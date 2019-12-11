@@ -20,7 +20,7 @@ void UpdateHeading()
 			IMUroll = roll * 16;
 		}
 	}
-}
+} 
 #endif
 
 #if (UseNano33 && UseSerialIMU)

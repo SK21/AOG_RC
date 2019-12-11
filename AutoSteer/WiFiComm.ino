@@ -72,7 +72,6 @@ void CommFromAOGwifi()
 				steerAngleSetPoint *= 0.01;
 
 				watchdogTimer = 0;
-				WifiCount = 0;
 
 				uTurn = 0;
 

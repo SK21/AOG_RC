@@ -21,7 +21,6 @@ int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering whee
 // ****** select only one IMU
 #define UseSerialIMU 0	// 0 false, 1 true 
 #define UseOnBoardIMU 1	// 0 false, 1 true 
-bool OnBoardIMUenabled = false;
 // ******
 
 // ****** select only one source of roll
@@ -30,10 +29,10 @@ bool OnBoardIMUenabled = false;
 // ******
 
 #define EncoderPin  2
-#define WORKSW_PIN  3
+#define WORKSW_PIN  4
+#define STEERSW_PIN  7
+#define DIR_PIN  8
 #define PWM_PIN  9
-#define DIR_PIN  10
-#define STEERSW_PIN  11
 // ******************************************
 
 #include <Wire.h>
@@ -56,6 +55,13 @@ void SERCOM0_Handler()
 {
 	IMUserial.IrqHandler();
 }
+
+// comm
+const byte MaxWords = 2;
+String CommData = "";
+String Word[MaxWords];
+int WordCount = 0;
+const int MaxCommData = 20;
 #endif
 
 #if (UseNano33 && UseOnBoardIMU)
@@ -121,13 +127,7 @@ int IMUroll = 0;
 boolean IMUdataFound = false;
 int IMUheader;
 int IMUtempHeader;
-
-// comm
-const byte MaxWords = 2;
-String CommData = "";
-String Word[MaxWords];
-int WordCount = 0;
-const int MaxCommData = 20;
+bool OnBoardIMUenabled = false;
 
 // steering wheel encoder
 volatile int pulseCount = 0; // Steering Wheel Encoder
@@ -161,7 +161,6 @@ unsigned int SteerPort = 5577;
 //sending back to where and which port
 static byte ipDestination[] = { 192, 168, 2, 255 };
 unsigned int portDestination = 9999; //AOG port that listens
-byte WifiCount = 0;
 
 unsigned long CommTime;
 unsigned long ConnectedCount = 0;
@@ -179,7 +178,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer  :  Version Date: 04/Dec/2019");
+	Serial.println("AutoSteer  :  Version Date: 06/Dec/2019");
 	Serial.println();
 
 #if(UseNano33 && UseSerialIMU)
