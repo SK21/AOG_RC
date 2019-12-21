@@ -13,7 +13,7 @@ void CommToAOGwifi()
 	OutBuffer[4] = (byte)(temp >> 8);
 	OutBuffer[5] = (byte)(temp);
 
-	// relayLo
+	// RelayFromAOG
 	OutBuffer[6] = RelayToAOG;
 
 	// SecSwOff
@@ -31,7 +31,7 @@ void CommToAOGwifi()
 
 void CommFromAOGwifi()
 {
-	delay(50);
+	delay(50);	// prevent wifi lockup
 	int PacketSize = UDPin.parsePacket();	// get packet
 	if (PacketSize)
 	{
@@ -42,7 +42,7 @@ void CommFromAOGwifi()
 			Serial.println("Header: " + String(temp));
 			if (temp == 31000)
 			{
-				relayLo = InBuffer[2];	// read relay control from AgOpenGPS  1 -> 8
+				RelayFromAOG = InBuffer[2];	// read relay control from AgOpenGPS  1 -> 8
 
 				// rate setting, 100 times actual
 				unsignedTemp = InBuffer[3] << 8 | InBuffer[4];

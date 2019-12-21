@@ -1,17 +1,16 @@
 
 // user settings ****************************
+bool UseSwitches = true;	// manual switches
+#define UseWifi 0		// 0 serial - Nano/Nano33, 1 wifi - Nano33
+int SecID[7] = { 1, 2, 3, 4, 0, 0, 0 }; // id of switch controlling section, 1,2,3,4 or 0 for none
+
 float MeterCal = 188;	// pulses per Unit 
 byte ValveType = 1;	// 0 standard, 1 Fast Close
-int SecID[7] = { 1, 2, 3, 4, 0, 0, 0 }; // id of switch controlling section, 1,2,3,4 or 0 for none
+bool SimulateFlow = true;	
 byte OnDirection = LOW;	// flowmeter pin
 byte OffDirection = HIGH;	// flowmeter pin
 byte MinPWMvalue = 145;
 byte MaxPWMvalue = 255;
-bool SimulateFlow = false;	
-bool UseSwitches = false;	// manual switches
-
-#define UseWifi 1		// 0 serial - Nano/Nano33, 1 wifi - Nano33
-
 #define WifiSSID "AOG"
 #define WifiPassword "tractor145"
 // ******************************************
@@ -30,13 +29,11 @@ bool UseSwitches = false;	// manual switches
 #define FlowPWM 9
 #define FlowDIR 10
 
-#define RateDownPin 13
+#define RateDownPin 13	// disconnect LED for some Nano's to work
 #define RateUpPin A0
 #define AutoPin A1
-//#define SW1pin A5
-//#define SW2pin A4
-#define SW1pin A0	// testing
-#define SW2pin A0	// testing
+#define SW1pin A5
+#define SW2pin A4
 #define SW3pin A3
 #define SW4pin A2
 #define MasterOffPin A6
@@ -49,7 +46,6 @@ unsigned long currentTime = LOOP_TIME;
 byte watchdogTimer = 0;
 
 //Kalman variables
-float rateK = 0.0;
 float Pc = 0.0;
 float G = 0.0;
 float P = 1.0;
@@ -59,15 +55,12 @@ float XeRate = 0.0; //the filtered flowrate
 const float varRate = 100; // variance, smaller, more filtering
 const float varProcess = 10;
 
-//program flow
-bool isDataFound = false, isSettingFound = false;
-int header = 0, tempHeader = 0;
-
 //bit 0 is section 0
-byte relayHi = 0, relayLo = 0; // bytes from AOG
+byte RelayFromAOG = 0; // bytes from AOG
 byte RelayControl = 0;
 byte RelayToAOG = 0;
-byte RelayTemp = 0;
+int RelayTemp = 0;
+bool RelaysOn = false;
 
 float rateSetPoint = 0.0;
 float rateError = 0; //for PID
@@ -123,23 +116,23 @@ bool MasterChanged = false;
 unsigned long MasterTime = 0;
 bool MasterLast = false;
 
-// debounce
-unsigned long DebounceDelay = 50;
-
 float pwmSetting = 0.0;
+int pwmManualRatio = 0;
 unsigned int unsignedTemp = 0;
 boolean AOGconnected = false;
 
 byte InCommand = 0;	// command byte from AOG
 byte Temp = 0;
 
-bool RelaysOn = false;
-
 // PID
 float KP;
 float KI;
 float KD;
 float DeadBand;
+
+bool isDataFound;
+int tempHeader;
+int header;
 
 #if UseWifi
 	// wifi
@@ -176,7 +169,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("Rate Control  :  Version Date: 04/Dec/2019");
+	Serial.println("Rate Control  :  Version Date: 21/Dec/2019");
 	Serial.println();
 
 	pinMode(SwitchedPowerPin, OUTPUT);
@@ -247,7 +240,7 @@ void loop()
 	else
 	{
 		// use control byte from AOG
-		RelayControl = relayLo;
+		RelayControl = RelayFromAOG;
 		RelayToAOG = 0;
 		AutoOn = true;
 	}
@@ -269,7 +262,7 @@ void loop()
 		}
 
 		if (SimulateFlow) DoSimulate();
-		CalRateError();
+		rateError = CalRateError();
 		if (RelayControl > 0) pwmSetting = DoPID(rateError, rateSetPoint, LOOP_TIME, MinPWMvalue, MaxPWMvalue, KP, KI, KD, DeadBand);
 		motorDrive();
 

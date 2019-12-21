@@ -31,12 +31,12 @@ void motorDrive()
 			if (RateUpMan)
 			{
 				digitalWrite(FlowDIR, OnDirection);
-				analogWrite(FlowPWM, MaxPWMvalue);
+				analogWrite(FlowPWM, (MaxPWMvalue * pwmManualRatio / 100));
 			}
 			else if (RateDownMan)
 			{
 				digitalWrite(FlowDIR, OffDirection);
-				analogWrite(FlowPWM, MaxPWMvalue);
+				analogWrite(FlowPWM, (MaxPWMvalue * pwmManualRatio / 100));
 			}
 			else
 			{

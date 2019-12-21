@@ -33,8 +33,8 @@ void DoSimulate()
 		{
 			// manual control
 			ValveAdjust = 0;
-			if (RateUpMan) ValveAdjust = (float) (LOOP_TIME / ValveOpenTime) * 100.0 * .5;
-			if (RateDownMan) ValveAdjust = (float) (LOOP_TIME / ValveOpenTime) * -100.0 * .5;
+			if (RateUpMan) ValveAdjust = (float) (LOOP_TIME / ValveOpenTime) * 100.0 * (pwmManualRatio / 100);
+			if (RateDownMan) ValveAdjust = (float) (LOOP_TIME / ValveOpenTime) * -100.0 * (pwmManualRatio / 100);
 		}
 
 		ValveOpen += ValveAdjust;

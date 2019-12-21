@@ -8,10 +8,9 @@ void ReadRateSwitch()
 	// rate up
 	if (RateUpPressed)
 	{
-		if (AutoOn)
+		if (SWreadTime - RateLastTime > RateDelayTime)
 		{
-			// auto rate
-			if (SWreadTime - RateLastTime > RateDelayTime)
+			if (AutoOn)
 			{
 				if (bitRead(OutCommand, 2))
 				{
@@ -27,23 +26,33 @@ void ReadRateSwitch()
 				}
 				bitClear(OutCommand, 4); // left
 				bitSet(OutCommand, 5); // rate up
-				RateLastTime = SWreadTime;
 			}
-		}
-		else
-		{
-			// manual rate
-			RateUpMan = true;
-			RateDownMan = false;
+			else
+			{
+				RateUpMan = true;
+				RateDownMan = false;
+				switch (pwmManualRatio)
+				{
+				case 10:
+					pwmManualRatio = 50;
+					break;
+				case 50:
+					pwmManualRatio = 100;
+					break;
+				default:
+					pwmManualRatio = 10;
+					break;
+				}
+			}
+			RateLastTime = SWreadTime;
 		}
 	}
 
 	if (RateDownPressed)
 	{
-		if (AutoOn)
+		if (SWreadTime - RateLastTime > RateDelayTime)
 		{
-			// auto rate
-			if (SWreadTime - RateLastTime > RateDelayTime)
+			if (AutoOn)
 			{
 				if (bitRead(OutCommand, 2))
 				{
@@ -59,14 +68,25 @@ void ReadRateSwitch()
 				}
 				bitClear(OutCommand, 4); // left
 				bitClear(OutCommand, 5); // rate down
-				RateLastTime = SWreadTime;
 			}
-		}
-		else
-		{
-			// manual rate
-			RateUpMan = false;
-			RateDownMan = true;
+			else
+			{
+				RateUpMan = false;
+				RateDownMan = true;
+				switch (pwmManualRatio)
+				{
+				case 10:
+					pwmManualRatio = 50;
+					break;
+				case 50:
+					pwmManualRatio = 100;
+					break;
+				default:
+					pwmManualRatio = 10;
+					break;
+				}
+			}
+			RateLastTime = SWreadTime;
 		}
 	}
 
@@ -75,6 +95,7 @@ void ReadRateSwitch()
 	{
 		RateDownMan = false;
 		RateUpMan = false;
+		pwmManualRatio = 0;
 		// clear rate values after delay
 		if (SWreadTime - RateLastTime > SWdelay)
 		{

@@ -7,7 +7,7 @@ void FlowPinISR()
 	pulseStart = millis(); // store the current microseconds and start clock again
 }
 
-void CalRateError()
+float CalRateError()
 {
 	//reset ISR
 	countsThisLoop = pulseCount;
@@ -37,12 +37,12 @@ void CalRateError()
 		P = (1 - G) * Pc; Xp = XeRate; Zp = Xp;
 		XeRate = G * (FlowRate - Zp) + Xp;
 		rateAppliedUPM = XeRate * 100; //fill in formatted rateApplied
-		rateError = rateSetPoint - XeRate;
+		return rateSetPoint - XeRate;
 	}
 	else
 	{
 		rateAppliedUPM = 0;
-		rateError = rateSetPoint;
+		return rateSetPoint;
 	}
 	//Serial.println();
 	//Serial.println("**************");

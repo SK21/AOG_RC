@@ -48,6 +48,15 @@ void ReadSectionSwitches()
 		AutoLast = AutoOn;
 	}
 
+	// set state of AOG master switch (btnSectionOffAutoOn)
+	bitClear(OutCommand, 0);
+	bitClear(OutCommand, 1);
+	if (MasterChanged)
+	{
+		if (MasterOn) bitSet(OutCommand, 0);	// request AOG master switch on, section buttons to auto 
+		if (!MasterOn) bitSet(OutCommand, 1);	// request AOG master switch off, section buttons to off
+	}
+
 	// relays
 	SecSwOff[0] = 0;
 
@@ -78,14 +87,15 @@ void ReadSectionSwitches()
 				}
 				if (PinState)
 				{
-					// AOG in control
-					if (bitRead(relayLo, i) == HIGH) bitSet(RelayControl, i); else bitClear(RelayControl, i);
+					// switch on, AOG in control
+					if (bitRead(RelayFromAOG, i) == HIGH) bitSet(RelayControl, i); else bitClear(RelayControl, i);
+					// aog section button is auto
 				}
 				else
 				{
 					// switch off
-					bitClear(RelayControl, i);
-					bitSet(SecSwOff[0], i);
+					bitClear(RelayControl, i);	// turn off section
+					bitSet(SecSwOff[0], i);		// set aog section button to off
 				}
 			}
 			// bytes to AOG, no change
@@ -126,13 +136,14 @@ void ReadSectionSwitches()
 				if (PinState)
 				{
 					// manual on
-					bitSet(RelayControl, i);
+					bitSet(RelayControl, i);	// turn section on
+					// aog section button will also be set to on
 				}
 				else
 				{
 					// switch off
-					bitClear(RelayControl, i);
-					bitSet(SecSwOff[0], i);
+					bitClear(RelayControl, i);	// turn off section
+					bitSet(SecSwOff[0], i);		// set aog section button to off
 				}
 			}
 			// bytes to AOG, update
@@ -140,9 +151,6 @@ void ReadSectionSwitches()
 
 			if (AutoChanged)
 			{
-				// the relay byte will change the section button
-				// to the appropriate state
-
 				// continue application for delay time of autochanged
 				RelayControl = RelayControlLast;
 			}
@@ -152,33 +160,12 @@ void ReadSectionSwitches()
 	{
 		// master off
 		// turn relays off
-		RelayControl = 0;
-		SecSwOff[0] = 255;
-
-		if (AutoChanged && !AutoOn)
-		{
-			// update section buttons state by repressing master off
-			bitClear(OutCommand, 0);
-			bitSet(OutCommand, 1);
-		}
+		RelayControl = 0;	// turn all sections off
+		RelayToAOG = 0;
+		SecSwOff[0] = 255;	// turn all aog section buttons off
 	}
 
 	// record relay byte before auto state change
 	if (!AutoChanged) RelayControlLast = RelayControl;
-
-	// AOG notification of master state
-	bitClear(OutCommand, 0);
-	bitClear(OutCommand, 1);
-	if (MasterChanged)
-	{
-		if (MasterOn)
-		{
-			bitSet(OutCommand, 0);
-		}
-		else
-		{
-			bitSet(OutCommand, 1);
-		}
-	}
 }
 

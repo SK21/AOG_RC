@@ -41,7 +41,7 @@ void CommToAOG()
 	Serial.print(Temp);
 	Serial.print(",");
 
-	Serial.print(RelayToAOG);	// relayLo
+	Serial.print(RelayToAOG);	// RelayFromAOG
 	Serial.print(",");
 	Serial.print(SecSwOff[1]);
 	Serial.print(",");
@@ -86,7 +86,7 @@ void CommFromAOG()
 	{
 		//Serial.println("Data found");
 		isDataFound = false;
-		relayLo = Serial.read();   // read relay control from AgOpenGPS  1 -> 8
+		RelayFromAOG = Serial.read();   // read relay control from AgOpenGPS  1 -> 8
 
 		// rate setting, 100 times actual
 		unsignedTemp = Serial.read() << 8 | Serial.read();
