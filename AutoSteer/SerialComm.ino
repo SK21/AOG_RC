@@ -8,22 +8,27 @@ void CommToAOG()
 	Serial.print(",");
 
 	// *******  if there is no gyro installed send 9999
+	temp = 9999;
 
-#if (!UseNano33 | (!UseSerialIMU && !UseOnBoardIMU))
-	IMUheading = 9999;
+#if UseSerialIMU
+	temp = IMUheading;
 #endif
 
-	Serial.print(IMUheading); //heading in degrees * 16
+#if (UseOnBoardIMU && UseNano33)
+	if (OnBoardIMUenabled) temp = IMUheading;
+#endif
+
+	Serial.print(temp); //heading in degrees * 16
 	Serial.print(",");
 
 	//*******  if no roll is installed, send 9999
 	int temp = 9999;
 
-#if (UseDog2 | (UseNano33 && UseSerialIMU))
+#if (UseDog2 | (UseIMUroll && UseSerialIMU))
 	temp = (int)XeRoll;
 #endif
 
-#if (UseNano33 && UseOnBoardIMU)
+#if (UseIMUroll && UseNano33 && UseOnBoardIMU)
 	if (OnBoardIMUenabled)	temp = (int)XeRoll;
 #endif
 	

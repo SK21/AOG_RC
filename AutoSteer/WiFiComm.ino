@@ -50,7 +50,7 @@ void CommToAOGwifi()
 
 void CommFromAOGwifi()
 {
-	delay(50);
+	delay(50);	// prevent wifi lockup
 	int PacketSize = UDPin.parsePacket();	// get packet
 	if (PacketSize)
 	{

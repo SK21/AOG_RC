@@ -19,8 +19,8 @@ byte MinPWMvalue = 10;
 int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering wheel encoder  
 
 // ****** select only one IMU
-#define UseSerialIMU 0	// 0 false, 1 true 
-#define UseOnBoardIMU 1	// 0 false, 1 true 
+#define UseSerialIMU 1	// 0 false, 1 true 
+#define UseOnBoardIMU 0	// 0 false, 1 true 
 // ******
 
 // ****** select only one source of roll
@@ -28,11 +28,19 @@ int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering whee
 #define UseIMUroll 1	//0 false, 1 true
 // ******
 
+#define AdsWAS 3	// ADS1115 wheel angle sensor pin
+#define AdsRoll 2	// ADS1115 roll pin
+
 #define EncoderPin  2
 #define WORKSW_PIN  4
 #define STEERSW_PIN  7
 #define DIR_PIN  8
 #define PWM_PIN  9
+
+// serial RX	5
+// serial TX	6
+// SDA			A4
+// SCL			A5
 // ******************************************
 
 #include <Wire.h>
@@ -55,13 +63,6 @@ void SERCOM0_Handler()
 {
 	IMUserial.IrqHandler();
 }
-
-// comm
-const byte MaxWords = 2;
-String CommData = "";
-String Word[MaxWords];
-int WordCount = 0;
-const int MaxCommData = 20;
 #endif
 
 #if (UseNano33 && UseOnBoardIMU)
@@ -167,9 +168,6 @@ unsigned long ConnectedCount = 0;
 unsigned long ReconnectCount = 0;
 #endif
 
-unsigned long BlinkTime = 0;
-bool BlinkState = false;
-
 void setup()
 {
 	//set up communication
@@ -178,7 +176,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer  :  Version Date: 06/Dec/2019");
+	Serial.println("AutoSteer  :  Version Date: 22/Dec/2019");
 	Serial.println();
 
 #if(UseNano33 && UseSerialIMU)
@@ -200,7 +198,6 @@ void setup()
 	pinMode(WORKSW_PIN, INPUT_PULLUP);
 	pinMode(STEERSW_PIN, INPUT_PULLUP);
 	pinMode(DIR_PIN, OUTPUT);
-	pinMode(LED_BUILTIN, OUTPUT);
 	pinMode(EncoderPin, INPUT_PULLUP);
 
 	ads.begin();
@@ -232,14 +229,7 @@ void setup()
 
 void loop()
 {
-	if ((millis() - BlinkTime) > 1000)
-	{
-		BlinkTime = millis();
-		BlinkState = !BlinkState;
-		digitalWrite(LED_BUILTIN, BlinkState);
-	}
-
-#if (UseNano33 && (UseOnBoardIMU | UseSerialIMU))
+#if ((UseNano33 && UseOnBoardIMU )| UseSerialIMU)
 	UpdateHeading();
 #endif
 
@@ -250,13 +240,6 @@ void loop()
 	CommFromAOG();
 #endif
 
-	/*
-	 * Loop triggers every 100 msec and sends back gyro heading, and roll, steer angle etc
-	 * All imu code goes in the loop
-	 *  Determine the header value and set the flag accordingly
-	 *  Then the next group of serial data is according to the flag
-	 *  Process accordingly updating values
-	 */
 	currentTime = millis();
 	if (currentTime - lastTime >= LOOP_TIME)
 	{

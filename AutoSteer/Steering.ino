@@ -1,11 +1,11 @@
 void DoSteering()
 {
 	//********** Roll **************
-#if (UseNano33 && UseIMUroll && UseSerialIMU)
+#if (UseIMUroll && UseSerialIMU)
 	rollK = IMUroll;
 #endif
 
-#if (UseNano33 && UseIMUroll && UseOnBoardIMU)
+#if (UseIMUroll && UseNano33  && UseOnBoardIMU)
 	if (OnBoardIMUenabled) rollK = IMUroll;
 #endif
 
@@ -17,8 +17,8 @@ void DoSteering()
 	//Dog2 range is 0.5 to 4.5 V, +-25 degrees
 	//ADS reading of the Dog2 ranges from 2700 to 24000 (21300)
 	// counts per degree for this sensor is 426 (21300/50)
-	//rollK = (((ads.readADC_SingleEnded(1) - 2700) / 426) - 25) * 16;
-	rollK = (ads.readADC_SingleEnded(1) - 13350) / 26.6;
+	//rollK = (((ads.readADC_SingleEnded(AdsRoll) - 2700) / 426) - 25) * 16;
+	rollK = (ads.readADC_SingleEnded(AdsRoll) - 13350) / 26.6;
 #endif
 
 	//Kalman filter
@@ -31,7 +31,7 @@ void DoSteering()
 
 
 	//************** Steering Angle ******************
-	steeringPosition = ads.readADC_SingleEnded(0);	//read the steering position sensor
+	steeringPosition = ads.readADC_SingleEnded(AdsWAS);	//read the steering position sensor
 	steeringPosition = (steeringPosition - SteeringPositionZero);
 
 	//convert position to steer angle. 6 counts per degree of steer pot position in my case
