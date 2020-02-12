@@ -1,23 +1,25 @@
-#include <SparkFunMPU9250-DMP_2.h>
-#include <MPU9250_RegisterMap_2.h>
+#include <SparkFunMPU9250-DMP.h>
+#include <MPU9250_RegisterMap.h>
 #include <Wire.h>
 
 #define SerialPort SerialUSB
 
 MPU9250_DMP imu;
 
+float Roll = 0;
+int SendHz = 10;
+unsigned long LastTime = 0;
+
 void setup() 
 {
 	SerialPort.begin(38400);
 
 	delay(5000);
-	Serial.println();
-	Serial.println("IMU_Razor  :  Version Date: 22/Dec/2019");
-	Serial.println();
+	SerialPort.println();
+	SerialPort.println("IMU_Razor  :  Version Date: 11/Feb/2020");
+	SerialPort.println();
 
 	Serial1.begin(38400);
-	pinMode(LED_BUILTIN, OUTPUT);
-	digitalWrite(LED_BUILTIN, LOW);
 
   // Call imu.begin() to verify communication and initialize
   if (imu.begin() != INV_SUCCESS)
@@ -50,6 +52,38 @@ void loop()
 		}
 	}
 
-	CommToAutoSteer();
+	Roll = imu.roll;
+	if (Roll > 180)
+	{
+		Roll = Roll - 360.0;
+	}
+
+	if ((millis() - LastTime) > (1000 / SendHz))
+	{
+		LastTime = millis();
+		CommToAutoSteer();
+	}
+
+	SerialPort.println();
+	SerialPort.println("Heading " + String(imu.yaw));
+	SerialPort.println("Roll " + String(Roll));
 }
+
+void CommToAutoSteer()
+{
+	//header bytes for 32500
+	Serial1.write(126);
+	Serial1.write(244);
+
+	// heading
+	int temp = imu.yaw * 16;	// 16 * actual
+	Serial1.write((byte)(temp >> 8));
+	Serial1.write((byte)temp);
+
+	// roll
+	temp = Roll * 16;	// 16 * actual
+	Serial1.write((byte)(temp >> 8));
+	Serial1.write((byte)temp);
+}
+
 

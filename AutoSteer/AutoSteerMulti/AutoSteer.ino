@@ -1,6 +1,6 @@
 
 // user settings ****************************
-// WAS RYT090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
+// WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
 // ADS reading of the WAS ranges from 2700 to 24000 (21300)
 // counts per degree for this sensor is 237 (21300/90)
 float SteerCPD = 237;	// AOG value sent * 2
@@ -11,7 +11,7 @@ byte MinPWMvalue = 10;
 	
 #define UseNano33 1	// 0 Nano, 1 Nano33
 
-#define UseWifi 1	// 0 serial, 1 wifi
+#define UseWifi 0	// 0 serial, 1 wifi
 #define WifiSSID "AOG"
 #define WifiPassword "tractor145"
 
@@ -19,8 +19,8 @@ byte MinPWMvalue = 10;
 int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering wheel encoder  
 
 // ****** select only one IMU
-#define UseSerialIMU 1	// 0 false, 1 true 
-#define UseOnBoardIMU 0	// 0 false, 1 true 
+#define UseSerialIMU 0	// 0 false, 1 true 
+#define UseOnBoardIMU 1	// 0 false, 1 true 
 // ******
 
 // ****** select only one source of roll
@@ -54,7 +54,6 @@ Adafruit_ADS1115 ads(0x48);
 // format:
 // byte 0, header high byte, 126 or 0x7E
 // byte 1, header low byte, 244 or 0xF4, header = 32500 or 0x7EF4
-// remaining is string data "heading,roll"
 #include "wiring_private.h"
 Uart IMUserial(&sercom0, 5, 6, SERCOM_RX_PAD_1, UART_TX_PAD_0);
 
