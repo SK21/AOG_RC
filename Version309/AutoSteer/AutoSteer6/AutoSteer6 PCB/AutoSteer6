@@ -1,0 +1,42 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>KiCad BOM Example 5</title>
+    </head>
+    <body>
+    <h1>I:\AOG\AutoSteer6 PCB\AutoSteer6.sch</h1>
+    <p>2020-01-12 11:08:53 AM</p>
+    <p>Eeschema (5.1.2)-2</p>
+    <p><b>Component Count:</b>28</p>
+    <table>
+    <tr><th style='width:640px'>Ref</th><th>Qnty</th><th>Value</th><th>Part</th><th>Footprint</th><th>Description</th><th>Vendor</th></tr>
+    <tr><td>A1</td><td>1</td><td>Nano_33/Nano</td><td>MyLib:Nano_33</td><td>my library:Nano_33</td><td>Arduino Nano 33</td><td></td></tr>
+    <tr><td>C1, C5</td><td>2</td><td>0.1 uF</td><td>Device:CP</td><td>Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm</td><td>Polarized capacitor</td><td></td></tr>
+    <tr><td>C2, C6</td><td>2</td><td>1000 uF</td><td>Device:CP</td><td>Capacitor_THT:CP_Radial_D10.0mm_P5.00mm</td><td>Polarized capacitor</td><td></td></tr>
+    <tr><td>C3</td><td>1</td><td>10 uF</td><td>Device:CP</td><td>Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm</td><td>Polarized capacitor</td><td></td></tr>
+    <tr><td>C4</td><td>1</td><td>2.2 uF</td><td>Device:CP</td><td>Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm</td><td>Polarized capacitor</td><td></td></tr>
+    <tr><td>D1</td><td>1</td><td>LED</td><td>Device:LED</td><td>LED_THT:LED_D3.0mm</td><td>Light emitting diode</td><td></td></tr>
+    <tr><td>D2</td><td>1</td><td>1N5400</td><td>MyLib:1N5400</td><td>my library:1N5400</td><td></td><td></td></tr>
+    <tr><td>J1</td><td>1</td><td>SDA</td><td>Connector:Conn_01x03_Female</td><td>Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical</td><td>Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J2</td><td>1</td><td>SCL</td><td>Connector:Conn_01x03_Female</td><td>Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical</td><td>Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J3</td><td>1</td><td>Analog</td><td>Connector:Screw_Terminal_01x04</td><td>my library:Phoenix_4_pin_5mm_terminal_block</td><td>Generic screw terminal, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J4</td><td>1</td><td>I2C-5V</td><td>Connector:Conn_01x04_Female</td><td>Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical</td><td>Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J5</td><td>1</td><td>GPIO's</td><td>Connector:Screw_Terminal_01x07</td><td>my library:Phoenix_7_pin_5mm_terminal_block</td><td>Generic screw terminal, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J6</td><td>1</td><td>Ground</td><td>Connector:Screw_Terminal_01x09</td><td>my library:Phoenix_9_pin_5mm_terminal_block</td><td>Generic screw terminal, single row, 01x09, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J7</td><td>1</td><td>Power Source</td><td>Connector:Conn_01x03_Female</td><td>Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical</td><td>Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J8</td><td>1</td><td>Power Out</td><td>Connector:Screw_Terminal_01x06</td><td>my library:Phoenix_6_pin_5mm_terminal_block</td><td>Generic screw terminal, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J9</td><td>1</td><td>Power In</td><td>Connector:Screw_Terminal_01x02</td><td>my library:Phoenix_2_pin_5mm_terminal_block</td><td>Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J10</td><td>1</td><td>VCC</td><td>Connector:Conn_01x03_Female</td><td>Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical</td><td>Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>L1</td><td>1</td><td>LLC</td><td>MyLib:LLC</td><td>my library:LLC</td><td></td><td></td></tr>
+    <tr><td>R1</td><td>1</td><td>1K</td><td>Device:R</td><td>Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal</td><td>Resistor</td><td></td></tr>
+    <tr><td>R2, R3, R4</td><td>3</td><td>330</td><td>Device:R</td><td>Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal</td><td>Resistor</td><td></td></tr>
+    <tr><td>R5, R6</td><td>2</td><td>4.7K</td><td>Device:R</td><td>Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal</td><td>Resistor</td><td></td></tr>
+    <tr><td>RG1</td><td>1</td><td>mEZD71201A</td><td>MyLib:mEZD71201A</td><td>my library:mEZD71201A</td><td></td><td></td></tr>
+    <tr><td>U1</td><td>1</td><td>ADS1115</td><td>MyLib:ADS1115</td><td>my library:ads1115</td><td></td><td></td></tr><!--TABLEROW-->
+    </table>
+    </body>
+</html>
+    
