@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name AutoSteer5-rescue)(type Legacy)(uri ${KIPRJMOD}/AutoSteer5-rescue.lib)(options "")(descr ""))
+)

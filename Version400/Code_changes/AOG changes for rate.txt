@@ -1,0 +1,108 @@
+Version 400 
+
+- changes to AgOpenGPS for rate control
+- line #'s are approximate
+
+1. AgOpenGPS Properties.Settings.Default
+	- FormRClocation	System.Drawing.Point
+ 
+2. copy the following files to the SourceCode/GPS/Forms folder:
+	FormRateControl.cs
+	FormRateControl.Designer.cs
+	FormRateSetting.cs
+	FormRateSettings.Designer.cs
+	FormRateControl.resx
+	FormRateSettings.resx
+
+3. right click on the Forms folder in the AgOpenGPS Solution explorer. Click Add/Existing Item. Add only FormRateControl.cs and FormRateSetting.cs . The other files will follow. If this does not work, start over and again copy the files to the folder. On the Visual Studio menu Project click Show All Files. Right click on the new files and Include In Project.
+
+4. Right click on AgOpenGPS and add a folder PGNs.
+
+
+5. Copy the files PGN31100.cs, PGN31200.cs, PGN31300.cs and PGN31400.cs to the PGNs folder.
+
+
+6. Right click on the PGNs folder in the AgOpenGPS Solution explorer. Click Add/Existing Item. Add the four classes.
+
+7. copy the following files to the SourceCode/GPS/Classes folder:
+	CAveraging.cs
+	CRateCals.cs
+
+8. right click on the Classes folder in the AgOpenGPS Solution explorer. Click Add/Existing Item. Add the two classes.
+
+9. FormGPS.cs line 251 (in region Class Props and instances)
+        // rate control
+        public CRateCals RC;
+        public Forms.FormRateControl FRC;
+
+
+10. FormGPS.cs  line 429 (under winform initialization)
+            // rate control
+            RC = new CRateCals(this);
+
+11. FormGPS.cs  line 713 (at the end of the sub FormGPS_FormClosing)
+            RC.SaveSettings();
+
+12. FormGPS.cs[Design] - add button to statusStripLeft
+
+
+13. FormGPS.cs line 1081
+        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        {
+            foreach (Form f in Application.OpenForms)
+            {
+                if (f is Forms.FormRateControl)
+                {
+                    f.WindowState = FormWindowState.Normal;
+                    f.Focus();
+                    return;
+                }
+            }
+            FRC = new AgOpenGPS.Forms.FormRateControl(this);
+            this.AddOwnedForm(FRC);
+            FRC.Show();
+        }
+
+14. change manual section buttons modifiers on FormGPS from private to Public
+
+
+15. SerialComm.Designer.cs
+
+ line 287
+        public void BuildMachineByte()   (change to public from private)
+
+
+16. SerialComm.Designer.cs
+	In sub "private void SerialLineReceivedMachine(string sentence)"
+
+ line 383
+            // send to rate controller
+            RC.CommFromArduino(sentence);
+
+17. GUI.Designer.cs line 1512	(before end of 1 second update)
+                    // rate control
+                    RC.Update();
+
+18. UDPComm.Designer.cs  line 19
+	public bool isUDPSendConnected;   (change to public from private)
+
+
+19. UDPComm.Designer.cs 
+	In sub "private void UpdateRecvMessage(int port, byte[] data)"
+
+ line 256 (just before end of sub)
+
+            if (data[0] == 121)
+            {
+                if (data[1] == 124 | data[1] == 224)
+                {
+                    // rate control
+                    RC.UDPcommFromArduino(data);
+                }
+            }
+
+
+
+
+
+
