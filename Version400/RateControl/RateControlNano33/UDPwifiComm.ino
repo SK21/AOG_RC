@@ -18,6 +18,11 @@ void SendUDPWifi()
 	Temp = ((int)((float)accumulatedCounts / (float)MeterCal));
 	toSend[5] = Temp;
 
+	// rate error %
+	ConvertToSignedBytes(PercentError * 100);
+	toSend[6] = HiByte;
+	toSend[7] = LoByte;
+
 	//off to AOG
 	UDPout.beginPacket(DestinationIP, DestinationPort);
 	UDPout.write(toSend, sizeof(toSend));
@@ -139,5 +144,4 @@ void CheckWifi()
 		Serial.println(ip);
 	}
 }
-
 #endif

@@ -165,6 +165,10 @@ byte Ethernet::buffer[200]; // udp send and receive buffer
 byte toSend[] = { 0,0,0,0,0,0,0,0,0,0 };
 #endif
 
+float PercentError = 0.0;
+byte HiByte;
+byte LoByte;
+
 void setup()
 {
 	Serial.begin(38400);
@@ -264,6 +268,9 @@ void loop()
 		{
 			rateError = CalRateError();
 			pwmSetting = DoPID(rateError, rateSetPoint, LOOP_TIME, MinPWMvalue, MaxPWMvalue, KP, KI, KD, DeadBand);
+
+			PercentError = 0.0;
+			if (rateSetPoint > 0) PercentError = (rateError / rateSetPoint) * 100;
 		}
 
 		motorDrive();
@@ -281,4 +288,16 @@ void loop()
 	//this must be called for ethercard functions to work. 
 	ether.packetLoop(ether.packetReceive());
 #endif
+}
+
+void ConvertToSignedBytes(int Num)
+{
+	// converts a negative integer to positive and sets bit 8 on the HiByte
+	// max # size is 32767
+	bool Neg = (Num < 0);
+	Num = abs(Num);
+	if (Num > 32767) Num = 32767;
+	HiByte = Num >> 8;
+	LoByte = Num;
+	if (Neg) HiByte = HiByte | B10000000;
 }

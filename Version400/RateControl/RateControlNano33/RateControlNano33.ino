@@ -9,6 +9,10 @@
 // LED on pin 13 may need to be disconnected / burnt with soldering iron
 
 // user settings ****************************
+#define CommType 2				// 0 Serial/USB, 2 UDP wifi
+#define WifiSSID "Tractor"
+#define WifiPassword "450450450"
+
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
 byte FlowOn = LOW;	// flowmeter pin
 bool UseSwitches = true;	// manual switches
@@ -20,9 +24,6 @@ byte MinPWMvalue = 145;
 byte MaxPWMvalue = 255;
 
 #define UseSwitchedPowerPin 0	// 0 use Relay8 as a normal relay, 1 use Relay8 as a switched power pin - turns on when sketch starts
-#define CommType 2				// 0 Serial/USB, 2 UDP wifi
-#define WifiSSID "Tractor"
-#define WifiPassword "450450450"
 // ******************************************
 
 #define Relay1 3
@@ -169,7 +170,9 @@ unsigned long ReconnectCount = 0;
 
 #endif
 
-float Test = 0.0;
+float PercentError = 0.0;
+byte HiByte;
+byte LoByte;
 
 void setup()
 {
@@ -281,6 +284,9 @@ void loop()
 			pwmSetting = DoPID(rateError, rateSetPoint, LOOP_TIME, MinPWMvalue, MaxPWMvalue, KP, KI, KD, DeadBand);
 		}
 
+		PercentError = 0.0;
+		if (rateSetPoint > 0) PercentError = (rateError / rateSetPoint) * 100;
+
 		motorDrive();
 
 #if(CommType == 0)
@@ -293,3 +299,16 @@ void loop()
 	}
 #endif
 }
+
+void ConvertToSignedBytes(int Num)
+{
+	// converts a negative integer to positive and sets bit 8 on the HiByte
+	// max # size is 32767
+	bool Neg = (Num < 0);
+	Num = abs(Num);
+	if (Num > 32767) Num = 32767;
+	HiByte = Num >> 8;
+	LoByte = Num;
+	if (Neg) HiByte = HiByte | B10000000;
+}
+

@@ -45,6 +45,14 @@ void SendSerial()
 	Serial.print(",");
 	Temp = ((int)((float)accumulatedCounts / (float)MeterCal));
 	Serial.print(Temp);
+	Serial.print(",");
+
+	// rate error %
+	ConvertToSignedBytes(PercentError * 100);
+	Serial.print(HiByte);
+	Serial.print(",");
+	Serial.print(LoByte);
+
 	Serial.println();
 	Serial.flush();   // flush out buffer     
 
@@ -62,6 +70,7 @@ void SendSerial()
 	Serial.print(SecSwOff[0]);
 	Serial.print(",");
 	Serial.print(OutCommand);
+
 	Serial.println();
 	Serial.flush();   // flush out buffer     
 }

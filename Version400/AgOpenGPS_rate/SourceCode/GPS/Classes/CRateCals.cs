@@ -23,10 +23,10 @@ namespace AgOpenGPS
         string[] QuantityDescriptions = new string[] { "Imp. Gallons", "US Gallons", "Lbs", "Lbs NH3", "Litres", "Kgs", "Kgs NH3" };
         string[] CoverageDescriptions = new string[] { "Acre", "Hectare", "Minute", "Hour" };
 
-        private double ApplicationRate = 0;
         private double UPM = 0; // units per minute
         private double TankRemaining = 0;
         private CAveraging UnitsPerMinute;
+        private CAveraging AppRate;
 
         private DateTime StartTime;
         private double CurrentMinutes;
@@ -79,6 +79,7 @@ namespace AgOpenGPS
                 Directory.CreateDirectory(SettingsDir);
             }
             UnitsPerMinute = new CAveraging(4);
+            AppRate = new CAveraging(4);
         }
 
         public bool SimulateFlow { get { return SimFlow; } set { SimFlow = value; } }
@@ -107,7 +108,6 @@ namespace AgOpenGPS
             {
                 // connection lost
                 ControllerConnected = false;
-                ApplicationRate = 0;
                 PauseArea = true;
                 PauseQuantity = true;
             }
@@ -146,7 +146,6 @@ namespace AgOpenGPS
                 HectaresPerMinute = (CurrentWidth * mf.pn.speed * .1) / 60;
 
                 //coverage
-                ApplicationRate = 0;
                 if (HectaresPerMinute > 0)    // Is application on?
                 {
                     switch (CoverageUnits)
@@ -154,22 +153,18 @@ namespace AgOpenGPS
                         case 0:
                             // acres
                             Coverage += CurrentWorkedArea * 0.000247105;
-                            ApplicationRate = UnitsPerMinute.Average() / (HectaresPerMinute * 2.47);
                             break;
                         case 1:
                             // hectares
                             Coverage += CurrentWorkedArea * .0001;
-                            ApplicationRate = UnitsPerMinute.Average() / HectaresPerMinute;
                             break;
                         case 2:
                             // minutes
                             Coverage += CurrentMinutes;
-                            ApplicationRate = UnitsPerMinute.Average();
                             break;
                         default:
                             // hours
                             Coverage += CurrentMinutes / 60;
-                            ApplicationRate = UnitsPerMinute.Average() * 60.0;
                             break;
                     }
                 }
@@ -265,7 +260,14 @@ namespace AgOpenGPS
 
         public string CurrentRate()
         {
-            return ApplicationRate.ToString("N1");
+            if (ControllerConnected & HectaresPerMinute > 0)
+            {
+                return AppRate.Average().ToString("N1");
+            }
+            else
+            {
+                return "0.0";
+            }
         }
 
         public string CurrentCoverage()
@@ -384,9 +386,12 @@ namespace AgOpenGPS
                 UnitsPerMinute.AddDataPoint(UPM);
                 AccQuantity = Rec31100.AccumulatedQuantity();
                 UpdateQuantity();
+
+                double NP = (1.0 - Rec31100.PercentError() / 100) * RateSet;
+                AppRate.AddDataPoint(NP);
             }
 
-            if(Rec31200.ParseStringData(words))
+            if (Rec31200.ParseStringData(words))
             {
                 ReceiveTime = DateTime.Now;
             }
@@ -400,6 +405,9 @@ namespace AgOpenGPS
                 UnitsPerMinute.AddDataPoint(UPM);
                 AccQuantity = Rec31100.AccumulatedQuantity();
                 UpdateQuantity();
+
+                double NP = (1.0 - Rec31100.PercentError() / 100) * RateSet;
+                AppRate.AddDataPoint(NP);
             }
 
             if (Rec31200.ParseByteData(data))

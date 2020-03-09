@@ -18,6 +18,11 @@ void SendUDPwired()
 	Temp = ((int)((float)accumulatedCounts / (float)MeterCal));
 	toSend[5] = Temp;
 
+	// rate error %
+	ConvertToSignedBytes(PercentError * 100);
+	toSend[6] = HiByte;
+	toSend[7] = LoByte;
+
 	//off to AOG
 	ether.sendUdp(toSend, sizeof(toSend), SourcePort, DestinationIP, DestinationPort);
 

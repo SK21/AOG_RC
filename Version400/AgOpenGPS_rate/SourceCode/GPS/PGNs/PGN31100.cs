@@ -10,10 +10,13 @@
         //  3. rate applied Lo	100 times actual
         //	4. acc.quantity	Hi	
         //  5. acc.quantity Lo
-        // total 6 bytes
+        //  6. error HiByte
+        //  7. error LoByte
+
+        // total 8 bytes
         // UDP port 6100
 
-        private const byte cByteCount = 6;
+        private const byte cByteCount = 8;
         private const byte HeaderHi = 121;
         private const byte HeaderLo = 124;
 
@@ -21,8 +24,12 @@
         public byte RateLo;
         public byte QuantityHi;
         public byte QuantityLo;
+        public byte ErrorHi;
+        public byte ErrorLo;
+        private byte ErrorHiTemp;
 
         private int Temp;
+        private double Err;
 
         public double RateApplied()
         {
@@ -36,6 +43,20 @@
             Temp = QuantityHi << 8;
             Temp |= QuantityLo;
             return (double)(Temp);
+        }
+
+        public double PercentError()
+        {
+            if ((ErrorHi & 0b10000000) == 0b10000000)
+            {
+                ErrorHiTemp = (byte)(ErrorHi & 0b01111111); // remove sign bit 8
+                Err = (ErrorHiTemp << 8 | ErrorLo) * -1;
+            }
+            else
+            {
+                Err = ErrorHi << 8 | ErrorLo;
+            }
+            return Err/100.0;
         }
 
         public bool ParseStringData(string[] Data)
@@ -57,6 +78,10 @@
                         byte.TryParse(Data[4], out QuantityHi);
                         byte.TryParse(Data[5], out QuantityLo);
 
+                        // error, 100 X actual
+                        byte.TryParse(Data[6], out ErrorHi);
+                        byte.TryParse(Data[7], out ErrorLo);
+
                         Result = true;
                     }
                 }
@@ -73,6 +98,8 @@
                 RateLo = Data[3];
                 QuantityHi = Data[4];
                 QuantityLo = Data[5];
+                ErrorHi = Data[6];
+                ErrorLo = Data[7];
 
                 Result = true;
             }
