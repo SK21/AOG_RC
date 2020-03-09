@@ -23,6 +23,7 @@ namespace AgOpenGPS.Forms
             Initializing = true;
             LoadSettings();
             Initializing = false;
+            DayNight();
         }
 
         private void LoadSettings()
@@ -35,10 +36,10 @@ namespace AgOpenGPS.Forms
             ValveType.SelectedIndex = mf.RC.ValveType;
             TankRemain.Text = mf.RC.CurrentTankRemaining();
             checkBox1.Checked = mf.RC.SimulateFlow;
-            tbKP.Text = (mf.RC.KP ).ToString("N0");
-            tbKI.Text = (mf.RC.KI ).ToString("N0");
-            tbKD.Text = (mf.RC.KD ).ToString("N0");
-            tbDeadband.Text = (mf.RC.DeadBand ).ToString("N0");
+            tbKP.Text = (mf.RC.KP).ToString("N0");
+            tbKI.Text = (mf.RC.KI).ToString("N0");
+            tbKD.Text = (mf.RC.KD).ToString("N0");
+            tbDeadband.Text = (mf.RC.DeadBand).ToString("N0");
             tbMinPWM.Text = (mf.RC.MinPWM).ToString("N0");
             tbMaxPWM.Text = (mf.RC.MaxPWM).ToString("N0");
         }
@@ -293,6 +294,30 @@ namespace AgOpenGPS.Forms
             tbDeadband.Text = "3";
             tbMinPWM.Text = "50";
             tbMaxPWM.Text = "255";
+        }
+
+        private void DayNight()
+        {
+            if (Properties.Settings.Default.setDisplay_isDayMode)
+            {
+                this.BackColor = mf.dayColor;
+                foreach (Control c in this.Controls)
+                {
+                    {
+                        c.ForeColor = Color.Black;
+                    }
+                }
+            }
+            else
+            {
+                this.BackColor = mf.nightColor;
+                foreach (Control c in this.Controls)
+                {
+                    {
+                        c.ForeColor = Color.White;
+                    }
+                }
+            }
         }
     }
 }

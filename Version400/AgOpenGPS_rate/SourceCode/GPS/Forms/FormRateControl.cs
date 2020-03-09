@@ -13,6 +13,9 @@ namespace AgOpenGPS.Forms
     public partial class FormRateControl : Form
     {
         private readonly FormGPS mf;
+        private bool LastIsDay = true;
+        private DateTime LastCheck;
+
         public FormRateControl(FormGPS CallingForm)
         {
             mf = CallingForm;
@@ -27,7 +30,7 @@ namespace AgOpenGPS.Forms
             AreaDone.Text = mf.RC.CurrentCoverage();
             TankRemain.Text = mf.RC.CurrentTankRemaining();
             VolApplied.Text = mf.RC.CurrentApplied();
-            if(mf.RC.ControllerConnected)
+            if (mf.RC.ControllerConnected)
             {
                 lbConnection.Text = "Controller Connected";
                 lbConnection.BackColor = Color.LightGreen;
@@ -37,6 +40,7 @@ namespace AgOpenGPS.Forms
                 lbConnection.Text = "Controller Disconnected";
                 lbConnection.BackColor = Color.Red;
             }
+            DayNight();
         }
 
         private void FormRateControl_Load(object sender, EventArgs e)
@@ -72,6 +76,38 @@ namespace AgOpenGPS.Forms
         private void bntOK_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void DayNight()
+        {
+            if ((DateTime.Now - LastCheck).Seconds > 3)
+            {
+                if (Properties.Settings.Default.setDisplay_isDayMode != LastIsDay)
+                {
+                    LastIsDay = Properties.Settings.Default.setDisplay_isDayMode;
+                    if (LastIsDay)
+                    {
+                        this.BackColor = mf.dayColor;
+                        foreach (Control c in this.Controls)
+                        {
+                            {
+                                c.ForeColor = Color.Black;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.BackColor = mf.nightColor;
+                        foreach (Control c in this.Controls)
+                        {
+                            {
+                                c.ForeColor = Color.White;
+                            }
+                        }
+                    }
+                }
+                LastCheck = DateTime.Now;
+            }
         }
     }
 }
