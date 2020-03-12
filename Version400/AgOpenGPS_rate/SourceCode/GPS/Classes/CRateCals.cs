@@ -10,6 +10,8 @@ namespace AgOpenGPS
 {
     public class CRateCals
     {
+        // last edited 12/Mar/2020
+
         private readonly FormGPS mf;
 
         // receive data
@@ -183,8 +185,8 @@ namespace AgOpenGPS
             // comm to arduino
             CommToArduino();
 
-            //remote switches
-            if (ControllerConnected) DoRemoteSwitches();
+            // remote switches
+            if (ControllerConnected) RateSet = Rec31200.DoSwitches(RateSet);
         }
 
         private void UpdateQuantity()
@@ -414,11 +416,6 @@ namespace AgOpenGPS
             {
                 ReceiveTime = DateTime.Now;
             }
-        }
-
-        public void DoRemoteSwitches()
-        {
-            RateSet = Rec31200.DoSwitches(RateSet);
         }
 
         void LoadSettings()

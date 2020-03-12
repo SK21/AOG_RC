@@ -13,6 +13,9 @@ namespace AgOpenGPS.Forms
     public partial class FormRateControl : Form
     {
         private readonly FormGPS mf;
+        private bool LastIsDay = true;
+        private DateTime LastCheck;
+
         public FormRateControl(FormGPS CallingForm)
         {
             mf = CallingForm;
@@ -37,11 +40,21 @@ namespace AgOpenGPS.Forms
                 lbConnection.Text = "Controller Disconnected";
                 lbConnection.BackColor = Color.Red;
             }
+            DayNight();
         }
 
         private void FormRateControl_Load(object sender, EventArgs e)
         {
             this.Location = Properties.Settings.Default.FormRClocation;
+
+            // check on screen
+            // Create rectangle
+            Rectangle formRectangle = new Rectangle(this.Left, this.Top, this.Width, this.Height);
+            if(! Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(formRectangle)))
+            {
+                this.Left = 0;
+                this.Top = 0;
+            }
         }
 
         private void FormRateControl_FormClosed(object sender, FormClosedEventArgs e)
@@ -59,7 +72,6 @@ namespace AgOpenGPS.Forms
 
             // don't forget to save the settings
             Properties.Settings.Default.Save();
-
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -72,6 +84,38 @@ namespace AgOpenGPS.Forms
         private void bntOK_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void DayNight()
+        {
+            if ((DateTime.Now - LastCheck).Seconds > 3)
+            {
+                if (Properties.Settings.Default.setDisplay_isDayMode != LastIsDay)
+                {
+                    LastIsDay = Properties.Settings.Default.setDisplay_isDayMode;
+                    if (LastIsDay)
+                    {
+                        this.BackColor = mf.dayColor;
+                        foreach (Control c in this.Controls)
+                        {
+                            {
+                                c.ForeColor = Color.Black;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.BackColor = mf.nightColor;
+                        foreach (Control c in this.Controls)
+                        {
+                            {
+                                c.ForeColor = Color.White;
+                            }
+                        }
+                    }
+                }
+                LastCheck = DateTime.Now;
+            }
         }
     }
 }

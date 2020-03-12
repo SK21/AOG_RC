@@ -5,7 +5,8 @@ Version 400
 
 1. AgOpenGPS Properties.Settings.Default
 	- FormRClocation	System.Drawing.Point
- 
+ 	- FormRSlocation	System.Drawing.Point
+
 2. copy the following files to the SourceCode/GPS/Forms folder:
 	FormRateControl.cs
 	FormRateControl.Designer.cs
@@ -36,7 +37,7 @@ Version 400
         public Forms.FormRateControl FRC;
 
 
-10. FormGPS.cs  line 429 (under winform initialization)
+10. FormGPS.cs  line 433 (under winform initialization)
             // rate control
             RC = new CRateCals(this);
 
@@ -44,6 +45,7 @@ Version 400
             RC.SaveSettings();
 
 12. FormGPS.cs[Design] - add button to statusStripLeft
+		       - add Image RateControlOff.PNG
 
 
 13. FormGPS.cs line 1081

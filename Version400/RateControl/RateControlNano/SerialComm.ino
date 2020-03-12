@@ -7,7 +7,9 @@
 //  3. rate applied Lo	100 times actual
 //	4. acc.quantity	Hi	
 //  5. acc.quantity Lo
-// total 6 bytes
+//  6. error % Hi		100 times actual
+//  7. error % Lo		100 times actual
+// total 8 bytes
 //
 // PGN 31200
 //	0. HeaderHi			121		0x79

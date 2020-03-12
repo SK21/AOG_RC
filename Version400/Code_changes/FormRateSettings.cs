@@ -282,7 +282,16 @@ namespace AgOpenGPS.Forms
 
         private void FormRateSettings_Load(object sender, EventArgs e)
         {
+            this.Location = Properties.Settings.Default.FormRSlocation;
 
+            // check on screen
+            // Create rectangle
+            Rectangle formRectangle = new Rectangle(this.Left, this.Top, this.Width, this.Height);
+            if (!Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(formRectangle)))
+            {
+                this.Left = 0;
+                this.Top = 0;
+            }
         }
 
         private void butLoadDefaults_Click(object sender, EventArgs e)
@@ -293,6 +302,23 @@ namespace AgOpenGPS.Forms
             tbDeadband.Text = "3";
             tbMinPWM.Text = "50";
             tbMaxPWM.Text = "255";
+        }
+
+        private void FormRateSettings_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                // save location and size if the state is normal
+                Properties.Settings.Default.FormRSlocation = this.Location;
+            }
+            else
+            {
+                // save the RestoreBounds if the form is minimized or maximized!
+                Properties.Settings.Default.FormRSlocation = this.RestoreBounds.Location;
+            }
+
+            // don't forget to save the settings
+            Properties.Settings.Default.Save();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace AgOpenGPS.Forms
             AreaDone.Text = mf.RC.CurrentCoverage();
             TankRemain.Text = mf.RC.CurrentTankRemaining();
             VolApplied.Text = mf.RC.CurrentApplied();
-            if (mf.RC.ControllerConnected)
+            if(mf.RC.ControllerConnected)
             {
                 lbConnection.Text = "Controller Connected";
                 lbConnection.BackColor = Color.LightGreen;
@@ -46,6 +46,15 @@ namespace AgOpenGPS.Forms
         private void FormRateControl_Load(object sender, EventArgs e)
         {
             this.Location = Properties.Settings.Default.FormRClocation;
+
+            // check on screen
+            // Create rectangle
+            Rectangle formRectangle = new Rectangle(this.Left, this.Top, this.Width, this.Height);
+            if(! Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(formRectangle)))
+            {
+                this.Left = 0;
+                this.Top = 0;
+            }
         }
 
         private void FormRateControl_FormClosed(object sender, FormClosedEventArgs e)
@@ -63,7 +72,6 @@ namespace AgOpenGPS.Forms
 
             // don't forget to save the settings
             Properties.Settings.Default.Save();
-
         }
 
         private void button3_Click(object sender, EventArgs e)

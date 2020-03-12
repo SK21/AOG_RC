@@ -526,6 +526,7 @@
             this.Name = "FormRateSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rate Settings";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormRateSettings_FormClosed);
             this.Load += new System.EventHandler(this.FormRateSettings_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

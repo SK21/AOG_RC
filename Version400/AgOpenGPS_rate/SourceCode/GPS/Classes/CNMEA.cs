@@ -305,7 +305,7 @@ Field	Meaning
         private void AverageTheSpeed()
         {
             //average the speed
-            mf.avgSpeed = (mf.avgSpeed * 0.8) + (speed * 0.2);
+            mf.avgSpeed = (mf.avgSpeed * 0.9) + (speed * 0.1);
         }
 
         private void ParseAVR()

@@ -485,7 +485,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(769, 431);
             this.Controls.Add(this.butLoadDefaults);
             this.Controls.Add(this.tbMaxPWM);
@@ -527,6 +526,7 @@
             this.Name = "FormRateSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rate Settings";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormRateSettings_FormClosed);
             this.Load += new System.EventHandler(this.FormRateSettings_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

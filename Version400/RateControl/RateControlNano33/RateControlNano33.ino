@@ -282,10 +282,10 @@ void loop()
 			rateError = CalRateError();
 
 			pwmSetting = DoPID(rateError, rateSetPoint, LOOP_TIME, MinPWMvalue, MaxPWMvalue, KP, KI, KD, DeadBand);
-		}
 
-		PercentError = 0.0;
-		if (rateSetPoint > 0) PercentError = (rateError / rateSetPoint) * 100;
+			PercentError = 0.0;
+			if (rateSetPoint > 0) PercentError = (rateError / rateSetPoint) * 100.0;
+		}
 
 		motorDrive();
 
@@ -300,7 +300,7 @@ void loop()
 #endif
 }
 
-void ConvertToSignedBytes(int Num)
+void ConvertToSignedBytes(int Num)	
 {
 	// converts a negative integer to positive and sets bit 8 on the HiByte
 	// max # size is 32767

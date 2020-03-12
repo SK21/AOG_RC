@@ -6,16 +6,16 @@
 // LED on pin 13 may need to be disconnected / burnt with soldering iron
 
 // user settings ****************************
+#define CommType 0				// 0 Serial/USB, 1 UDP wired
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
-byte FlowOn = LOW;	// flowmeter pin
+byte FlowOn = LOW;	// flowmeter pin on direction
 bool UseSwitches = true;	// manual switches
-float MeterCal = 188;	// pulses per Unit 
-byte ValveType = 1;	// 0 standard, 1 Fast Close
+float MeterCal = 188;		// pulses per Unit 
+byte ValveType = 1;			// 0 standard, 1 Fast Close
 bool SimulateFlow = true;	
 byte MinPWMvalue = 145;
 byte MaxPWMvalue = 255;
 #define UseSwitchedPowerPin 0	// 0 use Relay8 as a normal relay, 1 use Relay8 as a switched power pin - turns on when sketch starts
-#define CommType 0				// 0 Serial/USB, 1 UDP wired
 // ******************************************
 
 #define Relay1 3
