@@ -1,0 +1,41 @@
+1. SerialComm.Designer.cs
+ line 287
+        public void BuildMachineByte()   (change to public from private)
+
+2. FormGPS.cs line 251 (in region Class Props and instances)
+        // PGNs
+        public PGN32100 Send32100;
+        public PGN32200 Send32200;
+        public PGN32300 Rec32300;
+
+3. FormGPS.cs  line 432 (under winform initialization)
+            // PGNs
+            Send32100 = new PGN32100(this);
+            Send32200 = new PGN32200(this);
+            Rec32300 = new PGN32300(this);
+
+4. GUI.Designer.cs line 1512	(before end of 1 second update)
+                    // send PGNs
+                    Send32100.Send();
+                    Send32200.Send();
+
+5. UDPComm.Designer.cs 
+	In sub "private void UpdateRecvMessage(int port, byte[] data)"
+
+ line 256 (just before end of sub)
+
+            // PGNs
+            int PGN = data[0] << 8 | data[1];
+            if (PGN == 32300) Rec32300.ParseByteData(data);
+
+
+6. Right click on AgOpenGPS and add a folder PGNs.
+
+
+7. Copy the files PGN32100.cs, PGN32200.cs and PGN32300.cs to the PGNs folder.
+
+
+8. Right click on the PGNs folder in the AgOpenGPS Solution explorer. Click Add/Existing Item. Add the four classes.
+
+9. change manual section buttons modifiers on FormGPS from private to Public
+
