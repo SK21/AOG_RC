@@ -1157,8 +1157,7 @@ namespace AgOpenGPS
                 oglZoom.Width = 180;
                 oglZoom.Height = 180;
             }
-        }               
-
+        } 
         
         //Function to delete flag
         public void DeleteSelectedFlag()
@@ -1400,7 +1399,7 @@ namespace AgOpenGPS
                     //counter used for saving field in background
                     minuteCounter++;
                     tenMinuteCounter++;
-                    
+
                     if (isRTK)
                     {
                         if (pn.fixQuality == 4) lblHz.BackColor = Color.Transparent;
@@ -1544,6 +1543,9 @@ namespace AgOpenGPS
                 {
                     //reset the counter
                     displayUpdateOneFifthCounter = oneFifthSecond;
+
+                    //SendPgnToApp(mc.machineData);
+                    //SendPgnToApp(mc.autoSteerData);
 
                     if (hd.isOn)
                     {

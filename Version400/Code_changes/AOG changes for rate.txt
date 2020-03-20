@@ -92,7 +92,7 @@ Version 400
 19. UDPComm.Designer.cs 
 	In sub "private void UpdateRecvMessage(int port, byte[] data)"
 
- line 256 (just before end of sub)
+ line 362 (just before end of sub)
 
             if (data[0] == 121)
             {

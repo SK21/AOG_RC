@@ -46,7 +46,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.rbtnRollNone = new System.Windows.Forms.RadioButton();
-            this.rbtnRollUDP = new System.Windows.Forms.RadioButton();
+            this.rbtnRollOGI = new System.Windows.Forms.RadioButton();
             this.rbtnRollAutoSteer = new System.Windows.Forms.RadioButton();
             this.rbtnRollGPS = new System.Windows.Forms.RadioButton();
             this.groupBoxHeadingCorrection = new System.Windows.Forms.GroupBox();
@@ -64,6 +64,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabFix = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.cboxNMEAHz = new System.Windows.Forms.ComboBox();
             this.lblSimGGA = new System.Windows.Forms.Label();
@@ -294,7 +295,7 @@
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.rbtnRollNone);
-            this.groupBox6.Controls.Add(this.rbtnRollUDP);
+            this.groupBox6.Controls.Add(this.rbtnRollOGI);
             this.groupBox6.Controls.Add(this.rbtnRollAutoSteer);
             this.groupBox6.Controls.Add(this.rbtnRollGPS);
             this.groupBox6.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -320,20 +321,20 @@
             this.rbtnRollNone.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbtnRollNone.UseVisualStyleBackColor = true;
             // 
-            // rbtnRollUDP
+            // rbtnRollOGI
             // 
-            this.rbtnRollUDP.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbtnRollUDP.FlatAppearance.CheckedBackColor = System.Drawing.Color.PaleGreen;
-            this.rbtnRollUDP.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbtnRollUDP.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbtnRollUDP.Location = new System.Drawing.Point(16, 261);
-            this.rbtnRollUDP.Name = "rbtnRollUDP";
-            this.rbtnRollUDP.Size = new System.Drawing.Size(248, 43);
-            this.rbtnRollUDP.TabIndex = 95;
-            this.rbtnRollUDP.TabStop = true;
-            this.rbtnRollUDP.Text = "UDP";
-            this.rbtnRollUDP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbtnRollUDP.UseVisualStyleBackColor = true;
+            this.rbtnRollOGI.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbtnRollOGI.FlatAppearance.CheckedBackColor = System.Drawing.Color.PaleGreen;
+            this.rbtnRollOGI.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbtnRollOGI.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbtnRollOGI.Location = new System.Drawing.Point(16, 261);
+            this.rbtnRollOGI.Name = "rbtnRollOGI";
+            this.rbtnRollOGI.Size = new System.Drawing.Size(248, 43);
+            this.rbtnRollOGI.TabIndex = 95;
+            this.rbtnRollOGI.TabStop = true;
+            this.rbtnRollOGI.Text = "OGI";
+            this.rbtnRollOGI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbtnRollOGI.UseVisualStyleBackColor = true;
             // 
             // rbtnRollAutoSteer
             // 
@@ -571,6 +572,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label3);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.cboxNMEAHz);
             this.groupBox4.Controls.Add(this.lblSimGGA);
@@ -585,6 +587,17 @@
             this.groupBox4.TabIndex = 71;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Position From";
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label3.Location = new System.Drawing.Point(456, 40);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 23);
+            this.label3.TabIndex = 90;
+            this.label3.Text = "Alarm";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label7
             // 
@@ -731,7 +744,7 @@
             this.MinimizeBox = false;
             this.Name = "FormIMU";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormDisplaySettings";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FormDisplaySettings_Load);
@@ -795,11 +808,12 @@
         private System.Windows.Forms.RadioButton rbtnHeadingCorrAutoSteer;
         private System.Windows.Forms.RadioButton rbtnHeadingCorrNone;
         private System.Windows.Forms.RadioButton rbtnRollNone;
-        private System.Windows.Forms.RadioButton rbtnRollUDP;
+        private System.Windows.Forms.RadioButton rbtnRollOGI;
         private System.Windows.Forms.RadioButton rbtnRollAutoSteer;
         private System.Windows.Forms.RadioButton rbtnRollGPS;
         private System.Windows.Forms.Label lblSimGGA;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox cboxNMEAHz;
+        private System.Windows.Forms.Label label3;
     }
 }
