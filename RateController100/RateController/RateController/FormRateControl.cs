@@ -14,14 +14,22 @@ namespace RateController
     {
         public CRateCals RC;
         public clsTools Tls;
-        public UDPComm UDP;
+        public SerialComm SER;
+        public UDPComm UDPnetwork;
+        public UDPComm UDPlocal;
+
+        public string NetworkIP;
+        public string LocalIP;
 
         public FormRateControl()
         {
             InitializeComponent();
             RC = new CRateCals(this);
             Tls = new clsTools(this);
-            UDP = new UDPComm(this);
+            SER = new SerialComm(this);
+            UDPnetwork = new UDPComm(this, Properties.Settings.Default.DestinationIP, 8000, 2188);
+            LocalIP = "127.100.0.0";
+            UDPlocal = new UDPComm(this, LocalIP, 8888, 2388);
         }
 
         private void RateControl_Load(object sender, EventArgs e)
@@ -35,11 +43,24 @@ namespace RateController
                 this.Close();
             }
 
-            UDP.StartUDPServer();
-            if (!UDP.isUDPSendConnected)
+            // UDP
+            NetworkIP = UDPnetwork.StartUDPServer();
+            if (!UDPnetwork.isUDPSendConnected)
             {
-                Tls.TimedMessageBox("UDP failed to start.", "", 3000, true);
+                Tls.TimedMessageBox("UDPnetwork failed to start.", "", 3000, true);
             }
+
+            UDPlocal.StartUDPServer();
+            if (!UDPlocal.isUDPSendConnected)
+            {
+                Tls.TimedMessageBox("UDPlocal failed to start.", "", 3000, true);
+            }
+
+            // serial
+            SER.RCportName = Properties.Settings.Default.RCportName;
+            SER.RCportBaud = Properties.Settings.Default.RCportBaud;
+            if (Properties.Settings.Default.RCportSuccessful) SER.OpenRCport();
+            SetDayMode();
         }
 
         public void UpdateStatus()
@@ -72,7 +93,6 @@ namespace RateController
                 lbAogConnected.Text = "AOG Disconnected";
                 lbAogConnected.BackColor = Color.Red;
             }
-            //DayNight();
         }
 
         private void FormRateControl_FormClosed(object sender, FormClosedEventArgs e)
@@ -98,6 +118,7 @@ namespace RateController
             Form frmRateSettings = new FormRateSettings(this);
             frmRateSettings.ShowDialog();
             UpdateStatus();
+            SetDayMode();
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -109,6 +130,26 @@ namespace RateController
         {
             RC.Update();
             UpdateStatus();
+        }
+
+        void SetDayMode()
+        {
+            if(Properties.Settings.Default.IsDay)
+            {
+                this.BackColor = Properties.Settings.Default.DayColour;
+                foreach(Control c in this.Controls)
+                {
+                    c.ForeColor = Color.Black;
+                }
+            }
+            else
+            {
+                this.BackColor = Properties.Settings.Default.NightColour;
+                foreach(Control c in this.Controls)
+                {
+                    c.ForeColor = Color.White;
+                }
+            }
         }
     }
 }

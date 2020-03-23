@@ -1,10 +1,10 @@
 #if(CommType == 2)
 void SendUDPWifi()
 {
-	// PGN 31100
+	// PGN 35200
 	// header
-	toSend[0] = 121;
-	toSend[1] = 124;
+	toSend[0] = 137;
+	toSend[1] = 128;
 
 	// rate applied, 100 X actual
 	Temp = ((int)RateAppliedUPM * 100) >> 8;
@@ -29,25 +29,25 @@ void SendUDPWifi()
 	UDPout.endPacket();
 
 
-	// PGN 31200
+	// PGN 32761
 	// header
-	toSend[0] = 121;
-	toSend[1] = 224;
+	toSend[0] = 127;
+	toSend[1] = 249;
 
 	// relay Hi
-	toSend[2] = 0;
+	toSend[5] = 0;
 
 	// relay Lo
-	toSend[3] = RelayToAOG;
+	toSend[6] = RelayToAOG;
 
 	// SecSwOff Hi
-	toSend[4] = SecSwOff[1];
+	toSend[7] = SecSwOff[1];
 
 	// SecSwOff Lo
-	toSend[5] = SecSwOff[0];
+	toSend[8] = SecSwOff[0];
 
 	// command byte
-	toSend[6] = OutCommand;
+	toSend[9] = OutCommand;
 
 	//off to AOG
 	UDPout.beginPacket(DestinationIP, DestinationPort);
@@ -63,8 +63,8 @@ void ReceiveUDPWifi()
 	{
 		int len = UDPin.read(InBuffer, 150);
 
-		// PGN31300
-		if ((len > 8) && (InBuffer[0] == 0x7A) && (InBuffer[1] = 0x44))
+		// PGN 35000
+		if ((len > 8) && (InBuffer[0] == 136) && (InBuffer[1] = 184))
 		{
 			RelayHi = InBuffer[2];
 			RelayFromAOG = InBuffer[3];
@@ -94,8 +94,8 @@ void ReceiveUDPWifi()
 			len = 0;
 		}
 
-		//PGN31400
-		if ((len > 7) && (InBuffer[0] == 0x7A) && (InBuffer[1] = 0xA8))
+		//PGN 35100
+		if ((len > 7) && (InBuffer[0] == 137) && (InBuffer[1] = 28))
 		{
 			KP = (float)InBuffer[2] * 0.1;
 			KI = (float)InBuffer[3] * 0.0001;

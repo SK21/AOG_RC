@@ -6,26 +6,29 @@ namespace RateController
 {
     public class UDPComm
     {
-        public bool isUDPSendConnected;
         private readonly FormRateControl mf;
+
+        public bool isUDPSendConnected;
 
         private byte[] buffer = new byte[1024];
 
-        private string cLocalIP;
-
-        private IPAddress epIP = IPAddress.Parse(Properties.Settings.Default.DestinationIP);
+        //private IPAddress epIP = IPAddress.Parse(Properties.Settings.Default.DestinationIP);
+        private IPAddress epIP;
+        private int cReceivePort;
+        private int cSendPort;
 
         private HandleDataDelegateObj HandleDataDelegate = null;
 
+        private int PGN;
         private Socket recvSocket;
-
         private Socket sendSocket;
 
-        private int PGN;
-
-        public UDPComm(FormRateControl CallingForm)
+        public UDPComm(FormRateControl CallingForm, string DestinationIP,int ReceivePort,int SendPort)
         {
             mf = CallingForm;
+            epIP = IPAddress.Parse(DestinationIP);
+            cReceivePort = ReceivePort;
+            cSendPort = SendPort;
         }
 
         // new data event
@@ -33,8 +36,6 @@ namespace RateController
 
         // Status delegate
         private delegate void HandleDataDelegateObj(int port, byte[] msg);
-
-        public string LocalIP { get { return cLocalIP; } }
 
         //sends byte array
         public void SendUDPMessage(byte[] byteData)
@@ -49,49 +50,66 @@ namespace RateController
                     if (byteData.Length != 0)
                         sendSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, EndPt, new AsyncCallback(SendData), null);
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
-                    //mf.Tls.WriteErrorLog("Sending UDP Message" + e.ToString());
-                    //mf.Tls.TimedMessageBox("Send Error", e.Message);
+
                 }
             }
         }
 
-        public void StartUDPServer()
+        public string StartUDPServer()
         {
             try
             {
-                // Initialise the delegate which updates the message received
+                // initialize the delegate which updates the message received
                 HandleDataDelegate = HandleData;
 
-                // Initialise the socket
-                sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                // initialize the receive socket
                 recvSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-                // Initialise the IPEndPoint for the server and listen on port 8888
-                IPEndPoint recv = new IPEndPoint(IPAddress.Any, 8888);
-
+                // Initialise the IPEndPoint for the server and port
+                IPEndPoint recv = new IPEndPoint(IPAddress.Any, cReceivePort);
                 // Associate the socket with this IP address and port
                 recvSocket.Bind(recv);
 
-                // Initialise the IPEndPoint for the server to send on port 2188
-                IPEndPoint server = new IPEndPoint(IPAddress.Any, 2188);
+                // initialize the send socket
+                sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+                // Initialise the IPEndPoint for the server to send on port 
+                IPEndPoint server = new IPEndPoint(IPAddress.Any, cSendPort);
                 sendSocket.Bind(server);
 
                 // Initialise the IPEndPoint for the client - async listner client only!
                 EndPoint client = new IPEndPoint(IPAddress.Any, 0);
 
                 // Start listening for incoming data
-                recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None,
-                                                ref client, new AsyncCallback(ReceiveData), recvSocket);
+                recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref client, new AsyncCallback(ReceiveData), recvSocket);
                 isUDPSendConnected = true;
+                return GetLocalIP();
             }
             catch (Exception e)
             {
                 mf.Tls.WriteErrorLog("UDP Server" + e);
                 mf.Tls.TimedMessageBox("UDP start error: ", e.Message);
+                return "";
             }
-            cLocalIP = GetLocalIP();
+        }
+
+        public string GetLocalIP()
+        {
+            try
+            {
+                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+                {
+                    socket.Connect("8.8.8.8", 65530);
+                    IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                    return endPoint.Address.ToString();
+                }
+            }
+            catch(Exception Ex)
+            {
+                return "";
+            }
         }
 
         private void HandleData(int Port, byte[] Data)
@@ -101,16 +119,15 @@ namespace RateController
                 PGN = Data[0] << 8 | Data[1];
                 switch (PGN)
                 {
-                    case 31100:
+                    case 35200:
                         mf.RC.UDPcommFromArduino(Data);
                         break;
-                    case 31200:
+
+                    case 32761:
                         mf.RC.UDPcommFromArduino(Data);
                         break;
-                    case 32100:
-                        mf.RC.UDPcommFromAOG(Data);
-                        break;
-                    case 32200:
+
+                    case 35400:
                         mf.RC.UDPcommFromAOG(Data);
                         break;
                 }
@@ -150,20 +167,9 @@ namespace RateController
             {
                 sendSocket.EndSend(asyncResult);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                //mf.Tls.WriteErrorLog(" UDP Send Data" + e.ToString());
-                //mf.Tls.TimedMessageBox("SendData Error", e.Message);
-            }
-        }
 
-        private string GetLocalIP()
-        {
-            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
-            {
-                socket.Connect("8.8.8.8", 65530);
-                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
-                return endPoint.Address.ToString();
             }
         }
     }

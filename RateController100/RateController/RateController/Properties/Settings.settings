@@ -68,5 +68,23 @@
     <Setting Name="DestinationIP" Type="System.String" Scope="User">
       <Value Profile="(Default)">192.168.1.255</Value>
     </Setting>
+    <Setting Name="RCportName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RCportSuccessful" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RCportBaud" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">38400</Value>
+    </Setting>
+    <Setting Name="IsDay" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DayColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">210, 220, 230</Value>
+    </Setting>
+    <Setting Name="NightColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">60, 60, 60</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -80,6 +80,7 @@
     <Compile Include="Classes\CAveraging.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\CRateCals.cs" />
+    <Compile Include="Classes\SerialComm.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
     <Compile Include="FormRateSettings.cs">
       <SubType>Form</SubType>
@@ -93,13 +94,11 @@
     <Compile Include="FormTimedMessage.Designer.cs">
       <DependentUpon>FormTimedMessage.cs</DependentUpon>
     </Compile>
-    <Compile Include="PGNs\PGN31100.cs" />
-    <Compile Include="PGNs\PGN31200.cs" />
-    <Compile Include="PGNs\PGN31300.cs" />
-    <Compile Include="PGNs\PGN31400.cs" />
-    <Compile Include="PGNs\PGN32100.cs" />
-    <Compile Include="PGNs\PGN32200.cs" />
-    <Compile Include="PGNs\PGN32300.cs" />
+    <Compile Include="PGNs\PGN32761.cs" />
+    <Compile Include="PGNs\PGN35000.cs" />
+    <Compile Include="PGNs\PGN35100.cs" />
+    <Compile Include="PGNs\PGN35200.cs" />
+    <Compile Include="PGNs\PGN35400.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FormRateControl.cs">
@@ -122,6 +121,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="FormRateControl.resx">
       <DependentUpon>FormRateControl.cs</DependentUpon>
@@ -145,6 +145,8 @@
     <Content Include="Images\OK64.png" />
     <Content Include="Images\RateControlOff.png" />
     <Content Include="Images\SettingsGear64.png" />
+    <None Include="Images\WindowDayMode.png" />
+    <None Include="Images\WindowNightMode.png" />
     <Content Include="RateControlOff.ico" />
   </ItemGroup>
   <ItemGroup>

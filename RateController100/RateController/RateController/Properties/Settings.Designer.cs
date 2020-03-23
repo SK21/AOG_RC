@@ -286,5 +286,77 @@ namespace RateController.Properties {
                 this["DestinationIP"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RCportName {
+            get {
+                return ((string)(this["RCportName"]));
+            }
+            set {
+                this["RCportName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RCportSuccessful {
+            get {
+                return ((bool)(this["RCportSuccessful"]));
+            }
+            set {
+                this["RCportSuccessful"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("38400")]
+        public int RCportBaud {
+            get {
+                return ((int)(this["RCportBaud"]));
+            }
+            set {
+                this["RCportBaud"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsDay {
+            get {
+                return ((bool)(this["IsDay"]));
+            }
+            set {
+                this["IsDay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("210, 220, 230")]
+        public global::System.Drawing.Color DayColour {
+            get {
+                return ((global::System.Drawing.Color)(this["DayColour"]));
+            }
+            set {
+                this["DayColour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60, 60, 60")]
+        public global::System.Drawing.Color NightColour {
+            get {
+                return ((global::System.Drawing.Color)(this["NightColour"]));
+            }
+            set {
+                this["NightColour"] = value;
+            }
+        }
     }
 }

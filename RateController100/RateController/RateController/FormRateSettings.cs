@@ -112,7 +112,6 @@ namespace RateController
                 Properties.Settings.Default.FormRSlocation = this.RestoreBounds.Location;
             }
 
-            // don't forget to save the settings
             Properties.Settings.Default.Save();
         }
 
@@ -120,8 +119,13 @@ namespace RateController
         {
             this.Location = Properties.Settings.Default.FormRSlocation;
             mf.Tls.IsOnScreen(this, true);
-            lbIP.Text = mf.UDP.LocalIP;
+            lbNetworkIP.Text = mf.NetworkIP;
+            lbLocalIP.Text = mf.LocalIP;
             lbVersion.Text = mf.Tls.VersionDate();
+            LoadRCbox();
+            SetRCbuttons();
+            SetDayMode();
+            SetBackColor();
         }
 
         private void LoadSettings()
@@ -130,7 +134,7 @@ namespace RateController
             AreaUnits.SelectedIndex = mf.RC.CoverageUnits;
             RateSet.Text = mf.RC.RateSet.ToString("N1");
             FlowCal.Text = mf.RC.FlowCal.ToString("N1");
-            TankSize.Text = mf.RC.TankSize.ToString("N1");
+            TankSize.Text = mf.RC.TankSize.ToString("N0");
             ValveType.SelectedIndex = mf.RC.ValveType;
             TankRemain.Text = mf.RC.CurrentTankRemaining();
             checkBox1.Checked = mf.RC.SimulateFlow;
@@ -293,6 +297,109 @@ namespace RateController
         private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void btnRescan_Click(object sender, EventArgs e)
+        {
+            LoadRCbox();
+            SetRCbuttons();
+        }
+
+        private void btnOpenSerialArduino_Click(object sender, EventArgs e)
+        {
+            mf.SER.OpenRCport();
+            SetRCbuttons();
+        }
+
+        private void cboxArdPort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            mf.SER.RCportName = cboxArdPort.Text;
+        }
+
+        private void btnCloseSerialArduino_Click(object sender, EventArgs e)
+        {
+            mf.SER.CloseRCport();
+            SetRCbuttons();
+        }
+
+        void SetRCbuttons()
+        {
+            if (mf.SER.RCport.IsOpen)
+            {
+                cboxBaud.Enabled = false;
+                cboxArdPort.Enabled = false;
+                btnCloseSerialArduino.Enabled = true;
+                btnOpenSerialArduino.Enabled = false;
+                cboxArdPort.SelectedIndex = cboxArdPort.FindStringExact(mf.SER.RCportName);
+                cboxBaud.SelectedIndex = cboxBaud.FindStringExact(mf.SER.RCportBaud.ToString());
+                lbArduinoConnected.Text = mf.SER.RCportName + " Connected";
+                lbArduinoConnected.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                cboxBaud.Enabled = true;
+                cboxArdPort.Enabled = true;
+                btnCloseSerialArduino.Enabled = false;
+                btnOpenSerialArduino.Enabled = true;
+                lbArduinoConnected.Text = mf.SER.RCportName + " Disconnected";
+                lbArduinoConnected.BackColor = Color.Red;
+            }
+        }
+
+        void LoadRCbox()
+        {
+            cboxArdPort.Items.Clear();
+            foreach (String s in System.IO.Ports.SerialPort.GetPortNames()) { cboxArdPort.Items.Add(s); }
+        }
+
+        private void label17_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblCurrentArduinoPort_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboxBaud_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            mf.SER.RCport.BaudRate = Convert.ToInt32(cboxBaud.Text);
+            mf.SER.RCportBaud = Convert.ToInt32(cboxBaud.Text);
+        }
+
+        private void btnDay_Click(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.IsDay)
+            {
+                Properties.Settings.Default.IsDay = false;
+            }
+            else
+            {
+                Properties.Settings.Default.IsDay = true;
+            }
+            SetDayMode();
+        }
+
+        void SetDayMode()
+        {
+            if (Properties.Settings.Default.IsDay)
+            {
+                btnDay.Image = Properties.Resources.WindowDayMode;
+            }
+            else
+            {
+                btnDay.Image = Properties.Resources.WindowNightMode;
+            }
+        }
+
+        void SetBackColor()
+        {
+            this.BackColor = Properties.Settings.Default.DayColour;
+            for (int i = 0; i < 4; i++)
+            {
+                tabControl1.TabPages[i].BackColor = Properties.Settings.Default.DayColour;
+            }
         }
     }
 }

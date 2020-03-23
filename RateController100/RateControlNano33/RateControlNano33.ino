@@ -9,7 +9,7 @@
 // LED on pin 13 may need to be disconnected / burnt with soldering iron
 
 // user settings ****************************
-#define CommType 2				// 0 Serial/USB, 2 UDP wifi
+#define CommType 0				// 0 Serial/USB, 2 UDP wifi
 #define WifiSSID "Tractor"
 #define WifiPassword "450450450"
 
@@ -140,8 +140,8 @@ float KI;
 float KD;
 float DeadBand;
 
-bool PGN31300Found;
-bool PGN31400Found;
+bool PGN35000Found;
+bool PGN35100Found;
 int tempHeader;
 int header;
 
@@ -162,7 +162,7 @@ unsigned int SourcePort = 6100;		// local port to send from
 
 // ethernet destination - AOG
 static byte DestinationIP[] = { 192, 168, 1, 255 };	// broadcast 255
-unsigned int DestinationPort = 8888; // RateControl port that listens 
+unsigned int DestinationPort = 8000; // RateControl port that listens 
 
 unsigned long CheckTime;
 unsigned long ConnectedCount = 0;
@@ -180,7 +180,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("Rate Control Nano33 RateController100  :  14/Mar/2020");
+	Serial.println("Rate Control Nano33 RateController100  :  23/Mar/2020");
 	Serial.println();
 
 	pinMode(Relay1, OUTPUT);

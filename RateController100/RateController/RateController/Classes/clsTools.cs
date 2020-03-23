@@ -10,7 +10,7 @@ namespace RateController
     public class clsTools
     {
         private string cAppName = "RateController";
-        private string cVersionDate = "14/Mar/2020";
+        private string cVersionDate = "23-Mar-2020";
         private FormRateControl mf;
         private string SettingsDir;
 
@@ -85,9 +85,9 @@ namespace RateController
                 TrimFile(FileName);
                 File.AppendAllText(FileName, DateTime.Now.ToString() + "  -  " + strErrorText + "\r\n\r\n");
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                //TimedMessageBox("Error in WriteErrorLog", ex.Message);
+
             }
         }
 
@@ -99,9 +99,9 @@ namespace RateController
                 SettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\" + cAppName + "\\Settings";
                 if (!Directory.Exists(SettingsDir)) Directory.CreateDirectory(SettingsDir);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                WriteErrorLog("Tools: CheckFolders: " + ex.Message);
+                
             }
         }
 
@@ -125,9 +125,9 @@ namespace RateController
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                //WriteErrorLog("Tools: TrimFile: " + ex.Message);
+                
             }
         }
     }

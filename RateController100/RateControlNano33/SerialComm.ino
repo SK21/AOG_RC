@@ -1,36 +1,44 @@
 #if(CommType == 0)
-//  Comm data from arduino to AgOpenGPS
-// PGN 31100
-//	0. HeaderHi			121		0x79
-//	1. HeaderLo			124		0x7C
+//  Comm data out
+// PGN 35200
+//	0. HeaderHi			137		
+//	1. HeaderLo			128		
 //	2. rate applied	Hi	100 times actual
 //  3. rate applied Lo	100 times actual
 //	4. acc.quantity	Hi	
 //  5. acc.quantity Lo
-// total 6 bytes
+//  6. error % Hi
+//  7. error % Lo
+//  8. -
+//  9. -
+// total 10 bytes
 //
-// PGN 31200
-//	0. HeaderHi			121		0x79
-//	1. HeaderLo			224		0xE0
-//  2. Relay Hi			8-15
-//	3. Relay Lo			0-7
-//	4. SecSwOff[1] Hi	sections 8 to 15
-//	5. SecSwOff[0] Lo	sections 0 to 7
-//	6. Command		    command byte out to AOG
+// PGN 32761
+//	0. HeaderHi			127		
+//	1. HeaderLo			249		
+//	2. -
+//  3. -
+//  4. -
+//  5. Relay Hi			8-15
+//	6. Relay Lo			0-7
+//	7. SecSwOff[1] Hi	sections 8 to 15
+//	8. SecSwOff[0] Lo	sections 0 to 7
+//	9. Command		    command byte out to AOG
 //			- bit 0		- AOG section buttons auto (xxxxxxx1)
 //			- bit 1		- AOG section buttons auto off (xxxxxx1x)
 //			- bits 2,3	- change rate steps 0 (xxxx00xx) no change, 1 (xxxx01xx), 2 (xxxx10xx), 3 (xxxx11xx)
 //			- bit 4		- 0 change rate left (xxx0xxxx), 1 change rate right (xxx1xxxx)
 //			- bit 5		- 0 rate down (xx0xxxxx), 1 rate up (xx1xxxxx)
-// total 7 bytes
+// total 10 bytes
 
 void SendSerial()
 {
 	// PGN 31100
-	Serial.print(121);	// headerHi
+	Serial.print(137);	// headerHi
 	Serial.print(",");
-	Serial.print(124);	// headerLo
+	Serial.print(128);	// headerLo
 	Serial.print(",");
+
 	// rate applied, 100 X actual
 	Temp = ((int)RateAppliedUPM * 100) >> 8;
 	Serial.print(Temp);
@@ -53,32 +61,47 @@ void SendSerial()
 	Serial.print(",");
 	Serial.print(LoByte);
 
+	Serial.print(",");
+	Serial.print(0);
+	Serial.print(",");
+	Serial.print(0);
+
 	Serial.println();
 	Serial.flush();   // flush out buffer     
 
-	// PGN 31200
-	Serial.print(121);	// headerHi
+	// PGN 32761
+	Serial.print(127);	// headerHi
 	Serial.print(",");
-	Serial.print(224);	// headerLo
+	Serial.print(249);	// headerLo
 	Serial.print(",");
+
+	Serial.print(0);
+	Serial.print(",");
+	Serial.print(0);
+	Serial.print(",");
+	Serial.print(0);
+	Serial.print(",");
+
 	Serial.print(0);	// Relay Hi
 	Serial.print(",");
 	Serial.print(RelayToAOG);	// Relay Lo
 	Serial.print(",");
+
 	Serial.print(SecSwOff[1]);
 	Serial.print(",");
 	Serial.print(SecSwOff[0]);
 	Serial.print(",");
+
 	Serial.print(OutCommand);
 
 	Serial.println();
 	Serial.flush();   // flush out buffer     
 }
 
-//  Comm data from AgOpenGPs to arduino
-//  PGN 31300
-//	0. HeaderHi		122		0x7A
-//	1. HeaderLo		68		0x44
+//  Comm data in
+//  PGN 35000
+//	0. HeaderHi		136		
+//	1. HeaderLo		184		
 //	2. Relay Hi		8-15
 //  3. Relay Lo		0-7
 //  4. Rate Set Hi	100 X actual
@@ -91,9 +114,9 @@ void SendSerial()
 //			- bit 3			simulate flow
 //  total 9 bytes
 //
-//  PGN 31400
-//	0. HeaderHi		122		0x7A
-//	1. HeaderLo		168		0xA8
+//  PGN 35100
+//	0. HeaderHi		137		
+//	1. HeaderLo		28		
 //  2. KP			P control gain, 10 times actual
 //  3. KI			I control gain, 10000 times actual
 //  4. KD			D control gain, 10 times actual
@@ -104,19 +127,18 @@ void SendSerial()
 
 void ReceiveSerial()
 {
-	if (Serial.available() > 0 && !PGN31300Found && !PGN31400Found) //find the header, 
+	if (Serial.available() > 0 && !PGN35000Found && !PGN35100Found) //find the header, 
 	{
 		int temp = Serial.read();
 		header = tempHeader << 8 | temp;               //high,low bytes to make int
 		tempHeader = temp;                             //save for next time
-		PGN31300Found = (header == 31300);
-		PGN31400Found = (header == 31400);
+		PGN35000Found = (header == 35000);
+		PGN35100Found = (header == 35100);
 	}
 
-	if (Serial.available() > 6 && PGN31300Found)
+	if (Serial.available() > 6 && PGN35000Found)
 	{
-		// PGN 31300
-		PGN31300Found = false;
+		PGN35000Found = false;
 
 		RelayHi = Serial.read();
 		RelayFromAOG = Serial.read();
@@ -144,10 +166,9 @@ void ReceiveSerial()
 		AOGconnected = true;
 	}
 
-	if (Serial.available() > 5 && PGN31400Found)
+	if (Serial.available() > 5 && PGN35100Found)
 	{
-		// PGN 31400
-		PGN31400Found = false;
+		PGN35100Found = false;
 
 		// PID
 		KP = (float)Serial.read() * 0.1;
