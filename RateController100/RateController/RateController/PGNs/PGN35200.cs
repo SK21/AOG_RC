@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -12,54 +13,52 @@ namespace RateController
         //0	HeaderHi		    137
         //1	HeaderLo		    128
         //2	rate applied Hi		100 X actual
-        //3	rate applied Lo		100 X actual
-        //4	acc.Quantity Hi		
-        //5	acc.Quantity Lo		
-        //6	error Hi		
-        //7	error Lo
+        //3	rate applied Lo		
+        //4	acc.Quantity 3		100 X actual
+        //5	acc.Quantity 2
+        //6 acc.Quantity 1
 
-        private const byte cByteCount = 8;
+        private const byte cByteCount = 7;
         private const byte HeaderHi = 137;
         private const byte HeaderLo = 128;
 
-        public byte RateHi;
-        public byte RateLo;
-        public byte QuantityHi;
-        public byte QuantityLo;
-        public byte ErrorHi;
-        public byte ErrorLo;
-        private byte ErrorHiTemp;
+        private byte RateHi;
+        private byte RateLo;
+
+        private byte QuantityB3;
+        private byte QuantityB2;
+        private byte QuantityB1;
 
         private int Temp;
-        private double Err;
+        private double RateAve;
+        private double Tmp;
 
-        public double RateApplied()
+        private double NewRateWeight = 20;  // amount new UPM value changes the average (1-100);
+
+        public double UPMaverage()
+        {
+            return RateAve;
+        }
+
+        public double UPM()
         {
             Temp = RateHi << 8;
             Temp |= RateLo;
             return Temp / 100.0;
         }
 
-        public double AccumulatedQuantity()
+        private void UpdateAve()
         {
-            Temp = QuantityHi << 8;
-            Temp |= QuantityLo;
-            return Temp;
+            Tmp = (RateHi << 8 | RateLo) / 100.0;
+            RateAve = (RateAve * ((100.0 - NewRateWeight) / 100.0)) + (Tmp * (NewRateWeight / 100.0));
         }
 
-        public double PercentError()
+        public double AccumulatedQuantity()
         {
-            if ((ErrorHi & 0b10000000) == 0b10000000)
-            {
-                // negative number
-                ErrorHiTemp = (byte)(ErrorHi & 0b01111111); // remove sign bit 8
-                Err = (ErrorHiTemp << 8 | ErrorLo) * -1;
-            }
-            else
-            {
-                Err = ErrorHi << 8 | ErrorLo;
-            }
-            return Err / 100.0;
+            Temp = QuantityB3 << 16;
+            Temp |= QuantityB2 << 8;
+            Temp |= QuantityB1;
+            return Temp / 100.0;
         }
 
         public bool ParseStringData(string[] Data)
@@ -78,12 +77,11 @@ namespace RateController
                         byte.TryParse(Data[3], out RateLo);
 
                         // accumulated quantity
-                        byte.TryParse(Data[4], out QuantityHi);
-                        byte.TryParse(Data[5], out QuantityLo);
+                        byte.TryParse(Data[4], out QuantityB3);
+                        byte.TryParse(Data[5], out QuantityB2);
+                        byte.TryParse(Data[6], out QuantityB1);
 
-                        // error, 100 X actual
-                        byte.TryParse(Data[6], out ErrorHi);
-                        byte.TryParse(Data[7], out ErrorLo);
+                        UpdateAve();
 
                         Result = true;
                     }
@@ -99,10 +97,11 @@ namespace RateController
             {
                 RateHi = Data[2];
                 RateLo = Data[3];
-                QuantityHi = Data[4];
-                QuantityLo = Data[5];
-                ErrorHi = Data[6];
-                ErrorLo = Data[7];
+                QuantityB3 = Data[4];
+                QuantityB2 = Data[5];
+                QuantityB1 = Data[6];
+
+                UpdateAve();
 
                 Result = true;
             }

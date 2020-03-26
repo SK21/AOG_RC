@@ -12,7 +12,6 @@ namespace RateController
 
         private byte[] buffer = new byte[1024];
 
-        //private IPAddress epIP = IPAddress.Parse(Properties.Settings.Default.DestinationIP);
         private IPAddress epIP;
         private int cReceivePort;
         private int cSendPort;

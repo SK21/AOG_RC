@@ -90,3 +90,18 @@ C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\
 C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.application
 C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.exe
 C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.pdb
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.exe.config
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.application
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.exe
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.pdb
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.exe
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.pdb

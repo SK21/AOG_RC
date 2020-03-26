@@ -27,14 +27,14 @@ void DoSimulate()
 				if (PWMnet < 0) PWMnet = 0;
 			}
 
-			ValveAdjust = (float)(PWMnet / 255) * (float)(LOOP_TIME / ValveOpenTime) * 100.0;
+			ValveAdjust = (float)(PWMnet / 255) * (float)(RateCheckInterval / ValveOpenTime) * 100.0;
 		}
 		else
 		{
 			// manual control
 			ValveAdjust = 0;
-			if (RateUpMan) ValveAdjust = (float) (LOOP_TIME / ValveOpenTime) * 100.0 * (pwmManualRatio / 100);
-			if (RateDownMan) ValveAdjust = (float) (LOOP_TIME / ValveOpenTime) * -100.0 * (pwmManualRatio / 100);
+			if (RateUpMan) ValveAdjust = (float) (RateCheckInterval / ValveOpenTime) * 100.0 * (pwmManualRatio / 100);
+			if (RateDownMan) ValveAdjust = (float) (RateCheckInterval / ValveOpenTime) * -100.0 * (pwmManualRatio / 100);
 		}
 
 		ValveOpen += ValveAdjust;
@@ -47,9 +47,9 @@ void DoSimulate()
 		ValveOpen = 0;
 	}
 
-	UPM = MaxRate * ValveOpen / 100;
+	UPM = MaxRate * ValveOpen / 100.0;
 
-	Pulses = (UPM * MeterCal) / 60000;  // (Units/min * pulses/Unit) = pulses/min / 60000 = pulses/millisecond
+	Pulses = (UPM * MeterCal) / 60000.0;  // (Units/min * pulses/Unit) = pulses/min / 60000 = pulses/millisecond
 	if (Pulses == 0)
 	{
 		pulseCount = 0;
@@ -60,7 +60,7 @@ void DoSimulate()
 		PulseTime = 1.0 / Pulses;	// milliseconds for each pulse
 
 		PulseTime = (random(ErrorRange * 2.0) / 100.0) * PulseTime + ((100.0 - ErrorRange) / 100.0) * PulseTime;
-		pulseCount = LOOP_TIME / PulseTime;	// milliseconds * pulses/millsecond = pulses
+		pulseCount = RateCheckInterval / PulseTime;	// milliseconds * pulses/millsecond = pulses
 
 		// pulse duration is the total time for all pulses in the loop
 		pulseDuration = PulseTime * pulseCount;

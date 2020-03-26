@@ -9,22 +9,15 @@ void FlowPinISR()
 
 float CalRateError()
 {
-	//reset ISR
+	//accumulated counts from this cycle
 	countsThisLoop = pulseCount;
 	pulseCount = 0;
-	DurationThisLoop = pulseDuration;
-	pulseDuration = 0;
-
-	//// adjust for zero flow
-	//countsThisLoop = countsThisLoop - 100;
-	//if (countsThisLoop < 0) countsThisLoop = 0;
-
-	//accumulated counts from this cycle
 	accumulatedCounts += countsThisLoop;
 
-	if (countsThisLoop && MeterCal)	// Is there flow?
+	if (countsThisLoop != 0 && MeterCal != 0)	// Is there flow?
 	{
-		pulseAverage = DurationThisLoop / countsThisLoop;
+		pulseAverage = pulseDuration / countsThisLoop;
+		pulseDuration = 0;
 
 		//what is current flowrate from meter, Units/minute
 		FlowRate = (float)pulseAverage * 0.001;	// change from milliseconds/pulse to seconds/pulse
@@ -36,10 +29,11 @@ float CalRateError()
 		Pc = P + varProcess;
 		G = Pc / (Pc + varRate);
 		P = (1 - G) * Pc;
-		Xp = RateAppliedUPM;
+		Xp = FlowRateFiltered;
 		Zp = Xp;
-		RateAppliedUPM = G * (FlowRate - Zp) + Xp;
-		return rateSetPoint - RateAppliedUPM;
+		FlowRateFiltered = G * (FlowRate - Zp) + Xp;
+
+		return rateSetPoint - FlowRateFiltered;
 	}
 	else
 	{

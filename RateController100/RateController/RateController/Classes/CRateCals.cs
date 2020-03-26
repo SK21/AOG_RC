@@ -26,17 +26,12 @@ namespace RateController
         string[] QuantityDescriptions = new string[] { "Imp. Gallons", "US Gallons", "Lbs", "Lbs NH3", "Litres", "Kgs", "Kgs NH3" };
         string[] CoverageDescriptions = new string[] { "Acre", "Hectare", "Minute", "Hour" };
 
-        private double UPM = 0; // units per minute
         private double TankRemaining = 0;
-        private CAveraging UnitsPerMinute;
-        private CAveraging AppRate;
-
         private DateTime StartTime;
         private double CurrentMinutes;
         private DateTime LastTime;
 
         private double QuantityApplied = 0;
-        private double AccQuantity = 0;
         private double CurrentQuantity = 0;
         private double LastQuantity = 0;
         public bool EraseApplied = false;
@@ -64,7 +59,6 @@ namespace RateController
         private DateTime AogReceiveTime;
 
         private bool PauseArea = false;
-        private bool PauseQuantity = false;
 
         public CRateCals(FormRateControl CallingForm)
         {
@@ -76,9 +70,6 @@ namespace RateController
             ArdSend35100 = new PGN35100(this);
 
             LoadSettings();
-
-            UnitsPerMinute = new CAveraging(4);
-            AppRate = new CAveraging(4);
         }
 
         public bool SimulateFlow { get { return SimFlow; } set { SimFlow = value; } }
@@ -125,7 +116,7 @@ namespace RateController
                 // work rate
                 CurrentWidth = AogRec35400.WorkingWidth();
 
-                HectaresPerMinute = CurrentWidth * AogRec35400.Speed() * .1 / 60;
+                HectaresPerMinute = CurrentWidth * AogRec35400.Speed() * 0.1 / 60.0;
 
                 //coverage
                 if (HectaresPerMinute > 0)    // Is application on?
@@ -157,7 +148,6 @@ namespace RateController
                 // connection lost
 
                 PauseArea = true;
-                PauseQuantity = true;
             }
 
             if (ArduinoConnected) RateSet = Switches32761.NewRate(RateSet);
@@ -171,34 +161,37 @@ namespace RateController
 
             // send comm to AOG
             Switches32761.Send();
-
         }
 
-        private void UpdateQuantity()
+        private void UpdateQuantity(double AccQuantity)
         {
-            CurrentQuantity = 0;
             if (AccQuantity > LastQuantity)
             {
-                if (PauseQuantity)
-                {
-                    // exclude quantity while paused
-                    LastQuantity = AccQuantity;
-                    PauseQuantity = false;
-                }
                 CurrentQuantity = AccQuantity - LastQuantity;
+                LastQuantity = AccQuantity;
+
+                // tank remaining
+                TankRemaining -= CurrentQuantity;
+
+                // quantity applied
+                QuantityApplied += CurrentQuantity;
             }
-            LastQuantity = AccQuantity;
+            else
+            {
+                // reset
+                LastQuantity = AccQuantity;
+            }
+        }
 
-            // tank remaining
-            TankRemaining -= CurrentQuantity;
-
-            // quantity applied
-            QuantityApplied += CurrentQuantity;
+        public void ResetApplied()
+        {
+            QuantityApplied = 0;
+            EraseApplied = true;
         }
 
         public double UPMsetting() // returns units per minute set rate
         {
-            double V;
+            double V = 0;
             switch (CoverageUnits)
             {
                 case 0:
@@ -207,7 +200,7 @@ namespace RateController
                     break;
                 case 1:
                     // hectares
-                    V = RateSet * HectaresPerMinute;
+                    V = RateSet * HectaresPerMinute ;
                     break;
                 case 2:
                     // minutes
@@ -219,6 +212,38 @@ namespace RateController
                     break;
             }
             return V;
+        }
+
+        public double RateApplied()
+        {
+            if (HectaresPerMinute > 0)
+            {
+                double V = 0;
+                switch (CoverageUnits)
+                {
+                    case 0:
+                        // acres
+                        V = ArdRec35200.UPMaverage() / (HectaresPerMinute * 2.47);
+                        break;
+                    case 1:
+                        // hectares
+                        V = ArdRec35200.UPMaverage() / HectaresPerMinute;
+                        break;
+                    case 2:
+                        // minutes
+                        V = ArdRec35200.UPMaverage();
+                        break;
+                    default:
+                        // hours
+                        V = ArdRec35200.UPMaverage() * 60;
+                        break;
+                }
+                return V;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public string Units()
@@ -239,17 +264,11 @@ namespace RateController
             TankRemaining = TankSize;
         }
 
-        public void ResetApplied()
-        {
-            QuantityApplied = 0;
-            EraseApplied = true;
-        }
-
         public string CurrentRate()
         {
             if (ArduinoConnected & AogConnected & HectaresPerMinute  > 0)
             {
-                return AppRate.Average().ToString("N1");
+                return RateApplied().ToString("N1");
             }
             else
             {
@@ -287,13 +306,7 @@ namespace RateController
             string[] words = sentence.Split(',');
             if (ArdRec35200.ParseStringData(words))
             {
-                UPM = ArdRec35200.RateApplied();
-                UnitsPerMinute.AddDataPoint(UPM);
-                AccQuantity = ArdRec35200.AccumulatedQuantity();
-                UpdateQuantity();
-
-                double NP = (1.0 - ArdRec35200.PercentError() / 100) * RateSet;
-                AppRate.AddDataPoint(NP);
+                UpdateQuantity(ArdRec35200.AccumulatedQuantity());
             }
 
             if (Switches32761.ParseStringData(words))
@@ -306,13 +319,7 @@ namespace RateController
         {
             if (ArdRec35200.ParseByteData(data))
             {
-                UPM = ArdRec35200.RateApplied();
-                UnitsPerMinute.AddDataPoint(UPM);
-                AccQuantity = ArdRec35200.AccumulatedQuantity();
-                UpdateQuantity();
-
-                double NP = (1.0 - ArdRec35200.PercentError() / 100) * RateSet;
-                AppRate.AddDataPoint(NP);
+                UpdateQuantity(ArdRec35200.AccumulatedQuantity());
             }
 
             if (Switches32761.ParseByteData(data))

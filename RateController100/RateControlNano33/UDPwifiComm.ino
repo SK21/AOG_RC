@@ -7,21 +7,19 @@ void SendUDPWifi()
 	toSend[1] = 128;
 
 	// rate applied, 100 X actual
-	Temp = ((int)RateAppliedUPM * 100) >> 8;
+	Temp = ((int)FlowRateFiltered * 100) >> 8;
 	toSend[2] = Temp;
-	Temp = (RateAppliedUPM * 100);
+	Temp = (FlowRateFiltered * 100);
 	toSend[3] = Temp;
 
-	// accumulated quantity
-	Temp = ((int)((float)accumulatedCounts / (float)MeterCal)) >> 8;
+	// accumulated quantity, 3 bytes
+	int Units = accumulatedCounts * 100 / MeterCal;
+	Temp = Units >> 16;
 	toSend[4] = Temp;
-	Temp = ((int)((float)accumulatedCounts / (float)MeterCal));
+	Temp = Units >> 8;
 	toSend[5] = Temp;
-
-	// rate error %
-	ConvertToSignedBytes(PercentError * 100);
-	toSend[6] = HiByte;
-	toSend[7] = LoByte;
+	Temp = Units;
+	toSend[6] = Temp;
 
 	//off to AOG
 	UDPout.beginPacket(DestinationIP, DestinationPort);

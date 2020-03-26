@@ -40,27 +40,26 @@ void SendSerial()
 	Serial.print(",");
 
 	// rate applied, 100 X actual
-	Temp = ((int)RateAppliedUPM * 100) >> 8;
+	Temp = ((int)FlowRateFiltered * 100) >> 8;
 	Serial.print(Temp);
 	Serial.print(",");
-	Temp = (RateAppliedUPM * 100);
-	Serial.print(Temp);
-	Serial.print(",");
-
-	// accumulated quantiy
-	Temp = ((int)((float)accumulatedCounts / (float)MeterCal)) >> 8;
-	Serial.print(Temp);
-	Serial.print(",");
-	Temp = ((int)((float)accumulatedCounts / (float)MeterCal));
+	Temp = (FlowRateFiltered * 100);
 	Serial.print(Temp);
 	Serial.print(",");
 
-	// rate error %
-	ConvertToSignedBytes(PercentError * 100);
-	Serial.print(HiByte);
+	// accumulated quantity, 3 bytes
+	int Units = accumulatedCounts * 100 / MeterCal;
+	Temp = Units >> 16;
+	Serial.print(Temp);
 	Serial.print(",");
-	Serial.print(LoByte);
+	Temp = Units >> 8;
+	Serial.print(Temp);
+	Serial.print(",");
+	Temp = Units;
+	Serial.print(Temp);
 
+	Serial.print(",");
+	Serial.print(0);
 	Serial.print(",");
 	Serial.print(0);
 	Serial.print(",");

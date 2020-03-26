@@ -61,7 +61,7 @@ float G = 0.0;
 float P = 1.0;
 float Xp = 0.0;
 float Zp = 0.0;
-float RateAppliedUPM = 0.0; //the filtered flowrate
+float FlowRateFiltered = 0.0; //the filtered flowrate
 const float varRate = 100; // variance, smaller, more filtering
 const float varProcess = 10;
 
@@ -83,7 +83,6 @@ float FlowRate = 0;
 float pulseAverage = 0;
 unsigned long accumulatedCounts = 0;
 float countsThisLoop = 0;
-unsigned long DurationThisLoop = 0;
 
 // AOG section buttons
 byte SecSwOff[2] = { 0, 0 }; // AOG section button off if set
@@ -145,6 +144,9 @@ bool PGN35100Found;
 int tempHeader;
 int header;
 
+unsigned long RateCheckInterval = 1000;
+unsigned long RateCheckLast = 0;
+
 #if (CommType == 2)
 // wifi UDP
 int ConnectionStatus = WL_IDLE_STATUS;
@@ -170,17 +172,13 @@ unsigned long ReconnectCount = 0;
 
 #endif
 
-float PercentError = 0.0;
-byte HiByte;
-byte LoByte;
-
 void setup()
 {
 	Serial.begin(38400);
 
 	delay(5000);
 	Serial.println();
-	Serial.println("Rate Control Nano33 RateController100  :  23/Mar/2020");
+	Serial.println("Rate Control Nano33 RateController100  :  25/Mar/2020");
 	Serial.println();
 
 	pinMode(Relay1, OUTPUT);
@@ -259,6 +257,16 @@ void loop()
 
 	SetRelays();
 
+	if (millis() - RateCheckLast > RateCheckInterval)
+	{
+		RateCheckLast = millis();
+		if (RelaysOn)
+		{
+			if (SimulateFlow) DoSimulate();
+			rateError = CalRateError();
+		}
+	}
+
 	currentTime = millis();
 	if (currentTime - lastTime >= LOOP_TIME)
 	{
@@ -275,16 +283,9 @@ void loop()
 			AOGconnected = false;
 		}
 
-		if (SimulateFlow) DoSimulate();
-
 		if (RelaysOn)
 		{
-			rateError = CalRateError();
-
 			pwmSetting = DoPID(rateError, rateSetPoint, LOOP_TIME, MinPWMvalue, MaxPWMvalue, KP, KI, KD, DeadBand);
-
-			PercentError = 0.0;
-			if (rateSetPoint > 0) PercentError = (rateError / rateSetPoint) * 100.0;
 		}
 
 		motorDrive();
@@ -300,15 +301,4 @@ void loop()
 #endif
 }
 
-void ConvertToSignedBytes(int Num)	
-{
-	// converts a negative integer to positive and sets bit 8 on the HiByte
-	// max # size is 32767
-	bool Neg = (Num < 0);
-	Num = abs(Num);
-	if (Num > 32767) Num = 32767;
-	HiByte = Num >> 8;
-	LoByte = Num;
-	if (Neg) HiByte = HiByte | B10000000;
-}
 

@@ -51,10 +51,9 @@
             // SetRate
             // 
             this.SetRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SetRate.Location = new System.Drawing.Point(221, 44);
-            this.SetRate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.SetRate.Location = new System.Drawing.Point(166, 36);
             this.SetRate.Name = "SetRate";
-            this.SetRate.Size = new System.Drawing.Size(136, 28);
+            this.SetRate.Size = new System.Drawing.Size(102, 23);
             this.SetRate.TabIndex = 68;
             this.SetRate.Text = "1,800.50";
             this.SetRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -62,10 +61,9 @@
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(12, 78);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(9, 63);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(160, 28);
+            this.label3.Size = new System.Drawing.Size(120, 23);
             this.label3.TabIndex = 67;
             this.label3.Text = "Current rate";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -73,10 +71,9 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 44);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(9, 36);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(217, 28);
+            this.label1.Size = new System.Drawing.Size(163, 23);
             this.label1.TabIndex = 66;
             this.label1.Text = "Auto Rate Setting";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -84,10 +81,9 @@
             // TankRemain
             // 
             this.TankRemain.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankRemain.Location = new System.Drawing.Point(221, 144);
-            this.TankRemain.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.TankRemain.Location = new System.Drawing.Point(166, 117);
             this.TankRemain.Name = "TankRemain";
-            this.TankRemain.Size = new System.Drawing.Size(136, 28);
+            this.TankRemain.Size = new System.Drawing.Size(102, 23);
             this.TankRemain.TabIndex = 65;
             this.TankRemain.Text = "0";
             this.TankRemain.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -95,10 +91,9 @@
             // lblUnits
             // 
             this.lblUnits.Font = new System.Drawing.Font("Tahoma", 13.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUnits.Location = new System.Drawing.Point(12, 11);
-            this.lblUnits.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblUnits.Location = new System.Drawing.Point(9, 9);
             this.lblUnits.Name = "lblUnits";
-            this.lblUnits.Size = new System.Drawing.Size(345, 28);
+            this.lblUnits.Size = new System.Drawing.Size(259, 23);
             this.lblUnits.TabIndex = 64;
             this.lblUnits.Text = "Imp. Gallons/Hectare";
             this.lblUnits.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -106,10 +101,9 @@
             // VolApplied
             // 
             this.VolApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolApplied.Location = new System.Drawing.Point(221, 177);
-            this.VolApplied.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.VolApplied.Location = new System.Drawing.Point(166, 144);
             this.VolApplied.Name = "VolApplied";
-            this.VolApplied.Size = new System.Drawing.Size(136, 28);
+            this.VolApplied.Size = new System.Drawing.Size(102, 23);
             this.VolApplied.TabIndex = 60;
             this.VolApplied.Text = "0";
             this.VolApplied.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -118,20 +112,18 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 177);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(9, 144);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(186, 29);
+            this.label2.Size = new System.Drawing.Size(148, 23);
             this.label2.TabIndex = 63;
             this.label2.Text = "Quantity Applied";
             // 
             // AreaDone
             // 
             this.AreaDone.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AreaDone.Location = new System.Drawing.Point(221, 111);
-            this.AreaDone.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.AreaDone.Location = new System.Drawing.Point(166, 90);
             this.AreaDone.Name = "AreaDone";
-            this.AreaDone.Size = new System.Drawing.Size(136, 28);
+            this.AreaDone.Size = new System.Drawing.Size(102, 23);
             this.AreaDone.TabIndex = 59;
             this.AreaDone.Text = "0";
             this.AreaDone.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -139,10 +131,9 @@
             // CurRate
             // 
             this.CurRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurRate.Location = new System.Drawing.Point(221, 78);
-            this.CurRate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.CurRate.Location = new System.Drawing.Point(166, 63);
             this.CurRate.Name = "CurRate";
-            this.CurRate.Size = new System.Drawing.Size(136, 28);
+            this.CurRate.Size = new System.Drawing.Size(102, 23);
             this.CurRate.TabIndex = 58;
             this.CurRate.Text = "1,800.50";
             this.CurRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -151,10 +142,9 @@
             // 
             this.label36.AutoSize = true;
             this.label36.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label36.Location = new System.Drawing.Point(12, 111);
-            this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label36.Location = new System.Drawing.Point(9, 90);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(113, 29);
+            this.label36.Size = new System.Drawing.Size(88, 23);
             this.label36.TabIndex = 62;
             this.label36.Text = "Coverage";
             // 
@@ -162,10 +152,9 @@
             // 
             this.label34.AutoSize = true;
             this.label34.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label34.Location = new System.Drawing.Point(12, 144);
-            this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label34.Location = new System.Drawing.Point(9, 117);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(183, 29);
+            this.label34.Size = new System.Drawing.Size(146, 23);
             this.label34.TabIndex = 61;
             this.label34.Text = "Tank Remaining";
             // 
@@ -173,10 +162,9 @@
             // 
             this.button3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
-            this.button3.Location = new System.Drawing.Point(12, 215);
-            this.button3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button3.Location = new System.Drawing.Point(9, 175);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(160, 89);
+            this.button3.Size = new System.Drawing.Size(120, 72);
             this.button3.TabIndex = 69;
             this.button3.Text = "Settings";
             this.button3.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -189,10 +177,9 @@
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(197, 215);
-            this.bntOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bntOK.Location = new System.Drawing.Point(148, 175);
             this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(160, 89);
+            this.bntOK.Size = new System.Drawing.Size(120, 72);
             this.bntOK.TabIndex = 70;
             this.bntOK.Text = "Close";
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -204,10 +191,9 @@
             this.lbArduinoConnected.BackColor = System.Drawing.Color.Red;
             this.lbArduinoConnected.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbArduinoConnected.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbArduinoConnected.Location = new System.Drawing.Point(12, 319);
-            this.lbArduinoConnected.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbArduinoConnected.Location = new System.Drawing.Point(9, 259);
             this.lbArduinoConnected.Name = "lbArduinoConnected";
-            this.lbArduinoConnected.Size = new System.Drawing.Size(345, 28);
+            this.lbArduinoConnected.Size = new System.Drawing.Size(259, 23);
             this.lbArduinoConnected.TabIndex = 71;
             this.lbArduinoConnected.Text = "Controller Disconnected";
             this.lbArduinoConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -223,19 +209,18 @@
             this.lbAogConnected.BackColor = System.Drawing.Color.Red;
             this.lbAogConnected.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbAogConnected.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAogConnected.Location = new System.Drawing.Point(12, 359);
-            this.lbAogConnected.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbAogConnected.Location = new System.Drawing.Point(9, 292);
             this.lbAogConnected.Name = "lbAogConnected";
-            this.lbAogConnected.Size = new System.Drawing.Size(345, 28);
+            this.lbAogConnected.Size = new System.Drawing.Size(259, 23);
             this.lbAogConnected.TabIndex = 72;
             this.lbAogConnected.Text = "AOG Disconnected";
             this.lbAogConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormRateControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(373, 402);
+            this.ClientSize = new System.Drawing.Size(279, 324);
             this.Controls.Add(this.lbAogConnected);
             this.Controls.Add(this.lbArduinoConnected);
             this.Controls.Add(this.bntOK);
@@ -254,7 +239,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "FormRateControl";
             this.Text = "RateControl";
