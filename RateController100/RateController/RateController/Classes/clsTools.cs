@@ -10,7 +10,7 @@ namespace RateController
     public class clsTools
     {
         private string cAppName = "RateController";
-        private string cVersionDate = "25-Mar-2020";
+        private string cVersionDate = "29-Mar-2020";
         private FormRateControl mf;
         private string SettingsDir;
 
@@ -69,7 +69,7 @@ namespace RateController
             {
                 string FileName = SettingsDir + "\\Activity Log.txt";
                 TrimFile(FileName);
-                File.AppendAllText(FileName, DateTime.Now.ToString() + "  -  " + Message + "\r\n\r\n");
+                File.AppendAllText(FileName, DateTime.Now.ToString() + "  -  " + Message + "\r\n");
             }
             catch (Exception ex)
             {
@@ -85,9 +85,8 @@ namespace RateController
                 TrimFile(FileName);
                 File.AppendAllText(FileName, DateTime.Now.ToString() + "  -  " + strErrorText + "\r\n\r\n");
             }
-            catch (Exception )
+            catch (Exception)
             {
-
             }
         }
 
@@ -99,13 +98,12 @@ namespace RateController
                 SettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\" + cAppName + "\\Settings";
                 if (!Directory.Exists(SettingsDir)) Directory.CreateDirectory(SettingsDir);
             }
-            catch (Exception )
+            catch (Exception)
             {
-                
             }
         }
 
-        private void TrimFile(string FileName, int MaxSize = 25000)
+        private void TrimFile(string FileName, int MaxSize = 50000)
         {
             try
             {
@@ -125,10 +123,51 @@ namespace RateController
                     }
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
-                
             }
         }
+
+        public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
+        {
+            // useage:
+            // point the Groupbox paint event to this sub:
+            //private void GroupBoxPaint(object sender, PaintEventArgs e)
+            //{
+            //    GroupBox box = sender as GroupBox;
+            //    mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+            //}
+
+            if (box != null)
+            {
+                Brush textBrush = new SolidBrush(textColor);
+                Brush borderBrush = new SolidBrush(borderColor);
+                Pen borderPen = new Pen(borderBrush);
+                SizeF strSize = g.MeasureString(box.Text, box.Font);
+                Rectangle rect = new Rectangle(box.ClientRectangle.X,
+                                               box.ClientRectangle.Y + (int)(strSize.Height / 2),
+                                               box.ClientRectangle.Width - 1,
+                                               box.ClientRectangle.Height - (int)(strSize.Height / 2) - 1);
+
+                // Clear text and border
+                g.Clear(BackColor);
+
+                // Draw text
+                g.DrawString(box.Text, box.Font, textBrush, box.Padding.Left, 0);
+
+                // Drawing Border
+                //Left
+                g.DrawLine(borderPen, rect.Location, new Point(rect.X, rect.Y + rect.Height));
+                //Right
+                g.DrawLine(borderPen, new Point(rect.X + rect.Width, rect.Y), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                //Bottom
+                g.DrawLine(borderPen, new Point(rect.X, rect.Y + rect.Height), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                //Top1
+                g.DrawLine(borderPen, new Point(rect.X, rect.Y), new Point(rect.X + box.Padding.Left, rect.Y));
+                //Top2
+                g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + (int)(strSize.Width), rect.Y), new Point(rect.X + rect.Width, rect.Y));
+            }
+        }
+
     }
 }

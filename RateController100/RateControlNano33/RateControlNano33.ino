@@ -1,22 +1,19 @@
-// #includes - need to be before first line of actual code so that all necessary prototypes are added
-#include <SPI.h>
-#include <WiFiNINA.h>
-#include <WiFiUdp.h>
 
+// works with Nano on USB,  PCB 3.1
 // works with Nano33 on wifi or USB,  PCB 3.1
-// works with Nano on USB,  PCB 3.1 or 4
 
 // LED on pin 13 may need to be disconnected / burnt with soldering iron
 
 // user settings ****************************
-#define CommType 0				// 0 Serial/USB, 2 UDP wifi
+#define BoardType 1		// 0 Nano, 1 Nano33
+#define CommType 0		// 0 Serial/USB, 2 UDP wifi (only Nano33)
 #define WifiSSID "Tractor"
 #define WifiPassword "450450450"
 
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
 byte FlowOn = LOW;	// flowmeter pin
 bool UseSwitches = true;	// manual switches
-float MeterCal = 188;	// pulses per Unit 
+float MeterCal = 17;	// pulses per Unit 
 byte ValveType = 1;	// 0 standard, 1 Fast Close
 
 bool SimulateFlow = true;	
@@ -25,6 +22,12 @@ byte MaxPWMvalue = 255;
 
 #define UseSwitchedPowerPin 0	// 0 use Relay8 as a normal relay, 1 use Relay8 as a switched power pin - turns on when sketch starts
 // ******************************************
+
+#if (BoardType == 1)
+#include <SPI.h>
+#include <WiFiNINA.h>
+#include <WiFiUdp.h>
+#endif
 
 #define Relay1 3
 #define Relay2 4
@@ -178,7 +181,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("Rate Control Nano33 RateController100  :  25/Mar/2020");
+	Serial.println("Rate Control Nano33 for RateController100  :  29/Mar/2020");
 	Serial.println();
 
 	pinMode(Relay1, OUTPUT);

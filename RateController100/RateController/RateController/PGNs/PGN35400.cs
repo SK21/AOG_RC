@@ -13,9 +13,9 @@ namespace RateController
         //1	header 1        72
         //2	workedAreaTotal Hi      hectares X 100
         //3	workedAreaTotal Lo
-        //4	ToolWorkingWidth Hi	- only sections that are on, actual X 100
+        //4	ToolWorkingWidth Hi     only sections that are on, actual X 100
         //5	ToolWorkingWidth Lo
-        //6	Speed Hi    actual X 100
+        //6	Speed Hi                actual X 100
         //7	Speed Lo
         //8	mdSectionControlByteHi
         //9	mdSectionControlByteLo

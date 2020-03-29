@@ -35,6 +35,15 @@ namespace RateController
 
         private double NewRateWeight = 20;  // amount new UPM value changes the average (1-100);
 
+        private double cPWMsetting;
+        private byte pwmHI;
+        private byte pwmLo;
+
+        public double PWMsetting()
+        {
+            return cPWMsetting;
+        }
+
         public double UPMaverage()
         {
             return RateAve;
@@ -83,6 +92,11 @@ namespace RateController
 
                         UpdateAve();
 
+                        // pwmSetting
+                        byte.TryParse(Data[7], out pwmHI);
+                        byte.TryParse(Data[8], out pwmLo);
+                        cPWMsetting = 300.0 - ((pwmHI << 8 | pwmLo) / 10.0);
+
                         Result = true;
                     }
                 }
@@ -97,11 +111,16 @@ namespace RateController
             {
                 RateHi = Data[2];
                 RateLo = Data[3];
+
                 QuantityB3 = Data[4];
                 QuantityB2 = Data[5];
                 QuantityB1 = Data[6];
 
                 UpdateAve();
+
+                pwmHI = Data[7];
+                pwmLo = Data[8];
+                cPWMsetting = 300.0 - ((pwmHI << 8 | pwmLo) / 10.0);
 
                 Result = true;
             }

@@ -21,57 +21,71 @@ namespace RateController
 
         public void CloseRCport()
         {
-            if (RCport.IsOpen)
+            try
             {
-                RCport.DataReceived -= RCport_DataReceived;
-                try
+                if (RCport.IsOpen)
                 {
-                    RCport.Close();
-                }
-                catch (Exception e)
-                {
-                    mf.Tls.TimedMessageBox("Could not close serial port.", e.Message, 3000, true);
-                }
+                    RCport.DataReceived -= RCport_DataReceived;
+                    try
+                    {
+                        RCport.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        mf.Tls.TimedMessageBox("Could not close serial port.", e.Message, 3000, true);
+                    }
 
-                Properties.Settings.Default.RCportSuccessful = false;
-                Properties.Settings.Default.Save();
+                    Properties.Settings.Default.RCportSuccessful = false;
+                    Properties.Settings.Default.Save();
 
-                RCport.Dispose();
+                    RCport.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("SerialComm/CloseRCport: " + ex.Message);
             }
         }
 
         public void OpenRCport()
         {
-            if (!RCport.IsOpen)
-            {
-                RCport.PortName = RCportName;
-                RCport.BaudRate = RCportBaud;
-                RCport.DataReceived += RCport_DataReceived;
-                RCport.DtrEnable = true;
-                RCport.RtsEnable = true;
-            }
-
             try
             {
-                RCport.Open();
+                if (!RCport.IsOpen)
+                {
+                    RCport.PortName = RCportName;
+                    RCport.BaudRate = RCportBaud;
+                    RCport.DataReceived += RCport_DataReceived;
+                    RCport.DtrEnable = true;
+                    RCport.RtsEnable = true;
+
+                    try
+                    {
+                        RCport.Open();
+                    }
+                    catch (Exception e)
+                    {
+                        mf.Tls.TimedMessageBox("Could not open serial port.", e.Message, 3000, true);
+
+                        Properties.Settings.Default.RCportSuccessful = false;
+                        Properties.Settings.Default.Save();
+                    }
+                }
+
+                if (RCport.IsOpen)
+                {
+                    RCport.DiscardOutBuffer();
+                    RCport.DiscardInBuffer();
+
+                    Properties.Settings.Default.RCportName = RCportName;
+                    Properties.Settings.Default.RCportSuccessful = true;
+                    Properties.Settings.Default.RCportBaud = RCportBaud;
+                    Properties.Settings.Default.Save();
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                mf.Tls.TimedMessageBox("Could not open serial port.", e.Message, 3000, true);
-
-                Properties.Settings.Default.RCportSuccessful = false;
-                Properties.Settings.Default.Save();
-            }
-
-            if (RCport.IsOpen)
-            {
-                RCport.DiscardOutBuffer();
-                RCport.DiscardInBuffer();
-
-                Properties.Settings.Default.RCportName = RCportName;
-                Properties.Settings.Default.RCportSuccessful = true;
-                Properties.Settings.Default.RCportBaud = RCportBaud;
-                Properties.Settings.Default.Save();
+                mf.Tls.WriteErrorLog("SerialComm/OpenRCport: " + ex.Message);
             }
         }
 
@@ -84,8 +98,9 @@ namespace RateController
                 {
                     RCport.Write(Data, 0, Data.Length);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    mf.Tls.WriteErrorLog("SerialComm/SendtoRC: " + ex.Message);
                 }
             }
         }
@@ -110,8 +125,9 @@ namespace RateController
                     mf.BeginInvoke(new NewDataDelegate(HandleRCdata), sentence);
                     if (RCport.BytesToRead > 32) RCport.DiscardInBuffer();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    mf.Tls.WriteErrorLog("SerialComm/RCport_DataReceived: " + ex.Message);
                 }
             }
         }

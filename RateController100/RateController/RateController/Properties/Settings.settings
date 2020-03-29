@@ -26,9 +26,6 @@
     <Setting Name="ValveType" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="SimulateFlow" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="KP" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
@@ -85,6 +82,9 @@
     </Setting>
     <Setting Name="NightColour" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">60, 60, 60</Value>
+    </Setting>
+    <Setting Name="SimulateType" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

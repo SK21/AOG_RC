@@ -11,6 +11,8 @@ namespace RateController
         private bool Initializing = false;
         private byte tempB = 0;
         private double tempD = 0;
+        private SimType SelectedSimulation;
+        private int Result;
 
         public FormRateSettings(FormRateControl CallingForm)
         {
@@ -37,6 +39,26 @@ namespace RateController
             {
                 // save changes
                 SaveSettings();
+
+                switch (SelectedSimulation)
+                {
+                    case SimType.VirtualNano:
+                        mf.Text = "Rate Controller (V)";
+                        mf.SER.CloseRCport();
+                        SetRCbuttons();
+                        break;
+                    case SimType.RealNano:
+                        mf.Text = "Rate Controller (R)";
+                        mf.SER.OpenRCport();
+                        SetRCbuttons();
+                        break;
+                    default:
+                        mf.Text = "Rate Controller";
+                        mf.SER.OpenRCport();
+                        SetRCbuttons();
+                        break;
+                }
+
                 SetButtons(false);
                 Initializing = true;
                 LoadSettings();
@@ -192,13 +214,26 @@ namespace RateController
             TankSize.Text = mf.RC.TankSize.ToString("N0");
             ValveType.SelectedIndex = mf.RC.ValveType;
             TankRemain.Text = mf.RC.CurrentTankRemaining();
-            checkBox1.Checked = mf.RC.SimulateFlow;
             tbKP.Text = (mf.RC.KP).ToString("N0");
             tbKI.Text = (mf.RC.KI).ToString("N0");
             tbKD.Text = (mf.RC.KD).ToString("N0");
             tbDeadband.Text = (mf.RC.DeadBand).ToString("N0");
             tbMinPWM.Text = (mf.RC.MinPWM).ToString("N0");
             tbMaxPWM.Text = (mf.RC.MaxPWM).ToString("N0");
+
+            SelectedSimulation = mf.RC.SimulationType;
+            switch (SelectedSimulation)
+            {
+                case SimType.VirtualNano:
+                    rbNano.Checked = true;
+                    break;
+                case SimType.RealNano:
+                    rbFlow.Checked = true;
+                    break;
+                default:
+                    rbNone.Checked = true;
+                    break;
+            }
         }
 
         private void RateSet_TextChanged(object sender, EventArgs e)
@@ -238,8 +273,6 @@ namespace RateController
             double.TryParse(TankRemain.Text, out tempD);
             mf.RC.SetTankRemaining(tempD);
 
-            mf.RC.SimulateFlow = checkBox1.Checked;
-
             byte.TryParse(tbKP.Text, out tempB);
             mf.RC.KP = tempB;
 
@@ -258,6 +291,9 @@ namespace RateController
 
             byte.TryParse(tbMaxPWM.Text, out tempB);
             mf.RC.MaxPWM = tempB;
+
+            mf.RC.SimulationType = SelectedSimulation;
+
             mf.RC.SaveSettings();
         }
 
@@ -397,6 +433,26 @@ namespace RateController
         private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void RadioButtonChanged(object sender,EventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+            if(rb!=null)
+            {
+                if(rb.Checked)
+                {
+                    int.TryParse(rb.Tag.ToString(), out Result);
+                    if (SelectedSimulation != (SimType)Result) SetButtons(true);
+                    SelectedSimulation = (SimType)Result;
+                }
+            }
+        }
+
+        private void GroupBoxPaint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
     }
 }

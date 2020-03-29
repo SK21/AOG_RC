@@ -97,10 +97,17 @@ namespace RateController
                     break;
             }
 
-            if (RC.SimFlow) Command |= 0b00001000; else Command &= 0b11110111;
+            if (RC.SimulationType!=SimType.None) Command |= 0b00001000; else Command &= 0b11110111;
 
-            RC.mf.SER.SendtoRC(Data());
-            RC.mf.UDPnetwork.SendUDPMessage(Data());
+            if (RC.SimulationType==SimType.VirtualNano)
+            {
+                RC.Nano.ReceiveSerial(Data());
+            }
+            else
+            {
+                RC.mf.SER.SendtoRC(Data());
+                RC.mf.UDPnetwork.SendUDPMessage(Data());
+            }
         }
     }
 }

@@ -8,10 +8,17 @@ float ErrorRange = 8;  // % random error in flow rate, above and below target
 float PulseTime = 0.0;
 float PWMnet = 0;	// pwmSetting - minPWM to account for motor lag
 
+unsigned long SimulateInterval;
+unsigned long SimulateTimeLast;
+
 void DoSimulate()
 {
-	if (RelaysOn)	
+	SimulateInterval = millis() - SimulateTimeLast;
+	SimulateTimeLast = millis();
+
+	if (RelaysOn)
 	{
+
 		// relays on
 		if (AutoOn)
 		{
@@ -27,14 +34,14 @@ void DoSimulate()
 				if (PWMnet < 0) PWMnet = 0;
 			}
 
-			ValveAdjust = (float)(PWMnet / 255) * (float)(RateCheckInterval / ValveOpenTime) * 100.0;
+			ValveAdjust = (float)(PWMnet / 255) * (float)(SimulateInterval / ValveOpenTime) * 100.0;
 		}
 		else
 		{
 			// manual control
 			ValveAdjust = 0;
-			if (RateUpMan) ValveAdjust = (float) (RateCheckInterval / ValveOpenTime) * 100.0 * (pwmManualRatio / 100);
-			if (RateDownMan) ValveAdjust = (float) (RateCheckInterval / ValveOpenTime) * -100.0 * (pwmManualRatio / 100);
+			if (RateUpMan) ValveAdjust = (float)(SimulateInterval / ValveOpenTime) * 100.0 * (pwmManualRatio / 100);
+			if (RateDownMan) ValveAdjust = (float)(SimulateInterval / ValveOpenTime) * -100.0 * (pwmManualRatio / 100);
 		}
 
 		ValveOpen += ValveAdjust;
@@ -60,7 +67,7 @@ void DoSimulate()
 		PulseTime = 1.0 / Pulses;	// milliseconds for each pulse
 
 		PulseTime = (random(ErrorRange * 2.0) / 100.0) * PulseTime + ((100.0 - ErrorRange) / 100.0) * PulseTime;
-		pulseCount = RateCheckInterval / PulseTime;	// milliseconds * pulses/millsecond = pulses
+		pulseCount = SimulateInterval / PulseTime;	// milliseconds * pulses/millsecond = pulses
 
 		// pulse duration is the total time for all pulses in the loop
 		pulseDuration = PulseTime * pulseCount;

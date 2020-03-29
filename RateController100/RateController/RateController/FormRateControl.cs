@@ -33,6 +33,7 @@ namespace RateController
             AreaDone.Text = RC.CurrentCoverage();
             TankRemain.Text = RC.CurrentTankRemaining();
             VolApplied.Text = RC.CurrentApplied();
+            lbCoverage.Text = RC.CoverageDescription();
 
             if (RC.ArduinoConnected)
             {
@@ -55,6 +56,8 @@ namespace RateController
                 lbAogConnected.Text = "AOG Disconnected";
                 lbAogConnected.BackColor = Color.Red;
             }
+
+            SetTitle();
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -112,11 +115,9 @@ namespace RateController
                 Tls.TimedMessageBox("UDPlocal failed to start.", "", 3000, true);
             }
 
-            // serial
-            SER.RCportName = Properties.Settings.Default.RCportName;
-            SER.RCportBaud = Properties.Settings.Default.RCportBaud;
-            if (Properties.Settings.Default.RCportSuccessful) SER.OpenRCport();
+            StartSerial();
             SetDayMode();
+            SetTitle();
         }
 
         private void SetDayMode()
@@ -143,6 +144,30 @@ namespace RateController
         {
             RC.Update();
             UpdateStatus();
+        }
+
+        private void SetTitle()
+        {
+            SimType Mode = (SimType)Properties.Settings.Default.SimulateType;
+            switch (Mode)
+            {
+                case SimType.VirtualNano:
+                    this.Text = "Rate Controller (V)";
+                    break;
+                case SimType.RealNano:
+                    this.Text = "Rate Controller (R)";
+                    break;
+                default:
+                    this.Text = "Rate Controller";
+                    break;
+            }
+        }
+
+        public void StartSerial()
+        {
+            SER.RCportName = Properties.Settings.Default.RCportName;
+            SER.RCportBaud = Properties.Settings.Default.RCportBaud;
+            if (Properties.Settings.Default.RCportSuccessful) SER.OpenRCport();
         }
     }
 }

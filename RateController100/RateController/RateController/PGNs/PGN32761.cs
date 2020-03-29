@@ -53,10 +53,10 @@ namespace RateController
                         {
                             byte.TryParse(Data[i], out cData[i]);
                         }
+                        Command = cData[9];
+                        Result = true;
                     }
                 }
-                Command = cData[9];
-                Result = true;
             }
             return Result;
         }

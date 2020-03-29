@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="RateController.exe" version="1.0.0.7" publicKeyToken="c8cac76245d180d1" language="neutral" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="RateControlOff.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="RateController" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="RateController.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="RateController.exe" size="530368">
+      <assemblyIdentity name="RateController" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>bAxSjFvgDIFRUG/umJNitnEEX6YUjs/AM30FDAaKjR8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Images\Cancel64.png" size="3206">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>SNSVCN+xDRbwZv4IGNdLCM2Qbv3ETbC+r9Ha8Kh8IYg=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\OK64.png" size="2887">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>PHmjWl8YyiPiHuL4wsgHGIatPTJHN1NGO+yfzSZ8g8c=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\RateControlOff.png" size="4308">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>3YKoNSnb4PKy8qDpy5nG42Q5gb7gjeUSUPeGd+SbF/4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\SettingsGear64.png" size="2445">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>rEnE5yyfM73qcjkoy4183KsZHAbZS02+4k3AiJOOgMc=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="RateController.exe.config" size="4191">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>i0YEV1xw7rr59u8rZlS3q7RS4L5GXQuL7f6hZNufn1g=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="RateControlOff.ico" size="109615">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>7yBStM5z4YwGdhwf0TcXUwRHMYH+ZXfZ9Y9npYz9Vmw=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=COMPUTER1\CoxDa" issuerKeyHash="835319242a42cf0f842a94f2ce045e2dde868f0c" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>wlEejZCAaH4dvkbIymwifW9/0EXnFlswLeX81ZmhaKY=</DigestValue></Reference></SignedInfo><SignatureValue>Y1hk5ycG1Mc1XUteP0Pqhri3Pd/7vyf8vqRHobSQ5ESPZZPmrz9XBGXN+ZorS307NVqGQn2yfdS+mJFe7180/5JorqHNJfOoR0npVsEc7p3M44LdFSXmkXJFlLJdbANjGqi3PrI0JlWEE3UovLq/3RSURvy9Fx5xqEznP+M/+0A=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>zYo0UV9XP7WnLFt0Z4SKu4omYKNyeIt76qQ59bbfD0bRwBszTQHPPNGKdr1/LoKy91L+LkI1ggt3lmhI0ZfqpyB4GleoMaMAxqq/sE7QZK/sVu7oxrnhJ5cZWdCMoFtZzILdmwij+MMKLu6TNk5sbUxLNKUcO/giRQMqliPsAYE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="a668a199d5fce52d305b16e745d07f6f7d226ccac846be1d7e6880908d1e51c2" Description="" Url=""><as:assemblyIdentity name="RateController.exe" version="1.0.0.7" publicKeyToken="c8cac76245d180d1" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=COMPUTER1\CoxDa</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>c2Ot6AFYqfXQsQ8HiB7/SGsp+xM0wSP5RVsS638Q44s=</DigestValue></Reference></SignedInfo><SignatureValue>cMONg/Jz51xyfo0Nc+id5wtjSf0Hjqw3ckJMwLK5tUOKsMCjBQUl1+fbKtC+mRm256thk0L5j7dq2qr4IzVmNttUJrTxNz5cArjj+2bbeYFvn2pFik2CC8AMffAPebQgGorlyZi6g6VvaG1cR852d36FR49bqSGFMmbSEx+vhRc=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>zYo0UV9XP7WnLFt0Z4SKu4omYKNyeIt76qQ59bbfD0bRwBszTQHPPNGKdr1/LoKy91L+LkI1ggt3lmhI0ZfqpyB4GleoMaMAxqq/sE7QZK/sVu7oxrnhJ5cZWdCMoFtZzILdmwij+MMKLu6TNk5sbUxLNKUcO/giRQMqliPsAYE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB1TCCAT6gAwIBAgIQGsxXaaMhwpFCRllz2fZ4ZTANBgkqhkiG9w0BAQsFADApMScwJQYDVQQDHh4AQwBPAE0AUABVAFQARQBSADEAXABDAG8AeABEAGEwHhcNMjAwMzE0MTcwOTEzWhcNMjEwMzE0MjMwOTEzWjApMScwJQYDVQQDHh4AQwBPAE0AUABVAFQARQBSADEAXABDAG8AeABEAGEwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAM2KNFFfVz+1pyxbdGeEiruKJmCjcniLe+qkOfW23w9G0cAbM00BzzzRina9fy6CsvdS/i5CNYILd5ZoSNGX6qcgeBpXqDGjAMaqv7BO0GSv7Fbu6Ma54SeXGVnQjKBbWcyC3ZsIo/jDCi7ukzZObG1MSzSlHDv4IkUDKpYj7AGBAgMBAAEwDQYJKoZIhvcNAQELBQADgYEAIxoGWZuAS8Y3jktJ9ZsUgG3NxyfTrUojsiFPgf8gfsdwW+K8BtYDqpNjpVvyGgBzVI/c81xNzgs747RulQAVvOCvyT18Z2qef1uwV/7myzeT1ICBY8GqWLrxyh7UYOYIHj6uV+hRkWksco7vS7zR7dfcHsv4Jv+YqMSev44+nJA=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

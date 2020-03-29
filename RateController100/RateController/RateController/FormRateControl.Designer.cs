@@ -39,7 +39,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.AreaDone = new System.Windows.Forms.Label();
             this.CurRate = new System.Windows.Forms.Label();
-            this.label36 = new System.Windows.Forms.Label();
+            this.lbCoverage = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
@@ -138,15 +138,15 @@
             this.CurRate.Text = "1,800.50";
             this.CurRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label36
+            // lbCoverage
             // 
-            this.label36.AutoSize = true;
-            this.label36.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label36.Location = new System.Drawing.Point(9, 90);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(88, 23);
-            this.label36.TabIndex = 62;
-            this.label36.Text = "Coverage";
+            this.lbCoverage.AutoSize = true;
+            this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCoverage.Location = new System.Drawing.Point(9, 90);
+            this.lbCoverage.Name = "lbCoverage";
+            this.lbCoverage.Size = new System.Drawing.Size(88, 23);
+            this.lbCoverage.TabIndex = 62;
+            this.lbCoverage.Text = "Coverage";
             // 
             // label34
             // 
@@ -234,14 +234,14 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.AreaDone);
             this.Controls.Add(this.CurRate);
-            this.Controls.Add(this.label36);
+            this.Controls.Add(this.lbCoverage);
             this.Controls.Add(this.label34);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "FormRateControl";
-            this.Text = "RateControl";
+            this.Text = "Rate Controller";
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormRateControl_FormClosed);
             this.Load += new System.EventHandler(this.RateControl_Load);
@@ -261,7 +261,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label AreaDone;
         private System.Windows.Forms.Label CurRate;
-        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label lbCoverage;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button bntOK;

@@ -61,8 +61,15 @@ namespace RateController
 
         public void Send()
         {
-            RC.mf.SER.SendtoRC(Data());
-            RC.mf.UDPnetwork.SendUDPMessage(Data());
+            if (RC.SimulationType == SimType.VirtualNano)
+            {
+                RC.Nano.ReceiveSerial(Data());
+            }
+            else
+            {
+                RC.mf.SER.SendtoRC(Data());
+                RC.mf.UDPnetwork.SendUDPMessage(Data());
+            }
         }
 
     }

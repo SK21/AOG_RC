@@ -33,7 +33,7 @@
 
 void SendSerial()
 {
-	// PGN 31100
+	// PGN 35200
 	Serial.print(137);	// headerHi
 	Serial.print(",");
 	Serial.print(128);	// headerLo
@@ -57,12 +57,16 @@ void SendSerial()
 	Serial.print(",");
 	Temp = Units;
 	Serial.print(Temp);
+	Serial.print(",");
 
+	// pwmSetting
+	Temp = (int)((300 - pwmSetting) * 10) >> 8;	// account for negative values
+	Serial.print(Temp);
 	Serial.print(",");
-	Serial.print(0);
+	Temp = (300 - pwmSetting) * 10;
+	Serial.print(Temp);
 	Serial.print(",");
-	Serial.print(0);
-	Serial.print(",");
+
 	Serial.print(0);
 
 	Serial.println();

@@ -9,6 +9,13 @@ using System.Diagnostics;
 
 namespace RateController
 {
+    public enum SimType
+    {
+        None,
+        VirtualNano,
+        RealNano
+    }
+
     public class CRateCals
     {
         public readonly FormRateControl mf;
@@ -23,7 +30,7 @@ namespace RateController
         // AgOpenGPS
         public PGN35400 AogRec35400 = new PGN35400();
 
-        string[] QuantityDescriptions = new string[] { "Imp. Gallons", "US Gallons", "Lbs", "Lbs NH3", "Litres", "Kgs", "Kgs NH3" };
+        string[] QuantityDescriptions = new string[] { "Imp. Gallons", "US Gallons", "Lbs", "Lbs N (NH3)", "Litres", "Kgs", "Kgs N (NH3)" };
         string[] CoverageDescriptions = new string[] { "Acre", "Hectare", "Minute", "Hour" };
 
         private double TankRemaining = 0;
@@ -33,7 +40,7 @@ namespace RateController
 
         private double QuantityApplied = 0;
         private double CurrentQuantity = 0;
-        private double LastQuantity = 0;
+        private double LastAccQuantity = 0;
         public bool EraseApplied = false;
 
         private double Coverage = 0;
@@ -49,7 +56,6 @@ namespace RateController
         public double TankSize = 0;
         public byte ValveType = 0;  // 0 standard, 1 fast close
 
-        public bool SimFlow = false;
         private double CurrentWidth;
 
         public bool ArduinoConnected = false;
@@ -59,6 +65,8 @@ namespace RateController
         private DateTime AogReceiveTime;
 
         private bool PauseArea = false;
+        public clsArduino Nano;
+        private SimType cSimulationType = 0; // 0 none, 1 virtual nano, 2 real nano
 
         public CRateCals(FormRateControl CallingForm)
         {
@@ -69,10 +77,10 @@ namespace RateController
             ArdSend35000 = new PGN35000(this);
             ArdSend35100 = new PGN35100(this);
 
+            Nano = new clsArduino(this);
+
             LoadSettings();
         }
-
-        public bool SimulateFlow { get { return SimFlow; } set { SimFlow = value; } }
 
         public byte KP { get { return ArdSend35100.KP; } set { ArdSend35100.KP = value; } }
 
@@ -85,6 +93,8 @@ namespace RateController
         public byte MinPWM { get { return ArdSend35100.MinPWM; } set { ArdSend35100.MinPWM = value; } }
 
         public byte MaxPWM { get { return ArdSend35100.MaxPWM; } set { ArdSend35100.MaxPWM = value; } }
+
+        public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }
 
         public void Update()
         {
@@ -141,7 +151,6 @@ namespace RateController
                             break;
                     }
                 }
-
             }
             else
             {
@@ -161,14 +170,16 @@ namespace RateController
 
             // send comm to AOG
             Switches32761.Send();
+
+            if (cSimulationType == SimType.VirtualNano) Nano.MainLoop();
         }
 
         private void UpdateQuantity(double AccQuantity)
         {
-            if (AccQuantity > LastQuantity)
+            if (AccQuantity > LastAccQuantity)
             {
-                CurrentQuantity = AccQuantity - LastQuantity;
-                LastQuantity = AccQuantity;
+                CurrentQuantity = AccQuantity - LastAccQuantity;
+                LastAccQuantity = AccQuantity;
 
                 // tank remaining
                 TankRemaining -= CurrentQuantity;
@@ -179,7 +190,7 @@ namespace RateController
             else
             {
                 // reset
-                LastQuantity = AccQuantity;
+                LastAccQuantity = AccQuantity;
             }
         }
 
@@ -252,6 +263,11 @@ namespace RateController
             return s;
         }
 
+        public string CoverageDescription()
+        {
+            return CoverageDescriptions[CoverageUnits] + "s";
+        }
+
         public void ResetCoverage()
         {
             Coverage = 0;
@@ -301,30 +317,46 @@ namespace RateController
 
         public void CommFromArduino(string sentence)
         {
-            int end = sentence.IndexOf("\r");
-            sentence = sentence.Substring(0, end);
-            string[] words = sentence.Split(',');
-            if (ArdRec35200.ParseStringData(words))
+            try
             {
-                UpdateQuantity(ArdRec35200.AccumulatedQuantity());
-            }
+                int end = sentence.IndexOf("\r");
+                sentence = sentence.Substring(0, end);
+                string[] words = sentence.Split(',');
+                if (ArdRec35200.ParseStringData(words))
+                {
+                    UpdateQuantity(ArdRec35200.AccumulatedQuantity());
+                    ArduinoReceiveTime = DateTime.Now;
+                }
 
-            if (Switches32761.ParseStringData(words))
+                if (Switches32761.ParseStringData(words))
+                {
+                    ArduinoReceiveTime = DateTime.Now;
+                }
+            }
+            catch (Exception)
             {
-                ArduinoReceiveTime = DateTime.Now;
+
             }
         }
 
         public void UDPcommFromArduino(byte[] data)
         {
-            if (ArdRec35200.ParseByteData(data))
+            try
             {
-                UpdateQuantity(ArdRec35200.AccumulatedQuantity());
-            }
+                if (ArdRec35200.ParseByteData(data))
+                {
+                    UpdateQuantity(ArdRec35200.AccumulatedQuantity());
+                    ArduinoReceiveTime = DateTime.Now;
+                }
 
-            if (Switches32761.ParseByteData(data))
+                if (Switches32761.ParseByteData(data))
+                {
+                    ArduinoReceiveTime = DateTime.Now;
+                }
+            }
+            catch (Exception)
             {
-                ArduinoReceiveTime = DateTime.Now;
+
             }
         }
 
@@ -347,13 +379,13 @@ namespace RateController
             FlowCal = Properties.Settings.Default.FlowCal;
             TankSize = Properties.Settings.Default.TankSize;
             ValveType = Properties.Settings.Default.ValveType;
-            SimFlow = Properties.Settings.Default.SimulateFlow;
             ArdSend35100.KP = Properties.Settings.Default.KP;
             ArdSend35100.KI = Properties.Settings.Default.KI;
             ArdSend35100.KD = Properties.Settings.Default.KD;
             ArdSend35100.Deadband = Properties.Settings.Default.DeadBand;
             ArdSend35100.MinPWM = Properties.Settings.Default.MinPWM;
             ArdSend35100.MaxPWM = Properties.Settings.Default.MaxPWM;
+            cSimulationType = (SimType)(Properties.Settings.Default.SimulateType);
         }
 
         public void SaveSettings()
@@ -367,13 +399,13 @@ namespace RateController
             Properties.Settings.Default.FlowCal = FlowCal;
             Properties.Settings.Default.TankSize = TankSize;
             Properties.Settings.Default.ValveType = ValveType;
-            Properties.Settings.Default.SimulateFlow = SimFlow;
             Properties.Settings.Default.KP = ArdSend35100.KP;
             Properties.Settings.Default.KI = ArdSend35100.KI;
             Properties.Settings.Default.KD = ArdSend35100.KD;
             Properties.Settings.Default.DeadBand = ArdSend35100.Deadband;
             Properties.Settings.Default.MinPWM = ArdSend35100.MinPWM;
             Properties.Settings.Default.MaxPWM = ArdSend35100.MaxPWM;
+            Properties.Settings.Default.SimulateType =(int) cSimulationType;
         }
     }
 }

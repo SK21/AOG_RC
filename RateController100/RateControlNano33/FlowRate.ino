@@ -14,7 +14,11 @@ float CalRateError()
 	pulseCount = 0;
 	accumulatedCounts += countsThisLoop;
 
-	if (countsThisLoop != 0 && MeterCal != 0)	// Is there flow?
+	if (countsThisLoop == 0 | MeterCal == 0)
+	{
+		FlowRate = 0;
+	}
+	else
 	{
 		pulseAverage = pulseDuration / countsThisLoop;
 		pulseDuration = 0;
@@ -24,19 +28,15 @@ float CalRateError()
 
 		if (FlowRate < .001) FlowRate = 0.1;	//prevent divide by zero      
 		else FlowRate = ((1.0 / FlowRate) * 60) / MeterCal;	//pulses/minute divided by pulses/Unit (pulses/minute * Units/pulse = Units/minute)
-
-		//Kalman filter
-		Pc = P + varProcess;
-		G = Pc / (Pc + varRate);
-		P = (1 - G) * Pc;
-		Xp = FlowRateFiltered;
-		Zp = Xp;
-		FlowRateFiltered = G * (FlowRate - Zp) + Xp;
-
-		return rateSetPoint - FlowRateFiltered;
 	}
-	else
-	{
-		return rateSetPoint;
-	}
+
+	//Kalman filter
+	Pc = P + varProcess;
+	G = Pc / (Pc + varRate);
+	P = (1 - G) * Pc;
+	Xp = FlowRateFiltered;
+	Zp = Xp;
+	FlowRateFiltered = G * (FlowRate - Zp) + Xp;
+
+	return rateSetPoint - FlowRateFiltered;
 }

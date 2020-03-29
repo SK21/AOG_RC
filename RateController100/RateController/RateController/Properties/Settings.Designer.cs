@@ -121,18 +121,6 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool SimulateFlow {
-            get {
-                return ((bool)(this["SimulateFlow"]));
-            }
-            set {
-                this["SimulateFlow"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public byte KP {
             get {
@@ -356,6 +344,18 @@ namespace RateController.Properties {
             }
             set {
                 this["NightColour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SimulateType {
+            get {
+                return ((int)(this["SimulateType"]));
+            }
+            set {
+                this["SimulateType"] = value;
             }
         }
     }
