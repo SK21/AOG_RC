@@ -10,7 +10,7 @@ namespace RateController
     public class clsTools
     {
         private string cAppName = "RateController";
-        private string cVersionDate = "29-Mar-2020";
+        private string cVersionDate = "30-Mar-2020";
         private FormRateControl mf;
         private string SettingsDir;
 

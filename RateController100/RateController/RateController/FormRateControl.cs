@@ -13,6 +13,7 @@ namespace RateController
         public clsTools Tls;
         public UDPComm UDPlocal;
         public UDPComm UDPnetwork;
+        private bool ShowAverageRate = false;
 
         public FormRateControl()
         {
@@ -29,11 +30,21 @@ namespace RateController
         {
             lblUnits.Text = RC.Units();
             SetRate.Text = RC.RateSet.ToString("N1");
-            CurRate.Text = RC.CurrentRate();
             AreaDone.Text = RC.CurrentCoverage();
             TankRemain.Text = RC.CurrentTankRemaining();
             VolApplied.Text = RC.CurrentApplied();
             lbCoverage.Text = RC.CoverageDescription();
+
+            if (ShowAverageRate)
+            {
+                lbRate.Text = "Average Rate";
+                lbRateAmount.Text = RC.AverageRate();
+            }
+            else
+            {
+                lbRate.Text = "Current Rate";
+                lbRateAmount.Text = RC.CurrentRate();
+            }
 
             if (RC.ArduinoConnected)
             {
@@ -168,6 +179,12 @@ namespace RateController
             SER.RCportName = Properties.Settings.Default.RCportName;
             SER.RCportBaud = Properties.Settings.Default.RCportBaud;
             if (Properties.Settings.Default.RCportSuccessful) SER.OpenRCport();
+        }
+
+        private void lbRate_Click(object sender, EventArgs e)
+        {
+            ShowAverageRate = !ShowAverageRate;
+            UpdateStatus();
         }
     }
 }

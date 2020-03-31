@@ -105,12 +105,13 @@ namespace RateController
 
         private void butLoadDefaults_Click(object sender, EventArgs e)
         {
-            tbKP.Text = "100";
+            tbKP.Text = "150";
             tbKI.Text = "0";
             tbKD.Text = "0";
             tbDeadband.Text = "3";
             tbMinPWM.Text = "50";
             tbMaxPWM.Text = "255";
+            tbFactor.Text = "100";
         }
 
         private void butResetAcres_Click(object sender, EventArgs e)
@@ -221,6 +222,9 @@ namespace RateController
             tbMinPWM.Text = (mf.RC.MinPWM).ToString("N0");
             tbMaxPWM.Text = (mf.RC.MaxPWM).ToString("N0");
 
+            tempB = (byte)(100 - (mf.RC.AdjustmentFactor - 100));   // convert so that larger value increases applied amount
+            tbFactor.Text = tempB.ToString("N0");
+
             SelectedSimulation = mf.RC.SimulationType;
             switch (SelectedSimulation)
             {
@@ -294,6 +298,9 @@ namespace RateController
 
             mf.RC.SimulationType = SelectedSimulation;
 
+            byte.TryParse(tbFactor.Text, out tempB);
+            mf.RC.AdjustmentFactor = (byte)(100 - (tempB - 100));   // convert back
+
             mf.RC.SaveSettings();
         }
 
@@ -337,14 +344,15 @@ namespace RateController
 
         private void SetRCbuttons()
         {
+            cboxArdPort.SelectedIndex = cboxArdPort.FindStringExact(mf.SER.RCportName);
+            cboxBaud.SelectedIndex = cboxBaud.FindStringExact(mf.SER.RCportBaud.ToString());
+
             if (mf.SER.RCport.IsOpen)
             {
                 cboxBaud.Enabled = false;
                 cboxArdPort.Enabled = false;
                 btnCloseSerialArduino.Enabled = true;
                 btnOpenSerialArduino.Enabled = false;
-                cboxArdPort.SelectedIndex = cboxArdPort.FindStringExact(mf.SER.RCportName);
-                cboxBaud.SelectedIndex = cboxBaud.FindStringExact(mf.SER.RCportBaud.ToString());
                 lbArduinoConnected.Text = mf.SER.RCportName + " Connected";
                 lbArduinoConnected.BackColor = Color.LightGreen;
             }
@@ -453,6 +461,29 @@ namespace RateController
         {
             GroupBox box = sender as GroupBox;
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
+        private void tbFactor_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbFactor_Validating(object sender, CancelEventArgs e)
+        {
+            byte.TryParse(tbFactor.Text, out tempB);
+            if (tempB < 70 || tempB > 130)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+                tbFactor.Select(0, tbFactor.Text.Length);
+                var ErrForm = new FormTimedMessage("Adjustment Factor Error", "Min 70, Max 130");
+                ErrForm.Show();
+            }
+        }
+
+        private void lbCoverage_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

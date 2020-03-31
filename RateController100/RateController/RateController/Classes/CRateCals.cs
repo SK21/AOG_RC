@@ -96,6 +96,8 @@ namespace RateController
 
         public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }
 
+        public byte AdjustmentFactor { get { return ArdSend35100.AdjustmentFactor; } set { ArdSend35100.AdjustmentFactor = value; } }
+
         public void Update()
         {
             StartTime = DateTime.Now;
@@ -292,6 +294,19 @@ namespace RateController
             }
         }
 
+        public string AverageRate()
+        {
+            if (ArduinoConnected & AogConnected
+                & HectaresPerMinute > 0 & Coverage > 0)
+            {
+                return (QuantityApplied / Coverage).ToString("N1");
+            }
+            else
+            {
+                return "0.0";
+            }
+        }
+
         public string CurrentCoverage()
         {
             return Coverage.ToString("N1");
@@ -386,6 +401,7 @@ namespace RateController
             ArdSend35100.MinPWM = Properties.Settings.Default.MinPWM;
             ArdSend35100.MaxPWM = Properties.Settings.Default.MaxPWM;
             cSimulationType = (SimType)(Properties.Settings.Default.SimulateType);
+            ArdSend35100.AdjustmentFactor = Properties.Settings.Default.AdjustmentFactor;
         }
 
         public void SaveSettings()
@@ -406,6 +422,7 @@ namespace RateController
             Properties.Settings.Default.MinPWM = ArdSend35100.MinPWM;
             Properties.Settings.Default.MaxPWM = ArdSend35100.MaxPWM;
             Properties.Settings.Default.SimulateType =(int) cSimulationType;
+            Properties.Settings.Default.AdjustmentFactor = ArdSend35100.AdjustmentFactor;
         }
     }
 }

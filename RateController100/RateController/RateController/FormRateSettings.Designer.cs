@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormRateSettings));
             this.butResetApplied = new System.Windows.Forms.Button();
             this.butResetAcres = new System.Windows.Forms.Button();
@@ -43,7 +44,7 @@
             this.VolumeUnits = new System.Windows.Forms.ComboBox();
             this.label28 = new System.Windows.Forms.Label();
             this.AreaUnits = new System.Windows.Forms.ComboBox();
-            this.label27 = new System.Windows.Forms.Label();
+            this.lbCoverage = new System.Windows.Forms.Label();
             this.RateSet = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -56,6 +57,8 @@
             this.rbFlow = new System.Windows.Forms.RadioButton();
             this.rbNano = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tbFactor = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.butLoadDefaults = new System.Windows.Forms.Button();
             this.tbKP = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -79,6 +82,7 @@
             this.cboxArdPort = new System.Windows.Forms.ComboBox();
             this.lblCurrentArduinoPort = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label33 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
@@ -107,6 +111,7 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -291,15 +296,15 @@
             this.AreaUnits.TabIndex = 79;
             this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
             // 
-            // label27
+            // lbCoverage
             // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(12, 72);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(88, 23);
-            this.label27.TabIndex = 96;
-            this.label27.Text = "Coverage";
+            this.lbCoverage.AutoSize = true;
+            this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCoverage.Location = new System.Drawing.Point(12, 72);
+            this.lbCoverage.Name = "lbCoverage";
+            this.lbCoverage.Size = new System.Drawing.Size(88, 23);
+            this.lbCoverage.TabIndex = 96;
+            this.lbCoverage.Text = "Coverage";
             // 
             // RateSet
             // 
@@ -369,7 +374,7 @@
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.label21);
             this.tabPage1.Controls.Add(this.RateSet);
-            this.tabPage1.Controls.Add(this.label27);
+            this.tabPage1.Controls.Add(this.lbCoverage);
             this.tabPage1.Controls.Add(this.AreaUnits);
             this.tabPage1.Controls.Add(this.label28);
             this.tabPage1.Controls.Add(this.label30);
@@ -384,7 +389,7 @@
             this.tabPage1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPage1.Location = new System.Drawing.Point(4, 35);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(412, 439);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main";
@@ -396,7 +401,7 @@
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Location = new System.Drawing.Point(4, 35);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(412, 439);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "PID";
@@ -407,10 +412,10 @@
             this.groupBox2.Controls.Add(this.rbFlow);
             this.groupBox2.Controls.Add(this.rbNano);
             this.groupBox2.Location = new System.Drawing.Point(35, 318);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox2.Size = new System.Drawing.Size(159, 111);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Size = new System.Drawing.Size(202, 111);
             this.groupBox2.TabIndex = 117;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Simulate Flow";
@@ -421,13 +426,13 @@
             this.rbNone.AutoSize = true;
             this.rbNone.Checked = true;
             this.rbNone.Location = new System.Drawing.Point(22, 27);
-            this.rbNone.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbNone.Margin = new System.Windows.Forms.Padding(2);
             this.rbNone.Name = "rbNone";
-            this.rbNone.Size = new System.Drawing.Size(72, 27);
+            this.rbNone.Size = new System.Drawing.Size(146, 27);
             this.rbNone.TabIndex = 118;
             this.rbNone.TabStop = true;
             this.rbNone.Tag = "0";
-            this.rbNone.Text = "None";
+            this.rbNone.Text = "Simulation Off";
             this.rbNone.UseVisualStyleBackColor = true;
             this.rbNone.CheckedChanged += new System.EventHandler(this.RadioButtonChanged);
             // 
@@ -435,7 +440,7 @@
             // 
             this.rbFlow.AutoSize = true;
             this.rbFlow.Location = new System.Drawing.Point(22, 77);
-            this.rbFlow.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbFlow.Margin = new System.Windows.Forms.Padding(2);
             this.rbFlow.Name = "rbFlow";
             this.rbFlow.Size = new System.Drawing.Size(114, 27);
             this.rbFlow.TabIndex = 117;
@@ -448,7 +453,7 @@
             // 
             this.rbNano.AutoSize = true;
             this.rbNano.Location = new System.Drawing.Point(22, 52);
-            this.rbNano.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbNano.Margin = new System.Windows.Forms.Padding(2);
             this.rbNano.Name = "rbNano";
             this.rbNano.Size = new System.Drawing.Size(131, 27);
             this.rbNano.TabIndex = 116;
@@ -459,6 +464,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.tbFactor);
+            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.butLoadDefaults);
             this.groupBox1.Controls.Add(this.tbKP);
             this.groupBox1.Controls.Add(this.label2);
@@ -473,14 +480,37 @@
             this.groupBox1.Controls.Add(this.tbMinPWM);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Location = new System.Drawing.Point(35, 6);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox1.Size = new System.Drawing.Size(347, 300);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Size = new System.Drawing.Size(347, 308);
             this.groupBox1.TabIndex = 116;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "PID";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.GroupBoxPaint);
+            // 
+            // tbFactor
+            // 
+            this.tbFactor.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbFactor.Location = new System.Drawing.Point(144, 272);
+            this.tbFactor.MaxLength = 8;
+            this.tbFactor.Name = "tbFactor";
+            this.tbFactor.Size = new System.Drawing.Size(49, 30);
+            this.tbFactor.TabIndex = 125;
+            this.tbFactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.toolTip1.SetToolTip(this.tbFactor, "Larger value increases amount applied.");
+            this.tbFactor.TextChanged += new System.EventHandler(this.tbFactor_TextChanged);
+            this.tbFactor.Validating += new System.ComponentModel.CancelEventHandler(this.tbFactor_Validating);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(20, 276);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(101, 23);
+            this.label1.TabIndex = 126;
+            this.label1.Text = "Adj. Factor";
             // 
             // butLoadDefaults
             // 
@@ -508,26 +538,26 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(22, 37);
+            this.label2.Location = new System.Drawing.Point(20, 36);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 23);
+            this.label2.Size = new System.Drawing.Size(110, 23);
             this.label2.TabIndex = 118;
-            this.label2.Text = "KP";
+            this.label2.Text = "Proportional";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(20, 77);
+            this.label5.Location = new System.Drawing.Point(20, 76);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(28, 23);
+            this.label5.Size = new System.Drawing.Size(76, 23);
             this.label5.TabIndex = 119;
-            this.label5.Text = "KI";
+            this.label5.Text = "Integral";
             // 
             // tbKI
             // 
             this.tbKI.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbKI.Location = new System.Drawing.Point(144, 73);
+            this.tbKI.Location = new System.Drawing.Point(144, 72);
             this.tbKI.MaxLength = 8;
             this.tbKI.Name = "tbKI";
             this.tbKI.Size = new System.Drawing.Size(49, 30);
@@ -539,16 +569,16 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(20, 119);
+            this.label6.Location = new System.Drawing.Point(20, 116);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(34, 23);
+            this.label6.Size = new System.Drawing.Size(92, 23);
             this.label6.TabIndex = 120;
-            this.label6.Text = "KD";
+            this.label6.Text = "Derivative";
             // 
             // tbKD
             // 
             this.tbKD.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbKD.Location = new System.Drawing.Point(144, 115);
+            this.tbKD.Location = new System.Drawing.Point(144, 112);
             this.tbKD.MaxLength = 8;
             this.tbKD.Name = "tbKD";
             this.tbKD.Size = new System.Drawing.Size(49, 30);
@@ -560,7 +590,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(20, 159);
+            this.label7.Location = new System.Drawing.Point(20, 156);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(97, 23);
             this.label7.TabIndex = 121;
@@ -569,19 +599,20 @@
             // tbDeadband
             // 
             this.tbDeadband.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDeadband.Location = new System.Drawing.Point(144, 155);
+            this.tbDeadband.Location = new System.Drawing.Point(144, 152);
             this.tbDeadband.MaxLength = 8;
             this.tbDeadband.Name = "tbDeadband";
             this.tbDeadband.Size = new System.Drawing.Size(49, 30);
             this.tbDeadband.TabIndex = 115;
             this.tbDeadband.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.toolTip1.SetToolTip(this.tbDeadband, "% error allowed.");
             this.tbDeadband.TextChanged += new System.EventHandler(this.tbDeadband_TextChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(20, 201);
+            this.label8.Location = new System.Drawing.Point(20, 196);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(94, 23);
             this.label8.TabIndex = 122;
@@ -590,7 +621,7 @@
             // tbMaxPWM
             // 
             this.tbMaxPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxPWM.Location = new System.Drawing.Point(144, 237);
+            this.tbMaxPWM.Location = new System.Drawing.Point(144, 232);
             this.tbMaxPWM.MaxLength = 8;
             this.tbMaxPWM.Name = "tbMaxPWM";
             this.tbMaxPWM.Size = new System.Drawing.Size(49, 30);
@@ -601,7 +632,7 @@
             // tbMinPWM
             // 
             this.tbMinPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinPWM.Location = new System.Drawing.Point(144, 197);
+            this.tbMinPWM.Location = new System.Drawing.Point(144, 192);
             this.tbMinPWM.MaxLength = 8;
             this.tbMinPWM.Name = "tbMinPWM";
             this.tbMinPWM.Size = new System.Drawing.Size(49, 30);
@@ -613,7 +644,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(20, 241);
+            this.label9.Location = new System.Drawing.Point(20, 236);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(98, 23);
             this.label9.TabIndex = 123;
@@ -743,6 +774,7 @@
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage4.Controls.Add(this.label33);
             this.tabPage4.Controls.Add(this.label10);
             this.tabPage4.Controls.Add(this.label31);
             this.tabPage4.Controls.Add(this.label22);
@@ -777,10 +809,20 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Misc";
             // 
+            // label33
+            // 
+            this.label33.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label33.Location = new System.Drawing.Point(56, 264);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(255, 23);
+            this.label33.TabIndex = 144;
+            this.label33.Text = "AgOpenGPS UDP must be on.";
+            this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // label10
             // 
             this.label10.Font = new System.Drawing.Font("Tahoma", 14.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(3, 287);
+            this.label10.Location = new System.Drawing.Point(3, 291);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(406, 23);
             this.label10.TabIndex = 143;
@@ -790,7 +832,7 @@
             // label31
             // 
             this.label31.Font = new System.Drawing.Font("Tahoma", 14.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label31.Location = new System.Drawing.Point(3, 142);
+            this.label31.Location = new System.Drawing.Point(3, 130);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(406, 23);
             this.label31.TabIndex = 142;
@@ -801,7 +843,7 @@
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(55, 176);
+            this.label22.Location = new System.Drawing.Point(55, 164);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(99, 23);
             this.label22.TabIndex = 139;
@@ -811,7 +853,7 @@
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(55, 211);
+            this.label23.Location = new System.Drawing.Point(55, 199);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(92, 23);
             this.label23.TabIndex = 140;
@@ -821,7 +863,7 @@
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(55, 244);
+            this.label24.Location = new System.Drawing.Point(55, 232);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(113, 23);
             this.label24.TabIndex = 141;
@@ -898,7 +940,7 @@
             // 
             this.label42.AutoSize = true;
             this.label42.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label42.Location = new System.Drawing.Point(74, 211);
+            this.label42.Location = new System.Drawing.Point(74, 199);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(0, 23);
             this.label42.TabIndex = 128;
@@ -908,7 +950,7 @@
             this.label43.AutoSize = true;
             this.label43.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label43.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label43.Location = new System.Drawing.Point(259, 243);
+            this.label43.Location = new System.Drawing.Point(259, 231);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(52, 25);
             this.label43.TabIndex = 131;
@@ -920,7 +962,7 @@
             this.label44.AutoSize = true;
             this.label44.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label44.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label44.Location = new System.Drawing.Point(259, 210);
+            this.label44.Location = new System.Drawing.Point(259, 198);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(52, 25);
             this.label44.TabIndex = 129;
@@ -931,7 +973,7 @@
             // 
             this.label45.AutoSize = true;
             this.label45.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label45.Location = new System.Drawing.Point(73, 244);
+            this.label45.Location = new System.Drawing.Point(73, 232);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(0, 23);
             this.label45.TabIndex = 130;
@@ -940,7 +982,7 @@
             // 
             this.label40.AutoSize = true;
             this.label40.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label40.Location = new System.Drawing.Point(73, 176);
+            this.label40.Location = new System.Drawing.Point(73, 164);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(0, 23);
             this.label40.TabIndex = 125;
@@ -949,7 +991,7 @@
             // 
             this.lbLocalIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbLocalIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbLocalIP.Location = new System.Drawing.Point(181, 175);
+            this.lbLocalIP.Location = new System.Drawing.Point(181, 163);
             this.lbLocalIP.Name = "lbLocalIP";
             this.lbLocalIP.Size = new System.Drawing.Size(130, 25);
             this.lbLocalIP.TabIndex = 126;
@@ -961,7 +1003,7 @@
             this.btnDay.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnDay.Image = ((System.Drawing.Image)(resources.GetObject("btnDay.Image")));
             this.btnDay.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnDay.Location = new System.Drawing.Point(145, 313);
+            this.btnDay.Location = new System.Drawing.Point(145, 318);
             this.btnDay.Name = "btnDay";
             this.btnDay.Size = new System.Drawing.Size(120, 72);
             this.btnDay.TabIndex = 123;
@@ -1108,7 +1150,7 @@
         private System.Windows.Forms.ComboBox VolumeUnits;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.ComboBox AreaUnits;
-        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label lbCoverage;
         private System.Windows.Forms.TextBox RateSet;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label3;
@@ -1159,6 +1201,8 @@
         private System.Windows.Forms.RadioButton rbFlow;
         private System.Windows.Forms.RadioButton rbNano;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox tbFactor;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button butLoadDefaults;
         private System.Windows.Forms.TextBox tbKP;
         private System.Windows.Forms.Label label2;
@@ -1172,5 +1216,7 @@
         private System.Windows.Forms.TextBox tbMaxPWM;
         private System.Windows.Forms.TextBox tbMinPWM;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label33;
     }
 }

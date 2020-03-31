@@ -17,8 +17,9 @@ namespace RateController
         //5	Deadband		% error allowed	
         //6	MinPWM			
         //7	MaxPWM
+        //8 adjustment factor
 
-        private const byte cByteCount = 8;
+        private const byte cByteCount = 9;
         private const byte HeaderHi = 137;
         private const byte HeaderLo = 28;
 
@@ -28,6 +29,7 @@ namespace RateController
         public byte Deadband;
         public byte MinPWM;
         public byte MaxPWM;
+        public byte AdjustmentFactor;
 
         private readonly CRateCals RC;
 
@@ -38,6 +40,7 @@ namespace RateController
             Deadband = 3;
             MinPWM = 50;
             MaxPWM = 255;
+            AdjustmentFactor = 100;
         }
 
         public byte ByteCount()
@@ -56,6 +59,8 @@ namespace RateController
             Vals[5] = Deadband;
             Vals[6] = MinPWM;
             Vals[7] = MaxPWM;
+            Vals[8] = AdjustmentFactor;
+
             return Vals;
         }
 

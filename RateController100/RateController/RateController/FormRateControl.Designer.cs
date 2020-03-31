@@ -31,14 +31,14 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormRateControl));
             this.SetRate = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lbRate = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.TankRemain = new System.Windows.Forms.Label();
             this.lblUnits = new System.Windows.Forms.Label();
             this.VolApplied = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.AreaDone = new System.Windows.Forms.Label();
-            this.CurRate = new System.Windows.Forms.Label();
+            this.lbRateAmount = new System.Windows.Forms.Label();
             this.lbCoverage = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
@@ -58,15 +58,16 @@
             this.SetRate.Text = "1,800.50";
             this.SetRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label3
+            // lbRate
             // 
-            this.label3.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(9, 63);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(120, 23);
-            this.label3.TabIndex = 67;
-            this.label3.Text = "Current rate";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbRate.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRate.Location = new System.Drawing.Point(9, 63);
+            this.lbRate.Name = "lbRate";
+            this.lbRate.Size = new System.Drawing.Size(148, 23);
+            this.lbRate.TabIndex = 67;
+            this.lbRate.Text = "Current Rate";
+            this.lbRate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbRate.Click += new System.EventHandler(this.lbRate_Click);
             // 
             // label1
             // 
@@ -128,15 +129,15 @@
             this.AreaDone.Text = "0";
             this.AreaDone.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // CurRate
+            // lbRateAmount
             // 
-            this.CurRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurRate.Location = new System.Drawing.Point(166, 63);
-            this.CurRate.Name = "CurRate";
-            this.CurRate.Size = new System.Drawing.Size(102, 23);
-            this.CurRate.TabIndex = 58;
-            this.CurRate.Text = "1,800.50";
-            this.CurRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRateAmount.Location = new System.Drawing.Point(166, 63);
+            this.lbRateAmount.Name = "lbRateAmount";
+            this.lbRateAmount.Size = new System.Drawing.Size(102, 23);
+            this.lbRateAmount.TabIndex = 58;
+            this.lbRateAmount.Text = "1,800.50";
+            this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbCoverage
             // 
@@ -226,14 +227,14 @@
             this.Controls.Add(this.bntOK);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.SetRate);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lbRate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.TankRemain);
             this.Controls.Add(this.lblUnits);
             this.Controls.Add(this.VolApplied);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.AreaDone);
-            this.Controls.Add(this.CurRate);
+            this.Controls.Add(this.lbRateAmount);
             this.Controls.Add(this.lbCoverage);
             this.Controls.Add(this.label34);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -253,14 +254,14 @@
         #endregion
 
         private System.Windows.Forms.Label SetRate;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbRate;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label TankRemain;
         private System.Windows.Forms.Label lblUnits;
         private System.Windows.Forms.Label VolApplied;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label AreaDone;
-        private System.Windows.Forms.Label CurRate;
+        private System.Windows.Forms.Label lbRateAmount;
         private System.Windows.Forms.Label lbCoverage;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Button button3;
