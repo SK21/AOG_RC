@@ -30,13 +30,8 @@ float CalRateError()
 		else FlowRate = ((1.0 / FlowRate) * 60) / MeterCal;	//pulses/minute divided by pulses/Unit (pulses/minute * Units/pulse = Units/minute)
 	}
 
-	//Kalman filter
-	Pc = P + varProcess;
-	G = Pc / (Pc + varRate);
-	P = (1 - G) * Pc;
-	Xp = FlowRateFiltered;
-	Zp = Xp;
-	FlowRateFiltered = G * (FlowRate - Zp) + Xp;
+	FlowRateFiltered = Filter(FlowRate) * AdjustmentFactor;
 
 	return rateSetPoint - FlowRateFiltered;
 }
+

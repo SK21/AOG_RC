@@ -4,12 +4,13 @@ float Pulses = 0.0;
 float ValveOpenTime = 2000;  // ms to fully open valve at max opening rate
 float UPM = 0.00;     // simulated units per minute
 float MaxRate = 120;  // max rate of system in UPM
-float ErrorRange = 8;  // % random error in flow rate, above and below target
+int ErrorRange = 5;  // % random error in flow rate
 float PulseTime = 0.0;
 float PWMnet = 0;	// pwmSetting - minPWM to account for motor lag
 
 unsigned long SimulateInterval;
 unsigned long SimulateTimeLast;
+float RandomError = 0;
 
 void DoSimulate()
 {
@@ -66,7 +67,9 @@ void DoSimulate()
 	{
 		PulseTime = 1.0 / Pulses;	// milliseconds for each pulse
 
-		PulseTime = (random(ErrorRange * 2.0) / 100.0) * PulseTime + ((100.0 - ErrorRange) / 100.0) * PulseTime;
+		RandomError = (100 - (ErrorRange / 2)) + (random(ErrorRange));
+
+		PulseTime = (float)(PulseTime * RandomError / 100);
 		pulseCount = SimulateInterval / PulseTime;	// milliseconds * pulses/millsecond = pulses
 
 		// pulse duration is the total time for all pulses in the loop

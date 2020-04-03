@@ -93,7 +93,7 @@ void ReceiveUDPWifi()
 		}
 
 		//PGN 35100
-		if ((len > 7) && (InBuffer[0] == 137) && (InBuffer[1] = 28))
+		if ((len > 8) && (InBuffer[0] == 137) && (InBuffer[1] = 28))
 		{
 			KP = (float)InBuffer[2] * 0.1;
 			KI = (float)InBuffer[3] * 0.0001;
@@ -101,6 +101,7 @@ void ReceiveUDPWifi()
 			DeadBand = (float)InBuffer[5];
 			MinPWMvalue = InBuffer[6];
 			MaxPWMvalue = InBuffer[7];
+			AdjustmentFactor = Serial.read() / 100.0;
 
 			//reset watchdog as we just heard from AgOpenGPS
 			watchdogTimer = 0;

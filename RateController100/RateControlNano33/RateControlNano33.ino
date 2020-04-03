@@ -11,10 +11,10 @@
 #define WifiPassword "450450450"
 
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
-byte FlowOn = LOW;	// flowmeter pin
+byte FlowOn = LOW;			// flowmeter pin
 bool UseSwitches = true;	// manual switches
-float MeterCal = 17;	// pulses per Unit 
-byte ValveType = 1;	// 0 standard, 1 Fast Close
+float MeterCal = 17;		// pulses per Unit 
+byte ValveType = 1;			// 0 standard, 1 Fast Close
 
 bool SimulateFlow = true;	
 byte MinPWMvalue = 145;
@@ -58,16 +58,6 @@ unsigned long lastTime = LOOP_TIME;
 unsigned long currentTime = LOOP_TIME;
 byte watchdogTimer = 0;
 
-//Kalman variables
-float Pc = 0.0;
-float G = 0.0;
-float P = 1.0;
-float Xp = 0.0;
-float Zp = 0.0;
-float FlowRateFiltered = 0.0; //the filtered flowrate
-const float varRate = 100; // variance, smaller, more filtering
-const float varProcess = 10;
-
 //bit 0 is section 0
 byte RelayHi = 0;	// 8-15
 byte RelayFromAOG = 0; // bytes from AOG, 0-7
@@ -83,9 +73,11 @@ float rateError = 0; //for PID
 volatile unsigned long pulseDuration;
 volatile unsigned long pulseCount = 0;
 float FlowRate = 0;
+float FlowRateFiltered = 0.0; 
 float pulseAverage = 0;
 unsigned long accumulatedCounts = 0;
 float countsThisLoop = 0;
+float AdjustmentFactor = 0.95;
 
 // AOG section buttons
 byte SecSwOff[2] = { 0, 0 }; // AOG section button off if set
@@ -130,7 +122,7 @@ bool MasterLast = true;
 
 float pwmSetting = 0.0;
 int pwmManualRatio = 0;
-unsigned int unsignedTemp = 0;
+unsigned int UnsignedTemp = 0;
 boolean AOGconnected = false;
 
 byte InCommand = 0;	// command byte from AOG
@@ -144,8 +136,8 @@ float DeadBand;
 
 bool PGN35000Found;
 bool PGN35100Found;
-int tempHeader;
-int header;
+unsigned int tempHeader;	// must be unsigned
+unsigned int header;		// must be unsigned
 
 unsigned long RateCheckInterval = 1000;
 unsigned long RateCheckLast = 0;
@@ -181,7 +173,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("Rate Control Nano33 for RateController100  :  29/Mar/2020");
+	Serial.println("Rate Control Nano33 for RateController100  :  02/Apr/2020");
 	Serial.println();
 
 	pinMode(Relay1, OUTPUT);

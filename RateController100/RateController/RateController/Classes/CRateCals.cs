@@ -163,15 +163,15 @@ namespace RateController
 
             if (ArduinoConnected) RateSet = Switches32761.NewRate(RateSet);
 
-            // send to arduino
-            if (AogConnected)
+            if (AogConnected & ArduinoConnected)
             {
+                // send to arduino
                 ArdSend35000.Send();
                 ArdSend35100.Send();
-            }
 
-            // send comm to AOG
-            Switches32761.Send();
+                // send comm to AOG
+                Switches32761.Send();
+            }
 
             if (cSimulationType == SimType.VirtualNano) Nano.MainLoop();
         }

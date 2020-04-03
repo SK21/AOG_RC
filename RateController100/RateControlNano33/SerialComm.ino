@@ -132,9 +132,9 @@ void ReceiveSerial()
 {
 	if (Serial.available() > 0 && !PGN35000Found && !PGN35100Found) //find the header, 
 	{
-		int temp = Serial.read();
-		header = tempHeader << 8 | temp;               //high,low bytes to make int
-		tempHeader = temp;                             //save for next time
+		UnsignedTemp = Serial.read();
+		header = tempHeader << 8 | UnsignedTemp;               //high,low bytes to make int
+		tempHeader = UnsignedTemp;                             //save for next time
 		PGN35000Found = (header == 35000);
 		PGN35100Found = (header == 35100);
 	}
@@ -147,12 +147,12 @@ void ReceiveSerial()
 		RelayFromAOG = Serial.read();
 
 		// rate setting, 100 times actual
-		unsignedTemp = Serial.read() << 8 | Serial.read();
-		rateSetPoint = (float)unsignedTemp * 0.01;
+		UnsignedTemp = Serial.read() << 8 | Serial.read();
+		rateSetPoint = (float)(UnsignedTemp * 0.01);
 
 		//Meter Cal, 100 times actual
-		unsignedTemp = Serial.read() << 8 | Serial.read();
-		MeterCal = (float)unsignedTemp * 0.01;
+		UnsignedTemp = Serial.read() << 8 | Serial.read();
+		MeterCal = (float)(UnsignedTemp * 0.01);
 
 		// command byte
 		InCommand = Serial.read();
@@ -169,7 +169,7 @@ void ReceiveSerial()
 		AOGconnected = true;
 	}
 
-	if (Serial.available() > 5 && PGN35100Found)
+	if (Serial.available() > 6 && PGN35100Found)
 	{
 		PGN35100Found = false;
 
@@ -180,6 +180,7 @@ void ReceiveSerial()
 		DeadBand = (float)Serial.read();
 		MinPWMvalue = Serial.read();
 		MaxPWMvalue = Serial.read();
+		AdjustmentFactor = Serial.read()/100.0;
 
 		//reset watchdog as we just heard from AgOpenGPS
 		watchdogTimer = 0;
