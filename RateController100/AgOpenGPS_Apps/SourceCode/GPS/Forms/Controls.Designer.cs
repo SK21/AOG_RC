@@ -1333,7 +1333,7 @@ namespace AgOpenGPS
                 if (result == DialogResult.OK) { }
             }
 
-            if (Properties.Settings.Default.setAS_isAutoSteerAutoOn) btnAutoSteer.Text = "A";
+            if (Properties.Settings.Default.setAS_isAutoSteerAutoOn) btnAutoSteer.Text = "R";
             else btnAutoSteer.Text = "M";
         }
         private void toolstripUSBPortsConfig_Click_1(object sender, EventArgs e)
@@ -1488,7 +1488,7 @@ namespace AgOpenGPS
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    if (Properties.Settings.Default.setAS_isAutoSteerAutoOn) btnAutoSteer.Text = "A";
+                    if (Properties.Settings.Default.setAS_isAutoSteerAutoOn) btnAutoSteer.Text = "R";
                     else btnAutoSteer.Text = "M";
                 }
             }
@@ -2237,7 +2237,7 @@ namespace AgOpenGPS
         private void btnResetSteerAngle_Click(object sender, EventArgs e)
         {
             sim.steerAngleScrollBar = 0;
-            hsbarSteerAngle.Value = 300;
+            hsbarSteerAngle.Value = 400;
             btnResetSteerAngle.Text = sim.steerAngleScrollBar.ToString("N1");
         }
         private void btnResetSim_Click(object sender, EventArgs e)
