@@ -9,40 +9,17 @@ void motorDrive()
 	else
 	{
 		// adjust flow rate
-		if (AutoOn)
+		if (pwmSetting >= 0)
 		{
-			// auto rate
-			if (pwmSetting >= 0)
-			{
-				//increase
-				digitalWrite(FlowDIR, FlowOn);
-				analogWrite(FlowPWM, pwmSetting);
-			}
-			else
-			{
-				//decrease
-				digitalWrite(FlowDIR, !FlowOn);
-				analogWrite(FlowPWM, -pwmSetting);	// offsets the negative pwm value
-			}
+			//increase
+			digitalWrite(FlowDIR, FlowOn);
+			analogWrite(FlowPWM, pwmSetting);
 		}
 		else
 		{
-			// manual rate
-			if (RateUpMan)
-			{
-				digitalWrite(FlowDIR, FlowOn);
-				analogWrite(FlowPWM, (MaxPWMvalue * pwmManualRatio / 100));
-			}
-			else if (RateDownMan)
-			{
-				digitalWrite(FlowDIR, !FlowOn);
-				analogWrite(FlowPWM, (MaxPWMvalue * pwmManualRatio / 100));
-			}
-			else
-			{
-				// stop motor
-				analogWrite(FlowPWM, 0);
-			}
+			//decrease
+			digitalWrite(FlowDIR, !FlowOn);
+			analogWrite(FlowPWM, -pwmSetting);	// offsets the negative pwm value
 		}
 	}
 }

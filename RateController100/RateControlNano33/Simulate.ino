@@ -21,29 +21,19 @@ void DoSimulate()
 	{
 
 		// relays on
-		if (AutoOn)
+		PWMnet = pwmSetting;
+		if (PWMnet < 0)
 		{
-			PWMnet = pwmSetting;
-			if (PWMnet < 0)
-			{
-				PWMnet += (MinPWMvalue * .5);
-				if (PWMnet > 0) PWMnet = 0;
-			}
-			else
-			{
-				PWMnet -= (MinPWMvalue * .5);
-				if (PWMnet < 0) PWMnet = 0;
-			}
-
-			ValveAdjust = (float)(PWMnet / 255) * (float)(SimulateInterval / ValveOpenTime) * 100.0;
+			PWMnet += (MinPWMvalue * .5);
+			if (PWMnet > 0) PWMnet = 0;
 		}
 		else
 		{
-			// manual control
-			ValveAdjust = 0;
-			if (RateUpMan) ValveAdjust = (float)(SimulateInterval / ValveOpenTime) * 100.0 * (pwmManualRatio / 100);
-			if (RateDownMan) ValveAdjust = (float)(SimulateInterval / ValveOpenTime) * -100.0 * (pwmManualRatio / 100);
+			PWMnet -= (MinPWMvalue * .5);
+			if (PWMnet < 0) PWMnet = 0;
 		}
+
+		ValveAdjust = (float)(PWMnet / 255) * (float)(SimulateInterval / ValveOpenTime) * 100.0;
 
 		ValveOpen += ValveAdjust;
 		if (ValveOpen < 0) ValveOpen = 0;

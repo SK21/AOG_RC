@@ -11,10 +11,10 @@
 #define WifiPassword "450450450"
 
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
-byte FlowOn = LOW;			// flowmeter pin
+byte FlowOn = LOW;	// flowmeter pin
 bool UseSwitches = true;	// manual switches
-float MeterCal = 17;		// pulses per Unit 
-byte ValveType = 1;			// 0 standard, 1 Fast Close
+float MeterCal = 17;	// pulses per Unit 
+byte ValveType = 1;	// 0 standard, 1 Fast Close
 
 bool SimulateFlow = true;	
 byte MinPWMvalue = 145;
@@ -94,8 +94,6 @@ byte OutCommand = 0;	// command byte out to AOG
 // rate switches
 unsigned long RateDelayTime = 1500;  // time between adjustments to rate
 unsigned long RateLastTime = 0;
-bool RateDownMan = false;
-bool RateUpMan = false;
 bool RateDownPressed = false;
 bool RateUpPressed = false;
 
@@ -121,7 +119,8 @@ unsigned long MasterTime = 0;
 bool MasterLast = true;
 
 float pwmSetting = 0.0;
-int pwmManualRatio = 0;
+float pwmSettingManual = 0.0;
+float HalfWay = 0.0;
 unsigned int UnsignedTemp = 0;
 boolean AOGconnected = false;
 
@@ -173,7 +172,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("Rate Control Nano33 for RateController100  :  02/Apr/2020");
+	Serial.println("Rate Control Nano33 for RateController100  :  03/Apr/2020");
 	Serial.println();
 
 	pinMode(Relay1, OUTPUT);
@@ -278,7 +277,7 @@ void loop()
 			AOGconnected = false;
 		}
 
-		if (RelaysOn)
+		if (RelaysOn && AutoOn)
 		{
 			pwmSetting = DoPID(rateError, rateSetPoint, LOOP_TIME, MinPWMvalue, MaxPWMvalue, KP, KI, KD, DeadBand);
 		}

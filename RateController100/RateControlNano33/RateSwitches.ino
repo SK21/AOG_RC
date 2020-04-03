@@ -2,105 +2,103 @@
 
 void ReadRateSwitch()
 {
-	SWreadTime = millis();
-
 	RateUpPressed = !digitalRead(RateUpPin);
 	RateDownPressed = !digitalRead(RateDownPin);
 
-	// rate up
-	if (RateUpPressed)
+	if (RateUpPressed || RateDownPressed)
 	{
+		// rate switch pressed
+		SWreadTime = millis();
+
 		if (SWreadTime - RateLastTime > RateDelayTime)
 		{
+			RateLastTime = SWreadTime;
 			if (AutoOn)
 			{
-				if (bitRead(OutCommand, 2))
+				if (RateUpPressed)
 				{
-					if (!bitRead(OutCommand, 3))
+					if (bitRead(OutCommand, 2))
 					{
-						bitSet(OutCommand, 3);
-						bitClear(OutCommand, 2);
+						if (!bitRead(OutCommand, 3))
+						{
+							bitSet(OutCommand, 3);
+							bitClear(OutCommand, 2);
+						}
 					}
+					else
+					{
+						bitSet(OutCommand, 2);
+					}
+					bitClear(OutCommand, 4); // left
+					bitSet(OutCommand, 5); // rate up
 				}
-				else
+
+				if (RateDownPressed)
 				{
-					bitSet(OutCommand, 2);
+					if (bitRead(OutCommand, 2))
+					{
+						if (!bitRead(OutCommand, 3))
+						{
+							bitSet(OutCommand, 3);
+							bitClear(OutCommand, 2);
+						}
+					}
+					else
+					{
+						bitSet(OutCommand, 2);
+					}
+					bitClear(OutCommand, 4); // left
+					bitClear(OutCommand, 5); // rate down
 				}
-				bitClear(OutCommand, 4); // left
-				bitSet(OutCommand, 5); // rate up
 			}
 			else
 			{
-				RateUpMan = true;
-				RateDownMan = false;
-				switch (pwmManualRatio)
-				{
-				case 10:
-					pwmManualRatio = 50;
-					break;
-				case 50:
-					pwmManualRatio = 100;
-					break;
-				default:
-					pwmManualRatio = 100;
-					break;
-				}
-			}
-			RateLastTime = SWreadTime;
-		}
-	}
+				// manual rate adjustment
+				HalfWay = MinPWMvalue + (MaxPWMvalue - MinPWMvalue) / 2;
 
-	if (RateDownPressed)
-	{
-		if (SWreadTime - RateLastTime > RateDelayTime)
-		{
-			if (AutoOn)
-			{
-				if (bitRead(OutCommand, 2))
+				if (pwmSettingManual < MinPWMvalue)
 				{
-					if (!bitRead(OutCommand, 3))
-					{
-						bitSet(OutCommand, 3);
-						bitClear(OutCommand, 2);
-					}
+					pwmSettingManual = MinPWMvalue;
+				}
+				else if ((pwmSettingManual >= MinPWMvalue) && (pwmSettingManual < HalfWay))
+				{
+					pwmSettingManual = HalfWay;
+				}
+				else if (pwmSettingManual >= HalfWay)
+				{
+					pwmSettingManual = MaxPWMvalue;
+				}
+
+				if (pwmSettingManual < MinPWMvalue) pwmSettingManual = MinPWMvalue;
+				if (pwmSettingManual > MaxPWMvalue) pwmSettingManual = MaxPWMvalue;
+
+				if (RateUpPressed)
+				{
+					pwmSetting = pwmSettingManual;
 				}
 				else
 				{
-					bitSet(OutCommand, 2);
-				}
-				bitClear(OutCommand, 4); // left
-				bitClear(OutCommand, 5); // rate down
-			}
-			else
-			{
-				RateUpMan = false;
-				RateDownMan = true;
-				switch (pwmManualRatio)
-				{
-				case 100:
-					pwmManualRatio = 50;
-					break;
-				case 50:
-					pwmManualRatio = 10;
-					break;
-				default:
-					pwmManualRatio = 10;
-					break;
+					pwmSetting = pwmSettingManual * -1;
 				}
 			}
-			RateLastTime = SWreadTime;
 		}
 	}
-
-	// rate button not pressed
-	if (!RateUpPressed && !RateDownPressed)
+	else
 	{
-		RateDownMan = false;
-		RateUpMan = false;
-		pwmManualRatio = 0;
-		// clear rate values after delay
+		// rate switch not pressed
+
+		if (!AutoOn)
+		{
+			// reset manual values
+			pwmSettingManual = 0;
+			pwmSetting = 0;
+		}
+
+		RateLastTime = millis() - RateDelayTime;
+
 		if (SWreadTime - RateLastTime > SWdelay)
 		{
+			// clear rate values after delay
 			bitClear(OutCommand, 2);
 			bitClear(OutCommand, 3);
 			bitClear(OutCommand, 4);
@@ -108,5 +106,6 @@ void ReadRateSwitch()
 		}
 	}
 }
+
 
 
