@@ -49,12 +49,12 @@ namespace RateController
                         break;
                     case SimType.RealNano:
                         mf.Text = "Rate Controller (R)";
-                        mf.SER.OpenRCport();
+                        //mf.SER.OpenRCport();
                         SetRCbuttons();
                         break;
                     default:
                         mf.Text = "Rate Controller";
-                        mf.SER.OpenRCport();
+                        //mf.SER.OpenRCport();
                         SetRCbuttons();
                         break;
                 }

@@ -807,7 +807,7 @@
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(412, 439);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Misc";
+            this.tabPage4.Text = "About";
             // 
             // label33
             // 

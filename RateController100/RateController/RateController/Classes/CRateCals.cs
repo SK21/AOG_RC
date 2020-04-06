@@ -21,7 +21,7 @@ namespace RateController
         public readonly FormRateControl mf;
 
         public PGN32761 Switches32761;
-        
+
         // Arduino
         private PGN35000 ArdSend35000;
         private PGN35100 ArdSend35100;
@@ -41,6 +41,8 @@ namespace RateController
         private double QuantityApplied = 0;
         private double CurrentQuantity = 0;
         private double LastAccQuantity = 0;
+        private double LastQuantityDifference = 0;
+
         public bool EraseApplied = false;
 
         private double Coverage = 0;
@@ -67,6 +69,9 @@ namespace RateController
         private bool PauseArea = false;
         public clsArduino Nano;
         private SimType cSimulationType = 0; // 0 none, 1 virtual nano, 2 real nano
+
+        double Ratio;
+        DateTime QcheckLast;
 
         public CRateCals(FormRateControl CallingForm)
         {
@@ -183,11 +188,14 @@ namespace RateController
                 CurrentQuantity = AccQuantity - LastAccQuantity;
                 LastAccQuantity = AccQuantity;
 
-                // tank remaining
-                TankRemaining -= CurrentQuantity;
+                if (QuantityValid(CurrentQuantity))
+                {
+                    // tank remaining
+                    TankRemaining -= CurrentQuantity;
 
-                // quantity applied
-                QuantityApplied += CurrentQuantity;
+                    // quantity applied
+                    QuantityApplied += CurrentQuantity;
+                }
             }
             else
             {
@@ -213,7 +221,7 @@ namespace RateController
                     break;
                 case 1:
                     // hectares
-                    V = RateSet * HectaresPerMinute ;
+                    V = RateSet * HectaresPerMinute;
                     break;
                 case 2:
                     // minutes
@@ -284,7 +292,7 @@ namespace RateController
 
         public string CurrentRate()
         {
-            if (ArduinoConnected & AogConnected & HectaresPerMinute  > 0)
+            if (ArduinoConnected & AogConnected & HectaresPerMinute > 0)
             {
                 return RateApplied().ToString("N1");
             }
@@ -375,9 +383,9 @@ namespace RateController
             }
         }
 
-       public void UDPcommFromAOG(byte[] data)
+        public void UDPcommFromAOG(byte[] data)
         {
-            if(AogRec35400.ParseByteData(data))
+            if (AogRec35400.ParseByteData(data))
             {
                 AogReceiveTime = DateTime.Now;
             }
@@ -421,8 +429,62 @@ namespace RateController
             Properties.Settings.Default.DeadBand = ArdSend35100.Deadband;
             Properties.Settings.Default.MinPWM = ArdSend35100.MinPWM;
             Properties.Settings.Default.MaxPWM = ArdSend35100.MaxPWM;
-            Properties.Settings.Default.SimulateType =(int) cSimulationType;
+            Properties.Settings.Default.SimulateType = (int)cSimulationType;
             Properties.Settings.Default.AdjustmentFactor = ArdSend35100.AdjustmentFactor;
+        }
+
+        private bool QuantityValid(double CurrentDifference)
+        {
+            bool Result = true;
+            try
+            {
+                // check quantity error
+                if (LastQuantityDifference > 0)
+                {
+                    Ratio = CurrentDifference / LastQuantityDifference;
+                    if ((Ratio > 4) | (Ratio < 0.25))
+                    {
+                        mf.Tls.WriteActivityLog("Quantity Check Ratio: " + Ratio.ToString("N2")
+                            + " Current Amount: " + CurrentDifference.ToString("N2") + " Last Amount: " + LastQuantityDifference.ToString("N2")
+                            + " RateSet: " + RateSet.ToString("N2") + " Current Rate: " + CurrentRate() + "\n");
+                    }
+                    if (Ratio > 10) Result = false; // too much of a change in quantity
+                }
+
+                // check rate error
+                if (RateSet > 0)
+                {
+                    Ratio = RateApplied() / RateSet;
+                    if ((Ratio > 1.5) | (Ratio < 0.67))
+                    {
+                        mf.Tls.WriteActivityLog("Rate Check Ratio: " + Ratio.ToString("N2")
+                            + " Current Amount: " + CurrentDifference.ToString("N2") + " Last Amount: " + LastQuantityDifference.ToString("N2")
+                            + " RateSet: " + RateSet.ToString("N2") + " Current Rate: " + CurrentRate() + "\n");
+                    }
+                }
+
+                // record values periodically
+                if ((DateTime.Now - QcheckLast).TotalMinutes > 30)
+                {
+                    QcheckLast = DateTime.Now;
+
+                    if (LastQuantityDifference > 0)
+                    {
+                        Ratio = CurrentDifference / LastQuantityDifference;
+                        mf.Tls.WriteActivityLog("Quantity Check Ratio: " + Ratio.ToString("N2")
+                            + " Current Amount: " + CurrentDifference.ToString("N2") + " Last Amount: " + LastQuantityDifference.ToString("N2")
+                            + " RateSet: " + RateSet.ToString("N2") + " Current Rate: " + CurrentRate() + "\n");
+                    }
+                }
+
+                LastQuantityDifference = CurrentDifference;
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("cRateCals: QuantityValid: " + ex.Message);
+                return false;
+            }
         }
     }
 }

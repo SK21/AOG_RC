@@ -75,7 +75,7 @@ volatile unsigned long pulseCount = 0;
 float FlowRate = 0;
 float FlowRateFiltered = 0.0; 
 float pulseAverage = 0;
-unsigned long accumulatedCounts = 0;
+float accumulatedCounts = 0;
 float countsThisLoop = 0;
 float AdjustmentFactor = 0.95;
 
@@ -172,7 +172,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("Rate Control Nano33 for RateController100  :  03/Apr/2020");
+	Serial.println("Rate Control Nano33 for RateController100  :  06/Apr/2020");
 	Serial.println();
 
 	pinMode(Relay1, OUTPUT);

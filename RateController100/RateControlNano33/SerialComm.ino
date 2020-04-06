@@ -48,7 +48,7 @@ void SendSerial()
 	Serial.print(",");
 
 	// accumulated quantity, 3 bytes
-	int Units = accumulatedCounts * 100 / MeterCal;
+	long Units = accumulatedCounts * 100.0 / MeterCal;
 	Temp = Units >> 16;
 	Serial.print(Temp);
 	Serial.print(",");

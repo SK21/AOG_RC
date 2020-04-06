@@ -13,7 +13,7 @@ void SendUDPWifi()
 	toSend[3] = Temp;
 
 	// accumulated quantity, 3 bytes
-	int Units = accumulatedCounts * 100 / MeterCal;
+	long Units = accumulatedCounts * 100.0 / MeterCal;
 	Temp = Units >> 16;
 	toSend[4] = Temp;
 	Temp = Units >> 8;
@@ -68,12 +68,12 @@ void ReceiveUDPWifi()
 			RelayFromAOG = InBuffer[3];
 
 			// rate setting, 100 times actual
-			unsignedTemp = InBuffer[4] << 8 | InBuffer[5];
-			rateSetPoint = (float)unsignedTemp * 0.01;
+			UnsignedTemp = InBuffer[4] << 8 | InBuffer[5];
+			rateSetPoint = (float)UnsignedTemp * 0.01;
 
 			// Meter Cal, 100 times actual
-			unsignedTemp = InBuffer[6] << 8 | InBuffer[7];
-			MeterCal = (float)unsignedTemp * 0.01;
+			UnsignedTemp = InBuffer[6] << 8 | InBuffer[7];
+			MeterCal = (float)UnsignedTemp * 0.01;
 
 			// command byte
 			InCommand = InBuffer[8];
