@@ -1,0 +1,7 @@
+Add this to the Additional Boards Manager
+
+,https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json
+
+
+Select SparkFun Samd Boards in the Boards Manager.
+

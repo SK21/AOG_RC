@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name AutoSteer5)(type KiCad)(uri ${KIPRJMOD}/AutoSteer5.pretty)(options "")(descr ""))
+)
