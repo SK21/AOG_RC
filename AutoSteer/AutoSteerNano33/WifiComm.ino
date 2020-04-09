@@ -10,12 +10,14 @@ void SendUDPWifi()
 	OutBuffer[3] = (byte)(temp);
 
 	// heading
-	OutBuffer[4] = (byte)(IMUheading >> 8);
-	OutBuffer[5] = (byte)(IMUheading);
+	temp = IMUheading * 16;
+	OutBuffer[4] = (byte)(temp >> 8);
+	OutBuffer[5] = (byte)(temp);
 
 	// Roll
-	OutBuffer[6] = (byte)(CurrentRoll >> 8);
-	OutBuffer[7] = (byte)(CurrentRoll);
+	temp = FilteredRoll * 16;
+	OutBuffer[6] = (byte)(temp >> 8);
+	OutBuffer[7] = (byte)(temp);
 
 	//switch byte
 	OutBuffer[8] = switchByte;

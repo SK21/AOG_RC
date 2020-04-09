@@ -1,15 +1,27 @@
 void UpdateHeadingRoll()
 {
 	// serial-attached IMU
-	if (IMUserial.available() > 0 && !PGN32750)
+	// PGN32750 
+	// 0 HeaderHi       127
+	// 1 HeaderLo       238
+	// 2 -
+	// 3 -
+	// 4 HeadingHi      actual X 16
+	// 5 HeadingLo
+	// 6 RollHi         actual X 16
+	// 7 RollLo
+	// 8 PitchHi        actual X 16
+	// 9 PitchLo
+
+	if (IMUserial.available() > 0 && !PGN32750Found)
 	{
 		int temp = IMUserial.read();
 		IMUheader = IMUtempHeader << 8 | temp;
 		IMUtempHeader = temp;
-		PGN32750 = (IMUheader == 32750);
+		PGN32750Found = (IMUheader == 32750);
 	}
 
-	if (IMUserial.available() > 7 && PGN32750)
+	if (IMUserial.available() > 7 && PGN32750Found)
 	{
 		IMUserial.read();
 		IMUserial.read();
@@ -18,7 +30,7 @@ void UpdateHeadingRoll()
 		IMUroll = (IMUserial.read() << 8 | IMUserial.read()) / 16.0;
 		IMUpitch = (IMUserial.read() << 8 | IMUserial.read()) / 16.0;
 
-		PGN32750 = false;
+		PGN32750Found = false;
 
 		if (aogSettings.UseMMA_X_Axis)
 		{

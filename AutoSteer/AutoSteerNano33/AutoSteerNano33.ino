@@ -1,4 +1,3 @@
-// #includes - need to be before first line of actual code so that all necessary prototypes are added
 #include <SPI.h>
 #include <WiFiNINA.h>
 #include <WiFiUdp.h>
@@ -11,18 +10,31 @@
 // WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
 // ADS reading of the WAS ranges from 2700 to 24000 (21300)
 // counts per degree for this sensor is 237 (21300/90)
+
 float SteerCPD = 237;	// AOG value sent * 2
 int SteeringZeroOffset = 15000; 
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
+
 int SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
 byte MinPWMvalue = 10;
+int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering wheel encoder  
+
+int MinSpeed = 1;
+int MaxSpeed = 15;
+bool InvertWas = false;
+
+byte AckermanFix = 100;	// %
+int SteerDeadband = 3;	// % error allowed
+bool UseSteerSwitch = false;	// true - on/off switch, false - momentary button
+
+bool UsePitch = false;	// true - use pitch, false - use roll
+bool InvertRoll = false;
 
 #define UseWifi 0	// 0 Serial/USB, 1 wifi
 #define WifiSSID "tractor"
 #define WifiPassword "450450450"
 
 #define UseEncoder 0	// Steering Wheel ENCODER Installed
-int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering wheel encoder  
 
 // ****** select only one IMU
 #define UseSerialIMU 1	// 0 false, 1 true 
@@ -36,6 +48,7 @@ int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering whee
 
 #define AdsWAS 3	// ADS1115 wheel angle sensor pin
 #define AdsRoll 2	// ADS1115 roll pin
+#define AdsPitch 1	// ADS1115 pitch pin
 
 #define EncoderPin  2
 #define WORKSW_PIN  4
@@ -83,9 +96,9 @@ byte watchdogTimer = 12;
 byte serialResetTimer = 0; //if serial buffer is getting full, empty it
 
 //Kalman variables
-float rollK = 0;
 float XeRoll = 0;
-int CurrentRoll = 0;
+float RawRoll = 9999;
+float FilteredRoll = 9999;
 float Pc = 0.0;
 float G = 0.0;
 float P = 1.0;
@@ -129,9 +142,10 @@ float Kd = 0.0f;  //derivative gain
 float maxIntegralValue = 20; //max PWM value for integral PID component
 
 //IMU
-int IMUheading = 9999;	// *******  if there is no gyro installed send 9999
-int IMUroll = 9999;	//*******  if no roll is installed, send 9999
-boolean IMUdataFound = false;
+float IMUheading = 9999;	// *******  if there is no gyro installed send 9999
+float IMUroll = 9999;	//*******  if no roll is installed, send 9999
+float IMUpitch = 9999;
+boolean PGN32750Found = false;
 int IMUheader;
 int IMUtempHeader;
 bool OnBoardIMUenabled = false;
@@ -182,7 +196,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer Nano33  :  08/Apr/2020");
+	Serial.println("AutoSteer Nano33  :  09/Apr/2020");
 	Serial.println();
 
 	//keep pulled high and drag low to activate, noise free safe

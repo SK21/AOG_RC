@@ -7,9 +7,9 @@ void CommToAOG()
 	Serial.print(",");
 	Serial.print((int)(steerAngleSetPoint * 100));   //the setpoint originally sent
 	Serial.print(",");
-	Serial.print(IMUheading); //heading in degrees * 16
+	Serial.print((int)(IMUheading * 16));
 	Serial.print(",");
-	Serial.print(CurrentRoll);
+	Serial.print((int)(FilteredRoll * 16));;
 	Serial.print(",");
 	Serial.print(switchByte); //steering switch status
 	Serial.println(",,,");

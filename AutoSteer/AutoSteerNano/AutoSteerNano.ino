@@ -114,7 +114,7 @@ float maxIntegralValue = 20; //max PWM value for integral PID component
 float IMUheading = 9999;	// *******  if there is no gyro installed send 9999
 float IMUroll = 9999;		//*******  if no roll is installed, send 9999
 float IMUpitch = 9999;
-boolean PGN32750 = false;
+boolean PGN32750Found = false;
 int IMUheader;
 int IMUtempHeader;
 
