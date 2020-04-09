@@ -185,7 +185,9 @@ namespace RateController
             mf.Tls.IsOnScreen(this, true);
             lbNetworkIP.Text = mf.NetworkIP;
             lbLocalIP.Text = mf.LocalIP;
-            lbVersion.Text = mf.Tls.VersionDate();
+            lbVersion.Text = "Version Date   " + mf.Tls.VersionDate();
+            lbDestinationIP.Text = Properties.Settings.Default.DestinationIP;
+
             LoadRCbox();
             SetRCbuttons();
             SetDayMode();
@@ -482,6 +484,11 @@ namespace RateController
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbVersion_Click(object sender, EventArgs e)
         {
 
         }

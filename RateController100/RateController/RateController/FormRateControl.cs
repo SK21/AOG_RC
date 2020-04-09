@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Net;
 
 namespace RateController
 {
@@ -21,9 +22,13 @@ namespace RateController
             RC = new CRateCals(this);
             Tls = new clsTools(this);
             SER = new SerialComm(this);
-            UDPnetwork = new UDPComm(this, Properties.Settings.Default.DestinationIP, 8000, 2188);
+
             LocalIP = "127.100.0.0";
-            UDPlocal = new UDPComm(this, LocalIP, 8888, 2388);
+            UDPlocal = new UDPComm(this, LocalIP, 8120, 2388);
+
+            Properties.Settings.Default.DestinationIP = BroadcastIP(UDPlocal.GetLocalIP());
+
+            UDPnetwork = new UDPComm(this, Properties.Settings.Default.DestinationIP, 8000, 2188);
         }
 
         public void UpdateStatus()
@@ -185,6 +190,25 @@ namespace RateController
         {
             ShowAverageRate = !ShowAverageRate;
             UpdateStatus();
+        }
+
+        private string BroadcastIP(string IP)
+        {
+            string Result = "";
+            string[] data = IP.Split('.');
+            if (data.Length == 4)
+            {
+                Result = data[0] + "." + data[1] + "." + data[2] + ".255";
+            }
+
+            if (IPAddress.TryParse(Result, out IPAddress Tmp))
+            {
+                return Result;
+            }
+            else
+            {
+                return "192.168.1.255";
+            }
         }
     }
 }

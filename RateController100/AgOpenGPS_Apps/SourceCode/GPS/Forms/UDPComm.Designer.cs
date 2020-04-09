@@ -929,7 +929,7 @@ namespace AgOpenGPS
 
                     // send data
                     RCip = IPAddress.Parse("127.100.0.0");
-                    RCendPt = new IPEndPoint(RCip, 8888);
+                    RCendPt = new IPEndPoint(RCip, 8120);
                     sendSocket.BeginSendTo(Data, 0, Data.Length, SocketFlags.None, RCendPt, new AsyncCallback(SendData), null);
                 }
             }
