@@ -6,9 +6,13 @@
 
 MPU9250_DMP imu;
 
-float Roll = 0;
 int SendHz = 10;
+
+float Roll = 0.0;
+float Pitch = 0.0;
+
 unsigned long LastTime = 0;
+int temp = 0;
 
 void setup() 
 {
@@ -16,7 +20,7 @@ void setup()
 
 	delay(5000);
 	SerialPort.println();
-	SerialPort.println("IMU_Razor  :  Version Date: 11/Feb/2020");
+	SerialPort.println("IMU_Razor  :   08/Apr/2020");
 	SerialPort.println();
 
 	Serial1.begin(38400);
@@ -38,13 +42,13 @@ void setup()
               10); // Set DMP FIFO rate to 10 Hz
 }
 
-void loop() 
+void loop()
 {
 	// Check for new data in the FIFO
-	if ( imu.fifoAvailable() )
+	if (imu.fifoAvailable())
 	{
 		// Use dmpUpdateFifo to update the ax, gx, mx, etc. values
-		if ( imu.dmpUpdateFifo() == INV_SUCCESS)
+		if (imu.dmpUpdateFifo() == INV_SUCCESS)
 		{
 			// computeEulerAngles can be used -- after updating the
 			// quaternion values -- to estimate roll, pitch, and yaw
@@ -58,30 +62,87 @@ void loop()
 		Roll = Roll - 360.0;
 	}
 
+	Pitch = imu.pitch;
+	if (Pitch > 180)
+	{
+		Pitch = Pitch - 360.0;
+	}
+
 	if ((millis() - LastTime) > (1000 / SendHz))
 	{
 		LastTime = millis();
-		CommToAutoSteer();
-	}
 
-	SerialPort.println();
-	SerialPort.println("Heading " + String(imu.yaw));
-	SerialPort.println("Roll " + String(Roll));
+		// PGN32750 
+		// 0 HeaderHi       127
+		// 1 HeaderLo       238
+		// 2 -
+		// 3 -
+		// 4 HeadingHi      actual X 16
+		// 5 HeadingLo
+		// 6 RollHi         actual X 16
+		// 7 RollLo
+		// 8 PitchHi        actual X 16
+		// 9 PitchLo
+
+		SendSerialUSB();
+		SendSerial1();
+	}
 }
 
-void CommToAutoSteer()
+void SendSerialUSB()
 {
-	//header bytes for 32500
-	Serial1.write(126);
-	Serial1.write(244);
+	SerialPort.print("127,238,0,0,");
 
 	// heading
-	int temp = imu.yaw * 16;	// 16 * actual
+	temp = imu.yaw * 16;
+	SerialPort.print((byte)(temp >> 8));
+	SerialPort.print(",");
+	SerialPort.print((byte)temp);
+	SerialPort.print(",");
+
+	// roll
+	temp = Roll * 16;
+	SerialPort.print((byte)(temp >> 8));
+	SerialPort.print(",");
+	SerialPort.print((byte)temp);
+	SerialPort.print(",");
+
+	// pitch
+	temp = Pitch * 16;
+	SerialPort.print((byte)(temp >> 8));
+	SerialPort.print(",");
+	SerialPort.print((byte)temp);
+
+	SerialPort.println();
+	SerialPort.flush();
+
+	//SerialPort.print("  Heading " + String(imu.yaw));
+	//SerialPort.print("  Roll " + String(imu.roll) + "  " + String(Roll));
+	//SerialPort.println("  Pitch " + String(imu.pitch) + "  " + String(Pitch));
+}
+
+void SendSerial1()
+{
+	Serial1.write(127);
+	Serial1.write(238);
+
+	temp = 0;
+	Serial1.write(temp);
+	Serial1.write(temp);
+
+	// heading
+	temp = imu.yaw * 16;
 	Serial1.write((byte)(temp >> 8));
 	Serial1.write((byte)temp);
 
 	// roll
-	temp = Roll * 16;	// 16 * actual
+	temp = Roll * 16;
+	Serial1.write((byte)(temp >> 8));
+
+	Serial1.write((byte)temp);
+
+	// pitch
+	temp = Pitch * 16;
 	Serial1.write((byte)(temp >> 8));
 	Serial1.write((byte)temp);
 }

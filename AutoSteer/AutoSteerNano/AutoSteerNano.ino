@@ -1,8 +1,8 @@
-// #includes - need to be before first line of actual code so that all necessary prototypes are added
 #include <SoftwareSerial.h>
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
 #include <EtherCard.h>
+#include <EEPROM.h> 
 
 
 // user settings ****************************
@@ -11,38 +11,47 @@
 // ADS reading of the WAS ranges from 2700 to 24000 (21300)
 // counts per degree for this sensor is 237 (21300/90)
 
-float SteerCPD = 237;	// AOG value sent * 2
-int SteeringZeroOffset = 13350; 
+float SteerCPD = 237;		// AOG value sent * 2
+int SteeringZeroOffset = 15000; 
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
 int SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
+
 byte MinPWMvalue = 10;
 
 #define CommType 0		// 0 Serial/USB, 1 UDP wired
-	
-#define UseDog2 1	// 0 false, 1 true (inclinometer)
-
-#define UseSerialIMU 1	// 0 false, 1 true
-
-#define UseEncoder 0	// Steering Wheel ENCODER Installed
-int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering wheel encoder  
 
 #define AdsWAS 3	// ADS1115 wheel angle sensor pin
 #define AdsRoll 2	// ADS1115 roll pin
+#define AdsPitch 1	// ADS1115 pitch pin
+
+int SteerDeadband = 3;	// % error allowed
 
 // ******************************************
 
+// PCB 3.1
 #define EncoderPin  2
 #define WORKSW_PIN  4
 #define STEERSW_PIN  7
 #define DIR_PIN  8
 #define PWM_PIN  9
-
-// serial RX	5
-// serial TX	6
+#define SSRX 5
+#define SSTX 6
 // SDA			A4
 // SCL			A5
 
-SoftwareSerial IMUserial(5, 6);
+// PCB 7
+//#define EncoderPin 3
+//#define WORKSW_PIN 4
+//#define STEERSW_PIN A0
+//#define DIR_PIN A1
+//#define PWM_PIN 9
+//#define SSRX 5
+//#define SSTX 6
+// SDA			A4
+// SCL			A5
+
+
+SoftwareSerial IMUserial(SSRX, SSTX);
 
 Adafruit_ADS1115 ads(0x48);
 
@@ -54,9 +63,9 @@ byte watchdogTimer = 12;
 byte serialResetTimer = 0; //if serial buffer is getting full, empty it
 
 //Kalman variables
-float rollK = 0;
 float XeRoll = 0;
-int CurrentRoll = 0;
+float RawRoll = 0;
+float FilteredRoll = 0;
 float Pc = 0.0;
 float G = 0.0;
 float P = 1.0;
@@ -71,7 +80,9 @@ bool PGN32763Found = false; // AogSettings
 bool PGN32764Found = false;	// autosteer settings
 bool PGN32766Found = false;	// autosteer data
 
-int header = 0, tempHeader = 0, temp;
+unsigned int header;
+unsigned int tempHeader;
+unsigned int temp;
 
 byte relay = 0, uTurn = 0;
 float distanceFromLine = 0;
@@ -100,9 +111,10 @@ float Kd = 0.0f;  //derivative gain
 float maxIntegralValue = 20; //max PWM value for integral PID component
 
 //IMU
-int IMUheading = 9999;	// *******  if there is no gyro installed send 9999
-int IMUroll = 9999;	//*******  if no roll is installed, send 9999
-boolean IMUdataFound = false;
+float IMUheading = 9999;	// *******  if there is no gyro installed send 9999
+float IMUroll = 9999;		//*******  if no roll is installed, send 9999
+float IMUpitch = 9999;
+boolean PGN32750 = false;
 int IMUheader;
 int IMUtempHeader;
 
@@ -148,6 +160,31 @@ byte Ethernet::buffer[200]; // udp send and receive buffer
 byte toSend[] = { 0,0,0,0,0,0,0,0,0,0 };
 #endif
 
+//Variables for settings - 0 is false  
+struct Setup {
+	byte InvertWAS = 0;
+	byte InvertRoll = 0;
+	byte MotorDriveDirection = 0;
+	byte SingleInputWAS = 1;
+	byte CytronDriver = 1;
+	byte SteerSwitch = 1;
+	byte UseMMA_X_Axis = 0;
+	byte ShaftEncoder = 0;
+
+	byte BNOInstalled = 0;
+	byte InclinometerInstalled = 0;   // set to 0 for none
+									  // set to 1 if DOGS2 Inclinometer is installed
+	byte MaxSpeed = 20;
+	byte MinSpeed = 15;
+	byte PulseCountMax = 5;
+	byte AckermanFix = 100;     //sent as percent
+};  Setup aogSettings;          //11 bytes
+
+//reset function
+void(*resetFunc) (void) = 0;
+
+#define EEP_Ident 0xEDFB  
+int EEread = 0;
 
 void setup()
 {
@@ -160,8 +197,24 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer Nano 400  :  08/Mar/2020");
+	Serial.println("AutoSteer Nano   :  08/Apr/2020");
 	Serial.println();
+
+	EEPROM.get(0, EEread);              // read identifier
+
+	if (EEread != EEP_Ident)   // check on first start and write EEPROM
+	{
+		EEPROM.put(0, EEP_Ident);
+		//EEPROM.put(2, 1660);
+		//EEPROM.put(10, steerSettings);
+		EEPROM.put(40, aogSettings);
+	}
+	else
+	{
+		//EEPROM.get(2, EEread);            // read SteerPosZero
+		//EEPROM.get(10, steerSettings);     // read the Settings
+		EEPROM.get(40, aogSettings);
+	}
 
 	//keep pulled high and drag low to activate, noise free safe
 	pinMode(WORKSW_PIN, INPUT_PULLUP);

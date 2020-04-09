@@ -8,25 +8,24 @@ void DoSteering()
 	//convert position to steer angle. 6 counts per degree of steer pot position in my case
 	//  ***** make sure that negative steer angle makes a left turn and positive value is a right turn *****
 	// remove or add the minus for steerSensorCounts to do that.
-	steerAngleActual = (float)(steeringPosition) / -SteerCPD;
+	steerAngleActual = (float)(steeringPosition) / (SteerCPD);
 
+	if (aogSettings.InvertWAS) steerAngleActual *= -1.0;
 
-	//*************** Drive Steering Motor ***********
-	pwmDrive = 0; //turn off steering motor
+	if (steerAngleActual < 0) steerAngleActual = (steerAngleActual * aogSettings.AckermanFix) / 100;
+
+	steerAngleError = steerAngleActual - steerAngleSetPoint;   //calculate the steering error
+
 	if (SteeringEnabled())
 	{
-		steerAngleError = steerAngleActual - steerAngleSetPoint;   //calculate the steering error
-
-		// PID
-		pwmDrive = Kp * steerAngleError * Ko;
-		pwmDrive = (constrain(pwmDrive, -255, 255));
-
-		//add min throttle factor so no delay from motor resistance.
-		if (pwmDrive < 0) pwmDrive -= MinPWMvalue;
-		else if (pwmDrive > 0) pwmDrive += MinPWMvalue;
-
-		if (pwmDrive > 255) pwmDrive = 255;
-		if (pwmDrive < -255) pwmDrive = -255;
+		//pwmDrive = GetPWM();
+		pwmDrive = DoPID(steerAngleError, steerAngleSetPoint, LOOP_TIME, MinPWMvalue, 255, Kp * Ko, Ki, Kd, SteerDeadband);
+	
+		if (aogSettings.MotorDriveDirection) pwmDrive *= -1;
+	}
+	else
+	{
+		pwmDrive = 0;
 	}
 
 	// pwm value out to motor
@@ -39,6 +38,7 @@ void DoSteering()
 		digitalWrite(DIR_PIN, LOW);
 		pwmDrive = -1 * pwmDrive;
 	}
+
 	analogWrite(PWM_PIN, pwmDrive);
 }
 
@@ -49,14 +49,12 @@ bool SteeringEnabled()
 	// check steering wheel encoder
 	watchdogTimer++;
 
-	if (pulseCount >= pulseCountMax)
+	if (watchdogTimer > 10 || distanceFromLine == 32020 || SteerSwitch == HIGH 
+		|| pulseCount >= aogSettings.PulseCountMax 
+		|| (CurrentSpeed < aogSettings.MinSpeed) || CurrentSpeed > aogSettings.MaxSpeed)
 	{
 		SteerSwitch = HIGH;
 		pulseCount = 0;
-	}
-
-	if (watchdogTimer > 10 || distanceFromLine == 32020 || CurrentSpeed < 1 || SteerSwitch == HIGH)
-	{
 		watchdogTimer = 12;
 		return false;
 	}
@@ -65,4 +63,21 @@ bool SteeringEnabled()
 		return true;
 	}
 }
+
+int GetPWM()
+{
+	// PID
+	temp = Kp * steerAngleError * Ko;
+	temp = (constrain(temp, -255, 255));
+
+	//add min throttle factor so no delay from motor resistance.
+	if (temp < 0) temp -= MinPWMvalue;
+	else if (temp > 0) temp += MinPWMvalue;
+
+	if (temp > 255) temp = 255;
+	if (temp < -255) temp = -255;
+
+	return temp;
+}
+
 

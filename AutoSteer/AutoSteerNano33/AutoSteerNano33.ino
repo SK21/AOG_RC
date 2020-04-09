@@ -12,7 +12,7 @@
 // ADS reading of the WAS ranges from 2700 to 24000 (21300)
 // counts per degree for this sensor is 237 (21300/90)
 float SteerCPD = 237;	// AOG value sent * 2
-int SteeringZeroOffset = 16500; 
+int SteeringZeroOffset = 15000; 
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
 int SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
 byte MinPWMvalue = 10;
@@ -21,7 +21,7 @@ byte MinPWMvalue = 10;
 #define WifiSSID "tractor"
 #define WifiPassword "450450450"
 
-#define UseEncoder 1	// Steering Wheel ENCODER Installed
+#define UseEncoder 0	// Steering Wheel ENCODER Installed
 int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering wheel encoder  
 
 // ****** select only one IMU
@@ -30,8 +30,8 @@ int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering whee
 // ******
 
 // ****** select only one source of roll
-#define UseDog2 0	// 0 false, 1 true (inclinometer)
-#define UseIMUroll 1	//0 false, 1 true
+#define UseDog2 1	// 0 false, 1 true (inclinometer)
+#define UseIMUroll 0	//0 false, 1 true
 // ******
 
 #define AdsWAS 3	// ADS1115 wheel angle sensor pin
@@ -182,7 +182,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer Nano33 400  :  08/Mar/2020");
+	Serial.println("AutoSteer Nano33  :  08/Apr/2020");
 	Serial.println();
 
 	//keep pulled high and drag low to activate, noise free safe

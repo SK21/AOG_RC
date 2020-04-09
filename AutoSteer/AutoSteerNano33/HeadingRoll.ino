@@ -30,13 +30,16 @@ void UpdateHeadingRoll()
 		int temp = IMUserial.read();
 		IMUheader = IMUtempHeader << 8 | temp;
 		IMUtempHeader = temp;
-		if (IMUheader == 32500) IMUdataFound = true;
+		if (IMUheader == 32750) IMUdataFound = true;
 	}
 
 	if (IMUserial.available() > 3 && IMUdataFound)
 	{
-		IMUheading = Serial.read() << 8 | Serial.read();
-		rollK = Serial.read() << 8 | Serial.read();
+		IMUserial.read();
+		IMUserial.read();
+
+		IMUheading = IMUserial.read() << 8 | IMUserial.read();
+		rollK = IMUserial.read() << 8 | IMUserial.read();
 		IMUdataFound = false;
 	}
 

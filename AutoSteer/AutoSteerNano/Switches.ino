@@ -3,7 +3,17 @@ void ReadSwitches()
 {
 	workSwitch = digitalRead(WORKSW_PIN);  // read work switch, Low on, High off
 	switchByte = 0;
-	switchByte = ReadPushButton() << 1; //put steerswitch status in bit 1 position
+
+	if (aogSettings.SteerSwitch == 1)
+	{
+		// on off switch
+		switchByte = (digitalRead(STEERSW_PIN)) << 1;
+	}
+	else
+	{
+		switchByte = ReadPushButton() << 1; //put steerswitch status in bit 1 position
+	}
+
 	switchByte = workSwitch | switchByte;
 }
 

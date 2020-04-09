@@ -1,20 +1,38 @@
 void UpdateHeadingRoll()
 {
-#if (UseSerialIMU)
 	// serial-attached IMU
-	if (IMUserial.available() > 0 && !IMUdataFound)
+	if (IMUserial.available() > 0 && !PGN32750)
 	{
 		int temp = IMUserial.read();
 		IMUheader = IMUtempHeader << 8 | temp;
 		IMUtempHeader = temp;
-		IMUdataFound = (IMUheader == 32500);
+		PGN32750 = (IMUheader == 32750);
 	}
 
-	if (IMUserial.available() > 3 && IMUdataFound)
+	if (IMUserial.available() > 7 && PGN32750)
 	{
-		IMUheading = IMUserial.read() << 8 | IMUserial.read();
-		rollK = IMUserial.read() << 8 | IMUserial.read();
-		IMUdataFound = false;
+		IMUserial.read();
+		IMUserial.read();
+
+		IMUheading = (IMUserial.read() << 8 | IMUserial.read()) / 16.0;
+		IMUroll = (IMUserial.read() << 8 | IMUserial.read()) / 16.0;
+		IMUpitch = (IMUserial.read() << 8 | IMUserial.read()) / 16.0;
+
+		PGN32750 = false;
+
+		if (aogSettings.UseMMA_X_Axis)
+		{
+			RawRoll = IMUroll;
+		}
+		else
+		{
+			RawRoll = IMUpitch;
+		}
+
+		//Serial.println();
+		//Serial.println("Heading " + String(IMUheading));
+		//Serial.println("Roll " + String(IMUroll));
+		//Serial.println("Pitch " + String(IMUpitch));
 	}
 
 	if (IMUserial.available() > 20)
@@ -22,26 +40,31 @@ void UpdateHeadingRoll()
 		// empty buffer
 		while (IMUserial.available() > 0) char t = IMUserial.read();
 	}
-#endif
 
-#if UseDog2
-	//inclinometer
-	//ADS1115 address 0x48, X is AIN1, Y is AIN2
-	//ADS max volts is 6.144 at 32767
-	//Dog2 model is G-NSDOG2-001
-	//Dog2 range is 0.5 to 4.5 V, +-25 degrees
-	//ADS reading of the Dog2 ranges from 2700 to 24000 (21300)
-	// counts per degree for this sensor is 426 (21300/50)
-	//rollK = (((ads.readADC_SingleEnded(AdsRoll) - 2700) / 426) - 25) * 16;
-	//rollK = (ads.readADC_SingleEnded(AdsRoll) - 13350) / 26.6;
-
-	rollK = ads.readADC_SingleEnded(AdsRoll);
-	rollK = (rollK - 13350) / 26.6;
-#endif
-
-	if (rollK == 9999)
+	if (aogSettings.InclinometerInstalled == 1)
 	{
-		CurrentRoll = 9999;
+		//Dog2 inclinometer
+		//ADS1115 address 0x48
+		//ADS max volts is 6.144 at 32767
+		//Dog2 model is G-NSDOG2-001
+		//Dog2 range is 0.5 to 4.5 V, +-25 degrees
+		//ADS reading of the Dog2 ranges from 2700 to 24000 (21300)
+		// counts per degree for this sensor is 426 (21300/50)
+		// zero = 2700 + (21300/2)
+
+		if (aogSettings.UseMMA_X_Axis)
+		{
+			RawRoll = (ads.readADC_SingleEnded(AdsRoll) - 13350) / 426;
+		}
+		else
+		{
+			RawRoll = (ads.readADC_SingleEnded(AdsPitch) - 13350) / 426;
+		}
+	}
+
+	if (RawRoll == 9999)
+	{
+		FilteredRoll = 9999;
 	}
 	else
 	{
@@ -51,7 +74,9 @@ void UpdateHeadingRoll()
 		P = (1 - G) * Pc;
 		Xp = XeRoll;
 		Zp = Xp;
-		XeRoll = G * (rollK - Zp) + Xp;
-		CurrentRoll = (int)XeRoll;
+		XeRoll = G * (RawRoll - Zp) + Xp;
+		FilteredRoll = XeRoll;
+
+		if (aogSettings.InvertRoll) FilteredRoll *= -1.0;
 	}
 }
