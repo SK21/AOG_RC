@@ -1,0 +1,17 @@
+ To enable the app for heading in AgOpenGPS click <Data Sources>, <Heading>, <OGI>. For roll <Data Sources>, <Roll>, <UDP>.
+
+
+
+
+Sends and receives:
+		// PGN32750 
+		// 0 HeaderHi       127
+		// 1 HeaderLo       238
+		// 2 -
+		// 3 -
+		// 4 HeadingHi      actual X 16
+		// 5 HeadingLo
+		// 6 RollHi         actual X 16
+		// 7 RollLo
+		// 8 PitchHi        actual X 16
+		// 9 PitchLo
