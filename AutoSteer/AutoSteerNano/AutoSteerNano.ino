@@ -2,31 +2,42 @@
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
 #include <EtherCard.h>
-#include <EEPROM.h> 
 
 
-// user settings ****************************
+// user settings ***********************************************
+
+#define CommType 0		// 0 Serial/USB, 1 UDP wired
+#define UseSteerSwitch 0		// 1 - steer switch, 0 - steer momentary button
+#define UseDog2 1
+
+#define UseEncoder 0
+#define PulseCountMax  3
 
 // WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
 // ADS reading of the WAS ranges from 2700 to 24000 (21300)
 // counts per degree for this sensor is 237 (21300/90)
-
 float SteerCPD = 237;		// AOG value sent * 2
 int SteeringZeroOffset = 15000; 
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
 int SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
 
 byte MinPWMvalue = 10;
-
-#define CommType 0		// 0 Serial/USB, 1 UDP wired
-
-#define AdsWAS 3	// ADS1115 wheel angle sensor pin
-#define AdsRoll 2	// ADS1115 roll pin
-#define AdsPitch 1	// ADS1115 pitch pin
-
 int SteerDeadband = 3;	// % error allowed
+#define UsePitch 0	// 1 - use pitch, 0 - use roll
 
-// ******************************************
+#define InvertWAS  0
+#define InvertRoll  0
+#define InvertMotorDrive 0
+
+#define AckermanFix  100     //sent as percent
+#define MinSpeed  1
+#define MaxSpeed  20
+
+#define AdsPitch 1	// ADS1115 pitch pin
+#define AdsRoll 2	// ADS1115 roll pin
+#define AdsWAS 3	// ADS1115 wheel angle sensor pin
+
+// end user settings ******************************************
 
 // PCB 3.1
 #define EncoderPin  2
@@ -98,6 +109,7 @@ int roll = 0;
 
 //pwm variables
 int pwmDrive = 0;
+int pwmTmp = 0;
 
 float CurrentSpeed = 0.0;
 
@@ -160,32 +172,6 @@ byte Ethernet::buffer[200]; // udp send and receive buffer
 byte toSend[] = { 0,0,0,0,0,0,0,0,0,0 };
 #endif
 
-//Variables for settings - 0 is false  
-struct Setup {
-	byte InvertWAS = 0;
-	byte InvertRoll = 0;
-	byte MotorDriveDirection = 0;
-	byte SingleInputWAS = 1;
-	byte CytronDriver = 1;
-	byte SteerSwitch = 1;
-	byte UseMMA_X_Axis = 0;
-	byte ShaftEncoder = 0;
-
-	byte BNOInstalled = 0;
-	byte InclinometerInstalled = 0;   // set to 0 for none
-									  // set to 1 if DOGS2 Inclinometer is installed
-	byte MaxSpeed = 20;
-	byte MinSpeed = 15;
-	byte PulseCountMax = 5;
-	byte AckermanFix = 100;     //sent as percent
-};  Setup aogSettings;          //11 bytes
-
-//reset function
-void(*resetFunc) (void) = 0;
-
-#define EEP_Ident 0xEDFB  
-int EEread = 0;
-
 void setup()
 {
 	//set up communication
@@ -197,24 +183,8 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer Nano   :  08/Apr/2020");
+	Serial.println("AutoSteer Nano   :  09/Apr/2020");
 	Serial.println();
-
-	EEPROM.get(0, EEread);              // read identifier
-
-	if (EEread != EEP_Ident)   // check on first start and write EEPROM
-	{
-		EEPROM.put(0, EEP_Ident);
-		//EEPROM.put(2, 1660);
-		//EEPROM.put(10, steerSettings);
-		EEPROM.put(40, aogSettings);
-	}
-	else
-	{
-		//EEPROM.get(2, EEread);            // read SteerPosZero
-		//EEPROM.get(10, steerSettings);     // read the Settings
-		EEPROM.get(40, aogSettings);
-	}
 
 	//keep pulled high and drag low to activate, noise free safe
 	pinMode(WORKSW_PIN, INPUT_PULLUP);

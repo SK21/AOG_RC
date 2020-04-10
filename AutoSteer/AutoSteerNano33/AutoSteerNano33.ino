@@ -7,6 +7,25 @@
 #include <MadgwickAHRS.h>
 
 // user settings ****************************
+
+#define UseWifi 0	// 0 Serial/USB, 1 wifi
+#define WifiSSID "tractor"
+#define WifiPassword "450450450"
+
+#define UseSteerSwitch 0		// 1 - steer switch, 0 - steer momentary button
+#define UseEncoder 0			// Steering Wheel ENCODER Installed
+#define PulseCountMax  3
+
+// ****** select only one source of roll
+#define UseDog2 0		// 0 false, 1 true (inclinometer)
+#define UseIMUroll 1	//0 false, 1 true
+// ******
+
+// ****** select only one IMU
+#define UseSerialIMU 1		// 0 false, 1 true 
+#define UseOnBoardIMU 0		// 0 false, 1 true 
+// ******
+
 // WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
 // ADS reading of the WAS ranges from 2700 to 24000 (21300)
 // counts per degree for this sensor is 237 (21300/90)
@@ -14,41 +33,23 @@
 float SteerCPD = 237;	// AOG value sent * 2
 int SteeringZeroOffset = 15000; 
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
-
 int SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
+
 byte MinPWMvalue = 10;
-int pulseCountMax = 3;	// Switch off Autosteer after X Pulses from Steering wheel encoder  
-
-int MinSpeed = 1;
-int MaxSpeed = 15;
-bool InvertWas = false;
-
-byte AckermanFix = 100;	// %
 int SteerDeadband = 3;	// % error allowed
-bool UseSteerSwitch = false;	// true - on/off switch, false - momentary button
+#define UsePitch 0	// 1 - use pitch, 0 - use roll
 
-bool UsePitch = false;	// true - use pitch, false - use roll
-bool InvertRoll = false;
+#define InvertWAS  0
+#define InvertRoll  0
+#define InvertMotorDrive 0
 
-#define UseWifi 0	// 0 Serial/USB, 1 wifi
-#define WifiSSID "tractor"
-#define WifiPassword "450450450"
+#define AckermanFix  100     //sent as percent
+#define MinSpeed  1
+#define MaxSpeed  20
 
-#define UseEncoder 0	// Steering Wheel ENCODER Installed
-
-// ****** select only one IMU
-#define UseSerialIMU 1	// 0 false, 1 true 
-#define UseOnBoardIMU 0	// 0 false, 1 true 
-// ******
-
-// ****** select only one source of roll
-#define UseDog2 1	// 0 false, 1 true (inclinometer)
-#define UseIMUroll 0	//0 false, 1 true
-// ******
-
-#define AdsWAS 3	// ADS1115 wheel angle sensor pin
-#define AdsRoll 2	// ADS1115 roll pin
 #define AdsPitch 1	// ADS1115 pitch pin
+#define AdsRoll 2	// ADS1115 roll pin
+#define AdsWAS 3	// ADS1115 wheel angle sensor pin
 
 #define EncoderPin  2
 #define WORKSW_PIN  4
@@ -129,6 +130,7 @@ int roll = 0;
 
 //pwm variables
 int pwmDrive = 0;
+int pwmTmp = 0;
 
 float CurrentSpeed = 0.0;
 

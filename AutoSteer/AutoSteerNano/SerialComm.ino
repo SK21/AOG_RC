@@ -92,37 +92,14 @@ void ReceiveSerial()
 	{
 		// AogSettings
 		PGN32763Found = false;  //reset the flag
-
-		byte sett = Serial.read(); //setting0
-
-		if (bitRead(sett, 0)) aogSettings.InvertWAS = 1; else aogSettings.InvertWAS = 0;
-		if (bitRead(sett, 1)) aogSettings.InvertRoll = 1; else aogSettings.InvertRoll = 0;
-		if (bitRead(sett, 2)) aogSettings.MotorDriveDirection = 1; else aogSettings.MotorDriveDirection = 0;
-		if (bitRead(sett, 3)) aogSettings.SingleInputWAS = 1; else aogSettings.SingleInputWAS = 0;
-		if (bitRead(sett, 4)) aogSettings.CytronDriver = 1; else aogSettings.CytronDriver = 0;
-		if (bitRead(sett, 5)) aogSettings.SteerSwitch = 1; else aogSettings.SteerSwitch = 0;
-		if (bitRead(sett, 6)) aogSettings.UseMMA_X_Axis = 1; else aogSettings.UseMMA_X_Axis = 0;
-		if (bitRead(sett, 7)) aogSettings.ShaftEncoder = 1; else aogSettings.ShaftEncoder = 0;
-
-		sett = Serial.read();  //setting1  
-
-		if (bitRead(sett, 0)) aogSettings.BNOInstalled = 1; else aogSettings.BNOInstalled = 0;
-
-		aogSettings.MaxSpeed = Serial.read();  
-		aogSettings.MinSpeed = Serial.read();
-
-		byte inc = Serial.read();
-		aogSettings.InclinometerInstalled = inc & 192;
-		aogSettings.InclinometerInstalled = aogSettings.InclinometerInstalled >> 6;
-		aogSettings.PulseCountMax = inc & 63;
-
-		aogSettings.AckermanFix = Serial.read();
-
 		Serial.read();
-
-		EEPROM.put(40, aogSettings);
-
-		resetFunc();
+		Serial.read();
+		Serial.read();
+		Serial.read();
+		Serial.read();
+		Serial.read();
+		Serial.read();
+		Serial.read();
 	}
 }
 #endif

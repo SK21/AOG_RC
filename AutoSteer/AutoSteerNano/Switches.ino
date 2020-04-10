@@ -4,7 +4,7 @@ void ReadSwitches()
 	workSwitch = digitalRead(WORKSW_PIN);  // read work switch, Low on, High off
 	switchByte = 0;
 
-	if (aogSettings.SteerSwitch == 1)
+	if (UseSteerSwitch)
 	{
 		// on off switch
 		switchByte = (digitalRead(STEERSW_PIN)) << 1;

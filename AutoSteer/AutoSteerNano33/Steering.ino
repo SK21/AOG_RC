@@ -10,16 +10,18 @@ void DoSteering()
 	// remove or add the minus for steerSensorCounts to do that.
 	steerAngleActual = (float)(steeringPosition) / (SteerCPD);
 
-	if (InvertWas) steerAngleActual *= -1.0;
+	if (InvertWAS) steerAngleActual *= -1.0;
 
-	if (steerAngleActual < 0)steerAngleActual = steerAngleActual * AckermanFix / 100;
+	if (steerAngleActual < 0)steerAngleActual = steerAngleActual * AckermanFix / 100.0;
 
 	steerAngleError = steerAngleActual - steerAngleSetPoint;   //calculate the steering error
 
 	if (SteeringEnabled())
 	{
-		//pwmDrive = GetPWM();
-		pwmDrive = DoPID(steerAngleError, steerAngleSetPoint, LOOP_TIME, MinPWMvalue, 255, Kp * Ko, Ki, Kd, SteerDeadband);
+		pwmDrive = GetPWM();
+		//pwmDrive = DoPID(steerAngleError, steerAngleSetPoint, LOOP_TIME, MinPWMvalue, 255, Kp * Ko, Ki, Kd, SteerDeadband);
+
+		if (InvertMotorDrive) pwmDrive *= -1;
 	}
 	else
 	{
@@ -48,10 +50,10 @@ bool SteeringEnabled()
 	watchdogTimer++;
 
 	if (watchdogTimer > 10 || distanceFromLine == 32020 || SteerSwitch == HIGH
-		|| pulseCount >= pulseCountMax
+		|| pulseCount >= PulseCountMax
 		|| (CurrentSpeed < MinSpeed) || CurrentSpeed > MaxSpeed)
 	{
-		SteerSwitch = HIGH;
+		//SteerSwitch = HIGH;
 		pulseCount = 0;
 		watchdogTimer = 12;
 		return false;
@@ -65,17 +67,17 @@ bool SteeringEnabled()
 int GetPWM()
 {
 	// PID
-	temp = Kp * steerAngleError * Ko;
-	temp = (constrain(temp, -255, 255));
+	pwmTmp = Kp * steerAngleError * Ko;
+	pwmTmp = (constrain(pwmTmp, -255, 255));
 
 	//add min throttle factor so no delay from motor resistance.
-	if (temp < 0) temp -= MinPWMvalue;
-	else if (temp > 0) temp += MinPWMvalue;
+	if (pwmTmp < 0) pwmTmp -= MinPWMvalue;
+	else if (pwmTmp > 0) pwmTmp += MinPWMvalue;
 
-	if (temp > 255) temp = 255;
-	if (temp < -255) temp = -255;
+	if (pwmTmp > 255) pwmTmp = 255;
+	if (pwmTmp < -255) pwmTmp = -255;
 
-	return temp;
+	return pwmTmp;
 }
 
 
