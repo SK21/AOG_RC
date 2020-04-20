@@ -89,11 +89,11 @@ namespace AgOpenGPS
                 byte[] byteData = Encoding.ASCII.GetBytes("98,43,26");
 
                 if (byteData.Length != 0)
-                    sendToAppSocket.BeginSendTo(byteData, 0, byteData.Length, 
+                    sendToAppSocket.BeginSendTo(byteData, 0, byteData.Length,
                         SocketFlags.None, epAppOne, new AsyncCallback(SendAppData), null);
 
-                    //sendToAppSocket.BeginSendTo(byteData, 0, byteData.Length, 
-                        //SocketFlags.None, epAppTwo, new AsyncCallback(SendAppData), null);
+                //sendToAppSocket.BeginSendTo(byteData, 0, byteData.Length, 
+                //SocketFlags.None, epAppTwo, new AsyncCallback(SendAppData), null);
             }
             catch (Exception ex)
             {
@@ -222,7 +222,7 @@ namespace AgOpenGPS
                 recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(ReceiveData), epSender);
 
                 //string text =  Encoding.ASCII.GetString(localMsg);
-                
+
                 int port = ((IPEndPoint)epSender).Port;
                 // Update status through a delegate
                 Invoke(updateRecvMessageDelegate, new object[] { port, localMsg });
@@ -402,7 +402,7 @@ namespace AgOpenGPS
             //turn right
             if (keyData == Keys.Right)
             {
-                sim.steerAngle+=2;
+                sim.steerAngle += 2;
                 if (sim.steerAngle > 40) sim.steerAngle = 40;
                 if (sim.steerAngle < -40) sim.steerAngle = -40;
                 sim.steerAngleScrollBar = sim.steerAngle;
@@ -414,7 +414,7 @@ namespace AgOpenGPS
             //turn left
             if (keyData == Keys.Left)
             {
-                sim.steerAngle-=2;
+                sim.steerAngle -= 2;
                 if (sim.steerAngle > 40) sim.steerAngle = 40;
                 if (sim.steerAngle < -40) sim.steerAngle = -40;
                 sim.steerAngleScrollBar = sim.steerAngle;
@@ -885,52 +885,58 @@ namespace AgOpenGPS
         {
             try
             {
-                if (isUDPSendConnected)
+                WatchDogCounts++;
+                if (WatchDogCounts * tmrWatchdog.Interval > 750)    // 750 ms timer
                 {
-                    int Temp;
-                    byte[] Data = new byte[10];
-                    Data[0] = 138;
-                    Data[1] = 72;
-                    IPAddress RCip;
-                    IPEndPoint RCendPt;
-
-                    // worked area
-                    Temp = (int)(fd.workedAreaTotal / 100.0);   // square meters / 100 = hectares * 100
-                    Data[2] = (byte)(Temp >> 8);
-                    Data[3] = (byte)Temp;
-
-                    // working width
-                    // is supersection on?
-                    Temp = 0;
-                    if (section[tool.numOfSections].isSectionOn)
+                    WatchDogCounts = 0;
+                    if (isUDPSendConnected)
                     {
-                        Temp = (int)(tool.toolWidth * 100.0);
-                    }
-                    else
-                    {
-                        // individual sections are possibly on
-                        for (int i = 0; i < tool.numOfSections; i++)
+                        int Temp;
+                        byte[] Data = new byte[10];
+                        Data[0] = 138;
+                        Data[1] = 72;
+                        IPAddress RCip;
+                        IPEndPoint RCendPt;
+
+                        // worked area
+                        Temp = (int)(fd.workedAreaTotal / 100.0);   // square meters / 100 = hectares * 100
+                        Data[2] = (byte)(Temp >> 8);
+                        Data[3] = (byte)Temp;
+
+                        // working width
+                        // is supersection on?
+                        Temp = 0;
+                        if (section[tool.numOfSections].isSectionOn)
                         {
-                            if (section[i].isSectionOn) Temp += (int)(section[i].sectionWidth * 100.0);
+                            Temp = (int)(tool.toolWidth * 100.0);
                         }
+                        else
+                        {
+                            // individual sections are possibly on
+                            for (int i = 0; i < tool.numOfSections; i++)
+                            {
+                                if (section[i].isSectionOn) Temp += (int)(section[i].sectionWidth * 100.0);
+                            }
+                        }
+                        Data[4] = (byte)(Temp >> 8);
+                        Data[5] = (byte)Temp;
+
+                        // speed
+                        Temp = (int)(pn.speed * 100);
+                        Data[6] = (byte)(Temp >> 8);
+                        Data[7] = (byte)Temp;
+
+                        // relay bytes
+                        BuildMachineByte();
+                        Data[8] = mc.machineData[mc.mdSectionControlByteHi];
+                        Data[9] = mc.machineData[mc.mdSectionControlByteLo];
+
+                        // send data
+                        RCip = IPAddress.Parse("127.100.0.0");
+                        RCendPt = new IPEndPoint(RCip, 8120);
+                        sendSocket.BeginSendTo(Data, 0, Data.Length, SocketFlags.None, RCendPt, new AsyncCallback(SendData), null);
                     }
-                    Data[4] = (byte)(Temp >> 8);
-                    Data[5] = (byte)Temp;
 
-                    // speed
-                    Temp = (int)(pn.speed * 100);
-                    Data[6] = (byte)(Temp >> 8);
-                    Data[7] = (byte)Temp;
-
-                    // relay bytes
-                    BuildMachineByte();
-                    Data[8] = mc.machineData[mc.mdSectionControlByteHi];
-                    Data[9] = mc.machineData[mc.mdSectionControlByteLo];
-
-                    // send data
-                    RCip = IPAddress.Parse("127.100.0.0");
-                    RCendPt = new IPEndPoint(RCip, 8120);
-                    sendSocket.BeginSendTo(Data, 0, Data.Length, SocketFlags.None, RCendPt, new AsyncCallback(SendData), null);
                 }
             }
             catch (Exception ex)

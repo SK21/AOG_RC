@@ -248,6 +248,9 @@ namespace AgOpenGPS
         /// </summary>
         public CFont font;
 
+        // RateController timer
+        private int WatchDogCounts = 0;
+
         #endregion // Class Props and instances
 
         // Constructor, Initializes a new instance of the "FormGPS" class.

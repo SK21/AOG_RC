@@ -1263,7 +1263,10 @@ namespace AgOpenGPS
         //Timer stopped while parsing nmea
         private void tmrWatchdog_tick(object sender, EventArgs e)
         {
-            //Check for a newline char, if none then just return
+             // send PGN to rate controller
+            SendPGN35400();
+
+           //Check for a newline char, if none then just return
             sentenceCounter++;
             int cr = pn.rawBuffer.IndexOf("\n", StringComparison.Ordinal);
             if (sentenceCounter > 80) 
@@ -1533,8 +1536,6 @@ namespace AgOpenGPS
                     //lblEast.Text = ((int)(pn.actualEasting)).ToString();
                     //lblNorth.Text = ((int)(pn.actualNorthing)).ToString();
 
-                    // send PGN to rate controller
-                    SendPGN35400();
                 } //end every 1/2 second
 
                 //every fifth second update  ///////////////////////////   FIFTH Fifth ////////////////////////////
@@ -1580,6 +1581,7 @@ namespace AgOpenGPS
                 }
 
             } //there was a new GPS update
+
 
             //start timer again and wait for new fix
             tmrWatchdog.Enabled = true;
