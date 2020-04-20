@@ -51,7 +51,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("WASchecker  :  19/Apr/2020");
+	Serial.println("WASchecker  :  20/Apr/2020");
 	Serial.println();
 
 	pinMode(WORKSW_PIN, INPUT_PULLUP);
@@ -60,6 +60,8 @@ void setup()
 
 void loop()
 {
+	ReadSwitches();
+
 	if (millis() - DelayLast > DelayInterval)
 	{
 		DelayLast = millis();
@@ -82,7 +84,6 @@ void loop()
 		Serial.println("Ads 2 " + String(ads.readADC_SingleEnded(2)));
 		Serial.println("Ads 3 " + String(ads.readADC_SingleEnded(3)));
 
-		ReadSwitches();
 		Serial.println();
 		Serial.println("switchByte " + String(switchByte));
 	}
