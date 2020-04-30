@@ -7,12 +7,14 @@
 // user settings ****************************
 #define BoardType 1		// 0 Nano, 1 Nano33
 #define CommType 0		// 0 Serial/USB, 2 UDP wifi (only Nano33)
-#define WifiSSID "Tractor"
-#define WifiPassword "450450450"
+
+#define WifiSSID "tractor"
+#define WifiPassword ""
+#define IPpart3 1	// ex: 192.168.IPpart3.255
 
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
 byte FlowOn = LOW;	// flowmeter pin
-bool UseSwitches = true;	// manual switches
+bool UseSwitches = false;	// manual switches
 float MeterCal = 17;	// pulses per Unit 
 byte ValveType = 1;	// 0 standard, 1 Fast Close
 
@@ -157,7 +159,7 @@ unsigned int ListeningPort = 9999;	// local port to listen on
 unsigned int SourcePort = 6100;		// local port to send from 
 
 // ethernet destination - AOG
-static byte DestinationIP[] = { 192, 168, 1, 255 };	// broadcast 255
+static byte DestinationIP[] = { 192, 168, IPpart3, 255 };	// broadcast 255
 unsigned int DestinationPort = 8000; // RateControl port that listens 
 
 unsigned long CheckTime;
@@ -172,7 +174,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("Rate Control Nano33 for RateController100  :  06/Apr/2020");
+	Serial.println("Rate Control Nano33 for RateController100  :  30/Apr/2020");
 	Serial.println();
 
 	pinMode(Relay1, OUTPUT);

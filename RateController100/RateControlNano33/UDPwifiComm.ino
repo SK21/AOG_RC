@@ -101,7 +101,7 @@ void ReceiveUDPWifi()
 			DeadBand = (float)InBuffer[5];
 			MinPWMvalue = InBuffer[6];
 			MaxPWMvalue = InBuffer[7];
-			AdjustmentFactor = Serial.read() / 100.0;
+			AdjustmentFactor = (float)InBuffer[8] / 100.0;
 
 			//reset watchdog as we just heard from AgOpenGPS
 			watchdogTimer = 0;
@@ -109,7 +109,6 @@ void ReceiveUDPWifi()
 			UDPin.flush();	// clear buffer 
 		}
 	}
-	Serial.println("AOGconnected " + String(AOGconnected));
 }
 
 void CheckWifi()
