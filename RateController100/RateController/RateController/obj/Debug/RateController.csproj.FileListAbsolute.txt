@@ -136,3 +136,19 @@ C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateContro
 C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.application
 C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.exe
 C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.pdb
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.exe.config
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.application
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.exe
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.pdb
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.application
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.exe
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.pdb

@@ -118,16 +118,16 @@ namespace RateController
                 PGN = Data[0] << 8 | Data[1];
                 switch (PGN)
                 {
-                    case 35200:
+                    case 32740:
+                        mf.RC.UDPcommFromAOG(Data);
+                        break;
+
+                    case 32741:
                         mf.RC.UDPcommFromArduino(Data);
                         break;
 
                     case 32761:
                         mf.RC.UDPcommFromArduino(Data);
-                        break;
-
-                    case 35400:
-                        mf.RC.UDPcommFromAOG(Data);
                         break;
                 }
             }

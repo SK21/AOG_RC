@@ -1264,7 +1264,7 @@ namespace AgOpenGPS
         private void tmrWatchdog_tick(object sender, EventArgs e)
         {
              // send PGN to rate controller
-            SendPGN35400();
+            SendPGN32740();
 
            //Check for a newline char, if none then just return
             sentenceCounter++;

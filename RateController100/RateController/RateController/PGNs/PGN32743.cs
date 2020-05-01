@@ -1,39 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RateController
+﻿namespace RateController
 {
-    public class PGN35100
+    public class PGN32743
     {
-        //PGN35100 to Arduino from Rate Controller				
-        //0	HeaderHi		137	
-        //1	HeaderLo		28	
-        //2	KP		        10 X actual	
-        //3	KI		        10000 X actual	
-        //4	KD		        10 X actual	
-        //5	Deadband		% error allowed	
-        //6	MinPWM			
+        // to Arduino from Rate Controller
+        //0	HeaderHi		127
+        //1	HeaderLo		231
+        //2	KP		        10 X actual
+        //3	KI		        10000 X actual
+        //4	KD		        10 X actual
+        //5	Deadband		% error allowed
+        //6	MinPWM
         //7	MaxPWM
         //8 adjustment factor
 
-        private const byte cByteCount = 9;
-        private const byte HeaderHi = 137;
-        private const byte HeaderLo = 28;
-
-        public byte KP;
-        public byte KI;
-        public byte KD;
-        public byte Deadband;
-        public byte MinPWM;
-        public byte MaxPWM;
         public byte AdjustmentFactor;
-
+        public byte Deadband;
+        public byte KD;
+        public byte KI;
+        public byte KP;
+        public byte MaxPWM;
+        public byte MinPWM;
+        private const byte cByteCount = 9;
+        private const byte HeaderHi = 127;
+        private const byte HeaderLo = 231;
         private readonly CRateCals RC;
 
-        public PGN35100(CRateCals CalledFrom)
+        public PGN32743(CRateCals CalledFrom)
         {
             RC = CalledFrom;
             KP = 100;
@@ -76,6 +68,5 @@ namespace RateController
                 RC.mf.UDPnetwork.SendUDPMessage(Data());
             }
         }
-
     }
 }

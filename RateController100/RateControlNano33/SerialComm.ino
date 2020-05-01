@@ -1,8 +1,8 @@
 #if(CommType == 0)
 //  Comm data out
-// PGN 35200
-//	0. HeaderHi			137		
-//	1. HeaderLo			128		
+// PGN 32741
+//	0. HeaderHi			127		
+//	1. HeaderLo			229		
 //	2. rate applied	Hi	100 times actual
 //  3. rate applied Lo	100 times actual
 //	4. acc.quantity	Hi	
@@ -33,10 +33,10 @@
 
 void SendSerial()
 {
-	// PGN 35200
-	Serial.print(137);	// headerHi
+	// PGN 32741
+	Serial.print(127);	// headerHi
 	Serial.print(",");
-	Serial.print(128);	// headerLo
+	Serial.print(229);	// headerLo
 	Serial.print(",");
 
 	// rate applied, 100 X actual
@@ -102,9 +102,9 @@ void SendSerial()
 }
 
 //  Comm data in
-//  PGN 35000
-//	0. HeaderHi		136		
-//	1. HeaderLo		184		
+//  PGN 32742
+//	0. HeaderHi		127		
+//	1. HeaderLo		230		
 //	2. Relay Hi		8-15
 //  3. Relay Lo		0-7
 //  4. Rate Set Hi	100 X actual
@@ -117,9 +117,9 @@ void SendSerial()
 //			- bit 3			simulate flow
 //  total 9 bytes
 //
-//  PGN 35100
-//	0. HeaderHi		137		
-//	1. HeaderLo		28		
+//  PGN 32743
+//	0. HeaderHi		127		
+//	1. HeaderLo		231		
 //  2. KP			P control gain, 10 times actual
 //  3. KI			I control gain, 10000 times actual
 //  4. KD			D control gain, 10 times actual
@@ -130,18 +130,18 @@ void SendSerial()
 
 void ReceiveSerial()
 {
-	if (Serial.available() > 0 && !PGN35000Found && !PGN35100Found) //find the header, 
+	if (Serial.available() > 0 && !PGN32742Found && !PGN32743Found) //find the header, 
 	{
 		UnsignedTemp = Serial.read();
 		header = tempHeader << 8 | UnsignedTemp;               //high,low bytes to make int
 		tempHeader = UnsignedTemp;                             //save for next time
-		PGN35000Found = (header == 35000);
-		PGN35100Found = (header == 35100);
+		PGN32742Found = (header == 32742);
+		PGN32743Found = (header == 32743);
 	}
 
-	if (Serial.available() > 6 && PGN35000Found)
+	if (Serial.available() > 6 && PGN32742Found)
 	{
-		PGN35000Found = false;
+		PGN32742Found = false;
 
 		RelayHi = Serial.read();
 		RelayFromAOG = Serial.read();
@@ -169,9 +169,9 @@ void ReceiveSerial()
 		AOGconnected = true;
 	}
 
-	if (Serial.available() > 6 && PGN35100Found)
+	if (Serial.available() > 6 && PGN32743Found)
 	{
-		PGN35100Found = false;
+		PGN32743Found = false;
 
 		// PID
 		KP = (float)Serial.read() * 0.1;

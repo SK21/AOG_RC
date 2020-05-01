@@ -51,35 +51,45 @@ namespace RateController
         {
             try
             {
-                if (!RCport.IsOpen)
+                if (SerialPortExists(RCportName))
                 {
-                    RCport.PortName = RCportName;
-                    RCport.BaudRate = RCportBaud;
-                    RCport.DataReceived += RCport_DataReceived;
-                    RCport.DtrEnable = true;
-                    RCport.RtsEnable = true;
-
-                    try
+                    if (!RCport.IsOpen)
                     {
-                        RCport.Open();
+                        RCport.PortName = RCportName;
+                        RCport.BaudRate = RCportBaud;
+                        RCport.DataReceived += RCport_DataReceived;
+                        RCport.DtrEnable = true;
+                        RCport.RtsEnable = true;
+
+                        try
+                        {
+                            RCport.Open();
+                        }
+                        catch (Exception e)
+                        {
+                            mf.Tls.TimedMessageBox("Could not open serial port.", e.Message, 3000, true);
+
+                            Properties.Settings.Default.RCportSuccessful = false;
+                            Properties.Settings.Default.Save();
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        mf.Tls.TimedMessageBox("Could not open serial port.", e.Message, 3000, true);
 
-                        Properties.Settings.Default.RCportSuccessful = false;
+                    if (RCport.IsOpen)
+                    {
+                        RCport.DiscardOutBuffer();
+                        RCport.DiscardInBuffer();
+
+                        Properties.Settings.Default.RCportName = RCportName;
+                        Properties.Settings.Default.RCportSuccessful = true;
+                        Properties.Settings.Default.RCportBaud = RCportBaud;
                         Properties.Settings.Default.Save();
                     }
                 }
-
-                if (RCport.IsOpen)
+                else
                 {
-                    RCport.DiscardOutBuffer();
-                    RCport.DiscardInBuffer();
+                    mf.Tls.TimedMessageBox("Could not open serial port.", "", 3000, true);
 
-                    Properties.Settings.Default.RCportName = RCportName;
-                    Properties.Settings.Default.RCportSuccessful = true;
-                    Properties.Settings.Default.RCportBaud = RCportBaud;
+                    Properties.Settings.Default.RCportSuccessful = false;
                     Properties.Settings.Default.Save();
                 }
             }
@@ -130,6 +140,20 @@ namespace RateController
                     mf.Tls.WriteErrorLog("SerialComm/RCport_DataReceived: " + ex.Message);
                 }
             }
+        }
+
+        private bool SerialPortExists(string PortName)
+        {
+            bool Result = false;
+            foreach (String s in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                if (s == PortName)
+                {
+                    Result = true;
+                    break;
+                }
+            }
+            return Result;
         }
     }
 }

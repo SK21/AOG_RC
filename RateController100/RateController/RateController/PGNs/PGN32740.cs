@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RateController
+﻿namespace RateController
 {
-    public class PGN35400
+    public class PGN32740
     {
-        //PGN from AOG
-        //0	header 0        138
-        //1	header 1        72
+        // to Rate Controller from AOG
+        //0	header 0        127
+        //1	header 1        228
         //2	workedAreaTotal Hi      hectares X 100
         //3	workedAreaTotal Lo
         //4	ToolWorkingWidth Hi     only sections that are on, actual X 100
@@ -20,43 +14,22 @@ namespace RateController
         //8	mdSectionControlByteHi
         //9	mdSectionControlByteLo
 
-        private const byte cByteCount = 10;
-        private const byte HeaderHi = 138;
-        private const byte HeaderLo = 72;
-
         public byte SectionControlByteHi;
         public byte SectionControlByteLo;
-
+        private const byte cByteCount = 10;
+        private const byte HeaderHi = 127;
+        private const byte HeaderLo = 228;
         private byte SpeedHi;
         private byte SpeedLo;
+        private int Temp;
         private byte WidthHi;
         private byte WidthLo;
         private byte WorkedHi;
         private byte WorkedLo;
 
-        private int Temp;
-
         public byte ByteCount()
         {
             return cByteCount;
-        }
-
-        public double Speed()
-        {
-            Temp = SpeedHi << 8 | SpeedLo;
-            return Temp / 100.0;
-        }
-
-        public double WorkedArea()
-        {
-            Temp = WorkedHi << 8 | WorkedLo;
-            return Temp / 100.0;
-        }
-
-        public double WorkingWidth()
-        {
-            Temp = WidthHi << 8 | WidthLo;
-            return Temp / 100.0;
         }
 
         public bool ParseByteData(byte[] Data)
@@ -76,6 +49,24 @@ namespace RateController
                 Result = true;
             }
             return Result;
+        }
+
+        public double Speed()
+        {
+            Temp = SpeedHi << 8 | SpeedLo;
+            return Temp / 100.0;
+        }
+
+        public double WorkedArea()
+        {
+            Temp = WorkedHi << 8 | WorkedLo;
+            return Temp / 100.0;
+        }
+
+        public double WorkingWidth()
+        {
+            Temp = WidthHi << 8 | WidthLo;
+            return Temp / 100.0;
         }
     }
 }

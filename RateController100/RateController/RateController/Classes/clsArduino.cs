@@ -130,7 +130,9 @@ namespace RateController
 
         private void SendSerial()
         {
-            Sentence = "137,128,";
+            // PGN 32741
+
+            Sentence = "127,229,";
 
             // rate applied
             Temp = (byte)((int)(FlowRateFiltered * 100) >> 8);
@@ -164,14 +166,14 @@ namespace RateController
 
             Sentence += "\r";
 
-            RC.CommFromArduino(Sentence);
+            RC.CommFromArduino(Sentence, false);
         }
 
         public void ReceiveSerial(byte[] Data)
         {
             int PGN = Data[0] << 8 | Data[1];
 
-            if (PGN == 35000)
+            if (PGN == 32742)
             {
                 RelayHi = Data[2];
                 RelayFromAOG = Data[3];
@@ -197,7 +199,7 @@ namespace RateController
                 AOGconnected = true;
             }
 
-            if (PGN == 35100)
+            if (PGN == 32743)
             {
                 KP = (float)(Data[2] * .1);
                 KI = (float)(Data[3] * .0001);

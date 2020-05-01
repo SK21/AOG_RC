@@ -1,10 +1,10 @@
 #if(CommType == 2)
 void SendUDPWifi()
 {
-	// PGN 35200
+	// PGN 32741
 	// header
-	toSend[0] = 137;
-	toSend[1] = 128;
+	toSend[0] = 127;
+	toSend[1] = 229;
 
 	// rate applied, 100 X actual
 	Temp = ((int)FlowRateFiltered * 100) >> 8;
@@ -51,18 +51,21 @@ void SendUDPWifi()
 	UDPout.beginPacket(DestinationIP, DestinationPort);
 	UDPout.write(toSend, sizeof(toSend));
 	UDPout.endPacket();
+
+	UDPout.flush();
 }
 
 void ReceiveUDPWifi()
 {
-	delay(50);	// prevent wifi lockup
+	//delay(50);	// prevent wifi lockup
 	int PacketSize = UDPin.parsePacket();	// get packet
 	if (PacketSize)
 	{
 		int len = UDPin.read(InBuffer, 150);
+		tempHeader = (InBuffer[0] << 8) | InBuffer[1];
 
-		// PGN 35000
-		if ((len > 8) && (InBuffer[0] == 136) && (InBuffer[1] = 184))
+		// PGN 32742
+		if ((len > 8) && (tempHeader == 32742))
 		{
 			RelayHi = InBuffer[2];
 			RelayFromAOG = InBuffer[3];
@@ -88,12 +91,11 @@ void ReceiveUDPWifi()
 			//reset watchdog as we just heard from AgOpenGPS
 			watchdogTimer = 0;
 			AOGconnected = true;
-			UDPin.flush();	// clear buffer 
 			len = 0;
 		}
 
-		//PGN 35100
-		if ((len > 8) && (InBuffer[0] == 137) && (InBuffer[1] = 28))
+		//PGN 32743
+		if ((len > 8) && (tempHeader == 32743))
 		{
 			KP = (float)InBuffer[2] * 0.1;
 			KI = (float)InBuffer[3] * 0.0001;
@@ -106,7 +108,6 @@ void ReceiveUDPWifi()
 			//reset watchdog as we just heard from AgOpenGPS
 			watchdogTimer = 0;
 			AOGconnected = true;
-			UDPin.flush();	// clear buffer 
 		}
 	}
 }

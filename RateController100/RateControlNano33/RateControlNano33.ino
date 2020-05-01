@@ -4,6 +4,9 @@
 
 // LED on pin 13 may need to be disconnected / burnt with soldering iron
 
+// when switching from serial to wifi be sure to start Rate Controller once with USB
+// unplugged to prevent problems with Rate Controller lock-up
+
 // user settings ****************************
 #define BoardType 1		// 0 Nano, 1 Nano33
 #define CommType 0		// 0 Serial/USB, 2 UDP wifi (only Nano33)
@@ -12,18 +15,19 @@
 #define WifiPassword ""
 #define IPpart3 1	// ex: 192.168.IPpart3.255
 
+bool UseSwitches = false;	// manual switches
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
 byte FlowOn = LOW;	// flowmeter pin
-bool UseSwitches = false;	// manual switches
+
+#define UseSwitchedPowerPin 0	// 0 use Relay8 as a normal relay, 1 use Relay8 as a switched power pin - turns on when sketch starts
+// ******************************************
+
 float MeterCal = 17;	// pulses per Unit 
 byte ValveType = 1;	// 0 standard, 1 Fast Close
 
 bool SimulateFlow = true;	
 byte MinPWMvalue = 145;
 byte MaxPWMvalue = 255;
-
-#define UseSwitchedPowerPin 0	// 0 use Relay8 as a normal relay, 1 use Relay8 as a switched power pin - turns on when sketch starts
-// ******************************************
 
 #if (BoardType == 1)
 #include <SPI.h>
@@ -135,8 +139,8 @@ float KI;
 float KD;
 float DeadBand;
 
-bool PGN35000Found;
-bool PGN35100Found;
+bool PGN32742Found;
+bool PGN32743Found;
 unsigned int tempHeader;	// must be unsigned
 unsigned int header;		// must be unsigned
 

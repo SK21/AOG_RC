@@ -1,79 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController
 {
     public class PGN32761
     {
-        //PGN32761 to Rate Controller from arduino, to AOG from Rate Controller				
-        //0	HeaderHi		127	
-        //1	HeaderLo		249	
-        //2	-			
-        //3	-			
-        //4	-			
-        //5	SecOn Hi		8-15	
-        //6	SecOn Lo		0-7	
-        //7	SecOff Hi			
-        //8	SecOff Lo			
-        //9	Command			
-        //	    - bit 0		auto button on	
+        //to Rate Controller from arduino, to AOG from Rate Controller
+        //0	HeaderHi		127
+        //1	HeaderLo		249
+        //2	-
+        //3	-
+        //4	-
+        //5	SecOn Hi		8-15
+        //6	SecOn Lo		0-7
+        //7	SecOff Hi
+        //8	SecOff Lo
+        //9	Command
+        //	    - bit 0		auto button on
         //	    - bit 1		auto button off
 
+        public byte Command;
         private const byte cByteCount = 10;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 249;
 
-        float RateCalcFactor = 1.03F;   // rate change amount for each step.  ex: 1.10 means 10% for each step
-        private byte[] cData = new byte[10];
         private readonly CRateCals RC;
-
-        int Temp;
-        public byte Command;
+        private byte[] cData = new byte[10];
+        private float RateCalcFactor = 1.03F;   // rate change amount for each step.  ex: 1.10 means 10% for each step
+        private int Temp;
 
         public PGN32761(CRateCals CalledFrom)
         {
             RC = CalledFrom;
-        }
-
-        public bool ParseStringData(string[] Data)
-        {
-            bool Result = false;
-            if (Data.Length >= cByteCount)
-            {
-                int.TryParse(Data[0], out Temp);
-                if (Temp == HeaderHi)
-                {
-                    int.TryParse(Data[1], out Temp);
-                    if (Temp == HeaderLo)
-                    {
-                        for (int i = 0; i < cByteCount; i++)
-                        {
-                            byte.TryParse(Data[i], out cData[i]);
-                        }
-                        Command = cData[9];
-                        Result = true;
-                    }
-                }
-            }
-            return Result;
-        }
-
-        public bool ParseByteData(byte[] Data)
-        {
-            bool Result = false;
-            if (Data[0] == HeaderHi & Data[1] == HeaderLo & Data.Length >= cByteCount)
-            {
-                for (int i = 0; i < cByteCount; i++)
-                {
-                    cData[i] = Data[i];
-                }
-                Command = cData[9];
-                Result = true;
-            }
-            return Result;
         }
 
         public double NewRate(double CurrentRate)
@@ -105,6 +62,44 @@ namespace RateController
                 }
             }
             return CurrentRate;
+        }
+
+        public bool ParseByteData(byte[] Data)
+        {
+            bool Result = false;
+            if (Data[0] == HeaderHi & Data[1] == HeaderLo & Data.Length >= cByteCount)
+            {
+                for (int i = 0; i < cByteCount; i++)
+                {
+                    cData[i] = Data[i];
+                }
+                Command = cData[9];
+                Result = true;
+            }
+            return Result;
+        }
+
+        public bool ParseStringData(string[] Data)
+        {
+            bool Result = false;
+            if (Data.Length >= cByteCount)
+            {
+                int.TryParse(Data[0], out Temp);
+                if (Temp == HeaderHi)
+                {
+                    int.TryParse(Data[1], out Temp);
+                    if (Temp == HeaderLo)
+                    {
+                        for (int i = 0; i < cByteCount; i++)
+                        {
+                            byte.TryParse(Data[i], out cData[i]);
+                        }
+                        Command = cData[9];
+                        Result = true;
+                    }
+                }
+            }
+            return Result;
         }
 
         public void Send()

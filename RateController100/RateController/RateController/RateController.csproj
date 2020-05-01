@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>24</ApplicationRevision>
+    <ApplicationRevision>25</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -94,11 +94,11 @@
     <Compile Include="FormTimedMessage.Designer.cs">
       <DependentUpon>FormTimedMessage.cs</DependentUpon>
     </Compile>
+    <Compile Include="PGNs\PGN32740.cs" />
+    <Compile Include="PGNs\PGN32741.cs" />
+    <Compile Include="PGNs\PGN32742.cs" />
+    <Compile Include="PGNs\PGN32743.cs" />
     <Compile Include="PGNs\PGN32761.cs" />
-    <Compile Include="PGNs\PGN35000.cs" />
-    <Compile Include="PGNs\PGN35100.cs" />
-    <Compile Include="PGNs\PGN35200.cs" />
-    <Compile Include="PGNs\PGN35400.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FormRateControl.cs">

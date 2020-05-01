@@ -880,8 +880,8 @@ namespace AgOpenGPS
 
         #endregion Gesture
 
-        #region PGN35400 to Rate Controller
-        void SendPGN35400()
+        #region PGN32740 to Rate Controller
+        void SendPGN32740()
         {
             try
             {
@@ -891,8 +891,8 @@ namespace AgOpenGPS
                     WatchDogCounts = 0;
                     int Temp;
                     byte[] Data = new byte[10];
-                    Data[0] = 138;
-                    Data[1] = 72;
+                    Data[0] = 127;
+                    Data[1] = 228;
 
                     // worked area
                     Temp = (int)(fd.workedAreaTotal / 100.0);   // square meters / 100 = hectares * 100
@@ -949,7 +949,7 @@ namespace AgOpenGPS
                         }
                         catch (Exception e)
                         {
-                            WriteErrorLog("PGN35400 to Machine Port " + e.ToString());
+                            WriteErrorLog("PGN32740 to Machine Port " + e.ToString());
                         }
                     }
                 }
