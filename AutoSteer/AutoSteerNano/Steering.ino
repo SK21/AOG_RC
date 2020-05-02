@@ -56,10 +56,14 @@ bool SteeringEnabled()
 		//SteerSwitch = HIGH;
 		pulseCount = 0;
 		watchdogTimer = 12;
+		digitalWrite(SteerSW_Relay, LOW);
+
 		return false;
 	}
 	else
 	{
+		digitalWrite(SteerSW_Relay, HIGH);
+
 		return true;
 	}
 }

@@ -7,7 +7,8 @@ void ReadSwitches()
 	if (UseSteerSwitch)
 	{
 		// on off switch
-		switchByte = (digitalRead(STEERSW_PIN)) << 1;
+		SteerSwitch = digitalRead(STEERSW_PIN);
+		switchByte = SteerSwitch << 1;
 	}
 	else
 	{

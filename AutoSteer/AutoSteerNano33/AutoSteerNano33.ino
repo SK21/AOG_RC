@@ -51,17 +51,29 @@ int SteerDeadband = 3;	// % error allowed
 #define AdsRoll 2	// ADS1115 roll pin
 #define AdsWAS 3	// ADS1115 wheel angle sensor pin
 
+// end user settings ******************************************
+
+// PCB 6
 #define EncoderPin  2
 #define WORKSW_PIN  4
 #define STEERSW_PIN  7
 #define DIR_PIN  8
 #define PWM_PIN  9
+#define SteerSW_Relay 10	// pin 10 not connected, could use pin 2 if not using encoder
+
+// PCB 7
+//#define EncoderPin 3
+//#define WORKSW_PIN 4
+//#define STEERSW_PIN A0
+//#define DIR_PIN 7
+//#define PWM_PIN 9
+//#define SteerSW_Relay 10
+
 
 // serial RX	5
 // serial TX	6
 // SDA			A4
 // SCL			A5
-// ******************************************
 
 Adafruit_ADS1115 ads(0x48);
 
@@ -198,7 +210,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer Nano33  :  09/Apr/2020");
+	Serial.println("AutoSteer Nano33  :  02/May/2020");
 	Serial.println();
 
 	//keep pulled high and drag low to activate, noise free safe
@@ -206,6 +218,8 @@ void setup()
 	pinMode(STEERSW_PIN, INPUT_PULLUP);
 	pinMode(DIR_PIN, OUTPUT);
 	pinMode(EncoderPin, INPUT_PULLUP);
+	pinMode(SteerSW_Relay, OUTPUT);
+	SteerSwitch = LOW;
 
 	ads.begin();
 

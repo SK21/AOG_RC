@@ -6,9 +6,9 @@
 
 // user settings ***********************************************
 
-#define CommType 0		// 0 Serial/USB, 1 UDP wired
-#define UseSteerSwitch 0		// 1 - steer switch, 0 - steer momentary button
-#define UseDog2 1
+#define CommType 0			// 0 Serial/USB, 1 UDP wired
+#define UseSteerSwitch 0	// 1 - steer switch, 0 - steer momentary button
+#define UseDog2 0
 
 #define UseEncoder 0
 #define PulseCountMax  3
@@ -16,6 +16,7 @@
 // WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
 // ADS reading of the WAS ranges from 2700 to 24000 (21300)
 // counts per degree for this sensor is 237 (21300/90)
+
 float SteerCPD = 237;		// AOG value sent * 2
 int SteeringZeroOffset = 15000; 
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
@@ -35,29 +36,31 @@ int SteerDeadband = 3;	// % error allowed
 
 #define AdsPitch 1	// ADS1115 pitch pin
 #define AdsRoll 2	// ADS1115 roll pin
-#define AdsWAS 3	// ADS1115 wheel angle sensor pin
+#define AdsWAS 0	// ADS1115 wheel angle sensor pin
 
 // end user settings ******************************************
 
-// PCB 3.1
-#define EncoderPin  2
-#define WORKSW_PIN  4
-#define STEERSW_PIN  7
-#define DIR_PIN  8
-#define PWM_PIN  9
-#define SSRX 5
-#define SSTX 6
+// PCB 6
+//#define EncoderPin  2
+//#define WORKSW_PIN  4
+//#define STEERSW_PIN  7
+//#define DIR_PIN  8
+//#define PWM_PIN  9
+//#define SSRX 5
+//#define SSTX 6
+//#define SteerSW_Relay 10
 // SDA			A4
 // SCL			A5
 
 // PCB 7
-//#define EncoderPin 3
-//#define WORKSW_PIN 4
-//#define STEERSW_PIN A0
-//#define DIR_PIN A1
-//#define PWM_PIN 9
-//#define SSRX 5
-//#define SSTX 6
+#define EncoderPin 3
+#define WORKSW_PIN 4
+#define STEERSW_PIN A0
+#define DIR_PIN 7
+#define PWM_PIN 9
+#define SSRX 5
+#define SSTX 6
+#define SteerSW_Relay 10
 // SDA			A4
 // SCL			A5
 
@@ -183,7 +186,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer Nano   :  09/Apr/2020");
+	Serial.println("AutoSteer Nano   :  17/Apr/2020");
 	Serial.println();
 
 	//keep pulled high and drag low to activate, noise free safe
@@ -191,6 +194,8 @@ void setup()
 	pinMode(STEERSW_PIN, INPUT_PULLUP);
 	pinMode(DIR_PIN, OUTPUT);
 	pinMode(EncoderPin, INPUT_PULLUP);
+	pinMode(SteerSW_Relay, OUTPUT);
+	SteerSwitch = LOW;
 
 	ads.begin();
 
