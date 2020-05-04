@@ -12,7 +12,7 @@ namespace AgOpenGPS.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
     internal sealed partial class Vehicle : global::System.Configuration.ApplicationSettingsBase {
         
         private static Vehicle defaultInstance = ((Vehicle)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Vehicle())));
@@ -25,7 +25,7 @@ namespace AgOpenGPS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
         public double setVehicle_toolWidth {
             get {
                 return ((double)(this["setVehicle_toolWidth"]));
@@ -37,7 +37,7 @@ namespace AgOpenGPS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.05")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double setVehicle_toolOverlap {
             get {
                 return ((double)(this["setVehicle_toolOverlap"]));
@@ -73,7 +73,7 @@ namespace AgOpenGPS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-4.0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-2.0")]
         public decimal setSection_position1 {
             get {
                 return ((decimal)(this["setSection_position1"]));
@@ -109,7 +109,7 @@ namespace AgOpenGPS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4.0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2.0")]
         public decimal setSection_position4 {
             get {
                 return ((decimal)(this["setSection_position4"]));
@@ -901,7 +901,7 @@ namespace AgOpenGPS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public byte setArdSteer_inclinometer {
             get {
                 return ((byte)(this["setArdSteer_inclinometer"]));
@@ -913,7 +913,7 @@ namespace AgOpenGPS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
         public byte setArdSteer_maxPulseCounts {
             get {
                 return ((byte)(this["setArdSteer_maxPulseCounts"]));
@@ -925,7 +925,7 @@ namespace AgOpenGPS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public byte setArdMac_hydRaiseTime {
             get {
                 return ((byte)(this["setArdMac_hydRaiseTime"]));
@@ -937,7 +937,7 @@ namespace AgOpenGPS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
         public byte setArdMac_hydLowerTime {
             get {
                 return ((byte)(this["setArdMac_hydLowerTime"]));
@@ -992,6 +992,30 @@ namespace AgOpenGPS.Properties {
             }
             set {
                 this["setArdSteer_ackermanFix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte setArdMac_setting0 {
+            get {
+                return ((byte)(this["setArdMac_setting0"]));
+            }
+            set {
+                this["setArdMac_setting0"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte setArdSteer_setting2 {
+            get {
+                return ((byte)(this["setArdSteer_setting2"]));
+            }
+            set {
+                this["setArdSteer_setting2"] = value;
             }
         }
     }

@@ -72,6 +72,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.checkBoxusetcp = new System.Windows.Forms.CheckBox();
+            this.btnPassUsername = new System.Windows.Forms.Button();
+            this.btnPassPassword = new System.Windows.Forms.Button();
+            this.cboxHTTP = new System.Windows.Forms.ComboBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCasterPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSendToUDPPort)).BeginInit();
@@ -86,31 +90,32 @@
             this.groupBox2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(772, 244);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(218, 76);
+            this.groupBox2.Size = new System.Drawing.Size(218, 99);
             this.groupBox2.TabIndex = 98;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Networking";
+            this.groupBox2.Text = "On / Off";
             // 
             // cboxIsNTRIPOn
             // 
-            this.cboxIsNTRIPOn.AutoSize = true;
+            this.cboxIsNTRIPOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.cboxIsNTRIPOn.BackColor = System.Drawing.Color.AliceBlue;
             this.cboxIsNTRIPOn.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.cboxIsNTRIPOn.Checked = true;
             this.cboxIsNTRIPOn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cboxIsNTRIPOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.cboxIsNTRIPOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cboxIsNTRIPOn.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cboxIsNTRIPOn.Location = new System.Drawing.Point(13, 32);
+            this.cboxIsNTRIPOn.Location = new System.Drawing.Point(35, 32);
             this.cboxIsNTRIPOn.Name = "cboxIsNTRIPOn";
-            this.cboxIsNTRIPOn.Size = new System.Drawing.Size(124, 29);
+            this.cboxIsNTRIPOn.Size = new System.Drawing.Size(150, 50);
             this.cboxIsNTRIPOn.TabIndex = 92;
             this.cboxIsNTRIPOn.Text = "NTRIP On";
             this.cboxIsNTRIPOn.UseVisualStyleBackColor = false;
-            this.cboxIsNTRIPOn.CheckedChanged += new System.EventHandler(this.cboxIsNTRIPOn_CheckedChanged);
             // 
             // tboxCasterIP
             // 
             this.tboxCasterIP.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tboxCasterIP.Location = new System.Drawing.Point(95, 250);
+            this.tboxCasterIP.Location = new System.Drawing.Point(62, 258);
             this.tboxCasterIP.Name = "tboxCasterIP";
             this.tboxCasterIP.ReadOnly = true;
             this.tboxCasterIP.Size = new System.Drawing.Size(157, 33);
@@ -122,7 +127,7 @@
             // 
             this.nudCasterPort.BackColor = System.Drawing.Color.AliceBlue;
             this.nudCasterPort.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudCasterPort.Location = new System.Drawing.Point(95, 301);
+            this.nudCasterPort.Location = new System.Drawing.Point(62, 309);
             this.nudCasterPort.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -147,7 +152,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(35, 310);
+            this.label6.Location = new System.Drawing.Point(2, 318);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(57, 25);
             this.label6.TabIndex = 81;
@@ -157,7 +162,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(53, 253);
+            this.label5.Location = new System.Drawing.Point(20, 261);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(39, 25);
             this.label5.TabIndex = 82;
@@ -207,7 +212,7 @@
             // 
             this.nudSendToUDPPort.BackColor = System.Drawing.Color.AliceBlue;
             this.nudSendToUDPPort.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudSendToUDPPort.Location = new System.Drawing.Point(815, 77);
+            this.nudSendToUDPPort.Location = new System.Drawing.Point(836, 77);
             this.nudSendToUDPPort.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -221,7 +226,6 @@
             0,
             0,
             0});
-            this.nudSendToUDPPort.ValueChanged += new System.EventHandler(this.nudSendToUDPPort_ValueChanged);
             this.nudSendToUDPPort.Enter += new System.EventHandler(this.NudSendToUDPPort_Enter);
             // 
             // label10
@@ -266,7 +270,7 @@
             // label7
             // 
             this.label7.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(796, 9);
+            this.label7.Location = new System.Drawing.Point(817, 9);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(180, 66);
             this.label7.TabIndex = 99;
@@ -280,8 +284,9 @@
             this.tboxUserName.Location = new System.Drawing.Point(450, 33);
             this.tboxUserName.Name = "tboxUserName";
             this.tboxUserName.PasswordChar = '*';
-            this.tboxUserName.Size = new System.Drawing.Size(274, 33);
+            this.tboxUserName.Size = new System.Drawing.Size(252, 33);
             this.tboxUserName.TabIndex = 100;
+            this.tboxUserName.Click += new System.EventHandler(this.tboxUserName_Click);
             // 
             // tboxUserPassword
             // 
@@ -290,8 +295,9 @@
             this.tboxUserPassword.Location = new System.Drawing.Point(450, 104);
             this.tboxUserPassword.Name = "tboxUserPassword";
             this.tboxUserPassword.PasswordChar = '*';
-            this.tboxUserPassword.Size = new System.Drawing.Size(274, 33);
+            this.tboxUserPassword.Size = new System.Drawing.Size(252, 33);
             this.tboxUserPassword.TabIndex = 101;
+            this.tboxUserPassword.Click += new System.EventHandler(this.tboxUserPassword_Click);
             // 
             // label3
             // 
@@ -317,7 +323,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(31, 370);
+            this.label13.Location = new System.Drawing.Point(31, 385);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(70, 25);
             this.label13.TabIndex = 105;
@@ -327,10 +333,11 @@
             // 
             this.tboxMount.BackColor = System.Drawing.Color.AliceBlue;
             this.tboxMount.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tboxMount.Location = new System.Drawing.Point(17, 401);
+            this.tboxMount.Location = new System.Drawing.Point(17, 416);
             this.tboxMount.Name = "tboxMount";
             this.tboxMount.Size = new System.Drawing.Size(341, 33);
             this.tboxMount.TabIndex = 104;
+            this.tboxMount.Click += new System.EventHandler(this.tboxMount_Click);
             // 
             // nudGGAInterval
             // 
@@ -350,7 +357,6 @@
             0,
             0,
             0});
-            this.nudGGAInterval.ValueChanged += new System.EventHandler(this.nudGGAInterval_ValueChanged);
             this.nudGGAInterval.Enter += new System.EventHandler(this.NudGGAInterval_Enter);
             // 
             // label15
@@ -372,11 +378,12 @@
             this.tboxEnterURL.Size = new System.Drawing.Size(341, 33);
             this.tboxEnterURL.TabIndex = 108;
             this.tboxEnterURL.Text = "RTK2Go.com";
+            this.tboxEnterURL.Click += new System.EventHandler(this.tboxEnterURL_Click);
             // 
             // btnGetIP
             // 
             this.btnGetIP.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGetIP.Location = new System.Drawing.Point(95, 188);
+            this.btnGetIP.Location = new System.Drawing.Point(17, 179);
             this.btnGetIP.Name = "btnGetIP";
             this.btnGetIP.Size = new System.Drawing.Size(157, 40);
             this.btnGetIP.TabIndex = 109;
@@ -535,7 +542,7 @@
             // label18
             // 
             this.label18.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(786, 138);
+            this.label18.Location = new System.Drawing.Point(807, 138);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(191, 77);
             this.label18.TabIndex = 126;
@@ -545,7 +552,7 @@
             // btnGetSourceTable
             // 
             this.btnGetSourceTable.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGetSourceTable.Location = new System.Drawing.Point(17, 440);
+            this.btnGetSourceTable.Location = new System.Drawing.Point(64, 455);
             this.btnGetSourceTable.Name = "btnGetSourceTable";
             this.btnGetSourceTable.Size = new System.Drawing.Size(235, 37);
             this.btnGetSourceTable.TabIndex = 127;
@@ -581,9 +588,9 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(746, 324);
+            this.label1.Location = new System.Drawing.Point(746, 348);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(244, 89);
+            this.label1.Size = new System.Drawing.Size(244, 78);
             this.label1.TabIndex = 129;
             this.label1.Text = "*Restart Required";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -600,13 +607,61 @@
             // 
             // checkBoxusetcp
             // 
-            this.checkBoxusetcp.AutoSize = true;
-            this.checkBoxusetcp.Location = new System.Drawing.Point(262, 320);
+            this.checkBoxusetcp.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBoxusetcp.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.checkBoxusetcp.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxusetcp.Location = new System.Drawing.Point(229, 318);
             this.checkBoxusetcp.Name = "checkBoxusetcp";
-            this.checkBoxusetcp.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxusetcp.Size = new System.Drawing.Size(108, 33);
             this.checkBoxusetcp.TabIndex = 132;
             this.checkBoxusetcp.Text = "Only TCP:Port";
             this.checkBoxusetcp.UseVisualStyleBackColor = true;
+            // 
+            // btnPassUsername
+            // 
+            this.btnPassUsername.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPassUsername.Location = new System.Drawing.Point(708, 30);
+            this.btnPassUsername.Name = "btnPassUsername";
+            this.btnPassUsername.Size = new System.Drawing.Size(63, 40);
+            this.btnPassUsername.TabIndex = 133;
+            this.btnPassUsername.Text = "(o)";
+            this.btnPassUsername.UseVisualStyleBackColor = true;
+            this.btnPassUsername.Click += new System.EventHandler(this.btnPassUsername_Click);
+            // 
+            // btnPassPassword
+            // 
+            this.btnPassPassword.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPassPassword.Location = new System.Drawing.Point(708, 101);
+            this.btnPassPassword.Name = "btnPassPassword";
+            this.btnPassPassword.Size = new System.Drawing.Size(63, 40);
+            this.btnPassPassword.TabIndex = 134;
+            this.btnPassPassword.Text = "(o)";
+            this.btnPassPassword.UseVisualStyleBackColor = true;
+            this.btnPassPassword.Click += new System.EventHandler(this.btnPassPassword_Click);
+            // 
+            // cboxHTTP
+            // 
+            this.cboxHTTP.Cursor = System.Windows.Forms.Cursors.Default;
+            this.cboxHTTP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboxHTTP.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboxHTTP.FormattingEnabled = true;
+            this.cboxHTTP.Items.AddRange(new object[] {
+            "1.0",
+            "1.1"});
+            this.cboxHTTP.Location = new System.Drawing.Point(257, 261);
+            this.cboxHTTP.Name = "cboxHTTP";
+            this.cboxHTTP.Size = new System.Drawing.Size(80, 33);
+            this.cboxHTTP.TabIndex = 135;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(260, 235);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(62, 23);
+            this.label20.TabIndex = 136;
+            this.label20.Text = "HTTP:";
             // 
             // FormNtrip
             // 
@@ -615,6 +670,10 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1010, 609);
             this.ControlBox = false;
+            this.Controls.Add(this.label20);
+            this.Controls.Add(this.cboxHTTP);
+            this.Controls.Add(this.btnPassPassword);
+            this.Controls.Add(this.btnPassUsername);
             this.Controls.Add(this.checkBoxusetcp);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.label1);
@@ -666,7 +725,6 @@
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FormNtrip_Load);
             this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCasterPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSendToUDPPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGGAInterval)).EndInit();
@@ -699,7 +757,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox tboxMount;
         private System.Windows.Forms.NumericUpDown nudGGAInterval;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox tboxEnterURL;
@@ -722,5 +779,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.CheckBox checkBoxusetcp;
+        public System.Windows.Forms.TextBox tboxMount;
+        private System.Windows.Forms.Button btnPassUsername;
+        private System.Windows.Forms.Button btnPassPassword;
+        private System.Windows.Forms.ComboBox cboxHTTP;
+        private System.Windows.Forms.Label label20;
     }
 }

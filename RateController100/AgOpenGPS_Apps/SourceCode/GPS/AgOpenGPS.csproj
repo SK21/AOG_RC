@@ -145,10 +145,16 @@
     <Compile Include="Classes\CTurn.cs" />
     <Compile Include="Classes\CTurnLines.cs" />
     <Compile Include="Classes\CTool.cs" />
-    <Compile Include="FormSource.cs">
+    <Compile Include="Forms\Pickers\FormColorPicker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSource.Designer.cs">
+    <Compile Include="Forms\Pickers\FormColorPicker.Designer.cs">
+      <DependentUpon>FormColorPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Pickers\FormSource.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Pickers\FormSource.Designer.cs">
       <DependentUpon>FormSource.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormSaveAs.cs">
@@ -162,6 +168,12 @@
     </Compile>
     <Compile Include="Forms\Form_First.Designer.cs">
       <DependentUpon>Form_First.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Inputs\FormKeyboard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Inputs\FormKeyboard.Designer.cs">
+      <DependentUpon>FormKeyboard.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Pickers\FormDrivePicker.cs">
       <SubType>Form</SubType>
@@ -211,10 +223,10 @@
     <Compile Include="Forms\Pickers\FormVehiclePicker.Designer.cs">
       <DependentUpon>FormVehiclePicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Settings\FormModules.cs">
+    <Compile Include="Forms\FormModules.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Settings\FormModules.Designer.cs">
+    <Compile Include="Forms\FormModules.Designer.cs">
       <DependentUpon>FormModules.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormHeadland.cs">
@@ -241,10 +253,10 @@
     <Compile Include="Forms\Pickers\FormFilePicker.Designer.cs">
       <DependentUpon>FormFilePicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormNumeric.cs">
+    <Compile Include="Forms\Inputs\FormNumeric.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormNumeric.Designer.cs">
+    <Compile Include="Forms\Inputs\FormNumeric.Designer.cs">
       <DependentUpon>FormNumeric.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Guidance\FormMakeBndCon.cs">
@@ -252,6 +264,18 @@
     </Compile>
     <Compile Include="Forms\Guidance\FormMakeBndCon.Designer.cs">
       <DependentUpon>FormMakeBndCon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\FormColor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\FormColor.Designer.cs">
+      <DependentUpon>FormColor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\FormDisplayOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\FormDisplayOptions.Designer.cs">
+      <DependentUpon>FormDisplayOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\FormNtrip.cs">
       <SubType>Form</SubType>
@@ -543,7 +567,10 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="FormSource.resx">
+    <EmbeddedResource Include="Forms\Pickers\FormColorPicker.resx">
+      <DependentUpon>FormColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Pickers\FormSource.resx">
       <DependentUpon>FormSource.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormSaveAs.resx">
@@ -551,6 +578,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_First.resx">
       <DependentUpon>Form_First.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Inputs\FormKeyboard.resx">
+      <DependentUpon>FormKeyboard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Pickers\FormDrivePicker.resx">
       <DependentUpon>FormDrivePicker.cs</DependentUpon>
@@ -576,7 +606,7 @@
     <EmbeddedResource Include="Forms\Pickers\FormVehiclePicker.resx">
       <DependentUpon>FormVehiclePicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Settings\FormModules.resx">
+    <EmbeddedResource Include="Forms\FormModules.resx">
       <DependentUpon>FormModules.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -592,11 +622,19 @@
     <EmbeddedResource Include="Forms\Pickers\FormFilePicker.resx">
       <DependentUpon>FormFilePicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormNumeric.resx">
+    <EmbeddedResource Include="Forms\Inputs\FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Guidance\FormMakeBndCon.resx">
       <DependentUpon>FormMakeBndCon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\FormColor.resx">
+      <DependentUpon>FormColor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\FormDisplayOptions.resx">
+      <DependentUpon>FormDisplayOptions.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\FormNtrip.resx">
       <DependentUpon>FormNtrip.cs</DependentUpon>
@@ -867,6 +905,7 @@
     <None Include="btnImages\DataSources.png" />
     <None Include="btnImages\Sort.png" />
     <None Include="btnImages\FileSaveAs.png" />
+    <None Include="btnImages\ColorBackGnd.png" />
     <Content Include="Dependencies\Audio\Boundary.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -889,6 +928,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Dependencies\Images\SpeedoNedle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dependencies\Images\Steer.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Dependencies\Images\Turn.png">
