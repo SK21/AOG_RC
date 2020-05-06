@@ -5,19 +5,20 @@ namespace RateController
 {
     public class SerialComm
     {
+        public SerialPort RCport = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
         public int RCportBaud = 38400;
         public string RCportName = "RCport";
-        public SerialPort RCport = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
-
         private readonly FormRateControl mf;
 
-        // new data event
-        public delegate void NewDataDelegate(string Sentence);
+        private bool SerialActive = false;  // prevents UI lock-up by only sending serial data after verfying connection
 
         public SerialComm(FormRateControl CallingForm)
         {
             mf = CallingForm;
         }
+
+        // new data event
+        public delegate void NewDataDelegate(string Sentence);
 
         public void CloseRCport()
         {
@@ -102,7 +103,8 @@ namespace RateController
         public void SendtoRC(byte[] Data)
         {
             // send to arduino rate controller
-            if (RCport.IsOpen)
+            if (RCport.IsOpen & SerialActive)
+            //if (RCport.IsOpen)
             {
                 try
                 {
@@ -122,7 +124,7 @@ namespace RateController
             if (end == -1) return;
             end = sentence.IndexOf(",", StringComparison.Ordinal);
             if (end == -1) return;
-            mf.RC.CommFromArduino(sentence);
+            if (mf.RC.CommFromArduino(sentence)) SerialActive = true;
         }
 
         private void RCport_DataReceived(object sender, SerialDataReceivedEventArgs e)

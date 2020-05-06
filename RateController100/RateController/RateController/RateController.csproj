@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>25</ApplicationRevision>
+    <ApplicationRevision>28</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -64,6 +64,12 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Keypad">
+      <HintPath>.\Keypad.dll</HintPath>
+    </Reference>
+    <Reference Include="RepeatButtonControl">
+      <HintPath>.\RepeatButtonControl.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -82,6 +88,12 @@
     <Compile Include="Classes\CRateCals.cs" />
     <Compile Include="Classes\SerialComm.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
+    <Compile Include="FormNumeric.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNumeric.Designer.cs">
+      <DependentUpon>FormNumeric.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormRateSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +119,9 @@
     <Compile Include="FormRateControl.Designer.cs">
       <DependentUpon>FormRateControl.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="FormNumeric.resx">
+      <DependentUpon>FormNumeric.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormRateSettings.resx">
       <DependentUpon>FormRateSettings.cs</DependentUpon>
     </EmbeddedResource>
@@ -142,11 +157,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Images\DnArrow64.png" />
+    <Content Include="Images\close.png" />
     <Content Include="Images\OK64.png" />
+    <Content Include="Images\OpenFile.png" />
+    <Content Include="Images\RateControlOff.ico" />
     <Content Include="Images\RateControlOff.png" />
     <Content Include="Images\SettingsGear64.png" />
     <None Include="Images\WindowDayMode.png" />
     <None Include="Images\WindowNightMode.png" />
+    <None Include="Images\UpArrow64.png" />
     <Content Include="RateControlOff.ico" />
   </ItemGroup>
   <ItemGroup>

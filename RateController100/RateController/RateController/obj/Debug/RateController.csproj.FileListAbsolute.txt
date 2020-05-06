@@ -152,3 +152,7 @@ C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateCont
 C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.application
 C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.exe
 C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.pdb
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+I:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\Keypad.dll
+I:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RepeatButtonControl.dll
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.CopyComplete

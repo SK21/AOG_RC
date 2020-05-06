@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AgOpenGPS;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,10 +10,10 @@ namespace RateController
     {
         private readonly FormRateControl mf;
         private bool Initializing = false;
+        private int Result;
+        private SimType SelectedSimulation;
         private byte tempB = 0;
         private double tempD = 0;
-        private SimType SelectedSimulation;
-        private int Result;
 
         public FormRateSettings(FormRateControl CallingForm)
         {
@@ -47,11 +48,13 @@ namespace RateController
                         mf.SER.CloseRCport();
                         SetRCbuttons();
                         break;
+
                     case SimType.RealNano:
                         mf.Text = "Rate Controller (R)";
                         //mf.SER.OpenRCport();
                         SetRCbuttons();
                         break;
+
                     default:
                         mf.Text = "Rate Controller";
                         //mf.SER.OpenRCport();
@@ -146,6 +149,19 @@ namespace RateController
             SetButtons(true);
         }
 
+        private void FlowCal_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(FlowCal.Text, out tempD);
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    FlowCal.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
         private void FlowCal_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -194,12 +210,10 @@ namespace RateController
             SetBackColor();
         }
 
-        private void label17_Click(object sender, EventArgs e)
+        private void GroupBoxPaint(object sender, PaintEventArgs e)
         {
-        }
-
-        private void lblCurrentArduinoPort_Click(object sender, EventArgs e)
-        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void LoadRCbox()
@@ -233,12 +247,41 @@ namespace RateController
                 case SimType.VirtualNano:
                     rbNano.Checked = true;
                     break;
+
                 case SimType.RealNano:
                     rbFlow.Checked = true;
                     break;
+
                 default:
                     rbNone.Checked = true;
                     break;
+            }
+        }
+
+        private void RadioButtonChanged(object sender, EventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+            if (rb != null)
+            {
+                if (rb.Checked)
+                {
+                    int.TryParse(rb.Tag.ToString(), out Result);
+                    if (SelectedSimulation != (SimType)Result) SetButtons(true);
+                    SelectedSimulation = (SimType)Result;
+                }
+            }
+        }
+
+        private void RateSet_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(RateSet.Text, out tempD);
+            using (var form = new FormNumeric(0, 500, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    RateSet.Text = form.ReturnValue.ToString();
+                }
             }
         }
 
@@ -369,6 +412,19 @@ namespace RateController
             }
         }
 
+        private void TankRemain_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(TankRemain.Text, out tempD);
+            using (var form = new FormNumeric(0, 100000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    TankRemain.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
         private void TankRemain_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -384,6 +440,19 @@ namespace RateController
                 TankRemain.Select(0, TankRemain.Text.Length);
                 var ErrForm = new FormTimedMessage("Tank Remaining Error", "Min 0, Max 100,000");
                 ErrForm.Show();
+            }
+        }
+
+        private void TankSize_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(TankSize.Text, out tempD);
+            using (var form = new FormNumeric(0, 100000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    TankSize.Text = form.ReturnValue.ToString();
+                }
             }
         }
 
@@ -405,64 +474,48 @@ namespace RateController
             }
         }
 
+        private void tbDeadband_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(tbDeadband.Text, out tempD);
+            using (var form = new FormNumeric(0, 20, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbDeadband.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
         private void tbDeadband_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
-        private void tbKD_TextChanged(object sender, EventArgs e)
+        private void tbDeadband_Validating(object sender, CancelEventArgs e)
         {
-            SetButtons(true);
-        }
-
-        private void tbKI_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbKP_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbMaxPWM_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbMinPWM_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void ValveType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void RadioButtonChanged(object sender,EventArgs e)
-        {
-            RadioButton rb = sender as RadioButton;
-            if(rb!=null)
+            byte.TryParse(tbDeadband.Text, out tempB);
+            if (tempB < 0 || tempB > 20)
             {
-                if(rb.Checked)
-                {
-                    int.TryParse(rb.Tag.ToString(), out Result);
-                    if (SelectedSimulation != (SimType)Result) SetButtons(true);
-                    SelectedSimulation = (SimType)Result;
-                }
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+                tbDeadband.Select(0, tbDeadband.Text.Length);
+                var ErrForm = new FormTimedMessage("Deadband Error", "Min 0, Max 20");
+                ErrForm.Show();
             }
         }
 
-        private void GroupBoxPaint(object sender, PaintEventArgs e)
+        private void tbFactor_Enter(object sender, EventArgs e)
         {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+            double.TryParse(tbFactor.Text, out tempD);
+            using (var form = new FormNumeric(70, 130, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbFactor.Text = form.ReturnValue.ToString();
+                }
+            }
         }
 
         private void tbFactor_TextChanged(object sender, EventArgs e)
@@ -483,14 +536,104 @@ namespace RateController
             }
         }
 
-        private void lbCoverage_Click(object sender, EventArgs e)
+        private void tbKD_Enter(object sender, EventArgs e)
         {
-
+            double.TryParse(tbKD.Text, out tempD);
+            using (var form = new FormNumeric(0, 255, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbKD.Text = form.ReturnValue.ToString();
+                }
+            }
         }
 
-        private void lbVersion_Click(object sender, EventArgs e)
+        private void tbKD_TextChanged(object sender, EventArgs e)
         {
+            SetButtons(true);
+        }
 
+        private void tbKI_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(tbKP.Text, out tempD);
+            using (var form = new FormNumeric(0, 255, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbKP.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbKI_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbKP_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(tbKP.Text, out tempD);
+            using (var form = new FormNumeric(0, 255, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbKP.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbKP_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbMaxPWM_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(tbMaxPWM.Text, out tempD);
+            using (var form = new FormNumeric(0, 255, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMaxPWM.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbMaxPWM_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbMinPWM_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(tbMinPWM.Text, out tempD);
+            using (var form = new FormNumeric(0, 255, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMinPWM.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbMinPWM_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ValveType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

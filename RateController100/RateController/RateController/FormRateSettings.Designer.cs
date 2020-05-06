@@ -155,6 +155,7 @@
             this.TankRemain.TabIndex = 84;
             this.TankRemain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.TankRemain.TextChanged += new System.EventHandler(this.TankRemain_TextChanged);
+            this.TankRemain.Enter += new System.EventHandler(this.TankRemain_Enter);
             this.TankRemain.Validating += new System.ComponentModel.CancelEventHandler(this.TankRemain_Validating);
             // 
             // butResetTank
@@ -219,6 +220,7 @@
             this.TankSize.TabIndex = 83;
             this.TankSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.TankSize.TextChanged += new System.EventHandler(this.TankSize_TextChanged);
+            this.TankSize.Enter += new System.EventHandler(this.TankSize_Enter);
             this.TankSize.Validating += new System.ComponentModel.CancelEventHandler(this.TankSize_Validating);
             // 
             // label32
@@ -241,6 +243,7 @@
             this.FlowCal.TabIndex = 81;
             this.FlowCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.FlowCal.TextChanged += new System.EventHandler(this.FlowCal_TextChanged);
+            this.FlowCal.Enter += new System.EventHandler(this.FlowCal_Enter);
             this.FlowCal.Validating += new System.ComponentModel.CancelEventHandler(this.FlowCal_Validating);
             // 
             // label30
@@ -318,6 +321,7 @@
             this.RateSet.TabIndex = 80;
             this.RateSet.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.RateSet.TextChanged += new System.EventHandler(this.RateSet_TextChanged);
+            this.RateSet.Enter += new System.EventHandler(this.RateSet_Enter);
             this.RateSet.Validating += new System.ComponentModel.CancelEventHandler(this.RateSet_Validating);
             // 
             // label21
@@ -502,6 +506,7 @@
             this.tbFactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.toolTip1.SetToolTip(this.tbFactor, "Larger value increases amount applied.");
             this.tbFactor.TextChanged += new System.EventHandler(this.tbFactor_TextChanged);
+            this.tbFactor.Enter += new System.EventHandler(this.tbFactor_Enter);
             this.tbFactor.Validating += new System.ComponentModel.CancelEventHandler(this.tbFactor_Validating);
             // 
             // label1
@@ -535,6 +540,7 @@
             this.tbKP.TabIndex = 112;
             this.tbKP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbKP.TextChanged += new System.EventHandler(this.tbKP_TextChanged);
+            this.tbKP.Enter += new System.EventHandler(this.tbKP_Enter);
             // 
             // label2
             // 
@@ -566,6 +572,7 @@
             this.tbKI.TabIndex = 113;
             this.tbKI.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbKI.TextChanged += new System.EventHandler(this.tbKI_TextChanged);
+            this.tbKI.Enter += new System.EventHandler(this.tbKI_Enter);
             // 
             // label6
             // 
@@ -587,6 +594,7 @@
             this.tbKD.TabIndex = 114;
             this.tbKD.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbKD.TextChanged += new System.EventHandler(this.tbKD_TextChanged);
+            this.tbKD.Enter += new System.EventHandler(this.tbKD_Enter);
             // 
             // label7
             // 
@@ -609,6 +617,8 @@
             this.tbDeadband.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.toolTip1.SetToolTip(this.tbDeadband, "% error allowed.");
             this.tbDeadband.TextChanged += new System.EventHandler(this.tbDeadband_TextChanged);
+            this.tbDeadband.Enter += new System.EventHandler(this.tbDeadband_Enter);
+            this.tbDeadband.Validating += new System.ComponentModel.CancelEventHandler(this.tbDeadband_Validating);
             // 
             // label8
             // 
@@ -630,6 +640,7 @@
             this.tbMaxPWM.TabIndex = 117;
             this.tbMaxPWM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbMaxPWM.TextChanged += new System.EventHandler(this.tbMaxPWM_TextChanged);
+            this.tbMaxPWM.Enter += new System.EventHandler(this.tbMaxPWM_Enter);
             // 
             // tbMinPWM
             // 
@@ -641,6 +652,7 @@
             this.tbMinPWM.TabIndex = 116;
             this.tbMinPWM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbMinPWM.TextChanged += new System.EventHandler(this.tbMinPWM_TextChanged);
+            this.tbMinPWM.Enter += new System.EventHandler(this.tbMinPWM_Enter);
             // 
             // label9
             // 
@@ -771,7 +783,6 @@
             this.lblCurrentArduinoPort.Size = new System.Drawing.Size(43, 23);
             this.lblCurrentArduinoPort.TabIndex = 65;
             this.lblCurrentArduinoPort.Text = "Port";
-            this.lblCurrentArduinoPort.Click += new System.EventHandler(this.lblCurrentArduinoPort_Click);
             // 
             // tabPage4
             // 
@@ -1105,7 +1116,6 @@
             this.lbVersion.TabIndex = 121;
             this.lbVersion.Text = "Version Date   10/Jan/2020";
             this.lbVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbVersion.Click += new System.EventHandler(this.lbVersion_Click);
             // 
             // FormRateSettings
             // 

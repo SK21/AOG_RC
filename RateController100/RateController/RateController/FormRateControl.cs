@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Net;
+using System.Windows.Forms;
 
 namespace RateController
 {
@@ -29,6 +29,13 @@ namespace RateController
             Properties.Settings.Default.DestinationIP = BroadcastIP(UDPlocal.GetLocalIP());
 
             UDPnetwork = new UDPComm(this, Properties.Settings.Default.DestinationIP, 8000, 2188);
+        }
+
+        public void StartSerial()
+        {
+            SER.RCportName = Properties.Settings.Default.RCportName;
+            SER.RCportBaud = Properties.Settings.Default.RCportBaud;
+            if (Properties.Settings.Default.RCportSuccessful) SER.OpenRCport();
         }
 
         public void UpdateStatus()
@@ -81,6 +88,25 @@ namespace RateController
             this.Close();
         }
 
+        private string BroadcastIP(string IP)
+        {
+            string Result = "";
+            string[] data = IP.Split('.');
+            if (data.Length == 4)
+            {
+                Result = data[0] + "." + data[1] + "." + data[2] + ".255";
+            }
+
+            if (IPAddress.TryParse(Result, out IPAddress Tmp))
+            {
+                return Result;
+            }
+            else
+            {
+                return "192.168.1.255";
+            }
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
             Form frmRateSettings = new FormRateSettings(this);
@@ -105,6 +131,12 @@ namespace RateController
             // don't forget to save the settings
             Properties.Settings.Default.Save();
             RC.SaveSettings();
+        }
+
+        private void lbRate_Click(object sender, EventArgs e)
+        {
+            ShowAverageRate = !ShowAverageRate;
+            UpdateStatus();
         }
 
         private void RateControl_Load(object sender, EventArgs e)
@@ -156,12 +188,6 @@ namespace RateController
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            RC.Update();
-            UpdateStatus();
-        }
-
         private void SetTitle()
         {
             SimType Mode = (SimType)Properties.Settings.Default.SimulateType;
@@ -170,45 +196,21 @@ namespace RateController
                 case SimType.VirtualNano:
                     this.Text = "Rate Controller (V)";
                     break;
+
                 case SimType.RealNano:
                     this.Text = "Rate Controller (R)";
                     break;
+
                 default:
                     this.Text = "Rate Controller";
                     break;
             }
         }
 
-        public void StartSerial()
+        private void timer1_Tick(object sender, EventArgs e)
         {
-            SER.RCportName = Properties.Settings.Default.RCportName;
-            SER.RCportBaud = Properties.Settings.Default.RCportBaud;
-            if (Properties.Settings.Default.RCportSuccessful) SER.OpenRCport();
-        }
-
-        private void lbRate_Click(object sender, EventArgs e)
-        {
-            ShowAverageRate = !ShowAverageRate;
+            RC.Update();
             UpdateStatus();
-        }
-
-        private string BroadcastIP(string IP)
-        {
-            string Result = "";
-            string[] data = IP.Split('.');
-            if (data.Length == 4)
-            {
-                Result = data[0] + "." + data[1] + "." + data[2] + ".255";
-            }
-
-            if (IPAddress.TryParse(Result, out IPAddress Tmp))
-            {
-                return Result;
-            }
-            else
-            {
-                return "192.168.1.255";
-            }
         }
     }
 }

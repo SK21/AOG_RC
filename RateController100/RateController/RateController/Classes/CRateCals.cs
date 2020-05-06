@@ -338,10 +338,12 @@ namespace RateController
             }
         }
 
-        public void CommFromArduino(string sentence, bool RealNano = true)
+        public bool CommFromArduino(string sentence, bool RealNano = true)
         {
+            bool Result = false;    // return true if there is good comm
             try
             {
+
                 int end = sentence.IndexOf("\r");
                 sentence = sentence.Substring(0, end);
                 string[] words = sentence.Split(',');
@@ -357,18 +359,21 @@ namespace RateController
                     {
                         UpdateQuantity(ArdRec32741.AccumulatedQuantity());
                         ArduinoReceiveTime = DateTime.Now;
+                        Result = true;
                     }
                 }
 
                 if (Switches32761.ParseStringData(words))
                 {
                     ArduinoReceiveTime = DateTime.Now;
+                    Result = true;
                 }
             }
             catch (Exception)
             {
-
+                return false;
             }
+            return Result;
         }
 
         public void UDPcommFromArduino(byte[] data)
