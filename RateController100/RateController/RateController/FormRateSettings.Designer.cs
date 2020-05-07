@@ -112,6 +112,24 @@
             this.label11 = new System.Windows.Forms.Label();
             this.lbVersion = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.lbWorkRateData = new System.Windows.Forms.Label();
+            this.lbWorkRate = new System.Windows.Forms.Label();
+            this.lbPWMdata = new System.Windows.Forms.Label();
+            this.lbPWM = new System.Windows.Forms.Label();
+            this.lbWidthData = new System.Windows.Forms.Label();
+            this.lbWidth = new System.Windows.Forms.Label();
+            this.lbSecHiData = new System.Windows.Forms.Label();
+            this.lbSectHi = new System.Windows.Forms.Label();
+            this.lbSecLoData = new System.Windows.Forms.Label();
+            this.lbSecLo = new System.Windows.Forms.Label();
+            this.lbSpeedData = new System.Windows.Forms.Label();
+            this.lbSpeed = new System.Windows.Forms.Label();
+            this.lbRateSetData = new System.Windows.Forms.Label();
+            this.lbRateSet = new System.Windows.Forms.Label();
+            this.lbRateAppliedData = new System.Windows.Forms.Label();
+            this.lbRateApplied = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -121,6 +139,7 @@
             this.tabPage4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // butResetApplied
@@ -364,6 +383,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(14, 10);
@@ -371,6 +391,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(420, 478);
             this.tabControl1.TabIndex = 122;
+            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
             // tabPage1
             // 
@@ -1117,6 +1138,198 @@
             this.lbVersion.Text = "Version Date   10/Jan/2020";
             this.lbVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.lbRateAppliedData);
+            this.tabPage5.Controls.Add(this.lbRateApplied);
+            this.tabPage5.Controls.Add(this.lbRateSetData);
+            this.tabPage5.Controls.Add(this.lbRateSet);
+            this.tabPage5.Controls.Add(this.lbSpeedData);
+            this.tabPage5.Controls.Add(this.lbSpeed);
+            this.tabPage5.Controls.Add(this.lbSecLoData);
+            this.tabPage5.Controls.Add(this.lbSecLo);
+            this.tabPage5.Controls.Add(this.lbSecHiData);
+            this.tabPage5.Controls.Add(this.lbSectHi);
+            this.tabPage5.Controls.Add(this.lbWidthData);
+            this.tabPage5.Controls.Add(this.lbWidth);
+            this.tabPage5.Controls.Add(this.lbPWMdata);
+            this.tabPage5.Controls.Add(this.lbPWM);
+            this.tabPage5.Controls.Add(this.lbWorkRateData);
+            this.tabPage5.Controls.Add(this.lbWorkRate);
+            this.tabPage5.Location = new System.Drawing.Point(4, 35);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(412, 439);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Diagnostics";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // lbWorkRateData
+            // 
+            this.lbWorkRateData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbWorkRateData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWorkRateData.Location = new System.Drawing.Point(228, 96);
+            this.lbWorkRateData.Name = "lbWorkRateData";
+            this.lbWorkRateData.Size = new System.Drawing.Size(130, 25);
+            this.lbWorkRateData.TabIndex = 133;
+            this.lbWorkRateData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbWorkRate
+            // 
+            this.lbWorkRate.AutoSize = true;
+            this.lbWorkRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWorkRate.Location = new System.Drawing.Point(55, 97);
+            this.lbWorkRate.Name = "lbWorkRate";
+            this.lbWorkRate.Size = new System.Drawing.Size(108, 23);
+            this.lbWorkRate.TabIndex = 134;
+            this.lbWorkRate.Text = "Hectares/hr";
+            // 
+            // lbPWMdata
+            // 
+            this.lbPWMdata.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbPWMdata.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPWMdata.Location = new System.Drawing.Point(228, 219);
+            this.lbPWMdata.Name = "lbPWMdata";
+            this.lbPWMdata.Size = new System.Drawing.Size(130, 25);
+            this.lbPWMdata.TabIndex = 137;
+            this.lbPWMdata.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbPWM
+            // 
+            this.lbPWM.AutoSize = true;
+            this.lbPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPWM.Location = new System.Drawing.Point(55, 220);
+            this.lbPWM.Name = "lbPWM";
+            this.lbPWM.Size = new System.Drawing.Size(52, 23);
+            this.lbPWM.TabIndex = 138;
+            this.lbPWM.Text = "PWM";
+            // 
+            // lbWidthData
+            // 
+            this.lbWidthData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbWidthData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWidthData.Location = new System.Drawing.Point(228, 260);
+            this.lbWidthData.Name = "lbWidthData";
+            this.lbWidthData.Size = new System.Drawing.Size(130, 25);
+            this.lbWidthData.TabIndex = 139;
+            this.lbWidthData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbWidth
+            // 
+            this.lbWidth.AutoSize = true;
+            this.lbWidth.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWidth.Location = new System.Drawing.Point(55, 261);
+            this.lbWidth.Name = "lbWidth";
+            this.lbWidth.Size = new System.Drawing.Size(166, 23);
+            this.lbWidth.TabIndex = 140;
+            this.lbWidth.Text = "Working Width (ft)";
+            // 
+            // lbSecHiData
+            // 
+            this.lbSecHiData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbSecHiData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSecHiData.Location = new System.Drawing.Point(228, 301);
+            this.lbSecHiData.Name = "lbSecHiData";
+            this.lbSecHiData.Size = new System.Drawing.Size(130, 25);
+            this.lbSecHiData.TabIndex = 141;
+            this.lbSecHiData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbSectHi
+            // 
+            this.lbSectHi.AutoSize = true;
+            this.lbSectHi.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSectHi.Location = new System.Drawing.Point(55, 302);
+            this.lbSectHi.Name = "lbSectHi";
+            this.lbSectHi.Size = new System.Drawing.Size(136, 23);
+            this.lbSectHi.TabIndex = 142;
+            this.lbSectHi.Text = "Section Byte Hi";
+            // 
+            // lbSecLoData
+            // 
+            this.lbSecLoData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbSecLoData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSecLoData.Location = new System.Drawing.Point(228, 342);
+            this.lbSecLoData.Name = "lbSecLoData";
+            this.lbSecLoData.Size = new System.Drawing.Size(130, 25);
+            this.lbSecLoData.TabIndex = 143;
+            this.lbSecLoData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbSecLo
+            // 
+            this.lbSecLo.AutoSize = true;
+            this.lbSecLo.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSecLo.Location = new System.Drawing.Point(55, 343);
+            this.lbSecLo.Name = "lbSecLo";
+            this.lbSecLo.Size = new System.Drawing.Size(138, 23);
+            this.lbSecLo.TabIndex = 144;
+            this.lbSecLo.Text = "Section Byte Lo";
+            // 
+            // lbSpeedData
+            // 
+            this.lbSpeedData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbSpeedData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSpeedData.Location = new System.Drawing.Point(228, 55);
+            this.lbSpeedData.Name = "lbSpeedData";
+            this.lbSpeedData.Size = new System.Drawing.Size(130, 25);
+            this.lbSpeedData.TabIndex = 145;
+            this.lbSpeedData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbSpeed
+            // 
+            this.lbSpeed.AutoSize = true;
+            this.lbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSpeed.Location = new System.Drawing.Point(55, 56);
+            this.lbSpeed.Name = "lbSpeed";
+            this.lbSpeed.Size = new System.Drawing.Size(63, 23);
+            this.lbSpeed.TabIndex = 146;
+            this.lbSpeed.Text = "Speed";
+            // 
+            // lbRateSetData
+            // 
+            this.lbRateSetData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbRateSetData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRateSetData.Location = new System.Drawing.Point(228, 137);
+            this.lbRateSetData.Name = "lbRateSetData";
+            this.lbRateSetData.Size = new System.Drawing.Size(130, 25);
+            this.lbRateSetData.TabIndex = 147;
+            this.lbRateSetData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip1.SetToolTip(this.lbRateSetData, "Units per Minute Set");
+            // 
+            // lbRateSet
+            // 
+            this.lbRateSet.AutoSize = true;
+            this.lbRateSet.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRateSet.Location = new System.Drawing.Point(55, 138);
+            this.lbRateSet.Name = "lbRateSet";
+            this.lbRateSet.Size = new System.Drawing.Size(80, 23);
+            this.lbRateSet.TabIndex = 148;
+            this.lbRateSet.Text = "UPM Set";
+            // 
+            // lbRateAppliedData
+            // 
+            this.lbRateAppliedData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbRateAppliedData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRateAppliedData.Location = new System.Drawing.Point(228, 178);
+            this.lbRateAppliedData.Name = "lbRateAppliedData";
+            this.lbRateAppliedData.Size = new System.Drawing.Size(130, 25);
+            this.lbRateAppliedData.TabIndex = 149;
+            this.lbRateAppliedData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip1.SetToolTip(this.lbRateAppliedData, "Units per Minute Applied");
+            // 
+            // lbRateApplied
+            // 
+            this.lbRateApplied.AutoSize = true;
+            this.lbRateApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRateApplied.Location = new System.Drawing.Point(55, 179);
+            this.lbRateApplied.Name = "lbRateApplied";
+            this.lbRateApplied.Size = new System.Drawing.Size(115, 23);
+            this.lbRateApplied.TabIndex = 150;
+            this.lbRateApplied.Text = "UPM Applied";
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // FormRateSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1149,6 +1362,8 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1236,5 +1451,23 @@
         private System.Windows.Forms.Label lbDestinationIP;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Label lbPWMdata;
+        private System.Windows.Forms.Label lbPWM;
+        private System.Windows.Forms.Label lbWorkRateData;
+        private System.Windows.Forms.Label lbWorkRate;
+        private System.Windows.Forms.Label lbSecLoData;
+        private System.Windows.Forms.Label lbSecLo;
+        private System.Windows.Forms.Label lbSecHiData;
+        private System.Windows.Forms.Label lbSectHi;
+        private System.Windows.Forms.Label lbWidthData;
+        private System.Windows.Forms.Label lbWidth;
+        private System.Windows.Forms.Label lbSpeedData;
+        private System.Windows.Forms.Label lbSpeed;
+        private System.Windows.Forms.Label lbRateAppliedData;
+        private System.Windows.Forms.Label lbRateApplied;
+        private System.Windows.Forms.Label lbRateSetData;
+        private System.Windows.Forms.Label lbRateSet;
+        private System.Windows.Forms.Timer timer1;
     }
 }

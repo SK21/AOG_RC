@@ -1,16 +1,16 @@
 #if(CommType == 0)
-//  Comm data out
-// PGN 32741
-//	0. HeaderHi			127		
-//	1. HeaderLo			229		
-//	2. rate applied	Hi	100 times actual
-//  3. rate applied Lo	100 times actual
-//	4. acc.quantity	Hi	
-//  5. acc.quantity Lo
-//  6. error % Hi
-//  7. error % Lo
-//  8. -
-//  9. -
+// PGN 32741 Comm data out
+// to Rate Controller from Arduino
+//0	HeaderHi		    127
+//1	HeaderLo		    229
+//2	rate applied Hi		100 X actual
+//3	rate applied Lo
+//4	acc.Quantity 3		100 X actual
+//5	acc.Quantity 2
+//6 acc.Quantity 1
+//7 PWM Hi
+//8 PWM Lo
+// 9 -
 // total 10 bytes
 //
 // PGN 32761

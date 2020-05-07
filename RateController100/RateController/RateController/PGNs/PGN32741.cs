@@ -10,6 +10,8 @@
         //4	acc.Quantity 3		100 X actual
         //5	acc.Quantity 2
         //6 acc.Quantity 1
+        //7 PWM Hi
+        //8 PWM Lo
 
         private const byte cByteCount = 7;
         private const byte HeaderHi = 127;

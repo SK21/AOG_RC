@@ -103,6 +103,57 @@ namespace RateController
 
         public byte AdjustmentFactor { get { return ArdSend32743.AdjustmentFactor; } set { ArdSend32743.AdjustmentFactor = value; } }
 
+        public double WorkRate()
+        {
+            if (CoverageUnits == 0)
+            {
+                return HectaresPerMinute * 2.47105 * 60;
+            }
+            else
+            {
+                return HectaresPerMinute * 60;
+            }
+        }
+
+        public double PWM()
+        {
+            return ArdRec32741.PWMsetting();
+        }
+
+        public double Width()
+        {
+            if (CoverageUnits == 0)
+            {
+                return CurrentWidth * 3.28;
+            }
+            else
+            {
+                return CurrentWidth;
+            }
+        }
+
+        public byte SectionHi()
+        {
+            return AogRec32740.SectionControlByteHi;
+        }
+
+        public byte SectionLo()
+        {
+            return AogRec32740.SectionControlByteLo;
+        }
+
+        public double Speed()
+        {
+            if(CoverageUnits==0)
+            {
+                return AogRec32740.Speed() * .621371;
+            }
+            else
+            {
+                return AogRec32740.Speed();
+            }
+        }
+
         public void Update()
         {
             StartTime = DateTime.Now;
@@ -233,6 +284,16 @@ namespace RateController
                     break;
             }
             return V;
+        }
+
+        public double UPMset()
+        {
+            return UPMsetting();
+        }
+
+        public double UPMapplied()
+        {
+            return ArdRec32741.UPMaverage();
         }
 
         public double RateApplied()

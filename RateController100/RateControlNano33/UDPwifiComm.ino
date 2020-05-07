@@ -21,6 +21,12 @@ void SendUDPWifi()
 	Temp = Units;
 	toSend[6] = Temp;
 
+	// pwmSetting
+	Temp = (int)((300 - pwmSetting) * 10) >> 8;	// account for negative values
+	toSend[7] = Temp;
+	Temp = (300 - pwmSetting) * 10;
+	toSend[8] = Temp;
+
 	//off to AOG
 	UDPout.beginPacket(DestinationIP, DestinationPort);
 	UDPout.write(toSend, sizeof(toSend));

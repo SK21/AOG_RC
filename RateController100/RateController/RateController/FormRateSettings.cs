@@ -193,6 +193,7 @@ namespace RateController
             }
 
             Properties.Settings.Default.Save();
+            timer1.Enabled = false;
         }
 
         private void FormRateSettings_Load(object sender, EventArgs e)
@@ -352,7 +353,7 @@ namespace RateController
         private void SetBackColor()
         {
             this.BackColor = Properties.Settings.Default.DayColour;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < tabControl1.TabCount; i++)
             {
                 tabControl1.TabPages[i].BackColor = Properties.Settings.Default.DayColour;
             }
@@ -556,13 +557,13 @@ namespace RateController
 
         private void tbKI_Enter(object sender, EventArgs e)
         {
-            double.TryParse(tbKP.Text, out tempD);
+            double.TryParse(tbKI.Text, out tempD);
             using (var form = new FormNumeric(0, 255, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbKP.Text = form.ReturnValue.ToString();
+                    tbKI.Text = form.ReturnValue.ToString();
                 }
             }
         }
@@ -634,6 +635,52 @@ namespace RateController
         private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            lbWorkRateData.Text = mf.RC.WorkRate().ToString("N1");
+            if(mf.RC.CoverageUnits==0)
+            {
+                lbWorkRate.Text = "Acres/Hr";
+            }
+            else
+            {
+                lbWorkRate.Text = "Hectares/Hr";
+            }
+
+
+            lbRateSetData.Text = mf.RC.UPMset().ToString("N1");
+            lbRateAppliedData.Text = mf.RC.UPMapplied().ToString("N1");
+            lbPWMdata.Text = mf.RC.PWM().ToString("N0");
+
+            lbWidthData.Text = mf.RC.Width().ToString("N1");
+            if (mf.RC.CoverageUnits==0)
+            {
+                lbWidth.Text = "Working Width (FT)";
+            }
+            else
+            {
+                lbWidth.Text = "Working Width (M)";
+            }
+
+            lbSecHiData.Text = mf.RC.SectionHi().ToString();
+            lbSecLoData.Text = mf.RC.SectionLo().ToString();
+
+            lbSpeedData.Text = mf.RC.Speed().ToString("N1");
+            if(mf.RC.CoverageUnits==0)
+            {
+                lbSpeed.Text = "MPH";
+            }
+            else
+            {
+                lbSpeed.Text = "KPH";
+            }
+        }
+
+        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            timer1.Enabled = (tabControl1.SelectedIndex == 3);
         }
     }
 }
