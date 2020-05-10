@@ -61,17 +61,14 @@ void CommFromAOG()
 	{
 		PGN32764Found = false;  //reset the flag
 
-		//change the factors as required for your own PID values
 		Kp = (float)Serial.read() * 1.0;   // read Kp from AgOpenGPS
-		Ki = (float)Serial.read() * 0.001;   // read Ki from AgOpenGPS
-		Kd = (float)Serial.read() * 1.0;   // read Kd from AgOpenGPS
-		Ko = (float)Serial.read() * 0.1;   // read Ko from AgOpenGPS
-
-		AOGzeroAdjustment = (Serial.read() - 127) * 20;	// 20 times the setting displayed in AOG
-		SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
+		Serial.read();	// low max pwm
+		Serial.read();	// Kd
+		Serial.read();	// Ko
+		AOGzeroAdjustment = (Serial.read() - 127) * 20;	// 20 times the steer zero setting displayed in AOG
 		MinPWMvalue = Serial.read(); //read the minimum amount of PWM for instant on
-		maxIntegralValue = Serial.read() * 0.1;
-		SteerCPD = Serial.read() * 2; // 2 times the setting displayed in AOG
+		Serial.read();	// high pwm
+		SteerCPD = Serial.read() * 2; // 2 times the steer count setting displayed in AOG
 	}
 
 	if (Serial.available() > 7 && PGN32762Found)

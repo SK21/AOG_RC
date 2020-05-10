@@ -17,8 +17,8 @@
 #define PulseCountMax  3
 
 // ****** select only one source of roll
-#define UseDog2 0		// 0 false, 1 true (inclinometer)
-#define UseIMUroll 1	//0 false, 1 true
+#define UseDog2 1		// 0 false, 1 true (inclinometer)
+#define UseIMUroll 0	//0 false, 1 true
 // ******
 
 // ****** select only one IMU
@@ -33,7 +33,6 @@
 float SteerCPD = 237;	// AOG value sent * 2
 int SteeringZeroOffset = 15000; 
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
-int SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
 
 byte MinPWMvalue = 10;
 int SteerDeadband = 3;	// % error allowed
@@ -147,13 +146,9 @@ int pwmTmp = 0;
 float CurrentSpeed = 0.0;
 
 //PID variables
-float Ko = 0.0f;  //overall gain
-float Kp = 0.0f;  //proportional gain
-float Ki = 0.0f;//integral gain
-float Kd = 0.0f;  //derivative gain
-
-//integral values - **** change as required *****
-float maxIntegralValue = 20; //max PWM value for integral PID component
+float Kp = 0.0f;	//proportional gain
+float Ki = 0.0f;	//integral gain
+float Kd = 0.0f;	//derivative gain
 
 //IMU
 float IMUheading = 9999;	// *******  if there is no gyro installed send 9999
@@ -210,7 +205,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer Nano33  :  02/May/2020");
+	Serial.println("AutoSteer Nano33  :  09/May/2020");
 	Serial.println();
 
 	//keep pulled high and drag low to activate, noise free safe

@@ -44,7 +44,7 @@ void ReceiveUDPWifi()
 			if (InBuffer[0] == 0x7F && InBuffer[1] == 0xFE)
 			{
 				relay = InBuffer[2];
-				CurrentSpeed = InBuffer[3] / 4;
+				CurrentSpeed = InBuffer[3] / 4.0;
 
 				//distance from the guidance line in mm
 				distanceFromLine = (float)(InBuffer[4] << 8 | InBuffer[5]);
@@ -58,8 +58,6 @@ void ReceiveUDPWifi()
 				uTurn = 0;
 
 				Len = 0;	// to skip autosteer settings
-
-				UDPin.flush();	// clear buffer
 			}
 		}
 
@@ -69,17 +67,9 @@ void ReceiveUDPWifi()
 			if (InBuffer[0] == 0x7F && InBuffer[1] == 0xFC)
 			{
 				Kp = (float)InBuffer[2] * 1.0;
-				Ki = (float)InBuffer[3] * .001;
-				Kd = (float)InBuffer[4] * 1.0;
-				Ko = (float)InBuffer[5] * .1;
-
 				AOGzeroAdjustment = (InBuffer[6] - 127) * 20;	// 20 times the setting displayed in AOG
-				SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
 				MinPWMvalue = InBuffer[7]; //read the minimum amount of PWM for instant on
-				maxIntegralValue = InBuffer[8] * 0.1;
 				SteerCPD = InBuffer[9] * 2; // 2 times the setting displayed in AOG
-				
-				UDPin.flush();	// clear buffer
 			}
 		}
 	}

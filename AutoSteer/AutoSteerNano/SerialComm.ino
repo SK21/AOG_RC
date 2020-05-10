@@ -13,7 +13,9 @@ void SendSerial()
 	Serial.print((int)(FilteredRoll * 16));;
 	Serial.print(",");
 	Serial.print(switchByte); //steering switch status
-	Serial.println(",,,");
+	Serial.print(",");
+	Serial.print(pwmDrive); 
+	Serial.println(",0,0");
 
 	Serial.flush();   // flush out buffer
 }
@@ -39,7 +41,7 @@ void ReceiveSerial()
 		// autosteer data
 		PGN32766Found = false;
 		relay = Serial.read();   // read relay control from AgOpenGPS
-		CurrentSpeed = (float)Serial.read() / 4;	//actual speed times 4, single byte
+		CurrentSpeed = (float)Serial.read() / 4.0;	//actual speed times 4, single byte
 
 		//distance from the guidance line in mm
 		distanceFromLine = (float)(Serial.read() << 8 | Serial.read());   //high,low bytes
@@ -62,17 +64,15 @@ void ReceiveSerial()
 		// autosteer settings
 		PGN32764Found = false;  //reset the flag
 
-		//change the factors as required for your own PID values
-		Kp = (float)Serial.read() * 1.0;		// read Kp from AgOpenGPS
-		Ki = (float)Serial.read() * 0.0001;		// read Ki from AgOpenGPS
-		Kd = (float)Serial.read() * 0.1;		// read Kd from AgOpenGPS
-		Ko = (float)Serial.read() * 0.1;		// read Ko from AgOpenGPS
 
-		AOGzeroAdjustment = (Serial.read() - 127) * 20;		// 20 times the setting displayed in AOG
-		SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
-		MinPWMvalue = Serial.read();	//read the minimum amount of PWM for instant on
-		maxIntegralValue = Serial.read() * 0.1;
-		SteerCPD = Serial.read() * 2;	// 2 times the setting displayed in AOG
+		Kp = (float)Serial.read() * 1.0;   // read Kp from AgOpenGPS
+		Serial.read();	// low max pwm
+		Serial.read();	// Kd
+		Serial.read();	// Ko
+		AOGzeroAdjustment = (Serial.read() - 127) * 20;	// 20 times the steer zero setting displayed in AOG
+		MinPWMvalue = Serial.read(); //read the minimum amount of PWM for instant on
+		Serial.read();	// high pwm
+		SteerCPD = Serial.read() * 2; // 2 times the steer count setting displayed in AOG
 	}
 
 	if (Serial.available() > 7 && PGN32762Found)

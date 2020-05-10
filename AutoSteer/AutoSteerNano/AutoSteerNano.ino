@@ -18,7 +18,7 @@
 // counts per degree for this sensor is 237 (21300/90)
 
 float SteerCPD = 237;		// AOG value sent * 2
-int SteeringZeroOffset = 15000; 
+int SteeringZeroOffset = 16400;		
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
 int SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
 
@@ -26,7 +26,7 @@ byte MinPWMvalue = 10;
 int SteerDeadband = 3;	// % error allowed
 #define UsePitch 0	// 1 - use pitch, 0 - use roll
 
-#define InvertWAS  0
+#define InvertWAS  1
 #define InvertRoll  0
 #define InvertMotorDrive 0
 
@@ -113,17 +113,14 @@ int roll = 0;
 //pwm variables
 int pwmDrive = 0;
 int pwmTmp = 0;
+int pwmDir = 1;
 
 float CurrentSpeed = 0.0;
 
 //PID variables
-float Ko = 0.0f;  //overall gain
 float Kp = 0.0f;  //proportional gain
 float Ki = 0.0f;//integral gain
 float Kd = 0.0f;  //derivative gain
-
-//integral values - **** change as required *****
-float maxIntegralValue = 20; //max PWM value for integral PID component
 
 //IMU
 float IMUheading = 9999;	// *******  if there is no gyro installed send 9999
@@ -186,7 +183,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("AutoSteer Nano   :  17/Apr/2020");
+	Serial.println("AutoSteer Nano   :  09/May/2020");
 	Serial.println();
 
 	//keep pulled high and drag low to activate, noise free safe

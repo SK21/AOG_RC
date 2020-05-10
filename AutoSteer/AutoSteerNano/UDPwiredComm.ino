@@ -47,14 +47,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
 	{
 		// autosteer settings
 		Kp = (float)data[2] * 1.0;
-		Ki = (float)data[3] * 0.0001;
-		Kd = (float)data[4] * 0.1;
-		Ko = (float)data[5] * 0.1;
-
 		AOGzeroAdjustment = (data[6] - 127) * 20;	// 20 X the setting displayed in AOG
-		SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
 		MinPWMvalue = data[7];	// read the minimum amount of PWM for instant on
-		maxIntegralValue = data[8] * 0.1;
 		SteerCPD = data[9] * 2;	// 2 X the setting displayed in AOG
 	}
 }

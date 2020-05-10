@@ -3,8 +3,8 @@ void DoSteering()
 	//************** Steering Angle ******************
 	steeringPosition = ads.readADC_SingleEnded(AdsWAS);	//read the steering position sensor
 
-	steeringPosition = (steeringPosition - SteeringPositionZero);
-
+	steeringPosition = (steeringPosition - SteeringZeroOffset - AOGzeroAdjustment);
+	 
 	//convert position to steer angle. 6 counts per degree of steer pot position in my case
 	//  ***** make sure that negative steer angle makes a left turn and positive value is a right turn *****
 	// remove or add the minus for steerSensorCounts to do that.
@@ -19,7 +19,7 @@ void DoSteering()
 	if (SteeringEnabled())
 	{
 		pwmDrive = GetPWM();
-		//pwmDrive = DoPID(steerAngleError, steerAngleSetPoint, LOOP_TIME, MinPWMvalue, 255, Kp * Ko, Ki, Kd, SteerDeadband);
+		//pwmDrive = DoPID(steerAngleError, steerAngleSetPoint, LOOP_TIME, MinPWMvalue, 255, Kp, Ki, Kd, SteerDeadband);
 	
 		if (InvertMotorDrive) pwmDrive *= -1;
 	}
@@ -32,14 +32,15 @@ void DoSteering()
 	if (pwmDrive >= 0)
 	{
 		digitalWrite(DIR_PIN, HIGH);
+		pwmDir = 1;
 	}
 	else
 	{
 		digitalWrite(DIR_PIN, LOW);
-		pwmDrive = -1 * pwmDrive;
+		pwmDir = -1;
 	}
 
-	analogWrite(PWM_PIN, pwmDrive);
+	analogWrite(PWM_PIN, pwmDrive * pwmDir);
 }
 
 bool SteeringEnabled()
@@ -49,8 +50,8 @@ bool SteeringEnabled()
 	// check steering wheel encoder
 	watchdogTimer++;
 
-	if (watchdogTimer > 10 || distanceFromLine == 32020 || SteerSwitch == HIGH 
-		|| pulseCount >= PulseCountMax 
+	if (watchdogTimer > 10 || distanceFromLine == 32020 || distanceFromLine == 32000
+		|| SteerSwitch == HIGH || pulseCount >= PulseCountMax
 		|| (CurrentSpeed < MinSpeed) || CurrentSpeed > MaxSpeed)
 	{
 		//SteerSwitch = HIGH;
@@ -71,7 +72,7 @@ bool SteeringEnabled()
 int GetPWM()
 {
 	// PID
-	pwmTmp = Kp * steerAngleError * Ko;
+	pwmTmp = Kp * steerAngleError;
 	pwmTmp = (constrain(pwmTmp, -255, 255));
 
 	//add min throttle factor so no delay from motor resistance.
