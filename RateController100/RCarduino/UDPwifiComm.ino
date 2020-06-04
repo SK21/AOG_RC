@@ -7,9 +7,9 @@ void SendUDPWifi()
 	toSend[1] = 229;
 
 	// rate applied, 100 X actual
-	Temp = ((int)FlowRateFiltered * 100) >> 8;
+	Temp = ((int)FlowRate * 100) >> 8;
 	toSend[2] = Temp;
-	Temp = (FlowRateFiltered * 100);
+	Temp = (FlowRate * 100);
 	toSend[3] = Temp;
 
 	// accumulated quantity, 3 bytes
@@ -77,12 +77,12 @@ void ReceiveUDPWifi()
 			RelayFromAOG = InBuffer[3];
 
 			// rate setting, 100 times actual
-			UnsignedTemp = InBuffer[4] << 8 | InBuffer[5];
-			rateSetPoint = (float)UnsignedTemp * 0.01;
+			UnSignedTemp = InBuffer[4] << 8 | InBuffer[5];
+			rateSetPoint = (float)UnSignedTemp * 0.01;
 
 			// Meter Cal, 100 times actual
-			UnsignedTemp = InBuffer[6] << 8 | InBuffer[7];
-			MeterCal = (float)UnsignedTemp * 0.01;
+			UnSignedTemp = InBuffer[6] << 8 | InBuffer[7];
+			MeterCal = (float)UnSignedTemp * 0.01;
 
 			// command byte
 			InCommand = InBuffer[8];
@@ -100,16 +100,14 @@ void ReceiveUDPWifi()
 			len = 0;
 		}
 
-		//PGN 32743
-		if ((len > 8) && (tempHeader == 32743))
+		//PGN 32744
+		if ((len > 9) && (tempHeader == 32744))
 		{
-			KP = (float)InBuffer[2] * 0.1;
-			KI = (float)InBuffer[3] * 0.0001;
-			KD = (float)InBuffer[4] * 0.1;
-			DeadBand = (float)InBuffer[5];
-			MinPWMvalue = InBuffer[6];
-			MaxPWMvalue = InBuffer[7];
-			AdjustmentFactor = (float)InBuffer[8] / 100.0;
+			VCN = InBuffer[2] << 8 | InBuffer[3];
+			SendTime = InBuffer[4] << 8 | InBuffer[5];
+			WaitTime = InBuffer[6] << 8 | InBuffer[7];
+			MaxPWMvalue = InBuffer[8];
+			MinPWMvalue = InBuffer[9];
 
 			//reset watchdog as we just heard from AgOpenGPS
 			watchdogTimer = 0;
@@ -151,3 +149,4 @@ void CheckWifi()
 	}
 }
 #endif
+

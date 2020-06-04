@@ -34,18 +34,6 @@
             <setting name="ValveType" serializeAs="String">
                 <value>0</value>
             </setting>
-            <setting name="KP" serializeAs="String">
-                <value>0</value>
-            </setting>
-            <setting name="KI" serializeAs="String">
-                <value>0</value>
-            </setting>
-            <setting name="KD" serializeAs="String">
-                <value>0</value>
-            </setting>
-            <setting name="DeadBand" serializeAs="String">
-                <value>0</value>
-            </setting>
             <setting name="MinPWM" serializeAs="String">
                 <value>0</value>
             </setting>
@@ -94,8 +82,20 @@
             <setting name="SimulateType" serializeAs="String">
                 <value>0</value>
             </setting>
-            <setting name="AdjustmentFactor" serializeAs="String">
-                <value>100</value>
+            <setting name="VCN" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="SendTime" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="WaitTime" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="AccQuantity" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="SecondsAve" serializeAs="String">
+                <value>3</value>
             </setting>
         </RateController.Properties.Settings>
     </userSettings>

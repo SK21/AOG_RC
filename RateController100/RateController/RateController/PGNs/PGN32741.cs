@@ -1,4 +1,7 @@
-﻿namespace RateController
+﻿using System;
+using System.Windows.Forms;
+
+namespace RateController
 {
     public class PGN32741
     {
@@ -17,7 +20,6 @@
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 229;
         private double cPWMsetting;
-        private double NewRateWeight = 20;  // amount new UPM value changes the average (1-100);
         private byte pwmHI;
         private byte pwmLo;
         private byte QuantityB1;
@@ -28,6 +30,27 @@
         private byte RateLo;
         private int Temp;
         private double Tmp;
+        private DateTime LastTime;
+        private double cSecondsAve = 5;   // ex: 5 second average rate
+
+        public double SecondsAverage
+        {
+            get
+            {
+                return cSecondsAve; 
+            } 
+            set
+            {
+                if (value < 1 | value > 300)
+                {
+                    cSecondsAve = 5;
+                }
+                else
+                {
+                    cSecondsAve = value;
+                }
+            }
+        }
 
         public double AccumulatedQuantity()
         {
@@ -106,15 +129,21 @@
             return Temp / 100.0;
         }
 
-        public double UPMaverage()
+        public double UPMaverage()  // for display
         {
             return RateAve;
         }
 
-        private void UpdateAve()
+        private void UpdateAve()   
         {
+            double FrequencyTime = (DateTime.Now - LastTime).TotalSeconds;
+            LastTime = DateTime.Now;
+            if (FrequencyTime < 0.01 | FrequencyTime > 2) FrequencyTime = 0.2;
+
+            double FrequencyDivisor = cSecondsAve / FrequencyTime;
+
             Tmp = (RateHi << 8 | RateLo) / 100.0;
-            RateAve = (RateAve * ((100.0 - NewRateWeight) / 100.0)) + (Tmp * (NewRateWeight / 100.0));
+            RateAve = (Tmp * (1 / FrequencyDivisor)) + (RateAve * ((FrequencyDivisor - 1) / FrequencyDivisor));
         }
     }
 }

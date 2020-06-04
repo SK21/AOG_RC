@@ -15,6 +15,7 @@ namespace RateController
         public UDPComm UDPlocal;
         public UDPComm UDPnetwork;
         private bool ShowAverageRate = false;
+        private DateTime LastSave;
 
         public FormRateControl()
         {
@@ -49,7 +50,7 @@ namespace RateController
 
             if (ShowAverageRate)
             {
-                lbRate.Text = "Average Rate";
+                lbRate.Text = "Overall Rate";
                 lbRateAmount.Text = RC.AverageRate();
             }
             else
@@ -129,7 +130,6 @@ namespace RateController
             }
 
             // don't forget to save the settings
-            Properties.Settings.Default.Save();
             RC.SaveSettings();
         }
 
@@ -211,6 +211,12 @@ namespace RateController
         {
             RC.Update();
             UpdateStatus();
+
+            if ((DateTime.Now - LastSave).TotalSeconds > 60)
+            {
+                RC.SaveSettings();
+                LastSave = DateTime.Now;
+            }
         }
     }
 }

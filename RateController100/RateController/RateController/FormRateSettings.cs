@@ -14,6 +14,7 @@ namespace RateController
         private SimType SelectedSimulation;
         private byte tempB = 0;
         private double tempD = 0;
+        private int tempInt = 0;
 
         public FormRateSettings(FormRateControl CallingForm)
         {
@@ -108,13 +109,11 @@ namespace RateController
 
         private void butLoadDefaults_Click(object sender, EventArgs e)
         {
-            tbKP.Text = "150";
-            tbKI.Text = "0";
-            tbKD.Text = "0";
-            tbDeadband.Text = "3";
-            tbMinPWM.Text = "50";
+            tbVCN.Text = "743";
+            tbSend.Text = "200";
+            tbWait.Text = "750";
             tbMaxPWM.Text = "255";
-            tbFactor.Text = "100";
+            tbMinPWM.Text = "145";
         }
 
         private void butResetAcres_Click(object sender, EventArgs e)
@@ -232,15 +231,12 @@ namespace RateController
             TankSize.Text = mf.RC.TankSize.ToString("N0");
             ValveType.SelectedIndex = mf.RC.ValveType;
             TankRemain.Text = mf.RC.CurrentTankRemaining();
-            tbKP.Text = (mf.RC.KP).ToString("N0");
-            tbKI.Text = (mf.RC.KI).ToString("N0");
-            tbKD.Text = (mf.RC.KD).ToString("N0");
-            tbDeadband.Text = (mf.RC.DeadBand).ToString("N0");
-            tbMinPWM.Text = (mf.RC.MinPWM).ToString("N0");
+            tbVCN.Text = (mf.RC.VCN).ToString("G0");
+            tbSend.Text = (mf.RC.SendTime).ToString("N0");
+            tbWait.Text = (mf.RC.WaitTime).ToString("N0");
             tbMaxPWM.Text = (mf.RC.MaxPWM).ToString("N0");
-
-            tempB = (byte)(100 - (mf.RC.AdjustmentFactor - 100));   // convert so that larger value increases applied amount
-            tbFactor.Text = tempB.ToString("N0");
+            tbMinPWM.Text = (mf.RC.MinPWM).ToString("N0");
+            tbSecondsAverage.Text = (mf.RC.SecondsAve).ToString("N1");
 
             SelectedSimulation = mf.RC.SimulationType;
             switch (SelectedSimulation)
@@ -323,29 +319,25 @@ namespace RateController
             double.TryParse(TankRemain.Text, out tempD);
             mf.RC.SetTankRemaining(tempD);
 
-            byte.TryParse(tbKP.Text, out tempB);
-            mf.RC.KP = tempB;
+            int.TryParse(tbVCN.Text, out tempInt);
+            mf.RC.VCN = tempInt;
 
-            byte.TryParse(tbKI.Text, out tempB);
-            mf.RC.KI = tempB;
+            int.TryParse(tbSend.Text, out tempInt);
+            mf.RC.SendTime = tempInt;
 
-            byte.TryParse(tbKD.Text, out tempB);
-            mf.RC.KD = tempB;
-
-            byte.TryParse(tbDeadband.Text, out tempB);
-            if (tempB > 15) tempB = 15;
-            mf.RC.DeadBand = tempB;
-
-            byte.TryParse(tbMinPWM.Text, out tempB);
-            mf.RC.MinPWM = tempB;
+            int.TryParse(tbWait.Text, out tempInt);
+            mf.RC.WaitTime = tempInt;
 
             byte.TryParse(tbMaxPWM.Text, out tempB);
             mf.RC.MaxPWM = tempB;
 
+            byte.TryParse(tbMinPWM.Text, out tempB);
+            mf.RC.MinPWM = tempB;
+
             mf.RC.SimulationType = SelectedSimulation;
 
-            byte.TryParse(tbFactor.Text, out tempB);
-            mf.RC.AdjustmentFactor = (byte)(100 - (tempB - 100));   // convert back
+            double.TryParse(tbSecondsAverage.Text, out tempD);
+            mf.RC.SecondsAve = tempD;
 
             mf.RC.SaveSettings();
         }
@@ -357,6 +349,7 @@ namespace RateController
             {
                 tabControl1.TabPages[i].BackColor = Properties.Settings.Default.DayColour;
             }
+            tbVCNdescription.BackColor = Properties.Settings.Default.DayColour;
         }
 
         private void SetButtons(bool Edited)
@@ -411,6 +404,11 @@ namespace RateController
                 lbArduinoConnected.Text = mf.SER.RCportName + " Disconnected";
                 lbArduinoConnected.BackColor = Color.Red;
             }
+        }
+
+        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            timer1.Enabled = (tabControl1.SelectedIndex == 3);
         }
 
         private void TankRemain_Enter(object sender, EventArgs e)
@@ -475,122 +473,6 @@ namespace RateController
             }
         }
 
-        private void tbDeadband_Enter(object sender, EventArgs e)
-        {
-            double.TryParse(tbDeadband.Text, out tempD);
-            using (var form = new FormNumeric(0, 20, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbDeadband.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbDeadband_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbDeadband_Validating(object sender, CancelEventArgs e)
-        {
-            byte.TryParse(tbDeadband.Text, out tempB);
-            if (tempB < 0 || tempB > 20)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-                tbDeadband.Select(0, tbDeadband.Text.Length);
-                var ErrForm = new FormTimedMessage("Deadband Error", "Min 0, Max 20");
-                ErrForm.Show();
-            }
-        }
-
-        private void tbFactor_Enter(object sender, EventArgs e)
-        {
-            double.TryParse(tbFactor.Text, out tempD);
-            using (var form = new FormNumeric(70, 130, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbFactor.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbFactor_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbFactor_Validating(object sender, CancelEventArgs e)
-        {
-            byte.TryParse(tbFactor.Text, out tempB);
-            if (tempB < 70 || tempB > 130)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-                tbFactor.Select(0, tbFactor.Text.Length);
-                var ErrForm = new FormTimedMessage("Adjustment Factor Error", "Min 70, Max 130");
-                ErrForm.Show();
-            }
-        }
-
-        private void tbKD_Enter(object sender, EventArgs e)
-        {
-            double.TryParse(tbKD.Text, out tempD);
-            using (var form = new FormNumeric(0, 255, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbKD.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbKD_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbKI_Enter(object sender, EventArgs e)
-        {
-            double.TryParse(tbKI.Text, out tempD);
-            using (var form = new FormNumeric(0, 255, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbKI.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbKI_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbKP_Enter(object sender, EventArgs e)
-        {
-            double.TryParse(tbKP.Text, out tempD);
-            using (var form = new FormNumeric(0, 255, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbKP.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbKP_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
         private void tbMaxPWM_Enter(object sender, EventArgs e)
         {
             double.TryParse(tbMaxPWM.Text, out tempD);
@@ -627,20 +509,121 @@ namespace RateController
             SetButtons(true);
         }
 
-        private void ValveType_SelectedIndexChanged(object sender, EventArgs e)
+        private void tbSecondsAverage_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(tbSecondsAverage.Text, out tempD);
+            using (var form = new FormNumeric(1, 300, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSecondsAverage.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbSecondsAverage_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
-        private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
+        private void tbSend_Enter(object sender, EventArgs e)
+        {
+            int.TryParse(tbSend.Text, out tempInt);
+            using (var form = new FormNumeric(20, 2000, tempInt))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSend.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbSend_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void tbSend_Validating(object sender, CancelEventArgs e)
+        {
+            int.TryParse(tbSend.Text, out tempInt);
+            if (tempInt < 20 || tempInt > 2000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+                tbSend.Select(0, tbSend.Text.Length);
+                var ErrForm = new FormTimedMessage("Send Time Error", "Min 20, Max 2000");
+                ErrForm.Show();
+            }
+        }
+
+        private void tbVCN_Enter(object sender, EventArgs e)
+        {
+            int.TryParse(tbVCN.Text, out tempInt);
+            using (var form = new FormNumeric(0, 9999, tempInt))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbVCN.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbVCN_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbVCN_Validating(object sender, CancelEventArgs e)
+        {
+            int.TryParse(tbVCN.Text, out tempInt);
+            if (tempInt < 0 || tempInt > 9999)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+                tbVCN.Select(0, tbVCN.Text.Length);
+                var ErrForm = new FormTimedMessage("VCN Number Error", "Min 0, Max 9999");
+                ErrForm.Show();
+            }
+        }
+
+        private void tbWait_Enter(object sender, EventArgs e)
+        {
+            int.TryParse(tbWait.Text, out tempInt);
+            using (var form = new FormNumeric(20, 2000, tempInt))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbWait.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbWait_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbWait_Validating(object sender, CancelEventArgs e)
+        {
+            int.TryParse(tbWait.Text, out tempInt);
+            if (tempInt < 20 || tempInt > 2000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+                tbWait.Select(0, tbWait.Text.Length);
+                var ErrForm = new FormTimedMessage("Wait Time Error", "Min 20, Max 2000");
+                ErrForm.Show();
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             lbWorkRateData.Text = mf.RC.WorkRate().ToString("N1");
-            if(mf.RC.CoverageUnits==0)
+            if (mf.RC.CoverageUnits == 0)
             {
                 lbWorkRate.Text = "Acres/Hr";
             }
@@ -649,13 +632,12 @@ namespace RateController
                 lbWorkRate.Text = "Hectares/Hr";
             }
 
-
             lbRateSetData.Text = mf.RC.UPMset().ToString("N1");
             lbRateAppliedData.Text = mf.RC.UPMapplied().ToString("N1");
             lbPWMdata.Text = mf.RC.PWM().ToString("N0");
 
             lbWidthData.Text = mf.RC.Width().ToString("N1");
-            if (mf.RC.CoverageUnits==0)
+            if (mf.RC.CoverageUnits == 0)
             {
                 lbWidth.Text = "Working Width (FT)";
             }
@@ -668,7 +650,7 @@ namespace RateController
             lbSecLoData.Text = mf.RC.SectionLo().ToString();
 
             lbSpeedData.Text = mf.RC.Speed().ToString("N1");
-            if(mf.RC.CoverageUnits==0)
+            if (mf.RC.CoverageUnits == 0)
             {
                 lbSpeed.Text = "MPH";
             }
@@ -678,9 +660,14 @@ namespace RateController
             }
         }
 
-        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        private void ValveType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            timer1.Enabled = (tabControl1.SelectedIndex == 3);
+            SetButtons(true);
+        }
+
+        private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

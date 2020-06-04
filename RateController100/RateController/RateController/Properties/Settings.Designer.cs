@@ -122,54 +122,6 @@ namespace RateController.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public byte KP {
-            get {
-                return ((byte)(this["KP"]));
-            }
-            set {
-                this["KP"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public byte KI {
-            get {
-                return ((byte)(this["KI"]));
-            }
-            set {
-                this["KI"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public byte KD {
-            get {
-                return ((byte)(this["KD"]));
-            }
-            set {
-                this["KD"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public byte DeadBand {
-            get {
-                return ((byte)(this["DeadBand"]));
-            }
-            set {
-                this["DeadBand"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public byte MinPWM {
             get {
                 return ((byte)(this["MinPWM"]));
@@ -361,13 +313,61 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public byte AdjustmentFactor {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int VCN {
             get {
-                return ((byte)(this["AdjustmentFactor"]));
+                return ((int)(this["VCN"]));
             }
             set {
-                this["AdjustmentFactor"] = value;
+                this["VCN"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SendTime {
+            get {
+                return ((int)(this["SendTime"]));
+            }
+            set {
+                this["SendTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int WaitTime {
+            get {
+                return ((int)(this["WaitTime"]));
+            }
+            set {
+                this["WaitTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double AccQuantity {
+            get {
+                return ((double)(this["AccQuantity"]));
+            }
+            set {
+                this["AccQuantity"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public double SecondsAve {
+            get {
+                return ((double)(this["SecondsAve"]));
+            }
+            set {
+                this["SecondsAve"] = value;
             }
         }
     }

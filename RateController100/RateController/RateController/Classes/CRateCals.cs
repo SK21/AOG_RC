@@ -24,7 +24,7 @@ namespace RateController
 
         // Arduino
         private PGN32742 ArdSend32742;                  // to Arduino from Rate Controller
-        private PGN32743 ArdSend32743;                  // to Arduino from Rate Controller
+        private PGN32744 ValveCal32744;                  // to Arduino from Rate Controller
         private PGN32741 ArdRec32741 = new PGN32741();  // to Rate Controller from Arduino
 
         // AgOpenGPS
@@ -80,28 +80,27 @@ namespace RateController
             Switches32761 = new PGN32761(this);
 
             ArdSend32742 = new PGN32742(this);
-            ArdSend32743 = new PGN32743(this);
+            ValveCal32744 = new PGN32744(this);
 
             Nano = new clsArduino(this);
 
             LoadSettings();
+            PauseArea = true;
         }
 
-        public byte KP { get { return ArdSend32743.KP; } set { ArdSend32743.KP = value; } }
+        public int VCN { get { return ValveCal32744.VCN; } set { ValveCal32744.VCN = value; } }
 
-        public byte KI { get { return ArdSend32743.KI; } set { ArdSend32743.KI = value; } }
+        public int SendTime { get { return ValveCal32744.SendTime; } set { ValveCal32744.SendTime = value; } }
 
-        public byte KD { get { return ArdSend32743.KD; } set { ArdSend32743.KD = value; } }
+        public int WaitTime { get { return ValveCal32744.WaitTime; } set { ValveCal32744.WaitTime = value; } }
+        
+        public byte MaxPWM { get { return ValveCal32744.MaxPWM; } set { ValveCal32744.MaxPWM = value; } }
 
-        public byte DeadBand { get { return ArdSend32743.Deadband; } set { ArdSend32743.Deadband = value; } }
-
-        public byte MinPWM { get { return ArdSend32743.MinPWM; } set { ArdSend32743.MinPWM = value; } }
-
-        public byte MaxPWM { get { return ArdSend32743.MaxPWM; } set { ArdSend32743.MaxPWM = value; } }
+        public byte MinPWM { get { return ValveCal32744.MinPWM; } set { ValveCal32744.MinPWM = value; } }
 
         public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }
 
-        public byte AdjustmentFactor { get { return ArdSend32743.AdjustmentFactor; } set { ArdSend32743.AdjustmentFactor = value; } }
+        public double SecondsAve { get { return ArdRec32741.SecondsAverage; } set { ArdRec32741.SecondsAverage = value; } }
 
         public double WorkRate()
         {
@@ -223,7 +222,7 @@ namespace RateController
             {
                 // send to arduino
                 ArdSend32742.Send();
-                ArdSend32743.Send();
+                ValveCal32744.Send();
 
                 // send comm to AOG
                 Switches32761.Send();
@@ -472,43 +471,53 @@ namespace RateController
         void LoadSettings()
         {
             Coverage = Properties.Settings.Default.Coverage;
+            CoverageUnits = Properties.Settings.Default.CoverageUnits;
+
             TankRemaining = Properties.Settings.Default.TankRemaining;
             QuantityApplied = Properties.Settings.Default.QuantityApplied;
             QuantityUnits = Properties.Settings.Default.QuantityUnits;
-            CoverageUnits = Properties.Settings.Default.CoverageUnits;
+            LastAccQuantity = Properties.Settings.Default.AccQuantity;
+
             RateSet = Properties.Settings.Default.RateSet;
             FlowCal = Properties.Settings.Default.FlowCal;
             TankSize = Properties.Settings.Default.TankSize;
             ValveType = Properties.Settings.Default.ValveType;
-            ArdSend32743.KP = Properties.Settings.Default.KP;
-            ArdSend32743.KI = Properties.Settings.Default.KI;
-            ArdSend32743.KD = Properties.Settings.Default.KD;
-            ArdSend32743.Deadband = Properties.Settings.Default.DeadBand;
-            ArdSend32743.MinPWM = Properties.Settings.Default.MinPWM;
-            ArdSend32743.MaxPWM = Properties.Settings.Default.MaxPWM;
             cSimulationType = (SimType)(Properties.Settings.Default.SimulateType);
-            ArdSend32743.AdjustmentFactor = Properties.Settings.Default.AdjustmentFactor;
+
+            ValveCal32744.VCN = Properties.Settings.Default.VCN;
+            ValveCal32744.SendTime = Properties.Settings.Default.SendTime;
+            ValveCal32744.WaitTime = Properties.Settings.Default.WaitTime;
+            ValveCal32744.MaxPWM = Properties.Settings.Default.MaxPWM;
+            ValveCal32744.MinPWM = Properties.Settings.Default.MinPWM;
+
+            ArdRec32741.SecondsAverage = Properties.Settings.Default.SecondsAve;
         }
 
         public void SaveSettings()
         {
             Properties.Settings.Default.Coverage = Coverage;
+            Properties.Settings.Default.CoverageUnits = CoverageUnits;
+
             Properties.Settings.Default.TankRemaining = TankRemaining;
             Properties.Settings.Default.QuantityApplied = QuantityApplied;
             Properties.Settings.Default.QuantityUnits = QuantityUnits;
-            Properties.Settings.Default.CoverageUnits = CoverageUnits;
+            Properties.Settings.Default.AccQuantity = LastAccQuantity;
+
             Properties.Settings.Default.RateSet = RateSet;
             Properties.Settings.Default.FlowCal = FlowCal;
             Properties.Settings.Default.TankSize = TankSize;
             Properties.Settings.Default.ValveType = ValveType;
-            Properties.Settings.Default.KP = ArdSend32743.KP;
-            Properties.Settings.Default.KI = ArdSend32743.KI;
-            Properties.Settings.Default.KD = ArdSend32743.KD;
-            Properties.Settings.Default.DeadBand = ArdSend32743.Deadband;
-            Properties.Settings.Default.MinPWM = ArdSend32743.MinPWM;
-            Properties.Settings.Default.MaxPWM = ArdSend32743.MaxPWM;
             Properties.Settings.Default.SimulateType = (int)cSimulationType;
-            Properties.Settings.Default.AdjustmentFactor = ArdSend32743.AdjustmentFactor;
+
+            Properties.Settings.Default.VCN = ValveCal32744.VCN;
+            Properties.Settings.Default.SendTime = ValveCal32744.SendTime;
+            Properties.Settings.Default.WaitTime = ValveCal32744.WaitTime;
+            Properties.Settings.Default.MaxPWM = ValveCal32744.MaxPWM;
+            Properties.Settings.Default.MinPWM = ValveCal32744.MinPWM;
+
+            Properties.Settings.Default.SecondsAve = ArdRec32741.SecondsAverage;
+
+            Properties.Settings.Default.Save();
         }
 
         private bool QuantityValid(double CurrentDifference)

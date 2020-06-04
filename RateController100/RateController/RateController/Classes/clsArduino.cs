@@ -41,7 +41,7 @@ namespace RateController
         bool RelaysOn;
 
         DateTime RateCheckLast;
-        int RateCheckInterval = 1000;
+        int RateCheckInterval = 500;
         float rateError;
 
         bool AutoOn;
@@ -58,7 +58,7 @@ namespace RateController
 
         float Pc;
         float P;
-        const float varProcess = 10.0F;
+        const float varProcess = 50.0F;
 
         const float varRate = 10.0F;
         float Xp;
@@ -77,16 +77,44 @@ namespace RateController
         float ValveAdjust = 0;   // % amount to open/close valve
         float ValveOpen = 0;      // % valve is open
         float Pulses = 0;
-        float ValveOpenTime = 2000;  // ms to fully open valve at max opening rate
+        float ValveOpenTime = 4000;  // ms to fully open valve at max opening rate
         float UPM = 0;     // simulated units per minute
         float MaxRate = 120;  // max rate of system in UPM
-        int ErrorRange = 8;  // % random error in flow rate, above and below target
+        int ErrorRange = 4;  // % random error in flow rate, above and below target
         float PulseTime = 0;
         float PWMnet = 0;   // pwmSetting - minPWM to account for motor lag
 
         DateTime SimulateTimeLast;
         int SimulateInterval;
         float RandomError;
+
+        DateTime LastFlowCal;
+        double Duration;
+        double Frequency;
+        int CurrentCounts;
+
+        long OldVCN;
+        byte VCNbacklash;
+        byte VCNspeed;
+        byte VCNbrake;
+        byte VCNdeadband;
+
+        int NewPWM;
+        float VCNerror;
+
+        DateTime SendStart;
+        DateTime WaitStart;
+
+        byte AdjustmentState = 0;	// 0 waiting, 1 sending pwm
+
+        long SendTime = 200;    // ms pwm is sent to valve
+        long WaitTime = 750;    // ms to wait before adjusting valve again
+        byte SlowSpeed = 9;     // low pwm rate
+        long VCN = 743;
+
+        bool LastDirectionPositive;     // adjustment direction
+        bool UseBacklashAdjustment;
+        int PartsTemp;
 
         public clsArduino(CRateCals CalledFrom)
         {
@@ -109,20 +137,19 @@ namespace RateController
                 if (RelaysOn)
                 {
                     if (SimulateFlow) DoSimulate();
-                    rateError = CalRateError();
+                    rateError = CalRateError2();
                 }
+            }
+
+            if(RelaysOn && AutoOn)
+            {
+                pwmSetting = VCNpwm(rateError, rateSetPoint, MinPWMvalue, MaxPWMvalue, VCN, FlowRate,
+                    SendTime, WaitTime, SlowSpeed, ValveType);
             }
 
             if ((DateTime.Now - LastTime).TotalMilliseconds >= LOOP_TIME)
             {
                 LastTime = DateTime.Now;
-
-                if (RelaysOn)
-                {
-                    pwmSetting = DoPID(rateError, rateSetPoint, LOOP_TIME, MinPWMvalue, MaxPWMvalue, KP, KI, KD, DeadBand);
-                }
-
-                //motorDrive();
 
                 SendSerial();
             }
@@ -199,14 +226,13 @@ namespace RateController
                 AOGconnected = true;
             }
 
-            if (PGN == 32743)
+            if (PGN == 32744)
             {
-                KP = (float)(Data[2] * .1);
-                KI = (float)(Data[3] * .0001);
-                KD = (float)(Data[4] * .1);
-                DeadBand = (float)(Data[5]);
-                MinPWMvalue = Data[6];
-                MaxPWMvalue = Data[7];
+                VCN = (int)(Data[2] << 8 | Data[3]);
+                SendTime = (int)(Data[4] << 8 | Data[5]);
+                WaitTime = (int)(Data[6] << 8 | Data[7]);
+                MaxPWMvalue = Data[8];
+                MinPWMvalue = Data[9];
 
                 AOGconnected = true;
             }
@@ -224,19 +250,21 @@ namespace RateController
                 // relays on
                 if (AutoOn)
                 {
-                    PWMnet = pwmSetting;
-                    if (PWMnet < 0)
+                    float Range = MaxPWMvalue - MinPWMvalue + 5;
+                    if (Range == 0 | pwmSetting == 0)
                     {
-                        PWMnet += (float)(MinPWMvalue * .5);
-                        if (PWMnet > 0) PWMnet = 0;
+                        ValveAdjust = 0;
                     }
                     else
                     {
-                        PWMnet -= (float)(MinPWMvalue * .5);
-                        if (PWMnet < 0) PWMnet = 0;
-                    }
+                        float Percent = (float)((Math.Abs(pwmSetting) - MinPWMvalue + 5) / Range);
+                        if (pwmSetting < 0)
+                        {
+                            Percent *= -1;
+                        }
 
-                    ValveAdjust = (float)((PWMnet / 255) * (float)(SimulateInterval / ValveOpenTime) * 100.0);
+                        ValveAdjust = (float)(Percent * (float)(SimulateInterval / ValveOpenTime) * 100.0);
+                    }
                 }
                 else
                 {
@@ -280,84 +308,152 @@ namespace RateController
 
         }
 
-        float CalRateError()
-        {
-            //accumulated counts from this cycle
-            countsThisLoop = pulseCount;
-            pulseCount = 0;
-            accumulatedCounts += (int)countsThisLoop;
 
-            if (countsThisLoop == 0 | MeterCal == 0)
+        float CalRateError2()
+        {
+            Duration = (DateTime.Now - LastFlowCal).TotalMilliseconds / 60000.0;    // minutes
+            LastFlowCal = DateTime.Now;
+            CurrentCounts = pulseCount;
+            pulseCount = 0;
+            accumulatedCounts += CurrentCounts;
+
+            if (Duration == 0 | MeterCal == 0)
             {
                 FlowRate = 0;
             }
             else
             {
-                pulseAverage = pulseDuration / countsThisLoop;
-                pulseDuration = 0;
-
-                //what is current flowrate from meter, Units/minute
-                FlowRate = (float)(pulseAverage * 0.001); // change from milliseconds/pulse to seconds/pulse
-
-                if (FlowRate < .001) FlowRate = 0.1F;    //prevent divide by zero      
-                else FlowRate = (float)(((1.0 / FlowRate) * 60) / MeterCal); //pulses/minute divided by pulses/Unit (pulses/minute * Units/pulse = Units/minute)
+                Frequency = CurrentCounts / Duration;
+                FlowRate = (float)(Frequency / MeterCal);    // units per minute
             }
 
-            //Kalman filter
-            Pc = P + varProcess;
-            G = Pc / (Pc + varRate);
-            P = (1 - G) * Pc;
-            Xp = FlowRateFiltered;
-            Zp = Xp;
-            FlowRateFiltered = G * (FlowRate - Zp) + Xp;
+            FlowRateFiltered = FlowRate;
 
             return rateSetPoint - FlowRateFiltered;
         }
 
-        int DoPID(float clError, float clSetPoint, int clInterval, byte MinPWM, byte MaxPWM,
-            float clKP, float clKi, float clKd, float deadBand)
+        int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
+                    float cFlowRate, long cSendTime, long cWaitTime, byte cSlowSpeed, byte cValveType)
         {
+            VCNparts(cVCN);
 
-            // Calculate how far we are from the target
-            clErrorLast = clCurrentError;
-            clCurrentError = clError;
-
-            // If the error is within the specified deadband, and the motor is moving slowly enough
-            // Or if the motor's target is a physical limit and that limit is hit
-            // (within deadband margins)
-            if (Math.Abs(clCurrentError) <= ((deadBand / 100) * clSetPoint) && Math.Abs(output) <= MinPWM)
+            // deadband
+            float DB = (float)(VCNdeadband / 100.0) * cSetPoint;
+            if (Math.Abs(cError) <= DB)
             {
-                // Stop the motor
-                output = 0;
-                clCurrentError = 0;
+                // valve does not need to be adjusted
+                NewPWM = 0;
             }
             else
             {
-                // Else, update motor duty cycle with the newest output value
-                // This equation is a simple PID control loop
-                output = ((clKP * clCurrentError) + (clKi * clIntegral)) + (clKd * clDerivative);
+                // backlash
+                if (!UseBacklashAdjustment && VCNbacklash > 0)
+                {
+                    if ((cError >= 0 && !LastDirectionPositive) | (cError < 0 && LastDirectionPositive))
+                    {
+                        UseBacklashAdjustment = true;
+                        SendStart = DateTime.Now;
+                    }
+                    LastDirectionPositive = (cError >= 0);
+                }
+
+                if (UseBacklashAdjustment)
+                {
+                    if ((DateTime.Now - SendStart).TotalMilliseconds > (VCNbacklash * 10))
+                    {
+                        UseBacklashAdjustment = false;
+                        LastDirectionPositive = (cError >= 0);
+                        SendStart = DateTime.Now;
+                    }
+                    else
+                    {
+                        NewPWM = MaxPWM - (cSlowSpeed * (MaxPWM - MinPWM) / 9);
+                        if (cError < 0) NewPWM *= -1;
+                    }
+                }
+                else
+                {
+                    if (AdjustmentState == 0)
+                    {
+                        // waiting
+                        if ((DateTime.Now - WaitStart).TotalMilliseconds > cWaitTime)
+                        {
+                            // waiting finished
+                            AdjustmentState = 1;
+                            SendStart = DateTime.Now;
+                        }
+                    }
+
+                    if (AdjustmentState == 1)
+                    {
+                        // sending pwm
+                        if ((DateTime.Now - SendStart).TotalMilliseconds > cSendTime)
+                        {
+                            // sending finished
+                            AdjustmentState = 0;
+                            WaitStart = DateTime.Now;
+                            NewPWM = 0;
+                        }
+                        else
+                        {
+                            // get new pwm value
+                            if (cFlowRate == 0 && cValveType == 1)
+                            {
+                                // open 'fast close' valve
+                                NewPWM = 255;
+                            }
+                            else
+                            {
+                                // % error
+                                if (cSetPoint > 0)
+                                {
+                                    VCNerror = (float)((cError / cSetPoint) * 100.0);
+                                }
+                                else
+                                {
+                                    VCNerror = 0;
+                                }
+
+                                // set pwm value
+                                if (Math.Abs(VCNerror) < VCNbrake)
+                                {
+                                    // slow adjustment
+                                    NewPWM = MaxPWM - (cSlowSpeed * (MaxPWM - MinPWM) / 9);
+                                }
+                                else
+                                {
+                                    // normal adjustment
+                                    NewPWM = MaxPWM - (VCNspeed * (MaxPWM - MinPWM) / 9);
+                                }
+
+                                if (cError < 0) NewPWM *= -1;
+                            }
+                        }
+                    }
+                }
             }
+            return NewPWM;
+        }
 
-            // Prevent output value from exceeding maximum output specified by user,
-            // And prevent the duty cycle from falling below the minimum velocity (excluding zero)
-            // The minimum velocity exists because some DC motors with gearboxes will not be able
-            // to overcome the detent torque of the gearbox at low velocities.
-            if (output >= MaxPWM)
-                output = MaxPWM;
-            else if (output <= -MaxPWM)
-                output = -MaxPWM;
-            else if (output < MinPWM && output > 0)
-                output = MinPWM;
-            else if (output > MinPWM * (-1) && output < 0)
-                output = MinPWM * (-1);
-            else
-                clIntegral += (clCurrentError * (float)clInterval); // The integral is only accumulated when the duty cycle isn't saturated at 100% or -100%.
+        void VCNparts(long NewVCN)
+        {
+            if ((NewVCN != OldVCN) && (NewVCN <= 9999) && (NewVCN >= 0))
+            {
+                VCNbacklash = (byte)(NewVCN / 1000);
+                PartsTemp = (int)(NewVCN - VCNbacklash * 1000);
 
-            // Calculate the derivative for the next iteration
-            if (clInterval > 0) clDerivative = (clCurrentError - clErrorLast) / (float)clInterval;
-            else clDerivative = 0;
+                VCNspeed = (byte)(PartsTemp / 100);
+                PartsTemp = PartsTemp - VCNspeed * 100;
 
-            return (int)output;
+                VCNbrake = (byte)(PartsTemp / 10);
+
+                VCNdeadband = (byte)(PartsTemp - VCNbrake * 10);
+
+                VCNbrake *= 10;
+                if (VCNbrake == 0) VCNbrake = 5;
+
+                OldVCN = NewVCN;
+            }
         }
     }
 }

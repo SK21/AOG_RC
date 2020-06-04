@@ -2,7 +2,7 @@ void motorDrive()
 {
 	if (ValveType == 1 && !RelaysOn)
 	{
-		// use fast close valve to turn off flow
+		// use 'fast close' valve to turn off flow
 		analogWrite(FlowPWM, 255);
 		digitalWrite(FlowDIR, !FlowOn);
 	}
@@ -23,5 +23,4 @@ void motorDrive()
 		}
 	}
 }
-
 

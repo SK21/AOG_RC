@@ -4,6 +4,9 @@ void ReadSectionSwitches()
 {
 	SWreadTime = millis();
 
+#if (PCBversion == 0)
+	AutoOn = !digitalRead(AutoPin);
+	
 	SW1on = !digitalRead(SW1pin);
 	SW2on = !digitalRead(SW2pin);
 	SW3on = !digitalRead(SW3pin);
@@ -18,6 +21,26 @@ void ReadSectionSwitches()
 	{
 		MasterOn = true;
 	}
+#endif
+
+#if (PCBversion == 1)
+	AutoOn = !mcp.digitalRead(AutoPin);
+
+	SW1on = !mcp.digitalRead(SW1pin);
+	SW2on = !mcp.digitalRead(SW2pin);
+	SW3on = !mcp.digitalRead(SW3pin);
+	SW4on = !mcp.digitalRead(SW4pin);
+
+	// master state
+	if (mcp.digitalRead(MasterOffPin) == LOW)
+	{
+		MasterOn = false;
+	}
+	else if (mcp.digitalRead(MasterOnPin) == LOW)
+	{
+		MasterOn = true;
+	}
+#endif
 
 	if ((MasterOn != MasterLast) && !MasterChanged)
 	{
@@ -34,8 +57,6 @@ void ReadSectionSwitches()
 	}
 
 	// auto state
-	AutoOn = !digitalRead(AutoPin);
-
 	if ((AutoOn != AutoLast) && !AutoChanged)
 	{
 		// create AOG auto notification
@@ -170,4 +191,5 @@ void ReadSectionSwitches()
 	// record relay byte before auto state change
 	if (!AutoChanged) RelayControlLast = RelayControl;
 }
+
 
