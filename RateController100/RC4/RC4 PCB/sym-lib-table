@@ -1,0 +1,6 @@
+(sym_lib_table
+  (lib (name Section-eagle-import)(type Legacy)(uri ${KIPRJMOD}/Section-eagle-import.lib)(options "")(descr ""))
+  (lib (name RC2-rescue)(type Legacy)(uri ${KIPRJMOD}/RC2-rescue.lib)(options "")(descr ""))
+  (lib (name RC2-eagle-import)(type Legacy)(uri ${KIPRJMOD}/RC2-eagle-import.lib)(options "")(descr ""))
+  (lib (name RC3-rescue)(type Legacy)(uri ${KIPRJMOD}/RC3-rescue.lib)(options "")(descr ""))
+)

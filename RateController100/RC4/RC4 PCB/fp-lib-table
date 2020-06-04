@@ -1,0 +1,6 @@
+(fp_lib_table
+  (lib (name Section)(type KiCad)(uri ${KIPRJMOD}/Section.pretty)(options "")(descr ""))
+  (lib (name RC2)(type KiCad)(uri ${KIPRJMOD}/RC2.pretty)(options "")(descr ""))
+  (lib (name diyAutoSteer)(type KiCad)(uri E:/MyDocs/Ardunio/Projects/AutoSteer/BrianTee/PCB/diyAutoSteer.pretty)(options "")(descr ""))
+  (lib (name RC31)(type KiCad)(uri ${KIPRJMOD}/RC31.pretty)(options "")(descr ""))
+)
