@@ -1,36 +1,6 @@
 void UpdateHeadingRoll()
 {
-#if (UseOnBoardIMU)
-	if (OnBoardIMUenabled)
-	{
-		// on-board IMU
-		float xAcc, yAcc, zAcc;
-		float xGyro, yGyro, zGyro;
-		float roll, pitch, heading;
-		if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable())
-		{
-			IMU.readAcceleration(xAcc, yAcc, zAcc);
-			IMU.readGyroscope(xGyro, yGyro, zGyro);
-			MKfilter.updateIMU(xGyro, yGyro, zGyro, xAcc, yAcc, zAcc);
-			roll = MKfilter.getRoll();
-			pitch = MKfilter.getPitch();
-			heading = MKfilter.getYaw();
-
-			IMUheading = heading;
-
-			if (UsePitch)
-			{
-				RawRoll = pitch;
-			}
-			else
-			{
-				RawRoll = roll;
-			}
-		}
-	}
-#endif
-
-#if (UseSerialIMU)
+#if (IMUSource == 1 | IMUSource == 2)
 	// serial-attached IMU
 	// PGN32750 
 	// 0 HeaderHi       127
@@ -49,7 +19,7 @@ void UpdateHeadingRoll()
 		int temp = IMUserial.read();
 		IMUheader = IMUtempHeader << 8 | temp;
 		IMUtempHeader = temp;
-		if (IMUheader == 32750) PGN32750Found = true;
+		PGN32750Found = (IMUheader == 32750);
 	}
 
 	if (IMUserial.available() > 7 && PGN32750Found)
@@ -63,7 +33,8 @@ void UpdateHeadingRoll()
 
 		PGN32750Found = false;
 
-		if (UsePitch)
+#if (RollSource == 1)
+		if (SwapPitchRoll)
 		{
 			RawRoll = IMUpitch;
 		}
@@ -71,6 +42,7 @@ void UpdateHeadingRoll()
 		{
 			RawRoll = IMUroll;
 		}
+#endif
 	}
 
 	if (IMUserial.available() > 20)
@@ -78,9 +50,41 @@ void UpdateHeadingRoll()
 		// empty buffer
 		while (IMUserial.available() > 0) char t = IMUserial.read();
 	}
+
 #endif
 
-#if UseDog2
+#if (IMUSource == 3)
+	if (OnBoardIMUenabled)
+	{
+		// on-board IMU
+		float xAcc, yAcc, zAcc;
+		float xGyro, yGyro, zGyro;
+		if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable())
+		{
+			IMU.readAcceleration(xAcc, yAcc, zAcc);
+			IMU.readGyroscope(xGyro, yGyro, zGyro);
+			MKfilter.updateIMU(xGyro, yGyro, zGyro, xAcc, yAcc, zAcc);
+
+			IMUroll = MKfilter.getRoll();
+			IMUpitch = MKfilter.getPitch();
+			IMUheading = MKfilter.getYaw();
+
+#if (RollSource == 1)
+			if (SwapPitchRoll)
+			{
+				RawRoll = IMUpitch;
+			}
+			else
+			{
+				RawRoll = IMUroll;
+			}
+#endif
+		}
+	}
+
+#endif
+
+#if (RollSource == 2)
 	//Dog2 inclinometer
 	//ADS1115 address 0x48
 	//ADS max volts is 6.144 at 32767
@@ -90,7 +94,7 @@ void UpdateHeadingRoll()
 	// counts per degree for this sensor is 426 (21300/50)
 	// zero = 2700 + (21300/2)
 
-	if (UsePitch)
+	if (SwapPitchRoll)
 	{
 		RawRoll = (ads.readADC_SingleEnded(AdsPitch) - 13350) / 426;
 	}
@@ -98,6 +102,7 @@ void UpdateHeadingRoll()
 	{
 		RawRoll = (ads.readADC_SingleEnded(AdsRoll) - 13350) / 426;
 	}
+
 #endif
 
 	if (RawRoll == 9999)

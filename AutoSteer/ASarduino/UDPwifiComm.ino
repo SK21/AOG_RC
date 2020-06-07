@@ -1,4 +1,4 @@
-#if (UseWifi)
+#if (CommType == 2)
 void SendUDPWifi()
 {
 	// PGN 32765
@@ -67,8 +67,10 @@ void ReceiveUDPWifi()
 			if (InBuffer[0] == 0x7F && InBuffer[1] == 0xFC)
 			{
 				Kp = (float)InBuffer[2] * 1.0;
+				LowMaxPWM = InBuffer[3];
 				AOGzeroAdjustment = (InBuffer[6] - 127) * 20;	// 20 times the setting displayed in AOG
 				MinPWMvalue = InBuffer[7]; //read the minimum amount of PWM for instant on
+				HighMaxPWM = InBuffer[8];
 				SteerCPD = InBuffer[9] * 2; // 2 times the setting displayed in AOG
 			}
 		}
@@ -108,4 +110,5 @@ void CheckWifi()
 	}
 }
 #endif
+
 

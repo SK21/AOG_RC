@@ -4,10 +4,11 @@ void ReadSwitches()
 	workSwitch = digitalRead(WORKSW_PIN);  // read work switch, Low on, High off
 	switchByte = 0;
 
-	if (UseSteerSwitch)
+	if (SteerSwitchType == 1)
 	{
 		// on off switch
-		switchByte = (digitalRead(STEERSW_PIN)) << 1;
+		SteerSwitch = digitalRead(STEERSW_PIN);
+		switchByte = SteerSwitch << 1;
 	}
 	else
 	{
@@ -38,5 +39,6 @@ byte ReadPushButton()
 	SWPrevious = SWreading;
 	return SteerSwitch;
 }
+
 
 
