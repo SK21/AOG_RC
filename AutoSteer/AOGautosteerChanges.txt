@@ -1,0 +1,7 @@
+
+AOG doesn't send autosteer settings unless they are changed. Add the following to send the settings whenever the autosteer port is connected:
+
+1. in SerialComm.Designer line 285
+
+            SendSteerSettingsOutAutoSteerPort();
+
