@@ -36,8 +36,7 @@ namespace RateController
                         mf.Tls.TimedMessageBox("Could not close serial port.", e.Message, 3000, true);
                     }
 
-                    Properties.Settings.Default.RCportSuccessful = false;
-                    Properties.Settings.Default.Save();
+                    mf.Tls.SaveProperty("RCportSuccessful", "false");
 
                     RCport.Dispose();
                 }
@@ -70,8 +69,7 @@ namespace RateController
                         {
                             mf.Tls.TimedMessageBox("Could not open serial port.", e.Message, 3000, true);
 
-                            Properties.Settings.Default.RCportSuccessful = false;
-                            Properties.Settings.Default.Save();
+                            mf.Tls.SaveProperty("RCportSuccessful", "false");
                         }
                     }
 
@@ -80,18 +78,16 @@ namespace RateController
                         RCport.DiscardOutBuffer();
                         RCport.DiscardInBuffer();
 
-                        Properties.Settings.Default.RCportName = RCportName;
-                        Properties.Settings.Default.RCportSuccessful = true;
-                        Properties.Settings.Default.RCportBaud = RCportBaud;
-                        Properties.Settings.Default.Save();
+                        mf.Tls.SaveProperty("RCportName", RCportName);
+                        mf.Tls.SaveProperty("RCportSuccessful", "true");
+                        mf.Tls.SaveProperty("RCportBaud", RCportBaud.ToString());
                     }
                 }
                 else
                 {
                     mf.Tls.TimedMessageBox("Could not open serial port.", "", 3000, true);
 
-                    Properties.Settings.Default.RCportSuccessful = false;
-                    Properties.Settings.Default.Save();
+                    mf.Tls.SaveProperty("RCportSuccessful", "false");
                 }
             }
             catch (Exception ex)

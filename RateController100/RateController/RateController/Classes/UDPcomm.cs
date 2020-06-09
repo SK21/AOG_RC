@@ -6,23 +6,20 @@ namespace RateController
 {
     public class UDPComm
     {
-        private readonly FormRateControl mf;
-
         public bool isUDPSendConnected;
-
+        private readonly FormRateControl mf;
         private byte[] buffer = new byte[1024];
 
-        private IPAddress epIP;
         private int cReceivePort;
         private int cSendPort;
-
+        private IPAddress epIP;
         private HandleDataDelegateObj HandleDataDelegate = null;
 
         private int PGN;
         private Socket recvSocket;
         private Socket sendSocket;
 
-        public UDPComm(FormRateControl CallingForm, string DestinationIP,int ReceivePort,int SendPort)
+        public UDPComm(FormRateControl CallingForm, string DestinationIP, int ReceivePort, int SendPort)
         {
             mf = CallingForm;
             epIP = IPAddress.Parse(DestinationIP);
@@ -35,6 +32,23 @@ namespace RateController
 
         // Status delegate
         private delegate void HandleDataDelegateObj(int port, byte[] msg);
+
+        public string GetLocalIP()
+        {
+            try
+            {
+                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+                {
+                    socket.Connect("8.8.8.8", 65530);
+                    IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                    return endPoint.Address.ToString();
+                }
+            }
+            catch (Exception Ex)
+            {
+                return "";
+            }
+        }
 
         //sends byte array
         public void SendUDPMessage(byte[] byteData)
@@ -49,9 +63,8 @@ namespace RateController
                     if (byteData.Length != 0)
                         sendSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, EndPt, new AsyncCallback(SendData), null);
                 }
-                catch (Exception )
+                catch (Exception)
                 {
-
                 }
             }
         }
@@ -74,7 +87,7 @@ namespace RateController
                 // initialize the send socket
                 sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-                // Initialise the IPEndPoint for the server to send on port 
+                // Initialise the IPEndPoint for the server to send on port
                 IPEndPoint server = new IPEndPoint(IPAddress.Any, cSendPort);
                 sendSocket.Bind(server);
 
@@ -90,23 +103,6 @@ namespace RateController
             {
                 mf.Tls.WriteErrorLog("UDP Server" + e);
                 mf.Tls.TimedMessageBox("UDP start error: ", e.Message);
-                return "";
-            }
-        }
-
-        public string GetLocalIP()
-        {
-            try
-            {
-                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
-                {
-                    socket.Connect("8.8.8.8", 65530);
-                    IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
-                    return endPoint.Address.ToString();
-                }
-            }
-            catch(Exception Ex)
-            {
                 return "";
             }
         }
@@ -168,7 +164,6 @@ namespace RateController
             }
             catch (Exception)
             {
-
             }
         }
     }

@@ -12,8 +12,6 @@ namespace AgOpenGPS
         private readonly double min;
         private bool isFirstKey;
 
-        public double ReturnValue { get; set; }
-
         public FormNumeric(double _min, double _max, double currentValue)
         {
             max = _max;
@@ -27,6 +25,35 @@ namespace AgOpenGPS
             isFirstKey = true;
         }
 
+        public double ReturnValue { get; set; }
+
+        private void BtnDistanceDn_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (tboxNumber.Text == "" || tboxNumber.Text == "-" || tboxNumber.Text == "Error ") tboxNumber.Text = "0";
+            double tryNumber = double.Parse(tboxNumber.Text, CultureInfo.CurrentCulture);
+
+            tryNumber--;
+            if (tryNumber < min) tryNumber = min;
+
+            tboxNumber.Text = tryNumber.ToString();
+
+            isFirstKey = false;
+        }
+
+        private void BtnDistanceUp_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (tboxNumber.Text == "" || tboxNumber.Text == "-" || tboxNumber.Text == "Error ") tboxNumber.Text = "0";
+            double tryNumber = double.Parse(tboxNumber.Text, CultureInfo.CurrentCulture);
+
+            tryNumber++;
+
+            if (tryNumber > max) tryNumber = max;
+
+            tboxNumber.Text = tryNumber.ToString();
+
+            isFirstKey = false;
+        }
+
         private void FormNumeric_Load(object sender, EventArgs e)
         {
             lblMax.Text = max.ToString();
@@ -38,7 +65,6 @@ namespace AgOpenGPS
 
         private void RegisterKeypad1_ButtonPressed(object sender, KeyPressEventArgs e)
         {
-
             if (isFirstKey)
             {
                 tboxNumber.Text = "";
@@ -46,7 +72,7 @@ namespace AgOpenGPS
             }
 
             //clear the error as user entered new values
-            if(tboxNumber.Text == "Number required.")
+            if (tboxNumber.Text == "Number required.")
             {
                 tboxNumber.Text = "";
                 lblMin.ForeColor = SystemColors.ControlText;
@@ -82,7 +108,7 @@ namespace AgOpenGPS
                         tboxNumber.Text = "0" + tboxNumber.Text;
                     }
 
-                    //neg sign then added a decimal, insert a 0 
+                    //neg sign then added a decimal, insert a 0
                     if (tboxNumber.Text.IndexOf("-") == 0 && tboxNumber.Text.IndexOf(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator) == 1)
                     {
                         tboxNumber.Text = "-0" + Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
@@ -150,34 +176,6 @@ namespace AgOpenGPS
                     this.Close();
                 }
             }
-        }
-
-        private void BtnDistanceUp_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (tboxNumber.Text == "" || tboxNumber.Text == "-" || tboxNumber.Text == "Error ") tboxNumber.Text = "0";
-            double tryNumber = double.Parse(tboxNumber.Text, CultureInfo.CurrentCulture);
-
-
-            tryNumber++;
-
-            if (tryNumber > max) tryNumber = max;
-
-            tboxNumber.Text = tryNumber.ToString();
-
-            isFirstKey = false;
-        }
-
-        private void BtnDistanceDn_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (tboxNumber.Text == "" || tboxNumber.Text == "-" || tboxNumber.Text == "Error ") tboxNumber.Text = "0";
-            double tryNumber = double.Parse(tboxNumber.Text, CultureInfo.CurrentCulture);
-
-            tryNumber--;
-            if (tryNumber < min) tryNumber = min;
-
-            tboxNumber.Text = tryNumber.ToString();
-
-            isFirstKey = false;
         }
     }
 }

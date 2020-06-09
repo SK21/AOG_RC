@@ -2,66 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RateController.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="FormRClocation" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 0</Value>
-    </Setting>
-    <Setting Name="FormRSlocation" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 0</Value>
-    </Setting>
-    <Setting Name="QuantityUnits" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="CoverageUnits" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="RateSet" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="FlowCal" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="TankSize" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="ValveType" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="MinPWM" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="MaxPWM" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="BtnOff" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="BtnAuto" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="BtnOn" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">2</Value>
-    </Setting>
-    <Setting Name="Coverage" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="TankRemaining" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="QuantityApplied" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="DestinationIP" Type="System.String" Scope="User">
-      <Value Profile="(Default)">192.168.1.255</Value>
-    </Setting>
-    <Setting Name="RCportName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="RCportSuccessful" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="RCportBaud" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">38400</Value>
-    </Setting>
     <Setting Name="IsDay" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
@@ -71,23 +11,8 @@
     <Setting Name="NightColour" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">60, 60, 60</Value>
     </Setting>
-    <Setting Name="SimulateType" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="VCN" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="SendTime" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="WaitTime" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="AccQuantity" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="SecondsAve" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">3</Value>
+    <Setting Name="FileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Default.rcs</Value>
     </Setting>
   </Settings>
 </SettingsFile>

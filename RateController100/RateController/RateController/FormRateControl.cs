@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Windows.Forms;
 
@@ -20,23 +21,35 @@ namespace RateController
         public FormRateControl()
         {
             InitializeComponent();
-            RC = new CRateCals(this);
             Tls = new clsTools(this);
+            RC = new CRateCals(this);
             SER = new SerialComm(this);
 
             LocalIP = "127.100.0.0";
             UDPlocal = new UDPComm(this, LocalIP, 8120, 2388);
 
-            Properties.Settings.Default.DestinationIP = BroadcastIP(UDPlocal.GetLocalIP());
+            Tls.SaveProperty("DestinationIP", BroadcastIP(UDPlocal.GetLocalIP()));
 
-            UDPnetwork = new UDPComm(this, Properties.Settings.Default.DestinationIP, 8000, 2188);
+            UDPnetwork = new UDPComm(this, Tls.LoadProperty("DestinationIP"), 8000, 2188);
         }
 
         public void StartSerial()
         {
-            SER.RCportName = Properties.Settings.Default.RCportName;
-            SER.RCportBaud = Properties.Settings.Default.RCportBaud;
-            if (Properties.Settings.Default.RCportSuccessful) SER.OpenRCport();
+            SER.RCportName = Tls.LoadProperty("RCportName");
+
+            int temp;
+            if (int.TryParse(Tls.LoadProperty("RCportBaud"), out temp))
+            {
+                SER.RCportBaud = temp;
+            }
+            else
+            {
+                SER.RCportBaud = 38400;
+            }
+
+            bool tempB;
+            bool.TryParse(Tls.LoadProperty("RCportSuccessful"), out tempB);
+            if (tempB) SER.OpenRCport();
         }
 
         public void UpdateStatus()
@@ -120,16 +133,8 @@ namespace RateController
         {
             if (this.WindowState == FormWindowState.Normal)
             {
-                // save location and size if the state is normal
-                Properties.Settings.Default.FormRClocation = this.Location;
+                Tls.SaveFormData(this);
             }
-            else
-            {
-                // save the RestoreBounds if the form is minimized or maximized!
-                Properties.Settings.Default.FormRClocation = this.RestoreBounds.Location;
-            }
-
-            // don't forget to save the settings
             RC.SaveSettings();
         }
 
@@ -141,8 +146,7 @@ namespace RateController
 
         private void RateControl_Load(object sender, EventArgs e)
         {
-            this.Location = Properties.Settings.Default.FormRClocation;
-            Tls.IsOnScreen(this, true);
+            Tls.LoadFormData(this);
 
             if (Tls.PrevInstance())
             {
@@ -162,7 +166,11 @@ namespace RateController
             {
                 Tls.TimedMessageBox("UDPlocal failed to start.", "", 3000, true);
             }
+            LoadSettings();
+        }
 
+        public void LoadSettings()
+        {
             StartSerial();
             SetDayMode();
             SetTitle();
@@ -190,19 +198,22 @@ namespace RateController
 
         private void SetTitle()
         {
-            SimType Mode = (SimType)Properties.Settings.Default.SimulateType;
+            string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+
+            SimType Mode;
+            Enum.TryParse(Tls.LoadProperty("cSimulationType"), true, out Mode);
             switch (Mode)
             {
                 case SimType.VirtualNano:
-                    this.Text = "Rate Controller (V)";
+                    this.Text = Title +" (V)";
                     break;
 
                 case SimType.RealNano:
-                    this.Text = "Rate Controller (R)";
+                    this.Text = Title +" (R)";
                     break;
 
                 default:
-                    this.Text = "Rate Controller";
+                    this.Text = Title;
                     break;
             }
         }

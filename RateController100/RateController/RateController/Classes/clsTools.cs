@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -9,15 +10,32 @@ namespace RateController
 {
     public class clsTools
     {
+        private static Hashtable ht;
         private string cAppName = "RateController";
-        private string cVersionDate = "04-Jun-2020";
+        private string cPropertiesFile;
+        private string cSettingsDir;
+        private string cVersionDate = "07-Jun-2020";
         private FormRateControl mf;
-        private string SettingsDir;
 
         public clsTools(FormRateControl CallingForm)
         {
             mf = CallingForm;
             CheckFolders();
+        }
+
+        public string PropertiesFile
+        {
+            get
+            {
+                return cPropertiesFile;
+            }
+            set
+            {
+                if (File.Exists(value))
+                {
+                    OpenFile(value);
+                }
+            }
         }
 
         public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
@@ -78,6 +96,26 @@ namespace RateController
             return IsOn;
         }
 
+        public void LoadFormData(Form Frm)
+        {
+            int Leftloc = 0;
+            int.TryParse(LoadProperty(Frm.Name + ".Left"), out Leftloc);
+            Frm.Left = Leftloc;
+
+            int Toploc = 0;
+            int.TryParse(LoadProperty(Frm.Name + ".Top"), out Toploc);
+            Frm.Top = Toploc;
+
+            IsOnScreen(Frm, true);
+        }
+
+        public string LoadProperty(string Key)
+        {
+            string Prop = "";
+            if (ht.Contains(Key)) Prop = ht[Key].ToString();
+            return Prop;
+        }
+
         public bool PrevInstance()
         {
             string PrsName = Process.GetCurrentProcess().ProcessName;
@@ -90,6 +128,54 @@ namespace RateController
             {
                 return false;
             }
+        }
+
+        public void SaveFile(string NewFile)
+        {
+            try
+            {
+                NewFile = Path.GetFileName(NewFile);
+                cPropertiesFile = cSettingsDir + "\\" + NewFile;
+                if (!File.Exists(cPropertiesFile)) File.Create(cPropertiesFile).Dispose();
+
+                SaveProperties();
+                Properties.Settings.Default.FileName = NewFile;
+                Properties.Settings.Default.Save();
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("clsTools: SaveFile: " + ex.Message);
+            }
+        }
+
+        public void SaveFormData(Form Frm)
+        {
+            SaveProperty(Frm.Name + ".Left", Frm.Left.ToString());
+            SaveProperty(Frm.Name + ".Top", Frm.Top.ToString());
+        }
+
+        public void SaveProperty(string Key, string Value)
+        {
+            bool Changed = false;
+            if (ht.Contains(Key))
+            {
+                if (!ht[Key].ToString().Equals(Value))
+                {
+                    ht[Key] = Value;
+                    Changed = true;
+                }
+            }
+            else
+            {
+                ht.Add(Key, Value);
+                Changed = true;
+            }
+            if (Changed) SaveProperties();
+        }
+
+        public string SettingsDir()
+        {
+            return cSettingsDir;
         }
 
         public void TimedMessageBox(string s1, string s2 = "", int timeout = 3000, bool LogError = false)
@@ -108,7 +194,7 @@ namespace RateController
         {
             try
             {
-                string FileName = SettingsDir + "\\Activity Log.txt";
+                string FileName = cSettingsDir + "\\Activity Log.txt";
                 TrimFile(FileName);
                 File.AppendAllText(FileName, DateTime.Now.ToString() + "  -  " + Message + "\r\n");
             }
@@ -122,7 +208,7 @@ namespace RateController
         {
             try
             {
-                string FileName = SettingsDir + "\\Error Log.txt";
+                string FileName = cSettingsDir + "\\Error Log.txt";
                 TrimFile(FileName);
                 File.AppendAllText(FileName, DateTime.Now.ToString() + "  -  " + strErrorText + "\r\n\r\n");
             }
@@ -136,8 +222,68 @@ namespace RateController
             try
             {
                 // SettingsDir
-                SettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\" + cAppName + "\\Settings";
-                if (!Directory.Exists(SettingsDir)) Directory.CreateDirectory(SettingsDir);
+                cSettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\" + cAppName + "\\Settings";
+                if (!Directory.Exists(cSettingsDir)) Directory.CreateDirectory(cSettingsDir);
+
+                OpenFile(Properties.Settings.Default.FileName);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void LoadProperties(string path)
+        {
+            // property:  key=value  ex: "LastFile=Main.mdb"
+            try
+            {
+                ht = new Hashtable();
+                string[] lines = System.IO.File.ReadAllLines(path);
+                foreach (string line in lines)
+                {
+                    if (line.Contains("=") && !String.IsNullOrEmpty(line.Split('=')[0]) && !String.IsNullOrEmpty(line.Split('=')[1]))
+                    {
+                        string[] splitText = line.Split('=');
+                        ht.Add(splitText[0], splitText[1]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: LoadProperties: " + ex.Message);
+            }
+        }
+
+        private void OpenFile(string NewFile)
+        {
+            try
+            {
+                NewFile = Path.GetFileName(NewFile);
+                cPropertiesFile = cSettingsDir + "\\" + NewFile;
+                if (!File.Exists(cPropertiesFile)) File.Create(cPropertiesFile).Dispose();
+
+                LoadProperties(cPropertiesFile);
+                Properties.Settings.Default.FileName = NewFile;
+                Properties.Settings.Default.Save();
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: OpenFile: " + ex.Message);
+            }
+        }
+
+        private void SaveProperties()
+        {
+            try
+            {
+                string[] NewLines = new string[ht.Count];
+                int i = -1;
+                foreach (DictionaryEntry Pair in ht)
+                {
+                    i++;
+                    NewLines[i] = Pair.Key.ToString() + "=" + Pair.Value.ToString();
+                }
+                if (i > -1) File.WriteAllLines(cPropertiesFile, NewLines);
             }
             catch (Exception)
             {

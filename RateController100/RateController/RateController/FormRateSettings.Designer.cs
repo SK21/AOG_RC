@@ -49,6 +49,8 @@
             this.ValveType = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
+            this.tbSecondsAverage = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tbVCNdescription = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -125,12 +127,12 @@
             this.btnDay = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnSaveJob = new System.Windows.Forms.Button();
-            this.btnLoadJob = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.tbSecondsAverage = new System.Windows.Forms.TextBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.btnSaveSettings = new System.Windows.Forms.Button();
+            this.btnLoadSettings = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -392,6 +394,28 @@
             this.tabPage1.Size = new System.Drawing.Size(412, 439);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(12, 319);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(272, 23);
+            this.label7.TabIndex = 105;
+            this.label7.Text = "Rate Averaging Time (seconds)";
+            // 
+            // tbSecondsAverage
+            // 
+            this.tbSecondsAverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSecondsAverage.Location = new System.Drawing.Point(300, 315);
+            this.tbSecondsAverage.MaxLength = 8;
+            this.tbSecondsAverage.Name = "tbSecondsAverage";
+            this.tbSecondsAverage.Size = new System.Drawing.Size(102, 30);
+            this.tbSecondsAverage.TabIndex = 104;
+            this.tbSecondsAverage.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbSecondsAverage.TextChanged += new System.EventHandler(this.tbSecondsAverage_TextChanged);
+            this.tbSecondsAverage.Enter += new System.EventHandler(this.tbSecondsAverage_Enter);
             // 
             // tabPage2
             // 
@@ -961,9 +985,9 @@
             this.groupBox3.Controls.Add(this.label19);
             this.groupBox3.Controls.Add(this.label18);
             this.groupBox3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(61, 4);
+            this.groupBox3.Location = new System.Drawing.Point(46, 4);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(278, 168);
+            this.groupBox3.Size = new System.Drawing.Size(315, 168);
             this.groupBox3.TabIndex = 123;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Network UDP";
@@ -973,10 +997,11 @@
             // 
             this.lbDestinationIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbDestinationIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDestinationIP.Location = new System.Drawing.Point(139, 62);
+            this.lbDestinationIP.Location = new System.Drawing.Point(144, 62);
             this.lbDestinationIP.Name = "lbDestinationIP";
-            this.lbDestinationIP.Size = new System.Drawing.Size(130, 25);
+            this.lbDestinationIP.Size = new System.Drawing.Size(158, 25);
             this.lbDestinationIP.TabIndex = 178;
+            this.lbDestinationIP.Text = "255.255.255.255";
             this.lbDestinationIP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label27
@@ -993,9 +1018,9 @@
             // 
             this.lbNetworkIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbNetworkIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbNetworkIP.Location = new System.Drawing.Point(139, 26);
+            this.lbNetworkIP.Location = new System.Drawing.Point(144, 26);
             this.lbNetworkIP.Name = "lbNetworkIP";
-            this.lbNetworkIP.Size = new System.Drawing.Size(130, 25);
+            this.lbNetworkIP.Size = new System.Drawing.Size(158, 25);
             this.lbNetworkIP.TabIndex = 115;
             this.lbNetworkIP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1014,7 +1039,7 @@
             this.label15.AutoSize = true;
             this.label15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label15.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(217, 134);
+            this.label15.Location = new System.Drawing.Point(250, 134);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(52, 25);
             this.label15.TabIndex = 119;
@@ -1035,7 +1060,7 @@
             this.label13.AutoSize = true;
             this.label13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label13.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(217, 98);
+            this.label13.Location = new System.Drawing.Point(250, 98);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(52, 25);
             this.label13.TabIndex = 117;
@@ -1084,9 +1109,9 @@
             this.groupBox4.Controls.Add(this.label24);
             this.groupBox4.Controls.Add(this.label42);
             this.groupBox4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox4.Location = new System.Drawing.Point(62, 178);
+            this.groupBox4.Location = new System.Drawing.Point(46, 178);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(278, 168);
+            this.groupBox4.Size = new System.Drawing.Size(316, 168);
             this.groupBox4.TabIndex = 124;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Local UDP";
@@ -1106,9 +1131,9 @@
             // 
             this.lbLocalIP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbLocalIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbLocalIP.Location = new System.Drawing.Point(139, 32);
+            this.lbLocalIP.Location = new System.Drawing.Point(144, 32);
             this.lbLocalIP.Name = "lbLocalIP";
-            this.lbLocalIP.Size = new System.Drawing.Size(130, 25);
+            this.lbLocalIP.Size = new System.Drawing.Size(158, 25);
             this.lbLocalIP.TabIndex = 126;
             this.lbLocalIP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1145,7 +1170,7 @@
             this.label44.AutoSize = true;
             this.label44.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label44.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label44.Location = new System.Drawing.Point(217, 67);
+            this.label44.Location = new System.Drawing.Point(250, 67);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(52, 25);
             this.label44.TabIndex = 129;
@@ -1167,7 +1192,7 @@
             this.label43.AutoSize = true;
             this.label43.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label43.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label43.Location = new System.Drawing.Point(217, 100);
+            this.label43.Location = new System.Drawing.Point(250, 100);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(52, 25);
             this.label43.TabIndex = 131;
@@ -1254,7 +1279,7 @@
             this.btnDay.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnDay.Image = ((System.Drawing.Image)(resources.GetObject("btnDay.Image")));
             this.btnDay.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnDay.Location = new System.Drawing.Point(62, 352);
+            this.btnDay.Location = new System.Drawing.Point(63, 352);
             this.btnDay.Name = "btnDay";
             this.btnDay.Size = new System.Drawing.Size(278, 48);
             this.btnDay.TabIndex = 123;
@@ -1267,38 +1292,6 @@
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // btnSaveJob
-            // 
-            this.btnSaveJob.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnSaveJob.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnSaveJob.Image = global::RateController.Properties.Resources.close;
-            this.btnSaveJob.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnSaveJob.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnSaveJob.Location = new System.Drawing.Point(118, 494);
-            this.btnSaveJob.Name = "btnSaveJob";
-            this.btnSaveJob.Size = new System.Drawing.Size(100, 72);
-            this.btnSaveJob.TabIndex = 124;
-            this.btnSaveJob.Text = "Save ";
-            this.btnSaveJob.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnSaveJob.UseVisualStyleBackColor = true;
-            this.btnSaveJob.Visible = false;
-            // 
-            // btnLoadJob
-            // 
-            this.btnLoadJob.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnLoadJob.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnLoadJob.Image = global::RateController.Properties.Resources.OpenFile;
-            this.btnLoadJob.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnLoadJob.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnLoadJob.Location = new System.Drawing.Point(10, 494);
-            this.btnLoadJob.Name = "btnLoadJob";
-            this.btnLoadJob.Size = new System.Drawing.Size(100, 72);
-            this.btnLoadJob.TabIndex = 123;
-            this.btnLoadJob.Text = "Load ";
-            this.btnLoadJob.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnLoadJob.UseVisualStyleBackColor = true;
-            this.btnLoadJob.Visible = false;
             // 
             // btnCancel
             // 
@@ -1331,35 +1324,55 @@
             this.bntOK.UseVisualStyleBackColor = true;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
-            // label7
+            // openFileDialog1
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(12, 319);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(272, 23);
-            this.label7.TabIndex = 105;
-            this.label7.Text = "Rate Averaging Time (seconds)";
+            this.openFileDialog1.DefaultExt = "rcs";
+            this.openFileDialog1.Filter = "RateController files|*.rcs";
             // 
-            // tbSecondsAverage
+            // saveFileDialog1
             // 
-            this.tbSecondsAverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSecondsAverage.Location = new System.Drawing.Point(300, 315);
-            this.tbSecondsAverage.MaxLength = 8;
-            this.tbSecondsAverage.Name = "tbSecondsAverage";
-            this.tbSecondsAverage.Size = new System.Drawing.Size(102, 30);
-            this.tbSecondsAverage.TabIndex = 104;
-            this.tbSecondsAverage.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbSecondsAverage.TextChanged += new System.EventHandler(this.tbSecondsAverage_TextChanged);
-            this.tbSecondsAverage.Enter += new System.EventHandler(this.tbSecondsAverage_Enter);
+            this.saveFileDialog1.DefaultExt = "rcs";
+            this.saveFileDialog1.Filter = "RateController files|*.rcs";
+            // 
+            // btnSaveSettings
+            // 
+            this.btnSaveSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnSaveSettings.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnSaveSettings.Image = global::RateController.Properties.Resources.close;
+            this.btnSaveSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSaveSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnSaveSettings.Location = new System.Drawing.Point(120, 494);
+            this.btnSaveSettings.Name = "btnSaveSettings";
+            this.btnSaveSettings.Size = new System.Drawing.Size(100, 72);
+            this.btnSaveSettings.TabIndex = 127;
+            this.btnSaveSettings.Text = "Save As";
+            this.btnSaveSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnSaveSettings.UseVisualStyleBackColor = true;
+            this.btnSaveSettings.Click += new System.EventHandler(this.btnSaveSettings_Click);
+            // 
+            // btnLoadSettings
+            // 
+            this.btnLoadSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnLoadSettings.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnLoadSettings.Image = global::RateController.Properties.Resources.OpenFile;
+            this.btnLoadSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnLoadSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnLoadSettings.Location = new System.Drawing.Point(14, 494);
+            this.btnLoadSettings.Name = "btnLoadSettings";
+            this.btnLoadSettings.Size = new System.Drawing.Size(100, 72);
+            this.btnLoadSettings.TabIndex = 126;
+            this.btnLoadSettings.Text = "Load ";
+            this.btnLoadSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnLoadSettings.UseVisualStyleBackColor = true;
+            this.btnLoadSettings.Click += new System.EventHandler(this.btnLoadSettings_Click);
             // 
             // FormRateSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(448, 575);
-            this.Controls.Add(this.btnSaveJob);
-            this.Controls.Add(this.btnLoadJob);
+            this.Controls.Add(this.btnSaveSettings);
+            this.Controls.Add(this.btnLoadSettings);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.bntOK);
@@ -1487,8 +1500,6 @@
         private System.Windows.Forms.Label lbRateSetData;
         private System.Windows.Forms.Label lbRateSet;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Button btnLoadJob;
-        private System.Windows.Forms.Button btnSaveJob;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox tbMinPWM;
         private System.Windows.Forms.Label label1;
@@ -1496,5 +1507,9 @@
         private System.Windows.Forms.TextBox tbVCNdescription;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox tbSecondsAverage;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button btnSaveSettings;
+        private System.Windows.Forms.Button btnLoadSettings;
     }
 }

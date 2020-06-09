@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>31</ApplicationRevision>
+    <ApplicationRevision>35</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -84,7 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\clsArduino.cs" />
-    <Compile Include="Classes\clsJobs.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\CRateCals.cs" />
     <Compile Include="Classes\SerialComm.cs" />

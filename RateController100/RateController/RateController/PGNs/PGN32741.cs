@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 
 namespace RateController
 {
@@ -20,6 +19,9 @@ namespace RateController
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 229;
         private double cPWMsetting;
+        private double cSecondsAve = 5;        // ex: 5 second average rate
+
+        private DateTime LastTime;
         private byte pwmHI;
         private byte pwmLo;
         private byte QuantityB1;
@@ -30,15 +32,13 @@ namespace RateController
         private byte RateLo;
         private int Temp;
         private double Tmp;
-        private DateTime LastTime;
-        private double cSecondsAve = 5;   // ex: 5 second average rate
 
         public double SecondsAverage
         {
             get
             {
-                return cSecondsAve; 
-            } 
+                return cSecondsAve;
+            }
             set
             {
                 if (value < 1 | value > 300)
@@ -134,7 +134,7 @@ namespace RateController
             return RateAve;
         }
 
-        private void UpdateAve()   
+        private void UpdateAve()
         {
             double FrequencyTime = (DateTime.Now - LastTime).TotalSeconds;
             LastTime = DateTime.Now;

@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RateController
@@ -23,6 +24,8 @@ namespace RateController
             Initializing = true;
             LoadSettings();
             Initializing = false;
+            openFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
+            saveFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
         }
 
         private void AreaUnits_SelectedIndexChanged(object sender, EventArgs e)
@@ -42,22 +45,24 @@ namespace RateController
                 // save changes
                 SaveSettings();
 
+                string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+
                 switch (SelectedSimulation)
                 {
                     case SimType.VirtualNano:
-                        mf.Text = "Rate Controller (V)";
+                        mf.Text = Title + " (V)";
                         mf.SER.CloseRCport();
                         SetRCbuttons();
                         break;
 
                     case SimType.RealNano:
-                        mf.Text = "Rate Controller (R)";
+                        mf.Text = Title + " (R)";
                         //mf.SER.OpenRCport();
                         SetRCbuttons();
                         break;
 
                     default:
-                        mf.Text = "Rate Controller";
+                        mf.Text = Title;
                         //mf.SER.OpenRCport();
                         SetRCbuttons();
                         break;
@@ -95,6 +100,17 @@ namespace RateController
             SetDayMode();
         }
 
+        private void btnLoadSettings_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                mf.Tls.PropertiesFile = openFileDialog1.FileName;
+                mf.RC.LoadSettings();
+                LoadSettings();
+                mf.LoadSettings();
+            }
+        }
+
         private void btnOpenSerialArduino_Click(object sender, EventArgs e)
         {
             mf.SER.OpenRCport();
@@ -105,6 +121,17 @@ namespace RateController
         {
             LoadRCbox();
             SetRCbuttons();
+        }
+
+        private void btnSaveSettings_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    mf.Tls.SaveFile(saveFileDialog1.FileName);
+                }
+            }
         }
 
         private void butLoadDefaults_Click(object sender, EventArgs e)
@@ -182,28 +209,19 @@ namespace RateController
         {
             if (this.WindowState == FormWindowState.Normal)
             {
-                // save location and size if the state is normal
-                Properties.Settings.Default.FormRSlocation = this.Location;
+                mf.Tls.SaveFormData(this);
             }
-            else
-            {
-                // save the RestoreBounds if the form is minimized or maximized!
-                Properties.Settings.Default.FormRSlocation = this.RestoreBounds.Location;
-            }
-
-            Properties.Settings.Default.Save();
             timer1.Enabled = false;
         }
 
         private void FormRateSettings_Load(object sender, EventArgs e)
         {
-            this.Location = Properties.Settings.Default.FormRSlocation;
-            mf.Tls.IsOnScreen(this, true);
+            mf.Tls.LoadFormData(this);
+
             lbNetworkIP.Text = mf.NetworkIP;
             lbLocalIP.Text = mf.LocalIP;
             lbVersion.Text = "Version Date   " + mf.Tls.VersionDate();
-            lbDestinationIP.Text = Properties.Settings.Default.DestinationIP;
-
+            lbDestinationIP.Text = mf.Tls.LoadProperty("DestinationIP");
             LoadRCbox();
             SetRCbuttons();
             SetDayMode();
