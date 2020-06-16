@@ -21,7 +21,8 @@ void DoSteering()
 		MaxPWMvalue = HighMaxPWM;
 		if (abs(steerAngleError) < LOW_HIGH_DEGREES)
 		{
-			MaxPWMvalue = (abs(steerAngleError) * ((HighMaxPWM - LowMaxPWM) / LOW_HIGH_DEGREES)) + LowMaxPWM;
+			//MaxPWMvalue = (abs(steerAngleError) * ((HighMaxPWM - LowMaxPWM) / LOW_HIGH_DEGREES)) + LowMaxPWM;
+			MaxPWMvalue = LowMaxPWM;
 		}
 
 		pwmDrive = GetPWM(MaxPWMvalue);

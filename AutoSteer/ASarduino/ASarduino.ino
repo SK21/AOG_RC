@@ -2,7 +2,7 @@
 // user settings ****************************
 #define CommType 0			// 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
 
-#define PCBversion	7		// 6 - ver6, 7 - ver7 (Nano only)
+#define PCBversion	6		// 6 - ver6, 7 - ver7 (Nano only)
 
 #define IMUSource	1		// 0 none, 1 serial Nano, 2 serial Nano33, 3 onboard Nano33
 #define RollSource	1		// 0 none, 1 IMU, 2 Dog2
@@ -19,10 +19,21 @@
 #define MinSpeed  3
 #define MaxSpeed  20
 
-int SteeringZeroOffset = 16400;
+// WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
+// ADS reading of the WAS ranges from 2700 to 24000 (21300)
+// counts per degree for this sensor is 237 (21300/90)
+//
+// Pivot arm ratio, (length of steering arm) / (length of sensor arm)
+// 
+// Adjust counts per degree for the pivot arm ratio.
+// ex: steering arm 9.5", sensor arm 6.5", ratio is 1.46
+//	   237 * 1.46 = 346
+
+float SteerCPD = 346;		// AOG value sent * 2
+int SteeringZeroOffset = 13800;
 
 //How many degrees before decreasing Max PWM
-#define LOW_HIGH_DEGREES 5.0
+#define LOW_HIGH_DEGREES 1.0
 
 #define AdsWAS 0		// ADS1115 wheel angle sensor pin
 #define AdsPitch 1		// ADS1115 pitch pin
@@ -172,22 +183,8 @@ const float SensorRate = 104.00;
 
 
 // WAS
-// WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
-// ADS reading of the WAS ranges from 2700 to 24000 (21300)
-// counts per degree for this sensor is 237 (21300/90)
-
-float SteerCPD = 237;		// AOG value sent * 2
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
 int SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
-
-//pwm variables
-int pwmDrive = 0;
-int pwmTmp = 0;
-int pwmDir = 1;
-byte MinPWMvalue = 10;
-byte MaxPWMvalue = 255;
-byte LowMaxPWM = 80;
-byte HighMaxPWM = 255;
 
 //loop time variables in microseconds
 const unsigned int LOOP_TIME = 100; // 10 hz
@@ -238,6 +235,15 @@ float Ki = 0.0f;//integral gain
 float Kd = 0.0f;  //derivative gain
 int SteerDeadband = 3;	// % error allowed
 
+//pwm variables
+int pwmDrive = 0;
+int pwmTmp = 0;
+int pwmDir = 1;
+byte MinPWMvalue = 10;
+byte MaxPWMvalue = 255;
+byte LowMaxPWM = 80;
+byte HighMaxPWM = 255;
+
 //IMU
 float IMUheading = 9999;	// *******  if there is no gyro installed send 9999
 float IMUroll = 9999;		//*******  if no roll is installed, send 9999
@@ -268,7 +274,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("ASarduino  :  06/Jun/2020");
+	Serial.println("ASarduino  :  13/Jun/2020");
 	Serial.println();
 
 	//keep pulled high and drag low to activate, noise free safe
