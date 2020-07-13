@@ -26,10 +26,10 @@
 //  3 - deadband 3%
 
 long OldVCN;
-byte VCNbacklash;
-byte VCNspeed;
-byte VCNbrake;
-byte VCNdeadband;
+byte VCNbacklash;	// A
+byte VCNspeed;		// B
+byte VCNbrake;		// C
+byte VCNdeadband;	// D
 
 int NewPWM;
 float VCNerror;
@@ -62,6 +62,7 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 		{
 			if ((cError >= 0 && !LastDirectionPositive) | (cError < 0 && LastDirectionPositive))
 			{
+				// direction changed, use backlash adjustment
 				UseBacklashAdjustment = true;
 				SendStart = millis();
 			}
@@ -70,6 +71,7 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 
 		if (UseBacklashAdjustment)
 		{
+			// backlash adjustment
 			if (millis() - SendStart > (VCNbacklash * 10))
 			{
 				UseBacklashAdjustment = false;
@@ -78,12 +80,13 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 			}
 			else
 			{
-				NewPWM = MaxPWM - (cSlowSpeed * (MaxPWM - MinPWM) / 9);
+				NewPWM = MaxPWM - ((MaxPWM - MinPWM) * cSlowSpeed / 9);
 				if (cError < 0) NewPWM *= -1;
 			}
 		}
 		else
 		{
+			// regular adjustment
 			if (AdjustmentState == 0)
 			{
 				// waiting
@@ -107,11 +110,11 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 				}
 				else
 				{
-					// get new pwm value
+					// get new pwm value to send
 					if (cFlowRate == 0 && cValveType == 1)
 					{
 						// open 'fast close' valve
-						NewPWM = 255;
+						NewPWM = MaxPWM;
 					}
 					else
 					{
@@ -129,12 +132,12 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 						if (abs(VCNerror) < VCNbrake)
 						{
 							// slow adjustment
-							NewPWM = MaxPWM - (cSlowSpeed * (MaxPWM - MinPWM) / 9);
+							NewPWM = MaxPWM - ((MaxPWM - MinPWM) * cSlowSpeed / 9);
 						}
 						else
 						{
 							// normal adjustment
-							NewPWM = MaxPWM - (VCNspeed * (MaxPWM - MinPWM) / 9);
+							NewPWM = MaxPWM - ((MaxPWM - MinPWM) * VCNspeed / 9);
 						}
 
 						if (cError < 0) NewPWM *= -1;

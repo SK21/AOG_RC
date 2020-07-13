@@ -4,7 +4,7 @@ void ReadSectionSwitches()
 {
 	SWreadTime = millis();
 
-#if (PCBversion == 0)
+#if (PCBversion == 3)
 	AutoOn = !digitalRead(AutoPin);
 	
 	SW1on = !digitalRead(SW1pin);
@@ -23,7 +23,7 @@ void ReadSectionSwitches()
 	}
 #endif
 
-#if (PCBversion == 1)
+#if (PCBversion == 4)
 	AutoOn = !mcp.digitalRead(AutoPin);
 
 	SW1on = !mcp.digitalRead(SW1pin);

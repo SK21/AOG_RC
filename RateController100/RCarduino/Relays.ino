@@ -4,7 +4,7 @@ void SetRelays(void)
 	if (AOGconnected) RelayTemp = RelayControl;
 	RelaysOn = (RelayTemp != 0);
 
-#if (PCBversion == 0)
+#if (PCBversion == 3)
 	if (bitRead(RelayTemp, 0)) digitalWrite(Relay1, HIGH); else digitalWrite(Relay1, LOW);
 	if (bitRead(RelayTemp, 1)) digitalWrite(Relay2, HIGH); else digitalWrite(Relay2, LOW);
 	if (bitRead(RelayTemp, 2)) digitalWrite(Relay3, HIGH); else digitalWrite(Relay3, LOW);
@@ -19,7 +19,7 @@ void SetRelays(void)
 
 #endif
 
-#if (PCBversion == 1)
+#if (PCBversion == 4)
 	if (bitRead(RelayTemp, 0)) mcp.digitalWrite(Relay1, HIGH); else mcp.digitalWrite(Relay1, LOW);
 	if (bitRead(RelayTemp, 1)) mcp.digitalWrite(Relay2, HIGH); else mcp.digitalWrite(Relay2, LOW);
 	if (bitRead(RelayTemp, 2)) mcp.digitalWrite(Relay3, HIGH); else mcp.digitalWrite(Relay3, LOW);

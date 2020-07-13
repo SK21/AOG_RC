@@ -2,16 +2,21 @@
 // user settings ****************************
 #define CommType 0			// 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
 
-#define PCBversion	1		// 0 - ver3.1, 1 - ver4 (Nano only)
+#define PCBversion	4		// 3 - ver3.1, 4 - ver4 (Nano only)
 
 byte FlowOn = HIGH;			// flowmeter pin on value
 bool UseSwitches = true;	// manual switches
 
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
 
-#define UseSwitchedPowerPin 1
-// 0 use Relay8 as a normal relay
-// 1 use Relay8 as a switched power pin - turns on when sketch starts, required for Raven valve
+long SendTime = 200;	// ms pwm is sent to valve
+long WaitTime = 750;	// ms to wait before adjusting valve again
+byte SlowSpeed = 9;		// low pwm rate, 0 fast, 9 slow
+
+unsigned long RateCheckInterval = 500;	// ms interval when checking rate error
+
+#define UseSwitchedPowerPin 1	// 0 use Relay8 as a normal relay
+								// 1 use Relay8 as a switched power pin - turns on when sketch starts, required for Raven valve
 
 #define WifiSSID "tractor"
 #define WifiPassword ""
@@ -75,7 +80,7 @@ unsigned long ConnectedCount = 0;
 unsigned long ReconnectCount = 0;
 #endif
 
-#if (PCBversion == 0)
+#if (PCBversion == 3)
 #define Relay1 3
 #define Relay2 4
 #define Relay3 5
@@ -100,7 +105,7 @@ unsigned long ReconnectCount = 0;
 #define RateDownPin 13	// disconnect LED for some Nano's to work
 #endif
 
-#if (PCBversion == 1)
+#if (PCBversion == 4)
 #include "Adafruit_MCP23017.h"
 
 Adafruit_MCP23017 mcp;
@@ -208,7 +213,6 @@ bool PGN32744Found;
 unsigned int tempHeader;	// must be unsigned
 unsigned int header;		// must be unsigned
 
-unsigned long RateCheckInterval = 500;
 unsigned long RateCheckLast = 0;
 
 float MeterCal = 17;	// pulses per Unit 
@@ -218,9 +222,6 @@ bool SimulateFlow = true;
 byte MinPWMvalue = 150;
 byte MaxPWMvalue = 255;
 
-long SendTime = 200;	// ms pwm is sent to valve
-long WaitTime = 750;	// ms to wait before adjusting valve again
-byte SlowSpeed = 9;		// low pwm rate
 long VCN = 743;
 
 unsigned int UnSignedTemp = 0;
@@ -231,7 +232,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("RCarduino  :  04/Jun/2020");
+	Serial.println("RCarduino  :  12/Jul/2020");
 	Serial.println();
 
 #if (CommType == 1)
@@ -265,7 +266,7 @@ void setup()
 	delay(1000);
 #endif
 
-#if (PCBversion == 0)
+#if (PCBversion == 3)
 	pinMode(Relay1, OUTPUT);
 	pinMode(Relay2, OUTPUT);
 	pinMode(Relay3, OUTPUT);
@@ -298,7 +299,7 @@ void setup()
 
 #endif
 
-#if (PCBversion == 1)
+#if (PCBversion == 4)
 	mcp.begin();      // use default address 0
 
 // MCP20317 pins

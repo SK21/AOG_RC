@@ -26,6 +26,8 @@ float CalRateError()
 		FlowRate = Frequency / MeterCal;	// units per minute
 	}
 
-	return rateSetPoint - FlowRate;
+	//return rateSetPoint - FlowRate;
+
+	return rateSetPoint - KF(FlowRate, 0.01, 0.005);
 }
 
