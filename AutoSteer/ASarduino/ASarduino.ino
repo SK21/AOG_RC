@@ -2,7 +2,7 @@
 // user settings ****************************
 #define CommType 0			// 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
 
-#define PCBversion	6		// 6 - ver6, 7 - ver7 (Nano only)
+#define PCBversion	7		// 6 - ver6, 7 - ver7 (Nano only)
 
 #define IMUSource	1		// 0 none, 1 serial Nano, 2 serial Nano33, 3 onboard Nano33
 #define RollSource	1		// 0 none, 1 IMU, 2 Dog2
@@ -19,6 +19,18 @@
 #define MinSpeed  3
 #define MaxSpeed  20
 
+#define AdsWAS 0		// ADS1115 wheel angle sensor pin
+#define AdsPitch 1		// ADS1115 pitch pin
+#define AdsRoll 2		// ADS1115 roll pin
+#define SwapPitchRoll 0	// 0 use roll value for roll, 1 use pitch value for roll
+
+#define WifiSSID "tractor"
+#define WifiPassword ""
+#define IPpart3 1	// ex: 192.168.IPpart3.255
+
+//How many degrees before decreasing Max PWM
+#define LOW_HIGH_DEGREES 1.0
+
 // WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
 // ADS reading of the WAS ranges from 2700 to 24000 (21300)
 // counts per degree for this sensor is 237 (21300/90)
@@ -32,17 +44,8 @@
 float SteerCPD = 346;		// AOG value sent * 2
 int SteeringZeroOffset = 13800;
 
-//How many degrees before decreasing Max PWM
-#define LOW_HIGH_DEGREES 1.0
-
-#define AdsWAS 0		// ADS1115 wheel angle sensor pin
-#define AdsPitch 1		// ADS1115 pitch pin
-#define AdsRoll 2		// ADS1115 roll pin
-#define SwapPitchRoll 0	// 0 use roll value for roll, 1 use pitch value for roll
-
-#define WifiSSID "tractor"
-#define WifiPassword ""
-#define IPpart3 1	// ex: 192.168.IPpart3.255
+int CloseDef = 2000;		// mm from line for close steering
+int MaxCloseAngle = 0.3;	// maximum steer angle when close to the line
 
 // ******************************************
 
@@ -159,14 +162,9 @@ SoftwareSerial IMUserial(SSRX, SSTX);
 // byte 0, header high byte, 126 or 0x7E
 // byte 1, header low byte, 244 or 0xF4, header = 32500 or 0x7EF4
 
+#include <Arduino.h>
 #include "wiring_private.h"
 Uart IMUserial(&sercom0, SSRX, SSTX, SERCOM_RX_PAD_1, UART_TX_PAD_0);
-
-// Attach the interrupt handler to the SERCOM
-void SERCOM0_Handler()
-{
-	IMUserial.IrqHandler();
-}
 
 #endif
 
@@ -181,7 +179,6 @@ const float SensorRate = 104.00;
 
 #endif
 
-
 // WAS
 int AOGzeroAdjustment = 0;	// AOG value sent * 20 to give range of +-10 degrees
 int SteeringPositionZero = SteeringZeroOffset + AOGzeroAdjustment;
@@ -193,17 +190,8 @@ unsigned int currentTime = LOOP_TIME;
 byte watchdogTimer = 12;
 byte serialResetTimer = 0; //if serial buffer is getting full, empty it
 
-//Kalman variables
-float XeRoll = 0;
 float RawRoll = 0;
 float FilteredRoll = 0;
-float Pc = 0.0;
-float G = 0.0;
-float P = 1.0;
-float Xp = 0.0;
-float Zp = 0.0;
-const float varRoll = 0.1; // variance, smaller, more filtering
-const float varProcess = 0.0001; //smaller is more filtering
 
  //program flow
 bool PGN32762Found = false; // machine data
@@ -228,12 +216,6 @@ float steerAngleError = 0; //setpoint - actual
 int roll = 0;
 
 float CurrentSpeed = 0.0;
-
-//PID variables
-float Kp = 0.0f;  //proportional gain
-float Ki = 0.0f;//integral gain
-float Kd = 0.0f;  //derivative gain
-int SteerDeadband = 3;	// % error allowed
 
 //pwm variables
 int pwmDrive = 0;
@@ -266,6 +248,12 @@ unsigned int SWdebounce = 50;
 byte switchByte = 0;
 byte workSwitch = 0;
 
+//PID variables
+float Kp = 0.0f;		//proportional gain
+float Ki = 0.0f;		//integral gain
+float Kd = 0.0f;		//derivative gain
+int SteerDeadband = 3;	// % error allowed
+
 void setup()
 {
 	//set up communication
@@ -274,7 +262,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("ASarduino  :  13/Jun/2020");
+	Serial.println("ASarduino  :  12/Jul/2020");
 	Serial.println();
 
 	//keep pulled high and drag low to activate, noise free safe
@@ -423,4 +411,13 @@ void EncoderISR()
 	}
 #endif     
 }
+
+#if (IMUSource == 2)
+//Attach the interrupt handler to the SERCOM
+void SERCOM0_Handler()
+{
+	IMUserial.IrqHandler();
+}
+#endif
+
 

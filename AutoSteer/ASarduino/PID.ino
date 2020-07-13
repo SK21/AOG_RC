@@ -12,9 +12,15 @@ float output = 0.0;			// output is the result from the control loop calculation
 float clIntegral = 0.0;
 float clDerivative = 0.0;
 
-int DoPID(float clError, float clSetPoint, unsigned long clInterval, byte MinPWM, byte MaxPWM,
+unsigned long clInterval;
+unsigned long clLast;
+
+int DoPID(float clError, float clSetPoint, byte MinPWM, byte MaxPWM,
 	float clKP, float clKi, float clKd, float deadBand)
 {
+	clInterval = millis() - clLast;
+	clLast = millis();
+
 	// Calculate how far we are from the target
 	clErrorLast = clCurrentError;
 	clCurrentError = clError;
@@ -56,6 +62,7 @@ int DoPID(float clError, float clSetPoint, unsigned long clInterval, byte MinPWM
 
 	return output;
 }
+
 
 
 

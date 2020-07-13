@@ -1,3 +1,4 @@
+
 void DoSteering()
 {
 	//************** Steering Angle ******************
@@ -14,10 +15,24 @@ void DoSteering()
 
 	if (steerAngleActual < 0) steerAngleActual = (steerAngleActual * AckermanFix) / 100.0;
 
+	// limit steering angle set point when close to line
+	if (distanceFromLine < CloseDef && abs(steerAngleSetPoint) > MaxCloseAngle)
+	{
+		if (steerAngleSetPoint < 0)
+		{
+			steerAngleSetPoint = -MaxCloseAngle;
+		}
+		else
+		{
+			steerAngleSetPoint = MaxCloseAngle;
+		}
+	}
+
 	steerAngleError = steerAngleActual - steerAngleSetPoint;   //calculate the steering error
 
 	if (SteeringEnabled())
 	{
+		// limit PWM when steer angle error is low
 		MaxPWMvalue = HighMaxPWM;
 		if (abs(steerAngleError) < LOW_HIGH_DEGREES)
 		{
@@ -25,9 +40,7 @@ void DoSteering()
 			MaxPWMvalue = LowMaxPWM;
 		}
 
-		pwmDrive = GetPWM(MaxPWMvalue);
-
-		//pwmDrive = DoPID(steerAngleError, steerAngleSetPoint, LOOP_TIME, MinPWMvalue, MaxPWMvalue, Kp, Ki, Kd, SteerDeadband);
+		pwmDrive = DoPID(steerAngleError, steerAngleSetPoint, MinPWMvalue, MaxPWMvalue, Kp, Ki, Kd, SteerDeadband);
 
 		if (InvertMotorDrive) pwmDrive *= -1;
 	}
@@ -75,21 +88,6 @@ bool SteeringEnabled()
 
 		return true;
 	}
-}
-
-int GetPWM(int MaxPWM)
-{
-	// PID
-	pwmTmp = Kp * steerAngleError;
-
-	//add min throttle factor so no delay from motor resistance.
-	if (pwmTmp < 0) pwmTmp -= MinPWMvalue;
-	else if (pwmTmp > 0) pwmTmp += MinPWMvalue;
-
-	if (pwmTmp > MaxPWM) pwmTmp = MaxPWM;
-	if (pwmTmp < -MaxPWM) pwmTmp = -MaxPWM;
-
-	return pwmTmp;
 }
 
 

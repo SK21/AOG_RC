@@ -111,15 +111,7 @@ void UpdateHeadingRoll()
 	}
 	else
 	{
-		//Kalman filter
-		Pc = P + varProcess;
-		G = Pc / (Pc + varRoll);
-		P = (1 - G) * Pc;
-		Xp = XeRoll;
-		Zp = Xp;
-		XeRoll = G * (RawRoll - Zp) + Xp;
-		FilteredRoll = XeRoll;
-
+		FilteredRoll = KF(RawRoll, 0.1, 0.0001);
 		if (InvertRoll) FilteredRoll *= -1.0;
 	}
 }
