@@ -2,7 +2,7 @@ void motorDrive()
 {
 	if (ValveType == 1 && !RelaysOn)
 	{
-		// use 'fast close' valve to turn off flow
+		// use Raven 'fast close' valve to turn off flow
 		analogWrite(FlowPWM, 255);
 		digitalWrite(FlowDIR, !FlowOn);
 	}

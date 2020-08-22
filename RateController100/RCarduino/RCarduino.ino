@@ -1,8 +1,9 @@
 
 // user settings ****************************
-#define CommType 0			// 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
 
 #define PCBversion	4		// 3 - ver3.1, 4 - ver4 (Nano only)
+
+#define CommType 0			// 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
 
 byte FlowOn = HIGH;			// flowmeter pin on value
 bool UseSwitches = true;	// manual switches
@@ -156,6 +157,7 @@ float rateError = 0; //for PID
 // flow rate
 volatile unsigned long pulseDuration;
 volatile unsigned long pulseCount = 0;
+volatile bool pulseState;
 float FlowRate = 0;
 float accumulatedCounts = 0;
 
@@ -232,7 +234,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("RCarduino  :  12/Jul/2020");
+	Serial.println("RCarduino  :  9/Aug/2020");
 	Serial.println();
 
 #if (CommType == 1)

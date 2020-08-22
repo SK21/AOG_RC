@@ -64,8 +64,11 @@ void DoSimulate()
 		PulseTime = (float)(PulseTime * RandomError / 100);
 		pulseCount = SimulateInterval / PulseTime;	// milliseconds * pulses/millsecond = pulses
 
-		// pulse duration is the total time for all pulses in the loop
-		pulseDuration = PulseTime * pulseCount;
+		//// pulse duration is the total time for all pulses in the loop
+		//pulseDuration = PulseTime * pulseCount;
+
+		// pulse duration is the time for one pulse
+		pulseDuration = PulseTime;
 	}
 }
 

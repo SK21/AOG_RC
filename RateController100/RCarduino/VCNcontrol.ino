@@ -74,6 +74,7 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 			// backlash adjustment
 			if (millis() - SendStart > (VCNbacklash * 10))
 			{
+				// backlash adjustment finished
 				UseBacklashAdjustment = false;
 				LastDirectionPositive = (cError >= 0);
 				SendStart = millis();
@@ -113,7 +114,7 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 					// get new pwm value to send
 					if (cFlowRate == 0 && cValveType == 1)
 					{
-						// open 'fast close' valve
+						// open Raven 'fast close' valve
 						NewPWM = MaxPWM;
 					}
 					else
