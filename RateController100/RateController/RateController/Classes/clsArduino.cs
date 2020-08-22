@@ -10,7 +10,6 @@ namespace RateController
     public class clsArduino
     {
         private string Sentence;
-        float FlowRateFiltered;
         byte Temp;
 
         int accumulatedCounts;
@@ -24,11 +23,6 @@ namespace RateController
         float rateSetPoint;
         byte InCommand;
 
-        float KP;
-        float KI;
-        float KD;
-
-        float DeadBand;
         byte MinPWMvalue;
         byte MaxPWMvalue;
 
@@ -41,38 +35,21 @@ namespace RateController
         bool RelaysOn;
 
         DateTime RateCheckLast;
-        int RateCheckInterval = 500;
+        int RateCheckInterval = 300;
         float rateError;
 
         bool AutoOn;
         bool RateUpMan;
         bool RateDownMan;
-
         int pwmManualRatio;
+
         int pulseCount;
         int pulseDuration;
 
-        float countsThisLoop;
-        float pulseAverage;
         float FlowRate;
 
-        float Pc;
-        float P;
-        const float varProcess = 50.0F;
-
-        const float varRate = 10.0F;
-        float Xp;
-        float Zp;
-
-        float G;
         DateTime LastTime;
         int LOOP_TIME = 200;
-
-        float clErrorLast = 0;    // errorlast is the error in the previous iteration of the control loop
-        float clCurrentError = 0;     // error is the difference between the target and the actual position
-        float output = 0;         // output is the result from the control loop calculation
-        float clIntegral = 0;
-        float clDerivative = 0;
 
         float ValveAdjust = 0;   // % amount to open/close valve
         float ValveOpen = 0;      // % valve is open
@@ -82,14 +59,11 @@ namespace RateController
         float MaxRate = 120;  // max rate of system in UPM
         int ErrorRange = 4;  // % random error in flow rate, above and below target
         float PulseTime = 0;
-        float PWMnet = 0;   // pwmSetting - minPWM to account for motor lag
 
         DateTime SimulateTimeLast;
         int SimulateInterval;
         float RandomError;
 
-        DateTime LastFlowCal;
-        double Duration;
         double Frequency;
         int CurrentCounts;
 
@@ -107,7 +81,7 @@ namespace RateController
 
         byte AdjustmentState = 0;	// 0 waiting, 1 sending pwm
 
-        long SendTime = 200;    // ms pwm is sent to valve
+        long SendTime = 300;    // ms pwm is sent to valve
         long WaitTime = 750;    // ms to wait before adjusting valve again
         byte SlowSpeed = 9;     // low pwm rate
         long VCN = 743;
@@ -115,6 +89,13 @@ namespace RateController
         bool LastDirectionPositive;     // adjustment direction
         bool UseBacklashAdjustment;
         int PartsTemp;
+
+        float KalResult = 0.0F;
+        float KalPc = 0.0F;
+        float KalG = 0.0F;
+        float KalP = 1.0F;
+        float KalVariance = 0.01F;   // larger is more filtering
+        float KalProcess = 0.005F;	// smaller is more filtering
 
         public clsArduino(CRateCals CalledFrom)
         {
@@ -137,7 +118,7 @@ namespace RateController
                 if (RelaysOn)
                 {
                     if (SimulateFlow) DoSimulate();
-                    rateError = CalRateError2();
+                    rateError = CalRateError();
                 }
             }
 
@@ -162,10 +143,10 @@ namespace RateController
             Sentence = "127,229,";
 
             // rate applied
-            Temp = (byte)((int)(FlowRateFiltered * 100) >> 8);
+            Temp = (byte)((int)(FlowRate * 100) >> 8);
             Sentence += Temp.ToString();
             Sentence += ",";
-            Temp = (byte)(FlowRateFiltered * 100);
+            Temp = (byte)(FlowRate * 100);
             Sentence += Temp.ToString();
             Sentence += ",";
 
@@ -299,38 +280,74 @@ namespace RateController
                 RandomError = (100 - ErrorRange) + (Rand.Next(ErrorRange * 2));
 
                 PulseTime = (float)(PulseTime * RandomError / 100);
-                //PulseTime = (float)((RandomError / 100.0) * PulseTime + ((100.0 - ErrorRange) / 100.0) * PulseTime);
                 pulseCount = (int)(SimulateInterval / PulseTime); // milliseconds * pulses/millsecond = pulses
 
                 // pulse duration is the total time for all pulses in the loop
-                pulseDuration = (int)(PulseTime * pulseCount);
+                //pulseDuration = (int)(PulseTime * pulseCount);
+
+                // pulse duration is the time for one pulse
+                pulseDuration = (int)PulseTime;
             }
 
         }
 
-
-        float CalRateError2()
+        float CalRateError()
         {
-            Duration = (DateTime.Now - LastFlowCal).TotalMilliseconds / 60000.0;    // minutes
-            LastFlowCal = DateTime.Now;
+            // measure time for one pulse
             CurrentCounts = pulseCount;
             pulseCount = 0;
             accumulatedCounts += CurrentCounts;
 
-            if (Duration == 0 | MeterCal == 0)
+            if(pulseDuration==0 | MeterCal==0)
             {
                 FlowRate = 0;
             }
             else
             {
-                Frequency = CurrentCounts / Duration;
+                Frequency = (1.0 / (double)pulseDuration) * 60000.0;    // pulses per minute
                 FlowRate = (float)(Frequency / MeterCal);    // units per minute
             }
 
-            FlowRateFiltered = FlowRate;
+            //return rateSetPoint - FlowRate;
 
-            return rateSetPoint - FlowRateFiltered;
+            // Kalmen filter
+            KalPc = KalP + KalProcess;
+            KalG = KalPc / (KalPc + KalVariance);
+            KalP = (1 - KalG) * KalPc;
+            KalResult = KalG * (FlowRate - KalResult) + KalResult;
+
+            return rateSetPoint - KalResult;
         }
+
+        //float CalRateError()
+        //{
+        //    // measure pulses over a time period
+        //    Duration = (DateTime.Now - LastFlowCal).TotalMilliseconds / 60000.0;    // minutes
+        //    LastFlowCal = DateTime.Now;
+        //    CurrentCounts = pulseCount;
+        //    pulseCount = 0;
+        //    accumulatedCounts += CurrentCounts;
+
+        //    if (Duration == 0 | MeterCal == 0)
+        //    {
+        //        FlowRate = 0;
+        //    }
+        //    else
+        //    {
+        //        Frequency = CurrentCounts / Duration;
+        //        FlowRate = (float)(Frequency / MeterCal);    // units per minute
+        //    }
+
+        //    //return rateSetPoint - FlowRate;
+
+        //    //Kalmen filter
+        //    KalPc = KalP + KalProcess;
+        //    KalG = KalPc / (KalPc + KalVariance);
+        //    KalP = (1 - KalG) * KalPc;
+        //    KalResult = KalG * (FlowRate - KalResult) + KalResult;
+
+        //    return rateSetPoint - KalResult;
+        //}
 
         int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
                     float cFlowRate, long cSendTime, long cWaitTime, byte cSlowSpeed, byte cValveType)
@@ -400,7 +417,7 @@ namespace RateController
                             if (cFlowRate == 0 && cValveType == 1)
                             {
                                 // open 'fast close' valve
-                                NewPWM = 255;
+                                NewPWM = MaxPWM;
                             }
                             else
                             {
@@ -418,12 +435,12 @@ namespace RateController
                                 if (Math.Abs(VCNerror) < VCNbrake)
                                 {
                                     // slow adjustment
-                                    NewPWM = MaxPWM - (cSlowSpeed * (MaxPWM - MinPWM) / 9);
+                                    NewPWM = MaxPWM - ((MaxPWM - MinPWM) * cSlowSpeed / 9);
                                 }
                                 else
                                 {
                                     // normal adjustment
-                                    NewPWM = MaxPWM - (VCNspeed * (MaxPWM - MinPWM) / 9);
+                                    NewPWM = MaxPWM - ((MaxPWM - MinPWM) * VCNspeed / 9);
                                 }
 
                                 if (cError < 0) NewPWM *= -1;
@@ -432,6 +449,7 @@ namespace RateController
                     }
                 }
             }
+            Debug.Print(NewPWM.ToString());
             return NewPWM;
         }
 
