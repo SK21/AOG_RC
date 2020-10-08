@@ -14,7 +14,7 @@ long SendTime = 200;	// ms pwm is sent to valve
 long WaitTime = 750;	// ms to wait before adjusting valve again
 byte SlowSpeed = 9;		// low pwm rate, 0 fast, 9 slow
 
-unsigned long RateCheckInterval = 500;	// ms interval when checking rate error
+unsigned long RateCheckInterval = 200;	// ms interval when checking rate error
 
 #define UseSwitchedPowerPin 1	// 0 use Relay8 as a normal relay
 								// 1 use Relay8 as a switched power pin - turns on when sketch starts, required for Raven valve
@@ -234,7 +234,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("RCarduino  :  9/Aug/2020");
+	Serial.println("RCarduino  :  07/Oct/2020");
 	Serial.println();
 
 #if (CommType == 1)
