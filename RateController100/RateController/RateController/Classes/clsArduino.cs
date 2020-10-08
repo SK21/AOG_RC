@@ -35,7 +35,7 @@ namespace RateController
         bool RelaysOn;
 
         DateTime RateCheckLast;
-        int RateCheckInterval = 300;
+        int RateCheckInterval = 200;
         float rateError;
 
         bool AutoOn;
@@ -297,6 +297,8 @@ namespace RateController
             CurrentCounts = pulseCount;
             pulseCount = 0;
             accumulatedCounts += CurrentCounts;
+
+            Debug.Print("duration " + pulseDuration.ToString());
 
             if(pulseDuration==0 | MeterCal==0)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -158,6 +159,38 @@ namespace RateController
             if (ArduinoConnected & AogConnected & HectaresPerMinute > 0)
             {
                 return RateApplied().ToString("N1");
+            }
+            else
+            {
+                return "0.0";
+            }
+        }
+
+        public string SmoothRate()
+        {
+            if (ArduinoConnected & AogConnected & HectaresPerMinute > 0)
+            {
+                if (RateSet > 0)
+                {
+                    double Rt = RateApplied() / RateSet;
+                    Debug.Print("");
+                    Debug.Print(RateApplied().ToString());
+                    Debug.Print(RateSet.ToString());
+                    Debug.Print(Rt.ToString());
+
+                    if (Rt >= .9 & Rt <= 1.1)
+                    {
+                        return RateSet.ToString("N1");
+                    }
+                    else
+                    {
+                        return RateApplied().ToString("N1");
+                    }
+                }
+                else
+                {
+                    return RateApplied().ToString("N1");
+                }
             }
             else
             {
@@ -435,10 +468,10 @@ namespace RateController
 
         public double UPMset()
         {
-            return UPMsetting();
+            return TargetUPM();
         }
 
-        public double UPMsetting() // returns units per minute set rate
+        public double TargetUPM() // returns units per minute set rate
         {
             double V = 0;
             switch (CoverageUnits)

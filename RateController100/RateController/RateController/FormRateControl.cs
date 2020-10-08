@@ -15,8 +15,9 @@ namespace RateController
         public clsTools Tls;
         public UDPComm UDPlocal;
         public UDPComm UDPnetwork;
-        private bool ShowAverageRate = false;
+        //private bool ShowAverageRate = false;
         private DateTime LastSave;
+        private int RateType = 0;   // 0 current rate, 1 instantaneous rate, 2 overall rate
 
         public FormRateControl()
         {
@@ -61,36 +62,52 @@ namespace RateController
             VolApplied.Text = RC.CurrentApplied();
             lbCoverage.Text = RC.CoverageDescription();
 
-            if (ShowAverageRate)
+            switch (RateType)
             {
-                lbRate.Text = "Overall Rate";
-                lbRateAmount.Text = RC.AverageRate();
+                case 1:
+                    lbRate.Text = "Instant Rate";
+                    lbRateAmount.Text = RC.CurrentRate();
+                    break;
+                case 2:
+                    lbRate.Text = "Overall Rate";
+                    lbRateAmount.Text = RC.AverageRate();
+                    break;
+                default:
+                    lbRate.Text = "Current Rate";
+                    lbRateAmount.Text = RC.SmoothRate();
+                    break;
             }
-            else
-            {
-                lbRate.Text = "Current Rate";
-                lbRateAmount.Text = RC.CurrentRate();
-            }
+
+            //if (ShowAverageRate)
+            //{
+            //    lbRate.Text = "Overall Rate";
+            //    lbRateAmount.Text = RC.AverageRate();
+            //}
+            //else
+            //{
+            //    lbRate.Text = "Current Rate";
+            //    lbRateAmount.Text = RC.CurrentRate();
+            //}
 
             if (RC.ArduinoConnected)
             {
-                lbArduinoConnected.Text = "Controller Connected";
+                //lbArduinoConnected.Text = "Controller Connected";
                 lbArduinoConnected.BackColor = Color.LightGreen;
             }
             else
             {
-                lbArduinoConnected.Text = "Controller Disconnected";
+                //lbArduinoConnected.Text = "Controller Disconnected";
                 lbArduinoConnected.BackColor = Color.Red;
             }
 
             if (RC.AogConnected)
             {
-                lbAogConnected.Text = "AOG Connected";
+                //lbAogConnected.Text = "AOG Connected";
                 lbAogConnected.BackColor = Color.LightGreen;
             }
             else
             {
-                lbAogConnected.Text = "AOG Disconnected";
+                //lbAogConnected.Text = "AOG Disconnected";
                 lbAogConnected.BackColor = Color.Red;
             }
 
@@ -140,7 +157,8 @@ namespace RateController
 
         private void lbRate_Click(object sender, EventArgs e)
         {
-            ShowAverageRate = !ShowAverageRate;
+            RateType++;
+            if (RateType > 2) RateType = 0;
             UpdateStatus();
         }
 
@@ -228,6 +246,11 @@ namespace RateController
                 RC.SaveSettings();
                 LastSave = DateTime.Now;
             }
+        }
+
+        private void lbArduinoConnected_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

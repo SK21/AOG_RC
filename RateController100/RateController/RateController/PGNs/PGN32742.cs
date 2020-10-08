@@ -58,7 +58,7 @@
             RelayHi = RC.AogRec32740.SectionControlByteHi;
             RelayLo = RC.AogRec32740.SectionControlByteLo;
 
-            int Temp = (int)(RC.UPMsetting() * 100.0);
+            int Temp = (int)(RC.TargetUPM() * 100.0);
             RateSetHi = (byte)(Temp >> 8);
             RateSetLo = (byte)Temp;
 

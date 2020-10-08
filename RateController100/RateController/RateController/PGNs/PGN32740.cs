@@ -27,6 +27,13 @@
         private byte WorkedHi;
         private byte WorkedLo;
 
+        float KalResult = 0.0F;
+        float KalPc = 0.0F;
+        float KalG = 0.0F;
+        float KalP = 1.0F;
+        float KalVariance = 0.01F;   // larger is more filtering
+        float KalProcess = 0.005F;  // smaller is more filtering
+
         public byte ByteCount()
         {
             return cByteCount;
@@ -54,7 +61,14 @@
         public double Speed()
         {
             Temp = SpeedHi << 8 | SpeedLo;
-            return Temp / 100.0;
+            //return Temp / 100.0;
+
+            // Kalmen filter
+            KalPc = KalP + KalProcess;
+            KalG = KalPc / (KalPc + KalVariance);
+            KalP = (1 - KalG) * KalPc;
+            KalResult = (KalG * ((float)Temp - KalResult) + KalResult);
+            return (double)(KalResult / 100.0);
         }
 
         public double WorkedArea()
