@@ -1,8 +1,8 @@
 
 // user settings ****************************
-#define CommType 0			// 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
-
 #define PCBversion	7		// 6 - ver6, 7 - ver7 (Nano only)
+
+#define CommType 0			// 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
 
 #define IMUSource	1		// 0 none, 1 serial Nano, 2 serial Nano33, 3 onboard Nano33
 #define RollSource	1		// 0 none, 1 IMU, 2 Dog2
@@ -13,7 +13,7 @@
 
 #define InvertWAS  1
 #define InvertRoll  0
-#define InvertMotorDrive 0
+#define InvertMotorDrive 1
 
 #define AckermanFix  100     //sent as percent
 #define MinSpeed  3
@@ -29,7 +29,7 @@
 #define IPpart3 1	// ex: 192.168.IPpart3.255
 
 //How many degrees before decreasing Max PWM
-#define LOW_HIGH_DEGREES 1.0
+#define LOW_HIGH_DEGREES 5.0
 
 // WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
 // ADS reading of the WAS ranges from 2700 to 24000 (21300)
@@ -41,11 +41,8 @@
 // ex: steering arm 9.5", sensor arm 6.5", ratio is 1.46
 //	   237 * 1.46 = 346
 
-float SteerCPD = 346;		// AOG value sent * 2
-int SteeringZeroOffset = 13800;
-
-int CloseDef = 2000;		// mm from line for close steering
-int MaxCloseAngle = 0.3;	// maximum steer angle when close to the line
+float SteerCPD = 237;		// AOG value sent * 2
+int SteeringZeroOffset = 16400;
 
 // ******************************************
 
@@ -190,9 +187,6 @@ unsigned int currentTime = LOOP_TIME;
 byte watchdogTimer = 12;
 byte serialResetTimer = 0; //if serial buffer is getting full, empty it
 
-float RawRoll = 0;
-float FilteredRoll = 0;
-
  //program flow
 bool PGN32762Found = false; // machine data
 bool PGN32763Found = false; // AogSettings
@@ -211,9 +205,6 @@ float steerAngleActual = 0;
 float steerAngleSetPoint = 0; //the desired angle from AgOpen
 int steeringPosition = 0;
 float steerAngleError = 0; //setpoint - actual
-
-//inclinometer variables
-int roll = 0;
 
 float CurrentSpeed = 0.0;
 
@@ -235,6 +226,9 @@ int IMUheader;
 int IMUtempHeader;
 bool OnBoardIMUenabled = false;
 
+float RawRoll = 0;
+float FilteredRoll = 0;
+
 // steering wheel encoder
 volatile int pulseCount = 0; // Steering Wheel Encoder
 
@@ -250,9 +244,6 @@ byte workSwitch = 0;
 
 //PID variables
 float Kp = 0.0f;		//proportional gain
-float Ki = 0.0f;		//integral gain
-float Kd = 0.0f;		//derivative gain
-int SteerDeadband = 3;	// % error allowed
 
 void setup()
 {
@@ -262,7 +253,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("ASarduino  :  12/Jul/2020");
+	Serial.println("ASarduino  :  11/Oct/2020");
 	Serial.println();
 
 	//keep pulled high and drag low to activate, noise free safe
@@ -419,5 +410,3 @@ void SERCOM0_Handler()
 	IMUserial.IrqHandler();
 }
 #endif
-
-

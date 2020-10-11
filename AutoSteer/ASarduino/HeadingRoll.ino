@@ -1,3 +1,10 @@
+float KalResult = 0;
+float KalPc = 0.0;
+float KalG = 0.0;
+float KalP = 1.0;
+float KalVariance = 0.1;	// larger is more filtering
+float KalProcess = 0.0001;	// smaller is more filtering
+
 void UpdateHeadingRoll()
 {
 #if (IMUSource == 1 | IMUSource == 2)
@@ -111,7 +118,13 @@ void UpdateHeadingRoll()
 	}
 	else
 	{
-		FilteredRoll = KF(RawRoll, 0.1, 0.0001);
+		// Kalmen filter
+		KalPc = KalP + KalProcess;
+		KalG = KalPc / (KalPc + KalVariance);
+		KalP = (1 - KalG) * KalPc;
+		KalResult = KalG * (RawRoll - KalResult) + KalResult;
+		FilteredRoll = KalResult;
+
 		if (InvertRoll) FilteredRoll *= -1.0;
 	}
 }
