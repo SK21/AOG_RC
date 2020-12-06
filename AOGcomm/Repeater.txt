@@ -1,0 +1,127 @@
+        #region UDPrepeater
+        private void URreceiveData(byte[] Data)
+        {
+            try
+            {
+                if (Data.Length == 10)
+                {
+                    int PGN = Data[0] << 8 | Data[1];
+
+                    // AOG - PGNs 31000 to 31999
+                    // arduino modules - PGNs 32000 to 32999
+                    // companion apps - PGNs 33000 to 33999
+
+                    if (PGN >= 31000 & PGN <= 31999)
+                    {
+                        // for AOG
+                        //UpdateForm("Received PGN" + PGN.ToString());
+                    }
+                    else if (PGN >= 32000 & PGN <= 32999)
+                    {
+                        // for modules
+                        URsendMessage(Data);
+                        SRsendMessage(Data);
+                    }
+                    else if (PGN >= 33000 & PGN <= 33999)
+                    {
+                        // for companion apps
+                        URsendMessage(Data, "127.0.0.1");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        public void URsendMessage(byte[] Data, string DestIP = "")
+        {
+            try
+            {
+                IPAddress DestinationIP;
+                if (isUDPSendConnected)
+                {
+                    if (DestIP == "")
+                    {
+                        DestinationIP = epIP;
+                    }
+                    else
+                    {
+                        DestinationIP = IPAddress.Parse(DestIP);
+                    }
+
+                    IPEndPoint EndPt;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        EndPt = new IPEndPoint(DestinationIP, 8888 + i);
+
+                        if (Data.Length != 0)
+                        {
+                            sendSocket.BeginSendTo(Data, 0, Data.Length, SocketFlags.None, EndPt, new AsyncCallback(SendData), null);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+        #endregion
+
+
+
+
+        #region SerialRepeater
+        private void SRreceive(string[] Words)
+        {
+            // change to bytes
+            byte[] Data = new byte[10];
+            for (int i = 0; i < 10; i++)
+            {
+                byte.TryParse(Words[i], out Data[i]);
+            }
+
+            int PGN = Data[0] << 8 | Data[1];
+
+            // AOG - PGNs 31000 to 31999
+            // arduino modules - PGNs 32000 to 32999
+            // companion apps - PGNs 33000 to 33999
+
+            if (PGN >= 31000 & PGN <= 31999)
+            {
+                // for AOG
+                //UpdateForm("Received PGN" + PGN.ToString());
+            }
+            else if (PGN >= 32000 & PGN <= 32999)
+            {
+                // for modules
+                SRsendMessage(Data);
+                URsendMessage(Data);
+            }
+            else if (PGN >= 33000 & PGN <= 33999)
+            {
+                // for companion apps
+                URsendMessage(Data, "127.0.0.1");
+            }
+        }
+
+        public void SRsendMessage(byte[] Data)
+        {
+            try
+            {
+                if (spMachine.IsOpen)
+                {
+                    spMachine.Write(Data, 0, Data.Length);
+                }
+            }
+            catch (Exception)
+            {
+                WriteErrorLog("Serial Repeater " + e.ToString());
+                SerialPortMachineClose();
+            }
+        }
+        #endregion
+
+
