@@ -19,38 +19,16 @@ namespace RateController
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 229;
         private double cPWMsetting;
-        private double cSecondsAve = 5;        // ex: 5 second average rate
 
-        private DateTime LastTime;
         private byte pwmHI;
         private byte pwmLo;
         private byte QuantityB1;
         private byte QuantityB2;
         private byte QuantityB3;
-        private double RateAve;
         private byte RateHi;
         private byte RateLo;
         private int Temp;
-        private double Tmp;
-
-        public double SecondsAverage
-        {
-            get
-            {
-                return cSecondsAve;
-            }
-            set
-            {
-                if (value < 1 | value > 300)
-                {
-                    cSecondsAve = 5;
-                }
-                else
-                {
-                    cSecondsAve = value;
-                }
-            }
-        }
+        private double cUPM;
 
         public double AccumulatedQuantity()
         {
@@ -67,12 +45,11 @@ namespace RateController
             {
                 RateHi = Data[2];
                 RateLo = Data[3];
+                cUPM = (RateHi << 8 | RateLo) / 100.0;
 
                 QuantityB3 = Data[4];
                 QuantityB2 = Data[5];
                 QuantityB1 = Data[6];
-
-                UpdateAve();
 
                 pwmHI = Data[7];
                 pwmLo = Data[8];
@@ -97,13 +74,12 @@ namespace RateController
                         // rate applied, 100 X actual
                         byte.TryParse(Data[2], out RateHi);
                         byte.TryParse(Data[3], out RateLo);
+                        cUPM = (RateHi << 8 | RateLo) / 100.0;
 
                         // accumulated quantity
                         byte.TryParse(Data[4], out QuantityB3);
                         byte.TryParse(Data[5], out QuantityB2);
                         byte.TryParse(Data[6], out QuantityB1);
-
-                        UpdateAve();
 
                         // pwmSetting
                         byte.TryParse(Data[7], out pwmHI);
@@ -124,26 +100,7 @@ namespace RateController
 
         public double UPM()
         {
-            Temp = RateHi << 8;
-            Temp |= RateLo;
-            return Temp / 100.0;
-        }
-
-        public double UPMaverage()  // for display
-        {
-            return RateAve;
-        }
-
-        private void UpdateAve()
-        {
-            double FrequencyTime = (DateTime.Now - LastTime).TotalSeconds;
-            LastTime = DateTime.Now;
-            if (FrequencyTime < 0.01 | FrequencyTime > 2) FrequencyTime = 0.2;
-
-            double FrequencyDivisor = cSecondsAve / FrequencyTime;
-
-            Tmp = (RateHi << 8 | RateLo) / 100.0;
-            RateAve = (Tmp * (1 / FrequencyDivisor)) + (RateAve * ((FrequencyDivisor - 1) / FrequencyDivisor));
+            return cUPM;
         }
     }
 }

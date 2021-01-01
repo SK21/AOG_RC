@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -39,9 +38,9 @@ namespace RateController
         float rateError;
 
         bool AutoOn;
-        bool RateUpMan;
-        bool RateDownMan;
-        int pwmManualRatio;
+        bool RateUpMan = false;
+        bool RateDownMan = false;
+        int pwmManualRatio = 0;
 
         int pulseCount;
         int pulseDuration;
@@ -298,8 +297,6 @@ namespace RateController
             pulseCount = 0;
             accumulatedCounts += CurrentCounts;
 
-            Debug.Print("duration " + pulseDuration.ToString());
-
             if(pulseDuration==0 | MeterCal==0)
             {
                 FlowRate = 0;
@@ -310,15 +307,14 @@ namespace RateController
                 FlowRate = (float)(Frequency / MeterCal);    // units per minute
             }
 
-            //return rateSetPoint - FlowRate;
-
             // Kalmen filter
             KalPc = KalP + KalProcess;
             KalG = KalPc / (KalPc + KalVariance);
             KalP = (1 - KalG) * KalPc;
             KalResult = KalG * (FlowRate - KalResult) + KalResult;
+            FlowRate = KalResult;
 
-            return rateSetPoint - KalResult;
+            return rateSetPoint - FlowRate;
         }
 
         //float CalRateError()
@@ -451,7 +447,6 @@ namespace RateController
                     }
                 }
             }
-            Debug.Print(NewPWM.ToString());
             return NewPWM;
         }
 

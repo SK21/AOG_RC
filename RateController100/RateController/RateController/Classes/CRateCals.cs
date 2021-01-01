@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -82,7 +81,6 @@ namespace RateController
 
         public byte MaxPWM { get { return ValveCal32744.MaxPWM; } set { ValveCal32744.MaxPWM = value; } }
         public byte MinPWM { get { return ValveCal32744.MinPWM; } set { ValveCal32744.MinPWM = value; } }
-        public double SecondsAve { get { return ArdRec32741.SecondsAverage; } set { ArdRec32741.SecondsAverage = value; } }
         public int SendTime { get { return ValveCal32744.SendTime; } set { ValveCal32744.SendTime = value; } }
         public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }  // 0 none, 1 virtual nano, 2 real nano
 
@@ -173,10 +171,6 @@ namespace RateController
                 if (RateSet > 0)
                 {
                     double Rt = RateApplied() / RateSet;
-                    Debug.Print("");
-                    Debug.Print(RateApplied().ToString());
-                    Debug.Print(RateSet.ToString());
-                    Debug.Print(Rt.ToString());
 
                     if (Rt >= .9 & Rt <= 1.1)
                     {
@@ -207,6 +201,7 @@ namespace RateController
         {
             double.TryParse(mf.Tls.LoadProperty("Coverage"), out Coverage);
             byte.TryParse(mf.Tls.LoadProperty("CoverageUnits"), out CoverageUnits);
+            double.TryParse(mf.Tls.LoadProperty("LastWorkedArea"), out LastWorkedArea);
 
             double.TryParse(mf.Tls.LoadProperty("TankRemaining"), out TankRemaining);
             double.TryParse(mf.Tls.LoadProperty("QuantityApplied"), out QuantityApplied);
@@ -227,7 +222,6 @@ namespace RateController
 
             double temp;
             double.TryParse(mf.Tls.LoadProperty("SecondsAverage"), out temp);
-            ArdRec32741.SecondsAverage = temp;
         }
 
         public double PWM()
@@ -244,22 +238,22 @@ namespace RateController
                 {
                     case 0:
                         // acres
-                        V = ArdRec32741.UPMaverage() / (HectaresPerMinute * 2.47);
+                        V = ArdRec32741.UPM() / (HectaresPerMinute * 2.47);
                         break;
 
                     case 1:
                         // hectares
-                        V = ArdRec32741.UPMaverage() / HectaresPerMinute;
+                        V = ArdRec32741.UPM() / HectaresPerMinute;
                         break;
 
                     case 2:
                         // minutes
-                        V = ArdRec32741.UPMaverage();
+                        V = ArdRec32741.UPM();
                         break;
 
                     default:
                         // hours
-                        V = ArdRec32741.UPMaverage() * 60;
+                        V = ArdRec32741.UPM() * 60;
                         break;
                 }
                 return V;
@@ -292,6 +286,7 @@ namespace RateController
         {
             mf.Tls.SaveProperty("Coverage", Coverage.ToString());
             mf.Tls.SaveProperty("CoverageUnits", CoverageUnits.ToString());
+            mf.Tls.SaveProperty("LastWorkedArea", LastWorkedArea.ToString());
 
             mf.Tls.SaveProperty("TankRemaining", TankRemaining.ToString());
             mf.Tls.SaveProperty("QuantityApplied", QuantityApplied.ToString());
@@ -309,8 +304,6 @@ namespace RateController
             mf.Tls.SaveProperty("WaitTime", ValveCal32744.WaitTime.ToString());
             mf.Tls.SaveProperty("MaxPWM", ValveCal32744.MaxPWM.ToString());
             mf.Tls.SaveProperty("MinPWM", ValveCal32744.MinPWM.ToString());
-
-            mf.Tls.SaveProperty("SecondsAverage", ArdRec32741.SecondsAverage.ToString());
         }
 
         public byte SectionHi()
@@ -398,9 +391,9 @@ namespace RateController
                 // worked area
                 TotalWorkedArea = AogRec32740.WorkedArea(); // hectares
 
-                if (PauseArea)
+                if (PauseArea | (LastWorkedArea > TotalWorkedArea))
                 {
-                    // exclude area worked while paused
+                    // exclude area worked while paused or reset LastWorkedArea
                     LastWorkedArea = TotalWorkedArea;
                     PauseArea = false;
                 }
@@ -457,19 +450,17 @@ namespace RateController
                 // send comm to AOG
                 Switches32761.Send();
             }
-
-            if (cSimulationType == SimType.VirtualNano) Nano.MainLoop();
         }
 
         public double UPMapplied()
         {
-            return ArdRec32741.UPMaverage();
+            return ArdRec32741.UPM();
         }
 
-        public double UPMset()
-        {
-            return TargetUPM();
-        }
+        //public double UPMset()
+        //{
+        //    return TargetUPM();
+        //}
 
         public double TargetUPM() // returns units per minute set rate
         {

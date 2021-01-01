@@ -254,7 +254,6 @@ namespace RateController
             tbWait.Text = (mf.RC.WaitTime).ToString("N0");
             tbMaxPWM.Text = (mf.RC.MaxPWM).ToString("N0");
             tbMinPWM.Text = (mf.RC.MinPWM).ToString("N0");
-            tbSecondsAverage.Text = (mf.RC.SecondsAve).ToString("N1");
 
             SelectedSimulation = mf.RC.SimulationType;
             switch (SelectedSimulation)
@@ -353,9 +352,6 @@ namespace RateController
             mf.RC.MinPWM = tempB;
 
             mf.RC.SimulationType = SelectedSimulation;
-
-            double.TryParse(tbSecondsAverage.Text, out tempD);
-            mf.RC.SecondsAve = tempD;
 
             mf.RC.SaveSettings();
         }
@@ -527,19 +523,6 @@ namespace RateController
             SetButtons(true);
         }
 
-        private void tbSecondsAverage_Enter(object sender, EventArgs e)
-        {
-            double.TryParse(tbSecondsAverage.Text, out tempD);
-            using (var form = new FormNumeric(1, 300, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbSecondsAverage.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
         private void tbSecondsAverage_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -650,7 +633,7 @@ namespace RateController
                 lbWorkRate.Text = "Hectares/Hr";
             }
 
-            lbRateSetData.Text = mf.RC.UPMset().ToString("N1");
+            lbRateSetData.Text = mf.RC.TargetUPM().ToString("N1");
             lbRateAppliedData.Text = mf.RC.UPMapplied().ToString("N1");
             lbPWMdata.Text = mf.RC.PWM().ToString("N0");
 

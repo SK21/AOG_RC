@@ -252,5 +252,10 @@ namespace RateController
         {
 
         }
+
+        private void NanoTimer_Tick(object sender, EventArgs e)
+        {
+            if (RC.SimulationType == SimType.VirtualNano) RC.Nano.MainLoop();
+        }
     }
 }

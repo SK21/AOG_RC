@@ -44,7 +44,7 @@ namespace RateController
                     return endPoint.Address.ToString();
                 }
             }
-            catch (Exception Ex)
+            catch (Exception)
             {
                 return "";
             }

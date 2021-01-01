@@ -46,6 +46,7 @@
             this.lbArduinoConnected = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.lbAogConnected = new System.Windows.Forms.Label();
+            this.NanoTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // SetRate
@@ -216,6 +217,12 @@
             this.lbAogConnected.Text = "AOG";
             this.lbAogConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // NanoTimer
+            // 
+            this.NanoTimer.Enabled = true;
+            this.NanoTimer.Interval = 50;
+            this.NanoTimer.Tick += new System.EventHandler(this.NanoTimer_Tick);
+            // 
             // FormRateControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,5 +274,6 @@
         private System.Windows.Forms.Label lbArduinoConnected;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label lbAogConnected;
+        private System.Windows.Forms.Timer NanoTimer;
     }
 }

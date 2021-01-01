@@ -49,8 +49,6 @@
             this.ValveType = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label7 = new System.Windows.Forms.Label();
-            this.tbSecondsAverage = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tbVCNdescription = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -148,7 +146,7 @@
             // butResetApplied
             // 
             this.butResetApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butResetApplied.Location = new System.Drawing.Point(301, 357);
+            this.butResetApplied.Location = new System.Drawing.Point(301, 349);
             this.butResetApplied.Name = "butResetApplied";
             this.butResetApplied.Size = new System.Drawing.Size(100, 72);
             this.butResetApplied.TabIndex = 103;
@@ -159,7 +157,7 @@
             // butResetAcres
             // 
             this.butResetAcres.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butResetAcres.Location = new System.Drawing.Point(11, 359);
+            this.butResetAcres.Location = new System.Drawing.Point(11, 351);
             this.butResetAcres.Name = "butResetAcres";
             this.butResetAcres.Size = new System.Drawing.Size(100, 72);
             this.butResetAcres.TabIndex = 102;
@@ -170,7 +168,7 @@
             // TankRemain
             // 
             this.TankRemain.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankRemain.Location = new System.Drawing.Point(301, 273);
+            this.TankRemain.Location = new System.Drawing.Point(301, 297);
             this.TankRemain.MaxLength = 8;
             this.TankRemain.Name = "TankRemain";
             this.TankRemain.Size = new System.Drawing.Size(102, 30);
@@ -183,7 +181,7 @@
             // butResetTank
             // 
             this.butResetTank.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butResetTank.Location = new System.Drawing.Point(156, 359);
+            this.butResetTank.Location = new System.Drawing.Point(156, 351);
             this.butResetTank.Name = "butResetTank";
             this.butResetTank.Size = new System.Drawing.Size(100, 72);
             this.butResetTank.TabIndex = 100;
@@ -195,7 +193,7 @@
             // 
             this.label34.AutoSize = true;
             this.label34.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label34.Location = new System.Drawing.Point(13, 277);
+            this.label34.Location = new System.Drawing.Point(13, 301);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(146, 23);
             this.label34.TabIndex = 101;
@@ -204,7 +202,7 @@
             // TankSize
             // 
             this.TankSize.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankSize.Location = new System.Drawing.Point(301, 231);
+            this.TankSize.Location = new System.Drawing.Point(301, 251);
             this.TankSize.MaxLength = 8;
             this.TankSize.Name = "TankSize";
             this.TankSize.Size = new System.Drawing.Size(102, 30);
@@ -218,7 +216,7 @@
             // 
             this.label32.AutoSize = true;
             this.label32.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label32.Location = new System.Drawing.Point(13, 235);
+            this.label32.Location = new System.Drawing.Point(13, 255);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(90, 23);
             this.label32.TabIndex = 99;
@@ -227,7 +225,7 @@
             // FlowCal
             // 
             this.FlowCal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FlowCal.Location = new System.Drawing.Point(300, 146);
+            this.FlowCal.Location = new System.Drawing.Point(300, 158);
             this.FlowCal.MaxLength = 8;
             this.FlowCal.Name = "FlowCal";
             this.FlowCal.Size = new System.Drawing.Size(102, 30);
@@ -241,7 +239,7 @@
             // 
             this.label30.AutoSize = true;
             this.label30.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label30.Location = new System.Drawing.Point(12, 150);
+            this.label30.Location = new System.Drawing.Point(12, 162);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(99, 23);
             this.label30.TabIndex = 98;
@@ -286,7 +284,7 @@
             "Hectare",
             "Minute",
             "Hour"});
-            this.AreaUnits.Location = new System.Drawing.Point(241, 61);
+            this.AreaUnits.Location = new System.Drawing.Point(241, 65);
             this.AreaUnits.Name = "AreaUnits";
             this.AreaUnits.Size = new System.Drawing.Size(161, 31);
             this.AreaUnits.TabIndex = 79;
@@ -296,7 +294,7 @@
             // 
             this.lbCoverage.AutoSize = true;
             this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCoverage.Location = new System.Drawing.Point(12, 65);
+            this.lbCoverage.Location = new System.Drawing.Point(12, 69);
             this.lbCoverage.Name = "lbCoverage";
             this.lbCoverage.Size = new System.Drawing.Size(88, 23);
             this.lbCoverage.TabIndex = 96;
@@ -305,7 +303,7 @@
             // RateSet
             // 
             this.RateSet.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RateSet.Location = new System.Drawing.Point(300, 104);
+            this.RateSet.Location = new System.Drawing.Point(300, 112);
             this.RateSet.MaxLength = 8;
             this.RateSet.Name = "RateSet";
             this.RateSet.Size = new System.Drawing.Size(102, 30);
@@ -319,7 +317,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(12, 108);
+            this.label21.Location = new System.Drawing.Point(12, 116);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(81, 23);
             this.label21.TabIndex = 95;
@@ -329,7 +327,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(12, 192);
+            this.label3.Location = new System.Drawing.Point(12, 208);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 23);
             this.label3.TabIndex = 94;
@@ -343,7 +341,7 @@
             this.ValveType.Items.AddRange(new object[] {
             "Standard",
             "Fast Close"});
-            this.ValveType.Location = new System.Drawing.Point(241, 188);
+            this.ValveType.Location = new System.Drawing.Point(241, 204);
             this.ValveType.Name = "ValveType";
             this.ValveType.Size = new System.Drawing.Size(161, 31);
             this.ValveType.TabIndex = 82;
@@ -368,8 +366,6 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage1.Controls.Add(this.label7);
-            this.tabPage1.Controls.Add(this.tbSecondsAverage);
             this.tabPage1.Controls.Add(this.VolumeUnits);
             this.tabPage1.Controls.Add(this.ValveType);
             this.tabPage1.Controls.Add(this.label3);
@@ -394,28 +390,6 @@
             this.tabPage1.Size = new System.Drawing.Size(412, 439);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(12, 319);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(272, 23);
-            this.label7.TabIndex = 105;
-            this.label7.Text = "Rate Averaging Time (seconds)";
-            // 
-            // tbSecondsAverage
-            // 
-            this.tbSecondsAverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSecondsAverage.Location = new System.Drawing.Point(300, 315);
-            this.tbSecondsAverage.MaxLength = 8;
-            this.tbSecondsAverage.Name = "tbSecondsAverage";
-            this.tbSecondsAverage.Size = new System.Drawing.Size(102, 30);
-            this.tbSecondsAverage.TabIndex = 104;
-            this.tbSecondsAverage.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbSecondsAverage.TextChanged += new System.EventHandler(this.tbSecondsAverage_TextChanged);
-            this.tbSecondsAverage.Enter += new System.EventHandler(this.tbSecondsAverage_Enter);
             // 
             // tabPage2
             // 
@@ -1505,8 +1479,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbMaxPWM;
         private System.Windows.Forms.TextBox tbVCNdescription;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox tbSecondsAverage;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button btnSaveSettings;
