@@ -50,6 +50,7 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 
 	// deadband
 	float DB = (float)(VCNdeadband / 100.0) * cSetPoint;
+
 	if (abs(cError) <= DB)
 	{
 		// valve does not need to be adjusted
@@ -60,7 +61,7 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 		// backlash
 		if (!UseBacklashAdjustment && VCNbacklash > 0)
 		{
-			if ((cError >= 0 && !LastDirectionPositive) | (cError < 0 && LastDirectionPositive))
+			if ((cError >= 0 && !LastDirectionPositive) || (cError < 0 && LastDirectionPositive))
 			{
 				// direction changed, use backlash adjustment
 				UseBacklashAdjustment = true;

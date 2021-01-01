@@ -7,7 +7,7 @@ void SendUDPwired()
 	toSend[1] = 229;
 
 	// rate applied, 100 X actual
-	Temp = ((int)FlowRate * 100) >> 8;
+	Temp = (int)(FlowRate * 100) >> 8;
 	toSend[2] = Temp;
 	Temp = (FlowRate * 100);
 	toSend[3] = Temp;
@@ -62,8 +62,9 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
 
 //void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, byte* data, uint16_t len)
 {
-	// PGN32742
-	if ((len > 8) && (data[0] == 127) && (data[1] = 230))
+	PGN = data[0] << 8 | data[1];
+
+	if ((len > 8) && (PGN == 32742))
 	{
 		RelayHi = data[2];
 		RelayFromAOG = data[3];
@@ -92,7 +93,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
 	}
 
 	//PGN32744
-	if ((len > 7) && (data[0] == 127) && (data[1] = 232))
+	if ((len > 7) && (PGN == 32744))
 	{
 		VCN = data[2] << 8 | data[3];
 		SendTime = data[4] << 8 | data[5];

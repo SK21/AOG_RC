@@ -7,7 +7,7 @@ void SendUDPWifi()
 	toSend[1] = 229;
 
 	// rate applied, 100 X actual
-	Temp = ((int)FlowRate * 100) >> 8;
+	Temp = (int)(FlowRate * 100) >> 8;
 	toSend[2] = Temp;
 	Temp = (FlowRate * 100);
 	toSend[3] = Temp;

@@ -34,7 +34,7 @@ float CalRateError()
 	pulseCount = 0;
 	accumulatedCounts += CurrentCounts;
 
-	if (pulseDuration == 0 | MeterCal == 0)
+	if (pulseDuration == 0 || MeterCal == 0)
 	{
 		FlowRate = 0;
 	}
@@ -44,15 +44,14 @@ float CalRateError()
 		FlowRate = Frequency / MeterCal;	// units per minute
 	}
 
-	//return rateSetPoint - FlowRate;
-
 	// Kalmen filter
 	KalPc = KalP + KalProcess;
 	KalG = KalPc / (KalPc + KalVariance);
 	KalP = (1 - KalG) * KalPc;
 	KalResult = KalG * (FlowRate - KalResult) + KalResult;
+	FlowRate = KalResult;
 
-	return rateSetPoint - KalResult;
+	return rateSetPoint - FlowRate;
 }
 
 //void FlowISR()

@@ -21,7 +21,7 @@ void DoSimulate()
 
 		// relays on
 		float Range = MaxPWMvalue - MinPWMvalue + 5;
-		if (Range == 0 | pwmSetting == 0)
+		if (Range == 0 || pwmSetting == 0)
 		{
 			ValveAdjust = 0;
 		}

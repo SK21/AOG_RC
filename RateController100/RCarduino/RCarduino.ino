@@ -1,12 +1,16 @@
 
 // user settings ****************************
 
-#define PCBversion	4		// 3 - ver3.1, 4 - ver4 (Nano only)
+#define CommType 1			// 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
 
-#define CommType 0			// 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
+#define WifiSSID "tractor"
+#define WifiPassword ""
+
+#define IPpart3 1			// ex: 192.168.IPpart3.255, 0-255
+#define IPMac 100			// unique number for Arduino IP address and Mac part 6, 0-255
 
 byte FlowOn = HIGH;			// flowmeter pin on value
-bool UseSwitches = true;	// manual switches
+bool UseSwitches = false;	// manual switches
 
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
 
@@ -19,27 +23,17 @@ unsigned long RateCheckInterval = 200;	// ms interval when checking rate error
 #define UseSwitchedPowerPin 1	// 0 use Relay8 as a normal relay
 								// 1 use Relay8 as a switched power pin - turns on when sketch starts, required for Raven valve
 
-#define WifiSSID "tractor"
-#define WifiPassword ""
-#define IPpart3 1	// ex: 192.168.IPpart3.255
+#define PCBversion	4		// 3 - ver3.1, 4 - ver4 (Nano only)
 
 // ******************************************
 
 #if (CommType == 1)
 #include <EtherCard.h>
+// ethernet interface ip address
+static byte ArduinoIP[] = { 192,168,IPpart3,IPMac };
 
-// ethernet mac address - must be unique on your network
-static byte LocalMac[] = { 0x70,0x69,0x69,0x2D,0x30,0x41 };
-
-unsigned int ListeningPort = 9999;	// local port to listen on
-
-// ethernet source - Arduino
-static byte SourceIP[] = { 192,168,IPpart3,88 };
-unsigned int SourcePort = 6100;		// local port to send from 
-
-// ethernet destination - Rate Controller
-static byte DestinationIP[] = { 192, 168, IPpart3, 255 };	// broadcast 255
-unsigned int DestinationPort = 8000; // Rate Controller listening port 
+// ethernet interface ip address
+static byte LocalMac[] = { 0x70,0x2D,0x31,0x21,0x62,IPMac };
 
 // gateway ip address
 static byte gwip[] = { 192,168,IPpart3,1 };
@@ -48,7 +42,15 @@ static byte myDNS[] = { 8,8,8,8 };
 //mask
 static byte mask[] = { 255,255,255,0 };
 
-byte Ethernet::buffer[200]; // udp send and receive buffer
+// local ports on Arduino
+unsigned int ListeningPort = 9999;	// to listen on
+unsigned int SourcePort = 6100;		// to send from 
+
+// ethernet destination - Rate Controller
+static byte DestinationIP[] = { 192, 168, IPpart3, 255 };	// broadcast 255
+unsigned int DestinationPort = 8000; // Rate Controller listening port 
+
+byte Ethernet::buffer[500]; // udp send and receive buffer
 
 //Array to send data back to AgOpenGPS
 byte toSend[] = { 0,0,0,0,0,0,0,0,0,0 };
@@ -228,24 +230,23 @@ long VCN = 743;
 
 unsigned int UnSignedTemp = 0;
 
+int PGN;
+
 void setup()
 {
 	Serial.begin(38400);
 
 	delay(5000);
 	Serial.println();
-	Serial.println("RCarduino  :  07/Oct/2020");
+	Serial.println("RCarduino  :  01-Jan-2021");
 	Serial.println();
 
 #if (CommType == 1)
-	if (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) == 0)
-		Serial.println(F("Failed to access Ethernet controller"));
+	if (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) == 0) Serial.println(F("Failed to access Ethernet controller"));
+	ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
 
-	//set up connection
-	ether.staticSetup(SourceIP, gwip, myDNS, mask);
-	ether.printIp("IP:  ", ether.myip);
-	ether.printIp("GW:  ", ether.gwip);
-	ether.printIp("DNS: ", ether.dnsip);
+	ether.printIp("IP Address:     ", ether.myip);
+	Serial.println("Destination IP: " + IPadd(DestinationIP));
 
 	//register sub for received data
 	ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
@@ -430,4 +431,9 @@ ether.packetLoop(ether.packetReceive());
 SendUDPWifi();
 }
 #endif
+}
+
+String IPadd(byte Address[])
+{
+	return String(Address[0]) + "." + String(Address[1]) + "." + String(Address[2]) + "." + String(Address[3]);
 }

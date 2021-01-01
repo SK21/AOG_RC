@@ -35,7 +35,7 @@ void SendSerial()
 	Serial.print(",");
 
 	// rate applied, 100 X actual
-	Temp = ((int)FlowRate * 100) >> 8;
+	Temp = (int)(FlowRate * 100) >> 8;
 	Serial.print(Temp);
 	Serial.print(",");
 	Temp = (FlowRate * 100);
