@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.NetworkInformation;
 
 namespace RateController
 {
@@ -10,45 +11,46 @@ namespace RateController
         private readonly FormRateControl mf;
         private byte[] buffer = new byte[1024];
 
-        private int cReceivePort;
-        private int cSendPort;
         private IPAddress epIP;
-        private HandleDataDelegateObj HandleDataDelegate = null;
-
-        private int PGN;
         private Socket recvSocket;
         private Socket sendSocket;
 
-        public UDPComm(FormRateControl CallingForm, string DestinationIP, int ReceivePort, int SendPort)
+        private HandleDataDelegateObj HandleDataDelegate = null;
+
+        private int PGN;
+        private bool cUpdateDestinationIP;
+
+        // local ports must be unique for each app on same pc and each class instance
+        private int cSendFromPort;
+        private int cReceivePort;
+        private int cSendToPort;
+
+        public UDPComm(FormRateControl CallingForm, int ReceivePort, int SendToPort, int SendFromPort
+            , string DestinationIP = "", bool UpdateDestinationIP = false)
         {
             mf = CallingForm;
-            epIP = IPAddress.Parse(DestinationIP);
             cReceivePort = ReceivePort;
-            cSendPort = SendPort;
+            cSendToPort = SendToPort;
+            cSendFromPort = SendFromPort;
+            cUpdateDestinationIP = UpdateDestinationIP;
+
+            if (DestinationIP == "")
+            {
+                SetEpIP();
+            }
+            else
+            {
+                epIP = IPAddress.Parse(DestinationIP);
+            }
+
+            NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(AddressChanged);
         }
 
-        // new data event
-        public delegate void NewDataDelegate(byte[] Data);
+        //// new data event
+        //public delegate void NewDataDelegate(byte[] Data);
 
         // Status delegate
         private delegate void HandleDataDelegateObj(int port, byte[] msg);
-
-        public string GetLocalIP()
-        {
-            try
-            {
-                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
-                {
-                    socket.Connect("8.8.8.8", 65530);
-                    IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
-                    return endPoint.Address.ToString();
-                }
-            }
-            catch (Exception)
-            {
-                return "";
-            }
-        }
 
         //sends byte array
         public void SendUDPMessage(byte[] byteData)
@@ -57,7 +59,7 @@ namespace RateController
             {
                 try
                 {
-                    IPEndPoint EndPt = new IPEndPoint(epIP, 9999);
+                    IPEndPoint EndPt = new IPEndPoint(epIP, cSendToPort);
 
                     // Send packet to the zero
                     if (byteData.Length != 0)
@@ -81,6 +83,7 @@ namespace RateController
 
                 // Initialise the IPEndPoint for the server and port
                 IPEndPoint recv = new IPEndPoint(IPAddress.Any, cReceivePort);
+
                 // Associate the socket with this IP address and port
                 recvSocket.Bind(recv);
 
@@ -88,7 +91,7 @@ namespace RateController
                 sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
                 // Initialise the IPEndPoint for the server to send on port
-                IPEndPoint server = new IPEndPoint(IPAddress.Any, cSendPort);
+                IPEndPoint server = new IPEndPoint(IPAddress.Any, cSendFromPort);
                 sendSocket.Bind(server);
 
                 // Initialise the IPEndPoint for the client - async listner client only!
@@ -97,7 +100,7 @@ namespace RateController
                 // Start listening for incoming data
                 recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref client, new AsyncCallback(ReceiveData), recvSocket);
                 isUDPSendConnected = true;
-                return GetLocalIP();
+                return LocalIP();
             }
             catch (Exception e)
             {
@@ -162,9 +165,58 @@ namespace RateController
             {
                 sendSocket.EndSend(asyncResult);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                mf.Tls.WriteErrorLog(" UDP Send Data" + ex.ToString());
             }
         }
+
+        private void SetEpIP()
+        {
+            string Result = "";
+            string IP = LocalIP();
+            string[] data = IP.Split('.');
+            if (data.Length == 4)
+            {
+                Result = data[0] + "." + data[1] + "." + data[2] + ".255";
+            }
+
+            if (IPAddress.TryParse(Result, out IPAddress Tmp))
+            {
+                epIP = Tmp;
+            }
+            else
+            {
+                epIP = IPAddress.Parse(mf.LoopBackBroadcastIP);
+            }
+        }
+
+        public string LocalIP()
+        {
+            try
+            {
+                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+                {
+                    socket.Connect("8.8.8.8", 65530);
+                    IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                    return endPoint.Address.ToString();
+                }
+            }
+            catch (Exception)
+            {
+                return mf.LoopBackIP;
+            }
+        }
+
+        private void AddressChanged(object sender, EventArgs e)
+        {
+            if (cUpdateDestinationIP) SetEpIP();
+        }
+
+        public string BroadcastIP()
+        {
+            return epIP.ToString();
+        }
+
     }
 }

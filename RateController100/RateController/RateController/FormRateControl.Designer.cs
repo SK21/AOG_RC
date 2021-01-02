@@ -197,7 +197,6 @@
             this.lbArduinoConnected.TabIndex = 71;
             this.lbArduinoConnected.Text = "Controller";
             this.lbArduinoConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbArduinoConnected.Click += new System.EventHandler(this.lbArduinoConnected_Click);
             // 
             // timer1
             // 

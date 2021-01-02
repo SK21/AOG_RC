@@ -8,16 +8,17 @@ namespace RateController
 {
     public partial class FormRateControl : Form
     {
-        public string LocalIP;
-        public string NetworkIP;
         public CRateCals RC;
         public SerialComm SER;
         public clsTools Tls;
-        public UDPComm UDPlocal;
+
+        public UDPComm UDPLoopBack;
         public UDPComm UDPnetwork;
-        //private bool ShowAverageRate = false;
         private DateTime LastSave;
+
         private int RateType = 0;   // 0 current rate, 1 instantaneous rate, 2 overall rate
+        public string LoopBackIP = "127.0.0.1";
+        public string LoopBackBroadcastIP = "127.0.0.255";
 
         public FormRateControl()
         {
@@ -26,12 +27,8 @@ namespace RateController
             RC = new CRateCals(this);
             SER = new SerialComm(this);
 
-            LocalIP = "127.100.0.0";
-            UDPlocal = new UDPComm(this, LocalIP, 8120, 2388);
-
-            Tls.SaveProperty("DestinationIP", BroadcastIP(UDPlocal.GetLocalIP()));
-
-            UDPnetwork = new UDPComm(this, Tls.LoadProperty("DestinationIP"), 8000, 2188);
+            UDPLoopBack = new UDPComm(this, 8120, 9999, 1460, LoopBackBroadcastIP); // AOG
+            UDPnetwork = new UDPComm(this, 8000, 9999, 1480, "", true);             // arduino
         }
 
         public void StartSerial()
@@ -65,29 +62,18 @@ namespace RateController
             switch (RateType)
             {
                 case 1:
-                    lbRate.Text = "Instant Rate";
+                    lbRate.Text = "Instant Rate..";
                     lbRateAmount.Text = RC.CurrentRate();
                     break;
                 case 2:
-                    lbRate.Text = "Overall Rate";
+                    lbRate.Text = "Overall Rate..";
                     lbRateAmount.Text = RC.AverageRate();
                     break;
                 default:
-                    lbRate.Text = "Current Rate";
+                    lbRate.Text = "Current Rate..";
                     lbRateAmount.Text = RC.SmoothRate();
                     break;
             }
-
-            //if (ShowAverageRate)
-            //{
-            //    lbRate.Text = "Overall Rate";
-            //    lbRateAmount.Text = RC.AverageRate();
-            //}
-            //else
-            //{
-            //    lbRate.Text = "Current Rate";
-            //    lbRateAmount.Text = RC.CurrentRate();
-            //}
 
             if (RC.ArduinoConnected)
             {
@@ -117,25 +103,6 @@ namespace RateController
         private void bntOK_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private string BroadcastIP(string IP)
-        {
-            string Result = "";
-            string[] data = IP.Split('.');
-            if (data.Length == 4)
-            {
-                Result = data[0] + "." + data[1] + "." + data[2] + ".255";
-            }
-
-            if (IPAddress.TryParse(Result, out IPAddress Tmp))
-            {
-                return Result;
-            }
-            else
-            {
-                return "192.168.1.255";
-            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -173,16 +140,16 @@ namespace RateController
             }
 
             // UDP
-            NetworkIP = UDPnetwork.StartUDPServer();
+            UDPnetwork.StartUDPServer();
             if (!UDPnetwork.isUDPSendConnected)
             {
                 Tls.TimedMessageBox("UDPnetwork failed to start.", "", 3000, true);
             }
 
-            UDPlocal.StartUDPServer();
-            if (!UDPlocal.isUDPSendConnected)
+            UDPLoopBack.StartUDPServer();
+            if (!UDPLoopBack.isUDPSendConnected)
             {
-                Tls.TimedMessageBox("UDPlocal failed to start.", "", 3000, true);
+                Tls.TimedMessageBox("UDPLoopBack failed to start.", "", 3000, true);
             }
             LoadSettings();
         }
@@ -246,11 +213,6 @@ namespace RateController
                 RC.SaveSettings();
                 LastSave = DateTime.Now;
             }
-        }
-
-        private void lbArduinoConnected_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void NanoTimer_Tick(object sender, EventArgs e)

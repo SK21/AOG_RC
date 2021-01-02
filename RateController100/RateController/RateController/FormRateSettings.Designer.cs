@@ -1088,7 +1088,7 @@
             this.groupBox4.Size = new System.Drawing.Size(316, 168);
             this.groupBox4.TabIndex = 124;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Local UDP";
+            this.groupBox4.Text = "LookBack UDP";
             this.groupBox4.Paint += new System.Windows.Forms.PaintEventHandler(this.GroupBoxPaint);
             // 
             // label33
@@ -1096,9 +1096,9 @@
             this.label33.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label33.Location = new System.Drawing.Point(14, 133);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(255, 23);
+            this.label33.Size = new System.Drawing.Size(288, 23);
             this.label33.TabIndex = 144;
-            this.label33.Text = "AgOpenGPS UDP must be on.";
+            this.label33.Text = "AgOpenGPS UDP must be on to receive.";
             this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbLocalIP

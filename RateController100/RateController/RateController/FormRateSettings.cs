@@ -218,10 +218,10 @@ namespace RateController
         {
             mf.Tls.LoadFormData(this);
 
-            lbNetworkIP.Text = mf.NetworkIP;
-            lbLocalIP.Text = mf.LocalIP;
+            lbNetworkIP.Text = mf.UDPnetwork.LocalIP();
+            lbLocalIP.Text = mf.LoopBackIP;
             lbVersion.Text = "Version Date   " + mf.Tls.VersionDate();
-            lbDestinationIP.Text = mf.Tls.LoadProperty("DestinationIP");
+            lbDestinationIP.Text = mf.UDPnetwork.BroadcastIP();
             LoadRCbox();
             SetRCbuttons();
             SetDayMode();

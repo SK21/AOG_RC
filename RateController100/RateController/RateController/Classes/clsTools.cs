@@ -14,7 +14,7 @@ namespace RateController
         private string cAppName = "RateController";
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "01-Jan-2021";
+        private string cVersionDate = "02-Jan-2021";
         private FormRateControl mf;
 
         public clsTools(FormRateControl CallingForm)

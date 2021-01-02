@@ -219,9 +219,6 @@ namespace RateController
             int.TryParse(mf.Tls.LoadProperty("WaitTime"), out ValveCal32744.WaitTime);
             byte.TryParse(mf.Tls.LoadProperty("MaxPWM"), out ValveCal32744.MaxPWM);
             byte.TryParse(mf.Tls.LoadProperty("MinPWM"), out ValveCal32744.MinPWM);
-
-            double temp;
-            double.TryParse(mf.Tls.LoadProperty("SecondsAverage"), out temp);
         }
 
         public double PWM()
@@ -456,11 +453,6 @@ namespace RateController
         {
             return ArdRec32741.UPM();
         }
-
-        //public double UPMset()
-        //{
-        //    return TargetUPM();
-        //}
 
         public double TargetUPM() // returns units per minute set rate
         {
