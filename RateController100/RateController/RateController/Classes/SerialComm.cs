@@ -7,14 +7,17 @@ namespace RateController
     {
         public SerialPort RCport = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
         public int RCportBaud = 38400;
-        public string RCportName = "RCport";
+        public string RCportName;
         private readonly FormRateControl mf;
+        private int cPortNumber;
 
         private bool SerialActive = false;  // prevents UI lock-up by only sending serial data after verfying connection
 
-        public SerialComm(FormRateControl CallingForm)
+        public SerialComm(FormRateControl CallingForm,int PortNumber)
         {
             mf = CallingForm;
+            cPortNumber = PortNumber;
+            RCportName = "RCport" + cPortNumber.ToString();
         }
 
         // new data event
@@ -36,7 +39,7 @@ namespace RateController
                         mf.Tls.TimedMessageBox("Could not close serial port.", e.Message, 3000, true);
                     }
 
-                    mf.Tls.SaveProperty("RCportSuccessful", "false");
+                    mf.Tls.SaveProperty("RCportSuccessful"+cPortNumber.ToString(), "false");
 
                     RCport.Dispose();
                 }
@@ -69,7 +72,7 @@ namespace RateController
                         {
                             mf.Tls.TimedMessageBox("Could not open serial port.", e.Message, 3000, true);
 
-                            mf.Tls.SaveProperty("RCportSuccessful", "false");
+                            mf.Tls.SaveProperty("RCportSuccessful" + cPortNumber.ToString(), "false");
                         }
                     }
 
@@ -78,16 +81,16 @@ namespace RateController
                         RCport.DiscardOutBuffer();
                         RCport.DiscardInBuffer();
 
-                        mf.Tls.SaveProperty("RCportName", RCportName);
-                        mf.Tls.SaveProperty("RCportSuccessful", "true");
-                        mf.Tls.SaveProperty("RCportBaud", RCportBaud.ToString());
+                        mf.Tls.SaveProperty("RCportName" + cPortNumber.ToString(), RCportName);
+                        mf.Tls.SaveProperty("RCportSuccessful" + cPortNumber.ToString(), "true");
+                        mf.Tls.SaveProperty("RCportBaud" + cPortNumber.ToString(), RCportBaud.ToString());
                     }
                 }
                 else
                 {
                     mf.Tls.TimedMessageBox("Could not open serial port.", "", 3000, true);
 
-                    mf.Tls.SaveProperty("RCportSuccessful", "false");
+                    mf.Tls.SaveProperty("RCportSuccessful" + cPortNumber.ToString(), "false");
                 }
             }
             catch (Exception ex)

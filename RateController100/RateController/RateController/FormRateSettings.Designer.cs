@@ -51,16 +51,12 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tbVCNdescription = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.rbNone = new System.Windows.Forms.RadioButton();
-            this.rbFlow = new System.Windows.Forms.RadioButton();
-            this.rbNano = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.butLoadDefaults = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.tbMinPWM = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tbMaxPWM = new System.Windows.Forms.TextBox();
-            this.butLoadDefaults = new System.Windows.Forms.Button();
             this.tbVCN = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -68,13 +64,32 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tbWait = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.lblCurrentBaud = new System.Windows.Forms.Label();
-            this.cboxBaud = new System.Windows.Forms.ComboBox();
-            this.lbArduinoConnected = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
+            this.lbPort3 = new System.Windows.Forms.Label();
+            this.cbBaud3 = new System.Windows.Forms.ComboBox();
+            this.btnPort3 = new System.Windows.Forms.Button();
+            this.cbPort3 = new System.Windows.Forms.ComboBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rbNone = new System.Windows.Forms.RadioButton();
+            this.rbFlow = new System.Windows.Forms.RadioButton();
+            this.rbNano = new System.Windows.Forms.RadioButton();
+            this.lbPort2 = new System.Windows.Forms.Label();
+            this.cbBaud2 = new System.Windows.Forms.ComboBox();
+            this.btnPort2 = new System.Windows.Forms.Button();
             this.btnRescan = new System.Windows.Forms.Button();
-            this.btnOpenSerialArduino = new System.Windows.Forms.Button();
-            this.btnCloseSerialArduino = new System.Windows.Forms.Button();
-            this.cboxArdPort = new System.Windows.Forms.ComboBox();
+            this.cbPort2 = new System.Windows.Forms.ComboBox();
+            this.lbPort1 = new System.Windows.Forms.Label();
+            this.cbBaud1 = new System.Windows.Forms.ComboBox();
+            this.btnPort1 = new System.Windows.Forms.Button();
+            this.cbPort1 = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lbPort0 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblCurrentBaud = new System.Windows.Forms.Label();
+            this.cbBaud0 = new System.Windows.Forms.ComboBox();
+            this.btnPort0 = new System.Windows.Forms.Button();
+            this.cbPort0 = new System.Windows.Forms.ComboBox();
             this.lblCurrentArduinoPort = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.lbRateAppliedData = new System.Windows.Forms.Label();
@@ -134,9 +149,9 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -146,9 +161,9 @@
             // butResetApplied
             // 
             this.butResetApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butResetApplied.Location = new System.Drawing.Point(301, 349);
+            this.butResetApplied.Location = new System.Drawing.Point(317, 351);
             this.butResetApplied.Name = "butResetApplied";
-            this.butResetApplied.Size = new System.Drawing.Size(100, 72);
+            this.butResetApplied.Size = new System.Drawing.Size(124, 72);
             this.butResetApplied.TabIndex = 103;
             this.butResetApplied.Text = "Reset Quantity";
             this.butResetApplied.UseVisualStyleBackColor = true;
@@ -157,9 +172,9 @@
             // butResetAcres
             // 
             this.butResetAcres.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butResetAcres.Location = new System.Drawing.Point(11, 351);
+            this.butResetAcres.Location = new System.Drawing.Point(51, 351);
             this.butResetAcres.Name = "butResetAcres";
-            this.butResetAcres.Size = new System.Drawing.Size(100, 72);
+            this.butResetAcres.Size = new System.Drawing.Size(124, 72);
             this.butResetAcres.TabIndex = 102;
             this.butResetAcres.Text = "Reset Coverage";
             this.butResetAcres.UseVisualStyleBackColor = true;
@@ -168,7 +183,7 @@
             // TankRemain
             // 
             this.TankRemain.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankRemain.Location = new System.Drawing.Point(301, 297);
+            this.TankRemain.Location = new System.Drawing.Point(341, 297);
             this.TankRemain.MaxLength = 8;
             this.TankRemain.Name = "TankRemain";
             this.TankRemain.Size = new System.Drawing.Size(102, 30);
@@ -181,9 +196,9 @@
             // butResetTank
             // 
             this.butResetTank.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butResetTank.Location = new System.Drawing.Point(156, 351);
+            this.butResetTank.Location = new System.Drawing.Point(184, 351);
             this.butResetTank.Name = "butResetTank";
-            this.butResetTank.Size = new System.Drawing.Size(100, 72);
+            this.butResetTank.Size = new System.Drawing.Size(124, 72);
             this.butResetTank.TabIndex = 100;
             this.butResetTank.Text = "Reset Tank";
             this.butResetTank.UseVisualStyleBackColor = true;
@@ -193,7 +208,7 @@
             // 
             this.label34.AutoSize = true;
             this.label34.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label34.Location = new System.Drawing.Point(13, 301);
+            this.label34.Location = new System.Drawing.Point(53, 301);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(146, 23);
             this.label34.TabIndex = 101;
@@ -202,7 +217,7 @@
             // TankSize
             // 
             this.TankSize.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankSize.Location = new System.Drawing.Point(301, 251);
+            this.TankSize.Location = new System.Drawing.Point(341, 251);
             this.TankSize.MaxLength = 8;
             this.TankSize.Name = "TankSize";
             this.TankSize.Size = new System.Drawing.Size(102, 30);
@@ -216,7 +231,7 @@
             // 
             this.label32.AutoSize = true;
             this.label32.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label32.Location = new System.Drawing.Point(13, 255);
+            this.label32.Location = new System.Drawing.Point(53, 255);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(90, 23);
             this.label32.TabIndex = 99;
@@ -225,7 +240,7 @@
             // FlowCal
             // 
             this.FlowCal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FlowCal.Location = new System.Drawing.Point(300, 158);
+            this.FlowCal.Location = new System.Drawing.Point(340, 158);
             this.FlowCal.MaxLength = 8;
             this.FlowCal.Name = "FlowCal";
             this.FlowCal.Size = new System.Drawing.Size(102, 30);
@@ -239,7 +254,7 @@
             // 
             this.label30.AutoSize = true;
             this.label30.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label30.Location = new System.Drawing.Point(12, 162);
+            this.label30.Location = new System.Drawing.Point(52, 162);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(99, 23);
             this.label30.TabIndex = 98;
@@ -258,7 +273,7 @@
             "Litres",
             "Kgs",
             "Kgs N (NH3)"});
-            this.VolumeUnits.Location = new System.Drawing.Point(241, 18);
+            this.VolumeUnits.Location = new System.Drawing.Point(281, 18);
             this.VolumeUnits.Name = "VolumeUnits";
             this.VolumeUnits.Size = new System.Drawing.Size(161, 31);
             this.VolumeUnits.TabIndex = 78;
@@ -268,7 +283,7 @@
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(12, 22);
+            this.label28.Location = new System.Drawing.Point(52, 22);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(80, 23);
             this.label28.TabIndex = 97;
@@ -284,7 +299,7 @@
             "Hectare",
             "Minute",
             "Hour"});
-            this.AreaUnits.Location = new System.Drawing.Point(241, 65);
+            this.AreaUnits.Location = new System.Drawing.Point(281, 65);
             this.AreaUnits.Name = "AreaUnits";
             this.AreaUnits.Size = new System.Drawing.Size(161, 31);
             this.AreaUnits.TabIndex = 79;
@@ -294,7 +309,7 @@
             // 
             this.lbCoverage.AutoSize = true;
             this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCoverage.Location = new System.Drawing.Point(12, 69);
+            this.lbCoverage.Location = new System.Drawing.Point(52, 69);
             this.lbCoverage.Name = "lbCoverage";
             this.lbCoverage.Size = new System.Drawing.Size(88, 23);
             this.lbCoverage.TabIndex = 96;
@@ -303,7 +318,7 @@
             // RateSet
             // 
             this.RateSet.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RateSet.Location = new System.Drawing.Point(300, 112);
+            this.RateSet.Location = new System.Drawing.Point(340, 112);
             this.RateSet.MaxLength = 8;
             this.RateSet.Name = "RateSet";
             this.RateSet.Size = new System.Drawing.Size(102, 30);
@@ -317,17 +332,17 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(12, 116);
+            this.label21.Location = new System.Drawing.Point(52, 116);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(81, 23);
+            this.label21.Size = new System.Drawing.Size(109, 23);
             this.label21.TabIndex = 95;
-            this.label21.Text = "Rate Set";
+            this.label21.Text = "Target Rate";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(12, 208);
+            this.label3.Location = new System.Drawing.Point(52, 208);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 23);
             this.label3.TabIndex = 94;
@@ -341,7 +356,7 @@
             this.ValveType.Items.AddRange(new object[] {
             "Standard",
             "Fast Close"});
-            this.ValveType.Location = new System.Drawing.Point(241, 204);
+            this.ValveType.Location = new System.Drawing.Point(281, 204);
             this.ValveType.Name = "ValveType";
             this.ValveType.Size = new System.Drawing.Size(161, 31);
             this.ValveType.TabIndex = 82;
@@ -359,7 +374,7 @@
             this.tabControl1.Location = new System.Drawing.Point(14, 10);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(420, 478);
+            this.tabControl1.Size = new System.Drawing.Size(500, 478);
             this.tabControl1.TabIndex = 122;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -387,7 +402,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 35);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(412, 439);
+            this.tabPage1.Size = new System.Drawing.Size(492, 439);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main";
             // 
@@ -395,90 +410,34 @@
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage2.Controls.Add(this.tbVCNdescription);
-            this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Location = new System.Drawing.Point(4, 35);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(412, 439);
+            this.tabPage2.Size = new System.Drawing.Size(492, 439);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "VCN";
             // 
             // tbVCNdescription
             // 
             this.tbVCNdescription.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbVCNdescription.Location = new System.Drawing.Point(219, 17);
+            this.tbVCNdescription.Location = new System.Drawing.Point(6, 207);
             this.tbVCNdescription.MaxLength = 8;
             this.tbVCNdescription.Multiline = true;
             this.tbVCNdescription.Name = "tbVCNdescription";
             this.tbVCNdescription.ReadOnly = true;
-            this.tbVCNdescription.Size = new System.Drawing.Size(187, 416);
+            this.tbVCNdescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbVCNdescription.Size = new System.Drawing.Size(480, 226);
             this.tbVCNdescription.TabIndex = 118;
             this.tbVCNdescription.Text = resources.GetString("tbVCNdescription.Text");
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.rbNone);
-            this.groupBox2.Controls.Add(this.rbFlow);
-            this.groupBox2.Controls.Add(this.rbNano);
-            this.groupBox2.Location = new System.Drawing.Point(5, 323);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox2.Size = new System.Drawing.Size(209, 111);
-            this.groupBox2.TabIndex = 117;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Simulate Flow";
-            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.GroupBoxPaint);
-            // 
-            // rbNone
-            // 
-            this.rbNone.AutoSize = true;
-            this.rbNone.Checked = true;
-            this.rbNone.Location = new System.Drawing.Point(22, 27);
-            this.rbNone.Margin = new System.Windows.Forms.Padding(2);
-            this.rbNone.Name = "rbNone";
-            this.rbNone.Size = new System.Drawing.Size(146, 27);
-            this.rbNone.TabIndex = 118;
-            this.rbNone.TabStop = true;
-            this.rbNone.Tag = "0";
-            this.rbNone.Text = "Simulation Off";
-            this.rbNone.UseVisualStyleBackColor = true;
-            this.rbNone.CheckedChanged += new System.EventHandler(this.RadioButtonChanged);
-            // 
-            // rbFlow
-            // 
-            this.rbFlow.AutoSize = true;
-            this.rbFlow.Location = new System.Drawing.Point(22, 77);
-            this.rbFlow.Margin = new System.Windows.Forms.Padding(2);
-            this.rbFlow.Name = "rbFlow";
-            this.rbFlow.Size = new System.Drawing.Size(114, 27);
-            this.rbFlow.TabIndex = 117;
-            this.rbFlow.Tag = "2";
-            this.rbFlow.Text = "Real Nano";
-            this.rbFlow.UseVisualStyleBackColor = true;
-            this.rbFlow.CheckedChanged += new System.EventHandler(this.RadioButtonChanged);
-            // 
-            // rbNano
-            // 
-            this.rbNano.AutoSize = true;
-            this.rbNano.Location = new System.Drawing.Point(22, 52);
-            this.rbNano.Margin = new System.Windows.Forms.Padding(2);
-            this.rbNano.Name = "rbNano";
-            this.rbNano.Size = new System.Drawing.Size(131, 27);
-            this.rbNano.TabIndex = 116;
-            this.rbNano.Tag = "1";
-            this.rbNano.Text = "Virtual Nano";
-            this.rbNano.UseVisualStyleBackColor = true;
-            this.rbNano.CheckedChanged += new System.EventHandler(this.RadioButtonChanged);
-            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.butLoadDefaults);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.tbMinPWM);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.tbMaxPWM);
-            this.groupBox1.Controls.Add(this.butLoadDefaults);
             this.groupBox1.Controls.Add(this.tbVCN);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label5);
@@ -489,17 +448,28 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(209, 314);
+            this.groupBox1.Size = new System.Drawing.Size(482, 197);
             this.groupBox1.TabIndex = 116;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Cal Values";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.GroupBoxPaint);
             // 
+            // butLoadDefaults
+            // 
+            this.butLoadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butLoadDefaults.Location = new System.Drawing.Point(279, 111);
+            this.butLoadDefaults.Name = "butLoadDefaults";
+            this.butLoadDefaults.Size = new System.Drawing.Size(100, 72);
+            this.butLoadDefaults.TabIndex = 129;
+            this.butLoadDefaults.Text = "Load Defaults";
+            this.butLoadDefaults.UseVisualStyleBackColor = true;
+            this.butLoadDefaults.Click += new System.EventHandler(this.butLoadDefaults_Click);
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(20, 192);
+            this.label8.Location = new System.Drawing.Point(253, 69);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(88, 23);
             this.label8.TabIndex = 128;
@@ -508,7 +478,7 @@
             // tbMinPWM
             // 
             this.tbMinPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinPWM.Location = new System.Drawing.Point(129, 188);
+            this.tbMinPWM.Location = new System.Drawing.Point(362, 65);
             this.tbMinPWM.MaxLength = 8;
             this.tbMinPWM.Name = "tbMinPWM";
             this.tbMinPWM.Size = new System.Drawing.Size(64, 30);
@@ -521,7 +491,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(20, 153);
+            this.label1.Location = new System.Drawing.Point(253, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(92, 23);
             this.label1.TabIndex = 126;
@@ -530,7 +500,7 @@
             // tbMaxPWM
             // 
             this.tbMaxPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxPWM.Location = new System.Drawing.Point(129, 149);
+            this.tbMaxPWM.Location = new System.Drawing.Point(362, 26);
             this.tbMaxPWM.MaxLength = 8;
             this.tbMaxPWM.Name = "tbMaxPWM";
             this.tbMaxPWM.Size = new System.Drawing.Size(64, 30);
@@ -539,21 +509,10 @@
             this.tbMaxPWM.TextChanged += new System.EventHandler(this.tbMaxPWM_TextChanged);
             this.tbMaxPWM.Enter += new System.EventHandler(this.tbMaxPWM_Enter);
             // 
-            // butLoadDefaults
-            // 
-            this.butLoadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butLoadDefaults.Location = new System.Drawing.Point(53, 224);
-            this.butLoadDefaults.Name = "butLoadDefaults";
-            this.butLoadDefaults.Size = new System.Drawing.Size(100, 72);
-            this.butLoadDefaults.TabIndex = 124;
-            this.butLoadDefaults.Text = "Load Defaults";
-            this.butLoadDefaults.UseVisualStyleBackColor = true;
-            this.butLoadDefaults.Click += new System.EventHandler(this.butLoadDefaults_Click);
-            // 
             // tbVCN
             // 
             this.tbVCN.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbVCN.Location = new System.Drawing.Point(129, 32);
+            this.tbVCN.Location = new System.Drawing.Point(173, 29);
             this.tbVCN.MaxLength = 8;
             this.tbVCN.Name = "tbVCN";
             this.tbVCN.Size = new System.Drawing.Size(64, 30);
@@ -567,7 +526,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(20, 36);
+            this.label2.Location = new System.Drawing.Point(50, 33);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(45, 23);
             this.label2.TabIndex = 118;
@@ -577,7 +536,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(20, 75);
+            this.label5.Location = new System.Drawing.Point(50, 95);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(100, 23);
             this.label5.TabIndex = 119;
@@ -586,7 +545,7 @@
             // tbSend
             // 
             this.tbSend.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSend.Location = new System.Drawing.Point(129, 71);
+            this.tbSend.Location = new System.Drawing.Point(173, 91);
             this.tbSend.MaxLength = 8;
             this.tbSend.Name = "tbSend";
             this.tbSend.Size = new System.Drawing.Size(64, 30);
@@ -601,7 +560,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(20, 114);
+            this.label6.Location = new System.Drawing.Point(50, 157);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(94, 23);
             this.label6.TabIndex = 120;
@@ -610,7 +569,7 @@
             // tbWait
             // 
             this.tbWait.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWait.Location = new System.Drawing.Point(129, 110);
+            this.tbWait.Location = new System.Drawing.Point(173, 153);
             this.tbWait.MaxLength = 8;
             this.tbWait.Name = "tbWait";
             this.tbWait.Size = new System.Drawing.Size(64, 30);
@@ -624,61 +583,196 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage3.Controls.Add(this.lblCurrentBaud);
-            this.tabPage3.Controls.Add(this.cboxBaud);
-            this.tabPage3.Controls.Add(this.lbArduinoConnected);
+            this.tabPage3.Controls.Add(this.label35);
+            this.tabPage3.Controls.Add(this.lbPort3);
+            this.tabPage3.Controls.Add(this.cbBaud3);
+            this.tabPage3.Controls.Add(this.btnPort3);
+            this.tabPage3.Controls.Add(this.cbPort3);
+            this.tabPage3.Controls.Add(this.groupBox2);
+            this.tabPage3.Controls.Add(this.lbPort2);
+            this.tabPage3.Controls.Add(this.cbBaud2);
+            this.tabPage3.Controls.Add(this.btnPort2);
             this.tabPage3.Controls.Add(this.btnRescan);
-            this.tabPage3.Controls.Add(this.btnOpenSerialArduino);
-            this.tabPage3.Controls.Add(this.btnCloseSerialArduino);
-            this.tabPage3.Controls.Add(this.cboxArdPort);
+            this.tabPage3.Controls.Add(this.cbPort2);
+            this.tabPage3.Controls.Add(this.lbPort1);
+            this.tabPage3.Controls.Add(this.cbBaud1);
+            this.tabPage3.Controls.Add(this.btnPort1);
+            this.tabPage3.Controls.Add(this.cbPort1);
+            this.tabPage3.Controls.Add(this.label10);
+            this.tabPage3.Controls.Add(this.label9);
+            this.tabPage3.Controls.Add(this.lbPort0);
+            this.tabPage3.Controls.Add(this.label7);
+            this.tabPage3.Controls.Add(this.lblCurrentBaud);
+            this.tabPage3.Controls.Add(this.cbBaud0);
+            this.tabPage3.Controls.Add(this.btnPort0);
+            this.tabPage3.Controls.Add(this.cbPort0);
             this.tabPage3.Controls.Add(this.lblCurrentArduinoPort);
             this.tabPage3.Location = new System.Drawing.Point(4, 35);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(412, 439);
+            this.tabPage3.Size = new System.Drawing.Size(492, 439);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Serial";
+            this.tabPage3.Text = "Ports";
             // 
-            // lblCurrentBaud
+            // label35
             // 
-            this.lblCurrentBaud.AutoSize = true;
-            this.lblCurrentBaud.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentBaud.Location = new System.Drawing.Point(79, 211);
-            this.lblCurrentBaud.Name = "lblCurrentBaud";
-            this.lblCurrentBaud.Size = new System.Drawing.Size(53, 23);
-            this.lblCurrentBaud.TabIndex = 74;
-            this.lblCurrentBaud.Text = "Baud";
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(14, 170);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(20, 23);
+            this.label35.TabIndex = 123;
+            this.label35.Text = "4";
             // 
-            // cboxBaud
+            // lbPort3
             // 
-            this.cboxBaud.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.cboxBaud.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboxBaud.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
-            this.cboxBaud.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.cboxBaud.FormattingEnabled = true;
-            this.cboxBaud.Items.AddRange(new object[] {
+            this.lbPort3.BackColor = System.Drawing.Color.Red;
+            this.lbPort3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbPort3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPort3.Location = new System.Drawing.Point(439, 163);
+            this.lbPort3.Name = "lbPort3";
+            this.lbPort3.Size = new System.Drawing.Size(41, 37);
+            this.lbPort3.TabIndex = 121;
+            this.lbPort3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // cbBaud3
+            // 
+            this.cbBaud3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.cbBaud3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBaud3.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
+            this.cbBaud3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.cbBaud3.FormattingEnabled = true;
+            this.cbBaud3.Items.AddRange(new object[] {
             "4800",
             "9600",
             "19200",
             "38400",
             "57600",
             "115200"});
-            this.cboxBaud.Location = new System.Drawing.Point(156, 203);
-            this.cboxBaud.Name = "cboxBaud";
-            this.cboxBaud.Size = new System.Drawing.Size(127, 37);
-            this.cboxBaud.TabIndex = 73;
-            this.cboxBaud.SelectedIndexChanged += new System.EventHandler(this.cboxBaud_SelectedIndexChanged);
+            this.cbBaud3.Location = new System.Drawing.Point(306, 163);
+            this.cbBaud3.Name = "cbBaud3";
+            this.cbBaud3.Size = new System.Drawing.Size(127, 37);
+            this.cbBaud3.TabIndex = 122;
+            this.cbBaud3.SelectedIndexChanged += new System.EventHandler(this.cboxBaud_SelectedIndexChanged);
             // 
-            // lbArduinoConnected
+            // btnPort3
             // 
-            this.lbArduinoConnected.BackColor = System.Drawing.Color.Red;
-            this.lbArduinoConnected.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbArduinoConnected.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbArduinoConnected.Location = new System.Drawing.Point(12, 409);
-            this.lbArduinoConnected.Name = "lbArduinoConnected";
-            this.lbArduinoConnected.Size = new System.Drawing.Size(388, 23);
-            this.lbArduinoConnected.TabIndex = 72;
-            this.lbArduinoConnected.Text = "Port Disconnected";
-            this.lbArduinoConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnPort3.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnPort3.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnPort3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPort3.Location = new System.Drawing.Point(40, 163);
+            this.btnPort3.Name = "btnPort3";
+            this.btnPort3.Size = new System.Drawing.Size(127, 37);
+            this.btnPort3.TabIndex = 120;
+            this.btnPort3.Text = "Connect";
+            this.btnPort3.UseVisualStyleBackColor = false;
+            this.btnPort3.Click += new System.EventHandler(this.PortBtnClick);
+            // 
+            // cbPort3
+            // 
+            this.cbPort3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPort3.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
+            this.cbPort3.FormattingEnabled = true;
+            this.cbPort3.Location = new System.Drawing.Point(173, 163);
+            this.cbPort3.Name = "cbPort3";
+            this.cbPort3.Size = new System.Drawing.Size(127, 37);
+            this.cbPort3.TabIndex = 119;
+            this.cbPort3.SelectedIndexChanged += new System.EventHandler(this.Port_SelectedIndexChanged);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.rbNone);
+            this.groupBox2.Controls.Add(this.rbFlow);
+            this.groupBox2.Controls.Add(this.rbNano);
+            this.groupBox2.Location = new System.Drawing.Point(143, 305);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Size = new System.Drawing.Size(189, 111);
+            this.groupBox2.TabIndex = 118;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Simulate Flow";
+            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
+            // 
+            // rbNone
+            // 
+            this.rbNone.AutoSize = true;
+            this.rbNone.Checked = true;
+            this.rbNone.Location = new System.Drawing.Point(22, 27);
+            this.rbNone.Margin = new System.Windows.Forms.Padding(2);
+            this.rbNone.Name = "rbNone";
+            this.rbNone.Size = new System.Drawing.Size(146, 27);
+            this.rbNone.TabIndex = 118;
+            this.rbNone.TabStop = true;
+            this.rbNone.Tag = "0";
+            this.rbNone.Text = "Simulation Off";
+            this.rbNone.UseVisualStyleBackColor = true;
+            // 
+            // rbFlow
+            // 
+            this.rbFlow.AutoSize = true;
+            this.rbFlow.Location = new System.Drawing.Point(22, 77);
+            this.rbFlow.Margin = new System.Windows.Forms.Padding(2);
+            this.rbFlow.Name = "rbFlow";
+            this.rbFlow.Size = new System.Drawing.Size(114, 27);
+            this.rbFlow.TabIndex = 117;
+            this.rbFlow.Tag = "2";
+            this.rbFlow.Text = "Real Nano";
+            this.rbFlow.UseVisualStyleBackColor = true;
+            // 
+            // rbNano
+            // 
+            this.rbNano.AutoSize = true;
+            this.rbNano.Location = new System.Drawing.Point(22, 52);
+            this.rbNano.Margin = new System.Windows.Forms.Padding(2);
+            this.rbNano.Name = "rbNano";
+            this.rbNano.Size = new System.Drawing.Size(131, 27);
+            this.rbNano.TabIndex = 116;
+            this.rbNano.Tag = "1";
+            this.rbNano.Text = "Virtual Nano";
+            this.rbNano.UseVisualStyleBackColor = true;
+            // 
+            // lbPort2
+            // 
+            this.lbPort2.BackColor = System.Drawing.Color.Red;
+            this.lbPort2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbPort2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPort2.Location = new System.Drawing.Point(439, 120);
+            this.lbPort2.Name = "lbPort2";
+            this.lbPort2.Size = new System.Drawing.Size(41, 37);
+            this.lbPort2.TabIndex = 84;
+            this.lbPort2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // cbBaud2
+            // 
+            this.cbBaud2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.cbBaud2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBaud2.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
+            this.cbBaud2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.cbBaud2.FormattingEnabled = true;
+            this.cbBaud2.Items.AddRange(new object[] {
+            "4800",
+            "9600",
+            "19200",
+            "38400",
+            "57600",
+            "115200"});
+            this.cbBaud2.Location = new System.Drawing.Point(306, 120);
+            this.cbBaud2.Name = "cbBaud2";
+            this.cbBaud2.Size = new System.Drawing.Size(127, 37);
+            this.cbBaud2.TabIndex = 85;
+            this.cbBaud2.SelectedIndexChanged += new System.EventHandler(this.cboxBaud_SelectedIndexChanged);
+            // 
+            // btnPort2
+            // 
+            this.btnPort2.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnPort2.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnPort2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPort2.Location = new System.Drawing.Point(40, 120);
+            this.btnPort2.Name = "btnPort2";
+            this.btnPort2.Size = new System.Drawing.Size(127, 37);
+            this.btnPort2.TabIndex = 83;
+            this.btnPort2.Text = "Connect";
+            this.btnPort2.UseVisualStyleBackColor = false;
+            this.btnPort2.Click += new System.EventHandler(this.PortBtnClick);
             // 
             // btnRescan
             // 
@@ -686,60 +780,181 @@
             this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnRescan.Location = new System.Drawing.Point(12, 321);
+            this.btnRescan.Location = new System.Drawing.Point(173, 206);
             this.btnRescan.Name = "btnRescan";
-            this.btnRescan.Size = new System.Drawing.Size(100, 72);
+            this.btnRescan.Size = new System.Drawing.Size(127, 72);
             this.btnRescan.TabIndex = 69;
             this.btnRescan.Text = "Rescan Ports";
             this.btnRescan.UseVisualStyleBackColor = false;
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             // 
-            // btnOpenSerialArduino
+            // cbPort2
             // 
-            this.btnOpenSerialArduino.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.btnOpenSerialArduino.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnOpenSerialArduino.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOpenSerialArduino.Location = new System.Drawing.Point(300, 321);
-            this.btnOpenSerialArduino.Name = "btnOpenSerialArduino";
-            this.btnOpenSerialArduino.Size = new System.Drawing.Size(100, 72);
-            this.btnOpenSerialArduino.TabIndex = 68;
-            this.btnOpenSerialArduino.Text = "Connect";
-            this.btnOpenSerialArduino.UseVisualStyleBackColor = false;
-            this.btnOpenSerialArduino.Click += new System.EventHandler(this.btnOpenSerialArduino_Click);
+            this.cbPort2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPort2.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
+            this.cbPort2.FormattingEnabled = true;
+            this.cbPort2.Location = new System.Drawing.Point(173, 120);
+            this.cbPort2.Name = "cbPort2";
+            this.cbPort2.Size = new System.Drawing.Size(127, 37);
+            this.cbPort2.TabIndex = 82;
+            this.cbPort2.SelectedIndexChanged += new System.EventHandler(this.Port_SelectedIndexChanged);
             // 
-            // btnCloseSerialArduino
+            // lbPort1
             // 
-            this.btnCloseSerialArduino.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.btnCloseSerialArduino.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnCloseSerialArduino.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCloseSerialArduino.Location = new System.Drawing.Point(156, 321);
-            this.btnCloseSerialArduino.Name = "btnCloseSerialArduino";
-            this.btnCloseSerialArduino.Size = new System.Drawing.Size(100, 72);
-            this.btnCloseSerialArduino.TabIndex = 67;
-            this.btnCloseSerialArduino.Text = "Disconnect";
-            this.btnCloseSerialArduino.UseVisualStyleBackColor = false;
-            this.btnCloseSerialArduino.Click += new System.EventHandler(this.btnCloseSerialArduino_Click);
+            this.lbPort1.BackColor = System.Drawing.Color.Red;
+            this.lbPort1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbPort1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPort1.Location = new System.Drawing.Point(439, 77);
+            this.lbPort1.Name = "lbPort1";
+            this.lbPort1.Size = new System.Drawing.Size(41, 37);
+            this.lbPort1.TabIndex = 80;
+            this.lbPort1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // cboxArdPort
+            // cbBaud1
             // 
-            this.cboxArdPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboxArdPort.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
-            this.cboxArdPort.FormattingEnabled = true;
-            this.cboxArdPort.Location = new System.Drawing.Point(156, 139);
-            this.cboxArdPort.Name = "cboxArdPort";
-            this.cboxArdPort.Size = new System.Drawing.Size(127, 37);
-            this.cboxArdPort.TabIndex = 66;
-            this.cboxArdPort.SelectedIndexChanged += new System.EventHandler(this.cboxArdPort_SelectedIndexChanged);
+            this.cbBaud1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.cbBaud1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBaud1.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
+            this.cbBaud1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.cbBaud1.FormattingEnabled = true;
+            this.cbBaud1.Items.AddRange(new object[] {
+            "4800",
+            "9600",
+            "19200",
+            "38400",
+            "57600",
+            "115200"});
+            this.cbBaud1.Location = new System.Drawing.Point(306, 77);
+            this.cbBaud1.Name = "cbBaud1";
+            this.cbBaud1.Size = new System.Drawing.Size(127, 37);
+            this.cbBaud1.TabIndex = 81;
+            this.cbBaud1.SelectedIndexChanged += new System.EventHandler(this.cboxBaud_SelectedIndexChanged);
+            // 
+            // btnPort1
+            // 
+            this.btnPort1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnPort1.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnPort1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPort1.Location = new System.Drawing.Point(40, 77);
+            this.btnPort1.Name = "btnPort1";
+            this.btnPort1.Size = new System.Drawing.Size(127, 37);
+            this.btnPort1.TabIndex = 79;
+            this.btnPort1.Text = "Connect";
+            this.btnPort1.UseVisualStyleBackColor = false;
+            this.btnPort1.Click += new System.EventHandler(this.PortBtnClick);
+            // 
+            // cbPort1
+            // 
+            this.cbPort1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPort1.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
+            this.cbPort1.FormattingEnabled = true;
+            this.cbPort1.Location = new System.Drawing.Point(173, 77);
+            this.cbPort1.Name = "cbPort1";
+            this.cbPort1.Size = new System.Drawing.Size(127, 37);
+            this.cbPort1.TabIndex = 78;
+            this.cbPort1.SelectedIndexChanged += new System.EventHandler(this.Port_SelectedIndexChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(14, 128);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(20, 23);
+            this.label10.TabIndex = 77;
+            this.label10.Text = "3";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(14, 84);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(20, 23);
+            this.label9.TabIndex = 76;
+            this.label9.Text = "2";
+            // 
+            // lbPort0
+            // 
+            this.lbPort0.BackColor = System.Drawing.Color.Red;
+            this.lbPort0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbPort0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPort0.Location = new System.Drawing.Point(439, 34);
+            this.lbPort0.Name = "lbPort0";
+            this.lbPort0.Size = new System.Drawing.Size(41, 37);
+            this.lbPort0.TabIndex = 72;
+            this.lbPort0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(14, 42);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(20, 23);
+            this.label7.TabIndex = 75;
+            this.label7.Text = "1";
+            // 
+            // lblCurrentBaud
+            // 
+            this.lblCurrentBaud.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurrentBaud.Location = new System.Drawing.Point(306, 8);
+            this.lblCurrentBaud.Name = "lblCurrentBaud";
+            this.lblCurrentBaud.Size = new System.Drawing.Size(127, 23);
+            this.lblCurrentBaud.TabIndex = 74;
+            this.lblCurrentBaud.Text = "Baud";
+            this.lblCurrentBaud.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // cbBaud0
+            // 
+            this.cbBaud0.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.cbBaud0.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBaud0.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
+            this.cbBaud0.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.cbBaud0.FormattingEnabled = true;
+            this.cbBaud0.Items.AddRange(new object[] {
+            "4800",
+            "9600",
+            "19200",
+            "38400",
+            "57600",
+            "115200"});
+            this.cbBaud0.Location = new System.Drawing.Point(306, 34);
+            this.cbBaud0.Name = "cbBaud0";
+            this.cbBaud0.Size = new System.Drawing.Size(127, 37);
+            this.cbBaud0.TabIndex = 73;
+            this.cbBaud0.SelectedIndexChanged += new System.EventHandler(this.cboxBaud_SelectedIndexChanged);
+            // 
+            // btnPort0
+            // 
+            this.btnPort0.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnPort0.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnPort0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPort0.Location = new System.Drawing.Point(40, 34);
+            this.btnPort0.Name = "btnPort0";
+            this.btnPort0.Size = new System.Drawing.Size(127, 37);
+            this.btnPort0.TabIndex = 68;
+            this.btnPort0.Text = "Connect";
+            this.btnPort0.UseVisualStyleBackColor = false;
+            this.btnPort0.Click += new System.EventHandler(this.PortBtnClick);
+            // 
+            // cbPort0
+            // 
+            this.cbPort0.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPort0.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold);
+            this.cbPort0.FormattingEnabled = true;
+            this.cbPort0.Location = new System.Drawing.Point(173, 34);
+            this.cbPort0.Name = "cbPort0";
+            this.cbPort0.Size = new System.Drawing.Size(127, 37);
+            this.cbPort0.TabIndex = 66;
+            this.cbPort0.SelectedIndexChanged += new System.EventHandler(this.Port_SelectedIndexChanged);
             // 
             // lblCurrentArduinoPort
             // 
-            this.lblCurrentArduinoPort.AutoSize = true;
             this.lblCurrentArduinoPort.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentArduinoPort.Location = new System.Drawing.Point(79, 147);
+            this.lblCurrentArduinoPort.Location = new System.Drawing.Point(173, 8);
             this.lblCurrentArduinoPort.Name = "lblCurrentArduinoPort";
-            this.lblCurrentArduinoPort.Size = new System.Drawing.Size(43, 23);
+            this.lblCurrentArduinoPort.Size = new System.Drawing.Size(127, 23);
             this.lblCurrentArduinoPort.TabIndex = 65;
             this.lblCurrentArduinoPort.Text = "Port";
+            this.lblCurrentArduinoPort.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // tabPage5
             // 
@@ -761,7 +976,7 @@
             this.tabPage5.Controls.Add(this.lbWorkRate);
             this.tabPage5.Location = new System.Drawing.Point(4, 35);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(412, 439);
+            this.tabPage5.Size = new System.Drawing.Size(492, 439);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Diagnostics";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -770,7 +985,7 @@
             // 
             this.lbRateAppliedData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbRateAppliedData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAppliedData.Location = new System.Drawing.Point(228, 178);
+            this.lbRateAppliedData.Location = new System.Drawing.Point(253, 178);
             this.lbRateAppliedData.Name = "lbRateAppliedData";
             this.lbRateAppliedData.Size = new System.Drawing.Size(130, 25);
             this.lbRateAppliedData.TabIndex = 149;
@@ -781,7 +996,7 @@
             // 
             this.lbRateApplied.AutoSize = true;
             this.lbRateApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateApplied.Location = new System.Drawing.Point(55, 179);
+            this.lbRateApplied.Location = new System.Drawing.Point(80, 179);
             this.lbRateApplied.Name = "lbRateApplied";
             this.lbRateApplied.Size = new System.Drawing.Size(115, 23);
             this.lbRateApplied.TabIndex = 150;
@@ -791,7 +1006,7 @@
             // 
             this.lbRateSetData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbRateSetData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateSetData.Location = new System.Drawing.Point(228, 137);
+            this.lbRateSetData.Location = new System.Drawing.Point(253, 137);
             this.lbRateSetData.Name = "lbRateSetData";
             this.lbRateSetData.Size = new System.Drawing.Size(130, 25);
             this.lbRateSetData.TabIndex = 147;
@@ -802,17 +1017,17 @@
             // 
             this.lbRateSet.AutoSize = true;
             this.lbRateSet.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateSet.Location = new System.Drawing.Point(55, 138);
+            this.lbRateSet.Location = new System.Drawing.Point(80, 138);
             this.lbRateSet.Name = "lbRateSet";
-            this.lbRateSet.Size = new System.Drawing.Size(80, 23);
+            this.lbRateSet.Size = new System.Drawing.Size(108, 23);
             this.lbRateSet.TabIndex = 148;
-            this.lbRateSet.Text = "UPM Set";
+            this.lbRateSet.Text = "UPM Target";
             // 
             // lbSpeedData
             // 
             this.lbSpeedData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbSpeedData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSpeedData.Location = new System.Drawing.Point(228, 55);
+            this.lbSpeedData.Location = new System.Drawing.Point(253, 55);
             this.lbSpeedData.Name = "lbSpeedData";
             this.lbSpeedData.Size = new System.Drawing.Size(130, 25);
             this.lbSpeedData.TabIndex = 145;
@@ -822,7 +1037,7 @@
             // 
             this.lbSpeed.AutoSize = true;
             this.lbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSpeed.Location = new System.Drawing.Point(55, 56);
+            this.lbSpeed.Location = new System.Drawing.Point(80, 56);
             this.lbSpeed.Name = "lbSpeed";
             this.lbSpeed.Size = new System.Drawing.Size(63, 23);
             this.lbSpeed.TabIndex = 146;
@@ -832,7 +1047,7 @@
             // 
             this.lbSecLoData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbSecLoData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSecLoData.Location = new System.Drawing.Point(228, 342);
+            this.lbSecLoData.Location = new System.Drawing.Point(253, 342);
             this.lbSecLoData.Name = "lbSecLoData";
             this.lbSecLoData.Size = new System.Drawing.Size(130, 25);
             this.lbSecLoData.TabIndex = 143;
@@ -842,7 +1057,7 @@
             // 
             this.lbSecLo.AutoSize = true;
             this.lbSecLo.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSecLo.Location = new System.Drawing.Point(55, 343);
+            this.lbSecLo.Location = new System.Drawing.Point(80, 343);
             this.lbSecLo.Name = "lbSecLo";
             this.lbSecLo.Size = new System.Drawing.Size(138, 23);
             this.lbSecLo.TabIndex = 144;
@@ -852,7 +1067,7 @@
             // 
             this.lbSecHiData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbSecHiData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSecHiData.Location = new System.Drawing.Point(228, 301);
+            this.lbSecHiData.Location = new System.Drawing.Point(253, 301);
             this.lbSecHiData.Name = "lbSecHiData";
             this.lbSecHiData.Size = new System.Drawing.Size(130, 25);
             this.lbSecHiData.TabIndex = 141;
@@ -862,7 +1077,7 @@
             // 
             this.lbSectHi.AutoSize = true;
             this.lbSectHi.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSectHi.Location = new System.Drawing.Point(55, 302);
+            this.lbSectHi.Location = new System.Drawing.Point(80, 302);
             this.lbSectHi.Name = "lbSectHi";
             this.lbSectHi.Size = new System.Drawing.Size(136, 23);
             this.lbSectHi.TabIndex = 142;
@@ -872,7 +1087,7 @@
             // 
             this.lbWidthData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbWidthData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWidthData.Location = new System.Drawing.Point(228, 260);
+            this.lbWidthData.Location = new System.Drawing.Point(253, 260);
             this.lbWidthData.Name = "lbWidthData";
             this.lbWidthData.Size = new System.Drawing.Size(130, 25);
             this.lbWidthData.TabIndex = 139;
@@ -882,7 +1097,7 @@
             // 
             this.lbWidth.AutoSize = true;
             this.lbWidth.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWidth.Location = new System.Drawing.Point(55, 261);
+            this.lbWidth.Location = new System.Drawing.Point(80, 261);
             this.lbWidth.Name = "lbWidth";
             this.lbWidth.Size = new System.Drawing.Size(166, 23);
             this.lbWidth.TabIndex = 140;
@@ -892,7 +1107,7 @@
             // 
             this.lbPWMdata.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbPWMdata.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPWMdata.Location = new System.Drawing.Point(228, 219);
+            this.lbPWMdata.Location = new System.Drawing.Point(253, 219);
             this.lbPWMdata.Name = "lbPWMdata";
             this.lbPWMdata.Size = new System.Drawing.Size(130, 25);
             this.lbPWMdata.TabIndex = 137;
@@ -902,7 +1117,7 @@
             // 
             this.lbPWM.AutoSize = true;
             this.lbPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPWM.Location = new System.Drawing.Point(55, 220);
+            this.lbPWM.Location = new System.Drawing.Point(80, 220);
             this.lbPWM.Name = "lbPWM";
             this.lbPWM.Size = new System.Drawing.Size(52, 23);
             this.lbPWM.TabIndex = 138;
@@ -912,7 +1127,7 @@
             // 
             this.lbWorkRateData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbWorkRateData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWorkRateData.Location = new System.Drawing.Point(228, 96);
+            this.lbWorkRateData.Location = new System.Drawing.Point(253, 96);
             this.lbWorkRateData.Name = "lbWorkRateData";
             this.lbWorkRateData.Size = new System.Drawing.Size(130, 25);
             this.lbWorkRateData.TabIndex = 133;
@@ -922,7 +1137,7 @@
             // 
             this.lbWorkRate.AutoSize = true;
             this.lbWorkRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWorkRate.Location = new System.Drawing.Point(55, 97);
+            this.lbWorkRate.Location = new System.Drawing.Point(80, 97);
             this.lbWorkRate.Name = "lbWorkRate";
             this.lbWorkRate.Size = new System.Drawing.Size(108, 23);
             this.lbWorkRate.TabIndex = 134;
@@ -942,7 +1157,7 @@
             this.tabPage4.Controls.Add(this.btnDay);
             this.tabPage4.Location = new System.Drawing.Point(4, 35);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(412, 439);
+            this.tabPage4.Size = new System.Drawing.Size(492, 439);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "About";
             // 
@@ -959,7 +1174,7 @@
             this.groupBox3.Controls.Add(this.label19);
             this.groupBox3.Controls.Add(this.label18);
             this.groupBox3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(46, 4);
+            this.groupBox3.Location = new System.Drawing.Point(82, 4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(315, 168);
             this.groupBox3.TabIndex = 123;
@@ -1083,12 +1298,12 @@
             this.groupBox4.Controls.Add(this.label24);
             this.groupBox4.Controls.Add(this.label42);
             this.groupBox4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox4.Location = new System.Drawing.Point(46, 178);
+            this.groupBox4.Location = new System.Drawing.Point(82, 178);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(316, 168);
+            this.groupBox4.Size = new System.Drawing.Size(316, 177);
             this.groupBox4.TabIndex = 124;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "LookBack UDP";
+            this.groupBox4.Text = "LoopBack UDP";
             this.groupBox4.Paint += new System.Windows.Forms.PaintEventHandler(this.GroupBoxPaint);
             // 
             // label33
@@ -1096,7 +1311,7 @@
             this.label33.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label33.Location = new System.Drawing.Point(14, 133);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(288, 23);
+            this.label33.Size = new System.Drawing.Size(288, 41);
             this.label33.TabIndex = 144;
             this.label33.Text = "AgOpenGPS UDP must be on to receive.";
             this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1240,7 +1455,7 @@
             // lbVersion
             // 
             this.lbVersion.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVersion.Location = new System.Drawing.Point(62, 410);
+            this.lbVersion.Location = new System.Drawing.Point(96, 412);
             this.lbVersion.Name = "lbVersion";
             this.lbVersion.Size = new System.Drawing.Size(278, 18);
             this.lbVersion.TabIndex = 121;
@@ -1253,7 +1468,7 @@
             this.btnDay.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnDay.Image = ((System.Drawing.Image)(resources.GetObject("btnDay.Image")));
             this.btnDay.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnDay.Location = new System.Drawing.Point(63, 352);
+            this.btnDay.Location = new System.Drawing.Point(99, 361);
             this.btnDay.Name = "btnDay";
             this.btnDay.Size = new System.Drawing.Size(278, 48);
             this.btnDay.TabIndex = 123;
@@ -1274,9 +1489,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(226, 494);
+            this.btnCancel.Location = new System.Drawing.Point(270, 490);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(100, 72);
+            this.btnCancel.Size = new System.Drawing.Size(115, 72);
             this.btnCancel.TabIndex = 92;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -1289,9 +1504,9 @@
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(334, 494);
+            this.bntOK.Location = new System.Drawing.Point(398, 490);
             this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(100, 72);
+            this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 93;
             this.bntOK.Text = "Close";
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -1315,9 +1530,9 @@
             this.btnSaveSettings.Image = global::RateController.Properties.Resources.close;
             this.btnSaveSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSaveSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnSaveSettings.Location = new System.Drawing.Point(120, 494);
+            this.btnSaveSettings.Location = new System.Drawing.Point(142, 490);
             this.btnSaveSettings.Name = "btnSaveSettings";
-            this.btnSaveSettings.Size = new System.Drawing.Size(100, 72);
+            this.btnSaveSettings.Size = new System.Drawing.Size(115, 72);
             this.btnSaveSettings.TabIndex = 127;
             this.btnSaveSettings.Text = "Save As";
             this.btnSaveSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -1331,9 +1546,9 @@
             this.btnLoadSettings.Image = global::RateController.Properties.Resources.OpenFile;
             this.btnLoadSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnLoadSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnLoadSettings.Location = new System.Drawing.Point(14, 494);
+            this.btnLoadSettings.Location = new System.Drawing.Point(14, 490);
             this.btnLoadSettings.Name = "btnLoadSettings";
-            this.btnLoadSettings.Size = new System.Drawing.Size(100, 72);
+            this.btnLoadSettings.Size = new System.Drawing.Size(115, 72);
             this.btnLoadSettings.TabIndex = 126;
             this.btnLoadSettings.Text = "Load ";
             this.btnLoadSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -1344,7 +1559,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(448, 575);
+            this.ClientSize = new System.Drawing.Size(527, 575);
             this.Controls.Add(this.btnSaveSettings);
             this.Controls.Add(this.btnLoadSettings);
             this.Controls.Add(this.tabControl1);
@@ -1363,12 +1578,12 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
             this.tabPage4.ResumeLayout(false);
@@ -1406,13 +1621,12 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btnRescan;
-        private System.Windows.Forms.Button btnOpenSerialArduino;
-        private System.Windows.Forms.Button btnCloseSerialArduino;
-        private System.Windows.Forms.ComboBox cboxArdPort;
+        private System.Windows.Forms.Button btnPort0;
+        private System.Windows.Forms.ComboBox cbPort0;
         private System.Windows.Forms.Label lblCurrentArduinoPort;
-        private System.Windows.Forms.Label lbArduinoConnected;
+        private System.Windows.Forms.Label lbPort0;
         private System.Windows.Forms.Label lblCurrentBaud;
-        private System.Windows.Forms.ComboBox cboxBaud;
+        private System.Windows.Forms.ComboBox cbBaud0;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.Label label43;
@@ -1438,12 +1652,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.RadioButton rbNone;
-        private System.Windows.Forms.RadioButton rbFlow;
-        private System.Windows.Forms.RadioButton rbNano;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button butLoadDefaults;
         private System.Windows.Forms.TextBox tbVCN;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label5;
@@ -1483,5 +1692,26 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button btnSaveSettings;
         private System.Windows.Forms.Button btnLoadSettings;
+        private System.Windows.Forms.Button butLoadDefaults;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton rbNone;
+        private System.Windows.Forms.RadioButton rbFlow;
+        private System.Windows.Forms.RadioButton rbNano;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label lbPort3;
+        private System.Windows.Forms.ComboBox cbBaud3;
+        private System.Windows.Forms.Button btnPort3;
+        private System.Windows.Forms.ComboBox cbPort3;
+        private System.Windows.Forms.Label lbPort2;
+        private System.Windows.Forms.ComboBox cbBaud2;
+        private System.Windows.Forms.Button btnPort2;
+        private System.Windows.Forms.ComboBox cbPort2;
+        private System.Windows.Forms.Label lbPort1;
+        private System.Windows.Forms.ComboBox cbBaud1;
+        private System.Windows.Forms.Button btnPort1;
+        private System.Windows.Forms.ComboBox cbPort1;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label7;
     }
 }

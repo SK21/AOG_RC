@@ -14,5 +14,8 @@
     <Setting Name="FileName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Default.rcs</Value>
     </Setting>
+    <Setting Name="setF_culture" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

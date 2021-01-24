@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -29,6 +30,12 @@ namespace RateController
         private byte RateLo;
         private int Temp;
         private double cUPM;
+        CRateCals RC;
+
+        public PGN32741(CRateCals CalledFrom)
+        {
+            RC = CalledFrom;
+        }
 
         public double AccumulatedQuantity()
         {
@@ -53,7 +60,9 @@ namespace RateController
 
                 pwmHI = Data[7];
                 pwmLo = Data[8];
-                cPWMsetting = 300.0 - ((pwmHI << 8 | pwmLo) / 10.0);
+                //cPWMsetting = 300.0 - ((pwmHI << 8 | pwmLo) / 10.0);
+                cPWMsetting = RC.mf.Tls.FromTwos16(pwmHI, pwmLo) / 10.0;
+                Debug.Print("Received pwm " + cPWMsetting.ToString());
 
                 Result = true;
             }
@@ -84,7 +93,11 @@ namespace RateController
                         // pwmSetting
                         byte.TryParse(Data[7], out pwmHI);
                         byte.TryParse(Data[8], out pwmLo);
-                        cPWMsetting = 300.0 - ((pwmHI << 8 | pwmLo) / 10.0);
+
+                        //cPWMsetting = 300.0 - ((pwmHI << 8 | pwmLo) / 10.0);
+                        cPWMsetting = RC.mf.Tls.FromTwos16(pwmHI, pwmLo) / 10.0;
+                        Debug.Print("Received pwm " + cPWMsetting.ToString());
+                        Debug.Print("");
 
                         Result = true;
                     }

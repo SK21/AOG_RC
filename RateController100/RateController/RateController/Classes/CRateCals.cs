@@ -13,65 +13,63 @@ namespace RateController
     {
         public readonly FormRateControl mf;
 
-        public bool AogConnected = false;
-
+        public PGN32761 Switches32761;                  //to Rate Controller from arduino, to AOG from Rate Controller
         public PGN32740 AogRec32740 = new PGN32740();
+        private PGN32741 ArdRec32741;
+        private PGN32742 ArdSend32742;                  // to Arduino from Rate Controller
+        private PGN32744 ValveCal32744;                  // to Arduino from Rate Controller
 
+        public bool AogConnected = false;
         public bool ArduinoConnected = false;
         public byte CoverageUnits = 0;
+
         public bool EraseApplied = false;
         public double FlowCal = 0;
         public clsArduino Nano;
+
         public byte QuantityUnits = 0;
         public double RateSet = 0;
-        public PGN32761 Switches32761;                  //to Rate Controller from arduino, to AOG from Rate Controller
-
         public double TankSize = 0;
 
         public byte ValveType = 0;        // 0 standard, 1 fast close
-
         private DateTime AogReceiveTime;
-
-        private PGN32741 ArdRec32741 = new PGN32741();
-
-        private PGN32742 ArdSend32742;                  // to Arduino from Rate Controller
-
         private DateTime ArduinoReceiveTime;
+
         private double Coverage = 0;
-        private string[] CoverageDescriptions = new string[] { "Acre", "Hectare", "Minute", "Hour" };
         private SimType cSimulationType = 0;
         private double CurrentMinutes;
+
         private double CurrentQuantity = 0;
         private double CurrentWidth;
         private double CurrentWorkedArea = 0;
+
         private double HectaresPerMinute = 0;
         private double LastAccQuantity = 0;
         private double LastQuantityDifference = 0;
+
         private DateTime LastTime;
         private double LastWorkedArea = 0;
-
         private bool PauseArea = false;
 
         private DateTime QcheckLast;
         private double QuantityApplied = 0;
-        private string[] QuantityDescriptions = new string[] { "Imp. Gallons", "US Gallons", "Lbs", "Lbs N (NH3)", "Litres", "Kgs", "Kgs N (NH3)" };
         private double Ratio;
+
         private DateTime StartTime;
-
         private double TankRemaining = 0;
-
         private double TotalWorkedArea = 0;
 
-        private PGN32744 ValveCal32744;                  // to Arduino from Rate Controller
+        private string[] CoverageDescriptions = new string[] { "Acre", "Hectare", Lang.lgHour, Lang.lgMinute };
+        private string[] QuantityDescriptions = new string[] { "Imp. Gallons", "US Gallons", "Lbs", "Lbs N (NH3)", "Litres", "Kgs", "Kgs N (NH3)" };
 
         public CRateCals(FormRateControl CallingForm)
         {
             mf = CallingForm;
 
             Switches32761 = new PGN32761(this);
-
             ArdSend32742 = new PGN32742(this);
             ValveCal32744 = new PGN32744(this);
+            ArdRec32741 = new PGN32741(this);
 
             Nano = new clsArduino(this);
 
@@ -82,8 +80,8 @@ namespace RateController
         public byte MaxPWM { get { return ValveCal32744.MaxPWM; } set { ValveCal32744.MaxPWM = value; } }
         public byte MinPWM { get { return ValveCal32744.MinPWM; } set { ValveCal32744.MinPWM = value; } }
         public int SendTime { get { return ValveCal32744.SendTime; } set { ValveCal32744.SendTime = value; } }
-        public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }  // 0 none, 1 virtual nano, 2 real nano
 
+        public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }  // 0 none, 1 virtual nano, 2 real nano
         public int VCN { get { return ValveCal32744.VCN; } set { ValveCal32744.VCN = value; } }
         public int WaitTime { get { return ValveCal32744.WaitTime; } set { ValveCal32744.WaitTime = value; } }
 
@@ -192,9 +190,9 @@ namespace RateController
             }
         }
 
-        public string CurrentTankRemaining()
+        public double CurrentTankRemaining()
         {
-            return TankRemaining.ToString("N0");
+            return TankRemaining;
         }
 
         public void LoadSettings()

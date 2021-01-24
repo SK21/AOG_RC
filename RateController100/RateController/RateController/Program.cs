@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
+using RateController.Properties;
+using System.Threading;
 
 namespace RateController
 {
@@ -14,6 +17,33 @@ namespace RateController
         [STAThread]
         static void Main()
         {
+            ////opening the subkey
+            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AgOpenGPS");
+
+            ////create default keys if not existing
+            if (regKey == null)
+            {
+                RegistryKey Key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\AgOpenGPS");
+
+                //storing the values
+                Key.SetValue("Language", "en");
+                Key.SetValue("Directory", "Default");
+                Key.Close();
+
+                Settings.Default.setF_culture = "en";
+                Settings.Default.Save();
+            }
+            else
+            {
+                Settings.Default.setF_culture = regKey.GetValue("Language").ToString();
+                Settings.Default.Save();
+                regKey.Close();
+            }
+
+            //if (Environment.OSVersion.Version.Major >= 6) SetProcessDPIAware();
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
+            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormRateControl());

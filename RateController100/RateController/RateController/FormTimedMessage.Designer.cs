@@ -73,8 +73,9 @@
             this.Name = "FormTimedMessage";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "RateController Message";
+            this.Text = "RateController";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.FormTimedMessage_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

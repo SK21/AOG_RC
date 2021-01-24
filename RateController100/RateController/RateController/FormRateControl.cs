@@ -9,7 +9,6 @@ namespace RateController
     public partial class FormRateControl : Form
     {
         public CRateCals RC;
-        public SerialComm SER;
         public clsTools Tls;
 
         public UDPComm UDPLoopBack;
@@ -20,34 +19,63 @@ namespace RateController
         public string LoopBackIP = "127.0.0.1";
         public string LoopBackBroadcastIP = "127.0.0.255";
 
+        public SerialComm[] SER = new SerialComm[4];
+
         public FormRateControl()
         {
             InitializeComponent();
+            #region // language
+
+            lbRate.Text = Lang.lgCurrentRate;
+            label1.Text = Lang.lgTargetRate;
+            lbCoverage.Text = Lang.lgCoverage;
+            label2.Text = Lang.lgQuantityApplied;
+            button3.Text = Lang.lgSettings;
+            bntOK.Text = Lang.lgClose;
+            label34.Text = Lang.lgTank_Remaining;
+
+            #endregion // language
+
             Tls = new clsTools(this);
             RC = new CRateCals(this);
-            SER = new SerialComm(this);
 
             UDPLoopBack = new UDPComm(this, 8120, 9999, 1460, LoopBackBroadcastIP); // AOG
             UDPnetwork = new UDPComm(this, 8000, 9999, 1480, "", true);             // arduino
+
+            for (int i=0;i<4;i++)
+            {
+                SER[i] = new SerialComm(this, i);
+            }
         }
 
         public void StartSerial()
         {
-            SER.RCportName = Tls.LoadProperty("RCportName");
-
-            int temp;
-            if (int.TryParse(Tls.LoadProperty("RCportBaud"), out temp))
+            try
             {
-                SER.RCportBaud = temp;
-            }
-            else
-            {
-                SER.RCportBaud = 38400;
-            }
+                for (int i = 0; i < 4; i++)
+                {
+                    SER[i].RCportName = Tls.LoadProperty("RCportName" + i.ToString());
 
-            bool tempB;
-            bool.TryParse(Tls.LoadProperty("RCportSuccessful"), out tempB);
-            if (tempB) SER.OpenRCport();
+                    int tmp;
+                    if (int.TryParse(Tls.LoadProperty("RCportBaud" + i.ToString()), out tmp))
+                    {
+                        SER[i].RCportBaud = tmp;
+                    }
+                    else
+                    {
+                        SER[i].RCportBaud = 38400;
+                    }
+
+                    bool tmp2;
+                    bool.TryParse(Tls.LoadProperty("RCportSuccessful" + i.ToString()), out tmp2);
+                    if (tmp2) SER[i].OpenRCport();
+                }
+            }
+            catch (Exception ex)
+            {
+                Tls.WriteErrorLog("FormRateControl/StartSerial: " + ex.Message);
+                Tls.TimedMessageBox(ex.Message);
+            }
         }
 
         public void UpdateStatus()
@@ -55,45 +83,41 @@ namespace RateController
             lblUnits.Text = RC.Units();
             SetRate.Text = RC.RateSet.ToString("N1");
             AreaDone.Text = RC.CurrentCoverage();
-            TankRemain.Text = RC.CurrentTankRemaining();
+            TankRemain.Text = RC.CurrentTankRemaining().ToString("N0");
             VolApplied.Text = RC.CurrentApplied();
             lbCoverage.Text = RC.CoverageDescription();
 
             switch (RateType)
             {
                 case 1:
-                    lbRate.Text = "Instant Rate..";
+                    lbRate.Text = Lang.lgInstantRate;
                     lbRateAmount.Text = RC.CurrentRate();
                     break;
                 case 2:
-                    lbRate.Text = "Overall Rate..";
+                    lbRate.Text = Lang.lgOverallRate;
                     lbRateAmount.Text = RC.AverageRate();
                     break;
                 default:
-                    lbRate.Text = "Current Rate..";
+                    lbRate.Text = Lang.lgCurrentRate;
                     lbRateAmount.Text = RC.SmoothRate();
                     break;
             }
 
             if (RC.ArduinoConnected)
             {
-                //lbArduinoConnected.Text = "Controller Connected";
                 lbArduinoConnected.BackColor = Color.LightGreen;
             }
             else
             {
-                //lbArduinoConnected.Text = "Controller Disconnected";
                 lbArduinoConnected.BackColor = Color.Red;
             }
 
             if (RC.AogConnected)
             {
-                //lbAogConnected.Text = "AOG Connected";
                 lbAogConnected.BackColor = Color.LightGreen;
             }
             else
             {
-                //lbAogConnected.Text = "AOG Disconnected";
                 lbAogConnected.BackColor = Color.Red;
             }
 
@@ -135,7 +159,7 @@ namespace RateController
 
             if (Tls.PrevInstance())
             {
-                Tls.TimedMessageBox("Already Running!");
+                Tls.TimedMessageBox(Lang.lgAlreadyRunning);
                 this.Close();
             }
 

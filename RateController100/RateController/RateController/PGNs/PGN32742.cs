@@ -100,7 +100,10 @@
             }
             else
             {
-                RC.mf.SER.SendtoRC(Data());
+                for(int i=0;i<4;i++)
+                {
+                    RC.mf.SER[i].SendtoRC(Data());
+                }
                 RC.mf.UDPnetwork.SendUDPMessage(Data());
             }
         }

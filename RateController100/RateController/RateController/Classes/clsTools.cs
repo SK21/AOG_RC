@@ -14,7 +14,7 @@ namespace RateController
         private string cAppName = "RateController";
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "02-Jan-2021";
+        private string cVersionDate = "24-Jan-2021";
         private FormRateControl mf;
 
         public clsTools(FormRateControl CallingForm)
@@ -313,6 +313,63 @@ namespace RateController
             catch (Exception)
             {
             }
+        }
+
+        public Int16 FromTwos16(byte MSB, byte LSB)
+        {
+            // returns number from two's complement bytes
+            Int16 Result = 0;
+            try
+            {
+                UInt16 Tmp = (UInt16)((MSB << 8) | LSB);
+                if ((Tmp & 32768) == 32768)
+                {
+                    // negative number
+                    Tmp = (UInt16)(~Tmp + 1);   // complement + 1
+                    Result = (Int16)(Tmp * -1.0);// multiply by -1 to give two's complement
+                }
+                else
+                {
+                    // positive number
+                    Result = (Int16)Tmp;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools/FromTwos16:" + ex.Message);
+            }
+            return Result;
+        }
+
+        public byte[] ToTwos16(Int16 Num)            
+        {
+            // returns two's complement bytes of Num
+            // MSB Result[1], LSB Result[0]
+            Int16 TN = Num;
+            byte[] Result = new byte[] { 0, 0 };
+            UInt16 Tmp = 0;
+            try
+            {
+                if (TN < 0)
+                {
+                    TN = (Int16)(TN * -1.0);
+                    Tmp = (UInt16)(~TN + 1);   // complement + 1
+                    Result[0] = (byte)Tmp;
+                    Result[1] = (byte)(Tmp >> 8);
+                }
+                else
+                {
+                    Result[0] = (byte)TN;
+                    Tmp = (UInt16)TN;
+                    Result[1] = (byte)(Tmp >> 8);
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools/ToTwos16:" + ex.Message);
+            }
+            return Result;
         }
     }
 }

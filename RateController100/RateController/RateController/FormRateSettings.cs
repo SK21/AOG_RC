@@ -17,9 +17,104 @@ namespace RateController
         private double tempD = 0;
         private int tempInt = 0;
 
+        private Button[] PortBtn;
+        private ComboBox[] Portcbo;
+        private ComboBox[] PortBaud;
+        private Label[] PortStatus;
+
         public FormRateSettings(FormRateControl CallingForm)
         {
             InitializeComponent();
+
+            PortBtn = new Button[] { btnPort0, btnPort1, btnPort2, btnPort3 };
+            Portcbo = new ComboBox[] { cbPort0, cbPort1, cbPort2, cbPort3 };
+            PortBaud = new ComboBox[] { cbBaud0, cbBaud1, cbBaud2, cbBaud3 };
+            PortStatus = new Label[] { lbPort0, lbPort1, lbPort2, lbPort3 };
+
+            for(int i=0;i<4;i++)
+            {
+                PortBtn[i].Text = Lang.lgConnect;
+                PortBtn[i].Tag = i;
+                Portcbo[i].Tag = i;
+                PortBaud[i].Tag = i;
+                PortStatus[i].Tag = i;
+            }
+
+            #region //language
+
+            tabPage1.Text = Lang.lgMain;
+            tabPage5.Text = Lang.lgDiagnostics;
+            tabPage4.Text = Lang.lgAbout;
+            groupBox3.Text = Lang.lgNetwork_UDP;
+
+            groupBox4.Text = Lang.lgLoopBackUDP;
+            label12.Text = Lang.lgIPAddress;
+            label27.Text = Lang.lgDestinationIP;
+            label18.Text = Lang.lgSendPort;
+
+            label19.Text = Lang.lgReceivePort;
+            label22.Text = Lang.lgIPAddress;
+            label23.Text = Lang.lgSendPort;
+            label24.Text = Lang.lgReceivePort;
+
+            label33.Text = Lang.lgUDPnotice;
+            btnDay.Text = Lang.lgDayNight;
+            btnLoadSettings.Text = Lang.lgLoad;
+            btnSaveSettings.Text = Lang.lgSaveAs;
+
+            btnCancel.Text = Lang.lgCancel;
+            bntOK.Text = Lang.lgClose;
+            label28.Text = Lang.lgQuantity;
+            lbCoverage.Text = Lang.lgCoverage;
+
+            label21.Text = Lang.lgTargetRate;
+            label30.Text = Lang.lgRateCal;
+            label3.Text = Lang.lgValveType;
+            label32.Text = Lang.lgTankSize;
+
+            label34.Text = Lang.lgTank_Remaining;
+            butResetAcres.Text = Lang.lgResetCoverage;
+            butResetTank.Text = Lang.lgResetTank;
+            butResetApplied.Text = Lang.lgResetQuantity;
+
+            groupBox1.Text = Lang.lgCalValues;
+            label5.Text = Lang.lgSendTime;
+            label6.Text = Lang.lgWaitTime;
+            label1.Text = Lang.lgMaxPWM;
+
+            label8.Text = Lang.lgMinPWM;
+            butLoadDefaults.Text = Lang.lgLoad_Defaults;
+            groupBox2.Text = Lang.lgSimulateFlow;
+            rbNone.Text = Lang.lgSimulationOff;
+
+            rbNano.Text = Lang.lgVirtualNano;
+            rbFlow.Text = Lang.lgRealNano;
+            tbVCNdescription.Text = Lang.lgVCNexplination;
+            lblCurrentArduinoPort.Text = Lang.lgPort;
+
+            lblCurrentBaud.Text = Lang.lgBaud;
+            btnRescan.Text = Lang.lgRescanPorts;
+            btnPort0.Text = Lang.lgConnect;
+
+            lbSpeed.Text = Lang.lgSpeed;
+            lbRateSet.Text = Lang.lgUPMTarget;
+            lbRateApplied.Text = Lang.lgUPMApplied;
+            lbSectHi.Text = Lang.lgSectionByteHi;
+
+            lbSecLo.Text = Lang.lgSectionByteLo;
+
+            AreaUnits.Items.Clear();
+            AreaUnits.Items.Add("Acre");
+            AreaUnits.Items.Add("Hectare");
+            AreaUnits.Items.Add(Lang.lgHour);
+            AreaUnits.Items.Add(Lang.lgMinute);
+
+            ValveType.Items.Clear();
+            ValveType.Items.Add(Lang.lgStandard);
+            ValveType.Items.Add(Lang.lgFastClose);
+
+            #endregion //language
+
             mf = CallingForm;
             Initializing = true;
             LoadSettings();
@@ -36,7 +131,7 @@ namespace RateController
         private void bntOK_Click(object sender, EventArgs e)
         {
             Button ButtonClicked = (Button)sender;
-            if (ButtonClicked.Text == "Close")
+            if (ButtonClicked.Text == Lang.lgClose)
             {
                 this.Close();
             }
@@ -51,7 +146,12 @@ namespace RateController
                 {
                     case SimType.VirtualNano:
                         mf.Text = Title + " (V)";
-                        mf.SER.CloseRCport();
+
+                        for(int i=0;i<4;i++)
+                        {
+                            mf.SER[i].CloseRCport();
+                        }
+
                         SetRCbuttons();
                         break;
 
@@ -83,7 +183,11 @@ namespace RateController
 
         private void btnCloseSerialArduino_Click(object sender, EventArgs e)
         {
-            mf.SER.CloseRCport();
+            for(int i=0;i<4;i++)
+            {
+                mf.SER[i].CloseRCport();
+            }
+
             SetRCbuttons();
         }
 
@@ -111,9 +215,18 @@ namespace RateController
             }
         }
 
-        private void btnOpenSerialArduino_Click(object sender, EventArgs e)
+        private void PortBtnClick(object sender, EventArgs e)
         {
-            mf.SER.OpenRCport();
+            int index = (int)((Button)sender).Tag;
+
+            if (PortBtn[index].Text == Lang.lgConnect)
+            {
+                mf.SER[index].OpenRCport();
+            }
+            else
+            {
+                mf.SER[index].CloseRCport();
+            }
             SetRCbuttons();
         }
 
@@ -156,18 +269,20 @@ namespace RateController
         private void butResetTank_Click(object sender, EventArgs e)
         {
             mf.RC.ResetTank();
-            TankRemain.Text = mf.RC.CurrentTankRemaining();
+            TankRemain.Text = mf.RC.CurrentTankRemaining().ToString("N0");
         }
 
-        private void cboxArdPort_SelectedIndexChanged(object sender, EventArgs e)
+        private void Port_SelectedIndexChanged(object sender, EventArgs e)
         {
-            mf.SER.RCportName = cboxArdPort.Text;
+            int index = (int)((ComboBox)sender).Tag;
+            mf.SER[index].RCportName = Portcbo[index].Text;
         }
 
         private void cboxBaud_SelectedIndexChanged(object sender, EventArgs e)
         {
-            mf.SER.RCport.BaudRate = Convert.ToInt32(cboxBaud.Text);
-            mf.SER.RCportBaud = Convert.ToInt32(cboxBaud.Text);
+            int index = (int)((ComboBox)sender).Tag;
+            mf.SER[index].RCport.BaudRate = Convert.ToInt32(PortBaud[index].Text);
+            mf.SER[index].RCportBaud = Convert.ToInt32(PortBaud[index].Text);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -201,7 +316,7 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
                 FlowCal.Select(0, FlowCal.Text.Length);
-                mf.Tls.TimedMessageBox("Meter Cal Error", "Min 0, Max 10,000", 3000, true);
+                mf.Tls.TimedMessageBox(Lang.lgMeterCalError, "Min 0, Max 10,000", 3000, true);
             }
         }
 
@@ -220,7 +335,7 @@ namespace RateController
 
             lbNetworkIP.Text = mf.UDPnetwork.LocalIP();
             lbLocalIP.Text = mf.LoopBackIP;
-            lbVersion.Text = "Version Date   " + mf.Tls.VersionDate();
+            lbVersion.Text = Lang.lgVersionDate + "   " + mf.Tls.VersionDate();
             lbDestinationIP.Text = mf.UDPnetwork.BroadcastIP();
             LoadRCbox();
             SetRCbuttons();
@@ -236,8 +351,11 @@ namespace RateController
 
         private void LoadRCbox()
         {
-            cboxArdPort.Items.Clear();
-            foreach (String s in System.IO.Ports.SerialPort.GetPortNames()) { cboxArdPort.Items.Add(s); }
+            for(int i=0;i<4;i++)
+            {
+                Portcbo[i].Items.Clear();
+                foreach (String s in System.IO.Ports.SerialPort.GetPortNames()) { Portcbo[i].Items.Add(s); }
+            }
         }
 
         private void LoadSettings()
@@ -248,7 +366,7 @@ namespace RateController
             FlowCal.Text = mf.RC.FlowCal.ToString("N1");
             TankSize.Text = mf.RC.TankSize.ToString("N0");
             ValveType.SelectedIndex = mf.RC.ValveType;
-            TankRemain.Text = mf.RC.CurrentTankRemaining();
+            TankRemain.Text = mf.RC.CurrentTankRemaining().ToString("N0");
             tbVCN.Text = (mf.RC.VCN).ToString("G0");
             tbSend.Text = (mf.RC.SendTime).ToString("N0");
             tbWait.Text = (mf.RC.WaitTime).ToString("N0");
@@ -312,7 +430,7 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
                 RateSet.Select(0, RateSet.Text.Length);
-                var ErrForm = new FormTimedMessage("Rate Set Error", "Min 0, Max 10,000");
+                var ErrForm = new FormTimedMessage(Lang.lgRateSetError, "Min 0, Max 10,000");
                 ErrForm.Show();
             }
         }
@@ -373,12 +491,12 @@ namespace RateController
                 if (Edited)
                 {
                     btnCancel.Enabled = true;
-                    this.bntOK.Text = "Save";
+                    this.bntOK.Text = Lang.lgSave;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
-                    this.bntOK.Text = "Close";
+                    this.bntOK.Text = Lang.lgClose;
                 }
             }
         }
@@ -397,26 +515,25 @@ namespace RateController
 
         private void SetRCbuttons()
         {
-            cboxArdPort.SelectedIndex = cboxArdPort.FindStringExact(mf.SER.RCportName);
-            cboxBaud.SelectedIndex = cboxBaud.FindStringExact(mf.SER.RCportBaud.ToString());
+            for (int i = 0; i < 4; i++)
+            {
+                Portcbo[i].SelectedIndex = Portcbo[i].FindStringExact(mf.SER[i].RCportName);
+                PortBaud[i].SelectedIndex = PortBaud[i].FindStringExact(mf.SER[i].RCportBaud.ToString());
 
-            if (mf.SER.RCport.IsOpen)
-            {
-                cboxBaud.Enabled = false;
-                cboxArdPort.Enabled = false;
-                btnCloseSerialArduino.Enabled = true;
-                btnOpenSerialArduino.Enabled = false;
-                lbArduinoConnected.Text = mf.SER.RCportName + " Connected";
-                lbArduinoConnected.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                cboxBaud.Enabled = true;
-                cboxArdPort.Enabled = true;
-                btnCloseSerialArduino.Enabled = false;
-                btnOpenSerialArduino.Enabled = true;
-                lbArduinoConnected.Text = mf.SER.RCportName + " Disconnected";
-                lbArduinoConnected.BackColor = Color.Red;
+                if(mf.SER[i].RCport.IsOpen)
+                {
+                    PortBaud[i].Enabled = false;
+                    Portcbo[i].Enabled = false;
+                    PortBtn[i].Text = Lang.lgDisconnect;
+                    PortStatus[i].BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    PortBaud[i].Enabled = true;
+                    Portcbo[i].Enabled = true;
+                    PortBtn[i].Text = Lang.lgConnect;
+                    PortStatus[i].BackColor = Color.Red;
+                }
             }
         }
 
@@ -451,7 +568,7 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
                 TankRemain.Select(0, TankRemain.Text.Length);
-                var ErrForm = new FormTimedMessage("Tank Remaining Error", "Min 0, Max 100,000");
+                var ErrForm = new FormTimedMessage(Lang.lgTankRemainError, "Min 0, Max 100,000");
                 ErrForm.Show();
             }
         }
@@ -482,7 +599,7 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
                 TankSize.Select(0, TankSize.Text.Length);
-                var ErrForm = new FormTimedMessage("Tank Size Error", "Min 0, Max 100,000");
+                var ErrForm = new FormTimedMessage(Lang.lgTankSizeError, "Min 0, Max 100,000");
                 ErrForm.Show();
             }
         }
@@ -554,7 +671,7 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
                 tbSend.Select(0, tbSend.Text.Length);
-                var ErrForm = new FormTimedMessage("Send Time Error", "Min 20, Max 2000");
+                var ErrForm = new FormTimedMessage(Lang.lgSendTimeError, "Min 20, Max 2000");
                 ErrForm.Show();
             }
         }
@@ -585,7 +702,7 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
                 tbVCN.Select(0, tbVCN.Text.Length);
-                var ErrForm = new FormTimedMessage("VCN Number Error", "Min 0, Max 9999");
+                var ErrForm = new FormTimedMessage(Lang.lgVCNError, "Min 0, Max 9999");
                 ErrForm.Show();
             }
         }
@@ -616,7 +733,7 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
                 tbWait.Select(0, tbWait.Text.Length);
-                var ErrForm = new FormTimedMessage("Wait Time Error", "Min 20, Max 2000");
+                var ErrForm = new FormTimedMessage(Lang.lgWaitTimeError, "Min 20, Max 2000");
                 ErrForm.Show();
             }
         }
@@ -626,11 +743,11 @@ namespace RateController
             lbWorkRateData.Text = mf.RC.WorkRate().ToString("N1");
             if (mf.RC.CoverageUnits == 0)
             {
-                lbWorkRate.Text = "Acres/Hr";
+                lbWorkRate.Text = Lang.lgAcresHr;
             }
             else
             {
-                lbWorkRate.Text = "Hectares/Hr";
+                lbWorkRate.Text = Lang.lgHectares_Hr;
             }
 
             lbRateSetData.Text = mf.RC.TargetUPM().ToString("N1");
@@ -640,11 +757,11 @@ namespace RateController
             lbWidthData.Text = mf.RC.Width().ToString("N1");
             if (mf.RC.CoverageUnits == 0)
             {
-                lbWidth.Text = "Working Width (FT)";
+                lbWidth.Text = Lang.lgWorkingWidthFT;
             }
             else
             {
-                lbWidth.Text = "Working Width (M)";
+                lbWidth.Text = Lang.lgWorkingWidthM;
             }
 
             lbSecHiData.Text = mf.RC.SectionHi().ToString();
@@ -653,11 +770,11 @@ namespace RateController
             lbSpeedData.Text = mf.RC.Speed().ToString("N1");
             if (mf.RC.CoverageUnits == 0)
             {
-                lbSpeed.Text = "MPH";
+                lbSpeed.Text = Lang.lgMPH;
             }
             else
             {
-                lbSpeed.Text = "KPH";
+                lbSpeed.Text = Lang.lgKPH;
             }
         }
 
@@ -669,6 +786,12 @@ namespace RateController
         private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void groupBox2_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
     }
 }

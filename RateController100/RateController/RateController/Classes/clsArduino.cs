@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -162,12 +163,20 @@ namespace RateController
             Sentence += ",";
 
             //pwmSetting
-            Temp = (byte)((int)((300 - pwmSetting) * 10) >> 8);
-            Sentence += Temp.ToString();
+            byte[] Tmp = RC.mf.Tls.ToTwos16((Int16)(pwmSetting * 10));
+            Sentence += Tmp[1].ToString();  // high byte
             Sentence += ",";
-            Temp = (byte)((300 - pwmSetting) * 10);
-            Sentence += Temp.ToString();
+            Sentence += Tmp[0].ToString();  // low byte
             Sentence += ",";
+
+            Debug.Print("FromArduino " + pwmSetting.ToString());
+
+            //Temp = (byte)((int)((300 - pwmSetting) * 10) >> 8);
+            //Sentence += Temp.ToString();
+            //Sentence += ",";
+            //Temp = (byte)((300 - pwmSetting) * 10);
+            //Sentence += Temp.ToString();
+            //Sentence += ",";
 
             Sentence += "0";
 
