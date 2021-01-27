@@ -506,6 +506,7 @@ namespace RateController
             this.MaximizeBox = false;
             this.Name = "FormStart";
             this.Text = "Rate Controller";
+            this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormRateControl_FormClosed);
             this.Load += new System.EventHandler(this.FormStart_Load);
             this.panProducts.ResumeLayout(false);
