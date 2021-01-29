@@ -101,10 +101,11 @@ void ReceiveUDPWifi()
 
 					SimulateFlow = ((InCommand & 8) == 8);
 
+					UseVCN = ((InCommand & 16) == 16);
+
 					//reset watchdog as we just heard from AgOpenGPS
 					watchdogTimer = 0;
 					AOGconnected = true;
-					len = 0;
 				}
 			}
 
@@ -118,7 +119,23 @@ void ReceiveUDPWifi()
 					WaitTime = InBuffer[7] << 8 | InBuffer[8];
 					MinPWMvalue = InBuffer[9];
 
-					//reset watchdog as we just heard from AgOpenGPS
+					watchdogTimer = 0;
+					AOGconnected = true;
+				}
+			}
+
+			if (PGN == 32616)
+			{
+				byte ConID = InBuffer[2];
+				if (ConID == ControllerID)
+				{
+					PIDkp = InBuffer[3];
+					PIDminPWM = InBuffer[4];
+					PIDLowMax = InBuffer[5];
+					PIDHighMax = InBuffer[6];
+					PIDdeadband = InBuffer[7];
+					PIDbrakePoint = InBuffer[8];
+
 					watchdogTimer = 0;
 					AOGconnected = true;
 				}

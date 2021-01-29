@@ -126,6 +126,11 @@ namespace RateController
                 {
                     c.ForeColor = Color.Black;
                 }
+                
+                for(int i=0;i<5;i++)
+                {
+                    Indicators[i].BackColor = Properties.Settings.Default.DayColour;
+                }
             }
             else
             {
@@ -133,6 +138,11 @@ namespace RateController
                 foreach (Control c in this.Controls)
                 {
                     c.ForeColor = Color.White;
+                }
+
+                for (int i = 0; i < 5; i++)
+                {
+                    Indicators[i].BackColor = Properties.Settings.Default.NightColour;
                 }
             }
         }
@@ -178,11 +188,11 @@ namespace RateController
                     Rates[i].Text = RateCals[i].SmoothRate();
                     if (RateCals[i].ArduinoConnected)
                     {
-                        Indicators[i].BackColor = Color.LightGreen;
+                        Indicators[i].Image = Properties.Resources.OnSmall;
                     }
                     else
                     {
-                        Indicators[i].BackColor = Color.Red;
+                        Indicators[i].Image = Properties.Resources.OffSmall;
                     }
                 }
                 lbArduinoConnected.Visible = false;

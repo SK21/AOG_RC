@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -132,11 +132,13 @@
     <Compile Include="PGNs\PGN32613.cs" />
     <Compile Include="PGNs\PGN32614.cs" />
     <Compile Include="PGNs\PGN32615.cs" />
+    <Compile Include="PGNs\PGN32616.cs" />
     <Compile Include="PGNs\PGN32761.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
@@ -185,6 +187,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\OffSmall1.bmp" />
+    <None Include="Resources\RateControlOff.png" />
     <None Include="Resources\ArrowRight1.png" />
     <None Include="Resources\ArrowLeft1.png" />
     <None Include="Resources\R674d5dd067acbd409ff50db6d0647f5d.png" />
@@ -192,7 +196,11 @@
     <None Include="Resources\ArrowLeft.png" />
     <None Include="Images\DnArrow64.png" />
     <Content Include="Images\close.png" />
+    <None Include="Images\Off.png" />
+    <None Include="Images\OffSmall.png" />
     <Content Include="Images\OK64.png" />
+    <None Include="Images\OnSmall.png" />
+    <None Include="Images\On.png" />
     <Content Include="Images\OpenFile.png" />
     <Content Include="Images\RateControlOff.ico" />
     <Content Include="Images\RateControlOff.png" />

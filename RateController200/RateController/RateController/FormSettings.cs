@@ -20,17 +20,32 @@ namespace RateController
 
         private bool Initializing = false;
         private SimType SelectedSimulation;
+        private Label[] Sec;
+
+        private TextBox[] PIDs;
 
         public FormSettings(FormStart CallingForm, int Page)
         {
             InitializeComponent();
-            tbs = new TabPage[4] { tbs0, tbs1, tbs2, tbs3 };
+            tbs = new TabPage[] { tbs0, tbs1, tbs2, tbs3, tbs4 };
             mf = CallingForm;
             CurrentProduct = Page - 1;
             if (CurrentProduct < 0) CurrentProduct = 0;
 
             openFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
             saveFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
+
+            Sec = new Label[] { sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10, sec11, sec12, sec13, sec14, sec15 };
+            
+            PIDs = new TextBox[] { tbPIDkp, tbPIDMinPWM, tbPIDLowMax, tbPIDHighMax, tbPIDDeadBand, tbPIDBrakePoint };
+            for (int i = 0; i < 6; i++)
+            {
+                PIDs[i].Tag = i;
+
+                PIDs[i].Enter += tbPID_Enter;
+                PIDs[i].TextChanged += tbPID_TextChanged;
+                PIDs[i].Validating += tbPID_Validating;
+            }
         }
 
         private void FormSettings_Load(object sender, EventArgs e)
@@ -59,9 +74,16 @@ namespace RateController
                     tbs[i].BackColor = Properties.Settings.Default.DayColour;
                 }
 
+                PortIndicator.BackColor = Properties.Settings.Default.DayColour;
+
                 foreach (Control c in this.Controls)
                 {
                     c.ForeColor = Color.Black;
+                }
+
+                for (int i = 0; i < 16; i++)
+                {
+                    Sec[i].BackColor = Properties.Settings.Default.DayColour;
                 }
             }
             else
@@ -73,9 +95,16 @@ namespace RateController
                     tbs[i].BackColor = Properties.Settings.Default.NightColour;
                 }
 
+                PortIndicator.BackColor = Properties.Settings.Default.NightColour;
+
                 foreach (Control c in this.Controls)
                 {
                     c.ForeColor = Color.White;
+                }
+
+                for (int i = 0; i < 16; i++)
+                {
+                    Sec[i].BackColor = Properties.Settings.Default.NightColour;
                 }
             }
 
@@ -104,6 +133,7 @@ namespace RateController
             UpdateDiags();
             LoadSettings();
             SetPortButtons();
+            SetVCNpid();
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
@@ -154,8 +184,19 @@ namespace RateController
                 lbWorkRate.Text = Lang.lgHectares_Hr;
             }
 
-            lbRateSetData.Text = mf.RateCals[CurrentProduct].TargetUPM().ToString("N1");
-            lbRateAppliedData.Text = mf.RateCals[CurrentProduct].UPMapplied().ToString("N1");
+            double Target = mf.RateCals[CurrentProduct].TargetUPM();
+            double Applied = mf.RateCals[CurrentProduct].UPMapplied();
+            double RateError = 0;
+
+            lbRateSetData.Text = Target.ToString("N1");
+            lbRateAppliedData.Text = Applied.ToString("N1");
+
+            if(Target>0)
+            {
+                RateError = ((Target - Applied) / Target) * 100;
+            }
+            lbErrorPercent.Text = RateError.ToString("N1");
+
             lbPWMdata.Text = mf.RateCals[CurrentProduct].PWM().ToString("N0");
 
             lbWidthData.Text = mf.RateCals[CurrentProduct].Width().ToString("N1");
@@ -168,9 +209,6 @@ namespace RateController
                 lbWidth.Text = Lang.lgWorkingWidthM;
             }
 
-            lbSecHiData.Text = mf.RateCals[CurrentProduct].SectionHi().ToString();
-            lbSecLoData.Text = mf.RateCals[CurrentProduct].SectionLo().ToString();
-
             lbSpeedData.Text = mf.RateCals[CurrentProduct].Speed().ToString("N1");
             if (mf.RateCals[CurrentProduct].CoverageUnits == 0)
             {
@@ -181,6 +219,38 @@ namespace RateController
                 lbSpeed.Text = Lang.lgKPH;
             }
             tbConID.Text = mf.RateCals[CurrentProduct].ControllerID.ToString();
+
+            // update sections
+            for (int i = 0; i < 16; i++)
+            {
+                if (i < 8)
+                {
+                    if (IsBitSet(mf.RateCals[CurrentProduct].SectionLo(), i))
+                    {
+                        Sec[i].Image = Properties.Resources.OnSmall;
+                    }
+                    else
+                    {
+                        Sec[i].Image = Properties.Resources.OffSmall;
+                    }
+                }
+                else
+                {
+                    if (IsBitSet(mf.RateCals[CurrentProduct].SectionHi(), i - 8))
+                    {
+                        Sec[i].Image = Properties.Resources.OnSmall;
+                    }
+                    else
+                    {
+                        Sec[i].Image = Properties.Resources.OffSmall;
+                    }
+                }
+            }
+        }
+
+        bool IsBitSet(byte b, int pos)
+        {
+            return (b & (1 << pos)) != 0;
         }
 
         private void LoadSettings()
@@ -213,6 +283,19 @@ namespace RateController
                     rbNone.Checked = true;
                     break;
             }
+
+            // VCN
+            rbVCN.Checked = (mf.RateCals[CurrentProduct].UseVCN);
+            rbPID.Checked = !(mf.RateCals[CurrentProduct].UseVCN);
+
+            // PID
+            tbPIDkp.Text = mf.RateCals[CurrentProduct].PIDkp.ToString("N0");
+            tbPIDMinPWM.Text = mf.RateCals[CurrentProduct].PIDminPWM.ToString("N0");
+            tbPIDLowMax.Text = mf.RateCals[CurrentProduct].PIDLowMax.ToString("N0");
+
+            tbPIDHighMax.Text = mf.RateCals[CurrentProduct].PIDHighMax.ToString("N0");
+            tbPIDDeadBand.Text = mf.RateCals[CurrentProduct].PIDdeadband.ToString("N0");
+            tbPIDBrakePoint.Text = mf.RateCals[CurrentProduct].PIDbrakepoint.ToString("N0");
         }
 
         private void tbProduct_TextChanged(object sender, EventArgs e)
@@ -228,11 +311,15 @@ namespace RateController
                 {
                     btnCancel.Enabled = true;
                     this.bntOK.Text = Lang.lgSave;
+                    btnLeft.Enabled = false;
+                    btnRight.Enabled = false;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
                     this.bntOK.Text = Lang.lgClose;
+                    btnLeft.Enabled = true;
+                    btnRight.Enabled = true;
                 }
             }
         }
@@ -268,6 +355,44 @@ namespace RateController
                 Initializing = true;
                 LoadSettings();
                 Initializing = false;
+                
+            }
+            SetVCNpid();
+        }
+
+        void SetVCNpid()
+        {
+            if (rbVCN.Checked)
+            {
+                tbVCN.Enabled = true;
+                tbSend.Enabled = true;
+                tbWait.Enabled = true;
+                tbMinPWM.Enabled = true;
+                btnLoadDefaults.Enabled = true;
+
+                for (int i = 0; i < 6; i++)
+                {
+                    PIDs[i].Enabled = false;
+                }
+                btnPIDloadDefaults.Enabled = false;
+
+                lbVCNpid.Text = "VCN";
+            }
+            else
+            {
+                tbVCN.Enabled = false;
+                tbSend.Enabled = false;
+                tbWait.Enabled = false;
+                tbMinPWM.Enabled = false;
+                btnLoadDefaults.Enabled = false;
+
+                for (int i = 0; i < 6; i++)
+                {
+                    PIDs[i].Enabled = true;
+                }
+                btnPIDloadDefaults.Enabled = true;
+
+                lbVCNpid.Text = "PID";
             }
         }
 
@@ -312,6 +437,28 @@ namespace RateController
             byte.TryParse(tbConID.Text, out tempB);
             mf.RateCals[CurrentProduct].ControllerID = tempB;
 
+            // VCN
+            mf.RateCals[CurrentProduct].UseVCN = (rbVCN.Checked);
+
+            // PID
+            byte.TryParse(tbPIDkp.Text, out tempB);
+            mf.RateCals[CurrentProduct].PIDkp = tempB;
+
+            byte.TryParse(tbPIDMinPWM.Text, out tempB);
+            mf.RateCals[CurrentProduct].PIDminPWM = tempB;
+
+            byte.TryParse(tbPIDLowMax.Text, out tempB);
+            mf.RateCals[CurrentProduct].PIDLowMax = tempB;
+
+            byte.TryParse(tbPIDHighMax.Text, out tempB);
+            mf.RateCals[CurrentProduct].PIDHighMax = tempB;
+
+            byte.TryParse(tbPIDDeadBand.Text, out tempB);
+            mf.RateCals[CurrentProduct].PIDdeadband = tempB;
+
+            byte.TryParse(tbPIDBrakePoint.Text, out tempB);
+            mf.RateCals[CurrentProduct].PIDbrakepoint = tempB;
+
             mf.RateCals[CurrentProduct].SaveSettings();
         }
 
@@ -325,14 +472,14 @@ namespace RateController
                 cboBaud.Enabled = false;
                 cboPort.Enabled = false;
                 btnConnect.Text = Lang.lgDisconnect;
-                PortIndicator.BackColor = Color.LightGreen;
+                PortIndicator.Image = Properties.Resources.On;
             }
             else
             {
                 cboBaud.Enabled = true;
                 cboPort.Enabled = true;
                 btnConnect.Text = Lang.lgConnect;
-                PortIndicator.BackColor = Color.Red;
+                PortIndicator.Image = Properties.Resources.Off;
             }
         }
 
@@ -347,7 +494,7 @@ namespace RateController
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 mf.Tls.PropertiesFile = openFileDialog1.FileName;
-                for(int i=0;i<5;i++)
+                for (int i = 0; i < 5; i++)
                 {
                     mf.RateCals[i].LoadSettings();
                 }
@@ -374,7 +521,7 @@ namespace RateController
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if(btnConnect.Text==Lang.lgConnect)
+            if (btnConnect.Text == Lang.lgConnect)
             {
                 mf.SER[CurrentProduct].OpenRCport();
             }
@@ -449,8 +596,6 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
-                FlowCal.Select(0, FlowCal.Text.Length);
-                mf.Tls.TimedMessageBox(Lang.lgMeterCalError, "Min 0, Max 10,000", 3000, true);
             }
         }
 
@@ -508,9 +653,6 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
-                RateSet.Select(0, RateSet.Text.Length);
-                var ErrForm = new FormTimedMessage(Lang.lgRateSetError, "Min 0, Max 10,000");
-                ErrForm.Show();
             }
         }
 
@@ -541,9 +683,6 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
-                TankRemain.Select(0, TankRemain.Text.Length);
-                var ErrForm = new FormTimedMessage(Lang.lgTankRemainError, "Min 0, Max 100,000");
-                ErrForm.Show();
             }
         }
 
@@ -574,9 +713,6 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
-                TankSize.Select(0, TankSize.Text.Length);
-                var ErrForm = new FormTimedMessage(Lang.lgTankSizeError, "Min 0, Max 100,000");
-                ErrForm.Show();
             }
         }
 
@@ -607,9 +743,6 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
-                tbMinPWM.Select(0, tbMinPWM.Text.Length);
-                var ErrForm = new FormTimedMessage("PWM error.", "Min 0, Max 255");
-                ErrForm.Show();
             }
         }
 
@@ -640,9 +773,6 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
-                tbSend.Select(0, tbSend.Text.Length);
-                var ErrForm = new FormTimedMessage(Lang.lgSendTimeError, "Min 20, Max 2000");
-                ErrForm.Show();
             }
         }
 
@@ -673,9 +803,6 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
-                tbVCN.Select(0, tbVCN.Text.Length);
-                var ErrForm = new FormTimedMessage(Lang.lgVCNError, "Min 0, Max 9999");
-                ErrForm.Show();
             }
         }
 
@@ -706,9 +833,6 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
-                tbWait.Select(0, tbWait.Text.Length);
-                var ErrForm = new FormTimedMessage(Lang.lgWaitTimeError, "Min 20, Max 2000");
-                ErrForm.Show();
             }
         }
 
@@ -749,9 +873,6 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
-                tbConID.Select(0, tbConID.Text.Length);
-                var ErrForm = new FormTimedMessage("Controller error.", "Min 0, Max 4");
-                ErrForm.Show();
             }
         }
 
@@ -765,6 +886,88 @@ namespace RateController
             Form frmAbout = new FormAbout(this);
             frmAbout.ShowDialog();
             SetDayMode();
+        }
+
+        private void btnPIDloadDefaults_Click(object sender, EventArgs e)
+        {
+            tbPIDkp.Text = "20";
+            tbPIDMinPWM.Text = "65";
+            tbPIDLowMax.Text = "125";
+            tbPIDHighMax.Text = "200";
+            tbPIDDeadBand.Text = "3";
+            tbPIDBrakePoint.Text = "20";
+        }
+
+        private void rbVCN_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void rbPID_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbPID_Enter(object sender, EventArgs e)
+        {
+            int index = (int)((TextBox)sender).Tag;
+            int tmp;
+            int max;
+
+            switch (index)
+            {
+                case 2:
+                    max = 90;
+                    break;
+                case 5:
+                    max = 10;
+                    break;
+                default:
+                    max = 255;
+                    break;
+            }
+
+            int.TryParse(PIDs[index].Text, out tmp);
+            using (var form = new FormNumeric(0, max, tmp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    PIDs[index].Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbPID_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbPID_Validating(object sender, CancelEventArgs e)
+        {
+            int index = (int)((TextBox)sender).Tag;
+            int tmp;
+            int max;
+
+            switch (index)
+            {
+                case 2:
+                    max = 90;
+                    break;
+                case 5:
+                    max = 10;
+                    break;
+                default:
+                    max = 255;
+                    break;
+            }
+
+            int.TryParse(PIDs[index].Text, out tmp);
+            if (tmp < 0 || tmp > max)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
         }
     }
 }

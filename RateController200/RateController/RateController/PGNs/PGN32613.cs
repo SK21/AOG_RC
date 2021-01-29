@@ -39,14 +39,6 @@ namespace RateController
             RC = CalledFrom;
         }
 
-        public double AccumulatedQuantity()
-        {
-            Temp = QuantityB3 << 16;
-            Temp |= QuantityB2 << 8;
-            Temp |= QuantityB1;
-            return Temp / 100.0;
-        }
-
         public int ControllerID()
         {
             return ConID;
@@ -70,7 +62,7 @@ namespace RateController
                 pwmLo = Data[9];
 
                 cPWMsetting = (double)((Int16)(pwmHI << 8 | pwmLo)) / 10.0; // 2s complement math
-                
+
                 Result = true;
             }
             return Result;
@@ -120,6 +112,14 @@ namespace RateController
         public double UPM()
         {
             return cUPM;
+        }
+
+        public double AccumulatedQuantity()
+        {
+            Temp = QuantityB3 << 16;
+            Temp |= QuantityB2 << 8;
+            Temp |= QuantityB1;
+            return Temp / 100.0;
         }
     }
 }

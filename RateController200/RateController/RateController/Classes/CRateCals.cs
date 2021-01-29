@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Timers;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -7,10 +7,11 @@ namespace RateController
     {
         public readonly FormStart mf;
 
-        public PGN32761 Switches32761;                  //to Rate Controller from arduino, to AOG from Rate Controller
+        public PGN32761 RateReceive;                  //to Rate Controller from arduino, to AOG from Rate Controller
         private PGN32613 ArdRec32613;
-        private PGN32614 ArdSend32614;                  // to Arduino from Rate Controller
-        private PGN32615 ValveCal32615;                  // to Arduino from Rate Controller
+        private PGN32614 RateSend;                  // to Arduino from Rate Controller
+        private PGN32615 VCNsend;                  // to Arduino from Rate Controller
+        private PGN32616 PIDsend;
 
         public bool ArduinoConnected = false;
         public byte CoverageUnits = 0;
@@ -50,32 +51,44 @@ namespace RateController
         private double TankRemaining = 0;
         private double TotalWorkedArea = 0;
 
-        public byte MinPWM { get { return ValveCal32615.MinPWM; } set { ValveCal32615.MinPWM = value; } }
-        public int SendTime { get { return ValveCal32615.SendTime; } set { ValveCal32615.SendTime = value; } }
+        public byte MinPWM { get { return VCNsend.MinPWM; } set { VCNsend.MinPWM = value; } }
+        public int SendTime { get { return VCNsend.SendTime; } set { VCNsend.SendTime = value; } }
 
-        public int VCN { get { return ValveCal32615.VCN; } set { ValveCal32615.VCN = value; } }
-        public int WaitTime { get { return ValveCal32615.WaitTime; } set { ValveCal32615.WaitTime = value; } }
+        public int VCN { get { return VCNsend.VCN; } set { VCNsend.VCN = value; } }
+        public int WaitTime { get { return VCNsend.WaitTime; } set { VCNsend.WaitTime = value; } }
 
         private int cControllerID = 0;
         private int cProductID = 0;
         private string cProductName = "";
+
+        public byte PIDkp { get { return PIDsend.KP; } set { PIDsend.KP = value; } }
+        public byte PIDminPWM { get { return PIDsend.MinPWM; } set { PIDsend.MinPWM = value; } }
+        public byte PIDLowMax { get { return PIDsend.LowMax; } set { PIDsend.LowMax = value; } }
+
+        public byte PIDHighMax { get { return PIDsend.HighMax; } set { PIDsend.HighMax = value; } }
+        public byte PIDdeadband { get { return PIDsend.DeadBand; } set { PIDsend.DeadBand = value; } }
+        public byte PIDbrakepoint { get { return PIDsend.BrakePoint; } set { PIDsend.BrakePoint = value; } }
+
+        public bool UseVCN = true;
 
         public CRateCals(FormStart CallingForm, int ProdID)
         {
             mf = CallingForm;
             cProductID = ProdID;
 
-            ArdSend32614 = new PGN32614(this, (byte)cProductID);
-            ValveCal32615 = new PGN32615(this, (byte)cProductID);
+            RateSend = new PGN32614(this, (byte)cProductID);
+            VCNsend = new PGN32615(this, (byte)cProductID);
+            PIDsend = new PGN32616(this, (byte)cProductID);
 
-            Switches32761 = new PGN32761(this);
+            RateReceive = new PGN32761(this);
             ArdRec32613 = new PGN32613(this);
-
             Nano = new clsArduino(this);
+
             LoadSettings();
 
-            ArdSend32614.ControllerID = (byte)cControllerID;
-            ValveCal32615.ControllerID = (byte)cControllerID;
+            RateSend.ControllerID = (byte)cControllerID;
+            VCNsend.ControllerID = (byte)cControllerID;
+            PIDsend.ControllerID = (byte)cControllerID;
 
             PauseArea = true;
         }
@@ -97,8 +110,8 @@ namespace RateController
                 if (value >= 0 && value < 5)
                 {
                     cControllerID = value;
-                    ArdSend32614.ControllerID = (byte)cControllerID;
-                    ValveCal32615.ControllerID = (byte)cControllerID;
+                    RateSend.ControllerID = (byte)cControllerID;
+                    VCNsend.ControllerID = (byte)cControllerID;
                 }
             }
         }
@@ -174,7 +187,7 @@ namespace RateController
                     }
                 }
 
-                if (Switches32761.ParseStringData(words))
+                if (RateReceive.ParseStringData(words))
                 {
                     ArduinoReceiveTime = DateTime.Now;
                     Result = true;
@@ -317,13 +330,23 @@ namespace RateController
             byte.TryParse(mf.Tls.LoadProperty("ValveType" + ProductID.ToString()), out ValveType);
             Enum.TryParse(mf.Tls.LoadProperty("cSimulationType" + ProductID.ToString()), true, out cSimulationType);
 
-            int.TryParse(mf.Tls.LoadProperty("VCN" + ProductID.ToString()), out ValveCal32615.VCN);
-            int.TryParse(mf.Tls.LoadProperty("SendTime" + ProductID.ToString()), out ValveCal32615.SendTime);
-            int.TryParse(mf.Tls.LoadProperty("WaitTime" + ProductID.ToString()), out ValveCal32615.WaitTime);
+            int.TryParse(mf.Tls.LoadProperty("VCN" + ProductID.ToString()), out VCNsend.VCN);
+            int.TryParse(mf.Tls.LoadProperty("SendTime" + ProductID.ToString()), out VCNsend.SendTime);
+            int.TryParse(mf.Tls.LoadProperty("WaitTime" + ProductID.ToString()), out VCNsend.WaitTime);
 
             cProductName = mf.Tls.LoadProperty("ProductName" + ProductID.ToString());
-            byte.TryParse(mf.Tls.LoadProperty("MinPWM" + ProductID.ToString()), out ValveCal32615.MinPWM);
+            byte.TryParse(mf.Tls.LoadProperty("MinPWM" + ProductID.ToString()), out VCNsend.MinPWM);
             int.TryParse(mf.Tls.LoadProperty("ControllerID" + ProductID.ToString()), out cControllerID);
+
+            byte.TryParse(mf.Tls.LoadProperty("KP" + ProductID.ToString()),out PIDsend.KP);
+            byte.TryParse(mf.Tls.LoadProperty("PIDMinPWM" + ProductID.ToString()), out PIDsend.MinPWM);
+            byte.TryParse(mf.Tls.LoadProperty("PIDLowMax" + ProductID.ToString()), out PIDsend.LowMax);
+
+            byte.TryParse(mf.Tls.LoadProperty("PIDHighMax" + ProductID.ToString()), out PIDsend.HighMax);
+            byte.TryParse(mf.Tls.LoadProperty("PIDdeadband" + ProductID.ToString()), out PIDsend.DeadBand);
+            byte.TryParse(mf.Tls.LoadProperty("PIDbrakepoint" + ProductID.ToString()), out PIDsend.BrakePoint);
+
+            bool.TryParse(mf.Tls.LoadProperty("UseVCN" + ProductID.ToString()), out UseVCN);
         }
 
         public void SaveSettings()
@@ -343,13 +366,23 @@ namespace RateController
             mf.Tls.SaveProperty("ValveType" + ProductID.ToString(), ValveType.ToString());
             mf.Tls.SaveProperty("cSimulationType" + ProductID.ToString(), cSimulationType.ToString());
 
-            mf.Tls.SaveProperty("VCN" + ProductID.ToString(), ValveCal32615.VCN.ToString());
-            mf.Tls.SaveProperty("SendTime" + ProductID.ToString(), ValveCal32615.SendTime.ToString());
-            mf.Tls.SaveProperty("WaitTime" + ProductID.ToString(), ValveCal32615.WaitTime.ToString());
+            mf.Tls.SaveProperty("VCN" + ProductID.ToString(), VCNsend.VCN.ToString());
+            mf.Tls.SaveProperty("SendTime" + ProductID.ToString(), VCNsend.SendTime.ToString());
+            mf.Tls.SaveProperty("WaitTime" + ProductID.ToString(), VCNsend.WaitTime.ToString());
 
             mf.Tls.SaveProperty("ProductName" + ProductID.ToString(), cProductName);
-            mf.Tls.SaveProperty("MinPWM" + ProductID.ToString(), ValveCal32615.MinPWM.ToString());
+            mf.Tls.SaveProperty("MinPWM" + ProductID.ToString(), VCNsend.MinPWM.ToString());
             mf.Tls.SaveProperty("ControllerID" + ProductID.ToString(), cControllerID.ToString());
+
+            mf.Tls.SaveProperty("KP" + ProductID.ToString(), PIDsend.KP.ToString());
+            mf.Tls.SaveProperty("PIDMinPWM" + ProductID.ToString(), PIDsend.MinPWM.ToString());
+            mf.Tls.SaveProperty("PIDLowMax" + ProductID.ToString(), PIDsend.LowMax.ToString());
+
+            mf.Tls.SaveProperty("PIDHighMax" + ProductID.ToString(), PIDsend.HighMax.ToString());
+            mf.Tls.SaveProperty("PIDdeadband" + ProductID.ToString(), PIDsend.DeadBand.ToString());
+            mf.Tls.SaveProperty("PIDbrakepoint" + ProductID.ToString(), PIDsend.BrakePoint.ToString());
+
+            mf.Tls.SaveProperty("UseVCN" + ProductID.ToString(), UseVCN.ToString());
         }
 
         public byte SectionHi()
@@ -395,7 +428,7 @@ namespace RateController
                     }
                 }
 
-                if (Switches32761.ParseByteData(data))
+                if (RateReceive.ParseByteData(data))
                 {
                     ArduinoReceiveTime = DateTime.Now;
                 }
@@ -409,6 +442,7 @@ namespace RateController
         {
             StartTime = DateTime.Now;
             CurrentMinutes = (StartTime - LastTime).TotalMinutes;
+
             if (CurrentMinutes < 0) CurrentMinutes = 0;
             LastTime = StartTime;
 
@@ -470,16 +504,27 @@ namespace RateController
                 PauseArea = true;
             }
 
-            if (ArduinoConnected) RateSet = Switches32761.NewRate(RateSet);
-
-            if (mf.AOG.Connected() & ArduinoConnected)
+            if (ArduinoConnected)
             {
-                // send to arduino
-                ArdSend32614.Send();
-                ValveCal32615.Send();
+                RateSet = RateReceive.NewRate(RateSet);
 
-                // send comm to AOG
-                Switches32761.Send();
+                if (mf.AOG.Connected())
+                {
+                    // send comm to AOG
+                    RateReceive.Send();
+
+                    // send to arduino
+                    RateSend.Send();
+
+                    if (UseVCN)
+                    {
+                        VCNsend.Send();
+                    }
+                    else
+                    {
+                        PIDsend.Send();
+                    }
+                }
             }
         }
 
@@ -549,39 +594,7 @@ namespace RateController
                 if (LastQuantityDifference > 0)
                 {
                     Ratio = CurrentDifference / LastQuantityDifference;
-                    if ((Ratio > 4) | (Ratio < 0.25))
-                    {
-                        mf.Tls.WriteActivityLog("Quantity Check Ratio: " + Ratio.ToString("N2")
-                            + " Current Amount: " + CurrentDifference.ToString("N2") + " Last Amount: " + LastQuantityDifference.ToString("N2")
-                            + " RateSet: " + RateSet.ToString("N2") + " Current Rate: " + CurrentRate() + "\n");
-                    }
                     if (Ratio > 10) Result = false; // too much of a change in quantity
-                }
-
-                // check rate error
-                if (RateSet > 0)
-                {
-                    Ratio = RateApplied() / RateSet;
-                    if ((Ratio > 1.5) | (Ratio < 0.67))
-                    {
-                        mf.Tls.WriteActivityLog("Rate Check Ratio: " + Ratio.ToString("N2")
-                            + " Current Amount: " + CurrentDifference.ToString("N2") + " Last Amount: " + LastQuantityDifference.ToString("N2")
-                            + " RateSet: " + RateSet.ToString("N2") + " Current Rate: " + CurrentRate() + "\n");
-                    }
-                }
-
-                // record values periodically
-                if ((DateTime.Now - QcheckLast).TotalMinutes > 30)
-                {
-                    QcheckLast = DateTime.Now;
-
-                    if (LastQuantityDifference > 0)
-                    {
-                        Ratio = CurrentDifference / LastQuantityDifference;
-                        mf.Tls.WriteActivityLog("Quantity Check Ratio: " + Ratio.ToString("N2")
-                            + " Current Amount: " + CurrentDifference.ToString("N2") + " Last Amount: " + LastQuantityDifference.ToString("N2")
-                            + " RateSet: " + RateSet.ToString("N2") + " Current Rate: " + CurrentRate() + "\n");
-                    }
                 }
 
                 LastQuantityDifference = CurrentDifference;

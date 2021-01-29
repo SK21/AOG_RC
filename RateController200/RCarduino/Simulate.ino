@@ -11,7 +11,7 @@ unsigned long SimulateInterval;
 unsigned long SimulateTimeLast;
 float RandomError = 0;
 
-void DoSimulate()
+void DoSimulate(byte sMin, byte sMax)
 {
 	SimulateInterval = millis() - SimulateTimeLast;
 	SimulateTimeLast = millis();
@@ -19,14 +19,14 @@ void DoSimulate()
 	if (RelaysOn)
 	{
 		// relays on
-		float Range = MaxPWMvalue - MinPWMvalue + 5;
+		float Range = sMax - sMin + 5;
 		if (Range == 0 || pwmSetting == 0)
 		{
 			ValveAdjust = 0;
 		}
 		else
 		{
-			float Percent = (float)((abs(pwmSetting) - MinPWMvalue + 5) / Range);
+			float Percent = (float)((abs(pwmSetting) - sMin + 5) / Range);
 			if (pwmSetting < 0)
 			{
 				Percent *= -1;

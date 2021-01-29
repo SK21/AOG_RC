@@ -1,4 +1,6 @@
-﻿namespace RateController
+﻿using System.Diagnostics;
+
+namespace RateController
 {
     public class PGN32614
     {
@@ -16,6 +18,7 @@
         //	- bit 0		    reset acc.Quantity
         //	- bit 1,2		valve type 0-3
         //	- bit 3		    simulate flow
+        //  - bit 4         0 UsePDI, 1 UseVCN 
 
         public byte Command;
         public byte FlowCalHi;
@@ -98,6 +101,8 @@
             }
 
             if (RC.SimulationType != SimType.None) Command |= 0b00001000; else Command &= 0b11110111;
+
+            if (RC.UseVCN) Command |= 0b00010000; else Command &= 0b11101111;
 
             if (RC.SimulationType == SimType.VirtualNano)
             {

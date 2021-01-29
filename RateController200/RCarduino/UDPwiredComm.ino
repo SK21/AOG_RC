@@ -95,13 +95,14 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
 
 				SimulateFlow = ((InCommand & 8) == 8);
 
+				UseVCN = ((InCommand & 16) == 16);
+
 				//reset watchdog as we just heard from AgOpenGPS
 				watchdogTimer = 0;
 				AOGconnected = true;
 			}
 		}
 
-		//PGN32615
 		if (PGN == 32615)
 		{
 			byte ConID = data[2];
@@ -112,7 +113,23 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
 				WaitTime = data[7] << 8 | data[8];
 				MinPWMvalue = data[9];
 
-				//reset watchdog as we just heard from AgOpenGPS
+				watchdogTimer = 0;
+				AOGconnected = true;
+			}
+		}
+
+		if (PGN == 32616)
+		{
+			byte ConID = data[2];
+			if (ConID == ControllerID)
+			{
+				PIDkp = data[3];
+				PIDminPWM = data[4];
+				PIDLowMax = data[5];
+				PIDHighMax = data[6];
+				PIDdeadband = data[7];
+				PIDbrakePoint = data[8];
+
 				watchdogTimer = 0;
 				AOGconnected = true;
 			}

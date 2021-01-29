@@ -34,8 +34,6 @@ namespace RateController
         byte RelayControl;
         bool RelaysOn;
 
-        DateTime RateCheckLast;
-        int RateCheckInterval = 200;
         float rateError;
 
         bool AutoOn;
@@ -98,6 +96,15 @@ namespace RateController
         float KalProcess = 0.005F;	// smaller is more filtering
 
         int mcID;
+        bool UseVCN = true;
+
+        // PID
+        byte PIDkp=20;
+        byte PIDminPWM = 50;
+        byte PIDLowMax = 100;
+        byte PIDHighMax = 255;
+        byte PIDdeadband = 3;
+        byte PIDbrakePoint = 20;
 
         public clsArduino(CRateCals CalledFrom)
         {
@@ -114,25 +121,28 @@ namespace RateController
 
             RelaysOn = (AOGconnected & (RelayControl != 0));
 
-            if ((DateTime.Now - RateCheckLast).TotalMilliseconds > RateCheckInterval)
-            {
-                RateCheckLast = DateTime.Now;
-                if (RelaysOn)
-                {
-                    if (SimulateFlow) DoSimulate();
-                    rateError = CalRateError();
-                }
-            }
-
-            if(RelaysOn && AutoOn)
-            {
-                pwmSetting = VCNpwm(rateError, rateSetPoint, MinPWMvalue, MaxPWMvalue, VCN, FlowRate,
-                    SendTime, WaitTime, SlowSpeed, ValveType);
-            }
-
             if ((DateTime.Now - LastTime).TotalMilliseconds >= LOOP_TIME)
             {
                 LastTime = DateTime.Now;
+
+                if(RelaysOn)
+                {
+                    if (SimulateFlow) DoSimulate();
+                    rateError = CalRateError();
+                    
+                    if(AutoOn)
+                    {
+                        if(UseVCN)
+                        {
+                            pwmSetting = VCNpwm(rateError, rateSetPoint, MinPWMvalue, MaxPWMvalue, VCN, FlowRate,
+                                SendTime, WaitTime, SlowSpeed, ValveType);
+                        }
+                        else
+                        {
+                            pwmSetting = DoPID(PIDkp, rateError, rateSetPoint, PIDminPWM, PIDLowMax, PIDHighMax, PIDbrakePoint, PIDdeadband);
+                        }
+                    }
+                }
 
                 SendSerial();
             }
@@ -181,7 +191,6 @@ namespace RateController
         public void ReceiveSerial(byte[] Data)
         {
             int PGN = Data[0] << 8 | Data[1];
-
             if (PGN == 32614)
             {
                 mcID = Data[2];
@@ -207,6 +216,8 @@ namespace RateController
 
                 SimulateFlow = ((InCommand & 8) == 8);
 
+                UseVCN = ((InCommand & 16) == 16);
+
                 AOGconnected = true;
             }
 
@@ -220,6 +231,20 @@ namespace RateController
 
                 AOGconnected = true;
             }
+
+            if (PGN == 32616)
+            {
+                byte ConID = Data[2];
+                PIDkp = Data[3];
+                PIDminPWM = Data[4];
+                PIDLowMax = Data[5];
+                PIDHighMax = Data[6];
+                PIDdeadband = Data[7];
+                PIDbrakePoint = Data[8];
+
+                AOGconnected = true;
+            }
+
         }
 
         void DoSimulate()
@@ -228,20 +253,27 @@ namespace RateController
 
             SimulateInterval = (int)(DateTime.Now - SimulateTimeLast).TotalMilliseconds;
             SimulateTimeLast = DateTime.Now;
+            byte Max = MaxPWMvalue;
+            byte Min = MinPWMvalue;
+            if(UseVCN)
+            {
+                Max = PIDHighMax;
+                Min = PIDminPWM;
+            }
 
             if (RelaysOn)
             {
                 // relays on
                 if (AutoOn)
                 {
-                    float Range = MaxPWMvalue - MinPWMvalue + 5;
+                    float Range = Max - Min + 5;
                     if (Range == 0 | pwmSetting == 0)
                     {
                         ValveAdjust = 0;
                     }
                     else
                     {
-                        float Percent = (float)((Math.Abs(pwmSetting) - MinPWMvalue + 5) / Range);
+                        float Percent = (float)((Math.Abs(pwmSetting) - Min + 5) / Range);
                         if (pwmSetting < 0)
                         {
                             Percent *= -1;
@@ -440,6 +472,33 @@ namespace RateController
 
                 OldVCN = NewVCN;
             }
+        }
+
+        int DoPID(byte clKP, float clError, float clSetPoint, byte clMinPWM, byte clLowMax, byte clHighMax, byte clBrakePoint, byte clDeadband)
+        {
+            int Result = 0;
+            if (clSetPoint <= 0) clSetPoint = (float)0.01;
+            float ErrorPercent = Math.Abs(clError / clSetPoint);
+            float ErrorBrake = (float)((float)(clBrakePoint / 100.0));
+            float Max = (float)clHighMax;
+
+            if(ErrorPercent>((float)(clDeadband/100.0)))
+            {
+                if(ErrorPercent<=ErrorBrake)
+                {
+                    Max = (ErrorPercent / ErrorBrake) * clLowMax;
+                }
+
+                Result = (int)(clKP * clError);
+
+                bool IsPositive = (Result > 0);
+                Result = Math.Abs(Result);
+                if (Result > Max) Result = (int)Max;
+                if (Result < clMinPWM) Result = clMinPWM;
+                if (!IsPositive) Result *= -1;
+            }
+
+            return Result;
         }
     }
 }

@@ -133,11 +133,12 @@ void ReceiveSerial()
 {
 	if (Serial.available() > 0 && !PGN32614Found && !PGN32615Found) //find the header, 
 	{
-		UnSignedTemp = Serial.read();
-		header = tempHeader << 8 | UnSignedTemp;               //high,low bytes to make int
-		tempHeader = UnSignedTemp;                             //save for next time
-		PGN32614Found = (header == 32614);
-		PGN32615Found = (header == 32615);
+		LSB = Serial.read();
+		PGN = MSB << 8 | LSB;               //high,low bytes to make int
+		MSB = LSB;                          //save for next time
+		PGN32614Found = (PGN == 32614);
+		PGN32615Found = (PGN == 32615);
+		PGN32616Found = (PGN == 32616);
 	}
 	if (Serial.available() > 7)
 	{
@@ -168,6 +169,7 @@ void ReceiveSerial()
 
 				SimulateFlow = ((InCommand & 8) == 8);
 
+				UseVCN = ((InCommand & 16) == 16);
 				//reset watchdog as we just heard from AgOpenGPS
 				watchdogTimer = 0;
 				AOGconnected = true;
@@ -186,7 +188,24 @@ void ReceiveSerial()
 				WaitTime = Serial.read() << 8 | Serial.read();
 				MinPWMvalue = Serial.read();
 
-				//reset watchdog as we just heard from AgOpenGPS
+				watchdogTimer = 0;
+				AOGconnected = true;
+			}
+		}
+
+		if (PGN32616Found)
+		{
+			PGN32616Found = false;
+			byte ConID = Serial.read();
+			if (ConID == ControllerID)
+			{
+				PIDkp = Serial.read();
+				PIDminPWM = Serial.read();
+				PIDLowMax = Serial.read();
+				PIDHighMax = Serial.read();
+				PIDdeadband = Serial.read();
+				PIDbrakePoint = Serial.read();
+
 				watchdogTimer = 0;
 				AOGconnected = true;
 			}

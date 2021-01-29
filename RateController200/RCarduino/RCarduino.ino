@@ -15,11 +15,9 @@ byte FlowOn = HIGH;			// flowmeter pin on value
 
 int SecID[] = { 1, 2, 3, 4, 0, 0, 0, 0 }; // id of switch controlling relay, 1,2,3,4 or 0 for none
 
-long SendTime = 200;	// ms pwm is sent to valve
-long WaitTime = 750;	// ms to wait before adjusting valve again
 byte SlowSpeed = 9;		// low pwm rate, 0 fast, 9 slow
 
-unsigned long RateCheckInterval = 200;	// ms interval when checking rate error
+const unsigned long LOOP_TIME = 200; //in msec = 5hz 
 
 #define UseSwitchedPowerPin 1	// 0 use Relay8 as a normal relay
 								// 1 use Relay8 as a switched power pin - turns on when sketch starts, required for Raven valve
@@ -142,20 +140,14 @@ Adafruit_MCP23017 mcp;
 #endif
 
 //loop time variables in microseconds
-const unsigned long LOOP_TIME = 200; //in msec = 5hz 
 unsigned long lastTime = LOOP_TIME;
-unsigned long currentTime = LOOP_TIME;
 byte watchdogTimer = 0;
 
-//bit 0 is section 0
-byte RelayHi = 0;	// 8-15
-byte RelayFromAOG = 0; // bytes from AOG, 0-7
 byte RelayControl = 0;
 byte RelayToAOG = 0;
 int RelayTemp = 0;
 bool RelaysOn = false;
 
-float rateSetPoint = 0.0;
 float rateError = 0; //for PID
 
 // flow rate
@@ -208,30 +200,44 @@ int pwmSetting = 0;
 int pwmSettingManual = 0;
 boolean AOGconnected = false;
 
-byte InCommand = 0;	// command byte from AOG
 byte Temp = 0;
-
-float DeadBand;
+unsigned int UnSignedTemp = 0;
 
 bool PGN32614Found;
 bool PGN32615Found;
-unsigned int tempHeader;	// must be unsigned
-unsigned int header;		// must be unsigned
+bool PGN32616Found;
 
-unsigned long RateCheckLast = 0;
-
-float MeterCal = 17;	// pulses per Unit 
-byte ValveType = 1;		// 0 standard, 1 Fast Close
-
+//bit 0 is section 0
+byte RelayHi = 0;			// 8-15
+byte RelayFromAOG = 0;		// bytes from AOG, 0-7
+float rateSetPoint = 0.0;
+float MeterCal = 17;		// pulses per Unit 
+byte InCommand = 0;			// command byte from AOG
+byte ValveType = 1;			// 0 standard, 1 Fast Close
 bool SimulateFlow = true;
+
+// VCN
+long VCN = 743;
+long SendTime = 200;	// ms pwm is sent to valve
+long WaitTime = 750;	// ms to wait before adjusting valve again
 byte MinPWMvalue = 150;
 byte MaxPWMvalue = 255;
+bool UseVCN = 1;		// 0 PID, 1 VCN
 
-long VCN = 743;
+// PID
+byte PIDkp = 20;
+byte PIDminPWM = 50;
+byte PIDLowMax = 100;
+byte PIDHighMax = 255;
+byte PIDdeadband = 3;
+byte PIDbrakePoint = 20;
 
-unsigned int UnSignedTemp = 0;
+byte PWMhi;
+byte PWMlo;
 
-int PGN;
+byte MSB;
+byte LSB;
+unsigned int PGN;
 
 void setup()
 {
@@ -239,7 +245,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("RCarduino  :  27-Jan-2021");
+	Serial.println("RCarduino  :  29-Jan-2021");
 	Serial.println();
 
 #if (CommType == 1)
@@ -365,10 +371,21 @@ void loop()
 	ReceiveUDPWifi();
 #endif
 
+	if (UseVCN)
+	{
+		PWMhi = MaxPWMvalue;
+		PWMlo = MinPWMvalue;
+	}
+	else
+	{
+		PWMhi = PIDHighMax;
+		PWMlo = PIDminPWM;
+	}
+
 	if (UseSwitches)
 	{
 		ReadSectionSwitches();
-		ReadRateSwitch();
+		ReadRateSwitch(PWMlo, PWMhi);
 	}
 	else
 	{
@@ -380,28 +397,31 @@ void loop()
 
 	SetRelays();
 
-	if (millis() - RateCheckLast > RateCheckInterval)
-	{
-		RateCheckLast = millis();
-		if (RelaysOn)
-		{
-			if (SimulateFlow) DoSimulate();
-			rateError = CalRateError();
-		}
-	}
-
-	if (RelaysOn && AutoOn)
-	{
-		pwmSetting = VCNpwm(rateError, rateSetPoint, MinPWMvalue, MaxPWMvalue,
-			VCN, FlowRate, SendTime, WaitTime, SlowSpeed, ValveType);
-	}
-
 	motorDrive();
 
-	currentTime = millis();
-	if (currentTime - lastTime >= LOOP_TIME)
+	if (millis() - lastTime >= LOOP_TIME)
 	{
-		lastTime = currentTime;
+		lastTime = millis();
+
+		if (RelaysOn)
+		{
+			if (SimulateFlow) DoSimulate(PWMlo, PWMhi);
+			rateError = CalRateError();
+
+			if (AutoOn)
+			{
+				if (UseVCN)
+				{
+					pwmSetting = VCNpwm(rateError, rateSetPoint, MinPWMvalue, MaxPWMvalue,
+						VCN, FlowRate, SendTime, WaitTime, SlowSpeed, ValveType);
+				}
+				else
+				{
+					pwmSetting = DoPID(PIDkp, rateError, rateSetPoint, PIDminPWM, PIDLowMax,
+						PIDHighMax, PIDbrakePoint, PIDdeadband);
+				}
+			}
+		}
 
 		// check connection to AOG
 		watchdogTimer++;

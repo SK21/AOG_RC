@@ -36,7 +36,6 @@ namespace RateController
         {
             RC = CalledFrom;
             cProdID = ProductID;
-            cConID = ControllerID;
 
             VCN = 743;
             SendTime = 200;

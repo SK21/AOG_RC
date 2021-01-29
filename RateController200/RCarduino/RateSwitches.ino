@@ -1,6 +1,6 @@
 // modified from https://github.com/mtz8302/AGO_SectionControl_SW_arduino_nano
 
-void ReadRateSwitch()
+void ReadRateSwitch(byte swMin,byte swMax)
 {
 	RateUpPressed = !digitalRead(RateUpPin);
 	RateDownPressed = !digitalRead(RateDownPin);
@@ -54,23 +54,23 @@ void ReadRateSwitch()
 			else
 			{
 				// manual rate adjustment
-				int HalfWay = MinPWMvalue + (MaxPWMvalue - MinPWMvalue) / 2;
+				int HalfWay = swMin + (swMax - swMin) / 2;
 
-				if (pwmSettingManual < MinPWMvalue)
+				if (pwmSettingManual < swMin)
 				{
-					pwmSettingManual = MinPWMvalue;
+					pwmSettingManual = swMin;
 				}
-				else if ((pwmSettingManual >= MinPWMvalue) && (pwmSettingManual < HalfWay))
+				else if ((pwmSettingManual >= swMax	) && (pwmSettingManual < HalfWay))
 				{
 					pwmSettingManual = HalfWay;
 				}
 				else if (pwmSettingManual >= HalfWay)
 				{
-					pwmSettingManual = MaxPWMvalue;
+					pwmSettingManual = swMax;
 				}
 
-				if (pwmSettingManual < MinPWMvalue) pwmSettingManual = MinPWMvalue;
-				if (pwmSettingManual > MaxPWMvalue) pwmSettingManual = MaxPWMvalue;
+				if (pwmSettingManual < swMin) pwmSettingManual = swMin;
+				if (pwmSettingManual > swMax) pwmSettingManual = swMax;
 
 				if (RateUpPressed)
 				{
