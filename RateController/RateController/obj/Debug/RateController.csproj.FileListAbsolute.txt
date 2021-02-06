@@ -1,0 +1,277 @@
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+I:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.exe.config
+I:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.exe
+I:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.pdb
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.exe
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.pdb
+I:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.exe.manifest
+I:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.application
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.exe.manifest
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController100\RateController\RateController\bin\Debug\RateController.exe.config
+C:\MyDocs\RateController100\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100\RateController\RateController\bin\Debug\RateController.application
+C:\MyDocs\RateController100\RateController\RateController\bin\Debug\RateController.exe
+C:\MyDocs\RateController100\RateController\RateController\bin\Debug\RateController.pdb
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.exe
+C:\MyDocs\RateController100\RateController\RateController\obj\Debug\RateController.pdb
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\bin\Debug\RateController.exe.config
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\bin\Debug\RateController.application
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\bin\Debug\RateController.exe
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\bin\Debug\RateController.pdb
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.exe
+C:\MyDocs\RateController100 428\RateController100\RateController\RateController\obj\Debug\RateController.pdb
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.exe.config
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.application
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.exe
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.pdb
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.exe
+C:\MyDocs\RateController100 15Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.pdb
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.exe
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.pdb
+I:\MyDocs\AOG\RateController300\RateController\RateController\bin\Debug\RateController.exe.config
+I:\MyDocs\AOG\RateController300\RateController\RateController\bin\Debug\RateController.exe.manifest
+I:\MyDocs\AOG\RateController300\RateController\RateController\bin\Debug\RateController.application
+I:\MyDocs\AOG\RateController300\RateController\RateController\bin\Debug\RateController.exe
+I:\MyDocs\AOG\RateController300\RateController\RateController\bin\Debug\RateController.pdb
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.exe.manifest
+I:\MyDocs\AOG\RateController300\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController300\RateController300\RateController\RateController\bin\Debug\RateController.exe.config
+C:\MyDocs\RateController300\RateController300\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\MyDocs\RateController300\RateController300\RateController\RateController\bin\Debug\RateController.application
+C:\MyDocs\RateController300\RateController300\RateController\RateController\bin\Debug\RateController.exe
+C:\MyDocs\RateController300\RateController300\RateController\RateController\bin\Debug\RateController.pdb
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.exe
+C:\MyDocs\RateController300\RateController300\RateController\RateController\obj\Debug\RateController.pdb
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.exe.config
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.application
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.exe
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\bin\Debug\RateController.pdb
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.exe
+C:\MyDocs\RateController100 25Mar2020\RateController\RateController\obj\Debug\RateController.pdb
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.exe.config
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.application
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.exe
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\bin\Debug\RateController.pdb
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.exe
+C:\MyDocs\RateController100 27Mar2020\RateController100\RateController\RateController\obj\Debug\RateController.pdb
+C:\MyDocs\RateController 1018\RateController\RateController\bin\Debug\RateController.exe.config
+C:\MyDocs\RateController 1018\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\MyDocs\RateController 1018\RateController\RateController\bin\Debug\RateController.application
+C:\MyDocs\RateController 1018\RateController\RateController\bin\Debug\RateController.exe
+C:\MyDocs\RateController 1018\RateController\RateController\bin\Debug\RateController.pdb
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.application
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.exe
+C:\MyDocs\RateController 1018\RateController\RateController\obj\Debug\RateController.pdb
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.exe.config
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.exe.manifest
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.application
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.exe
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\bin\Debug\RateController.pdb
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.exe.manifest
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.application
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.exe
+C:\Users\Public\Documents\Current AOG files\RateController100 19Apr2020\RateController100\RateController\RateController\obj\Debug\RateController.pdb
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+I:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\Keypad.dll
+I:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RepeatButtonControl.dll
+I:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.CopyComplete
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.exe.config
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.exe.manifest
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.application
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.exe
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.pdb
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\Keypad.dll
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RepeatButtonControl.dll
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.exe.manifest
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.application
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.CopyComplete
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.exe
+E:\MyFiles\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.pdb
+E:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.exe.config
+E:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.exe.manifest
+E:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.application
+E:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.exe
+E:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RateController.pdb
+E:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\Keypad.dll
+E:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\RepeatButtonControl.dll
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.FormRateSettings.resources
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.FormRateControl.resources
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.exe.manifest
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.application
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.csproj.CopyComplete
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.exe
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.pdb
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.Lang.resources
+E:\MyDocs\AOG\RateController100\RateController\RateController\bin\Debug\de\RateController.resources.dll
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\RateController.Lang.de.resources
+E:\MyDocs\AOG\RateController100\RateController\RateController\obj\Debug\de\RateController.resources.dll
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\bin\Debug\RateController.exe.config
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\bin\Debug\RateController.exe.manifest
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\bin\Debug\RateController.application
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\bin\Debug\RateController.exe
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\bin\Debug\RateController.pdb
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\bin\Debug\de\RateController.resources.dll
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\bin\Debug\Keypad.dll
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\bin\Debug\RepeatButtonControl.dll
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.Lang.resources
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.Lang.de.resources
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\de\RateController.resources.dll
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.exe.manifest
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.application
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.csproj.CopyComplete
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.exe
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.pdb
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.FormAbout.resources
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.FormSettings.resources
+E:\MyDocs\AOG\RateController100\MultipleRates\RateController\RateController\obj\Debug\RateController.FormStart.resources
+E:\MyDocs\AOG\RateController200\RateController\RateController\bin\Debug\RateController.exe.config
+E:\MyDocs\AOG\RateController200\RateController\RateController\bin\Debug\RateController.exe.manifest
+E:\MyDocs\AOG\RateController200\RateController\RateController\bin\Debug\RateController.application
+E:\MyDocs\AOG\RateController200\RateController\RateController\bin\Debug\RateController.exe
+E:\MyDocs\AOG\RateController200\RateController\RateController\bin\Debug\RateController.pdb
+E:\MyDocs\AOG\RateController200\RateController\RateController\bin\Debug\de\RateController.resources.dll
+E:\MyDocs\AOG\RateController200\RateController\RateController\bin\Debug\Keypad.dll
+E:\MyDocs\AOG\RateController200\RateController\RateController\bin\Debug\RepeatButtonControl.dll
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.FormAbout.resources
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.FormSettings.resources
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.FormStart.resources
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.FormTimedMessage.resources
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.Lang.resources
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.Properties.Resources.resources
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.Lang.de.resources
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\de\RateController.resources.dll
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.exe.manifest
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.application
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.csproj.CopyComplete
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.exe
+E:\MyDocs\AOG\RateController200\RateController\RateController\obj\Debug\RateController.pdb
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\bin\Debug\RateController.exe.config
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\bin\Debug\RateController.exe.manifest
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\bin\Debug\RateController.application
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\bin\Debug\RateController.exe
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\bin\Debug\RateController.pdb
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\bin\Debug\de\RateController.resources.dll
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\bin\Debug\Keypad.dll
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\bin\Debug\RepeatButtonControl.dll
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.FormAbout.resources
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.FormSettings.resources
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.FormStart.resources
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.FormTimedMessage.resources
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.Lang.resources
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.Properties.Resources.resources
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.Lang.de.resources
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\de\RateController.resources.dll
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.exe.manifest
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.application
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.csproj.CopyComplete
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.exe
+E:\MyDocs\AOG\RateController 2.0\Other_Files\Source\RateController\obj\Debug\RateController.pdb
