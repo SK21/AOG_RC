@@ -37,6 +37,16 @@ namespace RateController
         float KalProcess = 0.005F;  // smaller is more filtering
 
         private DateTime ReceiveTime;
+        private byte LastSectionHi;
+        private byte LastSectionLo;
+
+        public event EventHandler<SectionsChangedEventArgs> SectionsChanged;
+
+        public class SectionsChangedEventArgs: EventArgs
+        {
+            public byte SectionHi { get; set; }
+            public byte SectionLo { get; set; }
+        }
 
         public byte ByteCount()
         {
@@ -57,6 +67,17 @@ namespace RateController
                 SectionControlByteHi = Data[8];
                 SectionControlByteLo = Data[9];
 
+                if ((SectionControlByteHi != LastSectionHi) || (SectionControlByteLo != LastSectionLo))
+                {
+                    SectionsChangedEventArgs args = new SectionsChangedEventArgs();
+                    args.SectionHi = SectionControlByteHi;
+                    args.SectionLo = SectionControlByteLo;
+                    SectionsChanged?.Invoke(this, args);
+
+                    LastSectionHi = SectionControlByteHi;
+                    LastSectionLo = SectionControlByteLo;
+                }
+
                 ReceiveTime = DateTime.Now;
                 Result = true;
             }
@@ -65,15 +86,22 @@ namespace RateController
 
         public double Speed()
         {
-            Temp = SpeedHi << 8 | SpeedLo;
-            //return Temp / 100.0;
+            if (Connected())
+            {
+                Temp = SpeedHi << 8 | SpeedLo;
+                //return Temp / 100.0;
 
-            // Kalmen filter
-            KalPc = KalP + KalProcess;
-            KalG = KalPc / (KalPc + KalVariance);
-            KalP = (1 - KalG) * KalPc;
-            KalResult = (KalG * ((float)Temp - KalResult) + KalResult);
-            return (double)(KalResult / 100.0);
+                // Kalmen filter
+                KalPc = KalP + KalProcess;
+                KalG = KalPc / (KalPc + KalVariance);
+                KalP = (1 - KalG) * KalPc;
+                KalResult = (KalG * ((float)Temp - KalResult) + KalResult);
+                return (double)(KalResult / 100.0);
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public double WorkedArea()

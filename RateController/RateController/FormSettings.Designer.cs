@@ -31,6 +31,10 @@ namespace RateController
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tc = new System.Windows.Forms.TabControl();
             this.tbs0 = new System.Windows.Forms.TabPage();
             this.rbPID = new System.Windows.Forms.RadioButton();
@@ -42,13 +46,13 @@ namespace RateController
             this.lb5 = new System.Windows.Forms.Label();
             this.lb3 = new System.Windows.Forms.Label();
             this.RateSet = new System.Windows.Forms.TextBox();
-            this.lb2 = new System.Windows.Forms.Label();
-            this.AreaUnits = new System.Windows.Forms.ComboBox();
-            this.lb1 = new System.Windows.Forms.Label();
             this.lb4 = new System.Windows.Forms.Label();
             this.FlowCal = new System.Windows.Forms.TextBox();
+            this.lb2 = new System.Windows.Forms.Label();
             this.lb6 = new System.Windows.Forms.Label();
             this.TankSize = new System.Windows.Forms.TextBox();
+            this.AreaUnits = new System.Windows.Forms.ComboBox();
+            this.lb1 = new System.Windows.Forms.Label();
             this.lb7 = new System.Windows.Forms.Label();
             this.TankRemain = new System.Windows.Forms.TextBox();
             this.btnResetQuantity = new System.Windows.Forms.Button();
@@ -136,6 +140,32 @@ namespace RateController
             this.lb34 = new System.Windows.Forms.Label();
             this.lbWorkRateData = new System.Windows.Forms.Label();
             this.lbWorkRate = new System.Windows.Forms.Label();
+            this.tbs5 = new System.Windows.Forms.TabPage();
+            this.btnCalCalculate = new System.Windows.Forms.Button();
+            this.btnCalStop = new System.Windows.Forms.Button();
+            this.lbCalCounts = new System.Windows.Forms.Label();
+            this.btnCalCopy = new System.Windows.Forms.Button();
+            this.tbCalMeasured = new System.Windows.Forms.TextBox();
+            this.lbCalCPU = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.btnCalStart = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
+            this.tbs6 = new System.Windows.Forms.TabPage();
+            this.lbTotalWidth = new System.Windows.Forms.Label();
+            this.rbCM = new System.Windows.Forms.RadioButton();
+            this.rbInches = new System.Windows.Forms.RadioButton();
+            this.DGV = new System.Windows.Forms.DataGridView();
+            this.sectionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.widthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.switchDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.enabledDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataSet1 = new System.Data.DataSet();
+            this.dataTable1 = new System.Data.DataTable();
+            this.dataColumn1 = new System.Data.DataColumn();
+            this.dataColumn2 = new System.Data.DataColumn();
+            this.dataColumn3 = new System.Data.DataColumn();
+            this.dataColumn4 = new System.Data.DataColumn();
             this.lbProduct = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -147,7 +177,6 @@ namespace RateController
             this.btnLoadSettings = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
-            this.lbVCNpid = new System.Windows.Forms.Label();
             this.tc.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.tbs1.SuspendLayout();
@@ -156,6 +185,11 @@ namespace RateController
             this.tbs2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tbs3.SuspendLayout();
+            this.tbs5.SuspendLayout();
+            this.tbs6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             this.SuspendLayout();
             // 
             // tc
@@ -165,6 +199,8 @@ namespace RateController
             this.tc.Controls.Add(this.tbs4);
             this.tc.Controls.Add(this.tbs2);
             this.tc.Controls.Add(this.tbs3);
+            this.tc.Controls.Add(this.tbs5);
+            this.tc.Controls.Add(this.tbs6);
             this.tc.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tc.Location = new System.Drawing.Point(12, 12);
             this.tc.Name = "tc";
@@ -266,10 +302,10 @@ namespace RateController
             "Lbs",
             "Litres",
             "Kgs"});
-            this.VolumeUnits.Location = new System.Drawing.Point(282, 109);
+            this.VolumeUnits.Location = new System.Drawing.Point(282, 74);
             this.VolumeUnits.Name = "VolumeUnits";
             this.VolumeUnits.Size = new System.Drawing.Size(161, 31);
-            this.VolumeUnits.TabIndex = 3;
+            this.VolumeUnits.TabIndex = 2;
             this.VolumeUnits.SelectedIndexChanged += new System.EventHandler(this.VolumeUnits_SelectedIndexChanged);
             // 
             // ValveType
@@ -320,63 +356,38 @@ namespace RateController
             this.RateSet.Enter += new System.EventHandler(this.RateSet_Enter);
             this.RateSet.Validating += new System.ComponentModel.CancelEventHandler(this.RateSet_Validating);
             // 
-            // lb2
-            // 
-            this.lb2.AutoSize = true;
-            this.lb2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb2.Location = new System.Drawing.Point(52, 149);
-            this.lb2.Name = "lb2";
-            this.lb2.Size = new System.Drawing.Size(88, 23);
-            this.lb2.TabIndex = 113;
-            this.lb2.Text = "Coverage";
-            // 
-            // AreaUnits
-            // 
-            this.AreaUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.AreaUnits.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AreaUnits.FormattingEnabled = true;
-            this.AreaUnits.Items.AddRange(new object[] {
-            "Acre",
-            "Hectare",
-            "Minute",
-            "Hour"});
-            this.AreaUnits.Location = new System.Drawing.Point(282, 145);
-            this.AreaUnits.Name = "AreaUnits";
-            this.AreaUnits.Size = new System.Drawing.Size(161, 31);
-            this.AreaUnits.TabIndex = 4;
-            // 
-            // lb1
-            // 
-            this.lb1.AutoSize = true;
-            this.lb1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb1.Location = new System.Drawing.Point(53, 113);
-            this.lb1.Name = "lb1";
-            this.lb1.Size = new System.Drawing.Size(80, 23);
-            this.lb1.TabIndex = 114;
-            this.lb1.Text = "Quantity";
-            // 
             // lb4
             // 
             this.lb4.AutoSize = true;
             this.lb4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb4.Location = new System.Drawing.Point(52, 78);
+            this.lb4.Location = new System.Drawing.Point(52, 150);
             this.lb4.Name = "lb4";
-            this.lb4.Size = new System.Drawing.Size(99, 23);
+            this.lb4.Size = new System.Drawing.Size(182, 23);
             this.lb4.TabIndex = 115;
-            this.lb4.Text = "Rate Cal #";
+            this.lb4.Text = "Sensor Counts / Unit";
             // 
             // FlowCal
             // 
             this.FlowCal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FlowCal.Location = new System.Drawing.Point(341, 74);
+            this.FlowCal.Location = new System.Drawing.Point(341, 146);
             this.FlowCal.MaxLength = 8;
             this.FlowCal.Name = "FlowCal";
             this.FlowCal.Size = new System.Drawing.Size(102, 30);
-            this.FlowCal.TabIndex = 2;
+            this.FlowCal.TabIndex = 4;
             this.FlowCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.FlowCal.TextChanged += new System.EventHandler(this.FlowCal_TextChanged);
             this.FlowCal.Enter += new System.EventHandler(this.FlowCal_Enter);
             this.FlowCal.Validating += new System.ComponentModel.CancelEventHandler(this.FlowCal_Validating);
+            // 
+            // lb2
+            // 
+            this.lb2.AutoSize = true;
+            this.lb2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb2.Location = new System.Drawing.Point(52, 114);
+            this.lb2.Name = "lb2";
+            this.lb2.Size = new System.Drawing.Size(88, 23);
+            this.lb2.TabIndex = 113;
+            this.lb2.Text = "Coverage";
             // 
             // lb6
             // 
@@ -400,6 +411,32 @@ namespace RateController
             this.TankSize.TextChanged += new System.EventHandler(this.TankSize_TextChanged);
             this.TankSize.Enter += new System.EventHandler(this.TankSize_Enter);
             this.TankSize.Validating += new System.ComponentModel.CancelEventHandler(this.TankSize_Validating);
+            // 
+            // AreaUnits
+            // 
+            this.AreaUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.AreaUnits.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AreaUnits.FormattingEnabled = true;
+            this.AreaUnits.Items.AddRange(new object[] {
+            "Acre",
+            "Hectare",
+            "Minute",
+            "Hour"});
+            this.AreaUnits.Location = new System.Drawing.Point(282, 110);
+            this.AreaUnits.Name = "AreaUnits";
+            this.AreaUnits.Size = new System.Drawing.Size(161, 31);
+            this.AreaUnits.TabIndex = 3;
+            this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
+            // 
+            // lb1
+            // 
+            this.lb1.AutoSize = true;
+            this.lb1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb1.Location = new System.Drawing.Point(53, 78);
+            this.lb1.Name = "lb1";
+            this.lb1.Size = new System.Drawing.Size(80, 23);
+            this.lb1.TabIndex = 114;
+            this.lb1.Text = "Quantity";
             // 
             // lb7
             // 
@@ -857,9 +894,9 @@ namespace RateController
             this.lbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbConID.Location = new System.Drawing.Point(127, 211);
             this.lbConID.Name = "lbConID";
-            this.lbConID.Size = new System.Drawing.Size(120, 23);
+            this.lbConID.Size = new System.Drawing.Size(116, 23);
             this.lbConID.TabIndex = 128;
-            this.lbConID.Text = "Controlller ID";
+            this.lbConID.Text = "Controller ID";
             // 
             // tbConID
             // 
@@ -1060,7 +1097,7 @@ namespace RateController
             this.tbs3.Name = "tbs3";
             this.tbs3.Size = new System.Drawing.Size(484, 396);
             this.tbs3.TabIndex = 2;
-            this.tbs3.Text = "Diagnostics";
+            this.tbs3.Text = "Diag.";
             this.tbs3.UseVisualStyleBackColor = true;
             // 
             // lbErrorPercent
@@ -1445,10 +1482,291 @@ namespace RateController
             this.lbWorkRate.TabIndex = 152;
             this.lbWorkRate.Text = "Hectares/hr";
             // 
+            // tbs5
+            // 
+            this.tbs5.Controls.Add(this.btnCalCalculate);
+            this.tbs5.Controls.Add(this.btnCalStop);
+            this.tbs5.Controls.Add(this.lbCalCounts);
+            this.tbs5.Controls.Add(this.btnCalCopy);
+            this.tbs5.Controls.Add(this.tbCalMeasured);
+            this.tbs5.Controls.Add(this.lbCalCPU);
+            this.tbs5.Controls.Add(this.label21);
+            this.tbs5.Controls.Add(this.label16);
+            this.tbs5.Controls.Add(this.btnCalStart);
+            this.tbs5.Controls.Add(this.label14);
+            this.tbs5.Location = new System.Drawing.Point(4, 33);
+            this.tbs5.Name = "tbs5";
+            this.tbs5.Padding = new System.Windows.Forms.Padding(3);
+            this.tbs5.Size = new System.Drawing.Size(484, 396);
+            this.tbs5.TabIndex = 5;
+            this.tbs5.Text = "Calibrate";
+            this.tbs5.UseVisualStyleBackColor = true;
+            // 
+            // btnCalCalculate
+            // 
+            this.btnCalCalculate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCalCalculate.Location = new System.Drawing.Point(95, 295);
+            this.btnCalCalculate.Name = "btnCalCalculate";
+            this.btnCalCalculate.Size = new System.Drawing.Size(124, 72);
+            this.btnCalCalculate.TabIndex = 169;
+            this.btnCalCalculate.Text = "Calculate";
+            this.btnCalCalculate.UseVisualStyleBackColor = true;
+            this.btnCalCalculate.Click += new System.EventHandler(this.btnCalCalculate_Click);
+            // 
+            // btnCalStop
+            // 
+            this.btnCalStop.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCalStop.Location = new System.Drawing.Point(254, 205);
+            this.btnCalStop.Name = "btnCalStop";
+            this.btnCalStop.Size = new System.Drawing.Size(124, 72);
+            this.btnCalStop.TabIndex = 168;
+            this.btnCalStop.Text = "Stop";
+            this.btnCalStop.UseVisualStyleBackColor = true;
+            this.btnCalStop.Click += new System.EventHandler(this.btnCalStop_Click);
+            // 
+            // lbCalCounts
+            // 
+            this.lbCalCounts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbCalCounts.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCalCounts.Location = new System.Drawing.Point(326, 68);
+            this.lbCalCounts.Name = "lbCalCounts";
+            this.lbCalCounts.Size = new System.Drawing.Size(102, 30);
+            this.lbCalCounts.TabIndex = 167;
+            this.lbCalCounts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnCalCopy
+            // 
+            this.btnCalCopy.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCalCopy.Location = new System.Drawing.Point(245, 295);
+            this.btnCalCopy.Name = "btnCalCopy";
+            this.btnCalCopy.Size = new System.Drawing.Size(142, 72);
+            this.btnCalCopy.TabIndex = 166;
+            this.btnCalCopy.Text = "Copy to Rate Settings";
+            this.btnCalCopy.UseVisualStyleBackColor = true;
+            this.btnCalCopy.Click += new System.EventHandler(this.btnCalCopy_Click);
+            // 
+            // tbCalMeasured
+            // 
+            this.tbCalMeasured.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbCalMeasured.Location = new System.Drawing.Point(326, 108);
+            this.tbCalMeasured.MaxLength = 8;
+            this.tbCalMeasured.Name = "tbCalMeasured";
+            this.tbCalMeasured.Size = new System.Drawing.Size(102, 30);
+            this.tbCalMeasured.TabIndex = 165;
+            this.tbCalMeasured.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lbCalCPU
+            // 
+            this.lbCalCPU.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbCalCPU.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCalCPU.Location = new System.Drawing.Point(326, 148);
+            this.lbCalCPU.Name = "lbCalCPU";
+            this.lbCalCPU.Size = new System.Drawing.Size(102, 30);
+            this.lbCalCPU.TabIndex = 164;
+            this.lbCalCPU.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(37, 112);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(169, 23);
+            this.label21.TabIndex = 120;
+            this.label21.Text = "Quantity measured";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(37, 152);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(182, 23);
+            this.label16.TabIndex = 119;
+            this.label16.Text = "Sensor Counts / Unit";
+            // 
+            // btnCalStart
+            // 
+            this.btnCalStart.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCalStart.Location = new System.Drawing.Point(95, 205);
+            this.btnCalStart.Name = "btnCalStart";
+            this.btnCalStart.Size = new System.Drawing.Size(124, 72);
+            this.btnCalStart.TabIndex = 118;
+            this.btnCalStart.Text = "Reset / Start";
+            this.btnCalStart.UseVisualStyleBackColor = true;
+            this.btnCalStart.Click += new System.EventHandler(this.btnCalStart_Click);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(37, 72);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(136, 23);
+            this.label14.TabIndex = 117;
+            this.label14.Text = "Sensor Counts ";
+            // 
+            // tbs6
+            // 
+            this.tbs6.Controls.Add(this.lbTotalWidth);
+            this.tbs6.Controls.Add(this.rbCM);
+            this.tbs6.Controls.Add(this.rbInches);
+            this.tbs6.Controls.Add(this.DGV);
+            this.tbs6.Location = new System.Drawing.Point(4, 33);
+            this.tbs6.Name = "tbs6";
+            this.tbs6.Size = new System.Drawing.Size(484, 396);
+            this.tbs6.TabIndex = 6;
+            this.tbs6.Text = "Sections";
+            this.tbs6.UseVisualStyleBackColor = true;
+            // 
+            // lbTotalWidth
+            // 
+            this.lbTotalWidth.Location = new System.Drawing.Point(231, 362);
+            this.lbTotalWidth.Name = "lbTotalWidth";
+            this.lbTotalWidth.Size = new System.Drawing.Size(237, 24);
+            this.lbTotalWidth.TabIndex = 3;
+            this.lbTotalWidth.Text = "Width 100 ft";
+            this.lbTotalWidth.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // rbCM
+            // 
+            this.rbCM.AutoSize = true;
+            this.rbCM.Location = new System.Drawing.Point(171, 360);
+            this.rbCM.Name = "rbCM";
+            this.rbCM.Size = new System.Drawing.Size(54, 28);
+            this.rbCM.TabIndex = 2;
+            this.rbCM.Text = "cm";
+            this.rbCM.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.rbCM.UseVisualStyleBackColor = true;
+            // 
+            // rbInches
+            // 
+            this.rbInches.AutoSize = true;
+            this.rbInches.Checked = true;
+            this.rbInches.Location = new System.Drawing.Point(58, 360);
+            this.rbInches.Name = "rbInches";
+            this.rbInches.Size = new System.Drawing.Size(84, 28);
+            this.rbInches.TabIndex = 1;
+            this.rbInches.TabStop = true;
+            this.rbInches.Text = "Inches";
+            this.rbInches.UseVisualStyleBackColor = true;
+            this.rbInches.CheckedChanged += new System.EventHandler(this.rbInches_CheckedChanged);
+            // 
+            // DGV
+            // 
+            this.DGV.AllowUserToAddRows = false;
+            this.DGV.AllowUserToDeleteRows = false;
+            this.DGV.AllowUserToResizeColumns = false;
+            this.DGV.AllowUserToResizeRows = false;
+            this.DGV.AutoGenerateColumns = false;
+            this.DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.sectionDataGridViewTextBoxColumn,
+            this.widthDataGridViewTextBoxColumn,
+            this.switchDataGridViewTextBoxColumn,
+            this.enabledDataGridViewCheckBoxColumn});
+            this.DGV.DataMember = "Table1";
+            this.DGV.DataSource = this.dataSet1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.NullValue = "<dbnull>";
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle4;
+            this.DGV.Location = new System.Drawing.Point(14, 3);
+            this.DGV.Name = "DGV";
+            this.DGV.Size = new System.Drawing.Size(454, 351);
+            this.DGV.TabIndex = 0;
+            this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
+            this.DGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGV_CellFormatting);
+            this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
+            // 
+            // sectionDataGridViewTextBoxColumn
+            // 
+            this.sectionDataGridViewTextBoxColumn.DataPropertyName = "Section";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.sectionDataGridViewTextBoxColumn.HeaderText = "Section";
+            this.sectionDataGridViewTextBoxColumn.Name = "sectionDataGridViewTextBoxColumn";
+            this.sectionDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sectionDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.sectionDataGridViewTextBoxColumn.Width = 80;
+            // 
+            // widthDataGridViewTextBoxColumn
+            // 
+            this.widthDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.widthDataGridViewTextBoxColumn.DataPropertyName = "Width";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = "<DBNULL>";
+            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            this.widthDataGridViewTextBoxColumn.HeaderText = "Width";
+            this.widthDataGridViewTextBoxColumn.Name = "widthDataGridViewTextBoxColumn";
+            this.widthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // switchDataGridViewTextBoxColumn
+            // 
+            this.switchDataGridViewTextBoxColumn.DataPropertyName = "Switch";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.NullValue = "<DBNULL>";
+            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            this.switchDataGridViewTextBoxColumn.HeaderText = "Switch";
+            this.switchDataGridViewTextBoxColumn.Name = "switchDataGridViewTextBoxColumn";
+            this.switchDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.switchDataGridViewTextBoxColumn.Width = 80;
+            // 
+            // enabledDataGridViewCheckBoxColumn
+            // 
+            this.enabledDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.enabledDataGridViewCheckBoxColumn.DataPropertyName = "Enabled";
+            this.enabledDataGridViewCheckBoxColumn.HeaderText = "Enabled";
+            this.enabledDataGridViewCheckBoxColumn.Name = "enabledDataGridViewCheckBoxColumn";
+            // 
+            // dataSet1
+            // 
+            this.dataSet1.DataSetName = "NewDataSet";
+            this.dataSet1.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable1});
+            // 
+            // dataTable1
+            // 
+            this.dataTable1.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn1,
+            this.dataColumn2,
+            this.dataColumn3,
+            this.dataColumn4});
+            this.dataTable1.TableName = "Table1";
+            // 
+            // dataColumn1
+            // 
+            this.dataColumn1.Caption = "Section";
+            this.dataColumn1.ColumnName = "Section";
+            this.dataColumn1.DataType = typeof(short);
+            // 
+            // dataColumn2
+            // 
+            this.dataColumn2.Caption = "Width";
+            this.dataColumn2.ColumnName = "Width";
+            this.dataColumn2.DataType = typeof(double);
+            // 
+            // dataColumn3
+            // 
+            this.dataColumn3.ColumnName = "Switch";
+            this.dataColumn3.DataType = typeof(short);
+            // 
+            // dataColumn4
+            // 
+            this.dataColumn4.ColumnName = "Enabled";
+            this.dataColumn4.DataType = typeof(bool);
+            this.dataColumn4.DefaultValue = false;
+            // 
             // lbProduct
             // 
             this.lbProduct.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbProduct.Location = new System.Drawing.Point(9, 533);
+            this.lbProduct.Location = new System.Drawing.Point(8, 551);
             this.lbProduct.Name = "lbProduct";
             this.lbProduct.Size = new System.Drawing.Size(119, 23);
             this.lbProduct.TabIndex = 139;
@@ -1562,22 +1880,11 @@ namespace RateController
             this.bntOK.UseVisualStyleBackColor = true;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
-            // lbVCNpid
-            // 
-            this.lbVCNpid.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVCNpid.Location = new System.Drawing.Point(12, 566);
-            this.lbVCNpid.Name = "lbVCNpid";
-            this.lbVCNpid.Size = new System.Drawing.Size(119, 23);
-            this.lbVCNpid.TabIndex = 143;
-            this.lbVCNpid.Text = "Product";
-            this.lbVCNpid.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(515, 612);
-            this.Controls.Add(this.lbVCNpid);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
@@ -1611,6 +1918,13 @@ namespace RateController
             this.groupBox2.PerformLayout();
             this.tbs3.ResumeLayout(false);
             this.tbs3.PerformLayout();
+            this.tbs5.ResumeLayout(false);
+            this.tbs5.PerformLayout();
+            this.tbs6.ResumeLayout(false);
+            this.tbs6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1733,6 +2047,31 @@ namespace RateController
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lbErrorPercent;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label lbVCNpid;
+        private System.Windows.Forms.TabPage tbs5;
+        private System.Windows.Forms.Button btnCalCopy;
+        private System.Windows.Forms.TextBox tbCalMeasured;
+        private System.Windows.Forms.Label lbCalCPU;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button btnCalStart;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label lbCalCounts;
+        private System.Windows.Forms.Button btnCalStop;
+        private System.Windows.Forms.TabPage tbs6;
+        private System.Windows.Forms.DataGridView DGV;
+        private System.Windows.Forms.Button btnCalCalculate;
+        private System.Data.DataSet dataSet1;
+        private System.Data.DataTable dataTable1;
+        private System.Data.DataColumn dataColumn1;
+        private System.Data.DataColumn dataColumn2;
+        private System.Data.DataColumn dataColumn3;
+        private System.Data.DataColumn dataColumn4;
+        private System.Windows.Forms.Label lbTotalWidth;
+        private System.Windows.Forms.RadioButton rbCM;
+        private System.Windows.Forms.RadioButton rbInches;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sectionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn widthDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn switchDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn enabledDataGridViewCheckBoxColumn;
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using AgOpenGPS;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -23,12 +24,15 @@ namespace RateController
         private Label[] Sec;
 
         private TextBox[] PIDs;
+        private double CalculatedCPU;
+        private double LastValue;
 
         public FormSettings(FormStart CallingForm, int Page)
         {
+            mf = CallingForm;
+            Initializing = true;
             InitializeComponent();
             tbs = new TabPage[] { tbs0, tbs1, tbs2, tbs3, tbs4 };
-            mf = CallingForm;
             CurrentProduct = Page - 1;
             if (CurrentProduct < 0) CurrentProduct = 0;
 
@@ -36,7 +40,7 @@ namespace RateController
             saveFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
 
             Sec = new Label[] { sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10, sec11, sec12, sec13, sec14, sec15 };
-            
+
             PIDs = new TextBox[] { tbPIDkp, tbPIDMinPWM, tbPIDLowMax, tbPIDHighMax, tbPIDDeadBand, tbPIDBrakePoint };
             for (int i = 0; i < 6; i++)
             {
@@ -58,9 +62,11 @@ namespace RateController
             SetDayMode();
             timer1.Enabled = true;
 
-            Initializing = true;
             UpdateDisplay();
+            LoadSectionData();
+            SetCalButtons();
             Initializing = false;
+            DGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
         }
 
         private void SetDayMode()
@@ -134,6 +140,14 @@ namespace RateController
             LoadSettings();
             SetPortButtons();
             SetVCNpid();
+            if(mf.UseInches)
+            {
+                rbInches.Checked = true;
+            }
+            else
+            {
+                rbCM.Checked = true;
+            }
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
@@ -170,6 +184,7 @@ namespace RateController
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateDiags();
+            if (mf.DoCal) lbCalCounts.Text = RunningCounts().ToString("N0");
         }
 
         void UpdateDiags()
@@ -191,7 +206,7 @@ namespace RateController
             lbRateSetData.Text = Target.ToString("N1");
             lbRateAppliedData.Text = Applied.ToString("N1");
 
-            if(Target>0)
+            if (Target > 0)
             {
                 RateError = ((Target - Applied) / Target) * 100;
             }
@@ -335,6 +350,8 @@ namespace RateController
             {
                 // save changes
                 SaveSettings();
+                SaveSectionData();
+                mf.Sections.SendSwitchesPGN();
 
                 string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
@@ -355,7 +372,7 @@ namespace RateController
                 Initializing = true;
                 LoadSettings();
                 Initializing = false;
-                
+
             }
             SetVCNpid();
         }
@@ -390,8 +407,6 @@ namespace RateController
                     PIDs[i].Enabled = false;
                 }
                 btnPIDloadDefaults.Enabled = false;
-
-                lbVCNpid.Text = "VCN";
             }
             else
             {
@@ -406,8 +421,6 @@ namespace RateController
                     PIDs[i].Enabled = true;
                 }
                 btnPIDloadDefaults.Enabled = true;
-
-                lbVCNpid.Text = "PID";
             }
         }
 
@@ -482,7 +495,7 @@ namespace RateController
             cboPort.SelectedIndex = cboPort.FindStringExact(mf.SER[CurrentProduct].RCportName);
             cboBaud.SelectedIndex = cboBaud.FindStringExact(mf.SER[CurrentProduct].RCportBaud.ToString());
 
-            if (mf.SER[CurrentProduct].RCport.IsOpen)
+            if (mf.SER[CurrentProduct].ArduinoPort.IsOpen)
             {
                 cboBaud.Enabled = false;
                 cboPort.Enabled = false;
@@ -500,7 +513,10 @@ namespace RateController
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            Initializing = true;
             LoadSettings();
+            LoadSectionData();
+            Initializing = false;
             SetButtons(false);
         }
 
@@ -580,7 +596,7 @@ namespace RateController
 
         private void cboBaud_SelectedIndexChanged(object sender, EventArgs e)
         {
-            mf.SER[CurrentProduct].RCport.BaudRate = Convert.ToInt32(cboBaud.Text);
+            mf.SER[CurrentProduct].ArduinoPort.BaudRate = Convert.ToInt32(cboBaud.Text);
             mf.SER[CurrentProduct].RCportBaud = Convert.ToInt32(cboBaud.Text);
         }
 
@@ -982,6 +998,232 @@ namespace RateController
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
+            }
+        }
+
+        private void AreaUnits_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void SetCalButtons()
+        {
+            btnCalStart.Enabled = !mf.DoCal;
+            btnCalStop.Enabled = mf.DoCal;
+            btnCalCalculate.Enabled = !mf.DoCal;
+            btnCalCopy.Enabled = !mf.DoCal;
+        }
+
+        private void btnCalStart_Click(object sender, EventArgs e)
+        {
+            mf.DoCal = true;
+            mf.CalCounterStart = mf.RateCals[CurrentProduct].QuantityApplied();
+            SetCalButtons();
+        }
+
+        private void btnCalStop_Click(object sender, EventArgs e)
+        {
+            mf.DoCal = false;
+            SetCalButtons();
+            mf.CalCounterEnd = mf.RateCals[CurrentProduct].QuantityApplied();
+            lbCalCounts.Text = CalCounts().ToString("N0");
+        }
+
+        private double RunningCounts()
+        {
+            double Result = 0;
+            if (mf.RateCals[CurrentProduct].FlowCal > 0)
+            {
+                Result = (mf.RateCals[CurrentProduct].QuantityApplied() - mf.CalCounterStart) * mf.RateCals[CurrentProduct].FlowCal;
+            }
+            return Result;
+        }
+
+        private double CalCounts()
+        {
+            double Result = 0;
+            if (mf.RateCals[CurrentProduct].FlowCal > 0)
+            {
+                Result = (mf.CalCounterEnd - mf.CalCounterStart) * mf.RateCals[CurrentProduct].FlowCal;
+            }
+            return Result;
+        }
+
+        private void btnCalCalculate_Click(object sender, EventArgs e)
+        {
+            CalculatedCPU = 0;
+            double Measured;
+            if (double.TryParse(tbCalMeasured.Text, out Measured))
+            {
+                if (Measured > 0)
+                {
+                    CalculatedCPU = CalCounts() / Measured;
+                }
+            }
+            lbCalCPU.Text = CalculatedCPU.ToString("N1");
+        }
+
+        private void btnCalCopy_Click(object sender, EventArgs e)
+        {
+            FlowCal.Text = CalculatedCPU.ToString("N1");
+        }
+
+        private void LoadSectionData()
+        {
+            try
+            {
+                dataSet1.Clear();
+                foreach (clsSection Sec in mf.Sections.Items)
+                {
+                    DataRow Rw = dataSet1.Tables[0].NewRow();
+                    Rw[0] = Sec.ID + 1;
+
+                    if(mf.UseInches)
+                    {
+                        Rw[1] = Sec.Width_inches;
+                    }
+                    else
+                    {
+                        Rw[1] = Sec.Width_cm;
+                    }
+
+                    Rw[2] = Sec.SwitchID + 1;
+                    Rw[3] = Sec.Enabled;
+
+                    dataSet1.Tables[0].Rows.Add(Rw);
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("FormSettings/LoadSectionData: " + ex.Message);
+            }
+        }
+
+        private void SaveSectionData()
+        {
+            try
+            {
+                for (int i = 0; i < 16; i++)
+                {
+                    for (int j = 1; j < 4; j++)
+                    {
+                        string val = DGV.Rows[i].Cells[j].EditedFormattedValue.ToString();
+                        if (val == "") val = "0";
+                        switch (j)
+                        {
+                            case 1:
+                                // width
+                                if (mf.UseInches)
+                                {
+                                    mf.Sections.Item(i).Width_inches = (float)Convert.ToDouble(val);
+                                }
+                                else
+                                {
+                                    mf.Sections.Item(i).Width_cm = (float)Convert.ToDouble(val);
+                                }
+                                break;
+                            case 2:
+                                // switch
+                                mf.Sections.Item(i).SwitchID = Convert.ToInt32(val) - 1;    // displayed as 1-4, saved as 0-3
+                                break;
+                            case 3:
+                                // enabled
+                                mf.Sections.Item(i).Enabled = Convert.ToBoolean(val);
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.TimedMessageBox(ex.Message);
+                LoadSectionData();
+            }
+            UpdateTotalWidth();
+        }
+
+        private void DGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == 1 || e.ColumnIndex == 2)
+            {
+                if (e.Value.ToString() == "0")
+                {
+                    e.Value = "";
+                    e.FormattingApplied = true;
+                }
+            }
+        }
+
+        private void rbInches_CheckedChanged(object sender, EventArgs e)
+        {
+            mf.UseInches = rbInches.Checked;
+            mf.Tls.SaveProperty("UseInches", rbInches.Checked.ToString());
+            LoadSectionData();
+            UpdateTotalWidth();
+        }
+
+        private void UpdateTotalWidth()
+        {
+            if(mf.UseInches)
+            {
+                int Ft = (int)(mf.Sections.TotalWidth() / 12);
+                int Inches = (int)(mf.Sections.TotalWidth() - Ft * 12);
+                lbTotalWidth.Text = "Width: " + Ft.ToString() + " ft  " + Inches.ToString() + " inches";
+            }
+            else
+            {
+                int cms = (int)(mf.Sections.TotalWidth(false));
+                lbTotalWidth.Text = "Width: " + cms.ToString() + " cm";
+            }
+        }
+
+        private void DGV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            UpdateTotalWidth();
+            if(!Initializing) SetButtons(true);
+        }
+
+        private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                double tempD;
+                string val = DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue.ToString();
+                switch (e.ColumnIndex)
+                {
+                    case 1:
+                        // width
+                        double.TryParse(val, out tempD);
+                        if (tempD == 0) tempD = LastValue;
+                        using (var form = new FormNumeric(0, 10000, tempD))
+                        {
+                            var result = form.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
+                                LastValue = form.ReturnValue;
+                            }
+                        }
+                        break;
+                    case 2:
+                        // switch
+                        double.TryParse(val, out tempD);
+                        using (var form = new FormNumeric(1, 4, tempD))
+                        {
+                            var result = form.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+
             }
         }
     }

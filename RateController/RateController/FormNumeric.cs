@@ -65,7 +65,7 @@ namespace AgOpenGPS
 
         private void RegisterKeypad1_ButtonPressed(object sender, KeyPressEventArgs e)
         {
-            if (isFirstKey)
+            if (isFirstKey && (e.KeyChar != 'K'))
             {
                 tboxNumber.Text = "";
                 isFirstKey = false;
@@ -176,6 +176,11 @@ namespace AgOpenGPS
                     this.Close();
                 }
             }
+        }
+
+        private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+
         }
     }
 }

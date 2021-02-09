@@ -12,7 +12,7 @@ namespace RateController
         private string Sentence;
         byte Temp;
 
-        int accumulatedCounts;
+        int TotalPulses;
         float MeterCal;
         float pwmSetting;
 
@@ -26,13 +26,13 @@ namespace RateController
         byte MinPWMvalue;
         byte MaxPWMvalue = 255;
 
-        bool AOGconnected;
+        bool ControllerConnected;
         int Tmp;
-        byte ValveType;
+        byte ControlType;   // 0 standard, 1 fast close, 2 motor
 
         bool SimulateFlow;
         byte RelayControl;
-        bool RelaysOn;
+        bool ApplicationOn = false;
 
         float rateError;
 
@@ -44,7 +44,7 @@ namespace RateController
         int pulseCount;
         int pulseDuration;
 
-        float FlowRate;
+        float UPM;
 
         DateTime LastTime;
         int LOOP_TIME = 200;
@@ -53,7 +53,7 @@ namespace RateController
         float ValveOpen = 0;      // % valve is open
         float Pulses = 0;
         float ValveOpenTime = 4000;  // ms to fully open valve at max opening rate
-        float UPM = 0;     // simulated units per minute
+        float SimUPM = 0;     // simulated units per minute
         float MaxRate = 120;  // max rate of system in UPM
         int ErrorRange = 4;  // % random error in flow rate, above and below target
         float PulseTime = 0;
@@ -99,12 +99,14 @@ namespace RateController
         bool UseVCN = true;
 
         // PID
-        byte PIDkp=20;
+        byte PIDkp = 20;
         byte PIDminPWM = 50;
         byte PIDLowMax = 100;
         byte PIDHighMax = 255;
         byte PIDdeadband = 3;
         byte PIDbrakePoint = 20;
+
+        private DateTime ReceiveTime;
 
         public clsArduino(CRateCals CalledFrom)
         {
@@ -119,31 +121,48 @@ namespace RateController
             // RelayToAOG = 0;
             AutoOn = true;
 
-            RelaysOn = (AOGconnected & (RelayControl != 0));
+            ControllerConnected = ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
+
+            ApplicationOn = (ControllerConnected & (RelayControl != 0) & (rateSetPoint > 0));
 
             if ((DateTime.Now - LastTime).TotalMilliseconds >= LOOP_TIME)
             {
                 LastTime = DateTime.Now;
 
-                if(RelaysOn)
+                switch (ControlType)
                 {
-                    if (SimulateFlow) DoSimulate();
-                    rateError = CalRateError();
-                    
-                    if(AutoOn)
-                    {
-                        if(UseVCN)
-                        {
-                            pwmSetting = VCNpwm(rateError, rateSetPoint, MinPWMvalue, MaxPWMvalue, VCN, FlowRate,
-                                SendTime, WaitTime, SlowSpeed, ValveType);
-                        }
-                        else
-                        {
-                            pwmSetting = DoPID(PIDkp, rateError, rateSetPoint, PIDminPWM, PIDLowMax, PIDHighMax, PIDbrakePoint, PIDdeadband);
-                        }
-                    }
-                }
+                    case 2:
+                        // motor control
+                        if (SimulateFlow) SimulateMotor(PIDminPWM, PIDHighMax);
+                        rateError = rateSetPoint - mcUPM();
 
+                        if (AutoOn)
+                        {
+                            pwmSetting = ControlMotor(PIDkp, rateError, rateSetPoint, PIDminPWM,
+                                PIDHighMax, PIDdeadband);
+                        }
+                        break;
+
+                    default:
+                        // valve control
+                        if (SimulateFlow) SimulateValve(MaxPWMvalue, MinPWMvalue);
+                        rateError = rateSetPoint - vcUPM();
+
+                        if (AutoOn)
+                        {
+                            if (UseVCN)
+                            {
+                                pwmSetting = VCNpwm(rateError, rateSetPoint, MinPWMvalue, MaxPWMvalue,
+                                    VCN, UPM, SendTime, WaitTime, SlowSpeed, ControlType);
+                            }
+                            else
+                            {
+                                pwmSetting = DoPID(PIDkp, rateError, rateSetPoint, PIDminPWM, PIDLowMax,
+                                    PIDHighMax, PIDbrakePoint, PIDdeadband);
+                            }
+                        }
+                        break;
+                }
                 SendSerial();
             }
         }
@@ -157,15 +176,15 @@ namespace RateController
             Sentence += mcID.ToString() + ",";
 
             // rate applied
-            Temp = (byte)((int)(FlowRate * 100) >> 8);
+            Temp = (byte)((int)(UPM * 100) >> 8);
             Sentence += Temp.ToString();
             Sentence += ",";
-            Temp = (byte)(FlowRate * 100);
+            Temp = (byte)(UPM * 100);
             Sentence += Temp.ToString();
             Sentence += ",";
 
             // accumulated quantity
-            int Units = (int)(accumulatedCounts * 100 / MeterCal);
+            int Units = (int)(TotalPulses * 100 / MeterCal);
             Temp = (byte)(Units >> 16);
             Sentence += Temp.ToString();
             Sentence += ",";
@@ -183,7 +202,7 @@ namespace RateController
             Sentence += Tmp[1].ToString();  // high byte
             Sentence += ",";
             Sentence += Tmp[0].ToString();  // low byte
-            
+
             Sentence += "\r";
             RC.CommFromArduino(Sentence, false);
         }
@@ -208,17 +227,17 @@ namespace RateController
 
                 // command byte
                 InCommand = Data[9];
-                if ((InCommand & 1) == 1) accumulatedCounts = 0;    // reset accumulated count
+                if ((InCommand & 1) == 1) TotalPulses = 0;    // reset accumulated count
 
-                ValveType = 0;
-                if ((InCommand & 2) == 2) ValveType += 1;
-                if ((InCommand & 4) == 4) ValveType += 2;
+                ControlType = 0;
+                if ((InCommand & 2) == 2) ControlType += 1;
+                if ((InCommand & 4) == 4) ControlType += 2;
 
                 SimulateFlow = ((InCommand & 8) == 8);
 
                 UseVCN = ((InCommand & 16) == 16);
 
-                AOGconnected = true;
+                ReceiveTime = DateTime.Now;
             }
 
             if (PGN == 32615)
@@ -229,7 +248,7 @@ namespace RateController
                 WaitTime = (int)(Data[7] << 8 | Data[8]);
                 MinPWMvalue = Data[9];
 
-                AOGconnected = true;
+                ReceiveTime = DateTime.Now;
             }
 
             if (PGN == 32616)
@@ -242,28 +261,55 @@ namespace RateController
                 PIDdeadband = Data[7];
                 PIDbrakePoint = Data[8];
 
-                AOGconnected = true;
+                ReceiveTime = DateTime.Now;
             }
 
+            if (PGN == 32617)
+            {
+                byte[] SecID = new byte[16];
+                byte IDs = 0;
+                byte Section = 0;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    IDs = Data[i + 2];
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (RC.mf.Tls.IsBitSet(IDs, j))
+                        {
+                            SecID[Section] = (byte)j;
+                            break;
+                        }
+                    }
+                    Section++;
+
+                    for (int j = 4; j < 8; j++)
+                    {
+                        if (RC.mf.Tls.IsBitSet(IDs, j))
+                        {
+                            SecID[Section] = (byte)(j - 4);
+                            break;
+                        }
+                    }
+                    Section++;
+                }
+            }
         }
 
-        void DoSimulate()
+        void SimulateValve(byte Max, byte Min)
         {
             var Rand = new Random();
 
             SimulateInterval = (int)(DateTime.Now - SimulateTimeLast).TotalMilliseconds;
             SimulateTimeLast = DateTime.Now;
-            byte Max = MaxPWMvalue;
-            byte Min = MinPWMvalue;
-            if(UseVCN)
+            if (UseVCN)
             {
                 Max = PIDHighMax;
                 Min = PIDminPWM;
             }
 
-            if (RelaysOn)
+            if (ApplicationOn)
             {
-                // relays on
                 if (AutoOn)
                 {
                     float Range = Max - Min + 5;
@@ -296,13 +342,12 @@ namespace RateController
             }
             else
             {
-                // relays off
                 ValveOpen = 0;
             }
 
-            UPM = (float)(MaxRate * ValveOpen / 100.0);
+            SimUPM = (float)(MaxRate * ValveOpen / 100.0);
 
-            Pulses = (float)((UPM * MeterCal) / 60000.0);  // (Units/min * pulses/Unit) = pulses/min / 60000 = pulses/millisecond
+            Pulses = (float)((SimUPM * MeterCal) / 60000.0);  // (Units/min * pulses/Unit) = pulses/min / 60000 = pulses/millisecond
             if (Pulses == 0)
             {
                 pulseCount = 0;
@@ -323,128 +368,191 @@ namespace RateController
 
         }
 
-        float CalRateError()
+        float MaxRPM = 100.0F;
+        float PPR = 240.0F;  // pulses per revolution
+        float SimRPM = 0.0F;
+
+        void SimulateMotor(byte sMin, byte sMax)
+        {
+            if (ApplicationOn)
+            {
+                var Rand = new Random();
+
+                SimulateInterval = (int)(DateTime.Now - SimulateTimeLast).TotalMilliseconds;
+                SimulateTimeLast = DateTime.Now;
+
+                SimRPM += (float)(((pwmSetting / (float)sMax) * MaxRPM - SimRPM) * 0.25);    // update rpm
+                if (SimRPM < sMin) SimRPM = (float)sMin;
+
+                pulseCount = (int)(SimRPM * PPR);
+                RandomError = (float)((100.0 - ErrorRange) + (Rand.Next((int)(ErrorRange * 2.0))));
+                pulseCount = (int)(pulseCount * RandomError / 100.0);
+                pulseCount = (int)(pulseCount * (SimulateInterval / 60000.0)); // counts for time slice
+            }
+            else
+            {
+                pulseCount = 0;
+            }
+        }
+
+        float vcUPM()   // valve control units per minute
         {
             // measure time for one pulse
             CurrentCounts = pulseCount;
             pulseCount = 0;
-            accumulatedCounts += CurrentCounts;
+            TotalPulses += CurrentCounts;
 
-            if(pulseDuration==0 | MeterCal==0)
+            if (pulseDuration == 0 | MeterCal == 0)
             {
-                FlowRate = 0;
+                UPM = 0;
             }
             else
             {
                 Frequency = (1.0 / (double)pulseDuration) * 60000.0;    // pulses per minute
-                FlowRate = (float)(Frequency / MeterCal);    // units per minute
+                UPM = (float)(Frequency / MeterCal);    // units per minute
             }
 
             // Kalmen filter
             KalPc = KalP + KalProcess;
             KalG = KalPc / (KalPc + KalVariance);
             KalP = (1 - KalG) * KalPc;
-            KalResult = KalG * (FlowRate - KalResult) + KalResult;
-            FlowRate = KalResult;
+            KalResult = KalG * (UPM - KalResult) + KalResult;
+            UPM = KalResult;
 
-            return rateSetPoint - FlowRate;
+            return UPM;
         }
+
+        int RateInterval;
+        DateTime RateTimeLast;
+        float Units;
+        float Minutes;
+
+        float mcUPM()   // motor control units per minute
+        {
+            CurrentCounts = pulseCount;
+            pulseCount = 0;
+            TotalPulses += CurrentCounts;
+
+            RateInterval = (int)(DateTime.Now - RateTimeLast).TotalMilliseconds;
+            RateTimeLast = DateTime.Now;
+
+            if (MeterCal <= 0 || RateInterval <= 0)
+            {
+                UPM = 0;
+            }
+            else
+            {
+                Units = (float)CurrentCounts / MeterCal;
+                Minutes = (float)((float)RateInterval / 60000.0);
+                UPM = Units / Minutes;
+            }
+
+            // Kalmen filter
+            KalPc = KalP + KalProcess;
+            KalG = KalPc / (KalPc + KalVariance);
+            KalP = (1 - KalG) * KalPc;
+            KalResult = KalG * (UPM - KalResult) + KalResult;
+            UPM = KalResult;
+
+            return UPM;
+        }
+
 
         int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
                     float cFlowRate, long cSendTime, long cWaitTime, byte cSlowSpeed, byte cValveType)
         {
-            VCNparts(cVCN);
-
-            // deadband
-            float DB = (float)(VCNdeadband / 100.0) * cSetPoint;
-            if (Math.Abs(cError) <= DB)
+            NewPWM = 0;
+            if (ApplicationOn)
             {
-                // valve does not need to be adjusted
-                NewPWM = 0;
-            }
-            else
-            {
-                // backlash
-                if (!UseBacklashAdjustment && VCNbacklash > 0)
-                {
-                    if ((cError >= 0 && !LastDirectionPositive) | (cError < 0 && LastDirectionPositive))
-                    {
-                        UseBacklashAdjustment = true;
-                        SendStart = DateTime.Now;
-                    }
-                    LastDirectionPositive = (cError >= 0);
-                }
+                VCNparts(cVCN);
 
-                if (UseBacklashAdjustment)
+                // deadband
+                float DB = (float)(VCNdeadband / 100.0) * cSetPoint;
+
+                if (Math.Abs(cError) > DB)
                 {
-                    if ((DateTime.Now - SendStart).TotalMilliseconds > (VCNbacklash * 10))
+                    // backlash
+                    if (!UseBacklashAdjustment && VCNbacklash > 0)
                     {
-                        UseBacklashAdjustment = false;
-                        LastDirectionPositive = (cError >= 0);
-                        SendStart = DateTime.Now;
-                    }
-                    else
-                    {
-                        NewPWM = MaxPWM - (cSlowSpeed * (MaxPWM - MinPWM) / 9);
-                        if (cError < 0) NewPWM *= -1;
-                    }
-                }
-                else
-                {
-                    if (AdjustmentState == 0)
-                    {
-                        // waiting
-                        if ((DateTime.Now - WaitStart).TotalMilliseconds > cWaitTime)
+                        if ((cError >= 0 && !LastDirectionPositive) | (cError < 0 && LastDirectionPositive))
                         {
-                            // waiting finished
-                            AdjustmentState = 1;
+                            UseBacklashAdjustment = true;
                             SendStart = DateTime.Now;
                         }
+                        LastDirectionPositive = (cError >= 0);
                     }
 
-                    if (AdjustmentState == 1)
+                    if (UseBacklashAdjustment)
                     {
-                        // sending pwm
-                        if ((DateTime.Now - SendStart).TotalMilliseconds > cSendTime)
+                        if ((DateTime.Now - SendStart).TotalMilliseconds > (VCNbacklash * 10))
                         {
-                            // sending finished
-                            AdjustmentState = 0;
-                            WaitStart = DateTime.Now;
-                            NewPWM = 0;
+                            UseBacklashAdjustment = false;
+                            LastDirectionPositive = (cError >= 0);
+                            SendStart = DateTime.Now;
                         }
                         else
                         {
-                            // get new pwm value
-                            if (cFlowRate == 0 && cValveType == 1)
+                            NewPWM = MaxPWM - (cSlowSpeed * (MaxPWM - MinPWM) / 9);
+                            if (cError < 0) NewPWM *= -1;
+                        }
+                    }
+                    else
+                    {
+                        if (AdjustmentState == 0)
+                        {
+                            // waiting
+                            if ((DateTime.Now - WaitStart).TotalMilliseconds > cWaitTime)
                             {
-                                // open 'fast close' valve
-                                NewPWM = MaxPWM;
+                                // waiting finished
+                                AdjustmentState = 1;
+                                SendStart = DateTime.Now;
+                            }
+                        }
+
+                        if (AdjustmentState == 1)
+                        {
+                            // sending pwm
+                            if ((DateTime.Now - SendStart).TotalMilliseconds > cSendTime)
+                            {
+                                // sending finished
+                                AdjustmentState = 0;
+                                WaitStart = DateTime.Now;
+                                NewPWM = 0;
                             }
                             else
                             {
-                                // % error
-                                if (cSetPoint > 0)
+                                // get new pwm value
+                                if (cFlowRate == 0 && cValveType == 1)
                                 {
-                                    VCNerror = (float)((cError / cSetPoint) * 100.0);
+                                    // open 'fast close' valve
+                                    NewPWM = MaxPWM;
                                 }
                                 else
                                 {
-                                    VCNerror = 0;
-                                }
+                                    // % error
+                                    if (cSetPoint > 0)
+                                    {
+                                        VCNerror = (float)((cError / cSetPoint) * 100.0);
+                                    }
+                                    else
+                                    {
+                                        VCNerror = 0;
+                                    }
 
-                                // set pwm value
-                                if (Math.Abs(VCNerror) < VCNbrake)
-                                {
-                                    // slow adjustment
-                                    NewPWM = MaxPWM - ((MaxPWM - MinPWM) * cSlowSpeed / 9);
-                                }
-                                else
-                                {
-                                    // normal adjustment
-                                    NewPWM = MaxPWM - ((MaxPWM - MinPWM) * VCNspeed / 9);
-                                }
+                                    // set pwm value
+                                    if (Math.Abs(VCNerror) < VCNbrake)
+                                    {
+                                        // slow adjustment
+                                        NewPWM = MaxPWM - ((MaxPWM - MinPWM) * cSlowSpeed / 9);
+                                    }
+                                    else
+                                    {
+                                        // normal adjustment
+                                        NewPWM = MaxPWM - ((MaxPWM - MinPWM) * VCNspeed / 9);
+                                    }
 
-                                if (cError < 0) NewPWM *= -1;
+                                    if (cError < 0) NewPWM *= -1;
+                                }
                             }
                         }
                     }
@@ -477,28 +585,54 @@ namespace RateController
         int DoPID(byte clKP, float clError, float clSetPoint, byte clMinPWM, byte clLowMax, byte clHighMax, byte clBrakePoint, byte clDeadband)
         {
             int Result = 0;
-            if (clSetPoint <= 0) clSetPoint = (float)0.01;
-            float ErrorPercent = Math.Abs(clError / clSetPoint);
-            float ErrorBrake = (float)((float)(clBrakePoint / 100.0));
-            float Max = (float)clHighMax;
-
-            if(ErrorPercent>((float)(clDeadband/100.0)))
+            if (ApplicationOn)
             {
-                if(ErrorPercent<=ErrorBrake)
+                float ErrorPercent = Math.Abs(clError / clSetPoint);
+                float ErrorBrake = (float)((float)(clBrakePoint / 100.0));
+                float Max = (float)clHighMax;
+
+                if (ErrorPercent > ((float)(clDeadband / 100.0)))
                 {
-                    Max = (ErrorPercent / ErrorBrake) * clLowMax;
+                    if (ErrorPercent <= ErrorBrake)
+                    {
+                        Max = (ErrorPercent / ErrorBrake) * clLowMax;
+                    }
+
+                    Result = (int)(clKP * clError);
+
+                    bool IsPositive = (Result > 0);
+                    Result = Math.Abs(Result);
+                    if (Result > Max) Result = (int)Max;
+                    if (Result < clMinPWM) Result = clMinPWM;
+                    if (!IsPositive) Result *= -1;
                 }
+            }
+            return Result;
+        }
 
-                Result = (int)(clKP * clError);
+        float LastPWM;
+        int ControlMotor(byte sKP, float sError, float sSetPoint, byte sMinPWM,
+             byte sHighMax, byte sDeadband)
+        {
+            float Result = 0;
+            float ErrorPercent = 0;
+            if (ApplicationOn)
+            {
+                Result = LastPWM;
+                ErrorPercent = (float)(Math.Abs(sError / sSetPoint) * 100.0);
+                float Max = (float)sHighMax;
 
-                bool IsPositive = (Result > 0);
-                Result = Math.Abs(Result);
-                if (Result > Max) Result = (int)Max;
-                if (Result < clMinPWM) Result = clMinPWM;
-                if (!IsPositive) Result *= -1;
+                if (ErrorPercent > (float)sDeadband)
+                {
+                    Result += (float)((float)sKP / 255.0) * sError;
+
+                    if (Result > Max) Result = Max;
+                    if (Result < sMinPWM) Result = (float)sMinPWM;
+                }
             }
 
-            return Result;
+            LastPWM = Result;
+            return (int)Result;
         }
     }
 }

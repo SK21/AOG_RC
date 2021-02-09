@@ -70,7 +70,7 @@ namespace RateController
             }
             else
             {
-                RC.mf.SER[cProdID].SendtoRC(Data);
+                RC.mf.SER[cProdID].SendToArduino(Data);
                 RC.mf.UDPnetwork.SendUDPMessage(Data);
             }
         }

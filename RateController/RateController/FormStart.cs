@@ -46,6 +46,13 @@ namespace RateController
         private Label[] Indicators;
         private DateTime LastSave;
 
+        public double CalCounterStart;
+        public double CalCounterEnd;
+        public bool DoCal;
+
+        public clsSections Sections;
+        public bool UseInches;
+
         public FormStart()
         {
             InitializeComponent();
@@ -79,6 +86,9 @@ namespace RateController
             ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4 };
             Rates = new Label[] { rt0, rt1, rt2, rt3, rt4 };
             Indicators = new Label[] { idc0, idc1, idc2, idc3, idc4 };
+
+            Sections = new clsSections(this);
+            UseInches = true;
         }
 
         private void FormStart_Load(object sender, EventArgs e)
@@ -108,6 +118,10 @@ namespace RateController
             }
             LoadSettings();
             UpdateStatus();
+
+            Sections.Load();
+            Sections.UpdateSectionsOn(AOG.SectionControlByteHi,AOG.SectionControlByteLo);
+            Sections.SendSwitchesPGN(true);
         }
 
         public void LoadSettings()
@@ -115,6 +129,8 @@ namespace RateController
             StartSerial();
             SetDayMode();
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+            bool tmp;
+            if (bool.TryParse(Tls.LoadProperty("UseInches"), out tmp)) UseInches = tmp;
         }
 
         private void SetDayMode()
@@ -283,6 +299,8 @@ namespace RateController
             {
                 RateCals[i].SaveSettings();
             }
+
+            Sections.Save();
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -365,6 +383,11 @@ namespace RateController
             {
                 if (RateCals[i].SimulationType == SimType.VirtualNano) RateCals[i].Nano.MainLoop();
             }
+        }
+
+        private void timerArea_Tick(object sender, EventArgs e)
+        {
+            Sections.UpdateWorkedArea();
         }
     }
 }

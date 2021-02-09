@@ -6,7 +6,7 @@ namespace RateController
 {
     public class SerialComm
     {
-        public SerialPort RCport = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
+        public SerialPort ArduinoPort = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
         public int RCportBaud = 38400;
         public string RCportName;
         private readonly FormStart mf;
@@ -28,12 +28,12 @@ namespace RateController
         {
             try
             {
-                if (RCport.IsOpen)
+                if (ArduinoPort.IsOpen)
                 {
-                    RCport.DataReceived -= RCport_DataReceived;
+                    ArduinoPort.DataReceived -= RCport_DataReceived;
                     try
                     {
-                        RCport.Close();
+                        ArduinoPort.Close();
                     }
                     catch (Exception e)
                     {
@@ -42,7 +42,7 @@ namespace RateController
 
                     mf.Tls.SaveProperty("RCportSuccessful"+cPortNumber.ToString(), "false");
 
-                    RCport.Dispose();
+                    ArduinoPort.Dispose();
                 }
             }
             catch (Exception ex)
@@ -57,17 +57,17 @@ namespace RateController
             {
                 if (SerialPortExists(RCportName))
                 {
-                    if (!RCport.IsOpen)
+                    if (!ArduinoPort.IsOpen)
                     {
-                        RCport.PortName = RCportName;
-                        RCport.BaudRate = RCportBaud;
-                        RCport.DataReceived += RCport_DataReceived;
-                        RCport.DtrEnable = true;
-                        RCport.RtsEnable = true;
+                        ArduinoPort.PortName = RCportName;
+                        ArduinoPort.BaudRate = RCportBaud;
+                        ArduinoPort.DataReceived += RCport_DataReceived;
+                        ArduinoPort.DtrEnable = true;
+                        ArduinoPort.RtsEnable = true;
 
                         try
                         {
-                            RCport.Open();
+                            ArduinoPort.Open();
                         }
                         catch (Exception e)
                         {
@@ -77,10 +77,10 @@ namespace RateController
                         }
                     }
 
-                    if (RCport.IsOpen)
+                    if (ArduinoPort.IsOpen)
                     {
-                        RCport.DiscardOutBuffer();
-                        RCport.DiscardInBuffer();
+                        ArduinoPort.DiscardOutBuffer();
+                        ArduinoPort.DiscardInBuffer();
 
                         mf.Tls.SaveProperty("RCportName" + cPortNumber.ToString(), RCportName);
                         mf.Tls.SaveProperty("RCportSuccessful" + cPortNumber.ToString(), "true");
@@ -100,14 +100,14 @@ namespace RateController
             }
         }
 
-        public void SendtoRC(byte[] Data)
+        public void SendToArduino(byte[] Data)
         {
             // send to arduino rate controller
-            if (RCport.IsOpen & SerialActive)
+            if (ArduinoPort.IsOpen & SerialActive)
             {
                 try
                 {
-                    RCport.Write(Data, 0, Data.Length);
+                    ArduinoPort.Write(Data, 0, Data.Length);
                 }
                 catch (Exception ex)
                 {
@@ -128,13 +128,13 @@ namespace RateController
 
         private void RCport_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (RCport.IsOpen)
+            if (ArduinoPort.IsOpen)
             {
                 try
                 {
-                    string sentence = RCport.ReadLine();
+                    string sentence = ArduinoPort.ReadLine();
                     mf.BeginInvoke(new NewDataDelegate(HandleRCdata), sentence);
-                    if (RCport.BytesToRead > 32) RCport.DiscardInBuffer();
+                    if (ArduinoPort.BytesToRead > 32) ArduinoPort.DiscardInBuffer();
                 }
                 catch (Exception ex)
                 {

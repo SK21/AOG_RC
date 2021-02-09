@@ -13,8 +13,9 @@ namespace RateController
         private static Hashtable ht;
         private string cAppName = "RateController";
         private string cPropertiesFile;
+
         private string cSettingsDir;
-        private string cVersionDate = "03-Feb-2021";
+        private string cVersionDate = "08-Feb-2021";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
@@ -313,6 +314,11 @@ namespace RateController
             catch (Exception)
             {
             }
+        }
+
+        public bool IsBitSet(byte b, int pos)
+        {
+            return ((b >> pos) & 1) != 0;
         }
     }
 }

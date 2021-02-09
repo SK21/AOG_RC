@@ -43,8 +43,7 @@ namespace RateController
         private double LastWorkedArea = 0;
         private bool PauseArea = false;
 
-        private DateTime QcheckLast;
-        private double QuantityApplied = 0;
+        private double cQuantityApplied = 0;
         private double Ratio;
 
         private DateTime StartTime;
@@ -155,7 +154,7 @@ namespace RateController
             if (ArduinoConnected & mf.AOG.Connected()
                 & HectaresPerMinute > 0 & Coverage > 0)
             {
-                return (QuantityApplied / Coverage).ToString("N1");
+                return (cQuantityApplied / Coverage).ToString("N1");
             }
             else
             {
@@ -202,7 +201,12 @@ namespace RateController
 
         public string CurrentApplied()
         {
-            return QuantityApplied.ToString("N0");
+            return cQuantityApplied.ToString("N0");
+        }
+
+        public double QuantityApplied()
+        {
+            return cQuantityApplied;
         }
 
         public string CurrentCoverage()
@@ -297,7 +301,7 @@ namespace RateController
 
         public void ResetApplied()
         {
-            QuantityApplied = 0;
+            cQuantityApplied = 0;
             EraseApplied = true;
         }
 
@@ -320,7 +324,7 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("LastWorkedArea" + ProductID.ToString()), out LastWorkedArea);
 
             double.TryParse(mf.Tls.LoadProperty("TankRemaining" + ProductID.ToString()), out TankRemaining);
-            double.TryParse(mf.Tls.LoadProperty("QuantityApplied" + ProductID.ToString()), out QuantityApplied);
+            double.TryParse(mf.Tls.LoadProperty("QuantityApplied" + ProductID.ToString()), out cQuantityApplied);
             byte.TryParse(mf.Tls.LoadProperty("QuantityUnits" + ProductID.ToString()), out QuantityUnits);
             double.TryParse(mf.Tls.LoadProperty("LastAccQuantity" + ProductID.ToString()), out LastAccQuantity);
 
@@ -356,7 +360,7 @@ namespace RateController
             mf.Tls.SaveProperty("LastWorkedArea" + ProductID.ToString(), LastWorkedArea.ToString());
 
             mf.Tls.SaveProperty("TankRemaining" + ProductID.ToString(), TankRemaining.ToString());
-            mf.Tls.SaveProperty("QuantityApplied" + ProductID.ToString(), QuantityApplied.ToString());
+            mf.Tls.SaveProperty("QuantityApplied" + ProductID.ToString(), cQuantityApplied.ToString());
             mf.Tls.SaveProperty("QuantityUnits" + ProductID.ToString(), QuantityUnits.ToString());
             mf.Tls.SaveProperty("LastAccQuantity" + ProductID.ToString(), LastAccQuantity.ToString());
 
@@ -454,7 +458,8 @@ namespace RateController
                 // still connected
 
                 // worked area
-                TotalWorkedArea = mf.AOG.WorkedArea(); // hectares
+                //TotalWorkedArea = mf.AOG.WorkedArea(); // hectares
+                TotalWorkedArea = mf.Sections.WorkedArea_ha();
 
                 if (PauseArea | (LastWorkedArea > TotalWorkedArea))
                 {
@@ -466,7 +471,8 @@ namespace RateController
                 LastWorkedArea = TotalWorkedArea;
 
                 // work rate
-                CurrentWidth = mf.AOG.WorkingWidth();
+                //CurrentWidth = mf.AOG.WorkingWidth();
+                CurrentWidth = mf.Sections.WorkingWidth_M();
 
                 HectaresPerMinute = CurrentWidth * mf.AOG.Speed() * 0.1 / 60.0;
 
@@ -596,6 +602,10 @@ namespace RateController
                     Ratio = CurrentDifference / LastQuantityDifference;
                     if (Ratio > 10) Result = false; // too much of a change in quantity
                 }
+                else
+                {
+                    Result = false;
+                }
 
                 LastQuantityDifference = CurrentDifference;
                 return Result;
@@ -620,7 +630,7 @@ namespace RateController
                     TankRemaining -= CurrentQuantity;
 
                     // quantity applied
-                    QuantityApplied += CurrentQuantity;
+                    cQuantityApplied += CurrentQuantity;
                 }
             }
             else
