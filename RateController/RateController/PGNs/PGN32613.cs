@@ -71,9 +71,11 @@ namespace RateController
         public bool ParseStringData(string[] Data)
         {
             bool Result = false;
+            
             if (Data.Length >= cByteCount)
             {
                 int.TryParse(Data[0], out Temp);
+
                 if (Temp == HeaderHi)
                 {
                     int.TryParse(Data[1], out Temp);

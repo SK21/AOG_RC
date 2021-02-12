@@ -104,8 +104,11 @@ namespace RateController
         {
             SecondsWorked = (float)(DateTime.Now - LastTime).TotalSeconds;
             LastTime = DateTime.Now;
-            HectaresPerSecond = (float)(WorkingWidth_M() * mf.AOG.Speed() * 0.1 / 3600.0);
-            cWorkedArea_ha += (HectaresPerSecond * SecondsWorked);
+            if (SecondsWorked < 60) // ignore invalid worked seconds
+            {
+                HectaresPerSecond = (float)(WorkingWidth_M() * mf.AOG.Speed() * 0.1 / 3600.0);
+                cWorkedArea_ha += (float)(HectaresPerSecond * SecondsWorked * 0.965);
+            }
         }
 
         public float WorkedArea_ha()

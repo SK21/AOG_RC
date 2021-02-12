@@ -261,6 +261,17 @@ namespace RateController
                     }
                 }
             }
+
+            // RPM
+            if (mf.RateCals[CurrentProduct].CountsRev > 0)
+            {
+                float RPM = (float)((mf.RateCals[CurrentProduct].FlowCal * Applied) / mf.RateCals[CurrentProduct].CountsRev);
+                lbRPM.Text = RPM.ToString("N0");
+            }
+            else
+            {
+                lbRPM.Text = "0";
+            }
         }
 
         bool IsBitSet(byte b, int pos)
@@ -282,6 +293,8 @@ namespace RateController
             tbSend.Text = (mf.RateCals[CurrentProduct].SendTime).ToString("N0");
             tbWait.Text = (mf.RateCals[CurrentProduct].WaitTime).ToString("N0");
             tbMinPWM.Text = (mf.RateCals[CurrentProduct].MinPWM).ToString("N0");
+
+            tbCountsRev.Text = (mf.RateCals[CurrentProduct].CountsRev.ToString("N0"));
 
             SelectedSimulation = mf.RateCals[CurrentProduct].SimulationType;
             switch (SelectedSimulation)
@@ -486,6 +499,9 @@ namespace RateController
 
             byte.TryParse(tbPIDBrakePoint.Text, out tempB);
             mf.RateCals[CurrentProduct].PIDbrakepoint = tempB;
+
+            int.TryParse(tbCountsRev.Text, out tempInt);
+            mf.RateCals[CurrentProduct].CountsRev = tempInt;
 
             mf.RateCals[CurrentProduct].SaveSettings();
         }
@@ -1224,6 +1240,36 @@ namespace RateController
             catch (Exception)
             {
 
+            }
+        }
+
+        private void tbCountsRev_Enter(object sender, EventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbCountsRev.Text, out tempInt);
+            using (var form = new FormNumeric(0, 10000, tempInt))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbCountsRev.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbCountsRev_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbCountsRev_Validating(object sender, CancelEventArgs e)
+        {
+            int Tmp;
+            int.TryParse(tbCountsRev.Text, out Tmp);
+            if (Tmp < 0 || Tmp > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
             }
         }
     }

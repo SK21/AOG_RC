@@ -69,6 +69,7 @@ namespace RateController
         public byte PIDbrakepoint { get { return PIDsend.BrakePoint; } set { PIDsend.BrakePoint = value; } }
 
         public bool UseVCN = true;
+        private int cCountsRev;
 
         public CRateCals(FormStart CallingForm, int ProdID)
         {
@@ -317,6 +318,18 @@ namespace RateController
             TankRemaining = TankSize;
         }
 
+        public int CountsRev
+        {
+            get { return cCountsRev; }
+            set
+            {
+                if (value >= 0 && value < 10000)
+                {
+                    cCountsRev = value;
+                }
+            }
+        }
+
         public void LoadSettings()
         {
             double.TryParse(mf.Tls.LoadProperty("Coverage" + ProductID.ToString()), out Coverage);
@@ -351,6 +364,7 @@ namespace RateController
             byte.TryParse(mf.Tls.LoadProperty("PIDbrakepoint" + ProductID.ToString()), out PIDsend.BrakePoint);
 
             bool.TryParse(mf.Tls.LoadProperty("UseVCN" + ProductID.ToString()), out UseVCN);
+            int.TryParse(mf.Tls.LoadProperty("CountsRev" + ProductID.ToString()), out cCountsRev);
         }
 
         public void SaveSettings()
@@ -387,6 +401,7 @@ namespace RateController
             mf.Tls.SaveProperty("PIDbrakepoint" + ProductID.ToString(), PIDsend.BrakePoint.ToString());
 
             mf.Tls.SaveProperty("UseVCN" + ProductID.ToString(), UseVCN.ToString());
+            mf.Tls.SaveProperty("CountsRev" + ProductID.ToString(), cCountsRev.ToString());
         }
 
         public byte SectionHi()

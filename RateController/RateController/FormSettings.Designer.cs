@@ -31,10 +31,10 @@ namespace RateController
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tc = new System.Windows.Forms.TabControl();
             this.tbs0 = new System.Windows.Forms.TabPage();
             this.rbPID = new System.Windows.Forms.RadioButton();
@@ -105,6 +105,10 @@ namespace RateController
             this.rbVirtual = new System.Windows.Forms.RadioButton();
             this.PortIndicator = new System.Windows.Forms.Label();
             this.tbs3 = new System.Windows.Forms.TabPage();
+            this.tbCountsRev = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.lbRPM = new System.Windows.Forms.Label();
             this.lbErrorPercent = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
@@ -1058,6 +1062,10 @@ namespace RateController
             // 
             // tbs3
             // 
+            this.tbs3.Controls.Add(this.tbCountsRev);
+            this.tbs3.Controls.Add(this.label24);
+            this.tbs3.Controls.Add(this.label23);
+            this.tbs3.Controls.Add(this.lbRPM);
             this.tbs3.Controls.Add(this.lbErrorPercent);
             this.tbs3.Controls.Add(this.label15);
             this.tbs3.Controls.Add(this.label20);
@@ -1100,11 +1108,54 @@ namespace RateController
             this.tbs3.Text = "Diag.";
             this.tbs3.UseVisualStyleBackColor = true;
             // 
+            // tbCountsRev
+            // 
+            this.tbCountsRev.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbCountsRev.Location = new System.Drawing.Point(256, 132);
+            this.tbCountsRev.MaxLength = 8;
+            this.tbCountsRev.Name = "tbCountsRev";
+            this.tbCountsRev.Size = new System.Drawing.Size(130, 30);
+            this.tbCountsRev.TabIndex = 194;
+            this.tbCountsRev.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbCountsRev.TextChanged += new System.EventHandler(this.tbCountsRev_TextChanged);
+            this.tbCountsRev.Enter += new System.EventHandler(this.tbCountsRev_Enter);
+            this.tbCountsRev.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRev_Validating);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label24.Location = new System.Drawing.Point(83, 136);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(105, 23);
+            this.label24.TabIndex = 193;
+            this.label24.Text = "Counts/Rev";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.Location = new System.Drawing.Point(83, 168);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(47, 23);
+            this.label23.TabIndex = 191;
+            this.label23.Text = "RPM";
+            // 
+            // lbRPM
+            // 
+            this.lbRPM.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRPM.Location = new System.Drawing.Point(256, 167);
+            this.lbRPM.Name = "lbRPM";
+            this.lbRPM.Size = new System.Drawing.Size(130, 25);
+            this.lbRPM.TabIndex = 190;
+            this.lbRPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lbErrorPercent
             // 
             this.lbErrorPercent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbErrorPercent.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbErrorPercent.Location = new System.Drawing.Point(256, 102);
+            this.lbErrorPercent.Location = new System.Drawing.Point(256, 72);
             this.lbErrorPercent.Name = "lbErrorPercent";
             this.lbErrorPercent.Size = new System.Drawing.Size(130, 25);
             this.lbErrorPercent.TabIndex = 188;
@@ -1114,7 +1165,7 @@ namespace RateController
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(83, 103);
+            this.label15.Location = new System.Drawing.Point(83, 73);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(77, 23);
             this.label15.TabIndex = 189;
@@ -1366,7 +1417,7 @@ namespace RateController
             // 
             this.lbRateAppliedData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbRateAppliedData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAppliedData.Location = new System.Drawing.Point(256, 66);
+            this.lbRateAppliedData.Location = new System.Drawing.Point(256, 42);
             this.lbRateAppliedData.Name = "lbRateAppliedData";
             this.lbRateAppliedData.Size = new System.Drawing.Size(130, 25);
             this.lbRateAppliedData.TabIndex = 165;
@@ -1376,7 +1427,7 @@ namespace RateController
             // 
             this.lb33.AutoSize = true;
             this.lb33.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb33.Location = new System.Drawing.Point(83, 67);
+            this.lb33.Location = new System.Drawing.Point(83, 43);
             this.lb33.Name = "lb33";
             this.lb33.Size = new System.Drawing.Size(115, 23);
             this.lb33.TabIndex = 166;
@@ -1386,7 +1437,7 @@ namespace RateController
             // 
             this.lbRateSetData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbRateSetData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateSetData.Location = new System.Drawing.Point(256, 30);
+            this.lbRateSetData.Location = new System.Drawing.Point(256, 12);
             this.lbRateSetData.Name = "lbRateSetData";
             this.lbRateSetData.Size = new System.Drawing.Size(130, 25);
             this.lbRateSetData.TabIndex = 163;
@@ -1396,7 +1447,7 @@ namespace RateController
             // 
             this.lb32.AutoSize = true;
             this.lb32.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb32.Location = new System.Drawing.Point(83, 31);
+            this.lb32.Location = new System.Drawing.Point(83, 13);
             this.lb32.Name = "lb32";
             this.lb32.Size = new System.Drawing.Size(108, 23);
             this.lb32.TabIndex = 164;
@@ -1406,7 +1457,7 @@ namespace RateController
             // 
             this.lbSpeedData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbSpeedData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSpeedData.Location = new System.Drawing.Point(256, 174);
+            this.lbSpeedData.Location = new System.Drawing.Point(256, 197);
             this.lbSpeedData.Name = "lbSpeedData";
             this.lbSpeedData.Size = new System.Drawing.Size(130, 25);
             this.lbSpeedData.TabIndex = 161;
@@ -1416,7 +1467,7 @@ namespace RateController
             // 
             this.lbSpeed.AutoSize = true;
             this.lbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSpeed.Location = new System.Drawing.Point(83, 175);
+            this.lbSpeed.Location = new System.Drawing.Point(83, 198);
             this.lbSpeed.Name = "lbSpeed";
             this.lbSpeed.Size = new System.Drawing.Size(63, 23);
             this.lbSpeed.TabIndex = 162;
@@ -1426,7 +1477,7 @@ namespace RateController
             // 
             this.lbWidthData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbWidthData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWidthData.Location = new System.Drawing.Point(256, 210);
+            this.lbWidthData.Location = new System.Drawing.Point(256, 227);
             this.lbWidthData.Name = "lbWidthData";
             this.lbWidthData.Size = new System.Drawing.Size(130, 25);
             this.lbWidthData.TabIndex = 155;
@@ -1436,7 +1487,7 @@ namespace RateController
             // 
             this.lbWidth.AutoSize = true;
             this.lbWidth.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWidth.Location = new System.Drawing.Point(83, 211);
+            this.lbWidth.Location = new System.Drawing.Point(83, 228);
             this.lbWidth.Name = "lbWidth";
             this.lbWidth.Size = new System.Drawing.Size(166, 23);
             this.lbWidth.TabIndex = 156;
@@ -1446,7 +1497,7 @@ namespace RateController
             // 
             this.lbPWMdata.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbPWMdata.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPWMdata.Location = new System.Drawing.Point(256, 138);
+            this.lbPWMdata.Location = new System.Drawing.Point(256, 102);
             this.lbPWMdata.Name = "lbPWMdata";
             this.lbPWMdata.Size = new System.Drawing.Size(130, 25);
             this.lbPWMdata.TabIndex = 153;
@@ -1456,7 +1507,7 @@ namespace RateController
             // 
             this.lb34.AutoSize = true;
             this.lb34.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb34.Location = new System.Drawing.Point(83, 139);
+            this.lb34.Location = new System.Drawing.Point(83, 103);
             this.lb34.Name = "lb34";
             this.lb34.Size = new System.Drawing.Size(52, 23);
             this.lb34.TabIndex = 154;
@@ -1466,7 +1517,7 @@ namespace RateController
             // 
             this.lbWorkRateData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbWorkRateData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWorkRateData.Location = new System.Drawing.Point(256, 246);
+            this.lbWorkRateData.Location = new System.Drawing.Point(256, 257);
             this.lbWorkRateData.Name = "lbWorkRateData";
             this.lbWorkRateData.Size = new System.Drawing.Size(130, 25);
             this.lbWorkRateData.TabIndex = 151;
@@ -1476,7 +1527,7 @@ namespace RateController
             // 
             this.lbWorkRate.AutoSize = true;
             this.lbWorkRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWorkRate.Location = new System.Drawing.Point(83, 247);
+            this.lbWorkRate.Location = new System.Drawing.Point(83, 258);
             this.lbWorkRate.Name = "lbWorkRate";
             this.lbWorkRate.Size = new System.Drawing.Size(108, 23);
             this.lbWorkRate.TabIndex = 152;
@@ -1667,15 +1718,15 @@ namespace RateController
             this.enabledDataGridViewCheckBoxColumn});
             this.DGV.DataMember = "Table1";
             this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.NullValue = "<dbnull>";
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.NullValue = "<dbnull>";
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle12;
             this.DGV.Location = new System.Drawing.Point(14, 3);
             this.DGV.Name = "DGV";
             this.DGV.Size = new System.Drawing.Size(454, 351);
@@ -1687,8 +1738,8 @@ namespace RateController
             // sectionDataGridViewTextBoxColumn
             // 
             this.sectionDataGridViewTextBoxColumn.DataPropertyName = "Section";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
             this.sectionDataGridViewTextBoxColumn.HeaderText = "Section";
             this.sectionDataGridViewTextBoxColumn.Name = "sectionDataGridViewTextBoxColumn";
             this.sectionDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1699,10 +1750,10 @@ namespace RateController
             // 
             this.widthDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.widthDataGridViewTextBoxColumn.DataPropertyName = "Width";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.Format = "N0";
-            dataGridViewCellStyle2.NullValue = "<DBNULL>";
-            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.Format = "N0";
+            dataGridViewCellStyle10.NullValue = "<DBNULL>";
+            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle10;
             this.widthDataGridViewTextBoxColumn.HeaderText = "Width";
             this.widthDataGridViewTextBoxColumn.Name = "widthDataGridViewTextBoxColumn";
             this.widthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
@@ -1710,9 +1761,9 @@ namespace RateController
             // switchDataGridViewTextBoxColumn
             // 
             this.switchDataGridViewTextBoxColumn.DataPropertyName = "Switch";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.NullValue = "<DBNULL>";
-            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle11.NullValue = "<DBNULL>";
+            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle11;
             this.switchDataGridViewTextBoxColumn.HeaderText = "Switch";
             this.switchDataGridViewTextBoxColumn.Name = "switchDataGridViewTextBoxColumn";
             this.switchDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
@@ -2073,5 +2124,9 @@ namespace RateController
         private System.Windows.Forms.DataGridViewTextBoxColumn widthDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn switchDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn enabledDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.TextBox tbCountsRev;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label lbRPM;
     }
 }

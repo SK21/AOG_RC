@@ -43,7 +43,6 @@ namespace RateController
 
         int pulseCount;
         int pulseDuration;
-
         float UPM;
 
         DateTime LastTime;
@@ -62,9 +61,6 @@ namespace RateController
         int SimulateInterval;
         float RandomError;
 
-        double Frequency;
-        int CurrentCounts;
-
         long OldVCN;
         byte VCNbacklash;
         byte VCNspeed;
@@ -73,6 +69,7 @@ namespace RateController
 
         int NewPWM;
         float VCNerror;
+        int CurrentCounts;
 
         DateTime SendStart;
         DateTime WaitStart;
@@ -134,7 +131,7 @@ namespace RateController
                     case 2:
                         // motor control
                         if (SimulateFlow) SimulateMotor(PIDminPWM, PIDHighMax);
-                        rateError = rateSetPoint - mcUPM();
+                        rateError = rateSetPoint - GetUPM();
 
                         if (AutoOn)
                         {
@@ -146,7 +143,7 @@ namespace RateController
                     default:
                         // valve control
                         if (SimulateFlow) SimulateValve(MaxPWMvalue, MinPWMvalue);
-                        rateError = rateSetPoint - vcUPM();
+                        rateError = rateSetPoint - GetUPM();
 
                         if (AutoOn)
                         {
@@ -369,8 +366,9 @@ namespace RateController
         }
 
         float MaxRPM = 100.0F;
-        float PPR = 240.0F;  // pulses per revolution
+        float PPR = 50.0F;  // pulses per revolution
         float SimRPM = 0.0F;
+        float SimTmp;
 
         void SimulateMotor(byte sMin, byte sMax)
         {
@@ -382,11 +380,22 @@ namespace RateController
                 SimulateTimeLast = DateTime.Now;
 
                 SimRPM += (float)(((pwmSetting / (float)sMax) * MaxRPM - SimRPM) * 0.25);    // update rpm
+                RandomError = (float)((100.0 - ErrorRange) + (Rand.Next((int)(ErrorRange * 2.0))));
+                SimRPM = (float)(SimRPM * RandomError / 100.0);
                 if (SimRPM < sMin) SimRPM = (float)sMin;
 
+
+                SimTmp = PPR * SimRPM;
+                if(SimTmp>0)
+                {
+                    pulseDuration = (int)(60000.0 / SimTmp);
+                }
+                else
+                {
+                    pulseDuration = 0;
+                }
+
                 pulseCount = (int)(SimRPM * PPR);
-                RandomError = (float)((100.0 - ErrorRange) + (Rand.Next((int)(ErrorRange * 2.0))));
-                pulseCount = (int)(pulseCount * RandomError / 100.0);
                 pulseCount = (int)(pulseCount * (SimulateInterval / 60000.0)); // counts for time slice
             }
             else
@@ -394,69 +403,6 @@ namespace RateController
                 pulseCount = 0;
             }
         }
-
-        float vcUPM()   // valve control units per minute
-        {
-            // measure time for one pulse
-            CurrentCounts = pulseCount;
-            pulseCount = 0;
-            TotalPulses += CurrentCounts;
-
-            if (pulseDuration == 0 | MeterCal == 0)
-            {
-                UPM = 0;
-            }
-            else
-            {
-                Frequency = (1.0 / (double)pulseDuration) * 60000.0;    // pulses per minute
-                UPM = (float)(Frequency / MeterCal);    // units per minute
-            }
-
-            // Kalmen filter
-            KalPc = KalP + KalProcess;
-            KalG = KalPc / (KalPc + KalVariance);
-            KalP = (1 - KalG) * KalPc;
-            KalResult = KalG * (UPM - KalResult) + KalResult;
-            UPM = KalResult;
-
-            return UPM;
-        }
-
-        int RateInterval;
-        DateTime RateTimeLast;
-        float Units;
-        float Minutes;
-
-        float mcUPM()   // motor control units per minute
-        {
-            CurrentCounts = pulseCount;
-            pulseCount = 0;
-            TotalPulses += CurrentCounts;
-
-            RateInterval = (int)(DateTime.Now - RateTimeLast).TotalMilliseconds;
-            RateTimeLast = DateTime.Now;
-
-            if (MeterCal <= 0 || RateInterval <= 0)
-            {
-                UPM = 0;
-            }
-            else
-            {
-                Units = (float)CurrentCounts / MeterCal;
-                Minutes = (float)((float)RateInterval / 60000.0);
-                UPM = Units / Minutes;
-            }
-
-            // Kalmen filter
-            KalPc = KalP + KalProcess;
-            KalG = KalPc / (KalPc + KalVariance);
-            KalP = (1 - KalG) * KalPc;
-            KalResult = KalG * (UPM - KalResult) + KalResult;
-            UPM = KalResult;
-
-            return UPM;
-        }
-
 
         int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
                     float cFlowRate, long cSendTime, long cWaitTime, byte cSlowSpeed, byte cValveType)
@@ -633,6 +579,102 @@ namespace RateController
 
             LastPWM = Result;
             return (int)Result;
+        }
+
+        DateTime LastPulse = DateTime.Now;
+        DateTime TimedLast = DateTime.Now;
+        int CurrentDuration;
+        float PPM;
+        int MinPulseTime;
+        int TimedCounts;
+        int LowMsPulseTrigger = 50;
+        int RateInterval;
+
+        float GetUPM()
+        {
+            SetMinPulseTime();
+
+            // check for no PPM
+            if ((DateTime.Now - LastPulse).TotalMilliseconds > 4000)
+            {
+                pulseDuration = 0;
+                CurrentDuration = 0;
+                PPM = 0;
+            }
+            if (pulseCount > 0)
+            {
+                LastPulse = DateTime.Now;
+            }
+
+
+            // accumulated total
+            CurrentCounts = pulseCount;
+            pulseCount = 0;
+            TotalPulses += CurrentCounts;
+
+            // ppm
+            if (MinPulseTime == 0)
+            {
+                // low ms/pulse
+                TimedCounts += CurrentCounts;
+                RateInterval = (int)(DateTime.Now - TimedLast).TotalMilliseconds;
+                if (RateInterval > 200)
+                {
+                    TimedLast = DateTime.Now;
+                    PPM = (float)((60000.0 * TimedCounts) / RateInterval);
+                    TimedCounts = 0;
+                }
+            }
+            else
+            {
+                // high ms/pulse
+                if (pulseDuration > MinPulseTime) CurrentDuration = pulseDuration;
+                if (CurrentDuration > 0) PPM = 60000 / CurrentDuration;
+            }
+
+            // Kalmen filter
+            KalPc = KalP + KalProcess;
+            KalG = KalPc / (KalPc + KalVariance);
+            KalP = (1 - KalG) * KalPc;
+            KalResult = KalG * (PPM - KalResult) + KalResult;
+            PPM = KalResult;
+
+            // units per minute
+            if (MeterCal > 0)
+            {
+                UPM = PPM / MeterCal;
+            }
+            else
+            {
+                UPM = 0;
+            }
+
+            return UPM;
+        }
+
+        void SetMinPulseTime()
+        {
+            // ms/pulse = 60000 / ((units per minute) * (counts per unit))
+            float Ms = rateSetPoint * MeterCal;
+            if (Ms > 0)
+            {
+                Ms = (float)(60000.0 / Ms);
+            }
+            else
+            {
+                Ms = 0;
+            }
+
+            if (Ms < LowMsPulseTrigger)
+            {
+                // low ms/pulse
+                MinPulseTime = 0;
+            }
+            else
+            {
+                // high ms/pulse
+                MinPulseTime = 5;
+            }
         }
     }
 }
