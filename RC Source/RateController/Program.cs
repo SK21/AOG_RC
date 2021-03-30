@@ -24,8 +24,8 @@ namespace RateController
             {
                 Settings.Default.setF_culture = regKey.GetValue("Language").ToString();
                 Settings.Default.Save();
-                regKey.Close();
             }
+            regKey.Close();
 
             //if (Environment.OSVersion.Version.Major >= 6) SetProcessDPIAware();
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);

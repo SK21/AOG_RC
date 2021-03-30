@@ -1149,7 +1149,7 @@ namespace RateController
             lbProduct.Text = (CurrentProduct + 1).ToString() + ". " + mf.Products.Item(CurrentProduct).ProductName;
             if (mf.Products.Item(CurrentProduct).SimulationType != SimType.None)
             {
-                lbProduct.ForeColor = Color.Tomato;
+                lbProduct.ForeColor = mf.SimColor;
                 lbProduct.Text = lbProduct.Text + "  Simulation";
             }
             else

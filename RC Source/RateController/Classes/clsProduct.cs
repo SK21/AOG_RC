@@ -433,7 +433,7 @@ namespace RateController
 
                 cHectaresPerMinute = (cWorkingWidth_cm / 100.0) * mf.AutoSteerPGN.Speed_KMH() / 600.0;
                 CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
-                CurrentWorkedArea_Hc *= 0.97;   // to match AOG
+                CurrentWorkedArea_Hc *= 0.96;   // to match AOG
 
                 //coverage
                 if (cHectaresPerMinute > 0)    // Is application on?
@@ -513,12 +513,13 @@ namespace RateController
         private bool QuantityValid(double CurrentDifference)
         {
             bool Result = true;
+            double Ratio = 0;
             try
             {
                 // check quantity error
                 if (LastQuantityDifference > 0)
                 {
-                    double Ratio = CurrentDifference / LastQuantityDifference;
+                    Ratio = CurrentDifference / LastQuantityDifference;
                     if (Ratio > 10) Result = false; // too much of a change in quantity
                 }
                 else
@@ -527,13 +528,13 @@ namespace RateController
                 }
 
                 LastQuantityDifference = CurrentDifference;
-                return Result;
             }
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("clsProduct: QuantityValid: " + ex.Message);
-                return false;
+                Result = false;
             }
+            return Result;
         }
 
         private void UpdateQuantity(double AccQuantity)

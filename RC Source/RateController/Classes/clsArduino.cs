@@ -13,8 +13,8 @@ namespace RateController
         private bool ControllerConnected;
         private byte ControlType;        // 0 standard, 1 fast close, 2 motor
 
-        private int CurrentCounts;
-        private int CurrentDuration;
+        private float CurrentCounts;
+        private float CurrentDuration;
         private int ErrorRange = 4;        // % random error in flow rate, above and below target
 
         private byte InCommand;
@@ -56,8 +56,8 @@ namespace RateController
         private float PPM;
         private float PPR = 50.0F;        // pulses per revolution
 
-        private int pulseCount;
-        private int pulseDuration;
+        private float pulseCount;
+        private float pulseDuration;
         private float Pulses = 0;
 
         private float PulseTime = 0;
@@ -85,10 +85,10 @@ namespace RateController
 
         private byte Temp;
 
-        private int TimedCounts;
+        private float TimedCounts;
         private DateTime TimedLast = DateTime.Now;
         private int Tmp;
-        private int TotalPulses;
+        private float TotalPulses;
 
         private float UPM;
 
@@ -395,13 +395,13 @@ namespace RateController
             {
                 // high ms/pulse
                 if (pulseDuration > MinPulseTime) CurrentDuration = pulseDuration;
-                if (CurrentDuration > 0) PPM = 60000 / CurrentDuration;
+                if (CurrentDuration > 0) PPM = ((float)(60000.0 / CurrentDuration));
             }
 
             // Kalmen filter
             KalPc = KalP + KalProcess;
             KalG = KalPc / (KalPc + KalVariance);
-            KalP = (1 - KalG) * KalPc;
+            KalP = (float)((1.0 - KalG) * KalPc);
             KalResult = KalG * (PPM - KalResult) + KalResult;
             PPM = KalResult;
 
@@ -492,15 +492,15 @@ namespace RateController
                 SimTmp = PPR * SimRPM;
                 if (SimTmp > 0)
                 {
-                    pulseDuration = (int)(60000.0 / SimTmp);
+                    pulseDuration = ((float)(60000.0 / SimTmp));
                 }
                 else
                 {
                     pulseDuration = 0;
                 }
 
-                pulseCount = (int)(SimRPM * PPR);
-                pulseCount = (int)(pulseCount * (SimulateInterval / 60000.0)); // counts for time slice
+                pulseCount = (float)(SimRPM * PPR);
+                pulseCount = (float)(pulseCount * (SimulateInterval / 60000.0)); // counts for time slice
             }
             else
             {
@@ -562,10 +562,10 @@ namespace RateController
                 RandomError = (100 - ErrorRange) + (Rand.Next(ErrorRange * 2));
 
                 PulseTime = (float)(PulseTime * RandomError / 100);
-                pulseCount = (int)(SimulateInterval / PulseTime); // milliseconds * pulses/millsecond = pulses
+                pulseCount = (float)(SimulateInterval / PulseTime); // milliseconds * pulses/millsecond = pulses
 
                 // pulse duration is the time for one pulse
-                pulseDuration = (int)PulseTime;
+                pulseDuration = PulseTime;
             }
         }
 

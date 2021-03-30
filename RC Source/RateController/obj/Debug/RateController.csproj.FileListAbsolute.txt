@@ -684,6 +684,7 @@ E:\Temp\RC\Source\RateController\obj\Debug\RateController.FormSettings.resources
 E:\Temp\RC\Source\RateController\obj\Debug\RateController.FormStart.resources
 E:\Temp\RC\Source\RateController\obj\Debug\RateController.FormTimedMessage.resources
 E:\Temp\RC\Source\RateController\obj\Debug\RateController.frmComm.resources
+E:\Temp\RC\Source\RateController\obj\Debug\RateController.frmMenu.resources
 E:\Temp\RC\Source\RateController\obj\Debug\RateController.frmSections.resources
 E:\Temp\RC\Source\RateController\obj\Debug\RateController.Lang.resources
 E:\Temp\RC\Source\RateController\obj\Debug\RateController.Properties.Resources.resources
@@ -777,3 +778,30 @@ C:\LocalDocs\Temp\RC 12Mar2021\RC\Source\RateController\bin\Debug\RepeatButtonCo
 C:\LocalDocs\Temp\RC 12Mar2021\RC\Source\RateController\obj\Debug\RateController.exe.manifest
 C:\LocalDocs\Temp\RC 12Mar2021\RC\Source\RateController\obj\Debug\RateController.application
 C:\LocalDocs\Temp\RC 12Mar2021\RC\Source\RateController\obj\Debug\RateController.csproj.CopyComplete
+C:\LocalDocs\Temp\RC\Source\RateController\bin\Debug\RateController.exe.config
+C:\LocalDocs\Temp\RC\Source\RateController\bin\Debug\RateController.exe.manifest
+C:\LocalDocs\Temp\RC\Source\RateController\bin\Debug\RateController.application
+C:\LocalDocs\Temp\RC\Source\RateController\bin\Debug\RateController.exe
+C:\LocalDocs\Temp\RC\Source\RateController\bin\Debug\RateController.pdb
+C:\LocalDocs\Temp\RC\Source\RateController\bin\Debug\de\RateController.resources.dll
+C:\LocalDocs\Temp\RC\Source\RateController\bin\Debug\Keypad.dll
+C:\LocalDocs\Temp\RC\Source\RateController\bin\Debug\RepeatButtonControl.dll
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.FormAbout.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.FormSettings.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.FormStart.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.FormTimedMessage.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.frmComm.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.frmSections.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.Lang.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.Lang.de.resources
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\de\RateController.resources.dll
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.exe.manifest
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.application
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.csproj.CopyComplete
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.exe
+C:\LocalDocs\Temp\RC\Source\RateController\obj\Debug\RateController.pdb

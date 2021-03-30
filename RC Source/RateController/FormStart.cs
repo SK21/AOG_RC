@@ -43,6 +43,8 @@ namespace RateController
 
         private int[] RateType = new int[5];    // 0 current rate, 1 instantaneous rate, 2 overall rate
 
+        public Color SimColor = Color.FromArgb(250,125,125);
+
         public FormStart()
         {
             InitializeComponent();
@@ -155,7 +157,7 @@ namespace RateController
                     }
                     else
                     {
-                        ProdName[i].ForeColor = Color.Tomato;
+                        ProdName[i].ForeColor = SimColor;
                     }
 
                     Rates[i].Text = Products.Item(i).SmoothRate();
@@ -208,7 +210,7 @@ namespace RateController
                     }
                     else
                     {
-                        lbArduinoConnected.BackColor = Color.Tomato;
+                        lbArduinoConnected.BackColor = SimColor;
                     }
                 }
                 else
