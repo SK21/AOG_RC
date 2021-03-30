@@ -1,4 +1,4 @@
-unsigned long CurrentCounts[SensorCount];
+float CurrentCounts[SensorCount];
 unsigned long LastPulse[SensorCount];
 unsigned long TimedCounts[SensorCount];
 
@@ -7,9 +7,9 @@ unsigned long RateTimeLast[SensorCount];
 float CurrentDuration[SensorCount];
 float PPM[SensorCount];
 
-volatile unsigned long pulseDuration[SensorCount];
+volatile float pulseDuration[SensorCount];
 volatile bool pulseState[SensorCount];
-volatile unsigned long pulseCount[SensorCount] = {0, 0};
+volatile float pulseCount[SensorCount] = {0, 0};
 volatile int MinPulseTime[SensorCount];
 
 float KalResult[SensorCount] = {0, 0};
@@ -102,13 +102,13 @@ float GetUPM(byte SensorID)
   {
       // high ms/pulse, use time for one pulse
     if (pulseDuration[SensorID] > MinPulseTime[SensorID]) CurrentDuration[SensorID] = pulseDuration[SensorID];
-    if (CurrentDuration[SensorID] > 0) PPM[SensorID] = 60000 / CurrentDuration[SensorID];
+    if (CurrentDuration[SensorID] > 0) PPM[SensorID] = 60000.0 / CurrentDuration[SensorID];
   }
 
   // Kalmen filter
   KalPc[SensorID] = KalP[SensorID] + KalProcess;
   KalG[SensorID] = KalPc[SensorID] / (KalPc[SensorID] + KalVariance);
-  KalP[SensorID] = (1 - KalG[SensorID]) * KalPc[SensorID];
+  KalP[SensorID] = (1.0 - KalG[SensorID]) * KalPc[SensorID];
   KalResult[SensorID] = KalG[SensorID] * (PPM[SensorID] - KalResult[SensorID]) + KalResult[SensorID];
   PPM[SensorID] = KalResult[SensorID];
 
