@@ -244,7 +244,11 @@ namespace RateController
                 if (cSections[i].SwitchChanged) Changed = true;
                 cSections[i].SwitchChanged = false;
             }
-            if (Changed) SendStatusUpdate();
+            if (Changed)
+            {
+                SendStatusUpdate();
+                mf.SwitchIDs.Send();
+            }
         }
 
         public void SendStatusUpdate(bool SourceAOG = false)

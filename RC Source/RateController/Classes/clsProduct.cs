@@ -53,6 +53,8 @@ namespace RateController
         private double cHectaresPerMinute;
         private double cManualRateFactor = 1;
 
+        private bool SwitchIDsSent;
+
         public clsProduct(FormStart CallingForm, int ProdID)
         {
             mf = CallingForm;
@@ -409,6 +411,13 @@ namespace RateController
         {
             if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected())
             {
+                if(!SwitchIDsSent)
+                {
+                    // send switch IDs to each arduino when first connected
+                    mf.SwitchIDs.Send();
+                    SwitchIDsSent = true;
+                }
+
                 UpdateStartTime = DateTime.Now;
                 CurrentMinutes = (UpdateStartTime - LastUpdateTime).TotalMinutes;
                 LastUpdateTime = UpdateStartTime;

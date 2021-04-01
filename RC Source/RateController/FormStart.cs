@@ -16,6 +16,8 @@ namespace RateController
     {
         public PGN254 AutoSteerPGN = new PGN254();
         public PGN32618 SwitchBox;
+        public PGN32620 SwitchIDs;
+
         public double CalCounterEnd;
         public double CalCounterStart;
 
@@ -66,6 +68,8 @@ namespace RateController
             UDPnetwork = new UDPComm(this, 29999, 28888, 1480, "192.168.1.255");    // arduino
 
             SwitchBox = new PGN32618(this);
+            SwitchIDs = new PGN32620(this);
+
             Sections = new clsSections(this);
             Products = new clsProducts(this);
 
