@@ -45,7 +45,7 @@ int VCNpwm(float cError, float cSetPoint, byte MinPWM, byte MaxPWM, long cVCN,
 	float cFlowRate, long cSendTime, long cWaitTime, byte cSlowSpeed, byte cControlType, byte SensorID)
 {
 	NewPWM = 0;
-	if (ApplicationOn[SensorID])
+	if (FlowEnabled[SensorID])
 	{
 		VCNparts(cVCN);
 

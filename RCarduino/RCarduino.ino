@@ -1,5 +1,5 @@
 // user settings ****************************
-#define CommType 1          // 0 Serial/USB , 1 UDP wired Nano, 2 UDP wifi Nano33
+#define CommType 1          // 0 Serial USB, 1 UDP wired Nano, 2 UDP wifi Nano33
 
 #define ModuleID 0			// unique ID 0-15
 #define IPMac 110			// unique number for Arduino IP address and Mac part 6, 0-255
@@ -8,7 +8,7 @@
 #define WifiSSID "tractor"
 #define WifiPassword ""
 
-const unsigned long LOOP_TIME = 200; //in msec = 5hz
+const unsigned long LOOP_TIME = 100; //in msec = 10hz
 
 #define UseSwitchedPowerPin 1	// 0 use Relay8 as a normal relay
 // 1 use Relay8 as a switched power pin - turns on when sketch starts, required for Raven valve
@@ -105,7 +105,7 @@ byte FlowPin[] = {3, 2}; // interrupt on this pin
 byte FlowDir[] = {4, 6};
 byte FlowPWM[] = {5, 9};
 
-bool ApplicationOn[] = {false, false};
+bool FlowEnabled[] = {false, false};
 float rateError[] = {0, 0}; //for PID
 
 float UPM[SensorCount];   // UPM rate
@@ -163,87 +163,109 @@ bool AutoOn = true;
 float NewRateFactor[2];
 unsigned long ManualLast[2];
 
+// WifiSwitches connection to Wemos D1 Mini
+// Use Serial RX, remove RX wire before uploading
+bool PGN32619Found;
+bool PGN32620Found;
+unsigned long WifiSwitchesTimer;
+bool WifiSwitchesEnabled = false;
+byte WifiSwitches[5];
+
+byte SwitchBytes[4];
+byte SwitchID[] = { 0,1,2,3,9,9,9,9,9,9,9,9,9,9,9,9 };
+
+bool EthernetEnabled = false;
+
 void setup()
 {
-  Serial.begin(38400);
+    Serial.begin(38400);
 
-  delay(5000);
-  Serial.println();
-  Serial.println("RCarduino  :  17-Mar-2021");
-  Serial.println("Module ID: " + String(ModuleID));
-  Serial.println();
+    delay(5000);
+    Serial.println();
+    Serial.println("RCarduino  :  31-Mar-2021");
+    Serial.print("Module ID: ");
+    Serial.println(ModuleID);
+    Serial.println();
 
-  mcp.begin();
+    mcp.begin();
 
-  // MCP20317 pins
-  mcp.pinMode(Relay1, OUTPUT);
-  mcp.pinMode(Relay2, OUTPUT);
-  mcp.pinMode(Relay3, OUTPUT);
-  mcp.pinMode(Relay4, OUTPUT);
-  mcp.pinMode(Relay5, OUTPUT);
-  mcp.pinMode(Relay6, OUTPUT);
-  mcp.pinMode(Relay7, OUTPUT);
-  mcp.pinMode(Relay8, OUTPUT);
+    // MCP20317 pins
+    mcp.pinMode(Relay1, OUTPUT);
+    mcp.pinMode(Relay2, OUTPUT);
+    mcp.pinMode(Relay3, OUTPUT);
+    mcp.pinMode(Relay4, OUTPUT);
+    mcp.pinMode(Relay5, OUTPUT);
+    mcp.pinMode(Relay6, OUTPUT);
+    mcp.pinMode(Relay7, OUTPUT);
+    mcp.pinMode(Relay8, OUTPUT);
 
-  mcp.pinMode(Relay9, OUTPUT);
-  mcp.pinMode(Relay10, OUTPUT);
-  mcp.pinMode(Relay11, OUTPUT);
-  mcp.pinMode(Relay12, OUTPUT);
-  mcp.pinMode(Relay13, OUTPUT);
-  mcp.pinMode(Relay14, OUTPUT);
-  mcp.pinMode(Relay15, OUTPUT);
-  mcp.pinMode(Relay16, OUTPUT);
+    mcp.pinMode(Relay9, OUTPUT);
+    mcp.pinMode(Relay10, OUTPUT);
+    mcp.pinMode(Relay11, OUTPUT);
+    mcp.pinMode(Relay12, OUTPUT);
+    mcp.pinMode(Relay13, OUTPUT);
+    mcp.pinMode(Relay14, OUTPUT);
+    mcp.pinMode(Relay15, OUTPUT);
+    mcp.pinMode(Relay16, OUTPUT);
 
-  // Nano pins
-  for (int i = 0; i < SensorCount; i++)
-  {
-      pinMode(FlowPin[i], INPUT_PULLUP);
-      pinMode(FlowDir[i], OUTPUT);
-      pinMode(FlowPWM[i], OUTPUT);
-  }
+    // Nano pins
+    for (int i = 0; i < SensorCount; i++)
+    {
+        pinMode(FlowPin[i], INPUT_PULLUP);
+        pinMode(FlowDir[i], OUTPUT);
+        pinMode(FlowPWM[i], OUTPUT);
+    }
 #if(UseSwitchedPowerPin == 1)
-  // turn on
-  mcp.digitalWrite(Relay8, HIGH);
+    // turn on
+    mcp.digitalWrite(Relay8, HIGH);
 #endif
 
-  attachInterrupt(digitalPinToInterrupt(FlowPin[0]), PPM0isr, RISING);
-  attachInterrupt(digitalPinToInterrupt(FlowPin[1]), PPM1isr, RISING);
+    attachInterrupt(digitalPinToInterrupt(FlowPin[0]), PPM0isr, RISING);
+    attachInterrupt(digitalPinToInterrupt(FlowPin[1]), PPM1isr, RISING);
 
 #if (CommType == 1)
-  if (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) == 0) Serial.println(F("Failed to access Ethernet controller"));
-  ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
+    EthernetEnabled = (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) != 0);
+    if (EthernetEnabled)
+    {
+        Serial.println("Ethernet controller found.");
 
-  ether.printIp("IP Address:     ", ether.myip);
-  Serial.println("Destination IP: " + IPadd(DestinationIP));
+        ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
 
-  //register sub for received data
-  ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
+        ether.printIp("IP Address:     ", ether.myip);
+        Serial.print("Destination IP: ");
+        Serial.println(IPadd(DestinationIP));
+
+        //register sub for received data
+        ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
+    }
+    else
+    {
+        Serial.println("Ethernet controller not found.");
+    }
 #endif
 
 #if (CommType == 2)
-  // check for the WiFi module:
-  if (WiFi.status() == WL_NO_MODULE)
-  {
-    Serial.println("Communication with WiFi module failed!");
-    // don't continue
-    while (true);
-  }
+    // check for the WiFi module:
+    if (WiFi.status() == WL_NO_MODULE)
+    {
+        Serial.println("Communication with WiFi module failed!");
+        // don't continue
+        while (true);
+    }
 
-  String fv = WiFi.firmwareVersion();
-  Serial.println("Wifi firmware version: " + fv);
+    String fv = WiFi.firmwareVersion();
+    Serial.println("Wifi firmware version: " + fv);
 
-  UDPin.begin(ListeningPort);
-  UDPout.begin(SourcePort);
-  delay(1000);
+    UDPin.begin(ListeningPort);
+    UDPout.begin(SourcePort);
+    delay(1000);
 #endif
-  Serial.println("Finished Setup.");
+    Serial.println("Finished Setup.");
 }
 
 void loop()
 {
-#if (CommType == 0)
     ReceiveSerial();
-#endif
 
 #if (CommType == 2)
     CheckWifi();
@@ -252,10 +274,31 @@ void loop()
 
     for (int i = 0; i < SensorCount; i++)
     {
-        ApplicationOn[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0);
+        FlowEnabled[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0);
     }
 
-    SetRelays();
+
+    // Relays
+    if (WifiSwitchesEnabled)
+    {
+        if (millis() - WifiSwitchesTimer > 60000)   // 60 second timer
+        {
+            // wifi switches have timed out
+            WifiSwitchesEnabled = false;
+            SetRelays(0, 0);
+        }
+    }
+    else
+    {
+        if (FlowEnabled[0] || FlowEnabled[1])
+        {
+            SetRelays(RelayHi, RelayLo);
+        }
+        else
+        {
+            SetRelays(0, 0);
+        }
+    }
 
     motorDrive();
 
@@ -280,23 +323,25 @@ void loop()
 
             watchdogTimer = 0;
         }
-
 #if(CommType == 0)
         SendSerial();
     }
 #endif
 
 #if(CommType == 1)
-    SendUDPwired();
+        if(EthernetEnabled) SendUDPwired();
     }
-delay(10);
+    if (EthernetEnabled)
+    {
+        delay(10);
 
-//this must be called for ethercard functions to work.
-ether.packetLoop(ether.packetReceive());
+        //this must be called for ethercard functions to work.
+        ether.packetLoop(ether.packetReceive());
+    }
 #endif
 
 #if(CommType == 2)
-SendUDPWifi();
+    SendUDPWifi();
 }
 #endif
 }
@@ -377,7 +422,7 @@ void ManualControl()
             ManualLast[i] = millis();
 
             // adjust rate
-            if (RateSetting[i] == 0) RateSetting[i] = 1; // to make ApplicationOn
+            if (RateSetting[i] == 0) RateSetting[i] = 1; // to make FlowEnabled
 
             switch (ControlType[i])
             {
@@ -429,4 +474,10 @@ void ManualControl()
             break;
         }
     }
+}
+
+void ToSerial(char* Description, float Val)
+{
+    Serial.print(Description);
+    Serial.println(Val);
 }

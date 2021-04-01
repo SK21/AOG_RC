@@ -1,4 +1,3 @@
-#if(CommType == 0)
 
 //PGN32613 to Rate Controller from Arduino
 //0	HeaderHi		127
@@ -87,128 +86,153 @@ void SendSerial()
 
 void ReceiveSerial()
 {
-  if (Serial.available() > 0 && !PGN32614Found && !PGN32615Found) //find the header,
-  {
-    LSB = Serial.read();
-    PGN = MSB << 8 | LSB;               //high,low bytes to make int
-    MSB = LSB;                          //save for next time
-    PGN32614Found = (PGN == 32614);
-    PGN32615Found = (PGN == 32615);
-    PGN32616Found = (PGN == 32616);
-  }
-  if (Serial.available() > 7)
-  {
-    if (PGN32614Found)
+    if (Serial.available() > 0 && !PGN32614Found && !PGN32615Found && !PGN32616Found
+        && !PGN32619Found && !PGN32620Found) //find the header
     {
-      PGN32614Found = false;
-      byte tmp = Serial.read();
-      if (ParseModID(tmp) == ModuleID)
-      {
-        byte SensorID = ParseSenID(tmp);
-        if (SensorID < SensorCount)
+        LSB = Serial.read();
+        PGN = MSB << 8 | LSB;               //high,low bytes to make int
+        
+        MSB = LSB;                          //save for next time
+        PGN32614Found = (PGN == 32614);
+        PGN32615Found = (PGN == 32615);
+        PGN32616Found = (PGN == 32616);
+        PGN32619Found = (PGN == 32619);
+        PGN32620Found = (PGN == 32620);
+    }
+
+    if (Serial.available() > 7 && PGN32614Found)
+    {
+        PGN32614Found = false;
+        byte tmp = Serial.read();
+        if (ParseModID(tmp) == ModuleID)
         {
-            RelayHi = Serial.read();
-            RelayLo = Serial.read();
-
-            // rate setting, 100 times actual
-            UnSignedTemp = Serial.read() << 8 | Serial.read();
-            float TmpSet = (float)(UnSignedTemp * 0.01);
-
-            //Meter Cal, 100 times actual
-            UnSignedTemp = Serial.read() << 8 | Serial.read();
-            MeterCal[SensorID] = (float)(UnSignedTemp * 0.01);
-
-            // command byte
-            InCommand[SensorID] = Serial.read();
-            if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
-
-            ControlType[SensorID] = 0;
-            if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
-            if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
-
-            SimulateFlow[SensorID] = ((InCommand[SensorID] & 8) == 8);
-
-            UseVCN[SensorID] = ((InCommand[SensorID] & 16) == 16);
-
-            AutoOn = ((InCommand[SensorID] & 32) == 32);
-            if (AutoOn)
+            byte SensorID = ParseSenID(tmp);
+            if (SensorID < SensorCount)
             {
-                RateSetting[SensorID] = TmpSet;
+                RelayHi = Serial.read();
+                RelayLo = Serial.read();
+
+                // rate setting, 100 times actual
+                UnSignedTemp = Serial.read() << 8 | Serial.read();
+                float TmpSet = (float)(UnSignedTemp * 0.01);
+
+                //Meter Cal, 100 times actual
+                UnSignedTemp = Serial.read() << 8 | Serial.read();
+                MeterCal[SensorID] = (float)(UnSignedTemp * 0.01);
+
+                // command byte
+                InCommand[SensorID] = Serial.read();
+                if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
+
+                ControlType[SensorID] = 0;
+                if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
+                if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
+
+                SimulateFlow[SensorID] = ((InCommand[SensorID] & 8) == 8);
+
+                UseVCN[SensorID] = ((InCommand[SensorID] & 16) == 16);
+
+                AutoOn = ((InCommand[SensorID] & 32) == 32);
+                if (AutoOn)
+                {
+                    RateSetting[SensorID] = TmpSet;
+                }
+                else
+                {
+                    NewRateFactor[SensorID] = TmpSet;
+                }
+
+                //reset watchdog as we just heard from AgOpenGPS
+                watchdogTimer = 0;
+                CommTime[SensorID] = millis();
             }
-            else
+        }
+    }
+
+    if (Serial.available() > 7 && PGN32615Found)
+    {
+        PGN32615Found = false;
+
+        byte tmp = Serial.read();
+        if (ParseModID(tmp) == ModuleID)
+        {
+            byte SensorID = ParseSenID(tmp);
+            if (SensorID < SensorCount)
             {
-                NewRateFactor[SensorID] = TmpSet;
+                VCN[SensorID] = Serial.read() << 8 | Serial.read();
+                SendTime[SensorID] = Serial.read() << 8 | Serial.read();
+                WaitTime[SensorID] = Serial.read() << 8 | Serial.read();
+                VCNminPWM[SensorID] = Serial.read();
+
+                watchdogTimer = 0;
+                CommTime[SensorID] = millis();
             }
-
-            //reset watchdog as we just heard from AgOpenGPS
-            watchdogTimer = 0;
-            CommTime[SensorID] = millis();
         }
-      }
     }
 
-    if (PGN32615Found)
+    if (Serial.available() > 7 && PGN32616Found)
     {
-      PGN32615Found = false;
-
-      byte tmp = Serial.read();
-      if (ParseModID(tmp) == ModuleID)
-      {
-        byte SensorID = ParseSenID(tmp);
-        if (SensorID < SensorCount)
+        PGN32616Found = false;
+        byte tmp = Serial.read();
+        if (ParseModID(tmp) == ModuleID)
         {
-            VCN[SensorID] = Serial.read() << 8 | Serial.read();
-            SendTime[SensorID] = Serial.read() << 8 | Serial.read();
-            WaitTime[SensorID] = Serial.read() << 8 | Serial.read();
-            VCNminPWM[SensorID] = Serial.read();
+            byte SensorID = ParseSenID(tmp);
+            if (SensorID < SensorCount)
+            {
+                PIDkp[SensorID] = Serial.read();
+                PIDminPWM[SensorID] = Serial.read();
+                PIDLowMax[SensorID] = Serial.read();
+                PIDHighMax[SensorID] = Serial.read();
+                PIDdeadband[SensorID] = Serial.read();
+                PIDbrakePoint[SensorID] = Serial.read();
 
-            watchdogTimer = 0;
-            CommTime[SensorID] = millis();
+                watchdogTimer = 0;
+                CommTime[SensorID] = millis();
+            }
         }
-      }
     }
 
-    if (PGN32616Found)
+    if (Serial.available() > 4 && PGN32619Found)
     {
-      PGN32616Found = false;
-      byte tmp = Serial.read();
-      if (ParseModID(tmp) == ModuleID)
-      {
-        byte SensorID = ParseSenID(tmp);
-        if (SensorID < SensorCount)
+        // from Wemos D1 mini
+        PGN32619Found = false;
+        for (int i = 0; i < 5; i++)
         {
-            PIDkp[SensorID] = Serial.read();
-            PIDminPWM[SensorID] = Serial.read();
-            PIDLowMax[SensorID] = Serial.read();
-            PIDHighMax[SensorID] = Serial.read();
-            PIDdeadband[SensorID] = Serial.read();
-            PIDbrakePoint[SensorID] = Serial.read();
-
-            watchdogTimer = 0;
-            CommTime[SensorID] = millis();
+            WifiSwitches[i] = Serial.read();
         }
-      }
+        Serial.println("");
+        WifiSwitchesEnabled = true;
+        WifiSwitchesTimer = millis();
+        SetRelaysWifi();
     }
-  }
 
+    if (Serial.available() > 3 && PGN32620Found)
+    {
+        // from rate controller
+        PGN32620Found = false;
+        for (int i = 0; i < 4; i++)
+        {
+            SwitchBytes[i] = Serial.read();
+        }
+        TranslateSwitchBytes();
+    }
 
-  //RelayHi = 0;
-  //RelayLo = 7;
-  //RateSetting = 10;
-  //MeterCal = 120;
+    //RelayHi = 0;
+    //RelayLo = 7;
+    //RateSetting = 10;
+    //MeterCal = 120;
 
-  //ControlType = 2;
+    //ControlType = 2;
 
-  //SimulateFlow = 0;
-  //UseVCN = 0;
-  //watchdogTimer = 0;
-  //ControllerConnected = true;
+    //SimulateFlow = 0;
+    //UseVCN = 0;
+    //watchdogTimer = 0;
+    //ControllerConnected = true;
 
-  //PIDkp = 80;
-  //PIDminPWM = 5;
-  //PIDLowMax = 150;
-  //PIDHighMax = 200;
-  //PIDdeadband = 3;
-  //PIDbrakePoint = 20;
+    //PIDkp = 80;
+    //PIDminPWM = 5;
+    //PIDLowMax = 150;
+    //PIDHighMax = 200;
+    //PIDdeadband = 3;
+    //PIDbrakePoint = 20;
 }
-#endif

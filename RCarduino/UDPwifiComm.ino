@@ -138,6 +138,23 @@ void ReceiveUDPWifi()
           }
         }
       }
+
+      if (PGN == 32620)
+      {
+          // section switch IDs to arduino
+          // 0    127
+          // 1    108
+          // 2    sec 0-3
+          // 3    sec 4-7
+          // 4    sec 8-11
+          // 5    sec 12-16
+          for (int i = 0; i < 4; i++)
+          {
+              SwitchBytes[i] = InBuffer[i + 2];
+          }
+          TranslateSwitchBytes();
+      }
+
     }
   }
 }
@@ -149,11 +166,13 @@ void CheckWifi()
     Serial.println();
     ConnectionStatus = WiFi.status();
     Serial.println("Wifi status: " + String(ConnectionStatus));
-    Serial.println("RSSI: " + String(WiFi.RSSI()));
+    Serial.print("RSSI: ");
+    Serial.println(WiFi.RSSI());
 
     if ((ConnectionStatus != WL_CONNECTED) || (WiFi.RSSI() <= -100) || (WiFi.RSSI() == 0))
     {
-      Serial.println("Connecting to " + String(ssid));
+        Serial.print("Connecting to ");
+        Serial.println(ssid);
 
       ConnectionStatus = WiFi.begin(ssid, pass);
       delay(5000);
@@ -165,9 +184,12 @@ void CheckWifi()
       ConnectedCount++;
       CheckTime = millis();
     }
-    Serial.println("Reconnect count: " + String(ReconnectCount));
-    Serial.println("Connected count: " + String(ConnectedCount));
-    Serial.println("Minutes connected: " + String(ConnectedCount * 5 / 60));
+    Serial.print("Reconnect count: ");
+    Serial.println(ReconnectCount);
+    Serial.print("Connected count: ");
+    Serial.println(ConnectedCount);
+    Serial.print("Minutes connected: ");
+    Serial.println(ConnectedCount * 5 / 60);
 
     IPAddress ip = WiFi.localIP();
     Serial.print("IP Address: ");

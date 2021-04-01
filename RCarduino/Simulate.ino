@@ -16,7 +16,7 @@ void SimulateValve(byte sMin, byte sMax, byte SensorID)
   SimulateInterval[SensorID] = millis() - SimulateTimeLast[SensorID];
   SimulateTimeLast[SensorID] = millis();
 
-  if (ApplicationOn[SensorID])
+  if (FlowEnabled[SensorID])
   {
     float Range = sMax - sMin + 5;
     if (Range == 0 || pwmSetting[SensorID] == 0)
@@ -72,7 +72,7 @@ float SimTmp;
 
 void SimulateMotor(byte sMin, byte sMax, byte SensorID)
 {
-  if (ApplicationOn[SensorID])
+  if (FlowEnabled[SensorID])
   {
     SimulateInterval[SensorID] = millis() - SimulateTimeLast[SensorID];
     SimulateTimeLast[SensorID] = millis();

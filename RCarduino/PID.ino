@@ -3,7 +3,7 @@ int DoPID(byte sKP, float sError, float sSetPoint, byte sMinPWM,
     byte sLowMax, byte sHighMax, byte sBrakePoint, byte sDeadband, byte SensorID)
 {
     int Result = 0;
-    if (ApplicationOn[SensorID])
+    if (FlowEnabled[SensorID])
     {
         float ErrorPercent = abs(sError / sSetPoint);
         float ErrorBrake = (float)((float)(sBrakePoint / 100.0));
@@ -35,7 +35,7 @@ int ControlMotor(byte sKP, float sError, float sSetPoint, byte sMinPWM,
     float Result = 0;
     float ErrorPercent = 0;
 
-    if (ApplicationOn[SensorID])
+    if (FlowEnabled[SensorID])
     {
         Result = LastPWM[SensorID];
         ErrorPercent = abs(sError / sSetPoint) * 100.0;
