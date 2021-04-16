@@ -10,8 +10,12 @@
 
 const unsigned long LOOP_TIME = 100; //in msec = 10hz
 
-#define UseSwitchedPowerPin 1	// 0 use Relay8 as a normal relay
-// 1 use Relay8 as a switched power pin - turns on when sketch starts, required for Raven valve
+
+// 0 use the defined relay as a normal relay
+// 1 use the defined relay as a switched power pin - turns on when sketch starts, required for some Raven valves
+#define UseSwitchedPowerPin 0	
+
+#define UseMCP23017 0      // 0 use Nano pins for relays, 1 use MCP23017 to control relays
 
 byte FlowOn[] = {HIGH, HIGH};		// on value for flowmeter or motor direction
 byte SlowSpeed[] = { 9,9 };		// for vcn, low pwm rate, 0 fast, 9 slow
@@ -77,7 +81,8 @@ unsigned long ConnectedCount = 0;
 unsigned long ReconnectCount = 0;
 #endif
 
-#include "Adafruit_MCP23017.h"
+#if (UseMCP23017 == 1)
+#include <Adafruit_MCP23017.h>
 
 Adafruit_MCP23017 mcp;
 
@@ -104,6 +109,30 @@ Adafruit_MCP23017 mcp;
 byte FlowPin[] = {3, 2}; // interrupt on this pin
 byte FlowDir[] = {4, 6};
 byte FlowPWM[] = {5, 9};
+
+#else
+// use Nano pins for relays
+
+// If using the ENC28J60 ethernet shield these pins
+// are used by it and unavailable for relays:
+// 7,8,10,11,12,13. It also pulls pin D2 high.
+// D2 can be used if pin D2 on the shield is cut off
+// and then mount the shield on top of the Nano.
+
+byte FlowPin[] = { 3, 2 }; // interrupt on this pin
+byte FlowDir[] = { 4, 6 };
+byte FlowPWM[] = { 5, 9 };
+
+#define Relay1 A0
+#define Relay2 A1
+#define Relay3 A2
+#define Relay4 A3
+//#define Relay5 12
+//#define Relay6 13
+//#define Relay7 14
+//#define Relay8 15
+
+#endif
 
 bool FlowEnabled[] = {false, false};
 float rateError[] = {0, 0}; //for PID
@@ -182,11 +211,12 @@ void setup()
 
     delay(5000);
     Serial.println();
-    Serial.println("RCarduino  :  31-Mar-2021");
+    Serial.println("RCarduino  :  15-Apr-2021");
     Serial.print("Module ID: ");
     Serial.println(ModuleID);
     Serial.println();
 
+#if (UseMCP23017 == 1)
     mcp.begin();
 
     // MCP20317 pins
@@ -218,6 +248,30 @@ void setup()
 #if(UseSwitchedPowerPin == 1)
     // turn on
     mcp.digitalWrite(Relay8, HIGH);
+#endif
+
+#else
+    // Nano pins
+    pinMode(Relay1, OUTPUT);
+    pinMode(Relay2, OUTPUT);
+    pinMode(Relay3, OUTPUT);
+    pinMode(Relay4, OUTPUT);
+    //pinMode(Relay5, OUTPUT);
+    //pinMode(Relay6, OUTPUT);
+    //pinMode(Relay7, OUTPUT);
+    //pinMode(Relay8, OUTPUT);
+
+    for (int i = 0; i < SensorCount; i++)
+    {
+        pinMode(FlowPin[i], INPUT_PULLUP);
+        pinMode(FlowDir[i], OUTPUT);
+        pinMode(FlowPWM[i], OUTPUT);
+    }
+#if(UseSwitchedPowerPin == 1)
+    // turn on
+    digitalWrite(Relay4, HIGH);
+#endif
+
 #endif
 
     attachInterrupt(digitalPinToInterrupt(FlowPin[0]), PPM0isr, RISING);
