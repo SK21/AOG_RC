@@ -1149,12 +1149,16 @@ namespace RateController
             lbProduct.Text = (CurrentProduct + 1).ToString() + ". " + mf.Products.Item(CurrentProduct).ProductName;
             if (mf.Products.Item(CurrentProduct).SimulationType != SimType.None)
             {
-                lbProduct.ForeColor = mf.SimColor;
-                lbProduct.Text = lbProduct.Text + "  Simulation";
+                lbProduct.Text = lbProduct.Text + "   Simulation";
+                //lbProduct.ForeColor = mf.SimColor;
+                lbProduct.BackColor = mf.SimColor;
+                lbProduct.BorderStyle = BorderStyle.FixedSingle;
             }
             else
             {
                 lbProduct.ForeColor = SystemColors.ControlText;
+                lbProduct.BackColor = Properties.Settings.Default.DayColour;
+                lbProduct.BorderStyle = BorderStyle.None;
             }
 
             Initializing = false;

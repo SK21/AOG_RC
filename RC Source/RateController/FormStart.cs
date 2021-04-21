@@ -45,7 +45,7 @@ namespace RateController
 
         private int[] RateType = new int[5];    // 0 current rate, 1 instantaneous rate, 2 overall rate
 
-        public Color SimColor = Color.FromArgb(250,125,125);
+        public Color SimColor = Color.FromArgb(255,191,0);
 
         public FormStart()
         {
@@ -158,10 +158,14 @@ namespace RateController
                     if (Products.Item(i ).SimulationType == SimType.None)
                     {
                         ProdName[i].ForeColor = SystemColors.ControlText;
+                        ProdName[i].BackColor = Properties.Settings.Default.DayColour;
+                        ProdName[i].BorderStyle = BorderStyle.None;
                     }
                     else
                     {
-                        ProdName[i].ForeColor = SimColor;
+                        //ProdName[i].ForeColor = SimColor;
+                        ProdName[i].BackColor = SimColor;
+                        ProdName[i].BorderStyle = BorderStyle.FixedSingle;
                     }
 
                     Rates[i].Text = Products.Item(i).SmoothRate();
