@@ -23,9 +23,85 @@ namespace RateController
 
         public FormSettings(FormStart CallingForm, int Page)
         {
+            InitializeComponent();
+            #region // language
+
+            lbProduct.Text = Lang.lgProduct;
+            tc.TabPages[0].Text = Lang.lgRate;
+            tc.TabPages[3].Text = Lang.lgOptions;
+            tc.TabPages[4].Text = Lang.lgDiagnostics;
+            tc.TabPages[5].Text = Lang.lgCalibrate;
+            btnCancel.Text = Lang.lgCancel;
+            bntOK.Text = Lang.lgClose;
+
+            lb0.Text = Lang.lgProductName;
+            lb5.Text = Lang.lgControlType;
+            lb1.Text = Lang.lgQuantity;
+            lb2.Text = Lang.lgCoverage;
+            lb4.Text = Lang.lgSensorCounts;
+            lb3.Text = Lang.lgTargetRate;
+            lb6.Text = Lang.lgTankSize;
+            lb7.Text = Lang.lgTank_Remaining;
+            rbVCN.Text = Lang.lgUseVCN;
+            rbPID.Text = Lang.lgUsePID;
+            btnResetCoverage.Text = Lang.lgCoverage;
+            btnResetTank.Text = Lang.lgTank;
+            btnResetQuantity.Text = Lang.lgQuantity;
+
+            groupBox1.Text = Lang.lgCalValues;
+            lb14.Text = Lang.lgMinPWM;
+            lb11.Text = Lang.lgSendTime;
+            lb12.Text = Lang.lgWaitTime;
+            btnLoadDefaults.Text = Lang.lgLoad_Defaults;
+            tbVCNdescription.Text = Lang.lgVCNexplination;
+
+            label7.Text = Lang.lgHighMax;
+            label5.Text = Lang.lgBrakePoint;
+            label4.Text = Lang.lgLowMax;
+            label3.Text = Lang.lgMinPWM;
+            label6.Text = Lang.lgDeadband;
+            btnPIDloadDefaults.Text = Lang.lgLoad_Defaults;
+
+            grpSections.Text = Lang.lgSections;
+            grpSensor.Text = Lang.lgSensorLocation;
+            lbConID.Text = Lang.lgModuleID;
+            label26.Text = Lang.lgSensorID;
+            grpSimulate.Text = Lang.lgSimulate;
+            rbNone.Text = Lang.lgSimulationOff;
+            rbVirtual.Text = Lang.lgVirtualNano;
+            rbReal.Text = Lang.lgRealNano;
+
+            lb32.Text = Lang.lgUPMTarget;
+            lb33.Text = Lang.lgUPMApplied;
+            label15.Text = Lang.lgUPMerror;
+            label24.Text = Lang.lgCountsRev;
+            label23.Text = Lang.lgRPM;
+            lbSpeed.Text = Lang.lgSpeed;
+            lbWidth.Text = Lang.lgWorkingWidthFT;
+            lbWorkRate.Text = Lang.lgHectares_Hr;
+            label1.Text = Lang.lgSection;
+
+            label14.Text = Lang.lgSensorTotalCounts;
+            label21.Text = Lang.lgQuantityMeasured;
+            label16.Text = Lang.lgSensorCounts;
+            btnCalStart.Text = Lang.lgResetStart;
+            btnCalStop.Text = Lang.lgStop;
+            btnCalCalculate.Text = Lang.lgCalculate;
+            btnCalCopy.Text = Lang.lgCalCopy;
+
+            ValveType.Items[0] = Lang.lgStandard;
+            ValveType.Items[1] = Lang.lgComboClose;
+            ValveType.Items[2] = Lang.lgMotor;
+
+            AreaUnits.Items[0] = Lang.lgAcres;
+            AreaUnits.Items[1] = Lang.lgHectares;
+            AreaUnits.Items[2] = Lang.lgHour;
+            AreaUnits.Items[3] = Lang.lgMinute;
+
+            #endregion // language
+
             mf = CallingForm;
             Initializing = true;
-            InitializeComponent();
             tbs = new TabPage[] { tbs0, tbs1, tbs3, tbs4 };
             CurrentProduct = Page - 1;
             if (CurrentProduct < 0) CurrentProduct = 0;

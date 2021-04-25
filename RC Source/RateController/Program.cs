@@ -23,6 +23,7 @@ namespace RateController
             if (regKey != null)
             {
                 Settings.Default.setF_culture = regKey.GetValue("Language").ToString();
+                //Settings.Default.setF_culture = "nl";
                 Settings.Default.Save();
                 regKey.Close();
             }

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace RateController
 {
@@ -22,7 +23,7 @@ namespace RateController
         public double CalCounterStart;
 
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Hr", "Min" };
-        public string[] CoverageDescriptions = new string[] { "Acre", "Hectare", Lang.lgHour, Lang.lgMinute };
+        public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgHours, Lang.lgMinutes };
         public bool DoCal;
 
         public clsProducts Products;
@@ -58,6 +59,12 @@ namespace RateController
             lbCoverage.Text = Lang.lgCoverage;
             label2.Text = Lang.lgQuantityApplied;
             label34.Text = Lang.lgTank_Remaining;
+
+            mnuSettings.Items[0].Text = Lang.lgProducts;
+            mnuSettings.Items[1].Text = Lang.lgSection;
+            mnuSettings.Items[3].Text = Lang.lgLoad;
+            mnuSettings.Items[4].Text = Lang.lgSaveAs;
+            mnuSettings.Items[5].Text = Lang.lgAbout;
 
             #endregion // language
 
@@ -428,6 +435,26 @@ namespace RateController
         {
             Form frmAbout = new FormAbout(this);
             frmAbout.ShowDialog();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label34_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbCoverage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

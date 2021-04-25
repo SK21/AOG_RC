@@ -120,14 +120,26 @@
   <data name="lgAbout" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="lgAcres" xml:space="preserve">
+    <value>Acres</value>
+  </data>
   <data name="lgAcresHr" xml:space="preserve">
     <value>Acres/Hr</value>
   </data>
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>Already Running</value>
   </data>
-  <data name="lgBaud" xml:space="preserve">
-    <value>Baud</value>
+  <data name="lgBrakePoint" xml:space="preserve">
+    <value>Brake Point</value>
+  </data>
+  <data name="lgCalCopy" xml:space="preserve">
+    <value>Copy to Rate Settings</value>
+  </data>
+  <data name="lgCalculate" xml:space="preserve">
+    <value>Calculate</value>
+  </data>
+  <data name="lgCalibrate" xml:space="preserve">
+    <value>Calibrate</value>
   </data>
   <data name="lgCalValues" xml:space="preserve">
     <value>Cal Values</value>
@@ -138,14 +150,17 @@
   <data name="lgClose" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="lgComboClose" xml:space="preserve">
+    <value>Combo Close</value>
+  </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Connect</value>
   </data>
-  <data name="lgConnected" xml:space="preserve">
-    <value>Connected</value>
+  <data name="lgControlType" xml:space="preserve">
+    <value>Control Type</value>
   </data>
-  <data name="lgController" xml:space="preserve">
-    <value>Controller</value>
+  <data name="lgCountsRev" xml:space="preserve">
+    <value>Counts/Rev</value>
   </data>
   <data name="lgCoverage" xml:space="preserve">
     <value>Coverage</value>
@@ -153,8 +168,8 @@
   <data name="lgCurrentRate" xml:space="preserve">
     <value>Current Rate …</value>
   </data>
-  <data name="lgDayNight" xml:space="preserve">
-    <value>Day/Night</value>
+  <data name="lgDeadband" xml:space="preserve">
+    <value>Deadband</value>
   </data>
   <data name="lgDestinationIP" xml:space="preserve">
     <value>Destination IP</value>
@@ -165,29 +180,29 @@
   <data name="lgDisconnect" xml:space="preserve">
     <value>Disconnect</value>
   </data>
-  <data name="lgDisconnected" xml:space="preserve">
-    <value>Disconnected</value>
+  <data name="lgEqual" xml:space="preserve">
+    <value>= Sec 1</value>
   </data>
-  <data name="lgFastClose" xml:space="preserve">
-    <value>Fast Close</value>
+  <data name="lgHectares" xml:space="preserve">
+    <value>Hectares</value>
   </data>
-  <data name="lgft" xml:space="preserve">
-    <value>ft</value>
-  </data>
-  <data name="lgHectares/Hr" xml:space="preserve">
+  <data name="lgHectares_Hr" xml:space="preserve">
     <value>Hectares/Hr</value>
+  </data>
+  <data name="lgHighMax" xml:space="preserve">
+    <value>High Max</value>
   </data>
   <data name="lgHour" xml:space="preserve">
     <value>Hour</value>
   </data>
-  <data name="lghr" xml:space="preserve">
-    <value>hr</value>
+  <data name="lgHours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="lgInches" xml:space="preserve">
+    <value>Inches</value>
   </data>
   <data name="lgInstantRate" xml:space="preserve">
     <value>Instant Rate …</value>
-  </data>
-  <data name="lgIPAddress" xml:space="preserve">
-    <value>IP Address</value>
   </data>
   <data name="lgKPH" xml:space="preserve">
     <value>KPH</value>
@@ -195,20 +210,11 @@
   <data name="lgLoad" xml:space="preserve">
     <value>Load</value>
   </data>
-  <data name="lgLoad Defaults" xml:space="preserve">
+  <data name="lgLoad_Defaults" xml:space="preserve">
     <value>Load Defaults</value>
   </data>
-  <data name="lgLoopBackUDP" xml:space="preserve">
-    <value>LoopBack UDP</value>
-  </data>
-  <data name="lgMain" xml:space="preserve">
-    <value>Main</value>
-  </data>
-  <data name="lgMaxPWM" xml:space="preserve">
-    <value>Max PWM</value>
-  </data>
-  <data name="lgMeterCalError" xml:space="preserve">
-    <value>Meter Cal Error</value>
+  <data name="lgLowMax" xml:space="preserve">
+    <value>Low Max</value>
   </data>
   <data name="lgMinPWM" xml:space="preserve">
     <value>Min PWM</value>
@@ -216,23 +222,38 @@
   <data name="lgMinute" xml:space="preserve">
     <value>Minute</value>
   </data>
+  <data name="lgMinutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="lgModuleID" xml:space="preserve">
+    <value>Module ID</value>
+  </data>
+  <data name="lgMotor" xml:space="preserve">
+    <value>Motor</value>
+  </data>
   <data name="lgMPH" xml:space="preserve">
     <value>MPH</value>
   </data>
-  <data name="lgNetwork UDP" xml:space="preserve">
-    <value>Network UDP</value>
+  <data name="lgNetworkConnections" xml:space="preserve">
+    <value>Network Connections</value>
+  </data>
+  <data name="lgNumSections" xml:space="preserve">
+    <value>Number of Sections</value>
+  </data>
+  <data name="lgOptions" xml:space="preserve">
+    <value>Options</value>
   </data>
   <data name="lgOverallRate" xml:space="preserve">
     <value>Overall Rate …</value>
   </data>
-  <data name="lgPort" xml:space="preserve">
-    <value>Port</value>
+  <data name="lgProduct" xml:space="preserve">
+    <value>Product</value>
   </data>
-  <data name="lgPortConnected" xml:space="preserve">
-    <value>Port Connected</value>
+  <data name="lgProductName" xml:space="preserve">
+    <value>Product Name</value>
   </data>
-  <data name="lgPortDisconnected" xml:space="preserve">
-    <value>Port Disconnected</value>
+  <data name="lgProducts" xml:space="preserve">
+    <value>Products</value>
   </data>
   <data name="lgQuantity" xml:space="preserve">
     <value>Quantity</value>
@@ -240,29 +261,26 @@
   <data name="lgQuantityApplied" xml:space="preserve">
     <value>Quantity Applied</value>
   </data>
-  <data name="lgRateCal" xml:space="preserve">
-    <value>Rate Cal #</value>
+  <data name="lgQuantityMeasured" xml:space="preserve">
+    <value>Quantity Measured</value>
   </data>
-  <data name="lgRateSetError" xml:space="preserve">
-    <value>Rate Set Error</value>
+  <data name="lgRate" xml:space="preserve">
+    <value>Rate</value>
   </data>
   <data name="lgRealNano" xml:space="preserve">
     <value>Real Nano</value>
   </data>
   <data name="lgReceivePort" xml:space="preserve">
-    <value>Receive Port</value>
+    <value>ReceivePort</value>
   </data>
-  <data name="lgRescanPorts" xml:space="preserve">
-    <value>Rescan Ports</value>
+  <data name="lgRescan" xml:space="preserve">
+    <value>Rescan</value>
   </data>
-  <data name="lgResetCoverage" xml:space="preserve">
-    <value>Reset Coverage</value>
+  <data name="lgResetStart" xml:space="preserve">
+    <value>Reset/Start</value>
   </data>
-  <data name="lgResetQuantity" xml:space="preserve">
-    <value>Reset Quantity</value>
-  </data>
-  <data name="lgResetTank" xml:space="preserve">
-    <value>Reset Tank</value>
+  <data name="lgRPM" xml:space="preserve">
+    <value>RPM</value>
   </data>
   <data name="lgSave" xml:space="preserve">
     <value>Save  </value>
@@ -270,11 +288,11 @@
   <data name="lgSaveAs" xml:space="preserve">
     <value>Save As</value>
   </data>
-  <data name="lgSectionByteHi" xml:space="preserve">
-    <value>Section Byte Hi</value>
+  <data name="lgSection" xml:space="preserve">
+    <value>Sections</value>
   </data>
-  <data name="lgSectionByteLo" xml:space="preserve">
-    <value>Section Byte Lo</value>
+  <data name="lgSections" xml:space="preserve">
+    <value>Sections for this Product</value>
   </data>
   <data name="lgSendPort" xml:space="preserve">
     <value>Send Port</value>
@@ -282,14 +300,20 @@
   <data name="lgSendTime" xml:space="preserve">
     <value>Send Time</value>
   </data>
-  <data name="lgSendTimeError" xml:space="preserve">
-    <value>Send Time Error</value>
+  <data name="lgSensorCounts" xml:space="preserve">
+    <value>Sensor Counts/Unit</value>
   </data>
-  <data name="lgSettings" xml:space="preserve">
-    <value>Settings</value>
+  <data name="lgSensorID" xml:space="preserve">
+    <value>Sensor ID</value>
   </data>
-  <data name="lgSimulateFlow" xml:space="preserve">
-    <value>Simulate Flow</value>
+  <data name="lgSensorLocation" xml:space="preserve">
+    <value>Rate Sensor Location</value>
+  </data>
+  <data name="lgSensorTotalCounts" xml:space="preserve">
+    <value>Sensor Counts</value>
+  </data>
+  <data name="lgSimulate" xml:space="preserve">
+    <value>Rate Simulation</value>
   </data>
   <data name="lgSimulationOff" xml:space="preserve">
     <value>Simulation Off</value>
@@ -300,41 +324,38 @@
   <data name="lgStandard" xml:space="preserve">
     <value>Standard</value>
   </data>
-  <data name="lgTank Remaining" xml:space="preserve">
-    <value>Tank Remaining</value>
+  <data name="lgStop" xml:space="preserve">
+    <value>Stop</value>
   </data>
-  <data name="lgTankRemainError" xml:space="preserve">
-    <value>Tank Remaining Error</value>
+  <data name="lgSwitch" xml:space="preserve">
+    <value>Switch</value>
+  </data>
+  <data name="lgTank" xml:space="preserve">
+    <value>Tank</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
     <value>Tank Size</value>
   </data>
-  <data name="lgTankSizeError" xml:space="preserve">
-    <value>Tank Size Error</value>
+  <data name="lgTank_Remaining" xml:space="preserve">
+    <value>Tank Remaining</value>
   </data>
   <data name="lgTargetRate" xml:space="preserve">
     <value>Target Rate</value>
   </data>
-  <data name="lgUDPLoopBackFailed" xml:space="preserve">
-    <value>UDPLoopBack failed to start</value>
-  </data>
-  <data name="lgUDPnetworkFailed" xml:space="preserve">
-    <value>UDPnetwork failed to start</value>
-  </data>
-  <data name="lgUDPnotice" xml:space="preserve">
-    <value>AgOpenGPS UDP must be on to receive.</value>
-  </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Applied</value>
+  </data>
+  <data name="lgUPMerror" xml:space="preserve">
+    <value>Error %</value>
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Target</value>
   </data>
-  <data name="lgValveType" xml:space="preserve">
-    <value>Valve Type</value>
+  <data name="lgUsePID" xml:space="preserve">
+    <value>Use PID</value>
   </data>
-  <data name="lgVCNError" xml:space="preserve">
-    <value>VCN Error</value>
+  <data name="lgUseVCN" xml:space="preserve">
+    <value>Use VCN</value>
   </data>
   <data name="lgVCNexplination" xml:space="preserve">
     <value>VCN is a 4 digit number. Backlash (1 short pulse to 9 long pulse), Speed (0 fast to 9 slow), Brake Point (0 5% to 9 90%) and Deadband (1 to 9 %).   ex: 743  no Backlash, 7 adjustment speed, 4 Brake Point at 40% error, deadband 3%.   Brake Point is the error % below which a slower adjustment speed is used.   Deadband is the error % below which no adjustment is made.  </value>
@@ -348,19 +369,13 @@
   <data name="lgWaitTime" xml:space="preserve">
     <value>Wait Time</value>
   </data>
-  <data name="lgWaitTimeError" xml:space="preserve">
-    <value>Wait Time Error</value>
-  </data>
-  <data name="lgWorkingWidth" xml:space="preserve">
-    <value>Working Width</value>
+  <data name="lgWidth" xml:space="preserve">
+    <value>Width</value>
   </data>
   <data name="lgWorkingWidthFT" xml:space="preserve">
     <value>Working Width (FT)</value>
   </data>
   <data name="lgWorkingWidthM" xml:space="preserve">
     <value>Working Width (M)</value>
-  </data>
-  <data name="lgWorkRate" xml:space="preserve">
-    <value>Work Rate</value>
   </data>
 </root>

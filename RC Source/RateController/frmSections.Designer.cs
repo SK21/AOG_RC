@@ -29,10 +29,10 @@ namespace RateController
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSections));
             this.DGV = new System.Windows.Forms.DataGridView();
             this.sectionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -71,15 +71,15 @@ namespace RateController
             this.switchDataGridViewTextBoxColumn});
             this.DGV.DataMember = "Table1";
             this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.NullValue = "<dbnull>";
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.NullValue = "<dbnull>";
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle12;
             this.DGV.Location = new System.Drawing.Point(15, 15);
             this.DGV.Margin = new System.Windows.Forms.Padding(6);
             this.DGV.Name = "DGV";
@@ -94,18 +94,18 @@ namespace RateController
             // sectionDataGridViewTextBoxColumn
             // 
             this.sectionDataGridViewTextBoxColumn.DataPropertyName = "Section";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
             this.sectionDataGridViewTextBoxColumn.HeaderText = "Section";
             this.sectionDataGridViewTextBoxColumn.Name = "sectionDataGridViewTextBoxColumn";
             // 
             // widthDataGridViewTextBoxColumn
             // 
             this.widthDataGridViewTextBoxColumn.DataPropertyName = "Width";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.Format = "N0";
-            dataGridViewCellStyle2.NullValue = null;
-            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.Format = "N0";
+            dataGridViewCellStyle10.NullValue = null;
+            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle10;
             this.widthDataGridViewTextBoxColumn.HeaderText = "Width";
             this.widthDataGridViewTextBoxColumn.Name = "widthDataGridViewTextBoxColumn";
             // 
@@ -113,8 +113,8 @@ namespace RateController
             // 
             this.switchDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.switchDataGridViewTextBoxColumn.DataPropertyName = "Switch";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle11;
             this.switchDataGridViewTextBoxColumn.HeaderText = "Switch";
             this.switchDataGridViewTextBoxColumn.Name = "switchDataGridViewTextBoxColumn";
             // 
@@ -166,10 +166,10 @@ namespace RateController
             // lbWidth
             // 
             this.lbWidth.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWidth.Location = new System.Drawing.Point(45, 367);
+            this.lbWidth.Location = new System.Drawing.Point(15, 367);
             this.lbWidth.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbWidth.Name = "lbWidth";
-            this.lbWidth.Size = new System.Drawing.Size(125, 24);
+            this.lbWidth.Size = new System.Drawing.Size(173, 24);
             this.lbWidth.TabIndex = 12;
             this.lbWidth.Text = "Width:  1200";
             this.lbWidth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -178,7 +178,7 @@ namespace RateController
             // 
             this.rbCM.AutoSize = true;
             this.rbCM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbCM.Location = new System.Drawing.Point(277, 365);
+            this.rbCM.Location = new System.Drawing.Point(296, 365);
             this.rbCM.Margin = new System.Windows.Forms.Padding(6);
             this.rbCM.Name = "rbCM";
             this.rbCM.Size = new System.Drawing.Size(54, 28);
@@ -192,7 +192,7 @@ namespace RateController
             this.rbInches.AutoSize = true;
             this.rbInches.Checked = true;
             this.rbInches.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbInches.Location = new System.Drawing.Point(181, 365);
+            this.rbInches.Location = new System.Drawing.Point(200, 365);
             this.rbInches.Margin = new System.Windows.Forms.Padding(6);
             this.rbInches.Name = "rbInches";
             this.rbInches.Size = new System.Drawing.Size(84, 28);
@@ -238,7 +238,7 @@ namespace RateController
             // tbSectionCount
             // 
             this.tbSectionCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSectionCount.Location = new System.Drawing.Point(277, 332);
+            this.tbSectionCount.Location = new System.Drawing.Point(200, 332);
             this.tbSectionCount.Margin = new System.Windows.Forms.Padding(6);
             this.tbSectionCount.Name = "tbSectionCount";
             this.tbSectionCount.Size = new System.Drawing.Size(54, 29);
@@ -252,7 +252,7 @@ namespace RateController
             // label25
             // 
             this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(45, 335);
+            this.label25.Location = new System.Drawing.Point(15, 335);
             this.label25.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(185, 28);
@@ -262,7 +262,7 @@ namespace RateController
             // lbFeet
             // 
             this.lbFeet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFeet.Location = new System.Drawing.Point(108, 391);
+            this.lbFeet.Location = new System.Drawing.Point(79, 390);
             this.lbFeet.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbFeet.Name = "lbFeet";
             this.lbFeet.Size = new System.Drawing.Size(100, 24);

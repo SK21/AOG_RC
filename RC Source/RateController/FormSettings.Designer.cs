@@ -228,7 +228,7 @@ namespace RateController
             this.tbs0.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbs0.Location = new System.Drawing.Point(4, 33);
             this.tbs0.Name = "tbs0";
-            this.tbs0.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs0.Padding = new System.Windows.Forms.Padding(3);
             this.tbs0.Size = new System.Drawing.Size(484, 396);
             this.tbs0.TabIndex = 0;
             this.tbs0.Text = "Rate";
@@ -239,7 +239,7 @@ namespace RateController
             this.rbPID.AutoSize = true;
             this.rbPID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbPID.Location = new System.Drawing.Point(245, 285);
-            this.rbPID.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbPID.Margin = new System.Windows.Forms.Padding(2);
             this.rbPID.Name = "rbPID";
             this.rbPID.Size = new System.Drawing.Size(95, 28);
             this.rbPID.TabIndex = 124;
@@ -254,7 +254,7 @@ namespace RateController
             this.rbVCN.Checked = true;
             this.rbVCN.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbVCN.Location = new System.Drawing.Point(121, 285);
-            this.rbVCN.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbVCN.Margin = new System.Windows.Forms.Padding(2);
             this.rbVCN.Name = "rbVCN";
             this.rbVCN.Size = new System.Drawing.Size(106, 28);
             this.rbVCN.TabIndex = 123;
@@ -503,7 +503,7 @@ namespace RateController
             this.tbs1.Controls.Add(this.groupBox1);
             this.tbs1.Location = new System.Drawing.Point(4, 33);
             this.tbs1.Name = "tbs1";
-            this.tbs1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs1.Padding = new System.Windows.Forms.Padding(3);
             this.tbs1.Size = new System.Drawing.Size(484, 396);
             this.tbs1.TabIndex = 1;
             this.tbs1.Text = "VCN";
@@ -534,9 +534,9 @@ namespace RateController
             this.groupBox1.Controls.Add(this.lb12);
             this.groupBox1.Controls.Add(this.tbWait);
             this.groupBox1.Location = new System.Drawing.Point(5, 5);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(474, 164);
             this.groupBox1.TabIndex = 119;
             this.groupBox1.TabStop = false;
@@ -669,7 +669,7 @@ namespace RateController
             this.tbs4.Controls.Add(this.label2);
             this.tbs4.Location = new System.Drawing.Point(4, 33);
             this.tbs4.Name = "tbs4";
-            this.tbs4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs4.Padding = new System.Windows.Forms.Padding(3);
             this.tbs4.Size = new System.Drawing.Size(484, 396);
             this.tbs4.TabIndex = 4;
             this.tbs4.Text = "PID";
@@ -901,7 +901,7 @@ namespace RateController
             // 
             this.rbReal.AutoSize = true;
             this.rbReal.Location = new System.Drawing.Point(315, 27);
-            this.rbReal.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbReal.Margin = new System.Windows.Forms.Padding(2);
             this.rbReal.Name = "rbReal";
             this.rbReal.Size = new System.Drawing.Size(117, 28);
             this.rbReal.TabIndex = 121;
@@ -914,7 +914,7 @@ namespace RateController
             // 
             this.rbVirtual.AutoSize = true;
             this.rbVirtual.Location = new System.Drawing.Point(166, 27);
-            this.rbVirtual.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbVirtual.Margin = new System.Windows.Forms.Padding(2);
             this.rbVirtual.Name = "rbVirtual";
             this.rbVirtual.Size = new System.Drawing.Size(131, 28);
             this.rbVirtual.TabIndex = 120;
@@ -928,7 +928,7 @@ namespace RateController
             this.rbNone.AutoSize = true;
             this.rbNone.Checked = true;
             this.rbNone.Location = new System.Drawing.Point(5, 27);
-            this.rbNone.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbNone.Margin = new System.Windows.Forms.Padding(2);
             this.rbNone.Name = "rbNone";
             this.rbNone.Size = new System.Drawing.Size(143, 28);
             this.rbNone.TabIndex = 119;
@@ -1731,7 +1731,7 @@ namespace RateController
             this.tbs5.Controls.Add(this.label14);
             this.tbs5.Location = new System.Drawing.Point(4, 33);
             this.tbs5.Name = "tbs5";
-            this.tbs5.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs5.Padding = new System.Windows.Forms.Padding(3);
             this.tbs5.Size = new System.Drawing.Size(484, 396);
             this.tbs5.TabIndex = 5;
             this.tbs5.Text = "Calibrate";
@@ -1919,7 +1919,7 @@ namespace RateController
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(515, 476);
+            this.ClientSize = new System.Drawing.Size(515, 563);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);

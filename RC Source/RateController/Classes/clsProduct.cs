@@ -178,7 +178,7 @@ namespace RateController
 
         public string CoverageDescription()
         {
-            return mf.CoverageDescriptions[CoverageUnits] + "s";
+            return mf.CoverageDescriptions[CoverageUnits];
         }
 
         public string CurrentApplied()

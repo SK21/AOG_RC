@@ -14,6 +14,17 @@ namespace RateController
         public FormAbout(FormStart CallingForm)
         {
             InitializeComponent();
+            #region // language
+
+            groupBox3.Text = Lang.lgNetworkConnections;
+            label27.Text = Lang.lgDestinationIP;
+            label18.Text = Lang.lgSendPort;
+            label19.Text = Lang.lgReceivePort;
+            btnCancel.Text = Lang.lgCancel;
+            bntOK.Text = Lang.lgClose;
+
+            #endregion  // language
+
             mf = CallingForm;
         }
 

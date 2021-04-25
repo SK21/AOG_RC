@@ -12,6 +12,16 @@ namespace RateController
         {
             mf = CallingForm;
             InitializeComponent();
+
+            #region // language
+
+            btnConnect1.Text = Lang.lgConnect;
+            btnConnect2.Text = Lang.lgConnect;
+            btnConnect3.Text = Lang.lgConnect;
+            btnRescan.Text = Lang.lgRescan;
+            bntOK.Text = Lang.lgClose;
+
+            #endregion // language
         }
 
         private void bntOK_Click(object sender, EventArgs e)

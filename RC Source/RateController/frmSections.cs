@@ -17,9 +17,24 @@ namespace RateController
 
         public frmSections(FormStart CalledFrom)
         {
+            InitializeComponent();
+
+            #region // language
+
+            DGV.Columns[0].HeaderText = Lang.lgSection;
+            DGV.Columns[1].HeaderText = Lang.lgWidth;
+            DGV.Columns[2].HeaderText = Lang.lgSwitch;
+            label25.Text = Lang.lgNumSections;
+            lbWidth.Text = Lang.lgWidth;
+            rbInches.Text = Lang.lgInches;
+            btnEqual.Text = Lang.lgEqual;
+            btnCancel.Text = Lang.lgCancel;
+            bntOK.Text = Lang.lgClose;
+
+            #endregion // language
+
             mf = CalledFrom;
             Initializing = true;
-            InitializeComponent();
             SetDayMode();
             UseInches = mf.UseInches;
         }
@@ -348,12 +363,12 @@ namespace RateController
         {
             if (mf.UseInches)
             {
-                lbWidth.Text = "Width:  " + (mf.Sections.TotalWidth()).ToString("N0");
+                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth()).ToString("N0");
                 lbFeet.Text = (mf.Sections.TotalWidth() / 12).ToString("N1") + "  FT";
             }
             else
             {
-                lbWidth.Text = "Width:  " + mf.Sections.TotalWidth(false).ToString("N0");
+                lbWidth.Text = Lang.lgWidth + ":  " + mf.Sections.TotalWidth(false).ToString("N0");
             }
         }
     }
