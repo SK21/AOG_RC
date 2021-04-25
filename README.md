@@ -1,4 +1,4 @@
-RateController is an add-on app that works with AgOpenGPS 4.6 (https://github.com/farmerbriantee/AgOpenGPS/) for rate control. There is an example rate control pcb and code in the RateController_Files folder of the latest release. It can control up to 16 sections and 5 products either by flow-meter or motor rpm.
+RateController is an add-on app that works with AgOpenGPS version 5 (https://github.com/farmerbriantee/AgOpenGPS/) for rate control. There is an example rate control pcb and code in the RateController_Files folder of the latest release. It can control up to 16 sections and 5 products either by flow-meter or motor rpm.
 
 There are two methods of rate control.
 1. VCN (valve cal number) is 4 numbers combined to control the rate.
