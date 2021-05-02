@@ -121,7 +121,7 @@
     <value>over</value>
   </data>
   <data name="lgAcres" xml:space="preserve">
-    <value>Acres</value>
+    <value>acres</value>
   </data>
   <data name="lgAcresHr" xml:space="preserve">
     <value>opp./u</value>
@@ -184,7 +184,7 @@
     <value>gelijk</value>
   </data>
   <data name="lgHectares" xml:space="preserve">
-    <value>Hectares</value>
+    <value>hectare</value>
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
     <value>hectare_ha</value>
@@ -377,8 +377,5 @@
   </data>
   <data name="lgWorkingWidthM" xml:space="preserve">
     <value>werkbreedte meter</value>
-  </data>
-  <data name="String1" xml:space="preserve">
-    <value />
   </data>
 </root>

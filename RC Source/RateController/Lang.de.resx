@@ -121,19 +121,19 @@
     <value>Über diese Software</value>
   </data>
   <data name="lgAcres" xml:space="preserve">
-    <value>Fluren</value>
+    <value>Acres</value>
   </data>
   <data name="lgAcresHr" xml:space="preserve">
-    <value>Joch/h</value>
+    <value>Acres/h</value>
   </data>
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>läuft bereits</value>
   </data>
   <data name="lgBrakePoint" xml:space="preserve">
-    <value>Bremspunkt</value>
+    <value>Umschaltpunkt</value>
   </data>
   <data name="lgCalCopy" xml:space="preserve">
-    <value>Kalibrierung kopieren</value>
+    <value>als Rate kopieren</value>
   </data>
   <data name="lgCalculate" xml:space="preserve">
     <value>Berechnen</value>
@@ -160,7 +160,7 @@
     <value>Steuerungstyp</value>
   </data>
   <data name="lgCountsRev" xml:space="preserve">
-    <value>Runterzählen</value>
+    <value>Pulse pro Umdrehung Durchflussgeber</value>
   </data>
   <data name="lgCoverage" xml:space="preserve">
     <value>Abdeckung</value>
@@ -181,13 +181,13 @@
     <value>Disconnect</value>
   </data>
   <data name="lgEqual" xml:space="preserve">
-    <value>Gleich</value>
+    <value>'=Teilbreite 1</value>
   </data>
   <data name="lgHectares" xml:space="preserve">
-    <value>Hektare</value>
+    <value>Hektar</value>
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
-    <value>Hektar_ha</value>
+    <value>Hektar/h</value>
   </data>
   <data name="lgHighMax" xml:space="preserve">
     <value>HighMax</value>
@@ -211,13 +211,13 @@
     <value>Laden</value>
   </data>
   <data name="lgLoad_Defaults" xml:space="preserve">
-    <value>Werkseinstellung</value>
+    <value>Standardwerte laden</value>
   </data>
   <data name="lgLowMax" xml:space="preserve">
     <value>LowMax</value>
   </data>
   <data name="lgMinPWM" xml:space="preserve">
-    <value>MinPWM</value>
+    <value>minimale PWM</value>
   </data>
   <data name="lgMinute" xml:space="preserve">
     <value>Minute</value>
@@ -235,10 +235,10 @@
     <value>MPH</value>
   </data>
   <data name="lgNetworkConnections" xml:space="preserve">
-    <value>Netzwerkverbindung</value>
+    <value>Netzwerkverbindungen</value>
   </data>
   <data name="lgNumSections" xml:space="preserve">
-    <value>numerische Auswahl</value>
+    <value>Anzahl Teilbreiten</value>
   </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Optionen</value>
@@ -265,13 +265,13 @@
     <value>gemessene Menge</value>
   </data>
   <data name="lgRate" xml:space="preserve">
-    <value>Rate</value>
+    <value>Ausbringrate</value>
   </data>
   <data name="lgRealNano" xml:space="preserve">
-    <value>RealNano</value>
+    <value>Realer Nano</value>
   </data>
   <data name="lgReceivePort" xml:space="preserve">
-    <value>ReceivePort</value>
+    <value>Eingangsport</value>
   </data>
   <data name="lgRescan" xml:space="preserve">
     <value>Rescan</value>
@@ -289,25 +289,25 @@
     <value>Speichern unter</value>
   </data>
   <data name="lgSection" xml:space="preserve">
-    <value>Teilbreite</value>
-  </data>
-  <data name="lgSections" xml:space="preserve">
     <value>Teilbreiten</value>
   </data>
+  <data name="lgSections" xml:space="preserve">
+    <value>Teilbreiten für dieses Produkt</value>
+  </data>
   <data name="lgSendPort" xml:space="preserve">
-    <value>SendPort</value>
+    <value>Sendeport</value>
   </data>
   <data name="lgSendTime" xml:space="preserve">
-    <value>SendTime</value>
+    <value>Sendezeit</value>
   </data>
   <data name="lgSensorCounts" xml:space="preserve">
-    <value>Zähler Sensor</value>
+    <value>Pulse/Einheit Durchflussgeber</value>
   </data>
   <data name="lgSensorID" xml:space="preserve">
     <value>Sensor-ID</value>
   </data>
   <data name="lgSensorLocation" xml:space="preserve">
-    <value>Sensorposition</value>
+    <value>Anschluss Durchflussgeber</value>
   </data>
   <data name="lgSensorTotalCounts" xml:space="preserve">
     <value>Gesamtzähler Sensor</value>
@@ -331,10 +331,10 @@
     <value>Schalter</value>
   </data>
   <data name="lgTank" xml:space="preserve">
-    <value>Tank</value>
+    <value>Restm. Tank</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
-    <value>Tankinhalt</value>
+    <value>Tanknenninhalt </value>
   </data>
   <data name="lgTank_Remaining" xml:space="preserve">
     <value>Restmenge Tank</value>
@@ -352,19 +352,21 @@
     <value>Zielwert Einheiten/min</value>
   </data>
   <data name="lgUsePID" xml:space="preserve">
-    <value>Benutze PID</value>
+    <value>P-Regler ein</value>
   </data>
   <data name="lgUseVCN" xml:space="preserve">
-    <value>Benutze VCN</value>
+    <value>VCN-Regler ein</value>
   </data>
   <data name="lgVCNexplination" xml:space="preserve">
-    <value>Erklärung zu VCN</value>
+    <value>VCN ist eine Folge aus 4 Ziffern: Getriebespiel (1=wenig, 9=viel), Geschwindigkeit (0=schnell, 9=langsam), Umschaltpunkt zu Langsamfahrt (0=5%, 9=90%), tolerierte Regelungenauigkeit (1..9%)
+Beispiel: “743”: kein Getriebespiel, Geschwindigkeit 7, Umschaltpunkt bei 40% Abweichung, tolerierte Ungenauigkeit 3%
+Wenn die Abweichung kleiner als die durch den Umschaltpunkt definierte ist, wird auf geringere Geschwindigkeit umgeschaltet. Die Regelung greift nicht ein, wenn der Durchfluss innerhalb der tolerierten Regelungenauigkeit liegt.</value>
   </data>
   <data name="lgVersionDate" xml:space="preserve">
     <value>Datum der Version</value>
   </data>
   <data name="lgVirtualNano" xml:space="preserve">
-    <value>VirtualNano</value>
+    <value>Virtueller Nano</value>
   </data>
   <data name="lgWaitTime" xml:space="preserve">
     <value>Wartezeit</value>

@@ -8,13 +8,13 @@ namespace RateController
 {
     public class PGN32620
     {
-        // section switch IDs to arduino
+        // section switch IDs to arduino, ex: byte 2, bits 0 and 1 give 4 choices for sec 0, bits 2 and 3 for sec 1, etc.
         // 0    127
         // 1    108
         // 2    sec 0-3
         // 3    sec 4-7
         // 4    sec 8-11
-        // 5    sec 12-16
+        // 5    sec 12-15
 
         private const byte cByteCount = 10;
         private const byte HeaderHi = 127;

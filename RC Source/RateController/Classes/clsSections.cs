@@ -223,7 +223,6 @@ namespace RateController
             {
                 AOGmasterOn = true;
             }
-
             SendStatusUpdate(true);
         }
 
@@ -423,7 +422,15 @@ namespace RateController
                             if (PinState)
                             {
                                 // manual on
-                                SectionControlByte[SwByte] = mf.Tls.BitSet(SectionControlByte[SwByte], SwBit);  // turn section on
+                                if (!mf.Tls.BitRead(SectionOnFromAOG[SwByte], SwBit))
+                                {
+                                    SectionControlByte[SwByte] = mf.Tls.BitClear(SectionControlByte[SwByte], SwBit);
+                                }
+                                else
+                                {
+                                     SectionControlByte[SwByte] = mf.Tls.BitSet(SectionControlByte[SwByte], SwBit);
+                               }
+                                //SectionControlByte[SwByte] = mf.Tls.BitSet(SectionControlByte[SwByte], SwBit);  // turn section on
                                 // AOG section button will also be set to on
                             }
                             else
