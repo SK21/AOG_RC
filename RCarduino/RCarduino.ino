@@ -1,5 +1,7 @@
+# define InoDescription "RCarduino  :  03-May-2021"
+
 // user settings ****************************
-#define CommType 1          // 0 Serial USB, 1 UDP wired Nano, 2 UDP wifi Nano33
+#define CommType 0          // 0 Serial USB, 1 UDP wired Nano, 2 UDP wifi Nano33
 
 #define ModuleID 0			// unique ID 0-15
 #define IPMac 110			// unique number for Arduino IP address and Mac part 6, 0-255
@@ -22,6 +24,8 @@ byte SlowSpeed[] = { 9,9 };		// for vcn, low pwm rate, 0 fast, 9 slow
 byte LowMsPulseTrigger[] = {50, 50}; 	// ms/pulse below which is low ms/pulse flow sensor
 
 #define SensorCount 2
+
+#define UseLocalSwitches 1   // 0 no switches, 1 read switches from this pcb
 
 // ******************************************
 
@@ -164,7 +168,7 @@ bool UseVCN[] = {1, 1};		// 0 PID, 1 VCN
 
 byte ManualPWMsetting[] = {0, 0};
 float RateSetting[] = {0.0, 0.0};	// auto UPM setting
-float MeterCal[] = {17.0, 17.0};	// pulses per Unit
+float MeterCal[] = {1.0, 1.0};	// pulses per Unit
 
 unsigned long CommTime[SensorCount];
 
@@ -205,13 +209,30 @@ byte SwitchID[] = { 0,1,2,3,9,9,9,9,9,9,9,9,9,9,9,9 };
 
 bool EthernetEnabled = false;
 
+#if (UseLocalSwitches)
+byte SwitchPGN[] = { 127,106,0,0 };     // PGN 32618
+byte Pins[] = { 0,0,0,0,0,0,0,0,0 };
+
+#define SW0pin	A4
+#define SW1pin	9
+#define SW2pin	6
+
+#define SW3pin 4
+#define AutoPin 5
+#define MasterOnPin 3
+
+#define MasterOffPin A5	//2 
+#define RateUpPin A3
+#define RateDownPin A2
+#endif
+
 void setup()
 {
     Serial.begin(38400);
 
     delay(5000);
     Serial.println();
-    Serial.println("RCarduino  :  15-Apr-2021");
+    Serial.println(InoDescription);
     Serial.print("Module ID: ");
     Serial.println(ModuleID);
     Serial.println();
@@ -314,12 +335,30 @@ void setup()
     UDPout.begin(SourcePort);
     delay(1000);
 #endif
+
+#if(UseLocalSwitches)
+    pinMode(SW0pin, INPUT_PULLUP);
+    pinMode(SW1pin, INPUT_PULLUP);
+    pinMode(SW2pin, INPUT_PULLUP);
+
+    pinMode(SW3pin, INPUT_PULLUP);
+    pinMode(AutoPin, INPUT_PULLUP);
+    pinMode(MasterOnPin, INPUT_PULLUP);
+
+    pinMode(MasterOffPin, INPUT_PULLUP);
+    pinMode(RateUpPin, INPUT_PULLUP);
+    pinMode(RateDownPin, INPUT_PULLUP);
+#endif
+
     Serial.println("Finished Setup.");
 }
 
 void loop()
 {
     ReceiveSerial();
+
+    GetUPM0();
+    GetUPM1();
 
 #if (CommType == 2)
     CheckWifi();
@@ -367,6 +406,10 @@ void loop()
         {
             ManualControl();
         }
+
+#if(UseLocalSwitches)
+        ReadSwitches();
+#endif
 
         // check connection to AOG
         watchdogTimer++;
@@ -436,7 +479,7 @@ void AutoControl()
         case 2:
             // motor control
             if (SimulateFlow[i]) SimulateMotor(PIDminPWM[i], PIDHighMax[i], i);
-            rateError[i] = RateSetting[i] - GetUPM(i);
+            rateError[i] = RateSetting[i] - UPM[i];
 
             // calculate new value
             pwmSetting[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
@@ -449,7 +492,7 @@ void AutoControl()
             if (UseVCN[i])
             {
                 if (SimulateFlow[i]) SimulateValve(VCNminPWM[i], VCNmaxPWM[i], i);
-                rateError[i] = RateSetting[i] - GetUPM(i);
+                rateError[i] = RateSetting[i] - UPM[i];
 
                 pwmSetting[i] = VCNpwm(rateError[i], RateSetting[i], VCNminPWM[i], VCNmaxPWM[i],
                     VCN[i], UPM[i], SendTime[i], WaitTime[i], SlowSpeed[i], ControlType[i], i);
@@ -457,7 +500,7 @@ void AutoControl()
             else
             {
                 if (SimulateFlow[i]) SimulateValve(PIDminPWM[i], PIDHighMax[i], i);
-                rateError[i] = RateSetting[i] - GetUPM(i);
+                rateError[i] = RateSetting[i] - UPM[i];
 
                 pwmSetting[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
                     PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i);
@@ -508,7 +551,7 @@ void ManualControl()
         case 2:
             // motor control
             if (SimulateFlow[i]) SimulateMotor(PIDminPWM[i], PIDHighMax[i], i);
-            rateError[i] = RateSetting[i] - GetUPM(i);
+            rateError[i] = RateSetting[i] - UPM[i];
             break;
 
         default:
@@ -524,7 +567,7 @@ void ManualControl()
                     SimulateValve(PIDminPWM[i], PIDHighMax[i], i);
                 }
             }
-            rateError[i] = RateSetting[i] - GetUPM(i);
+            rateError[i] = RateSetting[i] - UPM[i];
             break;
         }
     }

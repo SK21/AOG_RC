@@ -48,8 +48,16 @@ void SimulateValve(byte sMin, byte sMax, byte SensorID)
   Pulses[SensorID] = (simUPM[SensorID] * MeterCal[SensorID]) / 60000.0;  // (Units/min * pulses/Unit) = pulses/min / 60000 = pulses/millisecond
   if (Pulses[SensorID] == 0)
   {
-    pulseCount[SensorID] = 0;
-    pulseDuration[SensorID] = 0;
+      if (SensorID == 0)
+      {
+          pulseCount0 = 0;
+          pulseDuration0 = 0;
+      }
+      else
+      {
+          pulseCount1 = 0;
+          pulseDuration1 = 0;
+      }
   }
   else
   {
@@ -58,10 +66,20 @@ void SimulateValve(byte sMin, byte sMax, byte SensorID)
     RandomError[SensorID] = (100.0 - ErrorRange[SensorID]) + (random(ErrorRange[SensorID] * 2.0));
     PulseTime[SensorID] = (float)(PulseTime[SensorID] * RandomError[SensorID] / 100.0);
 
-    pulseCount[SensorID] = SimulateInterval[SensorID] / PulseTime[SensorID];	// milliseconds * pulses/millsecond = pulses
+    if (SensorID == 0)
+    {
+        pulseCount0 = SimulateInterval[SensorID] / PulseTime[SensorID];	// milliseconds * pulses/millsecond = pulses
 
-    // pulse duration is the time for one pulse
-    pulseDuration[SensorID] = PulseTime[SensorID];
+        // pulse duration is the time for one pulse
+        pulseDuration0 = PulseTime[SensorID];
+    }
+    else
+    {
+        pulseCount1 = SimulateInterval[SensorID] / PulseTime[SensorID];	// milliseconds * pulses/millsecond = pulses
+
+        // pulse duration is the time for one pulse
+        pulseDuration1 = PulseTime[SensorID];
+    }
   }
 }
 
@@ -72,31 +90,70 @@ float SimTmp;
 
 void SimulateMotor(byte sMin, byte sMax, byte SensorID)
 {
-  if (FlowEnabled[SensorID])
-  {
-    SimulateInterval[SensorID] = millis() - SimulateTimeLast[SensorID];
-    SimulateTimeLast[SensorID] = millis();
-
-    SimRPM[SensorID] += ((pwmSetting[SensorID] / (float)sMax) * MaxRPM - SimRPM[SensorID]) * 0.25;	// update rpm
-    RandomError[SensorID] = (100.0 - ErrorRange[SensorID]) + (random(ErrorRange[SensorID] * 2.0));
-    SimRPM[SensorID] = SimRPM[SensorID] * RandomError[SensorID] / 100.0;
-    if (SimRPM[SensorID] < sMin) SimRPM[SensorID] = (float)sMin;
-
-    SimTmp = PPR * SimRPM[SensorID];
-    if (SimTmp > 0)
+    if (FlowEnabled[SensorID])
     {
-      pulseDuration[SensorID] = 60000 / SimTmp;
-    }
-    else
-    {
-      pulseDuration[SensorID] = 0;
-    }
+        if (SensorID == 0)
+        {
+            if (FlowEnabled[SensorID])
+            {
+                SimulateInterval[SensorID] = millis() - SimulateTimeLast[SensorID];
+                SimulateTimeLast[SensorID] = millis();
 
-    pulseCount[SensorID] = SimRPM[SensorID] * PPR;
-    pulseCount[SensorID] = pulseCount[SensorID] * (SimulateInterval[SensorID] / 60000.0);	// counts for time slice
-  }
-  else
-  {
-    pulseCount[SensorID] = 0;
-  }
+                SimRPM[SensorID] += ((pwmSetting[SensorID] / (float)sMax) * MaxRPM - SimRPM[SensorID]) * 0.25;	// update rpm
+                RandomError[SensorID] = (100.0 - ErrorRange[SensorID]) + (random(ErrorRange[SensorID] * 2.0));
+                SimRPM[SensorID] = SimRPM[SensorID] * RandomError[SensorID] / 100.0;
+                if (SimRPM[SensorID] < sMin) SimRPM[SensorID] = (float)sMin;
+
+                SimTmp = PPR * SimRPM[SensorID];
+
+                if (SimTmp > 0)
+                {
+                    pulseDuration0 = 60000 / SimTmp;
+                }
+                else
+                {
+                    pulseDuration0 = 0;
+                }
+
+                pulseCount0 = SimRPM[SensorID] * PPR;
+                pulseCount0 = pulseCount0 * (SimulateInterval[SensorID] / 60000.0);	// counts for time slice
+            }
+            else
+            {
+                pulseCount0 = 0;
+            }
+        }
+        else
+        {
+            if (FlowEnabled[SensorID])
+            {
+                SimulateInterval[SensorID] = millis() - SimulateTimeLast[SensorID];
+                SimulateTimeLast[SensorID] = millis();
+
+                SimRPM[SensorID] += ((pwmSetting[SensorID] / (float)sMax) * MaxRPM - SimRPM[SensorID]) * 0.25;	// update rpm
+                RandomError[SensorID] = (100.0 - ErrorRange[SensorID]) + (random(ErrorRange[SensorID] * 2.0));
+                SimRPM[SensorID] = SimRPM[SensorID] * RandomError[SensorID] / 100.0;
+                if (SimRPM[SensorID] < sMin) SimRPM[SensorID] = (float)sMin;
+
+                SimTmp = PPR * SimRPM[SensorID];
+
+                if (SimTmp > 0)
+                {
+                    pulseDuration1 = 60000 / SimTmp;
+                }
+                else
+                {
+                    pulseDuration1 = 0;
+                }
+
+                pulseCount1 = SimRPM[SensorID] * PPR;
+                pulseCount1 = pulseCount1 * (SimulateInterval[SensorID] / 60000.0);	// counts for time slice
+            }
+            else
+            {
+                pulseCount1 = 0;
+            }
+
+        }
+    }
 }
