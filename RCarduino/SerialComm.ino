@@ -72,21 +72,10 @@ void SendSerial()
 //- bit 1, 2		valve type 0 - 3
 //- bit 3		simulate flow
 //
-//PGN32615 to Arduino from Rate Controller
-// 0 HeaderHi       127
-// 1 HeaderLo       103
-// 2 Controller ID
-// 3 VCN Hi         Valve Cal Number
-// 4 VCN Lo
-// 5 Send Hi        ms sending pwm
-// 6 Send Lo
-// 7 Wait Hi        ms to wait before sending pwm again
-// 8 Wait Lo
-// 9 Min PWM
 
 void ReceiveSerial()
 {
-    if (Serial.available() > 0 && !PGN32614Found && !PGN32615Found && !PGN32616Found
+    if (Serial.available() > 0 && !PGN32614Found && !PGN32616Found
         && !PGN32619Found && !PGN32620Found) //find the header
     {
         LSB = Serial.read();
@@ -94,7 +83,6 @@ void ReceiveSerial()
         
         MSB = LSB;                          //save for next time
         PGN32614Found = (PGN == 32614);
-        PGN32615Found = (PGN == 32615);
         PGN32616Found = (PGN == 32616);
         PGN32619Found = (PGN == 32619);
         PGN32620Found = (PGN == 32620);
@@ -130,7 +118,7 @@ void ReceiveSerial()
 
                 SimulateFlow[SensorID] = ((InCommand[SensorID] & 8) == 8);
 
-                UseVCN[SensorID] = ((InCommand[SensorID] & 16) == 16);
+                UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
 
                 AutoOn = ((InCommand[SensorID] & 32) == 32);
                 if (AutoOn)
@@ -143,27 +131,6 @@ void ReceiveSerial()
                 }
 
                 //reset watchdog as we just heard from AgOpenGPS
-                watchdogTimer = 0;
-                CommTime[SensorID] = millis();
-            }
-        }
-    }
-
-    if (Serial.available() > 7 && PGN32615Found)
-    {
-        PGN32615Found = false;
-
-        byte tmp = Serial.read();
-        if (ParseModID(tmp) == ModuleID)
-        {
-            byte SensorID = ParseSenID(tmp);
-            if (SensorID < SensorCount)
-            {
-                VCN[SensorID] = Serial.read() << 8 | Serial.read();
-                SendTime[SensorID] = Serial.read() << 8 | Serial.read();
-                WaitTime[SensorID] = Serial.read() << 8 | Serial.read();
-                VCNminPWM[SensorID] = Serial.read();
-
                 watchdogTimer = 0;
                 CommTime[SensorID] = millis();
             }
@@ -216,23 +183,4 @@ void ReceiveSerial()
         }
         TranslateSwitchBytes();
     }
-
-    //RelayHi = 0;
-    //RelayLo = 7;
-    //RateSetting = 10;
-    //MeterCal = 120;
-
-    //ControlType = 2;
-
-    //SimulateFlow = 0;
-    //UseVCN = 0;
-    //watchdogTimer = 0;
-    //ControllerConnected = true;
-
-    //PIDkp = 80;
-    //PIDminPWM = 5;
-    //PIDLowMax = 150;
-    //PIDHighMax = 200;
-    //PIDdeadband = 3;
-    //PIDbrakePoint = 20;
 }

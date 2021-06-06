@@ -12,7 +12,6 @@ namespace RateController
         public clsArduino VirtualNano;
         public PGN32613 ArduinoModule;
         private PGN32614 RateToArduino;
-        private PGN32615 VCNtoArduino;
         private PGN32616 PIDtoArduino;
 
         public double cRateSet = 0;
@@ -22,10 +21,8 @@ namespace RateController
         public double FlowCal = 0;
         public byte QuantityUnits = 0;
         public double TankSize = 0;
-        public bool UseVCN = true;
 
         public byte ValveType = 0;        // 0 standard, 1 fast close, 3 motor
-        private bool[] cAssignedSections = new bool[16];
         private int cCountsRev;
 
         private int cModID;        // arduino ID, 0-15, high 4 bits
@@ -54,6 +51,7 @@ namespace RateController
         private double cManualRateFactor = 1;
 
         private bool SwitchIDsSent;
+        private bool cUseMultiPulse;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -64,7 +62,6 @@ namespace RateController
 
             ArduinoModule = new PGN32613(this);
             RateToArduino = new PGN32614(this);
-            VCNtoArduino = new PGN32615(this);
             PIDtoArduino = new PGN32616(this);
             VirtualNano = new clsArduino(this);
         }
@@ -84,8 +81,6 @@ namespace RateController
         }
 
         public int ID { get { return cProductID; } }
-
-        public byte MinPWM { get { return VCNtoArduino.MinPWM; } set { VCNtoArduino.MinPWM = value; } }
 
         public double ManualRateFactor { get { return cManualRateFactor; } set { cManualRateFactor = value; } }
 
@@ -132,8 +127,6 @@ namespace RateController
             }
         }
 
-        public int SendTime { get { return VCNtoArduino.SendTime; } set { VCNtoArduino.SendTime = value; } }
-
         public byte SensorID
         {
             get { return (byte)cSenID; }
@@ -151,17 +144,7 @@ namespace RateController
         }
 
         public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }
-        public int VCN { get { return VCNtoArduino.VCN; } set { VCNtoArduino.VCN = value; } }
-        public int WaitTime { get { return VCNtoArduino.WaitTime; } set { VCNtoArduino.WaitTime = value; } }
         private string IDname { get { return cProductID.ToString(); } }
-
-        public void AssignSection(byte ID, bool Assigned = true)
-        {
-            if (ID < 16)
-            {
-                cAssignedSections[ID] = Assigned;
-            }
-        }
 
         public string AverageRate()
         {
@@ -175,6 +158,8 @@ namespace RateController
                 return "0.0";
             }
         }
+
+        public bool UseMultiPulse { get { return cUseMultiPulse; } set { cUseMultiPulse = value; } }
 
         public string CoverageDescription()
         {
@@ -206,18 +191,6 @@ namespace RateController
         public double CurrentTankRemaining()
         {
             return TankRemaining;
-        }
-
-        public bool IsSectionAssigned(byte ID)
-        {
-            if (ID < 16)
-            {
-                return cAssignedSections[ID];
-            }
-            else
-            {
-                return false;
-            }
         }
 
         public double PWM()
@@ -434,7 +407,7 @@ namespace RateController
 
                 for (int i = 0; i < 16; i++)
                 {
-                    if (cAssignedSections[i] & mf.Sections.IsSectionOn(i))
+                    if (mf.Sections.IsSectionOn(i))
                     {
                         cWorkingWidth_cm += mf.Sections.Item(i).Width_cm;
                     }
@@ -473,15 +446,7 @@ namespace RateController
 
                 // send to arduino
                 RateToArduino.Send();
-
-                if (UseVCN)
-                {
-                    VCNtoArduino.Send();
-                }
-                else
-                {
-                    PIDtoArduino.Send();
-                }
+                PIDtoArduino.Send();
             }
             else
             {
@@ -585,12 +550,7 @@ namespace RateController
             byte.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), out ValveType);
             Enum.TryParse(mf.Tls.LoadProperty("cSimulationType" + IDname), true, out cSimulationType);
 
-            int.TryParse(mf.Tls.LoadProperty("VCN" + IDname), out VCNtoArduino.VCN);
-            int.TryParse(mf.Tls.LoadProperty("SendTime" + IDname), out VCNtoArduino.SendTime);
-            int.TryParse(mf.Tls.LoadProperty("WaitTime" + IDname), out VCNtoArduino.WaitTime);
-
             cProductName = mf.Tls.LoadProperty("ProductName" + IDname);
-            byte.TryParse(mf.Tls.LoadProperty("MinPWM" + IDname), out VCNtoArduino.MinPWM);
 
             byte.TryParse(mf.Tls.LoadProperty("KP" + IDname), out PIDtoArduino.KP);
             byte.TryParse(mf.Tls.LoadProperty("PIDMinPWM" + IDname), out PIDtoArduino.MinPWM);
@@ -600,7 +560,7 @@ namespace RateController
             byte.TryParse(mf.Tls.LoadProperty("PIDdeadband" + IDname), out PIDtoArduino.DeadBand);
             byte.TryParse(mf.Tls.LoadProperty("PIDbrakepoint" + IDname), out PIDtoArduino.BrakePoint);
 
-            bool.TryParse(mf.Tls.LoadProperty("UseVCN" + IDname), out UseVCN);
+            bool.TryParse(mf.Tls.LoadProperty("UseMultiPulse" + IDname), out cUseMultiPulse);
             int.TryParse(mf.Tls.LoadProperty("CountsRev" + IDname), out cCountsRev);
 
             int tmp;
@@ -610,11 +570,6 @@ namespace RateController
             tmp = 0;
             int.TryParse(mf.Tls.LoadProperty("ModuleID" + IDname), out tmp);
             ModuleID = (byte)tmp;
-
-            for (int i = 0; i < 16; i++)
-            {
-                bool.TryParse(mf.Tls.LoadProperty("ProductSection_" + i.ToString() + "_Prod_" + IDname), out cAssignedSections[i]);
-            }
         }
 
         public void Save()
@@ -633,12 +588,7 @@ namespace RateController
             mf.Tls.SaveProperty("ValveType" + IDname, ValveType.ToString());
             mf.Tls.SaveProperty("cSimulationType" + IDname, cSimulationType.ToString());
 
-            mf.Tls.SaveProperty("VCN" + IDname, VCNtoArduino.VCN.ToString());
-            mf.Tls.SaveProperty("SendTime" + IDname, VCNtoArduino.SendTime.ToString());
-            mf.Tls.SaveProperty("WaitTime" + IDname, VCNtoArduino.WaitTime.ToString());
-
             mf.Tls.SaveProperty("ProductName" + IDname, cProductName);
-            mf.Tls.SaveProperty("MinPWM" + IDname, VCNtoArduino.MinPWM.ToString());
 
             mf.Tls.SaveProperty("KP" + IDname, PIDtoArduino.KP.ToString());
             mf.Tls.SaveProperty("PIDMinPWM" + IDname, PIDtoArduino.MinPWM.ToString());
@@ -648,16 +598,11 @@ namespace RateController
             mf.Tls.SaveProperty("PIDdeadband" + IDname, PIDtoArduino.DeadBand.ToString());
             mf.Tls.SaveProperty("PIDbrakepoint" + IDname, PIDtoArduino.BrakePoint.ToString());
 
-            mf.Tls.SaveProperty("UseVCN" + IDname, UseVCN.ToString());
+            mf.Tls.SaveProperty("UseMultiPulse" + IDname, cUseMultiPulse.ToString());
             mf.Tls.SaveProperty("CountsRev" + IDname, cCountsRev.ToString());
 
             mf.Tls.SaveProperty("ModuleID" + IDname, cModID.ToString());
             mf.Tls.SaveProperty("SensorID" + IDname, cSenID.ToString());
-
-            for (int i = 0; i < 16; i++)
-            {
-                mf.Tls.SaveProperty("ProductSection_" + i.ToString() + "_Prod_" + IDname, cAssignedSections[i].ToString());
-            }
         }
     }
 }

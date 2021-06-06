@@ -26,6 +26,8 @@ void PPM1isr()
 
     if (millis() - pulseStart > 5)
     {
+        pulseCount1++;
+
         pulseState1 = !pulseState1;
 
         if (pulseState1)
@@ -35,7 +37,6 @@ void PPM1isr()
         else
         {
             pulseDuration1 = millis() - pulseStart;
-            pulseCount1++;
             pulseStart = 1;
         }
     }
@@ -43,7 +44,10 @@ void PPM1isr()
 
 void GetUPM1()
 {
-    SetMinPulseTime1();
+    CurrentCounts1 = pulseCount1;
+    pulseCount1 = 0;
+
+    if (pulseDuration1 > 5) CurrentDuration1 = pulseDuration1;
 
     // check for no PPM
     if (millis() - LastPulse1 > 4000)
@@ -52,18 +56,14 @@ void GetUPM1()
         CurrentDuration1 = 0;
         PPM1 = 0;
     }
-    if (pulseCount1 > 0)
-    {
-        LastPulse1 = millis();
-    }
+
+    if (CurrentCounts1 > 0) LastPulse0 = millis();
 
     // accumulated total
-    CurrentCounts1 = pulseCount1;
-    pulseCount1 = 0;
     TotalPulses[1] += CurrentCounts1;
 
     // ppm
-    if (MinPulseTime1 == 0)
+    if (UseMultiPulses[1])
     {
         // low ms/pulse, use pulses over time
         TimedCounts1 += CurrentCounts1;
@@ -78,7 +78,6 @@ void GetUPM1()
     else
     {
         // high ms/pulse, use time for one pulse
-        if (pulseDuration1 > MinPulseTime1) CurrentDuration1 = pulseDuration1;
         if (CurrentDuration1 > 0) PPM1 = 60000.0 / CurrentDuration1;
     }
 
@@ -99,37 +98,4 @@ void GetUPM1()
         UPM[1] = 0;
     }
 }
-
-void SetMinPulseTime1()
-{
-    if (RateSetting[1] <= 0 || MeterCal[1] <= 0)
-    {
-        MinPulseTime1 = 5;
-    }
-    else
-    {
-        // ms/pulse = 60000 / ((units per minute) * (counts per unit))
-        float Ms = RateSetting[1] * MeterCal[1];
-        if (Ms > 0)
-        {
-            Ms = 60000.0 / Ms;
-        }
-        else
-        {
-            Ms = 0;
-        }
-
-        if (Ms < LowMsPulseTrigger[1])
-        {
-            // low ms/pulse
-            MinPulseTime1 = 0;
-        }
-        else
-        {
-            // high ms/pulse
-            MinPulseTime1 = 5;
-        }
-    }
-}
-
 

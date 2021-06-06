@@ -12,14 +12,13 @@ namespace RateController
         public FormStart mf;
         private double CalculatedCPU;
         private int CurrentProduct;
-        private int ErrorCount;
         private bool Initializing = false;
         private double[] MaxError = new double[5];
         private TextBox[] PIDs;
         private Label[] Sec;
-        private CheckBox[] SecCK;
         private SimType SelectedSimulation;
         private TabPage[] tbs;
+        bool[] SwON = new bool[9];
 
         public FormSettings(FormStart CallingForm, int Page)
         {
@@ -28,9 +27,9 @@ namespace RateController
 
             lbProduct.Text = Lang.lgProduct;
             tc.TabPages[0].Text = Lang.lgRate;
-            tc.TabPages[3].Text = Lang.lgOptions;
-            tc.TabPages[4].Text = Lang.lgDiagnostics;
-            tc.TabPages[5].Text = Lang.lgCalibrate;
+            tc.TabPages[2].Text = Lang.lgOptions;
+            tc.TabPages[3].Text = Lang.lgDiagnostics;
+            tc.TabPages[4].Text = Lang.lgCalibrate;
             btnCancel.Text = Lang.lgCancel;
             bntOK.Text = Lang.lgClose;
 
@@ -42,18 +41,9 @@ namespace RateController
             lb3.Text = Lang.lgTargetRate;
             lb6.Text = Lang.lgTankSize;
             lb7.Text = Lang.lgTank_Remaining;
-            rbVCN.Text = Lang.lgUseVCN;
-            rbPID.Text = Lang.lgUsePID;
             btnResetCoverage.Text = Lang.lgCoverage;
             btnResetTank.Text = Lang.lgTank;
             btnResetQuantity.Text = Lang.lgQuantity;
-
-            groupBox1.Text = Lang.lgCalValues;
-            lb14.Text = Lang.lgMinPWM;
-            lb11.Text = Lang.lgSendTime;
-            lb12.Text = Lang.lgWaitTime;
-            btnLoadDefaults.Text = Lang.lgLoad_Defaults;
-            tbVCNdescription.Text = Lang.lgVCNexplination;
 
             label7.Text = Lang.lgHighMax;
             label5.Text = Lang.lgBrakePoint;
@@ -62,7 +52,6 @@ namespace RateController
             label6.Text = Lang.lgDeadband;
             btnPIDloadDefaults.Text = Lang.lgLoad_Defaults;
 
-            grpSections.Text = Lang.lgSections;
             grpSensor.Text = Lang.lgSensorLocation;
             lbConID.Text = Lang.lgModuleID;
             label26.Text = Lang.lgSensorID;
@@ -102,7 +91,7 @@ namespace RateController
 
             mf = CallingForm;
             Initializing = true;
-            tbs = new TabPage[] { tbs0, tbs1, tbs3, tbs4 };
+            tbs = new TabPage[] { tbs0, tbs4, tbs6, tbs3, tbs5 };
             CurrentProduct = Page - 1;
             if (CurrentProduct < 0) CurrentProduct = 0;
 
@@ -121,11 +110,13 @@ namespace RateController
                 PIDs[i].Validating += tbPID_Validating;
             }
 
-            SecCK = new CheckBox[] { ck0, ck1, ck2, ck3, ck4, ck5, ck6, ck7, ck8, ck9, ck10, ck11, ck12, ck13, ck14, ck15 };
-            for (int i = 0; i < 16; i++)
-            {
-                SecCK[i].CheckedChanged += ck0_CheckedChanged;
-            }
+            mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
+        }
+
+        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
+        {
+            SwON = e.Switches;
+            UpdateSwitches();
         }
 
         private void AreaUnits_SelectedIndexChanged(object sender, EventArgs e)
@@ -219,14 +210,6 @@ namespace RateController
             }
         }
 
-        private void btnLoadDefaults_Click(object sender, EventArgs e)
-        {
-            tbVCN.Text = "743";
-            tbSend.Text = "200";
-            tbWait.Text = "750";
-            tbMinPWM.Text = "145";
-        }
-
         private void btnLoadSettings_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -240,12 +223,12 @@ namespace RateController
 
         private void btnPIDloadDefaults_Click(object sender, EventArgs e)
         {
-            tbPIDkp.Text = "40";
-            tbPIDMinPWM.Text = "5";
-            tbPIDLowMax.Text = "125";
+            tbPIDkp.Text = "100";
             tbPIDHighMax.Text = "200";
-            tbPIDDeadBand.Text = "3";
             tbPIDBrakePoint.Text = "20";
+            tbPIDLowMax.Text = "100";
+            tbPIDMinPWM.Text = "70";
+            tbPIDDeadBand.Text = "4";
         }
 
         private void btnResetCoverage_Click(object sender, EventArgs e)
@@ -332,11 +315,6 @@ namespace RateController
             return Unique;
         }
 
-        private void ck0_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
         private void FlowCal_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -414,27 +392,10 @@ namespace RateController
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
-        private void LoadSecCK()
-        {
-            for (int i = 0; i < 16; i++)
-            {
-                if (mf.Sections.Item(i).Enabled)
-                {
-                    SecCK[i].Enabled = true;
-                    SecCK[i].Checked = mf.Products.Item(CurrentProduct).IsSectionAssigned((byte)i);
-                }
-                else
-                {
-                    SecCK[i].Enabled = false;
-
-                    SecCK[i].Checked = false;
-                    mf.Products.Item(CurrentProduct).AssignSection((byte)i, false);
-                }
-            }
-        }
-
         private void LoadSettings()
         {
+            byte tempB;
+
             tbProduct.Text = mf.Products.Item(CurrentProduct).ProductName;
             VolumeUnits.SelectedIndex = mf.Products.Item(CurrentProduct).QuantityUnits;
             AreaUnits.SelectedIndex = mf.Products.Item(CurrentProduct).CoverageUnits;
@@ -443,10 +404,6 @@ namespace RateController
             TankSize.Text = mf.Products.Item(CurrentProduct).TankSize.ToString("N0");
             ValveType.SelectedIndex = mf.Products.Item(CurrentProduct).ValveType;
             TankRemain.Text = mf.Products.Item(CurrentProduct).CurrentTankRemaining().ToString("N0");
-            tbVCN.Text = (mf.Products.Item(CurrentProduct).VCN).ToString("G0");
-            tbSend.Text = (mf.Products.Item(CurrentProduct).SendTime).ToString("N0");
-            tbWait.Text = (mf.Products.Item(CurrentProduct).WaitTime).ToString("N0");
-            tbMinPWM.Text = (mf.Products.Item(CurrentProduct).MinPWM).ToString("N0");
 
             tbCountsRev.Text = (mf.Products.Item(CurrentProduct).CountsRev.ToString("N0"));
 
@@ -470,10 +427,6 @@ namespace RateController
                     break;
             }
 
-            // VCN
-            rbVCN.Checked = (mf.Products.Item(CurrentProduct).UseVCN);
-            rbPID.Checked = !(mf.Products.Item(CurrentProduct).UseVCN);
-
             // PID
             tbPIDkp.Text = mf.Products.Item(CurrentProduct).PIDkp.ToString("N0");
             tbPIDMinPWM.Text = mf.Products.Item(CurrentProduct).PIDminPWM.ToString("N0");
@@ -483,8 +436,24 @@ namespace RateController
             tbPIDDeadBand.Text = mf.Products.Item(CurrentProduct).PIDdeadband.ToString("N0");
             tbPIDBrakePoint.Text = mf.Products.Item(CurrentProduct).PIDbrakepoint.ToString("N0");
 
-            LoadSecCK();
             tbSenID.Text = mf.Products.Item(CurrentProduct).SensorID.ToString();
+
+            rbSinglePulse.Checked = !(mf.Products.Item(CurrentProduct).UseMultiPulse);
+            rbMultiPulse.Checked= (mf.Products.Item(CurrentProduct).UseMultiPulse);
+
+            // load defaults if blank
+            byte.TryParse(tbPIDkp.Text, out tempB);
+            if (tempB == 0)
+            {
+                tbPIDkp.Text = "100";
+                tbPIDHighMax.Text = "200";
+                tbPIDBrakePoint.Text = "20";
+                tbPIDLowMax.Text = "100";
+                tbPIDMinPWM.Text = "70";
+                tbPIDDeadBand.Text = "4";
+
+                SaveSettings();
+            }
         }
 
         private void RadioButtonChanged(object sender, EventArgs e)
@@ -552,21 +521,6 @@ namespace RateController
             return Result;
         }
 
-        private void SaveSecCK()
-        {
-            for (int i = 0; i < 16; i++)
-            {
-                if (SecCK[i].Enabled & SecCK[i].Checked)
-                {
-                    mf.Products.Item(CurrentProduct).AssignSection((byte)i);
-                }
-                else
-                {
-                    mf.Products.Item(CurrentProduct).AssignSection((byte)i, false);
-                }
-            }
-        }
-
         private void SaveSettings()
         {
             double tempD;
@@ -590,26 +544,11 @@ namespace RateController
             double.TryParse(TankRemain.Text, out tempD);
             mf.Products.Item(CurrentProduct).SetTankRemaining(tempD);
 
-            int.TryParse(tbVCN.Text, out tempInt);
-            mf.Products.Item(CurrentProduct).VCN = tempInt;
-
-            int.TryParse(tbSend.Text, out tempInt);
-            mf.Products.Item(CurrentProduct).SendTime = tempInt;
-
-            int.TryParse(tbWait.Text, out tempInt);
-            mf.Products.Item(CurrentProduct).WaitTime = tempInt;
-
-            byte.TryParse(tbMinPWM.Text, out tempB);
-            mf.Products.Item(CurrentProduct).MinPWM = tempB;
-
             mf.Products.Item(CurrentProduct).SimulationType = SelectedSimulation;
             mf.Products.Item(CurrentProduct).ProductName = tbProduct.Text;
 
             byte.TryParse(tbConID.Text, out tempB);
             mf.Products.Item(CurrentProduct).ModuleID = tempB;
-
-            // VCN
-            mf.Products.Item(CurrentProduct).UseVCN = (rbVCN.Checked);
 
             // PID
             byte.TryParse(tbPIDkp.Text, out tempB);
@@ -633,11 +572,13 @@ namespace RateController
             int.TryParse(tbCountsRev.Text, out tempInt);
             mf.Products.Item(CurrentProduct).CountsRev = tempInt;
 
-            SaveSecCK();
             byte.TryParse(tbSenID.Text, out tempB);
             mf.Products.Item(CurrentProduct).SensorID = tempB;
 
             mf.Products.Item(CurrentProduct).Save();
+
+            mf.Products.Item(CurrentProduct).UseMultiPulse = (rbMultiPulse.Checked);
+
         }
 
         private void SetButtons(bool Edited)
@@ -675,7 +616,7 @@ namespace RateController
             {
                 this.BackColor = Properties.Settings.Default.DayColour;
 
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     tbs[i].BackColor = Properties.Settings.Default.DayColour;
                 }
@@ -697,7 +638,7 @@ namespace RateController
             {
                 this.BackColor = Properties.Settings.Default.NightColour;
 
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     tbs[i].BackColor = Properties.Settings.Default.NightColour;
                 }
@@ -719,7 +660,6 @@ namespace RateController
             {
                 tc.TabPages[i].BackColor = Properties.Settings.Default.DayColour;
             }
-            tbVCNdescription.BackColor = Properties.Settings.Default.DayColour;
         }
 
         private void SetModuleIndicator()
@@ -736,45 +676,10 @@ namespace RateController
 
         private void SetVCNpid()
         {
-            if (rbVCN.Checked)
-            {
-                tbVCN.Enabled = true;
-                tbSend.Enabled = true;
-                tbWait.Enabled = true;
-                tbMinPWM.Enabled = true;
-                btnLoadDefaults.Enabled = true;
-
-                for (int i = 0; i < 6; i++)
-                {
-                    PIDs[i].Enabled = false;
-                }
-                btnPIDloadDefaults.Enabled = false;
-            }
-            else
-            {
-                tbVCN.Enabled = false;
-                tbSend.Enabled = false;
-                tbWait.Enabled = false;
-                tbMinPWM.Enabled = false;
-                btnLoadDefaults.Enabled = false;
-
-                tbPIDBrakePoint.Enabled = true;
-                tbPIDLowMax.Enabled = true;
-
-                for (int i = 0; i < 6; i++)
-                {
-                    PIDs[i].Enabled = true;
-                }
-                btnPIDloadDefaults.Enabled = true;
-            }
-
             switch (ValveType.SelectedIndex)
             {
                 case 2:
                     // motor
-                    rbPID.Checked = true;
-                    rbPID.Enabled = false;
-                    rbVCN.Enabled = false;
                     tbPIDBrakePoint.Enabled = false;
                     tbPIDLowMax.Enabled = false;
                     tbPIDBrakePoint.Text = "0";
@@ -783,8 +688,6 @@ namespace RateController
 
                 default:
                     // 0 standard valve, 1 fast close valve
-                    rbVCN.Enabled = true;
-                    rbPID.Enabled = true;
                     break;
             }
         }
@@ -895,36 +798,6 @@ namespace RateController
             }
         }
 
-        private void tbMinPWM_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbMinPWM.Text, out tempD);
-            using (var form = new FormNumeric(0, 255, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbMinPWM.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbMinPWM_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbMinPWM_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbMinPWM.Text, out tempD);
-            if (tempD < 0 || tempD > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
         private void tbPID_Enter(object sender, EventArgs e)
         {
             int index = (int)((TextBox)sender).Tag;
@@ -1001,36 +874,6 @@ namespace RateController
             SetButtons(true);
         }
 
-        private void tbSend_Enter(object sender, EventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbSend.Text, out tempInt);
-            using (var form = new FormNumeric(20, 2000, tempInt))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbSend.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbSend_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbSend_Validating(object sender, CancelEventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbSend.Text, out tempInt);
-            if (tempInt < 20 || tempInt > 2000)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
         private void tbSenID_Enter(object sender, EventArgs e)
         {
             int tempInt;
@@ -1055,66 +898,6 @@ namespace RateController
             int tempInt;
             int.TryParse(tbSenID.Text, out tempInt);
             if (tempInt < 0 || tempInt > 15)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbVCN_Enter(object sender, EventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbVCN.Text, out tempInt);
-            using (var form = new FormNumeric(0, 9999, tempInt))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbVCN.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbVCN_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbVCN_Validating(object sender, CancelEventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbVCN.Text, out tempInt);
-            if (tempInt < 0 || tempInt > 9999)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbWait_Enter(object sender, EventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbWait.Text, out tempInt);
-            using (var form = new FormNumeric(20, 2000, tempInt))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbWait.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbWait_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbWait_Validating(object sender, CancelEventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbWait.Text, out tempInt);
-            if (tempInt < 20 || tempInt > 2000)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -1149,15 +932,10 @@ namespace RateController
             if (Target > 0)
             {
                 RateError = ((Applied - Target) / Target) * 100;
-
-                if (Math.Abs(RateError) > MaxError[CurrentProduct]) MaxError[CurrentProduct] = Math.Abs(RateError);
-                ErrorCount++;
-                if (ErrorCount > 10)
-                {
-                    lbMaxError.Text = MaxError[CurrentProduct].ToString("N1");
-                    ErrorCount = 0;
-                    MaxError[CurrentProduct] = 0;
-                }
+                bool IsNegative = RateError < 0;
+                RateError = Math.Abs(RateError);
+                if (RateError > 100) RateError = 100;
+                if (IsNegative) RateError *= -1;
             }
             lbErrorPercent.Text = RateError.ToString("N1");
 
@@ -1188,8 +966,8 @@ namespace RateController
             // update sections
             for (int i = 0; i < 16; i++)
             {
-                Sec[i].Enabled = (mf.Sections.Item(i).Enabled) & (mf.Products.Item(CurrentProduct).IsSectionAssigned((byte)i));
-                if (mf.Sections.IsSectionOn(i) & mf.Products.Item(CurrentProduct).IsSectionAssigned((byte)i))
+                Sec[i].Enabled = (mf.Sections.Item(i).Enabled);
+                if (mf.Sections.IsSectionOn(i))
                 {
                     Sec[i].Image = Properties.Resources.OnSmall;
                 }
@@ -1238,6 +1016,7 @@ namespace RateController
             }
 
             Initializing = false;
+            UpdateSwitches();
         }
 
         private void ValveType_SelectedIndexChanged(object sender, EventArgs e)
@@ -1276,6 +1055,111 @@ namespace RateController
                     tbCalMeasured.Text = form.ReturnValue.ToString();
                 }
             }
+        }
+
+        private void UpdateSwitches()
+        {
+            if(SwON[0])
+            {
+                swAuto.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                swAuto.BackColor = Color.Red;
+            }
+
+            if (SwON[1])
+            {
+                swMasterOn.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                swMasterOn.BackColor = tbs3.BackColor;
+            }
+
+            if (SwON[2])
+            {
+                swMasterOff.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                swMasterOff.BackColor = tbs3.BackColor;
+            }
+
+            if (SwON[3])
+            {
+                swUp.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                swUp.BackColor = tbs3.BackColor;
+            }
+
+            if (SwON[4])
+            {
+                swDown.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                swDown.BackColor = tbs3.BackColor;
+            }
+
+
+            if (SwON[5])
+            {
+                swOne.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                swOne.BackColor = Color.Red;
+            }
+
+
+            if (SwON[6])
+            {
+                swTwo.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                swTwo.BackColor = Color.Red;
+            }
+
+            if (SwON[7])
+            {
+                swThree.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                swThree.BackColor = Color.Red;
+            }
+
+            if (SwON[8])
+            {
+                swFour.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                swFour.BackColor = Color.Red;
+            }
+        }
+
+        private void rbSinglePulse_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbs4_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void tbs4_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbPIDkp_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

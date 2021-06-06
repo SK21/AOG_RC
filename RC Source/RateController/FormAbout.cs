@@ -66,7 +66,7 @@ namespace RateController
         {
             mf.Tls.LoadFormData(this);
 
-            lbVersion.Text = Lang.lgVersionDate + "   " + mf.Tls.VersionDate();
+            lbAppVersion.Text = mf.Tls.AppVersion() + "    " + mf.Tls.VersionDate();
 
             Initializing = true;
             LoadIP();

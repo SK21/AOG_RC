@@ -17,7 +17,7 @@ namespace RateController
         //	- bit 0		    reset acc.Quantity
         //	- bit 1,2		valve type 0-3
         //	- bit 3		    simulate flow
-        //  - bit 4         0 UsePDI, 1 UseVCN 
+        //  - bit 4         0 - average time for multiple pulses, 1 - time for one pulse
         //  - bit 5         AutoOn
 
         private byte cCommand;
@@ -108,7 +108,7 @@ namespace RateController
 
             if (Prod.SimulationType != SimType.None) cCommand |= 0b00001000; else cCommand &= 0b11110111;
 
-            if (Prod.UseVCN) cCommand |= 0b00010000; else cCommand &= 0b11101111;
+            if (Prod.UseMultiPulse) cCommand |= 0b00010000; else cCommand &= 0b11101111;
 
             if (Prod.mf.Sections.SwitchOn(Switches.Auto)) cCommand |= 0b00100000;
 

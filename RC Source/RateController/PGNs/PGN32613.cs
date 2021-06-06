@@ -54,7 +54,7 @@ namespace RateController
                     {
                         RateHi = Data[3];
                         RateLo = Data[4];
-                        cUPM = (RateHi << 8 | RateLo) / 100.0;
+                        cUPM = (double)((Int16)(RateHi << 8 | RateLo)) / 100.0;
 
                         QuantityB3 = Data[5];
                         QuantityB2 = Data[6];

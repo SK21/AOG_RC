@@ -1,7 +1,7 @@
-# define InoDescription "RCarduino  :  03-May-2021"
+# define InoDescription "RCarduino  :  06-Jun-2021"
 
 // user settings ****************************
-#define CommType 0          // 0 Serial USB, 1 UDP wired Nano, 2 UDP wifi Nano33
+#define CommType 1          // 0 Serial USB, 1 UDP wired Nano, 2 UDP wifi Nano33
 
 #define ModuleID 0			// unique ID 0-15
 #define IPMac 110			// unique number for Arduino IP address and Mac part 6, 0-255
@@ -17,15 +17,13 @@ const unsigned long LOOP_TIME = 100; //in msec = 10hz
 // 1 use the defined relay as a switched power pin - turns on when sketch starts, required for some Raven valves
 #define UseSwitchedPowerPin 0	
 
-#define UseMCP23017 0      // 0 use Nano pins for relays, 1 use MCP23017 to control relays
+#define UseMCP23017 1      // 0 use Nano pins for relays, 1 use MCP23017 to control relays
 
-byte FlowOn[] = {HIGH, HIGH};		// on value for flowmeter or motor direction
-byte SlowSpeed[] = { 9,9 };		// for vcn, low pwm rate, 0 fast, 9 slow
-byte LowMsPulseTrigger[] = {50, 50}; 	// ms/pulse below which is low ms/pulse flow sensor
+byte FlowOn[] = {LOW, LOW};		// on value for flowmeter or motor direction
 
 #define SensorCount 2
 
-#define UseLocalSwitches 1   // 0 no switches, 1 read switches from this pcb
+#define UseLocalSwitches 0   // 0 no switches, 1 read switches from this pcb
 
 // ******************************************
 
@@ -144,13 +142,6 @@ float rateError[] = {0, 0}; //for PID
 float UPM[SensorCount];   // UPM rate
 int pwmSetting[SensorCount];
 
-// VCN
-long VCN[] = {343, 343};
-long SendTime[] = {400, 400};	// ms pwm is sent to valve
-long WaitTime[] = {500, 500};	// ms to wait before adjusting valve again
-byte VCNminPWM[] = {200, 200};
-byte VCNmaxPWM[] = {255, 255};
-
 // PID
 byte PIDkp[] = {20, 20};
 byte PIDminPWM[] = {50, 50};
@@ -164,7 +155,6 @@ byte ControlType[] = {0, 0};    	// 0 standard, 1 Fast Close, 2 Motor
 
 float TotalPulses[SensorCount];
 bool SimulateFlow[] = {true, true};
-bool UseVCN[] = {1, 1};		// 0 PID, 1 VCN
 
 byte ManualPWMsetting[] = {0, 0};
 float RateSetting[] = {0.0, 0.0};	// auto UPM setting
@@ -184,7 +174,6 @@ byte Temp = 0;
 unsigned int UnSignedTemp = 0;
 
 bool PGN32614Found;
-bool PGN32615Found;
 bool PGN32616Found;
 
 byte MSB;
@@ -195,6 +184,7 @@ bool AutoOn = true;
 
 float NewRateFactor[2];
 unsigned long ManualLast[2];
+float ManualFactor[2];
 
 // WifiSwitches connection to Wemos D1 Mini
 // Use Serial RX, remove RX wire before uploading
@@ -225,6 +215,8 @@ byte Pins[] = { 0,0,0,0,0,0,0,0,0 };
 #define RateUpPin A3
 #define RateDownPin A2
 #endif
+
+bool UseMultiPulses[2] = { 0, 0 };   //  0 - average time for multiple pulses, 1 - time for one pulse
 
 void setup()
 {
@@ -393,7 +385,7 @@ void loop()
         }
     }
 
-    motorDrive();
+    AdjustFlow();
 
     if (millis() - lastTime >= LOOP_TIME)
     {
@@ -489,22 +481,11 @@ void AutoControl()
         default:
             // valve control
             // calculate new value
-            if (UseVCN[i])
-            {
-                if (SimulateFlow[i]) SimulateValve(VCNminPWM[i], VCNmaxPWM[i], i);
-                rateError[i] = RateSetting[i] - UPM[i];
+            if (SimulateFlow[i]) SimulateValve(PIDminPWM[i], PIDHighMax[i], i);
+            rateError[i] = RateSetting[i] - UPM[i];
 
-                pwmSetting[i] = VCNpwm(rateError[i], RateSetting[i], VCNminPWM[i], VCNmaxPWM[i],
-                    VCN[i], UPM[i], SendTime[i], WaitTime[i], SlowSpeed[i], ControlType[i], i);
-            }
-            else
-            {
-                if (SimulateFlow[i]) SimulateValve(PIDminPWM[i], PIDHighMax[i], i);
-                rateError[i] = RateSetting[i] - UPM[i];
-
-                pwmSetting[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
-                    PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i);
-            }
+            pwmSetting[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
+                PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i);
             break;
         }
     }
@@ -531,16 +512,19 @@ void ManualControl()
 
             default:
                 // valve control
+                pwmSetting[i] = 0;
+
                 if (NewRateFactor[i] < 1)
                 {
                     // rate down
-                    pwmSetting[i] = (1 - NewRateFactor[i]) * ((PIDHighMax[i] + PIDminPWM[i]) / 2) * -1;
+                    pwmSetting[i] = -PIDminPWM[i];
                 }
-                else
+                else if (NewRateFactor[i] > 1)
                 {
                     // rate up
-                    pwmSetting[i] = (NewRateFactor[i] - 1) * ((PIDHighMax[i] + PIDminPWM[i]) / 2);
+                    pwmSetting[i] = PIDminPWM[i];
                 }
+
                 break;
             }
         }
@@ -558,14 +542,7 @@ void ManualControl()
             // valve control
             if (SimulateFlow[i])
             {
-                if (UseVCN[i])
-                {
-                    SimulateValve(VCNminPWM[i], VCNmaxPWM[i], i);
-                }
-                else
-                {
-                    SimulateValve(PIDminPWM[i], PIDHighMax[i], i);
-                }
+                SimulateValve(PIDminPWM[i], PIDHighMax[i], i);
             }
             rateError[i] = RateSetting[i] - UPM[i];
             break;

@@ -31,6 +31,8 @@ namespace RateController
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAbout));
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.IPA1 = new System.Windows.Forms.TextBox();
+            this.IPA2 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.IPA3 = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
@@ -40,11 +42,10 @@ namespace RateController
             this.label14 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.lbVersion = new System.Windows.Forms.Label();
             this.bntOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.IPA2 = new System.Windows.Forms.TextBox();
-            this.IPA1 = new System.Windows.Forms.TextBox();
+            this.lbAppVersion = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,6 +70,28 @@ namespace RateController
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Network Connections";
             this.groupBox3.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox3_Paint);
+            // 
+            // IPA1
+            // 
+            this.IPA1.Location = new System.Drawing.Point(140, 28);
+            this.IPA1.Name = "IPA1";
+            this.IPA1.Size = new System.Drawing.Size(36, 30);
+            this.IPA1.TabIndex = 0;
+            this.IPA1.Text = "255";
+            this.IPA1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.IPA1.Click += new System.EventHandler(this.IPA1_Click);
+            this.IPA1.TextChanged += new System.EventHandler(this.IPA1_TextChanged);
+            // 
+            // IPA2
+            // 
+            this.IPA2.Location = new System.Drawing.Point(182, 28);
+            this.IPA2.Name = "IPA2";
+            this.IPA2.Size = new System.Drawing.Size(36, 30);
+            this.IPA2.TabIndex = 1;
+            this.IPA2.Text = "255";
+            this.IPA2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.IPA2.Click += new System.EventHandler(this.IPA2_Click);
+            this.IPA2.TextChanged += new System.EventHandler(this.IPA2_TextChanged);
             // 
             // label2
             // 
@@ -164,23 +187,13 @@ namespace RateController
             this.label18.TabIndex = 133;
             this.label18.Text = "Send Port";
             // 
-            // lbVersion
-            // 
-            this.lbVersion.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVersion.Location = new System.Drawing.Point(12, 153);
-            this.lbVersion.Name = "lbVersion";
-            this.lbVersion.Size = new System.Drawing.Size(315, 18);
-            this.lbVersion.TabIndex = 140;
-            this.lbVersion.Text = "Version Date   10/Jan/2020";
-            this.lbVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // bntOK
             // 
             this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(212, 182);
+            this.bntOK.Location = new System.Drawing.Point(212, 202);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 0;
@@ -196,7 +209,7 @@ namespace RateController
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(12, 182);
+            this.btnCancel.Location = new System.Drawing.Point(12, 202);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(115, 72);
             this.btnCancel.TabIndex = 179;
@@ -205,37 +218,36 @@ namespace RateController
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // IPA2
+            // lbAppVersion
             // 
-            this.IPA2.Location = new System.Drawing.Point(182, 28);
-            this.IPA2.Name = "IPA2";
-            this.IPA2.Size = new System.Drawing.Size(36, 30);
-            this.IPA2.TabIndex = 1;
-            this.IPA2.Text = "255";
-            this.IPA2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.IPA2.Click += new System.EventHandler(this.IPA2_Click);
-            this.IPA2.TextChanged += new System.EventHandler(this.IPA2_TextChanged);
+            this.lbAppVersion.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbAppVersion.Location = new System.Drawing.Point(12, 171);
+            this.lbAppVersion.Name = "lbAppVersion";
+            this.lbAppVersion.Size = new System.Drawing.Size(315, 18);
+            this.lbAppVersion.TabIndex = 180;
+            this.lbAppVersion.Text = "Version 2.1.9";
+            this.lbAppVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // IPA1
+            // label1
             // 
-            this.IPA1.Location = new System.Drawing.Point(140, 28);
-            this.IPA1.Name = "IPA1";
-            this.IPA1.Size = new System.Drawing.Size(36, 30);
-            this.IPA1.TabIndex = 0;
-            this.IPA1.Text = "255";
-            this.IPA1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.IPA1.Click += new System.EventHandler(this.IPA1_Click);
-            this.IPA1.TextChanged += new System.EventHandler(this.IPA1_TextChanged);
+            this.label1.Font = new System.Drawing.Font("Tahoma", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 153);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(315, 18);
+            this.label1.TabIndex = 181;
+            this.label1.Text = "Version";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(340, 263);
+            this.ClientSize = new System.Drawing.Size(340, 287);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbAppVersion);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.bntOK);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.lbVersion);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -260,12 +272,13 @@ namespace RateController
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label lbVersion;
         private System.Windows.Forms.Button bntOK;
         private System.Windows.Forms.TextBox IPA3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.TextBox IPA1;
         private System.Windows.Forms.TextBox IPA2;
+        private System.Windows.Forms.Label lbAppVersion;
+        private System.Windows.Forms.Label label1;
     }
 }

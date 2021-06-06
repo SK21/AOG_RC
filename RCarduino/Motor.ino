@@ -1,4 +1,4 @@
-void motorDrive()
+void AdjustFlow()
 {
     for (int i = 0; i < SensorCount; i++)
     {

@@ -70,8 +70,6 @@ namespace RateController
             public bool MasterOn { get; set; }
         }
 
-        public event EventHandler<MasterChangedArgs> MasterSwitchChanged;
-
         public clsSections(FormStart CallingForm)
         {
             mf = CallingForm;
@@ -88,6 +86,7 @@ namespace RateController
 
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
+            // switch box switches have changed
             SwON = e.Switches;
             SendStatusUpdate();
         }
@@ -212,6 +211,7 @@ namespace RateController
 
         private void AOGnew_RelaysChanged(object sender, PGN254.RelaysChangedArgs e)
         {
+            // AOG section bytes have changed
             SectionOnFromAOG[0] = e.RelayLo;
             SectionOnFromAOG[1] = e.RelayHi;
 
@@ -255,6 +255,7 @@ namespace RateController
             bool SectionSwitchesChanged = false;
             if (mf.SwitchBox.Connected())
             {
+
                 ReadRateSwitches();
                 SectionSwitchesChanged = ReadSectionSwitches();
             }
@@ -300,27 +301,11 @@ namespace RateController
             if (SwON[(int)Switches.MasterOff]) MasterOn = false;
             if (SwON[(int)Switches.MasterOn]) MasterOn = true;
 
-            if(AOGmasterOff)
-            {
-                MasterOn = false;
-                AOGmasterOff = false;
-            }
-
-            if(AOGmasterOn)
-            {
-                MasterOn = true;
-                AOGmasterOn = false;
-            }
-
             if ((MasterOn != MasterLast) & !MasterChanged)
             {
                 // create AOG master notification
                 MasterTime = SWreadTime;
                 MasterChanged = true;
-
-                MasterChangedArgs args = new MasterChangedArgs();
-                args.MasterOn = MasterOn;
-                MasterSwitchChanged?.Invoke(this, args);
             }
 
             if (SWreadTime > MasterTime.AddMilliseconds(EraseDelay))
@@ -339,6 +324,21 @@ namespace RateController
                 if (!MasterOn) OutCommand = mf.Tls.BitSet(OutCommand, 1);   // request AOG master switch off, section buttons to off
             }
 
+            // check if AOG sections changed
+            if (AOGmasterOff)
+            {
+                if (!AutoChanged && !AutoLast)
+                {
+                    MasterOn = false;
+                }
+                AOGmasterOff = false;
+            }
+
+            if (AOGmasterOn)
+            {
+                MasterOn = true;
+                AOGmasterOn = false;
+            }
 
             // auto state
             if ((SwON[(int)Switches.Auto] != AutoLast) & !AutoChanged)
@@ -382,72 +382,37 @@ namespace RateController
                                 break;
                         }
 
-                        if (SwON[(int)Switches.Auto])
+                        if (PinState)
                         {
-                            // master on, auto on
-                            if (PinState)
+                            // master on, section switch on
+                            if (SwON[(int)Switches.Auto])
                             {
-                                // switch on, AOG in control
+                                // master on, section switch on, auto on
+                                // AOG in control
                                 if (mf.Tls.BitRead(SectionOnFromAOG[SwByte], SwBit))
                                 {
-                                    SectionControlByte[SwByte] = mf.Tls.BitSet(SectionControlByte[SwByte], SwBit);
+                                    SectionControlByte[SwByte] = mf.Tls.BitSet(SectionControlByte[SwByte], SwBit); // turn section on
                                 }
                                 else
                                 {
-                                    SectionControlByte[SwByte] = mf.Tls.BitClear(SectionControlByte[SwByte], SwBit);
+                                    SectionControlByte[SwByte] = mf.Tls.BitClear(SectionControlByte[SwByte], SwBit); // turn section off
                                 }
                             }
                             else
                             {
-                                // switch off
-                                SectionControlByte[SwByte] = mf.Tls.BitClear(SectionControlByte[SwByte], SwBit);    // turn off section
-                                SectionOffToAOG[SwByte] = mf.Tls.BitSet(SectionOffToAOG[SwByte], SwBit);    // set AOG section button to off
-                            }
+                                // master on, section switch on, auto off
+                                // manual on
+                                SectionControlByte[SwByte] = mf.Tls.BitSet(SectionControlByte[SwByte], SwBit);  // turn section on
 
-                            //// update On byte to AOG, set to 0 for no change
-                            //SectionOnFromAOG[SwByte] = 0;
-
-                            if (AutoChanged)
-                            {
-                                // change section buttons to auto state by resending master on
-                                OutCommand = mf.Tls.BitSet(OutCommand, 0);
-
-                                // continue application for delay time of auto changed
-                                SectionControlByte[SwByte] = SectionControlLast[SwByte];
+                                // update On byte to AOG
+                                SectionOnToAOG[SwByte] = SectionControlByte[SwByte];
                             }
                         }
                         else
                         {
-                            // master on, auto off
-                            if (PinState)
-                            {
-                                // manual on
-                                if (!mf.Tls.BitRead(SectionOnFromAOG[SwByte], SwBit))
-                                {
-                                    SectionControlByte[SwByte] = mf.Tls.BitClear(SectionControlByte[SwByte], SwBit);
-                                }
-                                else
-                                {
-                                     SectionControlByte[SwByte] = mf.Tls.BitSet(SectionControlByte[SwByte], SwBit);
-                               }
-                                //SectionControlByte[SwByte] = mf.Tls.BitSet(SectionControlByte[SwByte], SwBit);  // turn section on
-                                // AOG section button will also be set to on
-                            }
-                            else
-                            {
-                                // switch off
-                                SectionControlByte[SwByte] = mf.Tls.BitClear(SectionControlByte[SwByte], SwBit);    // turn off section
-                                SectionOffToAOG[SwByte] = mf.Tls.BitSet(SectionOffToAOG[SwByte], SwBit);    // set AOG section button to off
-                            }
-
-                            // update On byte to AOG
-                            SectionOnToAOG[SwByte] = SectionControlByte[SwByte];
-
-                            if (AutoChanged)
-                            {
-                                // continue application for delay time of auto changed
-                                SectionControlByte[SwByte] = SectionControlLast[SwByte];
-                            }
+                            // section switch off
+                            SectionControlByte[SwByte] = mf.Tls.BitClear(SectionControlByte[SwByte], SwBit);    // turn off section
+                            SectionOffToAOG[SwByte] = mf.Tls.BitSet(SectionOffToAOG[SwByte], SwBit);    // set AOG section button to off
                         }
                     }
                 }
@@ -463,6 +428,16 @@ namespace RateController
                     SectionOnToAOG[i] = 0;
                     SectionOffToAOG[i] = 255;
 
+                }
+            }
+
+            if (AutoChanged)
+            {
+                if (SwON[(int)Switches.Auto])
+                {
+                    // auto on
+                    // change section buttons to auto state by resending master on
+                    OutCommand = mf.Tls.BitSet(OutCommand, 0);
                 }
             }
 

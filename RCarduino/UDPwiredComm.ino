@@ -72,7 +72,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
 
                 SimulateFlow[SensorID] = ((InCommand[SensorID] & 8) == 8);
 
-                UseVCN[SensorID] = ((InCommand[SensorID] & 16) == 16);
+                UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
 
                 AutoOn = ((InCommand[SensorID] & 32) == 32);
                 if (AutoOn)
@@ -83,27 +83,11 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
                 {
                     NewRateFactor[SensorID] = TmpSet;
                 }
+                //ToSerial("autoon " ,AutoOn);
+                //ToSerial("tmpset", TmpSet);
+                //Serial.println("");
 
                 //reset watchdog as we just heard from AgOpenGPS
-                watchdogTimer = 0;
-                CommTime[SensorID] = millis();
-            }
-        }
-    }
-
-    if (len > 9 && PGN == 32615)
-    {
-        byte tmp = data[2];
-        if (ParseModID(tmp) == ModuleID)
-        {
-            byte SensorID = ParseSenID(tmp);
-            if (SensorID < SensorCount)
-            {
-                VCN[SensorID] = data[3] << 8 | data[4];
-                SendTime[SensorID] = data[5] << 8 | data[6];
-                WaitTime[SensorID] = data[7] << 8 | data[8];
-                VCNminPWM[SensorID] = data[9];
-
                 watchdogTimer = 0;
                 CommTime[SensorID] = millis();
             }

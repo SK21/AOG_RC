@@ -15,7 +15,8 @@ namespace RateController
         private string cPropertiesFile;
 
         private string cSettingsDir;
-        private string cVersionDate = "02-May-2021";
+        private string cAppVersion = "2.1.10";
+        private string cVersionDate = "06-Jun-2021";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
@@ -184,6 +185,11 @@ namespace RateController
             var form = new FormTimedMessage(s1, s2, timeout);
             form.Show();
             if (LogError) WriteErrorLog(s1 + "  " + s2);
+        }
+
+        public string AppVersion()
+        {
+            return cAppVersion;
         }
 
         public string VersionDate()

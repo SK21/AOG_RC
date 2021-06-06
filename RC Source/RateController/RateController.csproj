@@ -13,7 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>E:\MyDocs\AOG\RateController\RateController 2.1.5\RateController_Install\</PublishUrl>
+    <PublishUrl>E:\Temp\RateController 2.1.10\RateController_Install\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>23</ApplicationRevision>
+    <ApplicationRevision>28</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -147,7 +147,6 @@
     <Compile Include="PGNs\PGN236.cs" />
     <Compile Include="PGNs\PGN32613.cs" />
     <Compile Include="PGNs\PGN32614.cs" />
-    <Compile Include="PGNs\PGN32615.cs" />
     <Compile Include="PGNs\PGN32616.cs" />
     <Compile Include="PGNs\PGN32618.cs" />
     <Compile Include="PGNs\PGN254.cs" />

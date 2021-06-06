@@ -26,8 +26,9 @@ void PPM0isr()
 
     if (millis() - pulseStart > 5)
     {
-        pulseState0 = !pulseState0;
+        pulseCount0++;
 
+        pulseState0 = !pulseState0;
         if (pulseState0)
         {
             pulseStart = millis();
@@ -35,7 +36,6 @@ void PPM0isr()
         else
         {
             pulseDuration0 = millis() - pulseStart;
-            pulseCount0++;
             pulseStart = 0;
         }
     }
@@ -43,7 +43,10 @@ void PPM0isr()
 
 void GetUPM0()
 {
-    SetMinPulseTime0();
+    CurrentCounts0 = pulseCount0;
+    pulseCount0 = 0;
+
+    if (pulseDuration0 > 5) CurrentDuration0 = pulseDuration0;
 
     // check for no PPM
     if (millis() - LastPulse0 > 4000)
@@ -52,18 +55,14 @@ void GetUPM0()
         CurrentDuration0 = 0;
         PPM0 = 0;
     }
-    if (pulseCount0 > 0)
-    {
-        LastPulse0 = millis();
-    }
+
+    if (CurrentCounts0 > 0) LastPulse0 = millis();
 
     // accumulated total
-    CurrentCounts0 = pulseCount0;
-    pulseCount0 = 0;
     TotalPulses[0] += CurrentCounts0;
 
     // ppm
-    if (MinPulseTime0 == 0)
+    if (UseMultiPulses[0])
     {
         // low ms/pulse, use pulses over time
         TimedCounts0 += CurrentCounts0;
@@ -78,7 +77,6 @@ void GetUPM0()
     else
     {
         // high ms/pulse, use time for one pulse
-        if (pulseDuration0 > MinPulseTime0) CurrentDuration0 = pulseDuration0;
         if (CurrentDuration0 > 0) PPM0 = 60000.0 / CurrentDuration0;
     }
 
@@ -97,38 +95,6 @@ void GetUPM0()
     else
     {
         UPM[0] = 0;
-    }
-}
-
-void SetMinPulseTime0()
-{
-    if (RateSetting[0] <= 0 || MeterCal[0] <= 0)
-    {
-        MinPulseTime0 = 5;
-    }
-    else
-    {
-        // ms/pulse = 60000 / ((units per minute) * (counts per unit))
-        float Ms = RateSetting[0] * MeterCal[0];
-        if (Ms > 0)
-        {
-            Ms = 60000.0 / Ms;
-        }
-        else
-        {
-            Ms = 0;
-        }
-
-        if (Ms < LowMsPulseTrigger[0])
-        {
-            // low ms/pulse
-            MinPulseTime0 = 0;
-        }
-        else
-        {
-            // high ms/pulse
-            MinPulseTime0 = 5;
-        }
     }
 }
 

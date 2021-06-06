@@ -80,7 +80,7 @@ void ReceiveUDPWifi()
 
               SimulateFlow[SensorID] = ((InCommand[SensorID] & 8) == 8);
 
-              UseVCN[SensorID] = ((InCommand[SensorID] & 16) == 16);
+              UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
 
               AutoOn = ((InCommand[SensorID] & 32) == 32);
               if (AutoOn)
@@ -93,25 +93,6 @@ void ReceiveUDPWifi()
               }
 
               //reset watchdog as we just heard from AgOpenGPS
-              watchdogTimer = 0;
-              CommTime[SensorID] = true;
-          }
-        }
-      }
-
-      if (PGN == 32615)
-      {
-        byte tmp = InBuffer[2];
-        if (ParseModID(tmp) == ModuleID)
-        {
-          byte SensorID = ParseSenID(tmp);
-          if (SensorID < SensorCount)
-          {
-              VCN[SensorID] = InBuffer[3] << 8 | InBuffer[4];
-              SendTime[SensorID] = InBuffer[5] << 8 | InBuffer[6];
-              WaitTime[SensorID] = InBuffer[7] << 8 | InBuffer[8];
-              VCNminPWM[SensorID] = InBuffer[9];
-
               watchdogTimer = 0;
               CommTime[SensorID] = true;
           }

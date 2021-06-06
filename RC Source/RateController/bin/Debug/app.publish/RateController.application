@@ -7,7 +7,7 @@
     <framework targetVersion="4.7.2" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="RateController.exe.manifest" size="9393">
+    <dependentAssembly dependencyType="install" codebase="Application Files\RateController_2_0_0_27\RateController.exe.manifest" size="9393">
       <assemblyIdentity name="RateController.exe" version="2.0.0.27" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>

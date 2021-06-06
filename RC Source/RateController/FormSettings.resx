@@ -181,16 +181,6 @@
         txQU/ACylOqhR/3kyAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="tbVCNdescription.Text" xml:space="preserve">
-    <value>VCN is a 4 digit number. Backlash (1 short pulse to 9 long pulse), Speed (0 fast to 9 slow), Brake Point (0 5% to 9 90%) and Deadband (1 to 9 %).
-
-ex: 743  no Backlash, 7 adjustment speed, 4 Brake Point at 40% error, deadband 3%.
-
-Brake Point is the error % below which a slower adjustment speed is used.
-
-Deadband is the error % below which no adjustment is made.
-</value>
-  </data>
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
