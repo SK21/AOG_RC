@@ -63,6 +63,16 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Alarm1 {
+            get {
+                object obj = ResourceManager.GetObject("Alarm1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ArrowLeft {
             get {
                 object obj = ResourceManager.GetObject("ArrowLeft", resourceCulture);
@@ -127,6 +137,15 @@ namespace RateController.Properties {
             get {
                 object obj = ResourceManager.GetObject("Example", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Loud_Alarm_Clock_Buzzer_Muk1984_493547174 {
+            get {
+                return ResourceManager.GetStream("Loud_Alarm_Clock_Buzzer_Muk1984_493547174", resourceCulture);
             }
         }
         

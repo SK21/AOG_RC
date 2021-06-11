@@ -64,7 +64,15 @@ namespace RateController
             if (Prod.mf.Sections.SwitchOn(Switches.Auto))
             {
                 // send target rate
-                Temp = (int)(Prod.TargetUPM() * 100.0);
+                if (Prod.TargetUPM() < Prod.MinUPM)
+                {
+                    Temp = (int)(Prod.MinUPM * 100.0);
+                }
+                else
+                {
+                    Temp = (int)(Prod.TargetUPM() * 100.0);
+                }
+
                 cRateSetHi = (byte)(Temp >> 8);
                 cRateSetLo = (byte)Temp;
             }

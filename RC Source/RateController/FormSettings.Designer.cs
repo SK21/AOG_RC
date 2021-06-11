@@ -73,6 +73,12 @@ namespace RateController
             this.tbPIDkp = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tbs6 = new System.Windows.Forms.TabPage();
+            this.label25 = new System.Windows.Forms.Label();
+            this.tbMinUPM = new System.Windows.Forms.TextBox();
+            this.ckOffRate = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbMultiPulse = new System.Windows.Forms.RadioButton();
+            this.rbSinglePulse = new System.Windows.Forms.RadioButton();
             this.grpSimulate = new System.Windows.Forms.GroupBox();
             this.rbReal = new System.Windows.Forms.RadioButton();
             this.rbVirtual = new System.Windows.Forms.RadioButton();
@@ -152,18 +158,15 @@ namespace RateController
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
             this.lbProduct = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rbSinglePulse = new System.Windows.Forms.RadioButton();
-            this.rbMultiPulse = new System.Windows.Forms.RadioButton();
             this.tc.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.tbs4.SuspendLayout();
             this.tbs6.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.grpSimulate.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.tbs3.SuspendLayout();
             this.tbs5.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tc
@@ -674,6 +677,9 @@ namespace RateController
             // 
             // tbs6
             // 
+            this.tbs6.Controls.Add(this.label25);
+            this.tbs6.Controls.Add(this.tbMinUPM);
+            this.tbs6.Controls.Add(this.ckOffRate);
             this.tbs6.Controls.Add(this.groupBox1);
             this.tbs6.Controls.Add(this.grpSimulate);
             this.tbs6.Controls.Add(this.grpSensor);
@@ -684,12 +690,85 @@ namespace RateController
             this.tbs6.Text = "Options";
             this.tbs6.UseVisualStyleBackColor = true;
             // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label25.Location = new System.Drawing.Point(24, 345);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(130, 23);
+            this.label25.TabIndex = 114;
+            this.label25.Text = "Minimum UPM";
+            this.label25.Click += new System.EventHandler(this.label25_Click);
+            // 
+            // tbMinUPM
+            // 
+            this.tbMinUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbMinUPM.Location = new System.Drawing.Point(160, 341);
+            this.tbMinUPM.MaxLength = 8;
+            this.tbMinUPM.Name = "tbMinUPM";
+            this.tbMinUPM.Size = new System.Drawing.Size(67, 30);
+            this.tbMinUPM.TabIndex = 113;
+            this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbMinUPM.TextChanged += new System.EventHandler(this.tbMinUPM_TextChanged);
+            this.tbMinUPM.Enter += new System.EventHandler(this.tbMinUPM_Enter);
+            // 
+            // ckOffRate
+            // 
+            this.ckOffRate.AutoSize = true;
+            this.ckOffRate.Location = new System.Drawing.Point(312, 342);
+            this.ckOffRate.Name = "ckOffRate";
+            this.ckOffRate.Size = new System.Drawing.Size(143, 28);
+            this.ckOffRate.TabIndex = 21;
+            this.ckOffRate.Text = "Off-rate Alarm";
+            this.ckOffRate.UseVisualStyleBackColor = true;
+            this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.rbMultiPulse);
+            this.groupBox1.Controls.Add(this.rbSinglePulse);
+            this.groupBox1.Location = new System.Drawing.Point(70, 135);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(338, 117);
+            this.groupBox1.TabIndex = 20;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Rate Method";
+            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
+            // 
+            // rbMultiPulse
+            // 
+            this.rbMultiPulse.AutoSize = true;
+            this.rbMultiPulse.Location = new System.Drawing.Point(23, 69);
+            this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
+            this.rbMultiPulse.Name = "rbMultiPulse";
+            this.rbMultiPulse.Size = new System.Drawing.Size(311, 28);
+            this.rbMultiPulse.TabIndex = 121;
+            this.rbMultiPulse.Tag = "0";
+            this.rbMultiPulse.Text = "Average Time  / pulses (> 20 pps)";
+            this.rbMultiPulse.UseVisualStyleBackColor = true;
+            // 
+            // rbSinglePulse
+            // 
+            this.rbSinglePulse.AutoSize = true;
+            this.rbSinglePulse.Checked = true;
+            this.rbSinglePulse.Location = new System.Drawing.Point(23, 27);
+            this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
+            this.rbSinglePulse.Name = "rbSinglePulse";
+            this.rbSinglePulse.Size = new System.Drawing.Size(275, 28);
+            this.rbSinglePulse.TabIndex = 120;
+            this.rbSinglePulse.TabStop = true;
+            this.rbSinglePulse.Tag = "0";
+            this.rbSinglePulse.Text = "Time for one pulse (< 20 pps)";
+            this.rbSinglePulse.UseVisualStyleBackColor = true;
+            this.rbSinglePulse.CheckedChanged += new System.EventHandler(this.rbSinglePulse_CheckedChanged);
+            // 
             // grpSimulate
             // 
             this.grpSimulate.Controls.Add(this.rbReal);
             this.grpSimulate.Controls.Add(this.rbVirtual);
             this.grpSimulate.Controls.Add(this.rbNone);
-            this.grpSimulate.Location = new System.Drawing.Point(23, 314);
+            this.grpSimulate.Location = new System.Drawing.Point(23, 258);
             this.grpSimulate.Name = "grpSimulate";
             this.grpSimulate.Size = new System.Drawing.Size(438, 66);
             this.grpSimulate.TabIndex = 19;
@@ -745,7 +824,7 @@ namespace RateController
             this.grpSensor.Controls.Add(this.ModuleIndicator);
             this.grpSensor.Controls.Add(this.lbConID);
             this.grpSensor.Controls.Add(this.tbConID);
-            this.grpSensor.Location = new System.Drawing.Point(70, 24);
+            this.grpSensor.Location = new System.Drawing.Point(70, 12);
             this.grpSensor.Name = "grpSensor";
             this.grpSensor.Size = new System.Drawing.Size(338, 117);
             this.grpSensor.TabIndex = 18;
@@ -1601,44 +1680,6 @@ namespace RateController
             this.lbProduct.Text = "Product";
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.rbMultiPulse);
-            this.groupBox1.Controls.Add(this.rbSinglePulse);
-            this.groupBox1.Location = new System.Drawing.Point(70, 169);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(338, 117);
-            this.groupBox1.TabIndex = 20;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Rate Method";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // rbSinglePulse
-            // 
-            this.rbSinglePulse.AutoSize = true;
-            this.rbSinglePulse.Checked = true;
-            this.rbSinglePulse.Location = new System.Drawing.Point(23, 27);
-            this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
-            this.rbSinglePulse.Name = "rbSinglePulse";
-            this.rbSinglePulse.Size = new System.Drawing.Size(275, 28);
-            this.rbSinglePulse.TabIndex = 120;
-            this.rbSinglePulse.Tag = "0";
-            this.rbSinglePulse.Text = "Time for one pulse (< 20 pps)";
-            this.rbSinglePulse.UseVisualStyleBackColor = true;
-            this.rbSinglePulse.CheckedChanged += new System.EventHandler(this.rbSinglePulse_CheckedChanged);
-            // 
-            // rbMultiPulse
-            // 
-            this.rbMultiPulse.AutoSize = true;
-            this.rbMultiPulse.Location = new System.Drawing.Point(23, 69);
-            this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
-            this.rbMultiPulse.Name = "rbMultiPulse";
-            this.rbMultiPulse.Size = new System.Drawing.Size(311, 28);
-            this.rbMultiPulse.TabIndex = 121;
-            this.rbMultiPulse.Tag = "0";
-            this.rbMultiPulse.Text = "Average Time  / pulses (> 20 pps)";
-            this.rbMultiPulse.UseVisualStyleBackColor = true;
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1666,6 +1707,9 @@ namespace RateController
             this.tbs4.ResumeLayout(false);
             this.tbs4.PerformLayout();
             this.tbs6.ResumeLayout(false);
+            this.tbs6.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.grpSimulate.ResumeLayout(false);
             this.grpSimulate.PerformLayout();
             this.grpSensor.ResumeLayout(false);
@@ -1674,8 +1718,6 @@ namespace RateController
             this.tbs3.PerformLayout();
             this.tbs5.ResumeLayout(false);
             this.tbs5.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1806,5 +1848,8 @@ namespace RateController
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rbMultiPulse;
         private System.Windows.Forms.RadioButton rbSinglePulse;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox tbMinUPM;
+        private System.Windows.Forms.CheckBox ckOffRate;
     }
 }

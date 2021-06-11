@@ -337,7 +337,7 @@
     <value>Tank Size</value>
   </data>
   <data name="lgTank_Remaining" xml:space="preserve">
-    <value>Tank Remaining</value>
+    <value>Quantity Left ...</value>
   </data>
   <data name="lgTargetRate" xml:space="preserve">
     <value>Target Rate</value>

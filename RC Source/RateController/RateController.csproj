@@ -13,7 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>E:\Temp\RateController 2.1.10\RateController_Install\</PublishUrl>
+    <PublishUrl>E:\Temp\RateController 2.1.11\RateController_Install\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>28</ApplicationRevision>
+    <ApplicationRevision>29</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -143,6 +143,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.resx</DependentUpon>
     </Compile>
+    <Compile Include="Lang.nl.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.nl.resx</DependentUpon>
+    </Compile>
     <Compile Include="PGNs\PGN234.cs" />
     <Compile Include="PGNs\PGN236.cs" />
     <Compile Include="PGNs\PGN32613.cs" />
@@ -180,7 +185,10 @@
       <LastGenOutput>Lang.de.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lang.nl.resx" />
+    <EmbeddedResource Include="Lang.nl.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.nl.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Lang.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.Designer.cs</LastGenOutput>
@@ -212,6 +220,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\Alarm1.png" />
+    <None Include="Resources\Loud_Alarm_Clock_Buzzer-Muk1984-493547174.wav" />
+    <None Include="Resources\Alarm.bmp" />
     <None Include="Resources\Example.rcs" />
     <None Include="Resources\OffSmall1.bmp" />
     <None Include="Resources\RateControlOff.png" />

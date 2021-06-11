@@ -454,6 +454,9 @@ namespace RateController
 
                 SaveSettings();
             }
+
+            tbMinUPM.Text = mf.Products.Item(CurrentProduct).MinUPM.ToString("N1");
+            ckOffRate.Checked = mf.Products.Item(CurrentProduct).UseOffRateAlarm;
         }
 
         private void RadioButtonChanged(object sender, EventArgs e)
@@ -579,9 +582,13 @@ namespace RateController
 
             mf.Products.Item(CurrentProduct).UseMultiPulse = (rbMultiPulse.Checked);
 
-        }
+            double.TryParse(tbMinUPM.Text, out tempD);
+            mf.Products.Item(CurrentProduct).MinUPM = tempD;
 
-        private void SetButtons(bool Edited)
+            mf.Products.Item(CurrentProduct).UseOffRateAlarm = ckOffRate.Checked;
+            }
+
+            private void SetButtons(bool Edited)
         {
             if (!Initializing)
             {
@@ -1160,6 +1167,35 @@ namespace RateController
         private void tbPIDkp_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void ckOffRate_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbMinUPM_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void label25_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbMinUPM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbMinUPM.Text, out tempD);
+            using (var form = new FormNumeric(0, 500, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMinUPM.Text = form.ReturnValue.ToString();
+                }
+            }
         }
     }
 }

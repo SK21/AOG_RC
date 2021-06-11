@@ -48,6 +48,9 @@ namespace RateController
 
         public Color SimColor = Color.FromArgb(255,191,0);
 
+        private bool ShowQuantityRemaining = true;
+        private bool AlarmColour;
+
         public FormStart()
         {
             InitializeComponent();
@@ -57,8 +60,8 @@ namespace RateController
             lbRate.Text = Lang.lgCurrentRate;
             label1.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
-            label2.Text = Lang.lgQuantityApplied;
-            label34.Text = Lang.lgTank_Remaining;
+            lbApplied.Text = Lang.lgQuantityApplied;
+            lbRemaining.Text = Lang.lgTank_Remaining;
 
             mnuSettings.Items[0].Text = Lang.lgProducts;
             mnuSettings.Items[1].Text = Lang.lgSection;
@@ -162,7 +165,7 @@ namespace RateController
                 {
                     ProdName[i].Text = Products.Item(i).ProductName;
 
-                    if (Products.Item(i ).SimulationType == SimType.None)
+                    if (Products.Item(i).SimulationType == SimType.None)
                     {
                         ProdName[i].ForeColor = SystemColors.ControlText;
                         ProdName[i].BackColor = Properties.Settings.Default.DayColour;
@@ -175,7 +178,7 @@ namespace RateController
                         ProdName[i].BorderStyle = BorderStyle.FixedSingle;
                     }
 
-                    Rates[i].Text = Products.Item(i).SmoothRate();
+                    Rates[i].Text = Products.Item(i).SmoothRate().ToString("N1");
                     if (Products.Item(i).ArduinoModule.Connected())
                     {
                         Indicators[i].Image = Properties.Resources.OnSmall;
@@ -195,25 +198,45 @@ namespace RateController
                 lblUnits.Text = Products.Item(CurrentPage - 1).Units();
                 SetRate.Text = Products.Item(CurrentPage - 1).RateSet.ToString("N1");
                 AreaDone.Text = Products.Item(CurrentPage - 1).CurrentCoverage();
-                TankRemain.Text = Products.Item(CurrentPage - 1).CurrentTankRemaining().ToString("N0");
                 VolApplied.Text = Products.Item(CurrentPage - 1).CurrentApplied();
                 lbCoverage.Text = Products.Item(CurrentPage - 1).CoverageDescription();
+
+                if (ShowQuantityRemaining)
+                {
+                    lbRemaining.Text = Lang.lgTank_Remaining;
+                    TankRemain.Text = Products.Item(CurrentPage - 1).CurrentTankRemaining().ToString("N0");
+                }
+                else
+                {
+                    lbRemaining.Text = CoverageDescriptions[Products.Item(CurrentPage - 1).CoverageUnits] + " Left ...";
+                    double RT = Products.Item(CurrentPage - 1).SmoothRate();
+                    if (RT == 0) RT = Products.Item(CurrentPage - 1).RateSet;
+
+                    if ((RT > 0) & (Products.Item(CurrentPage - 1).CurrentTankRemaining() > 0))
+                    {
+                        TankRemain.Text = (Products.Item(CurrentPage - 1).CurrentTankRemaining() / RT).ToString("N1");
+                    }
+                    else
+                    {
+                        TankRemain.Text = "0.0";
+                    }
+                }
 
                 switch (RateType[CurrentPage - 1])
                 {
                     case 1:
                         lbRate.Text = Lang.lgInstantRate;
-                        lbRateAmount.Text = Products.Item(CurrentPage - 1).CurrentRate();
+                        lbRateAmount.Text = Products.Item(CurrentPage - 1).CurrentRate().ToString("N1");
                         break;
 
                     case 2:
                         lbRate.Text = Lang.lgOverallRate;
-                        lbRateAmount.Text = Products.Item(CurrentPage - 1).AverageRate();
+                        lbRateAmount.Text = Products.Item(CurrentPage - 1).AverageRate().ToString("N1");
                         break;
 
                     default:
                         lbRate.Text = Lang.lgCurrentRate;
-                        lbRateAmount.Text = Products.Item(CurrentPage - 1).SmoothRate();
+                        lbRateAmount.Text = Products.Item(CurrentPage - 1).SmoothRate().ToString("N1");
                         break;
                 }
 
@@ -253,6 +276,18 @@ namespace RateController
             {
                 panProducts.Visible = true;
                 panSummary.Visible = false;
+            }
+
+            // alarm
+            btAlarm.Visible = Products.CheckAlarm();
+            if (btAlarm.Visible) AlarmColour = !AlarmColour;
+            if (AlarmColour)
+            {
+                btAlarm.BackColor = Color.Red;
+            }
+            else
+            {
+                btAlarm.BackColor = Color.Yellow;
             }
         }
 
@@ -444,7 +479,7 @@ namespace RateController
 
         private void label34_Click(object sender, EventArgs e)
         {
-
+            ShowQuantityRemaining = !ShowQuantityRemaining;
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
@@ -455,6 +490,11 @@ namespace RateController
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btAlarm_Click(object sender, EventArgs e)
+        {
+            Products.PauseAlarm = true;
         }
     }
 }

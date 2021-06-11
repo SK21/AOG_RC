@@ -53,6 +53,9 @@ namespace RateController
         private bool SwitchIDsSent;
         private bool cUseMultiPulse;
 
+        private double cMinUPM;
+        private bool cUseOffRateAlarm;
+
         public clsProduct(FormStart CallingForm, int ProdID)
         {
             mf = CallingForm;
@@ -83,6 +86,24 @@ namespace RateController
         public int ID { get { return cProductID; } }
 
         public double ManualRateFactor { get { return cManualRateFactor; } set { cManualRateFactor = value; } }
+
+        public double MinUPM
+        {
+            get { return cMinUPM; }
+            set
+            {
+                if(value>=0 & value <1000)
+                {
+                    cMinUPM = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid value.");
+                }
+            }
+        }
+
+        public bool UseOffRateAlarm { get { return cUseOffRateAlarm; } set { cUseOffRateAlarm = value; } }
 
         public byte ModuleID
         {
@@ -146,16 +167,16 @@ namespace RateController
         public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }
         private string IDname { get { return cProductID.ToString(); } }
 
-        public string AverageRate()
+        public double AverageRate()
         {
             if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected()
                 & cHectaresPerMinute > 0 & Coverage > 0)
             {
-                return (cQuantityApplied / Coverage).ToString("N1");
+                return (cQuantityApplied / Coverage);
             }
             else
             {
-                return "0.0";
+                return 0;
             }
         }
 
@@ -176,15 +197,15 @@ namespace RateController
             return Coverage.ToString("N1");
         }
 
-        public string CurrentRate()
+        public double CurrentRate()
         {
             if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected() & cHectaresPerMinute > 0)
             {
-                return RateApplied().ToString("N1");
+                return RateApplied();
             }
             else
             {
-                return "0.0";
+                return 0;
             }
         }
 
@@ -288,32 +309,31 @@ namespace RateController
             }
         }
 
-        public string SmoothRate()
+        public double SmoothRate()
         {
             if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected() & cHectaresPerMinute > 0)
             {
                 if (cRateSet > 0)
                 {
                     double Rt = RateApplied() / cRateSet;
-                    //if (cProductID == 1) Debugger.Break();
 
                     if (Rt >= .9 & Rt <= 1.1 & mf.Sections.SwitchOn(Switches.Auto))
                     {
-                        return cRateSet.ToString("N1");
+                        return cRateSet;
                     }
                     else
                     {
-                        return RateApplied().ToString("N1");
+                        return RateApplied();
                     }
                 }
                 else
                 {
-                    return RateApplied().ToString("N1");
+                    return RateApplied();
                 }
             }
             else
             {
-                return "0.0";
+                return 0;
             }
         }
 
@@ -384,7 +404,7 @@ namespace RateController
         {
             if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected())
             {
-                if(!SwitchIDsSent)
+                if (!SwitchIDsSent)
                 {
                     // send switch IDs to each arduino when first connected
                     mf.SwitchIDs.Send();
@@ -415,7 +435,7 @@ namespace RateController
 
                 cHectaresPerMinute = (cWorkingWidth_cm / 100.0) * mf.AutoSteerPGN.Speed_KMH() / 600.0;
                 CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
-                CurrentWorkedArea_Hc *= 0.96;   // to match AOG
+                CurrentWorkedArea_Hc *= 0.97;   // to match AOG
 
                 //coverage
                 if (cHectaresPerMinute > 0)    // Is application on?
@@ -570,6 +590,9 @@ namespace RateController
             tmp = 0;
             int.TryParse(mf.Tls.LoadProperty("ModuleID" + IDname), out tmp);
             ModuleID = (byte)tmp;
+
+            bool.TryParse(mf.Tls.LoadProperty("OffRateAlarm" + IDname), out cUseOffRateAlarm);
+            double.TryParse(mf.Tls.LoadProperty("MinUPM" + IDname), out cMinUPM);
         }
 
         public void Save()
@@ -603,6 +626,9 @@ namespace RateController
 
             mf.Tls.SaveProperty("ModuleID" + IDname, cModID.ToString());
             mf.Tls.SaveProperty("SensorID" + IDname, cSenID.ToString());
+
+            mf.Tls.SaveProperty("OffRateAlarm" + IDname, cUseOffRateAlarm.ToString());
+            mf.Tls.SaveProperty("MinUPM" + IDname, cMinUPM.ToString());
         }
     }
 }

@@ -35,6 +35,7 @@ namespace RateController
             this.lbArduinoConnected = new System.Windows.Forms.Label();
             this.lbAogConnected = new System.Windows.Forms.Label();
             this.panProducts = new System.Windows.Forms.Panel();
+            this.btAlarm = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lbProduct = new System.Windows.Forms.Label();
             this.SetRate = new System.Windows.Forms.Label();
@@ -43,11 +44,11 @@ namespace RateController
             this.TankRemain = new System.Windows.Forms.Label();
             this.lblUnits = new System.Windows.Forms.Label();
             this.VolApplied = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lbApplied = new System.Windows.Forms.Label();
             this.AreaDone = new System.Windows.Forms.Label();
             this.lbRateAmount = new System.Windows.Forms.Label();
             this.lbCoverage = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
+            this.lbRemaining = new System.Windows.Forms.Label();
             this.panSummary = new System.Windows.Forms.Panel();
             this.idc0 = new System.Windows.Forms.Label();
             this.prd4 = new System.Windows.Forms.Label();
@@ -114,6 +115,7 @@ namespace RateController
             // 
             // panProducts
             // 
+            this.panProducts.Controls.Add(this.btAlarm);
             this.panProducts.Controls.Add(this.groupBox3);
             this.panProducts.Controls.Add(this.lbProduct);
             this.panProducts.Controls.Add(this.SetRate);
@@ -122,15 +124,30 @@ namespace RateController
             this.panProducts.Controls.Add(this.TankRemain);
             this.panProducts.Controls.Add(this.lblUnits);
             this.panProducts.Controls.Add(this.VolApplied);
-            this.panProducts.Controls.Add(this.label2);
+            this.panProducts.Controls.Add(this.lbApplied);
             this.panProducts.Controls.Add(this.AreaDone);
             this.panProducts.Controls.Add(this.lbRateAmount);
             this.panProducts.Controls.Add(this.lbCoverage);
-            this.panProducts.Controls.Add(this.label34);
+            this.panProducts.Controls.Add(this.lbRemaining);
             this.panProducts.Location = new System.Drawing.Point(0, 0);
             this.panProducts.Name = "panProducts";
             this.panProducts.Size = new System.Drawing.Size(270, 150);
             this.panProducts.TabIndex = 50;
+            // 
+            // btAlarm
+            // 
+            this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
+            this.btAlarm.Location = new System.Drawing.Point(3, 2);
+            this.btAlarm.Name = "btAlarm";
+            this.btAlarm.Size = new System.Drawing.Size(151, 143);
+            this.btAlarm.TabIndex = 146;
+            this.btAlarm.Text = "Rate Alarm";
+            this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btAlarm.UseVisualStyleBackColor = true;
+            this.btAlarm.Visible = false;
+            this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
             // 
             // groupBox3
             // 
@@ -213,15 +230,15 @@ namespace RateController
             this.VolApplied.Text = "0";
             this.VolApplied.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label2
+            // lbApplied
             // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(0, 123);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(175, 23);
-            this.label2.TabIndex = 151;
-            this.label2.Text = "Quantity Applied";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
+            this.lbApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbApplied.Location = new System.Drawing.Point(0, 123);
+            this.lbApplied.Name = "lbApplied";
+            this.lbApplied.Size = new System.Drawing.Size(192, 23);
+            this.lbApplied.TabIndex = 151;
+            this.lbApplied.Text = "Quantity Applied";
+            this.lbApplied.Click += new System.EventHandler(this.label2_Click);
             // 
             // AreaDone
             // 
@@ -253,15 +270,15 @@ namespace RateController
             this.lbCoverage.Text = "Coverage";
             this.lbCoverage.Click += new System.EventHandler(this.lbCoverage_Click);
             // 
-            // label34
+            // lbRemaining
             // 
-            this.label34.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label34.Location = new System.Drawing.Point(0, 98);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(175, 23);
-            this.label34.TabIndex = 149;
-            this.label34.Text = "Tank Remaining";
-            this.label34.Click += new System.EventHandler(this.label34_Click);
+            this.lbRemaining.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRemaining.Location = new System.Drawing.Point(0, 98);
+            this.lbRemaining.Name = "lbRemaining";
+            this.lbRemaining.Size = new System.Drawing.Size(192, 23);
+            this.lbRemaining.TabIndex = 149;
+            this.lbRemaining.Text = "Quantity Remain.";
+            this.lbRemaining.Click += new System.EventHandler(this.label34_Click);
             // 
             // panSummary
             // 
@@ -598,11 +615,11 @@ namespace RateController
         private System.Windows.Forms.Label TankRemain;
         private System.Windows.Forms.Label lblUnits;
         private System.Windows.Forms.Label VolApplied;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbApplied;
         private System.Windows.Forms.Label AreaDone;
         private System.Windows.Forms.Label lbRateAmount;
         private System.Windows.Forms.Label lbCoverage;
-        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label lbRemaining;
         private System.Windows.Forms.Panel panSummary;
         private System.Windows.Forms.Label idc0;
         private System.Windows.Forms.Label prd4;
@@ -630,5 +647,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button btAlarm;
     }
 }
