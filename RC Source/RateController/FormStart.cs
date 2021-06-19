@@ -61,7 +61,7 @@ namespace RateController
             label1.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
             lbApplied.Text = Lang.lgQuantityApplied;
-            lbRemaining.Text = Lang.lgTank_Remaining;
+            lbRemaining.Text = Lang.lgTank_Remaining + " ...";
 
             mnuSettings.Items[0].Text = Lang.lgProducts;
             mnuSettings.Items[1].Text = Lang.lgSection;
@@ -203,7 +203,7 @@ namespace RateController
 
                 if (ShowQuantityRemaining)
                 {
-                    lbRemaining.Text = Lang.lgTank_Remaining;
+                    lbRemaining.Text = Lang.lgTank_Remaining + " ...";
                     TankRemain.Text = Products.Item(CurrentPage - 1).CurrentTankRemaining().ToString("N0");
                 }
                 else

@@ -435,7 +435,6 @@ namespace RateController
 
                 cHectaresPerMinute = (cWorkingWidth_cm / 100.0) * mf.AutoSteerPGN.Speed_KMH() / 600.0;
                 CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
-                CurrentWorkedArea_Hc *= 0.97;   // to match AOG
 
                 //coverage
                 if (cHectaresPerMinute > 0)    // Is application on?

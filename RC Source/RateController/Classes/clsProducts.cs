@@ -21,6 +21,8 @@ namespace RateController
         private bool cPauseAlarm;
         private bool cShowAlarm;
 
+        private double AlarmLevel = 0.75;
+
         public clsProducts(FormStart CallingForm)
         {
             mf = CallingForm;
@@ -131,7 +133,7 @@ namespace RateController
             {
                 if (cProducts[i].UseOffRateAlarm)
                 {
-                    if ((cProducts[i].SmoothRate() < (cProducts[i].RateSet * 0.6)) & (cProducts[i].WorkRate() > 0))
+                    if ((cProducts[i].SmoothRate() < (cProducts[i].RateSet * AlarmLevel)) & (cProducts[i].WorkRate() > 0))
                     {
                         cAlarmOn = true;
                         break;

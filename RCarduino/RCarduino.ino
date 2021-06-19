@@ -1,4 +1,4 @@
-# define InoDescription "RCarduino  :  06-Jun-2021"
+# define InoDescription "RCarduino  :  14-Jun-2021"
 
 // user settings ****************************
 #define CommType 1          // 0 Serial USB, 1 UDP wired Nano, 2 UDP wifi Nano33
@@ -20,6 +20,8 @@ const unsigned long LOOP_TIME = 100; //in msec = 10hz
 #define UseMCP23017 1      // 0 use Nano pins for relays, 1 use MCP23017 to control relays
 
 byte FlowOn[] = {LOW, LOW};		// on value for flowmeter or motor direction
+
+#define RelayOn LOW     // LOW for pre-built 8 relay module, HIGH for pcb relays 
 
 #define SensorCount 2
 
@@ -88,24 +90,44 @@ unsigned long ReconnectCount = 0;
 
 Adafruit_MCP23017 mcp;
 
-// MCP23017 pins
-#define Relay1 8
-#define Relay2 9
-#define Relay3 10
-#define Relay4 11
-#define Relay5 12
-#define Relay6 13
-#define Relay7 14
-#define Relay8 15
+// MCP23017 pins pcb relays
+//#define Relay1 8
+//#define Relay2 9
+//#define Relay3 10
+//#define Relay4 11
+//#define Relay5 12
+//#define Relay6 13
+//#define Relay7 14
+//#define Relay8 15
+//
+//#define Relay9 7
+//#define Relay10 6
+//#define Relay11 5
+//#define Relay12 4
+//#define Relay13 3
+//#define Relay14 2
+//#define Relay15 1
+//#define Relay16 0
 
-#define Relay9 0
-#define Relay10 1
-#define Relay11 2
-#define Relay12 3
-#define Relay13 4
-#define Relay14 5
-#define Relay15 6
-#define Relay16 7
+// MCP23017 pins pre-built 8 relay module 
+#define Relay1 0
+#define Relay2 1
+#define Relay3 2
+#define Relay4 3
+#define Relay5 4
+#define Relay6 5
+#define Relay7 6
+#define Relay8 7
+
+#define Relay9 8
+#define Relay10 9
+#define Relay11 10
+#define Relay12 11
+#define Relay13 12
+#define Relay14 13
+#define Relay15 14
+#define Relay16 15
+
 
 // Nano pins
 byte FlowPin[] = {3, 2}; // interrupt on this pin

@@ -709,7 +709,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Quantity Left ....
+        ///   Looks up a localized string similar to Quantity Left.
         /// </summary>
         internal static string lgTank_Remaining {
             get {

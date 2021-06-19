@@ -139,7 +139,7 @@ namespace RateController
             this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
-            this.btAlarm.Location = new System.Drawing.Point(3, 2);
+            this.btAlarm.Location = new System.Drawing.Point(-5, 4);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(151, 143);
             this.btAlarm.TabIndex = 146;

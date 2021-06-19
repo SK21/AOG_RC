@@ -694,7 +694,7 @@ namespace RateController
             // 
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(24, 345);
+            this.label25.Location = new System.Drawing.Point(21, 145);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(130, 23);
             this.label25.TabIndex = 114;
@@ -704,11 +704,11 @@ namespace RateController
             // tbMinUPM
             // 
             this.tbMinUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinUPM.Location = new System.Drawing.Point(160, 341);
+            this.tbMinUPM.Location = new System.Drawing.Point(157, 141);
             this.tbMinUPM.MaxLength = 8;
             this.tbMinUPM.Name = "tbMinUPM";
             this.tbMinUPM.Size = new System.Drawing.Size(67, 30);
-            this.tbMinUPM.TabIndex = 113;
+            this.tbMinUPM.TabIndex = 0;
             this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbMinUPM.TextChanged += new System.EventHandler(this.tbMinUPM_TextChanged);
             this.tbMinUPM.Enter += new System.EventHandler(this.tbMinUPM_Enter);
@@ -716,10 +716,10 @@ namespace RateController
             // ckOffRate
             // 
             this.ckOffRate.AutoSize = true;
-            this.ckOffRate.Location = new System.Drawing.Point(312, 342);
+            this.ckOffRate.Location = new System.Drawing.Point(312, 142);
             this.ckOffRate.Name = "ckOffRate";
             this.ckOffRate.Size = new System.Drawing.Size(143, 28);
-            this.ckOffRate.TabIndex = 21;
+            this.ckOffRate.TabIndex = 1;
             this.ckOffRate.Text = "Off-rate Alarm";
             this.ckOffRate.UseVisualStyleBackColor = true;
             this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
@@ -728,7 +728,7 @@ namespace RateController
             // 
             this.groupBox1.Controls.Add(this.rbMultiPulse);
             this.groupBox1.Controls.Add(this.rbSinglePulse);
-            this.groupBox1.Location = new System.Drawing.Point(70, 135);
+            this.groupBox1.Location = new System.Drawing.Point(70, 184);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(338, 117);
             this.groupBox1.TabIndex = 20;
@@ -743,7 +743,7 @@ namespace RateController
             this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbMultiPulse.Name = "rbMultiPulse";
             this.rbMultiPulse.Size = new System.Drawing.Size(311, 28);
-            this.rbMultiPulse.TabIndex = 121;
+            this.rbMultiPulse.TabIndex = 1;
             this.rbMultiPulse.Tag = "0";
             this.rbMultiPulse.Text = "Average Time  / pulses (> 20 pps)";
             this.rbMultiPulse.UseVisualStyleBackColor = true;
@@ -756,7 +756,7 @@ namespace RateController
             this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbSinglePulse.Name = "rbSinglePulse";
             this.rbSinglePulse.Size = new System.Drawing.Size(275, 28);
-            this.rbSinglePulse.TabIndex = 120;
+            this.rbSinglePulse.TabIndex = 0;
             this.rbSinglePulse.TabStop = true;
             this.rbSinglePulse.Tag = "0";
             this.rbSinglePulse.Text = "Time for one pulse (< 20 pps)";
@@ -768,7 +768,7 @@ namespace RateController
             this.grpSimulate.Controls.Add(this.rbReal);
             this.grpSimulate.Controls.Add(this.rbVirtual);
             this.grpSimulate.Controls.Add(this.rbNone);
-            this.grpSimulate.Location = new System.Drawing.Point(23, 258);
+            this.grpSimulate.Location = new System.Drawing.Point(23, 317);
             this.grpSimulate.Name = "grpSimulate";
             this.grpSimulate.Size = new System.Drawing.Size(438, 66);
             this.grpSimulate.TabIndex = 19;
@@ -783,7 +783,7 @@ namespace RateController
             this.rbReal.Margin = new System.Windows.Forms.Padding(2);
             this.rbReal.Name = "rbReal";
             this.rbReal.Size = new System.Drawing.Size(117, 28);
-            this.rbReal.TabIndex = 121;
+            this.rbReal.TabIndex = 2;
             this.rbReal.Tag = "2";
             this.rbReal.Text = "Real Nano";
             this.rbReal.UseVisualStyleBackColor = true;
@@ -796,7 +796,7 @@ namespace RateController
             this.rbVirtual.Margin = new System.Windows.Forms.Padding(2);
             this.rbVirtual.Name = "rbVirtual";
             this.rbVirtual.Size = new System.Drawing.Size(131, 28);
-            this.rbVirtual.TabIndex = 120;
+            this.rbVirtual.TabIndex = 1;
             this.rbVirtual.Tag = "1";
             this.rbVirtual.Text = "Virtual Nano";
             this.rbVirtual.UseVisualStyleBackColor = true;
@@ -810,7 +810,7 @@ namespace RateController
             this.rbNone.Margin = new System.Windows.Forms.Padding(2);
             this.rbNone.Name = "rbNone";
             this.rbNone.Size = new System.Drawing.Size(143, 28);
-            this.rbNone.TabIndex = 119;
+            this.rbNone.TabIndex = 0;
             this.rbNone.TabStop = true;
             this.rbNone.Tag = "0";
             this.rbNone.Text = "Simulation Off";
@@ -849,7 +849,7 @@ namespace RateController
             this.tbSenID.MaxLength = 8;
             this.tbSenID.Name = "tbSenID";
             this.tbSenID.Size = new System.Drawing.Size(67, 30);
-            this.tbSenID.TabIndex = 150;
+            this.tbSenID.TabIndex = 1;
             this.tbSenID.Text = "0";
             this.tbSenID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbSenID.TextChanged += new System.EventHandler(this.tbSenID_TextChanged);
@@ -884,7 +884,7 @@ namespace RateController
             this.tbConID.MaxLength = 8;
             this.tbConID.Name = "tbConID";
             this.tbConID.Size = new System.Drawing.Size(67, 30);
-            this.tbConID.TabIndex = 147;
+            this.tbConID.TabIndex = 0;
             this.tbConID.Text = "0";
             this.tbConID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbConID.TextChanged += new System.EventHandler(this.tbConID_TextChanged);
