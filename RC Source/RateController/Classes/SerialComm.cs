@@ -153,6 +153,10 @@ namespace RateController
                                         if (Prod.SerialFromAruduino(words)) SerialActive = true;
                                     }
                                     break;
+
+                                case 32621:
+                                    if (mf.PressureData.ParseStringData(words)) SerialActive = true;
+                                    break;
                             }
                         }
                     }

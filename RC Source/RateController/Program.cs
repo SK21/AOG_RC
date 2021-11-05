@@ -17,18 +17,12 @@ namespace RateController
         [STAThread]
         static void Main()
         {
-            ////opening the subkey
-            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AgOpenGPS");
-
-            if (regKey != null)
+            if (Properties.Settings.Default.setF_culture == "")
             {
-                Settings.Default.setF_culture = regKey.GetValue("Language").ToString();
-                //Settings.Default.setF_culture = "de";
-                Settings.Default.Save();
-                regKey.Close();
+                Properties.Settings.Default.setF_culture = "en";
+                Properties.Settings.Default.Save();
             }
 
-            //if (Environment.OSVersion.Version.Major >= 6) SetProcessDPIAware();
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
 

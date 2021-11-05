@@ -17,6 +17,7 @@ namespace RateController
 
         public frmSections(FormStart CalledFrom)
         {
+            Initializing = true;
             InitializeComponent();
 
             #region // language
@@ -34,7 +35,6 @@ namespace RateController
             #endregion // language
 
             mf = CalledFrom;
-            Initializing = true;
             SetDayMode();
             UseInches = mf.UseInches;
         }

@@ -28,8 +28,8 @@ namespace RateController
         private DateTime LastPulse = DateTime.Now;
         private float LastPWM;
         private DateTime LastTime;
-        private int LOOP_TIME = 200;
-        private float MaxSimRate = 100F;        // max rate of system in UPM
+        private int LOOP_TIME = 50;
+        private float MaxSimRate = 150F;        // max rate of system in UPM
 
         private float MaxRPM = 100.0F;
         private int mcID;
@@ -113,7 +113,7 @@ namespace RateController
                     {
                         case 2:
                             // motor control
-                            if (SimulateFlow) SimulateMotor(PIDminPWM, PIDHighMax);
+                            if (SimulateFlow) SimulateMotor(PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
 
                             pwmSetting = ControlMotor(PIDkp, rateError, rateSetPoint, PIDminPWM,
@@ -169,13 +169,13 @@ namespace RateController
                         // calculate application rate
                         case 2:
                             // motor control
-                            if (SimulateFlow) SimulateMotor(PIDminPWM, PIDHighMax);
+                            if (SimulateFlow) SimulateMotor(PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
                             break;
 
                         default:
                             // valve control
-                            if (SimulateFlow)                                    SimulateValve(PIDminPWM, PIDHighMax);
+                            if (SimulateFlow) SimulateValve(PIDminPWM, PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
                             break;
                     }
@@ -194,15 +194,15 @@ namespace RateController
                 RelayHi = Data[3];
                 RelayFromAOG = Data[4];
 
-                // rate setting, 100 times actual
-                int TmpSetting = Data[5] << 8 | Data[6];
+                // rate setting, 10 times actual
+                double TmpSetting = Data[5] << 16 | Data[6] << 8 | Data[7];
 
                 // meter cal, 100 times actual
-                Tmp = Data[7] << 8 | Data[8];
+                Tmp = Data[8] << 8 | Data[9];
                 MeterCal = (float)(Tmp * .01);
 
                 // command byte
-                InCommand = Data[9];
+                InCommand = Data[10];
                 if ((InCommand & 1) == 1) TotalPulses = 0;    // reset accumulated count
 
                 ControlType = 0;
@@ -216,11 +216,11 @@ namespace RateController
                 AutoOn = ((InCommand & 32) == 32);
                 if (AutoOn)
                 {
-                    rateSetPoint = (float)(TmpSetting * .01);
+                    rateSetPoint = (float)(TmpSetting * .1);
                 }
                 else
                 {
-                    NewRateFactor = (float)(TmpSetting * .01);
+                    NewRateFactor = (float)(TmpSetting * .1);
                 }
 
                 ReceiveTime = DateTime.Now;
@@ -359,37 +359,38 @@ namespace RateController
         private void SendSerial()
         {
             // PGN 32613
-            string[] words = new string[10];
+            string[] words = new string[11];
             words[0] = "127";
             words[1] = "101";
             words[2] = mcID.ToString();
 
-            // rate applied
-            Temp = (byte)((int)(UPM * 100) >> 8);
+            // rate applied, 10 X actual
+            Temp = (byte)((int)(UPM * 10) >> 16);
             words[3] = Temp.ToString();
-            Temp = (byte)(UPM * 100);
+            Temp = (byte)((int)(UPM * 10) >> 8);
             words[4] = Temp.ToString();
+            Temp = (byte)(UPM * 10);
+            words[5] = Temp.ToString();
 
             // accumulated quantity
             int Units = (int)(TotalPulses * 100 / MeterCal);
             Temp = (byte)(Units >> 16);
-            words[5] = Temp.ToString();
-            Temp = (byte)(Units >> 8);
             words[6] = Temp.ToString();
-            Temp = (byte)Units;
+            Temp = (byte)(Units >> 8);
             words[7] = Temp.ToString();
+            Temp = (byte)Units;
+            words[8] = Temp.ToString();
 
             //pwmSetting
-            UInt16 Number = (UInt16)(pwmSetting * 10);
-            byte[] Tmp = new byte[] { (byte)Number, (byte)(Number >> 8) };
-
-            words[8] = Tmp[1].ToString();
-            words[9] = Tmp[0].ToString();
+            Temp = (byte)((int)(pwmSetting * 10) >> 8);
+            words[9] = Temp.ToString();
+            Temp = (byte)((int)(pwmSetting * 10));
+            words[10] = Temp.ToString();
 
             RC.SerialFromAruduino(words, false);
         }
 
-        private void SimulateMotor(byte sMin, byte sMax)
+        private void SimulateMotor( byte sMax)
         {
             if (ApplicationOn)
             {
@@ -401,7 +402,7 @@ namespace RateController
                 SimRPM += (float)(((pwmSetting / (float)sMax) * MaxRPM - SimRPM) * 0.25);    // update rpm
                 RandomError = (float)((100.0 - ErrorRange) + (Rand.Next((int)(ErrorRange * 2.0))));
                 SimRPM = (float)(SimRPM * RandomError / 100.0);
-                if (SimRPM < sMin) SimRPM = (float)sMin;
+                if (SimRPM < 0) SimRPM = 0;
 
                 SimTmp = PPR * SimRPM;
                 if (SimTmp > 0)
