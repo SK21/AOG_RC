@@ -97,15 +97,6 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Base Rate.
-        /// </summary>
-        internal static string lgBaseRate {
-            get {
-                return ResourceManager.GetString("lgBaseRate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Brake Point.
         /// </summary>
         internal static string lgBrakePoint {
@@ -183,15 +174,6 @@ namespace RateController {
         internal static string lgConnect {
             get {
                 return ResourceManager.GetString("lgConnect", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Control.
-        /// </summary>
-        internal static string lgControl {
-            get {
-                return ResourceManager.GetString("lgControl", resourceCulture);
             }
         }
         
@@ -295,7 +277,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PWM High Max.
+        ///   Looks up a localized string similar to High Max.
         /// </summary>
         internal static string lgHighMax {
             get {
@@ -349,15 +331,6 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Language.
-        /// </summary>
-        internal static string lgLanguage {
-            get {
-                return ResourceManager.GetString("lgLanguage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Load.
         /// </summary>
         internal static string lgLoad {
@@ -376,7 +349,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PWM Low Max.
+        ///   Looks up a localized string similar to Low Max.
         /// </summary>
         internal static string lgLowMax {
             get {
@@ -385,7 +358,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PWM Minimum.
+        ///   Looks up a localized string similar to Min PWM.
         /// </summary>
         internal static string lgMinPWM {
             get {
@@ -448,15 +421,6 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New.
-        /// </summary>
-        internal static string lgNew {
-            get {
-                return ResourceManager.GetString("lgNew", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Number of Sections.
         /// </summary>
         internal static string lgNumSections {
@@ -480,15 +444,6 @@ namespace RateController {
         internal static string lgOverallRate {
             get {
                 return ResourceManager.GetString("lgOverallRate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pressure.
-        /// </summary>
-        internal static string lgPressure {
-            get {
-                return ResourceManager.GetString("lgPressure", resourceCulture);
             }
         }
         

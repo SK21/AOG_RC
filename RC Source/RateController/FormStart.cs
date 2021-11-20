@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace RateController
 {
@@ -17,9 +18,6 @@ namespace RateController
         public PGN254 AutoSteerPGN = new PGN254();
         public PGN32618 SwitchBox;
         public PGN32620 SwitchIDs;
-        public PGN32621 PressureData;
-        public clsAlarm RCalarm;
-        public PGN230 VRdata = new PGN230();
 
         public double CalCounterEnd;
         public double CalCounterStart;
@@ -48,9 +46,10 @@ namespace RateController
 
         private int[] RateType = new int[5];    // 0 current rate, 1 instantaneous rate, 2 overall rate
 
-        public Color SimColor = Color.FromArgb(255, 191, 0);
+        public Color SimColor = Color.FromArgb(255,191,0);
+
         private bool ShowQuantityRemaining = true;
-        public clsPressures PressureObjects;
+        private bool AlarmColour;
 
         public FormStart()
         {
@@ -66,12 +65,9 @@ namespace RateController
 
             mnuSettings.Items[0].Text = Lang.lgProducts;
             mnuSettings.Items[1].Text = Lang.lgSection;
-            mnuSettings.Items[3].Text = Lang.lgPressure;
-            mnuSettings.Items[4].Text = Lang.lgNew;
-            mnuSettings.Items[5].Text = Lang.lgLoad;
-            mnuSettings.Items[6].Text = Lang.lgSaveAs;
-            mnuSettings.Items[7].Text = Lang.lgLanguage;
-            mnuSettings.Items[8].Text = Lang.lgAbout;
+            mnuSettings.Items[3].Text = Lang.lgLoad;
+            mnuSettings.Items[4].Text = Lang.lgSaveAs;
+            mnuSettings.Items[5].Text = Lang.lgAbout;
 
             #endregion // language
 
@@ -83,11 +79,9 @@ namespace RateController
 
             SwitchBox = new PGN32618(this);
             SwitchIDs = new PGN32620(this);
-            PressureData = new PGN32621(this);
 
             Sections = new clsSections(this);
             Products = new clsProducts(this);
-            RCalarm = new clsAlarm(this, btAlarm);
 
             for (int i = 0; i < 3; i++)
             {
@@ -100,7 +94,6 @@ namespace RateController
 
             UseInches = true;
 
-            PressureObjects = new clsPressures(this);
         }
 
         public byte CurrentProduct()
@@ -130,8 +123,6 @@ namespace RateController
             Products.Load();
 
             UDPnetwork.BroadCastIP = Tls.LoadProperty("BroadCastIP");
-
-            PressureObjects.Load();
         }
 
         public void StartSerial()
@@ -141,10 +132,10 @@ namespace RateController
                 for (int i = 0; i < 3; i++)
                 {
                     String ID = "_" + i.ToString() + "_";
-                    SER[i].RCportName = Tls.LoadProperty("RCportName" + ID + i.ToString());
+                    SER[i].RCportName = Tls.LoadProperty("RCportName"+ID + i.ToString());
 
                     int tmp;
-                    if (int.TryParse(Tls.LoadProperty("RCportBaud" + ID + i.ToString()), out tmp))
+                    if (int.TryParse(Tls.LoadProperty("RCportBaud"+ ID+ i.ToString()), out tmp))
                     {
                         SER[i].RCportBaud = tmp;
                     }
@@ -154,7 +145,7 @@ namespace RateController
                     }
 
                     bool tmp2;
-                    bool.TryParse(Tls.LoadProperty("RCportSuccessful" + ID + i.ToString()), out tmp2);
+                    bool.TryParse(Tls.LoadProperty("RCportSuccessful"+ID + i.ToString()), out tmp2);
                     if (tmp2) SER[i].OpenRCport();
                 }
             }
@@ -205,7 +196,7 @@ namespace RateController
 
                 lbProduct.Text = CurrentPage.ToString() + ". " + Products.Item(CurrentPage - 1).ProductName;
                 lblUnits.Text = Products.Item(CurrentPage - 1).Units();
-                SetRate.Text = Products.Item(CurrentPage - 1).TargetRate().ToString("N1");
+                SetRate.Text = Products.Item(CurrentPage - 1).RateSet.ToString("N1");
                 AreaDone.Text = Products.Item(CurrentPage - 1).CurrentCoverage();
                 VolApplied.Text = Products.Item(CurrentPage - 1).CurrentApplied();
                 lbCoverage.Text = Products.Item(CurrentPage - 1).CoverageDescription();
@@ -219,7 +210,7 @@ namespace RateController
                 {
                     lbRemaining.Text = CoverageDescriptions[Products.Item(CurrentPage - 1).CoverageUnits] + " Left ...";
                     double RT = Products.Item(CurrentPage - 1).SmoothRate();
-                    if (RT == 0) RT = Products.Item(CurrentPage - 1).TargetRate();
+                    if (RT == 0) RT = Products.Item(CurrentPage - 1).RateSet;
 
                     if ((RT > 0) & (Products.Item(CurrentPage - 1).CurrentTankRemaining() > 0))
                     {
@@ -288,7 +279,16 @@ namespace RateController
             }
 
             // alarm
-            RCalarm.CheckAlarms();
+            btAlarm.Visible = Products.CheckAlarm();
+            if (btAlarm.Visible) AlarmColour = !AlarmColour;
+            if (AlarmColour)
+            {
+                btAlarm.BackColor = Color.Red;
+            }
+            else
+            {
+                btAlarm.BackColor = Color.Yellow;
+            }
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
@@ -418,7 +418,7 @@ namespace RateController
 
         public void SendSerial(byte[] Data)
         {
-            for (int i = 0; i < 3; i++)
+            for(int i=0;i<3;i++)
             {
                 SER[i].SendData(Data);
             }
@@ -474,6 +474,7 @@ namespace RateController
 
         private void label2_Click(object sender, EventArgs e)
         {
+
         }
 
         private void label34_Click(object sender, EventArgs e)
@@ -483,60 +484,17 @@ namespace RateController
 
         private void lbCoverage_Click(object sender, EventArgs e)
         {
+
         }
 
         private void label1_Click(object sender, EventArgs e)
         {
+
         }
 
         private void btAlarm_Click(object sender, EventArgs e)
         {
-            RCalarm.Silence();
-        }
-
-        private void deustchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "de";
-            Properties.Settings.Default.Save();
-            Application.Restart();
-        }
-
-        private void englishToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "en";
-            Properties.Settings.Default.Save();
-            Application.Restart();
-        }
-
-        private void nederlandsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "nl";
-            Properties.Settings.Default.Save();
-            Application.Restart();
-        }
-
-        private void pressureToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new FormPressure(this);
-            frm.ShowDialog();
-        }
-
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.InitialDirectory = Tls.SettingsDir();
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Tls.NewFile(saveFileDialog1.FileName);
-                    LoadSettings();
-                }
-            }
-        }
-
-        private void SetRate_Click(object sender, EventArgs e)
-        {
-
+            Products.PauseAlarm = true;
         }
     }
 }

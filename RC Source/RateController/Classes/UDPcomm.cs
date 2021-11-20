@@ -148,16 +148,11 @@ namespace RateController
                 if (PGN == 32897)
                 {
                     // AGIO
+                    // AutoSteer AGIO PGN
                     switch (Data[3])
                     {
-                        case 254:
-                            // AutoSteer AGIO PGN
+                        case 0xFE:
                             mf.AutoSteerPGN.ParseByteData(Data);
-                            break;
-
-                        case 230:
-                            // vr data
-                            mf.VRdata.ParseByteData(Data);
                             break;
                     }
                 }
@@ -174,10 +169,6 @@ namespace RateController
                             {
                                 Prod.UDPcommFromArduino(Data);
                             }
-                            break;
-
-                        case 32621:
-                            mf.PressureData.ParseByteData(Data);
                             break;
                     }
                 }

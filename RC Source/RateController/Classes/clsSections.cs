@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Timers;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -25,7 +27,7 @@ namespace RateController
         // 7    Rate up
         // 8    Rate down
 
-        private bool[] SwON = new bool[9];
+        bool[] SwON = new bool[9];
 
         private DateTime SWreadTime;
         private DateTime RateLastTime;
@@ -33,37 +35,35 @@ namespace RateController
         private int StepDelay = 1000;   // ms between adjustments
 
         // sent back to AOG
-        private byte OutCommand;
-
-        private byte OutLast;
-        private byte[] SectionOnFromAOG = new byte[2];
-        private byte[] SectionOnToAOG = new byte[2];
-        private byte[] SectionOffToAOG = new byte[2];
-        private byte[] SectionOnToAOGlast = new byte[2];
-        private byte[] SectionOffToAOGlast = new byte[2];
+        byte OutCommand;
+        byte OutLast;
+        byte[] SectionOnFromAOG = new byte[2];
+        byte[] SectionOnToAOG = new byte[2];
+        byte[] SectionOffToAOG = new byte[2];
+        byte[] SectionOnToAOGlast = new byte[2];
+        byte[] SectionOffToAOGlast = new byte[2];
 
         // used by RateController
-        private byte[] SectionControlByte = new byte[2];
+        byte[] SectionControlByte = new byte[2];
+        byte[] SectionControlLast = new byte[2];
 
-        private byte[] SectionControlLast = new byte[2];
+        bool PinState;
 
-        private bool PinState;
+        bool MasterOn;
+        bool MasterLast;
+        bool MasterChanged;
+        DateTime MasterTime;
 
-        private bool MasterOn;
-        private bool MasterLast;
-        private bool MasterChanged;
-        private DateTime MasterTime;
-
-        private bool AutoLast;
-        private bool AutoChanged;
-        private DateTime AutoTime;
+        bool AutoLast;
+        bool AutoChanged;
+        DateTime AutoTime;
 
         private PGN234 ToAOG;
         private float RateCalcFactor = 0.05F;   // rate change amount for each step.  ex: 0.10 means 10% for each step
 
-        private int Tmp;
-        private bool AOGmasterOn;
-        private bool AOGmasterOff;
+        int Tmp;
+        bool AOGmasterOn;
+        bool AOGmasterOff;
 
         public class MasterChangedArgs : EventArgs
         {
@@ -255,6 +255,7 @@ namespace RateController
             bool SectionSwitchesChanged = false;
             if (mf.SwitchBox.Connected())
             {
+
                 ReadRateSwitches();
                 SectionSwitchesChanged = ReadSectionSwitches();
             }
@@ -271,7 +272,7 @@ namespace RateController
 
             if (!SourceAOG & (RelaysChanged | SectionSwitchesChanged))
             {
-                // send to AOG
+                // send to AOG 
                 ToAOG.OnHi = SectionOnToAOG[1];
                 ToAOG.OnLo = SectionOnToAOG[0];
                 ToAOG.OffHi = SectionOffToAOG[1];
@@ -319,7 +320,7 @@ namespace RateController
             OutCommand = mf.Tls.BitClear(OutCommand, 1);
             if (MasterChanged)
             {
-                if (MasterOn) OutCommand = mf.Tls.BitSet(OutCommand, 0);    // request AOG master switch on, section buttons to auto
+                if (MasterOn) OutCommand = mf.Tls.BitSet(OutCommand, 0);    // request AOG master switch on, section buttons to auto 
                 if (!MasterOn) OutCommand = mf.Tls.BitSet(OutCommand, 1);   // request AOG master switch off, section buttons to off
             }
 
@@ -354,6 +355,7 @@ namespace RateController
                 AutoLast = SwON[(int)Switches.Auto];
             }
 
+
             // Relays
             if (MasterOn)
             {
@@ -366,19 +368,15 @@ namespace RateController
                             case 0:
                                 PinState = SwON[(int)Switches.sw0];
                                 break;
-
                             case 1:
                                 PinState = SwON[(int)Switches.sw1];
                                 break;
-
                             case 2:
                                 PinState = SwON[(int)Switches.sw2];
                                 break;
-
                             case 3:
                                 PinState = SwON[(int)Switches.sw3];
                                 break;
-
                             default:
                                 PinState = false;
                                 break;
@@ -429,6 +427,7 @@ namespace RateController
 
                     SectionOnToAOG[i] = 0;
                     SectionOffToAOG[i] = 255;
+
                 }
             }
 
@@ -468,7 +467,7 @@ namespace RateController
             return Result;
         }
 
-        private void ReadRateSwitches()
+        void ReadRateSwitches()
         {
             if (SwON[(int)Switches.RateUp] || SwON[(int)Switches.RateDown])
             {
@@ -528,6 +527,7 @@ namespace RateController
                     OutCommand = mf.Tls.BitClear(OutCommand, 5);
                     mf.Products.Item(mf.CurrentProduct() - 1).ManualRateFactor = 1;
                 }
+
             }
         }
 
@@ -599,3 +599,4 @@ namespace RateController
         }
     }
 }
+

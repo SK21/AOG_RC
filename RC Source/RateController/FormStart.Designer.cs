@@ -73,14 +73,8 @@ namespace RateController
             this.productsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pressureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.deustchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.englishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nederlandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -145,12 +139,11 @@ namespace RateController
             this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
-            this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(3, 27);
+            this.btAlarm.Location = new System.Drawing.Point(-5, 4);
             this.btAlarm.Name = "btAlarm";
-            this.btAlarm.Size = new System.Drawing.Size(168, 120);
+            this.btAlarm.Size = new System.Drawing.Size(151, 143);
             this.btAlarm.TabIndex = 146;
-            this.btAlarm.Text = "Rate  Alarm  Pressure Alarm";
+            this.btAlarm.Text = "Rate Alarm";
             this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Visible = false;
@@ -183,7 +176,6 @@ namespace RateController
             this.SetRate.TabIndex = 156;
             this.SetRate.Text = "1,800.50";
             this.SetRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.SetRate.Click += new System.EventHandler(this.SetRate_Click);
             // 
             // lbRate
             // 
@@ -516,20 +508,17 @@ namespace RateController
             this.productsToolStripMenuItem,
             this.sectionsToolStripMenuItem,
             this.commToolStripMenuItem,
-            this.pressureToolStripMenuItem,
-            this.newToolStripMenuItem,
             this.loadToolStripMenuItem,
             this.saveToolStripMenuItem,
-            this.toolStripMenuItem1,
             this.aboutToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(184, 382);
+            this.mnuSettings.Size = new System.Drawing.Size(173, 256);
             // 
             // productsToolStripMenuItem
             // 
             this.productsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("productsToolStripMenuItem.Image")));
             this.productsToolStripMenuItem.Name = "productsToolStripMenuItem";
-            this.productsToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
+            this.productsToolStripMenuItem.Size = new System.Drawing.Size(172, 42);
             this.productsToolStripMenuItem.Text = "Products";
             this.productsToolStripMenuItem.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -537,7 +526,7 @@ namespace RateController
             // 
             this.sectionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("sectionsToolStripMenuItem.Image")));
             this.sectionsToolStripMenuItem.Name = "sectionsToolStripMenuItem";
-            this.sectionsToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
+            this.sectionsToolStripMenuItem.Size = new System.Drawing.Size(172, 42);
             this.sectionsToolStripMenuItem.Text = "Sections";
             this.sectionsToolStripMenuItem.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -545,31 +534,15 @@ namespace RateController
             // 
             this.commToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("commToolStripMenuItem.Image")));
             this.commToolStripMenuItem.Name = "commToolStripMenuItem";
-            this.commToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
+            this.commToolStripMenuItem.Size = new System.Drawing.Size(172, 42);
             this.commToolStripMenuItem.Text = "Comm";
             this.commToolStripMenuItem.Click += new System.EventHandler(this.commToolStripMenuItem_Click);
-            // 
-            // pressureToolStripMenuItem
-            // 
-            this.pressureToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pressureToolStripMenuItem.Image")));
-            this.pressureToolStripMenuItem.Name = "pressureToolStripMenuItem";
-            this.pressureToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.pressureToolStripMenuItem.Text = "Pressure";
-            this.pressureToolStripMenuItem.Click += new System.EventHandler(this.pressureToolStripMenuItem_Click);
-            // 
-            // newToolStripMenuItem
-            // 
-            this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.newToolStripMenuItem.Text = "New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Image = global::RateController.Properties.Resources.OpenFile;
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(172, 42);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -577,47 +550,15 @@ namespace RateController
             // 
             this.saveToolStripMenuItem.Image = global::RateController.Properties.Resources.close;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(172, 42);
             this.saveToolStripMenuItem.Text = "Save As";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deustchToolStripMenuItem,
-            this.englishToolStripMenuItem,
-            this.nederlandsToolStripMenuItem});
-            this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(183, 42);
-            this.toolStripMenuItem1.Text = "Language";
-            // 
-            // deustchToolStripMenuItem
-            // 
-            this.deustchToolStripMenuItem.Name = "deustchToolStripMenuItem";
-            this.deustchToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
-            this.deustchToolStripMenuItem.Text = "Deustch";
-            this.deustchToolStripMenuItem.Click += new System.EventHandler(this.deustchToolStripMenuItem_Click);
-            // 
-            // englishToolStripMenuItem
-            // 
-            this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-            this.englishToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
-            this.englishToolStripMenuItem.Text = "English";
-            this.englishToolStripMenuItem.Click += new System.EventHandler(this.englishToolStripMenuItem_Click);
-            // 
-            // nederlandsToolStripMenuItem
-            // 
-            this.nederlandsToolStripMenuItem.Name = "nederlandsToolStripMenuItem";
-            this.nederlandsToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
-            this.nederlandsToolStripMenuItem.Text = "Nederlands";
-            this.nederlandsToolStripMenuItem.Click += new System.EventHandler(this.nederlandsToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Image = global::RateController.Properties.Resources.R674d5dd067acbd409ff50db6d0647f5d;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(172, 42);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -707,11 +648,5 @@ namespace RateController
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button btAlarm;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem deustchToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem englishToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem nederlandsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pressureToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
     }
 }

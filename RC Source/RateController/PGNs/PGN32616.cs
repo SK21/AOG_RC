@@ -18,7 +18,7 @@ namespace RateController
         // 6    HighMax
         // 7    Deadband
         // 8    BrakePoint
-        // 9    Timed Adjustment    0-disabled
+        // 9    -
 
         public byte KP;
         public byte MinPWM;
@@ -27,7 +27,6 @@ namespace RateController
         public byte HighMax;
         public byte DeadBand;
         public byte BrakePoint;
-        public byte TimedAdjustment;
 
         private const byte cByteCount = 10;
         private const byte HeaderHi = 127;
@@ -38,13 +37,12 @@ namespace RateController
         {
             Prod = CalledFrom;
 
-            KP = 50;
-            MinPWM = 30;
-            LowMax = 75;
-            HighMax = 100;
-            DeadBand = 4;
-            BrakePoint = 20;
-            TimedAdjustment = 0;
+            KP = 20;
+            MinPWM = 50;
+            LowMax = 150;
+            HighMax = 255;
+            DeadBand = 3;
+            BrakePoint = 2;
         }
 
         public void Send()
@@ -53,13 +51,12 @@ namespace RateController
             Data[0] = HeaderHi;
             Data[1] = HeaderLo;
             Data[2] = Prod.mf.Tls.BuildModSenID(Prod.ModuleID, Prod.SensorID);
-            Data[3] = (byte)(255 * KP / 100);
-            Data[4] = (byte)(255 * MinPWM / 100);
-            Data[5] = (byte)(255 * LowMax / 100);
-            Data[6] = (byte)(255 * HighMax / 100);
+            Data[3] = KP;
+            Data[4] = MinPWM;
+            Data[5] = LowMax;
+            Data[6] = HighMax;
             Data[7] = DeadBand;
             Data[8] = BrakePoint;
-            Data[9] = TimedAdjustment;
 
             if (Prod.SimulationType == SimType.VirtualNano)
             {

@@ -129,9 +129,6 @@
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>Already Running</value>
   </data>
-  <data name="lgBaseRate" xml:space="preserve">
-    <value>Base Rate</value>
-  </data>
   <data name="lgBrakePoint" xml:space="preserve">
     <value>Brake Point</value>
   </data>
@@ -158,9 +155,6 @@
   </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Connect</value>
-  </data>
-  <data name="lgControl" xml:space="preserve">
-    <value>Control</value>
   </data>
   <data name="lgControlType" xml:space="preserve">
     <value>Control Type</value>
@@ -196,7 +190,7 @@
     <value>Hectares/Hr</value>
   </data>
   <data name="lgHighMax" xml:space="preserve">
-    <value>PWM High Max</value>
+    <value>High Max</value>
   </data>
   <data name="lgHour" xml:space="preserve">
     <value>Hour</value>
@@ -213,9 +207,6 @@
   <data name="lgKPH" xml:space="preserve">
     <value>KPH</value>
   </data>
-  <data name="lgLanguage" xml:space="preserve">
-    <value>Language</value>
-  </data>
   <data name="lgLoad" xml:space="preserve">
     <value>Load</value>
   </data>
@@ -223,10 +214,10 @@
     <value>Load Defaults</value>
   </data>
   <data name="lgLowMax" xml:space="preserve">
-    <value>PWM Low Max</value>
+    <value>Low Max</value>
   </data>
   <data name="lgMinPWM" xml:space="preserve">
-    <value>PWM Minimum</value>
+    <value>Min PWM</value>
   </data>
   <data name="lgMinute" xml:space="preserve">
     <value>Minute</value>
@@ -246,9 +237,6 @@
   <data name="lgNetworkConnections" xml:space="preserve">
     <value>Network Connections</value>
   </data>
-  <data name="lgNew" xml:space="preserve">
-    <value>New</value>
-  </data>
   <data name="lgNumSections" xml:space="preserve">
     <value>Number of Sections</value>
   </data>
@@ -257,9 +245,6 @@
   </data>
   <data name="lgOverallRate" xml:space="preserve">
     <value>Overall Rate …</value>
-  </data>
-  <data name="lgPressure" xml:space="preserve">
-    <value>Pressure</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Product</value>

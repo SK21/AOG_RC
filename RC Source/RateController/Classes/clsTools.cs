@@ -12,11 +12,11 @@ namespace RateController
     {
         private static Hashtable ht;
         private string cAppName = "RateController";
-        private string cAppVersion = "2.1.13";
         private string cPropertiesFile;
 
         private string cSettingsDir;
-        private string cVersionDate = "31-Oct-2021";
+        private string cAppVersion = "2.1.12";
+        private string cVersionDate = "19-Jun-2021";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
@@ -24,6 +24,7 @@ namespace RateController
             mf = CallingForm;
             CheckFolders();
         }
+
         public string PropertiesFile
         {
             get
@@ -37,33 +38,6 @@ namespace RateController
                     OpenFile(value);
                 }
             }
-        }
-
-        public string AppVersion()
-        {
-            return cAppVersion;
-        }
-
-        public byte BitClear(byte b, int pos)
-        {
-            byte msk = (byte)(1 << pos);
-            msk = (byte)~msk;
-            return (byte)(b & msk);
-        }
-
-        public bool BitRead(byte b, int pos)
-        {
-            return ((b >> pos) & 1) != 0;
-        }
-
-        public byte BitSet(byte b, int pos)
-        {
-            return (byte)(b | (1 << pos));
-        }
-
-        public byte BuildModSenID(byte ArdID, byte SenID)
-        {
-            return (byte)((ArdID << 4) | (SenID & 0b00001111));
         }
 
         public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
@@ -144,18 +118,6 @@ namespace RateController
             return Prop;
         }
 
-        public byte ParseModID(byte ID)
-        {
-            // top 4 bits
-            return (byte)(ID >> 4);
-        }
-
-        public byte ParseSenID(byte ID)
-        {
-            // bottom 4 bits
-            return (byte)(ID & 0b00001111);
-        }
-
         public bool PrevInstance()
         {
             string PrsName = Process.GetCurrentProcess().ProcessName;
@@ -168,27 +130,6 @@ namespace RateController
             {
                 return false;
             }
-        }
-
-        public bool NewFile(string Name)
-        {
-            bool Result = false;
-            try
-            {
-                Name = Path.GetFileName(Name);
-                cPropertiesFile = cSettingsDir + "\\" + Name;
-                if(!File.Exists(cPropertiesFile))
-                {
-                    File.WriteAllBytes(cPropertiesFile, Properties.Resources.Example);
-                    OpenFile(cPropertiesFile);
-                    Result = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("clsTools: NewFile: " + ex.Message);
-            }
-            return Result;
         }
 
         public void SaveFile(string NewFile)
@@ -239,20 +180,16 @@ namespace RateController
             return cSettingsDir;
         }
 
-        public int StringToInt(string S)
-        {
-            if (decimal.TryParse(S, out decimal tmp))
-            {
-                return (int)tmp;
-            }
-            return 0;
-        }
-
         public void TimedMessageBox(string s1, string s2 = "", int timeout = 3000, bool LogError = false)
         {
             var form = new FormTimedMessage(s1, s2, timeout);
             form.Show();
             if (LogError) WriteErrorLog(s1 + "  " + s2);
+        }
+
+        public string AppVersion()
+        {
+            return cAppVersion;
         }
 
         public string VersionDate()
@@ -305,8 +242,6 @@ namespace RateController
             {
             }
         }
-
-        
 
         private void LoadProperties(string path)
         {
@@ -389,6 +324,40 @@ namespace RateController
             catch (Exception)
             {
             }
+        }
+
+        public bool BitRead(byte b, int pos)
+        {
+            return ((b >> pos) & 1) != 0;
+        }
+
+        public byte BitSet(byte b, int pos)
+        {
+            return (byte)(b | (1 << pos));
+        }
+
+        public byte BitClear(byte b, int pos)
+        {
+            byte msk = (byte)(1 << pos);
+            msk = (byte)~msk;
+            return (byte)(b & msk);
+        }
+
+        public byte ParseModID(byte ID)
+        {
+            // top 4 bits
+            return (byte)(ID >> 4);
+        }
+
+        public byte ParseSenID(byte ID)
+        {
+            // bottom 4 bits
+            return (byte)(ID & 0b00001111);
+        }
+
+        public byte BuildModSenID(byte ArdID, byte SenID)
+        {
+            return (byte)((ArdID << 4) | (SenID & 0b00001111));
         }
     }
 }
