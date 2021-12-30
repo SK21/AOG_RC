@@ -351,17 +351,6 @@
   <data name="lgUPMTarget" xml:space="preserve">
     <value>Zielwert Einheiten/min</value>
   </data>
-  <data name="lgUsePID" xml:space="preserve">
-    <value>P-Regler ein</value>
-  </data>
-  <data name="lgUseVCN" xml:space="preserve">
-    <value>VCN-Regler ein</value>
-  </data>
-  <data name="lgVCNexplination" xml:space="preserve">
-    <value>VCN ist eine Folge aus 4 Ziffern: Getriebespiel (1=wenig, 9=viel), Geschwindigkeit (0=schnell, 9=langsam), Umschaltpunkt zu Langsamfahrt (0=5%, 9=90%), tolerierte Regelungenauigkeit (1..9%)
-Beispiel: “743”: kein Getriebespiel, Geschwindigkeit 7, Umschaltpunkt bei 40% Abweichung, tolerierte Ungenauigkeit 3%
-Wenn die Abweichung kleiner als die durch den Umschaltpunkt definierte ist, wird auf geringere Geschwindigkeit umgeschaltet. Die Regelung greift nicht ein, wenn der Durchfluss innerhalb der tolerierten Regelungenauigkeit liegt.</value>
-  </data>
   <data name="lgVersionDate" xml:space="preserve">
     <value>Datum der Version</value>
   </data>

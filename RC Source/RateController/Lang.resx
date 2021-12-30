@@ -129,6 +129,9 @@
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>Already Running</value>
   </data>
+  <data name="lgBaseRate" xml:space="preserve">
+    <value>Base Rate</value>
+  </data>
   <data name="lgBrakePoint" xml:space="preserve">
     <value>Brake Point</value>
   </data>
@@ -155,6 +158,9 @@
   </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Connect</value>
+  </data>
+  <data name="lgControl" xml:space="preserve">
+    <value>Control</value>
   </data>
   <data name="lgControlType" xml:space="preserve">
     <value>Control Type</value>
@@ -190,7 +196,7 @@
     <value>Hectares/Hr</value>
   </data>
   <data name="lgHighMax" xml:space="preserve">
-    <value>High Max</value>
+    <value>PWM High Max</value>
   </data>
   <data name="lgHour" xml:space="preserve">
     <value>Hour</value>
@@ -207,6 +213,9 @@
   <data name="lgKPH" xml:space="preserve">
     <value>KPH</value>
   </data>
+  <data name="lgLanguage" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="lgLoad" xml:space="preserve">
     <value>Load</value>
   </data>
@@ -214,10 +223,10 @@
     <value>Load Defaults</value>
   </data>
   <data name="lgLowMax" xml:space="preserve">
-    <value>Low Max</value>
+    <value>PWM Low Max</value>
   </data>
   <data name="lgMinPWM" xml:space="preserve">
-    <value>Min PWM</value>
+    <value>PWM Minimum</value>
   </data>
   <data name="lgMinute" xml:space="preserve">
     <value>Minute</value>
@@ -237,6 +246,9 @@
   <data name="lgNetworkConnections" xml:space="preserve">
     <value>Network Connections</value>
   </data>
+  <data name="lgNew" xml:space="preserve">
+    <value>New</value>
+  </data>
   <data name="lgNumSections" xml:space="preserve">
     <value>Number of Sections</value>
   </data>
@@ -245,6 +257,9 @@
   </data>
   <data name="lgOverallRate" xml:space="preserve">
     <value>Overall Rate …</value>
+  </data>
+  <data name="lgPressure" xml:space="preserve">
+    <value>Pressure</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Product</value>
@@ -268,7 +283,7 @@
     <value>Rate</value>
   </data>
   <data name="lgRealNano" xml:space="preserve">
-    <value>Real Nano</value>
+    <value>Connected Module</value>
   </data>
   <data name="lgReceivePort" xml:space="preserve">
     <value>ReceivePort</value>
@@ -316,7 +331,7 @@
     <value>Rate Simulation</value>
   </data>
   <data name="lgSimulationOff" xml:space="preserve">
-    <value>Simulation Off</value>
+    <value>Off</value>
   </data>
   <data name="lgSpeed" xml:space="preserve">
     <value>Speed</value>
@@ -351,20 +366,11 @@
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Target</value>
   </data>
-  <data name="lgUsePID" xml:space="preserve">
-    <value>Use PID</value>
-  </data>
-  <data name="lgUseVCN" xml:space="preserve">
-    <value>Use VCN</value>
-  </data>
-  <data name="lgVCNexplination" xml:space="preserve">
-    <value>VCN is a 4 digit number. Backlash (1 short pulse to 9 long pulse), Speed (0 fast to 9 slow), Brake Point (0 5% to 9 90%) and Deadband (1 to 9 %).   ex: 743  no Backlash, 7 adjustment speed, 4 Brake Point at 40% error, deadband 3%.   Brake Point is the error % below which a slower adjustment speed is used.   Deadband is the error % below which no adjustment is made.  </value>
-  </data>
   <data name="lgVersionDate" xml:space="preserve">
     <value>Version Date</value>
   </data>
   <data name="lgVirtualNano" xml:space="preserve">
-    <value>Virtual Nano</value>
+    <value>Virtual Module</value>
   </data>
   <data name="lgWaitTime" xml:space="preserve">
     <value>Wait Time</value>

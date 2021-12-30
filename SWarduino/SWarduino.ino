@@ -1,9 +1,10 @@
 #include <EtherCard.h>
 
+# define InoDescription "SWarduino  :  26-Nov-2021"
+
 // user settings ****************************
 
-#define CommType 1			// 0 Serial/USB , 1 UDP wired Nano
-
+#define CommType 0			// 0 Serial/USB , 1 UDP wired Nano
 #define IPpart3 1			// ex: 192.168.IPpart3.255, 0-255
 #define IPMac 188			// unique number for Arduino IP address and Mac part 6, 0-255
 
@@ -33,23 +34,38 @@ unsigned int DestinationPort = 29999; // Rate Controller listening port
 byte Ethernet::buffer[500]; // udp send and receive buffer
 #endif
 
-//Array to send data back 
-byte toSend[] = { 127,106,0,0 };
+//PGN 32618 to send data back 
+byte toSend[] = { 106,127,0,0,0 };
 byte Pins[] = { 0,0,0,0,0,0,0,0,0 };
 
+// SW1 PCB
+//#define SW0pin	A4
+//#define SW1pin	9
+//#define SW2pin	6
+//
+//#define SW3pin 4
+//#define AutoPin 5
+//#define MasterOnPin A5
+//
+//#define MasterOffPin 3	 
+//#define RateUpPin A3
+//#define RateDownPin A2
+
+// SW2 PCB
 #define SW0pin	A4
 #define SW1pin	9
 #define SW2pin	6
 
 #define SW3pin 4
-#define AutoPin 5
-#define MasterOnPin 3
+#define AutoPin A5
+#define MasterOnPin 5
 
-#define MasterOffPin A5	//2 
+#define MasterOffPin 3	 
 #define RateUpPin A3
 #define RateDownPin A2
 
 unsigned long LastTime;
+bool EthernetEnabled = false;
 
 void setup()
 {
@@ -57,7 +73,7 @@ void setup()
 
 	delay(5000);
 	Serial.println();
-	Serial.println("SWarduino  :  10-Mar-2021");
+	Serial.println(InoDescription);
 	Serial.println();
 
 	pinMode(SW0pin, INPUT_PULLUP);
@@ -73,19 +89,23 @@ void setup()
 	pinMode(RateDownPin, INPUT_PULLUP);
 
 #if(CommType==1)
-	if (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) == 0)
+	while (!EthernetEnabled)
 	{
-		Serial.println(F("Failed to access Ethernet controller"));
+		EthernetEnabled = (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) != 0);
+		Serial.print(".");
 	}
-	else
-	{
-		Serial.println("Ethernet controller found!");
-	}
+
+	Serial.println("");
+	Serial.println("Ethernet controller found.");
+
 	ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
 
 	ether.printIp("IP Address:     ", ether.myip);
-	Serial.println("Destination IP: " + IPadd(DestinationIP));
+	Serial.print("Destination IP: ");
+	Serial.println(IPadd(DestinationIP));
 #endif
+
+	Serial.println("Finished Setup.");
 }
 
 void loop()
@@ -96,30 +116,31 @@ void loop()
 
 		// read switches
 		// toSend[2]
-		Pins[0] = !digitalRead(SW0pin);			// 1
-		Pins[1] = !digitalRead(SW1pin);			// 2
-		Pins[2] = !digitalRead(SW2pin);			// 4
-		Pins[3] = !digitalRead(SW3pin);			// 8
-
-		// toSend[3]
 		Pins[4] = !digitalRead(AutoPin);			// 1
 		Pins[5] = !digitalRead(MasterOnPin);		// 2
 		Pins[6] = !digitalRead(MasterOffPin);	// 4
 		Pins[7] = !digitalRead(RateUpPin);		// 8
 		Pins[8] = !digitalRead(RateDownPin);		// 16
 
+		// toSend[3]
+		Pins[0] = !digitalRead(SW0pin);			// 1
+		Pins[1] = !digitalRead(SW1pin);			// 2
+		Pins[2] = !digitalRead(SW2pin);			// 4
+		Pins[3] = !digitalRead(SW3pin);			// 8
+
+
 		// build data
 		toSend[2] = 0;
 		toSend[3] = 0;
 
-		for (int i = 0; i < 4; i++)
-		{
-			if(Pins[i]) toSend[2] = toSend[2] | (1 << i);
-		}
-
 		for (int i = 0; i < 5; i++)
 		{
-			if (Pins[i + 4]) toSend[3] = toSend[3] | (1 << i);
+			if (Pins[i + 4]) toSend[2] = toSend[2] | (1 << i);
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			if (Pins[i]) toSend[3] = toSend[3] | (1 << i);
 		}
 
 		// PGN 32618

@@ -1,0 +1,5 @@
+SWarduino1.ino.hex	Old bootloader, USB comm
+SWarduino2.ino.hex	Nano, USB comm
+
+
+Upload one of the files with Xloader.

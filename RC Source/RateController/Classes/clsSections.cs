@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Timers;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -15,19 +13,16 @@ namespace RateController
 
         private FormStart mf;
 
-        //public PGN32618 SwitchBox;
-        // switches
-        // 0    switch 0
-        // 1    switch 1
-        // 2    switch 2
-        // 3    switch 3
-        // 4    Auto
-        // 5    Master on
-        // 6    Master off
-        // 7    Rate up
-        // 8    Rate down
-
-        bool[] SwON = new bool[9];
+        // to Rate Controller from arduino switch box
+        // 0   106
+        // 1   127
+        // 2    - bit 0 Auto
+        //      - bit 1 MasterOn        
+        //      - bit 2 MasterOff       
+        //      - bit 3 RateUp          
+        //      - bit 4 RateDown        
+        // 3    sw0 to sw7
+        // 4    sw8 to sw15
 
         private DateTime SWreadTime;
         private DateTime RateLastTime;
@@ -35,35 +30,37 @@ namespace RateController
         private int StepDelay = 1000;   // ms between adjustments
 
         // sent back to AOG
-        byte OutCommand;
-        byte OutLast;
-        byte[] SectionOnFromAOG = new byte[2];
-        byte[] SectionOnToAOG = new byte[2];
-        byte[] SectionOffToAOG = new byte[2];
-        byte[] SectionOnToAOGlast = new byte[2];
-        byte[] SectionOffToAOGlast = new byte[2];
+        private byte OutCommand;
+
+        private byte OutLast;
+        private byte[] SectionOnFromAOG = new byte[2];
+        private byte[] SectionOnToAOG = new byte[2];
+        private byte[] SectionOffToAOG = new byte[2];
+        private byte[] SectionOnToAOGlast = new byte[2];
+        private byte[] SectionOffToAOGlast = new byte[2];
 
         // used by RateController
-        byte[] SectionControlByte = new byte[2];
-        byte[] SectionControlLast = new byte[2];
+        private byte[] SectionControlByte = new byte[2];
 
-        bool PinState;
+        private byte[] SectionControlLast = new byte[2];
 
-        bool MasterOn;
-        bool MasterLast;
-        bool MasterChanged;
-        DateTime MasterTime;
+        private bool PinState;
 
-        bool AutoLast;
-        bool AutoChanged;
-        DateTime AutoTime;
+        private bool MasterOn;
+        private bool MasterLast;
+        private bool MasterChanged;
+        private DateTime MasterTime;
+
+        private bool AutoLast;
+        private bool AutoChanged;
+        private DateTime AutoTime;
 
         private PGN234 ToAOG;
         private float RateCalcFactor = 0.05F;   // rate change amount for each step.  ex: 0.10 means 10% for each step
 
-        int Tmp;
-        bool AOGmasterOn;
-        bool AOGmasterOff;
+        private int Tmp;
+        private bool AOGmasterOn;
+        private bool AOGmasterOff;
 
         public class MasterChangedArgs : EventArgs
         {
@@ -80,14 +77,11 @@ namespace RateController
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
 
             ToAOG = new PGN234(mf);
-
-            SwON[(int)Switches.Auto] = true;
         }
 
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
             // switch box switches have changed
-            SwON = e.Switches;
             SendStatusUpdate();
         }
 
@@ -255,7 +249,6 @@ namespace RateController
             bool SectionSwitchesChanged = false;
             if (mf.SwitchBox.Connected())
             {
-
                 ReadRateSwitches();
                 SectionSwitchesChanged = ReadSectionSwitches();
             }
@@ -272,7 +265,7 @@ namespace RateController
 
             if (!SourceAOG & (RelaysChanged | SectionSwitchesChanged))
             {
-                // send to AOG 
+                // send to AOG
                 ToAOG.OnHi = SectionOnToAOG[1];
                 ToAOG.OnLo = SectionOnToAOG[0];
                 ToAOG.OffHi = SectionOffToAOG[1];
@@ -282,13 +275,10 @@ namespace RateController
             }
         }
 
-        public bool SwitchOn(Switches ID)
-        {
-            return SwON[(int)ID];
-        }
-
         private bool ReadSectionSwitches()
         {
+            int ID = 0;
+
             for (int i = 0; i < 2; i++)
             {
                 SectionOnToAOG[i] = 0;
@@ -298,8 +288,8 @@ namespace RateController
             SWreadTime = DateTime.Now;
 
             // Master switch
-            if (SwON[(int)Switches.MasterOff]) MasterOn = false;
-            if (SwON[(int)Switches.MasterOn]) MasterOn = true;
+            if (mf.SwitchBox.SwitchOn(SwIDs.MasterOff)) MasterOn = false;
+            if (mf.SwitchBox.SwitchOn(SwIDs.MasterOn)) MasterOn = true;
 
             if ((MasterOn != MasterLast) & !MasterChanged)
             {
@@ -320,7 +310,7 @@ namespace RateController
             OutCommand = mf.Tls.BitClear(OutCommand, 1);
             if (MasterChanged)
             {
-                if (MasterOn) OutCommand = mf.Tls.BitSet(OutCommand, 0);    // request AOG master switch on, section buttons to auto 
+                if (MasterOn) OutCommand = mf.Tls.BitSet(OutCommand, 0);    // request AOG master switch on, section buttons to auto
                 if (!MasterOn) OutCommand = mf.Tls.BitSet(OutCommand, 1);   // request AOG master switch off, section buttons to off
             }
 
@@ -341,7 +331,7 @@ namespace RateController
             }
 
             // auto state
-            if ((SwON[(int)Switches.Auto] != AutoLast) & !AutoChanged)
+            if ((mf.SwitchBox.SwitchOn(SwIDs.Auto) != AutoLast) & !AutoChanged)
             {
                 // create AOG auto notification
                 AutoTime = SWreadTime;
@@ -352,9 +342,8 @@ namespace RateController
             {
                 // cancel AOG auto notification
                 AutoChanged = false;
-                AutoLast = SwON[(int)Switches.Auto];
+                AutoLast = mf.SwitchBox.SwitchOn(SwIDs.Auto);
             }
-
 
             // Relays
             if (MasterOn)
@@ -363,29 +352,13 @@ namespace RateController
                 {
                     for (int SwBit = 0; SwBit < 8; SwBit++)
                     {
-                        switch (mf.Sections.Item(SwBit + SwByte * 8).SwitchID)
-                        {
-                            case 0:
-                                PinState = SwON[(int)Switches.sw0];
-                                break;
-                            case 1:
-                                PinState = SwON[(int)Switches.sw1];
-                                break;
-                            case 2:
-                                PinState = SwON[(int)Switches.sw2];
-                                break;
-                            case 3:
-                                PinState = SwON[(int)Switches.sw3];
-                                break;
-                            default:
-                                PinState = false;
-                                break;
-                        }
+                        ID = mf.Sections.Item(SwBit + SwByte * 8).SwitchID;
+                        PinState = mf.SwitchBox.SectionSwitchOn(ID);
 
                         if (PinState)
                         {
                             // master on, section switch on
-                            if (SwON[(int)Switches.Auto])
+                            if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
                             {
                                 // master on, section switch on, auto on
                                 // AOG in control
@@ -427,13 +400,12 @@ namespace RateController
 
                     SectionOnToAOG[i] = 0;
                     SectionOffToAOG[i] = 255;
-
                 }
             }
 
             if (AutoChanged)
             {
-                if (SwON[(int)Switches.Auto])
+                if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
                 {
                     // auto on
                     // change section buttons to auto state by resending master on
@@ -467,16 +439,16 @@ namespace RateController
             return Result;
         }
 
-        void ReadRateSwitches()
+        private void ReadRateSwitches()
         {
-            if (SwON[(int)Switches.RateUp] || SwON[(int)Switches.RateDown])
+            if (mf.SwitchBox.SwitchOn(SwIDs.RateUp) || mf.SwitchBox.SwitchOn(SwIDs.RateDown))
             {
                 SWreadTime = DateTime.Now;
 
                 if ((SWreadTime - RateLastTime).TotalMilliseconds > StepDelay)
                 {
                     RateLastTime = DateTime.Now;
-                    if (SwON[(int)Switches.RateUp])
+                    if (mf.SwitchBox.SwitchOn(SwIDs.RateUp))
                     {
                         if (mf.Tls.BitRead(OutCommand, 2))
                         {
@@ -494,7 +466,7 @@ namespace RateController
                         OutCommand = mf.Tls.BitSet(OutCommand, 5);   // rate up
                     }
 
-                    if (SwON[(int)Switches.RateDown])
+                    if (mf.SwitchBox.SwitchOn(SwIDs.RateDown))
                     {
                         if (mf.Tls.BitRead(OutCommand, 2))
                         {
@@ -527,7 +499,6 @@ namespace RateController
                     OutCommand = mf.Tls.BitClear(OutCommand, 5);
                     mf.Products.Item(mf.CurrentProduct() - 1).ManualRateFactor = 1;
                 }
-
             }
         }
 
@@ -588,7 +559,7 @@ namespace RateController
                 clsProduct Prd = mf.Products.Item(mf.CurrentProduct() - 1);
                 Prd.ManualRateFactor = ChangeAmount;
 
-                if (SwON[(int)Switches.Auto])
+                if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
                 {
                     double CurrentRate = Prd.RateSet;
                     if (RateUp & CurrentRate == 0) CurrentRate = 1; // provide a starting point
@@ -599,4 +570,3 @@ namespace RateController
         }
     }
 }
-

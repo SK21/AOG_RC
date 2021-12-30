@@ -1,0 +1,2 @@
+RCnano.ino.hex:
+	UDP comm, UseMCP23017 1, UseSwitchedPowerPin 0
