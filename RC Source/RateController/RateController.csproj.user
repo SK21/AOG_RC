@@ -2,7 +2,7 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
-    <PublishUrlHistory>E:\MyDocs\AOG\RateController100\RateController\Install\|I:\MyDocs\AOG\RateController100\RateController\Install\|I:\MyDocs\AOG\RateController100\Install\</PublishUrlHistory>
+    <PublishUrlHistory>E:\MyDocs\AOG\RateController\Software Versions\RateController 2.1.12\RateController_Install\|E:\MyDocs\AOG\RateController100\RateController\Install\|I:\MyDocs\AOG\RateController100\RateController\Install\|I:\MyDocs\AOG\RateController100\Install\</PublishUrlHistory>
     <InstallUrlHistory />
     <SupportUrlHistory />
     <UpdateUrlHistory />

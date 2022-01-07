@@ -8,17 +8,24 @@ namespace RateController
 {
     public class PGN32620
     {
-        // section switch IDs to arduino, ex: byte 2, bits 0 and 1 give 4 choices for sec 0, bits 2 and 3 for sec 1, etc.
-        // 0    127
-        // 1    108
-        // 2    sec 0-3
-        // 3    sec 4-7
-        // 4    sec 8-11
-        // 5    sec 12-15
+        // section switch IDs to arduino
+        // ex: byte 2: bits 0-3 identify switch # (0-15) for sec 0
+        // ex: byte 2: bits 4-7 identify switch # (0-15) for sec 1
+
+        // 0    108
+        // 1    127
+        // 2    sec 0-1
+        // 3    sec 2-3
+        // 4    sec 4-5
+        // 5    sec 6-7
+        // 6    sec 8-9
+        // 7    sec 10-11
+        // 8    sec 12-13
+        // 9    sec 14-15
 
         private const byte cByteCount = 10;
-        private const byte HeaderHi = 127;
         private const byte HeaderLo = 108;
+        private const byte HeaderHi = 127;
 
         FormStart mf;
         byte[] Data = new byte[cByteCount];
@@ -34,7 +41,7 @@ namespace RateController
         {
             int ByteCount = 2;
             int BitCount = 0;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 8; i++)
             {
                 Data[i + 2] = 0;
             }
@@ -44,9 +51,9 @@ namespace RateController
                 byte SwitchID = (byte)Sec.SwitchID;
                 SwitchID = (byte)(SwitchID << BitCount);
                 Data[ByteCount] |= SwitchID;
-                BitCount += 2;
+                BitCount += 4;
 
-                if (BitCount > 6)
+                if (BitCount > 4)
                 {
                     ByteCount++;
                     BitCount = 0;

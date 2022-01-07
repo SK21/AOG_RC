@@ -12,26 +12,17 @@ namespace RateController
         private bool ControllerConnected;
         private byte ControlType;        // 0 standard, 1 fast close, 2 motor
 
-        private float CurrentCounts;
-        private float CurrentDuration;
         private int ErrorRange = 4;        // % random error in flow rate, above and below target
 
         private byte InCommand;
 
-        private float KalG = 0.0F;
-        private float KalP = 1.0F;
-        private float KalPc = 0.0F;
-        private float KalProcess = 0.005F;        // smaller is more filtering
-        private float KalResult = 0.0F;
-        private float KalVariance = 0.01F;        // larger is more filtering
-
         private DateTime LastPulse = DateTime.Now;
         private float LastPWM;
         private DateTime LastTime;
-        private int LOOP_TIME = 200;
-        private float MaxSimRate = 100F;        // max rate of system in UPM
+        private int LOOP_TIME = 50;
+        private float MaxSimRate = 40F;        // max rate of system in UPM
 
-        private float MaxRPM = 100.0F;
+        private byte MaxRPM = 255;
         private int mcID;
         private float MeterCal;
 
@@ -43,10 +34,9 @@ namespace RateController
         private byte PIDLowMax = 100;
         private byte PIDminPWM = 50;
 
-        private float PPM;
-        private float PPR = 50.0F;        // pulses per revolution
+        private float PPR = 1.0F;        // pulses per revolution
 
-        private float pulseCount;
+        private UInt16 pulseCount;
         private float pulseDuration;
         private float Pulses = 0;
 
@@ -72,7 +62,6 @@ namespace RateController
 
         private byte Temp;
 
-        private float TimedCounts;
         private DateTime TimedLast = DateTime.Now;
         private int Tmp;
         private float TotalPulses;
@@ -113,7 +102,7 @@ namespace RateController
                     {
                         case 2:
                             // motor control
-                            if (SimulateFlow) SimulateMotor(PIDminPWM, PIDHighMax);
+                            if (SimulateFlow) SimulateMotor(PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
 
                             pwmSetting = ControlMotor(PIDkp, rateError, rateSetPoint, PIDminPWM,
@@ -169,13 +158,13 @@ namespace RateController
                         // calculate application rate
                         case 2:
                             // motor control
-                            if (SimulateFlow) SimulateMotor(PIDminPWM, PIDHighMax);
+                            if (SimulateFlow) SimulateMotor(PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
                             break;
 
                         default:
                             // valve control
-                            if (SimulateFlow)                                    SimulateValve(PIDminPWM, PIDHighMax);
+                            if (SimulateFlow) SimulateValve(PIDminPWM, PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
                             break;
                     }
@@ -186,23 +175,23 @@ namespace RateController
 
         public void ReceiveSerial(byte[] Data)
         {
-            int PGN = Data[0] << 8 | Data[1];
+            int PGN = Data[1] << 8 | Data[0];
             if (PGN == 32614)
             {
                 mcID = Data[2];
 
-                RelayHi = Data[3];
-                RelayFromAOG = Data[4];
+                RelayFromAOG = Data[3];
+                RelayHi = Data[4];
 
-                // rate setting, 100 times actual
-                int TmpSetting = Data[5] << 8 | Data[6];
+                // rate setting, 10 times actual
+                double TmpSetting = Data[7] << 16 | Data[6] << 8 | Data[5];
 
                 // meter cal, 100 times actual
-                Tmp = Data[7] << 8 | Data[8];
+                Tmp = Data[9] << 8 | Data[8];
                 MeterCal = (float)(Tmp * .01);
 
                 // command byte
-                InCommand = Data[9];
+                InCommand = Data[10];
                 if ((InCommand & 1) == 1) TotalPulses = 0;    // reset accumulated count
 
                 ControlType = 0;
@@ -216,11 +205,11 @@ namespace RateController
                 AutoOn = ((InCommand & 32) == 32);
                 if (AutoOn)
                 {
-                    rateSetPoint = (float)(TmpSetting * .01);
+                    rateSetPoint = (float)(TmpSetting * .1);
                 }
                 else
                 {
-                    NewRateFactor = (float)(TmpSetting * .01);
+                    NewRateFactor = (float)(TmpSetting * .1);
                 }
 
                 ReceiveTime = DateTime.Now;
@@ -238,6 +227,10 @@ namespace RateController
 
                 ReceiveTime = DateTime.Now;
             }
+
+            MaxSimRate = (float)(RC.TargetRate() * 1.5);
+            //Debug.Print("");
+            //Debug.Print("MaxSimRate " + MaxSimRate.ToString("N2"));
         }
 
         private int ControlMotor(byte sKP, float sError, float sSetPoint, byte sMinPWM,
@@ -299,55 +292,69 @@ namespace RateController
             }
         }
 
+        UInt32 Osum;
+        UInt32 Omax;
+        UInt32 Omin;
+        UInt16 Ocount;
+        float Oave;
+        UInt32 PPM;
+        UInt16 TimedCounts;
+        UInt16 CurrentCounts;
+        UInt16 CurrentDuration;
+
         private float GetUPM()
         {
-            CurrentCounts = pulseCount;
-            pulseCount = 0;
-
-                if (pulseDuration > 5) CurrentDuration = pulseDuration;
-
-            // check for no PPM
-            if ((DateTime.Now - LastPulse).TotalMilliseconds > 4000)
+            if (pulseCount > 0)
             {
-                pulseDuration = 0;
-                CurrentDuration = 0;
-                PPM = 0;
-            }
-            if (CurrentCounts > 0) LastPulse = DateTime.Now;
+                CurrentCounts = pulseCount;
+                pulseCount = 0;
+                CurrentDuration = (ushort)pulseDuration;
 
-            // accumulated total
-            TotalPulses += CurrentCounts;
-
-            // ppm
-            if (cUseMultiPulse)
-            {
-                // low ms/pulse
-                TimedCounts += CurrentCounts;
-                RateInterval = (int)(DateTime.Now - TimedLast).TotalMilliseconds;
-                if (RateInterval > 200)
+                if (cUseMultiPulse)
                 {
-                    TimedLast = DateTime.Now;
-                    PPM = (float)((60000.0 * TimedCounts) / RateInterval);
-                    TimedCounts = 0;
+                    // low ms/pulse, use pulses over time
+                    TimedCounts += CurrentCounts;
+                    RateInterval = (int)(DateTime.Now - TimedLast).TotalMilliseconds;
+                    if (RateInterval > 200)
+                    {
+                        TimedLast = DateTime.Now;
+                        PPM = (uint)((6000000 * TimedCounts) / RateInterval);  // 100 X actual
+                        TimedCounts = 0;
+                    }
                 }
-            }
-            else
-            {
-                // high ms/pulse
-                if (CurrentDuration > 0) PPM = ((float)(60000.0 / CurrentDuration));
+                else
+                {
+                    // high ms/pulse, use time for one pulse
+                    PPM = (uint)(6000000 / CurrentDuration); // 100 X actual
+                }
+
+                LastPulse = DateTime.Now;
+                TotalPulses += CurrentCounts;
             }
 
-            // Kalmen filter
-            KalPc = KalP + KalProcess;
-            KalG = KalPc / (KalPc + KalVariance);
-            KalP = (float)((1.0 - KalG) * KalPc);
-            KalResult = KalG * (PPM - KalResult) + KalResult;
-            PPM = KalResult;
+            if ((DateTime.Now - LastPulse).TotalMilliseconds > 4000) PPM = 0;   // check for no flow
+
+            // olympic average
+            Osum += PPM;
+            if (PPM > Omax) Omax = PPM;
+            if (PPM < Omin) Omin = PPM;
+
+            Ocount++;
+            if (Ocount > 9)
+            {
+                Osum -= Omax;
+                Osum -= Omin;
+                Oave = (float)((float)Osum / 800.0);  // divide by 8 and divide by 100 
+                Osum = 0;
+                Omax = 0;
+                Omin = 50000;
+                Ocount = 0;
+            }
 
             // units per minute
             if (MeterCal > 0)
             {
-                UPM = PPM / MeterCal;
+                UPM = Oave / MeterCal;
             }
             else
             {
@@ -359,49 +366,49 @@ namespace RateController
         private void SendSerial()
         {
             // PGN 32613
-            string[] words = new string[10];
-            words[0] = "127";
-            words[1] = "101";
+            string[] words = new string[11];
+            words[0] = "101";
+            words[1] = "127";
             words[2] = mcID.ToString();
 
-            // rate applied
-            Temp = (byte)((int)(UPM * 100) >> 8);
-            words[3] = Temp.ToString();
-            Temp = (byte)(UPM * 100);
+            // rate applied, 10 X actual
+            Temp = (byte)((int)(UPM * 10) >> 16);
+            words[5] = Temp.ToString();
+            Temp = (byte)((int)(UPM * 10) >> 8);
             words[4] = Temp.ToString();
+            Temp = (byte)(UPM * 10);
+            words[3] = Temp.ToString();
 
             // accumulated quantity
-            int Units = (int)(TotalPulses * 100 / MeterCal);
+            int Units = (int)(TotalPulses * 10 / MeterCal);
             Temp = (byte)(Units >> 16);
-            words[5] = Temp.ToString();
+            words[8] = Temp.ToString();
             Temp = (byte)(Units >> 8);
-            words[6] = Temp.ToString();
-            Temp = (byte)Units;
             words[7] = Temp.ToString();
+            Temp = (byte)Units;
+            words[6] = Temp.ToString();
 
             //pwmSetting
-            UInt16 Number = (UInt16)(pwmSetting * 10);
-            byte[] Tmp = new byte[] { (byte)Number, (byte)(Number >> 8) };
-
-            words[8] = Tmp[1].ToString();
-            words[9] = Tmp[0].ToString();
+            Temp = (byte)((int)(pwmSetting * 10) >> 8);
+            words[10] = Temp.ToString();
+            Temp = (byte)((int)(pwmSetting * 10));
+            words[9] = Temp.ToString();
 
             RC.SerialFromAruduino(words, false);
         }
 
-        private void SimulateMotor(byte sMin, byte sMax)
+        double PrevCount;
+        double CurCount;
+        private void SimulateMotor( byte sMax)
         {
             if (ApplicationOn)
             {
-                var Rand = new Random();
-
                 SimulateInterval = (int)(DateTime.Now - SimulateTimeLast).TotalMilliseconds;
                 SimulateTimeLast = DateTime.Now;
 
-                SimRPM += (float)(((pwmSetting / (float)sMax) * MaxRPM - SimRPM) * 0.25);    // update rpm
-                RandomError = (float)((100.0 - ErrorRange) + (Rand.Next((int)(ErrorRange * 2.0))));
-                SimRPM = (float)(SimRPM * RandomError / 100.0);
-                if (SimRPM < sMin) SimRPM = (float)sMin;
+                SimRPM += (float)(((pwmSetting / (float)sMax) * MaxRPM - SimRPM) * 0.35);    // update rpm
+                RC.mf.Tls.NoisyData(SimRPM, ErrorRange);    // add error
+                if (SimRPM < 0) SimRPM = 0;
 
                 SimTmp = PPR * SimRPM;
                 if (SimTmp > 0)
@@ -413,8 +420,13 @@ namespace RateController
                     pulseDuration = 0;
                 }
 
-                pulseCount = (float)(SimRPM * PPR);
-                pulseCount = (float)(pulseCount * (SimulateInterval / 60000.0)); // counts for time slice
+                CurCount = SimRPM * PPR;
+                PrevCount += CurCount * (SimulateInterval / 60000.0); // counts for time slice
+                if(PrevCount>1)
+                {
+                    pulseCount = (ushort)PrevCount;
+                    PrevCount = 0;
+                }
             }
             else
             {
@@ -424,8 +436,6 @@ namespace RateController
 
         private void SimulateValve(byte Min, byte Max)
         {
-            var Rand = new Random();
-
             SimulateInterval = (int)(DateTime.Now - SimulateTimeLast).TotalMilliseconds;
             SimulateTimeLast = DateTime.Now;
 
@@ -468,10 +478,13 @@ namespace RateController
             {
                 PulseTime = (float)(1.0 / Pulses);   // milliseconds for each pulse
 
-                RandomError = (100 - ErrorRange) + (Rand.Next(ErrorRange * 2));
-
-                PulseTime = (float)(PulseTime * RandomError / 100);
-                pulseCount = (float)(SimulateInterval / PulseTime); // milliseconds * pulses/millsecond = pulses
+                PulseTime = (float)RC.mf.Tls.NoisyData(PulseTime, ErrorRange);
+                PrevCount += SimulateInterval / PulseTime; // milliseconds * pulses/millsecond = pulses
+                if(PrevCount>1)
+                {
+                    pulseCount = (ushort)PrevCount;
+                    PrevCount = 0;
+                }
 
                 // pulse duration is the time for one pulse
                 pulseDuration = PulseTime;

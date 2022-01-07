@@ -97,6 +97,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Base Rate.
+        /// </summary>
+        internal static string lgBaseRate {
+            get {
+                return ResourceManager.GetString("lgBaseRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Brake Point.
         /// </summary>
         internal static string lgBrakePoint {
@@ -174,6 +183,15 @@ namespace RateController {
         internal static string lgConnect {
             get {
                 return ResourceManager.GetString("lgConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Control.
+        /// </summary>
+        internal static string lgControl {
+            get {
+                return ResourceManager.GetString("lgControl", resourceCulture);
             }
         }
         
@@ -277,7 +295,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to High Max.
+        ///   Looks up a localized string similar to PWM High Max.
         /// </summary>
         internal static string lgHighMax {
             get {
@@ -331,6 +349,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        internal static string lgLanguage {
+            get {
+                return ResourceManager.GetString("lgLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Load.
         /// </summary>
         internal static string lgLoad {
@@ -349,7 +376,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Low Max.
+        ///   Looks up a localized string similar to PWM Low Max.
         /// </summary>
         internal static string lgLowMax {
             get {
@@ -358,7 +385,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Min PWM.
+        ///   Looks up a localized string similar to PWM Minimum.
         /// </summary>
         internal static string lgMinPWM {
             get {
@@ -421,6 +448,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New.
+        /// </summary>
+        internal static string lgNew {
+            get {
+                return ResourceManager.GetString("lgNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number of Sections.
         /// </summary>
         internal static string lgNumSections {
@@ -444,6 +480,15 @@ namespace RateController {
         internal static string lgOverallRate {
             get {
                 return ResourceManager.GetString("lgOverallRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pressure.
+        /// </summary>
+        internal static string lgPressure {
+            get {
+                return ResourceManager.GetString("lgPressure", resourceCulture);
             }
         }
         
@@ -511,7 +556,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Real Nano.
+        ///   Looks up a localized string similar to Connected Module.
         /// </summary>
         internal static string lgRealNano {
             get {
@@ -655,7 +700,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Simulation Off.
+        ///   Looks up a localized string similar to Off.
         /// </summary>
         internal static string lgSimulationOff {
             get {
@@ -763,33 +808,6 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use PID.
-        /// </summary>
-        internal static string lgUsePID {
-            get {
-                return ResourceManager.GetString("lgUsePID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use VCN.
-        /// </summary>
-        internal static string lgUseVCN {
-            get {
-                return ResourceManager.GetString("lgUseVCN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to VCN is a 4 digit number. Backlash (1 short pulse to 9 long pulse), Speed (0 fast to 9 slow), Brake Point (0 5% to 9 90%) and Deadband (1 to 9 %).   ex: 743  no Backlash, 7 adjustment speed, 4 Brake Point at 40% error, deadband 3%.   Brake Point is the error % below which a slower adjustment speed is used.   Deadband is the error % below which no adjustment is made.  .
-        /// </summary>
-        internal static string lgVCNexplination {
-            get {
-                return ResourceManager.GetString("lgVCNexplination", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Version Date.
         /// </summary>
         internal static string lgVersionDate {
@@ -799,7 +817,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Virtual Nano.
+        ///   Looks up a localized string similar to Virtual Module.
         /// </summary>
         internal static string lgVirtualNano {
             get {

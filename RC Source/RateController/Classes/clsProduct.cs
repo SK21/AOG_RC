@@ -9,52 +9,48 @@ namespace RateController
     {
         public readonly FormStart mf;
 
-        public clsArduino VirtualNano;
         public PGN32613 ArduinoModule;
-        private PGN32614 RateToArduino;
-        private PGN32616 PIDtoArduino;
-
-        public double cRateSet = 0;
         public byte CoverageUnits = 0;
+        public double cRateSet = 0;
         public bool EraseApplied = false;
-
         public double FlowCal = 0;
         public byte QuantityUnits = 0;
         public double TankSize = 0;
+        public byte ValveType = 0;  // 0 standard, 1 fast close, 3 motor
+        public clsArduino VirtualNano;
 
-        public byte ValveType = 0;        // 0 standard, 1 fast close, 3 motor
         private int cCountsRev;
-
-        private int cModID;        // arduino ID, 0-15, high 4 bits
-        private int cSenID;        // rate sensor ID on arduino, 0-15, low 4 bits
-        private int cProductID;
-
+        private double cHectaresPerMinute;
+        private double cManualRateFactor = 1;
+        private double cMinUPM;
+        private int cModID; // arduino ID, 0-15, high 4 bits
+        private byte cOffRateSetting;
         private double Coverage = 0;
+        private int cProductID;
         private string cProductName = "";
         private double cQuantityApplied = 0;
+
+        private int cSenID; // rate sensor ID on arduino, 0-15, low 4 bits
+
         private SimType cSimulationType = 0;
 
         private double CurrentMinutes;
         private double CurrentQuantity = 0;
         private double CurrentWorkedArea_Hc = 0;
+        private bool cUseMultiPulse;
+        private bool cUseOffRateAlarm;
+        private byte cVariableRate = 0;
+        private double cWorkingWidth_cm;
         private double LastAccQuantity = 0;
-
         private double LastQuantityDifference = 0;
         private DateTime LastUpdateTime;
-
         private bool PauseWork = false;
+        private PGN32616 PIDtoArduino;
+        private PGN32614 RateToArduino;
+        private bool SwitchIDsSent;
         private double TankRemaining = 0;
         private DateTime UpdateStartTime;
-
-        private double cWorkingWidth_cm;
-        private double cHectaresPerMinute;
-        private double cManualRateFactor = 1;
-
-        private bool SwitchIDsSent;
-        private bool cUseMultiPulse;
-
-        private double cMinUPM;
-        private bool cUseOffRateAlarm;
+        private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -69,8 +65,6 @@ namespace RateController
             VirtualNano = new clsArduino(this);
         }
 
-        public double RateSet { get { return cRateSet; } set { cRateSet = value; } }
-
         public int CountsRev
         {
             get { return cCountsRev; }
@@ -84,15 +78,13 @@ namespace RateController
         }
 
         public int ID { get { return cProductID; } }
-
         public double ManualRateFactor { get { return cManualRateFactor; } set { cManualRateFactor = value; } }
-
         public double MinUPM
         {
             get { return cMinUPM; }
             set
             {
-                if(value>=0 & value <1000)
+                if (value >= 0 & value < 1000)
                 {
                     cMinUPM = value;
                 }
@@ -102,8 +94,6 @@ namespace RateController
                 }
             }
         }
-
-        public bool UseOffRateAlarm { get { return cUseOffRateAlarm; } set { cUseOffRateAlarm = value; } }
 
         public byte ModuleID
         {
@@ -121,13 +111,29 @@ namespace RateController
             }
         }
 
+        public byte OffRateSetting
+        {
+            get { return cOffRateSetting; }
+            set
+            {
+                if (value >= 0 && value <= 40)
+                {
+                    cOffRateSetting = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid Off-rate setting.");
+                }
+            }
+        }
+
         public byte PIDbrakepoint { get { return PIDtoArduino.BrakePoint; } set { PIDtoArduino.BrakePoint = value; } }
         public byte PIDdeadband { get { return PIDtoArduino.DeadBand; } set { PIDtoArduino.DeadBand = value; } }
         public byte PIDHighMax { get { return PIDtoArduino.HighMax; } set { PIDtoArduino.HighMax = value; } }
         public byte PIDkp { get { return PIDtoArduino.KP; } set { PIDtoArduino.KP = value; } }
         public byte PIDLowMax { get { return PIDtoArduino.LowMax; } set { PIDtoArduino.LowMax = value; } }
         public byte PIDminPWM { get { return PIDtoArduino.MinPWM; } set { PIDtoArduino.MinPWM = value; } }
-
+        public byte PIDTimed { get { return PIDtoArduino.TimedAdjustment; } set { PIDtoArduino.TimedAdjustment = value; } }
         public string ProductName
         {
             get { return cProductName; }
@@ -148,6 +154,8 @@ namespace RateController
             }
         }
 
+        public double RateSet { get { return cRateSet; } set { cRateSet = value; } }
+
         public byte SensorID
         {
             get { return (byte)cSenID; }
@@ -165,6 +173,27 @@ namespace RateController
         }
 
         public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }
+
+        public bool UseMultiPulse { get { return cUseMultiPulse; } set { cUseMultiPulse = value; } }
+
+        public bool UseOffRateAlarm { get { return cUseOffRateAlarm; } set { cUseOffRateAlarm = value; } }
+
+        public byte VariableRate
+        {
+            get { return cVariableRate; }
+            set
+            {
+                if (value < 6)
+                {
+                    cVariableRate = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid Variable Rate option.");
+                }
+            }
+        }
+
         private string IDname { get { return cProductID.ToString(); } }
 
         public double AverageRate()
@@ -179,8 +208,6 @@ namespace RateController
                 return 0;
             }
         }
-
-        public bool UseMultiPulse { get { return cUseMultiPulse; } set { cUseMultiPulse = value; } }
 
         public string CoverageDescription()
         {
@@ -212,6 +239,72 @@ namespace RateController
         public double CurrentTankRemaining()
         {
             return TankRemaining;
+        }
+
+        public void Load()
+        {
+            int tmp;
+            byte val;
+
+            double.TryParse(mf.Tls.LoadProperty("Coverage" + IDname), out Coverage);
+            byte.TryParse(mf.Tls.LoadProperty("CoverageUnits" + IDname), out CoverageUnits);
+
+            double.TryParse(mf.Tls.LoadProperty("TankRemaining" + IDname), out TankRemaining);
+            double.TryParse(mf.Tls.LoadProperty("QuantityApplied" + IDname), out cQuantityApplied);
+            byte.TryParse(mf.Tls.LoadProperty("QuantityUnits" + IDname), out QuantityUnits);
+            double.TryParse(mf.Tls.LoadProperty("LastAccQuantity" + IDname), out LastAccQuantity);
+
+            double.TryParse(mf.Tls.LoadProperty("RateSet" + IDname), out cRateSet);
+            double.TryParse(mf.Tls.LoadProperty("FlowCal" + IDname), out FlowCal);
+            double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out TankSize);
+            byte.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), out ValveType);
+            Enum.TryParse(mf.Tls.LoadProperty("cSimulationType" + IDname), true, out cSimulationType);
+
+            cProductName = mf.Tls.LoadProperty("ProductName" + IDname);
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("KP" + IDname), out val);
+            PIDtoArduino.KP = val;
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("PIDMinPWM" + IDname), out val);
+            PIDtoArduino.MinPWM = val;
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("PIDLowMax" + IDname), out val);
+            PIDtoArduino.LowMax = val;
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("PIDHighMax" + IDname), out val);
+            PIDtoArduino.HighMax = val;
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("PIDdeadband" + IDname), out val);
+            PIDtoArduino.DeadBand = val;
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("PIDbrakepoint" + IDname), out val);
+            PIDtoArduino.BrakePoint = val;
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("TimedAdjustment" + IDname), out val);
+            PIDtoArduino.TimedAdjustment = val;
+
+            bool.TryParse(mf.Tls.LoadProperty("UseMultiPulse" + IDname), out cUseMultiPulse);
+            int.TryParse(mf.Tls.LoadProperty("CountsRev" + IDname), out cCountsRev);
+
+            int.TryParse(mf.Tls.LoadProperty("SensorID" + IDname), out tmp);
+            SensorID = (byte)tmp;
+
+            tmp = 0;
+            int.TryParse(mf.Tls.LoadProperty("ModuleID" + IDname), out tmp);
+            ModuleID = (byte)tmp;
+
+            bool.TryParse(mf.Tls.LoadProperty("OffRateAlarm" + IDname), out cUseOffRateAlarm);
+            byte.TryParse(mf.Tls.LoadProperty("OffRateSetting" + IDname), out cOffRateSetting);
+
+            double.TryParse(mf.Tls.LoadProperty("MinUPM" + IDname), out cMinUPM);
+            byte.TryParse(mf.Tls.LoadProperty("VariableRate" + IDname), out cVariableRate);
         }
 
         public double PWM()
@@ -276,6 +369,46 @@ namespace RateController
             TankRemaining = TankSize;
         }
 
+        public void Save()
+        {
+            mf.Tls.SaveProperty("Coverage" + IDname, Coverage.ToString());
+            mf.Tls.SaveProperty("CoverageUnits" + IDname, CoverageUnits.ToString());
+
+            mf.Tls.SaveProperty("TankRemaining" + IDname, TankRemaining.ToString());
+            mf.Tls.SaveProperty("QuantityApplied" + IDname, cQuantityApplied.ToString());
+            mf.Tls.SaveProperty("QuantityUnits" + IDname, QuantityUnits.ToString());
+            mf.Tls.SaveProperty("LastAccQuantity" + IDname, LastAccQuantity.ToString());
+
+            mf.Tls.SaveProperty("RateSet" + IDname, cRateSet.ToString());
+            mf.Tls.SaveProperty("FlowCal" + IDname, FlowCal.ToString());
+            mf.Tls.SaveProperty("TankSize" + IDname, TankSize.ToString());
+            mf.Tls.SaveProperty("ValveType" + IDname, ValveType.ToString());
+            mf.Tls.SaveProperty("cSimulationType" + IDname, cSimulationType.ToString());
+
+            mf.Tls.SaveProperty("ProductName" + IDname, cProductName);
+
+            mf.Tls.SaveProperty("KP" + IDname, PIDtoArduino.KP.ToString());
+            mf.Tls.SaveProperty("PIDMinPWM" + IDname, PIDtoArduino.MinPWM.ToString());
+            mf.Tls.SaveProperty("PIDLowMax" + IDname, PIDtoArduino.LowMax.ToString());
+
+            mf.Tls.SaveProperty("PIDHighMax" + IDname, PIDtoArduino.HighMax.ToString());
+            mf.Tls.SaveProperty("PIDdeadband" + IDname, PIDtoArduino.DeadBand.ToString());
+            mf.Tls.SaveProperty("PIDbrakepoint" + IDname, PIDtoArduino.BrakePoint.ToString());
+            mf.Tls.SaveProperty("TimedAdjustment" + IDname, PIDtoArduino.TimedAdjustment.ToString());
+
+            mf.Tls.SaveProperty("UseMultiPulse" + IDname, cUseMultiPulse.ToString());
+            mf.Tls.SaveProperty("CountsRev" + IDname, cCountsRev.ToString());
+
+            mf.Tls.SaveProperty("ModuleID" + IDname, cModID.ToString());
+            mf.Tls.SaveProperty("SensorID" + IDname, cSenID.ToString());
+
+            mf.Tls.SaveProperty("OffRateAlarm" + IDname, cUseOffRateAlarm.ToString());
+            mf.Tls.SaveProperty("OffRateSetting" + IDname, cOffRateSetting.ToString());
+
+            mf.Tls.SaveProperty("MinUPM" + IDname, cMinUPM.ToString());
+            mf.Tls.SaveProperty("VariableRate" + IDname, cVariableRate.ToString());
+        }
+
         public bool SerialFromAruduino(string[] words, bool RealNano = true)
         {
             bool Result = false;    // return true if there is good comm
@@ -313,13 +446,13 @@ namespace RateController
         {
             if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected() & cHectaresPerMinute > 0)
             {
-                if (cRateSet > 0)
+                if (TargetRate() > 0)
                 {
-                    double Rt = RateApplied() / cRateSet;
+                    double Rt = RateApplied() / TargetRate();
 
-                    if (Rt >= .9 & Rt <= 1.1 & mf.Sections.SwitchOn(Switches.Auto))
+                    if (Rt >= .9 & Rt <= 1.1 & mf.SwitchBox.SwitchOn(SwIDs.Auto))
                     {
-                        return cRateSet;
+                        return TargetRate();
                     }
                     else
                     {
@@ -349,6 +482,20 @@ namespace RateController
             }
         }
 
+        public double TargetRate()
+        {
+            double Result = cRateSet;
+            if (VRconversion[cVariableRate] < 5)
+            {
+                double Percent = mf.VRdata.Rate(VRconversion[cVariableRate]);
+                if ((int)Percent != 255)
+                {
+                    Result = (double)Percent / 100.0 * cRateSet;
+                }
+            }
+            return Result;
+        }
+
         public double TargetUPM() // returns units per minute set rate
         {
             double V = 0;
@@ -356,22 +503,22 @@ namespace RateController
             {
                 case 0:
                     // acres
-                    V = cRateSet * cHectaresPerMinute * 2.47;
+                    V = TargetRate() * cHectaresPerMinute * 2.47;
                     break;
 
                 case 1:
                     // hectares
-                    V = cRateSet * cHectaresPerMinute;
+                    V = TargetRate() * cHectaresPerMinute;
                     break;
 
                 case 2:
                     // minutes
-                    V = cRateSet;
+                    V = TargetRate();
                     break;
 
                 default:
                     // hours
-                    V = cRateSet / 60;
+                    V = TargetRate() / 60;
                     break;
             }
             return V;
@@ -483,7 +630,7 @@ namespace RateController
         {
             if (CoverageUnits == 0)
             {
-                return (cWorkingWidth_cm/100) * 3.28;
+                return (cWorkingWidth_cm / 100) * 3.28;
             }
             else
             {
@@ -551,83 +698,6 @@ namespace RateController
                 // reset
                 LastAccQuantity = AccQuantity;
             }
-        }
-
-        public void Load()
-        {
-            double.TryParse(mf.Tls.LoadProperty("Coverage" + IDname), out Coverage);
-            byte.TryParse(mf.Tls.LoadProperty("CoverageUnits" + IDname), out CoverageUnits);
-
-            double.TryParse(mf.Tls.LoadProperty("TankRemaining" + IDname), out TankRemaining);
-            double.TryParse(mf.Tls.LoadProperty("QuantityApplied" + IDname), out cQuantityApplied);
-            byte.TryParse(mf.Tls.LoadProperty("QuantityUnits" + IDname), out QuantityUnits);
-            double.TryParse(mf.Tls.LoadProperty("LastAccQuantity" + IDname), out LastAccQuantity);
-
-            double.TryParse(mf.Tls.LoadProperty("RateSet" + IDname), out cRateSet);
-            double.TryParse(mf.Tls.LoadProperty("FlowCal" + IDname), out FlowCal);
-            double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out TankSize);
-            byte.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), out ValveType);
-            Enum.TryParse(mf.Tls.LoadProperty("cSimulationType" + IDname), true, out cSimulationType);
-
-            cProductName = mf.Tls.LoadProperty("ProductName" + IDname);
-
-            byte.TryParse(mf.Tls.LoadProperty("KP" + IDname), out PIDtoArduino.KP);
-            byte.TryParse(mf.Tls.LoadProperty("PIDMinPWM" + IDname), out PIDtoArduino.MinPWM);
-            byte.TryParse(mf.Tls.LoadProperty("PIDLowMax" + IDname), out PIDtoArduino.LowMax);
-
-            byte.TryParse(mf.Tls.LoadProperty("PIDHighMax" + IDname), out PIDtoArduino.HighMax);
-            byte.TryParse(mf.Tls.LoadProperty("PIDdeadband" + IDname), out PIDtoArduino.DeadBand);
-            byte.TryParse(mf.Tls.LoadProperty("PIDbrakepoint" + IDname), out PIDtoArduino.BrakePoint);
-
-            bool.TryParse(mf.Tls.LoadProperty("UseMultiPulse" + IDname), out cUseMultiPulse);
-            int.TryParse(mf.Tls.LoadProperty("CountsRev" + IDname), out cCountsRev);
-
-            int tmp;
-            int.TryParse(mf.Tls.LoadProperty("SensorID" + IDname), out tmp);
-            SensorID = (byte)tmp;
-
-            tmp = 0;
-            int.TryParse(mf.Tls.LoadProperty("ModuleID" + IDname), out tmp);
-            ModuleID = (byte)tmp;
-
-            bool.TryParse(mf.Tls.LoadProperty("OffRateAlarm" + IDname), out cUseOffRateAlarm);
-            double.TryParse(mf.Tls.LoadProperty("MinUPM" + IDname), out cMinUPM);
-        }
-
-        public void Save()
-        {
-            mf.Tls.SaveProperty("Coverage" + IDname, Coverage.ToString());
-            mf.Tls.SaveProperty("CoverageUnits" + IDname, CoverageUnits.ToString());
-
-            mf.Tls.SaveProperty("TankRemaining" + IDname, TankRemaining.ToString());
-            mf.Tls.SaveProperty("QuantityApplied" + IDname, cQuantityApplied.ToString());
-            mf.Tls.SaveProperty("QuantityUnits" + IDname, QuantityUnits.ToString());
-            mf.Tls.SaveProperty("LastAccQuantity" + IDname, LastAccQuantity.ToString());
-
-            mf.Tls.SaveProperty("RateSet" + IDname, cRateSet.ToString());
-            mf.Tls.SaveProperty("FlowCal" + IDname, FlowCal.ToString());
-            mf.Tls.SaveProperty("TankSize" + IDname, TankSize.ToString());
-            mf.Tls.SaveProperty("ValveType" + IDname, ValveType.ToString());
-            mf.Tls.SaveProperty("cSimulationType" + IDname, cSimulationType.ToString());
-
-            mf.Tls.SaveProperty("ProductName" + IDname, cProductName);
-
-            mf.Tls.SaveProperty("KP" + IDname, PIDtoArduino.KP.ToString());
-            mf.Tls.SaveProperty("PIDMinPWM" + IDname, PIDtoArduino.MinPWM.ToString());
-            mf.Tls.SaveProperty("PIDLowMax" + IDname, PIDtoArduino.LowMax.ToString());
-
-            mf.Tls.SaveProperty("PIDHighMax" + IDname, PIDtoArduino.HighMax.ToString());
-            mf.Tls.SaveProperty("PIDdeadband" + IDname, PIDtoArduino.DeadBand.ToString());
-            mf.Tls.SaveProperty("PIDbrakepoint" + IDname, PIDtoArduino.BrakePoint.ToString());
-
-            mf.Tls.SaveProperty("UseMultiPulse" + IDname, cUseMultiPulse.ToString());
-            mf.Tls.SaveProperty("CountsRev" + IDname, cCountsRev.ToString());
-
-            mf.Tls.SaveProperty("ModuleID" + IDname, cModID.ToString());
-            mf.Tls.SaveProperty("SensorID" + IDname, cSenID.ToString());
-
-            mf.Tls.SaveProperty("OffRateAlarm" + IDname, cUseOffRateAlarm.ToString());
-            mf.Tls.SaveProperty("MinUPM" + IDname, cMinUPM.ToString());
         }
     }
 }

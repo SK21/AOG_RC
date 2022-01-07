@@ -351,15 +351,6 @@
   <data name="lgUPMTarget" xml:space="preserve">
     <value>doelwaarde eenheden/min</value>
   </data>
-  <data name="lgUsePID" xml:space="preserve">
-    <value>gebruik PID</value>
-  </data>
-  <data name="lgUseVCN" xml:space="preserve">
-    <value>gebruik VCN</value>
-  </data>
-  <data name="lgVCNexplination" xml:space="preserve">
-    <value>uitleg VCN</value>
-  </data>
   <data name="lgVersionDate" xml:space="preserve">
     <value>versiedatum</value>
   </data>

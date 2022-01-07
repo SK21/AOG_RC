@@ -144,20 +144,26 @@ namespace RateController
         {
             if (Data.Length > 1)
             {
-                PGN = Data[0] << 8 | Data[1];
+                PGN = Data[0] << 8 | Data[1];   // AGIO big endian
                 if (PGN == 32897)
                 {
                     // AGIO
-                    // AutoSteer AGIO PGN
                     switch (Data[3])
                     {
-                        case 0xFE:
+                        case 254:
+                            // AutoSteer AGIO PGN
                             mf.AutoSteerPGN.ParseByteData(Data);
+                            break;
+
+                        case 230:
+                            // vr data
+                            mf.VRdata.ParseByteData(Data);
                             break;
                     }
                 }
                 else
                 {
+                    PGN = Data[1] << 8 | Data[0];   // rc modules little endian
                     switch (PGN)
                     {
                         case 32618:
@@ -169,6 +175,10 @@ namespace RateController
                             {
                                 Prod.UDPcommFromArduino(Data);
                             }
+                            break;
+
+                        case 32621:
+                            mf.PressureData.ParseByteData(Data);
                             break;
                     }
                 }

@@ -1,35 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Media;
 
 namespace RateController
 {
     public class clsProducts
     {
         public IList<clsProduct> Items; // access records by index
+        private double AlarmSetPoint;
         private List<clsProduct> cProducts = new List<clsProduct>();
         private DateTime LastSave;
         private int MaxRecords = 5;
         private FormStart mf;
 
-        System.IO.Stream Str;
-        System.Media.SoundPlayer RateAlarm;
-
-        private double AlarmCounter;
-        private bool cAlarmOn;
-        private bool cPauseAlarm;
-        private bool cShowAlarm;
-
-        private double AlarmLevel = 0.75;
-
         public clsProducts(FormStart CallingForm)
         {
             mf = CallingForm;
             Items = cProducts.AsReadOnly();
+        }
 
-            Str = Properties.Resources.Loud_Alarm_Clock_Buzzer_Muk1984_493547174;
-            RateAlarm = new System.Media.SoundPlayer(Str);
+        public bool AlarmOn()
+        {
+            bool cAlarmOn = false;
+            for (int i = 0; i < MaxRecords; i++)
+            {
+                if ((cProducts[i].WorkRate() > 0) & (cProducts[i].UseOffRateAlarm))
+                {
+                    // too low?
+                    AlarmSetPoint = (100 - cProducts[i].OffRateSetting) / 100.0;
+                    if (cProducts[i].SmoothRate() < (cProducts[i].TargetRate() * AlarmSetPoint))
+                    {
+                        cAlarmOn = true;
+                        break;
+                    }
+
+                    // too high?
+                    AlarmSetPoint = (100 + cProducts[i].OffRateSetting) / 100.0;
+                    if (cProducts[i].SmoothRate() > (cProducts[i].TargetRate() * AlarmSetPoint))
+                    {
+                        cAlarmOn = true;
+                        break;
+                    }
+                }
+            }
+            return cAlarmOn;
         }
 
         public int Count()
@@ -122,49 +135,6 @@ namespace RateController
                 if (cProducts[i].ID == ProdID) return i;
             }
             return -1;
-        }
-
-        public bool PauseAlarm { set { cPauseAlarm = value; } }
-
-        public bool CheckAlarm()
-        {
-            cAlarmOn = false;
-            for (int i = 0; i < MaxRecords; i++)
-            {
-                if (cProducts[i].UseOffRateAlarm)
-                {
-                    if ((cProducts[i].SmoothRate() < (cProducts[i].RateSet * AlarmLevel)) & (cProducts[i].WorkRate() > 0))
-                    {
-                        cAlarmOn = true;
-                        break;
-                    }
-                }
-            }
-
-            if (cAlarmOn)
-            {
-                if (cPauseAlarm)
-                {
-                    RateAlarm.Stop();
-                }
-                else
-                {
-                    AlarmCounter++;
-                    if (AlarmCounter > 5)
-                    {
-                        RateAlarm.Play();
-                        cShowAlarm = true;
-                    }
-                }
-            }
-            else
-            {
-                AlarmCounter = 0;
-                RateAlarm.Stop();
-                cPauseAlarm = false;
-                cShowAlarm = false;
-            }
-            return cShowAlarm;
         }
     }
 }

@@ -27,6 +27,7 @@ namespace RateController
 
             lbProduct.Text = Lang.lgProduct;
             tc.TabPages[0].Text = Lang.lgRate;
+            tc.TabPages[1].Text = Lang.lgControl;
             tc.TabPages[2].Text = Lang.lgOptions;
             tc.TabPages[3].Text = Lang.lgDiagnostics;
             tc.TabPages[4].Text = Lang.lgCalibrate;
@@ -38,7 +39,7 @@ namespace RateController
             lb1.Text = Lang.lgQuantity;
             lb2.Text = Lang.lgCoverage;
             lb4.Text = Lang.lgSensorCounts;
-            lb3.Text = Lang.lgTargetRate;
+            lb3.Text = Lang.lgBaseRate;
             lb6.Text = Lang.lgTankSize;
             lb7.Text = Lang.lgTank_Remaining;
             btnResetCoverage.Text = Lang.lgCoverage;
@@ -55,10 +56,7 @@ namespace RateController
             grpSensor.Text = Lang.lgSensorLocation;
             lbConID.Text = Lang.lgModuleID;
             label26.Text = Lang.lgSensorID;
-            grpSimulate.Text = Lang.lgSimulate;
-            rbNone.Text = Lang.lgSimulationOff;
-            rbVirtual.Text = Lang.lgVirtualNano;
-            rbReal.Text = Lang.lgRealNano;
+            ckSimulate.Text = Lang.lgSimulate;
 
             lb32.Text = Lang.lgUPMTarget;
             lb33.Text = Lang.lgUPMApplied;
@@ -100,8 +98,8 @@ namespace RateController
 
             Sec = new Label[] { sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10, sec11, sec12, sec13, sec14, sec15 };
 
-            PIDs = new TextBox[] { tbPIDkp, tbPIDMinPWM, tbPIDLowMax, tbPIDHighMax, tbPIDDeadBand, tbPIDBrakePoint };
-            for (int i = 0; i < 6; i++)
+            PIDs = new TextBox[] { tbPIDkp, tbPIDDeadBand, tbTimedAdjustment, tbPIDHighMax, tbPIDBrakePoint, tbPIDLowMax, tbPIDMinPWM };
+            for (int i = 0; i < 7; i++)
             {
                 PIDs[i].Tag = i;
 
@@ -223,12 +221,14 @@ namespace RateController
 
         private void btnPIDloadDefaults_Click(object sender, EventArgs e)
         {
-            tbPIDkp.Text = "100";
-            tbPIDHighMax.Text = "200";
+            tbPIDkp.Text = "50";
+            tbPIDHighMax.Text = "100";
             tbPIDBrakePoint.Text = "20";
-            tbPIDLowMax.Text = "100";
-            tbPIDMinPWM.Text = "70";
+            tbPIDLowMax.Text = "80";
+            tbPIDMinPWM.Text = "30";
             tbPIDDeadBand.Text = "4";
+            tbTimedAdjustment.Text = "0";
+            ckTimedResponse.Checked = false;
         }
 
         private void btnResetCoverage_Click(object sender, EventArgs e)
@@ -403,6 +403,8 @@ namespace RateController
             FlowCal.Text = mf.Products.Item(CurrentProduct).FlowCal.ToString("N1");
             TankSize.Text = mf.Products.Item(CurrentProduct).TankSize.ToString("N0");
             ValveType.SelectedIndex = mf.Products.Item(CurrentProduct).ValveType;
+            cbVR.SelectedIndex = mf.Products.Item(CurrentProduct).VariableRate;
+
             TankRemain.Text = mf.Products.Item(CurrentProduct).CurrentTankRemaining().ToString("N0");
 
             tbCountsRev.Text = (mf.Products.Item(CurrentProduct).CountsRev.ToString("N0"));
@@ -412,20 +414,7 @@ namespace RateController
             tbConID.Text = tmp;
 
             SelectedSimulation = mf.Products.Item(CurrentProduct).SimulationType;
-            switch (SelectedSimulation)
-            {
-                case SimType.VirtualNano:
-                    rbVirtual.Checked = true;
-                    break;
-
-                case SimType.RealNano:
-                    rbReal.Checked = true;
-                    break;
-
-                default:
-                    rbNone.Checked = true;
-                    break;
-            }
+            ckSimulate.Checked = (SelectedSimulation == SimType.VirtualNano);
 
             // PID
             tbPIDkp.Text = mf.Products.Item(CurrentProduct).PIDkp.ToString("N0");
@@ -436,6 +425,20 @@ namespace RateController
             tbPIDDeadBand.Text = mf.Products.Item(CurrentProduct).PIDdeadband.ToString("N0");
             tbPIDBrakePoint.Text = mf.Products.Item(CurrentProduct).PIDbrakepoint.ToString("N0");
 
+            byte temp = mf.Products.Item(CurrentProduct).PIDTimed;
+            if (temp == 0)
+            {
+                ckTimedResponse.Checked = false;
+                tbTimedAdjustment.Enabled = false;
+                tbTimedAdjustment.Text = "0";
+            }
+            else
+            {
+                ckTimedResponse.Checked = true;
+                tbTimedAdjustment.Enabled = true;
+                tbTimedAdjustment.Text = temp.ToString("N0");
+            }
+
             tbSenID.Text = mf.Products.Item(CurrentProduct).SensorID.ToString();
 
             rbSinglePulse.Checked = !(mf.Products.Item(CurrentProduct).UseMultiPulse);
@@ -445,40 +448,28 @@ namespace RateController
             byte.TryParse(tbPIDkp.Text, out tempB);
             if (tempB == 0)
             {
-                tbPIDkp.Text = "100";
-                tbPIDHighMax.Text = "200";
+                tbPIDkp.Text = "50";
+                tbPIDHighMax.Text = "100";
                 tbPIDBrakePoint.Text = "20";
-                tbPIDLowMax.Text = "100";
-                tbPIDMinPWM.Text = "70";
+                tbPIDLowMax.Text = "80";
+                tbPIDMinPWM.Text = "30";
                 tbPIDDeadBand.Text = "4";
+                tbTimedAdjustment.Text = "0";
+                ckTimedResponse.Checked = false;
 
                 SaveSettings();
             }
 
             tbMinUPM.Text = mf.Products.Item(CurrentProduct).MinUPM.ToString("N1");
             ckOffRate.Checked = mf.Products.Item(CurrentProduct).UseOffRateAlarm;
-        }
-
-        private void RadioButtonChanged(object sender, EventArgs e)
-        {
-            int Result;
-            RadioButton rb = sender as RadioButton;
-            if (rb != null)
-            {
-                if (rb.Checked)
-                {
-                    int.TryParse(rb.Tag.ToString(), out Result);
-                    if (SelectedSimulation != (SimType)Result) SetButtons(true);
-                    SelectedSimulation = (SimType)Result;
-                }
-            }
+            tbOffRate.Text = mf.Products.Item(CurrentProduct).OffRateSetting.ToString("N0");
         }
 
         private void RateSet_Enter(object sender, EventArgs e)
         {
             double tempD;
             double.TryParse(RateSet.Text, out tempD);
-            using (var form = new FormNumeric(0, 500, tempD))
+            using (var form = new FormNumeric(0, 50000, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -497,7 +488,7 @@ namespace RateController
         {
             double tempD;
             double.TryParse(RateSet.Text, out tempD);
-            if (tempD < 0 || tempD > 10000)
+            if (tempD < 0 || tempD > 50000)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -544,6 +535,8 @@ namespace RateController
 
             mf.Products.Item(CurrentProduct).ValveType = Convert.ToByte(ValveType.SelectedIndex);
 
+            mf.Products.Item(CurrentProduct).VariableRate = Convert.ToByte(cbVR.SelectedIndex);
+
             double.TryParse(TankRemain.Text, out tempD);
             mf.Products.Item(CurrentProduct).SetTankRemaining(tempD);
 
@@ -572,13 +565,14 @@ namespace RateController
             byte.TryParse(tbPIDBrakePoint.Text, out tempB);
             mf.Products.Item(CurrentProduct).PIDbrakepoint = tempB;
 
+            byte.TryParse(tbTimedAdjustment.Text, out tempB);
+            mf.Products.Item(CurrentProduct).PIDTimed = tempB;
+
             int.TryParse(tbCountsRev.Text, out tempInt);
             mf.Products.Item(CurrentProduct).CountsRev = tempInt;
 
             byte.TryParse(tbSenID.Text, out tempB);
             mf.Products.Item(CurrentProduct).SensorID = tempB;
-
-            mf.Products.Item(CurrentProduct).Save();
 
             mf.Products.Item(CurrentProduct).UseMultiPulse = (rbMultiPulse.Checked);
 
@@ -586,6 +580,11 @@ namespace RateController
             mf.Products.Item(CurrentProduct).MinUPM = tempD;
 
             mf.Products.Item(CurrentProduct).UseOffRateAlarm = ckOffRate.Checked;
+
+            byte.TryParse(tbOffRate.Text, out tempB);
+            mf.Products.Item(CurrentProduct).OffRateSetting = tempB;
+
+            mf.Products.Item(CurrentProduct).Save();
             }
 
             private void SetButtons(bool Edited)
@@ -691,10 +690,15 @@ namespace RateController
                     tbPIDLowMax.Enabled = false;
                     tbPIDBrakePoint.Text = "0";
                     tbPIDLowMax.Text = "0";
+                    ckTimedResponse.Enabled = false;
+                    ckTimedResponse.Checked = false;
                     break;
 
                 default:
                     // 0 standard valve, 1 fast close valve
+                    tbPIDBrakePoint.Enabled = true;
+                    tbPIDLowMax.Enabled = true;
+                    ckTimedResponse.Enabled = true;
                     break;
             }
         }
@@ -810,24 +814,28 @@ namespace RateController
             int index = (int)((TextBox)sender).Tag;
             int tmp;
             int max;
+            int min;
 
             switch (index)
             {
-                case 5:
-                    max = 90;
+                case 1:
+                    max = 10;
+                    min = 1;
                     break;
 
-                case 4:
-                    max = 10;
+                case 2:
+                    max = 255;
+                    min = 50;
                     break;
 
                 default:
-                    max = 255;
+                    max = 100;
+                    min = 1;
                     break;
             }
 
             int.TryParse(PIDs[index].Text, out tmp);
-            using (var form = new FormNumeric(0, max, tmp))
+            using (var form = new FormNumeric(min, max, tmp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -847,24 +855,28 @@ namespace RateController
             int index = (int)((TextBox)sender).Tag;
             int tmp;
             int max;
+            int min;
 
             switch (index)
             {
-                case 5:
-                    max = 90;
+                case 1:
+                    max = 10;
+                    min = 1;
                     break;
 
-                case 4:
-                    max = 10;
+                case 2:
+                    max = 255;
+                    min = 50;
                     break;
 
                 default:
-                    max = 255;
+                    max = 100;
+                    min = 1;
                     break;
             }
 
             int.TryParse(PIDs[index].Text, out tmp);
-            if (tmp < 0 || tmp > max)
+            if (tmp < min || tmp > max)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -1172,6 +1184,16 @@ namespace RateController
         private void ckOffRate_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+
+            if(ckOffRate.Checked)
+            {
+                tbOffRate.Enabled = true;
+            }
+            else
+            {
+                tbOffRate.Enabled = false;
+                tbOffRate.Text = "0";
+            }
         }
 
         private void tbMinUPM_TextChanged(object sender, EventArgs e)
@@ -1196,6 +1218,104 @@ namespace RateController
                     tbMinUPM.Text = form.ReturnValue.ToString();
                 }
             }
+        }
+
+        private void cbVR_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckTimedResponse_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+
+            if(ckTimedResponse.Checked)
+            {
+                tbTimedAdjustment.Enabled = true;
+            }
+            else
+            {
+                tbTimedAdjustment.Enabled = false;
+                tbTimedAdjustment.Text = "0";
+            }
+        }
+
+        private void tbOffRate_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbOffRate.Text, out tempD);
+            using (var form = new FormNumeric(0, 40, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbOffRate.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbOffRate_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbOffRate_Validating(object sender, CancelEventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbOffRate.Text, out tempInt);
+            if (tempInt < 0 || tempInt > 40)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void label33_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbs3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label44_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void swDown_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbWorkRateData_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ckSimulate_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+            if(ckSimulate.Checked)
+            {
+                SelectedSimulation = SimType.VirtualNano;
+            }
+            else
+            {
+                SelectedSimulation = SimType.None;
+            }
+        }
+
+        private void label28_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -17,6 +17,7 @@ namespace RateController
 
         public frmSections(FormStart CalledFrom)
         {
+            Initializing = true;
             InitializeComponent();
 
             #region // language
@@ -34,7 +35,6 @@ namespace RateController
             #endregion // language
 
             mf = CalledFrom;
-            Initializing = true;
             SetDayMode();
             UseInches = mf.UseInches;
         }
@@ -116,7 +116,7 @@ namespace RateController
                     case 2:
                         // switch
                         double.TryParse(val, out tempD);
-                        using (var form = new FormNumeric(1, 4, tempD))
+                        using (var form = new FormNumeric(1, 16, tempD))
                         {
                             var result = form.ShowDialog();
                             if (result == DialogResult.OK)
@@ -237,7 +237,7 @@ namespace RateController
 
                             case 2:
                                 // switch
-                                mf.Sections.Item(i).SwitchID = Convert.ToInt32(val) - 1;    // displayed as 1-4, saved as 0-3
+                                mf.Sections.Item(i).SwitchID = Convert.ToInt32(val) - 1;    // displayed as 1-16, saved as 0-15
                                 break;
                         }
                     }

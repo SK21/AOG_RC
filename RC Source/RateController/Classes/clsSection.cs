@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -13,7 +12,7 @@ namespace RateController
         private int cSwitchID = 0;
         private float cWidth = 0;   // cm
 
-        private int MaxSwitches = 4;
+        private int MaxSwitches = 16;
         private FormStart mf;
         private string Name;
 

@@ -6,31 +6,24 @@ namespace RateController
     public class PGN32613
     {
         // to Rate Controller from Arduino
-        //0	HeaderHi		    127
-        //1	HeaderLo		    101
-        //2 Mod/Sen ID         0-15/0-15
-        //3	rate applied Hi		100 X actual
-        //4	rate applied Lo
-        //5	acc.Quantity 3		100 X actual
-        //6	acc.Quantity 2
-        //7 acc.Quantity 1
-        //8 PWM Hi
-        //9 PWM Lo
+        //0	HeaderLo		    101
+        //1	HeaderHi		    127
+        //2 Mod/Sen ID          0-15/0-15
+        //3	rate applied Lo 	10 X actual
+        //4 rate applied Mid
+        //5	rate applied Hi
+        //6	acc.Quantity Lo		10 X actual
+        //7	acc.Quantity Mid
+        //8 acc.Quantity Hi
+        //9 PWM Lo              10 X actual
+        //10 PWM Hi
 
-        private const byte cByteCount = 10;
-        private const byte HeaderHi = 127;
+        private const byte cByteCount = 11;
         private const byte HeaderLo = 101;
+        private const byte HeaderHi = 127;
         private double cPWMsetting;
-
-        private byte pwmHI;
-        private byte pwmLo;
-        private byte QuantityB1;
-        private byte QuantityB2;
-        private byte QuantityB3;
-        private byte RateHi;
-        private byte RateLo;
-        private int Temp;
         private double cUPM;
+        private double cQuantity;
 
         clsProduct Prod;
 
@@ -44,7 +37,7 @@ namespace RateController
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
-            if (Data[0] == HeaderHi & Data[1] == HeaderLo & Data.Length >= cByteCount)
+            if (Data[1] == HeaderHi & Data[0] == HeaderLo & Data.Length >= cByteCount)
             {
                 int tmp = Prod.mf.Tls.ParseModID(Data[2]);
                 if (Prod.ModuleID == tmp)
@@ -52,21 +45,13 @@ namespace RateController
                     tmp = Prod.mf.Tls.ParseSenID(Data[2]);
                     if (Prod.SensorID == tmp)
                     {
-                        RateHi = Data[3];
-                        RateLo = Data[4];
-                        cUPM = (double)((Int16)(RateHi << 8 | RateLo)) / 100.0;
-
-                        QuantityB3 = Data[5];
-                        QuantityB2 = Data[6];
-                        QuantityB1 = Data[7];
-
-                        pwmHI = Data[8];
-                        pwmLo = Data[9];
-
-                        cPWMsetting = (double)((Int16)(pwmHI << 8 | pwmLo)) / 10.0; // 2s complement math
-
+                        cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 10.0;
+                        cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
+                        cPWMsetting = (Int16)(Data[10] << 8 | Data[9]) / 10.0;  // need to cast to 16 bit integer to preserve the sign bit
                         ReceiveTime = DateTime.Now;
                         Result = true;
+
+                        //CheckRate();
                     }
                 }
             }
@@ -75,16 +60,25 @@ namespace RateController
 
         public bool ParseStringData(string[] Data)
         {
+            byte pwmHi;
+            byte pwmLo;
+            byte QuantityLo;
+            byte QuantityMid;
+            byte QuantityHi;
+            byte RateHi;
+            byte RateMid;
+            byte RateLo;
+            int Temp;
             bool Result = false;
 
             if (Data.Length >= cByteCount)
             {
                 int.TryParse(Data[0], out Temp);
 
-                if (Temp == HeaderHi)
+                if (Temp == HeaderLo)
                 {
                     int.TryParse(Data[1], out Temp);
-                    if (Temp == HeaderLo)
+                    if (Temp == HeaderHi)
                     {
                         int.TryParse(Data[2], out Temp);
                         int tmp = Prod.mf.Tls.ParseModID((byte)Temp);
@@ -93,24 +87,28 @@ namespace RateController
                             tmp = Prod.mf.Tls.ParseSenID((byte)Temp);
                             if (Prod.SensorID == tmp)
                             {
-                                // rate applied, 100 X actual
-                                byte.TryParse(Data[3], out RateHi);
-                                byte.TryParse(Data[4], out RateLo);
-                                cUPM = (RateHi << 8 | RateLo) / 100.0;
+                                // rate applied, 10 X actual
+                                byte.TryParse(Data[3], out RateLo);
+                                byte.TryParse(Data[4], out RateMid);
+                                byte.TryParse(Data[5], out RateHi);
+                                cUPM = (RateHi << 16 | RateMid << 8 | RateLo) / 10.0;
 
                                 // accumulated quantity
-                                byte.TryParse(Data[5], out QuantityB3);
-                                byte.TryParse(Data[6], out QuantityB2);
-                                byte.TryParse(Data[7], out QuantityB1);
+                                byte.TryParse(Data[6], out QuantityLo);
+                                byte.TryParse(Data[7], out QuantityMid);
+                                byte.TryParse(Data[8], out QuantityHi);
+                                cQuantity = (QuantityHi << 16 | QuantityMid << 8 | QuantityLo) / 10.0;
 
                                 // pwmSetting
-                                byte.TryParse(Data[8], out pwmHI);
                                 byte.TryParse(Data[9], out pwmLo);
+                                byte.TryParse(Data[10], out pwmHi);
 
-                                cPWMsetting = (double)((Int16)(pwmHI << 8 | pwmLo)) / 10.0;
+                                cPWMsetting = (double)((Int16)(pwmHi << 8 | pwmLo)) / 10.0;
 
                                 ReceiveTime = DateTime.Now;
                                 Result = true;
+
+                                //CheckRate();
                             }
                         }
                     }
@@ -131,10 +129,7 @@ namespace RateController
 
         public double AccumulatedQuantity()
         {
-            Temp = QuantityB3 << 16;
-            Temp |= QuantityB2 << 8;
-            Temp |= QuantityB1;
-            return Temp / 100.0;
+            return cQuantity;
         }
 
         public bool Connected()
@@ -146,6 +141,23 @@ namespace RateController
             else
             {
                 return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
+            }
+        }
+
+        double Trate;
+        double Ratio;
+        void CheckRate()
+        {
+            Trate = Prod.TargetUPM();
+            if (Trate > 0 && cUPM > 0)
+            {
+                Ratio = Math.Abs((cUPM / Trate) - 1);
+                if (Ratio > 0.3)
+                {
+                    Prod.mf.Tls.WriteActivityLog("");
+                    Prod.mf.Tls.WriteActivityLog("Current rate: " + cUPM.ToString("N2") + ", Ave. rate: " + Trate.ToString("N2") + ", Ratio: " + Ratio.ToString("N2")
+                       + ", Quantity: " + cQuantity.ToString("N2") + ", PWM:" + cPWMsetting.ToString("N2"));
+                }
             }
         }
     }
