@@ -45,9 +45,20 @@ unsigned long LastRelaySend;
 bool RelayStatus[16];
 bool BitState;
 
+bool RelaysRemaining;   // relay messages left to send
+byte RelaysLoByte;
+byte RelaysHiByte;
+
 void SetRelays(byte LoByte, byte HiByte)
 {
-    if (millis() - LastRelaySend > 30)
+    if (!RelaysRemaining)
+    {
+        RelaysLoByte = LoByte;
+        RelaysHiByte = HiByte;
+        RelaysRemaining = true;
+    }
+
+    if (millis() - LastRelaySend > 30)  // do one relay at a time, 30 ms apart
     {
         LastRelaySend = millis();
         for (int i = 0; i < 16; i++)
@@ -58,11 +69,11 @@ void SetRelays(byte LoByte, byte HiByte)
             }
             else if (i < 8)
             {
-                BitState = bitRead(LoByte, i);
+                BitState = bitRead(RelaysLoByte, i);
             }
             else
             {
-                BitState = bitRead(HiByte, i - 8);
+                BitState = bitRead(RelaysHiByte, i - 8);
             }
 
             if (RelayStatus[i] != BitState)
@@ -71,13 +82,15 @@ void SetRelays(byte LoByte, byte HiByte)
                 RelayStatus[i] = BitState;
                 break;
             }
+
+            if (i == 15) RelaysRemaining = false;
         }
     }
 }
 
 void WriteRelay(byte ID, byte State)
 {
-    byte SendArray[] = { 1,6,0,ID,2 - State,0,CRC[2 * ID + 16 * State - 2],CRC[2 * ID + 16 * State - 1] };
+    byte SendArray[] = { 1,6,0,ID,(byte)(2 - State),0,CRC[2 * ID + 16 * State - 2],CRC[2 * ID + 16 * State - 1] };
     Serial1.write(SendArray, sizeof(SendArray));
 }
 #endif
