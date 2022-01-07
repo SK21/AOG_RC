@@ -1,4 +1,4 @@
-
+#if(UseRateControl)
 void CheckRelays()
 {
     if (WifiSwitchesEnabled)
@@ -80,4 +80,4 @@ void WriteRelay(byte ID, byte State)
     byte SendArray[] = { 1,6,0,ID,2 - State,0,CRC[2 * ID + 16 * State - 2],CRC[2 * ID + 16 * State - 1] };
     Serial1.write(SendArray, sizeof(SendArray));
 }
-
+#endif

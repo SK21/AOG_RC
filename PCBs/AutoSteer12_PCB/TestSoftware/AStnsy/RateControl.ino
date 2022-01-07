@@ -1,7 +1,7 @@
 #if(UseRateControl)
 void DoRate()
 {
-    ReceiveUDPrate();
+    ReceiveRateUDP();
     ReceiveWemos();
 
     if (millis() - RateLoopLast >= RateLoopTime)
@@ -26,7 +26,7 @@ void DoRate()
             ManualControl();
         }
     }
-    SendUDPrate();
+    SendRateUDP();
 }
 
 byte ParseModID(byte ID)

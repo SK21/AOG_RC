@@ -1,5 +1,5 @@
 #if(UseRateControl)
-void SendUDPrate()
+void SendRateUDP()
 {
 	//PGN32613 to Rate Controller from Arduino
 	//0	HeaderLo		101
@@ -48,7 +48,7 @@ void SendUDPrate()
 	UDPrate.endPacket();
 }
 
-void ReceiveUDPrate()
+void ReceiveRateUDP()
 {
 	//PGN32614 to Arduino from Rate Controller
 	//0	HeaderLo		102

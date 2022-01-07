@@ -9,7 +9,7 @@ void ReadSwitches()
 {
 	// steer switch		- low, steering on 
 	//					- high, steering off
-	
+
 	// guidanceStatus	- low, steering off
 	//					- high, steering on
 
@@ -17,8 +17,13 @@ void ReadSwitches()
 	{
 		// on off switch
 		SWpin = digitalRead(STEERSW_PIN);
+
 		if (SWpin == LOW && !Latched) SteerSwitch = SWpin;
-		if (SWpin == HIGH) Latched = false;
+		if (SWpin)
+		{
+			Latched = false;
+			SteerSwitch = SWpin;
+		}
 		switchByte = SteerSwitch << 1;
 	}
 	else if (steerConfig.SteerButton == 1)
@@ -85,27 +90,27 @@ void ReadSwitches()
 		}
 	}
 
-	//// pressure sensor
-	//if (steerConfig.PressureSensor)
-	//{
-	//	int16_t analogValue = analogRead(ANALOG_SENSOR_PIN);
+	// pressure sensor, 3.3V pin
+	if (steerConfig.PressureSensor)
+	{
+		int16_t analogValue = analogRead(PressureSensorPin);
 
-	//	// Calculations below do some assumptions, but we should be close?
-	//	// 0-250bar sensor 4-20ma with 150ohm 1V - 5V -> 62,5 bar/V
-	//	// 5v  / 1024 values -> 0,0048828125 V/bit
-	//	// 62,5 * 0,0048828125 = 0,30517578125 bar/count
-	//	// 1v = 0 bar = 204,8 counts
-	//	int16_t steeringWheelPressureReading = (analogValue - 204) * 0.30517578125;
+		// Calculations below do some assumptions, but we should be close?
+		// 0-250bar sensor 4-20ma with 150ohm 1V - 5V -> 62,5 bar/V
+		// 5v  / 1024 values -> 0,0048828125 V/bit
+		// 62,5 * 0,0048828125 = 0,30517578125 bar/count
+		// 1v = 0 bar = 204,8 counts
+		int16_t steeringWheelPressureReading = (analogValue - 204) * 0.30517578125;
 
-	//	// When the pressure sensor is reading pressure high enough, shut off
-	//	if (steeringWheelPressureReading >= steerConfig.PulseCountMax)
-	//	{
-	//		SteerSwitch = HIGH;
-	//		switchByte = SteerSwitch << 1;
-	//		SWprevious = LOW;
-	//		Latched = true;
-	//	}
-	//}
+		// When the pressure sensor is reading pressure high enough, shut off
+		if (steeringWheelPressureReading >= steerConfig.PulseCountMax)
+		{
+			SteerSwitch = HIGH;
+			switchByte = SteerSwitch << 1;
+			SWprevious = LOW;
+			Latched = true;
+		}
+	}
 
 	workSwitch = digitalRead(WORKSW_PIN);  // read work switch, Low on, High off
 	switchByte |= workSwitch;

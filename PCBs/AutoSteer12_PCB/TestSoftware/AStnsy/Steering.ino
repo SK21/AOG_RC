@@ -30,8 +30,8 @@ void DoSteering()
 
 		pwmDrive = 0;
 
-		// release steer motor 
-		digitalWrite(SteerSW_Relay, HIGH);
+		// release steer motor relay
+		digitalWrite(SteerSW_Relay, LOW);
 	}
 	else
 	{
@@ -56,8 +56,8 @@ void DoSteering()
 
 		if (steerConfig.MotorDriveDirection) pwmDrive *= -1;
 
-		// engage steer motor
-		digitalWrite(SteerSW_Relay, LOW);
+		// engage steer motor relay
+		digitalWrite(SteerSW_Relay, HIGH);
 	}
 
 	// pwm value out to motor
@@ -75,3 +75,34 @@ void DoSteering()
 	analogWrite(PWM1_PIN, pwmDrive * pwmDir);
 }
 
+void UpdateHeadingRoll()
+{
+#if(IMUtype == 1)
+	// BNO080x
+	if (myIMU.dataAvailable())
+	{
+		IMU_Heading = (myIMU.getYaw()) * 180.0 / PI; // Convert yaw / heading to degrees
+		IMU_Heading = -IMU_Heading; //BNO085 counter clockwise data to clockwise data
+		if (IMU_Heading < 0 && IMU_Heading >= -180) //Scale BNO085 yaw from [-180°;180°] to [0;360°]
+		{
+			IMU_Heading = IMU_Heading + 360;
+		}
+
+		if (SwapPitchRoll) //Adafruit library: roll is rotation around X axis
+		{
+			IMU_Roll = (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
+			IMU_Pitch = (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
+		}
+		else //Adafruit library: pitch is rotation around Y axis
+		{
+			IMU_Roll = (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
+			IMU_Pitch = (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
+		}
+
+		if (InvertRoll)
+		{
+			IMU_Roll *= -1.0; //Invert roll sign if needed
+		}
+	}
+#endif
+}

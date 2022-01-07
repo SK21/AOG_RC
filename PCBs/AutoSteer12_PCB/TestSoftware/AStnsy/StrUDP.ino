@@ -1,4 +1,4 @@
-void SendUDPwired()
+void SendSteerUDP()
 {
     // steer angle
     int16_t tmp = (int)(steerAngleActual * 100);
@@ -8,7 +8,7 @@ void SendUDPwired()
     // heading
     if (UseIMUheading && IMUtype != 0)
     {
-        tmp = (int)(IMUheading * 10);
+        tmp = (int)(IMU_Heading * 10);
     }
     else
     {
@@ -20,7 +20,7 @@ void SendUDPwired()
     // roll
     if (UseIMUroll && IMUtype != 0)
     {
-        tmp = (int)(IMUroll * 10);
+        tmp = (int)(IMU_Roll * 10);
     }
     else
     {
@@ -47,7 +47,7 @@ void SendUDPwired()
     UDPsteering.endPacket();
 }
 
-void ReceiveUDPwired()
+void ReceiveSteerUDP()
 {
     uint16_t len = UDPsteering.parsePacket();
     if (len > 13)
@@ -108,3 +108,4 @@ void ReceiveUDPwired()
         }
     }
 }
+

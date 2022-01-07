@@ -1,15 +1,7 @@
 #if(UseRateControl)
 volatile unsigned long Duration[SensorCount];
 volatile unsigned long PulseCount[SensorCount];
-float PPM[SensorCount];
 unsigned long LastPulse[SensorCount];
-
-float KalResult[SensorCount];
-float KalPC[SensorCount];
-float KalG[SensorCount];
-float KalP[] = { 1.0,1.0,1.0,1.0,1.0 };
-float KalVariance[] = { 0.01,0.01,0.01,0.01,0.01 };
-float KalProcess[] = { 0.005,0.005,0.005,0.005,0.005 };
 
 unsigned long TimedCounts[SensorCount];
 unsigned long RateInterval[SensorCount];
@@ -17,6 +9,13 @@ unsigned long RateTimeLast[SensorCount];
 
 unsigned long CurrentCount;
 unsigned long CurrentDuration;
+
+unsigned long PPM[SensorCount];		// pulse per minute * 100
+unsigned long Osum[SensorCount];
+unsigned long Omax[SensorCount];
+unsigned long Omin[SensorCount];
+byte Ocount[SensorCount];
+float Oave;
 
 void ISR0()
 {
@@ -49,14 +48,14 @@ void GetUPM()
 				if (RateInterval[i] > 200)
 				{
 					RateTimeLast[i] = millis();
-					PPM[i] = (60000.0 * (float)TimedCounts[i]) / (float)RateInterval[i];
+					PPM[i] = (6000000 * TimedCounts[i]) / RateInterval[i];	// 100 X actual
 					TimedCounts[i] = 0;
 				}
 			}
 			else
 			{
 				// high ms/pulse, use time for one pulse
-				PPM[i] = 60000.0 / (float)CurrentDuration;
+				PPM[i] = 6000000 / CurrentDuration;	// 100 X actual
 			}
 
 			LastPulse[i] = millis();
@@ -65,17 +64,28 @@ void GetUPM()
 
 		if (millis() - LastPulse[i] > 4000)	PPM[i] = 0;	// check for no flow
 
-		// Kalmen filter
-		KalPC[i] = KalP[i] + KalProcess[i];
-		KalG[i] = KalPC[i] / (KalPC[i] + KalVariance[i]);
-		KalP[i] = (1.0 - KalG[i]) * KalPC[i];
-		KalResult[i] = KalG[i] * (PPM[i] - KalResult[i]) + KalResult[i];
-		PPM[i] = KalResult[i];
+
+		// olympic average
+		Osum[i] += PPM[i];
+		if (PPM[i] > Omax[i]) Omax[i] = PPM[i];
+		if (PPM[i] < Omin[i]) Omin[i] = PPM[i];
+
+		Ocount[i]++;
+		if (Ocount[i] > 9)
+		{
+			Osum[i] -= Omax[i];
+			Osum[i] -= Omin[i];
+			Oave = (float)Osum[i] / 800.0;	// divide by 8 and divide by 100 
+			Osum[i] = 0;
+			Omax[i] = 0;
+			Omin[i] = 50000;
+			Ocount[i] = 0;
+		}
 
 		// units per minute
 		if (MeterCal[i] > 0)
 		{
-			UPM[i] = PPM[i] / MeterCal[i];
+			UPM[i] = Oave / MeterCal[i];
 		}
 		else
 		{

@@ -1,4 +1,4 @@
-17355244280683247
+17358474214963906
 Button_Switch_THT
 KSA_Tactile_SPST
 KSA http://www.ckswitches.com/media/1457/ksa_ksl.pdf
@@ -53264,6 +53264,13 @@ HR911105A-1
 14
 14
 MyFootprints
+KF142V-5.08-2P
+
+0
+0
+4
+2
+MyFootprints
 KF142V-5.08-4P
 
 0
@@ -69335,6 +69342,13 @@ https://www.usriot.com/download/WIFI/USR-C322-Hardware-Manual_V1.2.01.pdf
 0
 44
 44
+RS485-TTL-CONVERTER
+RS485-TTL-CONVERTER
+<b>RS485 to TTL converter</b> based on <b>MAX485</b> chip
+0
+0
+8
+8
 Relay_THT
 Relay_1-Form-A_Schrack-RYII_RM5mm
 Relay, 1-Form-A, Schrack-RYII, RM5mm, SPST-NO
@@ -71206,7 +71220,7 @@ DCU (R-PDSO-G8)
 8
 SamacSys_Parts
 SOT230P700X180-4N
-MIC79050-4.2YS
+SOT-223-
 0
 0
 4
