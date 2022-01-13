@@ -1,4 +1,284 @@
-17358474214963906
+17593631147297897
+AutoSteer12e
+BNO080_Outline
+
+
+0
+2
+0
+AutoSteer12e
+CMPS14_no_pins
+
+
+0
+0
+0
+AutoSteer12e
+CP_Elec_10x10.5
+SMD capacitor, aluminum electrolytic, Vishay 1010, 10.0x10.5mm, http://www.vishay.com/docs/28395/150crz.pdf
+capacitor electrolytic
+0
+2
+2
+AutoSteer12e
+C_0805_2012Metric
+Capacitor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf, https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator
+capacitor
+0
+2
+2
+AutoSteer12e
+DO-201AD-28
+DO-201AD
+Diode
+0
+2
+2
+AutoSteer12e
+DT1312PA
+DT13-12PA-1
+Connector
+0
+15
+15
+AutoSteer12e
+D_SMA
+Diode SMA (DO-214AC)
+Diode SMA (DO-214AC)
+0
+2
+2
+AutoSteer12e
+D_SOD-123F
+D_SOD-123F
+D_SOD-123F
+0
+2
+2
+AutoSteer12e
+Fuse_Holder_C3131
+
+
+0
+2
+2
+AutoSteer12e
+Grove
+
+
+0
+4
+4
+AutoSteer12e
+HF3FF0121ZST
+HF3FF/012-1ZST
+Relay or Contactor
+0
+5
+5
+AutoSteer12e
+HR911105A
+HR911105A-1
+Connector
+0
+14
+14
+AutoSteer12e
+KF142V-5.08-2P
+
+
+0
+4
+2
+AutoSteer12e
+KF142V-5.08-6P
+
+
+0
+12
+6
+AutoSteer12e
+MDD10A_Outline
+13Amp DC Motor Driver (MD13S)<br><br><br>Created by: Wai Weng
+
+0
+7
+1
+AutoSteer12e
+Maxim_Integrated-S8-2-0-P-MFG
+
+
+0
+8
+8
+AutoSteer12e
+MountingHole_3.2mm_M3
+Mounting Hole 3.2mm, no annular, M3
+mounting hole 3.2mm no annular m3
+0
+0
+0
+AutoSteer12e
+PinHeader_2x03_P2.00mm_Vertical
+Through hole straight pin header, 2x03, 2.00mm pitch, double rows
+Through hole pin header THT 2x03 2.00mm double row
+0
+6
+6
+AutoSteer12e
+PinSocket_1x06_P2.54mm_Vertical
+Through hole straight socket strip, 1x06, 2.54mm pitch, single row (from Kicad 4.0.7), script generated
+Through hole socket strip THT 1x06 2.54mm single row
+0
+6
+6
+AutoSteer12e
+PinSocket_1x08_P2.54mm_Vertical
+Through hole straight socket strip, 1x08, 2.54mm pitch, single row (from Kicad 4.0.7), script generated
+Through hole socket strip THT 1x08 2.54mm single row
+0
+8
+8
+AutoSteer12e
+PinSocket_1x09_P2.54mm_Vertical
+Through hole straight socket strip, 1x09, 2.54mm pitch, single row (from Kicad 4.0.7), script generated
+Through hole socket strip THT 1x09 2.54mm single row
+0
+9
+9
+AutoSteer12e
+PinSocket_1x10_P2.54mm_Vertical
+Through hole straight socket strip, 1x10, 2.54mm pitch, single row (from Kicad 4.0.7), script generated
+Through hole socket strip THT 1x10 2.54mm single row
+0
+10
+10
+AutoSteer12e
+PinSocket_1x15_P2.54mm_Vertical
+Through hole straight socket strip, 1x15, 2.54mm pitch, single row (from Kicad 4.0.7), script generated
+Through hole socket strip THT 1x15 2.54mm single row
+0
+15
+15
+AutoSteer12e
+Qwic_vertical
+JST SH series connector, BM04B-SRSS-TB (http://www.jst-mfg.com/product/pdf/eng/eSH.pdf), generated with kicad-footprint-generator
+connector JST SH side entry
+0
+6
+5
+AutoSteer12e
+QwiicLogo
+
+
+0
+0
+0
+AutoSteer12e
+R_1206_3216Metric
+Resistor SMD 1206 (3216 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator
+resistor
+0
+2
+2
+AutoSteer12e
+R_1210_3225Metric
+Resistor SMD 1210 (3225 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator
+resistor
+0
+2
+2
+AutoSteer12e
+SF_F9P_SMA_No_Pins
+
+
+0
+0
+0
+AutoSteer12e
+SMA(DO-214AC)
+Diode SMA (DO-214AC)
+Diode SMA (DO-214AC)
+0
+2
+2
+AutoSteer12e
+SOIC127P600X175-8N
+
+
+0
+8
+8
+AutoSteer12e
+SOIC254P960X420-4N
+
+
+0
+4
+4
+AutoSteer12e
+SOP50P310X90-8N
+DCU (R-PDSO-G8)
+Integrated Circuit
+0
+8
+8
+AutoSteer12e
+SOT-23
+SOT-23, Standard
+SOT-23
+0
+3
+3
+AutoSteer12e
+SOT-223
+module CMS SOT223 4 pins
+CMS SOT
+0
+4
+4
+AutoSteer12e
+SimpleRTK2B_no_pins
+Arduino UNO R3, http://www.mouser.com/pdfdocs/Gravitech_Arduino_Nano3_0.pdf
+Arduino UNO R3
+0
+0
+0
+AutoSteer12e
+TMPA1265SP-101MN-D
+Choke, SMD, 12x12mm 8mm height
+Choke SMD
+0
+2
+2
+AutoSteer12e
+TO263-5L
+
+
+0
+6
+6
+AutoSteer12e
+Teensy41_no_pins
+
+
+0
+0
+0
+AutoSteer12e
+WEMOS_D1_mini_light_no_pins
+16-pin module, column spacing 22.86 mm (900 mils), https://wiki.wemos.cc/products:d1:d1_mini, https://c1.staticflickr.com/1/734/31400410271_f278b087db_z.jpg
+ESP8266 WiFi microcontroller
+0
+0
+0
+AutoSteer12e
+ads1115_no_pins
+
+
+0
+0
+0
 Button_Switch_THT
 KSA_Tactile_SPST
 KSA http://www.ckswitches.com/media/1457/ksa_ksl.pdf
@@ -53306,13 +53586,6 @@ https://www.amazon.ca/Erayco-LM2596-Converter-3-0-40V-1-5-35V/dp/B07JNQFV7F/ref=
 6
 4
 MyFootprints
-MAX485ESA&plus_T
-
-0
-0
-8
-8
-MyFootprints
 MD13S
 13Amp DC Motor Driver (MD13S)<br><br><br>Created by: Wai Weng
 0
@@ -53333,13 +53606,6 @@ MDD10A_Outline
 0
 7
 1
-MyFootprints
-MEZD71201AG
-MEZD71201A-G-2
-0
-0
-3
-3
 MyFootprints
 MODULE_ESP32-DEVKITC-32D
 
@@ -53558,6 +53824,20 @@ SF_F9P_SMA_No_Pins
 0
 0
 MyFootprints
+SL43-E3&slash_57T
+
+0
+0
+2
+2
+MyFootprints
+SMA(DO-214AC)
+Diode SMA (DO-214AC)
+0
+0
+2
+2
+MyFootprints
 SOIC127P600X175-8N
 
 0
@@ -53579,19 +53859,19 @@ MIC79050-4.2YS
 4
 4
 MyFootprints
+SS32-E3&slash_57T
+
+0
+0
+2
+2
+MyFootprints
 SS7188VANF
 SS-7188V-A-NF-2
 0
 0
 8
 8
-MyFootprints
-SSOP-16_208MIL
-
-0
-0
-16
-16
 MyFootprints
 STMicroelectronics-L78M05ABDT-TR-MFG
 
@@ -53788,13 +54068,6 @@ mEZD71201A
 0
 3
 3
-MyFootprints
-max3485eesa&plus_T
-
-0
-0
-8
-8
 NetTie
 NetTie-2_SMD_Pad0.5mm
 Net tie, 2 pin, 0.5mm square SMD pads
@@ -54824,13 +55097,6 @@ Oscillator_SeikoEpson_SG-8002DC
 0
 4
 4
-PJ-080BH
-CUI_PJ-080BH
-
-0
-0
-6
-6
 Package_BGA
 Analog_BGA-28_4.0x6.25mm_Layout4x7_P0.8mm_Ball0.45mm_Pad0.4
 Analog BGA-28 4.0mm x 6.25mm package, pitch 0.4mm pad, based on https://www.analog.com/media/en/technical-documentation/data-sheets/8063fa.pdf
@@ -69342,13 +69608,6 @@ https://www.usriot.com/download/WIFI/USR-C322-Hardware-Manual_V1.2.01.pdf
 0
 44
 44
-RS485-TTL-CONVERTER
-RS485-TTL-CONVERTER
-<b>RS485 to TTL converter</b> based on <b>MAX485</b> chip
-0
-0
-8
-8
 Relay_THT
 Relay_1-Form-A_Schrack-RYII_RM5mm
 Relay, 1-Form-A, Schrack-RYII, RM5mm, SPST-NO
@@ -71211,6 +71470,13 @@ SHDR4W110P0X500_1X4_2000X1280X1205P
 0
 4
 4
+SamacSys_Parts
+SOIC127P600X175-8N
+-8 so
+0
+0
+8
+8
 SamacSys_Parts
 SOP50P310X90-8N
 DCU (R-PDSO-G8)
