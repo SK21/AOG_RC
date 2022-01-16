@@ -14,8 +14,8 @@ void SendRateUDP()
 	//9 PWM Lo
 	//10 PWM Hi
 
-	RateSend[0] = 127;
-	RateSend[1] = 101;
+	RateSend[0] = 101;
+	RateSend[1] = 127;
 
 	RateSend[2] = BuildModSenID(ModuleID, 0);
 

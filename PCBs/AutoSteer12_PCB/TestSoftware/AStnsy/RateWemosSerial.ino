@@ -10,6 +10,7 @@ void ReceiveWemos()
 		PGN = MSB << 8 | LSB;
 		LSB = MSB;
 		PGN32619Found = (PGN == 32619);
+		Serial.println(PGN);
 	}
 	if (Serial1.available() > 2 && PGN32619Found)
 	{

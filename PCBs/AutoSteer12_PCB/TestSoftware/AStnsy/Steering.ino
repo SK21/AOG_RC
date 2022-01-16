@@ -1,7 +1,8 @@
+
 void DoSteering()
 {
 	//************** Steering Angle ******************
-	adc.setMux(AdsWAS);
+	adc.setMux(0x4000);
 	steeringPosition = adc.getConversion();
 	steeringPosition = (steeringPosition >> 1);			//bit shift by 2  0 to 13610 is 0 to 5v
 	adc.triggerConversion();		//ADS1115 Single Mode 
@@ -30,7 +31,7 @@ void DoSteering()
 
 		pwmDrive = 0;
 
-		// release steer motor relay
+		// release steer motor 
 		digitalWrite(SteerSW_Relay, LOW);
 	}
 	else
@@ -56,7 +57,7 @@ void DoSteering()
 
 		if (steerConfig.MotorDriveDirection) pwmDrive *= -1;
 
-		// engage steer motor relay
+		// engage steer motor
 		digitalWrite(SteerSW_Relay, HIGH);
 	}
 
@@ -75,7 +76,10 @@ void DoSteering()
 	analogWrite(PWM1_PIN, pwmDrive * pwmDir);
 }
 
-void UpdateHeadingRoll()
+float tmpIMU;
+float HeadingLast;
+
+void ReadIMU()
 {
 #if(IMUtype == 1)
 	// BNO080x
@@ -87,22 +91,77 @@ void UpdateHeadingRoll()
 		{
 			IMU_Heading = IMU_Heading + 360;
 		}
+		IMU_Heading *= 10.0;
 
 		if (SwapPitchRoll) //Adafruit library: roll is rotation around X axis
 		{
-			IMU_Roll = (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
-			IMU_Pitch = (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
+			tmpIMU = 10 * (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
+			if (InvertRoll) tmpIMU *= -1.0;
+			IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
+
+			tmpIMU = 10 * (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
+			IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
 		}
 		else //Adafruit library: pitch is rotation around Y axis
 		{
-			IMU_Roll = (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
-			IMU_Pitch = (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
+			tmpIMU = 10 * (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
+			if (InvertRoll) tmpIMU *= -1.0;
+			IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
+
+			tmpIMU = 10 * (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
+			IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
 		}
 
-		if (InvertRoll)
-		{
-			IMU_Roll *= -1.0; //Invert roll sign if needed
-		}
+#if(EnableGyro)
+		tmpIMU = -10 * (myIMU.getGyroZ()) * 180.0 / PI;
+		IMU_YawRate = IMU_YawRate * 0.8 + tmpIMU * 0.2;
+#endif
 	}
 #endif
+
+#if(IMUtype == 2)
+	// CMPS14
+	int16_t temp = 0;
+
+	//the heading x10
+	Wire.beginTransmission(CMPS14_ADDRESS);
+	Wire.write(0x02);
+	Wire.endTransmission();
+
+	Wire.requestFrom(CMPS14_ADDRESS, 3);
+	while (Wire.available() < 3);
+
+	IMU_Heading = Wire.read() << 8 | Wire.read();
+
+	//3rd byte pitch
+	IMU_Pitch = Wire.read();
+
+	//roll
+	Wire.beginTransmission(CMPS14_ADDRESS);
+	Wire.write(0x1C);
+	Wire.endTransmission();
+
+	Wire.requestFrom(CMPS14_ADDRESS, 2);
+	while (Wire.available() < 2);
+
+	tmpIMU = int16_t(Wire.read() << 8 | Wire.read());
+
+	//Complementary filter
+	IMU_Roll = 0.9 * IMU_Roll + 0.1 * tmpIMU;
+
+	//Get the Z gyro
+	Wire.beginTransmission(CMPS14_ADDRESS);
+	Wire.write(0x16);
+	Wire.endTransmission();
+
+	Wire.requestFrom(CMPS14_ADDRESS, 2);
+	while (Wire.available() < 2);
+
+	tmpIMU = int16_t(Wire.read() << 8 | Wire.read());
+
+	//Complementary filter
+	IMU_YawRate = 0.93 * IMU_YawRate + 0.07 * tmpIMU;
+
+#endif
 }
+

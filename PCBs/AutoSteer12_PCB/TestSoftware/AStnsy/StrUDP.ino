@@ -6,7 +6,7 @@ void SendSteerUDP()
     AOG[6] = tmp >> 8;
 
     // heading
-    if (UseIMUheading && IMUtype != 0)
+    if (ReceiverType == 0 && IMUtype != 0)
     {
         tmp = (int)(IMU_Heading * 10);
     }
@@ -18,7 +18,7 @@ void SendSteerUDP()
     AOG[8] = tmp >> 8;
 
     // roll
-    if (UseIMUroll && IMUtype != 0)
+    if (ReceiverType == 0 && IMUtype != 0)
     {
         tmp = (int)(IMU_Roll * 10);
     }

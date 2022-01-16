@@ -4,32 +4,23 @@
 #include <NativeEthernetUdp.h>
 #include <Watchdog_t4.h>	// https://github.com/tonton81/WDT_T4
 #include "BNO08x_AOG.h"		// https://github.com/Math-51/Autosteer_USB_4.3.10_BN08x
-#include "NMEAParserX.h"	// adapted from https://github.com/Glinnes/NMEAParser
-#include "zADS1115.h"	
+#include "zADS1115.h"		
+#include "zNMEAParser.h"	
 
-# define InoDescription "AStnsy  :  07-Jan-2022"
-// for use with Teensy 4.1 and AS12 pcb
+# define InoDescription "AStnsy  :  16-Jan-2022"
+// for use with Teensy 4.1 and AS12 PCB
 
 // user settings ****************************
 #define ReceiverType 1		// 0 None, 1 SimpleRTK2B, 2 SparkFun F9P
-#define UsePanda 0
 #define Hz_Per_KMH 25.5		// 25.5 Hz/KMH = 41.0 Hz/MPH, depends on sensor  
 
-#define IMUtype	1			// 0 None, 1 SparkFun BNO08x, CMPS14
-#define UseIMUheading 1		
-#define UseIMUroll	1		
+#define IMUtype	1			// 0 None, 1 SparkFun BNO08x, 2 CMPS14
+#define EnableGyro 0
 #define SwapPitchRoll 1		// 0 use roll value for roll, 1 use pitch value for roll
 #define InvertRoll  0
 
 #define MinSpeed  1
 #define MaxSpeed  15
-
-// Wheel angle sensor
-// ADS1115_REG_CONFIG_MUX_SINGLE_0 (0x4000)  // Single-ended AIN0
-// ADS1115_REG_CONFIG_MUX_SINGLE_1 (0x5000)  // Single-ended AIN1
-// ADS1115_REG_CONFIG_MUX_SINGLE_2 (0x6000)  // Single-ended AIN2
-// ADS1115_REG_CONFIG_MUX_SINGLE_3 (0x7000)  // Single-ended AIN3
-#define AdsWAS ADS1115_REG_CONFIG_MUX_SINGLE_0		// ADS1115 wheel angle sensor pin
 
 #define IPpart3 1	// ex: 192.168.IPpart3.255
 #define IPMac 73	// unique number for Arduino IP address and Mac part 6
@@ -48,7 +39,7 @@ const uint16_t  SendTime = 250;	// 4 hz, send data back to AGIO
 #define EEP_Ident 4410	// if not in eeprom, overwrite
 
 
-#define UseRateControl 0				
+#define UseRateControl 1				
 #define SensorCount 1
 #define ModuleID 0						// unique ID 0-15
 #define RelayOn LOW						// sections relays on signal 
@@ -57,6 +48,8 @@ const unsigned long RateLoopTime = 50;	//in msec = 20hz
 byte SwitchedPowerRelay = 255;			// # of relay always on, needed for some raven valves. Use 255 for none.
 
 // ******************************************
+
+ADS1115_lite adc(ADS1115_DEFAULT_ADDRESS);     
 
 WDT_T4<WDT1> wdt;
 
@@ -78,8 +71,6 @@ WDT_T4<WDT1> wdt;
 #define RS485SendEnable 27
 #define PressureSensorPin 25	// 3.3v
 
-ADS1115_lite adc(ADS1115_DEFAULT_ADDRESS);     
-
 // Receiver serial connection
 #if(ReceiverType==1)
 // simpleRTK2B
@@ -91,6 +82,10 @@ ADS1115_lite adc(ADS1115_DEFAULT_ADDRESS);
 // SparkFun F9P
 #define SerialRTCM Serial4	// RTCM
 #define SerialNMEA Serial5	// NMEA
+#endif
+
+#if(ReceiverType !=0)
+NMEAParser<2> parser;
 #endif
 
 // ethernet
@@ -113,16 +108,23 @@ uint8_t data[UDP_TX_PACKET_MAX_SIZE];  // Buffer For Receiving UDP Data
 EthernetUDP UDPgps;
 uint16_t UDPrtcmPort = 5432;	// local port to listen on for RTCM data
 
+
+//IMU
 #if(IMUtype == 1)
 	BNO080 myIMU;
 #define BNO08x_ADRESS 0x4B //Use 0x4A for Adafruit BNO085 board, use 0x4B for Sparkfun BNO080 board
 #define REPORT_INTERVAL 40 //Report interval in ms
 #endif
 
-//IMU
+#if(IMUtype == 2)
+#define CMPS14_ADDRESS 0x60 
+#endif
+
 float IMU_Heading = 0;
 float IMU_Roll = 0;
 float IMU_Pitch = 0;
+float IMU_YawRate = 0;
+
 
 //loop time variables in microseconds
 uint16_t  lastTime = LOOP_TIME;
@@ -252,10 +254,6 @@ byte FlowPin[] = { 26 };
 
 #endif
 
-#if(UsePanda)
-NMEAParser<2> parser;
-#endif
-
 void setup()
 {
 	// watchdog timer
@@ -263,17 +261,11 @@ void setup()
 	config.timeout = 20;
 	wdt.begin(config);
 
-	static char ReceiveBuffer[512];
-	SerialNMEA.addMemoryForRead(ReceiveBuffer, 512);
-
-	static char SendBuffer[512];
-	SerialRTCM.addMemoryForWrite(SendBuffer, 512);
+	static char ReceiveBuffer[100];
+	SerialNMEA.addMemoryForRead(ReceiveBuffer, 100);
 
 	pinMode(LED_BUILTIN, OUTPUT);
 	noTone(SpeedPulsePin);
-
-	//set up communication
-	Wire.begin();	// AS12 pcb, I2C on pins SCL 19, SDA 18
 
 	Serial.begin(38400);
 
@@ -326,6 +318,10 @@ void setup()
 	// GPS port
 	UDPgps.begin(UDPrtcmPort);
 
+	//set up communication
+	Wire.begin();			// I2C on pins SCL 19, SDA 18
+	Wire.setClock(400000); //Increase I2C data rate to 400kHz
+
 #if (IMUtype == 1)
 	//BNO085 init
 	Serial.println("Starting IMU ...");
@@ -337,8 +333,9 @@ void setup()
 	}
 	Serial.println("");
 
-	Wire.setClock(400000); //Increase I2C data rate to 400kHz
-
+#if(EnableGyro)
+	myIMU.enableGyro(REPORT_INTERVAL-1);
+#endif
 	myIMU.enableGameRotationVector(REPORT_INTERVAL); //Send data update every REPORT_INTERVAL in ms for BNO085
 
 	//Retrieve the getFeatureResponse report to check if Rotation vector report is corectly enable
@@ -351,11 +348,6 @@ void setup()
 	{
 		Serial.println(F("BNO08x init fails!!"));
 	}
-#endif
-
-#if(ReceiverType !=0)
-	SerialNMEA.begin(115200);
-	SerialRTCM.begin(115200);
 #endif
 
 	// ADS1115
@@ -377,6 +369,15 @@ void setup()
 	pinMode(RS485SendEnable, OUTPUT);
 	digitalWrite(RS485SendEnable, HIGH);
 
+#if(ReceiverType !=0)
+	SerialNMEA.begin(115200);
+	SerialRTCM.begin(115200);
+
+	parser.setErrorHandler(errorHandler);
+	parser.addHandler("G-GGA", GGA_Handler);
+	parser.addHandler("G-VTG", VTG_Handler);
+#endif
+
 #if(UseRateControl)
 	Serial.print("Module ID: ");
 	Serial.println(ModuleID);
@@ -384,12 +385,6 @@ void setup()
 	
 	attachInterrupt(digitalPinToInterrupt(Encoder_Pin), ISR0, FALLING);
 	UDPrate.begin(ListeningPortRate);
-#endif
-
-#if(UsePanda)
-	parser.setErrorHandler(errorHandler);
-	parser.addHandler("G-GGA", GGA_Handler);
-	parser.addHandler("G-VTG", VTG_Handler);
 #endif
 
 	Serial.println("");
@@ -411,20 +406,18 @@ void loop()
 	if (millis() - LastSend > SendTime)
 	{
 		LastSend = millis();
+
+#if (ReceiverType == 0)
+			ReadIMU();
+#endif
 		SendSteerUDP();
 	}
 
-#if(ReceiverType !=0)
-
-#if(UsePanda)
-	DoPanda();
-#else
-	RelayGPSData();
-#endif
-
-#endif
-
 	SendSpeedPulse();
+
+#if(ReceiverType !=0)
+	DoPanda();
+#endif
 
 #if(UseRateControl)
 	DoRate();
