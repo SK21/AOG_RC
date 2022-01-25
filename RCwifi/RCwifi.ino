@@ -1,10 +1,20 @@
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-#include <ESP8266WebServer.h>
-#include <ESP8266mDNS.h>
+# define InoDescription "RCwifi  :  25-Jan-2022"
+// used for remote section on/off to test if functional
+// for Wemos D1 mini Pro,  board: LOLIN(Wemos) D1 R2 & mini
+// OTA update from access point using Arduino IDE
 
-# define InoDescription "RCwifi  :  27-Dec-2021"
-// Wemos D1 mini Pro,  board: LOLIN(Wemos) D1 R2 & mini
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
+#include <ESP8266WebServer.h>
+#include <WiFiClient.h>
+
+ESP8266WebServer server(80);
+
+const char* ssid = "Switches";
+const char* password = "tractor99"; // needs to be at least 8 characters
 
 unsigned long BlinkTime;
 bool BlinkState;
@@ -16,26 +26,31 @@ byte SendByte;
 byte SendBit;
 
 unsigned long LoopTime;
-ESP8266WebServer server(80);
 String tmp;
+IPAddress apIP(192, 168, 4, 1);
 
 void setup()
 {
 	Serial.begin(38400);
 	delay(2000);
+	Serial.println("");
 	Serial.println(InoDescription);
 
-	pinMode(BUILTIN_LED, OUTPUT);
+	pinMode(LED_BUILTIN, OUTPUT);
 
 	WiFi.disconnect();
-	WiFi.softAP("Switches");
+	WiFi.mode(WIFI_AP);
+	WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
+	WiFi.softAP(ssid, password);
 
-	IPAddress myIP = WiFi.softAPIP();
-	Serial.print("AP IP address: ");
-	Serial.println(myIP);
+	MDNS.begin("esp8266", WiFi.softAPIP());
+	Serial.print("IP address: ");
+	Serial.println(WiFi.softAPIP());
+
+	StartOTA();
+
 	server.on("/", handleRoot);
 	server.on("/ButtonPressed", ButtonPressed);
-
 	server.begin();
 	Serial.println("HTTP server started");
 
@@ -47,6 +62,7 @@ void setup()
 
 void loop()
 {
+	ArduinoOTA.handle();
 	server.handleClient();
 	Blink();
 }
@@ -57,7 +73,7 @@ void Blink()
 	{
 		BlinkTime = millis();
 		BlinkState = !BlinkState;
-		digitalWrite(BUILTIN_LED, BlinkState);
+		digitalWrite(LED_BUILTIN, BlinkState);
 	}
 }
 
@@ -208,4 +224,3 @@ String GetPage1()
 
 	return st;
 }
-
