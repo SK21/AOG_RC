@@ -7,7 +7,7 @@
 #include "zADS1115.h"		
 #include "zNMEAParser.h"	
 
-# define InoDescription "AStnsy  :  16-Jan-2022"
+# define InoDescription "AStnsy  :  24-Jan-2022"
 // for use with Teensy 4.1 and AS12 PCB
 
 // user settings ****************************
@@ -40,8 +40,9 @@ const uint16_t  SendTime = 250;	// 4 hz, send data back to AGIO
 
 
 #define UseRateControl 1				
-#define SensorCount 1
 #define ModuleID 0						// unique ID 0-15
+#define SensorCount 1
+
 #define RelayOn LOW						// sections relays on signal 
 byte FlowOn[] = { LOW };				// on value for flowmeter or motor direction
 const unsigned long RateLoopTime = 50;	//in msec = 20hz

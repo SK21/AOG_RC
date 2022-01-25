@@ -15,7 +15,7 @@ unsigned long Osum[SensorCount];
 unsigned long Omax[SensorCount];
 unsigned long Omin[SensorCount];
 byte Ocount[SensorCount];
-float Oave;
+float Oave[SensorCount];
 
 void ISR0()
 {
@@ -75,7 +75,7 @@ void GetUPM()
 		{
 			Osum[i] -= Omax[i];
 			Osum[i] -= Omin[i];
-			Oave = (float)Osum[i] / 800.0;	// divide by 8 and divide by 100 
+			Oave[i] = (float)Osum[i] / 800.0;	// divide by 8 and divide by 100 
 			Osum[i] = 0;
 			Omax[i] = 0;
 			Omin[i] = 50000;
@@ -85,7 +85,7 @@ void GetUPM()
 		// units per minute
 		if (MeterCal[i] > 0)
 		{
-			UPM[i] = Oave / MeterCal[i];
+			UPM[i] = Oave[i] / MeterCal[i];
 		}
 		else
 		{
