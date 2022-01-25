@@ -1,4 +1,4 @@
-#if(ReceiverType !=0 && UsePanda)
+#if(ReceiverType !=0)
 
 const bool isLastSentenceGGA = true;
 const uint16_t DELAY_TIME = 40;  //how long after last sentence should imu sample   
@@ -6,8 +6,12 @@ bool isTriggered = false;
 uint32_t PandalastTime = DELAY_TIME;
 uint32_t currentTime = DELAY_TIME;
 
-void RelayCorrectionData()
+void DoPanda()
 {
+    // NMEA
+    if (SerialNMEA.available()) parser << SerialNMEA.read();
+
+    // RTCM
     int packetSize = UDPgps.parsePacket();
     if (packetSize)
     {
@@ -16,14 +20,8 @@ void RelayCorrectionData()
             SerialRTCM.write(UDPgps.read());
         }
     }
-}
 
-void DoPanda()
-{
-    RelayCorrectionData();
-
-    if (SerialNMEA.available()) parser << SerialNMEA.read();
-
+    // IMU
     currentTime = millis();
     if (isTriggered && currentTime - PandalastTime > DELAY_TIME)
     {
@@ -112,59 +110,20 @@ void VTG_Handler()
 int16_t Ptemp;
 void imuHandler()
 {
-#if(IMUtype == 1)   // SparkFun BNO08x
-    UpdateHeadingRoll();
-    Ptemp = (int16_t)(IMU_Heading * 10);
+    ReadIMU();
+
+    Ptemp = (int16_t)IMU_Heading;
     itoa(Ptemp, imuHeading, 10);
 
-    Ptemp = (int16_t)(IMU_Roll * 10);
+    Ptemp = (int16_t)IMU_Roll;
     itoa(Ptemp, imuRoll, 10);
 
-    Ptemp = (int16_t)(IMU_Pitch * 10);
+    Ptemp = (int16_t)IMU_Pitch;
     itoa(Ptemp, imuPitch, 10);
-#endif
 
-#if(IMUtype == 2)   // CMPS14
-    int16_t temp = 0;
-
-    //the heading x10
-    Wire.beginTransmission(CMPS14_ADDRESS);
-    Wire.write(0x02);
-    Wire.endTransmission();
-
-    Wire.requestFrom(CMPS14_ADDRESS, 3);
-    while (Wire.available() < 3);
-
-    temp = Wire.read() << 8 | Wire.read();
-    itoa(temp, imuHeading, 10);
-
-    //3rd byte pitch
-    int8_t pitch = Wire.read();
-    itoa(pitch, imuPitch, 10);
-
-
-    //the roll x10
-    Wire.beginTransmission(CMPS14_ADDRESS);
-    Wire.write(0x1C);
-    Wire.endTransmission();
-
-    Wire.requestFrom(CMPS14_ADDRESS, 2);
-    while (Wire.available() < 2);
-
-    temp = Wire.read() << 8 | Wire.read();
-    itoa(temp, imuRoll, 10);
-
-    ////IMU gyro
-    //Wire.beginTransmission(CMPS14_ADDRESS);
-    //Wire.write(0x16);
-    //Wire.endTransmission();
-
-    //Wire.requestFrom(CMPS14_ADDRESS, 2);
-    //while (Wire.available() < 2);
-
-    //YawRate
-    temp = (int16_t)kalGyro;
-    itoa(temp, imuYawRate, 10);
+#if(EnableGyro)
+    Ptemp = (int16_t)IMU_YawRate;
+    itoa(Ptemp, imuYawRate, 10);
 #endif
 }
 
@@ -234,7 +193,6 @@ void BuildPANDA(void)
     PandalastTime = millis();
     isTriggered = true;
 
-    //SerialGPS.print(nme);
     UDPgps.beginPacket(AGIOip, AGIOport);
     UDPgps.write(nme);
     UDPgps.endPacket();

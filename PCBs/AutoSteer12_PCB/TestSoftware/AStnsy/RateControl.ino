@@ -25,8 +25,8 @@ void DoRate()
         {
             ManualControl();
         }
-    }
     SendRateUDP();
+    }
 }
 
 byte ParseModID(byte ID)
