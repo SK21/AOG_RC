@@ -1,11 +1,13 @@
 #include <Adafruit_MCP23X17.h>
 #include <EtherCard.h>
 
-# define InoDescription "RCnano  :  30-Dec-2021"
+# define InoDescription "RCnano  :  23-Jan-2022"
 
 // user settings ****************************
 #define CommType 1                  // 0 Serial USB, 1 UDP wired 
 #define ModuleID 0			        // unique ID 0-15
+#define SensorCount 1
+
 #define IPMac 110			        // unique number for Arduino IP address and Mac part 6, 0-255
 #define IPpart3 1			        // ex: 192.168.IPpart3.255, 0-255
 const unsigned long LOOP_TIME = 50; //in msec = 20hz
@@ -13,7 +15,6 @@ const unsigned long LOOP_TIME = 50; //in msec = 20hz
 #define UseMCP23017 1               // 0 use Nano pins for relays, 1 use MCP23017 to control relays
 byte FlowOn[] = {LOW, LOW};		    // on value for flowmeter or motor direction
 #define RelayOn LOW             
-#define SensorCount 1
 
 // 0 use the defined relay as a normal relay
 // 1 use the defined relay as a switched power pin - turns on when sketch starts, required for some Raven valves
