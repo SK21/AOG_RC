@@ -44,14 +44,15 @@ namespace RateController
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto))
             {
                 // auto rate
-                Tmp = Prod.MinUPM * 10.0;
-                if ((Prod.TargetUPM() * 10.0) > Tmp) Tmp = Prod.TargetUPM() * 10.0;
+                Tmp = Prod.TargetUPM() * 10.0;
+                if (Tmp < (Prod.MinUPM * 10.0)) Tmp = Prod.MinUPM * 10.0;
             }
             else
             {
                 // manual rate
                 Tmp = (Prod.ManualRateFactor * 10.0);
             }
+
             cData[5] = (byte)Tmp;
             cData[6] = (byte)((int)Tmp >> 8);
             cData[7] = (byte)((int)Tmp >> 16);

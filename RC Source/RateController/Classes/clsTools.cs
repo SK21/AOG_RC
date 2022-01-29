@@ -12,11 +12,11 @@ namespace RateController
     {
         private static Hashtable ht;
         private string cAppName = "RateController";
-        private string cAppVersion = "2.1.15";
+        private string cAppVersion = "2.1.16";
         private string cPropertiesFile;
 
         private string cSettingsDir;
-        private string cVersionDate = "30-Dec-2021";
+        private string cVersionDate = "23-Jan-2022";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)

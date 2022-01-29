@@ -187,7 +187,7 @@
     <value>Disconnect</value>
   </data>
   <data name="lgEqual" xml:space="preserve">
-    <value>= Sec 1</value>
+    <value>=1</value>
   </data>
   <data name="lgHectares" xml:space="preserve">
     <value>Hectares</value>

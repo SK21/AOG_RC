@@ -30,7 +30,7 @@ namespace RateController
         private int StepDelay = 1000;   // ms between adjustments
 
         // sent back to AOG
-        private byte OutCommand;
+        private byte OutCommand;    // see PGN234, byte 5
 
         private byte OutLast;
         private byte[] SectionOnFromAOG = new byte[2];

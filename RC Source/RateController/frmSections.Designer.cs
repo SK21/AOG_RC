@@ -29,10 +29,10 @@ namespace RateController
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSections));
             this.DGV = new System.Windows.Forms.DataGridView();
             this.sectionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -71,15 +71,15 @@ namespace RateController
             this.switchDataGridViewTextBoxColumn});
             this.DGV.DataMember = "Table1";
             this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.NullValue = "<dbnull>";
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.NullValue = "<dbnull>";
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle4;
             this.DGV.Location = new System.Drawing.Point(15, 15);
             this.DGV.Margin = new System.Windows.Forms.Padding(6);
             this.DGV.Name = "DGV";
@@ -94,18 +94,18 @@ namespace RateController
             // sectionDataGridViewTextBoxColumn
             // 
             this.sectionDataGridViewTextBoxColumn.DataPropertyName = "Section";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
             this.sectionDataGridViewTextBoxColumn.HeaderText = "Section";
             this.sectionDataGridViewTextBoxColumn.Name = "sectionDataGridViewTextBoxColumn";
             // 
             // widthDataGridViewTextBoxColumn
             // 
             this.widthDataGridViewTextBoxColumn.DataPropertyName = "Width";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle10.Format = "N0";
-            dataGridViewCellStyle10.NullValue = null;
-            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = null;
+            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
             this.widthDataGridViewTextBoxColumn.HeaderText = "Width";
             this.widthDataGridViewTextBoxColumn.Name = "widthDataGridViewTextBoxColumn";
             // 
@@ -113,8 +113,8 @@ namespace RateController
             // 
             this.switchDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.switchDataGridViewTextBoxColumn.DataPropertyName = "Switch";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.switchDataGridViewTextBoxColumn.HeaderText = "Switch";
             this.switchDataGridViewTextBoxColumn.Name = "switchDataGridViewTextBoxColumn";
             // 
@@ -158,8 +158,8 @@ namespace RateController
             this.btnEqual.Name = "btnEqual";
             this.btnEqual.Size = new System.Drawing.Size(115, 72);
             this.btnEqual.TabIndex = 15;
-            this.btnEqual.Text = " = Sec 1";
-            this.btnEqual.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnEqual.Text = "=1";
+            this.btnEqual.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEqual.UseVisualStyleBackColor = true;
             this.btnEqual.Click += new System.EventHandler(this.button1_Click);
             // 

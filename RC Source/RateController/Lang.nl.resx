@@ -181,7 +181,7 @@
     <value>verbreken</value>
   </data>
   <data name="lgEqual" xml:space="preserve">
-    <value>gelijk</value>
+    <value>=1</value>
   </data>
   <data name="lgHectares" xml:space="preserve">
     <value>hectare</value>

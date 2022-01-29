@@ -59,7 +59,7 @@ namespace RateController
                 {
                     for (int j = 0; j < 8; j++)
                     {
-                        SW[5 + j + (i - 1) * 8] = mf.Tls.BitRead(Data[i + 3], j);
+                        SW[5 + j + i * 8] = mf.Tls.BitRead(Data[i + 3], j);
                     }
                 }
 
@@ -85,10 +85,10 @@ namespace RateController
                 for (int i = 0; i < cByteCount; i++)
                 {
                     Dt[i] = 0;
-                    byte.TryParse(Data[i], out Dt[i]);
-                    Result = ParseByteData(Dt);
+                    Result = byte.TryParse(Data[i], out Dt[i]);
                 }
             }
+            if (Result) Result = ParseByteData(Dt);
 
             return Result;
         }

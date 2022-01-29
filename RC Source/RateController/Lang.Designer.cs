@@ -268,7 +268,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to = Sec 1.
+        ///   Looks up a localized string similar to =1.
         /// </summary>
         internal static string lgEqual {
             get {

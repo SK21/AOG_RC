@@ -1,6 +1,8 @@
-#include <EtherCard.h>
+# define InoDescription "SWarduino  :  28-Jan-2022"
+// to control switches on pcb SW1 or pcb SW2
+// Nano board
 
-# define InoDescription "SWarduino  :  26-Nov-2021"
+#include <EtherCard.h>
 
 // user settings ****************************
 
@@ -116,17 +118,17 @@ void loop()
 
 		// read switches
 		// toSend[2]
-		Pins[4] = !digitalRead(AutoPin);			// 1
-		Pins[5] = !digitalRead(MasterOnPin);		// 2
-		Pins[6] = !digitalRead(MasterOffPin);	// 4
-		Pins[7] = !digitalRead(RateUpPin);		// 8
-		Pins[8] = !digitalRead(RateDownPin);		// 16
+		Pins[0] = !digitalRead(AutoPin);			
+		Pins[1] = !digitalRead(MasterOnPin);		
+		Pins[2] = !digitalRead(MasterOffPin);	
+		Pins[3] = !digitalRead(RateUpPin);		
+		Pins[4] = !digitalRead(RateDownPin);		
 
 		// toSend[3]
-		Pins[0] = !digitalRead(SW0pin);			// 1
-		Pins[1] = !digitalRead(SW1pin);			// 2
-		Pins[2] = !digitalRead(SW2pin);			// 4
-		Pins[3] = !digitalRead(SW3pin);			// 8
+		Pins[5] = !digitalRead(SW0pin);			
+		Pins[6] = !digitalRead(SW1pin);			
+		Pins[7] = !digitalRead(SW2pin);			
+		Pins[8] = !digitalRead(SW3pin);			
 
 
 		// build data
@@ -135,12 +137,12 @@ void loop()
 
 		for (int i = 0; i < 5; i++)
 		{
-			if (Pins[i + 4]) toSend[2] = toSend[2] | (1 << i);
+			if (Pins[i]) toSend[2] = toSend[2] | (1 << i);
 		}
 
 		for (int i = 0; i < 4; i++)
 		{
-			if (Pins[i]) toSend[3] = toSend[3] | (1 << i);
+			if (Pins[i+5]) toSend[3] = toSend[3] | (1 << i);
 		}
 
 		// PGN 32618
@@ -151,10 +153,10 @@ void loop()
 #endif
 
 		// send serial
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			Serial.print(toSend[i]);
-			if (i < 3) Serial.print(",");
+			if (i < 4) Serial.print(",");
 		}
 		Serial.println();
 		Serial.flush();
@@ -169,4 +171,3 @@ String IPadd(byte Address[])
 {
 	return String(Address[0]) + "." + String(Address[1]) + "." + String(Address[2]) + "." + String(Address[3]);
 }
-

@@ -43,7 +43,6 @@ namespace RateController
         private float PulseTime = 0;
 
         private float pwmSetting;
-        private float RandomError;
         private float rateError;
         private int RateInterval;
         private float rateSetPoint;
