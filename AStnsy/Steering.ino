@@ -1,11 +1,62 @@
 
+// based on https://github.com/RalphBacon/ADS1115-ADC/blob/master/ADS1115_ADC_16_bit_SingleEnded.ino
+
+uint16_t ReadAds1115(byte NextPinNumber = 0)
+{
+	// read current value
+	Wire.beginTransmission(AdsI2Caddress);
+	Wire.write(0b00000000); //Point to Conversion register 
+	Wire.endTransmission();
+	Wire.requestFrom(AdsI2Caddress, 2);
+	uint16_t convertedValue = (Wire.read() << 8 | Wire.read());
+
+
+	// do next conversion
+	Wire.beginTransmission(AdsI2Caddress);
+	Wire.write(0b00000001); // Point to Config Register
+
+	// Write the MSB + LSB of Config Register
+	// MSB: Bits 15:8
+	// Bit  15    0=No effect, 1=Begin Single Conversion (in power down mode)
+	// Bits 14:12   How to configure A0 to A3 (comparator or single ended)
+	// Bits 11:9  Programmable Gain 000=6.144v 001=4.096v 010=2.048v .... 111=0.256v
+	// Bits 8     0=Continuous conversion mode, 1=Power down single shot
+	switch (NextPinNumber)
+	{
+		// single ended
+	case 1:
+		Wire.write(0b01010000);	// AIN1
+		break;
+	case 2:
+		Wire.write(0b01100000);	// AIN2
+		break;
+	case 3:
+		Wire.write(0b01110000);	// AIN3
+		break;
+	default:
+		Wire.write(0b01000000);	// AIN0
+		break;
+	}
+
+	// LSB: Bits 7:0
+	// Bits 7:5 Data Rate (Samples per second) 000=8, 001=16, 010=32, 011=64,
+	//      100=128, 101=250, 110=475, 111=860
+	// Bit  4   Comparator Mode 0=Traditional, 1=Window
+	// Bit  3   Comparator Polarity 0=low, 1=high
+	// Bit  2   Latching 0=No, 1=Yes
+	// Bits 1:0 Comparator # before Alert pin goes high
+	//      00=1, 01=2, 10=4, 11=Disable this feature
+	Wire.write(0b00000011);
+	Wire.endTransmission();
+
+	return convertedValue;
+}
+
 void DoSteering()
 {
 	//************** Steering Angle ******************
-	adc.setMux(0x4000);
-	steeringPosition = adc.getConversion();
+	steeringPosition = ReadAds1115();
 	steeringPosition = (steeringPosition >> 1);			//bit shift by 2  0 to 13610 is 0 to 5v
-	adc.triggerConversion();		//ADS1115 Single Mode 
 
 	//convert position to steer angle. 32 counts per degree of steer pot position in my case
 	//  ***** make sure that negative steer angle makes a left turn and positive value is a right turn *****
@@ -164,4 +215,3 @@ void ReadIMU()
 
 #endif
 }
-

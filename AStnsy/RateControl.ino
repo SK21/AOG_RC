@@ -7,15 +7,14 @@ void DoRate()
     if (millis() - RateLoopLast >= RateLoopTime)
     {
         RateLoopLast = millis();
-        GetUPM();
+        CheckRelays();
 
         for (int i = 0; i < SensorCount; i++)
         {
             FlowEnabled[i] = (millis() - RateCommTime[i] < 4000) && (RateSetting[i] > 0);
         }
 
-        CheckRelays();
-        AdjustFlow();
+        GetUPM();
 
         if (AutoOn)
         {
@@ -25,7 +24,8 @@ void DoRate()
         {
             ManualControl();
         }
-    SendRateUDP();
+        AdjustFlow();
+        SendRateUDP();
     }
 }
 

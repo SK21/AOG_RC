@@ -32,6 +32,7 @@ void ReadSwitches()
 		// pin is pulled high and goes low when button is pushed
 
 		SWreading = digitalRead(STEERSW_PIN);
+
 		if (SWreading == LOW && SWprevious == HIGH && millis() - SWtime > SWdebounce)
 		{
 			if (SteerSwitch == HIGH)

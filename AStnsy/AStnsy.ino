@@ -1,4 +1,4 @@
-# define InoDescription "AStnsy  :  24-Jan-2022"
+# define InoDescription "AStnsy  :  23-Feb-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 and AS12 PCB
 
@@ -8,11 +8,10 @@
 #include <NativeEthernetUdp.h>
 #include <Watchdog_t4.h>	// https://github.com/tonton81/WDT_T4
 #include "BNO08x_AOG.h"		// https://github.com/Math-51/Autosteer_USB_4.3.10_BN08x
-#include "zADS1115.h"		
 #include "zNMEAParser.h"	
 
 // user settings ****************************
-#define ReceiverType 1		// 0 None, 1 SimpleRTK2B, 2 SparkFun F9P
+#define ReceiverType 0		// 0 None, 1 SimpleRTK2B, 2 SparkFun F9P
 #define Hz_Per_KMH 25.5		// 25.5 Hz/KMH = 41.0 Hz/MPH, depends on sensor  
 
 #define IMUtype	1			// 0 None, 1 SparkFun BNO08x, 2 CMPS14
@@ -50,8 +49,7 @@ const unsigned long RateLoopTime = 50;	//in msec = 20hz
 byte SwitchedPowerRelay = 255;			// # of relay always on, needed for some raven valves. Use 255 for none.
 
 // ******************************************
-
-ADS1115_lite adc(ADS1115_DEFAULT_ADDRESS);     
+#define AdsI2Caddress 0x48
 
 WDT_T4<WDT1> wdt;
 
@@ -66,12 +64,13 @@ WDT_T4<WDT1> wdt;
 #define SteerSW_Relay 2	
 #define WORKSW_PIN 30	
 #define STEERSW_PIN 31	
-#define Encoder_Pin 26		
+#define Encoder_Pin 38		
 #define CurrentSensorPin 10
 
 #define SpeedPulsePin 11
-#define RS485SendEnable 27
 #define PressureSensorPin 25	// 3.3v
+#define RS485SendEnable 27
+#define SerialRS485 Serial7
 
 // Receiver serial connection
 #if(ReceiverType==1)
@@ -261,8 +260,10 @@ void setup()
 	config.timeout = 20;
 	wdt.begin(config);
 
+#if (ReceiverType !=0)
 	static char ReceiveBuffer[100];
 	SerialNMEA.addMemoryForRead(ReceiveBuffer, 100);
+#endif
 
 	pinMode(LED_BUILTIN, OUTPUT);
 	noTone(SpeedPulsePin);
@@ -355,15 +356,16 @@ void setup()
 	Serial.println("Starting ADS ...");
 	while (!ADSfound)
 	{
-		ADSfound = adc.testConnection();
+		Wire.beginTransmission(AdsI2Caddress);
+		Wire.write(0b00000000);	//Point to Conversion register
+		Wire.endTransmission();
+		Wire.requestFrom(AdsI2Caddress, 2);
+		ADSfound = Wire.available();
 		Serial.print(".");
 		delay(500);
 	}
 	Serial.println("");
 	Serial.println("ADS connected.");
-
-	adc.setSampleRate(ADS1115_REG_CONFIG_DR_128SPS); //128 samples per second
-	adc.setGain(ADS1115_REG_CONFIG_PGA_6_144V);
 
 	// RS485
 	pinMode(RS485SendEnable, OUTPUT);
@@ -378,12 +380,16 @@ void setup()
 	parser.addHandler("G-VTG", VTG_Handler);
 #endif
 
+	SerialRS485.begin(9600);
+
 #if(UseRateControl)
-	Serial.print("Module ID: ");
+	Serial.println("");
+	Serial.print("Rate Module ID: ");
 	Serial.println(ModuleID);
 	Serial.println();
-	
-	attachInterrupt(digitalPinToInterrupt(Encoder_Pin), ISR0, FALLING);
+
+	pinMode(FlowPin[0], INPUT_PULLUP);
+	attachInterrupt(digitalPinToInterrupt(FlowPin[0]), ISR0, FALLING);
 	UDPrate.begin(ListeningPortRate);
 
 	RateSend[0] = 101;

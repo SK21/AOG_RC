@@ -53,7 +53,7 @@ void ReceiveRateUDP()
 	//4	relay Hi		8 - 15
 	//5	rate set Lo		10 X actual
 	//6 rate set Mid
-	//7	rate set Hi		10 X actual
+	//7	rate set Hi		
 	//8	Flow Cal Lo		100 X actual
 	//9	Flow Cal Hi		
 	//10	Command
@@ -91,7 +91,7 @@ void ReceiveRateUDP()
 					MeterCal[SensorID] = (float)tmp * 0.01;
 
 					// command byte
-					InCommand = data[10];
+					InCommand = RateData[10];
 					if ((InCommand & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
 
 					ControlType[SensorID] = 0;
@@ -122,13 +122,13 @@ void ReceiveRateUDP()
 				byte SensorID = ParseSenID(tmp);
 				if (SensorID == 0)
 				{
-					PIDkp[SensorID] = data[3];
-					PIDminPWM[SensorID] = data[4];
-					PIDLowMax[SensorID] = data[5];
-					PIDHighMax[SensorID] = data[6];
-					PIDdeadband[SensorID] = data[7];
-					PIDbrakePoint[SensorID] = data[8];
-					AdjustTime[SensorID] = data[9];
+					PIDkp[SensorID] = RateData[3];
+					PIDminPWM[SensorID] = RateData[4];
+					PIDLowMax[SensorID] = RateData[5];
+					PIDHighMax[SensorID] = RateData[6];
+					PIDdeadband[SensorID] = RateData[7];
+					PIDbrakePoint[SensorID] = RateData[8];
+					AdjustTime[SensorID] = RateData[9];
 				}
 			}
 		}
