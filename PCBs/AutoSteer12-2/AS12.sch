@@ -4,8 +4,8 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title "AS12"
-Date "2022-01-09"
+Title "AS12-2"
+Date "2022-02-11"
 Rev ""
 Comp ""
 Comment1 ""
@@ -452,8 +452,6 @@ Wire Wire Line
 	7900 5150 7900 4900
 Wire Wire Line
 	7900 4900 7850 4900
-Wire Wire Line
-	5400 1900 5400 3850
 Connection ~ 7500 5850
 Wire Wire Line
 	7500 5400 8050 5400
@@ -865,24 +863,8 @@ Connection ~ 3750 2900
 Wire Wire Line
 	3400 4150 3200 4150
 Wire Wire Line
-	3200 4150 3200 2600
+	3200 4150 3200 3100
 Connection ~ 3200 2300
-Connection ~ 5400 3850
-$Comp
-L power:GND #PWR016
-U 1 1 61E960B4
-P 4500 3650
-F 0 "#PWR016" H 4500 3400 50  0001 C CNN
-F 1 "GND" H 4550 3500 50  0000 C CNN
-F 2 "" H 4500 3650 50  0001 C CNN
-F 3 "" H 4500 3650 50  0001 C CNN
-	1    4500 3650
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4300 3750 4300 3650
-Wire Wire Line
-	4300 3650 4500 3650
 Wire Wire Line
 	3050 4150 3200 4150
 Connection ~ 3200 4150
@@ -890,8 +872,6 @@ Wire Wire Line
 	3050 4050 3050 3450
 Wire Wire Line
 	3050 3450 4650 3450
-Wire Wire Line
-	4300 3850 4650 3850
 NoConn ~ 3050 4350
 NoConn ~ 3050 4450
 $Comp
@@ -977,7 +957,7 @@ L MyLib:HF3FF_012-1ZST K1
 U 1 1 620F7DE0
 P 10050 6250
 F 0 "K1" H 10600 6515 50  0000 C CNN
-F 1 "HF3FF_012-1ZST" H 10600 6424 50  0000 C CNN
+F 1 "HF3FF_005-1ZST" H 10600 6424 50  0000 C CNN
 F 2 "MyFootprints:HF3FF0121ZST" H 11000 6350 50  0001 L CNN
 F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 11000 6250 50  0001 L CNN
 F 4 "Relay: electromagnetic; SPDT; Ucoil: 12VDC; 10A/277VAC; 10A/28VDC" H 11000 6150 50  0001 L CNN "Description"
@@ -1037,7 +1017,6 @@ Wire Wire Line
 Connection ~ 10150 6050
 NoConn ~ 5600 3750
 NoConn ~ 7800 3750
-NoConn ~ 4300 3950
 NoConn ~ 4300 4050
 NoConn ~ 4300 4150
 NoConn ~ 4300 4250
@@ -1063,19 +1042,17 @@ $EndComp
 Wire Wire Line
 	3050 4250 3150 4250
 Wire Wire Line
-	3150 4250 3150 2700
+	3150 4250 3150 3150
 Connection ~ 3150 4250
 Wire Wire Line
 	3150 4250 3400 4250
 Connection ~ 3150 2350
-Connection ~ 3150 2700
 Wire Wire Line
 	3150 2700 3150 2350
 Wire Wire Line
 	3150 2700 3750 2700
 Wire Wire Line
 	3150 2350 3950 2350
-Connection ~ 3200 2600
 Wire Wire Line
 	3200 2600 3200 2300
 Wire Wire Line
@@ -1091,17 +1068,6 @@ F 1 "CMPS14" H 2742 4544 50  0000 C CNN
 F 2 "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Vertical" H 2850 4250 50  0001 C CNN
 F 3 "~" H 2850 4250 50  0001 C CNN
 	1    2850 4250
-	-1   0    0    -1  
-$EndComp
-$Comp
-L Connector:Conn_01x08_Female J6
-U 1 1 62638104
-P 4100 4050
-F 0 "J6" H 3992 4535 50  0000 C CNN
-F 1 "BNO080_right" H 3992 4444 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 4100 4050 50  0001 C CNN
-F 3 "~" H 4100 4050 50  0001 C CNN
-	1    4100 4050
 	-1   0    0    -1  
 $EndComp
 $Comp
@@ -1319,7 +1285,7 @@ Connection ~ 9300 1400
 Wire Wire Line
 	9300 1400 9300 1750
 $Comp
-L AS12-rescue:CH70120CB3PR-MyLib U4
+L MyLib:CH70120CB3PR U4
 U 1 1 61C4A961
 P 3300 7050
 F 0 "U4" H 3300 6469 50  0000 C CNN
@@ -3658,11 +3624,6 @@ Wire Wire Line
 Wire Wire Line
 	5300 3300 5300 5400
 Wire Wire Line
-	4650 3850 4650 3450
-Connection ~ 4650 3850
-Wire Wire Line
-	4650 3850 5400 3850
-Wire Wire Line
 	2500 2450 2500 3250
 Wire Wire Line
 	2500 3250 5300 3250
@@ -3849,8 +3810,6 @@ Wire Wire Line
 Wire Wire Line
 	5400 5500 4500 5500
 Connection ~ 5400 5500
-Wire Wire Line
-	5400 3850 5400 5500
 Wire Wire Line
 	5550 2550 5550 5550
 NoConn ~ 5000 6400
@@ -4051,4 +4010,53 @@ Text Notes 600  2350 0    50   ~ 0
 25
 Text Notes 600  2450 0    50   ~ 0
 26
+Wire Wire Line
+	5150 2600 5150 3100
+Wire Wire Line
+	5150 3100 3200 3100
+Connection ~ 5150 2600
+Wire Wire Line
+	5200 2700 5200 3150
+Wire Wire Line
+	5200 3150 3150 3150
+Connection ~ 5200 2700
+Connection ~ 5400 3850
+Wire Wire Line
+	5400 3850 5400 5500
+Wire Wire Line
+	5400 1900 5400 3850
+Wire Wire Line
+	4650 3850 5400 3850
+Connection ~ 4650 3850
+Wire Wire Line
+	4650 3850 4650 3450
+$Comp
+L Connector:Conn_01x08_Female J6
+U 1 1 62638104
+P 4100 4050
+F 0 "J6" H 3992 4535 50  0000 C CNN
+F 1 "BNO080_right" H 3992 4444 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 4100 4050 50  0001 C CNN
+F 3 "~" H 4100 4050 50  0001 C CNN
+	1    4100 4050
+	-1   0    0    -1  
+$EndComp
+NoConn ~ 4300 3950
+Wire Wire Line
+	4300 3850 4650 3850
+Wire Wire Line
+	4300 3650 4500 3650
+Wire Wire Line
+	4300 3750 4300 3650
+$Comp
+L power:GND #PWR016
+U 1 1 61E960B4
+P 4500 3650
+F 0 "#PWR016" H 4500 3400 50  0001 C CNN
+F 1 "GND" H 4550 3500 50  0000 C CNN
+F 2 "" H 4500 3650 50  0001 C CNN
+F 3 "" H 4500 3650 50  0001 C CNN
+	1    4500 3650
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

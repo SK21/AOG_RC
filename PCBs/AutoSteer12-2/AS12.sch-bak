@@ -4,8 +4,8 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title "AS12"
-Date "2022-01-09"
+Title "AS12-2"
+Date "2022-02-11"
 Rev ""
 Comp ""
 Comment1 ""
@@ -865,7 +865,7 @@ Connection ~ 3750 2900
 Wire Wire Line
 	3400 4150 3200 4150
 Wire Wire Line
-	3200 4150 3200 2600
+	3200 4150 3200 3100
 Connection ~ 3200 2300
 Connection ~ 5400 3850
 $Comp
@@ -977,7 +977,7 @@ L MyLib:HF3FF_012-1ZST K1
 U 1 1 620F7DE0
 P 10050 6250
 F 0 "K1" H 10600 6515 50  0000 C CNN
-F 1 "HF3FF_012-1ZST" H 10600 6424 50  0000 C CNN
+F 1 "HF3FF_005-1ZST" H 10600 6424 50  0000 C CNN
 F 2 "MyFootprints:HF3FF0121ZST" H 11000 6350 50  0001 L CNN
 F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 11000 6250 50  0001 L CNN
 F 4 "Relay: electromagnetic; SPDT; Ucoil: 12VDC; 10A/277VAC; 10A/28VDC" H 11000 6150 50  0001 L CNN "Description"
@@ -1063,19 +1063,17 @@ $EndComp
 Wire Wire Line
 	3050 4250 3150 4250
 Wire Wire Line
-	3150 4250 3150 2700
+	3150 4250 3150 3150
 Connection ~ 3150 4250
 Wire Wire Line
 	3150 4250 3400 4250
 Connection ~ 3150 2350
-Connection ~ 3150 2700
 Wire Wire Line
 	3150 2700 3150 2350
 Wire Wire Line
 	3150 2700 3750 2700
 Wire Wire Line
 	3150 2350 3950 2350
-Connection ~ 3200 2600
 Wire Wire Line
 	3200 2600 3200 2300
 Wire Wire Line
@@ -4051,4 +4049,14 @@ Text Notes 600  2350 0    50   ~ 0
 25
 Text Notes 600  2450 0    50   ~ 0
 26
+Wire Wire Line
+	5150 2600 5150 3100
+Wire Wire Line
+	5150 3100 3200 3100
+Connection ~ 5150 2600
+Wire Wire Line
+	5200 2700 5200 3150
+Wire Wire Line
+	5200 3150 3150 3150
+Connection ~ 5200 2700
 $EndSCHEMATC
