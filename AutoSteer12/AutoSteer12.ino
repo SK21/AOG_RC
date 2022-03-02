@@ -1,4 +1,4 @@
-# define InoDescription "AStnsy  :  23-Feb-2022"
+# define InoDescription "AutoSteer12   02-Mar-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 and AS12 PCB
 
@@ -11,11 +11,14 @@
 #include "zNMEAParser.h"	
 
 // user settings ****************************
-#define ReceiverType 0		// 0 None, 1 SimpleRTK2B, 2 SparkFun F9P
+#define ReceiverType 1		// 0 None, 1 SimpleRTK2B, 2 SparkFun F9P
 #define Hz_Per_KMH 25.5		// 25.5 Hz/KMH = 41.0 Hz/MPH, depends on sensor  
 
-#define IMUtype	1			// 0 None, 1 SparkFun BNO08x, 2 CMPS14
 #define EnableGyro 0
+#define IMUtype	1			// 0 None, 1 SparkFun BNO08x, 2 CMPS14
+#define IMU_Delay 90		// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
+#define isLastSentenceGGA  true
+
 #define SwapPitchRoll 1		// 0 use roll value for roll, 1 use pitch value for roll
 #define InvertRoll  0
 
@@ -66,9 +69,9 @@ WDT_T4<WDT1> wdt;
 #define STEERSW_PIN 31	
 #define Encoder_Pin 38		
 #define CurrentSensorPin 10
+#define PressureSensorPin 25
 
 #define SpeedPulsePin 11
-#define PressureSensorPin 25	// 3.3v
 #define RS485SendEnable 27
 #define SerialRS485 Serial7
 
@@ -113,7 +116,7 @@ uint16_t UDPrtcmPort = 5432;	// local port to listen on for RTCM data
 #if(IMUtype == 1)
 	BNO080 myIMU;
 #define BNO08x_ADRESS 0x4B //Use 0x4A for Adafruit BNO085 board, use 0x4B for Sparkfun BNO080 board
-#define REPORT_INTERVAL 40 //Report interval in ms
+#define REPORT_INTERVAL 90 //Report interval in ms
 #endif
 
 #if(IMUtype == 2)
@@ -296,6 +299,10 @@ void setup()
 	pinMode(DIR2_PIN, OUTPUT);
 	pinMode(SteerSW_Relay, OUTPUT);
 	pinMode(SpeedPulsePin, OUTPUT);
+
+	// analog pins
+	pinMode(CurrentSensorPin, INPUT);
+	pinMode(PressureSensorPin, INPUT);
 
 	SteerSwitch = LOW;
 

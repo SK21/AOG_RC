@@ -4,6 +4,7 @@ bool PulseRead;
 bool PulseLast;
 bool Latched;
 int8_t SWpin;
+float SensorReading;
 
 void ReadSwitches()
 {
@@ -79,10 +80,10 @@ void ReadSwitches()
 	// current sensor
 	if (steerConfig.CurrentSensor)
 	{
-		int16_t analogValue = analogRead(CurrentSensorPin);
-
-		// When the current sensor is reading current high enough, shut off
-		if (abs(((analogValue - 512)) / 10.24) >= steerConfig.PulseCountMax) //amp current limit switch off
+		float SensorSample = (float)analogRead(CurrentSensorPin);
+		SensorSample = (abs(512 - SensorSample)) * 0.5;
+		SensorReading = SensorReading * 0.7 + SensorSample * 0.3;
+		if (SensorReading >= steerConfig.PulseCountMax)
 		{
 			SteerSwitch = HIGH;
 			switchByte = SteerSwitch << 1;
@@ -91,27 +92,20 @@ void ReadSwitches()
 		}
 	}
 
-	//// pressure sensor
-	//if (steerConfig.PressureSensor)
-	//{
-	//	int16_t analogValue = analogRead(ANALOG_SENSOR_PIN);
-
-	//	// Calculations below do some assumptions, but we should be close?
-	//	// 0-250bar sensor 4-20ma with 150ohm 1V - 5V -> 62,5 bar/V
-	//	// 5v  / 1024 values -> 0,0048828125 V/bit
-	//	// 62,5 * 0,0048828125 = 0,30517578125 bar/count
-	//	// 1v = 0 bar = 204,8 counts
-	//	int16_t steeringWheelPressureReading = (analogValue - 204) * 0.30517578125;
-
-	//	// When the pressure sensor is reading pressure high enough, shut off
-	//	if (steeringWheelPressureReading >= steerConfig.PulseCountMax)
-	//	{
-	//		SteerSwitch = HIGH;
-	//		switchByte = SteerSwitch << 1;
-	//		SWprevious = LOW;
-	//		Latched = true;
-	//	}
-	//}
+	// pressure sensor
+	if (steerConfig.PressureSensor)
+	{
+		float SensorSample = (float)analogRead(PressureSensorPin);
+		SensorSample *= 0.25;
+		SensorReading = SensorReading * 0.6 + SensorSample * 0.4;
+		if (SensorReading >= steerConfig.PulseCountMax)
+		{
+			SteerSwitch = HIGH;
+			switchByte = SteerSwitch << 1;
+			SWprevious = LOW;
+			Latched = true;
+		}
+	}
 
 	workSwitch = digitalRead(WORKSW_PIN);  // read work switch, Low on, High off
 	switchByte |= workSwitch;

@@ -1,10 +1,8 @@
 #if(ReceiverType !=0)
 
-const bool isLastSentenceGGA = true;
-const uint16_t DELAY_TIME = 40;  //how long after last sentence should imu sample   
 bool isTriggered = false;
-uint32_t PandalastTime = DELAY_TIME;
-uint32_t currentTime = DELAY_TIME;
+uint32_t PandalastTime = IMU_Delay;
+uint32_t currentTime = IMU_Delay;
 
 void DoPanda()
 {
@@ -23,7 +21,7 @@ void DoPanda()
 
     // IMU
     currentTime = millis();
-    if (isTriggered && currentTime - PandalastTime > DELAY_TIME)
+    if (isTriggered && currentTime - PandalastTime > IMU_Delay)
     {
         imuHandler();
         isTriggered = false;
