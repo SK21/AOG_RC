@@ -4,7 +4,6 @@ bool PulseRead;
 bool PulseLast;
 bool Latched;
 int8_t SWpin;
-float SensorReading;
 
 void ReadSwitches()
 {

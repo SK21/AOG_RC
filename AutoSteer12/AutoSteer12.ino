@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteer12   02-Mar-2022"
+# define InoDescription "AutoSteer12   03-Mar-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 and AS12 PCB
 
@@ -18,6 +18,7 @@
 #define IMUtype	1			// 0 None, 1 SparkFun BNO08x, 2 CMPS14
 #define IMU_Delay 90		// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
 #define isLastSentenceGGA  true
+#define REPORT_INTERVAL 40	// Report interval in ms for Sparkfun
 
 #define SwapPitchRoll 1		// 0 use roll value for roll, 1 use pitch value for roll
 #define InvertRoll  0
@@ -116,7 +117,6 @@ uint16_t UDPrtcmPort = 5432;	// local port to listen on for RTCM data
 #if(IMUtype == 1)
 	BNO080 myIMU;
 #define BNO08x_ADRESS 0x4B //Use 0x4A for Adafruit BNO085 board, use 0x4B for Sparkfun BNO080 board
-#define REPORT_INTERVAL 90 //Report interval in ms
 #endif
 
 #if(IMUtype == 2)
@@ -158,7 +158,11 @@ int8_t MaxPWMvalue = 255;
 
 //fromAutoSteerData FD 253 - ActualSteerAngle*100 -5,6, Heading-7,8, 
 //Roll-9,10, SwitchByte-11, pwmDisplay-12, CRC 13
-byte AOG[] = { 0x80,0x81, 0x7f, 0xFD, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
+uint8_t PGN_253[] = { 0x80,0x81, 0x7f, 0xFD, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
+
+//fromAutoSteerData FD 250 - sensor values etc
+uint8_t PGN_250[] = { 0x80,0x81, 0x7f, 0xFA, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
+float SensorReading;
 
 //Variables for settings  
 struct Storage {
@@ -256,6 +260,8 @@ byte FlowPin[] = { 26 };
 
 #endif
 
+uint8_t ErrorCount;
+
 void setup()
 {
 	// watchdog timer
@@ -300,10 +306,6 @@ void setup()
 	pinMode(SteerSW_Relay, OUTPUT);
 	pinMode(SpeedPulsePin, OUTPUT);
 
-	// analog pins
-	pinMode(CurrentSensorPin, INPUT);
-	pinMode(PressureSensorPin, INPUT);
-
 	SteerSwitch = LOW;
 
 	// ethernet start
@@ -331,30 +333,65 @@ void setup()
 	Wire.setClock(400000); //Increase I2C data rate to 400kHz
 
 #if (IMUtype == 1)
+	// Sparkfun or Adafruit
 	//BNO085 init
+
+	ErrorCount = 0;
 	Serial.println("Starting IMU ...");
 	while (!IMUstarted)
 	{
 		IMUstarted = myIMU.begin(BNO08x_ADRESS, Wire);	
 		Serial.print(".");
 		delay(500);
+		if (ErrorCount++ > 10) break;
 	}
 	Serial.println("");
 
-#if(EnableGyro)
-	myIMU.enableGyro(REPORT_INTERVAL-1);
-#endif
-	myIMU.enableGameRotationVector(REPORT_INTERVAL); //Send data update every REPORT_INTERVAL in ms for BNO085
-
-	//Retrieve the getFeatureResponse report to check if Rotation vector report is corectly enable
-	if (myIMU.getFeatureResponseAvailable() == true)
+	if (IMUstarted)
 	{
-		if (myIMU.checkReportEnable(SENSOR_REPORTID_GAME_ROTATION_VECTOR, REPORT_INTERVAL) == false) myIMU.printGetFeatureResponse();
-		Serial.println("BNO08x init succeeded.");
+#if(EnableGyro)
+		myIMU.enableGyro(REPORT_INTERVAL - 1);
+#endif
+		myIMU.enableGameRotationVector(REPORT_INTERVAL); //Send data update every REPORT_INTERVAL in ms for BNO085
+
+		//Retrieve the getFeatureResponse report to check if Rotation vector report is corectly enable
+		if (myIMU.getFeatureResponseAvailable() == true)
+		{
+			if (myIMU.checkReportEnable(SENSOR_REPORTID_GAME_ROTATION_VECTOR, REPORT_INTERVAL) == false) myIMU.printGetFeatureResponse();
+			Serial.println("BNO08x init succeeded.");
+		}
+		else
+		{
+			Serial.println(F("BNO08x init fails!!"));
+		}
 	}
 	else
 	{
-		Serial.println(F("BNO08x init fails!!"));
+		Serial.println("IMU failed to start.");
+	}
+#endif
+
+#if(IMUtype==2)
+	// CMPS14
+
+	ErrorCount = 0;
+	Serial.println("Starting IMU ...");
+	while (!IMUstarted)
+	{
+		Wire.beginTransmission(CMPS14_ADDRESS);
+		IMUstarted = !Wire.endTransmission();
+		Serial.print(".");
+		delay(500);
+		if (ErrorCount++ > 10) break;
+	}
+	Serial.println("");
+	if (IMUstarted)
+	{
+		Serial.println("IMU started.");
+	}
+	else
+	{
+		Serial.println("IMU failed to start.");
 	}
 #endif
 
@@ -377,6 +414,7 @@ void setup()
 	// RS485
 	pinMode(RS485SendEnable, OUTPUT);
 	digitalWrite(RS485SendEnable, HIGH);
+	SerialRS485.begin(9600);
 
 #if(ReceiverType !=0)
 	SerialNMEA.begin(115200);
@@ -386,8 +424,6 @@ void setup()
 	parser.addHandler("G-GGA", GGA_Handler);
 	parser.addHandler("G-VTG", VTG_Handler);
 #endif
-
-	SerialRS485.begin(9600);
 
 #if(UseRateControl)
 	Serial.println("");

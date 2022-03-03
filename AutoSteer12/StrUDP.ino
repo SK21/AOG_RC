@@ -1,9 +1,10 @@
 void SendSteerUDP()
 {
+    // Steer Data 1
     // steer angle
     int16_t tmp = (int)(steerAngleActual * 100);
-    AOG[5] = (byte)tmp;
-    AOG[6] = tmp >> 8;
+    PGN_253[5] = (byte)tmp;
+    PGN_253[6] = tmp >> 8;
 
     // heading
     if (ReceiverType == 0 && IMUtype != 0)
@@ -14,8 +15,8 @@ void SendSteerUDP()
     {
         tmp = 9999;
     }
-    AOG[7] = (byte)tmp;
-    AOG[8] = tmp >> 8;
+    PGN_253[7] = (byte)tmp;
+    PGN_253[8] = tmp >> 8;
 
     // roll
     if (ReceiverType == 0 && IMUtype != 0)
@@ -27,24 +28,43 @@ void SendSteerUDP()
         tmp = 8888;
     }
 
-    AOG[9] = (byte)tmp;
-    AOG[10] = tmp >> 8;
+    PGN_253[9] = (byte)tmp;
+    PGN_253[10] = tmp >> 8;
 
-    AOG[11] = switchByte;
-    AOG[12] = pwmDrive;
+    PGN_253[11] = switchByte;
+    PGN_253[12] = pwmDrive;
 
     //add the checksum
     int16_t CK_A = 0;
-    for (uint8_t i = 2; i < sizeof(AOG) - 1; i++)
+    for (uint8_t i = 2; i < sizeof(PGN_253) - 1; i++)
     {
-        CK_A = (CK_A + AOG[i]);
+        CK_A = (CK_A + PGN_253[i]);
     }
-    AOG[sizeof(AOG) - 1] = CK_A;
+    PGN_253[sizeof(PGN_253) - 1] = CK_A;
 
     //off to AOG
     UDPsteering.beginPacket(AGIOip, AGIOport);
-    UDPsteering.write(AOG, sizeof(AOG));
+    UDPsteering.write(PGN_253, sizeof(PGN_253));
     UDPsteering.endPacket();
+
+    // Steer Data 2
+    if (steerConfig.PressureSensor || steerConfig.CurrentSensor)
+    {
+        PGN_250[5] = (byte)SensorReading;
+
+        //add the checksum for AOG2
+        CK_A = 0;
+        for (uint8_t i = 2; i < sizeof(PGN_250) - 1; i++)
+        {
+            CK_A = (CK_A + PGN_250[i]);
+        }
+        PGN_250[sizeof(PGN_250) - 1] = CK_A;
+
+        //off to AOG
+        UDPsteering.beginPacket(AGIOip, AGIOport);
+        UDPsteering.write(PGN_250, sizeof(PGN_250));
+        UDPsteering.endPacket();
+    }
 }
 
 void ReceiveSteerUDP()
