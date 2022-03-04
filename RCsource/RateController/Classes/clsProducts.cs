@@ -23,7 +23,7 @@ namespace RateController
             bool cAlarmOn = false;
             for (int i = 0; i < MaxRecords; i++)
             {
-                if ((cProducts[i].WorkRate() > 0) & (cProducts[i].UseOffRateAlarm))
+                if ((cProducts[i].WorkRate() > 0) && (cProducts[i].UseOffRateAlarm))
                 {
                     // too low?
                     AlarmSetPoint = (100 - cProducts[i].OffRateSetting) / 100.0;
@@ -93,7 +93,7 @@ namespace RateController
             {
                 if (cProducts[i].ID != ProdID)  // exclude current product
                 {
-                    if (cProducts[i].ModuleID == ModID & cProducts[i].SensorID == SenID)
+                    if (cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID)
                     {
                         Result = false;
                         break;

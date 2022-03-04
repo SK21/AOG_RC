@@ -21,7 +21,6 @@ namespace RateController
         private const byte HeaderLo = 109;
         private const byte HeaderHi = 127;
 
-        private FormStart mf;
 
         private Int16[,] cPressure = new short[255, 4]; // modules, pressures
         private int Temp;
@@ -29,15 +28,10 @@ namespace RateController
         private byte HiByte;
         private byte ModuleID;
 
-        public PGN32621(FormStart CalledFrom)
-        {
-            mf = CalledFrom;
-        }
-
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
-            if (Data[1] == HeaderHi & Data[0] == HeaderLo & Data.Length >= cByteCount)
+            if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount)
             {
                 ModuleID = Data[3];
                 for (int i = 0; i < 4; i++)
@@ -78,7 +72,7 @@ namespace RateController
 
         public Int16 Pressure(byte ModuleID, byte SensorID)
         {
-            if (SensorID < 4 & ModuleID < 255)
+            if (SensorID < 4 && ModuleID < 255)
             {
                 return cPressure[ModuleID, SensorID];
             }

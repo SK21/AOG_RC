@@ -115,7 +115,7 @@ namespace RateController
             // Test
             bool IsOn = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(formRectangle));
 
-            if (!IsOn & PutOnScreen)
+            if (!IsOn && PutOnScreen)
             {
                 form.Top = 0;
                 form.Left = 0;

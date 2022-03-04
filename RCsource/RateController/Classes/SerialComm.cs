@@ -106,7 +106,7 @@ namespace RateController
         public void SendData(byte[] Data)
         {
             // send to arduino rate controller
-            if (ArduinoPort.IsOpen & SerialActive)
+            if (ArduinoPort.IsOpen && SerialActive)
             {
                 try
                 {

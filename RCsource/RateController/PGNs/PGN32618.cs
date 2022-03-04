@@ -47,7 +47,7 @@ namespace RateController
         {
             bool Result = false;
 
-            if (Data[0] == HeaderLo & Data[1] == HeaderHi & Data.Length >= cByteCount)
+            if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount)
             {
                 SW[0] = mf.Tls.BitRead(Data[2], 0);     // auto on
                 SW[1] = mf.Tls.BitRead(Data[2], 1);     // master on

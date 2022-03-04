@@ -83,7 +83,7 @@ namespace RateController
 
             SwitchBox = new PGN32618(this);
             SwitchIDs = new PGN32620(this);
-            PressureData = new PGN32621(this);
+            PressureData = new PGN32621();
 
             Sections = new clsSections(this);
             Products = new clsProducts(this);
@@ -221,7 +221,7 @@ namespace RateController
                     double RT = Products.Item(CurrentPage - 1).SmoothRate();
                     if (RT == 0) RT = Products.Item(CurrentPage - 1).TargetRate();
 
-                    if ((RT > 0) & (Products.Item(CurrentPage - 1).CurrentTankRemaining() > 0))
+                    if ((RT > 0) && (Products.Item(CurrentPage - 1).CurrentTankRemaining() > 0))
                     {
                         TankRemain.Text = (Products.Item(CurrentPage - 1).CurrentTankRemaining() / RT).ToString("N1");
                     }

@@ -90,7 +90,7 @@ namespace RateController
 
             ControllerConnected = ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
 
-            ApplicationOn = (ControllerConnected & (RelayControl != 0) & (rateSetPoint > 0));
+            ApplicationOn = (ControllerConnected && (RelayControl != 0) && (rateSetPoint > 0));
 
             if ((DateTime.Now - LastTime).TotalMilliseconds >= LOOP_TIME)
             {
@@ -133,7 +133,7 @@ namespace RateController
                             case 2:
                                 // motor control
                                 pwmSetting *= NewRateFactor;
-                                if (pwmSetting == 0 & NewRateFactor > 1) pwmSetting = PIDminPWM;
+                                if (pwmSetting == 0 && NewRateFactor > 1) pwmSetting = PIDminPWM;
                                 break;
 
                             default:
@@ -441,7 +441,7 @@ namespace RateController
             if (ApplicationOn)
             {
                 float Range = Max - Min + 5;
-                if (Range == 0 | pwmSetting == 0)
+                if (Range == 0 || pwmSetting == 0)
                 {
                     ValveAdjust = 0;
                 }

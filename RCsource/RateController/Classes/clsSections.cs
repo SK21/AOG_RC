@@ -17,10 +17,10 @@ namespace RateController
         // 0   106
         // 1   127
         // 2    - bit 0 Auto
-        //      - bit 1 MasterOn        
-        //      - bit 2 MasterOff       
-        //      - bit 3 RateUp          
-        //      - bit 4 RateDown        
+        //      - bit 1 MasterOn
+        //      - bit 2 MasterOff
+        //      - bit 3 RateUp
+        //      - bit 4 RateDown
         // 3    sw0 to sw7
         // 4    sw8 to sw15
 
@@ -98,7 +98,7 @@ namespace RateController
             }
             set
             {
-                if (value < 0 | value > 16)
+                if (value < 0 || value > 16)
                 {
                     throw new IndexOutOfRangeException();
                 }
@@ -263,7 +263,7 @@ namespace RateController
 
             bool RelaysChanged = UpdateSectionsOn();
 
-            if (!SourceAOG & (RelaysChanged | SectionSwitchesChanged))
+            if (!SourceAOG && (RelaysChanged || SectionSwitchesChanged))
             {
                 // send to AOG
                 ToAOG.OnHi = SectionOnToAOG[1];
@@ -291,7 +291,7 @@ namespace RateController
             if (mf.SwitchBox.SwitchOn(SwIDs.MasterOff)) MasterOn = false;
             if (mf.SwitchBox.SwitchOn(SwIDs.MasterOn)) MasterOn = true;
 
-            if ((MasterOn != MasterLast) & !MasterChanged)
+            if ((MasterOn != MasterLast) && !MasterChanged)
             {
                 // create AOG master notification
                 MasterTime = SWreadTime;
@@ -331,7 +331,7 @@ namespace RateController
             }
 
             // auto state
-            if ((mf.SwitchBox.SwitchOn(SwIDs.Auto) != AutoLast) & !AutoChanged)
+            if ((mf.SwitchBox.SwitchOn(SwIDs.Auto) != AutoLast) && !AutoChanged)
             {
                 // create AOG auto notification
                 AutoTime = SWreadTime;
@@ -422,7 +422,7 @@ namespace RateController
                 }
             }
 
-            bool Result = MasterChanged | (OutCommand != OutLast);
+            bool Result = MasterChanged || (OutCommand != OutLast);
 
             OutLast = OutCommand;
 
@@ -562,11 +562,16 @@ namespace RateController
                 if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
                 {
                     double CurrentRate = Prd.RateSet;
-                    if (RateUp & CurrentRate == 0) CurrentRate = 1; // provide a starting point
+                    if (RateUp && CurrentRate == 0) CurrentRate = 1; // provide a starting point
                     CurrentRate = Math.Round(CurrentRate * ChangeAmount, 1);
                     Prd.RateSet = CurrentRate;
                 }
             }
+        }
+
+        public float WorkingWidth_cm()
+        {
+            return cWorkingWidth_cm;
         }
     }
 }

@@ -18,11 +18,12 @@ namespace RateController
         private Label[] Sec;
         private SimType SelectedSimulation;
         private TabPage[] tbs;
-        bool[] SwON = new bool[9];
+        private bool[] SwON = new bool[9];
 
         public FormSettings(FormStart CallingForm, int Page)
         {
             InitializeComponent();
+
             #region // language
 
             lbProduct.Text = Lang.lgProduct;
@@ -138,16 +139,6 @@ namespace RateController
                     mf.Sections.CheckSwitchDefinitions();
 
                     string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
-
-                    switch (SelectedSimulation)
-                    {
-                        case SimType.VirtualNano:
-                            break;
-
-                        case SimType.RealNano:
-                        default:
-                            break;
-                    }
 
                     SetButtons(false);
                     UpdateForm();
@@ -266,10 +257,6 @@ namespace RateController
                     mf.LoadSettings();
                 }
             }
-        }
-
-        private void btnSections_Click(object sender, EventArgs e)
-        {
         }
 
         private double CalCounts()
@@ -442,7 +429,7 @@ namespace RateController
             tbSenID.Text = mf.Products.Item(CurrentProduct).SensorID.ToString();
 
             rbSinglePulse.Checked = !(mf.Products.Item(CurrentProduct).UseMultiPulse);
-            rbMultiPulse.Checked= (mf.Products.Item(CurrentProduct).UseMultiPulse);
+            rbMultiPulse.Checked = (mf.Products.Item(CurrentProduct).UseMultiPulse);
 
             // load defaults if blank
             byte.TryParse(tbPIDkp.Text, out tempB);
@@ -585,9 +572,9 @@ namespace RateController
             mf.Products.Item(CurrentProduct).OffRateSetting = tempB;
 
             mf.Products.Item(CurrentProduct).Save();
-            }
+        }
 
-            private void SetButtons(bool Edited)
+        private void SetButtons(bool Edited)
         {
             if (!Initializing)
             {
@@ -1078,7 +1065,7 @@ namespace RateController
 
         private void UpdateSwitches()
         {
-            if(SwON[0])
+            if (SwON[0])
             {
                 swAuto.BackColor = Color.LightGreen;
             }
@@ -1123,7 +1110,6 @@ namespace RateController
                 swDown.BackColor = tbs3.BackColor;
             }
 
-
             if (SwON[5])
             {
                 swOne.BackColor = Color.LightGreen;
@@ -1132,7 +1118,6 @@ namespace RateController
             {
                 swOne.BackColor = Color.Red;
             }
-
 
             if (SwON[6])
             {
@@ -1167,25 +1152,11 @@ namespace RateController
             SetButtons(true);
         }
 
-        private void tbs4_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void tbs4_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tbPIDkp_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void ckOffRate_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
 
-            if(ckOffRate.Checked)
+            if (ckOffRate.Checked)
             {
                 tbOffRate.Enabled = true;
             }
@@ -1199,11 +1170,6 @@ namespace RateController
         private void tbMinUPM_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
-        }
-
-        private void label25_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void tbMinUPM_Enter(object sender, EventArgs e)
@@ -1229,7 +1195,7 @@ namespace RateController
         {
             SetButtons(true);
 
-            if(ckTimedResponse.Checked)
+            if (ckTimedResponse.Checked)
             {
                 tbTimedAdjustment.Enabled = true;
             }
@@ -1270,40 +1236,10 @@ namespace RateController
             }
         }
 
-        private void label33_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tbs3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label44_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void swDown_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lbWorkRateData_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ckSimulate_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
-            if(ckSimulate.Checked)
+            if (ckSimulate.Checked)
             {
                 SelectedSimulation = SimType.VirtualNano;
             }
@@ -1311,11 +1247,6 @@ namespace RateController
             {
                 SelectedSimulation = SimType.None;
             }
-        }
-
-        private void label28_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
