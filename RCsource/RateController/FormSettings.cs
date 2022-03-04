@@ -13,7 +13,6 @@ namespace RateController
         private double CalculatedCPU;
         private int CurrentProduct;
         private bool Initializing = false;
-        private double[] MaxError = new double[5];
         private TextBox[] PIDs;
         private Label[] Sec;
         private SimType SelectedSimulation;
@@ -347,30 +346,6 @@ namespace RateController
             timer1.Enabled = true;
 
             UpdateForm();
-        }
-
-        private void groupBox1_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void groupBox2_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void groupBox3_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void groupBox4_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void grpSections_Paint(object sender, PaintEventArgs e)
@@ -1010,7 +985,6 @@ namespace RateController
             if (mf.Products.Item(CurrentProduct).SimulationType != SimType.None)
             {
                 lbProduct.Text = lbProduct.Text + "   Simulation";
-                //lbProduct.ForeColor = mf.SimColor;
                 lbProduct.BackColor = mf.SimColor;
                 lbProduct.BorderStyle = BorderStyle.FixedSingle;
             }

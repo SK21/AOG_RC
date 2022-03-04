@@ -80,12 +80,6 @@ namespace RateController
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
-        private void groupBox4_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
         private void IPA1_Click(object sender, EventArgs e)
         {
             double tempD;

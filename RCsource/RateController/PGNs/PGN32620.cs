@@ -33,8 +33,8 @@ namespace RateController
         public PGN32620(FormStart CallingForm)
         {
             mf = CallingForm;
-            Data[0] = 127;
-            Data[1] = 108;
+            Data[0] = HeaderHi;
+            Data[1] = HeaderLo;
         }
 
         public void Send()

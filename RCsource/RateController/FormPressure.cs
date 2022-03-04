@@ -256,15 +256,6 @@ namespace RateController
                     c.ForeColor = Color.Black;
                 }
             }
-            //else
-            //{
-            //    this.BackColor = Properties.Settings.Default.NightColour;
-
-            //    foreach (Control c in this.Controls)
-            //    {
-            //        c.ForeColor = Color.White;
-            //    }
-            //}
         }
 
         private void tbOffRate_Enter(object sender, EventArgs e)

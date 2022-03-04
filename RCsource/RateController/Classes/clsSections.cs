@@ -7,7 +7,6 @@ namespace RateController
     {
         public IList<clsSection> Items;
         private List<clsSection> cSections = new List<clsSection>();
-        private float[] cProdWorkedArea_ha = new float[16];
 
         private float cWorkingWidth_cm;
 
@@ -100,7 +99,8 @@ namespace RateController
             {
                 if (value < 0 || value > 16)
                 {
-                    throw new IndexOutOfRangeException();
+                    throw new ArgumentException("Index is out of range");
+
                 }
                 else
                 {
@@ -125,7 +125,7 @@ namespace RateController
         public clsSection Item(int SectionID)
         {
             int IDX = ListID(SectionID);
-            if (IDX == -1) throw new IndexOutOfRangeException();
+            if (IDX == -1) throw new ArgumentException("Index is out of range");
             return cSections[IDX];
         }
 

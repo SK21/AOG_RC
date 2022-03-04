@@ -53,7 +53,7 @@ namespace RateController
         public clsProduct Item(int ProdID)  // access records by Product ID
         {
             int IDX = ListID(ProdID);
-            if (IDX == -1) throw new IndexOutOfRangeException();
+            if (IDX == -1) throw new ArgumentException("Index is out of range");
             return cProducts[IDX];
         }
 

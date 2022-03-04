@@ -75,7 +75,7 @@ namespace RateController
 
             #endregion // language
 
-            Tls = new clsTools(this);
+            Tls = new clsTools();
             UDPagio = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
             //UDPagio = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255");       // AOG
 
@@ -182,7 +182,6 @@ namespace RateController
                     }
                     else
                     {
-                        //ProdName[i].ForeColor = SimColor;
                         ProdName[i].BackColor = SimColor;
                         ProdName[i].BorderStyle = BorderStyle.FixedSingle;
                     }
@@ -481,14 +480,6 @@ namespace RateController
             ShowQuantityRemaining = !ShowQuantityRemaining;
         }
 
-        private void lbCoverage_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-        }
-
         private void btAlarm_Click(object sender, EventArgs e)
         {
             RCalarm.Silence();
@@ -532,11 +523,6 @@ namespace RateController
                     LoadSettings();
                 }
             }
-        }
-
-        private void SetRate_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

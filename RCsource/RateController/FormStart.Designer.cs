@@ -183,7 +183,6 @@ namespace RateController
             this.SetRate.TabIndex = 156;
             this.SetRate.Text = "1,800.50";
             this.SetRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.SetRate.Click += new System.EventHandler(this.SetRate_Click);
             // 
             // lbRate
             // 
@@ -206,7 +205,6 @@ namespace RateController
             this.label1.TabIndex = 154;
             this.label1.Text = "Target Rate";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // TankRemain
             // 
@@ -276,7 +274,6 @@ namespace RateController
             this.lbCoverage.Size = new System.Drawing.Size(175, 23);
             this.lbCoverage.TabIndex = 150;
             this.lbCoverage.Text = "Coverage";
-            this.lbCoverage.Click += new System.EventHandler(this.lbCoverage_Click);
             // 
             // lbRemaining
             // 
