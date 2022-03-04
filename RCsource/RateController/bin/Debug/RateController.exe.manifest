@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="RateController.exe" size="4877824">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="RateController.exe" size="4877312">
       <assemblyIdentity name="RateController" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>+UkUNQKwadDETD9OkFcnaB71vHsdkkzXmoYmlp6bhR4=</dsig:DigestValue>
+        <dsig:DigestValue>OtBC+gkvm2m+f/hp0F1QjKCWdVMPioiOI9yii4gkl4c=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -74,7 +74,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>mv1yqO1bdS8S/gmu7YPcoicB2xF2AkM9FsBRtcOES+A=</dsig:DigestValue>
+        <dsig:DigestValue>tKq85RnY9VPk0wXmy4NZqq2S3g2Reh/wrd3+TyW+eZE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -86,7 +86,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>P+30t2ySlRPCxWZ0b+NYRopO0i81PQB1/PsB2t51VqU=</dsig:DigestValue>
+        <dsig:DigestValue>w3KJWjOJ7AAlt2E4mq1lGQAETH9MmAXoyZG89YhwN20=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

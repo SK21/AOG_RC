@@ -347,13 +347,13 @@ namespace RateController
 
             // UDP
             UDPnetwork.StartUDPServer();
-            if (!UDPnetwork.isUDPSendConnected)
+            if (!UDPnetwork.IsUDPSendConnected)
             {
                 Tls.TimedMessageBox("UDPnetwork failed to start.", "", 3000, true);
             }
 
             UDPagio.StartUDPServer();
-            if (!UDPagio.isUDPSendConnected)
+            if (!UDPagio.IsUDPSendConnected)
             {
                 Tls.TimedMessageBox("UDPagio failed to start.", "", 3000, true);
             }

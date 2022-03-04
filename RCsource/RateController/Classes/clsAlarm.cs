@@ -11,15 +11,12 @@ namespace RateController
         private FormStart mf;
         private Button cAlarmButton;
         private bool AlarmColour;
-        private bool cRateAlarm;
-        private bool cPressureAlarm;
-        private string cMessage;
 
         private System.Media.SoundPlayer Sounds;
-        private System.IO.Stream Str;
 
         public clsAlarm(FormStart CallingFrom, Button AlarmButton)
         {
+            System.IO.Stream Str;
             mf = CallingFrom;
             cAlarmButton = AlarmButton;
             Str = Properties.Resources.Loud_Alarm_Clock_Buzzer_Muk1984_493547174;
@@ -30,6 +27,10 @@ namespace RateController
 
         public void CheckAlarms()
         {
+            bool cRateAlarm;
+            bool cPressureAlarm;
+            string cMessage;
+
             cRateAlarm = mf.Products.AlarmOn();
             cPressureAlarm = mf.PressureObjects.AlarmOn();
 

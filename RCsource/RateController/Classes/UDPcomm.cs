@@ -8,7 +8,7 @@ namespace RateController
 {
     public class UDPComm
     {
-        public bool isUDPSendConnected;
+        private bool cIsUDPSendConnected;
         private readonly FormStart mf;
         private byte[] buffer = new byte[1024];
 
@@ -21,7 +21,6 @@ namespace RateController
         private IPAddress epIP;
         private HandleDataDelegateObj HandleDataDelegate = null;
 
-        private int PGN;
         private Socket recvSocket;
         private Socket sendSocket;
 
@@ -45,6 +44,8 @@ namespace RateController
 
             NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(AddressChanged);
         }
+
+        public bool IsUDPSendConnected { get { return cIsUDPSendConnected; } }
 
         // Status delegate
         private delegate void HandleDataDelegateObj(int port, byte[] msg);
@@ -80,7 +81,7 @@ namespace RateController
         //sends byte array
         public void SendUDPMessage(byte[] byteData)
         {
-            if (isUDPSendConnected)
+            if (cIsUDPSendConnected)
             {
                 try
                 {
@@ -124,7 +125,7 @@ namespace RateController
 
                 // Start listening for incoming data
                 recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref client, new AsyncCallback(ReceiveData), recvSocket);
-                isUDPSendConnected = true;
+                cIsUDPSendConnected = true;
                 return LocalIP();
             }
             catch (Exception e)
@@ -142,6 +143,8 @@ namespace RateController
 
         private void HandleData(int Port, byte[] Data)
         {
+            int PGN;
+
             if (Data.Length > 1)
             {
                 PGN = Data[0] << 8 | Data[1];   // AGIO big endian

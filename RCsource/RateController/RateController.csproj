@@ -93,7 +93,7 @@
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsProduct.cs" />
     <Compile Include="Classes\SerialComm.cs" />
-    <Compile Include="Classes\UDPcomm.cs" />
+    <Compile Include="Classes\UdpComm.cs" />
     <Compile Include="FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -50,8 +50,6 @@ namespace RateController
                         cPWMsetting = (Int16)(Data[10] << 8 | Data[9]) / 10.0;  // need to cast to 16 bit integer to preserve the sign bit
                         ReceiveTime = DateTime.Now;
                         Result = true;
-
-                        //CheckRate();
                     }
                 }
             }
@@ -107,8 +105,6 @@ namespace RateController
 
                                 ReceiveTime = DateTime.Now;
                                 Result = true;
-
-                                //CheckRate();
                             }
                         }
                     }
@@ -141,23 +137,6 @@ namespace RateController
             else
             {
                 return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
-            }
-        }
-
-        double Trate;
-        double Ratio;
-        void CheckRate()
-        {
-            Trate = Prod.TargetUPM();
-            if (Trate > 0 && cUPM > 0)
-            {
-                Ratio = Math.Abs((cUPM / Trate) - 1);
-                if (Ratio > 0.3)
-                {
-                    Prod.mf.Tls.WriteActivityLog("");
-                    Prod.mf.Tls.WriteActivityLog("Current rate: " + cUPM.ToString("N2") + ", Ave. rate: " + Trate.ToString("N2") + ", Ratio: " + Ratio.ToString("N2")
-                       + ", Quantity: " + cQuantity.ToString("N2") + ", PWM:" + cPWMsetting.ToString("N2"));
-                }
             }
         }
     }

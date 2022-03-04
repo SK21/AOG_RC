@@ -5,9 +5,9 @@ namespace RateController
 {
     public class SerialComm
     {
-        public SerialPort ArduinoPort = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
-        public int RCportBaud = 38400;
-        public string RCportName;
+        private SerialPort cArduinoPort = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
+        private int cRCportBaud = 38400;
+        private string cRCportName;
         private readonly FormStart mf;
         private int cPortNumber;
 
@@ -20,8 +20,22 @@ namespace RateController
         {
             mf = CallingForm;
             cPortNumber = PortNumber;
-            RCportName = "RCport" + cPortNumber.ToString();
+            cRCportName = "RCport" + cPortNumber.ToString();
             ID = "_" + PortNumber.ToString() + "_";
+        }
+
+        public SerialPort ArduinoPort { get { return cArduinoPort; } }
+
+        public int RCportBaud
+        {
+            get { return cRCportBaud; }
+            set { cRCportBaud = value; }
+        }
+
+        public string RCportName
+        {
+            get { return cRCportName; }
+            set { cRCportName = value; }
         }
 
         // new data event
@@ -31,12 +45,12 @@ namespace RateController
         {
             try
             {
-                if (ArduinoPort.IsOpen)
+                if (cArduinoPort.IsOpen)
                 {
-                    ArduinoPort.DataReceived -= RCport_DataReceived;
+                    cArduinoPort.DataReceived -= RCport_DataReceived;
                     try
                     {
-                        ArduinoPort.Close();
+                        cArduinoPort.Close();
                     }
                     catch (Exception e)
                     {
@@ -45,7 +59,7 @@ namespace RateController
 
                     mf.Tls.SaveProperty("RCportSuccessful"+ID + cPortNumber.ToString(), "false");
 
-                    ArduinoPort.Dispose();
+                    cArduinoPort.Dispose();
                 }
             }
             catch (Exception ex)
@@ -58,19 +72,19 @@ namespace RateController
         {
             try
             {
-                if (SerialPortExists(RCportName))
+                if (SerialPortExists(cRCportName))
                 {
-                    if (!ArduinoPort.IsOpen)
+                    if (!cArduinoPort.IsOpen)
                     {
-                        ArduinoPort.PortName = RCportName;
-                        ArduinoPort.BaudRate = RCportBaud;
-                        ArduinoPort.DataReceived += RCport_DataReceived;
-                        ArduinoPort.DtrEnable = true;
-                        ArduinoPort.RtsEnable = true;
+                        cArduinoPort.PortName = cRCportName;
+                        cArduinoPort.BaudRate = cRCportBaud;
+                        cArduinoPort.DataReceived += RCport_DataReceived;
+                        cArduinoPort.DtrEnable = true;
+                        cArduinoPort.RtsEnable = true;
 
                         try
                         {
-                            ArduinoPort.Open();
+                            cArduinoPort.Open();
                         }
                         catch (Exception e)
                         {
@@ -80,14 +94,14 @@ namespace RateController
                         }
                     }
 
-                    if (ArduinoPort.IsOpen)
+                    if (cArduinoPort.IsOpen)
                     {
-                        ArduinoPort.DiscardOutBuffer();
-                        ArduinoPort.DiscardInBuffer();
+                        cArduinoPort.DiscardOutBuffer();
+                        cArduinoPort.DiscardInBuffer();
 
-                        mf.Tls.SaveProperty("RCportName"+ID + cPortNumber.ToString(), RCportName);
+                        mf.Tls.SaveProperty("RCportName"+ID + cPortNumber.ToString(), cRCportName);
                         mf.Tls.SaveProperty("RCportSuccessful"+ID + cPortNumber.ToString(), "true");
-                        mf.Tls.SaveProperty("RCportBaud"+ID + cPortNumber.ToString(), RCportBaud.ToString());
+                        mf.Tls.SaveProperty("RCportBaud"+ID + cPortNumber.ToString(), cRCportBaud.ToString());
                     }
                 }
                 else
@@ -106,11 +120,11 @@ namespace RateController
         public void SendData(byte[] Data)
         {
             // send to arduino rate controller
-            if (ArduinoPort.IsOpen && SerialActive)
+            if (cArduinoPort.IsOpen && SerialActive)
             {
                 try
                 {
-                    ArduinoPort.Write(Data, 0, Data.Length);
+                    cArduinoPort.Write(Data, 0, Data.Length);
                 }
                 catch (Exception ex)
                 {
@@ -170,13 +184,13 @@ namespace RateController
 
         private void RCport_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (ArduinoPort.IsOpen)
+            if (cArduinoPort.IsOpen)
             {
                 try
                 {
-                    string sentence = ArduinoPort.ReadLine();
+                    string sentence = cArduinoPort.ReadLine();
                     mf.BeginInvoke(new NewDataDelegate(ReceiveData), sentence);
-                    if (ArduinoPort.BytesToRead > 32) ArduinoPort.DiscardInBuffer();
+                    if (cArduinoPort.BytesToRead > 32) cArduinoPort.DiscardInBuffer();
                 }
                 catch (Exception ex)
                 {
