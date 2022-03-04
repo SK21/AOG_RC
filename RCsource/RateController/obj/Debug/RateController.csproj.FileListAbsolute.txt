@@ -1610,3 +1610,4 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RCsource\RateController\obj\Debug\Ra
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RCsource\RateController\obj\Debug\RateController.csproj.CopyComplete
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RCsource\RateController\obj\Debug\RateController.exe
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RCsource\RateController\obj\Debug\RateController.pdb
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RCsource\RateController\obj\Debug\RateController.csprojAssemblyReference.cache

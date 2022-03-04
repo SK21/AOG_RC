@@ -142,20 +142,20 @@ namespace RateController
                         }
                     }
 
-                    switch (ControlType)
+                    if (SimulateFlow)
                     {
-                        // calculate application rate
-                        case 2:
-                            // motor control
-                            if (SimulateFlow) SimulateMotor(PIDHighMax);
-                            rateError = rateSetPoint - GetUPM();
-                            break;
+                        switch (ControlType)
+                        {
+                            case 2:
+                                // motor control
+                                SimulateMotor(PIDHighMax);
+                                break;
 
-                        default:
-                            // valve control
-                            if (SimulateFlow) SimulateValve(PIDminPWM, PIDHighMax);
-                            rateError = rateSetPoint - GetUPM();
-                            break;
+                            default:
+                                // valve control
+                                SimulateValve(PIDminPWM, PIDHighMax);
+                                break;
+                        }
                     }
                 }
                 SendSerial();
