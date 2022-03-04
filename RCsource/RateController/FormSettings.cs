@@ -136,9 +136,6 @@ namespace RateController
                     // save changes
                     SaveSettings();
                     mf.Sections.CheckSwitchDefinitions();
-
-                    string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
-
                     SetButtons(false);
                     UpdateForm();
                 }

@@ -49,7 +49,7 @@ namespace RateController
             {
                 if (cSectionOn != value)
                 {
-                    if (value == true && cEnabled == false)
+                    if (value  && !cEnabled )
                     {
                         cSectionOn = false;
                     }

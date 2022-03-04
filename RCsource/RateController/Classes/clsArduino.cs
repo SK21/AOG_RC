@@ -9,13 +9,9 @@ namespace RateController
 
         private bool ApplicationOn = false;
         private bool AutoOn = true;
-        private bool ControllerConnected;
         private byte ControlType;        // 0 standard, 1 fast close, 2 motor
 
         private int ErrorRange = 4;        // % random error in flow rate, above and below target
-
-        private byte InCommand;
-
         private DateTime LastPulse = DateTime.Now;
         private float LastPWM;
         private DateTime LastTime;
@@ -40,29 +36,19 @@ namespace RateController
         private float pulseDuration;
         private float Pulses = 0;
 
-        private float PulseTime = 0;
-
         private float pwmSetting;
-        private float rateError;
-        private int RateInterval;
         private float rateSetPoint;
         private DateTime ReceiveTime;
-        private byte RelayControl;
         private byte RelayFromAOG;
         private byte RelayHi;
 
         private float SimRPM = 0.0F;
 
-        private float SimTmp;
         private bool SimulateFlow;
         private int SimulateInterval;
         private DateTime SimulateTimeLast;
-        private float SimUPM = 0;        // simulated units per minute
-
-        private byte Temp;
 
         private DateTime TimedLast = DateTime.Now;
-        private int Tmp;
         private float TotalPulses;
 
         private float UPM;
@@ -83,6 +69,10 @@ namespace RateController
 
         public void MainLoop()
         {
+            bool ControllerConnected;
+            float rateError;
+            byte RelayControl;
+
             // ReceiveSerial();
 
             RelayControl = RelayFromAOG;
@@ -174,6 +164,9 @@ namespace RateController
 
         public void ReceiveSerial(byte[] Data)
         {
+            byte InCommand;
+            int Tmp;
+
             int PGN = Data[1] << 8 | Data[0];
             if (PGN == 32614)
             {
@@ -262,7 +255,7 @@ namespace RateController
                 if (ApplicationOn)
                 {
                     float ErrorPercent = Math.Abs(clError / clSetPoint);
-                    float ErrorBrake = (float)((float)(clBrakePoint / 100.0));
+                    float ErrorBrake = (float)(clBrakePoint / 100.0);
                     float Max = (float)clHighMax;
 
                     if (ErrorPercent > ((float)(clDeadband / 100.0)))
@@ -296,11 +289,13 @@ namespace RateController
         float Oave;
         UInt32 PPM;
         UInt16 TimedCounts;
-        UInt16 CurrentCounts;
         UInt16 CurrentDuration;
 
         private float GetUPM()
         {
+            UInt16 CurrentCounts;
+            int RateInterval;
+
             if (pulseCount > 0)
             {
                 CurrentCounts = pulseCount;
@@ -362,6 +357,8 @@ namespace RateController
 
         private void SendSerial()
         {
+            byte Temp;
+
             // PGN 32613
             string[] words = new string[11];
             words[0] = "101";
@@ -395,9 +392,11 @@ namespace RateController
         }
 
         double PrevCount;
-        double CurCount;
         private void SimulateMotor( byte sMax)
         {
+            float SimTmp;
+            double CurCount;
+
             if (ApplicationOn)
             {
                 SimulateInterval = (int)(DateTime.Now - SimulateTimeLast).TotalMilliseconds;
@@ -433,6 +432,9 @@ namespace RateController
 
         private void SimulateValve(byte Min, byte Max)
         {
+            float PulseTime = 0;
+            float SimUPM = 0;        // simulated units per minute
+
             SimulateInterval = (int)(DateTime.Now - SimulateTimeLast).TotalMilliseconds;
             SimulateTimeLast = DateTime.Now;
 
@@ -445,13 +447,13 @@ namespace RateController
                 }
                 else
                 {
-                    float Percent = (float)((Math.Abs(pwmSetting) - Min + 5) / Range);
+                    float Percent = (Math.Abs(pwmSetting) - Min + 5) / Range;
                     if (pwmSetting < 0)
                     {
                         Percent *= -1;
                     }
 
-                    ValveAdjust = (float)(Percent * (float)(SimulateInterval / ValveOpenTime) * 100.0);
+                    ValveAdjust = (float)(Percent * (SimulateInterval / ValveOpenTime) * 100.0);
                 }
 
                 ValveOpen += ValveAdjust;

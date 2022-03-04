@@ -23,14 +23,12 @@ namespace RateController
 
 
         private Int16[,] cPressure = new short[255, 4]; // modules, pressures
-        private int Temp;
-        private byte LoByte;
-        private byte HiByte;
-        private byte ModuleID;
 
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
+            byte ModuleID;
+
             if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount)
             {
                 ModuleID = Data[3];
@@ -45,7 +43,12 @@ namespace RateController
 
         public bool ParseStringData(string[] Data)
         {
+            int Temp;
+            byte LoByte;
+            byte HiByte;
             bool Result = false;
+            byte ModuleID;
+
             if (Data.Length >= cByteCount)
             {
                 int.TryParse(Data[0], out Temp);

@@ -36,7 +36,7 @@ namespace RateController
         {
             double Tmp = 0;
 
-            cData[2] = Prod.mf.Tls.BuildModSenID(Prod.ModuleID, (byte)Prod.SensorID);
+            cData[2] = Prod.mf.Tls.BuildModSenID(Prod.ModuleID, Prod.SensorID);
             cData[3] = Prod.mf.Sections.SectionLo();
             cData[4] = Prod.mf.Sections.SectionHi();
 

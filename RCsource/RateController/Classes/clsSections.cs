@@ -43,8 +43,6 @@ namespace RateController
 
         private byte[] SectionControlLast = new byte[2];
 
-        private bool PinState;
-
         private bool MasterOn;
         private bool MasterLast;
         private bool MasterChanged;
@@ -348,6 +346,8 @@ namespace RateController
             // Relays
             if (MasterOn)
             {
+                bool PinState;
+
                 for (int SwByte = 0; SwByte < 2; SwByte++)
                 {
                     for (int SwBit = 0; SwBit < 8; SwBit++)

@@ -11,7 +11,7 @@ namespace RateController
 
         public PGN32613 ArduinoModule;
         public byte CoverageUnits = 0;
-        public double cRateSet = 0;
+        private double cRateSet = 0;
         public bool EraseApplied = false;
         public double FlowCal = 0;
         public byte QuantityUnits = 0;
@@ -31,11 +31,9 @@ namespace RateController
         private double cQuantityApplied = 0;
 
         private int cSenID; // rate sensor ID on arduino, 0-15, low 4 bits
-
         private SimType cSimulationType = 0;
 
         private double CurrentMinutes;
-        private double CurrentQuantity = 0;
         private double CurrentWorkedArea_Hc = 0;
         private bool cUseMultiPulse;
         private bool cUseOffRateAlarm;
@@ -49,7 +47,6 @@ namespace RateController
         private PGN32614 RateToArduino;
         private bool SwitchIDsSent;
         private double TankRemaining = 0;
-        private DateTime UpdateStartTime;
         private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
 
         public clsProduct(FormStart CallingForm, int ProdID)
@@ -490,7 +487,7 @@ namespace RateController
                 double Percent = mf.VRdata.Rate(VRconversion[cVariableRate]);
                 if ((int)Percent != 255)
                 {
-                    Result = (double)Percent / 100.0 * cRateSet;
+                    Result = Percent / 100.0 * cRateSet;
                 }
             }
             return Result;
@@ -549,6 +546,8 @@ namespace RateController
 
         public void Update()
         {
+            DateTime UpdateStartTime;
+
             if (ArduinoModule.Connected() && mf.AutoSteerPGN.Connected())
             {
                 if (!SwitchIDsSent)
@@ -671,6 +670,8 @@ namespace RateController
 
         private void UpdateQuantity(double AccQuantity)
         {
+            double CurrentQuantity = 0;
+
             if (AccQuantity > LastAccQuantity)
             {
                 CurrentQuantity = AccQuantity - LastAccQuantity;

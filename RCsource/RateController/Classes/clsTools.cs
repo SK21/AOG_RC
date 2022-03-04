@@ -375,7 +375,7 @@ namespace RateController
                     {
                         // trim file
                         string[] Lines = File.ReadAllLines(FileName);
-                        int Len = (int)Lines.Length;
+                        int Len = Lines.Length;
                         int St = (int)(Len * .1); // skip first 10% of old lines
                         string[] NewLines = new string[Len - St];
                         Array.Copy(Lines, St, NewLines, 0, Len - St);

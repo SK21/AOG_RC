@@ -6,7 +6,6 @@ namespace RateController
     public class clsProducts
     {
         public IList<clsProduct> Items; // access records by index
-        private double AlarmSetPoint;
         private List<clsProduct> cProducts = new List<clsProduct>();
         private DateTime LastSave;
         private int MaxRecords = 5;
@@ -21,6 +20,8 @@ namespace RateController
         public bool AlarmOn()
         {
             bool cAlarmOn = false;
+            double AlarmSetPoint;
+
             for (int i = 0; i < MaxRecords; i++)
             {
                 if ((cProducts[i].WorkRate() > 0) && (cProducts[i].UseOffRateAlarm))
