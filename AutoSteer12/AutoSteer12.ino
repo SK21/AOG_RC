@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteer12   03-Mar-2022"
+# define InoDescription "AutoSteer12   07-Mar-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 and AS12 PCB
 
@@ -266,7 +266,7 @@ void setup()
 {
 	// watchdog timer
 	WDT_timings_t config;
-	config.timeout = 20;
+	config.timeout = 40;
 	wdt.begin(config);
 
 #if (ReceiverType !=0)
@@ -310,16 +310,12 @@ void setup()
 
 	// ethernet start
 	Serial.println("Starting Ethernet ...");
-	EthernetConnected = Ethernet.begin(LocalMac);
-	Ethernet.setLocalIP(LocalIP);
-	if (EthernetConnected)
-	{
-		Serial.println("Ethernet connected.");
-	}
-	else
-	{
-		Serial.println("Ethernet not connected.");
-	}
+	Serial.print("IP Address: 192.168.");
+	Serial.print(IPpart3);
+	Serial.print(".");
+	Serial.println(IPMac);
+	Ethernet.begin(LocalMac,LocalIP);
+  
 	Serial.println("");
 
 	// main port
