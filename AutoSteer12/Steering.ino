@@ -57,7 +57,6 @@ void DoSteering()
 	//************** Steering Angle ******************
 	steeringPosition = ReadAds1115();
 	steeringPosition = steeringPosition >> 1;
-	WASreading = steeringPosition;
 
 	//  ***** make sure that negative steer angle makes a left turn and positive value is a right turn *****
 	if (steerConfig.InvertWAS)

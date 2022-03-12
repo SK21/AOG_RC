@@ -24,14 +24,14 @@
 #define SwapPitchRoll 1		// 0 use roll value for roll, 1 use pitch value for roll
 #define InvertRoll  0
 
+const uint16_t  LOOP_TIME = 25;	// 40 hz, main loop
+const uint16_t  SendTime = 200;	// ms interval to send data back to AGIO
+
 #define MinSpeed  1
 #define MaxSpeed  15
 
 #define IPpart3 1	// ex: 192.168.IPpart3.255
 #define IPMac 73	// unique number for Arduino IP address and Mac part 6
-
-const uint16_t  LOOP_TIME = 25;	// 40 hz, main loop
-const uint16_t  SendTime = 200;	// ms interval to send data back to AGIO
 
 #define Hz_Per_KMH 25.5		// 25.5 Hz/KMH = 41.0 Hz/MPH, depends on sensor  
 #define EEP_Ident 4410	// if not in eeprom, overwrite
@@ -190,7 +190,6 @@ int16_t EEread = 0;
 uint32_t CommTime;
 uint32_t LastSend;
 
-bool EthernetConnected = false;
 bool IMUstarted = false;
 bool ADSfound = false;	
 
@@ -296,7 +295,7 @@ void setup()
 	pinMode(SteerSW_Relay, OUTPUT);
 	pinMode(SpeedPulsePin, OUTPUT);
 
-	SteerSwitch = LOW;
+	SteerSwitch = HIGH;
 
 	// ethernet start
 	Serial.println("Starting Ethernet ...");
@@ -430,8 +429,6 @@ void setup()
 	Serial.println("Finished setup.");
 }
 
-int16_t WASreading;
-
 void loop()
 {
 	Blink();
@@ -446,13 +443,6 @@ void loop()
 
 	if (millis() - LastSend > SendTime)
 	{
-		//Serial.println("");
-
-		//Serial.print("WAS ");
-		//Serial.print(WASreading);
-		//Serial.print(", pwmDrive ");
-		//Serial.println(pwmDrive);
-
 		LastSend = millis();
 
 #if (ReceiverType == 0)

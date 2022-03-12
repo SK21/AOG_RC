@@ -32,7 +32,7 @@ void SendSteerUDP()
     PGN_253[10] = tmp >> 8;
 
     PGN_253[11] = switchByte;
-    PGN_253[12] = pwmDrive;
+    PGN_253[12] = pwmDrive;     // only works for positive values
 
     //add the checksum
     int16_t CK_A = 0;
