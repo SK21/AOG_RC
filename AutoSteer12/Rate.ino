@@ -1,25 +1,25 @@
 #if(UseRateControl)
-volatile unsigned long Duration[SensorCount];
-volatile unsigned long PulseCount[SensorCount];
-unsigned long LastPulse[SensorCount];
+volatile uint32_t Duration[SensorCount];
+volatile uint32_t PulseCount[SensorCount];
+uint32_t LastPulse[SensorCount];
 
-unsigned long TimedCounts[SensorCount];
-unsigned long RateInterval[SensorCount];
-unsigned long RateTimeLast[SensorCount];
+uint32_t TimedCounts[SensorCount];
+uint32_t RateInterval[SensorCount];
+uint32_t RateTimeLast[SensorCount];
 
-unsigned long CurrentCount;
-unsigned long CurrentDuration;
+uint32_t CurrentCount;
+uint32_t CurrentDuration;
 
-unsigned long PPM[SensorCount];		// pulse per minute * 100
-unsigned long Osum[SensorCount];
-unsigned long Omax[SensorCount];
-unsigned long Omin[SensorCount];
+uint32_t PPM[SensorCount];		// pulse per minute * 100
+uint32_t Osum[SensorCount];
+uint32_t Omax[SensorCount];
+uint32_t Omin[SensorCount];
 byte Ocount[SensorCount];
 float Oave[SensorCount];
 
 void ISR0()
 {
-	static unsigned long PulseTime;
+	static uint32_t PulseTime;
 	if (millis() - PulseTime > 10)
 	{
 		Duration[0] = millis() - PulseTime;

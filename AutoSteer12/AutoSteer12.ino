@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteer12   07-Mar-2022"
+# define InoDescription "AutoSteer12   12-Mar-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 and AS12 PCB
 
@@ -11,8 +11,9 @@
 #include "zNMEAParser.h"	
 
 // user settings ****************************
-#define ReceiverType 1		// 0 None, 1 SimpleRTK2B, 2 SparkFun F9P
-#define Hz_Per_KMH 25.5		// 25.5 Hz/KMH = 41.0 Hz/MPH, depends on sensor  
+#define ReceiverType 1			// 0 None, 1 SimpleRTK2B, 2 SparkFun F9P
+#define SteeringZeroOffset 6100
+#define LOW_HIGH_DEGREES 5.0	//How many degrees before decreasing Max PWM
 
 #define EnableGyro 0
 #define IMUtype	1			// 0 None, 1 SparkFun BNO08x, 2 CMPS14
@@ -29,27 +30,20 @@
 #define IPpart3 1	// ex: 192.168.IPpart3.255
 #define IPMac 73	// unique number for Arduino IP address and Mac part 6
 
-//How many degrees before decreasing Max PWM
-#define LOW_HIGH_DEGREES 5.0
-
-// WAS RTY090LVNAA voltage output is 0.5 (left) to 4.5 (right). +-45 degrees
-// ADS reading of the WAS ranges from 2700 to 24000 (21300)
-// counts per degree for this sensor is 237 (21300/90)
-int16_t SteeringZeroOffset = 6500;
-
 const uint16_t  LOOP_TIME = 25;	// 40 hz, main loop
-const uint16_t  SendTime = 250;	// 4 hz, send data back to AGIO
+const uint16_t  SendTime = 200;	// ms interval to send data back to AGIO
 
+#define Hz_Per_KMH 25.5		// 25.5 Hz/KMH = 41.0 Hz/MPH, depends on sensor  
 #define EEP_Ident 4410	// if not in eeprom, overwrite
 
 
-#define UseRateControl 1				
+#define UseRateControl 0				
 #define ModuleID 0						// unique ID 0-15
 #define SensorCount 1
 
 #define RelayOn LOW						// sections relays on signal 
 byte FlowOn[] = { LOW };				// on value for flowmeter or motor direction
-const unsigned long RateLoopTime = 50;	//in msec = 20hz
+const uint32_t RateLoopTime = 50;		//in msec = 20hz
 byte SwitchedPowerRelay = 255;			// # of relay always on, needed for some raven valves. Use 255 for none.
 
 // ******************************************
@@ -129,7 +123,7 @@ float IMU_Pitch = 0;
 float IMU_YawRate = 0;
 
 //loop time variables in microseconds
-uint16_t  lastTime = LOOP_TIME;
+uint32_t  lastTime = LOOP_TIME;
 
 int8_t guidanceStatus;
 
@@ -144,7 +138,7 @@ float Speed_KMH = 0.0;
 int8_t SteerSwitch = LOW;	// Low on, High off
 int8_t SWreading = HIGH;
 int8_t SWprevious = LOW;
-uint16_t  SWtime = 0;
+uint32_t  SWtime = 0;
 uint16_t  SWdebounce = 50;
 
 int8_t switchByte = 0;
@@ -153,8 +147,7 @@ int8_t workSwitch = 0;
 //pwm variables
 int16_t pwmDrive = 0;
 int16_t pwmTmp = 0;
-int16_t pwmDir = 1;
-int8_t MaxPWMvalue = 255;
+int16_t MaxPWMvalue = 255;
 
 //fromAutoSteerData FD 253 - ActualSteerAngle*100 -5,6, Heading-7,8, 
 //Roll-9,10, SwitchByte-11, pwmDisplay-12, CRC 13
@@ -166,14 +159,14 @@ float SensorReading;
 
 //Variables for settings  
 struct Storage {
-	int8_t Kp = 40;  //proportional gain
-	int8_t lowPWM = 10;  //band of no action
+	uint8_t Kp = 40;  //proportional gain
+	uint8_t lowPWM = 10;  //band of no action
 	int16_t wasOffset = 0;
-	int8_t minPWM = 9;
-	int8_t highPWM = 60;//max PWM value
+	uint8_t minPWM = 9;
+	uint8_t highPWM = 60;//max PWM value
 	float steerSensorCounts = 30;
 	float AckermanFix = 1;     //sent as percent
-};  Storage steerSettings;  //14 bytes
+};  Storage steerSettings;  //11 bytes
 
  //Variables for settings - 0 is false  
 struct Setup {
@@ -194,15 +187,12 @@ struct Setup {
 //EEPROM
 int16_t EEread = 0;
 
-unsigned long CommTime;
-unsigned long LastSend;
+uint32_t CommTime;
+uint32_t LastSend;
 
 bool EthernetConnected = false;
 bool IMUstarted = false;
 bool ADSfound = false;	
-
-//reset function
-void(*resetFunc) (void) = 0;
 
 #if(UseRateControl)
 byte RateSend[11];
@@ -210,7 +200,7 @@ bool FlowEnabled[SensorCount];
 float rateError[SensorCount];
 float UPM[SensorCount];
 int RatePWM[SensorCount];
-unsigned long RateCommTime[SensorCount];
+uint32_t RateCommTime[SensorCount];
 
 byte PIDkp[] = { 20 };
 byte PIDminPWM[] = { 50 };
@@ -222,14 +212,14 @@ byte AdjustTime[SensorCount];
 
 byte InCommand;
 byte ControlType[SensorCount];	// 0 standard, 1 fast close, 2 motor
-unsigned long TotalPulses[SensorCount];
+uint32_t TotalPulses[SensorCount];
 byte ManualPWMsetting;
 float RateSetting[SensorCount];
 float MeterCal[SensorCount];
 
 byte RelayLo;
 byte RelayHi;
-unsigned long RateLoopLast = RateLoopTime;
+uint32_t RateLoopLast = RateLoopTime;
 bool AutoOn = true;
 unsigned int PGN;
 bool PGN32614Found;
@@ -238,9 +228,9 @@ bool PGN32619Found;
 bool PGN32620Found;
 
 float NewRateFactor[SensorCount];
-unsigned long ManualLast[SensorCount];
+uint32_t ManualLast[SensorCount];
 float ManualFactor;
-unsigned long WifiSwitchesTimer;
+uint32_t WifiSwitchesTimer;
 bool WifiSwitchesEnabled = false;
 byte WifiSwitches[5];
 
@@ -440,6 +430,8 @@ void setup()
 	Serial.println("Finished setup.");
 }
 
+int16_t WASreading;
+
 void loop()
 {
 	Blink();
@@ -454,6 +446,13 @@ void loop()
 
 	if (millis() - LastSend > SendTime)
 	{
+		//Serial.println("");
+
+		//Serial.print("WAS ");
+		//Serial.print(WASreading);
+		//Serial.print(", pwmDrive ");
+		//Serial.println(pwmDrive);
+
 		LastSend = millis();
 
 #if (ReceiverType == 0)
@@ -489,13 +488,14 @@ void Blink()
 }
  
 
-// https://discourse.agopengps.com/t/get-feed-rate-from-ago-and-transform-it-into-weedkiller-sprayer-computer-compatible-pulses/2958/39
-unsigned long PulseTime;
+uint32_t SpeedPulseTime;
 void SendSpeedPulse()
 {
-	if (millis() - PulseTime > 400) //This section runs every 400 millis.  It gets speed and changes the frequency of the tone generator.
+	// https://discourse.agopengps.com/t/get-feed-rate-from-ago-and-transform-it-into-weedkiller-sprayer-computer-compatible-pulses/2958/39
+
+	if (millis() - SpeedPulseTime > 400) //This section runs every 400 millis.  It gets speed and changes the frequency of the tone generator.
 	{
-		PulseTime = millis();
+		SpeedPulseTime = millis();
 		if (Speed_KMH < 1.22) // If the speed is lower than (0.76 MPH, 1.22 KMH) or (31.1 Hz) it forces the output to 0. Tone will not work under 31 Hz 
 		{
 			noTone(SpeedPulsePin);

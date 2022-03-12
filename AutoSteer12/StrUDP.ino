@@ -80,7 +80,7 @@ void ReceiveSteerUDP()
                 // autosteer data
                 Speed_KMH = (data[6] << 8 | data[5]) * 0.1;
                 guidanceStatus = data[7];
-                steerAngleSetPoint = (data[9] << 8 | data[8]) * 0.01;
+                steerAngleSetPoint = (float)((int16_t)(data[9] << 8 | data[8])) * 0.01;
                 CommTime = millis();
             }
 
@@ -91,9 +91,9 @@ void ReceiveSteerUDP()
                 steerSettings.highPWM = data[6];
                 steerSettings.lowPWM = data[7];
                 steerSettings.minPWM = data[8];
-                steerSettings.steerSensorCounts = data[9];
+                steerSettings.steerSensorCounts = (float)data[9];
                 steerSettings.wasOffset = data[10] | data[11] << 8;
-                steerSettings.AckermanFix = data[12] * 0.01;
+                steerSettings.AckermanFix = (float)data[12] * 0.01;
 
                 EEPROM.put(10, steerSettings);
             }
@@ -122,8 +122,8 @@ void ReceiveSteerUDP()
 
                 EEPROM.put(40, steerConfig);
 
-                //reset the arduino
-                //resetFunc();
+                //reset the Teensy
+                SCB_AIRCR = 0x05FA0004;
             }
         }
     }

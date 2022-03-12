@@ -1,8 +1,8 @@
 
-// based on https://github.com/RalphBacon/ADS1115-ADC/blob/master/ADS1115_ADC_16_bit_SingleEnded.ino
-
 uint16_t ReadAds1115(byte NextPinNumber = 0)
 {
+	// based on https://github.com/RalphBacon/ADS1115-ADC/blob/master/ADS1115_ADC_16_bit_SingleEnded.ino
+
 	// read current value
 	Wire.beginTransmission(AdsI2Caddress);
 	Wire.write(0b00000000); //Point to Conversion register 
@@ -46,7 +46,7 @@ uint16_t ReadAds1115(byte NextPinNumber = 0)
 	// Bit  2   Latching 0=No, 1=Yes
 	// Bits 1:0 Comparator # before Alert pin goes high
 	//      00=1, 01=2, 10=4, 11=Disable this feature
-	Wire.write(0b00000011);
+	Wire.write(0b11100011);	//860 samples/sec
 	Wire.endTransmission();
 
 	return convertedValue;
@@ -56,9 +56,9 @@ void DoSteering()
 {
 	//************** Steering Angle ******************
 	steeringPosition = ReadAds1115();
-	steeringPosition = (steeringPosition >> 1);			//bit shift by 2  0 to 13610 is 0 to 5v
+	steeringPosition = steeringPosition >> 1;
+	WASreading = steeringPosition;
 
-	//convert position to steer angle. 32 counts per degree of steer pot position in my case
 	//  ***** make sure that negative steer angle makes a left turn and positive value is a right turn *****
 	if (steerConfig.InvertWAS)
 	{
@@ -72,11 +72,9 @@ void DoSteering()
 	}
 
 	if (steerAngleActual < 0) steerAngleActual = (steerAngleActual * steerSettings.AckermanFix);
+	steerAngleError = steerAngleActual - steerAngleSetPoint;   
 
-	steerAngleError = steerAngleActual - steerAngleSetPoint;   //calculate the steering error
-
-	if ((millis() - CommTime > 4000) || (bitRead(guidanceStatus, 0) == 0)
-		|| SteerSwitch == HIGH || (Speed_KMH < MinSpeed) || Speed_KMH > MaxSpeed)
+	if ((millis() - CommTime > 4000) || (bitRead(guidanceStatus, 0) == 0) || SteerSwitch == HIGH || (Speed_KMH < MinSpeed) || Speed_KMH > MaxSpeed)
 	{
 		// steering disabled
 
@@ -88,7 +86,7 @@ void DoSteering()
 	else
 	{
 		// steering enabled
-
+		
 		// limit PWM when steer angle error is low
 		MaxPWMvalue = steerSettings.highPWM;
 		if (abs(steerAngleError) < LOW_HIGH_DEGREES)
@@ -102,7 +100,6 @@ void DoSteering()
 		//add min throttle factor so no delay from motor resistance.
 		if (pwmDrive < 0) pwmDrive -= steerSettings.minPWM;
 		else if (pwmDrive > 0) pwmDrive += steerSettings.minPWM;
-
 		if (pwmDrive > MaxPWMvalue) pwmDrive = MaxPWMvalue;
 		if (pwmDrive < -MaxPWMvalue) pwmDrive = -MaxPWMvalue;
 
@@ -127,19 +124,10 @@ void DoSteering()
 	}
 
 	// pwm value out to motor
-	if (pwmDrive >= 0)
-	{
-		digitalWrite(DIR1_PIN, HIGH);
-		pwmDir = 1;
-	}
-	else
-	{
-		digitalWrite(DIR1_PIN, LOW);
-		pwmDir = -1;
-	}
-
-	analogWrite(PWM1_PIN, pwmDrive * pwmDir);
+	digitalWrite(DIR1_PIN, (pwmDrive >= 0));
+	analogWrite(PWM1_PIN, abs(pwmDrive));
 }
+
 
 float tmpIMU;
 float HeadingLast;
@@ -154,7 +142,7 @@ void ReadIMU()
 		{
 			IMU_Heading = (myIMU.getYaw()) * 180.0 / PI; // Convert yaw / heading to degrees
 			IMU_Heading = -IMU_Heading; //BNO085 counter clockwise data to clockwise data
-			if (IMU_Heading < 0 && IMU_Heading >= -180) //Scale BNO085 yaw from [-180°;180°] to [0;360°]
+			if (IMU_Heading < 0 && IMU_Heading >= -180) //Scale BNO085 yaw from [-180ï¿½;180ï¿½] to [0;360ï¿½]
 			{
 				IMU_Heading = IMU_Heading + 360;
 			}

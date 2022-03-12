@@ -1,4 +1,4 @@
-unsigned long PulseStart;
+uint32_t PulseStart;
 int SwitchPulseCount;
 bool PulseRead;
 bool PulseLast;
@@ -38,10 +38,12 @@ void ReadSwitches()
 			if (SteerSwitch == HIGH)
 			{
 				SteerSwitch = LOW;
+				Serial.println("SteerSwitch set low.");
 			}
 			else
 			{
 				SteerSwitch = HIGH;
+				Serial.println("SteerSwitch set high.");
 			}
 			SWtime = millis();
 		}

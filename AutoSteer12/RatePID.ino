@@ -1,6 +1,6 @@
 #if(UseRateControl)
 bool AdjustState[] = { true,true,true,true,true }; // false - pause adjusting, true - adjust
-unsigned long CurrentAdjustTime[2];
+uint32_t CurrentAdjustTime[2];
 
 int DoPID(byte sKP, float sError, float sSetPoint, byte sMinPWM,
     byte sLowMax, byte sHighMax, byte sBrakePoint, byte sDeadband, byte SensorID)
