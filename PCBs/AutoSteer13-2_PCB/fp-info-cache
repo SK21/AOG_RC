@@ -1,11 +1,4 @@
-17511650898752204
-1988820
-SHDR4W110P0X500_1X4_2000X1280X1205P
-1988820
-Connector
-0
-4
-4
+17510019503984506
 Button_Switch_THT
 KSA_Tactile_SPST
 KSA http://www.ckswitches.com/media/1457/ksa_ksl.pdf
@@ -53156,8 +53149,8 @@ CMPS14_no_pins
 
 0
 0
-0
-0
+2
+2
 MyFootprints
 CPC796404
 
