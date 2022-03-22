@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name AS13-rescue)(type Legacy)(uri ${KIPRJMOD}/AS13-rescue.lib)(options "")(descr ""))
-)
