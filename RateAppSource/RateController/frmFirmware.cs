@@ -13,9 +13,11 @@ namespace RateController
         // modified from https://github.com/luni64/TeensySharp/tree/master/src/Examples/07_WinForms%20Uploader
         // requires the NuGet package lunOptics.libTeensySharp
         // right click on project name in the solution explorer and select "Manage NuGet Packages..."
+        // teensy uploader and serial monitor need to be closed to free the serial port
 
-        private TeensyWatcher watcher;
         private FormStart mf;
+        private bool UseDefault = false;
+        private TeensyWatcher watcher;
 
         public frmFirmware(FormStart CallingForm)
         {
@@ -29,6 +31,75 @@ namespace RateController
                 lbTeensies.Items.Add(teensy);
             }
             if (lbTeensies.Items.Count > 0) lbTeensies.SelectedIndex = 0;
+        }
+
+        private void bntOK_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            UseDefault = false;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "hex files (*.hex)|*.hex|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 0;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    tbHexfile.Text = openFileDialog.FileName;
+
+                    var fw = new TeensyFirmware(tbHexfile.Text);
+                    lblFWType.Text = "Firmware type: " + fw.boardType.ToString();
+                }
+            }
+        }
+
+        private void btnDefault_Click(object sender, EventArgs e)
+        {
+            UseDefault = true;
+            tbHexfile.Text = "Default file version date: " + mf.Tls.ModuleVersion();
+            lblFWType.Text = "";
+        }
+
+        private async void btnUpload_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filename = "";
+                var teensy = lbTeensies.SelectedItem as ITeensy;
+                if (teensy != null)
+                {
+                    if (UseDefault)
+                    {
+                        filename = Path.GetTempFileName();
+                        File.WriteAllBytes(filename, Properties.Resources.AutoSteerTeensy_ino);
+                    }
+                    else
+                    {
+                        filename = tbHexfile.Text;
+                    }
+
+                    if (File.Exists(filename))
+                    {
+                        var progress = new Progress<int>(v => progressBar.Value = v);
+                        progressBar.Visible = true;
+                        var result = await teensy.UploadAsync(filename, progress);
+                        mf.Tls.ShowHelp(result.ToString(), "Message", 3000);
+                        progressBar.Visible = false;
+                        progressBar.Value = 0;
+                    }
+                    else
+                    {
+                        mf.Tls.ShowHelp("File does not exist", "Error", 3000, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
+            }
         }
 
         private void ConnectedTeensiesChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -52,50 +123,6 @@ namespace RateController
             if (lbTeensies.SelectedIndex == -1 && lbTeensies.Items.Count > 0) lbTeensies.SelectedIndex = 0;
         }
 
-        private async void btnUpload_Click(object sender, EventArgs e)
-        {
-            var teensy = lbTeensies.SelectedItem as ITeensy;
-            if (teensy != null)
-            {
-                string filename = tbHexfile.Text;
-                if (File.Exists(filename))
-                {
-                    var progress = new Progress<int>(v => progressBar.Value = v);
-                    progressBar.Visible = true;
-                    var result = await teensy.UploadAsync(filename, progress);
-                    mf.Tls.ShowHelp(result.ToString(), "Message", 3000);
-                    progressBar.Visible = false;
-                    progressBar.Value = 0;
-                }
-                else
-                {
-                    mf.Tls.ShowHelp("File does not exist", "Error", 3000, true);
-                }
-            }
-        }
-
-        private void btnBrowse_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "hex files (*.hex)|*.hex|All files (*.*)|*.*";
-                openFileDialog.FilterIndex = 0;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    tbHexfile.Text = openFileDialog.FileName;
-
-                    var fw = new TeensyFirmware(tbHexfile.Text);
-                    lblFWType.Text = "Firmware type: " + fw.boardType.ToString();
-                }
-            }
-        }
-
-        private void frmFirmware_Load(object sender, EventArgs e)
-        {
-            mf.Tls.LoadFormData(this);
-        }
-
         private void frmFirmware_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (this.WindowState == FormWindowState.Normal)
@@ -104,9 +131,10 @@ namespace RateController
             }
         }
 
-        private void bntOK_Click(object sender, EventArgs e)
+        private void frmFirmware_Load(object sender, EventArgs e)
         {
-            Close();
+            mf.Tls.LoadFormData(this);
+            this.BackColor = Properties.Settings.Default.DayColour;
         }
     }
 }

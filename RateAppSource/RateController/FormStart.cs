@@ -71,8 +71,9 @@ namespace RateController
             mnuSettings.Items[5].Text = Lang.lgLoad;
             mnuSettings.Items[6].Text = Lang.lgSaveAs;
             mnuSettings.Items[7].Text = Lang.lgLanguage;
-            mnuSettings.Items[8].Text = Lang.lgFirmware;
-            mnuSettings.Items[9].Text = Lang.lgAbout;
+            mnuSettings.Items[8].Text = Lang.lgPCBconfig;
+            mnuSettings.Items[9].Text = Lang.lgFirmware;
+            mnuSettings.Items[10].Text = Lang.lgAbout;
 
             #endregion // language
 
@@ -581,6 +582,12 @@ namespace RateController
         {
             Form Sec = new frmFirmware(this);
             Sec.ShowDialog();
+        }
+
+        private void pCBConfigToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form tmp = new frmPCBsettings(this);
+            tmp.ShowDialog();
         }
     }
 }

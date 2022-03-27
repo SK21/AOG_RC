@@ -10,13 +10,16 @@ namespace RateController
 {
     public class clsTools
     {
-        private static Hashtable ht;
         private string cAppName = "RateController";
-        private string cAppVersion = "2.1.17";
+        private string cAppVersion = "2.2.0";
+        private string cVersionDate = "26-Mar-2022";
+
+        private string cModuleVersion = "26-Mar-2022";
+
+        private static Hashtable ht;
         private string cPropertiesFile;
 
         private string cSettingsDir;
-        private string cVersionDate = "21-Mar-2022";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
@@ -42,6 +45,11 @@ namespace RateController
         public string AppVersion()
         {
             return cAppVersion;
+        }
+
+        public string ModuleVersion()
+        {
+            return cModuleVersion;
         }
 
         public byte BitClear(byte b, int pos)

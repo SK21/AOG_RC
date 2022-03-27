@@ -22,7 +22,7 @@ namespace RateController
             label1.Text = Message;
             timer1.Interval = timeInMsec;
 
-            if (Message.Length < 50)
+            if (Message.Length < 40)
             {
                 this.Height = 200;
                 this.Width = 250;
@@ -54,6 +54,11 @@ namespace RateController
             timer1.Enabled = false;
             timer1.Dispose();
             Dispose();
+
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                mf.Tls.SaveFormData(this);
+            }
             Close();
         }
 

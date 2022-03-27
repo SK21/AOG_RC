@@ -261,6 +261,9 @@
   <data name="lgOverallRate" xml:space="preserve">
     <value>Overall Rate …</value>
   </data>
+  <data name="lgPCBconfig" xml:space="preserve">
+    <value>PCB Config</value>
+  </data>
   <data name="lgPressure" xml:space="preserve">
     <value>Pressure</value>
   </data>

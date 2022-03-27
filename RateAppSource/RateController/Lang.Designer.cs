@@ -493,6 +493,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PCB Config.
+        /// </summary>
+        internal static string lgPCBconfig {
+            get {
+                return ResourceManager.GetString("lgPCBconfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pressure.
         /// </summary>
         internal static string lgPressure {
