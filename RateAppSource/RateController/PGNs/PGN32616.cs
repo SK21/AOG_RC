@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RateController
+﻿namespace RateController
 {
-    class PGN32616
+    public class PGN32616
     {
         // PID to Arduino from RateController
         // 0    104
@@ -20,19 +14,17 @@ namespace RateController
         // 8    BrakePoint
         // 9    Timed Adjustment    0-disabled
 
-        private byte cKP;
-        private byte cMinPWM;
-        private byte cLowMax;
-
-        private byte cHighMax;
-        private byte cDeadBand;
-        private byte cBrakePoint;
-        private byte cTimedAdjustment;
-
         private const byte cByteCount = 10;
-        private const byte HeaderLo = 104;
         private const byte HeaderHi = 127;
+        private const byte HeaderLo = 104;
         private readonly clsProduct Prod;
+        private byte cBrakePoint;
+        private byte cDeadBand;
+        private byte cHighMax;
+        private byte cKP;
+        private byte cLowMax;
+        private byte cMinPWM;
+        private byte cTimedAdjustment;
 
         public PGN32616(clsProduct CalledFrom)
         {
@@ -45,6 +37,76 @@ namespace RateController
             cDeadBand = 4;
             cBrakePoint = 20;
             cTimedAdjustment = 0;
+        }
+
+        public byte BrakePoint
+        {
+            get { return cBrakePoint; }
+            set
+            {
+                if (value <= 100) cBrakePoint = value;
+            }
+        }
+
+        public byte DeadBand
+        {
+            get { return cDeadBand; }
+            set
+            {
+                if (value <= 100) cDeadBand = value;
+            }
+        }
+
+        public byte HighMax
+        {
+            get { return cHighMax; }
+            set
+            {
+                if (value <= 100) cHighMax = value;
+            }
+        }
+
+        public byte KP
+        {
+            get { return cKP; }
+            set
+            {
+                if (value <= 100) cKP = value;
+            }
+        }
+
+        public byte LowMax
+        {
+            get { return cLowMax; }
+            set
+            {
+                if (value <= 100) cLowMax = value;
+            }
+        }
+
+        public byte MinPWM
+        {
+            get { return cMinPWM; }
+            set
+            {
+                if (value <= 100) cMinPWM = value;
+            }
+        }
+
+        public byte TimedAdjustment
+        {
+            get { return cTimedAdjustment; }
+            set
+            {
+                if (value >= 50)
+                {
+                    cTimedAdjustment = value;
+                }
+                else
+                {
+                    cTimedAdjustment = 0;
+                }
+            }
         }
 
         public void Send()
@@ -69,76 +131,6 @@ namespace RateController
             {
                 Prod.mf.SendSerial(Data);
                 Prod.mf.UDPnetwork.SendUDPMessage(Data);
-            }
-        }
-
-        public byte KP
-        {
-            get { return cKP; }
-            set
-            {
-                if (value <= 100) cKP = value;
-            }
-        }
-
-        public byte MinPWM
-        {
-            get { return cMinPWM; }
-            set
-            {
-                if (value <= 100) cMinPWM = value;
-            }
-        }
-
-        public byte LowMax
-        {
-            get { return cLowMax; }
-            set
-            {
-                if (value <= 100) cLowMax = value;
-            }
-        }
-
-        public byte HighMax
-        {
-            get { return cHighMax; }
-            set
-            {
-                if (value <= 100) cHighMax = value;
-            }
-        }
-
-        public byte DeadBand
-        {
-            get { return cDeadBand; }
-            set
-            {
-                if (value <= 100) cDeadBand = value;
-            }
-        }
-
-        public byte BrakePoint
-        {
-            get { return cBrakePoint; }
-            set
-            {
-                if (value <= 100) cBrakePoint = value;
-            }
-        }
-
-        public byte TimedAdjustment
-        {
-            get { return cTimedAdjustment; }
-            set
-            {
-                if (value >= 50)
-                {
-                    cTimedAdjustment = value;
-                }
-                else 
-                {
-                    cTimedAdjustment = 0;
-                }
             }
         }
     }

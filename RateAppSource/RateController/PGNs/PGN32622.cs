@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RateController
+﻿namespace RateController
 {
     public class PGN32622
     {
@@ -13,7 +7,7 @@ namespace RateController
         //1     HeaderHi    127
         //2     Receiver    0-None, 1-SimpleRTK2B, 2-Sparkfun F9P
         //3     IMU         0-None, 1-Sparkfun BNO, 2-CMPS14, 3-Adafruit BNO
-        //4     Read Delay  
+        //4     Read Delay
         //5     Report Interval
         //6     Zero offset Lo
         //7     Zero offset Hi
@@ -23,8 +17,8 @@ namespace RateController
         //11    Speed pulse cal X 10 Hi
         //12    Restart module
 
-        private frmPCBsettings cf;
         private byte[] cData = new byte[13];
+        private frmPCBsettings cf;
 
         public PGN32622(frmPCBsettings CalledFrom)
         {

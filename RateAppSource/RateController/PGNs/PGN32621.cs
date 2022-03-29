@@ -18,16 +18,17 @@ namespace RateController
         // 10   sensor 3 Hi
 
         private const byte cByteCount = 11;
-        private const byte HeaderLo = 109;
         private const byte HeaderHi = 127;
-
+        private const byte HeaderLo = 109;
+        private Int16[,] cPressure = new short[255, 4];
+        private byte HiByte;
+        private byte LoByte;
         private FormStart mf;
 
-        private Int16[,] cPressure = new short[255, 4]; // modules, pressures
-        private int Temp;
-        private byte LoByte;
-        private byte HiByte;
         private byte ModuleID;
+
+        // modules, pressures
+        private int Temp;
 
         public PGN32621(FormStart CalledFrom)
         {

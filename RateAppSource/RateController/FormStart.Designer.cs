@@ -78,6 +78,7 @@ namespace RateController
             this.deustchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.englishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nederlandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pCBConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firmwareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -85,7 +86,6 @@ namespace RateController
             this.btnRight = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
-            this.pCBConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -150,7 +150,7 @@ namespace RateController
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(4, 27);
+            this.btAlarm.Location = new System.Drawing.Point(12, 30);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 146;
@@ -222,6 +222,7 @@ namespace RateController
             this.TankRemain.TabIndex = 153;
             this.TankRemain.Text = "5000";
             this.TankRemain.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TankRemain.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
             // 
             // lblUnits
             // 
@@ -272,6 +273,7 @@ namespace RateController
             this.lbRateAmount.TabIndex = 146;
             this.lbRateAmount.Text = "1,800.50";
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbRateAmount.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRate_HelpRequested);
             // 
             // lbCoverage
             // 
@@ -499,13 +501,13 @@ namespace RateController
             this.firmwareToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(201, 488);
+            this.mnuSettings.Size = new System.Drawing.Size(190, 466);
             // 
             // productsToolStripMenuItem
             // 
             this.productsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("productsToolStripMenuItem.Image")));
             this.productsToolStripMenuItem.Name = "productsToolStripMenuItem";
-            this.productsToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.productsToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
             this.productsToolStripMenuItem.Text = "Products";
             this.productsToolStripMenuItem.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -513,7 +515,7 @@ namespace RateController
             // 
             this.sectionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("sectionsToolStripMenuItem.Image")));
             this.sectionsToolStripMenuItem.Name = "sectionsToolStripMenuItem";
-            this.sectionsToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.sectionsToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
             this.sectionsToolStripMenuItem.Text = "Sections";
             this.sectionsToolStripMenuItem.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -521,7 +523,7 @@ namespace RateController
             // 
             this.commToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("commToolStripMenuItem.Image")));
             this.commToolStripMenuItem.Name = "commToolStripMenuItem";
-            this.commToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.commToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
             this.commToolStripMenuItem.Text = "Comm";
             this.commToolStripMenuItem.Click += new System.EventHandler(this.commToolStripMenuItem_Click);
             // 
@@ -529,7 +531,7 @@ namespace RateController
             // 
             this.pressureToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pressureToolStripMenuItem.Image")));
             this.pressureToolStripMenuItem.Name = "pressureToolStripMenuItem";
-            this.pressureToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.pressureToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
             this.pressureToolStripMenuItem.Text = "Pressure";
             this.pressureToolStripMenuItem.Click += new System.EventHandler(this.pressureToolStripMenuItem_Click);
             // 
@@ -537,7 +539,7 @@ namespace RateController
             // 
             this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -545,7 +547,7 @@ namespace RateController
             // 
             this.loadToolStripMenuItem.Image = global::RateController.Properties.Resources.OpenFile;
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -553,7 +555,7 @@ namespace RateController
             // 
             this.saveToolStripMenuItem.Image = global::RateController.Properties.Resources.close;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
             this.saveToolStripMenuItem.Text = "Save As";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -565,7 +567,7 @@ namespace RateController
             this.nederlandsToolStripMenuItem});
             this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(200, 42);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(189, 42);
             this.toolStripMenuItem1.Text = "Language";
             // 
             // deustchToolStripMenuItem
@@ -589,11 +591,19 @@ namespace RateController
             this.nederlandsToolStripMenuItem.Text = "Nederlands";
             this.nederlandsToolStripMenuItem.Click += new System.EventHandler(this.nederlandsToolStripMenuItem_Click);
             // 
+            // pCBConfigToolStripMenuItem
+            // 
+            this.pCBConfigToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pCBConfigToolStripMenuItem.Image")));
+            this.pCBConfigToolStripMenuItem.Name = "pCBConfigToolStripMenuItem";
+            this.pCBConfigToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
+            this.pCBConfigToolStripMenuItem.Text = "PCB config";
+            this.pCBConfigToolStripMenuItem.Click += new System.EventHandler(this.pCBConfigToolStripMenuItem_Click);
+            // 
             // firmwareToolStripMenuItem
             // 
             this.firmwareToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("firmwareToolStripMenuItem.Image")));
             this.firmwareToolStripMenuItem.Name = "firmwareToolStripMenuItem";
-            this.firmwareToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.firmwareToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
             this.firmwareToolStripMenuItem.Text = "Firmware";
             this.firmwareToolStripMenuItem.Click += new System.EventHandler(this.firmwareToolStripMenuItem_Click);
             // 
@@ -601,7 +611,7 @@ namespace RateController
             // 
             this.aboutToolStripMenuItem.Image = global::RateController.Properties.Resources.R674d5dd067acbd409ff50db6d0647f5d;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -646,14 +656,6 @@ namespace RateController
             this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // pCBConfigToolStripMenuItem
-            // 
-            this.pCBConfigToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pCBConfigToolStripMenuItem.Image")));
-            this.pCBConfigToolStripMenuItem.Name = "pCBConfigToolStripMenuItem";
-            this.pCBConfigToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
-            this.pCBConfigToolStripMenuItem.Text = "PCB config";
-            this.pCBConfigToolStripMenuItem.Click += new System.EventHandler(this.pCBConfigToolStripMenuItem_Click);
             // 
             // FormStart
             // 

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-
-namespace RateController
+﻿namespace RateController
 {
     public class PGN234
     {
@@ -30,8 +23,8 @@ namespace RateController
         // 12   swOffGr1        ss 8
         // 13   CRC
 
-        private FormStart mf;
         private byte[] cData = new byte[14];
+        private FormStart mf;
 
         public PGN234(FormStart CalledFrom)
         {
@@ -46,15 +39,17 @@ namespace RateController
             cData[8] = 0;
         }
 
-        public byte Command { set { cData[5] = value; } }
+        public byte Command
+        { set { cData[5] = value; } }
 
-        public byte OnLo { set { cData[9] = value; } }
-
-        public byte OffLo { set { cData[10] = value; } }
-
-        public byte OnHi { set { cData[11] = value; } }
-
-        public byte OffHi { set { cData[12] = value; } }
+        public byte OffHi
+        { set { cData[12] = value; } }
+        public byte OffLo
+        { set { cData[10] = value; } }
+        public byte OnHi
+        { set { cData[11] = value; } }
+        public byte OnLo
+        { set { cData[9] = value; } }
 
         public void Send()
         {

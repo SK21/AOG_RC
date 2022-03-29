@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RateController
+﻿namespace RateController
 {
     public class PGN32620
     {
@@ -24,11 +18,10 @@ namespace RateController
         // 9    sec 14-15
 
         private const byte cByteCount = 10;
-        private const byte HeaderLo = 108;
         private const byte HeaderHi = 127;
-
-        FormStart mf;
-        byte[] Data = new byte[cByteCount];
+        private const byte HeaderLo = 108;
+        private byte[] Data = new byte[cByteCount];
+        private FormStart mf;
 
         public PGN32620(FormStart CallingForm)
         {

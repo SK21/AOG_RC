@@ -268,10 +268,6 @@ namespace RateController
             }
         }
 
-        private void btnSections_Click(object sender, EventArgs e)
-        {
-        }
-
         private double CalCounts()
         {
             double Result = 0;
@@ -1346,7 +1342,7 @@ namespace RateController
 
         private void label2_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "How fast the valve/motor responses to rate changes.";
+            string Message = "How fast the valve/motor responds to rate changes.";
 
             mf.Tls.ShowHelp(Message, "Response Rate");
             hlpevent.Handled = true;
@@ -1421,8 +1417,8 @@ namespace RateController
 
         private void rbSinglePulse_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "For slow flow sensors that take > 50 ms/pulse" +
-                " use the time for one pulse to measure flow rate.";
+            string Message = "Use the time for one pulse to measure flow rate when" +
+                " each flow sensor pulse takes more than 50 milliseconds.";
 
             mf.Tls.ShowHelp(Message, "Rate Method");
             hlpevent.Handled = true;
@@ -1430,8 +1426,8 @@ namespace RateController
 
         private void rbMultiPulse_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "For fast flow sensors that take < 50 ms/pulse" +
-                " use the average time of multiple pulse to measure flow rate.";
+            string Message = "Use the average time of multiple pulses to measure flow rate " +
+                "when each flow sensor pulse takes less than 50 milliseconds.";
 
             mf.Tls.ShowHelp(Message, "Rate Method");
             hlpevent.Handled = true;

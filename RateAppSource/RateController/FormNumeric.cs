@@ -177,10 +177,5 @@ namespace AgOpenGPS
                 }
             }
         }
-
-        private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-
-        }
     }
 }

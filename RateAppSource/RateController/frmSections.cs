@@ -62,7 +62,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowHelp(ex.Message,this.Text,3000,true);
+                mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
             }
         }
 
@@ -71,6 +71,14 @@ namespace RateController
             mf.UseInches = UseInches;
             UpdateForm();
             SetButtons(false);
+        }
+
+        private void btnEqual_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Copy the width of section 1 to the other sections.";
+
+            mf.Tls.ShowHelp(Message, "Copy");
+            hlpevent.Handled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -370,14 +378,6 @@ namespace RateController
             {
                 lbWidth.Text = Lang.lgWidth + ":  " + mf.Sections.TotalWidth(false).ToString("N0");
             }
-        }
-
-        private void btnEqual_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Copy the width of section 1 to the other sections.";
-
-            mf.Tls.ShowHelp(Message, "Copy");
-            hlpevent.Handled = true;
         }
     }
 }

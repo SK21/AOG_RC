@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -19,19 +18,38 @@ namespace RateController
         //10 PWM Hi
 
         private const byte cByteCount = 11;
-        private const byte HeaderLo = 101;
         private const byte HeaderHi = 127;
+        private const byte HeaderLo = 101;
         private double cPWMsetting;
-        private double cUPM;
         private double cQuantity;
+        private double cUPM;
+        private clsProduct Prod;
 
-        clsProduct Prod;
-
+        private double Ratio;
         private DateTime ReceiveTime;
+
+        private double Trate;
 
         public PGN32613(clsProduct CalledFrom)
         {
             Prod = CalledFrom;
+        }
+
+        public double AccumulatedQuantity()
+        {
+            return cQuantity;
+        }
+
+        public bool Connected()
+        {
+            if (Prod.SimulationType == SimType.VirtualNano)
+            {
+                return true;
+            }
+            else
+            {
+                return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
+            }
         }
 
         public bool ParseByteData(byte[] Data)
@@ -127,26 +145,7 @@ namespace RateController
             return cUPM;
         }
 
-        public double AccumulatedQuantity()
-        {
-            return cQuantity;
-        }
-
-        public bool Connected()
-        {
-            if (Prod.SimulationType == SimType.VirtualNano)
-            {
-                return true;
-            }
-            else
-            {
-                return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
-            }
-        }
-
-        double Trate;
-        double Ratio;
-        void CheckRate()
+        private void CheckRate()
         {
             Trate = Prod.TargetUPM();
             if (Trate > 0 && cUPM > 0)

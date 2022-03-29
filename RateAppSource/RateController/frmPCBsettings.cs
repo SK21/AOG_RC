@@ -175,6 +175,41 @@ namespace RateController
             }
         }
 
+        private void ckADS_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Use either the ADS1115 or the Teensy analog pin " +
+                "to read the wheel angle sensor.";
+
+            mf.Tls.ShowHelp(Message, "Use ADS1115");
+            hlpevent.Handled = true;
+        }
+
+        private void ckFlowOn_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Which signal (high or low) increases the flow rate" +
+                "for rate control.";
+
+            mf.Tls.ShowHelp(Message, "Flow on high");
+            hlpevent.Handled = true;
+        }
+
+        private void ckGGA_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Either GGA or VTG can be last when GPS data is sent from the" +
+                " receiver. This is used to determine when the data transfer is finished.";
+
+            mf.Tls.ShowHelp(Message, "GGA last");
+            hlpevent.Handled = true;
+        }
+
+        private void ckRelayOn_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Which signal (high or low) turns on the relay.";
+
+            mf.Tls.ShowHelp(Message, "Relay on high");
+            hlpevent.Handled = true;
+        }
+
         private void frmPCBsettings_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (this.WindowState == FormWindowState.Normal)
@@ -437,6 +472,73 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
+        }
+
+        private void tbAdsWasPin_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The pin (1-4) on the ADS1115 that is connected to the " +
+                "wheel angle sensor.";
+
+            mf.Tls.ShowHelp(Message, "ADS1115");
+            hlpevent.Handled = true;
+        }
+
+        private void tbIMUdelay_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Milliseconds delay in reading the IMU. This is used to match " +
+                "the timing of the GPS data.";
+
+            mf.Tls.ShowHelp(Message, "Read delay");
+            hlpevent.Handled = true;
+        }
+
+        private void tbIMUinterval_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Milliseconds between updates from the IMU.";
+
+            mf.Tls.ShowHelp(Message, "Report Interval");
+            hlpevent.Handled = true;
+        }
+
+        private void tbPowerRelay_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The number of the relay (1-16) that is always on.";
+
+            mf.Tls.ShowHelp(Message, "Power relay");
+            hlpevent.Handled = true;
+        }
+
+        private void tbPulseCal_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The number of pulses per second output for monitors to read 1 KMH.";
+
+            mf.Tls.ShowHelp(Message, "Speed pulse");
+            hlpevent.Handled = true;
+        }
+
+        private void tbRS485port_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The serial port (1-7) used for RS485.";
+
+            mf.Tls.ShowHelp(Message, "RS485 serial port");
+            hlpevent.Handled = true;
+        }
+
+        private void tbRTCM_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The port number for GPS corrections that matches the" +
+                " port used in AGIO.";
+
+            mf.Tls.ShowHelp(Message, "RTCM port");
+            hlpevent.Handled = true;
+        }
+
+        private void tbSteerRelay_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Teensy pin used for the steer disconnect relay.";
+
+            mf.Tls.ShowHelp(Message, "Steer relay");
+            hlpevent.Handled = true;
         }
 
         private void UpdateForm()

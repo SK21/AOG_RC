@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -14,6 +13,7 @@ namespace RateController
 
         // local ports must be unique for each app on same pc and each class instance
         private int cReceivePort;
+
         private int cSendFromPort;
         private int cSendToPort;
 
@@ -129,7 +129,7 @@ namespace RateController
             }
             catch (Exception e)
             {
-                mf.Tls.ShowHelp("UDP start error: \n"+ e.Message,"Comm",3000,true);
+                mf.Tls.ShowHelp("UDP start error: \n" + e.Message, "Comm", 3000, true);
                 return "";
             }
         }
@@ -206,7 +206,7 @@ namespace RateController
             }
             catch (Exception e)
             {
-                mf.Tls.ShowHelp("ReceiveData Error \n"+ e.Message,"Comm",3000,true);
+                mf.Tls.ShowHelp("ReceiveData Error \n" + e.Message, "Comm", 3000, true);
             }
         }
 

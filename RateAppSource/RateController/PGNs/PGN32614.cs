@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace RateController
+﻿namespace RateController
 {
     public class PGN32614
     {
@@ -91,7 +89,7 @@ namespace RateController
             if (Prod.SimulationType != SimType.None) cData[10] |= 0b00001000; else cData[10] &= 0b11110111;
             if (Prod.UseMultiPulse) cData[10] |= 0b00010000; else cData[10] &= 0b11101111;
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[10] |= 0b00100000;
-            Debug.Print(cData[10].ToString("N3"));
+            //Debug.Print(cData[10].ToString("N3"));
 
             // send
             if (Prod.SimulationType == SimType.VirtualNano)

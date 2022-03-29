@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController
 {
@@ -28,8 +24,8 @@ namespace RateController
         //          - invert roll
         //9     Restart module
 
-        private frmPCBsettings cf;
         private byte[] cData = new byte[10];
+        private frmPCBsettings cf;
 
         public PGN32623(frmPCBsettings CalledFrom)
         {
@@ -48,7 +44,7 @@ namespace RateController
             cData[2] = (byte)val;
             cData[3] = (byte)((int)val >> 8);
 
-            for (int i=4;i<8;i++)
+            for (int i = 4; i < 8; i++)
             {
                 double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[i + 7].Name), out val);
                 cData[i] = (byte)val;
@@ -56,10 +52,10 @@ namespace RateController
 
             // check boxes
             cData[8] = 0;
-            for(int i=0;i<cf.CKs.Length;i++)
+            for (int i = 0; i < cf.CKs.Length; i++)
             {
                 bool.TryParse(cf.mf.Tls.LoadProperty(cf.CKs[i].Name), out Checked);
-                if(Checked) cData[8] |= (byte)(Math.Pow(2, i));
+                if (Checked) cData[8] |= (byte)(Math.Pow(2, i));
             }
 
             if (RestartModule) cData[9] = 1; else cData[9] = 0;

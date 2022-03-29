@@ -30,7 +30,7 @@ namespace RateController
             else if (Message.Length < 100)
             {
                 this.Height = 250;
-                this.Width = 250;
+                this.Width = 350;
             }
             else
             {

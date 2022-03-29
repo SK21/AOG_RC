@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RateController
+﻿namespace RateController
 {
     public class PGN32624
     {
@@ -26,8 +20,8 @@ namespace RateController
         //14    RS485 send enable
         //15    Restart module
 
-        private frmPCBsettings cf;
         private byte[] cData = new byte[16];
+        private frmPCBsettings cf;
 
         public PGN32624(frmPCBsettings CalledFrom)
         {
@@ -39,7 +33,7 @@ namespace RateController
         public void Send(bool RestartModule = false)
         {
             byte val;
-            
+
             for (int i = 2; i < 15; i++)
             {
                 byte.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[i + 9].Name), out val);

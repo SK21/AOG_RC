@@ -191,6 +191,7 @@
             this.tbPulseCal.Size = new System.Drawing.Size(102, 30);
             this.tbPulseCal.TabIndex = 128;
             this.tbPulseCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPulseCal.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPulseCal_HelpRequested);
             // 
             // label5
             // 
@@ -251,6 +252,7 @@
             this.tbIMUinterval.Size = new System.Drawing.Size(102, 30);
             this.tbIMUinterval.TabIndex = 122;
             this.tbIMUinterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbIMUinterval.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbIMUinterval_HelpRequested);
             // 
             // label2
             // 
@@ -271,6 +273,7 @@
             this.tbIMUdelay.Size = new System.Drawing.Size(102, 30);
             this.tbIMUdelay.TabIndex = 120;
             this.tbIMUdelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbIMUdelay.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbIMUdelay_HelpRequested);
             // 
             // cbIMU
             // 
@@ -386,6 +389,7 @@
             this.ckADS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckADS.UseVisualStyleBackColor = true;
             this.ckADS.CheckedChanged += new System.EventHandler(this.tb_TextChanged);
+            this.ckADS.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckADS_HelpRequested);
             // 
             // label7
             // 
@@ -406,6 +410,7 @@
             this.tbRS485port.Size = new System.Drawing.Size(102, 30);
             this.tbRS485port.TabIndex = 140;
             this.tbRS485port.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbRS485port.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbRS485port_HelpRequested);
             // 
             // ckFlowOn
             // 
@@ -422,6 +427,7 @@
             this.ckFlowOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckFlowOn.UseVisualStyleBackColor = true;
             this.ckFlowOn.CheckedChanged += new System.EventHandler(this.tb_TextChanged);
+            this.ckFlowOn.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckFlowOn_HelpRequested);
             // 
             // tbPowerRelay
             // 
@@ -432,6 +438,7 @@
             this.tbPowerRelay.Size = new System.Drawing.Size(102, 30);
             this.tbPowerRelay.TabIndex = 130;
             this.tbPowerRelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPowerRelay.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPowerRelay_HelpRequested);
             // 
             // label12
             // 
@@ -472,6 +479,7 @@
             this.tbAdsWasPin.Size = new System.Drawing.Size(102, 30);
             this.tbAdsWasPin.TabIndex = 138;
             this.tbAdsWasPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbAdsWasPin.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbAdsWasPin_HelpRequested);
             // 
             // label10
             // 
@@ -498,6 +506,7 @@
             this.ckRelayOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckRelayOn.UseVisualStyleBackColor = true;
             this.ckRelayOn.CheckedChanged += new System.EventHandler(this.tb_TextChanged);
+            this.ckRelayOn.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckRelayOn_HelpRequested);
             // 
             // label9
             // 
@@ -534,6 +543,7 @@
             this.tbRTCM.Size = new System.Drawing.Size(102, 30);
             this.tbRTCM.TabIndex = 136;
             this.tbRTCM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbRTCM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbRTCM_HelpRequested);
             // 
             // ckInvertRoll
             // 
@@ -598,6 +608,7 @@
             this.ckGGA.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckGGA.UseVisualStyleBackColor = true;
             this.ckGGA.CheckedChanged += new System.EventHandler(this.tb_TextChanged);
+            this.ckGGA.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckGGA_HelpRequested);
             // 
             // tabPage3
             // 
@@ -853,6 +864,7 @@
             this.tbSteerRelay.Size = new System.Drawing.Size(102, 30);
             this.tbSteerRelay.TabIndex = 166;
             this.tbSteerRelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSteerRelay.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbSteerRelay_HelpRequested);
             // 
             // label32
             // 
@@ -897,7 +909,7 @@
             // btnLoadDefaults
             // 
             this.btnLoadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLoadDefaults.Location = new System.Drawing.Point(312, 316);
+            this.btnLoadDefaults.Location = new System.Drawing.Point(207, 316);
             this.btnLoadDefaults.Name = "btnLoadDefaults";
             this.btnLoadDefaults.Size = new System.Drawing.Size(100, 72);
             this.btnLoadDefaults.TabIndex = 138;
@@ -908,7 +920,7 @@
             // btnSendToModule
             // 
             this.btnSendToModule.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSendToModule.Location = new System.Drawing.Point(202, 316);
+            this.btnSendToModule.Location = new System.Drawing.Point(313, 316);
             this.btnSendToModule.Name = "btnSendToModule";
             this.btnSendToModule.Size = new System.Drawing.Size(100, 72);
             this.btnSendToModule.TabIndex = 139;
@@ -927,6 +939,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.bntOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;

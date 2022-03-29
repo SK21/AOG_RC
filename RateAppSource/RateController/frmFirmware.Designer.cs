@@ -49,6 +49,7 @@ namespace RateController
             this.tbHexfile.Name = "tbHexfile";
             this.tbHexfile.Size = new System.Drawing.Size(492, 30);
             this.tbHexfile.TabIndex = 36;
+            this.tbHexfile.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbHexfile_HelpRequested);
             // 
             // progressBar
             // 
@@ -89,6 +90,7 @@ namespace RateController
             this.lbTeensies.Name = "lbTeensies";
             this.lbTeensies.Size = new System.Drawing.Size(492, 119);
             this.lbTeensies.TabIndex = 30;
+            this.lbTeensies.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbTeensies_HelpRequested);
             // 
             // lblFWType
             // 
@@ -129,6 +131,7 @@ namespace RateController
             this.btnUpload.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnUpload.UseVisualStyleBackColor = true;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
+            this.btnUpload.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnUpload_HelpRequested);
             // 
             // btnBrowse
             // 
@@ -143,6 +146,7 @@ namespace RateController
             this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            this.btnBrowse.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnBrowse_HelpRequested);
             // 
             // btnDefault
             // 
@@ -152,9 +156,10 @@ namespace RateController
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(115, 72);
             this.btnDefault.TabIndex = 140;
-            this.btnDefault.Text = "Load Default";
+            this.btnDefault.Text = "Use Default";
             this.btnDefault.UseVisualStyleBackColor = true;
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
+            this.btnDefault.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnDefault_HelpRequested);
             // 
             // frmFirmware
             // 
@@ -173,6 +178,7 @@ namespace RateController
             this.Controls.Add(this.lbTeensies);
             this.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(5);
             this.MaximizeBox = false;

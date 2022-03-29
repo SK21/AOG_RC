@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -25,22 +20,21 @@ namespace RateController
         // 12   Relay Hi
         // 13   CRC
 
+        private byte cRelayHi;
+        private byte cRelayLo;
+        private float cSpeed;
+        private float KalG = 0.0F;
+        private float KalP = 1.0F;
+        private float KalPc = 0.0F;
+        private float KalResult = 0.0F;
+        private float KalVariance = 0.01F;   // larger is more filtering
+        private float KalProcess = 0.005F;  // smaller is more filtering
+        private DateTime ReceiveTime;
+        private byte RelayHiLast;
+        private byte RelayLoLast;
         private int totalHeaderByteCount = 5;
 
-        float cSpeed;
-        byte cRelayHi;
-        byte cRelayLo;
-
-        byte RelayHiLast;
-        byte RelayLoLast;
-        private DateTime ReceiveTime;
-
-        float KalResult = 0.0F;
-        float KalPc = 0.0F;
-        float KalG = 0.0F;
-        float KalP = 1.0F;
-        float KalVariance = 0.01F;   // larger is more filtering
-        float KalProcess = 0.005F;  // smaller is more filtering
+        public event EventHandler<RelaysChangedArgs> RelaysChanged;
 
         public class RelaysChangedArgs : EventArgs
         {
@@ -48,7 +42,16 @@ namespace RateController
             public byte RelayLo { get; set; }
         }
 
-        public event EventHandler<RelaysChangedArgs> RelaysChanged;
+        public byte RelayHi
+        { get { return cRelayHi; } }
+
+        public byte RelayLo
+        { get { return cRelayLo; } }
+
+        public bool Connected()
+        {
+            return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
+        }
 
         public void ParseByteData(byte[] Data)
         {
@@ -87,15 +90,6 @@ namespace RateController
                 }
             }
         }
-
-        public bool Connected()
-        {
-            return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
-        }
-
-        public byte RelayHi { get { return cRelayHi; } }
-
-        public byte RelayLo { get { return cRelayLo; } }
 
         public double Speed_KMH()
         {
