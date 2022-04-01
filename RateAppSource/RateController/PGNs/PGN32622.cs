@@ -61,7 +61,7 @@
             if (RestartModule) cData[12] = 1; else cData[12] = 0;
 
             cf.mf.SendSerial(cData);
-            cf.mf.UDPnetwork.SendUDPMessage(cData);
+            cf.mf.UDPconfig.SendUDPMessage(cData);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace RateController
 
         private byte[] cData = new byte[10];
         private frmPCBsettings cf;
+        private string Name;
 
         public PGN32623(frmPCBsettings CalledFrom)
         {
@@ -40,13 +41,15 @@ namespace RateController
             double val;
 
             // text boxes
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[6].Name), out val);
+            Name = cf.CFG[6].Name;
+            double.TryParse(cf.mf.Tls.LoadProperty(Name), out val);
             cData[2] = (byte)val;
             cData[3] = (byte)((int)val >> 8);
 
             for (int i = 4; i < 8; i++)
             {
-                double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[i + 7].Name), out val);
+                Name = cf.CFG[i + 3].Name;
+                double.TryParse(cf.mf.Tls.LoadProperty(Name), out val);
                 cData[i] = (byte)val;
             }
 
@@ -54,14 +57,15 @@ namespace RateController
             cData[8] = 0;
             for (int i = 0; i < cf.CKs.Length; i++)
             {
-                bool.TryParse(cf.mf.Tls.LoadProperty(cf.CKs[i].Name), out Checked);
+                Name = cf.CKs[i].Name;
+                bool.TryParse(cf.mf.Tls.LoadProperty(Name), out Checked);
                 if (Checked) cData[8] |= (byte)(Math.Pow(2, i));
             }
 
             if (RestartModule) cData[9] = 1; else cData[9] = 0;
 
             cf.mf.SendSerial(cData);
-            cf.mf.UDPnetwork.SendUDPMessage(cData);
+            cf.mf.UDPconfig.SendUDPMessage(cData);
         }
     }
 }

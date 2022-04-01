@@ -8,12 +8,13 @@ namespace RateController
 {
     public partial class FormAbout : Form
     {
-        private FormStart mf;
         private bool Initializing = false;
+        private FormStart mf;
 
         public FormAbout(FormStart CallingForm)
         {
             InitializeComponent();
+
             #region // language
 
             groupBox3.Text = Lang.lgNetworkConnections;
@@ -23,7 +24,7 @@ namespace RateController
             btnCancel.Text = Lang.lgCancel;
             bntOK.Text = Lang.lgClose;
 
-            #endregion  // language
+            #endregion // language
 
             mf = CallingForm;
         }
@@ -145,11 +146,18 @@ namespace RateController
 
         private void LoadIP()
         {
-            IPAddress tmp = mf.UDPnetwork.GetBroadCastIP;
-            byte[] Parts = tmp.GetAddressBytes();
-            IPA1.Text = Parts[0].ToString();
-            IPA2.Text = Parts[1].ToString();
-            IPA3.Text = Parts[2].ToString();
+            try
+            {
+                IPAddress tmp = mf.UDPnetwork.GetBroadCastIP;
+                byte[] Parts = tmp.GetAddressBytes();
+                IPA1.Text = Parts[0].ToString();
+                IPA2.Text = Parts[1].ToString();
+                IPA3.Text = Parts[2].ToString();
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, this.Name, 3000, true);
+            }
         }
 
         private void SetButtons(bool Edited)

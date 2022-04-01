@@ -36,9 +36,11 @@ namespace RateController
 
         public SerialComm[] SER = new SerialComm[3];
         public clsTools Tls;
+       
         public UDPComm UDPagio;
-
         public UDPComm UDPnetwork;
+        public UDPComm UDPconfig;
+
         public bool UseInches;
         private int CurrentPage;
 
@@ -82,6 +84,7 @@ namespace RateController
             //UDPagio = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255");       // AOG
 
             UDPnetwork = new UDPComm(this, 29999, 28888, 1480, "192.168.1.255");    // arduino
+            UDPconfig = new UDPComm(this, 29900, 28800, 1482, "192.168.1.255");     // pcb config
 
             SwitchBox = new PGN32618(this);
             SwitchIDs = new PGN32620(this);
@@ -132,6 +135,7 @@ namespace RateController
             Products.Load();
 
             UDPnetwork.BroadCastIP = Tls.LoadProperty("BroadCastIP");
+            UDPconfig.BroadCastIP = Tls.LoadProperty("BroadCastIP");
 
             PressureObjects.Load();
         }
@@ -360,6 +364,13 @@ namespace RateController
             {
                 Tls.ShowHelp("UDPagio failed to start.", "", 3000, true);
             }
+
+            UDPconfig.StartUDPServer();
+            if(!UDPconfig.isUDPSendConnected)
+            {
+                Tls.ShowHelp("UDPconfig failed to start.", "", 3000, true);
+            }
+
             LoadSettings();
             UpdateStatus();
         }

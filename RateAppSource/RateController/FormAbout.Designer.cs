@@ -65,7 +65,7 @@ namespace RateController
             this.groupBox3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox3.Location = new System.Drawing.Point(12, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(315, 136);
+            this.groupBox3.Size = new System.Drawing.Size(315, 134);
             this.groupBox3.TabIndex = 142;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Network Connections";
@@ -127,12 +127,11 @@ namespace RateController
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
             this.label15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label15.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(246, 101);
+            this.label15.Location = new System.Drawing.Point(184, 102);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(62, 25);
+            this.label15.Size = new System.Drawing.Size(76, 23);
             this.label15.TabIndex = 119;
             this.label15.Text = "29999";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -141,19 +140,18 @@ namespace RateController
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(30, 136);
+            this.label16.Location = new System.Drawing.Point(30, 105);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(0, 23);
             this.label16.TabIndex = 118;
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
             this.label13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label13.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(246, 67);
+            this.label13.Location = new System.Drawing.Point(184, 68);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(62, 25);
+            this.label13.Size = new System.Drawing.Size(76, 23);
             this.label13.TabIndex = 117;
             this.label13.Text = "28888";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -162,7 +160,7 @@ namespace RateController
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(31, 103);
+            this.label14.Location = new System.Drawing.Point(31, 72);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(0, 23);
             this.label14.TabIndex = 116;
@@ -171,7 +169,7 @@ namespace RateController
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(6, 102);
+            this.label19.Location = new System.Drawing.Point(6, 103);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(113, 23);
             this.label19.TabIndex = 134;
@@ -181,7 +179,7 @@ namespace RateController
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(6, 68);
+            this.label18.Location = new System.Drawing.Point(6, 69);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(92, 23);
             this.label18.TabIndex = 133;
@@ -193,7 +191,7 @@ namespace RateController
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(212, 202);
+            this.bntOK.Location = new System.Drawing.Point(212, 203);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 0;
@@ -209,7 +207,7 @@ namespace RateController
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(12, 202);
+            this.btnCancel.Location = new System.Drawing.Point(12, 203);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(115, 72);
             this.btnCancel.TabIndex = 179;
@@ -221,7 +219,7 @@ namespace RateController
             // lbAppVersion
             // 
             this.lbAppVersion.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAppVersion.Location = new System.Drawing.Point(12, 171);
+            this.lbAppVersion.Location = new System.Drawing.Point(12, 172);
             this.lbAppVersion.Name = "lbAppVersion";
             this.lbAppVersion.Size = new System.Drawing.Size(315, 18);
             this.lbAppVersion.TabIndex = 180;
@@ -231,7 +229,7 @@ namespace RateController
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 153);
+            this.label1.Location = new System.Drawing.Point(12, 154);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(315, 18);
             this.label1.TabIndex = 181;
@@ -242,7 +240,7 @@ namespace RateController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(340, 287);
+            this.ClientSize = new System.Drawing.Size(340, 286);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lbAppVersion);
             this.Controls.Add(this.btnCancel);
