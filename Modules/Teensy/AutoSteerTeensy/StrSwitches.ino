@@ -38,12 +38,10 @@ void ReadSwitches()
 			if (SteerSwitch == HIGH)
 			{
 				SteerSwitch = LOW;
-				Serial.println("SteerSwitch set low.");
 			}
 			else
 			{
 				SteerSwitch = HIGH;
-				Serial.println("SteerSwitch set high.");
 			}
 			SWtime = millis();
 		}

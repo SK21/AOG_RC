@@ -3,6 +3,8 @@ bool isTriggered = false;
 uint32_t PandalastTime = PCB.IMUdelay;
 uint32_t currentTime = PCB.IMUdelay;
 
+uint32_t RTCMlastTime;
+
 void DoPanda()
 {
     // NMEA
@@ -15,6 +17,15 @@ void DoPanda()
         for (int i = 0; i < packetSize; i++)
         {
             SerialRTCM->write(UDPgps.read());
+        }
+
+        // debug RTCM
+        if (millis() - RTCMlastTime > 500)
+        {
+            PrintRunTime();
+            Serial.print("RTCM interval ");
+            Serial.println(millis() - RTCMlastTime);
+            RTCMlastTime = millis();
         }
     }
 
@@ -187,6 +198,14 @@ void BuildPANDA(void)
     CalculateChecksum();
 
     strcat(nme, "\r\n");
+
+    // debug panda
+    if (millis() - PandalastTime > 500)
+    {
+        PrintRunTime();
+        Serial.print("Panda interval ");
+        Serial.println(millis() - PandalastTime);
+    }
 
     PandalastTime = millis();
     isTriggered = true;

@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   26-Mar-2022"
+# define InoDescription "AutoSteerTeensy   31-Mar-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -59,11 +59,8 @@ struct PCBpinConfig	// 13 bytes
 PCBpinConfig PINS;
 
 const uint16_t  LOOP_TIME = 25;	// 40 hz, main loop
-const uint16_t  SendTime = 200;	// ms interval to send data back to AGIO
+const uint16_t  SteerCommSendInterval = 200;	// ms interval to send data back to AGIO
 const int16_t AdsI2Caddress = 0x48;
-
-#define IPpart3 1	// ex: 192.168.IPpart3.255
-#define IPMac 73	// unique number for Arduino IP address and Mac part 6
 
 #define LOW_HIGH_DEGREES 5.0	//How many degrees before decreasing Max PWM
 #define MaxFlowSensorCount 2
@@ -73,6 +70,9 @@ const uint32_t RateLoopTime = 50;		//in msec = 20hz
 WDT_T4<WDT1> wdt;
 
 // ethernet
+#define IPpart3 1	// ex: 192.168.IPpart3.255
+#define IPMac 73	// unique number for Arduino IP address and Mac part 6
+
 // ethernet interface ip address
 IPAddress LocalIP(192, 168, IPpart3, IPMac);
 
@@ -113,7 +113,7 @@ int8_t SteerSwitch = LOW;	// Low on, High off
 int8_t SWreading = HIGH;
 int8_t SWprevious = LOW;
 uint32_t  SWtime = 0;
-uint16_t  SWdebounce = 50;
+const uint16_t  SWdebounce = 50;
 
 int8_t switchByte = 0;
 int8_t workSwitch = 0;
@@ -220,6 +220,11 @@ uint16_t ListeningPortRate = 28888;
 uint16_t DestinationPortRate = 29999;
 uint8_t RateData[UDP_TX_PACKET_MAX_SIZE];  // Buffer For Receiving UDP Data
 
+// Config port
+EthernetUDP UDPconfig;
+uint16_t ListeningPortConfig = 28800;
+uint16_t DestinationPortConfig = 29900;
+uint8_t ConfigData[UDP_TX_PACKET_MAX_SIZE];
 
 uint8_t ErrorCount;
 NMEAParser<2> parser;
@@ -229,13 +234,31 @@ HardwareSerial* SerialRTCM;
 HardwareSerial* SerialNMEA;
 HardwareSerial* SerialRS485;
 
+uint32_t LoopLast;
+uint32_t ShowLoopTime;
+
+uint32_t SketchStartTime = millis();
+void PrintRunTime(uint32_t StartTime = SketchStartTime)
+{
+	uint32_t time = millis() - StartTime;
+	uint32_t minutes = time / 60000;
+	uint32_t secs = (time - minutes * 60000) / 1000;
+	uint32_t ms = time - minutes * 60000 - secs * 1000;
+	Serial.print(minutes);
+	Serial.print(":");
+	Serial.print(secs);
+	Serial.print(".");
+	Serial.print(ms);
+	Serial.print("> ");
+}
+
 void setup()
 {
 	// watchdog timer
 	WDT_timings_t config;
-	config.timeout = 40;
+	config.timeout = 120;	// seconds
 	wdt.begin(config);
-	
+
 	pinMode(LED_BUILTIN, OUTPUT);
 
 	Serial.begin(38400);
@@ -259,17 +282,18 @@ void setup()
 	}
 
 	// pcb data
-	EEPROM.get(79, EEread);
+	EEPROM.get(100, EEread);
+
 	if (EEread != PCB_Ident)
 	{
-		EEPROM.put(79, PCB_Ident);
-		EEPROM.put(80, PCB);
-		EEPROM.put(120, PINS);
+		EEPROM.put(100, PCB_Ident);
+		EEPROM.put(110, PCB);
+		EEPROM.put(150, PINS);
 	}
 	else
 	{
-		EEPROM.get(80, PCB);
-		EEPROM.get(120, PINS);
+		EEPROM.get(110, PCB);
+		EEPROM.get(150, PINS);
 	}
 
 	// gps receiver
@@ -295,8 +319,8 @@ void setup()
 		parser.addHandler("G-GGA", GGA_Handler);
 		parser.addHandler("G-VTG", VTG_Handler);
 
-		static char ReceiveBuffer2[100];
-		SerialNMEA->addMemoryForRead(ReceiveBuffer2, 100);
+		static char ReceiveBuffer[100];
+		SerialNMEA->addMemoryForRead(ReceiveBuffer, 100);
 	}
 
 	pinMode(PINS.Encoder, INPUT_PULLUP);
@@ -313,6 +337,36 @@ void setup()
 	adc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::MED_SPEED); // change the conversion speed
 	adc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED); // change the sampling speed
 
+	if (PCB.UseAds)
+	{
+		// ADS1115
+		Serial.println("");
+		Serial.println("Starting ADS ...");
+		ErrorCount = 0;
+		while (!ADSfound)
+		{
+			Wire.beginTransmission(AdsI2Caddress);
+			Wire.write(0b00000000);	//Point to Conversion register
+			Wire.endTransmission();
+			Wire.requestFrom(AdsI2Caddress, 2);
+			ADSfound = Wire.available();
+			Serial.print(".");
+			delay(500);
+			if (ErrorCount++ > 10) break;
+		}
+		Serial.println("");
+		if (ADSfound)
+		{
+			Serial.println("ADS connected.");
+			Serial.println("");
+		}
+		else
+		{
+			Serial.println("ADS not found.");
+			Serial.println("");
+		}
+	}
+
 	SteerSwitch = HIGH;
 
 	// ethernet start
@@ -321,7 +375,7 @@ void setup()
 	Serial.print(IPpart3);
 	Serial.print(".");
 	Serial.println(IPMac);
-	Ethernet.begin(LocalMac,LocalIP);
+	Ethernet.begin(LocalMac, LocalIP);
 	Serial.println("");
 
 	// main port
@@ -400,6 +454,9 @@ void setup()
 			Serial.println("IMU failed to start.");
 		}
 		break;
+
+	default:
+		PCB.IMU = 0;
 	}
 
 	// RS485
@@ -426,7 +483,7 @@ void setup()
 	case 7:
 		SerialRS485 = &Serial7;
 		break;
-	case 8:
+	default:
 		SerialRS485 = &Serial8;
 		break;
 	}
@@ -451,6 +508,8 @@ void setup()
 		RateSend[2] = BuildModSenID(PCB.ModuleID, 0);
 	}
 
+	UDPconfig.begin(ListeningPortConfig);
+
 	noTone(PINS.SpeedPulse);
 	Serial.println("");
 	Serial.println("Finished setup.");
@@ -459,6 +518,7 @@ void setup()
 void loop()
 {
 	Blink();
+	ReceiveConfig();
 	ReceiveSteerUDP();
 
 	if (millis() - lastTime >= LOOP_TIME)
@@ -468,7 +528,7 @@ void loop()
 		DoSteering();
 	}
 
-	if (millis() - LastSend > SendTime)
+	if (millis() - LastSend > SteerCommSendInterval)
 	{
 		LastSend = millis();
 		if (PCB.Receiver == 0) ReadIMU();
@@ -479,6 +539,16 @@ void loop()
 	if (PCB.Receiver != 0) DoPanda();
 	if (PCB.UseRate) DoRate();
 	wdt.feed();
+
+	// loop interval
+	//if (millis() - ShowLoopTime > 1000)
+	//{
+	//	PrintRunTime();
+	//	Serial.print("Loop interval (micros) ");
+	//	Serial.println(micros() - LoopLast);
+	//	ShowLoopTime = millis();
+	//}
+	//LoopLast = micros();
 }
 
 bool State = 0;

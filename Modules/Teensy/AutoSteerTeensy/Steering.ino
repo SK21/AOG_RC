@@ -158,8 +158,9 @@ void ReadIMU()
 				}
 				IMU_Heading *= 10.0;
 
-				if (PCB.SwapRollPitch) //Adafruit library: roll is rotation around X axis
-				{
+				if (PCB.SwapRollPitch) 
+				{ 
+					//Adafruit library: pitch is rotation around Y axis
 					tmpIMU = 10 * (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
 					if (PCB.InvertRoll) tmpIMU *= -1.0;
 					IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
@@ -167,8 +168,9 @@ void ReadIMU()
 					tmpIMU = 10 * (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
 					IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
 				}
-				else //Adafruit library: pitch is rotation around Y axis
+				else
 				{
+					//Adafruit library: roll is rotation around X axis
 					tmpIMU = 10 * (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
 					if (PCB.InvertRoll) tmpIMU *= -1.0;
 					IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
