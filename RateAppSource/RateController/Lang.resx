@@ -255,6 +255,9 @@
   <data name="lgNumSections" xml:space="preserve">
     <value>Number of Sections</value>
   </data>
+  <data name="lgOpen" xml:space="preserve">
+    <value>Open</value>
+  </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Options</value>
   </data>

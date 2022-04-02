@@ -19,11 +19,11 @@ namespace RateController
 
             mf = CallingForm;
 
-            CFG = new TextBox[] {tbIMUdelay,tbIMUinterval,tbZeroOffset,tbMinSpeed
-            ,tbMaxSpeed,tbPulseCal,tbRTCM,tbAdsWasPin,tbModule,tbPowerRelay
-            ,tbRS485port,tbDir1,tbPwm1,tbSteerSwitch,tbWAS,tbSteerRelay,tbWorkSwitch
-            ,tbCurrentSensor,tbPressureSensor,tbEncoder,tbDir2,tbPwm2
-            ,tbSpeedPulse,tbSendEnable};
+            CFG = new TextBox[] {tbNMEAserialPort,tbRTCMserialPort,tbRTCM,tbIMUdelay
+                ,tbIMUinterval,tbZeroOffset,tbAdsWasPin,tbMinSpeed,tbMaxSpeed,tbPulseCal
+                ,tbPowerRelay,tbRS485port,tbModule
+                ,tbDir1,tbPwm1,tbSteerSwitch,tbWAS,tbSteerRelay,tbWorkSwitch,tbCurrentSensor
+                ,tbPressureSensor,tbEncoder,tbDir2,tbPwm2,tbSpeedPulse,tbSendEnable};
 
             for (int i = 0; i < CFG.Length; i++)
             {
@@ -64,34 +64,6 @@ namespace RateController
                     SaveSettings();
                     SetButtons(false);
                     UpdateForm();
-
-                    //// update module
-                    //bool Updated = false;
-                    //if (TabEdited[0])
-                    //{
-                    //    PGN32622 PGN = new PGN32622(this);
-                    //    PGN.Send(!TabEdited[1] && !TabEdited[2]);
-                    //    Updated = true;
-                    //}
-
-                    //if (TabEdited[1])
-                    //{
-                    //    PGN32623 PGN = new PGN32623(this);
-                    //    PGN.Send(!TabEdited[2]);
-                    //    Updated = true;
-                    //}
-
-                    //if (TabEdited[2])
-                    //{
-                    //    PGN32624 PGN = new PGN32624(this);
-                    //    PGN.Send(true);
-                    //    Updated = true;
-                    //}
-
-                    //if (Updated)
-                    //{
-                    //    mf.Tls.ShowHelp("Sent to module.", this.Text, 3000);
-                    //}
                 }
             }
             catch (Exception ex)
@@ -114,19 +86,22 @@ namespace RateController
         {
             // AS13_PCB
             cbReceiver.SelectedIndex = 1;
+            tbNMEAserialPort.Text = "3";
+            tbRTCMserialPort.Text = "8";
+            tbRTCM.Text = "5432";
             cbIMU.SelectedIndex = 1;
             tbIMUdelay.Text = "90";
             tbIMUinterval.Text = "40";
             tbZeroOffset.Text = "6100";
+            tbAdsWasPin.Text = "0";
+
             tbMinSpeed.Text = "1";
             tbMaxSpeed.Text = "15";
             tbPulseCal.Text = "25.5";
-
-            tbModule.Text = "0";
             tbPowerRelay.Text = "255";
-            tbRTCM.Text = "5432";
-            tbAdsWasPin.Text = "1";
             tbRS485port.Text = "7";
+            tbModule.Text = "0";
+
             ckGyro.Checked = false;
             ckGGA.Checked = true;
             ckUseRate.Checked = false;
@@ -251,12 +226,12 @@ namespace RateController
                 for (int i = 0; i < CFG.Length; i++)
                 {
                     double.TryParse(mf.Tls.LoadProperty(CFG[i].Name), out val);
-                    if (i == 5)
+                    if (i == 9)
                     {
                         // pulse cal
                         CFG[i].Text = val.ToString("N1");
                     }
-                    else if (i == 6)
+                    else if (i == 2)
                     {
                         // RTCM port
                         CFG[i].Text = val.ToString("#######");
@@ -344,41 +319,43 @@ namespace RateController
             {
                 case 0:
                 case 1:
-                    max = 200;
-                    min = 0;
+                case 11:
+                    max = 8;
+                    min = 1;
                     break;
 
                 case 2:
-                case 5:
-                case 6:
-                    max = 10000;
+                    max = 9999;
                     min = 0;
                     break;
 
                 case 3:
-                case 4:
-                    max = 30;
-                    min = 0;
-                    break;
-
-                case 8:
+                case 12:
                     max = 255;
                     min = 0;
                     break;
 
-                case 9:
+                case 4:
+                case 10:
                     max = 255;
                     min = 1;
+                    break;
+
+                case 5:
+                case 9:
+                    max = 10000;
+                    min = 0;
+                    break;
+
+                case 6:
+                    max = 3;
+                    min = 0;
                     break;
 
                 case 7:
-                    max = 4;
-                    min = 1;
-                    break;
-
-                case 10:
-                    max = 8;
-                    min = 1;
+                case 8:
+                    max = 30;
+                    min = 0;
                     break;
 
                 default:
@@ -394,7 +371,7 @@ namespace RateController
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    if (index == 5)
+                    if (index == 9)
                     {
                         // pulse cal, 1 decimal
                         CFG[index].Text = form.ReturnValue.ToString("N1");
@@ -423,41 +400,43 @@ namespace RateController
             {
                 case 0:
                 case 1:
-                    max = 200;
-                    min = 0;
+                case 11:
+                    max = 8;
+                    min = 1;
                     break;
 
                 case 2:
-                case 5:
-                case 6:
-                    max = 10000;
+                    max = 9999;
                     min = 0;
                     break;
 
                 case 3:
-                case 4:
-                    max = 30;
-                    min = 0;
-                    break;
-
-                case 8:
+                case 12:
                     max = 255;
                     min = 0;
                     break;
 
-                case 9:
+                case 4:
+                case 10:
                     max = 255;
                     min = 1;
+                    break;
+
+                case 5:
+                case 9:
+                    max = 10000;
+                    min = 0;
+                    break;
+
+                case 6:
+                    max = 3;
+                    min = 0;
                     break;
 
                 case 7:
-                    max = 4;
-                    min = 1;
-                    break;
-
-                case 10:
-                    max = 8;
-                    min = 1;
+                case 8:
+                    max = 30;
+                    min = 0;
                     break;
 
                 default:
@@ -476,7 +455,7 @@ namespace RateController
 
         private void tbAdsWasPin_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "The pin (1-4) on the ADS1115 that is connected to the " +
+            string Message = "The pin (0-3) on the ADS1115 that is connected to the " +
                 "wheel angle sensor.";
 
             mf.Tls.ShowHelp(Message, "ADS1115");
@@ -502,7 +481,7 @@ namespace RateController
 
         private void tbPowerRelay_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "The number of the relay (1-16) that is always on.";
+            string Message = "The number of the relay (1-16) that is always on. 255 for none.";
 
             mf.Tls.ShowHelp(Message, "Power relay");
             hlpevent.Handled = true;
@@ -518,7 +497,7 @@ namespace RateController
 
         private void tbRS485port_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "The serial port (1-7) used for RS485.";
+            string Message = "The serial port (1-8) used for RS485.";
 
             mf.Tls.ShowHelp(Message, "RS485 serial port");
             hlpevent.Handled = true;

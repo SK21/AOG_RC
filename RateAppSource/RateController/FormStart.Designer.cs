@@ -108,6 +108,7 @@ namespace RateController
             this.lbArduinoConnected.TabIndex = 144;
             this.lbArduinoConnected.Text = "Mod";
             this.lbArduinoConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbArduinoConnected.Click += new System.EventHandler(this.lbArduinoConnected_Click);
             this.lbArduinoConnected.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbArduinoConnected_HelpRequested);
             // 
             // lbAogConnected
@@ -121,6 +122,7 @@ namespace RateController
             this.lbAogConnected.TabIndex = 145;
             this.lbAogConnected.Text = "AOG";
             this.lbAogConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbAogConnected.Click += new System.EventHandler(this.lbAogConnected_Click);
             this.lbAogConnected.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbAogConnected_HelpRequested);
             // 
             // panProducts
@@ -501,7 +503,7 @@ namespace RateController
             this.firmwareToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(190, 466);
+            this.mnuSettings.Size = new System.Drawing.Size(201, 488);
             // 
             // productsToolStripMenuItem
             // 
@@ -531,8 +533,9 @@ namespace RateController
             // 
             this.pressureToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pressureToolStripMenuItem.Image")));
             this.pressureToolStripMenuItem.Name = "pressureToolStripMenuItem";
-            this.pressureToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
+            this.pressureToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
             this.pressureToolStripMenuItem.Text = "Pressure";
+            this.pressureToolStripMenuItem.Visible = false;
             this.pressureToolStripMenuItem.Click += new System.EventHandler(this.pressureToolStripMenuItem_Click);
             // 
             // newToolStripMenuItem
@@ -547,8 +550,8 @@ namespace RateController
             // 
             this.loadToolStripMenuItem.Image = global::RateController.Properties.Resources.OpenFile;
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(189, 42);
-            this.loadToolStripMenuItem.Text = "Load";
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.loadToolStripMenuItem.Text = "Open";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem

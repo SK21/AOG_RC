@@ -475,6 +475,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        internal static string lgOpen {
+            get {
+                return ResourceManager.GetString("lgOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Options.
         /// </summary>
         internal static string lgOptions {

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -146,6 +147,8 @@ namespace RateController
                 PGN = Data[0] << 8 | Data[1];   // AGIO big endian
                 if (PGN == 32897)
                 {
+                    Debug.Print("PGN " + PGN.ToString());
+                    Debug.Print("ID " + Data[3].ToString());
                     // AGIO
                     switch (Data[3])
                     {

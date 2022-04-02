@@ -61,9 +61,7 @@
             this.tbAdsWasPin = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.ckRelayOn = new System.Windows.Forms.CheckBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.ckUseRate = new System.Windows.Forms.CheckBox();
-            this.tbRTCM = new System.Windows.Forms.TextBox();
             this.ckInvertRoll = new System.Windows.Forms.CheckBox();
             this.ckSwapPitchRoll = new System.Windows.Forms.CheckBox();
             this.ckGyro = new System.Windows.Forms.CheckBox();
@@ -97,6 +95,12 @@
             this.tbDir1 = new System.Windows.Forms.TextBox();
             this.btnLoadDefaults = new System.Windows.Forms.Button();
             this.btnSendToModule = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.tbRTCM = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.tbNMEAserialPort = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.tbRTCMserialPort = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -110,9 +114,10 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(419, 316);
+            this.btnCancel.Location = new System.Drawing.Point(838, 608);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(115, 72);
+            this.btnCancel.Size = new System.Drawing.Size(230, 138);
             this.btnCancel.TabIndex = 136;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -125,9 +130,10 @@
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(543, 316);
+            this.bntOK.Location = new System.Drawing.Point(1086, 608);
+            this.bntOK.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
+            this.bntOK.Size = new System.Drawing.Size(230, 138);
             this.bntOK.TabIndex = 135;
             this.bntOK.Text = "Close";
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -140,34 +146,38 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl1.Location = new System.Drawing.Point(12, 12);
+            this.tabControl1.Location = new System.Drawing.Point(24, 23);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(646, 298);
-            this.tabControl1.TabIndex = 137;
+            this.tabControl1.Size = new System.Drawing.Size(1292, 573);
+            this.tabControl1.TabIndex = 2;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label6);
-            this.tabPage1.Controls.Add(this.tbPulseCal);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.tbMaxSpeed);
-            this.tabPage1.Controls.Add(this.label4);
-            this.tabPage1.Controls.Add(this.tbMinSpeed);
+            this.tabPage1.Controls.Add(this.label13);
+            this.tabPage1.Controls.Add(this.tbRTCMserialPort);
+            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.label8);
+            this.tabPage1.Controls.Add(this.tbNMEAserialPort);
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.tbAdsWasPin);
+            this.tabPage1.Controls.Add(this.tbRTCM);
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.tbIMUinterval);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.tbIMUdelay);
             this.tabPage1.Controls.Add(this.cbIMU);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.lb4);
             this.tabPage1.Controls.Add(this.tbZeroOffset);
+            this.tabPage1.Controls.Add(this.lb4);
+            this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.cbReceiver);
             this.tabPage1.Controls.Add(this.lb5);
-            this.tabPage1.Location = new System.Drawing.Point(4, 33);
+            this.tabPage1.Location = new System.Drawing.Point(8, 58);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(638, 261);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage1.Size = new System.Drawing.Size(1276, 507);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Config 1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -176,19 +186,21 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(350, 162);
+            this.label6.Location = new System.Drawing.Point(22, 157);
+            this.label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(142, 23);
+            this.label6.Size = new System.Drawing.Size(282, 46);
             this.label6.TabIndex = 129;
             this.label6.Text = "Speed pulse cal";
             // 
             // tbPulseCal
             // 
             this.tbPulseCal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPulseCal.Location = new System.Drawing.Point(519, 159);
+            this.tbPulseCal.Location = new System.Drawing.Point(360, 151);
+            this.tbPulseCal.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbPulseCal.MaxLength = 8;
             this.tbPulseCal.Name = "tbPulseCal";
-            this.tbPulseCal.Size = new System.Drawing.Size(102, 30);
+            this.tbPulseCal.Size = new System.Drawing.Size(200, 53);
             this.tbPulseCal.TabIndex = 128;
             this.tbPulseCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPulseCal.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPulseCal_HelpRequested);
@@ -197,19 +209,21 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(350, 126);
+            this.label5.Location = new System.Drawing.Point(22, 87);
+            this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(147, 23);
+            this.label5.Size = new System.Drawing.Size(293, 46);
             this.label5.TabIndex = 127;
             this.label5.Text = "Maximum speed";
             // 
             // tbMaxSpeed
             // 
             this.tbMaxSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxSpeed.Location = new System.Drawing.Point(519, 123);
+            this.tbMaxSpeed.Location = new System.Drawing.Point(360, 82);
+            this.tbMaxSpeed.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbMaxSpeed.MaxLength = 8;
             this.tbMaxSpeed.Name = "tbMaxSpeed";
-            this.tbMaxSpeed.Size = new System.Drawing.Size(102, 30);
+            this.tbMaxSpeed.Size = new System.Drawing.Size(200, 53);
             this.tbMaxSpeed.TabIndex = 126;
             this.tbMaxSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -217,19 +231,21 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(350, 90);
+            this.label4.Location = new System.Drawing.Point(22, 18);
+            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(143, 23);
+            this.label4.Size = new System.Drawing.Size(284, 46);
             this.label4.TabIndex = 125;
             this.label4.Text = "Minimum speed";
             // 
             // tbMinSpeed
             // 
             this.tbMinSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinSpeed.Location = new System.Drawing.Point(519, 87);
+            this.tbMinSpeed.Location = new System.Drawing.Point(360, 12);
+            this.tbMinSpeed.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbMinSpeed.MaxLength = 8;
             this.tbMinSpeed.Name = "tbMinSpeed";
-            this.tbMinSpeed.Size = new System.Drawing.Size(102, 30);
+            this.tbMinSpeed.Size = new System.Drawing.Size(200, 53);
             this.tbMinSpeed.TabIndex = 124;
             this.tbMinSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -237,19 +253,21 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(6, 159);
+            this.label3.Location = new System.Drawing.Point(663, 238);
+            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(168, 23);
+            this.label3.Size = new System.Drawing.Size(340, 46);
             this.label3.TabIndex = 123;
             this.label3.Text = "IMU report interval";
             // 
             // tbIMUinterval
             // 
             this.tbIMUinterval.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbIMUinterval.Location = new System.Drawing.Point(200, 156);
+            this.tbIMUinterval.Location = new System.Drawing.Point(1051, 235);
+            this.tbIMUinterval.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbIMUinterval.MaxLength = 8;
             this.tbIMUinterval.Name = "tbIMUinterval";
-            this.tbIMUinterval.Size = new System.Drawing.Size(102, 30);
+            this.tbIMUinterval.Size = new System.Drawing.Size(200, 53);
             this.tbIMUinterval.TabIndex = 122;
             this.tbIMUinterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbIMUinterval.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbIMUinterval_HelpRequested);
@@ -258,19 +276,21 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(6, 123);
+            this.label2.Location = new System.Drawing.Point(663, 165);
+            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(138, 23);
+            this.label2.Size = new System.Drawing.Size(276, 46);
             this.label2.TabIndex = 121;
             this.label2.Text = "IMU read delay";
             // 
             // tbIMUdelay
             // 
             this.tbIMUdelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbIMUdelay.Location = new System.Drawing.Point(200, 120);
+            this.tbIMUdelay.Location = new System.Drawing.Point(1051, 162);
+            this.tbIMUdelay.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbIMUdelay.MaxLength = 8;
             this.tbIMUdelay.Name = "tbIMUdelay";
-            this.tbIMUdelay.Size = new System.Drawing.Size(102, 30);
+            this.tbIMUdelay.Size = new System.Drawing.Size(200, 53);
             this.tbIMUdelay.TabIndex = 120;
             this.tbIMUdelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbIMUdelay.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbIMUdelay_HelpRequested);
@@ -285,9 +305,10 @@
             "Sparkfun BNO",
             "CMPS14",
             "Adafruit BNO"});
-            this.cbIMU.Location = new System.Drawing.Point(141, 83);
+            this.cbIMU.Location = new System.Drawing.Point(933, 91);
+            this.cbIMU.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.cbIMU.Name = "cbIMU";
-            this.cbIMU.Size = new System.Drawing.Size(161, 31);
+            this.cbIMU.Size = new System.Drawing.Size(318, 54);
             this.cbIMU.TabIndex = 118;
             this.cbIMU.SelectedIndexChanged += new System.EventHandler(this.tb_TextChanged);
             // 
@@ -295,9 +316,10 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(6, 86);
+            this.label1.Location = new System.Drawing.Point(663, 96);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 23);
+            this.label1.Size = new System.Drawing.Size(88, 46);
             this.label1.TabIndex = 119;
             this.label1.Text = "IMU";
             // 
@@ -305,19 +327,21 @@
             // 
             this.lb4.AutoSize = true;
             this.lb4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb4.Location = new System.Drawing.Point(350, 54);
+            this.lb4.Location = new System.Drawing.Point(663, 311);
+            this.lb4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lb4.Name = "lb4";
-            this.lb4.Size = new System.Drawing.Size(142, 23);
+            this.lb4.Size = new System.Drawing.Size(289, 46);
             this.lb4.TabIndex = 117;
             this.lb4.Text = "WAS zero offset";
             // 
             // tbZeroOffset
             // 
             this.tbZeroOffset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbZeroOffset.Location = new System.Drawing.Point(519, 49);
+            this.tbZeroOffset.Location = new System.Drawing.Point(1051, 308);
+            this.tbZeroOffset.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbZeroOffset.MaxLength = 8;
             this.tbZeroOffset.Name = "tbZeroOffset";
-            this.tbZeroOffset.Size = new System.Drawing.Size(102, 30);
+            this.tbZeroOffset.Size = new System.Drawing.Size(200, 53);
             this.tbZeroOffset.TabIndex = 116;
             this.tbZeroOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -330,9 +354,10 @@
             "None",
             "SimpleRTK2B",
             "Sparkfun F9P"});
-            this.cbReceiver.Location = new System.Drawing.Point(141, 46);
+            this.cbReceiver.Location = new System.Drawing.Point(282, 88);
+            this.cbReceiver.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.cbReceiver.Name = "cbReceiver";
-            this.cbReceiver.Size = new System.Drawing.Size(161, 31);
+            this.cbReceiver.Size = new System.Drawing.Size(318, 54);
             this.cbReceiver.TabIndex = 112;
             this.cbReceiver.SelectedIndexChanged += new System.EventHandler(this.tb_TextChanged);
             // 
@@ -340,36 +365,40 @@
             // 
             this.lb5.AutoSize = true;
             this.lb5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb5.Location = new System.Drawing.Point(6, 49);
+            this.lb5.Location = new System.Drawing.Point(12, 94);
+            this.lb5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lb5.Name = "lb5";
-            this.lb5.Size = new System.Drawing.Size(116, 23);
+            this.lb5.Size = new System.Drawing.Size(233, 46);
             this.lb5.TabIndex = 113;
             this.lb5.Text = "GPS receiver";
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Controls.Add(this.ckADS);
             this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.tbPulseCal);
             this.tabPage2.Controls.Add(this.tbRS485port);
             this.tabPage2.Controls.Add(this.ckFlowOn);
+            this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.tbPowerRelay);
             this.tabPage2.Controls.Add(this.label12);
+            this.tabPage2.Controls.Add(this.tbMaxSpeed);
             this.tabPage2.Controls.Add(this.tbModule);
-            this.tabPage2.Controls.Add(this.label8);
-            this.tabPage2.Controls.Add(this.tbAdsWasPin);
             this.tabPage2.Controls.Add(this.label10);
             this.tabPage2.Controls.Add(this.ckRelayOn);
-            this.tabPage2.Controls.Add(this.label9);
             this.tabPage2.Controls.Add(this.ckUseRate);
-            this.tabPage2.Controls.Add(this.tbRTCM);
+            this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.ckInvertRoll);
             this.tabPage2.Controls.Add(this.ckSwapPitchRoll);
+            this.tabPage2.Controls.Add(this.tbMinSpeed);
             this.tabPage2.Controls.Add(this.ckGyro);
             this.tabPage2.Controls.Add(this.ckGGA);
-            this.tabPage2.Location = new System.Drawing.Point(4, 33);
+            this.tabPage2.Location = new System.Drawing.Point(8, 58);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(638, 261);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage2.Size = new System.Drawing.Size(1276, 507);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Config 2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -380,10 +409,10 @@
             this.ckADS.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ckADS.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckADS.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckADS.Location = new System.Drawing.Point(180, 187);
-            this.ckADS.Margin = new System.Windows.Forms.Padding(2);
+            this.ckADS.Location = new System.Drawing.Point(360, 360);
+            this.ckADS.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ckADS.Name = "ckADS";
-            this.ckADS.Size = new System.Drawing.Size(100, 60);
+            this.ckADS.Size = new System.Drawing.Size(200, 115);
             this.ckADS.TabIndex = 149;
             this.ckADS.Text = "Use ADS1115";
             this.ckADS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -395,19 +424,21 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(353, 47);
+            this.label7.Location = new System.Drawing.Point(706, 90);
+            this.label7.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(152, 23);
+            this.label7.Size = new System.Drawing.Size(310, 46);
             this.label7.TabIndex = 141;
             this.label7.Text = "RS485 serial port";
             // 
             // tbRS485port
             // 
             this.tbRS485port.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRS485port.Location = new System.Drawing.Point(527, 43);
+            this.tbRS485port.Location = new System.Drawing.Point(1054, 83);
+            this.tbRS485port.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbRS485port.MaxLength = 8;
             this.tbRS485port.Name = "tbRS485port";
-            this.tbRS485port.Size = new System.Drawing.Size(102, 30);
+            this.tbRS485port.Size = new System.Drawing.Size(200, 53);
             this.tbRS485port.TabIndex = 140;
             this.tbRS485port.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbRS485port.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbRS485port_HelpRequested);
@@ -418,10 +449,10 @@
             this.ckFlowOn.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFlowOn.Location = new System.Drawing.Point(353, 187);
-            this.ckFlowOn.Margin = new System.Windows.Forms.Padding(2);
+            this.ckFlowOn.Location = new System.Drawing.Point(706, 360);
+            this.ckFlowOn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ckFlowOn.Name = "ckFlowOn";
-            this.ckFlowOn.Size = new System.Drawing.Size(100, 60);
+            this.ckFlowOn.Size = new System.Drawing.Size(200, 115);
             this.ckFlowOn.TabIndex = 148;
             this.ckFlowOn.Text = "Flow on high";
             this.ckFlowOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -432,10 +463,11 @@
             // tbPowerRelay
             // 
             this.tbPowerRelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPowerRelay.Location = new System.Drawing.Point(526, 6);
+            this.tbPowerRelay.Location = new System.Drawing.Point(1052, 12);
+            this.tbPowerRelay.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbPowerRelay.MaxLength = 8;
             this.tbPowerRelay.Name = "tbPowerRelay";
-            this.tbPowerRelay.Size = new System.Drawing.Size(102, 30);
+            this.tbPowerRelay.Size = new System.Drawing.Size(200, 53);
             this.tbPowerRelay.TabIndex = 130;
             this.tbPowerRelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPowerRelay.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPowerRelay_HelpRequested);
@@ -444,19 +476,21 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(353, 10);
+            this.label12.Location = new System.Drawing.Point(706, 19);
+            this.label12.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(127, 23);
+            this.label12.Size = new System.Drawing.Size(258, 46);
             this.label12.TabIndex = 131;
             this.label12.Text = "Power relay #";
             // 
             // tbModule
             // 
             this.tbModule.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbModule.Location = new System.Drawing.Point(180, 80);
+            this.tbModule.Location = new System.Drawing.Point(1054, 148);
+            this.tbModule.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbModule.MaxLength = 8;
             this.tbModule.Name = "tbModule";
-            this.tbModule.Size = new System.Drawing.Size(102, 30);
+            this.tbModule.Size = new System.Drawing.Size(200, 53);
             this.tbModule.TabIndex = 134;
             this.tbModule.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -464,19 +498,21 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(7, 47);
+            this.label8.Location = new System.Drawing.Point(663, 383);
+            this.label8.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(162, 23);
+            this.label8.Size = new System.Drawing.Size(327, 46);
             this.label8.TabIndex = 139;
             this.label8.Text = "ADS1115 WAS pin";
             // 
             // tbAdsWasPin
             // 
             this.tbAdsWasPin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbAdsWasPin.Location = new System.Drawing.Point(180, 43);
+            this.tbAdsWasPin.Location = new System.Drawing.Point(1051, 380);
+            this.tbAdsWasPin.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbAdsWasPin.MaxLength = 8;
             this.tbAdsWasPin.Name = "tbAdsWasPin";
-            this.tbAdsWasPin.Size = new System.Drawing.Size(102, 30);
+            this.tbAdsWasPin.Size = new System.Drawing.Size(200, 53);
             this.tbAdsWasPin.TabIndex = 138;
             this.tbAdsWasPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbAdsWasPin.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbAdsWasPin_HelpRequested);
@@ -485,9 +521,10 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(7, 84);
+            this.label10.Location = new System.Drawing.Point(708, 156);
+            this.label10.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(97, 23);
+            this.label10.Size = new System.Drawing.Size(193, 46);
             this.label10.TabIndex = 135;
             this.label10.Text = "Module ID";
             // 
@@ -497,10 +534,10 @@
             this.ckRelayOn.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRelayOn.Location = new System.Drawing.Point(353, 117);
-            this.ckRelayOn.Margin = new System.Windows.Forms.Padding(2);
+            this.ckRelayOn.Location = new System.Drawing.Point(706, 225);
+            this.ckRelayOn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ckRelayOn.Name = "ckRelayOn";
-            this.ckRelayOn.Size = new System.Drawing.Size(100, 60);
+            this.ckRelayOn.Size = new System.Drawing.Size(200, 115);
             this.ckRelayOn.TabIndex = 147;
             this.ckRelayOn.Text = "Relay on high";
             this.ckRelayOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -508,42 +545,21 @@
             this.ckRelayOn.CheckedChanged += new System.EventHandler(this.tb_TextChanged);
             this.ckRelayOn.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckRelayOn_HelpRequested);
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(7, 10);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(99, 23);
-            this.label9.TabIndex = 137;
-            this.label9.Text = "RTCM port";
-            // 
             // ckUseRate
             // 
             this.ckUseRate.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckUseRate.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ckUseRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckUseRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckUseRate.Location = new System.Drawing.Point(180, 117);
-            this.ckUseRate.Margin = new System.Windows.Forms.Padding(2);
+            this.ckUseRate.Location = new System.Drawing.Point(360, 225);
+            this.ckUseRate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ckUseRate.Name = "ckUseRate";
-            this.ckUseRate.Size = new System.Drawing.Size(100, 60);
+            this.ckUseRate.Size = new System.Drawing.Size(200, 115);
             this.ckUseRate.TabIndex = 146;
             this.ckUseRate.Text = "Use rate control";
             this.ckUseRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckUseRate.UseVisualStyleBackColor = true;
             this.ckUseRate.CheckedChanged += new System.EventHandler(this.tb_TextChanged);
-            // 
-            // tbRTCM
-            // 
-            this.tbRTCM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRTCM.Location = new System.Drawing.Point(180, 6);
-            this.tbRTCM.MaxLength = 8;
-            this.tbRTCM.Name = "tbRTCM";
-            this.tbRTCM.Size = new System.Drawing.Size(102, 30);
-            this.tbRTCM.TabIndex = 136;
-            this.tbRTCM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRTCM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbRTCM_HelpRequested);
             // 
             // ckInvertRoll
             // 
@@ -551,10 +567,10 @@
             this.ckInvertRoll.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ckInvertRoll.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckInvertRoll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckInvertRoll.Location = new System.Drawing.Point(526, 187);
-            this.ckInvertRoll.Margin = new System.Windows.Forms.Padding(2);
+            this.ckInvertRoll.Location = new System.Drawing.Point(1052, 360);
+            this.ckInvertRoll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ckInvertRoll.Name = "ckInvertRoll";
-            this.ckInvertRoll.Size = new System.Drawing.Size(100, 60);
+            this.ckInvertRoll.Size = new System.Drawing.Size(200, 115);
             this.ckInvertRoll.TabIndex = 145;
             this.ckInvertRoll.Text = "Invert roll";
             this.ckInvertRoll.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -568,10 +584,10 @@
             this.ckSwapPitchRoll.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ckSwapPitchRoll.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckSwapPitchRoll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSwapPitchRoll.Location = new System.Drawing.Point(526, 117);
-            this.ckSwapPitchRoll.Margin = new System.Windows.Forms.Padding(2);
+            this.ckSwapPitchRoll.Location = new System.Drawing.Point(1052, 225);
+            this.ckSwapPitchRoll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ckSwapPitchRoll.Name = "ckSwapPitchRoll";
-            this.ckSwapPitchRoll.Size = new System.Drawing.Size(100, 60);
+            this.ckSwapPitchRoll.Size = new System.Drawing.Size(200, 115);
             this.ckSwapPitchRoll.TabIndex = 144;
             this.ckSwapPitchRoll.Text = "Swap pitch roll";
             this.ckSwapPitchRoll.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -583,10 +599,10 @@
             this.ckGyro.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ckGyro.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckGyro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckGyro.Location = new System.Drawing.Point(7, 117);
-            this.ckGyro.Margin = new System.Windows.Forms.Padding(2);
+            this.ckGyro.Location = new System.Drawing.Point(14, 225);
+            this.ckGyro.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ckGyro.Name = "ckGyro";
-            this.ckGyro.Size = new System.Drawing.Size(100, 60);
+            this.ckGyro.Size = new System.Drawing.Size(200, 115);
             this.ckGyro.TabIndex = 142;
             this.ckGyro.Text = "Gyro On";
             this.ckGyro.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -599,10 +615,10 @@
             this.ckGGA.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ckGGA.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckGGA.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckGGA.Location = new System.Drawing.Point(7, 187);
-            this.ckGGA.Margin = new System.Windows.Forms.Padding(2);
+            this.ckGGA.Location = new System.Drawing.Point(14, 360);
+            this.ckGGA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ckGGA.Name = "ckGGA";
-            this.ckGGA.Size = new System.Drawing.Size(100, 60);
+            this.ckGGA.Size = new System.Drawing.Size(200, 115);
             this.ckGGA.TabIndex = 143;
             this.ckGGA.Text = "GGA last";
             this.ckGGA.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -638,9 +654,10 @@
             this.tabPage3.Controls.Add(this.tbPwm1);
             this.tabPage3.Controls.Add(this.label33);
             this.tabPage3.Controls.Add(this.tbDir1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 33);
+            this.tabPage3.Location = new System.Drawing.Point(8, 58);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(638, 261);
+            this.tabPage3.Size = new System.Drawing.Size(1276, 507);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Pins";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -649,19 +666,21 @@
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(353, 190);
+            this.label22.Location = new System.Drawing.Point(706, 365);
+            this.label22.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(171, 23);
+            this.label22.Size = new System.Drawing.Size(342, 46);
             this.label22.TabIndex = 183;
             this.label22.Text = "RS485 send enable";
             // 
             // tbSendEnable
             // 
             this.tbSendEnable.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSendEnable.Location = new System.Drawing.Point(531, 186);
+            this.tbSendEnable.Location = new System.Drawing.Point(1062, 358);
+            this.tbSendEnable.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbSendEnable.MaxLength = 8;
             this.tbSendEnable.Name = "tbSendEnable";
-            this.tbSendEnable.Size = new System.Drawing.Size(102, 30);
+            this.tbSendEnable.Size = new System.Drawing.Size(200, 53);
             this.tbSendEnable.TabIndex = 182;
             this.tbSendEnable.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -669,29 +688,32 @@
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(353, 154);
+            this.label23.Location = new System.Drawing.Point(706, 296);
+            this.label23.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(113, 23);
+            this.label23.Size = new System.Drawing.Size(223, 46);
             this.label23.TabIndex = 181;
             this.label23.Text = "Speed pulse";
             // 
             // tbSpeedPulse
             // 
             this.tbSpeedPulse.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSpeedPulse.Location = new System.Drawing.Point(531, 150);
+            this.tbSpeedPulse.Location = new System.Drawing.Point(1062, 288);
+            this.tbSpeedPulse.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbSpeedPulse.MaxLength = 8;
             this.tbSpeedPulse.Name = "tbSpeedPulse";
-            this.tbSpeedPulse.Size = new System.Drawing.Size(102, 30);
+            this.tbSpeedPulse.Size = new System.Drawing.Size(200, 53);
             this.tbSpeedPulse.TabIndex = 180;
             this.tbSpeedPulse.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // tbPressureSensor
             // 
             this.tbPressureSensor.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPressureSensor.Location = new System.Drawing.Point(531, 6);
+            this.tbPressureSensor.Location = new System.Drawing.Point(1062, 12);
+            this.tbPressureSensor.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbPressureSensor.MaxLength = 8;
             this.tbPressureSensor.Name = "tbPressureSensor";
-            this.tbPressureSensor.Size = new System.Drawing.Size(102, 30);
+            this.tbPressureSensor.Size = new System.Drawing.Size(200, 53);
             this.tbPressureSensor.TabIndex = 178;
             this.tbPressureSensor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -699,9 +721,10 @@
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(353, 10);
+            this.label24.Location = new System.Drawing.Point(706, 19);
+            this.label24.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(141, 23);
+            this.label24.Size = new System.Drawing.Size(286, 46);
             this.label24.TabIndex = 179;
             this.label24.Text = "Pressure sensor";
             // 
@@ -709,19 +732,21 @@
             // 
             this.label31.AutoSize = true;
             this.label31.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label31.Location = new System.Drawing.Point(353, 118);
+            this.label31.Location = new System.Drawing.Point(706, 227);
+            this.label31.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(96, 23);
+            this.label31.Size = new System.Drawing.Size(193, 46);
             this.label31.TabIndex = 165;
             this.label31.Text = "Rate PWM";
             // 
             // tbDir2
             // 
             this.tbDir2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDir2.Location = new System.Drawing.Point(531, 78);
+            this.tbDir2.Location = new System.Drawing.Point(1062, 150);
+            this.tbDir2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbDir2.MaxLength = 8;
             this.tbDir2.Name = "tbDir2";
-            this.tbDir2.Size = new System.Drawing.Size(102, 30);
+            this.tbDir2.Size = new System.Drawing.Size(200, 53);
             this.tbDir2.TabIndex = 158;
             this.tbDir2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -729,19 +754,21 @@
             // 
             this.label34.AutoSize = true;
             this.label34.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label34.Location = new System.Drawing.Point(353, 82);
+            this.label34.Location = new System.Drawing.Point(706, 158);
+            this.label34.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(86, 23);
+            this.label34.Size = new System.Drawing.Size(173, 46);
             this.label34.TabIndex = 159;
             this.label34.Text = "Rate DIR";
             // 
             // tbPwm2
             // 
             this.tbPwm2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPwm2.Location = new System.Drawing.Point(531, 114);
+            this.tbPwm2.Location = new System.Drawing.Point(1062, 219);
+            this.tbPwm2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbPwm2.MaxLength = 8;
             this.tbPwm2.Name = "tbPwm2";
-            this.tbPwm2.Size = new System.Drawing.Size(102, 30);
+            this.tbPwm2.Size = new System.Drawing.Size(200, 53);
             this.tbPwm2.TabIndex = 164;
             this.tbPwm2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -749,19 +776,21 @@
             // 
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(7, 118);
+            this.label25.Location = new System.Drawing.Point(14, 227);
+            this.label25.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(174, 23);
+            this.label25.Size = new System.Drawing.Size(349, 46);
             this.label25.TabIndex = 177;
             this.label25.Text = "Wheel angle sensor";
             // 
             // tbWAS
             // 
             this.tbWAS.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWAS.Location = new System.Drawing.Point(202, 114);
+            this.tbWAS.Location = new System.Drawing.Point(404, 219);
+            this.tbWAS.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbWAS.MaxLength = 8;
             this.tbWAS.Name = "tbWAS";
-            this.tbWAS.Size = new System.Drawing.Size(102, 30);
+            this.tbWAS.Size = new System.Drawing.Size(200, 53);
             this.tbWAS.TabIndex = 176;
             this.tbWAS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -769,19 +798,21 @@
             // 
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(353, 46);
+            this.label26.Location = new System.Drawing.Point(706, 88);
+            this.label26.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(79, 23);
+            this.label26.Size = new System.Drawing.Size(156, 46);
             this.label26.TabIndex = 175;
             this.label26.Text = "Encoder";
             // 
             // tbEncoder
             // 
             this.tbEncoder.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbEncoder.Location = new System.Drawing.Point(531, 42);
+            this.tbEncoder.Location = new System.Drawing.Point(1062, 81);
+            this.tbEncoder.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbEncoder.MaxLength = 8;
             this.tbEncoder.Name = "tbEncoder";
-            this.tbEncoder.Size = new System.Drawing.Size(102, 30);
+            this.tbEncoder.Size = new System.Drawing.Size(200, 53);
             this.tbEncoder.TabIndex = 174;
             this.tbEncoder.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -789,19 +820,21 @@
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(7, 82);
+            this.label27.Location = new System.Drawing.Point(14, 158);
+            this.label27.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(112, 23);
+            this.label27.Size = new System.Drawing.Size(226, 46);
             this.label27.TabIndex = 173;
             this.label27.Text = "Steer switch";
             // 
             // tbSteerSwitch
             // 
             this.tbSteerSwitch.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSteerSwitch.Location = new System.Drawing.Point(202, 78);
+            this.tbSteerSwitch.Location = new System.Drawing.Point(404, 150);
+            this.tbSteerSwitch.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbSteerSwitch.MaxLength = 8;
             this.tbSteerSwitch.Name = "tbSteerSwitch";
-            this.tbSteerSwitch.Size = new System.Drawing.Size(102, 30);
+            this.tbSteerSwitch.Size = new System.Drawing.Size(200, 53);
             this.tbSteerSwitch.TabIndex = 172;
             this.tbSteerSwitch.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -809,19 +842,21 @@
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(7, 226);
+            this.label28.Location = new System.Drawing.Point(14, 435);
+            this.label28.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(133, 23);
+            this.label28.Size = new System.Drawing.Size(268, 46);
             this.label28.TabIndex = 171;
             this.label28.Text = "Current sensor";
             // 
             // tbCurrentSensor
             // 
             this.tbCurrentSensor.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCurrentSensor.Location = new System.Drawing.Point(202, 222);
+            this.tbCurrentSensor.Location = new System.Drawing.Point(404, 427);
+            this.tbCurrentSensor.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbCurrentSensor.MaxLength = 8;
             this.tbCurrentSensor.Name = "tbCurrentSensor";
-            this.tbCurrentSensor.Size = new System.Drawing.Size(102, 30);
+            this.tbCurrentSensor.Size = new System.Drawing.Size(200, 53);
             this.tbCurrentSensor.TabIndex = 170;
             this.tbCurrentSensor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -829,19 +864,21 @@
             // 
             this.label29.AutoSize = true;
             this.label29.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label29.Location = new System.Drawing.Point(7, 190);
+            this.label29.Location = new System.Drawing.Point(14, 365);
+            this.label29.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(111, 23);
+            this.label29.Size = new System.Drawing.Size(226, 46);
             this.label29.TabIndex = 169;
             this.label29.Text = "Work switch";
             // 
             // tbWorkSwitch
             // 
             this.tbWorkSwitch.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWorkSwitch.Location = new System.Drawing.Point(202, 186);
+            this.tbWorkSwitch.Location = new System.Drawing.Point(404, 358);
+            this.tbWorkSwitch.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbWorkSwitch.MaxLength = 8;
             this.tbWorkSwitch.Name = "tbWorkSwitch";
-            this.tbWorkSwitch.Size = new System.Drawing.Size(102, 30);
+            this.tbWorkSwitch.Size = new System.Drawing.Size(200, 53);
             this.tbWorkSwitch.TabIndex = 168;
             this.tbWorkSwitch.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -849,19 +886,21 @@
             // 
             this.label30.AutoSize = true;
             this.label30.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label30.Location = new System.Drawing.Point(7, 154);
+            this.label30.Location = new System.Drawing.Point(14, 296);
+            this.label30.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(100, 23);
+            this.label30.Size = new System.Drawing.Size(202, 46);
             this.label30.TabIndex = 167;
             this.label30.Text = "Steer relay";
             // 
             // tbSteerRelay
             // 
             this.tbSteerRelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSteerRelay.Location = new System.Drawing.Point(202, 150);
+            this.tbSteerRelay.Location = new System.Drawing.Point(404, 288);
+            this.tbSteerRelay.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbSteerRelay.MaxLength = 8;
             this.tbSteerRelay.Name = "tbSteerRelay";
-            this.tbSteerRelay.Size = new System.Drawing.Size(102, 30);
+            this.tbSteerRelay.Size = new System.Drawing.Size(200, 53);
             this.tbSteerRelay.TabIndex = 166;
             this.tbSteerRelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbSteerRelay.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbSteerRelay_HelpRequested);
@@ -870,19 +909,21 @@
             // 
             this.label32.AutoSize = true;
             this.label32.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label32.Location = new System.Drawing.Point(7, 46);
+            this.label32.Location = new System.Drawing.Point(14, 88);
+            this.label32.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(102, 23);
+            this.label32.Size = new System.Drawing.Size(204, 46);
             this.label32.TabIndex = 163;
             this.label32.Text = "Steer PWM";
             // 
             // tbPwm1
             // 
             this.tbPwm1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPwm1.Location = new System.Drawing.Point(202, 42);
+            this.tbPwm1.Location = new System.Drawing.Point(404, 81);
+            this.tbPwm1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbPwm1.MaxLength = 8;
             this.tbPwm1.Name = "tbPwm1";
-            this.tbPwm1.Size = new System.Drawing.Size(102, 30);
+            this.tbPwm1.Size = new System.Drawing.Size(200, 53);
             this.tbPwm1.TabIndex = 162;
             this.tbPwm1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -890,28 +931,31 @@
             // 
             this.label33.AutoSize = true;
             this.label33.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label33.Location = new System.Drawing.Point(7, 10);
+            this.label33.Location = new System.Drawing.Point(14, 19);
+            this.label33.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(92, 23);
+            this.label33.Size = new System.Drawing.Size(184, 46);
             this.label33.TabIndex = 161;
             this.label33.Text = "Steer DIR";
             // 
             // tbDir1
             // 
             this.tbDir1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDir1.Location = new System.Drawing.Point(202, 6);
+            this.tbDir1.Location = new System.Drawing.Point(404, 12);
+            this.tbDir1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tbDir1.MaxLength = 8;
             this.tbDir1.Name = "tbDir1";
-            this.tbDir1.Size = new System.Drawing.Size(102, 30);
+            this.tbDir1.Size = new System.Drawing.Size(200, 53);
             this.tbDir1.TabIndex = 160;
             this.tbDir1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnLoadDefaults
             // 
             this.btnLoadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLoadDefaults.Location = new System.Drawing.Point(207, 316);
+            this.btnLoadDefaults.Location = new System.Drawing.Point(414, 608);
+            this.btnLoadDefaults.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnLoadDefaults.Name = "btnLoadDefaults";
-            this.btnLoadDefaults.Size = new System.Drawing.Size(100, 72);
+            this.btnLoadDefaults.Size = new System.Drawing.Size(200, 138);
             this.btnLoadDefaults.TabIndex = 138;
             this.btnLoadDefaults.Text = "Load Defaults";
             this.btnLoadDefaults.UseVisualStyleBackColor = true;
@@ -920,19 +964,86 @@
             // btnSendToModule
             // 
             this.btnSendToModule.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSendToModule.Location = new System.Drawing.Point(313, 316);
+            this.btnSendToModule.Location = new System.Drawing.Point(626, 608);
+            this.btnSendToModule.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnSendToModule.Name = "btnSendToModule";
-            this.btnSendToModule.Size = new System.Drawing.Size(100, 72);
+            this.btnSendToModule.Size = new System.Drawing.Size(200, 138);
             this.btnSendToModule.TabIndex = 139;
             this.btnSendToModule.Text = "Send to Module";
             this.btnSendToModule.UseVisualStyleBackColor = true;
             this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(12, 311);
+            this.label9.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(323, 46);
+            this.label9.TabIndex = 139;
+            this.label9.Text = "RTCM UDP port #";
+            // 
+            // tbRTCM
+            // 
+            this.tbRTCM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbRTCM.Location = new System.Drawing.Point(400, 308);
+            this.tbRTCM.Margin = new System.Windows.Forms.Padding(6);
+            this.tbRTCM.MaxLength = 8;
+            this.tbRTCM.Name = "tbRTCM";
+            this.tbRTCM.Size = new System.Drawing.Size(200, 53);
+            this.tbRTCM.TabIndex = 138;
+            this.tbRTCM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(12, 165);
+            this.label11.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(300, 46);
+            this.label11.TabIndex = 141;
+            this.label11.Text = "NMEA serial port";
+            // 
+            // tbNMEAserialPort
+            // 
+            this.tbNMEAserialPort.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbNMEAserialPort.Location = new System.Drawing.Point(400, 162);
+            this.tbNMEAserialPort.Margin = new System.Windows.Forms.Padding(6);
+            this.tbNMEAserialPort.MaxLength = 8;
+            this.tbNMEAserialPort.Name = "tbNMEAserialPort";
+            this.tbNMEAserialPort.Size = new System.Drawing.Size(200, 53);
+            this.tbNMEAserialPort.TabIndex = 140;
+            this.tbNMEAserialPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(12, 238);
+            this.label13.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(300, 46);
+            this.label13.TabIndex = 143;
+            this.label13.Text = "RTCM serial port";
+            // 
+            // tbRTCMserialPort
+            // 
+            this.tbRTCMserialPort.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbRTCMserialPort.Location = new System.Drawing.Point(400, 235);
+            this.tbRTCMserialPort.Margin = new System.Windows.Forms.Padding(6);
+            this.tbRTCMserialPort.MaxLength = 8;
+            this.tbRTCMserialPort.Name = "tbRTCMserialPort";
+            this.tbRTCMserialPort.Size = new System.Drawing.Size(200, 53);
+            this.tbRTCMserialPort.TabIndex = 142;
+            this.tbRTCMserialPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // frmPCBsettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(670, 400);
+            this.ClientSize = new System.Drawing.Size(1334, 769);
             this.Controls.Add(this.btnSendToModule);
             this.Controls.Add(this.btnLoadDefaults);
             this.Controls.Add(this.tabControl1);
@@ -941,6 +1052,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmPCBsettings";
@@ -988,8 +1100,6 @@
         private System.Windows.Forms.TextBox tbRS485port;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox tbAdsWasPin;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbRTCM;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox tbModule;
         private System.Windows.Forms.Label label12;
@@ -1029,5 +1139,11 @@
         private System.Windows.Forms.CheckBox ckGyro;
         private System.Windows.Forms.CheckBox ckGGA;
         private System.Windows.Forms.Button btnSendToModule;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox tbRTCMserialPort;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox tbNMEAserialPort;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox tbRTCM;
     }
 }

@@ -70,7 +70,7 @@ namespace RateController
             mnuSettings.Items[1].Text = Lang.lgSection;
             mnuSettings.Items[3].Text = Lang.lgPressure;
             mnuSettings.Items[4].Text = Lang.lgNew;
-            mnuSettings.Items[5].Text = Lang.lgLoad;
+            mnuSettings.Items[5].Text = Lang.lgOpen;
             mnuSettings.Items[6].Text = Lang.lgSaveAs;
             mnuSettings.Items[7].Text = Lang.lgLanguage;
             mnuSettings.Items[8].Text = Lang.lgPCBconfig;
@@ -469,6 +469,7 @@ namespace RateController
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.InitialDirectory = Tls.SettingsDir();
+            saveFileDialog1.Title = "Save As";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
@@ -537,6 +538,7 @@ namespace RateController
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.InitialDirectory = Tls.SettingsDir();
+            saveFileDialog1.Title = "New File";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
@@ -557,7 +559,8 @@ namespace RateController
             string Message = "1 - Current Rate, shows" +
                 " the target rate when it is within 10% of target. Outside this range it" +
                 " shows the exact rate being applied. \n 2 - Instant Rate, shows the exact rate." +
-                "\n 3 - Overall, averages total quantity applied over area done.";
+                "\n 3 - Overall, averages total quantity applied over area done." +
+                "\n Press to change.";
 
             Tls.ShowHelp(Message, "Rate");
             hlpevent.Handled = true;
@@ -565,7 +568,8 @@ namespace RateController
 
         private void lbRemaining_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Shows either quantity remaining or area that can be done with the remaining quantity.";
+            string Message = "Shows either quantity remaining or area that can be done with the remaining quantity." +
+                "\n Press to change.";
 
             Tls.ShowHelp(Message, "Remaining");
             hlpevent.Handled = true;
@@ -574,7 +578,7 @@ namespace RateController
         private void lbArduinoConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Indicates if the arduino module is connected. Green is connected, " +
-                "yellow is simulation mode, red not connected.";
+                "yellow is simulation mode, red not connected. Press to minimize window.";
 
             this.Tls.ShowHelp(Message, "MOD");
             hlpevent.Handled = true;
@@ -583,7 +587,7 @@ namespace RateController
         private void lbAogConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Indicates if AgOpenGPS is connected. Green is connected, " +
-                "red is not connected.";
+                "red is not connected. Press to minimize window.";
 
             this.Tls.ShowHelp(Message, "AOG");
             hlpevent.Handled = true;
@@ -599,6 +603,16 @@ namespace RateController
         {
             Form tmp = new frmPCBsettings(this);
             tmp.ShowDialog();
+        }
+
+        private void lbArduinoConnected_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void lbAogConnected_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }

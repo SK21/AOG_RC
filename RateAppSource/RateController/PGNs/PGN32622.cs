@@ -6,18 +6,19 @@
         //0     HeaderLo    110
         //1     HeaderHi    127
         //2     Receiver    0-None, 1-SimpleRTK2B, 2-Sparkfun F9P
-        //3     IMU         0-None, 1-Sparkfun BNO, 2-CMPS14, 3-Adafruit BNO
-        //4     Read Delay
-        //5     Report Interval
-        //6     Zero offset Lo
-        //7     Zero offset Hi
-        //8     Minimum speed
-        //9     Maximum speed
-        //10    Speed pulse cal X 10 Lo
-        //11    Speed pulse cal X 10 Hi
-        //12    Restart module
+        //3     NMEA serial port, 1-8
+        //4     RTCM serial port, 1-8
+        //5     RTCM UDP port # lo
+        //6     RTCM UDP port # Hi
+        //7     IMU         0-None, 1-Sparkfun BNO, 2-CMPS14, 3-Adafruit BNO
+        //8     Read Delay
+        //9     Report Interval
+        //10    Zero offset Lo
+        //11    Zero offset Hi
+        //12    ADS1115 WAS pin, 0-3
+        //13    Restart module
 
-        private byte[] cData = new byte[13];
+        private byte[] cData = new byte[14];
         private frmPCBsettings cf;
 
         public PGN32622(frmPCBsettings CalledFrom)
@@ -35,18 +36,18 @@
             byte.TryParse(cf.mf.Tls.LoadProperty("GPSreceiver"), out tmp);
             cData[2] = tmp;
 
-            byte.TryParse(cf.mf.Tls.LoadProperty("IMU"), out tmp);
-            cData[3] = tmp;
-
             double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[0].Name), out val);
-            cData[4] = (byte)val;
+            cData[3] = (byte)val;
 
             double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[1].Name), out val);
-            cData[5] = (byte)val;
+            cData[4] = (byte)val;
 
             double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[2].Name), out val);
-            cData[6] = (byte)val;
-            cData[7] = (byte)((int)val >> 8);
+            cData[5] = (byte)val;
+            cData[6] = (byte)((int)val >> 8);
+
+            byte.TryParse(cf.mf.Tls.LoadProperty("IMU"), out tmp);
+            cData[7] = tmp;
 
             double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[3].Name), out val);
             cData[8] = (byte)val;
@@ -55,10 +56,13 @@
             cData[9] = (byte)val;
 
             double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[5].Name), out val);
-            cData[10] = (byte)(val * 10);
-            cData[11] = (byte)((int)(val * 10) >> 8);
+            cData[10] = (byte)val;
+            cData[11] = (byte)((int)val >> 8);
 
-            if (RestartModule) cData[12] = 1; else cData[12] = 0;
+            byte.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[6].Name), out tmp);
+            cData[12] = tmp;
+
+            if (RestartModule) cData[13] = 1; else cData[13] = 0;
 
             cf.mf.SendSerial(cData);
             cf.mf.UDPconfig.SendUDPMessage(cData);
