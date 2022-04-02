@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   31-Mar-2022"
+# define InoDescription "AutoSteerTeensy   01-Apr-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -15,26 +15,28 @@
 struct PCBconfig	// 23 bytes
 {
 	uint8_t Receiver = 1;		// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
-	uint16_t ZeroOffset = 6100;
+	uint8_t NMEAserialPort = 8;	// from receiver
+	uint8_t	RTCMserialPort = 3;	// to receiver
+	uint16_t RTCMport = 5432;	// local port to listen on for RTCM data
 	uint8_t IMU = 1;			// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO
 	uint8_t IMUdelay = 90;		// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
 	uint8_t IMU_Interval = 40;	// for Sparkfun 
+	uint16_t ZeroOffset = 6100;
+	uint8_t AdsWASpin = 0;		// ADS1115 pin for WAS
 	uint8_t MinSpeed = 1;
 	uint8_t MaxSpeed = 15;
 	uint16_t PulseCal = 255;	// Hz/KMH X 10
-	uint8_t ModuleID = 0;
 	uint8_t	PowerRelay = 255;	// # of relay always on, needed for some raven valves. Use 255 for none.
-	uint16_t RTCMport = 5432;	// local port to listen on for RTCM data
-	uint8_t AdsWASpin = 0;		// ADS1115 pin for WAS
 	uint8_t RS485PortNumber = 7;	// serial port #
+	uint8_t ModuleID = 0;
 	uint8_t GyroOn = 0;
 	uint8_t	GGAlast = 1;
-	uint8_t SwapRollPitch = 1;	// 0 use roll value for roll, 1 use pitch value for roll
-	uint8_t InvertRoll = 0;
 	uint8_t UseRate = 0;
+	uint8_t	UseAds = 0;			// 0 use ADS1115 for WAS, 1 use Teensy analog pin for WAS
 	uint8_t RelayOnSignal = 0;	// value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
-	uint8_t	UseAds = 0;			// 0 use ADS1115 for WAS, 1 use Teensy analog pin for WAS
+	uint8_t SwapRollPitch = 1;	// 0 use roll value for roll, 1 use pitch value for roll
+	uint8_t InvertRoll = 0;
 };
 
 PCBconfig PCB;
@@ -297,17 +299,62 @@ void setup()
 	}
 
 	// gps receiver
-	if (PCB.Receiver == 1)
+	// SerialNMEA
+	switch (PCB.NMEAserialPort)
 	{
-		// simpleRTK2B
-		SerialRTCM = &Serial4;
+	case 1:
+		SerialNMEA = &Serial1;
+		break;
+	case 2:
+		SerialNMEA = &Serial2;
+		break;
+	case 3:
+		SerialNMEA = &Serial3;
+		break;
+	case 4:
+		SerialNMEA = &Serial4;
+		break;
+	case 5:
 		SerialNMEA = &Serial5;
-	}
-	else if (PCB.Receiver == 2)
-	{
-		// sparkfun f9p
-		SerialRTCM = &Serial3;
+		break;
+	case 6:
+		SerialNMEA = &Serial6;
+		break;
+	case 7:
+		SerialNMEA = &Serial7;
+		break;
+	default:
 		SerialNMEA = &Serial8;
+		break;
+	}
+
+	// SerialRTCM
+	switch (PCB.RTCMserialPort)
+	{
+	case 1:
+		SerialRTCM = &Serial1;
+		break;
+	case 2:
+		SerialRTCM = &Serial2;
+		break;
+	case 3:
+		SerialRTCM = &Serial3;
+		break;
+	case 4:
+		SerialRTCM = &Serial4;
+		break;
+	case 5:
+		SerialRTCM = &Serial5;
+		break;
+	case 6:
+		SerialRTCM = &Serial6;
+		break;
+	case 7:
+		SerialRTCM = &Serial7;
+		break;
+	default:
+		SerialRTCM = &Serial8;
+		break;
 	}
 
 	if (PCB.Receiver != 0)
@@ -336,6 +383,9 @@ void setup()
 	adc->adc0->setResolution(12); // set bits of resolution
 	adc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::MED_SPEED); // change the conversion speed
 	adc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED); // change the sampling speed
+
+	Wire.begin();			// I2C on pins SCL 19, SDA 18
+	Wire.setClock(400000); //Increase I2C data rate to 400kHz
 
 	if (PCB.UseAds)
 	{
@@ -383,10 +433,6 @@ void setup()
 
 	// GPS port
 	UDPgps.begin(PCB.RTCMport);
-
-	//set up I2C
-	Wire.begin();			// I2C on pins SCL 19, SDA 18
-	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
 
 	// IMU
 	uint8_t IMUaddress;
@@ -533,14 +579,14 @@ void loop()
 		LastSend = millis();
 		if (PCB.Receiver == 0) ReadIMU();
 		SendSteerUDP();
-	}
+}
 
 	SendSpeedPulse();
 	if (PCB.Receiver != 0) DoPanda();
 	if (PCB.UseRate) DoRate();
 	wdt.feed();
 
-	// loop interval
+	 // loop interval
 	//if (millis() - ShowLoopTime > 1000)
 	//{
 	//	PrintRunTime();

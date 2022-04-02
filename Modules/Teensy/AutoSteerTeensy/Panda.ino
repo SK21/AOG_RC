@@ -20,7 +20,7 @@ void DoPanda()
         }
 
         // debug RTCM
-        if (millis() - RTCMlastTime > 500)
+        if (millis() - RTCMlastTime > 1100)
         {
             PrintRunTime();
             Serial.print("RTCM interval ");

@@ -18,7 +18,6 @@ void SendSteerUDP()
     {
         tmp = 9999;
     }
-    tmp = 930;
     PGN_253[7] = (byte)tmp;
     PGN_253[8] = tmp >> 8;
 
