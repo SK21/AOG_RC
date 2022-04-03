@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>52</ApplicationRevision>
+    <ApplicationRevision>54</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -276,7 +276,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\7791659_language_speak_communication_speech_chat_icon.png" />
+    <None Include="Resources\7504229_hamburger_menu_list_options_icon.png" />
     <None Include="Resources\AutoSteerTeensy.ino.hex" />
+    <None Include="Resources\UpLoad.png" />
+    <None Include="Resources\3556117_arrow_ui_up_icon.png" />
+    <None Include="Resources\wrench.png" />
     <None Include="Resources\Upload.bmp" />
     <None Include="Resources\Alarm1.png" />
     <None Include="Resources\Example.rcs" />

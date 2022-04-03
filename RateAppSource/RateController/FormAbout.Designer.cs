@@ -30,53 +30,24 @@ namespace RateController
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAbout));
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.IPA1 = new System.Windows.Forms.TextBox();
             this.IPA2 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.IPA3 = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.bntOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.lbAppVersion = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox3.SuspendLayout();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.bntOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.IPA1);
-            this.groupBox3.Controls.Add(this.IPA2);
-            this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Controls.Add(this.IPA3);
-            this.groupBox3.Controls.Add(this.label27);
-            this.groupBox3.Controls.Add(this.label15);
-            this.groupBox3.Controls.Add(this.label16);
-            this.groupBox3.Controls.Add(this.label13);
-            this.groupBox3.Controls.Add(this.label14);
-            this.groupBox3.Controls.Add(this.label19);
-            this.groupBox3.Controls.Add(this.label18);
-            this.groupBox3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(12, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(315, 134);
-            this.groupBox3.TabIndex = 142;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Network Connections";
-            this.groupBox3.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox3_Paint);
             // 
             // IPA1
             // 
-            this.IPA1.Location = new System.Drawing.Point(140, 28);
+            this.IPA1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IPA1.Location = new System.Drawing.Point(159, 46);
             this.IPA1.Name = "IPA1";
-            this.IPA1.Size = new System.Drawing.Size(36, 30);
-            this.IPA1.TabIndex = 0;
+            this.IPA1.Size = new System.Drawing.Size(36, 53);
+            this.IPA1.TabIndex = 1;
             this.IPA1.Text = "255";
             this.IPA1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.IPA1.Click += new System.EventHandler(this.IPA1_Click);
@@ -84,10 +55,11 @@ namespace RateController
             // 
             // IPA2
             // 
-            this.IPA2.Location = new System.Drawing.Point(182, 28);
+            this.IPA2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IPA2.Location = new System.Drawing.Point(201, 46);
             this.IPA2.Name = "IPA2";
-            this.IPA2.Size = new System.Drawing.Size(36, 30);
-            this.IPA2.TabIndex = 1;
+            this.IPA2.Size = new System.Drawing.Size(36, 53);
+            this.IPA2.TabIndex = 2;
             this.IPA2.Text = "255";
             this.IPA2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.IPA2.Click += new System.EventHandler(this.IPA2_Click);
@@ -97,19 +69,21 @@ namespace RateController
             // 
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(266, 28);
+            this.label2.Location = new System.Drawing.Point(285, 46);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 30);
             this.label2.TabIndex = 3;
             this.label2.Text = "255";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // IPA3
             // 
-            this.IPA3.Location = new System.Drawing.Point(224, 28);
+            this.IPA3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IPA3.Location = new System.Drawing.Point(243, 46);
             this.IPA3.Name = "IPA3";
-            this.IPA3.Size = new System.Drawing.Size(36, 30);
-            this.IPA3.TabIndex = 2;
+            this.IPA3.Size = new System.Drawing.Size(36, 53);
+            this.IPA3.TabIndex = 3;
             this.IPA3.Text = "255";
             this.IPA3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.IPA3.Click += new System.EventHandler(this.IPA3_Click);
@@ -119,107 +93,17 @@ namespace RateController
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(6, 32);
+            this.label27.Location = new System.Drawing.Point(11, 50);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(126, 23);
+            this.label27.Size = new System.Drawing.Size(257, 46);
             this.label27.TabIndex = 177;
             this.label27.Text = "Destination IP";
-            // 
-            // label15
-            // 
-            this.label15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label15.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(184, 102);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(76, 23);
-            this.label15.TabIndex = 119;
-            this.label15.Text = "29999";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(30, 105);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(0, 23);
-            this.label16.TabIndex = 118;
-            // 
-            // label13
-            // 
-            this.label13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label13.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(184, 68);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(76, 23);
-            this.label13.TabIndex = 117;
-            this.label13.Text = "28888";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(31, 72);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(0, 23);
-            this.label14.TabIndex = 116;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(6, 103);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(113, 23);
-            this.label19.TabIndex = 134;
-            this.label19.Text = "Receive Port";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(6, 69);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(92, 23);
-            this.label18.TabIndex = 133;
-            this.label18.Text = "Send Port";
-            // 
-            // bntOK
-            // 
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(212, 203);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 0;
-            this.bntOK.Text = "Close";
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
-            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(12, 203);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(115, 72);
-            this.btnCancel.TabIndex = 179;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.label27.Click += new System.EventHandler(this.label27_Click);
             // 
             // lbAppVersion
             // 
             this.lbAppVersion.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAppVersion.Location = new System.Drawing.Point(12, 172);
+            this.lbAppVersion.Location = new System.Drawing.Point(12, 20);
             this.lbAppVersion.Name = "lbAppVersion";
             this.lbAppVersion.Size = new System.Drawing.Size(315, 18);
             this.lbAppVersion.TabIndex = 180;
@@ -229,23 +113,59 @@ namespace RateController
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 154);
+            this.label1.Location = new System.Drawing.Point(12, 2);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(315, 18);
             this.label1.TabIndex = 181;
             this.label1.Text = "Version";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnCancel
+            // 
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
+            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnCancel.Location = new System.Drawing.Point(12, 91);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(115, 72);
+            this.btnCancel.TabIndex = 4;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // bntOK
+            // 
+            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
+            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.bntOK.Location = new System.Drawing.Point(212, 91);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(115, 72);
+            this.bntOK.TabIndex = 0;
+            this.bntOK.Text = "Close";
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
+            // 
             // FormAbout
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(340, 286);
+            this.ClientSize = new System.Drawing.Size(339, 175);
+            this.Controls.Add(this.IPA1);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.IPA2);
             this.Controls.Add(this.lbAppVersion);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.IPA3);
             this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.label27);
             this.Controls.Add(this.bntOK);
-            this.Controls.Add(this.groupBox3);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -255,22 +175,13 @@ namespace RateController
             this.Text = "About";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormAbout_FormClosed);
             this.Load += new System.EventHandler(this.FormAbout_Load);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Button bntOK;
         private System.Windows.Forms.TextBox IPA3;
         private System.Windows.Forms.Label label2;

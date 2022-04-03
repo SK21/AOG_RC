@@ -156,6 +156,9 @@
   <data name="lgComboClose" xml:space="preserve">
     <value>Combo Close</value>
   </data>
+  <data name="lgComm" xml:space="preserve">
+    <value>Comm</value>
+  </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Connect</value>
   </data>

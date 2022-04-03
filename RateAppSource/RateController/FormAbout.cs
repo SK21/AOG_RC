@@ -17,10 +17,7 @@ namespace RateController
 
             #region // language
 
-            groupBox3.Text = Lang.lgNetworkConnections;
             label27.Text = Lang.lgDestinationIP;
-            label18.Text = Lang.lgSendPort;
-            label19.Text = Lang.lgReceivePort;
             btnCancel.Text = Lang.lgCancel;
             bntOK.Text = Lang.lgClose;
 
@@ -180,6 +177,16 @@ namespace RateController
         private void SetDayMode()
         {
             this.BackColor = Properties.Settings.Default.DayColour;
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label27_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

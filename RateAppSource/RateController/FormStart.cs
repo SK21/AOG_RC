@@ -66,16 +66,18 @@ namespace RateController
             lbApplied.Text = Lang.lgQuantityApplied;
             lbRemaining.Text = Lang.lgTank_Remaining + " ...";
 
-            mnuSettings.Items[0].Text = Lang.lgProducts;
-            mnuSettings.Items[1].Text = Lang.lgSection;
-            mnuSettings.Items[3].Text = Lang.lgPressure;
-            mnuSettings.Items[4].Text = Lang.lgNew;
-            mnuSettings.Items[5].Text = Lang.lgOpen;
-            mnuSettings.Items[6].Text = Lang.lgSaveAs;
-            mnuSettings.Items[7].Text = Lang.lgLanguage;
-            mnuSettings.Items[8].Text = Lang.lgPCBconfig;
-            mnuSettings.Items[9].Text = Lang.lgFirmware;
-            mnuSettings.Items[10].Text = Lang.lgAbout;
+            mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
+            mnuSettings.Items["MnuSections"].Text = Lang.lgSection;
+            mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
+            mnuSettings.Items["MnuNew"].Text = Lang.lgNew;
+            mnuSettings.Items["MnuOpen"].Text = Lang.lgOpen;
+            mnuSettings.Items["MnuSaveAs"].Text = Lang.lgSaveAs;
+            mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
+
+            MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
+            MnuOptions.DropDownItems["MnuConfig"].Text = Lang.lgPCBconfig;
+            MnuOptions.DropDownItems["MnuFirmware"].Text = Lang.lgFirmware;
+            MnuOptions.DropDownItems["MnuAbout"].Text = Lang.lgAbout;
 
             #endregion // language
 
@@ -508,33 +510,6 @@ namespace RateController
             RCalarm.Silence();
         }
 
-        private void deustchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "de";
-            Properties.Settings.Default.Save();
-            Application.Restart();
-        }
-
-        private void englishToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "en";
-            Properties.Settings.Default.Save();
-            Application.Restart();
-        }
-
-        private void nederlandsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "nl";
-            Properties.Settings.Default.Save();
-            Application.Restart();
-        }
-
-        private void pressureToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new FormPressure(this);
-            frm.ShowDialog();
-        }
-
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.InitialDirectory = Tls.SettingsDir();
@@ -547,11 +522,6 @@ namespace RateController
                     LoadSettings();
                 }
             }
-        }
-
-        private void SetRate_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void lbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -593,18 +563,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void firmwareToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form Sec = new frmFirmware(this);
-            Sec.ShowDialog();
-        }
-
-        private void pCBConfigToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmPCBsettings(this);
-            tmp.ShowDialog();
-        }
-
         private void lbArduinoConnected_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
@@ -613,6 +571,45 @@ namespace RateController
         private void lbAogConnected_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void MnuNederlands_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "nl";
+            Properties.Settings.Default.Save();
+            Application.Restart();
+        }
+
+        private void MnuDeustch_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "de";
+            Properties.Settings.Default.Save();
+            Application.Restart();
+        }
+
+        private void MnuEnglish_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "en";
+            Properties.Settings.Default.Save();
+            Application.Restart();
+        }
+
+        private void MnuFirmware_Click(object sender, EventArgs e)
+        {
+            Form Sec = new frmFirmware(this);
+            Sec.ShowDialog();
+        }
+
+        private void MnuAbout_Click(object sender, EventArgs e)
+        {
+            Form frmAbout = new FormAbout(this);
+            frmAbout.ShowDialog();
+        }
+
+        private void MnuConfig_Click(object sender, EventArgs e)
+        {
+            Form tmp = new frmPCBsettings(this);
+            tmp.ShowDialog();
         }
     }
 }
