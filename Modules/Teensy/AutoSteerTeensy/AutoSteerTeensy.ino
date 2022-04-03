@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   01-Apr-2022"
+# define InoDescription "AutoSteerTeensy   02-Apr-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -92,6 +92,7 @@ uint8_t data[UDP_TX_PACKET_MAX_SIZE];  // Buffer For Receiving UDP Data
 
 // UDP GPS traffic
 EthernetUDP UDPgps;
+char GPSbuffer[512];	// buffer for ntrip data
 
 float IMU_Heading = 0;
 float IMU_Roll = 0;
@@ -251,7 +252,7 @@ void PrintRunTime(uint32_t StartTime = SketchStartTime)
 	Serial.print(secs);
 	Serial.print(".");
 	Serial.print(ms);
-	Serial.print("> ");
+	Serial.print(">  \t");
 }
 
 void setup()
@@ -366,8 +367,15 @@ void setup()
 		parser.addHandler("G-GGA", GGA_Handler);
 		parser.addHandler("G-VTG", VTG_Handler);
 
-		static char ReceiveBuffer[100];
-		SerialNMEA->addMemoryForRead(ReceiveBuffer, 100);
+		static char NMEAreceiveBuffer[512];
+		static char NMEAsendBuffer[512];
+		static char RTCMreceiveBuffer[512];
+		static char RTCMsendBuffer[512];
+
+		SerialNMEA->addMemoryForRead(NMEAreceiveBuffer, 512);
+		SerialNMEA->addMemoryForWrite(NMEAsendBuffer, 512);
+		SerialRTCM->addMemoryForRead(RTCMreceiveBuffer, 512);
+		SerialRTCM->addMemoryForWrite(RTCMsendBuffer, 512);
 	}
 
 	pinMode(PINS.Encoder, INPUT_PULLUP);
@@ -390,7 +398,6 @@ void setup()
 	if (PCB.UseAds)
 	{
 		// ADS1115
-		Serial.println("");
 		Serial.println("Starting ADS ...");
 		ErrorCount = 0;
 		while (!ADSfound)
@@ -417,15 +424,12 @@ void setup()
 		}
 	}
 
-	SteerSwitch = HIGH;
-
 	// ethernet start
 	Serial.println("Starting Ethernet ...");
-	Serial.print("IP Address: 192.168.");
-	Serial.print(IPpart3);
-	Serial.print(".");
-	Serial.println(IPMac);
-	Ethernet.begin(LocalMac, LocalIP);
+	Ethernet.begin(LocalMac, 0);
+	Ethernet.setLocalIP(LocalIP);
+	Serial.print("IP Address: ");
+	Serial.println(Ethernet.localIP());
 	Serial.println("");
 
 	// main port
@@ -557,6 +561,8 @@ void setup()
 	UDPconfig.begin(ListeningPortConfig);
 
 	noTone(PINS.SpeedPulse);
+	SteerSwitch = HIGH;
+
 	Serial.println("");
 	Serial.println("Finished setup.");
 }
@@ -589,10 +595,13 @@ void loop()
 	 // loop interval
 	//if (millis() - ShowLoopTime > 1000)
 	//{
-	//	PrintRunTime();
-	//	Serial.print("Loop interval (micros) ");
-	//	Serial.println(micros() - LoopLast);
-	//	ShowLoopTime = millis();
+	//	if (micros() - LoopLast > 5)
+	//	{
+	//		PrintRunTime();
+	//		Serial.print("Loop interval (ms) ");
+	//		Serial.println((float)(micros() - LoopLast) / 1000.0, 3);
+	//		ShowLoopTime = millis();
+	//	}
 	//}
 	//LoopLast = micros();
 }

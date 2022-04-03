@@ -1,6 +1,4 @@
 
-uint32_t    SendLastTime;
-
 void SendSteerUDP()
 {
     // Steer Data 1
@@ -68,15 +66,6 @@ void SendSteerUDP()
         UDPsteering.write(PGN_250, sizeof(PGN_250));
         UDPsteering.endPacket();
     }
-
-    // debug send udp
-    if (millis() - SendLastTime > SteerCommSendInterval * 1.5)
-    {
-        PrintRunTime();
-        Serial.print("Steering send UDP interval ");
-        Serial.println(millis() - SendLastTime);
-    }
-        SendLastTime = millis();
 }
 
 void ReceiveSteerUDP()

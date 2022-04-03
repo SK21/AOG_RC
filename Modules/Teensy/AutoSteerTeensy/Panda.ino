@@ -3,8 +3,6 @@ bool isTriggered = false;
 uint32_t PandalastTime = PCB.IMUdelay;
 uint32_t currentTime = PCB.IMUdelay;
 
-uint32_t RTCMlastTime;
-
 void DoPanda()
 {
     // NMEA
@@ -14,19 +12,8 @@ void DoPanda()
     int packetSize = UDPgps.parsePacket();
     if (packetSize)
     {
-        for (int i = 0; i < packetSize; i++)
-        {
-            SerialRTCM->write(UDPgps.read());
-        }
-
-        // debug RTCM
-        if (millis() - RTCMlastTime > 1100)
-        {
-            PrintRunTime();
-            Serial.print("RTCM interval ");
-            Serial.println(millis() - RTCMlastTime);
-            RTCMlastTime = millis();
-        }
+        UDPgps.read(GPSbuffer, packetSize);
+        SerialRTCM->write(GPSbuffer, packetSize);
     }
 
     // IMU
@@ -199,19 +186,12 @@ void BuildPANDA(void)
 
     strcat(nme, "\r\n");
 
-    // debug panda
-    if (millis() - PandalastTime > 500)
-    {
-        PrintRunTime();
-        Serial.print("Panda interval ");
-        Serial.println(millis() - PandalastTime);
-    }
-
     PandalastTime = millis();
     isTriggered = true;
 
+    uint16_t len = strlen(nme);
     UDPgps.beginPacket(AGIOip, AGIOport);
-    UDPgps.write(nme);
+    UDPgps.write(nme, len);
     UDPgps.endPacket();
 }
 
