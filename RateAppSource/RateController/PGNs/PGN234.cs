@@ -54,7 +54,7 @@
         public void Send()
         {
             cData[13] = CRC();
-            mf.UDPagio.SendUDPMessage(cData);
+            mf.UDPaog.SendUDPMessage(cData);
         }
 
         private byte CRC()

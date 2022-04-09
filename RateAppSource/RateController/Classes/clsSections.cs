@@ -179,20 +179,20 @@ namespace RateController
                 cWorkingWidth_cm = 0;
                 for (int i = 0; i < 16; i++)
                 {
-                    tmp = cSections[i].SectionOn;
+                    tmp = cSections[i].IsON;
 
                     if (i < 8)
                     {
-                        cSections[i].SectionOn = mf.Tls.BitRead(SectionControlByte[0], i);
+                        cSections[i].IsON = mf.Tls.BitRead(SectionControlByte[0], i);
                     }
                     else
                     {
-                        cSections[i].SectionOn = mf.Tls.BitRead(SectionControlByte[1], i - 8);
+                        cSections[i].IsON = mf.Tls.BitRead(SectionControlByte[1], i - 8);
                     }
 
-                    if (cSections[i].SectionOn != tmp) Result = true;
+                    if (cSections[i].IsON != tmp) Result = true;
 
-                    if (cSections[i].SectionOn) cWorkingWidth_cm += cSections[i].Width_cm;
+                    if (cSections[i].IsON) cWorkingWidth_cm += cSections[i].Width_cm;
                 }
             }
             catch (Exception ex)

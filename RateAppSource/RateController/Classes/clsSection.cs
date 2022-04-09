@@ -42,7 +42,7 @@ namespace RateController
 
         public int ID { get { return cID; } }
 
-        public bool SectionOn
+        public bool IsON
         {
             get { return cSectionOn; }
             set

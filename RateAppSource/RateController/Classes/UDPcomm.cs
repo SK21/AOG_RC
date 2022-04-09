@@ -147,8 +147,8 @@ namespace RateController
                 PGN = Data[0] << 8 | Data[1];   // AGIO big endian
                 if (PGN == 32897)
                 {
-                    Debug.Print("PGN " + PGN.ToString());
-                    Debug.Print("ID " + Data[3].ToString());
+                    //Debug.Print("PGN " + PGN.ToString());
+                    //Debug.Print("ID " + Data[3].ToString());
                     // AGIO
                     switch (Data[3])
                     {
@@ -207,8 +207,13 @@ namespace RateController
                 // Update status through a delegate
                 mf.Invoke(HandleDataDelegate, new object[] { port, localMsg });
             }
+            catch( System.ObjectDisposedException)
+            {
+                // do nothing
+            }
             catch (Exception e)
             {
+
                 mf.Tls.ShowHelp("ReceiveData Error \n" + e.Message, "Comm", 3000, true);
             }
         }

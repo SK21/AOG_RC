@@ -107,5 +107,37 @@ namespace RateController
         {
             return SW[(int)ID];
         }
+
+        public void PressSwitch(SwIDs ID)
+        {
+            ReceiveTime = DateTime.Now;
+            
+            switch (ID)
+            {
+                case SwIDs.MasterOn:
+                    SW[1] = true;
+                    SW[2] = false;
+                    break;
+                case SwIDs.MasterOff:
+                    SW[1] = false;
+                    SW[2] = true;
+                    break;
+                case SwIDs.RateUp:
+                    SW[3] = true;
+                    SW[4] = false;
+                    break;
+                case SwIDs.RateDown:
+                    SW[3] = false;
+                    SW[4] = true;
+                    break;
+                default:
+                    SW[(int)ID] = !SW[(int)ID];
+                    break;
+            }
+            SwitchPGNargs args = new SwitchPGNargs();
+            args.Switches = SW;
+            SwitchPGNreceived?.Invoke(this, args);
+
+        }
     }
 }

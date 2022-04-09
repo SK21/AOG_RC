@@ -1794,6 +1794,5 @@ C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\Rat
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.exe
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.pdb
-C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
-C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.SuggestedBindingRedirects.cache
-C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmRelays.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csprojAssemblyReference.cache

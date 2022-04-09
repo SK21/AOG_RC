@@ -20,8 +20,8 @@ namespace RateController
             mf = CallingForm;
 
             CFG = new TextBox[] {tbNMEAserialPort,tbRTCMserialPort,tbRTCM,tbIMUdelay
-                ,tbIMUinterval,tbZeroOffset,tbAdsWasPin,tbMinSpeed,tbMaxSpeed,tbPulseCal
-                ,tbPowerRelay,tbRS485port,tbModule
+                ,tbIMUinterval,tbZeroOffset // 5
+                ,tbMinSpeed,tbMaxSpeed,tbPulseCal,tbAdsWasPin,tbRS485port,tbModule   //11
                 ,tbDir1,tbPwm1,tbSteerSwitch,tbWAS,tbSteerRelay,tbWorkSwitch,tbCurrentSensor
                 ,tbPressureSensor,tbEncoder,tbDir2,tbPwm2,tbSpeedPulse,tbSendEnable};
 
@@ -98,7 +98,6 @@ namespace RateController
             tbMinSpeed.Text = "1";
             tbMaxSpeed.Text = "15";
             tbPulseCal.Text = "25.5";
-            tbPowerRelay.Text = "255";
             tbRS485port.Text = "7";
             tbModule.Text = "0";
 
@@ -226,7 +225,7 @@ namespace RateController
                 for (int i = 0; i < CFG.Length; i++)
                 {
                     double.TryParse(mf.Tls.LoadProperty(CFG[i].Name), out val);
-                    if (i == 9)
+                    if (i == 8)
                     {
                         // pulse cal
                         CFG[i].Text = val.ToString("N1");
@@ -319,7 +318,7 @@ namespace RateController
             {
                 case 0:
                 case 1:
-                case 11:
+                case 10:
                     max = 8;
                     min = 1;
                     break;
@@ -330,30 +329,30 @@ namespace RateController
                     break;
 
                 case 3:
+                case 11:
                 case 12:
                     max = 255;
                     min = 0;
                     break;
 
                 case 4:
-                case 10:
                     max = 255;
                     min = 1;
                     break;
 
                 case 5:
-                case 9:
+                case 8:
                     max = 10000;
                     min = 0;
                     break;
 
-                case 6:
+                case 9:
                     max = 3;
                     min = 0;
                     break;
 
+                case 6:
                 case 7:
-                case 8:
                     max = 30;
                     min = 0;
                     break;
@@ -400,7 +399,7 @@ namespace RateController
             {
                 case 0:
                 case 1:
-                case 11:
+                case 10:
                     max = 8;
                     min = 1;
                     break;
@@ -411,30 +410,30 @@ namespace RateController
                     break;
 
                 case 3:
+                case 11:
                 case 12:
                     max = 255;
                     min = 0;
                     break;
 
                 case 4:
-                case 10:
                     max = 255;
                     min = 1;
                     break;
 
                 case 5:
-                case 9:
+                case 8:
                     max = 10000;
                     min = 0;
                     break;
 
-                case 6:
+                case 9:
                     max = 3;
                     min = 0;
                     break;
 
+                case 6:
                 case 7:
-                case 8:
                     max = 30;
                     min = 0;
                     break;
@@ -476,14 +475,6 @@ namespace RateController
             string Message = "Milliseconds between updates from the IMU.";
 
             mf.Tls.ShowHelp(Message, "Report Interval");
-            hlpevent.Handled = true;
-        }
-
-        private void tbPowerRelay_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The number of the relay (1-16) that is always on. 255 for none.";
-
-            mf.Tls.ShowHelp(Message, "Power relay");
             hlpevent.Handled = true;
         }
 

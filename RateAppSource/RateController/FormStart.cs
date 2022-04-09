@@ -14,6 +14,9 @@ namespace RateController
 
     public partial class FormStart : Form
     {
+        public readonly int MaxRelays = 16;
+        public readonly int MaxSections = 16;
+
         public PGN254 AutoSteerPGN = new PGN254();
         public PGN32618 SwitchBox;
         public PGN32620 SwitchIDs;
@@ -37,7 +40,7 @@ namespace RateController
         public SerialComm[] SER = new SerialComm[3];
         public clsTools Tls;
        
-        public UDPComm UDPagio;
+        public UDPComm UDPaog;
         public UDPComm UDPnetwork;
         public UDPComm UDPconfig;
 
@@ -54,6 +57,8 @@ namespace RateController
         private bool ShowQuantityRemaining = true;
         public clsPressures PressureObjects;
 
+        public clsRelays RelayObjects;
+
         public FormStart()
         {
             InitializeComponent();
@@ -68,12 +73,13 @@ namespace RateController
 
             mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
             mnuSettings.Items["MnuSections"].Text = Lang.lgSection;
-            mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
-            mnuSettings.Items["MnuNew"].Text = Lang.lgNew;
-            mnuSettings.Items["MnuOpen"].Text = Lang.lgOpen;
-            mnuSettings.Items["MnuSaveAs"].Text = Lang.lgSaveAs;
             mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
 
+            MnuOptions.DropDownItems["mnuRelays"].Text = Lang.lgRelays;
+            MnuOptions.DropDownItems["MnuComm"].Text = Lang.lgComm;
+            MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
+            MnuOptions.DropDownItems["MnuOpen"].Text = Lang.lgOpen;
+            MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
             MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
             MnuOptions.DropDownItems["MnuConfig"].Text = Lang.lgPCBconfig;
             MnuOptions.DropDownItems["MnuFirmware"].Text = Lang.lgFirmware;
@@ -82,8 +88,8 @@ namespace RateController
             #endregion // language
 
             Tls = new clsTools(this);
-            UDPagio = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
-            //UDPagio = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255");       // AOG
+            //UDPagio = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
+            UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255");       // AOG
 
             UDPnetwork = new UDPComm(this, 29999, 28888, 1480, "192.168.1.255");    // arduino
             UDPconfig = new UDPComm(this, 29900, 28800, 1482, "192.168.1.255");     // pcb config
@@ -108,6 +114,7 @@ namespace RateController
             UseInches = true;
 
             PressureObjects = new clsPressures(this);
+            RelayObjects = new clsRelays(this);
         }
 
         public byte CurrentProduct()
@@ -140,6 +147,7 @@ namespace RateController
             UDPconfig.BroadCastIP = Tls.LoadProperty("BroadCastIP");
 
             PressureObjects.Load();
+            RelayObjects.Load();
         }
 
         public void StartSerial()
@@ -339,6 +347,8 @@ namespace RateController
             Products.Save();
 
             Tls.SaveProperty("BroadCastIP", UDPnetwork.BroadCastIP);
+
+            Application.Exit();
         }
 
         private void FormStart_Load(object sender, EventArgs e)
@@ -361,8 +371,8 @@ namespace RateController
                 Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true);
             }
 
-            UDPagio.StartUDPServer();
-            if (!UDPagio.isUDPSendConnected)
+            UDPaog.StartUDPServer();
+            if (!UDPaog.isUDPSendConnected)
             {
                 Tls.ShowHelp("UDPagio failed to start.", "", 3000, true);
             }
@@ -375,6 +385,8 @@ namespace RateController
 
             LoadSettings();
             UpdateStatus();
+
+            //Tls.ShowHelp(new string('a', 50));
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -609,6 +621,12 @@ namespace RateController
         private void MnuConfig_Click(object sender, EventArgs e)
         {
             Form tmp = new frmPCBsettings(this);
+            tmp.ShowDialog();
+        }
+
+        private void MnuRelays_Click(object sender, EventArgs e)
+        {
+            Form tmp = new frmRelays(this);
             tmp.ShowDialog();
         }
     }

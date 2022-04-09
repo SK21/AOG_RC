@@ -1,4 +1,7 @@
-﻿namespace RateController
+﻿using System.Diagnostics;
+using System;
+
+namespace RateController
 {
     public class PGN32614
     {
@@ -30,13 +33,34 @@
             cData[1] = 127;
         }
 
+        DateTime Last;
+
         public void Send()
         {
             double Tmp = 0;
 
             cData[2] = Prod.mf.Tls.BuildModSenID(Prod.ModuleID, (byte)Prod.SensorID);
-            cData[3] = Prod.mf.Sections.SectionLo();
-            cData[4] = Prod.mf.Sections.SectionHi();
+            //cData[3] = Prod.mf.Sections.SectionLo();
+            //cData[4] = Prod.mf.Sections.SectionHi();
+
+            int Relays = Prod.mf.RelayObjects.Status();
+            cData[3] = (byte)Relays;
+            cData[4] = (byte)(Relays >> 8);
+
+            if ((DateTime.Now - Last).TotalSeconds > 1)
+            {
+                Last = DateTime.Now;
+                Debug.Print("");
+                for (int j = 0; j < 2; j++)
+                {
+                    byte Rlys = cData[j + 3];
+                    for (int i = 0; i < 8; i++)
+                    {
+                        bool ON = (((byte)(Math.Pow(2, i)) & Rlys) > 0);
+                        Debug.Print((i+1).ToString() + ", " + j.ToString() + ": " + ON.ToString());
+                    }
+                }
+            }
 
             // rate set
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto))

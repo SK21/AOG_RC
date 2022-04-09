@@ -15,10 +15,9 @@
         //9     Report Interval
         //10    Zero offset Lo
         //11    Zero offset Hi
-        //12    ADS1115 WAS pin, 0-3
-        //13    Restart module
+        //12    Restart module
 
-        private byte[] cData = new byte[14];
+        private byte[] cData = new byte[13];
         private frmPCBsettings cf;
 
         public PGN32622(frmPCBsettings CalledFrom)
@@ -59,10 +58,7 @@
             cData[10] = (byte)val;
             cData[11] = (byte)((int)val >> 8);
 
-            byte.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[6].Name), out tmp);
-            cData[12] = tmp;
-
-            if (RestartModule) cData[13] = 1; else cData[13] = 0;
+            if (RestartModule) cData[12] = 1; else cData[12] = 0;
 
             cf.mf.SendSerial(cData);
             cf.mf.UDPconfig.SendUDPMessage(cData);

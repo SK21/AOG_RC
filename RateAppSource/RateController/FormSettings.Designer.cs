@@ -1064,6 +1064,7 @@ namespace RateController
             this.swMasterOff.TabIndex = 204;
             this.swMasterOff.Text = "Master Off";
             this.swMasterOff.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swMasterOff.Click += new System.EventHandler(this.swMasterOff_Click);
             this.swMasterOff.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swDown
@@ -1089,6 +1090,7 @@ namespace RateController
             this.swUp.TabIndex = 202;
             this.swUp.Text = "Rate Up";
             this.swUp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swUp.Click += new System.EventHandler(this.swUp_Click);
             this.swUp.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swAuto
@@ -1101,6 +1103,7 @@ namespace RateController
             this.swAuto.TabIndex = 201;
             this.swAuto.Text = "Auto";
             this.swAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swAuto.Click += new System.EventHandler(this.swAuto_Click);
             this.swAuto.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swFour
@@ -1113,6 +1116,7 @@ namespace RateController
             this.swFour.TabIndex = 200;
             this.swFour.Text = "4";
             this.swFour.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swFour.Click += new System.EventHandler(this.swFour_Click);
             this.swFour.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swThree
@@ -1125,6 +1129,7 @@ namespace RateController
             this.swThree.TabIndex = 199;
             this.swThree.Text = "3";
             this.swThree.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swThree.Click += new System.EventHandler(this.swThree_Click);
             this.swThree.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swTwo
@@ -1137,6 +1142,7 @@ namespace RateController
             this.swTwo.TabIndex = 198;
             this.swTwo.Text = "2";
             this.swTwo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swTwo.Click += new System.EventHandler(this.swTwo_Click);
             this.swTwo.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swOne
@@ -1149,6 +1155,7 @@ namespace RateController
             this.swOne.TabIndex = 197;
             this.swOne.Text = "1";
             this.swOne.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swOne.Click += new System.EventHandler(this.swOne_Click);
             this.swOne.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // label22
@@ -1172,6 +1179,7 @@ namespace RateController
             this.swMasterOn.TabIndex = 195;
             this.swMasterOn.Text = "Master On";
             this.swMasterOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swMasterOn.Click += new System.EventHandler(this.swMasterOn_Click);
             this.swMasterOn.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // tbCountsRev

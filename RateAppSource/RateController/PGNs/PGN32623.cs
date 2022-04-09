@@ -11,7 +11,7 @@ namespace RateController
         //3     Maximum speed
         //4     Speed pulse cal X 10 Lo
         //5     Speed pulse cal X 10 Hi
-        //6     Power relay #
+        //6     ADS1115 WAS pin
         //7     RS485 Serial port, 1-8
         //8     Module ID
         //9     Commands
@@ -42,23 +42,23 @@ namespace RateController
             double val;
 
             // text boxes
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[7].Name), out val);
+            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[6].Name), out val);
             cData[2] = (byte)val;
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[8].Name), out val);
+            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[7].Name), out val);
             cData[3] = (byte)val;
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[9].Name), out val);
+            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[8].Name), out val);
             cData[4] = (byte)(val * 10);
             cData[5] = (byte)((int)(val * 10) >> 8);
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[10].Name), out val);
+            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[9].Name), out val);
             cData[6] = (byte)val;
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[11].Name), out val);
+            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[10].Name), out val);
             cData[7] = (byte)val;
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[12].Name), out val);
+            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[11].Name), out val);
             cData[8] = (byte)val;
 
             // check boxes

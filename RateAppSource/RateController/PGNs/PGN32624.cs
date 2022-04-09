@@ -36,7 +36,7 @@
 
             for (int i = 2; i < 15; i++)
             {
-                byte.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[i + 9].Name), out val);
+                byte.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[i + 10].Name), out val);
                 cData[i] = val;
             }
 

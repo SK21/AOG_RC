@@ -300,6 +300,9 @@
   <data name="lgReceivePort" xml:space="preserve">
     <value>ReceivePort</value>
   </data>
+  <data name="lgRelays" xml:space="preserve">
+    <value>Relays</value>
+  </data>
   <data name="lgRescan" xml:space="preserve">
     <value>Rescan</value>
   </data>

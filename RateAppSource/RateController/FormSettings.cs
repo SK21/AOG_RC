@@ -1288,7 +1288,7 @@ namespace RateController
 
         private void swDown_Click(object sender, EventArgs e)
         {
-
+            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
         }
 
         private void lbWorkRateData_Click(object sender, EventArgs e)
@@ -1498,6 +1498,46 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Copy");
             hlpevent.Handled = true;
+        }
+
+        private void swMasterOn_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+        }
+
+        private void swMasterOff_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+        }
+
+        private void swOne_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw0);
+        }
+
+        private void swTwo_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw1);
+        }
+
+        private void swThree_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw2);
+        }
+
+        private void swFour_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw3);
+        }
+
+        private void swAuto_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.Auto);
+        }
+
+        private void swUp_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
         }
     }
 }

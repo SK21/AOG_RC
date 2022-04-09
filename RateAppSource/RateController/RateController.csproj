@@ -13,7 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Install\</PublishUrl>
+    <PublishUrl>C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Install\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>54</ApplicationRevision>
+    <ApplicationRevision>59</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -109,6 +109,8 @@
     <Compile Include="Classes\clsPressure.cs" />
     <Compile Include="Classes\clsPressures.cs" />
     <Compile Include="Classes\clsProducts.cs" />
+    <Compile Include="Classes\clsRelay.cs" />
+    <Compile Include="Classes\clsRelays.cs" />
     <Compile Include="Classes\clsSection.cs" />
     <Compile Include="Classes\clsSections.cs" />
     <Compile Include="Classes\clsTools.cs" />
@@ -168,6 +170,12 @@
     </Compile>
     <Compile Include="frmPCBsettings.Designer.cs">
       <DependentUpon>frmPCBsettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmRelays.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRelays.Designer.cs">
+      <DependentUpon>frmRelays.cs</DependentUpon>
     </Compile>
     <Compile Include="frmSections.cs">
       <SubType>Form</SubType>
@@ -232,6 +240,9 @@
     <EmbeddedResource Include="frmPCBsettings.resx">
       <DependentUpon>frmPCBsettings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmRelays.resx">
+      <DependentUpon>frmRelays.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmSections.resx">
       <DependentUpon>frmSections.cs</DependentUpon>
     </EmbeddedResource>
@@ -276,9 +287,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\AutoSteerTeensy.ino.hex" />
+    <None Include="Resources\Industry-Circuit-icon.png" />
+    <None Include="Resources\cableusb_119960.png" />
     <None Include="Resources\7791659_language_speak_communication_speech_chat_icon.png" />
     <None Include="Resources\7504229_hamburger_menu_list_options_icon.png" />
-    <None Include="Resources\AutoSteerTeensy.ino.hex" />
     <None Include="Resources\UpLoad.png" />
     <None Include="Resources\3556117_arrow_ui_up_icon.png" />
     <None Include="Resources\wrench.png" />
@@ -298,6 +311,7 @@
     <Content Include="Images\close.png" />
     <None Include="Images\Off.png" />
     <None Include="Images\OffSmall.png" />
+    <None Include="Images\FileNew.png" />
     <Content Include="Images\OK64.png" />
     <None Include="Images\OnSmall.png" />
     <None Include="Images\On.png" />
