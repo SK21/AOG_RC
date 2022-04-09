@@ -6,7 +6,7 @@ void ReceiveConfig()
 		UDPconfig.read(ConfigData, UDP_TX_PACKET_MAX_SIZE);
 		PGN = ConfigData[1] << 8 | ConfigData[0];
 
-		if (PGN == 32622 && len > 13)
+		if (PGN == 32622 && len > 12)
 		{
 			// pcb config
 			PCB.Receiver = ConfigData[2];
@@ -17,11 +17,10 @@ void ReceiveConfig()
 			PCB.IMUdelay = ConfigData[8];
 			PCB.IMU_Interval = ConfigData[9];
 			PCB.ZeroOffset = ConfigData[10] | ConfigData[11] << 8;
-			PCB.AdsWASpin = ConfigData[12];
 
 			EEPROM.put(110, PCB);
 
-			if (ConfigData[13])  SCB_AIRCR = 0x05FA0004; //reset the Teensy 	
+			if (ConfigData[12])  SCB_AIRCR = 0x05FA0004; //reset the Teensy 	
 		}
 		else if (PGN == 32623 && len > 10)
 		{
@@ -29,7 +28,7 @@ void ReceiveConfig()
 			PCB.MinSpeed = ConfigData[2];
 			PCB.MaxSpeed = ConfigData[3];
 			PCB.PulseCal = ConfigData[4] | ConfigData[5] << 8;
-			PCB.PowerRelay = ConfigData[6];
+			PCB.AdsWASpin = ConfigData[6];
 			PCB.RS485PortNumber = ConfigData[7];
 			PCB.ModuleID = ConfigData[8];
 

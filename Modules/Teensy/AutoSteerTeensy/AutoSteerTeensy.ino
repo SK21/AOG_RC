@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   02-Apr-2022"
+# define InoDescription "AutoSteerTeensy   09-Apr-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -11,8 +11,9 @@
 #include "zNMEAParser.h"	
 #include <ADC.h>
 #include <ADC_util.h>
+#include <PCA95x5.h>		// https://github.com/hideakitai/PCA95x5
 
-struct PCBconfig	// 23 bytes
+struct PCBconfig	// 26 bytes
 {
 	uint8_t Receiver = 1;		// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
 	uint8_t NMEAserialPort = 8;	// from receiver
@@ -26,7 +27,6 @@ struct PCBconfig	// 23 bytes
 	uint8_t MinSpeed = 1;
 	uint8_t MaxSpeed = 15;
 	uint16_t PulseCal = 255;	// Hz/KMH X 10
-	uint8_t	PowerRelay = 255;	// # of relay always on, needed for some raven valves. Use 255 for none.
 	uint8_t RS485PortNumber = 7;	// serial port #
 	uint8_t ModuleID = 0;
 	uint8_t GyroOn = 0;
@@ -37,6 +37,7 @@ struct PCBconfig	// 23 bytes
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t SwapRollPitch = 1;	// 0 use roll value for roll, 1 use pitch value for roll
 	uint8_t InvertRoll = 0;
+	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - 8 module relay board, 3 - 16 module relay board
 };
 
 PCBconfig PCB;
@@ -61,7 +62,6 @@ struct PCBpinConfig	// 13 bytes
 PCBpinConfig PINS;
 
 const uint16_t  LOOP_TIME = 25;	// 40 hz, main loop
-const uint16_t  SteerCommSendInterval = 200;	// ms interval to send data back to AGIO
 const int16_t AdsI2Caddress = 0x48;
 
 #define LOW_HIGH_DEGREES 5.0	//How many degrees before decreasing Max PWM
@@ -127,10 +127,14 @@ int16_t MaxPWMvalue = 255;
 
 //fromAutoSteerData FD 253 - ActualSteerAngle*100 -5,6, Heading-7,8, 
 //Roll-9,10, SwitchByte-11, pwmDisplay-12, CRC 13
-uint8_t PGN_253[] = { 0x80,0x81, 0x7f, 0xFD, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
+uint8_t PGN_253[] = { 0x80,0x81, 0x78, 0xFD, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
 
 //fromAutoSteerData FD 250 - sensor values etc
-uint8_t PGN_250[] = { 0x80,0x81, 0x7f, 0xFA, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
+uint8_t PGN_250[] = { 0x80,0x81, 0x78, 0xFA, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
+
+//show life in AgIO
+uint8_t helloFromSteer[] = { 0x80,0x81, 0x78, 199, 1, 0, 0x47 };
+
 float SensorReading;
 
 //Variables for settings  
@@ -259,7 +263,7 @@ void setup()
 {
 	// watchdog timer
 	WDT_timings_t config;
-	config.timeout = 120;	// seconds
+	config.timeout = 60;	// seconds
 	wdt.begin(config);
 
 	pinMode(LED_BUILTIN, OUTPUT);
@@ -578,14 +582,8 @@ void loop()
 		lastTime = millis();
 		ReadSwitches();
 		DoSteering();
-	}
-
-	if (millis() - LastSend > SteerCommSendInterval)
-	{
-		LastSend = millis();
 		if (PCB.Receiver == 0) ReadIMU();
-		SendSteerUDP();
-}
+	}
 
 	SendSpeedPulse();
 	if (PCB.Receiver != 0) DoPanda();
@@ -595,13 +593,11 @@ void loop()
 	 // loop interval
 	//if (millis() - ShowLoopTime > 1000)
 	//{
-	//	if (micros() - LoopLast > 5)
-	//	{
+	//		ShowLoopTime = millis();
 	//		PrintRunTime();
+
 	//		Serial.print("Loop interval (ms) ");
 	//		Serial.println((float)(micros() - LoopLast) / 1000.0, 3);
-	//		ShowLoopTime = millis();
-	//	}
 	//}
 	//LoopLast = micros();
 }
@@ -632,7 +628,8 @@ void SendSpeedPulse()
 		{
 			noTone(PINS.SpeedPulse);
 		}
-		else {
+		else
+		{
 			tone(PINS.SpeedPulse, (Speed_KMH * PCB.PulseCal / 10));
 		}
 	}
