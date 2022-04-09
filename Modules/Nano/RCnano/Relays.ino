@@ -12,14 +12,16 @@ void CheckRelays()
 	}
 	else
 	{
-		if (FlowEnabled[0] || FlowEnabled[1])
-		{
-			SetRelays(RelayLo, RelayHi);
-		}
-		else
-		{
-			SetRelays(0, 0);
-		}
+//		if (FlowEnabled[0] || FlowEnabled[1])
+//		{
+//			SetRelays(RelayLo, RelayHi);
+//		}
+//		else
+//		{
+//			SetRelays(0, 0);
+//		}
+
+   SetRelays(RelayLo,RelayHi);
 	}
 }
 
@@ -48,10 +50,7 @@ void SetRelays(byte LoByte, byte HiByte)
 	if (bitRead(LoByte, 4)) mcp.digitalWrite(Relay5, RelayOn); else mcp.digitalWrite(Relay5, !RelayOn);
 	if (bitRead(LoByte, 5)) mcp.digitalWrite(Relay6, RelayOn); else mcp.digitalWrite(Relay6, !RelayOn);
 	if (bitRead(LoByte, 6)) mcp.digitalWrite(Relay7, RelayOn); else mcp.digitalWrite(Relay7, !RelayOn);
-
-#if(UseSwitchedPowerPin == 0)
 	if (bitRead(LoByte, 7)) mcp.digitalWrite(Relay8, RelayOn); else mcp.digitalWrite(Relay8, !RelayOn);
-#endif
 
 	if (bitRead(HiByte, 0)) mcp.digitalWrite(Relay9, RelayOn); else mcp.digitalWrite(Relay9, !RelayOn);
 	if (bitRead(HiByte, 1)) mcp.digitalWrite(Relay10, RelayOn); else mcp.digitalWrite(Relay10, !RelayOn);
@@ -67,10 +66,7 @@ void SetRelays(byte LoByte, byte HiByte)
 	if (bitRead(LoByte, 0)) digitalWrite(Relay1, RelayOn); else digitalWrite(Relay1, !RelayOn);
 	if (bitRead(LoByte, 1)) digitalWrite(Relay2, RelayOn); else digitalWrite(Relay2, !RelayOn);
 	if (bitRead(LoByte, 2)) digitalWrite(Relay3, RelayOn); else digitalWrite(Relay3, !RelayOn);
-
-#if(UseSwitchedPowerPin == 0)
 	if (bitRead(LoByte, 3)) digitalWrite(Relay4, RelayOn); else digitalWrite(Relay4, !RelayOn);
-#endif
 
 	//if (bitRead(LoByte, 4)) digitalWrite(Relay5, RelayOn); else digitalWrite(Relay5, !RelayOn);
 	//if (bitRead(LoByte, 5)) digitalWrite(Relay6, RelayOn); else digitalWrite(Relay6, !RelayOn);

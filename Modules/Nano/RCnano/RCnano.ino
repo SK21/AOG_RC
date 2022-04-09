@@ -1,7 +1,13 @@
+#include <stash.h>
+#include <net.h>
+#include <enc28j60.h>
+#include <bufferfiller.h>
+#include <Adafruit_MCP23XXX.h>
+#include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
 #include <EtherCard.h>
 
-# define InoDescription "RCnano  :  23-Jan-2022"
+# define InoDescription "RCnano  :  09-Apr-2022"
 
 // user settings ****************************
 #define CommType 1                  // 0 Serial USB, 1 UDP wired 
@@ -15,10 +21,6 @@ const unsigned long LOOP_TIME = 50; //in msec = 20hz
 #define UseMCP23017 1               // 0 use Nano pins for relays, 1 use MCP23017 to control relays
 byte FlowOn[] = {LOW, LOW};		    // on value for flowmeter or motor direction
 #define RelayOn LOW             
-
-// 0 use the defined relay as a normal relay
-// 1 use the defined relay as a switched power pin - turns on when sketch starts, required for some Raven valves
-#define UseSwitchedPowerPin 0
 // ******************************************
 
 #if (CommType == 1)
