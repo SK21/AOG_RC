@@ -1,26 +1,25 @@
-#include <stash.h>
-#include <net.h>
-#include <enc28j60.h>
-#include <bufferfiller.h>
-#include <Adafruit_MCP23XXX.h>
+
 #include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
-#include <EtherCard.h>
+#include <Adafruit_MCP23XXX.h>
 
-# define InoDescription "RCnano  :  09-Apr-2022"
+#include <EtherCard.h>
+#include <Wire.h>
+
+# define InoDescription "RCnano  :  11-Apr-2022"
 
 // user settings ****************************
-#define CommType 1                  // 0 Serial USB, 1 UDP wired 
+#define CommType 0                  // 0 Serial USB, 1 UDP wired 
 #define ModuleID 0			        // unique ID 0-15
 #define SensorCount 1
 
 #define IPMac 110			        // unique number for Arduino IP address and Mac part 6, 0-255
-#define IPpart3 1			        // ex: 192.168.IPpart3.255, 0-255
+#define IPpart3 5			        // ex: 192.168.IPpart3.255, 0-255
 const unsigned long LOOP_TIME = 50; //in msec = 20hz
 
 #define UseMCP23017 1               // 0 use Nano pins for relays, 1 use MCP23017 to control relays
 byte FlowOn[] = {LOW, LOW};		    // on value for flowmeter or motor direction
-#define RelayOn LOW             
+#define RelayOn LOW
 // ******************************************
 
 #if (CommType == 1)
@@ -54,7 +53,7 @@ byte toSend[2][11] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 
 #if (UseMCP23017 == 1)
 Adafruit_MCP23X17 mcp;
 
-// Pin number is an integer in the range 0..15, 
+// Pin number is an integer in the range 0..15,
 // where pins numbered from 0 to 7 are on Port A, GPA0 = 0,
 // and pins numbered from 8 to 15 are on Port B, GPB0 = 8.
 
@@ -163,7 +162,7 @@ bool WifiSwitchesEnabled = false;
 byte WifiSwitches[5];
 
 byte SwitchBytes[8];
-byte SectionSwitchID[] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
+byte SectionSwitchID[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
 bool EthernetEnabled = false;
 bool UseMultiPulses[2] = { 0, 0 };   //  0 - average time for multiple pulses, 1 - time for one pulse
@@ -179,7 +178,18 @@ void setup()
     Serial.println(ModuleID);
     Serial.println();
 
+    Wire.begin();
 #if (UseMCP23017 == 1)
+    Wire.beginTransmission(0x20);
+    if (Wire.endTransmission() == 0)
+    {
+        Serial.println("MCP23017 Found.");
+    }
+    else
+    {
+        Serial.println("MCP23017 not found.");
+    }
+
     mcp.begin_I2C();
 
     // MCP20317 pins
@@ -208,10 +218,6 @@ void setup()
         pinMode(FlowDir[i], OUTPUT);
         pinMode(FlowPWM[i], OUTPUT);
     }
-#if(UseSwitchedPowerPin == 1)
-    // turn on
-    mcp.digitalWrite(Relay8, HIGH);
-#endif
 
 #else
     // Nano pins
@@ -230,11 +236,6 @@ void setup()
         pinMode(FlowDir[i], OUTPUT);
         pinMode(FlowPWM[i], OUTPUT);
     }
-#if(UseSwitchedPowerPin == 1)
-    // turn on
-    digitalWrite(Relay4, HIGH);
-#endif
-
 #endif
 
     attachInterrupt(digitalPinToInterrupt(FlowPin[0]), ISR0, FALLING);
@@ -305,7 +306,7 @@ void loop()
 
 #if(CommType == 1)
     SendUDPwired();
-    }
+}
 
 delay(10);
 
@@ -319,29 +320,29 @@ ether.packetLoop(ether.packetReceive());
 
 String IPadd(byte Address[])
 {
-  return String(Address[0]) + "." + String(Address[1]) + "." + String(Address[2]) + "." + String(Address[3]);
+    return String(Address[0]) + "." + String(Address[1]) + "." + String(Address[2]) + "." + String(Address[3]);
 }
 
 bool IsBitSet(byte b, int pos)
 {
-  return ((b >> pos) & 1) != 0;
+    return ((b >> pos) & 1) != 0;
 }
 
 byte ParseModID(byte ID)
 {
-  // top 4 bits
-  return ID >> 4;
+    // top 4 bits
+    return ID >> 4;
 }
 
 byte ParseSenID(byte ID)
 {
-  // bottom 4 bits
-  return (ID & 0b00001111);
+    // bottom 4 bits
+    return (ID & 0b00001111);
 }
 
 byte BuildModSenID(byte Mod_ID, byte Sen_ID)
 {
-  return ((Mod_ID << 4) | (Sen_ID & 0b00001111));
+    return ((Mod_ID << 4) | (Sen_ID & 0b00001111));
 }
 
 void AutoControl()
