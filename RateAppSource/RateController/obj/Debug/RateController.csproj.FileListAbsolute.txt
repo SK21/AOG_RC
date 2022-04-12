@@ -1747,6 +1747,7 @@ C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateCont
 C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.exe
 C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.pdb
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmRelays.resources
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\RateController.exe.config
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\RateController.exe.manifest
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\RateController.application
@@ -1780,6 +1781,7 @@ C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\Rat
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmFirmware.resources
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmHelp.resources
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmPCBsettings.resources
+C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmRelays.resources
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmSections.resources
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.Lang.resources
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.Properties.Resources.resources
@@ -1794,5 +1796,4 @@ C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\Rat
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.exe
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.pdb
-C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmRelays.resources
 C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csprojAssemblyReference.cache

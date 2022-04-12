@@ -86,9 +86,9 @@ namespace RateController
         {
             // AS13_PCB
             cbReceiver.SelectedIndex = 1;
-            tbNMEAserialPort.Text = "3";
-            tbRTCMserialPort.Text = "8";
-            tbRTCM.Text = "5432";
+            tbNMEAserialPort.Text = "8";
+            tbRTCMserialPort.Text = "3";
+            tbRTCM.Text = "2233";
             cbIMU.SelectedIndex = 1;
             tbIMUdelay.Text = "90";
             tbIMUinterval.Text = "40";

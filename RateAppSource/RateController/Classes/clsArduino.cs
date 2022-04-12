@@ -228,8 +228,6 @@ namespace RateController
             }
 
             MaxSimRate = (float)(RC.TargetRate() * 1.5);
-            //Debug.Print("");
-            //Debug.Print("MaxSimRate " + MaxSimRate.ToString("N2"));
         }
 
         private int ControlMotor(byte sKP, float sError, float sSetPoint, byte sMinPWM,

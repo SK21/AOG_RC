@@ -228,6 +228,9 @@
   <data name="lgLoad_Defaults" xml:space="preserve">
     <value>Load Defaults</value>
   </data>
+  <data name="lgLocalIP" xml:space="preserve">
+    <value>Local IP</value>
+  </data>
   <data name="lgLowMax" xml:space="preserve">
     <value>PWM Low Max</value>
   </data>

@@ -41,8 +41,8 @@ namespace RateController
         public clsTools Tls;
        
         public UDPComm UDPaog;
-        public UDPComm UDPnetwork;
-        public UDPComm UDPconfig;
+        public UDPComm UDPmodules;
+        public UDPComm UDPmodulesConfig;
 
         public bool UseInches;
         private int CurrentPage;
@@ -74,6 +74,7 @@ namespace RateController
             mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
             mnuSettings.Items["MnuSections"].Text = Lang.lgSection;
             mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
+            mnuSettings.Items["MnuAbout"].Text = Lang.lgAbout;
 
             MnuOptions.DropDownItems["mnuRelays"].Text = Lang.lgRelays;
             MnuOptions.DropDownItems["MnuComm"].Text = Lang.lgComm;
@@ -83,16 +84,18 @@ namespace RateController
             MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
             MnuOptions.DropDownItems["MnuConfig"].Text = Lang.lgPCBconfig;
             MnuOptions.DropDownItems["MnuFirmware"].Text = Lang.lgFirmware;
-            MnuOptions.DropDownItems["MnuAbout"].Text = Lang.lgAbout;
 
             #endregion // language
 
             Tls = new clsTools(this);
-            //UDPagio = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
-            UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255");       // AOG
+            //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
+            UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255",false,true);       // AOG
 
-            UDPnetwork = new UDPComm(this, 29999, 28888, 1480, "192.168.1.255");    // arduino
-            UDPconfig = new UDPComm(this, 29900, 28800, 1482, "192.168.1.255");     // pcb config
+            //UDPnetwork = new UDPComm(this, 29999, 28888, 1480, "192.168.1.255");    // arduino
+            //UDPconfig = new UDPComm(this, 29900, 28800, 1482, "192.168.1.255");     // pcb config
+
+            UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
+            UDPmodulesConfig = new UDPComm(this, 29900, 28800, 1482);     // pcb config
 
             SwitchBox = new PGN32618(this);
             SwitchIDs = new PGN32620(this);
@@ -143,8 +146,8 @@ namespace RateController
 
             Products.Load();
 
-            UDPnetwork.BroadCastIP = Tls.LoadProperty("BroadCastIP");
-            UDPconfig.BroadCastIP = Tls.LoadProperty("BroadCastIP");
+            //UDPmodules.BroadCastIP = Tls.LoadProperty("BroadCastIP");
+            //UDPmodulesConfig.BroadCastIP = Tls.LoadProperty("BroadCastIP");
 
             PressureObjects.Load();
             RelayObjects.Load();
@@ -346,7 +349,7 @@ namespace RateController
             Sections.Save();
             Products.Save();
 
-            Tls.SaveProperty("BroadCastIP", UDPnetwork.BroadCastIP);
+            //Tls.SaveProperty("BroadCastIP", UDPmodules.BroadCastIP);
 
             Application.Exit();
         }
@@ -365,8 +368,8 @@ namespace RateController
             }
 
             // UDP
-            UDPnetwork.StartUDPServer();
-            if (!UDPnetwork.isUDPSendConnected)
+            UDPmodules.StartUDPServer();
+            if (!UDPmodules.isUDPSendConnected)
             {
                 Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true);
             }
@@ -377,8 +380,8 @@ namespace RateController
                 Tls.ShowHelp("UDPagio failed to start.", "", 3000, true);
             }
 
-            UDPconfig.StartUDPServer();
-            if(!UDPconfig.isUDPSendConnected)
+            UDPmodulesConfig.StartUDPServer();
+            if(!UDPmodulesConfig.isUDPSendConnected)
             {
                 Tls.ShowHelp("UDPconfig failed to start.", "", 3000, true);
             }
@@ -386,7 +389,6 @@ namespace RateController
             LoadSettings();
             UpdateStatus();
 
-            //Tls.ShowHelp(new string('a', 50));
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)

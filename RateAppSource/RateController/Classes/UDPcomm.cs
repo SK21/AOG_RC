@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -19,6 +18,7 @@ namespace RateController
         private int cSendToPort;
 
         private bool cUpdateDestinationIP;
+        private bool cUseLoopback;
         private IPAddress epIP;
         private HandleDataDelegateObj HandleDataDelegate = null;
 
@@ -26,14 +26,16 @@ namespace RateController
         private Socket recvSocket;
         private Socket sendSocket;
 
-        public UDPComm(FormStart CallingForm, int ReceivePort, int SendToPort, int SendFromPort
-            , string DestinationIP = "", bool UpdateDestinationIP = false)
+        public UDPComm(FormStart CallingForm, int ReceivePort, int SendToPort
+            , int SendFromPort, string DestinationIP = ""
+            , bool UpdateDestinationIP = false, bool UseLoopBack = false)
         {
             mf = CallingForm;
             cReceivePort = ReceivePort;
             cSendToPort = SendToPort;
             cSendFromPort = SendFromPort;
             cUpdateDestinationIP = UpdateDestinationIP;
+            cUseLoopback = UseLoopBack;
 
             if (DestinationIP == "")
             {
@@ -59,18 +61,17 @@ namespace RateController
             }
         }
 
-        public IPAddress GetBroadCastIP { get { return epIP; } }
-
         public string LocalIP()
         {
             try
             {
-                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
-                {
-                    socket.Connect("8.8.8.8", 65530);
-                    IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
-                    return endPoint.Address.ToString();
-                }
+                string Result = "127.0.0.1";
+                string Adr = GetLocalIPv4(NetworkInterfaceType.Ethernet);
+
+                IPAddress IP = new IPAddress(new byte[] { 127, 0, 0, 1 });
+                if (IPAddress.TryParse(Adr, out IP)) Result = Adr;
+
+                return Result;
             }
             catch (Exception)
             {
@@ -97,7 +98,7 @@ namespace RateController
             }
         }
 
-        public string StartUDPServer()
+        public void StartUDPServer()
         {
             try
             {
@@ -108,10 +109,16 @@ namespace RateController
                 recvSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
                 // Initialise the IPEndPoint for the server and port
-                IPEndPoint recv = new IPEndPoint(IPAddress.Any, cReceivePort);
-
                 // Associate the socket with this IP address and port
-                recvSocket.Bind(recv);
+                if (cUseLoopback)
+                {
+                    string Adr = "127.100.56.100";   // new unique loopback address
+                    recvSocket.Bind(new IPEndPoint(IPAddress.Parse(Adr), cReceivePort));
+                }
+                else
+                {
+                    recvSocket.Bind(new IPEndPoint(IPAddress.Any, cReceivePort));
+                }
 
                 // initialize the send socket
                 sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -126,18 +133,37 @@ namespace RateController
                 // Start listening for incoming data
                 recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref client, new AsyncCallback(ReceiveData), recvSocket);
                 isUDPSendConnected = true;
-                return LocalIP();
             }
             catch (Exception e)
             {
                 mf.Tls.ShowHelp("UDP start error: \n" + e.Message, "Comm", 3000, true);
-                return "";
             }
         }
 
         private void AddressChanged(object sender, EventArgs e)
         {
             if (cUpdateDestinationIP) SetEpIP(LocalIP());
+        }
+
+        private string GetLocalIPv4(NetworkInterfaceType _type)
+        {
+            // https://stackoverflow.com/questions/6803073/get-local-ip-address
+
+            string output = "";
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == _type && item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            output = ip.Address.ToString();
+                        }
+                    }
+                }
+            }
+            return output;
         }
 
         private void HandleData(int Port, byte[] Data)
@@ -147,8 +173,6 @@ namespace RateController
                 PGN = Data[0] << 8 | Data[1];   // AGIO big endian
                 if (PGN == 32897)
                 {
-                    //Debug.Print("PGN " + PGN.ToString());
-                    //Debug.Print("ID " + Data[3].ToString());
                     // AGIO
                     switch (Data[3])
                     {
@@ -207,13 +231,12 @@ namespace RateController
                 // Update status through a delegate
                 mf.Invoke(HandleDataDelegate, new object[] { port, localMsg });
             }
-            catch( System.ObjectDisposedException)
+            catch (System.ObjectDisposedException)
             {
                 // do nothing
             }
             catch (Exception e)
             {
-
                 mf.Tls.ShowHelp("ReceiveData Error \n" + e.Message, "Comm", 3000, true);
             }
         }
@@ -245,7 +268,7 @@ namespace RateController
             }
             else
             {
-                epIP = IPAddress.Parse("192.168.1.255");
+                epIP = IPAddress.Parse("192.168.5.255");
             }
         }
     }

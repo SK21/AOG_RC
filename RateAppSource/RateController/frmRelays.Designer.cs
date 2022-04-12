@@ -29,10 +29,13 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRelays));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRelays));
             this.DGV = new System.Windows.Forms.DataGridView();
+            this.ColRelay = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataSet1 = new System.Data.DataSet();
             this.dataTable1 = new System.Data.DataTable();
             this.dataRelay = new System.Data.DataColumn();
@@ -41,9 +44,6 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
             this.btnLoadDefaults = new System.Windows.Forms.Button();
-            this.ColRelay = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColType = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
@@ -84,6 +84,40 @@
             this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
             this.DGV.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.DGV_DataError);
             this.DGV.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.DGV_HelpRequested);
+            // 
+            // ColRelay
+            // 
+            this.ColRelay.DataPropertyName = "cRelay";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColRelay.DefaultCellStyle = dataGridViewCellStyle1;
+            this.ColRelay.HeaderText = "Relay";
+            this.ColRelay.Name = "ColRelay";
+            this.ColRelay.ReadOnly = true;
+            // 
+            // ColType
+            // 
+            this.ColType.DataPropertyName = "cType";
+            this.ColType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ColType.HeaderText = "Type";
+            this.ColType.Items.AddRange(new object[] {
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"});
+            this.ColType.Name = "ColType";
+            this.ColType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.ColType.Width = 150;
+            // 
+            // ColSection
+            // 
+            this.ColSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColSection.DataPropertyName = "cSection";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColSection.DefaultCellStyle = dataGridViewCellStyle2;
+            this.ColSection.HeaderText = "Section #";
+            this.ColSection.Name = "ColSection";
             // 
             // dataSet1
             // 
@@ -151,47 +185,13 @@
             // btnLoadDefaults
             // 
             this.btnLoadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLoadDefaults.Location = new System.Drawing.Point(21, 386);
+            this.btnLoadDefaults.Location = new System.Drawing.Point(21, 389);
             this.btnLoadDefaults.Name = "btnLoadDefaults";
             this.btnLoadDefaults.Size = new System.Drawing.Size(100, 72);
             this.btnLoadDefaults.TabIndex = 140;
             this.btnLoadDefaults.Text = "Load Defaults";
             this.btnLoadDefaults.UseVisualStyleBackColor = true;
             this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
-            // 
-            // ColRelay
-            // 
-            this.ColRelay.DataPropertyName = "cRelay";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColRelay.DefaultCellStyle = dataGridViewCellStyle1;
-            this.ColRelay.HeaderText = "Relay";
-            this.ColRelay.Name = "ColRelay";
-            this.ColRelay.ReadOnly = true;
-            // 
-            // ColType
-            // 
-            this.ColType.DataPropertyName = "cType";
-            this.ColType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ColType.HeaderText = "Type";
-            this.ColType.Items.AddRange(new object[] {
-            "a",
-            "b",
-            "c",
-            "d",
-            "e"});
-            this.ColType.Name = "ColType";
-            this.ColType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.ColType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.ColType.Width = 150;
-            // 
-            // ColSection
-            // 
-            this.ColSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColSection.DataPropertyName = "cSection";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColSection.DefaultCellStyle = dataGridViewCellStyle2;
-            this.ColSection.HeaderText = "Section #";
-            this.ColSection.Name = "ColSection";
             // 
             // frmRelays
             // 

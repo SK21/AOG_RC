@@ -130,7 +130,7 @@
             else
             {
                 Prod.mf.SendSerial(Data);
-                Prod.mf.UDPnetwork.SendUDPMessage(Data);
+                Prod.mf.UDPmodules.SendUDPMessage(Data);
             }
         }
     }

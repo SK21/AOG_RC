@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController
 {
-    public enum RelayTypes { Section, Slave, Master, Power, Invert_Section };
+    public enum RelayTypes
+    { Section, Slave, Master, Power, Invert_Section };
 
     public class clsRelay
     {
-        private RelayTypes cType = RelayTypes.Section;
-        private int cSectionID;
         private string cDescription;
-
         private int cID;
         private bool cRelayOn = false;
+        private int cSectionID;
+        private RelayTypes cType = RelayTypes.Section;
         private FormStart mf;
 
         public clsRelay(FormStart CallingFrom, int ID)
@@ -25,32 +21,6 @@ namespace RateController
             cID = ID;
             cDescription = "Relay " + ID.ToString();
             cSectionID = ID;    // default to a matching section ID
-        }
-
-        public int ID { get { return cID; } }
-
-        public RelayTypes Type
-        {
-            get { return cType; }
-            set { cType = value; }
-        }
-
-        public int SectionID
-        {
-            get { return cSectionID; }
-            set
-            {
-                if (value >= 0 && value < mf.MaxSections)
-                {
-                    cSectionID = value;
-                }
-            }
-        }
-
-        public bool IsON
-        {
-            get { return cRelayOn; }
-            set { cRelayOn = value; }
         }
 
         public string Description
@@ -67,6 +37,33 @@ namespace RateController
                     cDescription = value;
                 }
             }
+        }
+
+        public int ID
+        { get { return cID; } }
+
+        public bool IsON
+        {
+            get { return cRelayOn; }
+            set { cRelayOn = value; }
+        }
+
+        public int SectionID
+        {
+            get { return cSectionID; }
+            set
+            {
+                if (value >= 0 && value < mf.MaxSections)
+                {
+                    cSectionID = value;
+                }
+            }
+        }
+
+        public RelayTypes Type
+        {
+            get { return cType; }
+            set { cType = value; }
         }
 
         public void Load()

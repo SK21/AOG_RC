@@ -143,7 +143,7 @@ namespace RateController
 
         public void Save()
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < cSections.Count; i++)
             {
                 cSections[i].Save();
             }

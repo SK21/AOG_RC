@@ -54,7 +54,7 @@
             }
 
             mf.SendSerial(Data);
-            mf.UDPnetwork.SendUDPMessage(Data);
+            mf.UDPmodules.SendUDPMessage(Data);
         }
     }
 }

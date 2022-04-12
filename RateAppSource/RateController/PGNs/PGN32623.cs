@@ -73,7 +73,7 @@ namespace RateController
             if (RestartModule) cData[10] = 1; else cData[10] = 0;
 
             cf.mf.SendSerial(cData);
-            cf.mf.UDPconfig.SendUDPMessage(cData);
+            cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
         }
     }
 }

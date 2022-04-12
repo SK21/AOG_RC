@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -21,15 +19,6 @@ namespace RateController
         public int Count()
         {
             return cRelays.Count;
-        }
-
-        private int ListID(int RelayID)
-        {
-            for (int i = 0; i < cRelays.Count; i++)
-            {
-                if (cRelays[i].ID == RelayID) return i;
-            }
-            return -1;
         }
 
         public clsRelay Item(int RelayID)
@@ -86,7 +75,7 @@ namespace RateController
                 }
             }
 
-            // set master and power relays
+            // set master relay
             for (int i = 0; i < cRelays.Count; i++)
             {
                 clsRelay Rly = cRelays[i];
@@ -152,10 +141,19 @@ namespace RateController
                 }
 
                 // build return int
-                if (Rly.IsON) Result |= (byte)(Math.Pow(2, i));
+                if (Rly.IsON) Result |= (int)Math.Pow(2, i);
             }
 
             return Result;
+        }
+
+        private int ListID(int RelayID)
+        {
+            for (int i = 0; i < cRelays.Count; i++)
+            {
+                if (cRelays[i].ID == RelayID) return i;
+            }
+            return -1;
         }
     }
 }
