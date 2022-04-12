@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   09-Apr-2022"
+# define InoDescription "AutoSteerTeensy   11-Apr-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -71,26 +71,22 @@ const int16_t AdsI2Caddress = 0x48;
 const uint32_t RateLoopTime = 50;		//in msec = 20hz
 WDT_T4<WDT1> wdt;
 
-// ethernet
-#define IPpart3 1	// ex: 192.168.IPpart3.255
-#define IPMac 73	// unique number for Arduino IP address and Mac part 6
-
 // ethernet interface ip address
-IPAddress LocalIP(192, 168, IPpart3, IPMac);
+IPAddress LocalIP(192, 168, 5, 126);
 
 // ethernet mac address - must be unique on your network
-static uint8_t LocalMac[] = { 0x70,0x30,IPMac,0x2D,0x31,0x69 };
+static uint8_t LocalMac[] = { 0x00,0x00,0x56,0x00,0x00,126 };
 
 // ethernet destination - AGIO
-IPAddress AGIOip(192, 168, IPpart3, 255);
+IPAddress AGIOip(192, 168, 5, 255);
 uint16_t  AGIOport = 9999; // port that AGIO listens on
 
-// UDP Steering traffic
+// UDP Steering traffic, to and from AGIO
 EthernetUDP UDPsteering;
 uint16_t  UDPsteeringPort = 8888;		// local port to listen on
 uint8_t data[UDP_TX_PACKET_MAX_SIZE];  // Buffer For Receiving UDP Data
 
-// UDP GPS traffic
+// UDP GPS traffic, NMEA from module to AGIO, RTCM from AGIO to module
 EthernetUDP UDPgps;
 char GPSbuffer[512];	// buffer for ntrip data
 
@@ -133,7 +129,7 @@ uint8_t PGN_253[] = { 0x80,0x81, 0x78, 0xFD, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
 uint8_t PGN_250[] = { 0x80,0x81, 0x78, 0xFA, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
 
 //show life in AgIO
-uint8_t helloFromSteer[] = { 0x80,0x81, 0x78, 199, 1, 0, 0x47 };
+uint8_t helloFromSteer[] = { 0x80, 0x81, 126, 126, 1, 1, 0x47 };
 
 float SensorReading;
 
@@ -596,8 +592,9 @@ void loop()
 	//		ShowLoopTime = millis();
 	//		PrintRunTime();
 
-	//		Serial.print("Loop interval (ms) ");
-	//		Serial.println((float)(micros() - LoopLast) / 1000.0, 3);
+	//		//Serial.print("Loop interval (ms) ");
+	//		//Serial.println((float)(micros() - LoopLast) / 1000.0, 3);
+
 	//}
 	//LoopLast = micros();
 }

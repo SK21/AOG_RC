@@ -5,7 +5,7 @@ uint32_t currentTime = PCB.IMUdelay;
 
 void DoPanda()
 {
-    // NMEA
+     // NMEA
     if (SerialNMEA->available()) parser << SerialNMEA->read();
 
     // RTCM
