@@ -1,6 +1,6 @@
 void AdjustFlow()
 {
-    for (int i = 0; i < SensorCount; i++)
+    for (int i = 0; i < PCB.SensorCount; i++)
     {
         switch (ControlType[i])
         {
@@ -11,13 +11,13 @@ void AdjustFlow()
                 if (pwmSetting[i] >= 0)
                 {
                     //increase
-                    digitalWrite(FlowDir[i], FlowOn[i]);
+                    digitalWrite(FlowDir[i], PCB.FlowOnDirection);
                     analogWrite(FlowPWM[i], pwmSetting[i]);
                 }
                 else
                 {
                     //decrease
-                    digitalWrite(FlowDir[i], !FlowOn[i]);
+                    digitalWrite(FlowDir[i], !PCB.FlowOnDirection);
                     analogWrite(FlowPWM[i], -pwmSetting[i]);	// offsets the negative pwm value
                 }
             }
@@ -25,7 +25,7 @@ void AdjustFlow()
             {
                 // stop flow
                 analogWrite(FlowPWM[i], 255);
-                digitalWrite(FlowDir[i], !FlowOn[i]);
+                digitalWrite(FlowDir[i], !PCB.FlowOnDirection);
             }
             break;
         case 2:
@@ -35,13 +35,13 @@ void AdjustFlow()
                 if (pwmSetting[i] >= 0)
                 {
                     //increase
-                    digitalWrite(FlowDir[i], FlowOn[i]);
+                    digitalWrite(FlowDir[i], PCB.FlowOnDirection);
                     analogWrite(FlowPWM[i], pwmSetting[i]);
                 }
                 else
                 {
                     //decrease
-                    digitalWrite(FlowDir[i], !FlowOn[i]);
+                    digitalWrite(FlowDir[i], !PCB.FlowOnDirection);
                     analogWrite(FlowPWM[i], -pwmSetting[i]);	// offsets the negative pwm value
                 }
             }
@@ -56,13 +56,13 @@ void AdjustFlow()
             if (pwmSetting[i] >= 0)
             {
                 //increase
-                digitalWrite(FlowDir[i], FlowOn[i]);
+                digitalWrite(FlowDir[i], PCB.FlowOnDirection);
                 analogWrite(FlowPWM[i], pwmSetting[i]);
             }
             else
             {
                 //decrease
-                digitalWrite(FlowDir[i], !FlowOn[i]);
+                digitalWrite(FlowDir[i], !PCB.FlowOnDirection);
                 analogWrite(FlowPWM[i], -pwmSetting[i]);	// offsets the negative pwm value
             }
             break;

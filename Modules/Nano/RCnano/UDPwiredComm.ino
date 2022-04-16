@@ -1,4 +1,3 @@
-#if(CommType == 1)
 void SendUDPwired()
 {
     //PGN32613 to Rate Controller from Arduino
@@ -13,12 +12,12 @@ void SendUDPwired()
     //8	acc.Quantity Hi
     //9 PWM Lo
     //10 PWM Hi
-    for (int i = 0; i < SensorCount; i++)
+    for (int i = 0; i < PCB.SensorCount; i++)
     {
         toSend[i][0] = 101;
         toSend[i][1] = 127;
 
-        toSend[i][2] = BuildModSenID(ModuleID, i);
+        toSend[i][2] = BuildModSenID(PCB.ModuleID, i);
 
         // rate applied, 10 X actual
         Temp = (UPM[i] * 10);
@@ -75,10 +74,10 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
     {
         byte tmp = data[2];
 
-        if (ParseModID(tmp) == ModuleID)
+        if (ParseModID(tmp) == PCB.ModuleID)
         {
             byte SensorID = ParseSenID(tmp);
-            if (SensorID < SensorCount)
+            if (SensorID < PCB.SensorCount)
             {
                 RelayLo = data[3];
                 RelayHi = data[4];
@@ -122,10 +121,10 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
     {
         // PID to Arduino from RateController
         byte tmp = data[2];
-        if (ParseModID(tmp) == ModuleID)
+        if (ParseModID(tmp) == PCB.ModuleID)
         {
             byte SensorID = ParseSenID(tmp);
-            if (SensorID < SensorCount)
+            if (SensorID < PCB.SensorCount)
             {
                 PIDkp[SensorID] = data[3];
                 PIDminPWM[SensorID] = data[4];
@@ -162,4 +161,3 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
         TranslateSwitchBytes();
     }
 }
-#endif

@@ -1,20 +1,20 @@
-volatile unsigned long Duration[SensorCount];
-volatile unsigned long PulseCount[SensorCount];
-unsigned long LastPulse[SensorCount];
+volatile unsigned long Duration[2];
+volatile unsigned long PulseCount[2];
+unsigned long LastPulse[2];
 
-unsigned long TimedCounts[SensorCount];
-unsigned long RateInterval[SensorCount];
-unsigned long RateTimeLast[SensorCount];
+unsigned long TimedCounts[2];
+unsigned long RateInterval[2];
+unsigned long RateTimeLast[2];
 
 unsigned long CurrentCount;
 unsigned long CurrentDuration;
 
-unsigned long PPM[SensorCount];		// pulse per minute * 100
-unsigned long Osum[SensorCount];
-unsigned long Omax[SensorCount];
-unsigned long Omin[SensorCount];
-byte Ocount[SensorCount];
-float Oave[SensorCount];
+unsigned long PPM[2];		// pulse per minute * 100
+unsigned long Osum[2];
+unsigned long Omax[2];
+unsigned long Omin[2];
+byte Ocount[2];
+float Oave[2];
 
 void ISR0()
 {
@@ -40,7 +40,7 @@ void ISR1()
 
 void GetUPM()
 {
-	for (int i = 0; i < SensorCount; i++)
+	for (int i = 0; i < PCB.SensorCount; i++)
 	{
 		if (PulseCount[i])
 		{
