@@ -50,6 +50,8 @@
             this.cbReceiver = new System.Windows.Forms.ComboBox();
             this.lb5 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbAdsWasPin = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.ckADS = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -97,8 +99,6 @@
             this.tbDir1 = new System.Windows.Forms.TextBox();
             this.btnLoadDefaults = new System.Windows.Forms.Button();
             this.btnSendToModule = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.tbAdsWasPin = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -168,7 +168,7 @@
             this.tabPage1.Controls.Add(this.lb5);
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(638, 261);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Config 1";
@@ -371,11 +371,32 @@
             this.tabPage2.Controls.Add(this.ckGGA);
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(638, 261);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Config 2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(353, 10);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(162, 23);
+            this.label8.TabIndex = 151;
+            this.label8.Text = "ADS1115 WAS pin";
+            // 
+            // tbAdsWasPin
+            // 
+            this.tbAdsWasPin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbAdsWasPin.Location = new System.Drawing.Point(527, 6);
+            this.tbAdsWasPin.MaxLength = 8;
+            this.tbAdsWasPin.Name = "tbAdsWasPin";
+            this.tbAdsWasPin.Size = new System.Drawing.Size(102, 30);
+            this.tbAdsWasPin.TabIndex = 150;
+            this.tbAdsWasPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbAdsWasPin.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbAdsWasPin_HelpRequested);
             // 
             // label6
             // 
@@ -394,7 +415,7 @@
             this.ckADS.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckADS.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckADS.Location = new System.Drawing.Point(180, 187);
-            this.ckADS.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ckADS.Margin = new System.Windows.Forms.Padding(2);
             this.ckADS.Name = "ckADS";
             this.ckADS.Size = new System.Drawing.Size(100, 60);
             this.ckADS.TabIndex = 149;
@@ -443,7 +464,7 @@
             this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckFlowOn.Location = new System.Drawing.Point(353, 187);
-            this.ckFlowOn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ckFlowOn.Margin = new System.Windows.Forms.Padding(2);
             this.ckFlowOn.Name = "ckFlowOn";
             this.ckFlowOn.Size = new System.Drawing.Size(100, 60);
             this.ckFlowOn.TabIndex = 148;
@@ -500,7 +521,7 @@
             this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckRelayOn.Location = new System.Drawing.Point(353, 117);
-            this.ckRelayOn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ckRelayOn.Margin = new System.Windows.Forms.Padding(2);
             this.ckRelayOn.Name = "ckRelayOn";
             this.ckRelayOn.Size = new System.Drawing.Size(100, 60);
             this.ckRelayOn.TabIndex = 147;
@@ -517,7 +538,7 @@
             this.ckUseRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckUseRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckUseRate.Location = new System.Drawing.Point(180, 117);
-            this.ckUseRate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ckUseRate.Margin = new System.Windows.Forms.Padding(2);
             this.ckUseRate.Name = "ckUseRate";
             this.ckUseRate.Size = new System.Drawing.Size(100, 60);
             this.ckUseRate.TabIndex = 146;
@@ -543,7 +564,7 @@
             this.ckInvertRoll.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckInvertRoll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckInvertRoll.Location = new System.Drawing.Point(526, 187);
-            this.ckInvertRoll.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ckInvertRoll.Margin = new System.Windows.Forms.Padding(2);
             this.ckInvertRoll.Name = "ckInvertRoll";
             this.ckInvertRoll.Size = new System.Drawing.Size(100, 60);
             this.ckInvertRoll.TabIndex = 145;
@@ -560,7 +581,7 @@
             this.ckSwapPitchRoll.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckSwapPitchRoll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckSwapPitchRoll.Location = new System.Drawing.Point(526, 117);
-            this.ckSwapPitchRoll.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ckSwapPitchRoll.Margin = new System.Windows.Forms.Padding(2);
             this.ckSwapPitchRoll.Name = "ckSwapPitchRoll";
             this.ckSwapPitchRoll.Size = new System.Drawing.Size(100, 60);
             this.ckSwapPitchRoll.TabIndex = 144;
@@ -585,7 +606,7 @@
             this.ckGyro.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckGyro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckGyro.Location = new System.Drawing.Point(7, 117);
-            this.ckGyro.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ckGyro.Margin = new System.Windows.Forms.Padding(2);
             this.ckGyro.Name = "ckGyro";
             this.ckGyro.Size = new System.Drawing.Size(100, 60);
             this.ckGyro.TabIndex = 142;
@@ -601,7 +622,7 @@
             this.ckGGA.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckGGA.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckGGA.Location = new System.Drawing.Point(7, 187);
-            this.ckGGA.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ckGGA.Margin = new System.Windows.Forms.Padding(2);
             this.ckGGA.Name = "ckGGA";
             this.ckGGA.Size = new System.Drawing.Size(100, 60);
             this.ckGGA.TabIndex = 143;
@@ -929,27 +950,6 @@
             this.btnSendToModule.UseVisualStyleBackColor = true;
             this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(353, 10);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(162, 23);
-            this.label8.TabIndex = 151;
-            this.label8.Text = "ADS1115 WAS pin";
-            // 
-            // tbAdsWasPin
-            // 
-            this.tbAdsWasPin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbAdsWasPin.Location = new System.Drawing.Point(527, 6);
-            this.tbAdsWasPin.MaxLength = 8;
-            this.tbAdsWasPin.Name = "tbAdsWasPin";
-            this.tbAdsWasPin.Size = new System.Drawing.Size(102, 30);
-            this.tbAdsWasPin.TabIndex = 150;
-            this.tbAdsWasPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbAdsWasPin.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbAdsWasPin_HelpRequested);
-            // 
             // frmPCBsettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -967,7 +967,7 @@
             this.MinimizeBox = false;
             this.Name = "frmPCBsettings";
             this.ShowInTaskbar = false;
-            this.Text = "PCB Settings";
+            this.Text = "Teensie Settings";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmPCBsettings_FormClosed);
             this.Load += new System.EventHandler(this.frmPCBsettings_Load);
             this.tabControl1.ResumeLayout(false);

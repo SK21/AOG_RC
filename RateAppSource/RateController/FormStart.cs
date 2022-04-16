@@ -610,8 +610,6 @@ namespace RateController
 
         private void MnuFirmware_Click(object sender, EventArgs e)
         {
-            Form Sec = new frmFirmware(this);
-            Sec.ShowDialog();
         }
 
         private void MnuAbout_Click(object sender, EventArgs e)
@@ -620,16 +618,34 @@ namespace RateController
             frmAbout.ShowDialog();
         }
 
-        private void MnuConfig_Click(object sender, EventArgs e)
+        private void MnuRelays_Click(object sender, EventArgs e)
+        {
+            Form tmp = new frmRelays(this);
+            tmp.ShowDialog();
+        }
+
+        private void teensieToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form tmp = new frmPCBsettings(this);
             tmp.ShowDialog();
         }
 
-        private void MnuRelays_Click(object sender, EventArgs e)
+        private void nanoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form tmp = new frmRelays(this);
+            Form tmp = new frmNanoSettings(this);
             tmp.ShowDialog();
+        }
+
+        private void nanoToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Form tmp = new frmNanoFirmware(this);
+            tmp.ShowDialog();
+        }
+
+        private void teensieToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Form Sec = new frmFirmware(this);
+            Sec.ShowDialog();
         }
     }
 }

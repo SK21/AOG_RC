@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>64</ApplicationRevision>
+    <ApplicationRevision>65</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -64,8 +64,14 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ArduinoUploader, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ArduinoUploader.3.2.0\lib\net452\ArduinoUploader.dll</HintPath>
+    </Reference>
     <Reference Include="BetterWin32Errors, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BetterWin32Errors.0.2.0\lib\net45\BetterWin32Errors.dll</HintPath>
+    </Reference>
+    <Reference Include="IntelHexFormatReader, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IntelHexFormatReader.2.2.1\lib\net452\IntelHexFormatReader.dll</HintPath>
     </Reference>
     <Reference Include="Keypad">
       <HintPath>.\Keypad.dll</HintPath>
@@ -165,6 +171,18 @@
     <Compile Include="frmHelp.Designer.cs">
       <DependentUpon>frmHelp.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmNanoFirmware.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmNanoFirmware.Designer.cs">
+      <DependentUpon>frmNanoFirmware.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmNanoSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmNanoSettings.Designer.cs">
+      <DependentUpon>frmNanoSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmPCBsettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,6 +228,8 @@
     <Compile Include="PGNs\PGN32622.cs" />
     <Compile Include="PGNs\PGN32623.cs" />
     <Compile Include="PGNs\PGN32624.cs" />
+    <Compile Include="PGNs\PGN32625.cs" />
+    <Compile Include="PGNs\PGN32626.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormAbout.resx">
@@ -236,6 +256,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmHelp.resx">
       <DependentUpon>frmHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmNanoFirmware.resx">
+      <DependentUpon>frmNanoFirmware.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmNanoSettings.resx">
+      <DependentUpon>frmNanoSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPCBsettings.resx">
       <DependentUpon>frmPCBsettings.cs</DependentUpon>
@@ -287,11 +313,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\mcp23017_Adafruit.jpg" />
     <None Include="Resources\AutoSteerTeensy.ino.hex" />
     <None Include="Resources\Industry-Circuit-icon.png" />
     <None Include="Resources\cableusb_119960.png" />
     <None Include="Resources\7791659_language_speak_communication_speech_chat_icon.png" />
     <None Include="Resources\7504229_hamburger_menu_list_options_icon.png" />
+    <None Include="Resources\RCnano.ino.hex" />
     <None Include="Resources\UpLoad.png" />
     <None Include="Resources\3556117_arrow_ui_up_icon.png" />
     <None Include="Resources\wrench.png" />

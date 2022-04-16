@@ -12,9 +12,10 @@ namespace RateController
     {
         private string cAppName = "RateController";
         private string cAppVersion = "2.2.0";
-        private string cVersionDate = "11-Apr-2022";
+        private string cVersionDate = "15-Apr-2022";
 
-        private string cModuleVersion = "11-Apr-2022";
+        private string cTeensieFirmware = "11-Apr-2022";
+        private string cNanoFirmware = "15-Apr-2022";
 
         private static Hashtable ht;
         private string cPropertiesFile;
@@ -47,9 +48,14 @@ namespace RateController
             return cAppVersion;
         }
 
-        public string ModuleVersion()
+        public string TeensieFirmwareVersion()
         {
-            return cModuleVersion;
+            return cTeensieFirmware;
+        }
+
+        public string NanoFirmwareVersion()
+        {
+            return cNanoFirmware;
         }
 
         public byte BitClear(byte b, int pos)
@@ -256,10 +262,19 @@ namespace RateController
             return 0;
         }
 
-        public void ShowHelp(string Message, string Title = "Help", int timeInMsec = 30000, bool LogError = false)
+        public void ShowHelp(string Message, string Title = "Help", 
+            int timeInMsec = 30000, bool LogError = false, bool Modal=false)
         {
             var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
-            Hlp.Show();
+            if (Modal)
+            {
+                Hlp.ShowDialog();
+            }
+            else
+            {
+                Hlp.Show();
+            }
+
             if (LogError) WriteErrorLog(Message);
         }
 

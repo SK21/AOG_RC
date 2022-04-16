@@ -1796,4 +1796,13 @@ C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\Rat
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.exe
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.pdb
-C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csprojAssemblyReference.cache
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmNanoSettings.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\ArduinoUploader.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\IntelHexFormatReader.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmNanoFirmware.resources
+C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\ArduinoUploader.dll
+C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\IntelHexFormatReader.dll
+C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmNanoFirmware.resources
+C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmNanoSettings.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache

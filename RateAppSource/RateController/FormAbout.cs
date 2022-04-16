@@ -5,7 +5,6 @@ namespace RateController
 {
     public partial class FormAbout : Form
     {
-        private bool Initializing = false;
         private FormStart mf;
 
         public FormAbout(FormStart CallingForm)

@@ -41,6 +41,7 @@ namespace RateController
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             UseDefault = false;
+            tbHexfile.Text = "";
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "hex files (*.hex)|*.hex|All files (*.*)|*.*";
@@ -56,11 +57,27 @@ namespace RateController
             }
         }
 
+        private void btnBrowse_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Search for new firmware (hex) files.";
+
+            mf.Tls.ShowHelp(Message, "Browse");
+            hlpevent.Handled = true;
+        }
+
         private void btnDefault_Click(object sender, EventArgs e)
         {
             UseDefault = true;
-            tbHexfile.Text = "Default file version date: " + mf.Tls.ModuleVersion();
+            tbHexfile.Text = "Default file version date: " + mf.Tls.TeensieFirmwareVersion();
             lblFWType.Text = "";
+        }
+
+        private void btnDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Use the base firmware included in the app.";
+
+            mf.Tls.ShowHelp(Message, "Use default");
+            hlpevent.Handled = true;
         }
 
         private async void btnUpload_Click(object sender, EventArgs e)
@@ -102,6 +119,14 @@ namespace RateController
             }
         }
 
+        private void btnUpload_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Upload new firmware to the Teensy.";
+
+            mf.Tls.ShowHelp(Message, "Upload");
+            hlpevent.Handled = true;
+        }
+
         private void ConnectedTeensiesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -137,44 +162,20 @@ namespace RateController
             this.BackColor = Properties.Settings.Default.DayColour;
         }
 
-        private void tbHexfile_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Filename of firmware to upload to the Teensy.";
-
-            mf.Tls.ShowHelp(Message, "Firmware");
-            hlpevent.Handled = true;
-        }
-
-        private void btnDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Use the base firmware included in the app.";
-
-            mf.Tls.ShowHelp(Message, "Use default");
-            hlpevent.Handled = true;
-        }
-
-        private void btnBrowse_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Search for new firmware (hex) files.";
-
-            mf.Tls.ShowHelp(Message, "Browse");
-            hlpevent.Handled = true;
-        }
-
-        private void btnUpload_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Upload new firmware to the Teensy.";
-
-            mf.Tls.ShowHelp(Message, "Upload");
-            hlpevent.Handled = true;
-        }
-
         private void lbTeensies_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Teensies connected to a serial (usb) port. " +
                 "Select the Teensy to update.";
 
             mf.Tls.ShowHelp(Message, "Connected Teensies");
+            hlpevent.Handled = true;
+        }
+
+        private void tbHexfile_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Filename of firmware to upload to the Teensy.";
+
+            mf.Tls.ShowHelp(Message, "Firmware");
             hlpevent.Handled = true;
         }
     }

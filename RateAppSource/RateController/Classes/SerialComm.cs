@@ -54,6 +54,11 @@ namespace RateController
             }
         }
 
+        public void OpenRCport(string Name)
+        {
+            if (ArduinoPort.PortName == Name) OpenRCport();
+        }
+
         public void OpenRCport()
         {
             try
@@ -101,6 +106,18 @@ namespace RateController
             {
                 mf.Tls.WriteErrorLog("SerialComm/OpenRCport: " + ex.Message);
             }
+        }
+
+        public bool PortOpen()
+        {
+            return ArduinoPort.IsOpen;
+        }
+
+        public bool PortOpen(string Name)
+        {
+            bool Result = false;
+            if (ArduinoPort.PortName == Name && ArduinoPort.IsOpen) Result = true;
+            return Result;
         }
 
         public void SendData(byte[] Data)

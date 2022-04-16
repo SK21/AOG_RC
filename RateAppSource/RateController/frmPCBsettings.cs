@@ -328,8 +328,12 @@ namespace RateController
                     min = 0;
                     break;
 
-                case 3:
                 case 11:
+                    max = 15;
+                    min = 0;
+                    break;
+
+                case 3:
                 case 12:
                     max = 255;
                     min = 0;
@@ -409,8 +413,12 @@ namespace RateController
                     min = 0;
                     break;
 
-                case 3:
                 case 11:
+                    max = 15;
+                    min = 0;
+                    break;
+
+                case 3:
                 case 12:
                     max = 255;
                     min = 0;

@@ -232,6 +232,16 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap mcp23017_Adafruit {
+            get {
+                object obj = ResourceManager.GetObject("mcp23017_Adafruit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Off {
             get {
                 object obj = ResourceManager.GetObject("Off", resourceCulture);
@@ -306,6 +316,16 @@ namespace RateController.Properties {
             get {
                 object obj = ResourceManager.GetObject("RateControlOff", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] RCnano_ino {
+            get {
+                object obj = ResourceManager.GetObject("RCnano_ino", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
