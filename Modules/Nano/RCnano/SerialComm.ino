@@ -138,8 +138,7 @@ void ReceiveSerial()
                     NewRateFactor[SensorID] = TmpSet;
                 }
 
-                //reset watchdog as we just heard from AgOpenGPS
-                watchdogTimer = 0;
+                CheckLast = millis();
                 CommTime[SensorID] = millis();
             }
         }
@@ -163,7 +162,7 @@ void ReceiveSerial()
                 PIDbrakePoint[SensorID] = Serial.read();
                 AdjustTime[SensorID] = Serial.read();
 
-                watchdogTimer = 0;
+                CheckLast = millis();
                 CommTime[SensorID] = millis();
             }
         }
@@ -181,6 +180,7 @@ void ReceiveSerial()
         WifiSwitchesEnabled = true;
         WifiSwitchesTimer = millis();
         SetRelaysWifi();
+        CheckLast = millis();
     }
 
     else if (Serial.available() > 7 && PGN32620Found)
@@ -203,7 +203,9 @@ void ReceiveSerial()
         {
             SwitchBytes[i] = Serial.read();
         }
+
         TranslateSwitchBytes();
+        CheckLast = millis();
     }
 
     else if (Serial.available() > 2 && PGN32625Found)
@@ -231,6 +233,7 @@ void ReceiveSerial()
         if ((tmp & 8) == 8) PCB.FlowOnDirection = 1; else PCB.FlowOnDirection = 0;
 
         EEPROM.put(10, PCB);
+        CheckLast = millis();
     }
 
     else if (Serial.available() > 21 && PGN32626Found)
@@ -261,6 +264,7 @@ void ReceiveSerial()
         }
 
         EEPROM.put(40, PINS);
+        CheckLast = millis();
 
         //reset the arduino
         resetFunc();

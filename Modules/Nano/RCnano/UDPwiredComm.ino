@@ -50,29 +50,29 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
 
 //void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, byte* data, uint16_t len)
 {
-    //PGN32614 to Arduino from Rate Controller
-    //0	HeaderLo		102
-    //1	HeaderHi		127
-    //2 Controller ID
-    //3	relay Lo		0 - 7
-    //4	relay Hi		8 - 15
-    //5	rate set Lo		10 X actual
-    //6 rate set Mid
-    //7	rate set Hi		10 X actual
-    //8	Flow Cal Lo		100 X actual
-    //9	Flow Cal Hi		
-    //10	Command
-    //- bit 0		    reset acc.Quantity
-    //- bit 1, 2		valve type 0 - 3
-    //- bit 3		    simulate flow
-    //- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
-    //- bit 5           AutoOn
 
     PGN = data[1] << 8 | data[0];
 
     if (len > 10 && PGN == 32614)
     {
-        byte tmp = data[2];
+        //PGN32614 to Arduino from Rate Controller
+        //0	HeaderLo		102
+        //1	HeaderHi		127
+        //2 Controller ID
+        //3	relay Lo		0 - 7
+        //4	relay Hi		8 - 15
+        //5	rate set Lo		10 X actual
+        //6 rate set Mid
+        //7	rate set Hi		10 X actual
+        //8	Flow Cal Lo		100 X actual
+        //9	Flow Cal Hi		
+        //10	Command
+        //- bit 0		    reset acc.Quantity
+        //- bit 1, 2		valve type 0 - 3
+        //- bit 3		    simulate flow
+        //- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
+        //- bit 5           AutoOn
+      byte tmp = data[2];
 
         if (ParseModID(tmp) == PCB.ModuleID)
         {
@@ -110,14 +110,12 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
                     NewRateFactor[SensorID] = TmpSet;
                 }
 
-                //reset watchdog as we just heard from AgOpenGPS
-                watchdogTimer = 0;
                 CommTime[SensorID] = millis();
             }
         }
     }
 
-    if (len > 9 && PGN == 32616)
+    else if (len > 9 && PGN == 32616)
     {
         // PID to Arduino from RateController
         byte tmp = data[2];
@@ -134,13 +132,12 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
                 PIDbrakePoint[SensorID] = data[8];
                 AdjustTime[SensorID] = data[9];
 
-                watchdogTimer = 0;
                 CommTime[SensorID] = millis();
             }
         }
     }
 
-    if (len > 9 && PGN == 32620)
+    else if (len > 9 && PGN == 32620)
     {
         // section switch IDs to arduino
         // 0    108
@@ -159,5 +156,63 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
             SwitchBytes[i] = data[i + 2];
         }
         TranslateSwitchBytes();
+    }
+
+    else if (len > 4 && PGN == 32625)
+    {
+        // from rate controller
+        // Nano config
+        // 0    113
+        // 1    127
+        // 2    ModuleID
+        // 3    SensorCount
+        // 4    Commands
+        //      - CommType
+        //      - UseMCP23017
+        //      - RelyOnSignal
+        //      - FlowOnSignal
+
+        PCB.ModuleID = data[2];
+        PCB.SensorCount = data[3];
+
+        byte tmp = data[4];
+        if ((tmp & 1)) PCB.CommType = 1; else PCB.CommType = 0;
+        if ((tmp & 2) == 2) PCB.UseMCP23017 = 1; else PCB.UseMCP23017 = 0;
+        if ((tmp & 4) == 4) PCB.RelayOnSignal = 1; else PCB.RelayOnSignal = 0;
+        if ((tmp & 8) == 8) PCB.FlowOnDirection = 1; else PCB.FlowOnDirection = 0;
+
+        EEPROM.put(10, PCB);
+    }
+
+    else if (len > 23 && PGN == 32626)
+    {
+       // from rate controller
+       // Nano pins
+       // 0        114
+       // 1        127
+       // 2        Flow 1
+       // 3        Flow 2
+       // 4        Dir 1
+       // 5        Dir 2
+       // 6        PWM 1
+       // 7        PWM 2
+       // 8 - 23   Relays 1-16
+
+       PINS.Flow1 = data[2];
+       PINS.Flow2 = data[3];
+       PINS.Dir1 = data[4];
+       PINS.Dir2 = data[5];
+       PINS.PWM1 = data[6];
+       PINS.PWM2 = data[7];
+
+       for (int i = 0; i < 16; i++)
+       {
+           PINS.Relays[i] = data[i + 8];
+       }
+
+       EEPROM.put(40, PINS);
+
+       //reset the arduino
+       resetFunc();
     }
 }

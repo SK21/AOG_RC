@@ -59,7 +59,7 @@ void SetRelays(byte LoByte, byte HiByte)
         // use Nano pins
         for (int i = 0; i < 16; i++)
         {
-            if (PINS.Relays[i] > 1) // check if relay is enabled, pin > 1
+            if (PINS.Relays[i] > 1) // check if relay is enabled
             {
                 if (i < 8) Rlys = LoByte; else Rlys = HiByte;
             }

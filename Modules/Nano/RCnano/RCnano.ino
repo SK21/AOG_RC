@@ -6,7 +6,7 @@
 #include <Wire.h>
 #include <EEPROM.h> 
 
-# define InoDescription "RCnano  :  15-Apr-2022"
+# define InoDescription "RCnano  :  16-Apr-2022"
 
 struct PCBconfig    // 6 bytes
 {
@@ -90,8 +90,16 @@ byte FlowDir[2];
 byte FlowPWM[2];
 
 bool FlowEnabled[] = {false, false};
-float rateError[] = {0, 0}; //for PID
-const unsigned long LOOP_TIME = 50; //in msec = 20hz
+float rateError[] = {0, 0}; 
+
+const uint16_t LOOP_TIME = 50;      //in msec = 20hz
+uint32_t LoopLast = LOOP_TIME;
+
+const uint16_t SendTime = 200;
+uint32_t SendLast = SendTime;
+
+const uint16_t CheckTime = 1000;    // check serial buffer full
+uint32_t CheckLast = CheckTime;
 
 float UPM[2];   // UPM rate
 int pwmSetting[2];
@@ -118,10 +126,6 @@ float MeterCal[] = {1.0, 1.0};	// pulses per Unit
 //bit 0 is section 0
 byte RelayLo = 0;	// sections 0-7
 byte RelayHi = 0;	// sections 8-15
-
-//loop time variables in microseconds
-unsigned long lastTime = LOOP_TIME;
-byte watchdogTimer = 0;
 
 byte Temp = 0;
 unsigned int UnSignedTemp = 0;
@@ -279,12 +283,8 @@ void setup()
 
         Serial.println("");
         Serial.println("Ethernet controller found.");
-
         ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
-
         ether.printIp("IP Address:     ", ether.myip);
-        Serial.print("Destination IP: ");
-        Serial.println(IPadd(DestinationIP));
 
         //register sub for received data
         ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
@@ -298,9 +298,9 @@ void loop()
 {
     ReceiveSerial();
 
-    if (millis() - lastTime >= LOOP_TIME)
+    if (millis() - LoopLast >= LOOP_TIME)
     {
-        lastTime = millis();
+        LoopLast = millis();
         GetUPM();
 
         for (int i = 0; i < PCB.SensorCount; i++)
@@ -319,16 +319,11 @@ void loop()
         {
             ManualControl();
         }
+    }
 
-        // check connection to AOG
-        watchdogTimer++;
-        if (watchdogTimer > 30)
-        {
-            //clean out serial buffer
-            while (Serial.available() > 0) char t = Serial.read();
-
-            watchdogTimer = 0;
-        }
+    if (millis() - SendLast > SendTime)
+    {
+        SendLast = millis();
 
         if (PCB.CommType == 0)
         {
@@ -340,6 +335,14 @@ void loop()
         }
     }
 
+    if (millis() - CheckLast > CheckTime)
+    {
+        CheckLast = millis();
+
+        //clean out serial buffer
+        while (Serial.available() > 0) char t = Serial.read();
+    }
+
     if (PCB.CommType == 1)
     {
         delay(10);
@@ -349,18 +352,6 @@ void loop()
     }
 }
 
-
-
-
-String IPadd(byte Address[])
-{
-    return String(Address[0]) + "." + String(Address[1]) + "." + String(Address[2]) + "." + String(Address[3]);
-}
-
-bool IsBitSet(byte b, int pos)
-{
-    return ((b >> pos) & 1) != 0;
-}
 
 byte ParseModID(byte ID)
 {
