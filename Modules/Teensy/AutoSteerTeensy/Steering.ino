@@ -66,6 +66,7 @@ void DoSteering()
 	//************** Steering Angle ******************
 	steeringPosition = ReadWAS(PCB.AdsWASpin);
 	steeringPosition = steeringPosition >> 1;
+	helloSteerPosition = steeringPosition - 6800;
 
 	//  ***** make sure that negative steer angle makes a left turn and positive value is a right turn *****
 	if (steerConfig.InvertWAS)
@@ -186,6 +187,7 @@ void ReadIMU()
 				}
 			}
 			break;
+
 		case 2:	// CMPS14
 			//the heading x10
 			Wire.beginTransmission(CMPS14_ADDRESS);

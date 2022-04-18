@@ -24,6 +24,11 @@ void DoRate()
             ManualControl();
         }
         AdjustFlow();
+    }
+
+    if (millis() - RateSendLast > RateSendTime)
+    {
+        RateSendLast = millis();
         SendRateUDP();
     }
 }

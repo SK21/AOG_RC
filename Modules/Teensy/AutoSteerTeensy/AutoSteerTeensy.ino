@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   11-Apr-2022"
+# define InoDescription "AutoSteerTeensy   17-Apr-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -61,15 +61,20 @@ struct PCBpinConfig	// 13 bytes
 
 PCBpinConfig PINS;
 
-const uint16_t  LOOP_TIME = 25;	// 40 hz, main loop
-const int16_t AdsI2Caddress = 0x48;
-
 #define LOW_HIGH_DEGREES 5.0	//How many degrees before decreasing Max PWM
-#define MaxFlowSensorCount 2
 #define CMPS14_ADDRESS 0x60 
-
-const uint32_t RateLoopTime = 50;		//in msec = 20hz
+const int16_t AdsI2Caddress = 0x48;
 WDT_T4<WDT1> wdt;
+
+// timing loops
+const uint16_t  LOOP_TIME = 25;	// 40 hz, main loop
+uint32_t  LoopLast = LOOP_TIME;
+
+const uint16_t RateLoopTime = 50;		//in msec = 20hz
+uint32_t RateLoopLast = RateLoopTime;
+
+const uint16_t RateSendTime = 200;
+uint32_t RateSendLast = RateSendTime;
 
 // ethernet interface ip address
 IPAddress LocalIP(192, 168, 5, 126);
@@ -90,48 +95,42 @@ uint8_t data[UDP_TX_PACKET_MAX_SIZE];  // Buffer For Receiving UDP Data
 EthernetUDP UDPgps;
 char GPSbuffer[512];	// buffer for ntrip data
 
-float IMU_Heading = 0;
-float IMU_Roll = 0;
-float IMU_Pitch = 0;
-float IMU_YawRate = 0;
-
-//loop time variables in microseconds
-uint32_t  lastTime = LOOP_TIME;
-
-int8_t guidanceStatus;
-
 //steering variables
 float steerAngleActual = 0;
 float steerAngleSetPoint = 0; //the desired angle from AgOpen
 int16_t steeringPosition = 0;
 float steerAngleError = 0; //setpoint - actual
 float Speed_KMH = 0.0;
+int8_t guidanceStatus;
 
-// steer switch
+float IMU_Heading = 0;
+float IMU_Roll = 0;
+float IMU_Pitch = 0;
+float IMU_YawRate = 0;
+
+// switches
 int8_t SteerSwitch = LOW;	// Low on, High off
 int8_t SWreading = HIGH;
 int8_t SWprevious = LOW;
 uint32_t  SWtime = 0;
 const uint16_t  SWdebounce = 50;
-
 int8_t switchByte = 0;
 int8_t workSwitch = 0;
+float SensorReading;
 
 //pwm variables
 int16_t pwmDrive = 0;
 int16_t MaxPWMvalue = 255;
 
-//fromAutoSteerData FD 253 - ActualSteerAngle*100 -5,6, Heading-7,8, 
-//Roll-9,10, SwitchByte-11, pwmDisplay-12, CRC 13
-uint8_t PGN_253[] = { 0x80,0x81, 0x78, 0xFD, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
+//Heart beat hello AgIO
+uint8_t helloFromAutoSteer[] = { 128, 129, 126, 126, 5, 0, 0, 0, 0, 0, 71 };
+int16_t helloSteerPosition = 0;
+
+//fromAutoSteerData FD 253 - ActualSteerAngle*100 -5,6, SwitchByte-7, pwmDisplay-8
+uint8_t PGN_253[] = { 128, 129, 123, 253, 8, 0, 0, 0, 0, 0,0,0,0, 12 };
 
 //fromAutoSteerData FD 250 - sensor values etc
-uint8_t PGN_250[] = { 0x80,0x81, 0x78, 0xFA, 8, 0, 0, 0, 0, 0,0,0,0, 0xCC };
-
-//show life in AgIO
-uint8_t helloFromSteer[] = { 0x80, 0x81, 126, 126, 1, 1, 0x47 };
-
-float SensorReading;
+uint8_t PGN_250[] = { 128, 129, 123, 250, 8, 0, 0, 0, 0, 0,0,0,0, 12 };
 
 //Variables for settings  
 struct Storage {
@@ -165,15 +164,8 @@ int16_t EEread = 0;
 #define EEP_Ident 4450	// if not in eeprom, overwrite
 #define PCB_Ident 2388
 
-uint32_t CommTime;
-uint32_t LastSend;
-
-bool IMUstarted = false;
-bool ADSfound = false;	
-
-ADC* adc = new ADC(); // adc object;
-
 // Rate control
+#define MaxFlowSensorCount 2
 byte RateSend[11];
 bool FlowEnabled[MaxFlowSensorCount];
 float rateError[MaxFlowSensorCount];
@@ -191,14 +183,13 @@ byte AdjustTime[MaxFlowSensorCount];
 
 byte InCommand;
 byte ControlType[MaxFlowSensorCount];	// 0 standard, 1 fast close, 2 motor
-uint32_t TotalPulses[MaxFlowSensorCount];
+uint16_t TotalPulses[MaxFlowSensorCount];
 byte ManualPWMsetting;
 float RateSetting[MaxFlowSensorCount];
 float MeterCal[MaxFlowSensorCount];
 
 byte RelayLo;
 byte RelayHi;
-uint32_t RateLoopLast = RateLoopTime;
 bool AutoOn = true;
 unsigned int PGN;
 bool PGN32614Found;
@@ -207,7 +198,7 @@ bool PGN32619Found;
 bool PGN32620Found;
 
 float NewRateFactor[MaxFlowSensorCount];
-uint32_t ManualLast[MaxFlowSensorCount];
+uint16_t ManualLast[MaxFlowSensorCount];
 float ManualFactor;
 uint32_t WifiSwitchesTimer;
 bool WifiSwitchesEnabled = false;
@@ -233,27 +224,14 @@ uint8_t ErrorCount;
 NMEAParser<2> parser;
 BNO080 myIMU;
 
+uint32_t CommTime;
+bool IMUstarted = false;
+bool ADSfound = false;
+ADC* adc = new ADC(); // adc object for analog pins
+
 HardwareSerial* SerialRTCM;
 HardwareSerial* SerialNMEA;
 HardwareSerial* SerialRS485;
-
-uint32_t LoopLast;
-uint32_t ShowLoopTime;
-
-uint32_t SketchStartTime = millis();
-void PrintRunTime(uint32_t StartTime = SketchStartTime)
-{
-	uint32_t time = millis() - StartTime;
-	uint32_t minutes = time / 60000;
-	uint32_t secs = (time - minutes * 60000) / 1000;
-	uint32_t ms = time - minutes * 60000 - secs * 1000;
-	Serial.print(minutes);
-	Serial.print(":");
-	Serial.print(secs);
-	Serial.print(".");
-	Serial.print(ms);
-	Serial.print(">  \t");
-}
 
 void setup()
 {
@@ -573,9 +551,9 @@ void loop()
 	ReceiveConfig();
 	ReceiveSteerUDP();
 
-	if (millis() - lastTime >= LOOP_TIME)
+	if (millis() - LoopLast >= LOOP_TIME)
 	{
-		lastTime = millis();
+		LoopLast = millis();
 		ReadSwitches();
 		DoSteering();
 		if (PCB.Receiver == 0) ReadIMU();
@@ -585,19 +563,8 @@ void loop()
 	if (PCB.Receiver != 0) DoPanda();
 	if (PCB.UseRate) DoRate();
 	wdt.feed();
-
-	 // loop interval
-	//if (millis() - ShowLoopTime > 1000)
-	//{
-	//		ShowLoopTime = millis();
-	//		PrintRunTime();
-
-	//		//Serial.print("Loop interval (ms) ");
-	//		//Serial.println((float)(micros() - LoopLast) / 1000.0, 3);
-
-	//}
-	//LoopLast = micros();
 }
+
 
 bool State = 0;
 uint32_t BlinkTime;
@@ -611,7 +578,6 @@ void Blink()
 		BlinkTime = millis();
 	}
 }
- 
 
 uint32_t SpeedPulseTime;
 void SendSpeedPulse()
