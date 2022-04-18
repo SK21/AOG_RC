@@ -1806,3 +1806,4 @@ C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\Rat
 C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmNanoSettings.resources
 C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
 C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.SuggestedBindingRedirects.cache

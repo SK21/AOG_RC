@@ -36,6 +36,11 @@ namespace RateController
             CKs = new CheckBox[] {ckGyro,ckGGA,ckUseRate,ckADS,ckRelayOn,ckFlowOn
             ,ckSwapPitchRoll,ckInvertRoll};
 
+            for(int i=0;i<CKs.Length;i++)
+            {
+                CKs[i].CheckedChanged += tb_TextChanged;
+            }
+
             TabEdited = new bool[3];
         }
 

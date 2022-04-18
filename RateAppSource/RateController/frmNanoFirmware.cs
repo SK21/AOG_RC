@@ -10,16 +10,15 @@ namespace RateController
 {
     public partial class frmNanoFirmware : Form
     {
-        public System.Timers.Timer timer = new System.Timers.Timer(1000);
-
-        private bool Completed;
-        private string ComPort;
-        private FormStart mf;
-        private int ProgressCount;
-
         // requires the NuGet package ArduinoUpdater
         // right click on project name in the solution explorer and select "Manage NuGet Packages..."
-        private bool UseDefault;
+
+        public System.Timers.Timer timer = new System.Timers.Timer(1000);
+        private bool Completed;
+        private string ComPort;
+        private int FileToUpload = 0;   // 0 - browse, 1 - default, 2 - default old bootloader
+        private FormStart mf;
+        private int ProgressCount;
 
         private BackgroundWorker worker = new BackgroundWorker();
 
@@ -42,7 +41,7 @@ namespace RateController
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            UseDefault = false;
+            FileToUpload = 0;
             tbHexfile.Text = "";
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
@@ -58,8 +57,30 @@ namespace RateController
 
         private void btnDefault_Click(object sender, EventArgs e)
         {
-            UseDefault = true;
+            FileToUpload = 1;
             tbHexfile.Text = "Default file version date:" + mf.Tls.NanoFirmwareVersion();
+        }
+
+        private void btnDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Use Nano version of firmware.";
+
+            mf.Tls.ShowHelp(Message, "Default");
+            hlpevent.Handled = true;
+        }
+
+        private void btnOldBootloader_Click(object sender, EventArgs e)
+        {
+            FileToUpload = 2;
+            tbHexfile.Text = "Default (OB) file version date:" + mf.Tls.NanoFirmwareVersion();
+        }
+
+        private void btnOldBootloader_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Use Nano Old Bootloader version of firmware.";
+
+            mf.Tls.ShowHelp(Message, "Default - Old Bootloader");
+            hlpevent.Handled = true;
         }
 
         private void btnUpload_Click(object sender, EventArgs e)
@@ -82,10 +103,6 @@ namespace RateController
                 mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
                 bntOK.Enabled = true;
             }
-        }
-
-        private void btnUpload_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
         }
 
         private void cboPort1_SelectedIndexChanged(object sender, EventArgs e)
@@ -135,14 +152,25 @@ namespace RateController
             {
                 string HexFile;
                 Completed = false;
-                if (UseDefault)
+
+                switch (FileToUpload)
                 {
-                    HexFile = Path.GetTempFileName();
-                    File.WriteAllBytes(HexFile, Properties.Resources.RCnano_ino);
-                }
-                else
-                {
-                    HexFile = tbHexfile.Text;
+                    case 1:
+                        // default
+                        HexFile = Path.GetTempFileName();
+                        File.WriteAllBytes(HexFile, Properties.Resources.RCnano_ino);
+                        break;
+
+                    case 2:
+                        // default old bootloader
+                        HexFile = Path.GetTempFileName();
+                        File.WriteAllBytes(HexFile, Properties.Resources.RCnanoOldBootLoader_ino);
+                        break;
+
+                    default:
+                        // file from browsing
+                        HexFile = tbHexfile.Text;
+                        break;
                 }
 
                 if (File.Exists(HexFile))

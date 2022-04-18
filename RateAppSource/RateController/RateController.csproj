@@ -13,7 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Install\</PublishUrl>
+    <PublishUrl>C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Install\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>65</ApplicationRevision>
+    <ApplicationRevision>66</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -313,13 +313,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
-    <None Include="Resources\mcp23017_Adafruit.jpg" />
     <None Include="Resources\AutoSteerTeensy.ino.hex" />
+    <None Include="Resources\mcp23017_Adafruit.jpg" />
     <None Include="Resources\Industry-Circuit-icon.png" />
     <None Include="Resources\cableusb_119960.png" />
     <None Include="Resources\7791659_language_speak_communication_speech_chat_icon.png" />
     <None Include="Resources\7504229_hamburger_menu_list_options_icon.png" />
     <None Include="Resources\RCnano.ino.hex" />
+    <None Include="Resources\RCnanoOldBootLoader.ino.hex" />
     <None Include="Resources\UpLoad.png" />
     <None Include="Resources\3556117_arrow_ui_up_icon.png" />
     <None Include="Resources\wrench.png" />

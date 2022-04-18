@@ -30,42 +30,28 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmNanoFirmware));
             this.btnDefault = new System.Windows.Forms.Button();
-            this.bntOK = new System.Windows.Forms.Button();
             this.tbHexfile = new System.Windows.Forms.TextBox();
-            this.btnUpload = new System.Windows.Forms.Button();
-            this.btnBrowse = new System.Windows.Forms.Button();
             this.cboPort1 = new System.Windows.Forms.ComboBox();
             this.lbPort = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.btnOldBootloader = new System.Windows.Forms.Button();
+            this.bntOK = new System.Windows.Forms.Button();
+            this.btnUpload = new System.Windows.Forms.Button();
+            this.btnBrowse = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnDefault
             // 
             this.btnDefault.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnDefault.Location = new System.Drawing.Point(139, 110);
+            this.btnDefault.Location = new System.Drawing.Point(112, 110);
             this.btnDefault.Margin = new System.Windows.Forms.Padding(17);
             this.btnDefault.Name = "btnDefault";
-            this.btnDefault.Size = new System.Drawing.Size(115, 72);
+            this.btnDefault.Size = new System.Drawing.Size(91, 83);
             this.btnDefault.TabIndex = 152;
             this.btnDefault.Text = "Use Default";
             this.btnDefault.UseVisualStyleBackColor = true;
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
-            // 
-            // bntOK
-            // 
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(405, 110);
-            this.bntOK.Margin = new System.Windows.Forms.Padding(17);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 151;
-            this.bntOK.Text = "Close";
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
+            this.btnDefault.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnDefault_HelpRequested);
             // 
             // tbHexfile
             // 
@@ -74,35 +60,6 @@
             this.tbHexfile.Name = "tbHexfile";
             this.tbHexfile.Size = new System.Drawing.Size(515, 29);
             this.tbHexfile.TabIndex = 150;
-            // 
-            // btnUpload
-            // 
-            this.btnUpload.Image = ((System.Drawing.Image)(resources.GetObject("btnUpload.Image")));
-            this.btnUpload.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnUpload.Location = new System.Drawing.Point(272, 110);
-            this.btnUpload.Margin = new System.Windows.Forms.Padding(17);
-            this.btnUpload.Name = "btnUpload";
-            this.btnUpload.Size = new System.Drawing.Size(115, 72);
-            this.btnUpload.TabIndex = 149;
-            this.btnUpload.Text = "Upload";
-            this.btnUpload.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnUpload.UseVisualStyleBackColor = true;
-            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
-            this.btnUpload.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnUpload_HelpRequested);
-            // 
-            // btnBrowse
-            // 
-            this.btnBrowse.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowse.Image")));
-            this.btnBrowse.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnBrowse.Location = new System.Drawing.Point(6, 110);
-            this.btnBrowse.Margin = new System.Windows.Forms.Padding(17);
-            this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(115, 72);
-            this.btnBrowse.TabIndex = 148;
-            this.btnBrowse.Text = "Browse";
-            this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnBrowse.UseVisualStyleBackColor = true;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // cboPort1
             // 
@@ -136,11 +93,69 @@
             this.progressBar1.TabIndex = 153;
             this.progressBar1.Visible = false;
             // 
+            // btnOldBootloader
+            // 
+            this.btnOldBootloader.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnOldBootloader.Location = new System.Drawing.Point(218, 110);
+            this.btnOldBootloader.Margin = new System.Windows.Forms.Padding(17);
+            this.btnOldBootloader.Name = "btnOldBootloader";
+            this.btnOldBootloader.Size = new System.Drawing.Size(91, 83);
+            this.btnOldBootloader.TabIndex = 154;
+            this.btnOldBootloader.Text = "Use Default (OB)";
+            this.btnOldBootloader.UseVisualStyleBackColor = true;
+            this.btnOldBootloader.Click += new System.EventHandler(this.btnOldBootloader_Click);
+            this.btnOldBootloader.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnOldBootloader_HelpRequested);
+            // 
+            // bntOK
+            // 
+            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
+            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.bntOK.Location = new System.Drawing.Point(430, 110);
+            this.bntOK.Margin = new System.Windows.Forms.Padding(17);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(91, 83);
+            this.bntOK.TabIndex = 151;
+            this.bntOK.Text = "Close";
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
+            // 
+            // btnUpload
+            // 
+            this.btnUpload.Image = ((System.Drawing.Image)(resources.GetObject("btnUpload.Image")));
+            this.btnUpload.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnUpload.Location = new System.Drawing.Point(324, 110);
+            this.btnUpload.Margin = new System.Windows.Forms.Padding(17);
+            this.btnUpload.Name = "btnUpload";
+            this.btnUpload.Size = new System.Drawing.Size(91, 83);
+            this.btnUpload.TabIndex = 149;
+            this.btnUpload.Text = "Upload";
+            this.btnUpload.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnUpload.UseVisualStyleBackColor = true;
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
+            // 
+            // btnBrowse
+            // 
+            this.btnBrowse.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowse.Image")));
+            this.btnBrowse.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnBrowse.Location = new System.Drawing.Point(6, 110);
+            this.btnBrowse.Margin = new System.Windows.Forms.Padding(17);
+            this.btnBrowse.Name = "btnBrowse";
+            this.btnBrowse.Size = new System.Drawing.Size(91, 83);
+            this.btnBrowse.TabIndex = 148;
+            this.btnBrowse.Text = "Browse";
+            this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            // 
             // frmNanoFirmware
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(537, 196);
+            this.ClientSize = new System.Drawing.Size(528, 205);
+            this.Controls.Add(this.btnOldBootloader);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.btnDefault);
             this.Controls.Add(this.bntOK);
@@ -176,5 +191,6 @@
         private System.Windows.Forms.ComboBox cboPort1;
         private System.Windows.Forms.Label lbPort;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button btnOldBootloader;
     }
 }

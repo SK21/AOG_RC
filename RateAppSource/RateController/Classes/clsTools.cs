@@ -12,10 +12,10 @@ namespace RateController
     {
         private string cAppName = "RateController";
         private string cAppVersion = "2.2.0";
-        private string cVersionDate = "15-Apr-2022";
+        private string cVersionDate = "17-Apr-2022";
 
-        private string cTeensieFirmware = "11-Apr-2022";
-        private string cNanoFirmware = "15-Apr-2022";
+        private string cTeensieFirmware = "17-Apr-2022";
+        private string cNanoFirmware = "16-Apr-2022";
 
         private static Hashtable ht;
         private string cPropertiesFile;

@@ -37,6 +37,11 @@ namespace RateController
             CKs = new CheckBox[] { ckUseEthernet, ckUseMCP23017,
             ckNanoRelayOn, ckNanoFlowOn};
 
+            for (int i = 0; i < CKs.Length; i++)
+            {
+                CKs[i].CheckedChanged += tb_TextChanged;
+            }
+
             TabEdited = new bool[2];
         }
 
