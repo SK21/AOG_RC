@@ -127,9 +127,6 @@
   <data name="ArrowLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ArrowLeft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="AutoSteerTeensy_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\AutoSteerTeensy.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="WindowNightMode" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\WindowNightMode.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -210,11 +207,5 @@
   </data>
   <data name="mcp23017_Adafruit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mcp23017_Adafruit.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RCnano_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RCnano.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="RCnanoOldBootLoader_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RCnanoOldBootLoader.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

@@ -63,6 +63,7 @@ namespace RateController
         private void frmHelp_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
+            this.BackColor = Properties.Settings.Default.DayColour;
         }
 
         private void frmHelp_FormClosed(object sender, FormClosedEventArgs e)

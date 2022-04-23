@@ -13,7 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Install\</PublishUrl>
+    <PublishUrl>C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Install\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>67</ApplicationRevision>
+    <ApplicationRevision>69</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -64,32 +64,17 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ArduinoUploader, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ArduinoUploader.3.2.0\lib\net452\ArduinoUploader.dll</HintPath>
-    </Reference>
     <Reference Include="BetterWin32Errors, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BetterWin32Errors.0.2.0\lib\net45\BetterWin32Errors.dll</HintPath>
     </Reference>
-    <Reference Include="IntelHexFormatReader, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IntelHexFormatReader.2.2.1\lib\net452\IntelHexFormatReader.dll</HintPath>
-    </Reference>
     <Reference Include="Keypad">
       <HintPath>.\Keypad.dll</HintPath>
-    </Reference>
-    <Reference Include="libTeensySharp, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\lunOptics.libTeensySharp.1.0.1\lib\netstandard2.0\libTeensySharp.dll</HintPath>
-    </Reference>
-    <Reference Include="libUsbTree, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\lunOptics.libUsbTree.1.0.1\lib\net46\libUsbTree.dll</HintPath>
     </Reference>
     <Reference Include="MoreLinq, Version=3.3.2.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.3.3.2\lib\net451\MoreLinq.dll</HintPath>
     </Reference>
     <Reference Include="RepeatButtonControl">
       <HintPath>.\RepeatButtonControl.dll</HintPath>
-    </Reference>
-    <Reference Include="RJCP.SerialPortStream, Version=2.3.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\packages\SerialPortStream.2.3.1\lib\net45\RJCP.SerialPortStream.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -159,35 +144,11 @@
     <Compile Include="frmComm.Designer.cs">
       <DependentUpon>frmComm.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmFirmware.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmFirmware.Designer.cs">
-      <DependentUpon>frmFirmware.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmHelp.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmHelp.Designer.cs">
       <DependentUpon>frmHelp.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmNanoFirmware.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmNanoFirmware.Designer.cs">
-      <DependentUpon>frmNanoFirmware.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmNanoSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmNanoSettings.Designer.cs">
-      <DependentUpon>frmNanoSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmPCBsettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPCBsettings.Designer.cs">
-      <DependentUpon>frmPCBsettings.cs</DependentUpon>
     </Compile>
     <Compile Include="frmRelays.cs">
       <SubType>Form</SubType>
@@ -225,11 +186,6 @@
     <Compile Include="PGNs\PGN254.cs" />
     <Compile Include="PGNs\PGN32620.cs" />
     <Compile Include="PGNs\PGN32621.cs" />
-    <Compile Include="PGNs\PGN32622.cs" />
-    <Compile Include="PGNs\PGN32623.cs" />
-    <Compile Include="PGNs\PGN32624.cs" />
-    <Compile Include="PGNs\PGN32625.cs" />
-    <Compile Include="PGNs\PGN32626.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormAbout.resx">
@@ -251,20 +207,8 @@
     <EmbeddedResource Include="frmComm.resx">
       <DependentUpon>frmComm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmFirmware.resx">
-      <DependentUpon>frmFirmware.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmHelp.resx">
       <DependentUpon>frmHelp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmNanoFirmware.resx">
-      <DependentUpon>frmNanoFirmware.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmNanoSettings.resx">
-      <DependentUpon>frmNanoSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPCBsettings.resx">
-      <DependentUpon>frmPCBsettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>

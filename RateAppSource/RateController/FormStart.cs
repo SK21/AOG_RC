@@ -42,7 +42,6 @@ namespace RateController
        
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
-        public UDPComm UDPmodulesConfig;
 
         public bool UseInches;
         private int CurrentPage;
@@ -82,8 +81,6 @@ namespace RateController
             MnuOptions.DropDownItems["MnuOpen"].Text = Lang.lgOpen;
             MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
             MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
-            MnuOptions.DropDownItems["MnuConfig"].Text = Lang.lgPCBconfig;
-            MnuOptions.DropDownItems["MnuFirmware"].Text = Lang.lgFirmware;
 
             #endregion // language
 
@@ -95,7 +92,6 @@ namespace RateController
             //UDPconfig = new UDPComm(this, 29900, 28800, 1482, "192.168.1.255");     // pcb config
 
             UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
-            UDPmodulesConfig = new UDPComm(this, 29900, 28800, 1482);     // pcb config
 
             SwitchBox = new PGN32618(this);
             SwitchIDs = new PGN32620(this);
@@ -145,10 +141,6 @@ namespace RateController
             Sections.CheckSwitchDefinitions();
 
             Products.Load();
-
-            //UDPmodules.BroadCastIP = Tls.LoadProperty("BroadCastIP");
-            //UDPmodulesConfig.BroadCastIP = Tls.LoadProperty("BroadCastIP");
-
             PressureObjects.Load();
             RelayObjects.Load();
         }
@@ -380,15 +372,8 @@ namespace RateController
                 Tls.ShowHelp("UDPagio failed to start.", "", 3000, true);
             }
 
-            UDPmodulesConfig.StartUDPServer();
-            if(!UDPmodulesConfig.isUDPSendConnected)
-            {
-                Tls.ShowHelp("UDPconfig failed to start.", "", 3000, true);
-            }
-
             LoadSettings();
             UpdateStatus();
-
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -496,12 +481,6 @@ namespace RateController
             }
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frmAbout = new FormAbout(this);
-            frmAbout.ShowDialog();
-        }
-
         private void label2_Click(object sender, EventArgs e)
         {
         }
@@ -561,7 +540,7 @@ namespace RateController
 
         private void lbArduinoConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Indicates if the arduino module is connected. Green is connected, " +
+            string Message = "Indicates if the product is connected to an arduino module. Green is connected, " +
                 "yellow is simulation mode, red not connected. Press to minimize window.";
 
             this.Tls.ShowHelp(Message, "MOD");
@@ -622,30 +601,6 @@ namespace RateController
         {
             Form tmp = new frmRelays(this);
             tmp.ShowDialog();
-        }
-
-        private void teensieToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmPCBsettings(this);
-            tmp.ShowDialog();
-        }
-
-        private void nanoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmNanoSettings(this);
-            tmp.ShowDialog();
-        }
-
-        private void nanoToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmNanoFirmware(this);
-            tmp.ShowDialog();
-        }
-
-        private void teensieToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Form Sec = new frmFirmware(this);
-            Sec.ShowDialog();
         }
     }
 }

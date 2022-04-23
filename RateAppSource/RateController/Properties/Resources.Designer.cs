@@ -141,16 +141,6 @@ namespace RateController.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] AutoSteerTeensy_ino {
-            get {
-                object obj = ResourceManager.GetObject("AutoSteerTeensy_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap cableusb_119960 {
@@ -316,26 +306,6 @@ namespace RateController.Properties {
             get {
                 object obj = ResourceManager.GetObject("RateControlOff", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] RCnano_ino {
-            get {
-                object obj = ResourceManager.GetObject("RCnano_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] RCnanoOldBootLoader_ino {
-            get {
-                object obj = ResourceManager.GetObject("RCnanoOldBootLoader_ino", resourceCulture);
-                return ((byte[])(obj));
             }
         }
         

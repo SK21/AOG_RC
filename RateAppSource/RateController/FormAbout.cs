@@ -40,6 +40,7 @@ namespace RateController
 
             lbAppVersion.Text = mf.Tls.AppVersion() + "    " + mf.Tls.VersionDate();
             lbIP.Text = mf.UDPmodules.LocalIP();
+            this.BackColor = Properties.Settings.Default.DayColour;
         }
     }
 }

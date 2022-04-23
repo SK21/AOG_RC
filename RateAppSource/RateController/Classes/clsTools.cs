@@ -12,10 +12,7 @@ namespace RateController
     {
         private string cAppName = "RateController";
         private string cAppVersion = "2.2.0";
-        private string cVersionDate = "17-Apr-2022";
-
-        private string cTeensieFirmware = "17-Apr-2022";
-        private string cNanoFirmware = "16-Apr-2022";
+        private string cVersionDate = "22-Apr-2022";
 
         private static Hashtable ht;
         private string cPropertiesFile;
@@ -46,16 +43,6 @@ namespace RateController
         public string AppVersion()
         {
             return cAppVersion;
-        }
-
-        public string TeensieFirmwareVersion()
-        {
-            return cTeensieFirmware;
-        }
-
-        public string NanoFirmwareVersion()
-        {
-            return cNanoFirmware;
         }
 
         public byte BitClear(byte b, int pos)
