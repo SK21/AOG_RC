@@ -1,21 +1,20 @@
-
 #include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
 #include <Adafruit_MCP23XXX.h>
 #include <EtherCard.h>
 #include <Wire.h>
-#include <EEPROM.h> 
+#include <EEPROM.h>
 
-# define InoDescription "RCnano  :  16-Apr-2022"
+# define InoDescription "RCnano  :  22-Apr-2022"
+# define UseEthernet 0
 
-struct PCBconfig    // 6 bytes
+struct PCBconfig    // 5 bytes
 {
-    uint8_t CommType = 0;           // 0 serial usb, 1 udp wired
-    uint8_t ModuleID = 0;
-    uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
-    uint8_t RelayOnSignal = 0;	    // value that turns on relays
-    uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
-    uint8_t SensorCount = 1;        // up to 2 sensors
+	uint8_t ModuleID = 0;
+	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
+	uint8_t RelayOnSignal = 0;	    // value that turns on relays
+	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
+	uint8_t SensorCount = 1;        // up to 2 sensors
 };
 
 PCBconfig PCB;
@@ -28,17 +27,18 @@ PCBconfig PCB;
 
 struct PCBpinConfig // 22 bytes
 {
-    uint8_t Flow1 = 2;
-    uint8_t Flow2 = 3;
-    uint8_t Dir1 = 4;
-    uint8_t Dir2 = 6;
-    uint8_t PWM1 = 5;
-    uint8_t PWM2 = 9;
-    uint8_t Relays[16];
+	uint8_t Flow1 = 2;
+	uint8_t Flow2 = 3;
+	uint8_t Dir1 = 4;
+	uint8_t Dir2 = 6;
+	uint8_t PWM1 = 5;
+	uint8_t PWM2 = 9;
+	uint8_t Relays[16];
 };
 
 PCBpinConfig PINS;
 
+#if UseEthernet
 // gateway ip address
 static byte gwip[] = { 192, 168, 5, 1 };
 //DNS- you just need one anyway
@@ -55,6 +55,7 @@ static byte DestinationIP[] = { 192, 168, 5, 255 };	// broadcast 255
 unsigned int DestinationPort = 29999; // Rate Controller listening port
 
 byte Ethernet::buffer[500]; // udp send and receive buffer
+#endif
 
 //Array to send data back to AgOpenGPS
 byte toSend[2][11] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
@@ -89,8 +90,8 @@ byte FlowPin[2];
 byte FlowDir[2];
 byte FlowPWM[2];
 
-bool FlowEnabled[] = {false, false};
-float rateError[] = {0, 0}; 
+bool FlowEnabled[] = { false, false };
+float rateError[] = { 0, 0 };
 
 const uint16_t LOOP_TIME = 50;      //in msec = 20hz
 uint32_t LoopLast = LOOP_TIME;
@@ -105,23 +106,23 @@ float UPM[2];   // UPM rate
 int pwmSetting[2];
 
 // PID
-byte PIDkp[] = {20, 20};
-byte PIDminPWM[] = {50, 50};
-byte PIDLowMax[] = {100, 100};
-byte PIDHighMax[] = { 255, 255};
-byte PIDdeadband[] = {3, 3};
-byte PIDbrakePoint[] = {20, 20};
+byte PIDkp[] = { 20, 20 };
+byte PIDminPWM[] = { 50, 50 };
+byte PIDLowMax[] = { 100, 100 };
+byte PIDHighMax[] = { 255, 255 };
+byte PIDdeadband[] = { 3, 3 };
+byte PIDbrakePoint[] = { 20, 20 };
 byte AdjustTime[2];
 
-byte InCommand[] = {0, 0};		// command byte from RateController
-byte ControlType[] = {0, 0};  // 0 standard, 1 Fast Close, 2 Motor
+byte InCommand[] = { 0, 0 };		// command byte from RateController
+byte ControlType[] = { 0, 0 };  // 0 standard, 1 Fast Close, 2 Motor
 
 unsigned long TotalPulses[2];
 unsigned long CommTime[2];
 
-byte ManualPWMsetting[] = {0, 0};
-float RateSetting[] = {0.0, 0.0};	// auto UPM setting
-float MeterCal[] = {1.0, 1.0};	// pulses per Unit
+byte ManualPWMsetting[] = { 0, 0 };
+float RateSetting[] = { 0.0, 0.0 };	// auto UPM setting
+float MeterCal[] = { 1.0, 1.0 };	// pulses per Unit
 
 //bit 0 is section 0
 byte RelayLo = 0;	// sections 0-7
@@ -164,310 +165,299 @@ int16_t EEread = 0;
 
 void setup()
 {
-    Serial.begin(38400);
+	Serial.begin(38400);
 
-    // pcb data
-    EEPROM.get(0, EEread);              // read identifier
-    if (EEread != PCB_Ident)
-    {
-        EEPROM.put(0, PCB_Ident);
-        EEPROM.put(10, PCB);
-        EEPROM.put(40, PINS);
-    }
-    else
-    {
-        EEPROM.get(10, PCB);
-        EEPROM.get(40, PINS);
-    }
+	// pcb data
+	EEPROM.get(0, EEread);              // read identifier
+	if (EEread != PCB_Ident)
+	{
+		EEPROM.put(0, PCB_Ident);
+		EEPROM.put(10, PCB);
+		EEPROM.put(40, PINS);
+	}
+	else
+	{
+		EEPROM.get(10, PCB);
+		EEPROM.get(40, PINS);
+	}
 
-    delay(5000);
-    Serial.println();
-    Serial.println(InoDescription);
-    Serial.print("Module ID: ");
-    Serial.println(PCB.ModuleID);
-    Serial.println();
+	delay(5000);
+	Serial.println();
+	Serial.println(InoDescription);
+	Serial.print("Module ID: ");
+	Serial.println(PCB.ModuleID);
+	Serial.println();
 
-    if (PCB.CommType == 0)
-    {
-        Serial.println("Using serial/usb comm.");
-    }
-    else
-    {
-        Serial.println("Using ethernet comm.");
-    }
+	if (PCB.SensorCount < 1) PCB.SensorCount = 1;
+	if (PCB.SensorCount > 2) PCB.SensorCount = 2;
 
-    if (PCB.UseMCP23017)
-    {
-        Serial.println("Using MCP23017 for relays.");
-    }
-    else
-    {
-        Serial.println("Using Nano pins for relays.");
-    }
+	if (PCB.UseMCP23017)
+	{
+		Serial.println("Using MCP23017 for relays.");
+	}
+	else
+	{
+		Serial.println("Using Nano pins for relays.");
+	}
 
-    Wire.begin();
-    if (PCB.UseMCP23017)
-    {
-        Wire.beginTransmission(0x20);
-        if (Wire.endTransmission() == 0)
-        {
-            Serial.println("MCP23017 Found.");
-        }
-        else
-        {
-            Serial.println("MCP23017 not found.");
-        }
+	Wire.begin();
+	if (PCB.UseMCP23017)
+	{
+		Wire.beginTransmission(0x20);
+		if (Wire.endTransmission() == 0)
+		{
+			Serial.println("MCP23017 Found.");
+		}
+		else
+		{
+			Serial.println("MCP23017 not found.");
+		}
 
-        mcp.begin_I2C();
+		mcp.begin_I2C();
 
-        // MCP20317 pins
-        mcp.pinMode(Relay1, OUTPUT);
-        mcp.pinMode(Relay2, OUTPUT);
-        mcp.pinMode(Relay3, OUTPUT);
-        mcp.pinMode(Relay4, OUTPUT);
-        mcp.pinMode(Relay5, OUTPUT);
-        mcp.pinMode(Relay6, OUTPUT);
-        mcp.pinMode(Relay7, OUTPUT);
-        mcp.pinMode(Relay8, OUTPUT);
+		// MCP20317 pins
+		mcp.pinMode(Relay1, OUTPUT);
+		mcp.pinMode(Relay2, OUTPUT);
+		mcp.pinMode(Relay3, OUTPUT);
+		mcp.pinMode(Relay4, OUTPUT);
+		mcp.pinMode(Relay5, OUTPUT);
+		mcp.pinMode(Relay6, OUTPUT);
+		mcp.pinMode(Relay7, OUTPUT);
+		mcp.pinMode(Relay8, OUTPUT);
 
-        mcp.pinMode(Relay9, OUTPUT);
-        mcp.pinMode(Relay10, OUTPUT);
-        mcp.pinMode(Relay11, OUTPUT);
-        mcp.pinMode(Relay12, OUTPUT);
-        mcp.pinMode(Relay13, OUTPUT);
-        mcp.pinMode(Relay14, OUTPUT);
-        mcp.pinMode(Relay15, OUTPUT);
-        mcp.pinMode(Relay16, OUTPUT);
-    }
-    else
-    {
-        // Nano pins
-        for (int i = 0; i < 16; i++)
-        {
-            // check if relay is enabled (pins 0 and 1 are for comm) and set pin mode
-            if (PINS.Relays[i] > 1) pinMode(PINS.Relays[i], OUTPUT);
-        }
-    }
+		mcp.pinMode(Relay9, OUTPUT);
+		mcp.pinMode(Relay10, OUTPUT);
+		mcp.pinMode(Relay11, OUTPUT);
+		mcp.pinMode(Relay12, OUTPUT);
+		mcp.pinMode(Relay13, OUTPUT);
+		mcp.pinMode(Relay14, OUTPUT);
+		mcp.pinMode(Relay15, OUTPUT);
+		mcp.pinMode(Relay16, OUTPUT);
+	}
+	else
+	{
+		// Nano pins
+		for (int i = 0; i < 16; i++)
+		{
+			// check if relay is enabled (pins 0 and 1 are for comm) and set pin mode
+			if (PINS.Relays[i] > 1) pinMode(PINS.Relays[i], OUTPUT);
+		}
+	}
 
-    // flow
-    FlowPin[0] = PINS.Flow1;
-    FlowPin[1] = PINS.Flow2;
-    FlowDir[0] = PINS.Dir1;
-    FlowDir[1] = PINS.Dir2;
-    FlowPWM[0] = PINS.PWM1;
-    FlowPWM[1] = PINS.PWM2;
+	// flow
+	FlowPin[0] = PINS.Flow1;
+	FlowPin[1] = PINS.Flow2;
+	FlowDir[0] = PINS.Dir1;
+	FlowDir[1] = PINS.Dir2;
+	FlowPWM[0] = PINS.PWM1;
+	FlowPWM[1] = PINS.PWM2;
 
-    for (int i = 0; i < PCB.SensorCount; i++)
-    {
-        pinMode(FlowPin[i], INPUT_PULLUP);
-        pinMode(FlowDir[i], OUTPUT);
-        pinMode(FlowPWM[i], OUTPUT);
-    }
+	for (int i = 0; i < PCB.SensorCount; i++)
+	{
+		pinMode(FlowPin[i], INPUT_PULLUP);
+		pinMode(FlowDir[i], OUTPUT);
+		pinMode(FlowPWM[i], OUTPUT);
+	}
 
-    attachInterrupt(digitalPinToInterrupt(FlowPin[0]), ISR0, FALLING);
-    attachInterrupt(digitalPinToInterrupt(FlowPin[1]), ISR1, FALLING);
+	attachInterrupt(digitalPinToInterrupt(FlowPin[0]), ISR0, FALLING);
+	attachInterrupt(digitalPinToInterrupt(FlowPin[1]), ISR1, FALLING);
 
-    if (PCB.CommType == 1)
-    {
-        // ethernet interface ip address
-        byte ArduinoIP[] = { 192, 168, 5, 110 + PCB.ModuleID };
+#if UseEthernet
+	// ethernet interface ip address
+	byte ArduinoIP[] = { 192, 168, 5, 110 + PCB.ModuleID };
 
-        // ethernet interface Mac address
-        byte LocalMac[] = { 0x70, 0x31, 0x21, 0x2D, 0x62, PCB.ModuleID };
+	// ethernet interface Mac address
+	byte LocalMac[] = { 0x70, 0x31, 0x21, 0x2D, 0x62, PCB.ModuleID };
 
-        while (!EthernetEnabled)
-        {
-            EthernetEnabled = (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) != 0);
-            Serial.print(".");
-        }
+	while (!EthernetEnabled)
+	{
+		EthernetEnabled = (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) != 0);
+		Serial.print(".");
+	}
 
-        Serial.println("");
-        Serial.println("Ethernet controller found.");
-        ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
-        ether.printIp("IP Address:     ", ether.myip);
+	Serial.println("");
+	Serial.println("Ethernet controller found.");
+	ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
+	ether.printIp("IP Address:     ", ether.myip);
 
-        //register sub for received data
-        ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
-    }
+	//register sub for received data
+	ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
+#endif
 
-    Serial.println("");
-    Serial.println("Finished Setup.");
+	pinMode(LED_BUILTIN, OUTPUT);
+	digitalWrite(LED_BUILTIN, HIGH);
+
+	Serial.println("");
+	Serial.println("Finished Setup.");
 }
 
 void loop()
 {
-    ReceiveSerial();
+	ReceiveSerial();
 
-    if (millis() - LoopLast >= LOOP_TIME)
-    {
-        LoopLast = millis();
-        GetUPM();
+	if (millis() - LoopLast >= LOOP_TIME)
+	{
+		LoopLast = millis();
+		GetUPM();
 
-        for (int i = 0; i < PCB.SensorCount; i++)
-        {
-            FlowEnabled[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0);
-        }
+		for (int i = 0; i < PCB.SensorCount; i++)
+		{
+			FlowEnabled[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0);
+		}
 
-        CheckRelays();
-        AdjustFlow();
+		CheckRelays();
+		AdjustFlow();
 
-        if (AutoOn)
-        {
-            AutoControl();
-        }
-        else
-        {
-            ManualControl();
-        }
-    }
+		if (AutoOn)
+		{
+			AutoControl();
+		}
+		else
+		{
+			ManualControl();
+		}
+	}
 
-    if (millis() - SendLast > SendTime)
-    {
-        SendLast = millis();
+	if (millis() - SendLast > SendTime)
+	{
+		SendLast = millis();
+		SendSerial();
+#if UseEthernet
+		SendUDPwired();
+#endif
+	}
 
-        if (PCB.CommType == 0)
-        {
-            SendSerial();
-        }
-        else
-        {
-            SendUDPwired();
-        }
-    }
+	if (millis() - CheckLast > CheckTime)
+	{
+		CheckLast = millis();
 
-    if (millis() - CheckLast > CheckTime)
-    {
-        CheckLast = millis();
+		//clean out serial buffer
+		while (Serial.available() > 0) char t = Serial.read();
+	}
 
-        //clean out serial buffer
-        while (Serial.available() > 0) char t = Serial.read();
-    }
+#if UseEthernet
+	delay(10);
 
-    if (PCB.CommType == 1)
-    {
-        delay(10);
-
-        //this must be called for ethercard functions to work.
-        ether.packetLoop(ether.packetReceive());
-    }
+	//this must be called for ethercard functions to work.
+	ether.packetLoop(ether.packetReceive());
+#endif
 }
-
 
 byte ParseModID(byte ID)
 {
-    // top 4 bits
-    return ID >> 4;
+	// top 4 bits
+	return ID >> 4;
 }
 
 byte ParseSenID(byte ID)
 {
-    // bottom 4 bits
-    return (ID & 0b00001111);
+	// bottom 4 bits
+	return (ID & 0b00001111);
 }
 
 byte BuildModSenID(byte Mod_ID, byte Sen_ID)
 {
-    return ((Mod_ID << 4) | (Sen_ID & 0b00001111));
+	return ((Mod_ID << 4) | (Sen_ID & 0b00001111));
 }
 
 void AutoControl()
 {
-    for (int i = 0; i < PCB.SensorCount; i++)
-    {
-        switch (ControlType[i])
-        {
-        case 2:
-            // motor control
-            rateError[i] = RateSetting[i] - UPM[i];
+	for (int i = 0; i < PCB.SensorCount; i++)
+	{
+		switch (ControlType[i])
+		{
+		case 2:
+			// motor control
+			rateError[i] = RateSetting[i] - UPM[i];
 
-            // calculate new value
-            pwmSetting[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
-                PIDHighMax[i], PIDdeadband[i], i);
-            break;
+			// calculate new value
+			pwmSetting[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
+				PIDHighMax[i], PIDdeadband[i], i);
+			break;
 
-        default:
-            // valve control
-            // calculate new value
-            rateError[i] = RateSetting[i] - UPM[i];
+		default:
+			// valve control
+			// calculate new value
+			rateError[i] = RateSetting[i] - UPM[i];
 
-            pwmSetting[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
-                PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i);
-            break;
-        }
-    }
+			pwmSetting[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
+				PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i);
+			break;
+		}
+	}
 }
 
 void ManualControl()
 {
-    for (int i = 0; i < PCB.SensorCount; i++)
-    {
-        if (millis() - ManualLast[i] > 1000)
-        {
-            ManualLast[i] = millis();
+	for (int i = 0; i < PCB.SensorCount; i++)
+	{
+		if (millis() - ManualLast[i] > 1000)
+		{
+			ManualLast[i] = millis();
 
-            // adjust rate
-            if (RateSetting[i] == 0) RateSetting[i] = 1; // to make FlowEnabled
+			// adjust rate
+			if (RateSetting[i] == 0) RateSetting[i] = 1; // to make FlowEnabled
 
-            switch (ControlType[i])
-            {
-            case 2:
-                // motor control
-                pwmSetting[i] *= NewRateFactor[i];
-                if (pwmSetting[i] == 0 && NewRateFactor[i] > 0) pwmSetting[i] = PIDminPWM[i];
-                break;
+			switch (ControlType[i])
+			{
+			case 2:
+				// motor control
+				pwmSetting[i] *= NewRateFactor[i];
+				if (pwmSetting[i] == 0 && NewRateFactor[i] > 0) pwmSetting[i] = PIDminPWM[i];
+				break;
 
-            default:
-                // valve control
-                pwmSetting[i] = 0;
+			default:
+				// valve control
+				pwmSetting[i] = 0;
 
-                if (NewRateFactor[i] < 1)
-                {
-                    // rate down
-                    pwmSetting[i] = -PIDminPWM[i];
-                }
-                else if (NewRateFactor[i] > 1)
-                {
-                    // rate up
-                    pwmSetting[i] = PIDminPWM[i];
-                }
+				if (NewRateFactor[i] < 1)
+				{
+					// rate down
+					pwmSetting[i] = -PIDminPWM[i];
+				}
+				else if (NewRateFactor[i] > 1)
+				{
+					// rate up
+					pwmSetting[i] = PIDminPWM[i];
+				}
 
-                break;
-            }
-        }
+				break;
+			}
+		}
 
-        switch (ControlType[i])
-        {
-            // calculate application rate
-        case 2:
-            // motor control
-            rateError[i] = RateSetting[i] - UPM[i];
-            break;
+		switch (ControlType[i])
+		{
+			// calculate application rate
+		case 2:
+			// motor control
+			rateError[i] = RateSetting[i] - UPM[i];
+			break;
 
-        default:
-            // valve control
-            rateError[i] = RateSetting[i] - UPM[i];
-            break;
-        }
-    }
+		default:
+			// valve control
+			rateError[i] = RateSetting[i] - UPM[i];
+			break;
+		}
+	}
 }
 
 void TranslateSwitchBytes()
 {
-    // Switch IDs from Rate Controller
-    // ex: byte 2: bits 0-3 identify switch # (0-15) for sec 0
-    // ex: byte 2: bits 4-7 identify switch # (0-15) for sec 1
+	// Switch IDs from Rate Controller
+	// ex: byte 2: bits 0-3 identify switch # (0-15) for sec 0
+	// ex: byte 2: bits 4-7 identify switch # (0-15) for sec 1
 
-    for (int i = 0; i < 16; i++)
-    {
-        byte ByteID = i / 2;
-        byte Mask = 15 << (4 * (i - 2 * ByteID));    // move mask to correct bits
-        SectionSwitchID[i] = SwitchBytes[ByteID] & Mask;    // mask out bits
-        SectionSwitchID[i] = SectionSwitchID[i] >> (4 * (i - 2 * ByteID)); // move bits for number
-    }
+	for (int i = 0; i < 16; i++)
+	{
+		byte ByteID = i / 2;
+		byte Mask = 15 << (4 * (i - 2 * ByteID));    // move mask to correct bits
+		SectionSwitchID[i] = SwitchBytes[ByteID] & Mask;    // mask out bits
+		SectionSwitchID[i] = SectionSwitchID[i] >> (4 * (i - 2 * ByteID)); // move bits for number
+	}
 }
 
 void ToSerial(char* Description, float Val)
 {
-    Serial.print(Description);
-    Serial.println(Val);
+	Serial.print(Description);
+	Serial.println(Val);
 }

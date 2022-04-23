@@ -1,3 +1,5 @@
+
+#if UseEthernet
 void SendUDPwired()
 {
     //PGN32613 to Rate Controller from Arduino
@@ -167,7 +169,6 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
         // 2    ModuleID
         // 3    SensorCount
         // 4    Commands
-        //      - CommType
         //      - UseMCP23017
         //      - RelyOnSignal
         //      - FlowOnSignal
@@ -176,10 +177,9 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
         PCB.SensorCount = data[3];
 
         byte tmp = data[4];
-        if ((tmp & 1)) PCB.CommType = 1; else PCB.CommType = 0;
-        if ((tmp & 2) == 2) PCB.UseMCP23017 = 1; else PCB.UseMCP23017 = 0;
-        if ((tmp & 4) == 4) PCB.RelayOnSignal = 1; else PCB.RelayOnSignal = 0;
-        if ((tmp & 8) == 8) PCB.FlowOnDirection = 1; else PCB.FlowOnDirection = 0;
+        if ((tmp & 1) == 1) PCB.UseMCP23017 = 1; else PCB.UseMCP23017 = 0;
+        if ((tmp & 2) == 2) PCB.RelayOnSignal = 1; else PCB.RelayOnSignal = 0;
+        if ((tmp & 4) == 4) PCB.FlowOnDirection = 1; else PCB.FlowOnDirection = 0;
 
         EEPROM.put(10, PCB);
     }
@@ -216,3 +216,4 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, b
        resetFunc();
     }
 }
+#endif
