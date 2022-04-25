@@ -284,9 +284,6 @@ void setup()
 	ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
 #endif
 
-	pinMode(LED_BUILTIN, OUTPUT);
-	digitalWrite(LED_BUILTIN, HIGH);
-
 	Serial.println("");
 	Serial.println("Finished Setup.");
 }

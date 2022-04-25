@@ -225,7 +225,6 @@ void ReceiveSerial()
 		PGN32625Found = false;
 		PCB.ModuleID = Serial.read();
 		PCB.SensorCount = Serial.read();
-
 		byte tmp = Serial.read();
 		if ((tmp & 1) == 1) PCB.UseMCP23017 = 1; else PCB.UseMCP23017 = 0;
 		if ((tmp & 2) == 2) PCB.RelayOnSignal = 1; else PCB.RelayOnSignal = 0;
