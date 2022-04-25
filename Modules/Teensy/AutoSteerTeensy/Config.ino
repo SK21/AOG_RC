@@ -63,7 +63,7 @@ void ReceiveConfig()
 			PINS.SpeedPulse = ConfigData[13];
 			PINS.RS485SendEnable = ConfigData[14];
 
-			EEPROM.put(150, PCB);
+			EEPROM.put(150, PINS);
 
 			if (ConfigData[15])  SCB_AIRCR = 0x05FA0004; //reset the Teensy   
 		}

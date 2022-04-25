@@ -13,6 +13,7 @@ int16_t ReadWAS(uint8_t NextPinNumber = 0)
 		Wire.endTransmission();
 		Wire.requestFrom(AdsI2Caddress, 2);
 		Result = (Wire.read() << 8 | Wire.read());
+		Result = Result >> 1;
 
 
 		// do next conversion
@@ -65,8 +66,9 @@ void DoSteering()
 {
 	//************** Steering Angle ******************
 	steeringPosition = ReadWAS(PCB.AdsWASpin);
-	steeringPosition = steeringPosition >> 1;
-	helloSteerPosition = steeringPosition - 6800;
+	//steeringPosition = steeringPosition >> 1;
+	//helloSteerPosition = steeringPosition - 6800;
+	helloSteerPosition = steeringPosition - PCB.ZeroOffset;
 
 	//  ***** make sure that negative steer angle makes a left turn and positive value is a right turn *****
 	if (steerConfig.InvertWAS)
