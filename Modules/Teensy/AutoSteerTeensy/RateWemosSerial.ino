@@ -1,12 +1,11 @@
 
 byte LSB;
 byte MSB;
-
 void ReceiveWemos()
 {
 	if (Serial1.available() > 0 && !PGN32619Found)
 	{
-		MSB = Serial7.read();
+		MSB = Serial1.read();
 		PGN = MSB << 8 | LSB;
 		LSB = MSB;
 		PGN32619Found = (PGN == 32619);

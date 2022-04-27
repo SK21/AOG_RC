@@ -6,7 +6,6 @@ uint32_t LastRelaySend;
 bool RelayStatus[16];
 bool BitState;
 uint8_t IOpin;
-PCA9535 ioex;
 uint8_t Relays8[] = { 7,5,3,1,8,10,12,14 }; // 8 relay module and a PCA9535PW
 uint8_t Relays16[] = { 15,14,13,12,11,10,9,8,0,1,2,3,4,5,6,7 }; // 16 relay module and a PCA9535PW
 
@@ -14,7 +13,7 @@ void CheckRelays()
 {
     if (WifiSwitchesEnabled)
     {
-        if (millis() - WifiSwitchesTimer > 3000) // 30 second timer
+        if (millis() - WifiSwitchesTimer > 30000) // 30 second timer
         {
             // wifi switches have timed out
             WifiSwitchesEnabled = false;

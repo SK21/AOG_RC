@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   17-Apr-2022"
+# define InoDescription "AutoSteerTeensy   26-Apr-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -15,29 +15,29 @@
 
 struct PCBconfig	// 26 bytes
 {
-	uint8_t Receiver = 1;		// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
-	uint8_t NMEAserialPort = 8;	// from receiver
-	uint8_t	RTCMserialPort = 3;	// to receiver
-	uint16_t RTCMport = 5432;	// local port to listen on for RTCM data
-	uint8_t IMU = 1;			// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO
-	uint8_t IMUdelay = 90;		// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
-	uint8_t IMU_Interval = 40;	// for Sparkfun 
+	uint8_t Receiver = 1;			// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
+	uint8_t NMEAserialPort = 8;		// from receiver
+	uint8_t	RTCMserialPort = 3;		// to receiver
+	uint16_t RTCMport = 5432;		// local port to listen on for RTCM data
+	uint8_t IMU = 1;				// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO
+	uint8_t IMUdelay = 90;			// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
+	uint8_t IMU_Interval = 40;		// for Sparkfun 
 	uint16_t ZeroOffset = 6100;
-	uint8_t AdsWASpin = 0;		// ADS1115 pin for WAS
+	uint8_t AdsWASpin = 0;			// ADS1115 pin for WAS
 	uint8_t MinSpeed = 1;
 	uint8_t MaxSpeed = 15;
-	uint16_t PulseCal = 255;	// Hz/KMH X 10
+	uint16_t PulseCal = 255;		// Hz/KMH X 10
 	uint8_t RS485PortNumber = 7;	// serial port #
 	uint8_t ModuleID = 0;
 	uint8_t GyroOn = 0;
 	uint8_t	GGAlast = 1;
 	uint8_t UseRate = 0;
-	uint8_t	UseAds = 0;			// 0 use ADS1115 for WAS, 1 use Teensy analog pin for WAS
-	uint8_t RelayOnSignal = 0;	// value that turns on relays
+	uint8_t	UseAds = 0;				// 0 use ADS1115 for WAS, 1 use Teensy analog pin for WAS
+	uint8_t RelayOnSignal = 0;		// value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
-	uint8_t SwapRollPitch = 1;	// 0 use roll value for roll, 1 use pitch value for roll
+	uint8_t SwapRollPitch = 1;		// 0 use roll value for roll, 1 use pitch value for roll
 	uint8_t InvertRoll = 0;
-	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - 8 module relay board, 3 - 16 module relay board
+	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
 };
 
 PCBconfig PCB;
@@ -232,6 +232,8 @@ ADC* adc = new ADC(); // adc object for analog pins
 HardwareSerial* SerialRTCM;
 HardwareSerial* SerialNMEA;
 HardwareSerial* SerialRS485;
+
+PCA9555 ioex;
 
 void setup()
 {
@@ -463,7 +465,7 @@ void setup()
 	case 2:
 		// CMPS14
 		ErrorCount = 0;
-		Serial.println("Starting IMU ...");
+		Serial.println("Starting  CMPS14 IMU  ...");
 		while (!IMUstarted)
 		{
 			Wire.beginTransmission(CMPS14_ADDRESS);
@@ -540,6 +542,19 @@ void setup()
 
 	noTone(PINS.SpeedPulse);
 	SteerSwitch = HIGH;
+
+	// Wemos on Serial1
+	Serial1.begin(38400);
+
+	// relays
+	if (PCB.RelayControl == 2 || PCB.RelayControl == 3)
+	{
+		// PCA9555 I/O expander
+		ioex.attach(Wire);
+		ioex.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
+		ioex.direction(PCA95x5::Direction::OUT_ALL);
+		ioex.write(PCA95x5::Level::H_ALL);
+	}
 
 	Serial.println("");
 	Serial.println("Finished setup.");

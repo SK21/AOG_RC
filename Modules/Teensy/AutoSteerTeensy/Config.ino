@@ -17,12 +17,11 @@ void ReceiveConfig()
 			PCB.IMUdelay = ConfigData[8];
 			PCB.IMU_Interval = ConfigData[9];
 			PCB.ZeroOffset = ConfigData[10] | ConfigData[11] << 8;
+			PCB.RelayControl = ConfigData[12];
 
 			EEPROM.put(110, PCB);
-
-			if (ConfigData[12])  SCB_AIRCR = 0x05FA0004; //reset the Teensy 	
 		}
-		else if (PGN == 32623 && len > 10)
+		else if (PGN == 32623 && len > 9)
 		{
 			// pcb config 2
 			PCB.MinSpeed = ConfigData[2];
@@ -43,10 +42,8 @@ void ReceiveConfig()
 			if (bitRead(Commands, 7)) PCB.InvertRoll = 1; else PCB.InvertRoll = 0;
 
 			EEPROM.put(110, PCB);
-
-			if (ConfigData[10])  SCB_AIRCR = 0x05FA0004; //reset the Teensy   
 		}
-		else if (PGN == 32624 && len > 15)
+		else if (PGN == 32624 && len > 14)
 		{
 			// pcb pins
 			PINS.SteerDir = ConfigData[2];
@@ -65,7 +62,7 @@ void ReceiveConfig()
 
 			EEPROM.put(150, PINS);
 
-			if (ConfigData[15])  SCB_AIRCR = 0x05FA0004; //reset the Teensy   
+			SCB_AIRCR = 0x05FA0004; //reset the Teensy   
 		}
 
 	}

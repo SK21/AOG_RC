@@ -18,11 +18,16 @@ void ReadSwitches()
 		// on off switch
 		SWpin = digitalRead(PINS.STEERSW);
 
-		if (SWpin == LOW && !Latched) SteerSwitch = SWpin;
 		if (SWpin)
 		{
+			// pin high, turn off
 			Latched = false;
 			SteerSwitch = SWpin;
+		}
+		else
+		{
+			// pin low, turn on
+			if (!Latched) SteerSwitch = SWpin;
 		}
 		switchByte = SteerSwitch << 1;
 	}
