@@ -85,7 +85,6 @@ void Send()
 	// 2    MasterOn
 	// 3	switches 0-7
 	// 4	switches 8-15
-
 	SendData[2] = MasterOn;
 	SendData[3] = 0;
 	SendData[4] = 0;
