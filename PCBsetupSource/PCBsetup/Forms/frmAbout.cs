@@ -50,6 +50,7 @@ namespace PCBsetup.Forms
             if (Properties.Settings.Default.IsDay)
             {
                 this.BackColor = Properties.Settings.Default.DayColour;
+                textBox1.BackColor = Properties.Settings.Default.DayColour;
                 foreach (Control c in this.Controls)
                 {
                     c.ForeColor = Color.Black;

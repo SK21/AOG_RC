@@ -17,7 +17,7 @@ namespace PCBsetup
         //9     Report Interval
         //10    Zero offset Lo
         //11    Zero offset Hi
-        //12    Restart module
+        //12    RelayControl 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
 
         private byte[] cData = new byte[13];
         private frmPCBsettings cf;
@@ -29,7 +29,7 @@ namespace PCBsetup
             cData[1] = 127;
         }
 
-        public void Send(bool RestartModule = false)
+        public void Send()
         {
             byte tmp;
             double val;
@@ -60,7 +60,8 @@ namespace PCBsetup
             cData[10] = (byte)val;
             cData[11] = (byte)((int)val >> 8);
 
-            if (RestartModule) cData[12] = 1; else cData[12] = 0;
+            byte.TryParse(cf.mf.Tls.LoadProperty("RelayControl"), out tmp);
+            cData[12] = tmp;
 
             cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
         }

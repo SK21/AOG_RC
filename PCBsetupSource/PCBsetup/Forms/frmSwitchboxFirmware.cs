@@ -62,13 +62,20 @@ namespace PCBsetup.Forms
         {
             try
             {
-                mf.CommPort.CloseSCport();
-                progressBar1.Visible = true;
-                ProgressCount = 0;
-                bntOK.Enabled = false;
-                StartUpload = DateTime.Now;
-                WatchDogTimer.Enabled = true;
-                worker.RunWorkerAsync();
+                if (mf.CommPort.IsOpen())   // to prove comm port exists
+                {
+                    mf.CommPort.CloseSCport();
+                    progressBar1.Visible = true;
+                    ProgressCount = 0;
+                    bntOK.Enabled = false;
+                    StartUpload = DateTime.Now;
+                    WatchDogTimer.Enabled = true;
+                    worker.RunWorkerAsync();
+                }
+                else
+                {
+                    mf.Tls.ShowHelp("Comm Port not open.", this.Text, 3000);
+                }
             }
             catch (Exception ex)
             {

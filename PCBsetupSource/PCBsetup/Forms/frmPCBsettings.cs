@@ -100,6 +100,7 @@ namespace PCBsetup.Forms
             tbIMUinterval.Text = "40";
             tbZeroOffset.Text = "6100";
             tbAdsWasPin.Text = "0";
+            cbRelayControl.SelectedIndex = 2;
 
             tbMinSpeed.Text = "1";
             tbMaxSpeed.Text = "15";
@@ -140,7 +141,7 @@ namespace PCBsetup.Forms
                 PGN32623 PGN2 = new PGN32623(this);
                 PGN2.Send();
                 PGN32624 PGN3 = new PGN32624(this);
-                PGN3.Send(true);
+                PGN3.Send();
 
                 mf.Tls.ShowHelp("Sent to module.", this.Text, 3000);
                 for (int i = 0; i < 3; i++)
@@ -253,6 +254,9 @@ namespace PCBsetup.Forms
                 byte.TryParse(mf.Tls.LoadProperty("IMU"), out tmp);
                 cbIMU.SelectedIndex = tmp;
 
+                byte.TryParse(mf.Tls.LoadProperty("RelayControl"), out tmp);
+                cbRelayControl.SelectedIndex = tmp;
+
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
                 {
@@ -279,6 +283,7 @@ namespace PCBsetup.Forms
                 // combo boxes
                 mf.Tls.SaveProperty("GPSreceiver", cbReceiver.SelectedIndex.ToString());
                 mf.Tls.SaveProperty("IMU", cbIMU.SelectedIndex.ToString());
+                mf.Tls.SaveProperty("RelayControl", cbRelayControl.SelectedIndex.ToString());
 
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
@@ -529,6 +534,21 @@ namespace PCBsetup.Forms
             Initializing = true;
             LoadSettings();
             Initializing = false;
+        }
+
+        private void cbReceiver_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void cbIMU_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void cbRelayControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

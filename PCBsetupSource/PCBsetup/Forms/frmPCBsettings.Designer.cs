@@ -99,6 +99,8 @@
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
+            this.cbRelayControl = new System.Windows.Forms.ComboBox();
+            this.label28 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -118,6 +120,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label28);
+            this.tabPage1.Controls.Add(this.cbRelayControl);
             this.tabPage1.Controls.Add(this.cbIMU);
             this.tabPage1.Controls.Add(this.tbZeroOffset);
             this.tabPage1.Controls.Add(this.tbIMUinterval);
@@ -155,6 +159,7 @@
             this.cbIMU.Name = "cbIMU";
             this.cbIMU.Size = new System.Drawing.Size(187, 32);
             this.cbIMU.TabIndex = 15;
+            this.cbIMU.SelectedIndexChanged += new System.EventHandler(this.cbIMU_SelectedIndexChanged);
             // 
             // tbZeroOffset
             // 
@@ -193,7 +198,7 @@
             // 
             // tbRTCMserialPort
             // 
-            this.tbRTCMserialPort.Location = new System.Drawing.Point(233, 141);
+            this.tbRTCMserialPort.Location = new System.Drawing.Point(233, 142);
             this.tbRTCMserialPort.Name = "tbRTCMserialPort";
             this.tbRTCMserialPort.Size = new System.Drawing.Size(118, 29);
             this.tbRTCMserialPort.TabIndex = 10;
@@ -201,7 +206,7 @@
             // 
             // tbNMEAserialPort
             // 
-            this.tbNMEAserialPort.Location = new System.Drawing.Point(233, 97);
+            this.tbNMEAserialPort.Location = new System.Drawing.Point(233, 99);
             this.tbNMEAserialPort.Name = "tbNMEAserialPort";
             this.tbNMEAserialPort.Size = new System.Drawing.Size(118, 29);
             this.tbNMEAserialPort.TabIndex = 9;
@@ -219,6 +224,7 @@
             this.cbReceiver.Name = "cbReceiver";
             this.cbReceiver.Size = new System.Drawing.Size(187, 32);
             this.cbReceiver.TabIndex = 8;
+            this.cbReceiver.SelectedIndexChanged += new System.EventHandler(this.cbReceiver_SelectedIndexChanged);
             // 
             // label8
             // 
@@ -841,6 +847,30 @@
             this.bntOK.UseVisualStyleBackColor = true;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
+            // cbRelayControl
+            // 
+            this.cbRelayControl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRelayControl.FormattingEnabled = true;
+            this.cbRelayControl.Items.AddRange(new object[] {
+            "No Relays",
+            "RS485",
+            "PCA9555  8 relays",
+            "PCA9555  16 relays"});
+            this.cbRelayControl.Location = new System.Drawing.Point(164, 228);
+            this.cbRelayControl.Name = "cbRelayControl";
+            this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
+            this.cbRelayControl.TabIndex = 16;
+            this.cbRelayControl.SelectedIndexChanged += new System.EventHandler(this.cbRelayControl_SelectedIndexChanged);
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(7, 231);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(122, 24);
+            this.label28.TabIndex = 17;
+            this.label28.Text = "Relay Control";
+            // 
             // frmPCBsettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -946,5 +976,7 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.ComboBox cbRelayControl;
     }
 }

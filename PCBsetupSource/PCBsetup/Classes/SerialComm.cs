@@ -53,7 +53,7 @@ namespace PCBsetup
                         ArduinoPort.Close();
                         cSerialActive = false;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         throw new InvalidOperationException("Could not close port.");
                     }
@@ -88,7 +88,7 @@ namespace PCBsetup
                         {
                             ArduinoPort.Open();
                         }
-                        catch (Exception e)
+                        catch (Exception )
                         {
                             mf.Tls.SaveProperty("SCportSuccessful" + ID, "false");
                             throw new InvalidOperationException("Could not open port.");

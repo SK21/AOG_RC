@@ -24,9 +24,8 @@ namespace PCBsetup
         //          - flow on high
         //          - swap pitch for roll
         //          - invert roll
-        //10    Restart module
 
-        private byte[] cData = new byte[11];
+        private byte[] cData = new byte[10];
         private frmPCBsettings cf;
         private string Name;
 
@@ -37,7 +36,7 @@ namespace PCBsetup
             cData[1] = 127;
         }
 
-        public void Send(bool RestartModule = false)
+        public void Send()
         {
             bool Checked;
             double val;
@@ -70,8 +69,6 @@ namespace PCBsetup
                 bool.TryParse(cf.mf.Tls.LoadProperty(Name), out Checked);
                 if (Checked) cData[9] |= (byte)Math.Pow(2, i);
             }
-
-            if (RestartModule) cData[10] = 1; else cData[10] = 0;
 
             cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
         }

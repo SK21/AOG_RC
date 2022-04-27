@@ -20,9 +20,8 @@ namespace PCBsetup
         //12    Rate PWM
         //13    Speed Pulse
         //14    RS485 send enable
-        //15    Restart module
 
-        private byte[] cData = new byte[16];
+        private byte[] cData = new byte[15];
         private frmPCBsettings cf;
 
         public PGN32624(frmPCBsettings CalledFrom)
@@ -32,7 +31,7 @@ namespace PCBsetup
             cData[1] = 127;
         }
 
-        public void Send(bool RestartModule = false)
+        public void Send()
         {
             byte val;
 
@@ -41,8 +40,6 @@ namespace PCBsetup
                 byte.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[i + 10].Name), out val);
                 cData[i] = val;
             }
-
-            if (RestartModule) cData[15] = 1; else cData[15] = 0;
 
             cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
         }
