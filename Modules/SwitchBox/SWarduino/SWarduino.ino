@@ -1,8 +1,7 @@
-
 #include <EtherCard.h>
-#include <EEPROM.h> 
+#include <EEPROM.h>
 
-# define InoDescription "SWarduino  :  22-Apr-2022"
+# define InoDescription "SWarduino  :  29-Apr-2022"
 // Nano board for rate control switches
 
 #define UseEthernet 0
@@ -18,35 +17,25 @@ struct PCBconfig
 	uint8_t	MasterOff = 3;
 	uint8_t	RateUp = A3;
 	uint8_t RateDown = A2;
+	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
 };
 
 PCBconfig PCB;
 
 #if UseEthernet
-	// ethernet interface ip address
-	static byte ArduinoIP[] = { 192,168,5,188 };
+// local ports on Arduino
+unsigned int ListeningPort = 28888;	// to listen on
+unsigned int SourcePort = 6200;		// to send from
 
-	// ethernet interface Mac address
-	static byte LocalMac[] = { 0x70,0x62,0x21,0x2D,0x31,188 };
+// ethernet destination - Rate Controller
+byte DestinationIP[] = { 192, 168,PCB.IPpart3, 255 };	// broadcast 255
+unsigned int DestinationPort = 29999; // Rate Controller listening port
 
-	// gateway ip address
-	static byte gwip[] = { 192,168,5,1 };
-	//DNS- you just need one anyway
-	static byte myDNS[] = { 8,8,8,8 };
-	//mask
-	static byte mask[] = { 255,255,255,0 };
-
-	// local ports on Arduino
-	unsigned int SourcePort = 6200;		// to send from 
-
-	// ethernet destination - Rate Controller
-	static byte DestinationIP[] = { 192, 168, 5, 255 };	// broadcast 255
-	unsigned int DestinationPort = 29999; // Rate Controller listening port 
-
-	byte Ethernet::buffer[500]; // udp send and receive buffer
+byte Ethernet::buffer[500]; // udp send and receive buffer
+bool EthernetEnabled = false;
 #endif
 
-//PGN 32618 to send data back 
+//PGN 32618 to send data back
 byte toSend[] = { 106,127,0,0,0 };
 byte Pins[] = { 0,0,0,0,0,0,0,0,0 };
 
@@ -71,7 +60,7 @@ void setup()
 	Serial.println();
 	Serial.println(InoDescription);
 	Serial.println();
-	
+
 	// pcb data
 	EEPROM.get(0, EEread);              // read identifier
 	if (EEread != PCB_Ident)
@@ -96,11 +85,43 @@ void setup()
 	pinMode(PCB.RateUp, INPUT_PULLUP);
 	pinMode(PCB.RateDown, INPUT_PULLUP);
 
+	Serial.print(PCB.IPpart3);
+
 #if UseEthernet
 	Serial.println("Starting Ethernet ...");
-	if (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) == 0)
-		Serial.println(F("Failed to access Ethernet controller"));
+	// ethernet interface ip address
+	byte ArduinoIP[] = { 192,168,PCB.IPpart3,188 };
+
+	// ethernet interface Mac address
+	byte LocalMac[] = { 0x70,0x62,0x21,0x2D,0x31,188 };
+
+	// gateway ip address
+	byte gwip[] = { 192,168,PCB.IPpart3,1 };
+
+	//DNS- you just need one anyway
+	static byte myDNS[] = { 8,8,8,8 };
+
+	//mask
+	static byte mask[] = { 255,255,255,0 };
+
+	DestinationIP[3] = PCB.IPpart3;
+
+	while (!EthernetEnabled)
+	{
+		EthernetEnabled = (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) != 0);
+		Serial.print(".");
+	}
+
+	Serial.println("");
+	Serial.println("Ethernet controller found.");
+	ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
+	ether.printIp("IP Address:     ", ether.myip);
+
+	//register sub for received data
+	ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
 #endif
+	pinMode(LED_BUILTIN, OUTPUT);
+	digitalWrite(LED_BUILTIN, LOW);
 
 	Serial.println("");
 	Serial.println("Finished Setup.");
@@ -114,18 +135,17 @@ void loop()
 
 		// read switches
 		// toSend[2]
-		Pins[0] = !digitalRead(PCB.Auto);			
-		Pins[1] = !digitalRead(PCB.MasterOn);		
-		Pins[2] = !digitalRead(PCB.MasterOff);	
-		Pins[3] = !digitalRead(PCB.RateUp);		
-		Pins[4] = !digitalRead(PCB.RateDown);		
+		Pins[0] = !digitalRead(PCB.Auto);
+		Pins[1] = !digitalRead(PCB.MasterOn);
+		Pins[2] = !digitalRead(PCB.MasterOff);
+		Pins[3] = !digitalRead(PCB.RateUp);
+		Pins[4] = !digitalRead(PCB.RateDown);
 
 		// toSend[3]
-		Pins[5] = !digitalRead(PCB.SW0);			
-		Pins[6] = !digitalRead(PCB.SW1);			
-		Pins[7] = !digitalRead(PCB.SW2);			
-		Pins[8] = !digitalRead(PCB.SW3);			
-
+		Pins[5] = !digitalRead(PCB.SW0);
+		Pins[6] = !digitalRead(PCB.SW1);
+		Pins[7] = !digitalRead(PCB.SW2);
+		Pins[8] = !digitalRead(PCB.SW3);
 
 		// build data
 		toSend[2] = 0;
@@ -138,13 +158,13 @@ void loop()
 
 		for (int i = 0; i < 4; i++)
 		{
-			if (Pins[i+5]) toSend[3] = toSend[3] | (1 << i);
+			if (Pins[i + 5]) toSend[3] = toSend[3] | (1 << i);
 		}
 
 		// PGN 32618
 #if UseEthernet
 			// send UDP
-			ether.sendUdp(toSend, sizeof(toSend), SourcePort, DestinationIP, DestinationPort);
+		ether.sendUdp(toSend, sizeof(toSend), SourcePort, DestinationIP, DestinationPort);
 #endif
 
 		// send serial
@@ -161,18 +181,19 @@ void loop()
 
 #if UseEthernet
 	//this must be called for ethercard functions to work.
-		ether.packetLoop(ether.packetReceive());
+	ether.packetLoop(ether.packetReceive());
 #endif
 }
 
 void ReceiveSerial()
 {
 	// pins config
-	if (Serial.available() > 0)
+	if (Serial.available())
 	{
+		digitalWrite(LED_BUILTIN, HIGH);
 		if (PGN32627Found)
 		{
-			if (Serial.available() > 8)
+			if (Serial.available() > 9)
 			{
 				PGN32627Found = false;
 				PCB.SW0 = Serial.read();
@@ -184,6 +205,7 @@ void ReceiveSerial()
 				PCB.MasterOff = Serial.read();
 				PCB.RateUp = Serial.read();
 				PCB.RateDown = Serial.read();
+				PCB.IPpart3 = Serial.read();
 
 				EEPROM.put(10, PCB);
 				resetFunc();
