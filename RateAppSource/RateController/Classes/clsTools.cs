@@ -12,7 +12,7 @@ namespace RateController
     {
         private string cAppName = "RateController";
         private string cAppVersion = "2.2.0";
-        private string cVersionDate = "22-Apr-2022";
+        private string cVersionDate = "28-Apr-2022";
 
         private static Hashtable ht;
         private string cPropertiesFile;
