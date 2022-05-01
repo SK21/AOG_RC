@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   26-Apr-2022"
+# define InoDescription "AutoSteerTeensy   30-Apr-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -11,14 +11,14 @@
 #include "zNMEAParser.h"	
 #include <ADC.h>
 #include <ADC_util.h>
-#include <PCA95x5.h>		// https://github.com/hideakitai/PCA95x5
+#include "PCA95x5_AOG.h"	// modified from https://github.com/hideakitai/PCA95x5
 
 struct PCBconfig	// 26 bytes
 {
 	uint8_t Receiver = 1;			// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
 	uint8_t NMEAserialPort = 8;		// from receiver
 	uint8_t	RTCMserialPort = 3;		// to receiver
-	uint16_t RTCMport = 5432;		// local port to listen on for RTCM data
+	uint16_t RTCMport = 2233;		// local port to listen on for RTCM data
 	uint8_t IMU = 1;				// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO
 	uint8_t IMUdelay = 90;			// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
 	uint8_t IMU_Interval = 40;		// for Sparkfun 
@@ -38,6 +38,7 @@ struct PCBconfig	// 26 bytes
 	uint8_t SwapRollPitch = 1;		// 0 use roll value for roll, 1 use pitch value for roll
 	uint8_t InvertRoll = 0;
 	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
+	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
 };
 
 PCBconfig PCB;
@@ -76,14 +77,6 @@ uint32_t RateLoopLast = RateLoopTime;
 const uint16_t RateSendTime = 200;
 uint32_t RateSendLast = RateSendTime;
 
-// ethernet interface ip address
-IPAddress LocalIP(192, 168, 5, 126);
-
-// ethernet mac address - must be unique on your network
-static uint8_t LocalMac[] = { 0x00,0x00,0x56,0x00,0x00,126 };
-
-// ethernet destination - AGIO
-IPAddress AGIOip(192, 168, 5, 255);
 uint16_t  AGIOport = 9999; // port that AGIO listens on
 
 // UDP Steering traffic, to and from AGIO
@@ -191,7 +184,11 @@ float MeterCal[MaxFlowSensorCount];
 byte RelayLo;
 byte RelayHi;
 bool AutoOn = true;
+
 unsigned int PGN;
+byte LSB;
+byte MSB;
+
 bool PGN32614Found;
 bool PGN32616Found;
 bool PGN32619Found;
@@ -234,6 +231,7 @@ HardwareSerial* SerialNMEA;
 HardwareSerial* SerialRS485;
 
 PCA9555 ioex;
+uint16_t Information = 0;
 
 void setup()
 {
@@ -345,7 +343,7 @@ void setup()
 
 		parser.setErrorHandler(errorHandler);
 		parser.addHandler("G-GGA", GGA_Handler);
-		parser.addHandler("G-VTG", VTG_Handler);
+		//parser.addHandler("G-VTG", VTG_Handler);
 
 		static char NMEAreceiveBuffer[512];
 		static char NMEAsendBuffer[512];
@@ -406,6 +404,9 @@ void setup()
 
 	// ethernet start
 	Serial.println("Starting Ethernet ...");
+	IPAddress LocalIP(192, 168, PCB.IPpart3, 126);
+	static uint8_t LocalMac[] = { 0x00,0x00,0x56,0x00,0x00,126 };
+
 	Ethernet.begin(LocalMac, 0);
 	Ethernet.setLocalIP(LocalIP);
 	Serial.print("IP Address: ");
@@ -556,6 +557,7 @@ void setup()
 		ioex.write(PCA95x5::Level::H_ALL);
 	}
 
+	Information = PCB.IPpart3;
 	Serial.println("");
 	Serial.println("Finished setup.");
 }
@@ -591,6 +593,8 @@ void Blink()
 		if (State) digitalWrite(LED_BUILTIN, HIGH);
 		else digitalWrite(LED_BUILTIN, LOW);
 		BlinkTime = millis();
+
+		Serial.println(Information);
 	}
 }
 
@@ -598,6 +602,7 @@ uint32_t SpeedPulseTime;
 void SendSpeedPulse()
 {
 	// https://discourse.agopengps.com/t/get-feed-rate-from-ago-and-transform-it-into-weedkiller-sprayer-computer-compatible-pulses/2958/39
+	// PulseCal: hz/mph - 41.0, hz/kmh - 25.5
 
 	if (millis() - SpeedPulseTime > 400) //This section runs every 400 millis.  It gets speed and changes the frequency of the tone generator.
 	{

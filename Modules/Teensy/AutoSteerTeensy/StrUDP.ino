@@ -1,3 +1,4 @@
+IPAddress SteerSendIP(192, 168, PCB.IPpart3, 255);
 
 void ReceiveSteerUDP()
 {
@@ -75,7 +76,7 @@ void ReceiveSteerUDP()
                     helloFromAutoSteer[9] = switchByte;
 
                     //off to AOG
-                    UDPsteering.beginPacket(AGIOip, AGIOport);
+                    UDPsteering.beginPacket(SteerSendIP, AGIOport);
                     UDPsteering.write(helloFromAutoSteer, sizeof(helloFromAutoSteer));
                     UDPsteering.endPacket();
 
@@ -131,7 +132,7 @@ void SendSteerUDP()
     PGN_253[sizeof(PGN_253) - 1] = CK_A;
 
     //off to AOG
-    UDPsteering.beginPacket(AGIOip, AGIOport);
+    UDPsteering.beginPacket(SteerSendIP, AGIOport);
     UDPsteering.write(PGN_253, sizeof(PGN_253));
     UDPsteering.endPacket();
 
@@ -149,7 +150,7 @@ void SendSteerUDP()
         PGN_250[sizeof(PGN_250) - 1] = CK_A;
 
         //off to AOG
-        UDPsteering.beginPacket(AGIOip, AGIOport);
+        UDPsteering.beginPacket(SteerSendIP, AGIOport);
         UDPsteering.write(PGN_250, sizeof(PGN_250));
         UDPsteering.endPacket();
     }

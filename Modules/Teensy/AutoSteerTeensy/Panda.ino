@@ -1,30 +1,4 @@
-
-bool isTriggered = false;
-uint32_t PandalastTime = PCB.IMUdelay;
-uint32_t currentTime = PCB.IMUdelay;
-
-void DoPanda()
-{
-     // NMEA
-    if (SerialNMEA->available()) parser << SerialNMEA->read();
-
-    // RTCM
-    int packetSize = UDPgps.parsePacket();
-    if (packetSize)
-    {
-        UDPgps.read(GPSbuffer, packetSize);
-        SerialRTCM->write(GPSbuffer, packetSize);
-    }
-
-    // IMU
-    currentTime = millis();
-    if (isTriggered && currentTime - PandalastTime > PCB.IMUdelay)
-    {
-        imuHandler();
-        isTriggered = false;
-        currentTime = millis();
-    }
-}
+IPAddress PandaSendIP(192, 168, PCB.IPpart3, 255);
 
 //Conversion to Hexidecimal
 const char* asciiHex = "0123456789ABCDEF";
@@ -54,6 +28,59 @@ char imuRoll[6];
 char imuPitch[6];
 char imuYawRate[6];
 
+bool isTriggered = false;
+uint32_t PandalastTime = PCB.IMUdelay;
+int16_t Ptemp;
+
+void DoPanda()
+{
+     // NMEA, from receiver to parser
+    if (PCB.NMEAserialPort == 0)
+    {
+        // usb serial
+        if (Serial.available()) parser << Serial.read();
+    }
+    else
+    {
+        // hardware serial
+        if (SerialNMEA->available()) parser << SerialNMEA->read();
+    }
+
+    // RTCM, from AGIO to receiver
+    int packetSize = UDPgps.parsePacket();
+    if (packetSize)
+    {
+        UDPgps.read(GPSbuffer, packetSize);
+        SerialRTCM->write(GPSbuffer, packetSize);
+    }
+
+    // IMU
+    if (isTriggered && millis() - PandalastTime > PCB.IMUdelay)
+    {
+        imuHandler();
+        isTriggered = false;
+    }
+}
+
+void imuHandler()
+{
+    ReadIMU();
+
+    Ptemp = (int16_t)IMU_Heading;
+    itoa(Ptemp, imuHeading, 10);
+
+    Ptemp = (int16_t)IMU_Roll;
+    itoa(Ptemp, imuRoll, 10);
+
+    Ptemp = (int16_t)IMU_Pitch;
+    itoa(Ptemp, imuPitch, 10);
+
+    if (PCB.GyroOn)
+    {
+        Ptemp = (int16_t)IMU_YawRate;
+        itoa(Ptemp, imuYawRate, 10);
+    }
+}
 
 // if odd characters showed up.
 void errorHandler()
@@ -89,42 +116,7 @@ void GGA_Handler() //Rec'd GGA
     //time of last DGPS update
     if (parser.getArg(12, ageDGPS));
 
-    if (PCB.GGAlast) BuildPANDA();
-}
-
-void VTG_Handler()
-{
-    //vtg heading
-    if (parser.getArg(0, vtgHeading));
-
-    //vtg Speed knots
-    if (parser.getArg(4, speedKnots));
-    if (!PCB.GGAlast) BuildPANDA();
-}
-
-int16_t Ptemp;
-void imuHandler()
-{
-    ReadIMU();
-
-    Ptemp = (int16_t)IMU_Heading;
-    itoa(Ptemp, imuHeading, 10);
-
-    Ptemp = (int16_t)IMU_Roll;
-    itoa(Ptemp, imuRoll, 10);
-
-    Ptemp = (int16_t)IMU_Pitch;
-    itoa(Ptemp, imuPitch, 10);
-
-    if (PCB.GyroOn)
-    {
-        Ptemp = (int16_t)IMU_YawRate;
-        itoa(Ptemp, imuYawRate, 10);
-    }
-}
-
-void BuildPANDA(void)
-{
+    // build Panda
     strcpy(nme, "");
 
     strcat(nme, "$PANDA,");
@@ -190,7 +182,7 @@ void BuildPANDA(void)
     isTriggered = true;
 
     uint16_t len = strlen(nme);
-    UDPgps.beginPacket(AGIOip, AGIOport);
+    UDPgps.beginPacket(PandaSendIP, AGIOport);
     UDPgps.write(nme, len);
     UDPgps.endPacket();
 }

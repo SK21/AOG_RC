@@ -1,6 +1,4 @@
 
-byte LSB;
-byte MSB;
 void ReceiveWemos()
 {
 	if (Serial1.available() > 0 && !PGN32619Found)

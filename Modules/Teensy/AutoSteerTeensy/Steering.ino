@@ -91,7 +91,7 @@ void DoSteering()
 
 		pwmDrive = 0;
 
-		// release steer motor 
+		// release steer relay 
 		digitalWrite(PINS.SteerSW_Relay, LOW);
 	}
 	else
@@ -130,7 +130,7 @@ void DoSteering()
 			pwmDrive += 128;          // add Center Pos.
 		}
 
-		// engage steer motor
+		// engage steer relay
 		digitalWrite(PINS.SteerSW_Relay, HIGH);
 	}
 

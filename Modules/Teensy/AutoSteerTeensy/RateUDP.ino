@@ -1,3 +1,4 @@
+IPAddress RateSendIP(192, 168, PCB.IPpart3, 255);
 
 void SendRateUDP()
 {
@@ -38,7 +39,7 @@ void SendRateUDP()
 	RateSend[10] = Temp;
 
 	// send to RateController
-	UDPrate.beginPacket(AGIOip, DestinationPortRate);
+	UDPrate.beginPacket(RateSendIP, DestinationPortRate);
 	UDPrate.write(RateSend, sizeof(RateSend));
 	UDPrate.endPacket();
 }

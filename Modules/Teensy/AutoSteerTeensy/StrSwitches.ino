@@ -2,7 +2,7 @@ uint32_t PulseStart;
 int SwitchPulseCount;
 bool PulseRead;
 bool PulseLast;
-bool Latched;
+bool LatchedOff;
 int8_t SWpin;
 
 void ReadSwitches()
@@ -21,13 +21,13 @@ void ReadSwitches()
 		if (SWpin)
 		{
 			// pin high, turn off
-			Latched = false;
+			LatchedOff = false;
 			SteerSwitch = SWpin;
 		}
 		else
 		{
 			// pin low, turn on
-			if (!Latched) SteerSwitch = SWpin;
+			if (!LatchedOff) SteerSwitch = SWpin;
 		}
 		switchByte = SteerSwitch << 1;
 	}
@@ -76,7 +76,7 @@ void ReadSwitches()
 				switchByte = SteerSwitch << 1;
 				SWprevious = HIGH;
 				SwitchPulseCount = 0;
-				Latched = true;
+				LatchedOff = true;
 			}
 		}
 	}
@@ -92,7 +92,7 @@ void ReadSwitches()
 			SteerSwitch = HIGH;
 			switchByte = SteerSwitch << 1;
 			SWprevious = LOW;
-			Latched = true;
+			LatchedOff = true;
 		}
 	}
 
@@ -107,7 +107,7 @@ void ReadSwitches()
 			SteerSwitch = HIGH;
 			switchByte = SteerSwitch << 1;
 			SWprevious = LOW;
-			Latched = true;
+			LatchedOff = true;
 		}
 	}
 
