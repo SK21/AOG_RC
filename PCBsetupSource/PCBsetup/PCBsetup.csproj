@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>9</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -182,6 +182,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\clsTextBox.cs" />
+    <Compile Include="Classes\clsTextBoxes.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\SerialComm.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
@@ -263,6 +265,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmFirmware.resx">
       <DependentUpon>frmFirmware.cs</DependentUpon>
@@ -326,8 +329,6 @@
     <None Include="Resources\Switchbox.ino.hex" />
     <None Include="Resources\SwitchboxOldBootLoader.ino.hex" />
     <None Include="Resources\SWNE.ino.hex" />
-    <None Include="Resources\SWOB.ino.hex" />
-    <None Include="Resources\SWOBNE.ino.hex" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -369,6 +370,8 @@
     <None Include="Resources\OpenFile.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\SWOB.ino.hex" />
+    <None Include="Resources\SWOBNE.ino.hex" />
     <None Include="Resources\UpArrow64.png" />
   </ItemGroup>
   <ItemGroup>

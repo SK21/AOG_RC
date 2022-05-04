@@ -65,7 +65,7 @@ namespace PCBsetup.Forms
         private void btnDefault_Click(object sender, EventArgs e)
         {
             UseDefault = true;
-            tbHexfile.Text = "Default file version date: " + mf.Tls.TeensieFirmwareVersion();
+            tbHexfile.Text = "Default file version date: " + mf.Tls.TeensyFirmwareVersion();
         }
 
         private void btnDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -80,6 +80,7 @@ namespace PCBsetup.Forms
         {
             try
             {
+                mf.CommPort.Close();
                 string filename = "";
                 var teensy = lbTeensies.SelectedItem as ITeensy;
                 if (teensy != null)
@@ -156,6 +157,9 @@ namespace PCBsetup.Forms
         {
             mf.Tls.LoadFormData(this);
             this.BackColor = PCBsetup.Properties.Settings.Default.DayColour;
+
+            UseDefault = true;
+            tbHexfile.Text = "Default file version date: " + mf.Tls.TeensyFirmwareVersion();
         }
 
         private void lbTeensies_HelpRequested(object sender, HelpEventArgs hlpevent)

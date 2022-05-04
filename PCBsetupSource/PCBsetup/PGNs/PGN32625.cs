@@ -10,12 +10,13 @@ namespace PCBsetup
         //1     HeaderHi    127
         //2     Module ID
         //3     flow sensor count
-        //4     Commands
+        //4     IP address
+        //5     Commands
         //      - Use MCP23107 
         //      - Relay on high
         //      - Flow on high
 
-        private byte[] cData = new byte[5];
+        private byte[] cData = new byte[6];
         private frmNanoSettings cf;
         private string Name;
 
@@ -29,27 +30,24 @@ namespace PCBsetup
         public bool Send()
         {
             bool Checked;
-            double val;
             bool Result = false;
 
             // text boxes
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[0].Name), out val);
-            cData[2] = (byte)val;
-
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[1].Name), out val);
-            cData[3] = (byte)val;
+            cData[2] = (byte)cf.Boxes.Value("tbNanoModuleID");
+            cData[3] = (byte)cf.Boxes.Value("tbNanoSensorCount");
+            cData[4] = (byte)cf.Boxes.Value("tbNanoIP");
 
             // check boxes
-            cData[4] = 0;
+            cData[5] = 0;
             for (int i = 0; i < cf.CKs.Length; i++)
             {
                 Name = cf.CKs[i].Name;
                 bool.TryParse(cf.mf.Tls.LoadProperty(Name), out Checked);
-                if (Checked) cData[4] |= (byte)Math.Pow(2, i);
+                if (Checked) cData[5] |= (byte)Math.Pow(2, i);
             }
 
-            Result = cf.mf.CommPort.SendData(cData);
-            cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+            Result = cf.mf.CommPort.Send(cData);
+            //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
             return Result;
         }
     }

@@ -13,17 +13,16 @@ namespace PCBsetup
         //4     Speed pulse cal X 10 Lo
         //5     Speed pulse cal X 10 Hi
         //6     ADS1115 WAS pin
-        //7     RS485 Serial port, 1-8
+        //7     RS485 Serial port, 0-8
         //8     Module ID
         //9     Commands
-        //          - Gyro on
-        //          - GGA last
         //          - use rate control
         //          - use ADS1115
         //          - relay on high
         //          - flow on high
         //          - swap pitch for roll
         //          - invert roll
+        //          - Gyro on
 
         private byte[] cData = new byte[10];
         private frmPCBsettings cf;
@@ -36,30 +35,22 @@ namespace PCBsetup
             cData[1] = 127;
         }
 
-        public void Send()
+        public bool Send()
         {
             bool Checked;
             double val;
 
             // text boxes
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[6].Name), out val);
-            cData[2] = (byte)val;
+            cData[2] = (byte)cf.Boxes.Value("tbMinSpeed");
+            cData[3] = (byte)cf.Boxes.Value("tbMaxSpeed");
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[7].Name), out val);
-            cData[3] = (byte)val;
-
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[8].Name), out val);
+            val = (byte)cf.Boxes.Value("tbPulseCal");
             cData[4] = (byte)(val * 10);
             cData[5] = (byte)((int)(val * 10) >> 8);
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[9].Name), out val);
-            cData[6] = (byte)val;
-
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[10].Name), out val);
-            cData[7] = (byte)val;
-
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[11].Name), out val);
-            cData[8] = (byte)val;
+            cData[6] = (byte)cf.Boxes.Value("tbAdsWasPin");
+            cData[7] = (byte)cf.Boxes.Value("tbRS485port");
+            cData[8] = (byte)cf.Boxes.Value("tbModule");
 
             // check boxes
             cData[9] = 0;
@@ -70,7 +61,10 @@ namespace PCBsetup
                 if (Checked) cData[9] |= (byte)Math.Pow(2, i);
             }
 
-            cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+            bool Result = cf.mf.CommPort.Send(cData);
+            //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+
+            return Result;
         }
     }
 }

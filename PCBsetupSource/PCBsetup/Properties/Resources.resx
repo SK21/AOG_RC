@@ -166,26 +166,11 @@
   <data name="RateOBNE_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RateOBNE.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="RateOBNE_ino_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RateOBNE.ino..hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="RateOB_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RateOB.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="Rate_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Rate.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="RCnanoOldBootLoader_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RCnanoOldBootLoader.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="RCnano_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RCnano.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="SwitchboxOldBootLoader_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SwitchboxOldBootLoader.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Switchbox_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Switchbox.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="SWNE_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SWNE.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

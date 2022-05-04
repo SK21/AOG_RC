@@ -92,7 +92,7 @@
             this.bntOK.Location = new System.Drawing.Point(387, 235);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 5;
+            this.bntOK.TabIndex = 1;
             this.bntOK.Text = "Close";
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.bntOK.UseVisualStyleBackColor = true;
@@ -105,7 +105,7 @@
             this.btnUpload.Location = new System.Drawing.Point(262, 235);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(115, 72);
-            this.btnUpload.TabIndex = 6;
+            this.btnUpload.TabIndex = 0;
             this.btnUpload.Text = "Upload";
             this.btnUpload.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnUpload.UseVisualStyleBackColor = true;
@@ -118,7 +118,7 @@
             this.btnDefault.Location = new System.Drawing.Point(137, 235);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(115, 72);
-            this.btnDefault.TabIndex = 7;
+            this.btnDefault.TabIndex = 2;
             this.btnDefault.Text = "Use Default";
             this.btnDefault.UseVisualStyleBackColor = true;
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
@@ -131,7 +131,7 @@
             this.btnBrowse.Location = new System.Drawing.Point(12, 235);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(115, 72);
-            this.btnBrowse.TabIndex = 8;
+            this.btnBrowse.TabIndex = 3;
             this.btnBrowse.Text = "Browse";
             this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnBrowse.UseVisualStyleBackColor = true;
@@ -156,7 +156,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmFirmware";

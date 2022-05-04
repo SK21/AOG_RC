@@ -51,6 +51,9 @@
             this.label8 = new System.Windows.Forms.Label();
             this.tbRateDown = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.lbIPpart4 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.tbIPaddress = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnLoadDefaults
@@ -104,7 +107,7 @@
             // 
             // tbMasterOn
             // 
-            this.tbMasterOn.Location = new System.Drawing.Point(195, 62);
+            this.tbMasterOn.Location = new System.Drawing.Point(171, 62);
             this.tbMasterOn.Name = "tbMasterOn";
             this.tbMasterOn.Size = new System.Drawing.Size(58, 29);
             this.tbMasterOn.TabIndex = 27;
@@ -113,7 +116,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(55, 64);
+            this.label2.Location = new System.Drawing.Point(31, 64);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(97, 24);
             this.label2.TabIndex = 26;
@@ -121,7 +124,7 @@
             // 
             // tbAuto
             // 
-            this.tbAuto.Location = new System.Drawing.Point(195, 12);
+            this.tbAuto.Location = new System.Drawing.Point(171, 12);
             this.tbAuto.Name = "tbAuto";
             this.tbAuto.Size = new System.Drawing.Size(58, 29);
             this.tbAuto.TabIndex = 25;
@@ -130,7 +133,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(55, 14);
+            this.label1.Location = new System.Drawing.Point(31, 14);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(49, 24);
             this.label1.TabIndex = 24;
@@ -138,7 +141,7 @@
             // 
             // tbRateUp
             // 
-            this.tbRateUp.Location = new System.Drawing.Point(195, 162);
+            this.tbRateUp.Location = new System.Drawing.Point(171, 162);
             this.tbRateUp.Name = "tbRateUp";
             this.tbRateUp.Size = new System.Drawing.Size(58, 29);
             this.tbRateUp.TabIndex = 31;
@@ -147,7 +150,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(55, 164);
+            this.label3.Location = new System.Drawing.Point(31, 164);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 24);
             this.label3.TabIndex = 30;
@@ -155,7 +158,7 @@
             // 
             // tbMasterOff
             // 
-            this.tbMasterOff.Location = new System.Drawing.Point(195, 112);
+            this.tbMasterOff.Location = new System.Drawing.Point(171, 112);
             this.tbMasterOff.Name = "tbMasterOff";
             this.tbMasterOff.Size = new System.Drawing.Size(58, 29);
             this.tbMasterOff.TabIndex = 29;
@@ -164,7 +167,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(55, 114);
+            this.label4.Location = new System.Drawing.Point(31, 114);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(94, 24);
             this.label4.TabIndex = 28;
@@ -240,7 +243,7 @@
             // 
             // tbRateDown
             // 
-            this.tbRateDown.Location = new System.Drawing.Point(195, 212);
+            this.tbRateDown.Location = new System.Drawing.Point(171, 212);
             this.tbRateDown.Name = "tbRateDown";
             this.tbRateDown.Size = new System.Drawing.Size(58, 29);
             this.tbRateDown.TabIndex = 41;
@@ -249,17 +252,46 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(55, 214);
+            this.label9.Location = new System.Drawing.Point(31, 214);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(102, 24);
             this.label9.TabIndex = 40;
             this.label9.Text = "Rate Down";
+            // 
+            // lbIPpart4
+            // 
+            this.lbIPpart4.AutoSize = true;
+            this.lbIPpart4.Location = new System.Drawing.Point(493, 214);
+            this.lbIPpart4.Name = "lbIPpart4";
+            this.lbIPpart4.Size = new System.Drawing.Size(45, 24);
+            this.lbIPpart4.TabIndex = 44;
+            this.lbIPpart4.Text = ".188";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(255, 214);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(181, 24);
+            this.label30.TabIndex = 43;
+            this.label30.Text = "IP Address  192.168.";
+            // 
+            // tbIPaddress
+            // 
+            this.tbIPaddress.Location = new System.Drawing.Point(437, 212);
+            this.tbIPaddress.Name = "tbIPaddress";
+            this.tbIPaddress.Size = new System.Drawing.Size(50, 29);
+            this.tbIPaddress.TabIndex = 42;
+            this.tbIPaddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // frmSwitchboxSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(557, 352);
+            this.Controls.Add(this.lbIPpart4);
+            this.Controls.Add(this.label30);
+            this.Controls.Add(this.tbIPaddress);
             this.Controls.Add(this.tbRateDown);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.tbSW4);
@@ -323,5 +355,8 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox tbRateDown;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lbIPpart4;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox tbIPaddress;
     }
 }

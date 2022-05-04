@@ -48,7 +48,7 @@
             this.btnBrowse.Location = new System.Drawing.Point(26, 157);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(115, 72);
-            this.btnBrowse.TabIndex = 15;
+            this.btnBrowse.TabIndex = 3;
             this.btnBrowse.Text = "Browse";
             this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnBrowse.UseVisualStyleBackColor = true;
@@ -60,7 +60,7 @@
             this.btnDefault.Location = new System.Drawing.Point(151, 157);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(115, 72);
-            this.btnDefault.TabIndex = 14;
+            this.btnDefault.TabIndex = 2;
             this.btnDefault.Text = "Use Default";
             this.btnDefault.UseVisualStyleBackColor = true;
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
@@ -72,7 +72,7 @@
             this.btnUpload.Location = new System.Drawing.Point(276, 157);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(115, 72);
-            this.btnUpload.TabIndex = 13;
+            this.btnUpload.TabIndex = 0;
             this.btnUpload.Text = "Upload";
             this.btnUpload.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnUpload.UseVisualStyleBackColor = true;
@@ -85,7 +85,7 @@
             this.bntOK.Location = new System.Drawing.Point(401, 157);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 12;
+            this.bntOK.TabIndex = 1;
             this.bntOK.Text = "Close";
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.bntOK.UseVisualStyleBackColor = true;

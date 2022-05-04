@@ -1,6 +1,7 @@
 ﻿using PCBsetup.Forms;
 using System;
 using System.IO.Ports;
+using System.Timers;
 
 namespace PCBsetup
 {
@@ -15,7 +16,7 @@ namespace PCBsetup
         private byte HiByte;
         private string ID;
         private byte LoByte;
-        private bool cSerialActive = false;  // prevents UI lock-up by only sending serial data after verfying connection
+        private bool cReceiveActive = false;  // prevents UI lock-up by only sending serial data after verfying connection
         private bool ActivationNotified = false;
 
         public event EventHandler ModuleConnected;
@@ -26,6 +27,15 @@ namespace PCBsetup
             cPortNumber = PortNumber;
             cSCportName = "SCport" + cPortNumber.ToString();
             ID = "_" + PortNumber.ToString();
+
+            Timer Watchdog = new Timer(3000);
+            Watchdog.Elapsed += new ElapsedEventHandler(CheckConnected);
+            Watchdog.Start();
+        }
+
+        void CheckConnected(object sender, ElapsedEventArgs e)
+        {
+            if (!ArduinoPort.IsOpen) cReceiveActive = false;
         }
 
         // new data event
@@ -36,12 +46,12 @@ namespace PCBsetup
             get { return cSCportName; }
             set
             {
-                CloseSCport();
+                Close();
                 cSCportName = value;
             }
         }
 
-        public void CloseSCport()
+        public void Close()
         {
             try
             {
@@ -51,7 +61,7 @@ namespace PCBsetup
                     try
                     {
                         ArduinoPort.Close();
-                        cSerialActive = false;
+                        cReceiveActive = false;
                     }
                     catch (Exception)
                     {
@@ -69,7 +79,7 @@ namespace PCBsetup
             }
         }
 
-        public void OpenSCport()
+        public void Open()
         {
             try
             {
@@ -122,19 +132,12 @@ namespace PCBsetup
             return ArduinoPort.IsOpen;
         }
 
-        public bool PortOpen(string Name)
-        {
-            bool Result = false;
-            if (ArduinoPort.PortName == Name && ArduinoPort.IsOpen) Result = true;
-            return Result;
-        }
-
-        public bool SendData(byte[] Data)
+        public bool Send(byte[] Data)
         {
             bool Result = false;
             if (ArduinoPort.IsOpen)
             {
-                if (cSerialActive)
+                if (cReceiveActive)
                 {
                     try
                     {
@@ -157,15 +160,15 @@ namespace PCBsetup
             }
             return Result;
         }
-        public bool IsSerialActive()
+        public bool IsReceiveActive()
         {
-            return cSerialActive;
+            return cReceiveActive;
         }
         private void ReceiveData(string sentence)
         {
             try
             {
-                    cSerialActive = true;
+                    cReceiveActive = true;
                     if (!ActivationNotified)
                     {
                         ModuleConnected?.Invoke(this, new EventArgs());

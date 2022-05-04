@@ -8,7 +8,7 @@ namespace PCBsetup.Forms
 {
     public partial class frmNanoSettings : Form
     {
-        public TextBox[] CFG;
+        public clsTextBoxes Boxes;
         public CheckBox[] CKs;
         public frmMain mf;
         private bool Initializing = false;
@@ -20,21 +20,6 @@ namespace PCBsetup.Forms
 
             mf = CallingForm;
 
-            CFG = new TextBox[] {tbNanoModuleID,tbNanoSensorCount,tbNanoFlow1, tbNanoFlow2,
-            tbNanoDir1,tbNanoDir2, tbNanoPWM1, tbNanoPWM2, tbRelay1, tbRelay2,tbRelay3,
-            tbRelay4, tbRelay5, tbRelay6, tbRelay7, tbRelay8, tbRelay9,
-            tbRelay10, tbRelay11, tbRelay12, tbRelay13, tbRelay14,
-            tbRelay15, tbRelay16};  // 24
-
-            for (int i = 0; i < CFG.Length; i++)
-            {
-                CFG[i].Tag = i;
-                CFG[i].Enter += tb_Enter;
-                CFG[i].TextChanged += tb_TextChanged;
-                CFG[i].Validating += tb_Validating;
-                if (i > 1) CFG[i].HelpRequested += Pins_HelpRequested;
-            }
-
             CKs = new CheckBox[] { ckUseMCP23017, ckNanoRelayOn, ckNanoFlowOn };
 
             for (int i = 0; i < CKs.Length; i++)
@@ -43,6 +28,9 @@ namespace PCBsetup.Forms
             }
 
             TabEdited = new bool[2];
+
+            Boxes = new clsTextBoxes(mf);
+            BuildBoxes();
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -103,10 +91,7 @@ namespace PCBsetup.Forms
             tbNanoPWM1.Text = "5";
             tbNanoPWM2.Text = "9";
 
-            for (int i = 0; i < 16; i++)
-            {
-                CFG[8 + i].Text = "0";
-            }
+            tbNanoIP.Text = "1";
         }
 
         private void btnSendToModule_Click(object sender, EventArgs e)
@@ -114,20 +99,20 @@ namespace PCBsetup.Forms
             bool Sent = false;
             try
             {
-                    PGN32625 PGN = new PGN32625(this);
-                    Sent = PGN.Send();
-                    PGN32626 PGN2 = new PGN32626(this);
-                    Sent = Sent & PGN2.Send();
+                PGN32625 PGN = new PGN32625(this);
+                Sent = PGN.Send();
+                PGN32626 PGN2 = new PGN32626(this);
+                Sent = Sent & PGN2.Send();
 
-                    if (Sent)
+                if (Sent)
+                {
+                    mf.Tls.ShowHelp("Sent to module.", this.Text, 3000);
+
+                    for (int i = 0; i < 2; i++)
                     {
-                        mf.Tls.ShowHelp("Sent to module.", this.Text, 3000);
-
-                        for (int i = 0; i < 2; i++)
-                        {
-                            TabEdited[i] = false;
-                        }
+                        TabEdited[i] = false;
                     }
+                }
             }
             catch (InvalidOperationException ex)
             {
@@ -149,6 +134,45 @@ namespace PCBsetup.Forms
             catch (Exception ex)
             {
                 mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
+            }
+        }
+
+        private void BuildBoxes()
+        {
+            int StartID = Boxes.Add(tbNanoModuleID, 15);
+            Boxes.Add(tbNanoSensorCount, 2);
+            Boxes.Add(tbNanoIP, 254);
+
+            Boxes.Add(tbNanoFlow1, 21);
+            Boxes.Add(tbNanoFlow2, 21);
+            Boxes.Add(tbNanoDir1, 21);
+            Boxes.Add(tbNanoDir2, 21);
+            Boxes.Add(tbNanoPWM1, 21);
+            Boxes.Add(tbNanoPWM2, 21);
+            Boxes.Add(tbRelay1, 21);
+            Boxes.Add(tbRelay2, 21);
+            Boxes.Add(tbRelay3, 21);
+            Boxes.Add(tbRelay4, 21);
+            Boxes.Add(tbRelay5, 21);
+
+            Boxes.Add(tbRelay6, 21);
+            Boxes.Add(tbRelay7, 21);
+            Boxes.Add(tbRelay8, 21);
+            Boxes.Add(tbRelay9, 21);
+            Boxes.Add(tbRelay10, 21);
+            Boxes.Add(tbRelay11, 21);
+            Boxes.Add(tbRelay12, 21);
+            Boxes.Add(tbRelay13, 21);
+            Boxes.Add(tbRelay14, 21);
+            Boxes.Add(tbRelay15, 21);
+            int EndID = Boxes.Add(tbRelay16, 21);
+
+            for (int i = StartID; i < EndID + 1; i++)
+            {
+                Boxes.Item(i).TB.Tag = Boxes.Item(i).ID;
+                Boxes.Item(i).TB.Enter += tb_Enter;
+                Boxes.Item(i).TB.TextChanged += tb_TextChanged;
+                Boxes.Item(i).TB.Validating += tb_Validating;
             }
         }
 
@@ -211,14 +235,9 @@ namespace PCBsetup.Forms
             try
             {
                 bool Checked;
-                double val;
 
                 // textboxes
-                for (int i = 0; i < CFG.Length; i++)
-                {
-                    double.TryParse(mf.Tls.LoadProperty(CFG[i].Name), out val);
-                    CFG[i].Text = val.ToString("N0");
-                }
+                Boxes.ReLoad();
 
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
@@ -250,10 +269,7 @@ namespace PCBsetup.Forms
             try
             {
                 // textboxes
-                for (int i = 0; i < CFG.Length; i++)
-                {
-                    mf.Tls.SaveProperty(CFG[i].Name, CFG[i].Text);
-                }
+                Boxes.Save();
 
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
@@ -290,36 +306,17 @@ namespace PCBsetup.Forms
         private void tb_Enter(object sender, EventArgs e)
         {
             int index = (int)((TextBox)sender).Tag;
-            int tmp;
-            int max;
-            int min;
+            clsTextBox BX = Boxes.Item(index);
+            double min = BX.MinValue;
+            double max = BX.MaxValue;
+            double Value = BX.Value();
 
-            switch (index)
-            {
-                case 0:
-                    max = 15;
-                    min = 0;
-                    break;
-
-                case 1:
-                    max = 2;
-                    min = 1;
-                    break;
-
-                default:
-                    // pins
-                    max = 21;
-                    min = 0;
-                    break;
-            }
-
-            int.TryParse(CFG[index].Text, out tmp);
-            using (var form = new FormNumeric(min, max, tmp))
+            using (var form = new FormNumeric(min, max, Value))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    CFG[index].Text = form.ReturnValue.ToString();
+                    BX.TB.Text = form.ReturnValue.ToString();
                 }
             }
         }
@@ -332,30 +329,8 @@ namespace PCBsetup.Forms
         private void tb_Validating(object sender, CancelEventArgs e)
         {
             int index = (int)((TextBox)sender).Tag;
-            int tmp;
-            int max;
-            int min;
-
-            switch (index)
-            {
-                case 0:
-                    max = 15;
-                    min = 0;
-                    break;
-
-                case 1:
-                    max = 2;
-                    min = 1;
-                    break;
-
-                default:
-                    // pins
-                    max = 21;
-                    min = 0;
-                    break;
-            }
-            int.TryParse(CFG[index].Text, out tmp);
-            if (tmp < min || tmp > max)
+            clsTextBox BX = Boxes.Item(index);
+            if (BX.Value() < BX.MinValue || BX.Value() > BX.MaxValue)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -374,6 +349,11 @@ namespace PCBsetup.Forms
         {
             Initializing = true;
             LoadSettings();
+
+            // IP address
+            double val = Boxes.Value("tbNanoModuleID");
+            lbIPpart4.Text = (val + 207).ToString();
+
             Initializing = false;
         }
     }

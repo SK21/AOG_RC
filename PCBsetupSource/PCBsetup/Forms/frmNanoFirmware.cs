@@ -65,7 +65,7 @@ namespace PCBsetup.Forms
             {
                 if (mf.CommPort.IsOpen())   // to prove comm port exists
                 {
-                    mf.CommPort.CloseSCport();
+                    mf.CommPort.Close();
                     progressBar1.Visible = true;
                     ProgressCount = 0;
                     bntOK.Enabled = false;
@@ -105,6 +105,9 @@ namespace PCBsetup.Forms
               new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
 
             PortWasOpen = mf.CommPort.IsOpen();
+
+            UserSelectedFile = false;
+            tbHexfile.Text = "Default file version date:" + mf.Tls.NanoFirmwareVersion();
         }
 
         private void LoadSettings()
@@ -267,7 +270,7 @@ namespace PCBsetup.Forms
                     break;
             }
 
-            mf.CommPort.OpenSCport();
+            mf.CommPort.Open();
             bntOK.Enabled = true;
             WatchDogTimer.Enabled = false;
         }

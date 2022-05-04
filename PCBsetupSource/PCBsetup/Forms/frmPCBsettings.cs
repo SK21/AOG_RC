@@ -8,7 +8,7 @@ namespace PCBsetup.Forms
 {
     public partial class frmPCBsettings : Form
     {
-        public TextBox[] CFG;
+        public clsTextBoxes Boxes;
         public CheckBox[] CKs;
         public frmMain mf;
         private bool Initializing = false;
@@ -20,22 +20,8 @@ namespace PCBsetup.Forms
 
             mf = CallingForm;
 
-            CFG = new TextBox[] {tbNMEAserialPort,tbRTCMserialPort,tbRTCM,tbIMUdelay
-                ,tbIMUinterval,tbZeroOffset // 5
-                ,tbMinSpeed,tbMaxSpeed,tbPulseCal,tbAdsWasPin,tbRS485port,tbModule   //11
-                ,tbDir1,tbPwm1,tbSteerSwitch,tbWAS,tbSteerRelay,tbWorkSwitch,tbCurrentSensor
-                ,tbPressureSensor,tbEncoder,tbDir2,tbPwm2,tbSpeedPulse,tbSendEnable};
-
-            for (int i = 0; i < CFG.Length; i++)
-            {
-                CFG[i].Tag = i;
-                CFG[i].Enter += tb_Enter;
-                CFG[i].TextChanged += tb_TextChanged;
-                CFG[i].Validating += tb_Validating;
-            }
-
-            CKs = new CheckBox[] {ckGyro,ckGGA,ckUseRate,ckADS,ckRelayOn,ckFlowOn
-            ,ckSwapPitchRoll,ckInvertRoll};
+            CKs = new CheckBox[] {ckUseRate,ckADS,ckRelayOn,ckFlowOn,ckSwapPitchRoll
+                ,ckInvertRoll,ckGyro};
 
             for (int i = 0; i < CKs.Length; i++)
             {
@@ -43,6 +29,9 @@ namespace PCBsetup.Forms
             }
 
             TabEdited = new bool[3];
+
+            Boxes = new clsTextBoxes(mf);
+            BuildBoxes();
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -101,6 +90,7 @@ namespace PCBsetup.Forms
             tbZeroOffset.Text = "6100";
             tbAdsWasPin.Text = "0";
             cbRelayControl.SelectedIndex = 2;
+            tbIPaddress.Text = "1";
 
             tbMinSpeed.Text = "1";
             tbMaxSpeed.Text = "15";
@@ -109,7 +99,6 @@ namespace PCBsetup.Forms
             tbModule.Text = "0";
 
             ckGyro.Checked = false;
-            ckGGA.Checked = true;
             ckUseRate.Checked = false;
             ckADS.Checked = false;
             ckRelayOn.Checked = false;
@@ -134,26 +123,101 @@ namespace PCBsetup.Forms
 
         private void btnSendToModule_Click(object sender, EventArgs e)
         {
+            bool Sent;
             try
             {
                 PGN32622 PGN = new PGN32622(this);
-                PGN.Send();
+                Sent = PGN.Send();
                 PGN32623 PGN2 = new PGN32623(this);
-                PGN2.Send();
+                Sent = Sent & PGN2.Send();
                 PGN32624 PGN3 = new PGN32624(this);
-                PGN3.Send();
+                Sent = Sent & PGN3.Send();
 
-                mf.Tls.ShowHelp("Sent to module.", this.Text, 3000);
-                for (int i = 0; i < 3; i++)
+                if (Sent)
                 {
-                    TabEdited[i] = false;
+                    mf.Tls.ShowHelp("Sent to module.", this.Text, 3000);
+                    for (int i = 0; i < 3; i++)
+                    {
+                        TabEdited[i] = false;
+                    }
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                switch (ex.Message)
+                {
+                    case "ModuleDisconnected":
+                        mf.Tls.ShowHelp("Module disconnected. Wait for connection and retry.", this.Text, 3000);
+                        break;
+
+                    case "CommDisconnected":
+                        mf.Tls.ShowHelp("Comm port is not open.", this.Text, 3000);
+                        break;
+
+                    default:
+                        mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
+                        break;
                 }
             }
             catch (Exception ex)
             {
                 mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
             }
-        } 
+        }
+
+        private void BuildBoxes()
+        {
+            int StartID = Boxes.Add(tbNMEAserialPort, 8,1);
+            Boxes.Add(tbRTCMserialPort, 8,1);
+            Boxes.Add(tbRTCM, 9999);
+            Boxes.Add(tbIMUdelay, 100);
+            Boxes.Add(tbIMUinterval, 100);
+            Boxes.Add(tbZeroOffset, 10000);
+            Boxes.Add(tbIPaddress, 254);
+            Boxes.Add(tbMinSpeed, 50);
+            Boxes.Add(tbMaxSpeed, 50);
+            Boxes.Add(tbPulseCal);
+            Boxes.Add(tbAdsWasPin, 3);
+            Boxes.Add(tbRS485port, 8,1);
+            Boxes.Add(tbModule, 15);
+
+            Boxes.Add(tbDir1, 41);
+            Boxes.Add(tbPwm1, 41);
+            Boxes.Add(tbSteerSwitch, 41);
+            Boxes.Add(tbWAS, 41);
+            Boxes.Add(tbSteerRelay, 41);
+            Boxes.Add(tbWorkSwitch, 41);
+            Boxes.Add(tbCurrentSensor, 41);
+            Boxes.Add(tbPressureSensor, 41);
+            Boxes.Add(tbEncoder, 41);
+            Boxes.Add(tbDir2, 41);
+            Boxes.Add(tbPwm2, 41);
+            Boxes.Add(tbSpeedPulse, 41);
+            int EndID = Boxes.Add(tbSendEnable, 41);
+
+            for (int i = StartID; i < EndID + 1; i++)
+            {
+                Boxes.Item(i).TB.Tag = Boxes.Item(i).ID;
+                Boxes.Item(i).TB.Enter += tb_Enter;
+                Boxes.Item(i).TB.TextChanged += tb_TextChanged;
+                Boxes.Item(i).TB.Validating += tb_Validating;
+            }
+        }
+
+        private void cbIMU_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void cbReceiver_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void cbRelayControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
 
         private void ckADS_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
@@ -170,15 +234,6 @@ namespace PCBsetup.Forms
                 "for rate control.";
 
             mf.Tls.ShowHelp(Message, "Flow on high");
-            hlpevent.Handled = true;
-        }
-
-        private void ckGGA_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Either GGA or VTG can be last when GPS data is sent from the" +
-                " receiver. This is used to determine when the data transfer is finished.";
-
-            mf.Tls.ShowHelp(Message, "GGA last");
             hlpevent.Handled = true;
         }
 
@@ -225,27 +280,9 @@ namespace PCBsetup.Forms
             {
                 byte tmp;
                 bool Checked;
-                double val;
 
                 // textboxes
-                for (int i = 0; i < CFG.Length; i++)
-                {
-                    double.TryParse(mf.Tls.LoadProperty(CFG[i].Name), out val);
-                    if (i == 8)
-                    {
-                        // pulse cal
-                        CFG[i].Text = val.ToString("N1");
-                    }
-                    else if (i == 2)
-                    {
-                        // RTCM port
-                        CFG[i].Text = val.ToString("#######");
-                    }
-                    else
-                    {
-                        CFG[i].Text = val.ToString("N0");
-                    }
-                }
+                Boxes.ReLoad();
 
                 // combo boxes
                 byte.TryParse(mf.Tls.LoadProperty("GPSreceiver"), out tmp);
@@ -275,10 +312,7 @@ namespace PCBsetup.Forms
             try
             {
                 // textboxes
-                for (int i = 0; i < CFG.Length; i++)
-                {
-                    mf.Tls.SaveProperty(CFG[i].Name, CFG[i].Text);
-                }
+                Boxes.Save();
 
                 // combo boxes
                 mf.Tls.SaveProperty("GPSreceiver", cbReceiver.SelectedIndex.ToString());
@@ -320,78 +354,23 @@ namespace PCBsetup.Forms
         private void tb_Enter(object sender, EventArgs e)
         {
             int index = (int)((TextBox)sender).Tag;
-            int tmp;
-            int max;
-            int min;
+            clsTextBox BX = Boxes.Item(index);
+            double min = BX.MinValue;
+            double max = BX.MaxValue;
+            double Value = BX.Value();
 
-            switch (index)
-            {
-                case 0:
-                case 1:
-                case 10:
-                    max = 8;
-                    min = 1;
-                    break;
-
-                case 2:
-                    max = 9999;
-                    min = 0;
-                    break;
-
-                case 11:
-                    max = 15;
-                    min = 0;
-                    break;
-
-                case 3:
-                case 12:
-                    max = 255;
-                    min = 0;
-                    break;
-
-                case 4:
-                    max = 255;
-                    min = 1;
-                    break;
-
-                case 5:
-                case 8:
-                    max = 10000;
-                    min = 0;
-                    break;
-
-                case 9:
-                    max = 3;
-                    min = 0;
-                    break;
-
-                case 6:
-                case 7:
-                    max = 30;
-                    min = 0;
-                    break;
-
-                default:
-                    // teensy pins
-                    max = 41;
-                    min = 0;
-                    break;
-            }
-
-            int.TryParse(CFG[index].Text, out tmp);
-            using (var form = new FormNumeric(min, max, tmp))
+            using (var form = new FormNumeric(min, max, Value))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    if (index == 9)
+                    if (BX.TB.Name == "tbPulseCal")
                     {
-                        // pulse cal, 1 decimal
-                        CFG[index].Text = form.ReturnValue.ToString("N1");
+                        BX.TB.Text = form.ReturnValue.ToString("N1");
                     }
                     else
                     {
-                        CFG[index].Text = form.ReturnValue.ToString();
+                        BX.TB.Text = form.ReturnValue.ToString();
                     }
                 }
             }
@@ -405,65 +384,8 @@ namespace PCBsetup.Forms
         private void tb_Validating(object sender, CancelEventArgs e)
         {
             int index = (int)((TextBox)sender).Tag;
-            int tmp;
-            int max;
-            int min;
-
-            switch (index)
-            {
-                case 0:
-                case 1:
-                case 10:
-                    max = 8;
-                    min = 1;
-                    break;
-
-                case 2:
-                    max = 9999;
-                    min = 0;
-                    break;
-
-                case 11:
-                    max = 15;
-                    min = 0;
-                    break;
-
-                case 3:
-                case 12:
-                    max = 255;
-                    min = 0;
-                    break;
-
-                case 4:
-                    max = 255;
-                    min = 1;
-                    break;
-
-                case 5:
-                case 8:
-                    max = 10000;
-                    min = 0;
-                    break;
-
-                case 9:
-                    max = 3;
-                    min = 0;
-                    break;
-
-                case 6:
-                case 7:
-                    max = 30;
-                    min = 0;
-                    break;
-
-                default:
-                    // teensy pins
-                    max = 41;
-                    min = 0;
-                    break;
-            }
-            int.TryParse(CFG[index].Text, out tmp);
-            if (tmp < min || tmp > max)
+            clsTextBox BX = Boxes.Item(index);
+            if (BX.Value() < BX.MinValue || BX.Value() > BX.MaxValue)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -506,7 +428,7 @@ namespace PCBsetup.Forms
 
         private void tbRS485port_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "The serial port (1-8) used for RS485.";
+            string Message = "The serial port (0-8) used for RS485.";
 
             mf.Tls.ShowHelp(Message, "RS485 serial port");
             hlpevent.Handled = true;
@@ -534,21 +456,6 @@ namespace PCBsetup.Forms
             Initializing = true;
             LoadSettings();
             Initializing = false;
-        }
-
-        private void cbReceiver_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void cbIMU_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void cbRelayControl_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
         }
     }
 }

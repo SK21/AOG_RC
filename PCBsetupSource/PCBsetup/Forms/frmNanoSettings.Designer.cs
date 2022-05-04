@@ -87,6 +87,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbNanoFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.lbIPpart4 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.tbNanoIP = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -153,6 +157,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lbIPpart4);
+            this.tabPage1.Controls.Add(this.label30);
+            this.tabPage1.Controls.Add(this.tbNanoIP);
+            this.tabPage1.Controls.Add(this.label29);
             this.tabPage1.Controls.Add(this.tbNanoSensorCount);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.tbNanoModuleID);
@@ -170,7 +178,7 @@
             // 
             // tbNanoSensorCount
             // 
-            this.tbNanoSensorCount.Location = new System.Drawing.Point(289, 159);
+            this.tbNanoSensorCount.Location = new System.Drawing.Point(287, 129);
             this.tbNanoSensorCount.Name = "tbNanoSensorCount";
             this.tbNanoSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbNanoSensorCount.TabIndex = 23;
@@ -180,7 +188,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(150, 162);
+            this.label2.Location = new System.Drawing.Point(60, 131);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(125, 24);
             this.label2.TabIndex = 22;
@@ -188,7 +196,7 @@
             // 
             // tbNanoModuleID
             // 
-            this.tbNanoModuleID.Location = new System.Drawing.Point(289, 115);
+            this.tbNanoModuleID.Location = new System.Drawing.Point(287, 78);
             this.tbNanoModuleID.Name = "tbNanoModuleID";
             this.tbNanoModuleID.Size = new System.Drawing.Size(58, 29);
             this.tbNanoModuleID.TabIndex = 21;
@@ -197,7 +205,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(150, 115);
+            this.label1.Location = new System.Drawing.Point(60, 80);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(96, 24);
             this.label1.TabIndex = 20;
@@ -673,6 +681,41 @@
             this.label4.TabIndex = 24;
             this.label4.Text = "Flow 1";
             // 
+            // lbIPpart4
+            // 
+            this.lbIPpart4.AutoSize = true;
+            this.lbIPpart4.Location = new System.Drawing.Point(343, 182);
+            this.lbIPpart4.Name = "lbIPpart4";
+            this.lbIPpart4.Size = new System.Drawing.Size(45, 24);
+            this.lbIPpart4.TabIndex = 27;
+            this.lbIPpart4.Text = ".126";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(201, 182);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(80, 24);
+            this.label30.TabIndex = 26;
+            this.label30.Text = "192.168.";
+            // 
+            // tbNanoIP
+            // 
+            this.tbNanoIP.Location = new System.Drawing.Point(287, 180);
+            this.tbNanoIP.Name = "tbNanoIP";
+            this.tbNanoIP.Size = new System.Drawing.Size(50, 29);
+            this.tbNanoIP.TabIndex = 25;
+            this.tbNanoIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(60, 182);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(101, 24);
+            this.label29.TabIndex = 24;
+            this.label29.Text = "IP Address";
+            // 
             // frmNanoSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -764,5 +807,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbNanoFlow1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lbIPpart4;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox tbNanoIP;
+        private System.Windows.Forms.Label label29;
     }
 }

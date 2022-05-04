@@ -27,17 +27,34 @@ namespace PCBsetup
 
         public bool Send()
         {
-            byte val;
-            bool Result=false;
+            cData[2] = (byte)cf.Boxes.Value("tbNanoFlow1");
+            cData[3] = (byte)cf.Boxes.Value("tbNanoFlow2");
+            cData[4] = (byte)cf.Boxes.Value("tbNanoDir1");
+            cData[5] = (byte)cf.Boxes.Value("tbNanoDir2");
+            cData[6] = (byte)cf.Boxes.Value("tbNanoPWM1");
+            cData[7] = (byte)cf.Boxes.Value("tbNanoPWM2");
 
-            for (int i = 2; i < 22; i++)
-            {
-                byte.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[i - 2].Name), out val);
-                cData[i] = val;
-            }
+            cData[8] = (byte)cf.Boxes.Value("tbRelay1");
+            cData[9] = (byte)cf.Boxes.Value("tbRelay2");
+            cData[10] = (byte)cf.Boxes.Value("tbRelay3");
+            cData[11] = (byte)cf.Boxes.Value("tbRelay4");
+            cData[12] = (byte)cf.Boxes.Value("tbRelay5");
+            cData[13] = (byte)cf.Boxes.Value("tbRelay6");
+            cData[14] = (byte)cf.Boxes.Value("tbRelay7");
+            cData[15] = (byte)cf.Boxes.Value("tbRelay8");
 
-             Result = cf.mf.CommPort.SendData(cData);
-            cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+            cData[16] = (byte)cf.Boxes.Value("tbRelay9");
+            cData[17] = (byte)cf.Boxes.Value("tbRelay10");
+            cData[18] = (byte)cf.Boxes.Value("tbRelay11");
+            cData[19] = (byte)cf.Boxes.Value("tbRelay12");
+            cData[20] = (byte)cf.Boxes.Value("tbRelay13");
+            cData[21] = (byte)cf.Boxes.Value("tbRelay14");
+            cData[22] = (byte)cf.Boxes.Value("tbRelay15");
+            cData[23] = (byte)cf.Boxes.Value("tbRelay16");
+
+            bool Result = cf.mf.CommPort.Send(cData);
+            //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+
             return Result;
         }
     }

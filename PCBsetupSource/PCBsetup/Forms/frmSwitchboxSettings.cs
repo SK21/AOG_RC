@@ -8,7 +8,7 @@ namespace PCBsetup.Forms
 {
     public partial class frmSwitchboxSettings : Form
     {
-        public TextBox[] CFG;
+        public clsTextBoxes Boxes;
         public frmMain mf;
         private bool ConfigEdited;
         private bool Initializing = false;
@@ -18,17 +18,8 @@ namespace PCBsetup.Forms
             InitializeComponent();
             mf = CallingForm;
 
-            CFG = new TextBox[] {tbSW1,tbSW2,tbSW3,tbSW4,
-                tbAuto,tbMasterOn,tbMasterOff,tbRateUp,tbRateDown};
-
-            for (int i = 0; i < CFG.Length; i++)
-            {
-                CFG[i].Tag = i;
-                CFG[i].Enter += tb_Enter;
-                CFG[i].TextChanged += tb_TextChanged;
-                CFG[i].Validating += tb_Validating;
-                CFG[i].HelpRequested += Pins_HelpRequested;
-            }
+            Boxes = new clsTextBoxes(mf);
+            BuildBoxes();
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -72,6 +63,7 @@ namespace PCBsetup.Forms
             tbSW2.Text = "9";
             tbSW3.Text = "6";
             tbSW4.Text = "4";
+            tbIPaddress.Text = "1";
         }
 
         private void btnSendToModule_Click(object sender, EventArgs e)
@@ -111,6 +103,28 @@ namespace PCBsetup.Forms
             }
         }
 
+        private void BuildBoxes()
+        {
+            Boxes.Add(tbSW1, 21);
+            Boxes.Add(tbSW2, 21);
+            Boxes.Add(tbSW3, 21);
+            Boxes.Add(tbSW4, 21);
+            Boxes.Add(tbAuto, 21);
+            Boxes.Add(tbMasterOn, 21);
+            Boxes.Add(tbMasterOff, 21);
+            Boxes.Add(tbRateUp, 21);
+            Boxes.Add(tbRateDown, 21);
+            Boxes.Add(tbIPaddress, 254); 
+
+            for (int i = 0; i < Boxes.Count(); i++)
+            {
+                Boxes.Item(i).TB.Tag = Boxes.Item(i).ID;
+                Boxes.Item(i).TB.Enter += tb_Enter;
+                Boxes.Item(i).TB.TextChanged += tb_TextChanged;
+                Boxes.Item(i).TB.Validating += tb_Validating;
+            }
+        }
+
         private void frmSwitchboxSettings_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (this.WindowState == FormWindowState.Normal)
@@ -139,14 +153,8 @@ namespace PCBsetup.Forms
         {
             try
             {
-                double val;
-
                 // textboxes
-                for (int i = 0; i < CFG.Length; i++)
-                {
-                    double.TryParse(mf.Tls.LoadProperty(CFG[i].Name), out val);
-                    CFG[i].Text = val.ToString("N0");
-                }
+                Boxes.ReLoad();
             }
             catch (Exception ex)
             {
@@ -170,10 +178,7 @@ namespace PCBsetup.Forms
             try
             {
                 // textboxes
-                for (int i = 0; i < CFG.Length; i++)
-                {
-                    mf.Tls.SaveProperty(CFG[i].Name, CFG[i].Text);
-                }
+                Boxes.Save();
             }
             catch (Exception ex)
             {
@@ -204,26 +209,17 @@ namespace PCBsetup.Forms
         private void tb_Enter(object sender, EventArgs e)
         {
             int index = (int)((TextBox)sender).Tag;
-            int tmp;
-            int max;
-            int min;
+            clsTextBox BX = Boxes.Item(index);
+            double min = BX.MinValue;
+            double max = BX.MaxValue;
+            double Value = BX.Value();
 
-            switch (index)
-            {
-                default:
-                    // pins
-                    max = 21;
-                    min = 0;
-                    break;
-            }
-
-            int.TryParse(CFG[index].Text, out tmp);
-            using (var form = new FormNumeric(min, max, tmp))
+            using (var form = new FormNumeric(min, max, Value))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    CFG[index].Text = form.ReturnValue.ToString();
+                    BX.TB.Text = form.ReturnValue.ToString();
                 }
             }
         }
@@ -236,20 +232,8 @@ namespace PCBsetup.Forms
         private void tb_Validating(object sender, CancelEventArgs e)
         {
             int index = (int)((TextBox)sender).Tag;
-            int tmp;
-            int max;
-            int min;
-
-            switch (index)
-            {
-                default:
-                    // pins
-                    max = 21;
-                    min = 0;
-                    break;
-            }
-            int.TryParse(CFG[index].Text, out tmp);
-            if (tmp < min || tmp > max)
+            clsTextBox BX = Boxes.Item(index);
+            if (BX.Value() < BX.MinValue || BX.Value() > BX.MaxValue)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;

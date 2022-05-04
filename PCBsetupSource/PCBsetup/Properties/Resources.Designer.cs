@@ -243,59 +243,9 @@ namespace PCBsetup.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] RateOBNE_ino_ {
-            get {
-                object obj = ResourceManager.GetObject("RateOBNE_ino_", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] RCnano_ino {
-            get {
-                object obj = ResourceManager.GetObject("RCnano_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] RCnanoOldBootLoader_ino {
-            get {
-                object obj = ResourceManager.GetObject("RCnanoOldBootLoader_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] SW_ino {
             get {
                 object obj = ResourceManager.GetObject("SW_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Switchbox_ino {
-            get {
-                object obj = ResourceManager.GetObject("Switchbox_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] SwitchboxOldBootLoader_ino {
-            get {
-                object obj = ResourceManager.GetObject("SwitchboxOldBootLoader_ino", resourceCulture);
                 return ((byte[])(obj));
             }
         }

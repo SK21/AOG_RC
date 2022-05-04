@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using libTeensySharp;
 
 namespace PCBsetup.Forms
 {
@@ -34,7 +35,7 @@ namespace PCBsetup.Forms
         {
             CommPort.SCportName = cboPort1.Text;
             CommPort.SCportBaud = 38400;
-            CommPort.OpenSCport();
+            CommPort.Open();
             return CommPort.IsOpen();
         }
 
@@ -48,11 +49,11 @@ namespace PCBsetup.Forms
         {
             if (btnConnect1.Text == Languages.Lang.lgConnect)
             {
-                OpenComm();
+                if (!OpenComm()) Tls.ShowHelp("Could not open comm port.", this.Text, 3000);
             }
             else
             {
-                CommPort.CloseSCport();
+                CommPort.Close();
             }
             UpdateForm();
         }
@@ -60,10 +61,22 @@ namespace PCBsetup.Forms
         private void btnRescan_Click(object sender, EventArgs e)
         {
             cboPort1.Items.Clear();
+            // nano ports
             foreach (String s in System.IO.Ports.SerialPort.GetPortNames())
             {
                 cboPort1.Items.Add(s);
             }
+
+            // teensy ports
+            //var Watcher = new TeensyWatcher();
+            //foreach (var Teensy in Watcher.ConnectedTeensies)
+            //{
+            //    foreach (var port in Teensy.Ports)
+            //    {
+            //        cboPort1.Items.Add(port);
+            //    }
+            //}
+
             UpdateForm();
         }
 
@@ -288,7 +301,7 @@ namespace PCBsetup.Forms
                 btnConnect1.Text = Languages.Lang.lgConnect;
             }
 
-            if (CommPort.IsSerialActive())
+            if (CommPort.IsReceiveActive())
             {
                 ModuleIndicator.Image = Properties.Resources.On;
             }

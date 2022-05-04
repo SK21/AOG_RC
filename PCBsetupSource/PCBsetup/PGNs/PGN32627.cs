@@ -16,8 +16,9 @@ namespace PCBsetup
         //8         Master Off
         //9         Rate Up
         //10        Rate Down
+        //11        IP address
 
-        private byte[] cData = new byte[11];
+        private byte[] cData = new byte[12];
         private frmSwitchboxSettings cf;
 
         public PGN32627(frmSwitchboxSettings CalledFrom)
@@ -29,17 +30,21 @@ namespace PCBsetup
 
         public bool Send()
         {
-            byte val;
-            bool Result = false;
+            cData[2] = (byte)cf.Boxes.Value("tbSW1");
+            cData[3] = (byte)cf.Boxes.Value("tbSW2");
+            cData[4] = (byte)cf.Boxes.Value("tbSW3");
+            cData[5] = (byte)cf.Boxes.Value("tbSW4");
+            cData[6] = (byte)cf.Boxes.Value("tbAuto");
 
-            for (int i = 2; i < 11; i++)
-            {
-                byte.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[i - 2].Name), out val);
-                cData[i] = val;
-            }
+            cData[7] = (byte)cf.Boxes.Value("tbMasterOn");
+            cData[8] = (byte)cf.Boxes.Value("tbMasterOff");
+            cData[9] = (byte)cf.Boxes.Value("tbRateUp");
+            cData[10] = (byte)cf.Boxes.Value("tbRateDown");
+            cData[11] = (byte)cf.Boxes.Value("tbIPaddress");
 
-             Result = cf.mf.CommPort.SendData(cData);
-            cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+            bool Result = cf.mf.CommPort.Send(cData);
+            //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+
             return Result;
         }
     }

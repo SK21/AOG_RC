@@ -13,11 +13,11 @@ namespace PCBsetup
     {
         private string cAppName = "PCBsetup";
         private string cAppVersion = "1.0.0";
-        private string cVersionDate = "26-Apr-2022";
+        private string cVersionDate = "03-May-2022";
 
-        private string cNanoFirmware = "22-Apr-2022";
-        private string cSwitchboxFirmware = "22-Apr-2022";
-        private string cTeensieFirmware = "26-Apr-2022";
+        private string cNanoFirmware = "01-May-2022";
+        private string cSwitchboxFirmware = "01-May-2022";
+        private string cTeensyFirmware = "03-May-2022";
 
         private static Hashtable ht;
         private string cPropertiesFile = "";
@@ -308,9 +308,9 @@ namespace PCBsetup
             return cSwitchboxFirmware;
         }
 
-        public string TeensieFirmwareVersion()
+        public string TeensyFirmwareVersion()
         {
-            return cTeensieFirmware;
+            return cTeensyFirmware;
         }
 
         public string VersionDate()

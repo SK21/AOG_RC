@@ -173,14 +173,14 @@
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(180, 28);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(159, 28);
             this.settingsToolStripMenuItem1.Text = "Settings";
             this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
             // 
             // firmwareToolStripMenuItem1
             // 
             this.firmwareToolStripMenuItem1.Name = "firmwareToolStripMenuItem1";
-            this.firmwareToolStripMenuItem1.Size = new System.Drawing.Size(180, 28);
+            this.firmwareToolStripMenuItem1.Size = new System.Drawing.Size(159, 28);
             this.firmwareToolStripMenuItem1.Text = "Firmware";
             this.firmwareToolStripMenuItem1.Click += new System.EventHandler(this.firmwareToolStripMenuItem1_Click);
             // 
@@ -281,7 +281,7 @@
             this.groupBox1.Size = new System.Drawing.Size(469, 76);
             this.groupBox1.TabIndex = 126;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Nano Serial Connection";
+            this.groupBox1.Text = "Serial Connection";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.GroupBoxPaint);
             // 
             // frmMain

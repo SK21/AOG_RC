@@ -31,17 +31,28 @@ namespace PCBsetup
             cData[1] = 127;
         }
 
-        public void Send()
+        public bool Send()
         {
-            byte val;
+            cData[2] = (byte)cf.Boxes.Value("tbDir1");
+            cData[3] = (byte)cf.Boxes.Value("tbPwm1");
+            cData[4] = (byte)cf.Boxes.Value("tbSteerSwitch");
+            cData[5] = (byte)cf.Boxes.Value("tbWAS");
+            cData[6] = (byte)cf.Boxes.Value("tbSteerRelay");
+            cData[7] = (byte)cf.Boxes.Value("tbWorkSwitch");
 
-            for (int i = 2; i < 15; i++)
-            {
-                byte.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[i + 10].Name), out val);
-                cData[i] = val;
-            }
+            cData[8] = (byte)cf.Boxes.Value("tbCurrentSensor");
+            cData[9] = (byte)cf.Boxes.Value("tbPressureSensor");
+            cData[10] = (byte)cf.Boxes.Value("tbEncoder");
+            cData[11] = (byte)cf.Boxes.Value("tbDir2");
 
-            cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+            cData[12] = (byte)cf.Boxes.Value("tbPwm2");
+            cData[13] = (byte)cf.Boxes.Value("tbSpeedPulse");
+            cData[14] = (byte)cf.Boxes.Value("tbSendEnable");
+
+            bool Result = cf.mf.CommPort.Send(cData);
+            //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+
+            return Result;
         }
     }
 }

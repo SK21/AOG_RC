@@ -8,8 +8,8 @@ namespace PCBsetup
         //0     HeaderLo    110
         //1     HeaderHi    127
         //2     Receiver    0-None, 1-SimpleRTK2B, 2-Sparkfun F9P
-        //3     NMEA serial port, 1-8
-        //4     RTCM serial port, 1-8
+        //3     NMEA serial port, 0-8
+        //4     RTCM serial port, 0-8
         //5     RTCM UDP port # lo
         //6     RTCM UDP port # Hi
         //7     IMU         0-None, 1-Sparkfun BNO, 2-CMPS14, 3-Adafruit BNO
@@ -18,8 +18,9 @@ namespace PCBsetup
         //10    Zero offset Lo
         //11    Zero offset Hi
         //12    RelayControl 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
+        //13    IP address, 3rd octet
 
-        private byte[] cData = new byte[13];
+        private byte[] cData = new byte[14];
         private frmPCBsettings cf;
 
         public PGN32622(frmPCBsettings CalledFrom)
@@ -29,7 +30,7 @@ namespace PCBsetup
             cData[1] = 127;
         }
 
-        public void Send()
+        public bool Send()
         {
             byte tmp;
             double val;
@@ -37,33 +38,32 @@ namespace PCBsetup
             byte.TryParse(cf.mf.Tls.LoadProperty("GPSreceiver"), out tmp);
             cData[2] = tmp;
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[0].Name), out val);
-            cData[3] = (byte)val;
+            cData[3] = (byte)cf.Boxes.Value("tbNMEAserialPort");
+            cData[4] = (byte)cf.Boxes.Value("tbRTCMserialPort");
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[1].Name), out val);
-            cData[4] = (byte)val;
-
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[2].Name), out val);
+            val = (byte)cf.Boxes.Value("tbRTCM");
             cData[5] = (byte)val;
             cData[6] = (byte)((int)val >> 8);
 
             byte.TryParse(cf.mf.Tls.LoadProperty("IMU"), out tmp);
             cData[7] = tmp;
+            
+            cData[8] = (byte)cf.Boxes.Value("tbIMUdelay");
+            cData[9] = (byte)cf.Boxes.Value("tbIMUinterval");
 
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[3].Name), out val);
-            cData[8] = (byte)val;
-
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[4].Name), out val);
-            cData[9] = (byte)val;
-
-            double.TryParse(cf.mf.Tls.LoadProperty(cf.CFG[5].Name), out val);
+            val = (byte)cf.Boxes.Value("tbZeroOffset");
             cData[10] = (byte)val;
             cData[11] = (byte)((int)val >> 8);
 
             byte.TryParse(cf.mf.Tls.LoadProperty("RelayControl"), out tmp);
             cData[12] = tmp;
 
-            cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+            cData[13] = (byte)cf.Boxes.Value("tbIPaddress");
+
+            bool Result = cf.mf.CommPort.Send(cData);
+            //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
+
+            return Result;
         }
     }
 }
