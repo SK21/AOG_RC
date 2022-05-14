@@ -11,12 +11,16 @@ void AdjustFlow()
                 if (pwmSetting[i] >= 0)
                 {
                     //increase
+                    if (pwmSetting[i] > 250)	pwmSetting[i] = 255;
+
                     digitalWrite(FlowDir[i], PCB.FlowOnDirection);
                     analogWrite(FlowPWM[i], pwmSetting[i]);
                 }
                 else
                 {
                     //decrease
+                    if (pwmSetting[i] < -250) pwmSetting[i] = -255;
+
                     digitalWrite(FlowDir[i], !PCB.FlowOnDirection);
                     analogWrite(FlowPWM[i], -pwmSetting[i]);	// offsets the negative pwm value
                 }

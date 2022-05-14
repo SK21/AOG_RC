@@ -1,5 +1,7 @@
 byte MSB;
 byte LSB;
+byte LoLast;
+uint32_t LoChangeTime;
 
 void SendSerial()
 {
@@ -15,50 +17,40 @@ void SendSerial()
 	//8	acc.Quantity Hi
 	//9 PWM Lo
 	//10 PWM Hi
+	//11	crc
 
 	for (int i = 0; i < PCB.SensorCount; i++)
 	{
 		// PGN 32613
-		Serial.print(101);	// headerHi
-		Serial.print(",");
-		Serial.print(127);	// headerLo
-		Serial.print(",");
-
-		Serial.print(BuildModSenID(PCB.ModuleID, i));
-		Serial.print(",");
+		Packet[0] = 101;
+		Packet[1] = 127;
+		Packet[2] = BuildModSenID(PCB.ModuleID, i);
 
 		// rate applied, 10 X actual
-		Temp = (UPM[i] * 10);
-		Serial.print(Temp);
-		Serial.print(",");
-		Temp = (int)(UPM[i] * 10) >> 8;
-		Serial.print(Temp);
-		Serial.print(",");
-		Temp = (int)(UPM[i] * 10) >> 16;
-		Serial.print(Temp);
-		Serial.print(",");
+		Packet[3] = UPM[i] * 10;
+		Packet[4] = (int)(UPM[i] * 10) >> 8;
+		Packet[5] = (int)(UPM[i] * 10) >> 16;
 
 		// accumulated quantity, 10 X actual
 		long Units = TotalPulses[i] * 10.0 / MeterCal[i];
-		Temp = Units;
-		Serial.print(Temp);
-		Serial.print(",");
-		Temp = Units >> 8;
-		Serial.print(Temp);
-		Serial.print(",");
-		Temp = Units >> 16;
-		Serial.print(Temp);
-		Serial.print(",");
+		Packet[6] = Units;
+		Packet[7] = Units >> 8;
+		Packet[8] = Units >> 16;
 
 		// pwmSetting
-		Temp = (byte)(pwmSetting[i] * 10);
-		Serial.print(Temp);
-		Serial.print(",");
-		Temp = (byte)((pwmSetting[i] * 10) >> 8);
-		Serial.print(Temp);
+		Packet[9] = pwmSetting[i] * 10;
+		Packet[10] = (pwmSetting[i] * 10) >> 8;
 
-		Serial.println();
-		Serial.flush();   // flush out buffer
+		// crc
+		Packet[11] = CRC(11, 0);
+
+		Serial.print(Packet[0]);
+		for (int i = 1; i < 12; i++)
+		{
+			Serial.print(",");
+			Serial.print(Packet[i]);
+		}
+		Serial.println("");
 	}
 }
 
@@ -68,7 +60,6 @@ void ReceiveSerial()
 		&& !PGN32619Found && !PGN32620Found
 		&& !PGN32625Found && !PGN32626Found) //find the header
 	{
-	digitalWrite(LED_BUILTIN, LOW);
 		MSB = Serial.read();
 		PGN = MSB << 8 | LSB;               //high,low bytes to make int
 		LSB = MSB;                          //save for next time
@@ -79,9 +70,15 @@ void ReceiveSerial()
 		PGN32620Found = (PGN == 32620);
 		PGN32625Found = (PGN == 32625);
 		PGN32626Found = (PGN == 32626);
+
+		if (Serial.available() > 40)
+		{
+			// clear buffer
+			while (Serial.available() > 0) char t = Serial.read();
+		}
 	}
 
-	if (Serial.available() > 8 && PGN32614Found)
+	if (Serial.available() > 11 && PGN32614Found)
 	{
 		//PGN32614 to Arduino from Rate Controller
 		//0	HeaderLo		102
@@ -97,94 +94,126 @@ void ReceiveSerial()
 		//10	Command
 		//- bit 0		    reset acc.Quantity
 		//- bit 1, 2		valve type 0 - 3
-		//- bit 3		    simulate flow
+		//- bit 3		    MasterOn
 		//- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
 		//- bit 5           AutoOn
+		//11    power relay Lo      list of power type relays 0-7
+		//12    power relay Hi      list of power type relays 8-15
+		//13	CRC
 
 		PGN32614Found = false;
-		byte tmp = Serial.read();
-		if (ParseModID(tmp) == PCB.ModuleID)
+		Packet[0] = 102;
+		Packet[1] = 127;
+		for (int i = 2; i < 14; i++)
 		{
-			byte SensorID = ParseSenID(tmp);
-			if (SensorID < PCB.SensorCount)
+			Packet[i] = Serial.read();
+		}
+
+		if (GoodCRC(14))
+		{
+			if (ParseModID(Packet[2]) == PCB.ModuleID)
 			{
-				RelayLo = Serial.read();
-				RelayHi = Serial.read();
-
-				// rate setting, 10 times actual
-				UnSignedTemp = Serial.read() | Serial.read() << 8 | Serial.read() << 16;
-				float TmpSet = (float)(UnSignedTemp * 0.1);
-
-				// Meter Cal, 100 times actual
-				UnSignedTemp = Serial.read() | Serial.read() << 8;
-				MeterCal[SensorID] = (float)(UnSignedTemp * 0.01);
-
-				// command byte
-				InCommand[SensorID] = Serial.read();
-				if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
-
-				ControlType[SensorID] = 0;
-				if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
-				if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
-
-				UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
-
-				AutoOn = ((InCommand[SensorID] & 32) == 32);
-				if (AutoOn)
+				byte SensorID = ParseSenID(Packet[2]);
+				if (SensorID < PCB.SensorCount)
 				{
-					RateSetting[SensorID] = TmpSet;
-				}
-				else
-				{
-					NewRateFactor[SensorID] = TmpSet;
-				}
+					RelayLo = Packet[3];
+					RelayHi = Packet[4];
 
-				CheckLast = millis();
-				CommTime[SensorID] = millis();
+					// rate setting, 10 times actual
+					UnSignedTemp = Packet[5] | Packet[6] << 8 | Packet[7] << 16;
+					float TmpSet = (float)(UnSignedTemp * 0.1);
+
+					// Meter Cal, 100 times actual
+					UnSignedTemp = Packet[8] | Packet[9] << 8;
+					MeterCal[SensorID] = (float)(UnSignedTemp * 0.01);
+
+					// command byte
+					InCommand[SensorID] = Packet[10];
+					if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
+
+					ControlType[SensorID] = 0;
+					if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
+					if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
+
+					MasterOn[SensorID] = ((InCommand[SensorID] & 8) == 8);
+					UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
+
+					AutoOn = ((InCommand[SensorID] & 32) == 32);
+					if (AutoOn)
+					{
+						RateSetting[SensorID] = TmpSet;
+					}
+					else
+					{
+						NewRateFactor[SensorID] = TmpSet;
+					}
+
+					// power relays
+					PowerRelayLo = Packet[11];
+					PowerRelayHi = Packet[12];
+
+					CommTime[SensorID] = millis();
+				}
 			}
 		}
 	}
 
-	else if (Serial.available() > 7 && PGN32616Found)
+	else if (Serial.available() > 8 && PGN32616Found)
 	{
 		// PID to Arduino from RateController
 		PGN32616Found = false;
-		byte tmp = Serial.read();
-		if (ParseModID(tmp) == PCB.ModuleID)
+		Packet[0] = 104;
+		Packet[1] = 127;
+		for (int i = 2; i < 11; i++)
 		{
-			byte SensorID = ParseSenID(tmp);
-			if (SensorID < PCB.SensorCount)
-			{
-				PIDkp[SensorID] = Serial.read();
-				PIDminPWM[SensorID] = Serial.read();
-				PIDLowMax[SensorID] = Serial.read();
-				PIDHighMax[SensorID] = Serial.read();
-				PIDdeadband[SensorID] = Serial.read();
-				PIDbrakePoint[SensorID] = Serial.read();
-				AdjustTime[SensorID] = Serial.read();
+			Packet[i] = Serial.read();
+		}
 
-				CheckLast = millis();
-				CommTime[SensorID] = millis();
+		if (GoodCRC(11))
+		{
+			if (ParseModID(Packet[2] == PCB.ModuleID))
+			{
+				byte SensorID = ParseSenID(Packet[2]);
+				if (SensorID < PCB.SensorCount)
+				{
+					PIDkp[SensorID] = Packet[3];
+					PIDminPWM[SensorID] = Packet[4];
+					PIDLowMax[SensorID] = Packet[5];
+					PIDHighMax[SensorID] = Packet[6];
+					PIDdeadband[SensorID] = Packet[7];
+					PIDbrakePoint[SensorID] = Packet[8];
+					AdjustTime[SensorID] = Packet[9];
+
+					CommTime[SensorID] = millis();
+
+				}
 			}
 		}
 	}
 
-	else if (Serial.available() > 2 && PGN32619Found)
+	else if (Serial.available() > 3 && PGN32619Found)
 	{
 		// from Wemos D1 mini
 		// section buttons
+		// 6 bytes
+
 		PGN32619Found = false;
-		for (int i = 2; i < 5; i++)
+		Packet[0] = 107;
+		Packet[1] = 127;
+		for (int i = 2; i < 6; i++)
 		{
-			WifiSwitches[i] = Serial.read();
+			Packet[i] = Serial.read();
+			WifiSwitches[i] = Packet[i];
 		}
-		WifiSwitchesEnabled = true;
-		WifiSwitchesTimer = millis();
-		SetRelaysWifi();
-		CheckLast = millis();
+
+		if (GoodCRC(6))
+		{
+			WifiSwitchesEnabled = true;
+			WifiSwitchesTimer = millis();
+		}
 	}
 
-	else if (Serial.available() > 7 && PGN32620Found)
+	else if (Serial.available() > 8 && PGN32620Found)
 	{
 		// from rate controller
 		// section switch IDs to arduino
@@ -198,15 +227,25 @@ void ReceiveSerial()
 		// 7    sec 10-11
 		// 8    sec 12-13
 		// 9    sec 14-15
+		// 10	crc
 
+		// 11 bytes
 		PGN32620Found = false;
-		for (int i = 0; i < 8; i++)
+		Packet[0] = 108;
+		Packet[1] = 127;
+		for (int i = 2; i < 11; i++)
 		{
-			SwitchBytes[i] = Serial.read();
+			Packet[i] = Serial.read();
 		}
 
-		TranslateSwitchBytes();
-		CheckLast = millis();
+		if (GoodCRC(11))
+		{
+			for (int i = 0; i < 8; i++)
+			{
+				SwitchBytes[i] = Packet[i + 2];
+			}
+			TranslateSwitchBytes();
+		}
 	}
 
 	else if (Serial.available() > 2 && PGN32625Found)
@@ -217,24 +256,39 @@ void ReceiveSerial()
 		// 1    127
 		// 2    ModuleID
 		// 3    SensorCount
-		// 4    Commands
+		// 4	IP address
+		// 5    Commands
 		//      - UseMCP23017
 		//      - RelyOnSignal
 		//      - FlowOnSignal
+		// 6	crc
+
+		// 7 bytes
 
 		PGN32625Found = false;
-		PCB.ModuleID = Serial.read();
-		PCB.SensorCount = Serial.read();
-		byte tmp = Serial.read();
-		if ((tmp & 1) == 1) PCB.UseMCP23017 = 1; else PCB.UseMCP23017 = 0;
-		if ((tmp & 2) == 2) PCB.RelayOnSignal = 1; else PCB.RelayOnSignal = 0;
-		if ((tmp & 4) == 4) PCB.FlowOnDirection = 1; else PCB.FlowOnDirection = 0;
+		Packet[0] = 113;
+		Packet[1] = 127;
+		for (int i = 2; i < 7; i++)
+		{
+			Packet[i] = Serial.read();
+		}
 
-		EEPROM.put(10, PCB);
-		CheckLast = millis();
+		if (GoodCRC(7))
+		{
+			PCB.ModuleID = Packet[2];
+			PCB.SensorCount = Packet[3];
+			PCB.IPpart3 = Packet[4];
+
+			byte tmp = Packet[5];
+			if ((tmp & 1) == 1) PCB.UseMCP23017 = 1; else PCB.UseMCP23017 = 0;
+			if ((tmp & 2) == 2) PCB.RelayOnSignal = 1; else PCB.RelayOnSignal = 0;
+			if ((tmp & 4) == 4) PCB.FlowOnDirection = 1; else PCB.FlowOnDirection = 0;
+
+			EEPROM.put(10, PCB);
+		}
 	}
 
-	else if (Serial.available() > 21 && PGN32626Found)
+	else if (Serial.available() > 22 && PGN32626Found)
 	{
 		// from rate controller
 		// Nano pins
@@ -247,24 +301,35 @@ void ReceiveSerial()
 		// 6        PWM 1
 		// 7        PWM 2
 		// 8 - 23   Relays 1-16
+		// 24		crc
 
+		// 25 bytes
 		PGN32626Found = false;
-		PINS.Flow1 = Serial.read();
-		PINS.Flow2 = Serial.read();
-		PINS.Dir1 = Serial.read();
-		PINS.Dir2 = Serial.read();
-		PINS.PWM1 = Serial.read();
-		PINS.PWM2 = Serial.read();
-
-		for (int i = 0; i < 16; i++)
+		Packet[0] = 114;
+		Packet[1] = 127;
+		for (int i = 2; i < 25; i++)
 		{
-			PINS.Relays[i] = Serial.read();
+			Packet[i] = Serial.read();
 		}
 
-		EEPROM.put(40, PINS);
-		CheckLast = millis();
+		if (GoodCRC(25))
+		{
+			PINS.Flow1 = Packet[2];
+			PINS.Flow2 = Packet[3];
+			PINS.Dir1 = Packet[4];
+			PINS.Dir2 = Packet[5];
+			PINS.PWM1 = Packet[6];
+			PINS.PWM2 = Packet[7];
 
-		//reset the arduino
-		resetFunc();
+			for (int i = 0; i < 16; i++)
+			{
+				PINS.Relays[i] = Packet[i + 8];
+			}
+
+			EEPROM.put(40, PINS);
+
+			//reset the arduino
+			resetFunc();
+		}
 	}
 }

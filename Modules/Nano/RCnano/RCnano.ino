@@ -5,8 +5,9 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
-# define InoDescription "RCnano  :  22-Apr-2022"
+# define InoDescription "RCnano  :  11-May-2022"
 # define UseEthernet 0
+# define DebugOn 0
 
 struct PCBconfig    // 5 bytes
 {
@@ -15,6 +16,7 @@ struct PCBconfig    // 5 bytes
 	uint8_t RelayOnSignal = 0;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t SensorCount = 1;        // up to 2 sensors
+	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
 };
 
 PCBconfig PCB;
@@ -39,26 +41,16 @@ struct PCBpinConfig // 22 bytes
 PCBpinConfig PINS;
 
 #if UseEthernet
-// gateway ip address
-static byte gwip[] = { 192, 168, 5, 1 };
-//DNS- you just need one anyway
-static byte myDNS[] = { 8, 8, 8, 8 };
-//mask
-static byte mask[] = { 255, 255, 255, 0 };
-
 // local ports on Arduino
 unsigned int ListeningPort = 28888;	// to listen on
 unsigned int SourcePort = 6100;		// to send from
 
 // ethernet destination - Rate Controller
-static byte DestinationIP[] = { 192, 168, 5, 255 };	// broadcast 255
+byte DestinationIP[] = { 192, 168, 1, 255 };	// broadcast 255
 unsigned int DestinationPort = 29999; // Rate Controller listening port
 
 byte Ethernet::buffer[500]; // udp send and receive buffer
 #endif
-
-//Array to send data back to AgOpenGPS
-byte toSend[2][11] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 
 Adafruit_MCP23X17 mcp;
 
@@ -99,9 +91,6 @@ uint32_t LoopLast = LOOP_TIME;
 const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
 
-const uint16_t CheckTime = 1000;    // check serial buffer full
-uint32_t CheckLast = CheckTime;
-
 float UPM[2];   // UPM rate
 int pwmSetting[2];
 
@@ -127,6 +116,8 @@ float MeterCal[] = { 1.0, 1.0 };	// pulses per Unit
 //bit 0 is section 0
 byte RelayLo = 0;	// sections 0-7
 byte RelayHi = 0;	// sections 8-15
+byte PowerRelayLo;
+byte PowerRelayHi;
 
 byte Temp = 0;
 unsigned int UnSignedTemp = 0;
@@ -140,12 +131,10 @@ float ManualFactor[2];
 // Use Serial RX, remove RX wire before uploading
 unsigned long WifiSwitchesTimer;
 bool WifiSwitchesEnabled = false;
-byte WifiSwitches[5];
+byte WifiSwitches[6];
 
 byte SwitchBytes[8];
 byte SectionSwitchID[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-
-bool EthernetEnabled = false;
 bool UseMultiPulses[2] = { 0, 0 };   //  0 - average time for multiple pulses, 1 - time for one pulse
 
 unsigned int PGN;
@@ -162,6 +151,14 @@ void(*resetFunc) (void) = 0;
 //EEPROM
 int16_t EEread = 0;
 #define PCB_Ident 2388
+
+bool MasterOn[2];
+byte CRCvalue;
+byte Packet[30];
+bool IOexpanderFound;
+uint8_t ErrorCount;
+
+uint32_t DebugTime;
 
 void setup()
 {
@@ -203,36 +200,50 @@ void setup()
 	Wire.begin();
 	if (PCB.UseMCP23017)
 	{
-		Wire.beginTransmission(0x20);
-		if (Wire.endTransmission() == 0)
+		// I/O expander on default address 0x20
+		Serial.println("");
+		Serial.println("Starting I/O Expander ...");
+		ErrorCount = 0;
+		while (!IOexpanderFound)
 		{
-			Serial.println("MCP23017 Found.");
+			Serial.print(".");
+			Wire.beginTransmission(0x20);
+			IOexpanderFound = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		Serial.println("");
+		if (IOexpanderFound)
+		{
+			Serial.println("I/O expander found.");
+			mcp.begin_I2C();
+
+			// MCP20317 pins
+			mcp.pinMode(Relay1, OUTPUT);
+			mcp.pinMode(Relay2, OUTPUT);
+			mcp.pinMode(Relay3, OUTPUT);
+			mcp.pinMode(Relay4, OUTPUT);
+			mcp.pinMode(Relay5, OUTPUT);
+			mcp.pinMode(Relay6, OUTPUT);
+			mcp.pinMode(Relay7, OUTPUT);
+			mcp.pinMode(Relay8, OUTPUT);
+
+			mcp.pinMode(Relay9, OUTPUT);
+			mcp.pinMode(Relay10, OUTPUT);
+			mcp.pinMode(Relay11, OUTPUT);
+			mcp.pinMode(Relay12, OUTPUT);
+			mcp.pinMode(Relay13, OUTPUT);
+			mcp.pinMode(Relay14, OUTPUT);
+			mcp.pinMode(Relay15, OUTPUT);
+			mcp.pinMode(Relay16, OUTPUT);
+
 		}
 		else
 		{
-			Serial.println("MCP23017 not found.");
+			Serial.println("I/O expander not found.");
 		}
-
-		mcp.begin_I2C();
-
-		// MCP20317 pins
-		mcp.pinMode(Relay1, OUTPUT);
-		mcp.pinMode(Relay2, OUTPUT);
-		mcp.pinMode(Relay3, OUTPUT);
-		mcp.pinMode(Relay4, OUTPUT);
-		mcp.pinMode(Relay5, OUTPUT);
-		mcp.pinMode(Relay6, OUTPUT);
-		mcp.pinMode(Relay7, OUTPUT);
-		mcp.pinMode(Relay8, OUTPUT);
-
-		mcp.pinMode(Relay9, OUTPUT);
-		mcp.pinMode(Relay10, OUTPUT);
-		mcp.pinMode(Relay11, OUTPUT);
-		mcp.pinMode(Relay12, OUTPUT);
-		mcp.pinMode(Relay13, OUTPUT);
-		mcp.pinMode(Relay14, OUTPUT);
-		mcp.pinMode(Relay15, OUTPUT);
-		mcp.pinMode(Relay16, OUTPUT);
 	}
 	else
 	{
@@ -263,17 +274,25 @@ void setup()
 	attachInterrupt(digitalPinToInterrupt(FlowPin[1]), ISR1, FALLING);
 
 #if UseEthernet
+	Serial.println("Starting Ethernet ...");
 	// ethernet interface ip address
-	byte ArduinoIP[] = { 192, 168, 5, 110 + PCB.ModuleID };
+	byte ArduinoIP[] = { 192, 168,PCB.IPpart3, 207 + PCB.ModuleID };
 
 	// ethernet interface Mac address
 	byte LocalMac[] = { 0x70, 0x31, 0x21, 0x2D, 0x62, PCB.ModuleID };
 
-	while (!EthernetEnabled)
-	{
-		EthernetEnabled = (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) != 0);
-		Serial.print(".");
-	}
+	// gateway ip address
+	static byte gwip[] = { 192, 168,PCB.IPpart3, 1 };
+
+	//DNS- you just need one anyway
+	static byte myDNS[] = { 8, 8, 8, 8 };
+
+	//mask
+	static byte mask[] = { 255, 255, 255, 0 };
+
+	DestinationIP[2] = PCB.IPpart3;
+
+	ether.begin(sizeof Ethernet::buffer, LocalMac, 10) != 0;
 
 	Serial.println("");
 	Serial.println("Ethernet controller found.");
@@ -283,6 +302,8 @@ void setup()
 	//register sub for received data
 	ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
 #endif
+	pinMode(LED_BUILTIN, OUTPUT);
+	digitalWrite(LED_BUILTIN, LOW);
 
 	Serial.println("");
 	Serial.println("Finished Setup.");
@@ -299,7 +320,7 @@ void loop()
 
 		for (int i = 0; i < PCB.SensorCount; i++)
 		{
-			FlowEnabled[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0);
+			FlowEnabled[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0) && MasterOn[i];
 		}
 
 		CheckRelays();
@@ -324,19 +345,15 @@ void loop()
 #endif
 	}
 
-	if (millis() - CheckLast > CheckTime)
-	{
-		CheckLast = millis();
-
-		//clean out serial buffer
-		while (Serial.available() > 0) char t = Serial.read();
-	}
-
 #if UseEthernet
 	delay(10);
 
 	//this must be called for ethercard functions to work.
 	ether.packetLoop(ether.packetReceive());
+#endif
+
+#if DebugOn
+	DebugTheINO();
 #endif
 }
 
@@ -452,9 +469,69 @@ void TranslateSwitchBytes()
 		SectionSwitchID[i] = SectionSwitchID[i] >> (4 * (i - 2 * ByteID)); // move bits for number
 	}
 }
-
-void ToSerial(char* Description, float Val)
+#if DebugOn
+void DebugTheINO()
 {
-	Serial.print(Description);
-	Serial.println(Val);
+	// send debug info to RateController
+	if (DebugOn && (millis() - DebugTime > 1000))
+	{
+		DebugTime = millis();
+
+		// PGN 2748 - 0xABC
+		Serial.print(0xBC);
+		Serial.print(",");
+		Serial.print(0xA);
+		Serial.print(",");
+
+		Serial.print(MasterOn[0]);
+		Serial.print(",");
+		Serial.print(PowerRelayLo);
+		Serial.print(",");
+		Serial.print(PowerRelayHi);
+		Serial.print(",");
+		Serial.print(FlowEnabled[0]);
+		Serial.print(",");
+		Serial.print(RelayLo);
+		Serial.print(",");
+		Serial.print(RelayHi);
+
+		Serial.print(",");
+		Serial.print(CRCvalue);
+		Serial.print(",");
+		Serial.print(CRCexpected);
+		Serial.print(",");
+		Serial.print(BadCRC);
+
+		
+		//for (int i = 1; i < 15; i++)
+		//{
+		//	Serial.print(",");
+		//	Serial.print(Packet[i]);
+		//}
+
+		Serial.println("");
+	}
+}
+#endif
+
+bool GoodCRC(uint16_t Length)
+{
+	byte ck = CRC(Length - 1, 0);
+	bool Result = (ck == Packet[Length - 1]);
+	return Result;
+}
+
+byte CRC(int Length, byte Start)
+{
+	byte Result = 0;
+	if (Length <= sizeof(Packet))
+	{
+		int CK = 0;
+		for (int i = Start; i < Length; i++)
+		{
+			CK += Packet[i];
+		}
+		Result = (byte)CK;
+	}
+	return Result;
 }
