@@ -1,4 +1,5 @@
-# define InoDescription "RCwifi  :  25-Jan-2022"
+# define InoDescription "RCwifi  :  11-May-2022"
+
 // used for remote section on/off to test if functional
 // for Wemos D1 mini Pro,  board: LOLIN(Wemos) D1 R2 & mini
 // OTA update from access point using Arduino IDE
@@ -21,13 +22,13 @@ bool BlinkState;
 bool MasterOn = false;
 bool Button[16];
 
-byte SendData[5];
 byte SendByte;
 byte SendBit;
 
 unsigned long LoopTime;
 String tmp;
 IPAddress apIP(192, 168, 4, 1);
+byte Packet[30];
 
 void setup()
 {
@@ -54,8 +55,8 @@ void setup()
 	server.begin();
 	Serial.println("HTTP server started");
 
-	SendData[0] = 107;
-	SendData[1] = 127;
+	Packet[0] = 107;
+	Packet[1] = 127;
 
 	Serial.println("Finished Setup");
 }
@@ -85,22 +86,27 @@ void Send()
 	// 2    MasterOn
 	// 3	switches 0-7
 	// 4	switches 8-15
-	SendData[2] = MasterOn;
-	SendData[3] = 0;
-	SendData[4] = 0;
+	// 5	crc
+
+	Packet[2] = MasterOn;
+	Packet[3] = 0;
+	Packet[4] = 0;
 
 	// convert section switches to bits
 	for (int i = 0; i < 16; i++)
 	{
 		SendByte = i / 8;
 		SendBit = i - SendByte * 8;
-		if (Button[i]) bitSet(SendData[SendByte + 3], SendBit);
+		if (Button[i]) bitSet(Packet[SendByte + 3], SendBit);
 	}
 
+	// crc
+	Packet[5] = CRC(5, 0);
+
 	// send
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 	{
-		Serial.write(SendData[i]);
+		Serial.write(Packet[i]);
 		yield();
 	}
 	Serial.println("");
@@ -223,3 +229,26 @@ String GetPage1()
 
 	return st;
 }
+
+bool GoodCRC(uint16_t Length)
+{
+	byte ck = CRC(Length - 1, 0);
+	bool Result = (ck == Packet[Length - 1]);
+	return Result;
+}
+
+byte CRC(int Length, byte Start)
+{
+	byte Result = 0;
+	if (Length <= sizeof(Packet))
+	{
+		int CK = 0;
+		for (int i = Start; i < Length; i++)
+		{
+			CK += Packet[i];
+		}
+		Result = (byte)CK;
+	}
+	return Result;
+}
+
