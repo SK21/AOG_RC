@@ -10,7 +10,7 @@ void DoRate()
 
         for (int i = 0; i < 1; i++)
         {
-            FlowEnabled[i] = (millis() - RateCommTime[i] < 4000) && (RateSetting[i] > 0);
+            FlowEnabled[i] = (millis() - RateCommTime[i] < 4000) && (RateSetting[i] > 0) && MasterOn;
         }
 
         GetUPM();

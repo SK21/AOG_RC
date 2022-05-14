@@ -34,17 +34,8 @@ int16_t Ptemp;
 
 void DoPanda()
 {
-     // NMEA, from receiver to parser
-    if (PCB.NMEAserialPort == 0)
-    {
-        // usb serial
-        if (Serial.available()) parser << Serial.read();
-    }
-    else
-    {
-        // hardware serial
-        if (SerialNMEA->available()) parser << SerialNMEA->read();
-    }
+    // NMEA, from receiver to parser
+    if (SerialNMEA->available()) parser << SerialNMEA->read();
 
     // RTCM, from AGIO to receiver
     int packetSize = UDPgps.parsePacket();
@@ -88,6 +79,16 @@ void errorHandler()
     //nothing at the moment
 }
 
+void VTG_Handler()
+{
+    //vtg heading
+    if (parser.getArg(0, vtgHeading));
+
+    //vtg Speed knots
+    if (parser.getArg(4, speedKnots));
+    if (!PCB.GGAlast) BuildPanda();
+}
+
 void GGA_Handler() //Rec'd GGA
 {
     // fix time
@@ -116,6 +117,11 @@ void GGA_Handler() //Rec'd GGA
     //time of last DGPS update
     if (parser.getArg(12, ageDGPS));
 
+    if (PCB.GGAlast) BuildPanda();
+}
+
+void BuildPanda()
+{
     // build Panda
     strcpy(nme, "");
 

@@ -8,17 +8,24 @@ void ReceiveWemos()
 		LSB = MSB;
 		PGN32619Found = (PGN == 32619);
 	}
-	if (Serial1.available() > 2 && PGN32619Found)
+	if (Serial1.available() > 3 && PGN32619Found)
 	{
 		// from Wemos D1 mini
 		// section buttons
 		PGN32619Found = false;
-		for (int16_t i = 2; i < 5; i++)
+		Packet[0] = 107;
+		Packet[1] = 127;
+		for (int i = 2; i < 6; i++)
 		{
-			WifiSwitches[i] = Serial1.read();
+			Packet[i] = Serial1.read();
+			WifiSwitches[i] = Packet[i];
 		}
-		WifiSwitchesEnabled = true;
-		WifiSwitchesTimer = millis();
+
+		if (GoodCRC(6))
+		{
+			WifiSwitchesEnabled = true;
+			WifiSwitchesTimer = millis();
+		}
 	}
 }
 

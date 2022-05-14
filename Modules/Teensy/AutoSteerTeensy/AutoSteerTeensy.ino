@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   30-Apr-2022"
+# define InoDescription "AutoSteerTeensy   09-May-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -158,8 +158,8 @@ int16_t EEread = 0;
 #define PCB_Ident 2388
 
 // Rate control
+bool MasterOn;
 #define MaxFlowSensorCount 2
-byte RateSend[11];
 bool FlowEnabled[MaxFlowSensorCount];
 float rateError[MaxFlowSensorCount];
 float UPM[MaxFlowSensorCount];
@@ -181,9 +181,11 @@ byte ManualPWMsetting;
 float RateSetting[MaxFlowSensorCount];
 float MeterCal[MaxFlowSensorCount];
 
+bool AutoOn = true;
 byte RelayLo;
 byte RelayHi;
-bool AutoOn = true;
+byte PowerRelayLo;
+byte PowerRelayHi;
 
 unsigned int PGN;
 byte LSB;
@@ -192,17 +194,14 @@ byte MSB;
 bool PGN32614Found;
 bool PGN32616Found;
 bool PGN32619Found;
-bool PGN32620Found;
 
 float NewRateFactor[MaxFlowSensorCount];
 uint16_t ManualLast[MaxFlowSensorCount];
 float ManualFactor;
 uint32_t WifiSwitchesTimer;
 bool WifiSwitchesEnabled = false;
-byte WifiSwitches[5];
+byte WifiSwitches[6];
 
-byte SwitchBytes[8];
-byte SectionSwitchID[] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
 bool UseMultiPulses[MaxFlowSensorCount];
 
 // Rate port
@@ -231,7 +230,8 @@ HardwareSerial* SerialNMEA;
 HardwareSerial* SerialRS485;
 
 PCA9555 ioex;
-uint16_t Information = 0;
+bool IOexpanderFound = false;
+byte Packet[30];
 
 void setup()
 {
@@ -343,7 +343,7 @@ void setup()
 
 		parser.setErrorHandler(errorHandler);
 		parser.addHandler("G-GGA", GGA_Handler);
-		//parser.addHandler("G-VTG", VTG_Handler);
+		parser.addHandler("G-VTG", VTG_Handler);
 
 		static char NMEAreceiveBuffer[512];
 		static char NMEAsendBuffer[512];
@@ -360,7 +360,7 @@ void setup()
 	pinMode(PINS.WORKSW, INPUT_PULLUP);
 	pinMode(PINS.STEERSW, INPUT_PULLUP);
 	pinMode(PINS.SteerDir, OUTPUT);
-	pinMode(PINS.FlowDir, OUTPUT);
+	pinMode(PINS.SteerPWM, OUTPUT);
 	pinMode(PINS.SteerSW_Relay, OUTPUT);
 	pinMode(PINS.SpeedPulse, OUTPUT);
 
@@ -530,13 +530,12 @@ void setup()
 		Serial.println(PCB.ModuleID);
 		Serial.println();
 
+		pinMode(PINS.FlowDir, OUTPUT);
+		pinMode(PINS.FlowPWM, OUTPUT);
 		pinMode(PINS.Encoder, INPUT_PULLUP);
+
 		attachInterrupt(digitalPinToInterrupt(PINS.Encoder), ISR0, FALLING);
 		UDPrate.begin(ListeningPortRate);
-
-		RateSend[0] = 101;
-		RateSend[1] = 127;
-		RateSend[2] = BuildModSenID(PCB.ModuleID, 0);
 	}
 
 	UDPconfig.begin(ListeningPortConfig);
@@ -550,14 +549,36 @@ void setup()
 	// relays
 	if (PCB.RelayControl == 2 || PCB.RelayControl == 3)
 	{
-		// PCA9555 I/O expander
-		ioex.attach(Wire);
-		ioex.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
-		ioex.direction(PCA95x5::Direction::OUT_ALL);
-		ioex.write(PCA95x5::Level::H_ALL);
+		// PCA9555 I/O expander on default address 0x20
+		Serial.println("");
+		Serial.println("Starting PCA9555 I/O Expander ...");
+		ErrorCount = 0;
+		while (!IOexpanderFound)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(0x20);
+			IOexpanderFound = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		Serial.println("");
+		if (IOexpanderFound)
+		{
+			Serial.println("I/O expander found.");
+
+			ioex.attach(Wire);
+			ioex.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
+			ioex.direction(PCA95x5::Direction::OUT_ALL);
+			ioex.write(PCA95x5::Level::H_ALL);
+		}
+		else
+		{
+			Serial.println("I/O expander not found.");
+		}
 	}
 
-	Information = PCB.IPpart3;
 	Serial.println("");
 	Serial.println("Finished setup.");
 }
@@ -593,8 +614,7 @@ void Blink()
 		if (State) digitalWrite(LED_BUILTIN, HIGH);
 		else digitalWrite(LED_BUILTIN, LOW);
 		BlinkTime = millis();
-
-		Serial.println(Information);
+		Serial.println(".");	// needed to allow PCBsetup to connect
 	}
 }
 
@@ -617,3 +637,26 @@ void SendSpeedPulse()
 		}
 	}
 }
+
+bool GoodCRC(uint16_t Length)
+{
+	byte ck = CRC(Length - 1, 0);
+	bool Result = (ck == Packet[Length - 1]);
+	return Result;
+}
+
+byte CRC(uint16_t Length, byte Start)
+{
+	byte Result = 0;
+	if (Length <= sizeof(Packet))
+	{
+		int CK = 0;
+		for (int i = Start; i < Length; i++)
+		{
+			CK += Packet[i];
+		}
+		Result = (byte)CK;
+	}
+	return Result;
+}
+
