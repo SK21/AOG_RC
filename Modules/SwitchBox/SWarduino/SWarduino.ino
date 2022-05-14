@@ -1,23 +1,21 @@
 #include <EtherCard.h>
 #include <EEPROM.h>
 
-# define InoDescription "SWarduino  :  29-Apr-2022"
+# define InoDescription "SWarduino  :  09-May-2022"
 // Nano board for rate control switches
 
 #define UseEthernet 0
 
 struct PCBconfig
 {
-	uint8_t	SW0 = A4;
-	uint8_t	SW1 = 9;
-	uint8_t	SW2 = 6;
-	uint8_t	SW3 = 4;
+	// SW2 pcb
 	uint8_t	Auto = A5;
 	uint8_t MasterOn = 5;
 	uint8_t	MasterOff = 3;
 	uint8_t	RateUp = A3;
 	uint8_t RateDown = A2;
 	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
+	uint8_t PinIDs[16];
 };
 
 PCBconfig PCB;
@@ -28,7 +26,7 @@ unsigned int ListeningPort = 28888;	// to listen on
 unsigned int SourcePort = 6200;		// to send from
 
 // ethernet destination - Rate Controller
-byte DestinationIP[] = { 192, 168,PCB.IPpart3, 255 };	// broadcast 255
+byte DestinationIP[] = { 192, 168, 1, 255 };	// broadcast 255
 unsigned int DestinationPort = 29999; // Rate Controller listening port
 
 byte Ethernet::buffer[500]; // udp send and receive buffer
@@ -36,8 +34,8 @@ bool EthernetEnabled = false;
 #endif
 
 //PGN 32618 to send data back
-byte toSend[] = { 106,127,0,0,0 };
-byte Pins[] = { 0,0,0,0,0,0,0,0,0 };
+byte Pins[5];
+byte Packet[30];
 
 unsigned long LastTime;
 byte MSB;
@@ -61,7 +59,18 @@ void setup()
 	Serial.println(InoDescription);
 	Serial.println();
 
-	// pcb data
+	// defaults
+	PCB.PinIDs[0] = A4;
+	PCB.PinIDs[1] = 9;
+	PCB.PinIDs[2] = 6;
+	PCB.PinIDs[3] = 4;
+
+	for (int i = 4; i < 16; i++)
+	{
+		PCB.PinIDs[i] = 0;
+	}
+
+	// stored pcb data
 	EEPROM.get(0, EEread);              // read identifier
 	if (EEread != PCB_Ident)
 	{
@@ -73,19 +82,16 @@ void setup()
 		EEPROM.get(10, PCB);
 	}
 
-	pinMode(PCB.SW0, INPUT_PULLUP);
-	pinMode(PCB.SW1, INPUT_PULLUP);
-	pinMode(PCB.SW2, INPUT_PULLUP);
-
-	pinMode(PCB.SW3, INPUT_PULLUP);
 	pinMode(PCB.Auto, INPUT_PULLUP);
 	pinMode(PCB.MasterOn, INPUT_PULLUP);
-
 	pinMode(PCB.MasterOff, INPUT_PULLUP);
 	pinMode(PCB.RateUp, INPUT_PULLUP);
 	pinMode(PCB.RateDown, INPUT_PULLUP);
 
-	Serial.print(PCB.IPpart3);
+	for (int i = 0; i < 16; i++)
+	{
+		if (PCB.PinIDs[i] > 0) pinMode(PCB.PinIDs[i], INPUT_PULLUP);
+	}
 
 #if UseEthernet
 	Serial.println("Starting Ethernet ...");
@@ -104,7 +110,7 @@ void setup()
 	//mask
 	static byte mask[] = { 255,255,255,0 };
 
-	DestinationIP[3] = PCB.IPpart3;
+	DestinationIP[2] = PCB.IPpart3;
 
 	while (!EthernetEnabled)
 	{
@@ -118,7 +124,7 @@ void setup()
 	ether.printIp("IP Address:     ", ether.myip);
 
 	//register sub for received data
-	ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
+	//ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
 #endif
 	pinMode(LED_BUILTIN, OUTPUT);
 	digitalWrite(LED_BUILTIN, LOW);
@@ -133,46 +139,55 @@ void loop()
 	{
 		LastTime = millis();
 
+		Packet[0] = 106;
+		Packet[1] = 127;
+
 		// read switches
-		// toSend[2]
 		Pins[0] = !digitalRead(PCB.Auto);
 		Pins[1] = !digitalRead(PCB.MasterOn);
 		Pins[2] = !digitalRead(PCB.MasterOff);
 		Pins[3] = !digitalRead(PCB.RateUp);
 		Pins[4] = !digitalRead(PCB.RateDown);
 
-		// toSend[3]
-		Pins[5] = !digitalRead(PCB.SW0);
-		Pins[6] = !digitalRead(PCB.SW1);
-		Pins[7] = !digitalRead(PCB.SW2);
-		Pins[8] = !digitalRead(PCB.SW3);
-
-		// build data
-		toSend[2] = 0;
-		toSend[3] = 0;
-
+		Packet[2] = 0;
 		for (int i = 0; i < 5; i++)
 		{
-			if (Pins[i]) toSend[2] = toSend[2] | (1 << i);
+			if (Pins[i]) Packet[2] = Packet[2] | (1 << i);
 		}
 
-		for (int i = 0; i < 4; i++)
+
+		Packet[3] = 0;
+		Packet[4] = 0;
+		for (int i = 0; i < 16; i++)
 		{
-			if (Pins[i + 5]) toSend[3] = toSend[3] | (1 << i);
+			if (PCB.PinIDs[i] > 0)
+			{
+				if (i < 8)
+				{
+					if (!digitalRead(PCB.PinIDs[i])) Packet[3] = Packet[3] | (1 << i);
+				}
+				else
+				{
+					if (!digitalRead(PCB.PinIDs[i])) Packet[4] = Packet[4] | (1 << (i - 8));
+				}
+			}
 		}
+
+		Packet[5] = CRC(5, 0);
 
 		// PGN 32618
 #if UseEthernet
 			// send UDP
-		ether.sendUdp(toSend, sizeof(toSend), SourcePort, DestinationIP, DestinationPort);
+		ether.sendUdp(Packet, 6, SourcePort, DestinationIP, DestinationPort);
 #endif
 
 		// send serial
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 6; i++)
 		{
-			Serial.print(toSend[i]);
-			if (i < 4) Serial.print(",");
+			Serial.print(Packet[i]);
+			if (i < 5) Serial.print(",");
 		}
+
 		Serial.println();
 		Serial.flush();
 	}
@@ -190,25 +205,34 @@ void ReceiveSerial()
 	// pins config
 	if (Serial.available())
 	{
-		digitalWrite(LED_BUILTIN, HIGH);
 		if (PGN32627Found)
 		{
-			if (Serial.available() > 9)
+			if (Serial.available() > 22)
 			{
 				PGN32627Found = false;
-				PCB.SW0 = Serial.read();
-				PCB.SW1 = Serial.read();
-				PCB.SW2 = Serial.read();
-				PCB.SW3 = Serial.read();
-				PCB.Auto = Serial.read();
-				PCB.MasterOn = Serial.read();
-				PCB.MasterOff = Serial.read();
-				PCB.RateUp = Serial.read();
-				PCB.RateDown = Serial.read();
-				PCB.IPpart3 = Serial.read();
+				Packet[0] = 115;
+				Packet[1] = 127;
+				for (int i = 2; i < 25; i++)
+				{
+					Packet[i] = Serial.read();
+				}
 
-				EEPROM.put(10, PCB);
-				resetFunc();
+				if (GoodCRC(25))
+				{
+					PCB.Auto = Packet[2];
+					PCB.MasterOn = Packet[3];
+					PCB.MasterOff = Packet[4];
+					PCB.RateUp = Packet[5];
+					PCB.RateDown = Packet[6];
+					PCB.IPpart3 = Packet[7];
+
+					for (int i = 8; i < 24; i++)
+					{
+						PCB.PinIDs[i - 8] = Packet[i];
+					}
+					EEPROM.put(10, PCB);
+					resetFunc();
+				}
 			}
 		}
 		else
@@ -220,4 +244,26 @@ void ReceiveSerial()
 			PGN32627Found = (PGN == 32627);
 		}
 	}
+}
+
+bool GoodCRC(uint16_t Length)
+{
+	byte ck = CRC(Length - 1, 0);
+	bool Result = (ck == Packet[Length - 1]);
+	return Result;
+}
+
+byte CRC(uint16_t Length, byte Start)
+{
+	byte Result = 0;
+	if (Length <= sizeof(Packet))
+	{
+		int CK = 0;
+		for (int i = Start; i < Length; i++)
+		{
+			CK += Packet[i];
+		}
+		Result = (byte)CK;
+	}
+	return Result;
 }
