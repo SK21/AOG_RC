@@ -41,7 +41,7 @@ namespace PCBsetup
             cData[3] = (byte)cf.Boxes.Value("tbNMEAserialPort");
             cData[4] = (byte)cf.Boxes.Value("tbRTCMserialPort");
 
-            val = (byte)cf.Boxes.Value("tbRTCM");
+            val = cf.Boxes.Value("tbRTCM");
             cData[5] = (byte)val;
             cData[6] = (byte)((int)val >> 8);
 
@@ -51,7 +51,7 @@ namespace PCBsetup
             cData[8] = (byte)cf.Boxes.Value("tbIMUdelay");
             cData[9] = (byte)cf.Boxes.Value("tbIMUinterval");
 
-            val = (byte)cf.Boxes.Value("tbZeroOffset");
+            val = cf.Boxes.Value("tbZeroOffset");
             cData[10] = (byte)val;
             cData[11] = (byte)((int)val >> 8);
 

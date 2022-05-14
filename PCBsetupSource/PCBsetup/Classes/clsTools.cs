@@ -11,17 +11,15 @@ namespace PCBsetup
 {
     public class clsTools
     {
+        private static Hashtable ht;
         private string cAppName = "PCBsetup";
         private string cAppVersion = "1.0.0";
-        private string cVersionDate = "03-May-2022";
-
-        private string cNanoFirmware = "01-May-2022";
-        private string cSwitchboxFirmware = "01-May-2022";
-        private string cTeensyFirmware = "03-May-2022";
-
-        private static Hashtable ht;
+        private string cNanoFirmware = "11-May-2022";
         private string cPropertiesFile = "";
         private string cSettingsDir = "";
+        private string cSwitchboxFirmware = "09-May-2022";
+        private string cTeensyFirmware = "09-May-2022";
+        private string cVersionDate = "11-May-2022";
         private frmMain mf;
 
         public clsTools(frmMain CallingForm)
@@ -70,6 +68,21 @@ namespace PCBsetup
         public byte BuildModSenID(byte ArdID, byte SenID)
         {
             return (byte)(ArdID << 4 | SenID & 0b00001111);
+        }
+
+        public byte CRC(byte[] Data, int Length, byte Start = 0)
+        {
+            byte Result = 0;
+            if (Length <= Data.Length)
+            {
+                int CK = 0;
+                for (int i = Start; i < Length; i++)
+                {
+                    CK += Data[i];
+                }
+                Result = (byte)CK;
+            }
+            return Result;
         }
 
         public void DelayMilliSeconds(int MS)
@@ -123,6 +136,30 @@ namespace PCBsetup
                 //Top2
                 g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + (int)strSize.Width, rect.Y), new Point(rect.X + rect.Width, rect.Y));
             }
+        }
+
+        public bool GoodCRC(byte[] Data, byte Start = 0)
+        {
+            bool Result = false;
+            int Length = Data.Length;
+            byte cr = CRC(Data, Length - 1, Start);
+            Result = (cr == Data[Length - 1]);
+            return Result;
+        }
+
+        public bool GoodCRC(string[] Data, byte Start = 0)
+        {
+            bool Result = false;
+            byte tmp;
+            int Length = Data.Length;
+            byte[] BD = new byte[Length];
+            for (int i = 0; i < Length; i++)
+            {
+                if (byte.TryParse(Data[i], out tmp)) BD[i] = tmp;
+            }
+            byte cr = CRC(BD, Length - 1, Start);   // exclude existing crc
+            Result = (cr == BD[Length - 1]);
+            return Result;
         }
 
         public bool IsOnScreen(Form form, bool PutOnScreen = false)

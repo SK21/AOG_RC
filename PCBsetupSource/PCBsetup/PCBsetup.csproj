@@ -13,7 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\surfacepro\OneDrive\AOG\2022\Dev\PCBsetup_Install\</PublishUrl>
+    <PublishUrl>C:\Users\CoxDa\OneDrive\AOG\2022\Dev\PCBsetup_Install\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>14</ApplicationRevision>
+    <ApplicationRevision>20</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -328,7 +328,6 @@
     <None Include="Resources\SW.ino.hex" />
     <None Include="Resources\Switchbox.ino.hex" />
     <None Include="Resources\SwitchboxOldBootLoader.ino.hex" />
-    <None Include="Resources\SWNE.ino.hex" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -370,6 +369,7 @@
     <None Include="Resources\OpenFile.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\SWNE.ino.hex" />
     <None Include="Resources\SWOB.ino.hex" />
     <None Include="Resources\SWOBNE.ino.hex" />
     <None Include="Resources\UpArrow64.png" />

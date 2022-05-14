@@ -44,7 +44,7 @@ namespace PCBsetup
             cData[2] = (byte)cf.Boxes.Value("tbMinSpeed");
             cData[3] = (byte)cf.Boxes.Value("tbMaxSpeed");
 
-            val = (byte)cf.Boxes.Value("tbPulseCal");
+            val = cf.Boxes.Value("tbPulseCal");
             cData[4] = (byte)(val * 10);
             cData[5] = (byte)((int)(val * 10) >> 8);
 

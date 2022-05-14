@@ -55,15 +55,30 @@ namespace PCBsetup.Forms
         private void btnLoadDefaults_Click(object sender, EventArgs e)
         {
             tbAuto.Text = "19";
-            tbMasterOn.Text = "5";
-            tbMasterOff.Text = "3";
+            tbMasterOn.Text = "3";
+            tbMasterOff.Text = "5";
             tbRateUp.Text = "17";
             tbRateDown.Text = "16";
+            tbIPaddress.Text = "1";
+
             tbSW1.Text = "18";
             tbSW2.Text = "9";
             tbSW3.Text = "6";
             tbSW4.Text = "4";
-            tbIPaddress.Text = "1";
+            tbSW5.Text = "0";
+            tbSW6.Text = "0";
+            tbSW7.Text = "0";
+            tbSW8.Text = "0";
+
+            tbSW9.Text = "0";
+            tbSW10.Text = "0";
+            tbSW11.Text = "0";
+            tbSW12.Text = "0";
+            tbSW13.Text = "0";
+            tbSW14.Text = "0";
+            tbSW15.Text = "0";
+            tbSW16.Text = "0";
+
         }
 
         private void btnSendToModule_Click(object sender, EventArgs e)
@@ -105,16 +120,30 @@ namespace PCBsetup.Forms
 
         private void BuildBoxes()
         {
-            Boxes.Add(tbSW1, 21);
-            Boxes.Add(tbSW2, 21);
-            Boxes.Add(tbSW3, 21);
-            Boxes.Add(tbSW4, 21);
             Boxes.Add(tbAuto, 21);
             Boxes.Add(tbMasterOn, 21);
             Boxes.Add(tbMasterOff, 21);
             Boxes.Add(tbRateUp, 21);
             Boxes.Add(tbRateDown, 21);
             Boxes.Add(tbIPaddress, 254); 
+
+            Boxes.Add(tbSW1, 21);
+            Boxes.Add(tbSW2, 21);
+            Boxes.Add(tbSW3, 21);
+            Boxes.Add(tbSW4, 21);
+            Boxes.Add(tbSW5, 21);
+            Boxes.Add(tbSW6, 21);
+            Boxes.Add(tbSW7, 21);
+            Boxes.Add(tbSW8, 21);
+
+            Boxes.Add(tbSW9, 21);
+            Boxes.Add(tbSW10, 21);
+            Boxes.Add(tbSW11, 21);
+            Boxes.Add(tbSW12, 21);
+            Boxes.Add(tbSW13, 21);
+            Boxes.Add(tbSW14, 21);
+            Boxes.Add(tbSW15, 21);
+            Boxes.Add(tbSW16, 21);
 
             for (int i = 0; i < Boxes.Count(); i++)
             {
@@ -245,6 +274,16 @@ namespace PCBsetup.Forms
             Initializing = true;
             LoadSettings();
             Initializing = false;
+        }
+
+        private void tbIPaddress_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbRateDown_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
