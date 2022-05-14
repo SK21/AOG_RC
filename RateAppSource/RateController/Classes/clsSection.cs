@@ -44,16 +44,18 @@ namespace RateController
 
         public bool IsON
         {
-            get { return cSectionOn; }
+            get
+            {
+                bool Result = false;
+                if (cEnabled) Result = cSectionOn;
+                return Result;
+            }
             set
             {
                 if (cSectionOn != value)
                 {
-                    if (value == true && cEnabled == false)
-                    {
-                        cSectionOn = false;
-                    }
                     cSectionOn = value;
+                    cEdited = true;
                 }
             }
         }

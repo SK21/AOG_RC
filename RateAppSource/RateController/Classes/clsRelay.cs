@@ -77,6 +77,8 @@ namespace RateController
 
         public void Save()
         {
+            // Should only be called from clsRelays. Need to run sub
+            // BuildPowerRelays on change.
             mf.Tls.SaveProperty("RelayType" + ID.ToString(), cType.ToString());
             mf.Tls.SaveProperty("RelaySection" + ID.ToString(), cSectionID.ToString());
             mf.Tls.SaveProperty("RelayDescription" + ID.ToString(), cDescription);

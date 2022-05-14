@@ -982,7 +982,8 @@ namespace RateController
             for (int i = 0; i < 16; i++)
             {
                 Sec[i].Enabled = (mf.Sections.Item(i).Enabled);
-                if (mf.Sections.IsSectionOn(i))
+                if (mf.Sections.Item(i).IsON) 
+                //if (mf.Sections.IsSectionOn(i))
                 {
                     Sec[i].Image = Properties.Resources.OnSmall;
                 }

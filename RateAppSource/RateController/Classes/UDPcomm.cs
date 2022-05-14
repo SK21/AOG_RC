@@ -268,7 +268,7 @@ namespace RateController
             }
             else
             {
-                epIP = IPAddress.Parse("192.168.5.255");
+                epIP = IPAddress.Parse("192.168.1.255");
             }
         }
     }

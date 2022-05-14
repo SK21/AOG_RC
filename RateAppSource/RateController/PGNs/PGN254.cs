@@ -27,20 +27,22 @@ namespace RateController
         private float KalP = 1.0F;
         private float KalPc = 0.0F;
         private float KalResult = 0.0F;
+        private FormStart mf;
+
         private float KalVariance = 0.01F;   // larger is more filtering
         private float KalProcess = 0.005F;  // smaller is more filtering
         private DateTime ReceiveTime;
+
         private byte RelayHiLast;
         private byte RelayLoLast;
         private int totalHeaderByteCount = 5;
 
-        public event EventHandler<RelaysChangedArgs> RelaysChanged;
-
-        public class RelaysChangedArgs : EventArgs
+        public PGN254(FormStart CalledFrom)
         {
-            public byte RelayHi { get; set; }
-            public byte RelayLo { get; set; }
+            mf = CalledFrom;
         }
+
+        public event EventHandler<RelaysChangedArgs> RelaysChanged;
 
         public byte RelayHi
         { get { return cRelayHi; } }
@@ -59,7 +61,7 @@ namespace RateController
             {
                 if (Data.Length == Data[4] + totalHeaderByteCount + 1)
                 {
-                    if (GoodCRC(Data))
+                    if (mf.Tls.GoodCRC(Data, 2))
                     {
                         cSpeed = (float)((Data[6] << 8 | Data[5]) / 10.0);
 
@@ -103,14 +105,10 @@ namespace RateController
             }
         }
 
-        private bool GoodCRC(byte[] Data)
+        public class RelaysChangedArgs : EventArgs
         {
-            int CK = 0;
-            for (int i = 2; i < Data.Length - 1; i++)
-            {
-                CK += Data[i];
-            }
-            return ((byte)CK == Data[Data.Length - 1]);
+            public byte RelayHi { get; set; }
+            public byte RelayLo { get; set; }
         }
     }
 }

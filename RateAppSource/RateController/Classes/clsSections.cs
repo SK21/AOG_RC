@@ -5,84 +5,64 @@ namespace RateController
 {
     public class clsSections
     {
+        // to use ForEach
         public IList<clsSection> Items;
-        private List<clsSection> cSections = new List<clsSection>();
-        private float[] cProdWorkedArea_ha = new float[16];
 
+        private bool AOGmasterOff;
+        private bool AOGmasterOn;
+        private bool AutoChanged;
+        private bool AutoLast;
+        private DateTime AutoTime;
+        private float[] cProdWorkedArea_ha = new float[16];
+        private List<clsSection> cSections = new List<clsSection>();
         private float cWorkingWidth_cm;
 
+        private int EraseDelay = 50;
+        private bool MasterChanged;
+        private bool MasterLast;
+        private bool MasterOn;
+        private DateTime MasterTime;
         private FormStart mf;
 
-        // to Rate Controller from arduino switch box
-        // 0   106
-        // 1   127
-        // 2    - bit 0 Auto
-        //      - bit 1 MasterOn        
-        //      - bit 2 MasterOff       
-        //      - bit 3 RateUp          
-        //      - bit 4 RateDown        
-        // 3    sw0 to sw7
-        // 4    sw8 to sw15
-
-        private DateTime SWreadTime;
-        private DateTime RateLastTime;
-        private int EraseDelay = 250;
-        private int StepDelay = 1000;   // ms between adjustments
-
-        // sent back to AOG
-        private byte OutCommand;    // see PGN234, byte 5
+        // sent back to AOG, see PGN234, byte 5
+        private byte OutCommand;
 
         private byte OutLast;
-        private byte[] SectionOnFromAOG = new byte[2];
-        private byte[] SectionOnToAOG = new byte[2];
-        private byte[] SectionOffToAOG = new byte[2];
-        private byte[] SectionOnToAOGlast = new byte[2];
-        private byte[] SectionOffToAOGlast = new byte[2];
+        private bool PinState;
+
+        // rate change amount for each step.  ex: 0.10 means 10% for each step
+        private float RateCalcFactor = 0.05F;
+
+        private DateTime RateLastTime;
 
         // used by RateController
         private byte[] SectionControlByte = new byte[2];
 
         private byte[] SectionControlLast = new byte[2];
+        private byte[] SectionOffToAOG = new byte[2];
+        private byte[] SectionOffToAOGlast = new byte[2];
 
-        private bool PinState;
+        private byte[] SectionOnFromAOG = new byte[2];
+        private byte[] SectionOnToAOG = new byte[2];
+        private byte[] SectionOnToAOGlast = new byte[2];
 
-        private bool MasterOn;
-        private bool MasterLast;
-        private bool MasterChanged;
-        private DateTime MasterTime;
+        // ms between adjustments
+        private int StepDelay = 500;
 
-        private bool AutoLast;
-        private bool AutoChanged;
-        private DateTime AutoTime;
-
-        private PGN234 ToAOG;
-        private float RateCalcFactor = 0.05F;   // rate change amount for each step.  ex: 0.10 means 10% for each step
-
+        private DateTime SWreadTime;
         private int Tmp;
-        private bool AOGmasterOn;
-        private bool AOGmasterOff;
-
-        public class MasterChangedArgs : EventArgs
-        {
-            public bool MasterOn { get; set; }
-        }
+        private PGN234 ToAOG;
 
         public clsSections(FormStart CallingForm)
         {
             mf = CallingForm;
-            Items = cSections.AsReadOnly(); // to use ForEach
+            Items = cSections.AsReadOnly(); 
 
             mf.AutoSteerPGN.RelaysChanged += AOGnew_RelaysChanged;
 
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
 
             ToAOG = new PGN234(mf);
-        }
-
-        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
-        {
-            // switch box switches have changed
-            SendStatusUpdate();
         }
 
         public int Count
@@ -122,6 +102,24 @@ namespace RateController
             }
         }
 
+        public void CheckSwitchDefinitions()
+        {
+            bool Changed = false;
+            for (int i = 0; i < 16; i++)
+            {
+                if (cSections[i].SwitchChanged) Changed = true;
+                cSections[i].SwitchChanged = false;
+            }
+            if (Changed)
+            {
+                SendStatusUpdate();
+                mf.SwitchIDs.Send();
+            }
+        }
+
+        public bool IsMasterOn()
+        { return MasterOn; }
+
         public clsSection Item(int SectionID)
         {
             int IDX = ListID(SectionID);
@@ -146,6 +144,47 @@ namespace RateController
             for (int i = 0; i < cSections.Count; i++)
             {
                 cSections[i].Save();
+            }
+        }
+
+        public byte SectionHi()
+        {
+            return SectionControlByte[1];
+        }
+
+        public byte SectionLo()
+        {
+            return SectionControlByte[0];
+        }
+
+        public void SendStatusUpdate(bool SourceAOG = false)
+        {
+            bool SectionSwitchesChanged = false;
+            if (mf.SwitchBox.Connected())
+            {
+                ReadRateSwitches();
+                SectionSwitchesChanged = ReadSectionSwitches();
+            }
+            else
+            {
+                SectionControlByte[0] = SectionOnFromAOG[0];
+                SectionControlByte[1] = SectionOnFromAOG[1];
+
+                AOGmasterOn = false;
+                AOGmasterOff = false;
+            }
+
+            bool RelaysChanged = UpdateSectionsOn();
+
+            if (!SourceAOG & (RelaysChanged | SectionSwitchesChanged))
+            {
+                // send to AOG
+                ToAOG.OnHi = SectionOnToAOG[1];
+                ToAOG.OnLo = SectionOnToAOG[0];
+                ToAOG.OffHi = SectionOffToAOG[1];
+                ToAOG.OffLo = SectionOffToAOG[0];
+                ToAOG.Command = OutCommand;
+                ToAOG.Send();
             }
         }
 
@@ -198,7 +237,7 @@ namespace RateController
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("clsSections/UpdateSectionsOn: " + ex.Message);
-                mf.Tls.ShowHelp(ex.Message,"Sections",3000,true);
+                mf.Tls.ShowHelp(ex.Message, "Sections", 3000, true);
             }
             return Result;
         }
@@ -229,49 +268,106 @@ namespace RateController
             return -1;
         }
 
-        public void CheckSwitchDefinitions()
+        private void NewRate()
         {
-            bool Changed = false;
-            for (int i = 0; i < 16; i++)
+            // update rate for currently displayed product
+            // rate change amount
+            int RateSteps = 0;
+            if ((OutCommand & 4) == 4) RateSteps = 1;
+            if ((OutCommand & 8) == 8) RateSteps += 2;
+
+            if (RateSteps > 0)
             {
-                if (cSections[i].SwitchChanged) Changed = true;
-                cSections[i].SwitchChanged = false;
-            }
-            if (Changed)
-            {
-                SendStatusUpdate();
-                mf.SwitchIDs.Send();
+                // rate direction
+                bool RateUp = false;
+                RateUp = (OutCommand & 32) == 32;
+
+                // change rate
+                float ChangeAmount = 1;
+                for (byte a = 1; a <= RateSteps; a++)
+                {
+                    if (RateUp)
+                    {
+                        ChangeAmount *= (1 + RateCalcFactor);
+                    }
+                    else
+                    {
+                        ChangeAmount *= (1 - RateCalcFactor);
+                    }
+                }
+                clsProduct Prd = mf.Products.Item(mf.CurrentProduct() - 1);
+                Prd.ManualRateFactor = ChangeAmount;
+
+                if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
+                {
+                    double CurrentRate = Prd.RateSet;
+                    if (RateUp & CurrentRate == 0) CurrentRate = 1; // provide a starting point
+                    CurrentRate = Math.Round(CurrentRate * ChangeAmount, 1);
+                    Prd.RateSet = CurrentRate;
+                }
             }
         }
 
-        public void SendStatusUpdate(bool SourceAOG = false)
+        private void ReadRateSwitches()
         {
-            bool SectionSwitchesChanged = false;
-            if (mf.SwitchBox.Connected())
+            if (mf.SwitchBox.SwitchOn(SwIDs.RateUp) || mf.SwitchBox.SwitchOn(SwIDs.RateDown))
             {
-                ReadRateSwitches();
-                SectionSwitchesChanged = ReadSectionSwitches();
+                SWreadTime = DateTime.Now;
+
+                if ((SWreadTime - RateLastTime).TotalMilliseconds > StepDelay)
+                {
+                    RateLastTime = DateTime.Now;
+                    if (mf.SwitchBox.SwitchOn(SwIDs.RateUp))
+                    {
+                        if (mf.Tls.BitRead(OutCommand, 2))
+                        {
+                            if (!mf.Tls.BitRead(OutCommand, 3))
+                            {
+                                OutCommand = mf.Tls.BitSet(OutCommand, 3);
+                                OutCommand = mf.Tls.BitClear(OutCommand, 2);
+                            }
+                        }
+                        else
+                        {
+                            OutCommand = mf.Tls.BitSet(OutCommand, 2);
+                        }
+                        OutCommand = mf.Tls.BitClear(OutCommand, 4); // left
+                        OutCommand = mf.Tls.BitSet(OutCommand, 5);   // rate up
+                    }
+
+                    if (mf.SwitchBox.SwitchOn(SwIDs.RateDown))
+                    {
+                        if (mf.Tls.BitRead(OutCommand, 2))
+                        {
+                            if (!mf.Tls.BitRead(OutCommand, 3))
+                            {
+                                OutCommand = mf.Tls.BitSet(OutCommand, 3);
+                                OutCommand = mf.Tls.BitClear(OutCommand, 2);
+                            }
+                        }
+                        else
+                        {
+                            OutCommand = mf.Tls.BitSet(OutCommand, 2);
+                        }
+                        OutCommand = mf.Tls.BitClear(OutCommand, 4); // left
+                        OutCommand = mf.Tls.BitClear(OutCommand, 5); // rate down
+                    }
+                }
+                NewRate();
             }
             else
             {
-                SectionControlByte[0] = SectionOnFromAOG[0];
-                SectionControlByte[1] = SectionOnFromAOG[1];
+                // rate switch not pressed
 
-                AOGmasterOn = false;
-                AOGmasterOff = false;
-            }
-
-            bool RelaysChanged = UpdateSectionsOn();
-
-            if (!SourceAOG & (RelaysChanged | SectionSwitchesChanged))
-            {
-                // send to AOG
-                ToAOG.OnHi = SectionOnToAOG[1];
-                ToAOG.OnLo = SectionOnToAOG[0];
-                ToAOG.OffHi = SectionOffToAOG[1];
-                ToAOG.OffLo = SectionOffToAOG[0];
-                ToAOG.Command = OutCommand;
-                ToAOG.Send();
+                if ((SWreadTime - RateLastTime).TotalMilliseconds > EraseDelay)
+                {
+                    // clear rate values after delay
+                    OutCommand = mf.Tls.BitClear(OutCommand, 2);
+                    OutCommand = mf.Tls.BitClear(OutCommand, 3);
+                    OutCommand = mf.Tls.BitClear(OutCommand, 4);
+                    OutCommand = mf.Tls.BitClear(OutCommand, 5);
+                    mf.Products.Item(mf.CurrentProduct() - 1).ManualRateFactor = 1;
+                }
             }
         }
 
@@ -439,134 +535,15 @@ namespace RateController
             return Result;
         }
 
-        private void ReadRateSwitches()
+        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
-            if (mf.SwitchBox.SwitchOn(SwIDs.RateUp) || mf.SwitchBox.SwitchOn(SwIDs.RateDown))
-            {
-                SWreadTime = DateTime.Now;
-
-                if ((SWreadTime - RateLastTime).TotalMilliseconds > StepDelay)
-                {
-                    RateLastTime = DateTime.Now;
-                    if (mf.SwitchBox.SwitchOn(SwIDs.RateUp))
-                    {
-                        if (mf.Tls.BitRead(OutCommand, 2))
-                        {
-                            if (!mf.Tls.BitRead(OutCommand, 3))
-                            {
-                                OutCommand = mf.Tls.BitSet(OutCommand, 3);
-                                OutCommand = mf.Tls.BitClear(OutCommand, 2);
-                            }
-                        }
-                        else
-                        {
-                            OutCommand = mf.Tls.BitSet(OutCommand, 2);
-                        }
-                        OutCommand = mf.Tls.BitClear(OutCommand, 4); // left
-                        OutCommand = mf.Tls.BitSet(OutCommand, 5);   // rate up
-                    }
-
-                    if (mf.SwitchBox.SwitchOn(SwIDs.RateDown))
-                    {
-                        if (mf.Tls.BitRead(OutCommand, 2))
-                        {
-                            if (!mf.Tls.BitRead(OutCommand, 3))
-                            {
-                                OutCommand = mf.Tls.BitSet(OutCommand, 3);
-                                OutCommand = mf.Tls.BitClear(OutCommand, 2);
-                            }
-                        }
-                        else
-                        {
-                            OutCommand = mf.Tls.BitSet(OutCommand, 2);
-                        }
-                        OutCommand = mf.Tls.BitClear(OutCommand, 4); // left
-                        OutCommand = mf.Tls.BitClear(OutCommand, 5); // rate down
-                    }
-                }
-                NewRate();
-            }
-            else
-            {
-                // rate switch not pressed
-
-                if ((SWreadTime - RateLastTime).TotalMilliseconds > EraseDelay)
-                {
-                    // clear rate values after delay
-                    OutCommand = mf.Tls.BitClear(OutCommand, 2);
-                    OutCommand = mf.Tls.BitClear(OutCommand, 3);
-                    OutCommand = mf.Tls.BitClear(OutCommand, 4);
-                    OutCommand = mf.Tls.BitClear(OutCommand, 5);
-                    mf.Products.Item(mf.CurrentProduct() - 1).ManualRateFactor = 1;
-                }
-            }
+            // switch box switches have changed
+            SendStatusUpdate();
         }
 
-        public byte SectionHi()
+        public class MasterChangedArgs : EventArgs
         {
-            return SectionControlByte[1];
-        }
-
-        public byte SectionLo()
-        {
-            return SectionControlByte[0];
-        }
-
-        public bool IsSectionOn(int SecID)
-        {
-            bool Result = false;
-            if (SecID < 16)
-            {
-                if (SecID < 8)
-                {
-                    Result = mf.Tls.BitRead(SectionControlByte[0], SecID);
-                }
-                else
-                {
-                    Result = mf.Tls.BitRead(SectionControlByte[1], SecID - 8);
-                }
-            }
-            return Result;
-        }
-
-        private void NewRate()
-        {
-            // update rate for currently displayed product
-            // rate change amount
-            int RateSteps = 0;
-            if ((OutCommand & 4) == 4) RateSteps = 1;
-            if ((OutCommand & 8) == 8) RateSteps += 2;
-
-            if (RateSteps > 0)
-            {
-                // rate direction
-                bool RateUp = false;
-                RateUp = (OutCommand & 32) == 32;
-
-                // change rate
-                float ChangeAmount = 1;
-                for (byte a = 1; a <= RateSteps; a++)
-                {
-                    if (RateUp)
-                    {
-                        ChangeAmount *= (1 + RateCalcFactor);
-                    }
-                    else
-                    {
-                        ChangeAmount *= (1 - RateCalcFactor);
-                    }
-                }
-                clsProduct Prd = mf.Products.Item(mf.CurrentProduct() - 1);
-                Prd.ManualRateFactor = ChangeAmount;
-
-                if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
-                {
-                    double CurrentRate = Prd.RateSet;
-                    if (RateUp & CurrentRate == 0) CurrentRate = 1; // provide a starting point
-                    CurrentRate = Math.Round(CurrentRate * ChangeAmount, 1);
-                    Prd.RateSet = CurrentRate;
-                }
-            }
+            public bool MasterOn { get; set; }
         }
     }
 }

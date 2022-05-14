@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace RateController
 {
     public class clsRelays
     {
         public IList<clsRelay> Items;
+        private int cPowerRelays;
         private List<clsRelay> cRelays = new List<clsRelay>();
         private FormStart mf;
 
@@ -37,7 +37,11 @@ namespace RateController
                 cRelays.Add(Rly);
                 Rly.Load();
             }
+            BuildPowerRelays();
         }
+
+        public int PowerRelays()
+        { return cPowerRelays; }
 
         public void Save(int RelayID = 0)
         {
@@ -54,6 +58,7 @@ namespace RateController
                 // save selected
                 cRelays[ListID(RelayID)].Save();
             }
+            BuildPowerRelays();
         }
 
         public int Status()
@@ -68,7 +73,8 @@ namespace RateController
             // check if at least one section on
             for (int i = 0; i < mf.MaxSections; i++)
             {
-                if (mf.Sections.IsSectionOn(i))
+                if(mf.Sections.Item(i).IsON)
+                //if (mf.Sections.IsSectionOn(i))
                 {
                     SectionsOn = true;
                     break;
@@ -145,6 +151,17 @@ namespace RateController
             }
 
             return Result;
+        }
+
+        private  void BuildPowerRelays()
+        {
+            // 16 bit list indicating which relays are power type
+            // needed for example when powering off a combo close valve in case of comm failure
+            cPowerRelays = 0;
+            for (int i = 0; i < cRelays.Count; i++)
+            {
+                if (cRelays[i].Type == RelayTypes.Power) cPowerRelays |= (int)Math.Pow(2, i);
+            }
         }
 
         private int ListID(int RelayID)

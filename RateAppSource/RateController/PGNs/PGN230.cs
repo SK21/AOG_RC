@@ -22,9 +22,11 @@
 
         private byte[] cRate = new byte[10];
         private int Length = 16;
+        private FormStart mf;
 
-        public PGN230()
+        public PGN230(FormStart CalledFrom)
         {
+            mf = CalledFrom;
             for (int i = 0; i < 5; i++)
             {
                 // set 2 bytes to 255 X 100 (0x639C) - no data
@@ -35,14 +37,11 @@
 
         public void ParseByteData(byte[] Data)
         {
-            if (Data.Length == Length)
+            if (Data.Length >= Length && mf.Tls.GoodCRC(Data, 2))
             {
-                if (GoodCRC(Data))
+                for (int i = 0; i < 10; i++)
                 {
-                    for (int i = 0; i < 10; i++)
-                    {
-                        cRate[i] = Data[i + 5];
-                    }
+                    cRate[i] = Data[i + 5];
                 }
             }
         }
@@ -55,16 +54,6 @@
                 Result = (cRate[RateID * 2 + 1] << 8 | cRate[RateID * 2]) / 100.0;
             }
             return Result;
-        }
-
-        private bool GoodCRC(byte[] Data)
-        {
-            int CK = 0;
-            for (int i = 2; i < Data.Length - 1; i++)
-            {
-                CK += Data[i];
-            }
-            return (byte)CK == Data[Data.Length - 1];
         }
     }
 }

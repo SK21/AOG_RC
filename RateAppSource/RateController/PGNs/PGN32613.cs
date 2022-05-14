@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -16,8 +17,9 @@ namespace RateController
         //8 acc.Quantity Hi
         //9 PWM Lo              10 X actual
         //10 PWM Hi
+        //11 CRC
 
-        private const byte cByteCount = 11;
+        private const byte cByteCount = 12;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 101;
         private double cPWMsetting;
@@ -55,7 +57,8 @@ namespace RateController
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
-            if (Data[1] == HeaderHi & Data[0] == HeaderLo & Data.Length >= cByteCount)
+            if (Data[1] == HeaderHi && Data[0] == HeaderLo &&
+                Data.Length >= cByteCount && Prod.mf.Tls.GoodCRC(Data))
             {
                 int tmp = Prod.mf.Tls.ParseModID(Data[2]);
                 if (Prod.ModuleID == tmp)
@@ -89,7 +92,7 @@ namespace RateController
             int Temp;
             bool Result = false;
 
-            if (Data.Length >= cByteCount)
+            if (Data.Length >= cByteCount && Prod.mf.Tls.GoodCRC(Data))
             {
                 int.TryParse(Data[0], out Temp);
 

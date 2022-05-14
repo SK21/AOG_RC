@@ -17,7 +17,7 @@ namespace RateController
         public readonly int MaxRelays = 16;
         public readonly int MaxSections = 16;
 
-        public PGN254 AutoSteerPGN = new PGN254();
+        public PGN254 AutoSteerPGN;
         public double CalCounterEnd;
         public double CalCounterStart;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Hr", "Min" };
@@ -39,7 +39,7 @@ namespace RateController
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
         public bool UseInches;
-        public PGN230 VRdata = new PGN230();
+        public PGN230 VRdata;
         private int CurrentPage;
 
         private Label[] Indicators;
@@ -84,6 +84,9 @@ namespace RateController
 
             UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
 
+            AutoSteerPGN = new PGN254(this);
+            VRdata = new PGN230(this);
+
             SwitchBox = new PGN32618(this);
             SwitchIDs = new PGN32620(this);
             PressureData = new PGN32621(this);
@@ -105,6 +108,8 @@ namespace RateController
 
             PressureObjects = new clsPressures(this);
             RelayObjects = new clsRelays(this);
+
+            timerMain.Interval = 1500;
         }
 
         public byte CurrentProduct()

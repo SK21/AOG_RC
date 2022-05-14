@@ -53,18 +53,8 @@
 
         public void Send()
         {
-            cData[13] = CRC();
+            cData[13] = mf.Tls.CRC(cData, cData.Length - 1, 2);
             mf.UDPaog.SendUDPMessage(cData);
-        }
-
-        private byte CRC()
-        {
-            int CK = 0;
-            for (int i = 2; i < cData.Length - 1; i++)
-            {
-                CK += cData[i];
-            }
-            return (byte)CK;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -13,8 +14,12 @@ namespace RateController
 
         private byte HiByte;
         private byte LoByte;
-        private bool SerialActive = false;  // prevents UI lock-up by only sending serial data after verfying connection
+
+        // prevent UI lock-up by only sending serial data after verfying connection
+        private bool SerialActive = false; 
+
         String ID;
+        private byte[] ReadBuffer;
 
         public SerialComm(FormStart CallingForm, int PortNumber)
         {
@@ -22,6 +27,7 @@ namespace RateController
             cPortNumber = PortNumber;
             RCportName = "RCport" + cPortNumber.ToString();
             ID = "_" + PortNumber.ToString() + "_";
+            ReadBuffer = new byte[100];
         }
 
         // new data event
@@ -135,48 +141,60 @@ namespace RateController
                 }
             }
         }
-
         private void ReceiveData(string sentence)
         {
             try
             {
-                // look for ',' and '\r'. Return if not found
-                int end = sentence.IndexOf(",", StringComparison.Ordinal);
-                if (end == -1) return;
-
-                end = sentence.IndexOf("\r");
-                if (end == -1) return;
-
-                sentence = sentence.Substring(0, end);
-                string[] words = sentence.Split(',');
-
-                if (words.Length > 1)
+                int CommaPosition = sentence.IndexOf(",", StringComparison.Ordinal);
+                int CRposition = sentence.IndexOf("\r");
+                if (CommaPosition > -1 && CRposition > -1)
                 {
-                    if (byte.TryParse(words[0], out LoByte))
+                    // string data
+                    sentence = sentence.Substring(0, CRposition);
+                    string[] words = sentence.Split(',');
+
+                    if (words.Length > 1)
                     {
-                        if (byte.TryParse(words[1], out HiByte))
+                        if (byte.TryParse(words[0], out LoByte))
                         {
-                            int PGN = HiByte << 8 | LoByte;
-
-                            switch (PGN)
+                            if (byte.TryParse(words[1], out HiByte))
                             {
-                                case 32618:
-                                    if (mf.SwitchBox.ParseStringData(words)) SerialActive = true;
-                                    break;
+                                int PGN = HiByte << 8 | LoByte;
+                                switch (PGN)
+                                {
+                                    case 32618:
+                                        if (mf.SwitchBox.ParseStringData(words)) SerialActive = true;
+                                        break;
 
-                                case 32613:
-                                    foreach (clsProduct Prod in mf.Products.Items)
-                                    {
-                                        if (Prod.SerialFromAruduino(words)) SerialActive = true;
-                                    }
-                                    break;
+                                    case 32613:
+                                        foreach (clsProduct Prod in mf.Products.Items)
+                                        {
+                                            if (Prod.SerialFromAruduino(words)) SerialActive = true;
+                                        }
+                                        break;
 
-                                case 32621:
-                                    if (mf.PressureData.ParseStringData(words)) SerialActive = true;
-                                    break;
+                                    case 32621:
+                                        if (mf.PressureData.ParseStringData(words)) SerialActive = true;
+                                        break;
+
+                                    case 0xABC:
+                                        // debug info from module
+                                        Debug.Print("");
+                                        for (int i = 0; i < words.Length; i++)
+                                        {
+                                            Debug.Print(DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + "  " + i.ToString() + " " + words[i].ToString());
+                                        }
+                                        Debug.Print("");
+                                        break;
+                                }
                             }
                         }
                     }
+                }
+                else
+                {
+                    // check for byte data
+                    //Debug.Print(sentence);
                 }
             }
             catch (Exception ex)

@@ -17,8 +17,9 @@ namespace RateController
         //      - bit 4 RateDown
         // 3    sw0 to sw7
         // 4    sw8 to sw15
+        // 5    crc
 
-        private const byte cByteCount = 5;
+        private const byte cByteCount = 6;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
         private FormStart mf;
@@ -47,7 +48,7 @@ namespace RateController
         {
             bool Result = false;
 
-            if (Data[0] == HeaderLo & Data[1] == HeaderHi & Data.Length >= cByteCount)
+            if (Data[0] == HeaderLo & Data[1] == HeaderHi & Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 SW[0] = mf.Tls.BitRead(Data[2], 0);     // auto on
                 SW[1] = mf.Tls.BitRead(Data[2], 1);     // master on
@@ -80,7 +81,7 @@ namespace RateController
             bool Result = false;
             byte[] Dt = new byte[cByteCount];
 
-            if (Data.Length >= cByteCount)
+            if (Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 for (int i = 0; i < cByteCount; i++)
                 {
@@ -137,7 +138,6 @@ namespace RateController
             SwitchPGNargs args = new SwitchPGNargs();
             args.Switches = SW;
             SwitchPGNreceived?.Invoke(this, args);
-
         }
     }
 }

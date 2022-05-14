@@ -19,12 +19,16 @@ namespace RateController
         //10	Command
         //	        - bit 0		    reset acc.Quantity
         //	        - bit 1,2		valve type 0-3
-        //	        - bit 3		    simulate flow
+        //	        - bit 3		    MasterOn
         //          - bit 4         0 - average time for multiple pulses, 1 - time for one pulse
         //          - bit 5         AutoOn
+        //11    power relay Lo      list of power type relays 0-7
+        //12    power relay Hi      list of power type relays 8-15
+        //13    CRC
 
         private readonly clsProduct Prod;
-        private byte[] cData = new byte[11];
+        private const byte cByteCount = 14;
+        private byte[] cData = new byte[cByteCount];
 
         public PGN32614(clsProduct CalledFrom)
         {
@@ -32,8 +36,6 @@ namespace RateController
             cData[0] = 102;
             cData[1] = 127;
         }
-
-        DateTime Last;
 
         public void Send()
         {
@@ -46,21 +48,6 @@ namespace RateController
             int Relays = Prod.mf.RelayObjects.Status();
             cData[3] = (byte)Relays;
             cData[4] = (byte)(Relays >> 8);
-
-            //if ((DateTime.Now - Last).TotalSeconds > 1)
-            //{
-            //    Last = DateTime.Now;
-            //    Debug.Print("");
-            //    for (int j = 0; j < 2; j++)
-            //    {
-            //        byte Rlys = cData[j + 3];
-            //        for (int i = 0; i < 8; i++)
-            //        {
-            //            bool ON = (((byte)(Math.Pow(2, i)) & Rlys) > 0);
-            //            Debug.Print((i + 1).ToString() + ", " + j.ToString() + ": " + ON.ToString());
-            //        }
-            //    }
-            //}
 
             // rate set
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto))
@@ -110,9 +97,20 @@ namespace RateController
                     break;
             }
 
-            if (Prod.SimulationType != SimType.None) cData[10] |= 0b00001000; else cData[10] &= 0b11110111;
+            if (Prod.mf.Sections.IsMasterOn()) cData[10] |= 0b00001000; else cData[10] &= 0b11110111;
             if (Prod.UseMultiPulse) cData[10] |= 0b00010000; else cData[10] &= 0b11101111;
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[10] |= 0b00100000;
+
+            // power relays
+            for (int i = 0; i < 16; i++)
+            {
+                int Power = Prod.mf.RelayObjects.PowerRelays();
+                cData[11] = (byte)Power;
+                cData[12] = (byte)(Power >> 8);
+            }
+
+            // CRC
+            cData[13] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
 
             // send
             if (Prod.SimulationType == SimType.VirtualNano)
