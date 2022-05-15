@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -574,7 +575,6 @@ namespace RateController
                 for (int i = 0; i < 16; i++)
                 {
                     if(mf.Sections.Item(i).IsON)
-                    //if (mf.Sections.IsSectionOn(i))
                     {
                         cWorkingWidth_cm += mf.Sections.Item(i).Width_cm;
                     }

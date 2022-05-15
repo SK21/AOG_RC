@@ -15,7 +15,7 @@ namespace RateController
         private string cAppVersion = "2.2.0";
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "13-May-2022";
+        private string cVersionDate = "15-May-2022";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
@@ -75,6 +75,27 @@ namespace RateController
                 for (int i = Start; i < Length; i++)
                 {
                     CK += Data[i];
+                }
+                Result = (byte)CK;
+            }
+            return Result;
+        }
+
+        public byte CRC(string[] Data, int Length, byte Start = 0)
+        {
+            byte Result = 0;
+            if (Length <= Data.Length)
+            {
+                byte tmp;
+                byte[] BD = new byte[Length];
+                for (int i = 0; i < Length; i++)
+                {
+                    if (byte.TryParse(Data[i], out tmp)) BD[i] = tmp;
+                }
+                int CK = 0;
+                for (int i = Start; i < Length; i++)
+                {
+                    CK += BD[i];
                 }
                 Result = (byte)CK;
             }

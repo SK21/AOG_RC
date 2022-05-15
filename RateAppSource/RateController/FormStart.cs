@@ -109,7 +109,7 @@ namespace RateController
             PressureObjects = new clsPressures(this);
             RelayObjects = new clsRelays(this);
 
-            timerMain.Interval = 1500;
+            timerMain.Interval = 1000;
         }
 
         public byte CurrentProduct()

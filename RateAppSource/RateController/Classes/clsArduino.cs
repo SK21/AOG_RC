@@ -101,7 +101,7 @@ namespace RateController
                     {
                         case 2:
                             // motor control
-                            if (SimulateFlow) SimulateMotor(PIDHighMax);
+                            SimulateMotor(PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
 
                             pwmSetting = ControlMotor(PIDkp, rateError, rateSetPoint, PIDminPWM,
@@ -111,7 +111,7 @@ namespace RateController
                         default:
                             // valve control
 
-                                if (SimulateFlow) SimulateValve(PIDminPWM, PIDHighMax);
+                                SimulateValve(PIDminPWM, PIDHighMax);
                                 rateError = rateSetPoint - GetUPM();
                                 pwmSetting = DoPID(PIDkp, rateError, rateSetPoint, PIDminPWM, PIDLowMax,
                                     PIDHighMax, PIDbrakePoint, PIDdeadband);
@@ -157,13 +157,13 @@ namespace RateController
                         // calculate application rate
                         case 2:
                             // motor control
-                            if (SimulateFlow) SimulateMotor(PIDHighMax);
+                            SimulateMotor(PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
                             break;
 
                         default:
                             // valve control
-                            if (SimulateFlow) SimulateValve(PIDminPWM, PIDHighMax);
+                            SimulateValve(PIDminPWM, PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
                             break;
                     }
@@ -363,33 +363,36 @@ namespace RateController
         private void SendSerial()
         {
             // PGN 32613
-            string[] words = new string[11];
+            string[] words = new string[12];
             words[0] = "101";
             words[1] = "127";
             words[2] = mcID.ToString();
 
             // rate applied, 10 X actual
-            Temp = (byte)((int)(UPM * 10) >> 16);
-            words[5] = Temp.ToString();
-            Temp = (byte)((int)(UPM * 10) >> 8);
-            words[4] = Temp.ToString();
             Temp = (byte)(UPM * 10);
             words[3] = Temp.ToString();
+            Temp = (byte)((int)(UPM * 10) >> 8);
+            words[4] = Temp.ToString();
+            Temp = (byte)((int)(UPM * 10) >> 16);
+            words[5] = Temp.ToString();
 
             // accumulated quantity
             int Units = (int)(TotalPulses * 10 / MeterCal);
-            Temp = (byte)(Units >> 16);
-            words[8] = Temp.ToString();
-            Temp = (byte)(Units >> 8);
-            words[7] = Temp.ToString();
             Temp = (byte)Units;
             words[6] = Temp.ToString();
+            Temp = (byte)(Units >> 8);
+            words[7] = Temp.ToString();
+            Temp = (byte)(Units >> 16);
+            words[8] = Temp.ToString();
 
             //pwmSetting
-            Temp = (byte)((int)(pwmSetting * 10) >> 8);
-            words[10] = Temp.ToString();
             Temp = (byte)((int)(pwmSetting * 10));
             words[9] = Temp.ToString();
+            Temp = (byte)((int)(pwmSetting * 10) >> 8);
+            words[10] = Temp.ToString();
+
+            // crc
+            words[11] = RC.mf.Tls.CRC(words, 12).ToString();
 
             RC.SerialFromAruduino(words, false);
         }
