@@ -139,14 +139,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PCBsetup.exe" size="3178424">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PCBsetup.exe" size="3178936">
       <assemblyIdentity name="PCBsetup" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>s1ScwhGmPKrvX53+vSQlSDNXJ+sclZ4wXcsTfvlXEvM=</dsig:DigestValue>
+        <dsig:DigestValue>di1MrEBbYZQ9omrPyTrPs71HFiNw7xIIN17qF2VX6dE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

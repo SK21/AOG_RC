@@ -1,4 +1,6 @@
 ﻿using PCBsetup.Forms;
+using System;
+using System.Diagnostics;
 
 namespace PCBsetup
 {
@@ -14,8 +16,9 @@ namespace PCBsetup
         //6         PWM 1
         //7         PWM 2
         //8 - 23    Relays 1 - 16    
+        //24        crc
 
-        private byte[] cData = new byte[24];
+        private byte[] cData = new byte[25];
         private frmNanoSettings cf;
 
         public PGN32626(frmNanoSettings CalledFrom)
@@ -52,9 +55,11 @@ namespace PCBsetup
             cData[22] = (byte)cf.Boxes.Value("tbRelay15");
             cData[23] = (byte)cf.Boxes.Value("tbRelay16");
 
+            // crc  
+            cData[24] = cf.mf.Tls.CRC(cData, 24);
+
             bool Result = cf.mf.CommPort.Send(cData);
             //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
-
             return Result;
         }
     }

@@ -15,8 +15,9 @@ namespace PCBsetup
         //      - Use MCP23107 
         //      - Relay on high
         //      - Flow on high
+        //6     crc
 
-        private byte[] cData = new byte[6];
+        private byte[] cData = new byte[7];
         private frmNanoSettings cf;
         private string Name;
 
@@ -45,6 +46,9 @@ namespace PCBsetup
                 bool.TryParse(cf.mf.Tls.LoadProperty(Name), out Checked);
                 if (Checked) cData[5] |= (byte)Math.Pow(2, i);
             }
+
+            // crc  
+            cData[6] = cf.mf.Tls.CRC(cData, 6);
 
             Result = cf.mf.CommPort.Send(cData);
             //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);

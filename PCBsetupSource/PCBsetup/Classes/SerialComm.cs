@@ -2,6 +2,7 @@
 using System;
 using System.IO.Ports;
 using System.Timers;
+using System.Diagnostics;
 
 namespace PCBsetup
 {
@@ -193,23 +194,33 @@ namespace PCBsetup
                         {
                             int PGN = HiByte << 8 | LoByte;
 
-                            //switch (PGN)
-                            //{
-                            //    case 32618:
-                            //        if (mf.SwitchBox.ParseStringData(words)) SerialActive = true;
-                            //        break;
+                            switch (PGN)
+                            {
+                                //case 32618:
+                                //    if (mf.SwitchBox.ParseStringData(words)) SerialActive = true;
+                                //    break;
 
-                            //    case 32613:
-                            //        foreach (clsProduct Prod in mf.Products.Items)
-                            //        {
-                            //            if (Prod.SerialFromAruduino(words)) SerialActive = true;
-                            //        }
-                            //        break;
+                                //case 32613:
+                                //    foreach (clsProduct Prod in mf.Products.Items)
+                                //    {
+                                //        if (Prod.SerialFromAruduino(words)) SerialActive = true;
+                                //    }
+                                //    break;
 
-                            //    case 32621:
-                            //        if (mf.PressureData.ParseStringData(words)) SerialActive = true;
-                            //        break;
-                            //}
+                                //case 32621:
+                                //    if (mf.PressureData.ParseStringData(words)) SerialActive = true;
+                                //    break;
+
+                                case 0xABC:
+                                    // debug info from module
+                                    Debug.Print("");
+                                    for (int i = 0; i < words.Length; i++)
+                                    {
+                                        Debug.Print(DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + "  " + i.ToString() + " " + words[i].ToString());
+                                    }
+                                    Debug.Print("");
+                                    break;
+                            }
                         }
                     }
                 }

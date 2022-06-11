@@ -55,7 +55,6 @@ namespace PCBsetup
 
             cData[24] = cf.mf.Tls.CRC(cData, 24);
 
-
             bool Result = cf.mf.CommPort.Send(cData);
             //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);
 
