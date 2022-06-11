@@ -268,46 +268,6 @@ namespace RateController
             return -1;
         }
 
-        private void NewRate()
-        {
-            // update rate for currently displayed product
-            // rate change amount
-            int RateSteps = 0;
-            if ((OutCommand & 4) == 4) RateSteps = 1;
-            if ((OutCommand & 8) == 8) RateSteps += 2;
-
-            if (RateSteps > 0)
-            {
-                // rate direction
-                bool RateUp = false;
-                RateUp = (OutCommand & 32) == 32;
-
-                // change rate
-                float ChangeAmount = 1;
-                for (byte a = 1; a <= RateSteps; a++)
-                {
-                    if (RateUp)
-                    {
-                        ChangeAmount *= (1 + RateCalcFactor);
-                    }
-                    else
-                    {
-                        ChangeAmount *= (1 - RateCalcFactor);
-                    }
-                }
-                clsProduct Prd = mf.Products.Item(mf.CurrentProduct() - 1);
-                Prd.ManualRateFactor = ChangeAmount;
-
-                if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
-                {
-                    double CurrentRate = Prd.RateSet;
-                    if (RateUp & CurrentRate == 0) CurrentRate = 1; // provide a starting point
-                    CurrentRate = Math.Round(CurrentRate * ChangeAmount, 1);
-                    Prd.RateSet = CurrentRate;
-                }
-            }
-        }
-
         private void ReadRateSwitches()
         {
             if (mf.SwitchBox.SwitchOn(SwIDs.RateUp) || mf.SwitchBox.SwitchOn(SwIDs.RateDown))
@@ -353,7 +313,64 @@ namespace RateController
                         OutCommand = mf.Tls.BitClear(OutCommand, 5); // rate down
                     }
                 }
-                NewRate();
+
+                // update rate for currently displayed product
+                // rate change amount
+                int RateSteps = 0;
+                if ((OutCommand & 4) == 4) RateSteps = 1;
+                if ((OutCommand & 8) == 8) RateSteps += 2;
+
+                if (RateSteps > 0)
+                {
+                    // rate direction
+                    bool RateUp = false;
+                    RateUp = (OutCommand & 32) == 32;
+
+                    // change rate
+                    float ChangeAmount = 1;
+                    for (byte a = 1; a <= RateSteps; a++)
+                    {
+                        if (RateUp)
+                        {
+                            ChangeAmount *= (1 + RateCalcFactor);
+                        }
+                        else
+                        {
+                            ChangeAmount *= (1 - RateCalcFactor);
+                        }
+                    }
+                    clsProduct Prd = mf.Products.Item(mf.CurrentProduct() - 1);
+
+                    // set manual adjustment rate
+                    double Dir = -1.0;
+                    if (RateUp) Dir = 1.0;
+                    switch (RateSteps)
+                    {
+                        case 2:
+                            Prd.ManualAdjust = (double)Prd.PIDminPWM / 100.0 * 255.0 * 2.0;
+                            if (Prd.ManualAdjust > 255) Prd.ManualAdjust = 255;
+                            Prd.ManualAdjust *= Dir;
+                            break;
+
+                        case 3:
+                            Prd.ManualAdjust = (double)Prd.PIDminPWM / 100.0 * 255.0 * 3.0;
+                            if (Prd.ManualAdjust > 255) Prd.ManualAdjust = 255;
+                            Prd.ManualAdjust *= Dir;
+                            break;
+
+                        default:
+                            Prd.ManualAdjust = (double)Prd.PIDminPWM / 100.0 * 255.0 * Dir;
+                            break;
+                    }
+
+                    if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
+                    {
+                        double CurrentRate = Prd.RateSet;
+                        if (RateUp & CurrentRate == 0) CurrentRate = 1; // provide a starting point
+                        CurrentRate = Math.Round(CurrentRate * ChangeAmount, 1);
+                        Prd.RateSet = CurrentRate;
+                    }
+                }
             }
             else
             {
@@ -366,7 +383,7 @@ namespace RateController
                     OutCommand = mf.Tls.BitClear(OutCommand, 3);
                     OutCommand = mf.Tls.BitClear(OutCommand, 4);
                     OutCommand = mf.Tls.BitClear(OutCommand, 5);
-                    mf.Products.Item(mf.CurrentProduct() - 1).ManualRateFactor = 1;
+                    mf.Products.Item(mf.CurrentProduct() - 1).ManualAdjust = 0;
                 }
             }
         }

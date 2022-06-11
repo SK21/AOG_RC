@@ -29,10 +29,10 @@ namespace RateController
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSections));
             this.DGV = new System.Windows.Forms.DataGridView();
             this.sectionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,8 +45,6 @@ namespace RateController
             this.dataColumn3 = new System.Data.DataColumn();
             this.btnEqual = new System.Windows.Forms.Button();
             this.lbWidth = new System.Windows.Forms.Label();
-            this.rbCM = new System.Windows.Forms.RadioButton();
-            this.rbInches = new System.Windows.Forms.RadioButton();
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
             this.tbSectionCount = new System.Windows.Forms.TextBox();
@@ -71,15 +69,15 @@ namespace RateController
             this.switchDataGridViewTextBoxColumn});
             this.DGV.DataMember = "Table1";
             this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.NullValue = "<dbnull>";
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.NullValue = "<dbnull>";
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle8;
             this.DGV.Location = new System.Drawing.Point(15, 15);
             this.DGV.Margin = new System.Windows.Forms.Padding(6);
             this.DGV.Name = "DGV";
@@ -94,18 +92,18 @@ namespace RateController
             // sectionDataGridViewTextBoxColumn
             // 
             this.sectionDataGridViewTextBoxColumn.DataPropertyName = "Section";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
             this.sectionDataGridViewTextBoxColumn.HeaderText = "Section";
             this.sectionDataGridViewTextBoxColumn.Name = "sectionDataGridViewTextBoxColumn";
             // 
             // widthDataGridViewTextBoxColumn
             // 
             this.widthDataGridViewTextBoxColumn.DataPropertyName = "Width";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.Format = "N0";
-            dataGridViewCellStyle2.NullValue = null;
-            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.Format = "N0";
+            dataGridViewCellStyle6.NullValue = null;
+            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
             this.widthDataGridViewTextBoxColumn.HeaderText = "Width";
             this.widthDataGridViewTextBoxColumn.Name = "widthDataGridViewTextBoxColumn";
             // 
@@ -113,8 +111,8 @@ namespace RateController
             // 
             this.switchDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.switchDataGridViewTextBoxColumn.DataPropertyName = "Switch";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
             this.switchDataGridViewTextBoxColumn.HeaderText = "Switch";
             this.switchDataGridViewTextBoxColumn.Name = "switchDataGridViewTextBoxColumn";
             // 
@@ -153,7 +151,7 @@ namespace RateController
             // 
             this.btnEqual.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEqual.Image = ((System.Drawing.Image)(resources.GetObject("btnEqual.Image")));
-            this.btnEqual.Location = new System.Drawing.Point(15, 420);
+            this.btnEqual.Location = new System.Drawing.Point(15, 397);
             this.btnEqual.Margin = new System.Windows.Forms.Padding(6);
             this.btnEqual.Name = "btnEqual";
             this.btnEqual.Size = new System.Drawing.Size(115, 72);
@@ -170,38 +168,10 @@ namespace RateController
             this.lbWidth.Location = new System.Drawing.Point(15, 367);
             this.lbWidth.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbWidth.Name = "lbWidth";
-            this.lbWidth.Size = new System.Drawing.Size(173, 24);
+            this.lbWidth.Size = new System.Drawing.Size(187, 24);
             this.lbWidth.TabIndex = 12;
-            this.lbWidth.Text = "Width:  1200";
+            this.lbWidth.Text = "Width:  1200 Inches";
             this.lbWidth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // rbCM
-            // 
-            this.rbCM.AutoSize = true;
-            this.rbCM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbCM.Location = new System.Drawing.Point(296, 365);
-            this.rbCM.Margin = new System.Windows.Forms.Padding(6);
-            this.rbCM.Name = "rbCM";
-            this.rbCM.Size = new System.Drawing.Size(54, 28);
-            this.rbCM.TabIndex = 10;
-            this.rbCM.Text = "cm";
-            this.rbCM.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.rbCM.UseVisualStyleBackColor = true;
-            // 
-            // rbInches
-            // 
-            this.rbInches.AutoSize = true;
-            this.rbInches.Checked = true;
-            this.rbInches.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbInches.Location = new System.Drawing.Point(200, 365);
-            this.rbInches.Margin = new System.Windows.Forms.Padding(6);
-            this.rbInches.Name = "rbInches";
-            this.rbInches.Size = new System.Drawing.Size(84, 28);
-            this.rbInches.TabIndex = 9;
-            this.rbInches.TabStop = true;
-            this.rbInches.Text = "Inches";
-            this.rbInches.UseVisualStyleBackColor = true;
-            this.rbInches.CheckedChanged += new System.EventHandler(this.rbInches_CheckedChanged);
             // 
             // btnCancel
             // 
@@ -210,7 +180,7 @@ namespace RateController
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(142, 420);
+            this.btnCancel.Location = new System.Drawing.Point(142, 397);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(115, 72);
@@ -226,7 +196,7 @@ namespace RateController
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(269, 420);
+            this.bntOK.Location = new System.Drawing.Point(269, 397);
             this.bntOK.Margin = new System.Windows.Forms.Padding(6);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
@@ -263,7 +233,7 @@ namespace RateController
             // lbFeet
             // 
             this.lbFeet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFeet.Location = new System.Drawing.Point(79, 390);
+            this.lbFeet.Location = new System.Drawing.Point(214, 367);
             this.lbFeet.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbFeet.Name = "lbFeet";
             this.lbFeet.Size = new System.Drawing.Size(100, 24);
@@ -275,7 +245,7 @@ namespace RateController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(402, 500);
+            this.ClientSize = new System.Drawing.Size(402, 484);
             this.Controls.Add(this.lbFeet);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.bntOK);
@@ -283,8 +253,6 @@ namespace RateController
             this.Controls.Add(this.label25);
             this.Controls.Add(this.tbSectionCount);
             this.Controls.Add(this.lbWidth);
-            this.Controls.Add(this.rbCM);
-            this.Controls.Add(this.rbInches);
             this.Controls.Add(this.DGV);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -311,8 +279,6 @@ namespace RateController
         private System.Windows.Forms.DataGridView DGV;
         private System.Windows.Forms.Button btnEqual;
         private System.Windows.Forms.Label lbWidth;
-        private System.Windows.Forms.RadioButton rbCM;
-        private System.Windows.Forms.RadioButton rbInches;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button bntOK;
         private System.Data.DataSet dataSet1;

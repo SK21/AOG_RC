@@ -21,7 +21,7 @@ namespace RateController
 
         private int cCountsRev;
         private double cHectaresPerMinute;
-        private double cManualRateFactor = 1;
+        private double cManualAdjust = 0;
         private double cMinUPM;
         private int cModID; // arduino ID, 0-15, high 4 bits
         private byte cOffRateSetting;
@@ -78,7 +78,7 @@ namespace RateController
         }
 
         public int ID { get { return cProductID; } }
-        public double ManualRateFactor { get { return cManualRateFactor; } set { cManualRateFactor = value; } }
+        public double ManualAdjust { get { return cManualAdjust; } set { cManualAdjust = value; } }
         public double MinUPM
         {
             get { return cMinUPM; }
@@ -214,14 +214,14 @@ namespace RateController
             return mf.CoverageDescriptions[CoverageUnits];
         }
 
-        public string CurrentApplied()
+        public double CurrentApplied()
         {
-            return cQuantityApplied.ToString("N0");
+            return cQuantityApplied;
         }
 
-        public string CurrentCoverage()
+        public double CurrentCoverage()
         {
-            return Coverage.ToString("N1");
+            return Coverage;
         }
 
         public double CurrentRate()
@@ -472,7 +472,7 @@ namespace RateController
 
         public double Speed()
         {
-            if (CoverageUnits == 0)
+            if (mf.UseInches)
             {
                 return mf.AutoSteerPGN.Speed_KMH() * 0.621371;
             }
@@ -549,7 +549,7 @@ namespace RateController
 
         public void Update()
         {
-            if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected())
+            if (ArduinoModule.Connected() & (mf.AutoSteerPGN.Connected() || CoverageUnits > 1))
             {
                 if (!SwitchIDsSent)
                 {
@@ -574,7 +574,7 @@ namespace RateController
 
                 for (int i = 0; i < 16; i++)
                 {
-                    if(mf.Sections.Item(i).IsON)
+                    if (mf.Sections.Item(i).IsON)
                     {
                         cWorkingWidth_cm += mf.Sections.Item(i).Width_cm;
                     }
@@ -628,7 +628,7 @@ namespace RateController
 
         public double Width()
         {
-            if (CoverageUnits == 0)
+            if (mf.UseInches)
             {
                 return (cWorkingWidth_cm / 100) * 3.28;
             }
@@ -640,7 +640,7 @@ namespace RateController
 
         public double WorkRate()
         {
-            if (CoverageUnits == 0)
+            if (mf.UseInches)
             {
                 return cHectaresPerMinute * 2.47105 * 60;
             }
@@ -684,14 +684,7 @@ namespace RateController
                 CurrentQuantity = AccQuantity - LastAccQuantity;
                 LastAccQuantity = AccQuantity;
 
-                if (QuantityValid(CurrentQuantity))
-                {
-                    // tank remaining
-                    TankRemaining -= CurrentQuantity;
-
-                    // quantity applied
-                    cQuantityApplied += CurrentQuantity;
-                }
+                if (QuantityValid(CurrentQuantity)) cQuantityApplied += CurrentQuantity;
             }
             else
             {

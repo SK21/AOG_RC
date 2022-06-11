@@ -13,7 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Install\</PublishUrl>
+    <PublishUrl>C:\Users\surfacepro\OneDrive\AOG\2022\Dev\RateController_Install\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>74</ApplicationRevision>
+    <ApplicationRevision>77</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -285,6 +285,8 @@
     <None Include="Images\Off.png" />
     <None Include="Images\OffSmall.png" />
     <None Include="Images\FileNew.png" />
+    <None Include="Images\icons8-check-circle-48.png" />
+    <None Include="Images\icons8-cancel-40.png" />
     <Content Include="Images\OK64.png" />
     <None Include="Images\OnSmall.png" />
     <None Include="Images\On.png" />

@@ -71,7 +71,7 @@ namespace RateController
         private float ValveOpen = 0;      // % valve is open
         private float ValveOpenTime = 4000;  // ms to fully open valve at max opening rate
 
-        private float NewRateFactor;
+        private float ManualAdjust;
         private DateTime ManualLast;
 
         private bool cUseMultiPulse;
@@ -132,22 +132,21 @@ namespace RateController
                         {
                             case 2:
                                 // motor control
-                                pwmSetting *= NewRateFactor;
-                                if (pwmSetting == 0 & NewRateFactor > 1) pwmSetting = PIDminPWM;
+                                if (ManualAdjust > 0)
+                                {
+                                    pwmSetting *= (float)1.10;
+                                    if (pwmSetting < 1) pwmSetting = PIDminPWM;
+                                }
+                                else if (ManualAdjust < 0)
+                                {
+                                    pwmSetting *= (float)0.90;
+                                    if (pwmSetting < PIDminPWM) pwmSetting = 0;
+                                }
                                 break;
 
                             default:
                                 // valve control
-                                if (NewRateFactor < 1)
-                                {
-                                    // rate down
-                                    pwmSetting = (1 - NewRateFactor) * ((PIDHighMax + PIDminPWM) / 2) * -1;
-                                }
-                                else
-                                {
-                                    // rate up
-                                    pwmSetting = (NewRateFactor - 1) * ((PIDHighMax + PIDminPWM) / 2);
-                                }
+                                pwmSetting = ManualAdjust;
                                 break;
                         }
                     }
@@ -183,7 +182,7 @@ namespace RateController
                 RelayHi = Data[4];
 
                 // rate setting, 10 times actual
-                double TmpSetting = Data[7] << 16 | Data[6] << 8 | Data[5];
+                double TmpSetting = ((short)(Data[7] << 16 | Data[6] << 8 | Data[5])) * 0.1;
 
                 // meter cal, 100 times actual
                 Tmp = Data[9] << 8 | Data[8];
@@ -204,11 +203,11 @@ namespace RateController
                 AutoOn = ((InCommand & 32) == 32);
                 if (AutoOn)
                 {
-                    rateSetPoint = (float)(TmpSetting * .1);
+                    rateSetPoint = (float)(TmpSetting);
                 }
                 else
                 {
-                    NewRateFactor = (float)(TmpSetting * .1);
+                    ManualAdjust = (float)(TmpSetting);
                 }
 
                 ReceiveTime = DateTime.Now;
@@ -322,7 +321,14 @@ namespace RateController
                 else
                 {
                     // high ms/pulse, use time for one pulse
-                    PPM = (uint)(6000000 / CurrentDuration); // 100 X actual
+                    if (CurrentDuration > 0)
+                    {
+                        PPM = (uint)(6000000 / CurrentDuration); // 100 X actual
+                    }
+                    else
+                    {
+                        PPM = 0;
+                    }
                 }
 
                 LastPulse = DateTime.Now;
@@ -337,11 +343,11 @@ namespace RateController
             if (PPM < Omin) Omin = PPM;
 
             Ocount++;
-            if (Ocount > 9)
+            if (Ocount > 4)
             {
                 Osum -= Omax;
                 Osum -= Omin;
-                Oave = (float)((float)Osum / 800.0);  // divide by 8 and divide by 100 
+                Oave = (float)((float)Osum / 300.0);  // divide by 3 and divide by 100 
                 Osum = 0;
                 Omax = 0;
                 Omin = 50000;
@@ -403,6 +409,9 @@ namespace RateController
         {
             if (ApplicationOn)
             {
+                if (pwmSetting > 250) pwmSetting = 255;
+                if (pwmSetting < -250) pwmSetting = -255;
+
                 SimulateInterval = (int)(DateTime.Now - SimulateTimeLast).TotalMilliseconds;
                 SimulateTimeLast = DateTime.Now;
 

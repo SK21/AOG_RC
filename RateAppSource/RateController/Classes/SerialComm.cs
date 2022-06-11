@@ -28,6 +28,8 @@ namespace RateController
             RCportName = "RCport" + cPortNumber.ToString();
             ID = "_" + PortNumber.ToString() + "_";
             ReadBuffer = new byte[100];
+            ArduinoPort.ReadTimeout = 500;
+            ArduinoPort.WriteTimeout = 500;
         }
 
         // new data event

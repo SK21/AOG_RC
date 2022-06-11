@@ -43,8 +43,6 @@ namespace RateController
             this.label1 = new System.Windows.Forms.Label();
             this.TankRemain = new System.Windows.Forms.Label();
             this.lblUnits = new System.Windows.Forms.Label();
-            this.VolApplied = new System.Windows.Forms.Label();
-            this.lbApplied = new System.Windows.Forms.Label();
             this.AreaDone = new System.Windows.Forms.Label();
             this.lbRateAmount = new System.Windows.Forms.Label();
             this.lbCoverage = new System.Windows.Forms.Label();
@@ -72,7 +70,8 @@ namespace RateController
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.metricToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.MnuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSaveAs = new System.Windows.Forms.ToolStripMenuItem();
@@ -136,15 +135,13 @@ namespace RateController
             this.panProducts.Controls.Add(this.label1);
             this.panProducts.Controls.Add(this.TankRemain);
             this.panProducts.Controls.Add(this.lblUnits);
-            this.panProducts.Controls.Add(this.VolApplied);
-            this.panProducts.Controls.Add(this.lbApplied);
             this.panProducts.Controls.Add(this.AreaDone);
             this.panProducts.Controls.Add(this.lbRateAmount);
             this.panProducts.Controls.Add(this.lbCoverage);
             this.panProducts.Controls.Add(this.lbRemaining);
             this.panProducts.Location = new System.Drawing.Point(0, 0);
             this.panProducts.Name = "panProducts";
-            this.panProducts.Size = new System.Drawing.Size(270, 150);
+            this.panProducts.Size = new System.Drawing.Size(271, 150);
             this.panProducts.TabIndex = 50;
             // 
             // btAlarm
@@ -153,7 +150,7 @@ namespace RateController
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(12, 30);
+            this.btAlarm.Location = new System.Drawing.Point(4, 23);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 146;
@@ -184,7 +181,7 @@ namespace RateController
             // SetRate
             // 
             this.SetRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SetRate.Location = new System.Drawing.Point(178, 48);
+            this.SetRate.Location = new System.Drawing.Point(180, 60);
             this.SetRate.Name = "SetRate";
             this.SetRate.Size = new System.Drawing.Size(97, 23);
             this.SetRate.TabIndex = 156;
@@ -195,7 +192,7 @@ namespace RateController
             // 
             this.lbRate.Cursor = System.Windows.Forms.Cursors.Default;
             this.lbRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRate.Location = new System.Drawing.Point(0, 23);
+            this.lbRate.Location = new System.Drawing.Point(0, 30);
             this.lbRate.Name = "lbRate";
             this.lbRate.Size = new System.Drawing.Size(175, 23);
             this.lbRate.TabIndex = 155;
@@ -207,7 +204,7 @@ namespace RateController
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 48);
+            this.label1.Location = new System.Drawing.Point(0, 60);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(175, 23);
             this.label1.TabIndex = 154;
@@ -217,11 +214,11 @@ namespace RateController
             // TankRemain
             // 
             this.TankRemain.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankRemain.Location = new System.Drawing.Point(178, 98);
+            this.TankRemain.Location = new System.Drawing.Point(188, 120);
             this.TankRemain.Name = "TankRemain";
-            this.TankRemain.Size = new System.Drawing.Size(97, 23);
+            this.TankRemain.Size = new System.Drawing.Size(89, 23);
             this.TankRemain.TabIndex = 153;
-            this.TankRemain.Text = "5000";
+            this.TankRemain.Text = "50000.1";
             this.TankRemain.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.TankRemain.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
             // 
@@ -235,29 +232,10 @@ namespace RateController
             this.lblUnits.Text = "Imp Gal/Min";
             this.lblUnits.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // VolApplied
-            // 
-            this.VolApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolApplied.Location = new System.Drawing.Point(178, 123);
-            this.VolApplied.Name = "VolApplied";
-            this.VolApplied.Size = new System.Drawing.Size(97, 23);
-            this.VolApplied.TabIndex = 148;
-            this.VolApplied.Text = "0";
-            this.VolApplied.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbApplied
-            // 
-            this.lbApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbApplied.Location = new System.Drawing.Point(0, 123);
-            this.lbApplied.Name = "lbApplied";
-            this.lbApplied.Size = new System.Drawing.Size(192, 23);
-            this.lbApplied.TabIndex = 151;
-            this.lbApplied.Text = "Quantity Applied";
-            // 
             // AreaDone
             // 
             this.AreaDone.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AreaDone.Location = new System.Drawing.Point(178, 73);
+            this.AreaDone.Location = new System.Drawing.Point(180, 90);
             this.AreaDone.Name = "AreaDone";
             this.AreaDone.Size = new System.Drawing.Size(97, 23);
             this.AreaDone.TabIndex = 147;
@@ -267,7 +245,7 @@ namespace RateController
             // lbRateAmount
             // 
             this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAmount.Location = new System.Drawing.Point(178, 23);
+            this.lbRateAmount.Location = new System.Drawing.Point(180, 30);
             this.lbRateAmount.Name = "lbRateAmount";
             this.lbRateAmount.Size = new System.Drawing.Size(97, 23);
             this.lbRateAmount.TabIndex = 146;
@@ -278,20 +256,21 @@ namespace RateController
             // lbCoverage
             // 
             this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCoverage.Location = new System.Drawing.Point(0, 73);
+            this.lbCoverage.Location = new System.Drawing.Point(0, 90);
             this.lbCoverage.Name = "lbCoverage";
             this.lbCoverage.Size = new System.Drawing.Size(175, 23);
             this.lbCoverage.TabIndex = 150;
             this.lbCoverage.Text = "Coverage";
+            this.lbCoverage.Click += new System.EventHandler(this.lbCoverage_Click);
             // 
             // lbRemaining
             // 
             this.lbRemaining.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRemaining.Location = new System.Drawing.Point(0, 98);
+            this.lbRemaining.Location = new System.Drawing.Point(0, 120);
             this.lbRemaining.Name = "lbRemaining";
-            this.lbRemaining.Size = new System.Drawing.Size(192, 23);
+            this.lbRemaining.Size = new System.Drawing.Size(201, 23);
             this.lbRemaining.TabIndex = 149;
-            this.lbRemaining.Text = "Quantity Remain.";
+            this.lbRemaining.Text = "Quantity Applied ...";
             this.lbRemaining.Click += new System.EventHandler(this.label34_Click);
             this.lbRemaining.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
             // 
@@ -500,7 +479,7 @@ namespace RateController
             // 
             this.MnuProducts.Image = ((System.Drawing.Image)(resources.GetObject("MnuProducts.Image")));
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(200, 42);
+            this.MnuProducts.Size = new System.Drawing.Size(172, 42);
             this.MnuProducts.Text = "Products";
             this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -508,7 +487,7 @@ namespace RateController
             // 
             this.MnuSections.Image = ((System.Drawing.Image)(resources.GetObject("MnuSections.Image")));
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(200, 42);
+            this.MnuSections.Size = new System.Drawing.Size(172, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -516,7 +495,7 @@ namespace RateController
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(200, 42);
+            this.MnuComm.Size = new System.Drawing.Size(172, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -524,14 +503,15 @@ namespace RateController
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(200, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(172, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
             // MnuOptions
             // 
             this.MnuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSeparator1,
+            this.metricToolStripMenuItem,
+            this.toolStripSeparator3,
             this.MnuNew,
             this.MnuOpen,
             this.MnuSaveAs,
@@ -540,19 +520,27 @@ namespace RateController
             this.MnuAbout});
             this.MnuOptions.Image = global::RateController.Properties.Resources._7504229_hamburger_menu_list_options_icon;
             this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(200, 42);
+            this.MnuOptions.Size = new System.Drawing.Size(172, 42);
             this.MnuOptions.Text = "Options";
             // 
-            // toolStripSeparator1
+            // metricToolStripMenuItem
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(197, 6);
+            this.metricToolStripMenuItem.Image = global::RateController.Properties.Resources.CheckMark;
+            this.metricToolStripMenuItem.Name = "metricToolStripMenuItem";
+            this.metricToolStripMenuItem.Size = new System.Drawing.Size(198, 42);
+            this.metricToolStripMenuItem.Text = "Metric Units";
+            this.metricToolStripMenuItem.Click += new System.EventHandler(this.metricToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(195, 6);
             // 
             // MnuNew
             // 
             this.MnuNew.Image = global::RateController.Properties.Resources.FileNew;
             this.MnuNew.Name = "MnuNew";
-            this.MnuNew.Size = new System.Drawing.Size(200, 42);
+            this.MnuNew.Size = new System.Drawing.Size(198, 42);
             this.MnuNew.Text = "New file";
             this.MnuNew.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -560,7 +548,7 @@ namespace RateController
             // 
             this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile;
             this.MnuOpen.Name = "MnuOpen";
-            this.MnuOpen.Size = new System.Drawing.Size(200, 42);
+            this.MnuOpen.Size = new System.Drawing.Size(198, 42);
             this.MnuOpen.Text = "Open";
             this.MnuOpen.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -568,14 +556,14 @@ namespace RateController
             // 
             this.MnuSaveAs.Image = global::RateController.Properties.Resources.close1;
             this.MnuSaveAs.Name = "MnuSaveAs";
-            this.MnuSaveAs.Size = new System.Drawing.Size(200, 42);
+            this.MnuSaveAs.Size = new System.Drawing.Size(198, 42);
             this.MnuSaveAs.Text = "Save As";
             this.MnuSaveAs.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(197, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(195, 6);
             // 
             // MnuLanguage
             // 
@@ -585,7 +573,7 @@ namespace RateController
             this.MnuNederlands});
             this.MnuLanguage.Image = global::RateController.Properties.Resources._7791659_language_speak_communication_speech_chat_icon;
             this.MnuLanguage.Name = "MnuLanguage";
-            this.MnuLanguage.Size = new System.Drawing.Size(200, 42);
+            this.MnuLanguage.Size = new System.Drawing.Size(198, 42);
             this.MnuLanguage.Text = "Language";
             // 
             // MnuDeustch
@@ -613,7 +601,7 @@ namespace RateController
             // 
             this.MnuAbout.Image = global::RateController.Properties.Resources.R674d5dd067acbd409ff50db6d0647f5d;
             this.MnuAbout.Name = "MnuAbout";
-            this.MnuAbout.Size = new System.Drawing.Size(200, 42);
+            this.MnuAbout.Size = new System.Drawing.Size(198, 42);
             this.MnuAbout.Text = "About";
             this.MnuAbout.Click += new System.EventHandler(this.MnuAbout_Click_1);
             // 
@@ -703,8 +691,6 @@ namespace RateController
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label TankRemain;
         private System.Windows.Forms.Label lblUnits;
-        private System.Windows.Forms.Label VolApplied;
-        private System.Windows.Forms.Label lbApplied;
         private System.Windows.Forms.Label AreaDone;
         private System.Windows.Forms.Label lbRateAmount;
         private System.Windows.Forms.Label lbCoverage;
@@ -738,7 +724,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem MnuDeustch;
         private System.Windows.Forms.ToolStripMenuItem MnuEnglish;
         private System.Windows.Forms.ToolStripMenuItem MnuNederlands;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem MnuNew;
         private System.Windows.Forms.ToolStripMenuItem MnuOpen;
         private System.Windows.Forms.ToolStripMenuItem MnuSaveAs;
@@ -746,5 +731,7 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem MnuComm;
         private System.Windows.Forms.ToolStripMenuItem MnuRelays;
         private System.Windows.Forms.ToolStripMenuItem MnuAbout;
+        private System.Windows.Forms.ToolStripMenuItem metricToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }

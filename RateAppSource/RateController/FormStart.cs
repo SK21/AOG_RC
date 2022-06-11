@@ -47,7 +47,8 @@ namespace RateController
         private Label[] Rates;
 
         private int[] RateType = new int[5];    // 0 current rate, 1 instantaneous rate, 2 overall rate
-        private bool ShowQuantityRemaining = true;
+        private bool ShowQuantityRemaining;
+        private bool ShowCoverageRemaining;
 
         public FormStart()
         {
@@ -58,7 +59,6 @@ namespace RateController
             lbRate.Text = Lang.lgCurrentRate;
             label1.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
-            lbApplied.Text = Lang.lgQuantityApplied;
             lbRemaining.Text = Lang.lgTank_Remaining + " ...";
 
             mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
@@ -221,29 +221,40 @@ namespace RateController
                 lbProduct.Text = CurrentPage.ToString() + ". " + Products.Item(CurrentPage - 1).ProductName;
                 lblUnits.Text = Products.Item(CurrentPage - 1).Units();
                 SetRate.Text = Products.Item(CurrentPage - 1).TargetRate().ToString("N1");
-                AreaDone.Text = Products.Item(CurrentPage - 1).CurrentCoverage();
-                VolApplied.Text = Products.Item(CurrentPage - 1).CurrentApplied();
-                lbCoverage.Text = Products.Item(CurrentPage - 1).CoverageDescription();
 
-                if (ShowQuantityRemaining)
+                if (ShowCoverageRemaining)
                 {
-                    lbRemaining.Text = Lang.lgTank_Remaining + " ...";
-                    TankRemain.Text = Products.Item(CurrentPage - 1).CurrentTankRemaining().ToString("N0");
-                }
-                else
-                {
-                    lbRemaining.Text = CoverageDescriptions[Products.Item(CurrentPage - 1).CoverageUnits] + " Left ...";
+                    lbCoverage.Text = CoverageDescriptions[Products.Item(CurrentPage - 1).CoverageUnits] + " Left ...";
                     double RT = Products.Item(CurrentPage - 1).SmoothRate();
                     if (RT == 0) RT = Products.Item(CurrentPage - 1).TargetRate();
 
                     if ((RT > 0) & (Products.Item(CurrentPage - 1).CurrentTankRemaining() > 0))
                     {
-                        TankRemain.Text = (Products.Item(CurrentPage - 1).CurrentTankRemaining() / RT).ToString("N1");
+                        AreaDone.Text = (Products.Item(CurrentPage - 1).CurrentTankRemaining() / RT).ToString("N1");
                     }
                     else
                     {
-                        TankRemain.Text = "0.0";
+                        AreaDone.Text = "0.0";
                     }
+                }
+                else
+                {
+                    // show amount done
+                    AreaDone.Text = Products.Item(CurrentPage - 1).CurrentCoverage().ToString("N1");
+                    lbCoverage.Text = Products.Item(CurrentPage - 1).CoverageDescription() + " ...";
+                }
+
+                if (ShowQuantityRemaining)
+                {
+                    lbRemaining.Text = Lang.lgTank_Remaining + " ...";
+                    TankRemain.Text = (Products.Item(CurrentPage - 1).CurrentTankRemaining()
+                        - Products.Item(CurrentPage - 1).CurrentApplied()).ToString("N1");
+                }
+                else
+                {
+                    // show amount done
+                    lbRemaining.Text = Lang.lgQuantityApplied + " ...";
+                    TankRemain.Text = Products.Item(CurrentPage - 1).CurrentApplied().ToString("N1");
                 }
 
                 switch (RateType[CurrentPage - 1])
@@ -279,6 +290,7 @@ namespace RateController
                 {
                     lbArduinoConnected.BackColor = Color.Red;
                 }
+
                 lbArduinoConnected.Visible = true;
             }
 
@@ -304,6 +316,16 @@ namespace RateController
 
             // alarm
             RCalarm.CheckAlarms();
+
+            // metric
+            if(UseInches)
+            {
+                MnuOptions.DropDownItems["metricToolStripMenuItem"].Image = Properties.Resources.Xmark;
+            }
+            else
+            {
+                MnuOptions.DropDownItems["metricToolStripMenuItem"].Image = Properties.Resources.CheckMark;
+            }
         }
 
         private void btAlarm_Click(object sender, EventArgs e)
@@ -394,6 +416,7 @@ namespace RateController
         private void label34_Click(object sender, EventArgs e)
         {
             ShowQuantityRemaining = !ShowQuantityRemaining;
+            UpdateStatus();
         }
 
         private void lbAogConnected_Click(object sender, EventArgs e)
@@ -581,6 +604,18 @@ namespace RateController
         private void timerNano_Tick(object sender, EventArgs e)
         {
             Products.UpdateVirtualNano();
+        }
+
+        private void metricToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UseInches = !UseInches;
+            Tls.SaveProperty("UseInches", UseInches.ToString());
+        }
+
+        private void lbCoverage_Click(object sender, EventArgs e)
+        {
+            ShowCoverageRemaining = !ShowCoverageRemaining;
+            UpdateStatus();
         }
     }
 }

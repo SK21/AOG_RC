@@ -928,7 +928,7 @@ namespace RateController
 
         private void UpdateDiags()
         {
-            if (mf.Products.Item(CurrentProduct).CoverageUnits == 0)
+            if (mf.UseInches)
             {
                 lbWorkRate.Text = Lang.lgAcresHr;
             }
@@ -959,7 +959,7 @@ namespace RateController
             lbWidthData.Text = mf.Products.Item(CurrentProduct).Width().ToString("N1");
             lbWorkRateData.Text = mf.Products.Item(CurrentProduct).WorkRate().ToString("N1");
 
-            if (mf.Products.Item(CurrentProduct).CoverageUnits == 0)
+            if (mf.UseInches)
             {
                 lbWidth.Text = Lang.lgWorkingWidthFT;
             }
@@ -969,7 +969,7 @@ namespace RateController
             }
 
             lbSpeedData.Text = mf.Products.Item(CurrentProduct).Speed().ToString("N1");
-            if (mf.Products.Item(CurrentProduct).CoverageUnits == 0)
+            if (mf.UseInches)
             {
                 lbSpeed.Text = Lang.lgMPH;
             }

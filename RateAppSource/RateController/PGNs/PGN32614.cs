@@ -59,7 +59,7 @@ namespace RateController
             else
             {
                 // manual rate
-                Tmp = (Prod.ManualRateFactor * 10.0);
+                Tmp = (Prod.ManualAdjust * 10.0);
             }
 
             cData[5] = (byte)Tmp;
