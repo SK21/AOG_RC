@@ -107,6 +107,8 @@ void Send()
 	for (int i = 0; i < 6; i++)
 	{
 		Serial.write(Packet[i]);
+		//Serial.print(Packet[i]);
+		//if (i < 5) Serial.print(",");
 		yield();
 	}
 	Serial.println("");
