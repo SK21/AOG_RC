@@ -5,9 +5,19 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
-# define InoDescription "RCnano  :  11-May-2022"
+# define InoDescription "RCnano  :  11-Jun-2022"
 # define UseEthernet 0
+
 # define DebugOn 0
+byte CRCexpected;
+byte CRCvalue;
+byte DebugCount;
+byte DebugCount2;
+byte DebugVal1;
+byte DebugVal2;
+uint32_t DebugTime;
+bool LEDon = false;
+
 
 struct PCBconfig    // 5 bytes
 {
@@ -54,7 +64,7 @@ byte Ethernet::buffer[500]; // udp send and receive buffer
 
 Adafruit_MCP23X17 mcp;
 
-// Pin number is an integer in the range 0..15,
+// Pin number is an integer in the range 0-15,
 // where pins numbered from 0 to 7 are on Port A, GPA0 = 0,
 // and pins numbered from 8 to 15 are on Port B, GPB0 = 8.
 
@@ -123,7 +133,7 @@ byte Temp = 0;
 unsigned int UnSignedTemp = 0;
 bool AutoOn = true;
 
-float NewRateFactor[2];
+float ManualAdjust[2];
 unsigned long ManualLast[2];
 float ManualFactor[2];
 
@@ -137,14 +147,6 @@ byte SwitchBytes[8];
 byte SectionSwitchID[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 bool UseMultiPulses[2] = { 0, 0 };   //  0 - average time for multiple pulses, 1 - time for one pulse
 
-unsigned int PGN;
-bool PGN32614Found;
-bool PGN32616Found;
-bool PGN32619Found;
-bool PGN32620Found;
-bool PGN32625Found; // nano config
-bool PGN32626Found; // nano pins
-
   //reset function
 void(*resetFunc) (void) = 0;
 
@@ -153,12 +155,14 @@ int16_t EEread = 0;
 #define PCB_Ident 2388
 
 bool MasterOn[2];
-byte CRCvalue;
 byte Packet[30];
 bool IOexpanderFound;
 uint8_t ErrorCount;
 
-uint32_t DebugTime;
+unsigned int PGNudp;
+unsigned int PGNserial;
+byte MSB;
+byte LSB;
 
 void setup()
 {
@@ -217,7 +221,7 @@ void setup()
 		Serial.println("");
 		if (IOexpanderFound)
 		{
-			Serial.println("I/O expander found.");
+			Serial.println("I/O Expander found.");
 			mcp.begin_I2C();
 
 			// MCP20317 pins
@@ -242,7 +246,7 @@ void setup()
 		}
 		else
 		{
-			Serial.println("I/O expander not found.");
+			Serial.println("I/O Expander not found.");
 		}
 	}
 	else
@@ -274,6 +278,7 @@ void setup()
 	attachInterrupt(digitalPinToInterrupt(FlowPin[1]), ISR1, FALLING);
 
 #if UseEthernet
+	Serial.println("");
 	Serial.println("Starting Ethernet ...");
 	// ethernet interface ip address
 	byte ArduinoIP[] = { 192, 168,PCB.IPpart3, 207 + PCB.ModuleID };
@@ -302,8 +307,11 @@ void setup()
 	//register sub for received data
 	ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
 #endif
+
+#if DebugOn
 	pinMode(LED_BUILTIN, OUTPUT);
-	digitalWrite(LED_BUILTIN, LOW);
+	digitalWrite(LED_BUILTIN, LEDon);
+#endif
 
 	Serial.println("");
 	Serial.println("Finished Setup.");
@@ -416,42 +424,26 @@ void ManualControl()
 			{
 			case 2:
 				// motor control
-				pwmSetting[i] *= NewRateFactor[i];
-				if (pwmSetting[i] == 0 && NewRateFactor[i] > 0) pwmSetting[i] = PIDminPWM[i];
+				if (ManualAdjust[i] > 0)
+				{
+					pwmSetting[i] *= 1.10;
+					if (pwmSetting[i] < 1) pwmSetting[i] = PIDminPWM[i];
+				}
+				else if (ManualAdjust[i] < 0)
+				{
+					pwmSetting[i] *= 0.90;
+					if (pwmSetting[i] < PIDminPWM[i]) pwmSetting[i] = 0;
+				}
 				break;
 
 			default:
 				// valve control
-				pwmSetting[i] = 0;
-
-				if (NewRateFactor[i] < 1)
-				{
-					// rate down
-					pwmSetting[i] = -PIDminPWM[i];
-				}
-				else if (NewRateFactor[i] > 1)
-				{
-					// rate up
-					pwmSetting[i] = PIDminPWM[i];
-				}
-
+				pwmSetting[i] = ManualAdjust[i];
 				break;
 			}
 		}
 
-		switch (ControlType[i])
-		{
-			// calculate application rate
-		case 2:
-			// motor control
-			rateError[i] = RateSetting[i] - UPM[i];
-			break;
-
-		default:
-			// valve control
-			rateError[i] = RateSetting[i] - UPM[i];
-			break;
-		}
+		rateError[i] = RateSetting[i] - UPM[i];
 	}
 }
 
@@ -477,37 +469,19 @@ void DebugTheINO()
 	{
 		DebugTime = millis();
 
-		// PGN 2748 - 0xABC
+		Serial.println("");
+		// PGNudp 2748 - 0xABC
 		Serial.print(0xBC);
 		Serial.print(",");
 		Serial.print(0xA);
 		Serial.print(",");
-
-		Serial.print(MasterOn[0]);
-		Serial.print(",");
-		Serial.print(PowerRelayLo);
-		Serial.print(",");
-		Serial.print(PowerRelayHi);
-		Serial.print(",");
-		Serial.print(FlowEnabled[0]);
-		Serial.print(",");
-		Serial.print(RelayLo);
-		Serial.print(",");
-		Serial.print(RelayHi);
-
-		Serial.print(",");
-		Serial.print(CRCvalue);
-		Serial.print(",");
-		Serial.print(CRCexpected);
-		Serial.print(",");
-		Serial.print(BadCRC);
-
-		
-		//for (int i = 1; i < 15; i++)
-		//{
-		//	Serial.print(",");
-		//	Serial.print(Packet[i]);
-		//}
+		Serial.print(DebugVal1);
+		//Serial.print(",");
+		//Serial.print(DebugVal2);
+		//Serial.print(",");
+		//Serial.print(DebugCount);
+		//Serial.print(",");
+		//Serial.print(DebugCount2);
 
 		Serial.println("");
 	}

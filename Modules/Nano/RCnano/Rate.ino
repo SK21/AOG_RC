@@ -65,7 +65,14 @@ void GetUPM()
 			else
 			{
 				// high ms/pulse, use time for one pulse
-				PPM[i] = 6000000 / CurrentDuration;	// 100 X actual
+				if (CurrentDuration == 0)
+				{
+					PPM[i] = 0;
+				}
+				else
+				{
+					PPM[i] = 6000000 / CurrentDuration;	// 100 X actual
+				}
 			}
 
 
@@ -81,11 +88,11 @@ void GetUPM()
 		if (PPM[i] < Omin[i]) Omin[i] = PPM[i];
 
 		Ocount[i]++;
-		if (Ocount[i] > 9)
+		if (Ocount[i] > 4)
 		{
 			Osum[i] -= Omax[i];
 			Osum[i] -= Omin[i];
-			Oave[i] = (float)Osum[i] / 800.0;	// divide by 8 and divide by 100 
+			Oave[i] = (float)Osum[i] / 300.0;	// divide by 3 and divide by 100 
 			Osum[i] = 0;
 			Omax[i] = 0;
 			Omin[i] = 50000;
