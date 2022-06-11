@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   09-May-2022"
+# define InoDescription "AutoSteerTeensy   11-Jun-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -195,7 +195,7 @@ bool PGN32614Found;
 bool PGN32616Found;
 bool PGN32619Found;
 
-float NewRateFactor[MaxFlowSensorCount];
+float ManualAdjust[MaxFlowSensorCount];
 uint16_t ManualLast[MaxFlowSensorCount];
 float ManualFactor;
 uint32_t WifiSwitchesTimer;

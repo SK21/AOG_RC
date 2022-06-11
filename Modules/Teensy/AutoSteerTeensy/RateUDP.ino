@@ -121,7 +121,7 @@ void ReceiveRateUDP()
 						}
 						else
 						{
-							NewRateFactor[SensorID] = TmpSet;
+							ManualAdjust[SensorID] = TmpSet;
 						}
 
 						// power relays

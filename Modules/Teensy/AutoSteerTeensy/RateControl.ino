@@ -92,41 +92,25 @@ void ManualControl()
             {
             case 2:
                 // motor control
-                RatePWM[i] *= NewRateFactor[i];
-                if (RatePWM[i] == 0 && NewRateFactor[i] > 0) RatePWM[i] = PIDminPWM[i];
+                if (ManualAdjust[i] > 0)
+                {
+                    RatePWM[i] *= 1.10;
+                    if (RatePWM[i] < 1) RatePWM[i] = PIDminPWM[i];
+                }
+                else if (ManualAdjust[i] < 0)
+                {
+                    RatePWM[i] *= 0.90;
+                    if (RatePWM[i] < PIDminPWM[i]) RatePWM[i] = 0;
+                }
                 break;
 
             default:
                 // valve control
-                RatePWM[i] = 0;
-
-                if (NewRateFactor[i] < 1)
-                {
-                    // rate down
-                    RatePWM[i] = -PIDminPWM[i];
-                }
-                else if (NewRateFactor[i] > 1)
-                {
-                    // rate up
-                    RatePWM[i] = PIDminPWM[i];
-                }
-
+                RatePWM[i] = ManualAdjust[i];
                 break;
             }
         }
 
-        switch (ControlType[i])
-        {
-            // calculate application rate
-        case 2:
-            // motor control
-            rateError[i] = RateSetting[i] - UPM[i];
-            break;
-
-        default:
-            // valve control
-            rateError[i] = RateSetting[i] - UPM[i];
-            break;
-        }
+        rateError[i] = RateSetting[i] - UPM[i];
     }
 }
