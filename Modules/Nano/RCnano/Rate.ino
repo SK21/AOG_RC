@@ -1,20 +1,20 @@
-volatile unsigned long Duration[SensorCount];
-volatile unsigned long PulseCount[SensorCount];
-unsigned long LastPulse[SensorCount];
+volatile unsigned long Duration[2];
+volatile unsigned long PulseCount[2];
+unsigned long LastPulse[2];
 
-unsigned long TimedCounts[SensorCount];
-unsigned long RateInterval[SensorCount];
-unsigned long RateTimeLast[SensorCount];
+unsigned long TimedCounts[2];
+unsigned long RateInterval[2];
+unsigned long RateTimeLast[2];
 
 unsigned long CurrentCount;
 unsigned long CurrentDuration;
 
-unsigned long PPM[SensorCount];		// pulse per minute * 100
-unsigned long Osum[SensorCount];
-unsigned long Omax[SensorCount];
-unsigned long Omin[SensorCount];
-byte Ocount[SensorCount];
-float Oave[SensorCount];
+unsigned long PPM[2];		// pulse per minute * 100
+unsigned long Osum[2];
+unsigned long Omax[2];
+unsigned long Omin[2];
+byte Ocount[2];
+float Oave[2];
 
 void ISR0()
 {
@@ -40,7 +40,7 @@ void ISR1()
 
 void GetUPM()
 {
-	for (int i = 0; i < SensorCount; i++)
+	for (int i = 0; i < PCB.SensorCount; i++)
 	{
 		if (PulseCount[i])
 		{
@@ -65,7 +65,14 @@ void GetUPM()
 			else
 			{
 				// high ms/pulse, use time for one pulse
-				PPM[i] = 6000000 / CurrentDuration;	// 100 X actual
+				if (CurrentDuration == 0)
+				{
+					PPM[i] = 0;
+				}
+				else
+				{
+					PPM[i] = 6000000 / CurrentDuration;	// 100 X actual
+				}
 			}
 
 
@@ -81,11 +88,11 @@ void GetUPM()
 		if (PPM[i] < Omin[i]) Omin[i] = PPM[i];
 
 		Ocount[i]++;
-		if (Ocount[i] > 9)
+		if (Ocount[i] > 4)
 		{
 			Osum[i] -= Omax[i];
 			Osum[i] -= Omin[i];
-			Oave[i] = (float)Osum[i] / 800.0;	// divide by 8 and divide by 100 
+			Oave[i] = (float)Osum[i] / 300.0;	// divide by 3 and divide by 100 
 			Osum[i] = 0;
 			Omax[i] = 0;
 			Omin[i] = 50000;

@@ -27,7 +27,6 @@ namespace RateController
             DGV.Columns[2].HeaderText = Lang.lgSwitch;
             label25.Text = Lang.lgNumSections;
             lbWidth.Text = Lang.lgWidth;
-            rbInches.Text = Lang.lgInches;
             btnEqual.Text = Lang.lgEqual;
             btnCancel.Text = Lang.lgCancel;
             bntOK.Text = Lang.lgClose;
@@ -62,7 +61,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowHelp(ex.Message,this.Text,3000,true);
+                mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
             }
         }
 
@@ -71,6 +70,14 @@ namespace RateController
             mf.UseInches = UseInches;
             UpdateForm();
             SetButtons(false);
+        }
+
+        private void btnEqual_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Copy the width of section 1 to the other sections.";
+
+            mf.Tls.ShowHelp(Message, "Copy");
+            hlpevent.Handled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -200,15 +207,6 @@ namespace RateController
             {
                 mf.Tls.WriteErrorLog("FormSections/LoadSectionData: " + ex.Message);
             }
-        }
-
-        private void rbInches_CheckedChanged(object sender, EventArgs e)
-        {
-            mf.UseInches = rbInches.Checked;
-            mf.Tls.SaveProperty("UseInches", rbInches.Checked.ToString());
-            LoadSectionData();
-            UpdateTotalWidth();
-            lbFeet.Visible = rbInches.Checked;
         }
 
         private void SaveSectionData()
@@ -346,15 +344,6 @@ namespace RateController
             LoadSectionData();
             SecCount = (byte)mf.Sections.Count;
             tbSectionCount.Text = SecCount.ToString("N0");
-
-            if (mf.UseInches)
-            {
-                rbInches.Checked = true;
-            }
-            else
-            {
-                rbCM.Checked = true;
-            }
             Initializing = false;
             UpdateTotalWidth();
         }
@@ -363,21 +352,15 @@ namespace RateController
         {
             if (mf.UseInches)
             {
-                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth()).ToString("N0");
+                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth()).ToString("N0")+" Inches";
                 lbFeet.Text = (mf.Sections.TotalWidth() / 12).ToString("N1") + "  FT";
+                lbFeet.Visible = true;
             }
             else
             {
-                lbWidth.Text = Lang.lgWidth + ":  " + mf.Sections.TotalWidth(false).ToString("N0");
+                lbWidth.Text = Lang.lgWidth + ":  " + mf.Sections.TotalWidth(false).ToString("N0")+" cm";
+                lbFeet.Visible = false;
             }
-        }
-
-        private void btnEqual_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Copy the width of section 1 to the other sections.";
-
-            mf.Tls.ShowHelp(Message, "Copy");
-            hlpevent.Handled = true;
         }
     }
 }

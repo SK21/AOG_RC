@@ -12,11 +12,10 @@ namespace RateController
     {
         private static Hashtable ht;
         private string cAppName = "RateController";
-        private string cAppVersion = "2.1.17";
+        private string cAppVersion = "2.3.0";
         private string cPropertiesFile;
-
         private string cSettingsDir;
-        private string cVersionDate = "21-Mar-2022";
+        private string cVersionDate = "11-Jun-2022";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
@@ -24,6 +23,7 @@ namespace RateController
             mf = CallingForm;
             CheckFolders();
         }
+
         public string PropertiesFile
         {
             get
@@ -64,6 +64,42 @@ namespace RateController
         public byte BuildModSenID(byte ArdID, byte SenID)
         {
             return (byte)((ArdID << 4) | (SenID & 0b00001111));
+        }
+
+        public byte CRC(byte[] Data, int Length, byte Start = 0)
+        {
+            byte Result = 0;
+            if (Length <= Data.Length)
+            {
+                int CK = 0;
+                for (int i = Start; i < Length; i++)
+                {
+                    CK += Data[i];
+                }
+                Result = (byte)CK;
+            }
+            return Result;
+        }
+
+        public byte CRC(string[] Data, int Length, byte Start = 0)
+        {
+            byte Result = 0;
+            if (Length <= Data.Length)
+            {
+                byte tmp;
+                byte[] BD = new byte[Length];
+                for (int i = 0; i < Length; i++)
+                {
+                    if (byte.TryParse(Data[i], out tmp)) BD[i] = tmp;
+                }
+                int CK = 0;
+                for (int i = Start; i < Length; i++)
+                {
+                    CK += BD[i];
+                }
+                Result = (byte)CK;
+            }
+            return Result;
         }
 
         public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
@@ -107,6 +143,30 @@ namespace RateController
             }
         }
 
+        public bool GoodCRC(byte[] Data, byte Start = 0)
+        {
+            bool Result = false;
+            int Length = Data.Length;
+            byte cr = CRC(Data, Length - 1, Start);
+            Result = (cr == Data[Length - 1]);
+            return Result;
+        }
+
+        public bool GoodCRC(string[] Data, byte Start = 0)
+        {
+            bool Result = false;
+            byte tmp;
+            int Length = Data.Length;
+            byte[] BD = new byte[Length];
+            for (int i = 0; i < Length; i++)
+            {
+                if (byte.TryParse(Data[i], out tmp)) BD[i] = tmp;
+            }
+            byte cr = CRC(BD, Length - 1, Start);   // exclude existing crc
+            Result = (cr == BD[Length - 1]);
+            return Result;
+        }
+
         public bool IsOnScreen(Form form, bool PutOnScreen = false)
         {
             // Create rectangle
@@ -144,6 +204,43 @@ namespace RateController
             return Prop;
         }
 
+        public bool NewFile(string Name)
+        {
+            bool Result = false;
+            try
+            {
+                Name = Path.GetFileName(Name);
+                cPropertiesFile = cSettingsDir + "\\" + Name;
+                if (!File.Exists(cPropertiesFile))
+                {
+                    File.WriteAllBytes(cPropertiesFile, Properties.Resources.Example);
+                    OpenFile(cPropertiesFile);
+                    Result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("clsTools: NewFile: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public double NoisyData(double CurrentData, double ErrorPercent = 5.0)
+        {
+            try
+            {
+                // error percent is above and below current data
+                var Rand = new Random();
+                int Max = (int)(CurrentData * ErrorPercent * 2.0);
+                double Spd = (CurrentData * (1.0 - ErrorPercent / 100.0)) + ((double)Rand.Next(Max) / 100.0);
+                return Spd;
+            }
+            catch (Exception)
+            {
+                return CurrentData;
+            }
+        }
+
         public byte ParseModID(byte ID)
         {
             // top 4 bits
@@ -168,27 +265,6 @@ namespace RateController
             {
                 return false;
             }
-        }
-
-        public bool NewFile(string Name)
-        {
-            bool Result = false;
-            try
-            {
-                Name = Path.GetFileName(Name);
-                cPropertiesFile = cSettingsDir + "\\" + Name;
-                if (!File.Exists(cPropertiesFile))
-                {
-                    File.WriteAllBytes(cPropertiesFile, Properties.Resources.Example);
-                    OpenFile(cPropertiesFile);
-                    Result = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("clsTools: NewFile: " + ex.Message);
-            }
-            return Result;
         }
 
         public void SaveFile(string NewFile)
@@ -239,6 +315,22 @@ namespace RateController
             return cSettingsDir;
         }
 
+        public void ShowHelp(string Message, string Title = "Help",
+            int timeInMsec = 30000, bool LogError = false, bool Modal = false)
+        {
+            var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
+            if (Modal)
+            {
+                Hlp.ShowDialog();
+            }
+            else
+            {
+                Hlp.Show();
+            }
+
+            if (LogError) WriteErrorLog(Message);
+        }
+
         public int StringToInt(string S)
         {
             if (decimal.TryParse(S, out decimal tmp))
@@ -246,13 +338,6 @@ namespace RateController
                 return (int)tmp;
             }
             return 0;
-        }
-
-        public void ShowHelp(string Message, string Title = "Help", int timeInMsec = 30000, bool LogError = false)
-        {
-            var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
-            Hlp.Show();
-            if (LogError) WriteErrorLog(Message);
         }
 
         public string VersionDate()
@@ -305,8 +390,6 @@ namespace RateController
             {
             }
         }
-
-
 
         private void LoadProperties(string path)
         {
@@ -388,22 +471,6 @@ namespace RateController
             }
             catch (Exception)
             {
-            }
-        }
-
-        public double NoisyData(double CurrentData, double ErrorPercent = 5.0)
-        {
-            try
-            {
-                // error percent is above and below current data
-                var Rand = new Random();
-                int Max = (int)(CurrentData * ErrorPercent * 2.0);
-                double Spd = (CurrentData * (1.0 - ErrorPercent / 100.0)) + ((double)Rand.Next(Max) / 100.0);
-                return Spd;
-            }
-            catch (Exception)
-            {
-                return CurrentData;
             }
         }
     }

@@ -73,7 +73,7 @@ namespace RateController
             if (ProdID == 0)
             {
                 // save all
-                for (int i = 0; i < MaxRecords; i++)
+                for (int i = 0; i < cProducts.Count; i++)
                 {
                     cProducts[i].Save();
                 }

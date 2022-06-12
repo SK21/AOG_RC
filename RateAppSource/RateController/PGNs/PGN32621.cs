@@ -16,18 +16,20 @@ namespace RateController
         // 8    sensor 2 Hi
         // 9    sensor 3 Lo
         // 10   sensor 3 Hi
+        // 11   crc
 
-        private const byte cByteCount = 11;
-        private const byte HeaderLo = 109;
+        private const byte cByteCount = 12;
         private const byte HeaderHi = 127;
-
+        private const byte HeaderLo = 109;
+        private Int16[,] cPressure = new short[255, 4];
+        private byte HiByte;
+        private byte LoByte;
         private FormStart mf;
 
-        private Int16[,] cPressure = new short[255, 4]; // modules, pressures
-        private int Temp;
-        private byte LoByte;
-        private byte HiByte;
         private byte ModuleID;
+
+        // modules, pressures
+        private int Temp;
 
         public PGN32621(FormStart CalledFrom)
         {
@@ -37,7 +39,7 @@ namespace RateController
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
-            if (Data[1] == HeaderHi & Data[0] == HeaderLo & Data.Length >= cByteCount)
+            if (Data[1] == HeaderHi & Data[0] == HeaderLo & Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 ModuleID = Data[3];
                 for (int i = 0; i < 4; i++)
@@ -52,7 +54,7 @@ namespace RateController
         public bool ParseStringData(string[] Data)
         {
             bool Result = false;
-            if (Data.Length >= cByteCount)
+            if (Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 int.TryParse(Data[0], out Temp);
 

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System;
 
 namespace RateController
 {
@@ -18,12 +19,16 @@ namespace RateController
         //10	Command
         //	        - bit 0		    reset acc.Quantity
         //	        - bit 1,2		valve type 0-3
-        //	        - bit 3		    simulate flow
+        //	        - bit 3		    MasterOn
         //          - bit 4         0 - average time for multiple pulses, 1 - time for one pulse
         //          - bit 5         AutoOn
+        //11    power relay Lo      list of power type relays 0-7
+        //12    power relay Hi      list of power type relays 8-15
+        //13    CRC
 
         private readonly clsProduct Prod;
-        private byte[] cData = new byte[11];
+        private const byte cByteCount = 14;
+        private byte[] cData = new byte[cByteCount];
 
         public PGN32614(clsProduct CalledFrom)
         {
@@ -40,6 +45,10 @@ namespace RateController
             cData[3] = Prod.mf.Sections.SectionLo();
             cData[4] = Prod.mf.Sections.SectionHi();
 
+            int Relays = Prod.mf.RelayObjects.Status();
+            cData[3] = (byte)Relays;
+            cData[4] = (byte)(Relays >> 8);
+
             // rate set
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto))
             {
@@ -50,7 +59,7 @@ namespace RateController
             else
             {
                 // manual rate
-                Tmp = (Prod.ManualRateFactor * 10.0);
+                Tmp = (Prod.ManualAdjust * 10.0);
             }
 
             cData[5] = (byte)Tmp;
@@ -88,10 +97,20 @@ namespace RateController
                     break;
             }
 
-            if (Prod.SimulationType != SimType.None) cData[10] |= 0b00001000; else cData[10] &= 0b11110111;
+            if (Prod.mf.Sections.IsMasterOn()) cData[10] |= 0b00001000; else cData[10] &= 0b11110111;
             if (Prod.UseMultiPulse) cData[10] |= 0b00010000; else cData[10] &= 0b11101111;
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[10] |= 0b00100000;
-            Debug.Print(cData[10].ToString("N3"));
+
+            // power relays
+            for (int i = 0; i < 16; i++)
+            {
+                int Power = Prod.mf.RelayObjects.PowerRelays();
+                cData[11] = (byte)Power;
+                cData[12] = (byte)(Power >> 8);
+            }
+
+            // CRC
+            cData[13] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
 
             // send
             if (Prod.SimulationType == SimType.VirtualNano)
@@ -101,7 +120,7 @@ namespace RateController
             else
             {
                 Prod.mf.SendSerial(cData);
-                Prod.mf.UDPnetwork.SendUDPMessage(cData);
+                Prod.mf.UDPmodules.SendUDPMessage(cData);
             }
         }
     }

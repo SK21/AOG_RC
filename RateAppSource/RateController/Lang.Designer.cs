@@ -178,6 +178,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comm.
+        /// </summary>
+        internal static string lgComm {
+            get {
+                return ResourceManager.GetString("lgComm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connect.
         /// </summary>
         internal static string lgConnect {
@@ -385,6 +394,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Local IP.
+        /// </summary>
+        internal static string lgLocalIP {
+            get {
+                return ResourceManager.GetString("lgLocalIP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PWM Low Max.
         /// </summary>
         internal static string lgLowMax {
@@ -475,6 +493,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        internal static string lgOpen {
+            get {
+                return ResourceManager.GetString("lgOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Options.
         /// </summary>
         internal static string lgOptions {
@@ -489,6 +516,15 @@ namespace RateController {
         internal static string lgOverallRate {
             get {
                 return ResourceManager.GetString("lgOverallRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PCB Config.
+        /// </summary>
+        internal static string lgPCBconfig {
+            get {
+                return ResourceManager.GetString("lgPCBconfig", resourceCulture);
             }
         }
         
@@ -579,6 +615,15 @@ namespace RateController {
         internal static string lgReceivePort {
             get {
                 return ResourceManager.GetString("lgReceivePort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Relays.
+        /// </summary>
+        internal static string lgRelays {
+            get {
+                return ResourceManager.GetString("lgRelays", resourceCulture);
             }
         }
         

@@ -17,27 +17,48 @@ namespace RateController
         //8 acc.Quantity Hi
         //9 PWM Lo              10 X actual
         //10 PWM Hi
+        //11 CRC
 
-        private const byte cByteCount = 11;
-        private const byte HeaderLo = 101;
+        private const byte cByteCount = 12;
         private const byte HeaderHi = 127;
+        private const byte HeaderLo = 101;
         private double cPWMsetting;
-        private double cUPM;
         private double cQuantity;
+        private double cUPM;
+        private clsProduct Prod;
 
-        clsProduct Prod;
-
+        private double Ratio;
         private DateTime ReceiveTime;
+
+        private double Trate;
 
         public PGN32613(clsProduct CalledFrom)
         {
             Prod = CalledFrom;
         }
 
+        public double AccumulatedQuantity()
+        {
+            return cQuantity;
+        }
+
+        public bool Connected()
+        {
+            if (Prod.SimulationType == SimType.VirtualNano)
+            {
+                return true;
+            }
+            else
+            {
+                return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
+            }
+        }
+
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
-            if (Data[1] == HeaderHi & Data[0] == HeaderLo & Data.Length >= cByteCount)
+            if (Data[1] == HeaderHi && Data[0] == HeaderLo &&
+                Data.Length >= cByteCount && Prod.mf.Tls.GoodCRC(Data))
             {
                 int tmp = Prod.mf.Tls.ParseModID(Data[2]);
                 if (Prod.ModuleID == tmp)
@@ -71,7 +92,7 @@ namespace RateController
             int Temp;
             bool Result = false;
 
-            if (Data.Length >= cByteCount)
+            if (Data.Length >= cByteCount && Prod.mf.Tls.GoodCRC(Data))
             {
                 int.TryParse(Data[0], out Temp);
 
@@ -127,26 +148,7 @@ namespace RateController
             return cUPM;
         }
 
-        public double AccumulatedQuantity()
-        {
-            return cQuantity;
-        }
-
-        public bool Connected()
-        {
-            if (Prod.SimulationType == SimType.VirtualNano)
-            {
-                return true;
-            }
-            else
-            {
-                return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
-            }
-        }
-
-        double Trate;
-        double Ratio;
-        void CheckRate()
+        private void CheckRate()
         {
             Trate = Prod.TargetUPM();
             if (Trate > 0 && cUPM > 0)

@@ -156,6 +156,9 @@
   <data name="lgComboClose" xml:space="preserve">
     <value>Combo Close</value>
   </data>
+  <data name="lgComm" xml:space="preserve">
+    <value>Comm</value>
+  </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Connect</value>
   </data>
@@ -225,6 +228,9 @@
   <data name="lgLoad_Defaults" xml:space="preserve">
     <value>Load Defaults</value>
   </data>
+  <data name="lgLocalIP" xml:space="preserve">
+    <value>Local IP</value>
+  </data>
   <data name="lgLowMax" xml:space="preserve">
     <value>PWM Low Max</value>
   </data>
@@ -255,11 +261,17 @@
   <data name="lgNumSections" xml:space="preserve">
     <value>Number of Sections</value>
   </data>
+  <data name="lgOpen" xml:space="preserve">
+    <value>Open</value>
+  </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Options</value>
   </data>
   <data name="lgOverallRate" xml:space="preserve">
     <value>Overall Rate …</value>
+  </data>
+  <data name="lgPCBconfig" xml:space="preserve">
+    <value>PCB Config</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
     <value>Pressure</value>
@@ -290,6 +302,9 @@
   </data>
   <data name="lgReceivePort" xml:space="preserve">
     <value>ReceivePort</value>
+  </data>
+  <data name="lgRelays" xml:space="preserve">
+    <value>Relays</value>
   </data>
   <data name="lgRescan" xml:space="preserve">
     <value>Rescan</value>

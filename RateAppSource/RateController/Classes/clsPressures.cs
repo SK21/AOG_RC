@@ -58,7 +58,7 @@ namespace RateController
                 {
                     if (cPressures[i].UnitsVolts > 0)
                     {
-                        if (mf.Sections.Item(cPressures[i].SectionID).SectionOn)
+                        if (mf.Sections.Item(cPressures[i].SectionID).IsON)
                         {
                             Count++;
                             Total += cPressures[i].Pressure();
@@ -72,7 +72,7 @@ namespace RateController
                 {
                     if (cPressures[i].UnitsVolts > 0)
                     {
-                        if (mf.Sections.Item(cPressures[i].SectionID).SectionOn)
+                        if (mf.Sections.Item(cPressures[i].SectionID).IsON)
                         {
                             // too low?
                             if (cPressures[i].Pressure() < (Ave * cOffAverageSetting / 100))

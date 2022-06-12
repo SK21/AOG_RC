@@ -22,26 +22,24 @@ namespace RateController
             label1.Text = Message;
             timer1.Interval = timeInMsec;
 
-            if (Message.Length < 50)
+            int len = Message.Length;
+            this.Width = 450;
+
+            int ht = 20 + (len / 34) * 40;
+            if (ht < 150)
             {
-                this.Height = 200;
-                this.Width = 250;
+                ht = 150;
             }
-            else if (Message.Length < 100)
+            else if (ht > 500)
             {
-                this.Height = 250;
-                this.Width = 250;
-            }
-            else
-            {
-                this.Height = 300;
-                this.Width = 500;
+                ht = 500;
             }
 
+            this.Height = ht;
+
             panel1.Width = this.Width - 40;
-            panel1.Height = this.Height - 136;
+            panel1.Height = this.Height - 40;
             label1.MaximumSize = new Size(panel1.Width - 10, 0);
-            bntOK.Location = new Point((this.Width - bntOK.Width) / 2, this.Height - 118);
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -54,12 +52,18 @@ namespace RateController
             timer1.Enabled = false;
             timer1.Dispose();
             Dispose();
+
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                mf.Tls.SaveFormData(this);
+            }
             Close();
         }
 
         private void frmHelp_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
+            this.BackColor = Properties.Settings.Default.DayColour;
         }
 
         private void frmHelp_FormClosed(object sender, FormClosedEventArgs e)
@@ -68,6 +72,11 @@ namespace RateController
             {
                 mf.Tls.SaveFormData(this);
             }
+        }
+
+        private void panel1_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -110,10 +110,6 @@
             this.btnDistanceDn.UseVisualStyleBackColor = false;
             this.btnDistanceDn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BtnDistanceDn_MouseDown);
             // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            // 
             // FormNumeric
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

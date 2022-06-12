@@ -235,6 +235,7 @@ namespace RateController
             this.cbVR.Size = new System.Drawing.Size(102, 31);
             this.cbVR.TabIndex = 124;
             this.cbVR.SelectedIndexChanged += new System.EventHandler(this.cbVR_SelectedIndexChanged);
+            this.cbVR.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label27_HelpRequested);
             // 
             // label27
             // 
@@ -355,6 +356,7 @@ namespace RateController
             this.FlowCal.TabIndex = 4;
             this.FlowCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.FlowCal.TextChanged += new System.EventHandler(this.FlowCal_TextChanged);
+            this.FlowCal.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lb4_HelpRequested);
             this.FlowCal.Enter += new System.EventHandler(this.FlowCal_Enter);
             this.FlowCal.Validating += new System.ComponentModel.CancelEventHandler(this.FlowCal_Validating);
             // 
@@ -518,11 +520,14 @@ namespace RateController
             // 
             // ckTimedResponse
             // 
+            this.ckTimedResponse.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTimedResponse.AutoSize = true;
             this.ckTimedResponse.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ckTimedResponse.Location = new System.Drawing.Point(65, 92);
+            this.ckTimedResponse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckTimedResponse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckTimedResponse.Location = new System.Drawing.Point(60, 92);
             this.ckTimedResponse.Name = "ckTimedResponse";
-            this.ckTimedResponse.Size = new System.Drawing.Size(182, 28);
+            this.ckTimedResponse.Size = new System.Drawing.Size(173, 34);
             this.ckTimedResponse.TabIndex = 141;
             this.ckTimedResponse.Text = "Timed Adjustment";
             this.ckTimedResponse.UseVisualStyleBackColor = true;
@@ -533,7 +538,7 @@ namespace RateController
             // 
             this.label30.AutoSize = true;
             this.label30.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label30.Location = new System.Drawing.Point(330, 95);
+            this.label30.Location = new System.Drawing.Point(330, 98);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(97, 23);
             this.label30.TabIndex = 140;
@@ -543,7 +548,7 @@ namespace RateController
             // 
             this.tbTimedAdjustment.Enabled = false;
             this.tbTimedAdjustment.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTimedAdjustment.Location = new System.Drawing.Point(260, 91);
+            this.tbTimedAdjustment.Location = new System.Drawing.Point(260, 93);
             this.tbTimedAdjustment.MaxLength = 8;
             this.tbTimedAdjustment.Name = "tbTimedAdjustment";
             this.tbTimedAdjustment.Size = new System.Drawing.Size(64, 30);
@@ -551,6 +556,7 @@ namespace RateController
             this.tbTimedAdjustment.Tag = "2";
             this.tbTimedAdjustment.Text = "100";
             this.tbTimedAdjustment.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbTimedAdjustment.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckTimedResponse_HelpRequested);
             // 
             // label13
             // 
@@ -633,6 +639,7 @@ namespace RateController
             this.tbPIDBrakePoint.TabIndex = 2;
             this.tbPIDBrakePoint.Tag = "4";
             this.tbPIDBrakePoint.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPIDBrakePoint.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label5_HelpRequested);
             // 
             // label5
             // 
@@ -648,13 +655,14 @@ namespace RateController
             // tbPIDDeadBand
             // 
             this.tbPIDDeadBand.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPIDDeadBand.Location = new System.Drawing.Point(260, 54);
+            this.tbPIDDeadBand.Location = new System.Drawing.Point(260, 55);
             this.tbPIDDeadBand.MaxLength = 8;
             this.tbPIDDeadBand.Name = "tbPIDDeadBand";
             this.tbPIDDeadBand.Size = new System.Drawing.Size(64, 30);
             this.tbPIDDeadBand.TabIndex = 5;
             this.tbPIDDeadBand.Tag = "1";
             this.tbPIDDeadBand.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPIDDeadBand.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label6_HelpRequested);
             // 
             // label6
             // 
@@ -677,6 +685,7 @@ namespace RateController
             this.tbPIDHighMax.TabIndex = 1;
             this.tbPIDHighMax.Tag = "3";
             this.tbPIDHighMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPIDHighMax.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label7_HelpRequested);
             // 
             // label7
             // 
@@ -699,6 +708,7 @@ namespace RateController
             this.tbPIDLowMax.TabIndex = 3;
             this.tbPIDLowMax.Tag = "5";
             this.tbPIDLowMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPIDLowMax.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label4_HelpRequested);
             // 
             // label4
             // 
@@ -721,6 +731,7 @@ namespace RateController
             this.tbPIDMinPWM.TabIndex = 4;
             this.tbPIDMinPWM.Tag = "6";
             this.tbPIDMinPWM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPIDMinPWM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label3_HelpRequested);
             // 
             // label3
             // 
@@ -744,6 +755,7 @@ namespace RateController
             this.tbPIDkp.Tag = "0";
             this.tbPIDkp.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPIDkp.TextChanged += new System.EventHandler(this.tbPIDkp_TextChanged);
+            this.tbPIDkp.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label2_HelpRequested);
             // 
             // label2
             // 
@@ -775,14 +787,17 @@ namespace RateController
             // 
             // ckSimulate
             // 
-            this.ckSimulate.AutoSize = true;
-            this.ckSimulate.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ckSimulate.Location = new System.Drawing.Point(130, 350);
+            this.ckSimulate.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckSimulate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSimulate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckSimulate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckSimulate.Location = new System.Drawing.Point(134, 352);
             this.ckSimulate.Margin = new System.Windows.Forms.Padding(2);
             this.ckSimulate.Name = "ckSimulate";
-            this.ckSimulate.Size = new System.Drawing.Size(149, 28);
+            this.ckSimulate.Size = new System.Drawing.Size(193, 34);
             this.ckSimulate.TabIndex = 117;
             this.ckSimulate.Text = "Simulate Rate ";
+            this.ckSimulate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSimulate.UseVisualStyleBackColor = true;
             this.ckSimulate.CheckedChanged += new System.EventHandler(this.ckSimulate_CheckedChanged);
             this.ckSimulate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckSimulate_HelpRequested);
@@ -791,7 +806,7 @@ namespace RateController
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(334, 315);
+            this.label28.Location = new System.Drawing.Point(381, 310);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(29, 23);
             this.label28.TabIndex = 116;
@@ -802,7 +817,7 @@ namespace RateController
             // 
             this.tbOffRate.Enabled = false;
             this.tbOffRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(296, 313);
+            this.tbOffRate.Location = new System.Drawing.Point(342, 306);
             this.tbOffRate.MaxLength = 8;
             this.tbOffRate.Name = "tbOffRate";
             this.tbOffRate.Size = new System.Drawing.Size(33, 30);
@@ -810,6 +825,7 @@ namespace RateController
             this.tbOffRate.Text = "20";
             this.tbOffRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbOffRate.TextChanged += new System.EventHandler(this.tbOffRate_TextChanged);
+            this.tbOffRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOffRate_HelpRequested);
             this.tbOffRate.Enter += new System.EventHandler(this.tbOffRate_Enter);
             this.tbOffRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbOffRate_Validating);
             // 
@@ -817,7 +833,7 @@ namespace RateController
             // 
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(132, 279);
+            this.label25.Location = new System.Drawing.Point(134, 267);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(130, 23);
             this.label25.TabIndex = 114;
@@ -828,24 +844,28 @@ namespace RateController
             // tbMinUPM
             // 
             this.tbMinUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinUPM.Location = new System.Drawing.Point(272, 276);
+            this.tbMinUPM.Location = new System.Drawing.Point(342, 264);
             this.tbMinUPM.MaxLength = 8;
             this.tbMinUPM.Name = "tbMinUPM";
             this.tbMinUPM.Size = new System.Drawing.Size(67, 30);
             this.tbMinUPM.TabIndex = 0;
             this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbMinUPM.TextChanged += new System.EventHandler(this.tbMinUPM_TextChanged);
+            this.tbMinUPM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label25_HelpRequested);
             this.tbMinUPM.Enter += new System.EventHandler(this.tbMinUPM_Enter);
             // 
             // ckOffRate
             // 
-            this.ckOffRate.AutoSize = true;
-            this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ckOffRate.Location = new System.Drawing.Point(130, 314);
+            this.ckOffRate.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckOffRate.Location = new System.Drawing.Point(133, 304);
             this.ckOffRate.Name = "ckOffRate";
-            this.ckOffRate.Size = new System.Drawing.Size(158, 28);
+            this.ckOffRate.Size = new System.Drawing.Size(193, 34);
             this.ckOffRate.TabIndex = 1;
             this.ckOffRate.Text = "Off-rate Alarm   ";
+            this.ckOffRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOffRate.UseVisualStyleBackColor = true;
             this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
             this.ckOffRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOffRate_HelpRequested);
@@ -854,7 +874,7 @@ namespace RateController
             // 
             this.groupBox1.Controls.Add(this.rbMultiPulse);
             this.groupBox1.Controls.Add(this.rbSinglePulse);
-            this.groupBox1.Location = new System.Drawing.Point(42, 144);
+            this.groupBox1.Location = new System.Drawing.Point(42, 135);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(385, 117);
             this.groupBox1.TabIndex = 20;
@@ -864,29 +884,35 @@ namespace RateController
             // 
             // rbMultiPulse
             // 
-            this.rbMultiPulse.AutoSize = true;
-            this.rbMultiPulse.Location = new System.Drawing.Point(23, 69);
+            this.rbMultiPulse.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbMultiPulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbMultiPulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbMultiPulse.Location = new System.Drawing.Point(13, 73);
             this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbMultiPulse.Name = "rbMultiPulse";
-            this.rbMultiPulse.Size = new System.Drawing.Size(356, 28);
+            this.rbMultiPulse.Size = new System.Drawing.Size(362, 37);
             this.rbMultiPulse.TabIndex = 1;
             this.rbMultiPulse.Tag = "0";
             this.rbMultiPulse.Text = "Average Time  / pulses (< 50 ms/pulse)";
+            this.rbMultiPulse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbMultiPulse.UseVisualStyleBackColor = true;
             this.rbMultiPulse.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbMultiPulse_HelpRequested);
             // 
             // rbSinglePulse
             // 
-            this.rbSinglePulse.AutoSize = true;
+            this.rbSinglePulse.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbSinglePulse.Checked = true;
-            this.rbSinglePulse.Location = new System.Drawing.Point(23, 27);
+            this.rbSinglePulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbSinglePulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbSinglePulse.Location = new System.Drawing.Point(13, 25);
             this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbSinglePulse.Name = "rbSinglePulse";
-            this.rbSinglePulse.Size = new System.Drawing.Size(320, 28);
+            this.rbSinglePulse.Size = new System.Drawing.Size(362, 37);
             this.rbSinglePulse.TabIndex = 0;
             this.rbSinglePulse.TabStop = true;
             this.rbSinglePulse.Tag = "0";
             this.rbSinglePulse.Text = "Time for one pulse (> 50 ms/pulse)";
+            this.rbSinglePulse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbSinglePulse.UseVisualStyleBackColor = true;
             this.rbSinglePulse.CheckedChanged += new System.EventHandler(this.rbSinglePulse_CheckedChanged);
             this.rbSinglePulse.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbSinglePulse_HelpRequested);
@@ -928,6 +954,7 @@ namespace RateController
             this.tbSenID.Text = "0";
             this.tbSenID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbSenID.TextChanged += new System.EventHandler(this.tbSenID_TextChanged);
+            this.tbSenID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label26_HelpRequested);
             this.tbSenID.Enter += new System.EventHandler(this.tbSenID_Enter);
             this.tbSenID.Validating += new System.ComponentModel.CancelEventHandler(this.tbSenID_Validating);
             // 
@@ -964,6 +991,7 @@ namespace RateController
             this.tbConID.Text = "0";
             this.tbConID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbConID.TextChanged += new System.EventHandler(this.tbConID_TextChanged);
+            this.tbConID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbConID_HelpRequested);
             this.tbConID.Enter += new System.EventHandler(this.tbConID_Enter);
             this.tbConID.Validating += new System.ComponentModel.CancelEventHandler(this.tbConID_Validating);
             // 
@@ -1036,6 +1064,8 @@ namespace RateController
             this.swMasterOff.TabIndex = 204;
             this.swMasterOff.Text = "Master Off";
             this.swMasterOff.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swMasterOff.Click += new System.EventHandler(this.swMasterOff_Click);
+            this.swMasterOff.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swDown
             // 
@@ -1048,6 +1078,7 @@ namespace RateController
             this.swDown.Text = "Rate Down";
             this.swDown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.swDown.Click += new System.EventHandler(this.swDown_Click);
+            this.swDown.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swUp
             // 
@@ -1059,6 +1090,8 @@ namespace RateController
             this.swUp.TabIndex = 202;
             this.swUp.Text = "Rate Up";
             this.swUp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swUp.Click += new System.EventHandler(this.swUp_Click);
+            this.swUp.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swAuto
             // 
@@ -1070,6 +1103,8 @@ namespace RateController
             this.swAuto.TabIndex = 201;
             this.swAuto.Text = "Auto";
             this.swAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swAuto.Click += new System.EventHandler(this.swAuto_Click);
+            this.swAuto.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swFour
             // 
@@ -1081,6 +1116,8 @@ namespace RateController
             this.swFour.TabIndex = 200;
             this.swFour.Text = "4";
             this.swFour.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swFour.Click += new System.EventHandler(this.swFour_Click);
+            this.swFour.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swThree
             // 
@@ -1092,6 +1129,8 @@ namespace RateController
             this.swThree.TabIndex = 199;
             this.swThree.Text = "3";
             this.swThree.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swThree.Click += new System.EventHandler(this.swThree_Click);
+            this.swThree.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swTwo
             // 
@@ -1103,6 +1142,8 @@ namespace RateController
             this.swTwo.TabIndex = 198;
             this.swTwo.Text = "2";
             this.swTwo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swTwo.Click += new System.EventHandler(this.swTwo_Click);
+            this.swTwo.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swOne
             // 
@@ -1114,6 +1155,8 @@ namespace RateController
             this.swOne.TabIndex = 197;
             this.swOne.Text = "1";
             this.swOne.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swOne.Click += new System.EventHandler(this.swOne_Click);
+            this.swOne.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // label22
             // 
@@ -1136,6 +1179,8 @@ namespace RateController
             this.swMasterOn.TabIndex = 195;
             this.swMasterOn.Text = "Master On";
             this.swMasterOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.swMasterOn.Click += new System.EventHandler(this.swMasterOn_Click);
+            this.swMasterOn.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // tbCountsRev
             // 
@@ -1148,6 +1193,7 @@ namespace RateController
             this.tbCountsRev.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbCountsRev.Click += new System.EventHandler(this.tbCountsRev_Click);
             this.tbCountsRev.TextChanged += new System.EventHandler(this.tbCountsRev_TextChanged);
+            this.tbCountsRev.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label24_HelpRequested);
             this.tbCountsRev.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRev_Validating);
             // 
             // label24
@@ -1513,6 +1559,7 @@ namespace RateController
             this.lbWidthData.Size = new System.Drawing.Size(130, 25);
             this.lbWidthData.TabIndex = 155;
             this.lbWidthData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbWidthData.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbWidth_HelpRequested);
             // 
             // lbWidth
             // 
@@ -1795,7 +1842,6 @@ namespace RateController
             this.tbs6.ResumeLayout(false);
             this.tbs6.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.grpSensor.ResumeLayout(false);
             this.grpSensor.PerformLayout();
             this.tbs3.ResumeLayout(false);

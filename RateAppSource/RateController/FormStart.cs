@@ -14,32 +14,32 @@ namespace RateController
 
     public partial class FormStart : Form
     {
-        public PGN254 AutoSteerPGN = new PGN254();
-        public PGN32618 SwitchBox;
-        public PGN32620 SwitchIDs;
-        public PGN32621 PressureData;
-        public clsAlarm RCalarm;
-        public PGN230 VRdata = new PGN230();
+        public readonly int MaxRelays = 16;
+        public readonly int MaxSections = 16;
 
+        public PGN254 AutoSteerPGN;
         public double CalCounterEnd;
         public double CalCounterStart;
-
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Hr", "Min" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgHours, Lang.lgMinutes };
         public bool DoCal;
-
+        public PGN32621 PressureData;
+        public clsPressures PressureObjects;
         public clsProducts Products;
-
         public string[] QuantityAbbr = new string[] { "Imp Gal", "US Gal", "Lbs", "Ltr", "Kgs" };
         public string[] QuantityDescriptions = new string[] { "Imp. Gallons", "US Gallons", "Lbs", "Litres", "Kgs" };
+        public clsAlarm RCalarm;
+        public clsRelays RelayObjects;
         public clsSections Sections;
-
         public SerialComm[] SER = new SerialComm[3];
+        public Color SimColor = Color.FromArgb(255, 191, 0);
+        public PGN32618 SwitchBox;
+        public PGN32620 SwitchIDs;
         public clsTools Tls;
-        public UDPComm UDPagio;
-
-        public UDPComm UDPnetwork;
+        public UDPComm UDPaog;
+        public UDPComm UDPmodules;
         public bool UseInches;
+        public PGN230 VRdata;
         private int CurrentPage;
 
         private Label[] Indicators;
@@ -47,10 +47,8 @@ namespace RateController
         private Label[] Rates;
 
         private int[] RateType = new int[5];    // 0 current rate, 1 instantaneous rate, 2 overall rate
-
-        public Color SimColor = Color.FromArgb(255, 191, 0);
-        private bool ShowQuantityRemaining = true;
-        public clsPressures PressureObjects;
+        private bool ShowQuantityRemaining;
+        private bool ShowCoverageRemaining;
 
         public FormStart()
         {
@@ -61,26 +59,33 @@ namespace RateController
             lbRate.Text = Lang.lgCurrentRate;
             label1.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
-            lbApplied.Text = Lang.lgQuantityApplied;
             lbRemaining.Text = Lang.lgTank_Remaining + " ...";
 
-            mnuSettings.Items[0].Text = Lang.lgProducts;
-            mnuSettings.Items[1].Text = Lang.lgSection;
-            mnuSettings.Items[3].Text = Lang.lgPressure;
-            mnuSettings.Items[4].Text = Lang.lgNew;
-            mnuSettings.Items[5].Text = Lang.lgLoad;
-            mnuSettings.Items[6].Text = Lang.lgSaveAs;
-            mnuSettings.Items[7].Text = Lang.lgLanguage;
-            mnuSettings.Items[8].Text = Lang.lgFirmware;
-            mnuSettings.Items[9].Text = Lang.lgAbout;
+            mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
+            mnuSettings.Items["MnuSections"].Text = Lang.lgSection;
+            mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
+            mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
+            mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
+
+            MnuOptions.DropDownItems["MnuAbout"].Text = Lang.lgAbout;
+            MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
+            MnuOptions.DropDownItems["MnuOpen"].Text = Lang.lgOpen;
+            MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
+            MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
 
             #endregion // language
 
             Tls = new clsTools(this);
-            UDPagio = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
-            //UDPagio = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255");       // AOG
+            //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
+            UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255", false, true);       // AOG
 
-            UDPnetwork = new UDPComm(this, 29999, 28888, 1480, "192.168.1.255");    // arduino
+            //UDPnetwork = new UDPComm(this, 29999, 28888, 1480, "192.168.1.255");    // arduino
+            //UDPconfig = new UDPComm(this, 29900, 28800, 1482, "192.168.1.255");     // pcb config
+
+            UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
+
+            AutoSteerPGN = new PGN254(this);
+            VRdata = new PGN230(this);
 
             SwitchBox = new PGN32618(this);
             SwitchIDs = new PGN32620(this);
@@ -102,6 +107,9 @@ namespace RateController
             UseInches = true;
 
             PressureObjects = new clsPressures(this);
+            RelayObjects = new clsRelays(this);
+
+            timerMain.Interval = 1000;
         }
 
         public byte CurrentProduct()
@@ -129,10 +137,16 @@ namespace RateController
             Sections.CheckSwitchDefinitions();
 
             Products.Load();
-
-            UDPnetwork.BroadCastIP = Tls.LoadProperty("BroadCastIP");
-
             PressureObjects.Load();
+            RelayObjects.Load();
+        }
+
+        public void SendSerial(byte[] Data)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                SER[i].SendData(Data);
+            }
         }
 
         public void StartSerial()
@@ -207,29 +221,40 @@ namespace RateController
                 lbProduct.Text = CurrentPage.ToString() + ". " + Products.Item(CurrentPage - 1).ProductName;
                 lblUnits.Text = Products.Item(CurrentPage - 1).Units();
                 SetRate.Text = Products.Item(CurrentPage - 1).TargetRate().ToString("N1");
-                AreaDone.Text = Products.Item(CurrentPage - 1).CurrentCoverage();
-                VolApplied.Text = Products.Item(CurrentPage - 1).CurrentApplied();
-                lbCoverage.Text = Products.Item(CurrentPage - 1).CoverageDescription();
 
-                if (ShowQuantityRemaining)
+                if (ShowCoverageRemaining)
                 {
-                    lbRemaining.Text = Lang.lgTank_Remaining + " ...";
-                    TankRemain.Text = Products.Item(CurrentPage - 1).CurrentTankRemaining().ToString("N0");
-                }
-                else
-                {
-                    lbRemaining.Text = CoverageDescriptions[Products.Item(CurrentPage - 1).CoverageUnits] + " Left ...";
+                    lbCoverage.Text = CoverageDescriptions[Products.Item(CurrentPage - 1).CoverageUnits] + " Left ...";
                     double RT = Products.Item(CurrentPage - 1).SmoothRate();
                     if (RT == 0) RT = Products.Item(CurrentPage - 1).TargetRate();
 
                     if ((RT > 0) & (Products.Item(CurrentPage - 1).CurrentTankRemaining() > 0))
                     {
-                        TankRemain.Text = (Products.Item(CurrentPage - 1).CurrentTankRemaining() / RT).ToString("N1");
+                        AreaDone.Text = (Products.Item(CurrentPage - 1).CurrentTankRemaining() / RT).ToString("N1");
                     }
                     else
                     {
-                        TankRemain.Text = "0.0";
+                        AreaDone.Text = "0.0";
                     }
+                }
+                else
+                {
+                    // show amount done
+                    AreaDone.Text = Products.Item(CurrentPage - 1).CurrentCoverage().ToString("N1");
+                    lbCoverage.Text = Products.Item(CurrentPage - 1).CoverageDescription() + " ...";
+                }
+
+                if (ShowQuantityRemaining)
+                {
+                    lbRemaining.Text = Lang.lgTank_Remaining + " ...";
+                    TankRemain.Text = (Products.Item(CurrentPage - 1).CurrentTankRemaining()
+                        - Products.Item(CurrentPage - 1).CurrentApplied()).ToString("N1");
+                }
+                else
+                {
+                    // show amount done
+                    lbRemaining.Text = Lang.lgQuantityApplied + " ...";
+                    TankRemain.Text = Products.Item(CurrentPage - 1).CurrentApplied().ToString("N1");
                 }
 
                 switch (RateType[CurrentPage - 1])
@@ -265,6 +290,7 @@ namespace RateController
                 {
                     lbArduinoConnected.BackColor = Color.Red;
                 }
+
                 lbArduinoConnected.Visible = true;
             }
 
@@ -290,6 +316,21 @@ namespace RateController
 
             // alarm
             RCalarm.CheckAlarms();
+
+            // metric
+            if(UseInches)
+            {
+                MnuOptions.DropDownItems["metricToolStripMenuItem"].Image = Properties.Resources.Xmark;
+            }
+            else
+            {
+                MnuOptions.DropDownItems["metricToolStripMenuItem"].Image = Properties.Resources.CheckMark;
+            }
+        }
+
+        private void btAlarm_Click(object sender, EventArgs e)
+        {
+            RCalarm.Silence();
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
@@ -331,7 +372,9 @@ namespace RateController
             Sections.Save();
             Products.Save();
 
-            Tls.SaveProperty("BroadCastIP", UDPnetwork.BroadCastIP);
+            //Tls.SaveProperty("BroadCastIP", UDPmodules.BroadCastIP);
+
+            Application.Exit();
         }
 
         private void FormStart_Load(object sender, EventArgs e)
@@ -343,22 +386,23 @@ namespace RateController
 
             if (Tls.PrevInstance())
             {
-                Tls.ShowHelp(Lang.lgAlreadyRunning,"Help",3000);
+                Tls.ShowHelp(Lang.lgAlreadyRunning, "Help", 3000);
                 this.Close();
             }
 
             // UDP
-            UDPnetwork.StartUDPServer();
-            if (!UDPnetwork.isUDPSendConnected)
+            UDPmodules.StartUDPServer();
+            if (!UDPmodules.isUDPSendConnected)
             {
                 Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true);
             }
 
-            UDPagio.StartUDPServer();
-            if (!UDPagio.isUDPSendConnected)
+            UDPaog.StartUDPServer();
+            if (!UDPaog.isUDPSendConnected)
             {
                 Tls.ShowHelp("UDPagio failed to start.", "", 3000, true);
             }
+
             LoadSettings();
             UpdateStatus();
         }
@@ -369,11 +413,156 @@ namespace RateController
             Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Black);
         }
 
+        private void label34_Click(object sender, EventArgs e)
+        {
+            ShowQuantityRemaining = !ShowQuantityRemaining;
+            UpdateStatus();
+        }
+
+        private void lbAogConnected_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void lbAogConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Indicates if AgOpenGPS is connected. Green is connected, " +
+                "red is not connected. Press to minimize window.";
+
+            this.Tls.ShowHelp(Message, "AOG");
+            hlpevent.Handled = true;
+        }
+
+        private void lbArduinoConnected_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void lbArduinoConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Indicates if the product is connected to an arduino module. Green is connected, " +
+                "yellow is simulation mode, red not connected. Press to minimize window.";
+
+            this.Tls.ShowHelp(Message, "MOD");
+            hlpevent.Handled = true;
+        }
+
         private void lbRate_Click(object sender, EventArgs e)
         {
             RateType[CurrentPage - 1]++;
             if (RateType[CurrentPage - 1] > 2) RateType[CurrentPage - 1] = 0;
             UpdateStatus();
+        }
+
+        private void lbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "1 - Current Rate, shows" +
+                " the target rate when it is within 10% of target. Outside this range it" +
+                " shows the exact rate being applied. \n 2 - Instant Rate, shows the exact rate." +
+                "\n 3 - Overall, averages total quantity applied over area done." +
+                "\n Press to change.";
+
+            Tls.ShowHelp(Message, "Rate");
+            hlpevent.Handled = true;
+        }
+
+        private void lbRemaining_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Shows either quantity remaining or area that can be done with the remaining quantity." +
+                "\n Press to change.";
+
+            Tls.ShowHelp(Message, "Remaining");
+            hlpevent.Handled = true;
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.InitialDirectory = Tls.SettingsDir();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Tls.PropertiesFile = openFileDialog1.FileName;
+                Products.Load();
+                LoadSettings();
+            }
+        }
+
+        private void MnuAbout_Click_1(object sender, EventArgs e)
+        {
+            Form frmAbout = new FormAbout(this);
+            frmAbout.ShowDialog();
+        }
+
+        private void MnuComm_Click(object sender, EventArgs e)
+        {
+            Form frm = new frmComm(this);
+            frm.ShowDialog();
+        }
+
+        private void MnuDeustch_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "de";
+            Properties.Settings.Default.Save();
+            Application.Restart();
+        }
+
+        private void MnuEnglish_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "en";
+            Properties.Settings.Default.Save();
+            Application.Restart();
+        }
+
+        private void MnuNederlands_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "nl";
+            Properties.Settings.Default.Save();
+            Application.Restart();
+        }
+
+        private void MnuRelays_Click_1(object sender, EventArgs e)
+        {
+            Form tmp = new frmRelays(this);
+            tmp.ShowDialog();
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.InitialDirectory = Tls.SettingsDir();
+            saveFileDialog1.Title = "New File";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    Tls.NewFile(saveFileDialog1.FileName);
+                    LoadSettings();
+                }
+            }
+        }
+
+        private void productsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new FormSettings(this, CurrentPage);
+            frm.ShowDialog();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.InitialDirectory = Tls.SettingsDir();
+            saveFileDialog1.Title = "Save As";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    Tls.SaveFile(saveFileDialog1.FileName);
+                    LoadSettings();
+                }
+            }
+        }
+
+        private void sectionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form Sec = new frmSections(this);
+            Sec.ShowDialog();
         }
 
         private void SetDayMode()
@@ -417,170 +606,16 @@ namespace RateController
             Products.UpdateVirtualNano();
         }
 
-        public void SendSerial(byte[] Data)
+        private void metricToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 3; i++)
-            {
-                SER[i].SendData(Data);
-            }
-        }
-
-        private void productsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new FormSettings(this, CurrentPage);
-            frm.ShowDialog();
-        }
-
-        private void sectionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form Sec = new frmSections(this);
-            Sec.ShowDialog();
-        }
-
-        private void commToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new frmComm(this);
-            frm.ShowDialog();
-        }
-
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.InitialDirectory = Tls.SettingsDir();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                Tls.PropertiesFile = openFileDialog1.FileName;
-                Products.Load();
-                LoadSettings();
-            }
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.InitialDirectory = Tls.SettingsDir();
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Tls.SaveFile(saveFileDialog1.FileName);
-                    LoadSettings();
-                }
-            }
-        }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frmAbout = new FormAbout(this);
-            frmAbout.ShowDialog();
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void label34_Click(object sender, EventArgs e)
-        {
-            ShowQuantityRemaining = !ShowQuantityRemaining;
+            UseInches = !UseInches;
+            Tls.SaveProperty("UseInches", UseInches.ToString());
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
         {
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void btAlarm_Click(object sender, EventArgs e)
-        {
-            RCalarm.Silence();
-        }
-
-        private void deustchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "de";
-            Properties.Settings.Default.Save();
-            Application.Restart();
-        }
-
-        private void englishToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "en";
-            Properties.Settings.Default.Save();
-            Application.Restart();
-        }
-
-        private void nederlandsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "nl";
-            Properties.Settings.Default.Save();
-            Application.Restart();
-        }
-
-        private void pressureToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new FormPressure(this);
-            frm.ShowDialog();
-        }
-
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.InitialDirectory = Tls.SettingsDir();
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Tls.NewFile(saveFileDialog1.FileName);
-                    LoadSettings();
-                }
-            }
-        }
-
-        private void SetRate_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "1 - Current Rate, shows" +
-                " the target rate when it is within 10% of target. Outside this range it" +
-                " shows the exact rate being applied. \n 2 - Instant Rate, shows the exact rate." +
-                "\n 3 - Overall, averages total quantity applied over area done.";
-
-            Tls.ShowHelp(Message, "Rate");
-            hlpevent.Handled = true;
-        }
-
-        private void lbRemaining_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Shows either quantity remaining or area that can be done with the remaining quantity.";
-
-            Tls.ShowHelp(Message, "Remaining");
-            hlpevent.Handled = true;
-        }
-
-        private void lbArduinoConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Indicates if the arduino module is connected. Green is connected, " +
-                "yellow is simulation mode, red not connected.";
-
-            this.Tls.ShowHelp(Message, "MOD");
-            hlpevent.Handled = true;
-        }
-
-        private void lbAogConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Indicates if AgOpenGPS is connected. Green is connected, " +
-                "red is not connected.";
-
-            this.Tls.ShowHelp(Message, "AOG");
-            hlpevent.Handled = true;
-        }
-
-        private void firmwareToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form Sec = new frmFirmware(this);
-            Sec.ShowDialog();
+            ShowCoverageRemaining = !ShowCoverageRemaining;
+            UpdateStatus();
         }
     }
 }

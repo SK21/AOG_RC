@@ -43,8 +43,6 @@ namespace RateController
             this.label1 = new System.Windows.Forms.Label();
             this.TankRemain = new System.Windows.Forms.Label();
             this.lblUnits = new System.Windows.Forms.Label();
-            this.VolApplied = new System.Windows.Forms.Label();
-            this.lbApplied = new System.Windows.Forms.Label();
             this.AreaDone = new System.Windows.Forms.Label();
             this.lbRateAmount = new System.Windows.Forms.Label();
             this.lbCoverage = new System.Windows.Forms.Label();
@@ -67,19 +65,22 @@ namespace RateController
             this.rt0 = new System.Windows.Forms.Label();
             this.timerNano = new System.Windows.Forms.Timer(this.components);
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.productsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pressureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.deustchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.englishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nederlandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.firmwareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.metricToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.MnuNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuSaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.MnuLanguage = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuDeustch = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuEnglish = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuNederlands = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.btnRight = new System.Windows.Forms.Button();
@@ -107,6 +108,7 @@ namespace RateController
             this.lbArduinoConnected.TabIndex = 144;
             this.lbArduinoConnected.Text = "Mod";
             this.lbArduinoConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbArduinoConnected.Click += new System.EventHandler(this.lbArduinoConnected_Click);
             this.lbArduinoConnected.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbArduinoConnected_HelpRequested);
             // 
             // lbAogConnected
@@ -120,6 +122,7 @@ namespace RateController
             this.lbAogConnected.TabIndex = 145;
             this.lbAogConnected.Text = "AOG";
             this.lbAogConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbAogConnected.Click += new System.EventHandler(this.lbAogConnected_Click);
             this.lbAogConnected.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbAogConnected_HelpRequested);
             // 
             // panProducts
@@ -132,15 +135,13 @@ namespace RateController
             this.panProducts.Controls.Add(this.label1);
             this.panProducts.Controls.Add(this.TankRemain);
             this.panProducts.Controls.Add(this.lblUnits);
-            this.panProducts.Controls.Add(this.VolApplied);
-            this.panProducts.Controls.Add(this.lbApplied);
             this.panProducts.Controls.Add(this.AreaDone);
             this.panProducts.Controls.Add(this.lbRateAmount);
             this.panProducts.Controls.Add(this.lbCoverage);
             this.panProducts.Controls.Add(this.lbRemaining);
             this.panProducts.Location = new System.Drawing.Point(0, 0);
             this.panProducts.Name = "panProducts";
-            this.panProducts.Size = new System.Drawing.Size(270, 150);
+            this.panProducts.Size = new System.Drawing.Size(271, 150);
             this.panProducts.TabIndex = 50;
             // 
             // btAlarm
@@ -149,7 +150,7 @@ namespace RateController
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(4, 27);
+            this.btAlarm.Location = new System.Drawing.Point(4, 23);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 146;
@@ -180,19 +181,18 @@ namespace RateController
             // SetRate
             // 
             this.SetRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SetRate.Location = new System.Drawing.Point(178, 48);
+            this.SetRate.Location = new System.Drawing.Point(180, 60);
             this.SetRate.Name = "SetRate";
             this.SetRate.Size = new System.Drawing.Size(97, 23);
             this.SetRate.TabIndex = 156;
             this.SetRate.Text = "1,800.50";
             this.SetRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.SetRate.Click += new System.EventHandler(this.SetRate_Click);
             // 
             // lbRate
             // 
             this.lbRate.Cursor = System.Windows.Forms.Cursors.Default;
             this.lbRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRate.Location = new System.Drawing.Point(0, 23);
+            this.lbRate.Location = new System.Drawing.Point(0, 30);
             this.lbRate.Name = "lbRate";
             this.lbRate.Size = new System.Drawing.Size(175, 23);
             this.lbRate.TabIndex = 155;
@@ -204,23 +204,23 @@ namespace RateController
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 48);
+            this.label1.Location = new System.Drawing.Point(0, 60);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(175, 23);
             this.label1.TabIndex = 154;
             this.label1.Text = "Target Rate";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // TankRemain
             // 
             this.TankRemain.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankRemain.Location = new System.Drawing.Point(178, 98);
+            this.TankRemain.Location = new System.Drawing.Point(188, 120);
             this.TankRemain.Name = "TankRemain";
-            this.TankRemain.Size = new System.Drawing.Size(97, 23);
+            this.TankRemain.Size = new System.Drawing.Size(89, 23);
             this.TankRemain.TabIndex = 153;
-            this.TankRemain.Text = "5000";
+            this.TankRemain.Text = "50000.1";
             this.TankRemain.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TankRemain.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
             // 
             // lblUnits
             // 
@@ -232,30 +232,10 @@ namespace RateController
             this.lblUnits.Text = "Imp Gal/Min";
             this.lblUnits.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // VolApplied
-            // 
-            this.VolApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolApplied.Location = new System.Drawing.Point(178, 123);
-            this.VolApplied.Name = "VolApplied";
-            this.VolApplied.Size = new System.Drawing.Size(97, 23);
-            this.VolApplied.TabIndex = 148;
-            this.VolApplied.Text = "0";
-            this.VolApplied.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbApplied
-            // 
-            this.lbApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbApplied.Location = new System.Drawing.Point(0, 123);
-            this.lbApplied.Name = "lbApplied";
-            this.lbApplied.Size = new System.Drawing.Size(192, 23);
-            this.lbApplied.TabIndex = 151;
-            this.lbApplied.Text = "Quantity Applied";
-            this.lbApplied.Click += new System.EventHandler(this.label2_Click);
-            // 
             // AreaDone
             // 
             this.AreaDone.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AreaDone.Location = new System.Drawing.Point(178, 73);
+            this.AreaDone.Location = new System.Drawing.Point(180, 90);
             this.AreaDone.Name = "AreaDone";
             this.AreaDone.Size = new System.Drawing.Size(97, 23);
             this.AreaDone.TabIndex = 147;
@@ -265,17 +245,18 @@ namespace RateController
             // lbRateAmount
             // 
             this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAmount.Location = new System.Drawing.Point(178, 23);
+            this.lbRateAmount.Location = new System.Drawing.Point(180, 30);
             this.lbRateAmount.Name = "lbRateAmount";
             this.lbRateAmount.Size = new System.Drawing.Size(97, 23);
             this.lbRateAmount.TabIndex = 146;
             this.lbRateAmount.Text = "1,800.50";
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbRateAmount.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRate_HelpRequested);
             // 
             // lbCoverage
             // 
             this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCoverage.Location = new System.Drawing.Point(0, 73);
+            this.lbCoverage.Location = new System.Drawing.Point(0, 90);
             this.lbCoverage.Name = "lbCoverage";
             this.lbCoverage.Size = new System.Drawing.Size(175, 23);
             this.lbCoverage.TabIndex = 150;
@@ -285,11 +266,11 @@ namespace RateController
             // lbRemaining
             // 
             this.lbRemaining.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRemaining.Location = new System.Drawing.Point(0, 98);
+            this.lbRemaining.Location = new System.Drawing.Point(0, 120);
             this.lbRemaining.Name = "lbRemaining";
-            this.lbRemaining.Size = new System.Drawing.Size(192, 23);
+            this.lbRemaining.Size = new System.Drawing.Size(201, 23);
             this.lbRemaining.TabIndex = 149;
-            this.lbRemaining.Text = "Quantity Remain.";
+            this.lbRemaining.Text = "Quantity Applied ...";
             this.lbRemaining.Click += new System.EventHandler(this.label34_Click);
             this.lbRemaining.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
             // 
@@ -486,122 +467,143 @@ namespace RateController
             this.mnuSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mnuSettings.ImageScalingSize = new System.Drawing.Size(36, 36);
             this.mnuSettings.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.productsToolStripMenuItem,
-            this.sectionsToolStripMenuItem,
-            this.commToolStripMenuItem,
-            this.pressureToolStripMenuItem,
-            this.newToolStripMenuItem,
-            this.loadToolStripMenuItem,
-            this.saveToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.firmwareToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.MnuProducts,
+            this.MnuSections,
+            this.MnuComm,
+            this.MnuRelays,
+            this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(184, 424);
+            this.mnuSettings.Size = new System.Drawing.Size(173, 214);
             // 
-            // productsToolStripMenuItem
+            // MnuProducts
             // 
-            this.productsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("productsToolStripMenuItem.Image")));
-            this.productsToolStripMenuItem.Name = "productsToolStripMenuItem";
-            this.productsToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.productsToolStripMenuItem.Text = "Products";
-            this.productsToolStripMenuItem.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
+            this.MnuProducts.Image = ((System.Drawing.Image)(resources.GetObject("MnuProducts.Image")));
+            this.MnuProducts.Name = "MnuProducts";
+            this.MnuProducts.Size = new System.Drawing.Size(172, 42);
+            this.MnuProducts.Text = "Products";
+            this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
-            // sectionsToolStripMenuItem
+            // MnuSections
             // 
-            this.sectionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("sectionsToolStripMenuItem.Image")));
-            this.sectionsToolStripMenuItem.Name = "sectionsToolStripMenuItem";
-            this.sectionsToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.sectionsToolStripMenuItem.Text = "Sections";
-            this.sectionsToolStripMenuItem.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
+            this.MnuSections.Image = ((System.Drawing.Image)(resources.GetObject("MnuSections.Image")));
+            this.MnuSections.Name = "MnuSections";
+            this.MnuSections.Size = new System.Drawing.Size(172, 42);
+            this.MnuSections.Text = "Sections";
+            this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
-            // commToolStripMenuItem
+            // MnuComm
             // 
-            this.commToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("commToolStripMenuItem.Image")));
-            this.commToolStripMenuItem.Name = "commToolStripMenuItem";
-            this.commToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.commToolStripMenuItem.Text = "Comm";
-            this.commToolStripMenuItem.Click += new System.EventHandler(this.commToolStripMenuItem_Click);
+            this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
+            this.MnuComm.Name = "MnuComm";
+            this.MnuComm.Size = new System.Drawing.Size(172, 42);
+            this.MnuComm.Text = "Comm";
+            this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
-            // pressureToolStripMenuItem
+            // MnuRelays
             // 
-            this.pressureToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pressureToolStripMenuItem.Image")));
-            this.pressureToolStripMenuItem.Name = "pressureToolStripMenuItem";
-            this.pressureToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.pressureToolStripMenuItem.Text = "Pressure";
-            this.pressureToolStripMenuItem.Click += new System.EventHandler(this.pressureToolStripMenuItem_Click);
+            this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
+            this.MnuRelays.Name = "MnuRelays";
+            this.MnuRelays.Size = new System.Drawing.Size(172, 42);
+            this.MnuRelays.Text = "Relays";
+            this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
-            // newToolStripMenuItem
+            // MnuOptions
             // 
-            this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.newToolStripMenuItem.Text = "New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            this.MnuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.metricToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.MnuNew,
+            this.MnuOpen,
+            this.MnuSaveAs,
+            this.toolStripSeparator2,
+            this.MnuLanguage,
+            this.MnuAbout});
+            this.MnuOptions.Image = global::RateController.Properties.Resources._7504229_hamburger_menu_list_options_icon;
+            this.MnuOptions.Name = "MnuOptions";
+            this.MnuOptions.Size = new System.Drawing.Size(172, 42);
+            this.MnuOptions.Text = "Options";
             // 
-            // loadToolStripMenuItem
+            // metricToolStripMenuItem
             // 
-            this.loadToolStripMenuItem.Image = global::RateController.Properties.Resources.OpenFile;
-            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.loadToolStripMenuItem.Text = "Load";
-            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+            this.metricToolStripMenuItem.Image = global::RateController.Properties.Resources.CheckMark;
+            this.metricToolStripMenuItem.Name = "metricToolStripMenuItem";
+            this.metricToolStripMenuItem.Size = new System.Drawing.Size(198, 42);
+            this.metricToolStripMenuItem.Text = "Metric Units";
+            this.metricToolStripMenuItem.Click += new System.EventHandler(this.metricToolStripMenuItem_Click);
             // 
-            // saveToolStripMenuItem
+            // toolStripSeparator3
             // 
-            this.saveToolStripMenuItem.Image = global::RateController.Properties.Resources.close;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.saveToolStripMenuItem.Text = "Save As";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(195, 6);
             // 
-            // toolStripMenuItem1
+            // MnuNew
             // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deustchToolStripMenuItem,
-            this.englishToolStripMenuItem,
-            this.nederlandsToolStripMenuItem});
-            this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(183, 42);
-            this.toolStripMenuItem1.Text = "Language";
+            this.MnuNew.Image = global::RateController.Properties.Resources.FileNew;
+            this.MnuNew.Name = "MnuNew";
+            this.MnuNew.Size = new System.Drawing.Size(198, 42);
+            this.MnuNew.Text = "New file";
+            this.MnuNew.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
-            // deustchToolStripMenuItem
+            // MnuOpen
             // 
-            this.deustchToolStripMenuItem.Name = "deustchToolStripMenuItem";
-            this.deustchToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
-            this.deustchToolStripMenuItem.Text = "Deustch";
-            this.deustchToolStripMenuItem.Click += new System.EventHandler(this.deustchToolStripMenuItem_Click);
+            this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile;
+            this.MnuOpen.Name = "MnuOpen";
+            this.MnuOpen.Size = new System.Drawing.Size(198, 42);
+            this.MnuOpen.Text = "Open";
+            this.MnuOpen.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
-            // englishToolStripMenuItem
+            // MnuSaveAs
             // 
-            this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-            this.englishToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
-            this.englishToolStripMenuItem.Text = "English";
-            this.englishToolStripMenuItem.Click += new System.EventHandler(this.englishToolStripMenuItem_Click);
+            this.MnuSaveAs.Image = global::RateController.Properties.Resources.close1;
+            this.MnuSaveAs.Name = "MnuSaveAs";
+            this.MnuSaveAs.Size = new System.Drawing.Size(198, 42);
+            this.MnuSaveAs.Text = "Save As";
+            this.MnuSaveAs.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
-            // nederlandsToolStripMenuItem
+            // toolStripSeparator2
             // 
-            this.nederlandsToolStripMenuItem.Name = "nederlandsToolStripMenuItem";
-            this.nederlandsToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
-            this.nederlandsToolStripMenuItem.Text = "Nederlands";
-            this.nederlandsToolStripMenuItem.Click += new System.EventHandler(this.nederlandsToolStripMenuItem_Click);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(195, 6);
             // 
-            // firmwareToolStripMenuItem
+            // MnuLanguage
             // 
-            this.firmwareToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("firmwareToolStripMenuItem.Image")));
-            this.firmwareToolStripMenuItem.Name = "firmwareToolStripMenuItem";
-            this.firmwareToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.firmwareToolStripMenuItem.Text = "Firmware";
-            this.firmwareToolStripMenuItem.Click += new System.EventHandler(this.firmwareToolStripMenuItem_Click);
+            this.MnuLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MnuDeustch,
+            this.MnuEnglish,
+            this.MnuNederlands});
+            this.MnuLanguage.Image = global::RateController.Properties.Resources._7791659_language_speak_communication_speech_chat_icon;
+            this.MnuLanguage.Name = "MnuLanguage";
+            this.MnuLanguage.Size = new System.Drawing.Size(198, 42);
+            this.MnuLanguage.Text = "Language";
             // 
-            // aboutToolStripMenuItem
+            // MnuDeustch
             // 
-            this.aboutToolStripMenuItem.Image = global::RateController.Properties.Resources.R674d5dd067acbd409ff50db6d0647f5d;
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(183, 42);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.MnuDeustch.Name = "MnuDeustch";
+            this.MnuDeustch.Size = new System.Drawing.Size(175, 28);
+            this.MnuDeustch.Text = "Deustch";
+            this.MnuDeustch.Click += new System.EventHandler(this.MnuDeustch_Click);
+            // 
+            // MnuEnglish
+            // 
+            this.MnuEnglish.Name = "MnuEnglish";
+            this.MnuEnglish.Size = new System.Drawing.Size(175, 28);
+            this.MnuEnglish.Text = "English";
+            this.MnuEnglish.Click += new System.EventHandler(this.MnuEnglish_Click);
+            // 
+            // MnuNederlands
+            // 
+            this.MnuNederlands.Name = "MnuNederlands";
+            this.MnuNederlands.Size = new System.Drawing.Size(175, 28);
+            this.MnuNederlands.Text = "Nederlands";
+            this.MnuNederlands.Click += new System.EventHandler(this.MnuNederlands_Click);
+            // 
+            // MnuAbout
+            // 
+            this.MnuAbout.Image = global::RateController.Properties.Resources.R674d5dd067acbd409ff50db6d0647f5d;
+            this.MnuAbout.Name = "MnuAbout";
+            this.MnuAbout.Size = new System.Drawing.Size(198, 42);
+            this.MnuAbout.Text = "About";
+            this.MnuAbout.Click += new System.EventHandler(this.MnuAbout_Click_1);
             // 
             // openFileDialog1
             // 
@@ -689,8 +691,6 @@ namespace RateController
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label TankRemain;
         private System.Windows.Forms.Label lblUnits;
-        private System.Windows.Forms.Label VolApplied;
-        private System.Windows.Forms.Label lbApplied;
         private System.Windows.Forms.Label AreaDone;
         private System.Windows.Forms.Label lbRateAmount;
         private System.Windows.Forms.Label lbCoverage;
@@ -714,21 +714,24 @@ namespace RateController
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Timer timerNano;
         private System.Windows.Forms.ContextMenuStrip mnuSettings;
-        private System.Windows.Forms.ToolStripMenuItem productsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sectionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem commToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MnuProducts;
+        private System.Windows.Forms.ToolStripMenuItem MnuSections;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button btAlarm;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem deustchToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem englishToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem nederlandsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pressureToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem firmwareToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MnuOptions;
+        private System.Windows.Forms.ToolStripMenuItem MnuLanguage;
+        private System.Windows.Forms.ToolStripMenuItem MnuDeustch;
+        private System.Windows.Forms.ToolStripMenuItem MnuEnglish;
+        private System.Windows.Forms.ToolStripMenuItem MnuNederlands;
+        private System.Windows.Forms.ToolStripMenuItem MnuNew;
+        private System.Windows.Forms.ToolStripMenuItem MnuOpen;
+        private System.Windows.Forms.ToolStripMenuItem MnuSaveAs;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem MnuComm;
+        private System.Windows.Forms.ToolStripMenuItem MnuRelays;
+        private System.Windows.Forms.ToolStripMenuItem MnuAbout;
+        private System.Windows.Forms.ToolStripMenuItem metricToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }

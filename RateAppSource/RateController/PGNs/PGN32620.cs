@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RateController
+﻿namespace RateController
 {
     public class PGN32620
     {
@@ -22,13 +16,13 @@ namespace RateController
         // 7    sec 10-11
         // 8    sec 12-13
         // 9    sec 14-15
+        // 10   crc
 
-        private const byte cByteCount = 10;
-        private const byte HeaderLo = 108;
+        private const byte cByteCount = 11;
         private const byte HeaderHi = 127;
-
-        FormStart mf;
-        byte[] Data = new byte[cByteCount];
+        private const byte HeaderLo = 108;
+        private byte[] Data = new byte[cByteCount];
+        private FormStart mf;
 
         public PGN32620(FormStart CallingForm)
         {
@@ -59,9 +53,10 @@ namespace RateController
                     BitCount = 0;
                 }
             }
+            Data[cByteCount - 1] = mf.Tls.CRC(Data, cByteCount - 1);
 
             mf.SendSerial(Data);
-            mf.UDPnetwork.SendUDPMessage(Data);
+            mf.UDPmodules.SendUDPMessage(Data);
         }
     }
 }

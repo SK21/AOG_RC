@@ -56,7 +56,7 @@ int DoPID(byte sKP, float sError, float sSetPoint, byte sMinPWM,
     return Result;
 }
 
-float LastPWM[SensorCount];
+float LastPWM[2];
 int ControlMotor(byte sKP, float sError, float sSetPoint, byte sMinPWM,
     byte sHighMax, byte sDeadband, byte SensorID)
 {
