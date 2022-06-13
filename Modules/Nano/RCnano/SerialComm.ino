@@ -162,7 +162,7 @@ void ReceiveSerial()
 
 				if (GoodCRC(11))
 				{
-					if (ParseModID(Packet[2] == PCB.ModuleID))
+					if (ParseModID(Packet[2]) == PCB.ModuleID)
 					{
 						byte SensorID = ParseSenID(Packet[2]);
 						if (SensorID < PCB.SensorCount)

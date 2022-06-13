@@ -5,7 +5,7 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
-# define InoDescription "RCnano  :  11-Jun-2022"
+# define InoDescription "RCnano  :  12-Jun-2022"
 # define UseEthernet 0
 
 # define DebugOn 0
