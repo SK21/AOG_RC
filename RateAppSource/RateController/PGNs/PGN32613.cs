@@ -17,9 +17,12 @@ namespace RateController
         //8 acc.Quantity Hi
         //9 PWM Lo              10 X actual
         //10 PWM Hi
-        //11 CRC
+        //11 Status
+        //      bit 0 - sensor 0 connected
+        //      bit 1 - sensor 1 connected
+        //12 CRC
 
-        private const byte cByteCount = 12;
+        private const byte cByteCount = 13;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 101;
         private double cPWMsetting;
@@ -31,6 +34,7 @@ namespace RateController
         private DateTime ReceiveTime;
 
         private double Trate;
+        private bool cModuleIsReceivingData;
 
         public PGN32613(clsProduct CalledFrom)
         {
@@ -44,6 +48,12 @@ namespace RateController
 
         public bool Connected()
         {
+            return ModuleReceiving() & ModuleSending();
+            //return ModuleSending();
+        }
+
+        public bool ModuleSending()
+        {
             if (Prod.SimulationType == SimType.VirtualNano)
             {
                 return true;
@@ -51,6 +61,18 @@ namespace RateController
             else
             {
                 return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
+            }
+        }
+
+        public bool ModuleReceiving()
+        {
+            if (Prod.SimulationType == SimType.VirtualNano)
+            {
+                return true;
+            }
+            else
+            {
+                return cModuleIsReceivingData;
             }
         }
 
@@ -69,6 +91,19 @@ namespace RateController
                         cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 10.0;
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
                         cPWMsetting = (Int16)(Data[10] << 8 | Data[9]) / 10.0;  // need to cast to 16 bit integer to preserve the sign bit
+
+                        // status
+                        if(tmp==0)
+                        {
+                            // sensor 0
+                            cModuleIsReceivingData = ((Data[11] & 0b00000001) == 0b00000001);
+                        }
+                        else
+                        {
+                            // sensor 1
+                            cModuleIsReceivingData = ((Data[11] & 0b00000010) == 0b00000010);
+                        }
+
                         ReceiveTime = DateTime.Now;
                         Result = true;
 
@@ -125,6 +160,20 @@ namespace RateController
                                 byte.TryParse(Data[10], out pwmHi);
 
                                 cPWMsetting = (double)((Int16)(pwmHi << 8 | pwmLo)) / 10.0;
+
+                                // status
+                                byte Status;
+                                byte.TryParse(Data[11], out Status);
+                                if (tmp == 0)
+                                {   
+                                    // sensor 0
+                                    cModuleIsReceivingData = ((Status & 0b00000001) == 0b00000001);
+                                }
+                                else
+                                {
+                                    // sensor 1
+                                    cModuleIsReceivingData = ((Status & 0b00000010) == 0b00000010);
+                                }
 
                                 ReceiveTime = DateTime.Now;
                                 Result = true;

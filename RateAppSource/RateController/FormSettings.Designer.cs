@@ -33,6 +33,8 @@ namespace RateController
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.tc = new System.Windows.Forms.TabControl();
             this.tbs0 = new System.Windows.Forms.TabPage();
+            this.tbAltRate = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.cbVR = new System.Windows.Forms.ComboBox();
             this.label27 = new System.Windows.Forms.Label();
             this.lb0 = new System.Windows.Forms.Label();
@@ -49,7 +51,6 @@ namespace RateController
             this.TankSize = new System.Windows.Forms.TextBox();
             this.AreaUnits = new System.Windows.Forms.ComboBox();
             this.lb1 = new System.Windows.Forms.Label();
-            this.lb7 = new System.Windows.Forms.Label();
             this.TankRemain = new System.Windows.Forms.TextBox();
             this.btnResetQuantity = new System.Windows.Forms.Button();
             this.btnResetTank = new System.Windows.Forms.Button();
@@ -188,6 +189,8 @@ namespace RateController
             // 
             // tbs0
             // 
+            this.tbs0.Controls.Add(this.tbAltRate);
+            this.tbs0.Controls.Add(this.label29);
             this.tbs0.Controls.Add(this.cbVR);
             this.tbs0.Controls.Add(this.label27);
             this.tbs0.Controls.Add(this.lb0);
@@ -204,7 +207,6 @@ namespace RateController
             this.tbs0.Controls.Add(this.TankSize);
             this.tbs0.Controls.Add(this.AreaUnits);
             this.tbs0.Controls.Add(this.lb1);
-            this.tbs0.Controls.Add(this.lb7);
             this.tbs0.Controls.Add(this.TankRemain);
             this.tbs0.Controls.Add(this.btnResetQuantity);
             this.tbs0.Controls.Add(this.btnResetTank);
@@ -218,6 +220,31 @@ namespace RateController
             this.tbs0.Text = "Rate";
             this.tbs0.UseVisualStyleBackColor = true;
             // 
+            // tbAltRate
+            // 
+            this.tbAltRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbAltRate.Location = new System.Drawing.Point(230, 236);
+            this.tbAltRate.MaxLength = 8;
+            this.tbAltRate.Name = "tbAltRate";
+            this.tbAltRate.Size = new System.Drawing.Size(102, 30);
+            this.tbAltRate.TabIndex = 127;
+            this.tbAltRate.Text = "75";
+            this.tbAltRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbAltRate.TextChanged += new System.EventHandler(this.tbAltRate_TextChanged);
+            this.tbAltRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbAltRate_HelpRequested);
+            this.tbAltRate.Enter += new System.EventHandler(this.tbAltRate_Enter);
+            this.tbAltRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbAltRate_Validating);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.Location = new System.Drawing.Point(40, 240);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(120, 23);
+            this.label29.TabIndex = 125;
+            this.label29.Text = "Alt. Rate (%)";
+            // 
             // cbVR
             // 
             this.cbVR.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -230,7 +257,7 @@ namespace RateController
             "Rate 3",
             "Rate 4",
             "Rate 5"});
-            this.cbVR.Location = new System.Drawing.Point(341, 212);
+            this.cbVR.Location = new System.Drawing.Point(230, 274);
             this.cbVR.Name = "cbVR";
             this.cbVR.Size = new System.Drawing.Size(102, 31);
             this.cbVR.TabIndex = 124;
@@ -241,7 +268,7 @@ namespace RateController
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(50, 216);
+            this.label27.Location = new System.Drawing.Point(40, 278);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(121, 23);
             this.label27.TabIndex = 123;
@@ -252,7 +279,7 @@ namespace RateController
             // 
             this.lb0.AutoSize = true;
             this.lb0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb0.Location = new System.Drawing.Point(50, 9);
+            this.lb0.Location = new System.Drawing.Point(40, 9);
             this.lb0.Name = "lb0";
             this.lb0.Size = new System.Drawing.Size(129, 23);
             this.lb0.TabIndex = 122;
@@ -261,7 +288,7 @@ namespace RateController
             // tbProduct
             // 
             this.tbProduct.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbProduct.Location = new System.Drawing.Point(282, 5);
+            this.tbProduct.Location = new System.Drawing.Point(230, 5);
             this.tbProduct.MaxLength = 15;
             this.tbProduct.Name = "tbProduct";
             this.tbProduct.Size = new System.Drawing.Size(161, 30);
@@ -280,7 +307,7 @@ namespace RateController
             "Lbs",
             "Litres",
             "Kgs"});
-            this.VolumeUnits.Location = new System.Drawing.Point(282, 74);
+            this.VolumeUnits.Location = new System.Drawing.Point(230, 82);
             this.VolumeUnits.Name = "VolumeUnits";
             this.VolumeUnits.Size = new System.Drawing.Size(161, 31);
             this.VolumeUnits.TabIndex = 2;
@@ -295,7 +322,7 @@ namespace RateController
             "Standard Valve",
             "Fast Close Valve",
             "Motor"});
-            this.ValveType.Location = new System.Drawing.Point(282, 39);
+            this.ValveType.Location = new System.Drawing.Point(230, 43);
             this.ValveType.Name = "ValveType";
             this.ValveType.Size = new System.Drawing.Size(161, 31);
             this.ValveType.TabIndex = 1;
@@ -305,7 +332,7 @@ namespace RateController
             // 
             this.lb5.AutoSize = true;
             this.lb5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb5.Location = new System.Drawing.Point(50, 43);
+            this.lb5.Location = new System.Drawing.Point(40, 47);
             this.lb5.Name = "lb5";
             this.lb5.Size = new System.Drawing.Size(116, 23);
             this.lb5.TabIndex = 111;
@@ -316,7 +343,7 @@ namespace RateController
             // 
             this.lb3.AutoSize = true;
             this.lb3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb3.Location = new System.Drawing.Point(50, 182);
+            this.lb3.Location = new System.Drawing.Point(40, 202);
             this.lb3.Name = "lb3";
             this.lb3.Size = new System.Drawing.Size(93, 23);
             this.lb3.TabIndex = 112;
@@ -325,11 +352,12 @@ namespace RateController
             // RateSet
             // 
             this.RateSet.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RateSet.Location = new System.Drawing.Point(341, 178);
+            this.RateSet.Location = new System.Drawing.Point(230, 198);
             this.RateSet.MaxLength = 8;
             this.RateSet.Name = "RateSet";
             this.RateSet.Size = new System.Drawing.Size(102, 30);
             this.RateSet.TabIndex = 5;
+            this.RateSet.Text = "143";
             this.RateSet.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.RateSet.TextChanged += new System.EventHandler(this.RateSet_TextChanged);
             this.RateSet.Enter += new System.EventHandler(this.RateSet_Enter);
@@ -339,7 +367,7 @@ namespace RateController
             // 
             this.lb4.AutoSize = true;
             this.lb4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb4.Location = new System.Drawing.Point(50, 148);
+            this.lb4.Location = new System.Drawing.Point(40, 164);
             this.lb4.Name = "lb4";
             this.lb4.Size = new System.Drawing.Size(182, 23);
             this.lb4.TabIndex = 115;
@@ -349,7 +377,7 @@ namespace RateController
             // FlowCal
             // 
             this.FlowCal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FlowCal.Location = new System.Drawing.Point(341, 144);
+            this.FlowCal.Location = new System.Drawing.Point(230, 160);
             this.FlowCal.MaxLength = 8;
             this.FlowCal.Name = "FlowCal";
             this.FlowCal.Size = new System.Drawing.Size(102, 30);
@@ -364,7 +392,7 @@ namespace RateController
             // 
             this.lb2.AutoSize = true;
             this.lb2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb2.Location = new System.Drawing.Point(50, 113);
+            this.lb2.Location = new System.Drawing.Point(40, 125);
             this.lb2.Name = "lb2";
             this.lb2.Size = new System.Drawing.Size(88, 23);
             this.lb2.TabIndex = 113;
@@ -374,7 +402,7 @@ namespace RateController
             // 
             this.lb6.AutoSize = true;
             this.lb6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb6.Location = new System.Drawing.Point(50, 251);
+            this.lb6.Location = new System.Drawing.Point(40, 317);
             this.lb6.Name = "lb6";
             this.lb6.Size = new System.Drawing.Size(90, 23);
             this.lb6.TabIndex = 116;
@@ -383,7 +411,7 @@ namespace RateController
             // TankSize
             // 
             this.TankSize.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankSize.Location = new System.Drawing.Point(341, 247);
+            this.TankSize.Location = new System.Drawing.Point(230, 313);
             this.TankSize.MaxLength = 8;
             this.TankSize.Name = "TankSize";
             this.TankSize.Size = new System.Drawing.Size(102, 30);
@@ -403,7 +431,7 @@ namespace RateController
             "Hectare",
             "Minute",
             "Hour"});
-            this.AreaUnits.Location = new System.Drawing.Point(282, 109);
+            this.AreaUnits.Location = new System.Drawing.Point(230, 121);
             this.AreaUnits.Name = "AreaUnits";
             this.AreaUnits.Size = new System.Drawing.Size(161, 31);
             this.AreaUnits.TabIndex = 3;
@@ -413,26 +441,16 @@ namespace RateController
             // 
             this.lb1.AutoSize = true;
             this.lb1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb1.Location = new System.Drawing.Point(50, 78);
+            this.lb1.Location = new System.Drawing.Point(40, 86);
             this.lb1.Name = "lb1";
             this.lb1.Size = new System.Drawing.Size(80, 23);
             this.lb1.TabIndex = 114;
             this.lb1.Text = "Quantity";
             // 
-            // lb7
-            // 
-            this.lb7.AutoSize = true;
-            this.lb7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb7.Location = new System.Drawing.Point(50, 285);
-            this.lb7.Name = "lb7";
-            this.lb7.Size = new System.Drawing.Size(146, 23);
-            this.lb7.TabIndex = 118;
-            this.lb7.Text = "Tank Remaining";
-            // 
             // TankRemain
             // 
             this.TankRemain.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankRemain.Location = new System.Drawing.Point(341, 281);
+            this.TankRemain.Location = new System.Drawing.Point(230, 351);
             this.TankRemain.MaxLength = 8;
             this.TankRemain.Name = "TankRemain";
             this.TankRemain.Size = new System.Drawing.Size(102, 30);
@@ -447,7 +465,7 @@ namespace RateController
             this.btnResetQuantity.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnResetQuantity.Image = ((System.Drawing.Image)(resources.GetObject("btnResetQuantity.Image")));
             this.btnResetQuantity.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnResetQuantity.Location = new System.Drawing.Point(319, 317);
+            this.btnResetQuantity.Location = new System.Drawing.Point(354, 309);
             this.btnResetQuantity.Name = "btnResetQuantity";
             this.btnResetQuantity.Size = new System.Drawing.Size(124, 72);
             this.btnResetQuantity.TabIndex = 10;
@@ -455,27 +473,28 @@ namespace RateController
             this.btnResetQuantity.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnResetQuantity.UseVisualStyleBackColor = true;
             this.btnResetQuantity.Click += new System.EventHandler(this.btnResetQuantity_Click);
+            this.btnResetQuantity.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnResetQuantity_HelpRequested);
             // 
             // btnResetTank
             // 
             this.btnResetTank.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetTank.Image = ((System.Drawing.Image)(resources.GetObject("btnResetTank.Image")));
             this.btnResetTank.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnResetTank.Location = new System.Drawing.Point(185, 317);
+            this.btnResetTank.Location = new System.Drawing.Point(40, 349);
             this.btnResetTank.Name = "btnResetTank";
-            this.btnResetTank.Size = new System.Drawing.Size(124, 72);
+            this.btnResetTank.Size = new System.Drawing.Size(182, 34);
             this.btnResetTank.TabIndex = 9;
-            this.btnResetTank.Text = "Tank";
+            this.btnResetTank.Text = "Tank Remaining";
             this.btnResetTank.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnResetTank.UseVisualStyleBackColor = true;
             this.btnResetTank.Click += new System.EventHandler(this.btnResetTank_Click);
+            this.btnResetTank.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnResetTank_HelpRequested);
             // 
             // btnResetCoverage
             // 
             this.btnResetCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnResetCoverage.Image = ((System.Drawing.Image)(resources.GetObject("btnResetCoverage.Image")));
             this.btnResetCoverage.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnResetCoverage.Location = new System.Drawing.Point(52, 317);
+            this.btnResetCoverage.Location = new System.Drawing.Point(354, 229);
             this.btnResetCoverage.Name = "btnResetCoverage";
             this.btnResetCoverage.Size = new System.Drawing.Size(124, 72);
             this.btnResetCoverage.TabIndex = 8;
@@ -483,6 +502,7 @@ namespace RateController
             this.btnResetCoverage.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnResetCoverage.UseVisualStyleBackColor = true;
             this.btnResetCoverage.Click += new System.EventHandler(this.btnResetCoverage_Click);
+            this.btnResetCoverage.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnResetCoverage_HelpRequested);
             // 
             // tbs4
             // 
@@ -515,8 +535,6 @@ namespace RateController
             this.tbs4.TabIndex = 4;
             this.tbs4.Text = "Control";
             this.tbs4.UseVisualStyleBackColor = true;
-            this.tbs4.Click += new System.EventHandler(this.tbs4_Click);
-            this.tbs4.Enter += new System.EventHandler(this.tbs4_Enter);
             // 
             // ckTimedResponse
             // 
@@ -1052,7 +1070,6 @@ namespace RateController
             this.tbs3.TabIndex = 2;
             this.tbs3.Text = "Diagnostics";
             this.tbs3.UseVisualStyleBackColor = true;
-            this.tbs3.Click += new System.EventHandler(this.tbs3_Click);
             // 
             // swMasterOff
             // 
@@ -1601,7 +1618,6 @@ namespace RateController
             this.lbWorkRateData.Size = new System.Drawing.Size(130, 25);
             this.lbWorkRateData.TabIndex = 151;
             this.lbWorkRateData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbWorkRateData.Click += new System.EventHandler(this.lbWorkRateData_Click);
             // 
             // lbWorkRate
             // 
@@ -1870,7 +1886,6 @@ namespace RateController
         private System.Windows.Forms.TextBox FlowCal;
         private System.Windows.Forms.Label lb6;
         private System.Windows.Forms.TextBox TankSize;
-        private System.Windows.Forms.Label lb7;
         private System.Windows.Forms.TextBox TankRemain;
         private System.Windows.Forms.Button btnResetQuantity;
         private System.Windows.Forms.Button btnResetTank;
@@ -1985,5 +2000,7 @@ namespace RateController
         private System.Windows.Forms.TextBox tbOffRate;
         private System.Windows.Forms.CheckBox ckTimedResponse;
         private System.Windows.Forms.CheckBox ckSimulate;
+        private System.Windows.Forms.TextBox tbAltRate;
+        private System.Windows.Forms.Label label29;
     }
 }

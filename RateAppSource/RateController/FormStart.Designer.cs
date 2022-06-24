@@ -35,12 +35,12 @@ namespace RateController
             this.lbArduinoConnected = new System.Windows.Forms.Label();
             this.lbAogConnected = new System.Windows.Forms.Label();
             this.panProducts = new System.Windows.Forms.Panel();
+            this.lbTarget = new System.Windows.Forms.Label();
             this.btAlarm = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lbProduct = new System.Windows.Forms.Label();
             this.SetRate = new System.Windows.Forms.Label();
             this.lbRate = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.TankRemain = new System.Windows.Forms.Label();
             this.lblUnits = new System.Windows.Forms.Label();
             this.AreaDone = new System.Windows.Forms.Label();
@@ -128,11 +128,11 @@ namespace RateController
             // panProducts
             // 
             this.panProducts.Controls.Add(this.btAlarm);
+            this.panProducts.Controls.Add(this.lbTarget);
             this.panProducts.Controls.Add(this.groupBox3);
             this.panProducts.Controls.Add(this.lbProduct);
             this.panProducts.Controls.Add(this.SetRate);
             this.panProducts.Controls.Add(this.lbRate);
-            this.panProducts.Controls.Add(this.label1);
             this.panProducts.Controls.Add(this.TankRemain);
             this.panProducts.Controls.Add(this.lblUnits);
             this.panProducts.Controls.Add(this.AreaDone);
@@ -144,13 +144,26 @@ namespace RateController
             this.panProducts.Size = new System.Drawing.Size(271, 150);
             this.panProducts.TabIndex = 50;
             // 
+            // lbTarget
+            // 
+            this.lbTarget.Cursor = System.Windows.Forms.Cursors.Default;
+            this.lbTarget.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTarget.Location = new System.Drawing.Point(0, 60);
+            this.lbTarget.Name = "lbTarget";
+            this.lbTarget.Size = new System.Drawing.Size(201, 23);
+            this.lbTarget.TabIndex = 159;
+            this.lbTarget.Text = "Target Rate";
+            this.lbTarget.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbTarget.Click += new System.EventHandler(this.lbTarget_Click);
+            this.lbTarget.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbTarget_HelpRequested);
+            // 
             // btAlarm
             // 
             this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(4, 23);
+            this.btAlarm.Location = new System.Drawing.Point(93, 27);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 146;
@@ -181,9 +194,9 @@ namespace RateController
             // SetRate
             // 
             this.SetRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SetRate.Location = new System.Drawing.Point(180, 60);
+            this.SetRate.Location = new System.Drawing.Point(188, 60);
             this.SetRate.Name = "SetRate";
-            this.SetRate.Size = new System.Drawing.Size(97, 23);
+            this.SetRate.Size = new System.Drawing.Size(89, 23);
             this.SetRate.TabIndex = 156;
             this.SetRate.Text = "1,800.50";
             this.SetRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -200,16 +213,6 @@ namespace RateController
             this.lbRate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbRate.Click += new System.EventHandler(this.lbRate_Click);
             this.lbRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRate_HelpRequested);
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 60);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(175, 23);
-            this.label1.TabIndex = 154;
-            this.label1.Text = "Target Rate";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // TankRemain
             // 
@@ -235,19 +238,20 @@ namespace RateController
             // AreaDone
             // 
             this.AreaDone.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AreaDone.Location = new System.Drawing.Point(180, 90);
+            this.AreaDone.Location = new System.Drawing.Point(188, 90);
             this.AreaDone.Name = "AreaDone";
-            this.AreaDone.Size = new System.Drawing.Size(97, 23);
+            this.AreaDone.Size = new System.Drawing.Size(89, 23);
             this.AreaDone.TabIndex = 147;
             this.AreaDone.Text = "0";
             this.AreaDone.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.AreaDone.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbCoverage_HelpRequested);
             // 
             // lbRateAmount
             // 
             this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAmount.Location = new System.Drawing.Point(180, 30);
+            this.lbRateAmount.Location = new System.Drawing.Point(188, 30);
             this.lbRateAmount.Name = "lbRateAmount";
-            this.lbRateAmount.Size = new System.Drawing.Size(97, 23);
+            this.lbRateAmount.Size = new System.Drawing.Size(89, 23);
             this.lbRateAmount.TabIndex = 146;
             this.lbRateAmount.Text = "1,800.50";
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -262,6 +266,7 @@ namespace RateController
             this.lbCoverage.TabIndex = 150;
             this.lbCoverage.Text = "Coverage";
             this.lbCoverage.Click += new System.EventHandler(this.lbCoverage_Click);
+            this.lbCoverage.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbCoverage_HelpRequested);
             // 
             // lbRemaining
             // 
@@ -688,7 +693,6 @@ namespace RateController
         private System.Windows.Forms.Label lbProduct;
         private System.Windows.Forms.Label SetRate;
         private System.Windows.Forms.Label lbRate;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label TankRemain;
         private System.Windows.Forms.Label lblUnits;
         private System.Windows.Forms.Label AreaDone;
@@ -733,5 +737,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem MnuAbout;
         private System.Windows.Forms.ToolStripMenuItem metricToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.Label lbTarget;
     }
 }

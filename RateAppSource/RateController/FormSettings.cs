@@ -17,12 +17,13 @@ namespace RateController
         private TextBox[] PIDs;
         private Label[] Sec;
         private SimType SelectedSimulation;
+        private bool[] SwON = new bool[9];
         private TabPage[] tbs;
-        bool[] SwON = new bool[9];
 
         public FormSettings(FormStart CallingForm, int Page)
         {
             InitializeComponent();
+
             #region // language
 
             lbProduct.Text = Lang.lgProduct;
@@ -41,9 +42,8 @@ namespace RateController
             lb4.Text = Lang.lgSensorCounts;
             lb3.Text = Lang.lgBaseRate;
             lb6.Text = Lang.lgTankSize;
-            lb7.Text = Lang.lgTank_Remaining;
             btnResetCoverage.Text = Lang.lgCoverage;
-            btnResetTank.Text = Lang.lgTank;
+            btnResetTank.Text = Lang.lgStartQuantity;
             btnResetQuantity.Text = Lang.lgQuantity;
 
             label7.Text = Lang.lgHighMax;
@@ -111,12 +111,6 @@ namespace RateController
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
         }
 
-        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
-        {
-            SwON = e.Switches;
-            UpdateSwitches();
-        }
-
         private void AreaUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -154,7 +148,7 @@ namespace RateController
                 }
                 else
                 {
-                    mf.Tls.ShowHelp("Module ID / Sensor ID pair must be unique.","Help",3000);
+                    mf.Tls.ShowHelp("Module ID / Sensor ID pair must be unique.", "Help", 3000);
                 }
             }
         }
@@ -178,11 +172,28 @@ namespace RateController
             FlowCal.Text = CalculatedCPU.ToString("N1");
         }
 
+        private void btnCalCopy_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Copies the calculated sensor counts/unit to the Rate page " +
+                "for the product.";
+
+            mf.Tls.ShowHelp(Message, "Copy");
+            hlpevent.Handled = true;
+        }
+
         private void btnCalStart_Click(object sender, EventArgs e)
         {
             mf.DoCal = true;
             mf.CalCounterStart = mf.Products.Item(CurrentProduct).QuantityApplied();
             SetCalButtons();
+        }
+
+        private void btnCalStart_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Resets or Starts the sensor count for the calibration test.";
+
+            mf.Tls.ShowHelp(Message, "Reset/Start");
+            hlpevent.Handled = true;
         }
 
         private void btnCalStop_Click(object sender, EventArgs e)
@@ -208,17 +219,6 @@ namespace RateController
             }
         }
 
-        private void btnLoadSettings_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                mf.Tls.PropertiesFile = openFileDialog1.FileName;
-                mf.Products.Load();
-                UpdateForm();
-                mf.LoadSettings();
-            }
-        }
-
         private void btnPIDloadDefaults_Click(object sender, EventArgs e)
         {
             tbPIDkp.Text = "50";
@@ -236,15 +236,39 @@ namespace RateController
             mf.Products.Item(CurrentProduct).ResetCoverage();
         }
 
+        private void btnResetCoverage_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Reset coverage to 0.";
+
+            mf.Tls.ShowHelp(Message, "Coverage", 10000);
+            hlpevent.Handled = true;
+        }
+
         private void btnResetQuantity_Click(object sender, EventArgs e)
         {
             mf.Products.Item(CurrentProduct).ResetApplied();
+        }
+
+        private void btnResetQuantity_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Reset quantity applied to 0.";
+
+            mf.Tls.ShowHelp(Message, "Quantity", 10000);
+            hlpevent.Handled = true;
         }
 
         private void btnResetTank_Click(object sender, EventArgs e)
         {
             mf.Products.Item(CurrentProduct).ResetTank();
             TankRemain.Text = mf.Products.Item(CurrentProduct).CurrentTankRemaining().ToString("N0");
+        }
+
+        private void btnResetTank_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Reset starting quantity to tank size.";
+
+            mf.Tls.ShowHelp(Message, "Tank", 10000);
+            hlpevent.Handled = true;
         }
 
         private void btnRight_Click(object sender, EventArgs e)
@@ -256,18 +280,6 @@ namespace RateController
             }
         }
 
-        private void btnSaveSettings_Click(object sender, EventArgs e)
-        {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    mf.Tls.SaveFile(saveFileDialog1.FileName);
-                    mf.LoadSettings();
-                }
-            }
-        }
-
         private double CalCounts()
         {
             double Result = 0;
@@ -276,6 +288,11 @@ namespace RateController
                 Result = (mf.CalCounterEnd - mf.CalCounterStart) * mf.Products.Item(CurrentProduct).FlowCal;
             }
             return Result;
+        }
+
+        private void cbVR_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
 
         private bool CheckModSen()
@@ -302,13 +319,83 @@ namespace RateController
                         tbConID.Text = i.ToString();
                         Initializing = false;
 
-                        mf.Tls.ShowHelp("Module set to " + i.ToString() +"\n Module/Sensor pair must be unique. Change as necessary.","Help",3000);
+                        mf.Tls.ShowHelp("Module set to " + i.ToString() + "\n Module/Sensor pair must be unique. Change as necessary.", "Help", 3000);
 
                         break;
                     }
                 }
             }
             return Unique;
+        }
+
+        private void ckOffRate_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+
+            if (ckOffRate.Checked)
+            {
+                tbOffRate.Enabled = true;
+            }
+            else
+            {
+                tbOffRate.Enabled = false;
+                tbOffRate.Text = "0";
+            }
+        }
+
+        private void ckOffRate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The % rate error where an alarm sounds.";
+
+            mf.Tls.ShowHelp(Message, "Off-rate Alarm");
+            hlpevent.Handled = true;
+        }
+
+        private void ckSimulate_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+            if (ckSimulate.Checked)
+            {
+                SelectedSimulation = SimType.VirtualNano;
+            }
+            else
+            {
+                SelectedSimulation = SimType.None;
+            }
+        }
+
+        private void ckSimulate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Simulate flow rate without needing an attached arduino module. It will " +
+                "simulate a varying random rate 4% above or below the target rate. Uncheck for " +
+                "normal operation.";
+
+            mf.Tls.ShowHelp(Message, "Simulate Rate");
+            hlpevent.Handled = true;
+        }
+
+        private void ckTimedResponse_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+
+            if (ckTimedResponse.Checked)
+            {
+                tbTimedAdjustment.Enabled = true;
+            }
+            else
+            {
+                tbTimedAdjustment.Enabled = false;
+                tbTimedAdjustment.Text = "0";
+            }
+        }
+
+        private void ckTimedResponse_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Adjusts the valve for a selected number of milliseconds, then pauses adjustment" +
+                " for 3 X the selected milliseconds. This allows the rate to settle before making further adjustments.";
+
+            mf.Tls.ShowHelp(Message, "Timed Adjustment");
+            hlpevent.Handled = true;
         }
 
         private void FlowCal_Enter(object sender, EventArgs e)
@@ -358,34 +445,146 @@ namespace RateController
             UpdateForm();
         }
 
-        private void groupBox1_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void groupBox2_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void groupBox3_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void groupBox4_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
         private void grpSections_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void label2_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "How fast the valve/motor responds to rate changes.";
+
+            mf.Tls.ShowHelp(Message, "Response Rate");
+            hlpevent.Handled = true;
+        }
+
+        private void label22_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Used to test if Switchbox switches are working.";
+
+            mf.Tls.ShowHelp(Message, "Switches");
+            hlpevent.Handled = true;
+        }
+
+        private void label24_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Enter the counts per revolution so RPM can be calculated.";
+
+            mf.Tls.ShowHelp(Message, "Counts/Rev");
+            hlpevent.Handled = true;
+        }
+
+        private void label25_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void label25_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Minimum flow rate for acceptable application.";
+
+            mf.Tls.ShowHelp(Message, "Minimum UPM");
+            hlpevent.Handled = true;
+        }
+
+        private void label26_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The unique flow sensor ID within each arduino module.";
+
+            mf.Tls.ShowHelp(Message, "Sensor ID");
+            hlpevent.Handled = true;
+        }
+
+        private void label27_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Not implemented.";
+
+            mf.Tls.ShowHelp(Message, "Variable Rate");
+            hlpevent.Handled = true;
+        }
+
+        private void label28_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void label3_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The minimum power sent to the valve/motor. The power needed to start to make the" +
+                " valve/motor move.";
+
+            mf.Tls.ShowHelp(Message, "PWM Minimum");
+            hlpevent.Handled = true;
+        }
+
+        private void label4_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The maximum power sent to the valve/motor when near the target rate. ";
+
+            mf.Tls.ShowHelp(Message, "PWM Low Max");
+            hlpevent.Handled = true;
+        }
+
+        private void label5_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The percent error below which a lower maximum power is used. It is used to slowly adjust the " +
+                "rate as it nears the target rate.";
+
+            mf.Tls.ShowHelp(Message, "Error Brake Point");
+            hlpevent.Handled = true;
+        }
+
+        private void label6_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The allowable amount of error where no adjustment is made.";
+
+            mf.Tls.ShowHelp(Message, "Deadband");
+            hlpevent.Handled = true;
+        }
+
+        private void label7_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The maximum power sent to the valve/motor when far from the target rate.";
+
+            mf.Tls.ShowHelp(Message, "PWM High Max");
+            hlpevent.Handled = true;
+        }
+
+        private void lb4_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Sensors counts for 1 unit of application.";
+
+            mf.Tls.ShowHelp(Message, "Sensor Counts");
+            hlpevent.Handled = true;
+        }
+
+        private void lb5_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "1 - Standard, use a valve to vary rate \n " +
+                "2 - Combo Close, use a valve to vary rate and on/off \n" +
+                "3 - Motor, vary motor speed to control rate.";
+
+            mf.Tls.ShowHelp(Message, "Control Type");
+            hlpevent.Handled = true;
+        }
+
+        private void lbConID_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The unique ID of each arduino module.";
+
+            mf.Tls.ShowHelp(Message, "Module ID");
+            hlpevent.Handled = true;
+        }
+
+        private void lbWidth_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The width of the implement that is applying product.";
+
+            mf.Tls.ShowHelp(Message, "Working Width");
+            hlpevent.Handled = true;
         }
 
         private void LoadSettings()
@@ -396,6 +595,7 @@ namespace RateController
             VolumeUnits.SelectedIndex = mf.Products.Item(CurrentProduct).QuantityUnits;
             AreaUnits.SelectedIndex = mf.Products.Item(CurrentProduct).CoverageUnits;
             RateSet.Text = mf.Products.Item(CurrentProduct).RateSet.ToString("N1");
+            tbAltRate.Text = mf.Products.Item(CurrentProduct).RateAlt.ToString("N0");
             FlowCal.Text = mf.Products.Item(CurrentProduct).FlowCal.ToString("N1");
             TankSize.Text = mf.Products.Item(CurrentProduct).TankSize.ToString("N0");
             ValveType.SelectedIndex = mf.Products.Item(CurrentProduct).ValveType;
@@ -438,7 +638,7 @@ namespace RateController
             tbSenID.Text = mf.Products.Item(CurrentProduct).SensorID.ToString();
 
             rbSinglePulse.Checked = !(mf.Products.Item(CurrentProduct).UseMultiPulse);
-            rbMultiPulse.Checked= (mf.Products.Item(CurrentProduct).UseMultiPulse);
+            rbMultiPulse.Checked = (mf.Products.Item(CurrentProduct).UseMultiPulse);
 
             // load defaults if blank
             byte.TryParse(tbPIDkp.Text, out tempB);
@@ -491,14 +691,27 @@ namespace RateController
             }
         }
 
-        private void rbPID_CheckedChanged(object sender, EventArgs e)
+        private void rbMultiPulse_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Use the average time of multiple pulses to measure flow rate " +
+                "when each flow sensor pulse takes less than 50 milliseconds.";
+
+            mf.Tls.ShowHelp(Message, "Rate Method");
+            hlpevent.Handled = true;
+        }
+
+        private void rbSinglePulse_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
-        private void rbVCN_CheckedChanged(object sender, EventArgs e)
+        private void rbSinglePulse_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            SetButtons(true);
+            string Message = "Use the time for one pulse to measure flow rate when" +
+                " each flow sensor pulse takes more than 50 milliseconds.";
+
+            mf.Tls.ShowHelp(Message, "Rate Method");
+            hlpevent.Handled = true;
         }
 
         private double RunningCounts()
@@ -522,6 +735,9 @@ namespace RateController
 
             double.TryParse(RateSet.Text, out tempD);
             mf.Products.Item(CurrentProduct).RateSet = tempD;
+
+            double.TryParse(tbAltRate.Text, out tempD);
+            mf.Products.Item(CurrentProduct).RateAlt = tempD;
 
             double.TryParse(FlowCal.Text, out tempD);
             mf.Products.Item(CurrentProduct).FlowCal = tempD;
@@ -581,9 +797,9 @@ namespace RateController
             mf.Products.Item(CurrentProduct).OffRateSetting = tempB;
 
             mf.Products.Item(CurrentProduct).Save();
-            }
+        }
 
-            private void SetButtons(bool Edited)
+        private void SetButtons(bool Edited)
         {
             if (!Initializing)
             {
@@ -699,6 +915,57 @@ namespace RateController
             }
         }
 
+        private void swAuto_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.Auto);
+        }
+
+        private void swDown_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+        }
+
+        private void swFour_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw3);
+        }
+
+        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
+        {
+            SwON = e.Switches;
+            UpdateSwitches();
+        }
+
+        private void swMasterOff_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+        }
+
+        private void swMasterOn_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+        }
+
+        private void swOne_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw0);
+        }
+
+        private void swThree_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw2);
+        }
+
+        private void swTwo_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw1);
+        }
+
+        private void swUp_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+        }
+
         private void TankRemain_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -759,6 +1026,20 @@ namespace RateController
             }
         }
 
+        private void tbCalMeasured_Click(object sender, EventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbCalMeasured.Text, out tempInt);
+            using (var form = new FormNumeric(0, 10000, tempInt))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbCalMeasured.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
         private void tbConID_Enter(object sender, EventArgs e)
         {
             int tempInt;
@@ -789,6 +1070,20 @@ namespace RateController
             }
         }
 
+        private void tbCountsRev_Click(object sender, EventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbCountsRev.Text, out tempInt);
+            using (var form = new FormNumeric(0, 10000, tempInt))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbCountsRev.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
         private void tbCountsRev_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -799,6 +1094,55 @@ namespace RateController
             int Tmp;
             int.TryParse(tbCountsRev.Text, out Tmp);
             if (Tmp < 0 || Tmp > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbMinUPM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbMinUPM.Text, out tempD);
+            using (var form = new FormNumeric(0, 500, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMinUPM.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbMinUPM_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbOffRate_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbOffRate.Text, out tempD);
+            using (var form = new FormNumeric(0, 40, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbOffRate.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbOffRate_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbOffRate_Validating(object sender, CancelEventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbOffRate.Text, out tempInt);
+            if (tempInt < 0 || tempInt > 40)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -879,12 +1223,11 @@ namespace RateController
             }
         }
 
-        private void tbProduct_TextChanged(object sender, EventArgs e)
+        private void tbPIDkp_TextChanged(object sender, EventArgs e)
         {
-            SetButtons(true);
         }
 
-        private void tbSectionCount_TextChanged(object sender, EventArgs e)
+        private void tbProduct_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
@@ -982,7 +1325,7 @@ namespace RateController
             for (int i = 0; i < 16; i++)
             {
                 Sec[i].Enabled = (mf.Sections.Item(i).Enabled);
-                if (mf.Sections.Item(i).IsON) 
+                if (mf.Sections.Item(i).IsON)
                 //if (mf.Sections.IsSectionOn(i))
                 {
                     Sec[i].Image = Properties.Resources.OnSmall;
@@ -1035,47 +1378,9 @@ namespace RateController
             UpdateSwitches();
         }
 
-        private void ValveType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbCountsRev_Click(object sender, EventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbCountsRev.Text, out tempInt);
-            using (var form = new FormNumeric(0, 10000, tempInt))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbCountsRev.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbCalMeasured_Click(object sender, EventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbCalMeasured.Text, out tempInt);
-            using (var form = new FormNumeric(0, 10000, tempInt))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbCalMeasured.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
         private void UpdateSwitches()
         {
-            if(SwON[0])
+            if (SwON[0])
             {
                 swAuto.BackColor = Color.LightGreen;
             }
@@ -1120,7 +1425,6 @@ namespace RateController
                 swDown.BackColor = tbs3.BackColor;
             }
 
-
             if (SwON[5])
             {
                 swOne.BackColor = Color.LightGreen;
@@ -1129,7 +1433,6 @@ namespace RateController
             {
                 swOne.BackColor = Color.Red;
             }
-
 
             if (SwON[6])
             {
@@ -1159,386 +1462,52 @@ namespace RateController
             }
         }
 
-        private void rbSinglePulse_CheckedChanged(object sender, EventArgs e)
+        private void ValveType_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
-        private void tbs4_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void tbs4_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tbPIDkp_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ckOffRate_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-
-            if(ckOffRate.Checked)
-            {
-                tbOffRate.Enabled = true;
-            }
-            else
-            {
-                tbOffRate.Enabled = false;
-                tbOffRate.Text = "0";
-            }
-        }
-
-        private void tbMinUPM_TextChanged(object sender, EventArgs e)
+        private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
-        private void label25_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tbMinUPM_Enter(object sender, EventArgs e)
+        private void tbAltRate_Enter(object sender, EventArgs e)
         {
             double tempD;
-            double.TryParse(tbMinUPM.Text, out tempD);
-            using (var form = new FormNumeric(0, 500, tempD))
+            double.TryParse(tbAltRate.Text, out tempD);
+            using (var form = new FormNumeric(1, 200, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbMinUPM.Text = form.ReturnValue.ToString();
+                    tbAltRate.Text = form.ReturnValue.ToString();
                 }
             }
         }
 
-        private void cbVR_SelectedIndexChanged(object sender, EventArgs e)
+        private void tbAltRate_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
-        private void ckTimedResponse_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-
-            if(ckTimedResponse.Checked)
-            {
-                tbTimedAdjustment.Enabled = true;
-            }
-            else
-            {
-                tbTimedAdjustment.Enabled = false;
-                tbTimedAdjustment.Text = "0";
-            }
-        }
-
-        private void tbOffRate_Enter(object sender, EventArgs e)
+        private void tbAltRate_Validating(object sender, CancelEventArgs e)
         {
             double tempD;
-            double.TryParse(tbOffRate.Text, out tempD);
-            using (var form = new FormNumeric(0, 40, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbOffRate.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbOffRate_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbOffRate_Validating(object sender, CancelEventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbOffRate.Text, out tempInt);
-            if (tempInt < 0 || tempInt > 40)
+            double.TryParse(RateSet.Text, out tempD);
+            if (tempD < 1 || tempD > 200)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
         }
 
-        private void label33_Click(object sender, EventArgs e)
+        private void tbAltRate_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
+            string Message = "Alternate Rate as % of base rate.";
 
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tbs3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label44_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void swDown_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
-        }
-
-        private void lbWorkRateData_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ckSimulate_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-            if(ckSimulate.Checked)
-            {
-                SelectedSimulation = SimType.VirtualNano;
-            }
-            else
-            {
-                SelectedSimulation = SimType.None;
-            }
-        }
-
-        private void label28_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lb5_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "1 - Standard, use a valve to vary rate \n " +
-                "2 - Combo Close, use a valve to vary rate and on/off \n" +
-                "3 - Motor, vary motor speed to control rate.";
-
-            mf.Tls.ShowHelp(Message, "Control Type");
+            mf.Tls.ShowHelp(Message, "Alternate Rate");
             hlpevent.Handled = true;
-        }
-
-        private void lb4_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Sensors counts for 1 unit of application.";
-
-            mf.Tls.ShowHelp(Message, "Sensor Counts");
-            hlpevent.Handled = true;
-        }
-
-        private void label27_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Not implemented.";
-
-            mf.Tls.ShowHelp(Message, "Variable Rate");
-            hlpevent.Handled = true;
-        }
-
-        private void label2_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "How fast the valve/motor responds to rate changes.";
-
-            mf.Tls.ShowHelp(Message, "Response Rate");
-            hlpevent.Handled = true;
-        }
-
-        private void label6_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The allowable amount of error where no adjustment is made.";
-
-            mf.Tls.ShowHelp(Message, "Deadband");
-            hlpevent.Handled = true;
-        }
-
-        private void ckTimedResponse_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Adjusts the valve for a selected number of milliseconds, then pauses adjustment" +
-                " for 3 X the selected milliseconds. This allows the rate to settle before making further adjustments.";
-
-            mf.Tls.ShowHelp(Message, "Timed Adjustment");
-            hlpevent.Handled = true;
-        }
-
-        private void label7_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The maximum power sent to the valve/motor when far from the target rate.";
-
-            mf.Tls.ShowHelp(Message, "PWM High Max");
-            hlpevent.Handled = true;
-        }
-
-        private void label5_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The percent error below which a lower maximum power is used. It is used to slowly adjust the " +
-                "rate as it nears the target rate.";
-
-            mf.Tls.ShowHelp(Message, "Error Brake Point");
-            hlpevent.Handled = true;
-        }
-
-        private void label4_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The maximum power sent to the valve/motor when near the target rate. ";
-
-            mf.Tls.ShowHelp(Message, "PWM Low Max");
-            hlpevent.Handled = true;
-        }
-
-        private void label3_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The minimum power sent to the valve/motor. The power needed to start to make the" +
-                " valve/motor move.";
-
-            mf.Tls.ShowHelp(Message, "PWM Minimum");
-            hlpevent.Handled = true;
-        }
-
-        private void lbConID_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The unique ID of each arduino module.";
-
-            mf.Tls.ShowHelp(Message, "Module ID");
-            hlpevent.Handled = true;
-        }
-
-        private void label26_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The unique flow sensor ID within each arduino module.";
-
-            mf.Tls.ShowHelp(Message, "Sensor ID");
-            hlpevent.Handled = true;
-        }
-
-        private void rbSinglePulse_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Use the time for one pulse to measure flow rate when" +
-                " each flow sensor pulse takes more than 50 milliseconds.";
-
-            mf.Tls.ShowHelp(Message, "Rate Method");
-            hlpevent.Handled = true;
-        }
-
-        private void rbMultiPulse_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Use the average time of multiple pulses to measure flow rate " +
-                "when each flow sensor pulse takes less than 50 milliseconds.";
-
-            mf.Tls.ShowHelp(Message, "Rate Method");
-            hlpevent.Handled = true;
-        }
-
-        private void label25_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Minimum flow rate for acceptable application.";
-
-            mf.Tls.ShowHelp(Message, "Minimum UPM");
-            hlpevent.Handled = true;
-        }
-
-        private void ckOffRate_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The % rate error where an alarm sounds.";
-
-            mf.Tls.ShowHelp(Message, "Off-rate Alarm");
-            hlpevent.Handled = true;
-        }
-
-        private void ckSimulate_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Simulate flow rate without needing an attached arduino module. It will " +
-                "simulate a varying random rate 4% above or below the target rate. Uncheck for " +
-                "normal operation.";
-
-            mf.Tls.ShowHelp(Message, "Simulate Rate");
-            hlpevent.Handled = true;
-        }
-
-        private void label24_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Enter the counts per revolution so RPM can be calculated.";
-
-            mf.Tls.ShowHelp(Message, "Counts/Rev");
-            hlpevent.Handled = true;
-        }
-
-        private void lbWidth_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The width of the implement that is applying product.";
-
-            mf.Tls.ShowHelp(Message, "Working Width");
-            hlpevent.Handled = true;
-        }
-
-        private void label22_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Used to test if Switchbox switches are working.";
-
-            mf.Tls.ShowHelp(Message, "Switches");
-            hlpevent.Handled = true;
-        }
-
-        private void btnCalStart_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Resets or Starts the sensor count for the calibration test.";
-
-            mf.Tls.ShowHelp(Message, "Reset/Start");
-            hlpevent.Handled = true;
-        }
-
-        private void btnCalCopy_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Copies the calculated sensor counts/unit to the Rate page " +
-                "for the product.";
-
-            mf.Tls.ShowHelp(Message, "Copy");
-            hlpevent.Handled = true;
-        }
-
-        private void swMasterOn_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
-        }
-
-        private void swMasterOff_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
-        }
-
-        private void swOne_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw0);
-        }
-
-        private void swTwo_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw1);
-        }
-
-        private void swThree_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw2);
-        }
-
-        private void swFour_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw3);
-        }
-
-        private void swAuto_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.Auto);
-        }
-
-        private void swUp_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
         }
     }
 }

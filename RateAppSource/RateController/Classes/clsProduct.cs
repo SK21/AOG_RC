@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
-    public enum ControlType { Standard, FastClose, Motor }
+    public enum ControlType
+    { Standard, FastClose, Motor }
 
     public class clsProduct
     {
@@ -11,8 +11,9 @@ namespace RateController
 
         public PGN32613 ArduinoModule;
         public byte CoverageUnits = 0;
-        public double cRateSet = 0;
-        public bool EraseApplied = false;
+        private double cRateSet = 0;
+        private double cRateAlt = 0;
+        public bool EraseArduinoQuantity = false;
         public double FlowCal = 0;
         public byte QuantityUnits = 0;
         public double TankSize = 0;
@@ -21,6 +22,7 @@ namespace RateController
 
         private int cCountsRev;
         private double cHectaresPerMinute;
+        private bool cLogRate;
         private double cManualAdjust = 0;
         private double cMinUPM;
         private int cModID; // arduino ID, 0-15, high 4 bits
@@ -29,28 +31,29 @@ namespace RateController
         private int cProductID;
         private string cProductName = "";
         private double cQuantityApplied = 0;
+        private double cQuantityOffset = 0; // used when arduino has lost accumulated quantity
 
         private int cSenID; // rate sensor ID on arduino, 0-15, low 4 bits
 
         private SimType cSimulationType = 0;
 
         private double CurrentMinutes;
-        private double CurrentQuantity = 0;
         private double CurrentWorkedArea_Hc = 0;
         private bool cUseMultiPulse;
         private bool cUseOffRateAlarm;
         private byte cVariableRate = 0;
         private double cWorkingWidth_cm;
         private double LastAccQuantity = 0;
-        private double LastQuantityDifference = 0;
         private DateTime LastUpdateTime;
         private bool PauseWork = false;
         private PGN32616 PIDtoArduino;
-        private PGN32614 RateToArduino;
+        public PGN32614 RateToArduino;
         private bool SwitchIDsSent;
         private double TankRemaining = 0;
         private DateTime UpdateStartTime;
         private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
+        private bool cDebugArduino = false;
+        private bool cUseAltRate = false;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -63,6 +66,7 @@ namespace RateController
             RateToArduino = new PGN32614(this);
             PIDtoArduino = new PGN32616(this);
             VirtualNano = new clsArduino(this);
+            cLogRate = true;
         }
 
         public int CountsRev
@@ -77,8 +81,10 @@ namespace RateController
             }
         }
 
-        public int ID { get { return cProductID; } }
-        public double ManualAdjust { get { return cManualAdjust; } set { cManualAdjust = value; } }
+        public int ID   { get { return cProductID; } }
+        public bool LogRate { get { return cLogRate; } set { cLogRate = value; } }
+        public double ManualAdjust  { get { return cManualAdjust; } set { cManualAdjust = value; } }
+        public bool UseAltRate  { get { return cUseAltRate; } set { cUseAltRate = value; } }
         public double MinUPM
         {
             get { return cMinUPM; }
@@ -94,6 +100,7 @@ namespace RateController
                 }
             }
         }
+        public bool DebugArduino { get { return cDebugArduino; } set { cDebugArduino = value; } }
 
         public byte ModuleID
         {
@@ -127,13 +134,21 @@ namespace RateController
             }
         }
 
-        public byte PIDbrakepoint { get { return PIDtoArduino.BrakePoint; } set { PIDtoArduino.BrakePoint = value; } }
-        public byte PIDdeadband { get { return PIDtoArduino.DeadBand; } set { PIDtoArduino.DeadBand = value; } }
-        public byte PIDHighMax { get { return PIDtoArduino.HighMax; } set { PIDtoArduino.HighMax = value; } }
-        public byte PIDkp { get { return PIDtoArduino.KP; } set { PIDtoArduino.KP = value; } }
-        public byte PIDLowMax { get { return PIDtoArduino.LowMax; } set { PIDtoArduino.LowMax = value; } }
-        public byte PIDminPWM { get { return PIDtoArduino.MinPWM; } set { PIDtoArduino.MinPWM = value; } }
-        public byte PIDTimed { get { return PIDtoArduino.TimedAdjustment; } set { PIDtoArduino.TimedAdjustment = value; } }
+        public byte PIDbrakepoint
+        { get { return PIDtoArduino.BrakePoint; } set { PIDtoArduino.BrakePoint = value; } }
+        public byte PIDdeadband
+        { get { return PIDtoArduino.DeadBand; } set { PIDtoArduino.DeadBand = value; } }
+        public byte PIDHighMax
+        { get { return PIDtoArduino.HighMax; } set { PIDtoArduino.HighMax = value; } }
+        public byte PIDkp
+        { get { return PIDtoArduino.KP; } set { PIDtoArduino.KP = value; } }
+        public byte PIDLowMax
+        { get { return PIDtoArduino.LowMax; } set { PIDtoArduino.LowMax = value; } }
+        public byte PIDminPWM
+        { get { return PIDtoArduino.MinPWM; } set { PIDtoArduino.MinPWM = value; } }
+        public byte PIDTimed
+        { get { return PIDtoArduino.TimedAdjustment; } set { PIDtoArduino.TimedAdjustment = value; } }
+
         public string ProductName
         {
             get { return cProductName; }
@@ -154,7 +169,10 @@ namespace RateController
             }
         }
 
-        public double RateSet { get { return cRateSet; } set { cRateSet = value; } }
+        public double RateSet
+        { get { return cRateSet; } set { cRateSet = value; } }
+
+        public double RateAlt { get { return cRateAlt; } set { cRateAlt = value; } }
 
         public byte SensorID
         {
@@ -172,11 +190,14 @@ namespace RateController
             }
         }
 
-        public SimType SimulationType { get { return cSimulationType; } set { cSimulationType = value; } }
+        public SimType SimulationType
+        { get { return cSimulationType; } set { cSimulationType = value; } }
 
-        public bool UseMultiPulse { get { return cUseMultiPulse; } set { cUseMultiPulse = value; } }
+        public bool UseMultiPulse
+        { get { return cUseMultiPulse; } set { cUseMultiPulse = value; } }
 
-        public bool UseOffRateAlarm { get { return cUseOffRateAlarm; } set { cUseOffRateAlarm = value; } }
+        public bool UseOffRateAlarm
+        { get { return cUseOffRateAlarm; } set { cUseOffRateAlarm = value; } }
 
         public byte VariableRate
         {
@@ -194,7 +215,8 @@ namespace RateController
             }
         }
 
-        private string IDname { get { return cProductID.ToString(); } }
+        private string IDname
+        { get { return cProductID.ToString(); } }
 
         public double AverageRate()
         {
@@ -255,6 +277,7 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("LastAccQuantity" + IDname), out LastAccQuantity);
 
             double.TryParse(mf.Tls.LoadProperty("RateSet" + IDname), out cRateSet);
+            double.TryParse(mf.Tls.LoadProperty("RateAlt" + IDname), out cRateAlt);
             double.TryParse(mf.Tls.LoadProperty("FlowCal" + IDname), out FlowCal);
             double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out TankSize);
             byte.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), out ValveType);
@@ -355,7 +378,8 @@ namespace RateController
         public void ResetApplied()
         {
             cQuantityApplied = 0;
-            EraseApplied = true;
+            cQuantityOffset = 0;
+            EraseArduinoQuantity = true;
         }
 
         public void ResetCoverage()
@@ -380,6 +404,7 @@ namespace RateController
             mf.Tls.SaveProperty("LastAccQuantity" + IDname, LastAccQuantity.ToString());
 
             mf.Tls.SaveProperty("RateSet" + IDname, cRateSet.ToString());
+            mf.Tls.SaveProperty("RateAlt" + IDname, cRateAlt.ToString());
             mf.Tls.SaveProperty("FlowCal" + IDname, FlowCal.ToString());
             mf.Tls.SaveProperty("TankSize" + IDname, TankSize.ToString());
             mf.Tls.SaveProperty("ValveType" + IDname, ValveType.ToString());
@@ -485,6 +510,7 @@ namespace RateController
         public double TargetRate()
         {
             double Result = cRateSet;
+            if (UseAltRate) Result *= cRateAlt / 100;
             if (VRconversion[cVariableRate] < 5)
             {
                 double Percent = mf.VRdata.Rate(VRconversion[cVariableRate]);
@@ -549,7 +575,7 @@ namespace RateController
 
         public void Update()
         {
-            if (ArduinoModule.Connected() & (mf.AutoSteerPGN.Connected() || CoverageUnits > 1))
+            if (ArduinoModule.ModuleSending() & (mf.AutoSteerPGN.Connected() || CoverageUnits > 1))
             {
                 if (!SwitchIDsSent)
                 {
@@ -613,6 +639,7 @@ namespace RateController
                 // send to arduino
                 RateToArduino.Send();
                 PIDtoArduino.Send();
+                if (cLogRate) LogTheRate();
             }
             else
             {
@@ -650,46 +677,36 @@ namespace RateController
             }
         }
 
-        private bool QuantityValid(double CurrentDifference)
+        private void LogTheRate()
         {
-            bool Result = true;
-            double Ratio = 0;
-            try
+            double Target = TargetRate();
+            double Applied = RateApplied();
+            if (Target > 0)
             {
-                // check quantity error
-                if (LastQuantityDifference > 0)
+                double Ratio = Applied / Target;
+                if (Ratio < 0.80 || Ratio > 1.20)
                 {
-                    Ratio = CurrentDifference / LastQuantityDifference;
-                    if (Ratio > 10) Result = false; // too much of a change in quantity
+                    string Mes = "Product: " + cProductID;
+                    Mes += "\t Coverage: " + Coverage.ToString("N1");
+                    Mes += "\t Target: " + Target.ToString("N1");
+                    Mes += "\t Applied: " + Applied.ToString("N1");
+                    Mes += "\t Ratio: " + Ratio.ToString("N2");
+                    mf.Tls.WriteActivityLog(Mes);
                 }
-                else
-                {
-                    Result = false;
-                }
-
-                LastQuantityDifference = CurrentDifference;
             }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog("clsProduct: QuantityValid: " + ex.Message);
-                Result = false;
-            }
-            return Result;
         }
 
-        private void UpdateQuantity(double AccQuantity)
+        private void UpdateQuantity(double ArduinoQuantity)
         {
-            if (AccQuantity > LastAccQuantity)
+            if (!EraseArduinoQuantity)
             {
-                CurrentQuantity = AccQuantity - LastAccQuantity;
-                LastAccQuantity = AccQuantity;
+                if ((ArduinoQuantity + cQuantityOffset) < cQuantityApplied) 
+                {
+                    // account for arduino losing accumulated quantity, ex: power loss
+                    cQuantityOffset = cQuantityApplied - ArduinoQuantity;
+                }
 
-                if (QuantityValid(CurrentQuantity)) cQuantityApplied += CurrentQuantity;
-            }
-            else
-            {
-                // reset
-                LastAccQuantity = AccQuantity;
+                cQuantityApplied = ArduinoQuantity + cQuantityOffset;
             }
         }
     }

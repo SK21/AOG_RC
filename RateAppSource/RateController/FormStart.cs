@@ -57,7 +57,7 @@ namespace RateController
             #region // language
 
             lbRate.Text = Lang.lgCurrentRate;
-            label1.Text = Lang.lgTargetRate;
+            lbTarget.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
             lbRemaining.Text = Lang.lgTank_Remaining + " ...";
 
@@ -230,7 +230,7 @@ namespace RateController
 
                     if ((RT > 0) & (Products.Item(CurrentPage - 1).CurrentTankRemaining() > 0))
                     {
-                        AreaDone.Text = (Products.Item(CurrentPage - 1).CurrentTankRemaining() / RT).ToString("N1");
+                        AreaDone.Text = ((Products.Item(CurrentPage - 1).CurrentTankRemaining() - Products.Item(CurrentPage - 1).CurrentApplied()) / RT).ToString("N1");
                     }
                     else
                     {
@@ -275,20 +275,28 @@ namespace RateController
                         break;
                 }
 
-                if (Products.Item(CurrentPage - 1).ArduinoModule.Connected())
+                clsProduct Prd = Products.Item(CurrentPage - 1);
+                if(Prd.SimulationType ==SimType.None)
                 {
-                    if (Products.Item(CurrentPage - 1).SimulationType == SimType.None)
+                    if(Prd.ArduinoModule.ModuleSending())
                     {
-                        lbArduinoConnected.BackColor = Color.LightGreen;
+                        if(Prd.ArduinoModule.ModuleReceiving())
+                        {
+                            lbArduinoConnected.BackColor = Color.LightGreen;
+                        }
+                        else
+                        {
+                            lbArduinoConnected.BackColor = Color.LightBlue;
+                        }
                     }
                     else
                     {
-                        lbArduinoConnected.BackColor = SimColor;
+                        lbArduinoConnected.BackColor = Color.Red;
                     }
                 }
                 else
                 {
-                    lbArduinoConnected.BackColor = Color.Red;
+                    lbArduinoConnected.BackColor = SimColor;
                 }
 
                 lbArduinoConnected.Visible = true;
@@ -394,13 +402,13 @@ namespace RateController
             UDPmodules.StartUDPServer();
             if (!UDPmodules.isUDPSendConnected)
             {
-                Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true);
+                Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true, true);
             }
 
             UDPaog.StartUDPServer();
             if (!UDPaog.isUDPSendConnected)
             {
-                Tls.ShowHelp("UDPagio failed to start.", "", 3000, true);
+                Tls.ShowHelp("UDPagio failed to start.", "", 3000, true, true);
             }
 
             LoadSettings();
@@ -440,8 +448,8 @@ namespace RateController
 
         private void lbArduinoConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Indicates if the product is connected to an arduino module. Green is connected, " +
-                "yellow is simulation mode, red not connected. Press to minimize window.";
+            string Message = "Green indicates module is sending and receiving data, blue indicates module is sending but not receiving, " +
+                " red indicates module is not sending or receiving, yellow is simulation mode. Press to minimize window.";
 
             this.Tls.ShowHelp(Message, "MOD");
             hlpevent.Handled = true;
@@ -468,7 +476,7 @@ namespace RateController
 
         private void lbRemaining_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Shows either quantity remaining or area that can be done with the remaining quantity." +
+            string Message = "Shows either quantity applied or quantity remaining." +
                 "\n Press to change.";
 
             Tls.ShowHelp(Message, "Remaining");
@@ -616,6 +624,37 @@ namespace RateController
         {
             ShowCoverageRemaining = !ShowCoverageRemaining;
             UpdateStatus();
+        }
+
+        private void lbCoverage_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Shows either coverage done or area that can be done with the remaining quantity." +
+                "\n Press to change.";
+
+            Tls.ShowHelp(Message, "Coverage");
+            hlpevent.Handled = true;
+        }
+
+        private void lbTarget_Click(object sender, EventArgs e)
+        {
+            if(lbTarget.Text==Lang.lgTargetRate)
+            {
+                lbTarget.Text = Lang.lgTargetRateAlt;
+                Products.Item(CurrentPage - 1).UseAltRate = true;
+            }
+            else
+            {
+                lbTarget.Text = Lang.lgTargetRate;
+                Products.Item(CurrentPage - 1).UseAltRate = false;
+            }
+        }
+
+        private void lbTarget_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Press to switch between base rate and alternate rate.";
+
+            Tls.ShowHelp(Message, "Target Rate");
+            hlpevent.Handled = true;
         }
     }
 }

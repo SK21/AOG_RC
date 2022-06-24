@@ -22,6 +22,7 @@ namespace RateController
         //	        - bit 3		    MasterOn
         //          - bit 4         0 - average time for multiple pulses, 1 - time for one pulse
         //          - bit 5         AutoOn
+        //          - bit 6         Debug On
         //11    power relay Lo      list of power type relays 0-7
         //12    power relay Hi      list of power type relays 8-15
         //13    CRC
@@ -73,8 +74,8 @@ namespace RateController
 
             // command byte
             cData[10] = 0;
-            if (Prod.EraseApplied) cData[10] |= 0b00000001;
-            Prod.EraseApplied = false;
+            if (Prod.EraseArduinoQuantity) cData[10] |= 0b00000001;
+            Prod.EraseArduinoQuantity = false;
 
             switch (Prod.ValveType)
             {
@@ -97,9 +98,12 @@ namespace RateController
                     break;
             }
 
-            if (Prod.mf.Sections.IsMasterOn()) cData[10] |= 0b00001000; else cData[10] &= 0b11110111;
-            if (Prod.UseMultiPulse) cData[10] |= 0b00010000; else cData[10] &= 0b11101111;
+            if (Prod.mf.Sections.IsMasterOn()) cData[10] |= 0b00001000;
+            if (Prod.UseMultiPulse) cData[10] |= 0b00010000; 
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[10] |= 0b00100000;
+            if (Prod.DebugArduino) cData[10] |= 0b01000000;
+
+            string Output = Convert.ToString(cData[10], 2);
 
             // power relays
             for (int i = 0; i < 16; i++)

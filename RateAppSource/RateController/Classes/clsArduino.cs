@@ -36,7 +36,7 @@ namespace RateController
 
         private float PPR = 1.0F;        // pulses per revolution
 
-        private UInt16 pulseCount;
+        private double pulseCount;
         private float pulseDuration;
         private float Pulses = 0;
 
@@ -292,11 +292,14 @@ namespace RateController
         UInt32 Omax;
         UInt32 Omin;
         UInt16 Ocount;
+        UInt32 Omax2;
+        UInt32 Omin2;
+
         float Oave;
         UInt32 PPM;
-        UInt16 TimedCounts;
-        UInt16 CurrentCounts;
-        UInt16 CurrentDuration;
+        double TimedCounts;
+        double CurrentCounts;
+        double CurrentDuration;
 
         private float GetUPM()
         {
@@ -304,14 +307,14 @@ namespace RateController
             {
                 CurrentCounts = pulseCount;
                 pulseCount = 0;
-                CurrentDuration = (ushort)pulseDuration;
+                CurrentDuration = pulseDuration;
 
                 if (cUseMultiPulse)
                 {
                     // low ms/pulse, use pulses over time
                     TimedCounts += CurrentCounts;
                     RateInterval = (int)(DateTime.Now - TimedLast).TotalMilliseconds;
-                    if (RateInterval > 200)
+                    if (RateInterval > 500)
                     {
                         TimedLast = DateTime.Now;
                         PPM = (uint)((6000000 * TimedCounts) / RateInterval);  // 100 X actual
@@ -332,25 +335,39 @@ namespace RateController
                 }
 
                 LastPulse = DateTime.Now;
-                TotalPulses += CurrentCounts;
+                TotalPulses += (float)CurrentCounts;
             }
 
             if ((DateTime.Now - LastPulse).TotalMilliseconds > 4000) PPM = 0;   // check for no flow
-
             // olympic average
-            Osum += PPM;
-            if (PPM > Omax) Omax = PPM;
-            if (PPM < Omin) Omin = PPM;
+            if (Omax < PPM)
+            {
+                Omax2 = Omax;
+                Omax = PPM;
+            }
+            else if (Omax2 < PPM) Omax2 = PPM;
 
+            if (Omin > PPM)
+            {
+                Omin2 = Omin;
+                Omin = PPM;
+            }
+            else if (Omin2 > PPM) Omin2 = PPM;
+
+            Osum += PPM;
             Ocount++;
-            if (Ocount > 4)
+            if (Ocount > 9)
             {
                 Osum -= Omax;
                 Osum -= Omin;
-                Oave = (float)((float)Osum / 300.0);  // divide by 3 and divide by 100 
+                Osum -= Omax2;
+                Osum -= Omin2;
+                Oave = (float)((float)Osum / 600.0);  // divide by 3 and divide by 100 
                 Osum = 0;
                 Omax = 0;
-                Omin = 50000;
+                Omin = 5000000;
+                Omax2 = 0;
+                Omin2 = 5000000;
                 Ocount = 0;
             }
 
@@ -369,7 +386,7 @@ namespace RateController
         private void SendSerial()
         {
             // PGN 32613
-            string[] words = new string[12];
+            string[] words = new string[13];
             words[0] = "101";
             words[1] = "127";
             words[2] = mcID.ToString();
@@ -397,8 +414,13 @@ namespace RateController
             Temp = (byte)((int)(pwmSetting * 10) >> 8);
             words[10] = Temp.ToString();
 
+            // status
+            // bit 0    - sensor 0 receiving rate controller data
+            // bit 1    - sensor 1 receiving rate controller data
+            words[11] = "3";
+
             // crc
-            words[11] = RC.mf.Tls.CRC(words, 12).ToString();
+            words[12] = RC.mf.Tls.CRC(words, 13).ToString();
 
             RC.SerialFromAruduino(words, false);
         }
@@ -433,7 +455,7 @@ namespace RateController
                 PrevCount += CurCount * (SimulateInterval / 60000.0); // counts for time slice
                 if(PrevCount>1)
                 {
-                    pulseCount = (ushort)PrevCount;
+                    pulseCount = PrevCount;
                     PrevCount = 0;
                 }
             }
@@ -491,7 +513,7 @@ namespace RateController
                 PrevCount += SimulateInterval / PulseTime; // milliseconds * pulses/millsecond = pulses
                 if(PrevCount>1)
                 {
-                    pulseCount = (ushort)PrevCount;
+                    pulseCount = PrevCount;
                     PrevCount = 0;
                 }
 

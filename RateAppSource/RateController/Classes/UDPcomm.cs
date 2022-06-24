@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -92,8 +93,9 @@ namespace RateController
                     if (byteData.Length != 0)
                         sendSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, EndPt, new AsyncCallback(SendData), null);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    mf.Tls.WriteErrorLog("UDPcomm/SendUDPMessage " + ex.Message);
                 }
             }
         }
@@ -168,46 +170,67 @@ namespace RateController
 
         private void HandleData(int Port, byte[] Data)
         {
-            if (Data.Length > 1)
+            try
             {
-                PGN = Data[0] << 8 | Data[1];   // AGIO big endian
-                if (PGN == 32897)
+                if (Data.Length > 1)
                 {
-                    // AGIO
-                    switch (Data[3])
+                    PGN = Data[0] << 8 | Data[1];   // AGIO big endian
+                    if (PGN == 32897)
                     {
-                        case 254:
-                            // AutoSteer AGIO PGN
-                            mf.AutoSteerPGN.ParseByteData(Data);
-                            break;
-
-                        case 230:
-                            // vr data
-                            mf.VRdata.ParseByteData(Data);
-                            break;
-                    }
-                }
-                else
-                {
-                    PGN = Data[1] << 8 | Data[0];   // rc modules little endian
-                    switch (PGN)
-                    {
-                        case 32618:
-                            mf.SwitchBox.ParseByteData(Data);
-                            break;
-
-                        case 32613:
-                            foreach (clsProduct Prod in mf.Products.Items)
+                        if (Data.Length > 2)
+                        {
+                            // AGIO
+                            switch (Data[3])
                             {
-                                Prod.UDPcommFromArduino(Data);
-                            }
-                            break;
+                                case 254:
+                                    // AutoSteer AGIO PGN
+                                    mf.AutoSteerPGN.ParseByteData(Data);
+                                    break;
 
-                        case 32621:
-                            mf.PressureData.ParseByteData(Data);
-                            break;
+                                case 230:
+                                    // vr data
+                                    mf.VRdata.ParseByteData(Data);
+                                    break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        PGN = Data[1] << 8 | Data[0];   // rc modules little endian
+                        switch (PGN)
+                        {
+                            case 32618:
+                                mf.SwitchBox.ParseByteData(Data);
+                                break;
+
+                            case 32613:
+                                foreach (clsProduct Prod in mf.Products.Items)
+                                {
+                                    Prod.UDPcommFromArduino(Data);
+                                }
+                                break;
+
+                            case 32621:
+                                mf.PressureData.ParseByteData(Data);
+                                break;
+
+                            case 0xABC:
+                                // debug info from module
+                                Debug.Print("");
+                                for (int i = 0; i < Data.Length; i++)
+                                {
+                                    Debug.Print(DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + "  " + i.ToString() + " " + Data[i].ToString());
+                                }
+                                Debug.Print("");
+                                break;
+                        }
                     }
                 }
+
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("UDPcomm/HandleData " + ex.Message);
             }
         }
 

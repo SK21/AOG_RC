@@ -357,6 +357,9 @@
   <data name="lgStandard" xml:space="preserve">
     <value>Standard</value>
   </data>
+  <data name="lgStartQuantity" xml:space="preserve">
+    <value>Tank Starting Quantity</value>
+  </data>
   <data name="lgStop" xml:space="preserve">
     <value>Stop</value>
   </data>
@@ -373,7 +376,10 @@
     <value>Quantity Left</value>
   </data>
   <data name="lgTargetRate" xml:space="preserve">
-    <value>Target Rate</value>
+    <value>Target Rate ...</value>
+  </data>
+  <data name="lgTargetRateAlt" xml:space="preserve">
+    <value>Target Rate Alt ...</value>
   </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Applied</value>
