@@ -14,7 +14,8 @@ void SendUDPwired()
     //8	acc.Quantity Hi
     //9 PWM Lo
     //10 PWM Hi
-    //11	crc
+    //11 Status
+    //12	crc
 
 
     for (int i = 0; i < PCB.SensorCount; i++)
@@ -47,11 +48,18 @@ void SendUDPwired()
         Temp = (byte)((pwmSetting[i] * 10) >> 8);
         Packet[10] = Temp;
 
+        // status
+        // bit 0    - sensor 0 receiving rate controller data
+        // bit 1    - sensor 1 receiving rate controller data
+        Packet[11] = 0;
+        if (millis() - CommTime[0] < 4000) Packet[11] |= 0b00000001;
+        if (millis() - CommTime[1] < 4000) Packet[11] |= 0b00000010;
+
         // crc
-        Packet[11] = CRC(11, 0);
+        Packet[12] = CRC(12, 0);
 
         //off to AOG
-        ether.sendUdp(Packet, 12, SourcePort, DestinationIP, DestinationPort);
+        ether.sendUdp(Packet, 13, SourcePort, DestinationIP, DestinationPort);
     }
 }
 
@@ -129,6 +137,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             {
                                 ManualAdjust[SensorID] = TmpSet;
                             }
+
+                            DebugOn = ((InCommand[SensorID] & 64) == 64);
 
                             // power relays
                             PowerRelayLo = Data[11];

@@ -5,18 +5,16 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
-# define InoDescription "RCnano  :  12-Jun-2022"
-# define UseEthernet 0
+# define InoDescription "RCnano  :  22-Jun-2022"
+# define UseEthernet 1
 
-# define DebugOn 0
-byte CRCexpected;
-byte CRCvalue;
-byte DebugCount;
+// debug variables
+bool DebugOn = false;
+byte DebugCount1;
 byte DebugCount2;
 byte DebugVal1;
 byte DebugVal2;
 uint32_t DebugTime;
-bool LEDon = false;
 
 
 struct PCBconfig    // 5 bytes
@@ -308,11 +306,6 @@ void setup()
 	ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
 #endif
 
-#if DebugOn
-	pinMode(LED_BUILTIN, OUTPUT);
-	digitalWrite(LED_BUILTIN, LEDon);
-#endif
-
 	Serial.println("");
 	Serial.println("Finished Setup.");
 }
@@ -360,9 +353,7 @@ void loop()
 	ether.packetLoop(ether.packetReceive());
 #endif
 
-#if DebugOn
-	DebugTheINO();
-#endif
+	if (DebugOn)DebugTheINO();
 }
 
 byte ParseModID(byte ID)
@@ -386,22 +377,18 @@ void AutoControl()
 {
 	for (int i = 0; i < PCB.SensorCount; i++)
 	{
+		rateError[i] = RateSetting[i] - UPM[i];
+
 		switch (ControlType[i])
 		{
 		case 2:
 			// motor control
-			rateError[i] = RateSetting[i] - UPM[i];
-
-			// calculate new value
 			pwmSetting[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
 				PIDHighMax[i], PIDdeadband[i], i);
 			break;
 
 		default:
 			// valve control
-			// calculate new value
-			rateError[i] = RateSetting[i] - UPM[i];
-
 			pwmSetting[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
 				PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i);
 			break;
@@ -413,6 +400,8 @@ void ManualControl()
 {
 	for (int i = 0; i < PCB.SensorCount; i++)
 	{
+		rateError[i] = RateSetting[i] - UPM[i];
+
 		if (millis() - ManualLast[i] > 1000)
 		{
 			ManualLast[i] = millis();
@@ -428,6 +417,7 @@ void ManualControl()
 				{
 					pwmSetting[i] *= 1.10;
 					if (pwmSetting[i] < 1) pwmSetting[i] = PIDminPWM[i];
+					if (pwmSetting[i] > 255) pwmSetting[i] = 255;
 				}
 				else if (ManualAdjust[i] < 0)
 				{
@@ -442,8 +432,6 @@ void ManualControl()
 				break;
 			}
 		}
-
-		rateError[i] = RateSetting[i] - UPM[i];
 	}
 }
 
@@ -461,33 +449,6 @@ void TranslateSwitchBytes()
 		SectionSwitchID[i] = SectionSwitchID[i] >> (4 * (i - 2 * ByteID)); // move bits for number
 	}
 }
-#if DebugOn
-void DebugTheINO()
-{
-	// send debug info to RateController
-	if (DebugOn && (millis() - DebugTime > 1000))
-	{
-		DebugTime = millis();
-
-		Serial.println("");
-		// PGNudp 2748 - 0xABC
-		Serial.print(0xBC);
-		Serial.print(",");
-		Serial.print(0xA);
-		Serial.print(",");
-		Serial.print(DebugVal1);
-		//Serial.print(",");
-		//Serial.print(DebugVal2);
-		//Serial.print(",");
-		//Serial.print(DebugCount);
-		//Serial.print(",");
-		//Serial.print(DebugCount2);
-
-		Serial.println("");
-	}
-}
-#endif
-
 bool GoodCRC(uint16_t Length)
 {
 	byte ck = CRC(Length - 1, 0);
@@ -509,3 +470,40 @@ byte CRC(int Length, byte Start)
 	}
 	return Result;
 }
+
+void DebugTheINO()
+{
+	// send debug info to RateController
+	if (millis() - DebugTime > 1000)
+	{
+		DebugTime = millis();
+
+		// Serial
+		// PGNudp 2748 - 0xABC
+		Serial.print(0xBC);
+		Serial.print(",");
+		Serial.print(0xA);
+		Serial.print(",");
+		Serial.print(DebugVal1);
+		Serial.print(",");
+		Serial.print(DebugVal2);
+		Serial.print(",");
+		Serial.print(DebugCount1);
+		Serial.print(",");
+		Serial.print(DebugCount2);
+
+		Serial.println("");
+
+#if UseEthernet
+		// UDP
+		Packet[0] = 0xBC;
+		Packet[1] = 0xA;
+		Packet[2] = DebugVal1;
+		Packet[3] = DebugVal2;
+		Packet[4] = DebugCount1;
+		Packet[5] = DebugCount2;
+		ether.sendUdp(Packet, 12, SourcePort, DestinationIP, DestinationPort);
+#endif
+	}
+}
+

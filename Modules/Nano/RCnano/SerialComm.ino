@@ -13,7 +13,8 @@ void SendSerial()
 	//8	acc.Quantity Hi
 	//9 PWM Lo
 	//10 PWM Hi
-	//11	crc
+	//11 Status
+	//12	crc
 
 	for (int i = 0; i < PCB.SensorCount; i++)
 	{
@@ -37,11 +38,18 @@ void SendSerial()
 		Packet[9] = pwmSetting[i] * 10;
 		Packet[10] = (pwmSetting[i] * 10) >> 8;
 
+		// status
+		// bit 0    - sensor 0 receiving rate controller data
+		// bit 1    - sensor 1 receiving rate controller data
+		Packet[11] = 0;
+		if (millis() - CommTime[0] < 4000) Packet[11] |= 0b00000001;
+		if (millis() - CommTime[1] < 4000) Packet[11] |= 0b00000010;
+		
 		// crc
-		Packet[11] = CRC(11, 0);
+		Packet[12] = CRC(12, 0);
 
 		Serial.print(Packet[0]);
-		for (int i = 1; i < 12; i++)
+		for (int i = 1; i < 13; i++)
 		{
 			Serial.print(",");
 			Serial.print(Packet[i]);
@@ -135,6 +143,8 @@ void ReceiveSerial()
 							{
 								ManualAdjust[SensorID] = TmpSet;
 							}
+
+							DebugOn = ((InCommand[SensorID] & 64) == 64);
 
 							// power relays
 							PowerRelayLo = Packet[11];
@@ -302,7 +312,6 @@ void ReceiveSerial()
 				{
 					Packet[i] = Serial.read();
 				}
-				CRCexpected = Packet[24];
 
 				if (GoodCRC(25))
 				{
