@@ -66,8 +66,6 @@ void DoSteering()
 {
 	//************** Steering Angle ******************
 	steeringPosition = ReadWAS(PCB.AdsWASpin);
-	//steeringPosition = steeringPosition >> 1;
-	//helloSteerPosition = steeringPosition - 6800;
 	helloSteerPosition = steeringPosition - PCB.ZeroOffset;
 
 	//  ***** make sure that negative steer angle makes a left turn and positive value is a right turn *****
@@ -230,6 +228,30 @@ void ReadIMU()
 			//Complementary filter
 			IMU_YawRate = 0.93 * IMU_YawRate + 0.07 * tmpIMU;
 			break;
+		}
+	}
+}
+
+void PositionMotor()
+{
+	float Reading = (float)adc->adc0->analogRead(PINS.PressureSensor);
+
+	if (digitalRead(PINS.SteerSW_Relay))
+	{
+		// steering engaged, extend linear actuator
+		if (Reading < 3)
+		{
+			digitalWrite(PINS.FlowDir, HIGH);
+			analogWrite(PINS.FlowPWM, 255);
+		}
+	}
+	else
+	{
+		// steering disengaged, retract linear actuator
+		if (Reading > 0.1)
+		{
+			digitalWrite(PINS.FlowDir, LOW);
+			analogWrite(PINS.FlowPWM, 255);
 		}
 	}
 }

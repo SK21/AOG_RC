@@ -16,37 +16,35 @@ void CheckRelays()
     NewLo = 0;
     NewHi = 0;
 
-    if(FlowEnabled[0])
+    if (WifiSwitchesEnabled)
     {
-        if (WifiSwitchesEnabled)
+        // wifi relay control
+        // controls by relay # not section #
+        if (millis() - WifiSwitchesTimer > 30000) // 30 second timer
         {
-            // wifi relay control
-            if (millis() - WifiSwitchesTimer > 30000) // 30 second timer
-            {
-                // wifi switches have timed out
-                WifiSwitchesEnabled = false;
-            }
-            else
-            {
-                if (WifiSwitches[2])
-                {
-                    // wifi master on
-                    NewLo = WifiSwitches[3];
-                    NewHi = WifiSwitches[4];
-                }
-                else
-                {
-                    // wifi master off
-                    WifiSwitchesEnabled = false;
-                }
-            }
+            // wifi switches have timed out
+            WifiSwitchesEnabled = false;
         }
         else
         {
-            // normal relay control
-            NewLo = RelayLo;
-            NewHi = RelayHi;
+            if (WifiSwitches[2])
+            {
+                // wifi master on
+                NewLo = WifiSwitches[3];
+                NewHi = WifiSwitches[4];
+            }
+            else
+            {
+                // wifi master off
+                WifiSwitchesEnabled = false;
+            }
         }
+    }
+    else if (FlowEnabled[0] || FlowEnabled[1])
+    {
+        // normal relay control
+        NewLo = RelayLo;
+        NewHi = RelayHi;
     }
 
     // power relays, always on

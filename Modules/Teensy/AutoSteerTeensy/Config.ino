@@ -57,6 +57,7 @@ void ReceiveConfig()
 			if (bitRead(Commands, 4)) PCB.SwapRollPitch = 1; else PCB.SwapRollPitch = 0;
 			if (bitRead(Commands, 5)) PCB.InvertRoll = 1; else PCB.InvertRoll = 0;
 			if (bitRead(Commands, 6)) PCB.GyroOn = 1; else PCB.GyroOn = 0;
+			if (bitRead(Commands, 7)) PCB.UseLinearActuator = 1; else PCB.UseLinearActuator = 0;
 
 			EEPROM.put(110, PCB);
 		}

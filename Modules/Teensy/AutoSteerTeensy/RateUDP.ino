@@ -14,9 +14,10 @@ void SendRateUDP()
 	//8	acc.Quantity Hi
 	//9 PWM Lo
 	//10 PWM Hi
-	//11 crc
+	//11 Status
+	//12 crc
 
-	// PGN 32613, 12 bytes
+	// PGN 32613, 13 bytes
 	Packet[0] = 101;
 	Packet[1] = 127;
 	Packet[2] = BuildModSenID(PCB.ModuleID, 0);
@@ -44,12 +45,19 @@ void SendRateUDP()
 	Temp = (byte)(RatePWM[0] * 10 >> 8);
 	Packet[10] = Temp;
 
+	// status
+	// bit 0    - sensor 0 receiving rate controller data
+	// bit 1    - sensor 1 receiving rate controller data
+	Packet[11] = 0;
+	if (millis() - RateCommTime[0] < 4000) Packet[11] |= 0b00000001;
+	if (millis() - RateCommTime[1] < 4000) Packet[11] |= 0b00000010;
+
 	// crc
-	Packet[11] = CRC(11, 0);
+	Packet[12] = CRC(12, 0);
 
 	// send to RateController
 	UDPrate.beginPacket(RateSendIP, DestinationPortRate);
-	UDPrate.write(Packet, 12);
+	UDPrate.write(Packet, 13);
 	UDPrate.endPacket();
 }
 
@@ -104,17 +112,17 @@ void ReceiveRateUDP()
 						MeterCal[SensorID] = (float)tmp * 0.01;
 
 						// command byte
-						InCommand = Packet[10];
-						if ((InCommand & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
+						InCommand[SensorID] = Packet[10];
+						if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
 
 						ControlType[SensorID] = 0;
-						if ((InCommand & 2) == 2) ControlType[SensorID] += 1;
-						if ((InCommand & 4) == 4) ControlType[SensorID] += 2;
+						if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
+						if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
 
-						MasterOn = ((InCommand & 8) == 8);
-						UseMultiPulses[SensorID] = ((InCommand & 16) == 16);
+						MasterOn[SensorID] = ((InCommand[SensorID] & 8) == 8);
+						UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
 
-						AutoOn = ((InCommand & 32) == 32);
+						AutoOn = ((InCommand[SensorID] & 32) == 32);
 						if (AutoOn)
 						{
 							RateSetting[SensorID] = TmpSet;
@@ -123,6 +131,8 @@ void ReceiveRateUDP()
 						{
 							ManualAdjust[SensorID] = TmpSet;
 						}
+
+						DebugOn = ((InCommand[SensorID] & 64) == 64);
 
 						// power relays
 						PowerRelayLo = Packet[11];
@@ -156,5 +166,43 @@ void ReceiveRateUDP()
 				}
 			}
 		}
+	}
+}
+
+void DebugTheINO()
+{
+	// send debug info to RateController
+	if (millis() - DebugTime > 1000)
+	{
+		DebugTime = millis();
+
+		// Serial
+		// PGNudp 2748 - 0xABC
+		Serial.print(0xBC);
+		Serial.print(",");
+		Serial.print(0xA);
+		Serial.print(",");
+		Serial.print(DebugVal1);
+		Serial.print(",");
+		Serial.print(DebugVal2);
+		Serial.print(",");
+		Serial.print(DebugCount1);
+		Serial.print(",");
+		Serial.print(DebugCount2);
+
+		Serial.println("");
+
+		// UDP
+		Packet[0] = 0xBC;
+		Packet[1] = 0xA;
+		Packet[2] = DebugVal1;
+		Packet[3] = DebugVal2;
+		Packet[4] = DebugCount1;
+		Packet[5] = DebugCount2;
+
+		// send to RateController
+		UDPrate.beginPacket(RateSendIP, DestinationPortRate);
+		UDPrate.write(Packet, 6);
+		UDPrate.endPacket();
 	}
 }

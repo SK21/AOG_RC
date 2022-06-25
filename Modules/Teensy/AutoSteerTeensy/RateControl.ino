@@ -6,14 +6,15 @@ void DoRate()
     if (millis() - RateLoopLast >= RateLoopTime)
     {
         RateLoopLast = millis();
-        CheckRelays();
+        GetUPM();
 
         for (int i = 0; i < 1; i++)
         {
-            FlowEnabled[i] = (millis() - RateCommTime[i] < 4000) && (RateSetting[i] > 0) && MasterOn;
+            FlowEnabled[i] = (millis() - RateCommTime[i] < 4000) && (RateSetting[i] > 0) && MasterOn[i];
         }
 
-        GetUPM();
+        CheckRelays();
+        AdjustFlow();
 
         if (AutoOn)
         {
@@ -23,7 +24,6 @@ void DoRate()
         {
             ManualControl();
         }
-        AdjustFlow();
     }
 
     if (millis() - RateSendLast > RateSendTime)
@@ -54,22 +54,18 @@ void AutoControl()
 {
     for (int i = 0; i < 1; i++)
     {
+        rateError[i] = RateSetting[i] - UPM[i];
+
         switch (ControlType[i])
         {
         case 2:
             // motor control
-            rateError[i] = RateSetting[i] - UPM[i];
-
-            // calculate new value
             RatePWM[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
                 PIDHighMax[i], PIDdeadband[i], i);
             break;
 
         default:
             // valve control
-            // calculate new value
-            rateError[i] = RateSetting[i] - UPM[i];
-
             RatePWM[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
                 PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i);
             break;
@@ -81,6 +77,8 @@ void ManualControl()
 {
     for (int i = 0; i < 1; i++)
     {
+        rateError[i] = RateSetting[i] - UPM[i];
+
         if (millis() - ManualLast[i] > 1000)
         {
             ManualLast[i] = millis();
@@ -96,6 +94,7 @@ void ManualControl()
                 {
                     RatePWM[i] *= 1.10;
                     if (RatePWM[i] < 1) RatePWM[i] = PIDminPWM[i];
+                    if (RatePWM[i] > 256) RatePWM[i] = 256;
                 }
                 else if (ManualAdjust[i] < 0)
                 {
@@ -110,7 +109,5 @@ void ManualControl()
                 break;
             }
         }
-
-        rateError[i] = RateSetting[i] - UPM[i];
     }
 }

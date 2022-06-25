@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   11-Jun-2022"
+# define InoDescription "AutoSteerTeensy   24-Jun-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -13,7 +13,15 @@
 #include <ADC_util.h>
 #include "PCA95x5_AOG.h"	// modified from https://github.com/hideakitai/PCA95x5
 
-struct PCBconfig	// 26 bytes
+// debug variables
+bool DebugOn = false;
+byte DebugCount1;
+byte DebugCount2;
+byte DebugVal1;
+byte DebugVal2;
+uint32_t DebugTime;
+
+struct PCBconfig	// 27 bytes
 {
 	uint8_t Receiver = 1;			// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
 	uint8_t NMEAserialPort = 8;		// from receiver
@@ -38,7 +46,8 @@ struct PCBconfig	// 26 bytes
 	uint8_t SwapRollPitch = 1;		// 0 use roll value for roll, 1 use pitch value for roll
 	uint8_t InvertRoll = 0;
 	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
-	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
+	uint8_t	IPpart3 = 1;			// IP address, 3rd octet.
+	uint8_t UseLinearActuator = 0;	// to engage or retract steering motor
 };
 
 PCBconfig PCB;
@@ -158,7 +167,7 @@ int16_t EEread = 0;
 #define PCB_Ident 2388
 
 // Rate control
-bool MasterOn;
+bool MasterOn[2];
 #define MaxFlowSensorCount 2
 bool FlowEnabled[MaxFlowSensorCount];
 float rateError[MaxFlowSensorCount];
@@ -174,7 +183,7 @@ byte PIDdeadband[] = { 3 };
 byte PIDbrakePoint[] = { 20 };
 byte AdjustTime[MaxFlowSensorCount];
 
-byte InCommand;
+byte InCommand[] = { 0, 0 };		// command byte from RateController
 byte ControlType[MaxFlowSensorCount];	// 0 standard, 1 fast close, 2 motor
 uint16_t TotalPulses[MaxFlowSensorCount];
 byte ManualPWMsetting;
@@ -594,12 +603,15 @@ void loop()
 		LoopLast = millis();
 		ReadSwitches();
 		DoSteering();
+		if (PCB.UseLinearActuator) PositionMotor();
 		if (PCB.Receiver == 0) ReadIMU();
+		if (DebugOn)DebugTheINO();
 	}
 
 	SendSpeedPulse();
 	if (PCB.Receiver != 0) DoPanda();
 	if (PCB.UseRate) DoRate();
+
 	wdt.feed();
 }
 
@@ -659,4 +671,5 @@ byte CRC(uint16_t Length, byte Start)
 	}
 	return Result;
 }
+
 
