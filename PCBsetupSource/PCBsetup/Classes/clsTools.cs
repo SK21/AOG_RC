@@ -18,7 +18,7 @@ namespace PCBsetup
         private string cPropertiesFile = "";
         private string cSettingsDir = "";
         private string cSwitchboxFirmware = "09-May-2022";
-        private string cTeensyFirmware = "11-Jun-2022";
+        private string cTeensyFirmware = "24-Jun-2022";
         private string cVersionDate = "24-Jun-2022";
         private frmMain mf;
 

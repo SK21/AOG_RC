@@ -21,7 +21,7 @@ namespace PCBsetup.Forms
             mf = CallingForm;
 
             CKs = new CheckBox[] {ckUseRate,ckADS,ckRelayOn,ckFlowOn,ckSwapPitchRoll
-                ,ckInvertRoll,ckGyro};
+                ,ckInvertRoll,ckGyro,ckActuator};
 
             for (int i = 0; i < CKs.Length; i++)
             {
@@ -105,6 +105,7 @@ namespace PCBsetup.Forms
             ckFlowOn.Checked = false;
             ckSwapPitchRoll.Checked = false;
             ckInvertRoll.Checked = false;
+            ckActuator.Checked = false;
 
             tbDir1.Text = "22";
             tbPwm1.Text = "23";
@@ -456,6 +457,16 @@ namespace PCBsetup.Forms
             Initializing = true;
             LoadSettings();
             Initializing = false;
+        }
+
+        private void ckActuator_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Use linear actuator to position steer motor." +
+                " Position is read on Pressure pin. Actuator is controlled" +
+                " with Rate Dir and Rate PWM pins.";
+
+            mf.Tls.ShowHelp(Message, "Actuator");
+            hlpevent.Handled = true;
         }
     }
 }

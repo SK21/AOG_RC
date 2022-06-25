@@ -31,6 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPCBsettings));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lbIPpart4 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.tbIPaddress = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.cbRelayControl = new System.Windows.Forms.ComboBox();
             this.cbIMU = new System.Windows.Forms.ComboBox();
@@ -100,10 +104,7 @@
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
-            this.label29 = new System.Windows.Forms.Label();
-            this.tbIPaddress = new System.Windows.Forms.TextBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.lbIPpart4 = new System.Windows.Forms.Label();
+            this.ckActuator = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -152,6 +153,41 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Config 1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // lbIPpart4
+            // 
+            this.lbIPpart4.AutoSize = true;
+            this.lbIPpart4.Location = new System.Drawing.Point(670, 231);
+            this.lbIPpart4.Name = "lbIPpart4";
+            this.lbIPpart4.Size = new System.Drawing.Size(45, 24);
+            this.lbIPpart4.TabIndex = 21;
+            this.lbIPpart4.Text = ".126";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(528, 232);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(80, 24);
+            this.label30.TabIndex = 20;
+            this.label30.Text = "192.168.";
+            // 
+            // tbIPaddress
+            // 
+            this.tbIPaddress.Location = new System.Drawing.Point(614, 229);
+            this.tbIPaddress.Name = "tbIPaddress";
+            this.tbIPaddress.Size = new System.Drawing.Size(50, 29);
+            this.tbIPaddress.TabIndex = 19;
+            this.tbIPaddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(387, 231);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(101, 24);
+            this.label29.TabIndex = 18;
+            this.label29.Text = "IP Address";
             // 
             // label28
             // 
@@ -331,6 +367,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.ckActuator);
             this.tabPage2.Controls.Add(this.ckInvertRoll);
             this.tabPage2.Controls.Add(this.ckSwapPitchRoll);
             this.tabPage2.Controls.Add(this.ckADS);
@@ -863,40 +900,19 @@
             this.bntOK.UseVisualStyleBackColor = true;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
-            // label29
+            // ckActuator
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(387, 231);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(101, 24);
-            this.label29.TabIndex = 18;
-            this.label29.Text = "IP Address";
-            // 
-            // tbIPaddress
-            // 
-            this.tbIPaddress.Location = new System.Drawing.Point(614, 229);
-            this.tbIPaddress.Name = "tbIPaddress";
-            this.tbIPaddress.Size = new System.Drawing.Size(50, 29);
-            this.tbIPaddress.TabIndex = 19;
-            this.tbIPaddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(528, 232);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(80, 24);
-            this.label30.TabIndex = 20;
-            this.label30.Text = "192.168.";
-            // 
-            // lbIPpart4
-            // 
-            this.lbIPpart4.AutoSize = true;
-            this.lbIPpart4.Location = new System.Drawing.Point(670, 231);
-            this.lbIPpart4.Name = "lbIPpart4";
-            this.lbIPpart4.Size = new System.Drawing.Size(45, 24);
-            this.lbIPpart4.TabIndex = 21;
-            this.lbIPpart4.Text = ".126";
+            this.ckActuator.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckActuator.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckActuator.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckActuator.Location = new System.Drawing.Point(613, 232);
+            this.ckActuator.Name = "ckActuator";
+            this.ckActuator.Size = new System.Drawing.Size(117, 69);
+            this.ckActuator.TabIndex = 36;
+            this.ckActuator.Text = "Use Actuator";
+            this.ckActuator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckActuator.UseVisualStyleBackColor = true;
+            this.ckActuator.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckActuator_HelpRequested);
             // 
             // frmPCBsettings
             // 
@@ -1008,5 +1024,6 @@
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox tbIPaddress;
         private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.CheckBox ckActuator;
     }
 }

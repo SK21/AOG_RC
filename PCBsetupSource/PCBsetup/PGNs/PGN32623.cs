@@ -23,6 +23,7 @@ namespace PCBsetup
         //          - swap pitch for roll
         //          - invert roll
         //          - Gyro on
+        //          - use linear actuator
 
         private byte[] cData = new byte[10];
         private frmPCBsettings cf;
