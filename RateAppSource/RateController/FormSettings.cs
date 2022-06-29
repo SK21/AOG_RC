@@ -98,8 +98,8 @@ namespace RateController
 
             Sec = new Label[] { sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10, sec11, sec12, sec13, sec14, sec15 };
 
-            PIDs = new TextBox[] { tbPIDkp, tbPIDDeadBand, tbTimedAdjustment, tbPIDHighMax, tbPIDBrakePoint, tbPIDLowMax, tbPIDMinPWM };
-            for (int i = 0; i < 7; i++)
+            PIDs = new TextBox[] { tbPIDkp, tbPIDDeadBand, tbTimedAdjustment, tbPIDHighMax, tbPIDBrakePoint, tbPIDLowMax, tbPIDMinPWM, tbPIDki };
+            for (int i = 0; i < 8; i++)
             {
                 PIDs[i].Tag = i;
 
@@ -221,14 +221,7 @@ namespace RateController
 
         private void btnPIDloadDefaults_Click(object sender, EventArgs e)
         {
-            tbPIDkp.Text = "50";
-            tbPIDHighMax.Text = "100";
-            tbPIDBrakePoint.Text = "20";
-            tbPIDLowMax.Text = "80";
-            tbPIDMinPWM.Text = "30";
-            tbPIDDeadBand.Text = "4";
-            tbTimedAdjustment.Text = "0";
-            ckTimedResponse.Checked = false;
+            LoadDefaults();
         }
 
         private void btnResetCoverage_Click(object sender, EventArgs e)
@@ -259,8 +252,10 @@ namespace RateController
 
         private void btnResetTank_Click(object sender, EventArgs e)
         {
-            mf.Products.Item(CurrentProduct).ResetTank();
-            TankRemain.Text = mf.Products.Item(CurrentProduct).CurrentTankRemaining().ToString("N0");
+            clsProduct Prd = mf.Products.Item(CurrentProduct);
+
+            Prd.ResetTank();
+            TankRemain.Text = Prd.CurrentTankRemaining().ToString("N0");
         }
 
         private void btnResetTank_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -282,10 +277,12 @@ namespace RateController
 
         private double CalCounts()
         {
+            clsProduct Prd = mf.Products.Item(CurrentProduct);
+
             double Result = 0;
-            if (mf.Products.Item(CurrentProduct).FlowCal > 0)
+            if (Prd.FlowCal > 0)
             {
-                Result = (mf.CalCounterEnd - mf.CalCounterStart) * mf.Products.Item(CurrentProduct).FlowCal;
+                Result = (mf.CalCounterEnd - mf.CalCounterStart) * Prd.FlowCal;
             }
             return Result;
         }
@@ -587,41 +584,55 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
+        private void LoadDefaults()
+        {
+            tbPIDkp.Text = "30";
+            tbPIDki.Text = "1";
+            tbPIDDeadBand.Text = "3";
+            tbPIDHighMax.Text = "60";
+            tbPIDBrakePoint.Text = "30";
+            tbPIDLowMax.Text = "30";
+            tbPIDMinPWM.Text = "10";
+            tbTimedAdjustment.Text = "0";
+            ckTimedResponse.Checked = false;
+        }
+
         private void LoadSettings()
         {
             byte tempB;
+            clsProduct Prd = mf.Products.Item(CurrentProduct);
 
-            tbProduct.Text = mf.Products.Item(CurrentProduct).ProductName;
-            VolumeUnits.SelectedIndex = mf.Products.Item(CurrentProduct).QuantityUnits;
-            AreaUnits.SelectedIndex = mf.Products.Item(CurrentProduct).CoverageUnits;
-            RateSet.Text = mf.Products.Item(CurrentProduct).RateSet.ToString("N1");
-            tbAltRate.Text = mf.Products.Item(CurrentProduct).RateAlt.ToString("N0");
-            FlowCal.Text = mf.Products.Item(CurrentProduct).FlowCal.ToString("N1");
-            TankSize.Text = mf.Products.Item(CurrentProduct).TankSize.ToString("N0");
-            ValveType.SelectedIndex = mf.Products.Item(CurrentProduct).ValveType;
-            cbVR.SelectedIndex = mf.Products.Item(CurrentProduct).VariableRate;
+            tbProduct.Text = Prd.ProductName;
+            VolumeUnits.SelectedIndex = Prd.QuantityUnits;
+            AreaUnits.SelectedIndex = Prd.CoverageUnits;
+            RateSet.Text = Prd.RateSet.ToString("N1");
+            tbAltRate.Text = Prd.RateAlt.ToString("N0");
+            FlowCal.Text = Prd.FlowCal.ToString("N1");
+            TankSize.Text = Prd.TankSize.ToString("N0");
+            ValveType.SelectedIndex = Prd.ValveType;
+            cbVR.SelectedIndex = Prd.VariableRate;
 
-            TankRemain.Text = mf.Products.Item(CurrentProduct).CurrentTankRemaining().ToString("N0");
+            TankRemain.Text = Prd.CurrentTankRemaining().ToString("N0");
 
-            tbCountsRev.Text = (mf.Products.Item(CurrentProduct).CountsRev.ToString("N0"));
+            tbCountsRev.Text = (Prd.CountsRev.ToString("N0"));
 
-            string tmp = mf.Products.Item(CurrentProduct).ModuleID.ToString();
+            string tmp = Prd.ModuleID.ToString();
             if (tmp == "99") tmp = "";
             tbConID.Text = tmp;
 
-            SelectedSimulation = mf.Products.Item(CurrentProduct).SimulationType;
+            SelectedSimulation = Prd.SimulationType;
             ckSimulate.Checked = (SelectedSimulation == SimType.VirtualNano);
 
             // PID
-            tbPIDkp.Text = mf.Products.Item(CurrentProduct).PIDkp.ToString("N0");
-            tbPIDMinPWM.Text = mf.Products.Item(CurrentProduct).PIDminPWM.ToString("N0");
-            tbPIDLowMax.Text = mf.Products.Item(CurrentProduct).PIDLowMax.ToString("N0");
+            tbPIDkp.Text = Prd.PIDkp.ToString("N0");
+            tbPIDki.Text = Prd.PIDki.ToString("N0");
+            tbPIDMinPWM.Text = Prd.PIDminPWM.ToString("N0");
+            tbPIDLowMax.Text = Prd.PIDLowMax.ToString("N0");
+            tbPIDHighMax.Text = Prd.PIDHighMax.ToString("N0");
+            tbPIDDeadBand.Text = Prd.PIDdeadband.ToString("N0");
+            tbPIDBrakePoint.Text = Prd.PIDbrakepoint.ToString("N0");
 
-            tbPIDHighMax.Text = mf.Products.Item(CurrentProduct).PIDHighMax.ToString("N0");
-            tbPIDDeadBand.Text = mf.Products.Item(CurrentProduct).PIDdeadband.ToString("N0");
-            tbPIDBrakePoint.Text = mf.Products.Item(CurrentProduct).PIDbrakepoint.ToString("N0");
-
-            byte temp = mf.Products.Item(CurrentProduct).PIDTimed;
+            byte temp = Prd.PIDTimed;
             if (temp == 0)
             {
                 ckTimedResponse.Checked = false;
@@ -635,30 +646,22 @@ namespace RateController
                 tbTimedAdjustment.Text = temp.ToString("N0");
             }
 
-            tbSenID.Text = mf.Products.Item(CurrentProduct).SensorID.ToString();
+            tbSenID.Text = Prd.SensorID.ToString();
 
-            rbSinglePulse.Checked = !(mf.Products.Item(CurrentProduct).UseMultiPulse);
-            rbMultiPulse.Checked = (mf.Products.Item(CurrentProduct).UseMultiPulse);
+            rbSinglePulse.Checked = !(Prd.UseMultiPulse);
+            rbMultiPulse.Checked = (Prd.UseMultiPulse);
 
             // load defaults if blank
             byte.TryParse(tbPIDkp.Text, out tempB);
             if (tempB == 0)
             {
-                tbPIDkp.Text = "50";
-                tbPIDHighMax.Text = "100";
-                tbPIDBrakePoint.Text = "20";
-                tbPIDLowMax.Text = "80";
-                tbPIDMinPWM.Text = "30";
-                tbPIDDeadBand.Text = "4";
-                tbTimedAdjustment.Text = "0";
-                ckTimedResponse.Checked = false;
-
+                LoadDefaults();
                 SaveSettings();
             }
 
-            tbMinUPM.Text = mf.Products.Item(CurrentProduct).MinUPM.ToString("N1");
-            ckOffRate.Checked = mf.Products.Item(CurrentProduct).UseOffRateAlarm;
-            tbOffRate.Text = mf.Products.Item(CurrentProduct).OffRateSetting.ToString("N0");
+            tbMinUPM.Text = Prd.MinUPM.ToString("N1");
+            ckOffRate.Checked = Prd.UseOffRateAlarm;
+            tbOffRate.Text = Prd.OffRateSetting.ToString("N0");
         }
 
         private void RateSet_Enter(object sender, EventArgs e)
@@ -717,9 +720,11 @@ namespace RateController
         private double RunningCounts()
         {
             double Result = 0;
-            if (mf.Products.Item(CurrentProduct).FlowCal > 0)
+            clsProduct Prd = mf.Products.Item(CurrentProduct);
+
+            if (Prd.FlowCal > 0)
             {
-                Result = (mf.Products.Item(CurrentProduct).QuantityApplied() - mf.CalCounterStart) * mf.Products.Item(CurrentProduct).FlowCal;
+                Result = (Prd.QuantityApplied() - mf.CalCounterStart) * Prd.FlowCal;
             }
             return Result;
         }
@@ -729,74 +734,78 @@ namespace RateController
             double tempD;
             int tempInt;
             byte tempB;
+            clsProduct Prd = mf.Products.Item(CurrentProduct);
 
-            mf.Products.Item(CurrentProduct).QuantityUnits = Convert.ToByte(VolumeUnits.SelectedIndex);
-            mf.Products.Item(CurrentProduct).CoverageUnits = Convert.ToByte(AreaUnits.SelectedIndex);
+            Prd.QuantityUnits = Convert.ToByte(VolumeUnits.SelectedIndex);
+            Prd.CoverageUnits = Convert.ToByte(AreaUnits.SelectedIndex);
 
             double.TryParse(RateSet.Text, out tempD);
-            mf.Products.Item(CurrentProduct).RateSet = tempD;
+            Prd.RateSet = tempD;
 
             double.TryParse(tbAltRate.Text, out tempD);
-            mf.Products.Item(CurrentProduct).RateAlt = tempD;
+            Prd.RateAlt = tempD;
 
             double.TryParse(FlowCal.Text, out tempD);
-            mf.Products.Item(CurrentProduct).FlowCal = tempD;
+            Prd.FlowCal = tempD;
 
             double.TryParse(TankSize.Text, out tempD);
-            mf.Products.Item(CurrentProduct).TankSize = tempD;
+            Prd.TankSize = tempD;
 
-            mf.Products.Item(CurrentProduct).ValveType = Convert.ToByte(ValveType.SelectedIndex);
+            Prd.ValveType = Convert.ToByte(ValveType.SelectedIndex);
 
-            mf.Products.Item(CurrentProduct).VariableRate = Convert.ToByte(cbVR.SelectedIndex);
+            Prd.VariableRate = Convert.ToByte(cbVR.SelectedIndex);
 
             double.TryParse(TankRemain.Text, out tempD);
-            mf.Products.Item(CurrentProduct).SetTankRemaining(tempD);
+            Prd.SetTankRemaining(tempD);
 
-            mf.Products.Item(CurrentProduct).SimulationType = SelectedSimulation;
-            mf.Products.Item(CurrentProduct).ProductName = tbProduct.Text;
+            Prd.SimulationType = SelectedSimulation;
+            Prd.ProductName = tbProduct.Text;
 
             byte.TryParse(tbConID.Text, out tempB);
-            mf.Products.Item(CurrentProduct).ModuleID = tempB;
+            Prd.ModuleID = tempB;
 
             // PID
             byte.TryParse(tbPIDkp.Text, out tempB);
-            mf.Products.Item(CurrentProduct).PIDkp = tempB;
+            Prd.PIDkp = tempB;
+
+            byte.TryParse(tbPIDki.Text, out tempB);
+            Prd.PIDki = tempB;
 
             byte.TryParse(tbPIDMinPWM.Text, out tempB);
-            mf.Products.Item(CurrentProduct).PIDminPWM = tempB;
+            Prd.PIDminPWM = tempB;
 
             byte.TryParse(tbPIDLowMax.Text, out tempB);
-            mf.Products.Item(CurrentProduct).PIDLowMax = tempB;
+            Prd.PIDLowMax = tempB;
 
             byte.TryParse(tbPIDHighMax.Text, out tempB);
-            mf.Products.Item(CurrentProduct).PIDHighMax = tempB;
+            Prd.PIDHighMax = tempB;
 
             byte.TryParse(tbPIDDeadBand.Text, out tempB);
-            mf.Products.Item(CurrentProduct).PIDdeadband = tempB;
+            Prd.PIDdeadband = tempB;
 
             byte.TryParse(tbPIDBrakePoint.Text, out tempB);
-            mf.Products.Item(CurrentProduct).PIDbrakepoint = tempB;
+            Prd.PIDbrakepoint = tempB;
 
             byte.TryParse(tbTimedAdjustment.Text, out tempB);
-            mf.Products.Item(CurrentProduct).PIDTimed = tempB;
+            Prd.PIDTimed = tempB;
 
             int.TryParse(tbCountsRev.Text, out tempInt);
-            mf.Products.Item(CurrentProduct).CountsRev = tempInt;
+            Prd.CountsRev = tempInt;
 
             byte.TryParse(tbSenID.Text, out tempB);
-            mf.Products.Item(CurrentProduct).SensorID = tempB;
+            Prd.SensorID = tempB;
 
-            mf.Products.Item(CurrentProduct).UseMultiPulse = (rbMultiPulse.Checked);
+            Prd.UseMultiPulse = (rbMultiPulse.Checked);
 
             double.TryParse(tbMinUPM.Text, out tempD);
-            mf.Products.Item(CurrentProduct).MinUPM = tempD;
+            Prd.MinUPM = tempD;
 
-            mf.Products.Item(CurrentProduct).UseOffRateAlarm = ckOffRate.Checked;
+            Prd.UseOffRateAlarm = ckOffRate.Checked;
 
             byte.TryParse(tbOffRate.Text, out tempB);
-            mf.Products.Item(CurrentProduct).OffRateSetting = tempB;
+            Prd.OffRateSetting = tempB;
 
-            mf.Products.Item(CurrentProduct).Save();
+            Prd.Save();
         }
 
         private void SetButtons(bool Edited)
@@ -1026,6 +1035,44 @@ namespace RateController
             }
         }
 
+        private void tbAltRate_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbAltRate.Text, out tempD);
+            using (var form = new FormNumeric(1, 200, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbAltRate.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbAltRate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Alternate Rate as % of base rate.";
+
+            mf.Tls.ShowHelp(Message, "Alternate Rate");
+            hlpevent.Handled = true;
+        }
+
+        private void tbAltRate_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbAltRate_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(RateSet.Text, out tempD);
+            if (tempD < 1 || tempD > 200)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
         private void tbCalMeasured_Click(object sender, EventArgs e)
         {
             int tempInt;
@@ -1168,6 +1215,11 @@ namespace RateController
                     min = 50;
                     break;
 
+                case 7:
+                    max = 25;
+                    min = 0;
+                    break;
+
                 default:
                     max = 100;
                     min = 1;
@@ -1209,6 +1261,11 @@ namespace RateController
                     min = 50;
                     break;
 
+                case 7:
+                    max = 25;
+                    min = 0;
+                    break;
+
                 default:
                     max = 100;
                     min = 1;
@@ -1223,8 +1280,14 @@ namespace RateController
             }
         }
 
-        private void tbPIDkp_TextChanged(object sender, EventArgs e)
+        private void tbPIDki_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
+            string Message = "Integral accumulates errors to provide an offset to the" +
+                " rate adjustment. Higher integral increases the offset due to past " +
+                "rate errors. ";
+
+            mf.Tls.ShowHelp(Message, "Integral");
+            hlpevent.Handled = true;
         }
 
         private void tbProduct_TextChanged(object sender, EventArgs e)
@@ -1271,6 +1334,8 @@ namespace RateController
 
         private void UpdateDiags()
         {
+            clsProduct Prd = mf.Products.Item(CurrentProduct);
+
             if (mf.UseInches)
             {
                 lbWorkRate.Text = Lang.lgAcresHr;
@@ -1280,8 +1345,8 @@ namespace RateController
                 lbWorkRate.Text = Lang.lgHectares_Hr;
             }
 
-            double Target = mf.Products.Item(CurrentProduct).TargetUPM();
-            double Applied = mf.Products.Item(CurrentProduct).UPMapplied();
+            double Target = Prd.TargetUPM();
+            double Applied = Prd.UPMapplied();
             double RateError = 0;
 
             lbRateSetData.Text = Target.ToString("N1");
@@ -1297,10 +1362,10 @@ namespace RateController
             }
             lbErrorPercent.Text = RateError.ToString("N1");
 
-            lbPWMdata.Text = mf.Products.Item(CurrentProduct).PWM().ToString("N0");
+            lbPWMdata.Text = Prd.PWM().ToString("N0");
 
-            lbWidthData.Text = mf.Products.Item(CurrentProduct).Width().ToString("N1");
-            lbWorkRateData.Text = mf.Products.Item(CurrentProduct).WorkRate().ToString("N1");
+            lbWidthData.Text = Prd.Width().ToString("N1");
+            lbWorkRateData.Text = Prd.WorkRate().ToString("N1");
 
             if (mf.UseInches)
             {
@@ -1311,7 +1376,7 @@ namespace RateController
                 lbWidth.Text = Lang.lgWorkingWidthM;
             }
 
-            lbSpeedData.Text = mf.Products.Item(CurrentProduct).Speed().ToString("N1");
+            lbSpeedData.Text = Prd.Speed().ToString("N1");
             if (mf.UseInches)
             {
                 lbSpeed.Text = Lang.lgMPH;
@@ -1337,9 +1402,9 @@ namespace RateController
             }
 
             // RPM
-            if (mf.Products.Item(CurrentProduct).CountsRev > 0)
+            if (Prd.CountsRev > 0)
             {
-                float RPM = (float)((mf.Products.Item(CurrentProduct).FlowCal * Applied) / mf.Products.Item(CurrentProduct).CountsRev);
+                float RPM = (float)((Prd.FlowCal * Applied) / Prd.CountsRev);
                 lbRPM.Text = RPM.ToString("N0");
             }
             else
@@ -1358,9 +1423,10 @@ namespace RateController
             SetModuleIndicator();
             SetCalButtons();
             SetDayMode();
+            clsProduct Prd = mf.Products.Item(CurrentProduct);
 
-            lbProduct.Text = (CurrentProduct + 1).ToString() + ". " + mf.Products.Item(CurrentProduct).ProductName;
-            if (mf.Products.Item(CurrentProduct).SimulationType != SimType.None)
+            lbProduct.Text = (CurrentProduct + 1).ToString() + ". " + Prd.ProductName;
+            if (Prd.SimulationType != SimType.None)
             {
                 lbProduct.Text = lbProduct.Text + "   Simulation";
                 //lbProduct.ForeColor = mf.SimColor;
@@ -1470,44 +1536,6 @@ namespace RateController
         private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
-        }
-
-        private void tbAltRate_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbAltRate.Text, out tempD);
-            using (var form = new FormNumeric(1, 200, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbAltRate.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbAltRate_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbAltRate_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(RateSet.Text, out tempD);
-            if (tempD < 1 || tempD > 200)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbAltRate_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Alternate Rate as % of base rate.";
-
-            mf.Tls.ShowHelp(Message, "Alternate Rate");
-            hlpevent.Handled = true;
         }
     }
 }

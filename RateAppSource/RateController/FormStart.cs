@@ -276,11 +276,11 @@ namespace RateController
                 }
 
                 clsProduct Prd = Products.Item(CurrentPage - 1);
-                if(Prd.SimulationType ==SimType.None)
+                if (Prd.SimulationType == SimType.None)
                 {
-                    if(Prd.ArduinoModule.ModuleSending())
+                    if (Prd.ArduinoModule.ModuleSending())
                     {
-                        if(Prd.ArduinoModule.ModuleReceiving())
+                        if (Prd.ArduinoModule.ModuleReceiving())
                         {
                             lbArduinoConnected.BackColor = Color.LightGreen;
                         }
@@ -326,7 +326,7 @@ namespace RateController
             RCalarm.CheckAlarms();
 
             // metric
-            if(UseInches)
+            if (UseInches)
             {
                 MnuOptions.DropDownItems["metricToolStripMenuItem"].Image = Properties.Resources.Xmark;
             }
@@ -637,7 +637,7 @@ namespace RateController
 
         private void lbTarget_Click(object sender, EventArgs e)
         {
-            if(lbTarget.Text==Lang.lgTargetRate)
+            if (lbTarget.Text == Lang.lgTargetRate)
             {
                 lbTarget.Text = Lang.lgTargetRateAlt;
                 Products.Item(CurrentPage - 1).UseAltRate = true;

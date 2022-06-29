@@ -31,6 +31,7 @@ namespace RateController
         private byte PIDdeadband = 3;
         private byte PIDHighMax = 255;
         private byte PIDkp = 20;
+        private byte PIDki = 0;
         private byte PIDLowMax = 100;
         private byte PIDminPWM = 50;
 
@@ -75,6 +76,7 @@ namespace RateController
         private DateTime ManualLast;
 
         private bool cUseMultiPulse;
+        public float Integral = 0;
 
         public clsArduino(clsProduct CalledFrom)
         {
@@ -114,7 +116,7 @@ namespace RateController
                                 SimulateValve(PIDminPWM, PIDHighMax);
                                 rateError = rateSetPoint - GetUPM();
                                 pwmSetting = DoPID(PIDkp, rateError, rateSetPoint, PIDminPWM, PIDLowMax,
-                                    PIDHighMax, PIDbrakePoint, PIDdeadband);
+                                    PIDHighMax, PIDbrakePoint, PIDdeadband,PIDki);
                             break;
                     }
                 }
@@ -222,6 +224,7 @@ namespace RateController
                 PIDHighMax = Data[6];
                 PIDdeadband = Data[7];
                 PIDbrakePoint = Data[8];
+                PIDki = Data[10];
 
                 ReceiveTime = DateTime.Now;
             }
@@ -253,7 +256,7 @@ namespace RateController
             return (int)Result;
         }
 
-        private int DoPID(byte clKP, float clError, float clSetPoint, byte clMinPWM, byte clLowMax, byte clHighMax, byte clBrakePoint, byte clDeadband)
+        private int DoPID(byte clKP, float clError, float clSetPoint, byte clMinPWM, byte clLowMax, byte clHighMax, byte clBrakePoint, byte clDeadband,byte clKi)
         {
             try
             {
@@ -266,20 +269,34 @@ namespace RateController
 
                     if (ErrorPercent > ((float)(clDeadband / 100.0)))
                     {
-                        if (ErrorPercent <= ErrorBrake)
-                        {
-                            Max = (ErrorPercent / ErrorBrake) * clLowMax;
-                        }
+                        if (ErrorPercent <= ErrorBrake) Max = clLowMax;
 
-                        Result = (int)(clKP * clError);
+                        Result = (int)((clKP * clError) + (Integral * clKi / 255.0));
 
                         bool IsPositive = (Result > 0);
                         Result = Math.Abs(Result);
+
+                        if (Result != 0)
+                        {
+                            // limit integral size
+                            if ((Integral / Result) < 4) Integral += clError / (float)3.0;
+                            //else Integral -= clError;
+                        }
+
                         if (Result > Max) Result = (int)Max;
-                        if (Result < clMinPWM) Result = clMinPWM;
+                        else if (Result < clMinPWM) Result = clMinPWM;
+
                         if (!IsPositive) Result *= -1;
                     }
+                    else
+                    {
+                        Integral = 0;
+                    }
                 }
+                //Debug.Print("");
+                //Debug.Print((Result*100/255).ToString());
+                //Debug.Print(Integral.ToString());
+
                 return Result;
             }
             catch (Exception)

@@ -13,9 +13,10 @@
         // 7    Deadband
         // 8    BrakePoint
         // 9    Timed Adjustment    0-disabled
-        // 10   CRC
+        // 10   KI
+        // 11   CRC
 
-        private const byte cByteCount = 11;
+        private const byte cByteCount = 12;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 104;
         private readonly clsProduct Prod;
@@ -23,6 +24,7 @@
         private byte cDeadBand;
         private byte cHighMax;
         private byte cKP;
+        private byte cKI;
         private byte cLowMax;
         private byte cMinPWM;
         private byte cTimedAdjustment;
@@ -32,6 +34,7 @@
             Prod = CalledFrom;
 
             cKP = 50;
+            cKI = 0;
             cMinPWM = 30;
             cLowMax = 75;
             cHighMax = 100;
@@ -73,6 +76,15 @@
             set
             {
                 if (value <= 100) cKP = value;
+            }
+        }
+
+        public byte KI
+        {
+            get { return cKI; }
+            set
+            {
+                if (value <= 100) cKI = value;
             }
         }
 
@@ -123,9 +135,10 @@
             Data[7] = cDeadBand;
             Data[8] = cBrakePoint;
             Data[9] = cTimedAdjustment;
+            Data[10] = (byte)(255 * cKI / 100);
 
             // CRC
-            Data[10] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
+            Data[11] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
             if (Prod.SimulationType == SimType.VirtualNano)
             {

@@ -22,7 +22,7 @@ namespace RateController
         //	        - bit 3		    MasterOn
         //          - bit 4         0 - average time for multiple pulses, 1 - time for one pulse
         //          - bit 5         AutoOn
-        //          - bit 6         Debug On
+        //          - bit 6         Debug pgn on
         //11    power relay Lo      list of power type relays 0-7
         //12    power relay Hi      list of power type relays 8-15
         //13    CRC
@@ -102,6 +102,7 @@ namespace RateController
             if (Prod.UseMultiPulse) cData[10] |= 0b00010000; 
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[10] |= 0b00100000;
             if (Prod.DebugArduino) cData[10] |= 0b01000000;
+            //cData[10] |= 0b01000000;    // turn on debug pgn
 
             string Output = Convert.ToString(cData[10], 2);
 

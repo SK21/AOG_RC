@@ -12,7 +12,7 @@ namespace RateController
         public PGN32613 ArduinoModule;
         public byte CoverageUnits = 0;
         private double cRateSet = 0;
-        private double cRateAlt = 0;
+        private double cRateAlt = 100;
         public bool EraseArduinoQuantity = false;
         public double FlowCal = 0;
         public byte QuantityUnits = 0;
@@ -142,6 +142,7 @@ namespace RateController
         { get { return PIDtoArduino.HighMax; } set { PIDtoArduino.HighMax = value; } }
         public byte PIDkp
         { get { return PIDtoArduino.KP; } set { PIDtoArduino.KP = value; } }
+        public byte PIDki { get { return PIDtoArduino.KI; } set { PIDtoArduino.KI = value; } }
         public byte PIDLowMax
         { get { return PIDtoArduino.LowMax; } set { PIDtoArduino.LowMax = value; } }
         public byte PIDminPWM
@@ -277,7 +278,10 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("LastAccQuantity" + IDname), out LastAccQuantity);
 
             double.TryParse(mf.Tls.LoadProperty("RateSet" + IDname), out cRateSet);
-            double.TryParse(mf.Tls.LoadProperty("RateAlt" + IDname), out cRateAlt);
+
+            string StrVal = mf.Tls.LoadProperty("RateAlt" + IDname);
+            if (StrVal != "") double.TryParse(StrVal, out cRateAlt);
+
             double.TryParse(mf.Tls.LoadProperty("FlowCal" + IDname), out FlowCal);
             double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out TankSize);
             byte.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), out ValveType);
@@ -288,6 +292,10 @@ namespace RateController
             val = 0;
             byte.TryParse(mf.Tls.LoadProperty("KP" + IDname), out val);
             PIDtoArduino.KP = val;
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("KI"+IDname), out val);
+            PIDtoArduino.KI = val;
 
             val = 0;
             byte.TryParse(mf.Tls.LoadProperty("PIDMinPWM" + IDname), out val);
@@ -413,6 +421,7 @@ namespace RateController
             mf.Tls.SaveProperty("ProductName" + IDname, cProductName);
 
             mf.Tls.SaveProperty("KP" + IDname, PIDtoArduino.KP.ToString());
+            mf.Tls.SaveProperty("KI" + IDname, PIDtoArduino.KI.ToString());
             mf.Tls.SaveProperty("PIDMinPWM" + IDname, PIDtoArduino.MinPWM.ToString());
             mf.Tls.SaveProperty("PIDLowMax" + IDname, PIDtoArduino.LowMax.ToString());
 
@@ -575,7 +584,7 @@ namespace RateController
 
         public void Update()
         {
-            if (ArduinoModule.ModuleSending() & (mf.AutoSteerPGN.Connected() || CoverageUnits > 1))
+            if (ArduinoModule.ModuleSending() && (mf.AutoSteerPGN.Connected() || CoverageUnits > 1))
             {
                 if (!SwitchIDsSent)
                 {
@@ -681,7 +690,7 @@ namespace RateController
         {
             double Target = TargetRate();
             double Applied = RateApplied();
-            if (Target > 0)
+            if (Target > 0 && Applied > 0)
             {
                 double Ratio = Applied / Target;
                 if (Ratio < 0.80 || Ratio > 1.20)

@@ -49,7 +49,6 @@ namespace RateController
         public bool Connected()
         {
             return ModuleReceiving() & ModuleSending();
-            //return ModuleSending();
         }
 
         public bool ModuleSending()

@@ -35,8 +35,8 @@ namespace RateController
             this.lbArduinoConnected = new System.Windows.Forms.Label();
             this.lbAogConnected = new System.Windows.Forms.Label();
             this.panProducts = new System.Windows.Forms.Panel();
-            this.lbTarget = new System.Windows.Forms.Label();
             this.btAlarm = new System.Windows.Forms.Button();
+            this.lbTarget = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lbProduct = new System.Windows.Forms.Label();
             this.SetRate = new System.Windows.Forms.Label();
@@ -144,19 +144,6 @@ namespace RateController
             this.panProducts.Size = new System.Drawing.Size(271, 150);
             this.panProducts.TabIndex = 50;
             // 
-            // lbTarget
-            // 
-            this.lbTarget.Cursor = System.Windows.Forms.Cursors.Default;
-            this.lbTarget.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTarget.Location = new System.Drawing.Point(0, 60);
-            this.lbTarget.Name = "lbTarget";
-            this.lbTarget.Size = new System.Drawing.Size(201, 23);
-            this.lbTarget.TabIndex = 159;
-            this.lbTarget.Text = "Target Rate";
-            this.lbTarget.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbTarget.Click += new System.EventHandler(this.lbTarget_Click);
-            this.lbTarget.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbTarget_HelpRequested);
-            // 
             // btAlarm
             // 
             this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -172,6 +159,19 @@ namespace RateController
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Visible = false;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
+            // 
+            // lbTarget
+            // 
+            this.lbTarget.Cursor = System.Windows.Forms.Cursors.Default;
+            this.lbTarget.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTarget.Location = new System.Drawing.Point(0, 60);
+            this.lbTarget.Name = "lbTarget";
+            this.lbTarget.Size = new System.Drawing.Size(201, 23);
+            this.lbTarget.TabIndex = 159;
+            this.lbTarget.Text = "Target Rate";
+            this.lbTarget.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbTarget.Click += new System.EventHandler(this.lbTarget_Click);
+            this.lbTarget.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbTarget_HelpRequested);
             // 
             // groupBox3
             // 
@@ -656,7 +656,7 @@ namespace RateController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(276, 220);
+            this.ClientSize = new System.Drawing.Size(276, 217);
             this.Controls.Add(this.panProducts);
             this.Controls.Add(this.panSummary);
             this.Controls.Add(this.lbAogConnected);
