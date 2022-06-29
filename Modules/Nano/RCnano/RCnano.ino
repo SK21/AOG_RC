@@ -5,7 +5,7 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
-# define InoDescription "RCnano  :  22-Jun-2022"
+# define InoDescription "RCnano  :  29-Jun-2022"
 # define UseEthernet 1
 
 // debug variables
@@ -15,7 +15,6 @@ byte DebugCount2;
 byte DebugVal1;
 byte DebugVal2;
 uint32_t DebugTime;
-
 
 struct PCBconfig    // 5 bytes
 {
@@ -104,6 +103,7 @@ int pwmSetting[2];
 
 // PID
 byte PIDkp[] = { 20, 20 };
+byte PIDki[] = { 0,0 };
 byte PIDminPWM[] = { 50, 50 };
 byte PIDLowMax[] = { 100, 100 };
 byte PIDHighMax[] = { 255, 255 };
@@ -390,7 +390,7 @@ void AutoControl()
 		default:
 			// valve control
 			pwmSetting[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
-				PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i);
+				PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i, PIDki[i]);
 			break;
 		}
 	}

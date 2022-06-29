@@ -158,19 +158,19 @@ void ReceiveSerial()
 			break;
 
 		case 32616:
-			if (Serial.available() > 8)
+			if (Serial.available() > 9)
 			{
-				// PID to Arduino from RateController, 11 bytes
+				// PID to Arduino from RateController, 12 bytes
 
 				PGNserial = 0;	// reset pgn
 				Packet[0] = 104;
 				Packet[1] = 127;
-				for (int i = 2; i < 11; i++)
+				for (int i = 2; i < 12; i++)
 				{
 					Packet[i] = Serial.read();
 				}
 
-				if (GoodCRC(11))
+				if (GoodCRC(12))
 				{
 					if (ParseModID(Packet[2]) == PCB.ModuleID)
 					{
@@ -184,6 +184,7 @@ void ReceiveSerial()
 							PIDdeadband[SensorID] = Packet[7];
 							PIDbrakePoint[SensorID] = Packet[8];
 							AdjustTime[SensorID] = Packet[9];
+							PIDki[SensorID] = Packet[10];
 
 							CommTime[SensorID] = millis();
 						}

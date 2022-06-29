@@ -152,13 +152,13 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             break;
 
         case 32616:
-            if (len > 10)
+            if (len > 11)
             {
-                // PID to Arduino from RateController, 11 bytes
+                // PID to Arduino from RateController, 12 bytes
 
-                memcpy(Packet, Data, 11);
+                memcpy(Packet, Data, 12);
 
-                if (GoodCRC(11))
+                if (GoodCRC(12))
                 {
                     byte tmp = Data[2];
                     if (ParseModID(tmp) == PCB.ModuleID)
@@ -173,6 +173,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             PIDdeadband[SensorID] = Data[7];
                             PIDbrakePoint[SensorID] = Data[8];
                             AdjustTime[SensorID] = Data[9];
+                            PIDki[SensorID] = Data[10];
 
                             CommTime[SensorID] = millis();
                         }
