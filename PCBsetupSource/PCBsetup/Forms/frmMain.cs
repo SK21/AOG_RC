@@ -310,5 +310,11 @@ namespace PCBsetup.Forms
                 ModuleIndicator.Image = Properties.Resources.Off;
             }
         }
+
+        private void SerialMonitorItem_Click(object sender, EventArgs e)
+        {
+            Form tmp = new frmMonitor(this);
+            tmp.ShowDialog();
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace PCBsetup
         //4     RTCM serial port, 0-8
         //5     RTCM UDP port # lo
         //6     RTCM UDP port # Hi
-        //7     IMU         0-None, 1-Sparkfun BNO, 2-CMPS14, 3-Adafruit BNO
+        //7     IMU         0-None, 1-Sparkfun BNO, 2-CMPS14, 3-Adafruit BNO, 4 serial
         //8     Read Delay
         //9     Report Interval
         //10    Zero offset Lo

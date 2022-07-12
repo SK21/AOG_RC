@@ -1,8 +1,8 @@
 ﻿using PCBsetup.Forms;
 using System;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Timers;
-using System.Diagnostics;
 
 namespace PCBsetup
 {
@@ -19,6 +19,7 @@ namespace PCBsetup
         private byte LoByte;
         private bool cReceiveActive = false;  // prevents UI lock-up by only sending serial data after verfying connection
         private bool ActivationNotified = false;
+        private string cLog;
 
         public event EventHandler ModuleConnected;
 
@@ -99,7 +100,7 @@ namespace PCBsetup
                         {
                             ArduinoPort.Open();
                         }
-                        catch (Exception )
+                        catch (Exception)
                         {
                             mf.Tls.SaveProperty("SCportSuccessful" + ID, "false");
                             throw new InvalidOperationException("Could not open port.");
@@ -131,6 +132,11 @@ namespace PCBsetup
         public bool IsOpen()
         {
             return ArduinoPort.IsOpen;
+        }
+
+        public string Log()
+        {
+            return cLog;
         }
 
         public bool Send(byte[] Data)
@@ -165,16 +171,29 @@ namespace PCBsetup
         {
             return cReceiveActive;
         }
+
+        private void AddToLog(string NewData)
+        {
+            cLog += NewData + "\n";
+            if (cLog.Length > 5000)
+            {
+                cLog = cLog.Substring(cLog.Length - 4800, 4800);
+            }
+        }
+
         private void ReceiveData(string sentence)
         {
             try
             {
-                    cReceiveActive = true;
-                    if (!ActivationNotified)
-                    {
-                        ModuleConnected?.Invoke(this, new EventArgs());
-                        ActivationNotified = true;
-                    }
+                AddToLog(sentence);
+
+                cReceiveActive = true;
+                if (!ActivationNotified)
+                {
+                    ModuleConnected?.Invoke(this, new EventArgs());
+                    ActivationNotified = true;
+                }
+
                 // look for ',' and '\r'. Return if not found
                 int end = sentence.IndexOf(",", StringComparison.Ordinal);
                 if (end == -1) return;

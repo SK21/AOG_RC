@@ -55,6 +55,7 @@
             this.PortIndicator1 = new System.Windows.Forms.Label();
             this.ModuleIndicator = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.SerialMonitorItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -65,7 +66,7 @@
             this.pictureBox1.Image = global::PCBsetup.Properties.Resources.AS13;
             this.pictureBox1.Location = new System.Drawing.Point(12, 117);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(469, 411);
+            this.pictureBox1.Size = new System.Drawing.Size(537, 411);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -78,10 +79,11 @@
             this.fileToolStripMenuItem,
             this.teensieToolStripMenuItem,
             this.nanoRateToolStripMenuItem,
-            this.nanoSwitchboxToolStripMenuItem});
+            this.nanoSwitchboxToolStripMenuItem,
+            this.SerialMonitorItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(495, 32);
+            this.menuStrip1.Size = new System.Drawing.Size(561, 32);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -212,7 +214,7 @@
             this.cboPort1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPort1.DropDownWidth = 145;
             this.cboPort1.FormattingEnabled = true;
-            this.cboPort1.Location = new System.Drawing.Point(241, 28);
+            this.cboPort1.Location = new System.Drawing.Point(267, 28);
             this.cboPort1.Name = "cboPort1";
             this.cboPort1.Size = new System.Drawing.Size(114, 32);
             this.cboPort1.TabIndex = 3;
@@ -220,7 +222,7 @@
             // 
             // btnRescan
             // 
-            this.btnRescan.Location = new System.Drawing.Point(126, 26);
+            this.btnRescan.Location = new System.Drawing.Point(139, 26);
             this.btnRescan.Name = "btnRescan";
             this.btnRescan.Size = new System.Drawing.Size(99, 37);
             this.btnRescan.TabIndex = 5;
@@ -250,7 +252,7 @@
             this.PortIndicator1.BackColor = System.Drawing.SystemColors.Control;
             this.PortIndicator1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PortIndicator1.Image = global::PCBsetup.Properties.Resources.Off;
-            this.PortIndicator1.Location = new System.Drawing.Point(375, 24);
+            this.PortIndicator1.Location = new System.Drawing.Point(410, 24);
             this.PortIndicator1.Name = "PortIndicator1";
             this.PortIndicator1.Size = new System.Drawing.Size(41, 37);
             this.PortIndicator1.TabIndex = 124;
@@ -262,7 +264,7 @@
             this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
             this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ModuleIndicator.Image = global::PCBsetup.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(422, 24);
+            this.ModuleIndicator.Location = new System.Drawing.Point(480, 24);
             this.ModuleIndicator.Name = "ModuleIndicator";
             this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
             this.ModuleIndicator.TabIndex = 125;
@@ -278,17 +280,24 @@
             this.groupBox1.Controls.Add(this.btnConnect1);
             this.groupBox1.Location = new System.Drawing.Point(12, 35);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(469, 76);
+            this.groupBox1.Size = new System.Drawing.Size(537, 76);
             this.groupBox1.TabIndex = 126;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Serial Connection";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.GroupBoxPaint);
             // 
+            // SerialMonitorItem
+            // 
+            this.SerialMonitorItem.Name = "SerialMonitorItem";
+            this.SerialMonitorItem.Size = new System.Drawing.Size(137, 28);
+            this.SerialMonitorItem.Text = "Serial Monitor";
+            this.SerialMonitorItem.Click += new System.EventHandler(this.SerialMonitorItem_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(495, 540);
+            this.ClientSize = new System.Drawing.Size(561, 540);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
@@ -341,5 +350,6 @@
         private System.Windows.Forms.Label PortIndicator1;
         private System.Windows.Forms.Label ModuleIndicator;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ToolStripMenuItem SerialMonitorItem;
     }
 }

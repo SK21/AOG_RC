@@ -54,6 +54,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ckActuator = new System.Windows.Forms.CheckBox();
             this.ckInvertRoll = new System.Windows.Forms.CheckBox();
             this.ckSwapPitchRoll = new System.Windows.Forms.CheckBox();
             this.ckADS = new System.Windows.Forms.CheckBox();
@@ -104,7 +105,6 @@
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
-            this.ckActuator = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -221,7 +221,8 @@
             "None",
             "Sparkfun BNO",
             "CMPS14",
-            "Adafruit BNO"});
+            "Adafruit BNO",
+            "Serial IMU"});
             this.cbIMU.Location = new System.Drawing.Point(544, 54);
             this.cbIMU.Name = "cbIMU";
             this.cbIMU.Size = new System.Drawing.Size(187, 32);
@@ -394,6 +395,20 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Config 2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // ckActuator
+            // 
+            this.ckActuator.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckActuator.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckActuator.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckActuator.Location = new System.Drawing.Point(613, 232);
+            this.ckActuator.Name = "ckActuator";
+            this.ckActuator.Size = new System.Drawing.Size(117, 69);
+            this.ckActuator.TabIndex = 36;
+            this.ckActuator.Text = "Use Actuator";
+            this.ckActuator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckActuator.UseVisualStyleBackColor = true;
+            this.ckActuator.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckActuator_HelpRequested);
             // 
             // ckInvertRoll
             // 
@@ -899,20 +914,6 @@
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.bntOK.UseVisualStyleBackColor = true;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
-            // ckActuator
-            // 
-            this.ckActuator.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckActuator.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckActuator.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckActuator.Location = new System.Drawing.Point(613, 232);
-            this.ckActuator.Name = "ckActuator";
-            this.ckActuator.Size = new System.Drawing.Size(117, 69);
-            this.ckActuator.TabIndex = 36;
-            this.ckActuator.Text = "Use Actuator";
-            this.ckActuator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckActuator.UseVisualStyleBackColor = true;
-            this.ckActuator.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckActuator_HelpRequested);
             // 
             // frmPCBsettings
             // 
