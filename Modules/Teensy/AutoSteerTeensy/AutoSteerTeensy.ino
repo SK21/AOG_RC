@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   24-Jun-2022"
+# define InoDescription "AutoSteerTeensy   12-Jul-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -19,6 +19,8 @@ byte DebugCount1;
 byte DebugCount2;
 byte DebugVal1;
 byte DebugVal2;
+int DebugVal3;
+uint16_t DebugVal4;
 uint32_t DebugTime;
 
 struct PCBconfig	// 27 bytes
@@ -27,7 +29,7 @@ struct PCBconfig	// 27 bytes
 	uint8_t NMEAserialPort = 8;		// from receiver
 	uint8_t	RTCMserialPort = 3;		// to receiver
 	uint16_t RTCMport = 2233;		// local port to listen on for RTCM data
-	uint8_t IMU = 1;				// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO
+	uint8_t IMU = 1;				// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO, 4 serial IMU
 	uint8_t IMUdelay = 90;			// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
 	uint8_t IMU_Interval = 40;		// for Sparkfun 
 	uint16_t ZeroOffset = 6100;
@@ -110,6 +112,10 @@ float IMU_Roll = 0;
 float IMU_Pitch = 0;
 float IMU_YawRate = 0;
 
+float Heading_Serial = 0;
+float Roll_Serial = 0;
+float Pitch_Serial = 0;
+
 // switches
 int8_t SteerSwitch = LOW;	// Low on, High off
 int8_t SWreading = HIGH;
@@ -176,6 +182,7 @@ int RatePWM[MaxFlowSensorCount];
 uint32_t RateCommTime[MaxFlowSensorCount];
 
 byte PIDkp[] = { 20 };
+byte PIDki[] = { 0 };
 byte PIDminPWM[] = { 50 };
 byte PIDLowMax[] = { 100 };
 byte PIDHighMax[] = { 255 };
@@ -196,17 +203,9 @@ byte RelayHi;
 byte PowerRelayLo;
 byte PowerRelayHi;
 
-unsigned int PGN;
-byte LSB;
-byte MSB;
-
-bool PGN32614Found;
-bool PGN32616Found;
-bool PGN32619Found;
-
 float ManualAdjust[MaxFlowSensorCount];
 uint16_t ManualLast[MaxFlowSensorCount];
-float ManualFactor;
+
 uint32_t WifiSwitchesTimer;
 bool WifiSwitchesEnabled = false;
 byte WifiSwitches[6];
@@ -240,7 +239,10 @@ HardwareSerial* SerialRS485;
 
 PCA9555 ioex;
 bool IOexpanderFound = false;
-byte Packet[30];
+
+////  function prototypes	https://forum.arduino.cc/t/declaration-of-functions/687199
+//bool GoodCRC(byte[], byte);
+//byte CRC(byte[], byte, byte);
 
 void setup()
 {
@@ -256,6 +258,9 @@ void setup()
 	Serial.println();
 	Serial.println(InoDescription);
 	Serial.println();
+
+	// Serial1 comm
+	Serial1.begin(38400);
 
 	EEPROM.get(0, EEread);              // read identifier
 
@@ -372,6 +377,9 @@ void setup()
 	pinMode(PINS.SteerPWM, OUTPUT);
 	pinMode(PINS.SteerSW_Relay, OUTPUT);
 	pinMode(PINS.SpeedPulse, OUTPUT);
+	pinMode(PINS.FlowDir, OUTPUT);
+	pinMode(PINS.FlowPWM, OUTPUT);
+
 
 	// analog pins
 	adc->adc0->setAveraging(16); // set number of averages
@@ -495,6 +503,12 @@ void setup()
 		}
 		break;
 
+	case 4:
+		// serial imu
+		Serial.println("Using serial IMU.");
+		IMUstarted = true;
+		break;
+
 	default:
 		PCB.IMU = 0;
 	}
@@ -539,10 +553,6 @@ void setup()
 		Serial.println(PCB.ModuleID);
 		Serial.println();
 
-		pinMode(PINS.FlowDir, OUTPUT);
-		pinMode(PINS.FlowPWM, OUTPUT);
-		pinMode(PINS.Encoder, INPUT_PULLUP);
-
 		attachInterrupt(digitalPinToInterrupt(PINS.Encoder), ISR0, FALLING);
 		UDPrate.begin(ListeningPortRate);
 	}
@@ -551,9 +561,6 @@ void setup()
 
 	noTone(PINS.SpeedPulse);
 	SteerSwitch = HIGH;
-
-	// Wemos on Serial1
-	Serial1.begin(38400);
 
 	// relays
 	if (PCB.RelayControl == 2 || PCB.RelayControl == 3)
@@ -594,24 +601,24 @@ void setup()
 
 void loop()
 {
-	Blink();
-	ReceiveConfig();
-	ReceiveSteerUDP();
-
 	if (millis() - LoopLast >= LOOP_TIME)
 	{
 		LoopLast = millis();
 		ReadSwitches();
-		DoSteering();
 		if (PCB.UseLinearActuator) PositionMotor();
 		if (PCB.Receiver == 0) ReadIMU();
-		if (DebugOn)DebugTheINO();
+		DoSteering();
+		if (DebugOn) DebugTheINO();
 	}
 
-	SendSpeedPulse();
+	Blink();
+	ReceiveSteerUDP();
+	ReceiveSerial1();
 	if (PCB.Receiver != 0) DoPanda();
-	if (PCB.UseRate) DoRate();
 
+	SendSpeedPulse();
+	if (PCB.UseRate) DoRate();
+	ReceiveSerial();
 	wdt.feed();
 }
 
@@ -627,6 +634,7 @@ void Blink()
 		else digitalWrite(LED_BUILTIN, LOW);
 		BlinkTime = millis();
 		Serial.println(".");	// needed to allow PCBsetup to connect
+		Serial.println(IMU_Heading/10);
 	}
 }
 
@@ -650,25 +658,22 @@ void SendSpeedPulse()
 	}
 }
 
-bool GoodCRC(uint16_t Length)
+bool GoodCRC(byte Data[], byte Length)
 {
-	byte ck = CRC(Length - 1, 0);
-	bool Result = (ck == Packet[Length - 1]);
+	byte ck = CRC(Data, Length - 1, 0);
+	bool Result = (ck == Data[Length - 1]);
 	return Result;
 }
 
-byte CRC(uint16_t Length, byte Start)
+byte CRC(byte Chk[], byte Length, byte Start)
 {
 	byte Result = 0;
-	if (Length <= sizeof(Packet))
+	int CK = 0;
+	for (int i = Start; i < Length; i++)
 	{
-		int CK = 0;
-		for (int i = Start; i < Length; i++)
-		{
-			CK += Packet[i];
-		}
-		Result = (byte)CK;
+		CK += Chk[i];
 	}
+	Result = (byte)CK;
 	return Result;
 }
 

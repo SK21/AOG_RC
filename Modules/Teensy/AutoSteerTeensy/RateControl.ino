@@ -1,7 +1,6 @@
 void DoRate()
 {
     ReceiveRateUDP();
-    ReceiveWemos();
 
     if (millis() - RateLoopLast >= RateLoopTime)
     {
@@ -67,7 +66,7 @@ void AutoControl()
         default:
             // valve control
             RatePWM[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
-                PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i);
+                PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i, PIDki[i]);
             break;
         }
     }

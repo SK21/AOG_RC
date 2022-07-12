@@ -228,30 +228,99 @@ void ReadIMU()
 			//Complementary filter
 			IMU_YawRate = 0.93 * IMU_YawRate + 0.07 * tmpIMU;
 			break;
+
+		case 4:
+			// serial IMU
+			IMU_Heading = Heading_Serial;
+			if (PCB.SwapRollPitch)
+			{
+				tmpIMU = Pitch_Serial;
+				if (PCB.InvertRoll) tmpIMU *= -1.0;
+				IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
+
+				tmpIMU = Roll_Serial;
+				IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
+			}
+			else
+			{
+				tmpIMU = Roll_Serial;
+				if (PCB.InvertRoll) tmpIMU *= -1.0;
+				IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
+
+				tmpIMU = Pitch_Serial;
+				IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
+			}
+			break;
 		}
 	}
 }
 
+uint32_t AdjustStartTime;
+byte AdjLast = 100;
+byte AdjDirection;
+bool IsMovement;
+int Reading;
+int ReadingLast;
+
 void PositionMotor()
 {
-	float Reading = (float)adc->adc0->analogRead(PINS.PressureSensor);
+	// position steering motor next to steering wheel, range 0-1023
 
-	if (digitalRead(PINS.SteerSW_Relay))
+	Reading = analogRead(PINS.PressureSensor);
+	AdjDirection = bitRead(guidanceStatus, 0);
+	//AdjDirection = digitalRead(PINS.SteerSW_Relay);
+
+	// check if changed direction
+	if (AdjLast != AdjDirection)
 	{
-		// steering engaged, extend linear actuator
-		if (Reading < 3)
+		AdjLast = AdjDirection;
+		AdjustStartTime = millis();
+		ReadingLast = Reading;
+		IsMovement = true;
+	}
+
+	// check for actuator movement
+	if (abs(Reading - ReadingLast) > 75)
+	{
+		// moved, reset start
+		AdjustStartTime = millis();
+		ReadingLast = Reading;
+		IsMovement = true; // account for slippage from stopped position
+	}
+	else
+	{
+		// not moved, check elapsed time
+		if (millis() - AdjustStartTime > 500)
+		{
+			IsMovement = false;
+		}
+	}
+
+	if (AdjDirection)
+	{
+		// steering engaged, retract linear actuator
+		if (Reading > 100 && IsMovement)
+		{
+			digitalWrite(PINS.FlowDir, LOW);
+			analogWrite(PINS.FlowPWM, 255);
+		}
+		else
+		{
+			analogWrite(PINS.FlowPWM, 0);
+		}
+
+	}
+	else
+	{
+		// steering disengaged, extend linear actuator
+		if (Reading < 600 && IsMovement)
 		{
 			digitalWrite(PINS.FlowDir, HIGH);
 			analogWrite(PINS.FlowPWM, 255);
 		}
-	}
-	else
-	{
-		// steering disengaged, retract linear actuator
-		if (Reading > 0.1)
+		else
 		{
-			digitalWrite(PINS.FlowDir, LOW);
-			analogWrite(PINS.FlowPWM, 255);
+			analogWrite(PINS.FlowPWM, 0);
 		}
 	}
 }

@@ -1,9 +1,11 @@
 
 bool AdjustState[] = { true,true,true,true,true }; // false - pause adjusting, true - adjust
 uint32_t CurrentAdjustTime[2];
+float Integral;
 
 int DoPID(byte sKP, float sError, float sSetPoint, byte sMinPWM,
-    byte sLowMax, byte sHighMax, byte sBrakePoint, byte sDeadband, byte SensorID)
+    byte sLowMax, byte sHighMax, byte sBrakePoint, byte sDeadband,
+    byte SensorID, byte sKI)
 {
     int Result = 0;
     if (AdjustState[SensorID] || AdjustTime[SensorID] == 0) // AdjustTime==0 disables timed adjustment
@@ -22,18 +24,28 @@ int DoPID(byte sKP, float sError, float sSetPoint, byte sMinPWM,
                     Max = (ErrorPercent / ErrorBrake) * sLowMax;
                 }
 
-                Result = (int)(sKP * sError);
+                Result = (int)((sKP * sError) + (Integral * sKI / 255.0));
 
                 bool IsPositive = (Result > 0);
                 Result = abs(Result);
+
+                if (Result != 0)
+                {
+                    // limit integral size
+                    if ((Integral / Result) < 4) Integral += sError / 3.0;
+                }
+
                 if (Result > Max) Result = (int)Max;
-                if (Result < sMinPWM) Result = sMinPWM;
+                else if (Result < sMinPWM) Result = sMinPWM;
+
                 if (!IsPositive) Result *= -1;
             }
             else
             {
                 // reset time since no adjustment was made
                 CurrentAdjustTime[SensorID] = millis();
+
+                Integral = 0;
             }
         }
 
