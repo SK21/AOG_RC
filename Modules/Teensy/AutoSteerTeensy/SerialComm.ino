@@ -21,19 +21,19 @@ void ReceiveSerial()
 		switch (SerialPGN)
 		{
 		case 32622:
-			// Teensy config, 15 bytes
-			if (Serial.available() > 12)
+			// Teensy config
+			PGNlength = 15;
+			if (Serial.available() > PGNlength - 3)
 			{
 				SerialPGN = 0;
 				SerialPacket[0] = 110;
 				SerialPacket[1] = 127;
 
-				for (int i = 2; i < 15; i++)
+				for (int i = 2; i < PGNlength; i++)
 				{
 					SerialPacket[i] = Serial.read();
 				}
-
-				if (GoodCRC(SerialPacket, 15))
+				if (GoodCRC(SerialPacket, PGNlength))
 				{
 					PCB.Receiver = SerialPacket[2];
 					PCB.NMEAserialPort = SerialPacket[3];
@@ -52,19 +52,20 @@ void ReceiveSerial()
 			break;
 
 		case 32623:
-			// Teensy config 2, 10 bytes
-			if (Serial.available() > 7)
+			// Teensy config 2
+			PGNlength = 11;
+			if (Serial.available() > PGNlength - 3)
 			{
 				SerialPGN = 0;
 				SerialPacket[0] = 111;
 				SerialPacket[1] = 127;
 
-				for (int i = 2; i < 10; i++)
+				for (int i = 2; i < PGNlength; i++)
 				{
 					SerialPacket[i] = Serial.read();
 				}
 
-				if (GoodCRC(SerialPacket, 10))
+				if (GoodCRC(SerialPacket, PGNlength))
 				{
 					PCB.MinSpeed = SerialPacket[2];
 					PCB.MaxSpeed = SerialPacket[3];
@@ -90,18 +91,19 @@ void ReceiveSerial()
 
 		case 32624:
 			// Teensy Pins, 16 bytes
-			if (Serial.available() > 13)
+			PGNlength = 16;
+			if (Serial.available() > PGNlength - 3)
 			{
 				SerialPGN = 0;
 				SerialPacket[0] = 112;
 				SerialPacket[1] = 127;
 
-				for (int i = 2; i < 16; i++)
+				for (int i = 2; i < PGNlength; i++)
 				{
 					SerialPacket[i] = Serial.read();
 				}
 
-				if (GoodCRC(SerialPacket, 16))
+				if (GoodCRC(SerialPacket, PGNlength))
 				{
 					PINS.SteerDir = SerialPacket[2];
 					PINS.SteerPWM = SerialPacket[3];

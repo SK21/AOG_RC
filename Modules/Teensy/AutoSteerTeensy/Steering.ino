@@ -1,4 +1,3 @@
-
 int16_t ReadWAS(uint8_t NextPinNumber = 0)
 {
 	int16_t Result = 0;
@@ -9,12 +8,11 @@ int16_t ReadWAS(uint8_t NextPinNumber = 0)
 		// use ADS1115
 		// read current value
 		Wire.beginTransmission(AdsI2Caddress);
-		Wire.write(0b00000000); //Point to Conversion register 
+		Wire.write(0b00000000); //Point to Conversion register
 		Wire.endTransmission();
 		Wire.requestFrom(AdsI2Caddress, 2);
 		Result = (Wire.read() << 8 | Wire.read());
 		Result = Result >> 1;
-
 
 		// do next conversion
 		Wire.beginTransmission(AdsI2Caddress);
@@ -81,7 +79,7 @@ void DoSteering()
 	}
 
 	if (steerAngleActual < 0) steerAngleActual = (steerAngleActual * steerSettings.AckermanFix);
-	steerAngleError = steerAngleActual - steerAngleSetPoint;   
+	steerAngleError = steerAngleActual - steerAngleSetPoint;
 
 	if ((millis() - CommTime > 4000) || (bitRead(guidanceStatus, 0) == 0) || SteerSwitch == HIGH || (Speed_KMH < PCB.MinSpeed) || Speed_KMH > PCB.MaxSpeed)
 	{
@@ -89,13 +87,13 @@ void DoSteering()
 
 		pwmDrive = 0;
 
-		// release steer relay 
+		// release steer relay
 		digitalWrite(PINS.SteerSW_Relay, LOW);
 	}
 	else
 	{
 		// steering enabled
-		
+
 		// limit PWM when steer angle error is low
 		MaxPWMvalue = steerSettings.highPWM;
 		if (abs(steerAngleError) < LOW_HIGH_DEGREES)
@@ -137,7 +135,6 @@ void DoSteering()
 	analogWrite(PINS.SteerPWM, abs(pwmDrive));
 }
 
-
 float tmpIMU;
 float HeadingLast;
 
@@ -159,8 +156,8 @@ void ReadIMU()
 				}
 				IMU_Heading *= 10.0;
 
-				if (PCB.SwapRollPitch) 
-				{ 
+				if (PCB.SwapRollPitch)
+				{
 					//Adafruit library: pitch is rotation around Y axis
 					tmpIMU = 10 * (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
 					if (PCB.InvertRoll) tmpIMU *= -1.0;
@@ -258,11 +255,15 @@ void ReadIMU()
 uint32_t AdjustStartTime;
 byte AdjLast = 100;
 byte AdjDirection;
-bool IsMovement;
+bool IsMoving;
 int Reading;
 int ReadingLast;
+int MinPosition = 2000;
+int MaxPosition = 0;
+int MinStop = 100;
+int MaxStop = 600;
 
-void PositionMotor()
+void PositionActuator()
 {
 	// position steering motor next to steering wheel, range 0-1023
 
@@ -273,33 +274,32 @@ void PositionMotor()
 	// check if changed direction
 	if (AdjLast != AdjDirection)
 	{
+		// reset
 		AdjLast = AdjDirection;
 		AdjustStartTime = millis();
 		ReadingLast = Reading;
-		IsMovement = true;
+		IsMoving = true;
+		MinPosition = 2000;
+		MaxPosition = 0;
 	}
 
 	// check for actuator movement
-	if (abs(Reading - ReadingLast) > 75)
+	if (abs(Reading - ReadingLast) > 50)
 	{
-		// moved, reset start
+		// moving, reset start
 		AdjustStartTime = millis();
 		ReadingLast = Reading;
-		IsMovement = true; // account for slippage from stopped position
 	}
 	else
 	{
-		// not moved, check elapsed time
-		if (millis() - AdjustStartTime > 500)
-		{
-			IsMovement = false;
-		}
+		// not moving, check elapsed time
+		if (millis() - AdjustStartTime > 500) IsMoving = false;
 	}
 
 	if (AdjDirection)
 	{
 		// steering engaged, retract linear actuator
-		if (Reading > 100 && IsMovement)
+		if (Reading > MinStop && IsMoving)
 		{
 			digitalWrite(PINS.FlowDir, LOW);
 			analogWrite(PINS.FlowPWM, 255);
@@ -309,11 +309,14 @@ void PositionMotor()
 			analogWrite(PINS.FlowPWM, 0);
 		}
 
+		// check for slippage
+		if (Reading < MinPosition) MinPosition = Reading;
+		if (Reading - MinPosition > 50) AdjLast = 100;	// reset
 	}
 	else
 	{
 		// steering disengaged, extend linear actuator
-		if (Reading < 600 && IsMovement)
+		if (Reading < MaxStop && IsMoving)
 		{
 			digitalWrite(PINS.FlowDir, HIGH);
 			analogWrite(PINS.FlowPWM, 255);
@@ -322,5 +325,9 @@ void PositionMotor()
 		{
 			analogWrite(PINS.FlowPWM, 0);
 		}
+
+		// check for slippage
+		if (Reading > MaxPosition) MaxPosition = Reading;
+		if (MaxPosition - Reading > 50) AdjLast = 100;  // reset
 	}
 }

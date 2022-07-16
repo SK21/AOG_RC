@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   12-Jul-2022"
+# define InoDescription "AutoSteerTeensy   16-Jul-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -239,6 +239,7 @@ HardwareSerial* SerialRS485;
 
 PCA9555 ioex;
 bool IOexpanderFound = false;
+byte PGNlength;
 
 ////  function prototypes	https://forum.arduino.cc/t/declaration-of-functions/687199
 //bool GoodCRC(byte[], byte);
@@ -605,20 +606,19 @@ void loop()
 	{
 		LoopLast = millis();
 		ReadSwitches();
-		if (PCB.UseLinearActuator) PositionMotor();
-		if (PCB.Receiver == 0) ReadIMU();
 		DoSteering();
+		if (PCB.UseLinearActuator) PositionActuator();
+		if (PCB.Receiver == 0) ReadIMU();
 		if (DebugOn) DebugTheINO();
 	}
 
 	Blink();
 	ReceiveSteerUDP();
-	ReceiveSerial1();
-	if (PCB.Receiver != 0) DoPanda();
-
-	SendSpeedPulse();
-	if (PCB.UseRate) DoRate();
 	ReceiveSerial();
+	ReceiveSerial1();
+	SendSpeedPulse();
+	if (PCB.Receiver != 0) DoPanda();
+	if (PCB.UseRate) DoRate();
 	wdt.feed();
 }
 
@@ -634,6 +634,7 @@ void Blink()
 		else digitalWrite(LED_BUILTIN, LOW);
 		BlinkTime = millis();
 		Serial.println(".");	// needed to allow PCBsetup to connect
+		Serial.print("Heading: ");
 		Serial.println(IMU_Heading/10);
 	}
 }

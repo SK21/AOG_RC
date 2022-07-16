@@ -196,14 +196,14 @@ void DebugTheINO()
 		Serial.print(DebugVal3);
 		Serial.print(", ");
 		Serial.print(DebugVal4);
-		Serial.print(": ");
+		Serial.print(",    ");
 		Serial.print(DebugCount1);
 		Serial.print(",");
 		Serial.print(DebugCount2);
 
 		Serial.println("");
 
-		//// UDP
+		//// UDP, will lock up if not connected
 		//RatePacket[0] = 0xBC;
 		//RatePacket[1] = 0xA;
 		//RatePacket[2] = DebugVal1;

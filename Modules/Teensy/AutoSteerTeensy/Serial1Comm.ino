@@ -24,19 +24,20 @@ void ReceiveSerial1()
 		{
 		case 32619:
 			// from Wemos D1 mini
-			if (Serial1.available() > 3)
+			PGNlength = 6;
+			if (Serial1.available() > PGNlength - 3)
 			{
 				// section buttons, pgn 6 bytes
 				Serial1PGN = 0;	// reset pgn
 				Serial1Packet[0] = 107;
 				Serial1Packet[1] = 127;
-				for (int i = 2; i < 6; i++)
+				for (int i = 2; i < PGNlength; i++)
 				{
 					Serial1Packet[i] = Serial1.read();
 					WifiSwitches[i] = Serial1Packet[i];
 				}
 
-				if (GoodCRC(Serial1Packet, 6))
+				if (GoodCRC(Serial1Packet, PGNlength))
 				{
 					WifiSwitchesEnabled = true;
 					WifiSwitchesTimer = millis();
