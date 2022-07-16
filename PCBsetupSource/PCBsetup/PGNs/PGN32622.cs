@@ -19,8 +19,9 @@ namespace PCBsetup
         //11    Zero offset Hi
         //12    RelayControl 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
         //13    IP address, 3rd octet
+        //14    CRC
 
-        private byte[] cData = new byte[14];
+        private byte[] cData = new byte[15];
         private frmPCBsettings cf;
 
         public PGN32622(frmPCBsettings CalledFrom)
@@ -59,6 +60,8 @@ namespace PCBsetup
             cData[12] = tmp;
 
             cData[13] = (byte)cf.Boxes.Value("tbIPaddress");
+
+            cData[14] = cf.mf.Tls.CRC(cData, 14);
 
             bool Result = cf.mf.CommPort.Send(cData);
             //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);

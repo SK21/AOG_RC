@@ -20,8 +20,9 @@ namespace PCBsetup
         //12    Rate PWM
         //13    Speed Pulse
         //14    RS485 send enable
+        //15    CRC
 
-        private byte[] cData = new byte[15];
+        private byte[] cData = new byte[16];
         private frmPCBsettings cf;
 
         public PGN32624(frmPCBsettings CalledFrom)
@@ -48,6 +49,8 @@ namespace PCBsetup
             cData[12] = (byte)cf.Boxes.Value("tbPwm2");
             cData[13] = (byte)cf.Boxes.Value("tbSpeedPulse");
             cData[14] = (byte)cf.Boxes.Value("tbSendEnable");
+
+            cData[15] = cf.mf.Tls.CRC(cData, 15);
 
             bool Result = cf.mf.CommPort.Send(cData);
             //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);

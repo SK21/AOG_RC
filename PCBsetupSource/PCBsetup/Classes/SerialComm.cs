@@ -12,16 +12,16 @@ namespace PCBsetup
         public string cSCportName;
         public int SCportBaud = 38400;
         private readonly frmMain mf;
+        private bool ActivationNotified = false;
+        private string cLog;
         private int cPortNumber;
+
+        // prevents UI lock-up by only sending serial data after verfying connection
+        private bool cReceiveActive = false;
 
         private byte HiByte;
         private string ID;
         private byte LoByte;
-        private bool cReceiveActive = false;  // prevents UI lock-up by only sending serial data after verfying connection
-        private bool ActivationNotified = false;
-        private string cLog;
-
-        public event EventHandler ModuleConnected;
 
         public SerialComm(frmMain CallingForm, int PortNumber)
         {
@@ -29,19 +29,18 @@ namespace PCBsetup
             cPortNumber = PortNumber;
             cSCportName = "SCport" + cPortNumber.ToString();
             ID = "_" + PortNumber.ToString();
+            ArduinoPort.ReadTimeout = 500;
+            ArduinoPort.WriteTimeout = 500;
 
             Timer Watchdog = new Timer(3000);
             Watchdog.Elapsed += new ElapsedEventHandler(CheckConnected);
             Watchdog.Start();
         }
 
-        void CheckConnected(object sender, ElapsedEventArgs e)
-        {
-            if (!ArduinoPort.IsOpen) cReceiveActive = false;
-        }
-
         // new data event
         public delegate void NewDataDelegate(string Sentence);
+
+        public event EventHandler ModuleConnected;
 
         public String SCportName
         {
@@ -79,6 +78,21 @@ namespace PCBsetup
             {
                 mf.Tls.WriteErrorLog("SerialComm/CloseSCport: " + ex.Message);
             }
+        }
+
+        public bool IsOpen()
+        {
+            return ArduinoPort.IsOpen;
+        }
+
+        public bool IsReceiveActive()
+        {
+            return cReceiveActive;
+        }
+
+        public string Log()
+        {
+            return cLog;
         }
 
         public void Open()
@@ -129,16 +143,6 @@ namespace PCBsetup
             }
         }
 
-        public bool IsOpen()
-        {
-            return ArduinoPort.IsOpen;
-        }
-
-        public string Log()
-        {
-            return cLog;
-        }
-
         public bool Send(byte[] Data)
         {
             bool Result = false;
@@ -167,18 +171,19 @@ namespace PCBsetup
             }
             return Result;
         }
-        public bool IsReceiveActive()
-        {
-            return cReceiveActive;
-        }
 
         private void AddToLog(string NewData)
         {
             cLog += NewData + "\n";
-            if (cLog.Length > 5000)
+            if (cLog.Length > 10000)
             {
-                cLog = cLog.Substring(cLog.Length - 4800, 4800);
+                cLog = cLog.Substring(cLog.Length - 9800, 9800);
             }
+        }
+
+        private void CheckConnected(object sender, ElapsedEventArgs e)
+        {
+            if (!ArduinoPort.IsOpen) cReceiveActive = false;
         }
 
         private void ReceiveData(string sentence)
@@ -206,7 +211,6 @@ namespace PCBsetup
 
                 if (words.Length > 1)
                 {
-
                     if (byte.TryParse(words[0], out LoByte))
                     {
                         if (byte.TryParse(words[1], out HiByte))

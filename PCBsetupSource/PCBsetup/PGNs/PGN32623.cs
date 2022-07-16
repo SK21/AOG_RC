@@ -24,8 +24,9 @@ namespace PCBsetup
         //          - invert roll
         //          - Gyro on
         //          - use linear actuator
+        //10    CRC
 
-        private byte[] cData = new byte[10];
+        private byte[] cData = new byte[11];
         private frmPCBsettings cf;
         private string Name;
 
@@ -61,6 +62,8 @@ namespace PCBsetup
                 bool.TryParse(cf.mf.Tls.LoadProperty(Name), out Checked);
                 if (Checked) cData[9] |= (byte)Math.Pow(2, i);
             }
+
+            cData[10] = cf.mf.Tls.CRC(cData, 10);
 
             bool Result = cf.mf.CommPort.Send(cData);
             //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);

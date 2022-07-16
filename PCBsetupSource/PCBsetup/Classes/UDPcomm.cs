@@ -23,7 +23,6 @@ namespace PCBsetup
         private IPAddress epIP;
         private HandleDataDelegateObj HandleDataDelegate;
 
-        private int PGN;
         private Socket recvSocket;
         private Socket sendSocket;
 
