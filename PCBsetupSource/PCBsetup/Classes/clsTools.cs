@@ -14,12 +14,12 @@ namespace PCBsetup
         private static Hashtable ht;
         private string cAppName = "PCBsetup";
         private string cAppVersion = "1.0.0";
-        private string cNanoFirmware = "29-Jun-2022";
+        private string cVersionDate = "17-Jul-2022";
+        private string cTeensyFirmware = "16-Jul-2022";
+        private string cNanoFirmware = "17-Jul-2022";
+        private string cSwitchboxFirmware = "09-May-2022";
         private string cPropertiesFile = "";
         private string cSettingsDir = "";
-        private string cSwitchboxFirmware = "09-May-2022";
-        private string cTeensyFirmware = "16-Jul-2022";
-        private string cVersionDate = "16-Jul-2022";
         private frmMain mf;
 
         public clsTools(frmMain CallingForm)
