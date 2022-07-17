@@ -70,13 +70,16 @@ void CheckRelays()
     else
     {
         // use Nano pins
-        for (int i = 0; i < 16; i++)
+        for (int j = 0; j < 2; j++)
         {
-            if (PINS.Relays[i] > 1) // check if relay is enabled
+            if (j < 1) Rlys = NewLo; else Rlys = NewHi;
+            for (int i = 0; i < 8; i++)
             {
-                if (i < 8) Rlys = NewLo; else Rlys = NewHi;
+                if (PINS.Relays[i] > 1) // check if relay is enabled
+                {
+                    if (bitRead(Rlys, i)) digitalWrite(PINS.Relays[i], PCB.RelayOnSignal); else digitalWrite(PINS.Relays[i], !PCB.RelayOnSignal);
+                }
             }
-            if (bitRead(Rlys, i)) digitalWrite(PINS.Relays[i], PCB.RelayOnSignal); else digitalWrite(PINS.Relays[i], !PCB.RelayOnSignal);
         }
     }
 }

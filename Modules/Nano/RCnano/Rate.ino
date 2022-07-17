@@ -35,8 +35,8 @@ void ISR1()
 	if (millis() - PulseTime > 10)
 	{
 		Duration[1] = millis() - PulseTime;
-		PulseCount[1]++;
 		PulseTime = millis();
+		PulseCount[1]++;
 	}
 }
 

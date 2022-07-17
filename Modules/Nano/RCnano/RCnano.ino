@@ -5,15 +5,16 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
-# define InoDescription "RCnano  :  29-Jun-2022"
-# define UseEthernet 1
+# define InoDescription "RCnano  :  17-Jul-2022"
+# define UseEthernet 0
 
 // debug variables
 bool DebugOn = false;
-byte DebugCount1;
-byte DebugCount2;
 byte DebugVal1;
 byte DebugVal2;
+byte DebugVal3;
+byte DebugVal4;
+uint16_t DebugVal5;
 uint32_t DebugTime;
 
 struct PCBconfig    // 5 bytes
@@ -117,7 +118,6 @@ byte ControlType[] = { 0, 0 };  // 0 standard, 1 Fast Close, 2 Motor
 unsigned long TotalPulses[2];
 unsigned long CommTime[2];
 
-byte ManualPWMsetting[] = { 0, 0 };
 float RateSetting[] = { 0.0, 0.0 };	// auto UPM setting
 float MeterCal[] = { 1.0, 1.0 };	// pulses per Unit
 
@@ -133,7 +133,6 @@ bool AutoOn = true;
 
 float ManualAdjust[2];
 unsigned long ManualLast[2];
-float ManualFactor[2];
 
 // WifiSwitches connection to Wemos D1 Mini
 // Use Serial RX, remove RX wire before uploading
@@ -145,7 +144,7 @@ byte SwitchBytes[8];
 byte SectionSwitchID[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 bool UseMultiPulses[2] = { 0, 0 };   //  0 - average time for multiple pulses, 1 - time for one pulse
 
-  //reset function
+ //reset function
 void(*resetFunc) (void) = 0;
 
 //EEPROM
@@ -153,14 +152,13 @@ int16_t EEread = 0;
 #define PCB_Ident 2388
 
 bool MasterOn[2];
-byte Packet[30];
 bool IOexpanderFound;
 uint8_t ErrorCount;
+byte PGNlength;
 
-unsigned int PGNudp;
-unsigned int PGNserial;
-byte MSB;
-byte LSB;
+////  function prototypes	https://forum.arduino.cc/t/declaration-of-functions/687199
+//bool GoodCRC(byte[], byte);
+//byte CRC(byte[], byte, byte);
 
 void setup()
 {
@@ -312,8 +310,6 @@ void setup()
 
 void loop()
 {
-	ReceiveSerial();
-
 	if (millis() - LoopLast >= LOOP_TIME)
 	{
 		LoopLast = millis();
@@ -335,6 +331,8 @@ void loop()
 		{
 			ManualControl();
 		}
+
+		if (DebugOn) DebugTheINO();
 	}
 
 	if (millis() - SendLast > SendTime)
@@ -353,7 +351,7 @@ void loop()
 	ether.packetLoop(ether.packetReceive());
 #endif
 
-	if (DebugOn)DebugTheINO();
+	ReceiveSerial();
 }
 
 byte ParseModID(byte ID)
@@ -449,27 +447,27 @@ void TranslateSwitchBytes()
 		SectionSwitchID[i] = SectionSwitchID[i] >> (4 * (i - 2 * ByteID)); // move bits for number
 	}
 }
-bool GoodCRC(uint16_t Length)
+
+bool GoodCRC(byte Data[], byte Length)
 {
-	byte ck = CRC(Length - 1, 0);
-	bool Result = (ck == Packet[Length - 1]);
+	byte ck = CRC(Data, Length - 1, 0);
+	bool Result = (ck == Data[Length - 1]);
 	return Result;
 }
 
-byte CRC(int Length, byte Start)
+byte CRC(byte Chk[], byte Length, byte Start)
 {
 	byte Result = 0;
-	if (Length <= sizeof(Packet))
+	int CK = 0;
+	for (int i = Start; i < Length; i++)
 	{
-		int CK = 0;
-		for (int i = Start; i < Length; i++)
-		{
-			CK += Packet[i];
-		}
-		Result = (byte)CK;
+		CK += Chk[i];
 	}
+	Result = (byte)CK;
 	return Result;
 }
+
+byte DebugPacket[30];
 
 void DebugTheINO()
 {
@@ -477,9 +475,12 @@ void DebugTheINO()
 	if (millis() - DebugTime > 1000)
 	{
 		DebugTime = millis();
+		DebugVal1 = PINS.Flow1;
+		DebugVal2 = PINS.Flow2;
+		DebugVal3 = PCB.ModuleID;
 
 		// Serial
-		// PGNudp 2748 - 0xABC
+		// UDPpgn 2748 - 0xABC
 		Serial.print(0xBC);
 		Serial.print(",");
 		Serial.print(0xA);
@@ -488,21 +489,25 @@ void DebugTheINO()
 		Serial.print(",");
 		Serial.print(DebugVal2);
 		Serial.print(",");
-		Serial.print(DebugCount1);
+		Serial.print(DebugVal3);
 		Serial.print(",");
-		Serial.print(DebugCount2);
+
+		Serial.print("   ");
+		Serial.print(DebugVal4);
+		Serial.print(",");
+		Serial.print(DebugVal5);
 
 		Serial.println("");
 
 #if UseEthernet
 		// UDP
-		Packet[0] = 0xBC;
-		Packet[1] = 0xA;
-		Packet[2] = DebugVal1;
-		Packet[3] = DebugVal2;
-		Packet[4] = DebugCount1;
-		Packet[5] = DebugCount2;
-		ether.sendUdp(Packet, 12, SourcePort, DestinationIP, DestinationPort);
+		DebugPacket[0] = 0xBC;
+		DebugPacket[1] = 0xA;
+		DebugPacket[2] = DebugVal1;
+		DebugPacket[3] = DebugVal2;
+		DebugPacket[4] = DebugVal3;
+		DebugPacket[5] = DebugVal4;
+		ether.sendUdp(DebugPacket, 12, SourcePort, DestinationIP, DestinationPort);
 #endif
 	}
 }
