@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{443D21BD-2AD4-49F1-9ADA-8BA0C99E26FE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>RateController</RootNamespace>
+    <AssemblyName>RateController</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Install\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>86</ApplicationRevision>
+    <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>RateControlOff.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>EAF3907E6C4AF9A34E01278060318EC4E1C91913</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>RateController_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BetterWin32Errors, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BetterWin32Errors.0.2.0\lib\net45\BetterWin32Errors.dll</HintPath>
+    </Reference>
+    <Reference Include="Keypad">
+      <HintPath>.\Keypad.dll</HintPath>
+    </Reference>
+    <Reference Include="MoreLinq, Version=3.3.2.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.3.3.2\lib\net451\MoreLinq.dll</HintPath>
+    </Reference>
+    <Reference Include="RepeatButtonControl">
+      <HintPath>.\RepeatButtonControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Ports, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Ports.4.7.0\lib\net461\System.IO.Ports.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\clsAlarm.cs" />
+    <Compile Include="Classes\clsArduino.cs" />
+    <Compile Include="Classes\clsPressure.cs" />
+    <Compile Include="Classes\clsPressures.cs" />
+    <Compile Include="Classes\clsProducts.cs" />
+    <Compile Include="Classes\clsRelay.cs" />
+    <Compile Include="Classes\clsRelays.cs" />
+    <Compile Include="Classes\clsSection.cs" />
+    <Compile Include="Classes\clsSections.cs" />
+    <Compile Include="Classes\clsTools.cs" />
+    <Compile Include="Classes\clsProduct.cs" />
+    <Compile Include="Classes\SerialComm.cs" />
+    <Compile Include="Classes\UDPcomm.cs" />
+    <Compile Include="FormAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAbout.Designer.cs">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormNumeric.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNumeric.Designer.cs">
+      <DependentUpon>FormNumeric.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPressure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPressure.Designer.cs">
+      <DependentUpon>FormPressure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSettings.Designer.cs">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormStart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormStart.Designer.cs">
+      <DependentUpon>FormStart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmComm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmComm.Designer.cs">
+      <DependentUpon>frmComm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmHelp.Designer.cs">
+      <DependentUpon>frmHelp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMonitor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMonitor.Designer.cs">
+      <DependentUpon>frmMonitor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmRelays.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRelays.Designer.cs">
+      <DependentUpon>frmRelays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSections.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSections.Designer.cs">
+      <DependentUpon>frmSections.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Lang.de.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.de.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Lang.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Lang.nl.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.nl.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PGNs\PGN230.cs" />
+    <Compile Include="PGNs\PGN234.cs" />
+    <Compile Include="PGNs\PGN32613.cs" />
+    <Compile Include="PGNs\PGN32614.cs" />
+    <Compile Include="PGNs\PGN32616.cs" />
+    <Compile Include="PGNs\PGN32618.cs" />
+    <Compile Include="PGNs\PGN254.cs" />
+    <Compile Include="PGNs\PGN32620.cs" />
+    <Compile Include="PGNs\PGN32621.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormAbout.resx">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNumeric.resx">
+      <DependentUpon>FormNumeric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPressure.resx">
+      <DependentUpon>FormPressure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSettings.resx">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormStart.resx">
+      <DependentUpon>FormStart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmComm.resx">
+      <DependentUpon>frmComm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmHelp.resx">
+      <DependentUpon>frmHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMonitor.resx">
+      <DependentUpon>frmMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRelays.resx">
+      <DependentUpon>frmRelays.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSections.resx">
+      <DependentUpon>frmSections.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lang.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.de.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lang.nl.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.nl.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lang.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="RateController_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\AutoSteerTeensy.ino.hex" />
+    <None Include="Resources\mcp23017_Adafruit.jpg" />
+    <None Include="Resources\Industry-Circuit-icon.png" />
+    <None Include="Resources\cableusb_119960.png" />
+    <None Include="Resources\7791659_language_speak_communication_speech_chat_icon.png" />
+    <None Include="Resources\7504229_hamburger_menu_list_options_icon.png" />
+    <None Include="Resources\RCnano.ino.hex" />
+    <None Include="Resources\RCnanoOldBootLoader.ino.hex" />
+    <None Include="Resources\UpLoad.png" />
+    <None Include="Resources\3556117_arrow_ui_up_icon.png" />
+    <None Include="Resources\wrench.png" />
+    <None Include="Resources\Upload.bmp" />
+    <None Include="Resources\Alarm1.png" />
+    <None Include="Resources\Example.rcs" />
+    <None Include="Resources\Loud_Alarm_Clock_Buzzer-Muk1984-493547174.wav" />
+    <None Include="Resources\Alarm.bmp" />
+    <None Include="Resources\OffSmall1.bmp" />
+    <None Include="Resources\RateControlOff.png" />
+    <None Include="Resources\ArrowRight1.png" />
+    <None Include="Resources\ArrowLeft1.png" />
+    <None Include="Resources\R674d5dd067acbd409ff50db6d0647f5d.png" />
+    <None Include="Resources\ArrowRight.png" />
+    <None Include="Resources\ArrowLeft.png" />
+    <None Include="Images\DnArrow64.png" />
+    <Content Include="Images\close.png" />
+    <None Include="Images\Off.png" />
+    <None Include="Images\OffSmall.png" />
+    <None Include="Images\FileNew.png" />
+    <None Include="Images\icons8-check-circle-48.png" />
+    <None Include="Images\icons8-cancel-40.png" />
+    <Content Include="Images\OK64.png" />
+    <None Include="Images\OnSmall.png" />
+    <None Include="Images\On.png" />
+    <Content Include="Images\OpenFile.png" />
+    <Content Include="Images\RateControlOff.ico" />
+    <Content Include="Images\RateControlOff.png" />
+    <Content Include="Images\SettingsGear64.png" />
+    <None Include="Images\WindowDayMode.png" />
+    <None Include="Images\WindowNightMode.png" />
+    <None Include="Images\UpArrow64.png" />
+    <Content Include="RateControlOff.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
