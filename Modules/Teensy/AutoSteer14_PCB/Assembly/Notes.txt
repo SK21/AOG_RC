@@ -1,0 +1,18 @@
+
+The PCB is missing a couple of components:
+
+The ethernet connector J11 is mounted on the PCB. It plugs into a socket on the underside of the Teensy.
+J11	Samtech MTMM-103-10-T-D-355, 9mm post height	male pin header on pcb
+	17-2314820-6-ND or 17-2314822-6-ND.		female socket header on Teensy
+
+
+
+The Deutsch connector J3 can be one of 4 versions A,B,C,D. The matching plug must be of the same version.
+
+A version:
+J3	DT13-12PA  	header that solders to the PCB
+	DT06-12SA	plug 
+	0462-201-16141	pin, 12
+	W12S-P012	wedge
+
+Panel mounting screws are #6-19 X 2. PCB mounting screws are #4-20 X 3.
