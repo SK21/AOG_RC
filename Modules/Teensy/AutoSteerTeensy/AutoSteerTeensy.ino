@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   16-Jul-2022"
+# define InoDescription "AutoSteerTeensy   22-Sep-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -15,63 +15,85 @@
 
 // debug variables
 bool DebugOn = false;
-byte DebugCount1;
-byte DebugCount2;
 byte DebugVal1;
 byte DebugVal2;
-int DebugVal3;
+byte DebugVal3;
 uint16_t DebugVal4;
+uint16_t DebugVal5;
+uint16_t DebugVal6;
 uint32_t DebugTime;
 
-struct PCBconfig	// 27 bytes
+struct PCBconfig	// 29 bytes
 {
 	uint8_t Receiver = 1;			// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
 	uint8_t NMEAserialPort = 8;		// from receiver
 	uint8_t	RTCMserialPort = 3;		// to receiver
+	uint8_t WemosSerialPort = 1;	// serial port connected to Wemos D1 Mini
+	uint8_t RS485PortNumber = 7;	// serial port #
 	uint16_t RTCMport = 2233;		// local port to listen on for RTCM data
-	uint8_t IMU = 1;				// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO, 4 serial IMU
+	uint8_t IMU = 1;				// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO
 	uint8_t IMUdelay = 90;			// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
 	uint8_t IMU_Interval = 40;		// for Sparkfun 
 	uint16_t ZeroOffset = 6100;
-	uint8_t AdsWASpin = 0;			// ADS1115 pin for WAS
+	uint8_t	IPpart3 = 1;			// IP address, 3rd octet.
 	uint8_t MinSpeed = 1;
 	uint8_t MaxSpeed = 15;
 	uint16_t PulseCal = 255;		// Hz/KMH X 10
-	uint8_t RS485PortNumber = 7;	// serial port #
+	uint8_t	AnalogMethod = 0;		// 0 use ADS1115 for WAS(AIN0), AIN1, current(AIN2), 1 use Teensy analog pin for WAS, 2 use ADS1115 from Wemos D1 Mini
+	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
 	uint8_t ModuleID = 0;
-	uint8_t GyroOn = 0;
-	uint8_t	GGAlast = 1;
-	uint8_t UseRate = 0;
-	uint8_t	UseAds = 0;				// 0 use ADS1115 for WAS, 1 use Teensy analog pin for WAS
-	uint8_t RelayOnSignal = 0;		// value that turns on relays
-	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t SwapRollPitch = 1;		// 0 use roll value for roll, 1 use pitch value for roll
 	uint8_t InvertRoll = 0;
-	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
-	uint8_t	IPpart3 = 1;			// IP address, 3rd octet.
-	uint8_t UseLinearActuator = 0;	// to engage or retract steering motor
+	uint8_t UseTB6612 = 0;			// 0 - don't use TB6612 motor driver, 1 - use TB6612 motor driver for motor 2
+	uint8_t GyroOn = 0;
+	uint8_t RelayOnSignal = 0;		// value that turns on relays
+	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
+	uint8_t UseRate = 0;
+	uint8_t UseLinearActuator = 0;	// to engage or retract steering motor, uses motor 2
+	uint8_t	GGAlast = 1;
 };
 
 PCBconfig PCB;
 
 struct PCBpinConfig	// 13 bytes
 {
-	uint8_t SteerDir = 22;			// motor 1 direction
-	uint8_t	SteerPWM = 23;			// motor 1 pwm
-	uint8_t	FlowDir = 36;			// motor 2 direction
-	uint8_t	FlowPWM = 37;			// motor 2 pwm
+	uint8_t Motor1Dir = 22;			// motor 1 direction
+	uint8_t	Motor1PWM = 23;			// motor 1 pwm
+	uint8_t	STEERSW = 39;
+	uint8_t	WAS = 25;				// wheel angle sensor
 	uint8_t	SteerSW_Relay = 2;		// pin for steering disconnect relay
 	uint8_t	WORKSW = 32;
-	uint8_t	STEERSW = 39;
-	uint8_t	Encoder = 38;
 	uint8_t CurrentSensor = 10;
-	uint8_t	WAS = 25;				// wheel angle sensor
 	uint8_t	PressureSensor = 26;
+	uint8_t	Encoder = 38;
+	uint8_t	Motor2Dir = 36;			// motor 2 direction, TB6612 IN1
+	uint8_t	Motor2PWM = 37;			// motor 2 pwm, TB6612 PWM
 	uint8_t	SpeedPulse = 11;
 	uint8_t	RS485SendEnable = 27;
 };
 
 PCBpinConfig PINS;
+
+struct PCBanalog
+{
+	int16_t AIN0;	// WAS
+	int16_t AIN1;	// linear actuator position or pressure sensor
+	int16_t AIN2;	// current
+	int16_t AIN3;
+};
+
+PCBanalog AINs;
+
+struct WemosWifi
+{
+	uint8_t Enabled;
+	uint32_t StartTime;
+	uint8_t MasterOn;
+	uint8_t RelaysLo;
+	uint8_t RelaysHi;
+};
+
+WemosWifi WifiSwitches;
 
 #define LOW_HIGH_DEGREES 5.0	//How many degrees before decreasing Max PWM
 #define CMPS14_ADDRESS 0x60 
@@ -170,7 +192,7 @@ struct Setup {
 //EEPROM
 int16_t EEread = 0;
 #define EEP_Ident 4450	// if not in eeprom, overwrite
-#define PCB_Ident 2388
+#define PCB_Ident 8230
 
 // Rate control
 bool MasterOn[2];
@@ -206,10 +228,6 @@ byte PowerRelayHi;
 float ManualAdjust[MaxFlowSensorCount];
 uint16_t ManualLast[MaxFlowSensorCount];
 
-uint32_t WifiSwitchesTimer;
-bool WifiSwitchesEnabled = false;
-byte WifiSwitches[6];
-
 bool UseMultiPulses[MaxFlowSensorCount];
 
 // Rate port
@@ -236,6 +254,7 @@ ADC* adc = new ADC(); // adc object for analog pins
 HardwareSerial* SerialRTCM;
 HardwareSerial* SerialNMEA;
 HardwareSerial* SerialRS485;
+HardwareSerial* SerialWemos;
 
 PCA9555 ioex;
 bool IOexpanderFound = false;
@@ -244,6 +263,8 @@ byte PGNlength;
 ////  function prototypes	https://forum.arduino.cc/t/declaration-of-functions/687199
 //bool GoodCRC(byte[], byte);
 //byte CRC(byte[], byte, byte);
+
+uint32_t Analogtime;
 
 void setup()
 {
@@ -259,9 +280,6 @@ void setup()
 	Serial.println();
 	Serial.println(InoDescription);
 	Serial.println();
-
-	// Serial1 comm
-	Serial1.begin(38400);
 
 	EEPROM.get(0, EEread);              // read identifier
 
@@ -291,6 +309,9 @@ void setup()
 		EEPROM.get(110, PCB);
 		EEPROM.get(150, PINS);
 	}
+	
+	// on-board motor controller
+	digitalWrite(10, PCB.UseTB6612);	// enable motor controller
 
 	// gps receiver
 	// SerialNMEA
@@ -351,6 +372,36 @@ void setup()
 		break;
 	}
 
+	// Wemos D1 Mini serial port
+	switch (PCB.WemosSerialPort)
+	{
+	case 1:
+		SerialWemos = &Serial1;
+		break;
+	case 2:
+		SerialWemos = &Serial2;
+		break;
+	case 3:
+		SerialWemos = &Serial3;
+		break;
+	case 4:
+		SerialWemos = &Serial4;
+		break;
+	case 5:
+		SerialWemos = &Serial5;
+		break;
+	case 6:
+		SerialWemos = &Serial6;
+		break;
+	case 7:
+		SerialWemos = &Serial7;
+		break;
+	default:
+		SerialWemos = &Serial8;
+		break;
+	}
+	SerialWemos->begin(38400);
+
 	if (PCB.Receiver != 0)
 	{
 		SerialRTCM->begin(115200);	// RTCM
@@ -374,12 +425,13 @@ void setup()
 	pinMode(PINS.Encoder, INPUT_PULLUP);
 	pinMode(PINS.WORKSW, INPUT_PULLUP);
 	pinMode(PINS.STEERSW, INPUT_PULLUP);
-	pinMode(PINS.SteerDir, OUTPUT);
-	pinMode(PINS.SteerPWM, OUTPUT);
+	pinMode(PINS.Motor1Dir, OUTPUT);
+	pinMode(PINS.Motor1PWM, OUTPUT);
 	pinMode(PINS.SteerSW_Relay, OUTPUT);
 	pinMode(PINS.SpeedPulse, OUTPUT);
-	pinMode(PINS.FlowDir, OUTPUT);
-	pinMode(PINS.FlowPWM, OUTPUT);
+	pinMode(PINS.Motor2Dir, OUTPUT);
+	pinMode(PINS.Motor2PWM, OUTPUT);
+	//pinMode(PINS.WAS, INPUT_PULLUP);
 
 
 	// analog pins
@@ -391,7 +443,7 @@ void setup()
 	Wire.begin();			// I2C on pins SCL 19, SDA 18
 	Wire.setClock(400000); //Increase I2C data rate to 400kHz
 
-	if (PCB.UseAds)
+	if (PCB.AnalogMethod==0)
 	{
 		// ADS1115
 		Serial.println("Starting ADS ...");
@@ -598,6 +650,7 @@ void setup()
 
 	Serial.println("");
 	Serial.println("Finished setup.");
+	Serial.println("");
 }
 
 void loop()
@@ -612,10 +665,16 @@ void loop()
 		if (DebugOn) DebugTheINO();
 	}
 
+	if (millis() - Analogtime > 5)
+	{
+		Analogtime = millis();
+		ReadAnalog();
+	}
+
 	Blink();
 	ReceiveSteerUDP();
-	ReceiveSerial();
-	ReceiveSerial1();
+	ReceiveSerialUSB();
+	ReceiveSerialWemos();
 	SendSpeedPulse();
 	if (PCB.Receiver != 0) DoPanda();
 	if (PCB.UseRate) DoRate();
@@ -625,6 +684,7 @@ void loop()
 
 bool State = 0;
 uint32_t BlinkTime;
+uint32_t LastBlink;
 void Blink()
 {
 	if (millis() - BlinkTime > 1000)
@@ -633,10 +693,20 @@ void Blink()
 		if (State) digitalWrite(LED_BUILTIN, HIGH);
 		else digitalWrite(LED_BUILTIN, LOW);
 		BlinkTime = millis();
+		Serial.print(" Loop interval (ms): ");
+		Serial.print((float)(micros() - LastBlink) / 1000.0, 3);
+		Serial.print(", Heading: ");
+		Serial.print(IMU_Heading / 10);
+		Serial.print(" , AIN0 (WAS): ");
+		Serial.print(AINs.AIN0);
+		Serial.print(", AIN1: ");
+		Serial.print(AINs.AIN1);
+		Serial.print(", AIN2: ");
+		Serial.print(AINs.AIN2);
+
 		Serial.println(".");	// needed to allow PCBsetup to connect
-		Serial.print("Heading: ");
-		Serial.println(IMU_Heading/10);
 	}
+	LastBlink = micros();
 }
 
 uint32_t SpeedPulseTime;
@@ -678,4 +748,30 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
+void ControlMotor2(uint8_t Speed, uint8_t Direction)
+{
+	if (PCB.UseTB6612)
+	{
+		// on-board TB6612FNG motor driver
+		if (Direction)
+		{
+			// clockwise
+			digitalWrite(29, LOW);
+			digitalWrite(9, HIGH);
+		}
+		else
+		{
+			// counter-clockwise
+			digitalWrite(29, HIGH);
+			digitalWrite(9, LOW);
+		}
+		analogWrite(28, Speed);
+	}
+	else
+	{
+		// external motor driver
+		digitalWrite(PINS.Motor2Dir, Direction);
+		analogWrite(PINS.Motor2PWM, Speed);
+	}
+}
 

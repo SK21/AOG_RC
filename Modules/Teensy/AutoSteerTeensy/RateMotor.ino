@@ -13,23 +13,23 @@ void AdjustFlow()
 					//increase
 					if (RatePWM[i] > 250)	RatePWM[i] = 256;
 
-					digitalWrite(PINS.FlowDir, PCB.FlowOnDirection);
-					analogWrite(PINS.FlowPWM, RatePWM[i]);
+					digitalWrite(PINS.Motor2Dir, PCB.FlowOnDirection);
+					analogWrite(PINS.Motor2PWM, RatePWM[i]);
 				}
 				else
 				{
 					//decrease
 					if (RatePWM[i] < -250) RatePWM[i] = -256;
 
-					digitalWrite(PINS.FlowDir, !PCB.FlowOnDirection);
-					analogWrite(PINS.FlowPWM, -RatePWM[i]);	// offsets the negative pwm value
+					digitalWrite(PINS.Motor2Dir, !PCB.FlowOnDirection);
+					analogWrite(PINS.Motor2PWM, -RatePWM[i]);	// offsets the negative pwm value
 				}
 			}
 			else
 			{
 				// stop flow
-				digitalWrite(PINS.FlowDir, !PCB.FlowOnDirection);
-				analogWrite(PINS.FlowPWM, 256);
+				digitalWrite(PINS.Motor2Dir, !PCB.FlowOnDirection);
+				analogWrite(PINS.Motor2PWM, 256);
 			}
 			break;
 		case 2:
@@ -39,20 +39,20 @@ void AdjustFlow()
 				if (RatePWM[i] >= 0)
 				{
 					//increase
-					digitalWrite(PINS.FlowDir, PCB.FlowOnDirection);
-					analogWrite(PINS.FlowPWM, RatePWM[i]);
+					digitalWrite(PINS.Motor2Dir, PCB.FlowOnDirection);
+					analogWrite(PINS.Motor2PWM, RatePWM[i]);
 				}
 				else
 				{
 					//decrease
-					digitalWrite(PINS.FlowDir, !PCB.FlowOnDirection);
-					analogWrite(PINS.FlowPWM, -RatePWM[i]);	// offsets the negative pwm value
+					digitalWrite(PINS.Motor2Dir, !PCB.FlowOnDirection);
+					analogWrite(PINS.Motor2PWM, -RatePWM[i]);	// offsets the negative pwm value
 				}
 			}
 			else
 			{
 				// stop motor
-				analogWrite(PINS.FlowPWM, 0);
+				analogWrite(PINS.Motor2PWM, 0);
 			}
 			break;
 		default:
@@ -60,14 +60,14 @@ void AdjustFlow()
 			if (RatePWM[i] >= 0)
 			{
 				//increase
-				digitalWrite(PINS.FlowDir, PCB.FlowOnDirection);
-				analogWrite(PINS.FlowPWM, RatePWM[i]);
+				digitalWrite(PINS.Motor2Dir, PCB.FlowOnDirection);
+				analogWrite(PINS.Motor2PWM, RatePWM[i]);
 			}
 			else
 			{
 				//decrease
-				digitalWrite(PINS.FlowDir, !PCB.FlowOnDirection);
-				analogWrite(PINS.FlowPWM, -RatePWM[i]);	// offsets the negative pwm value
+				digitalWrite(PINS.Motor2Dir, !PCB.FlowOnDirection);
+				analogWrite(PINS.Motor2PWM, -RatePWM[i]);	// offsets the negative pwm value
 			}
 			break;
 		}

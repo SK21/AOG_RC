@@ -1,69 +1,8 @@
-int16_t ReadWAS(uint8_t NextPinNumber = 0)
-{
-	int16_t Result = 0;
-	if (PCB.UseAds)
-	{
-		// based on https://github.com/RalphBacon/ADS1115-ADC/blob/master/ADS1115_ADC_16_bit_SingleEnded.ino
-
-		// use ADS1115
-		// read current value
-		Wire.beginTransmission(AdsI2Caddress);
-		Wire.write(0b00000000); //Point to Conversion register
-		Wire.endTransmission();
-		Wire.requestFrom(AdsI2Caddress, 2);
-		Result = (Wire.read() << 8 | Wire.read());
-		Result = Result >> 1;
-
-		// do next conversion
-		Wire.beginTransmission(AdsI2Caddress);
-		Wire.write(0b00000001); // Point to Config Register
-
-		// Write the MSB + LSB of Config Register
-		// MSB: Bits 15:8
-		// Bit  15    0=No effect, 1=Begin Single Conversion (in power down mode)
-		// Bits 14:12   How to configure A0 to A3 (comparator or single ended)
-		// Bits 11:9  Programmable Gain 000=6.144v 001=4.096v 010=2.048v .... 111=0.256v
-		// Bits 8     0=Continuous conversion mode, 1=Power down single shot
-		switch (NextPinNumber)
-		{
-			// single ended
-		case 1:
-			Wire.write(0b01010000);	// AIN1
-			break;
-		case 2:
-			Wire.write(0b01100000);	// AIN2
-			break;
-		case 3:
-			Wire.write(0b01110000);	// AIN3
-			break;
-		default:
-			Wire.write(0b01000000);	// AIN0
-			break;
-		}
-
-		// LSB: Bits 7:0
-		// Bits 7:5 Data Rate (Samples per second) 000=8, 001=16, 010=32, 011=64,
-		//      100=128, 101=250, 110=475, 111=860
-		// Bit  4   Comparator Mode 0=Traditional, 1=Window
-		// Bit  3   Comparator Polarity 0=low, 1=high
-		// Bit  2   Latching 0=No, 1=Yes
-		// Bits 1:0 Comparator # before Alert pin goes high
-		//      00=1, 01=2, 10=4, 11=Disable this feature
-		Wire.write(0b11100011);	//860 samples/sec
-		Wire.endTransmission();
-	}
-	else
-	{
-		// use Teensy analog pin
-		Result = adc->adc0->analogRead(PINS.WAS);
-	}
-	return Result;
-}
 
 void DoSteering()
 {
 	//************** Steering Angle ******************
-	steeringPosition = ReadWAS(PCB.AdsWASpin);
+	steeringPosition = AINs.AIN0;
 	helloSteerPosition = steeringPosition - PCB.ZeroOffset;
 
 	//  ***** make sure that negative steer angle makes a left turn and positive value is a right turn *****
@@ -131,8 +70,8 @@ void DoSteering()
 	}
 
 	// pwm value out to motor
-	digitalWrite(PINS.SteerDir, (pwmDrive >= 0));
-	analogWrite(PINS.SteerPWM, abs(pwmDrive));
+	digitalWrite(PINS.Motor1Dir, (pwmDrive >= 0));
+	analogWrite(PINS.Motor1PWM, abs(pwmDrive));
 }
 
 float tmpIMU;
@@ -225,29 +164,6 @@ void ReadIMU()
 			//Complementary filter
 			IMU_YawRate = 0.93 * IMU_YawRate + 0.07 * tmpIMU;
 			break;
-
-		case 4:
-			// serial IMU
-			IMU_Heading = Heading_Serial;
-			if (PCB.SwapRollPitch)
-			{
-				tmpIMU = Pitch_Serial;
-				if (PCB.InvertRoll) tmpIMU *= -1.0;
-				IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
-
-				tmpIMU = Roll_Serial;
-				IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
-			}
-			else
-			{
-				tmpIMU = Roll_Serial;
-				if (PCB.InvertRoll) tmpIMU *= -1.0;
-				IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
-
-				tmpIMU = Pitch_Serial;
-				IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
-			}
-			break;
 		}
 	}
 }
@@ -256,18 +172,17 @@ uint32_t AdjustStartTime;
 byte AdjLast = 100;
 byte AdjDirection;
 bool IsMoving;
-int Reading;
 int ReadingLast;
 int MinPosition = 2000;
 int MaxPosition = 0;
 int MinStop = 100;
-int MaxStop = 600;
+int MaxStop = 850;
+byte MinMovement = 50;
+uint16_t MinAdjustTime = 500;
 
 void PositionActuator()
 {
-	// position steering motor next to steering wheel, range 0-1023
-
-	Reading = analogRead(PINS.PressureSensor);
+	// position steering motor next to steering wheel, range 0-1023, position from Razor IMU
 	AdjDirection = bitRead(guidanceStatus, 0);
 	//AdjDirection = digitalRead(PINS.SteerSW_Relay);
 
@@ -277,57 +192,55 @@ void PositionActuator()
 		// reset
 		AdjLast = AdjDirection;
 		AdjustStartTime = millis();
-		ReadingLast = Reading;
+		ReadingLast = AINs.AIN1;
 		IsMoving = true;
 		MinPosition = 2000;
 		MaxPosition = 0;
 	}
 
 	// check for actuator movement
-	if (abs(Reading - ReadingLast) > 50)
+	if (abs(AINs.AIN1 - ReadingLast) > MinMovement)
 	{
 		// moving, reset start
 		AdjustStartTime = millis();
-		ReadingLast = Reading;
+		ReadingLast = AINs.AIN1;
 	}
 	else
 	{
 		// not moving, check elapsed time
-		if (millis() - AdjustStartTime > 500) IsMoving = false;
+		if (millis() - AdjustStartTime > MinAdjustTime) IsMoving = false;
 	}
 
 	if (AdjDirection)
 	{
 		// steering engaged, retract linear actuator
-		if (Reading > MinStop && IsMoving)
+		if (AINs.AIN1 > MinStop && IsMoving)
 		{
-			digitalWrite(PINS.FlowDir, LOW);
-			analogWrite(PINS.FlowPWM, 255);
+			ControlMotor2(255, LOW);
 		}
 		else
 		{
-			analogWrite(PINS.FlowPWM, 0);
+			ControlMotor2(0, LOW);
 		}
 
 		// check for slippage
-		if (Reading < MinPosition) MinPosition = Reading;
-		if (Reading - MinPosition > 50) AdjLast = 100;	// reset
+		if (AINs.AIN1 < MinPosition) MinPosition = AINs.AIN1;
+		if (AINs.AIN1 - MinPosition > 50) AdjLast = 100;	// reset
 	}
 	else
 	{
 		// steering disengaged, extend linear actuator
-		if (Reading < MaxStop && IsMoving)
+		if (AINs.AIN1 < MaxStop && IsMoving)
 		{
-			digitalWrite(PINS.FlowDir, HIGH);
-			analogWrite(PINS.FlowPWM, 255);
+			ControlMotor2(255, HIGH);
 		}
 		else
 		{
-			analogWrite(PINS.FlowPWM, 0);
+			ControlMotor2(0, HIGH);
 		}
 
 		// check for slippage
-		if (Reading > MaxPosition) MaxPosition = Reading;
-		if (MaxPosition - Reading > 50) AdjLast = 100;  // reset
+		if (AINs.AIN1 > MaxPosition) MaxPosition = AINs.AIN1;
+		if (MaxPosition - AINs.AIN1 > 50) AdjLast = 100;  // reset
 	}
 }

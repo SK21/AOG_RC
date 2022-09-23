@@ -56,7 +56,17 @@ void ReadSwitches()
 	else
 	{
 		// no switch, match status
-		SteerSwitch = !guidanceStatus;
+		if (guidanceStatus)
+		{
+			// steering on
+			if (!LatchedOff) SteerSwitch = !guidanceStatus;
+		}
+		else
+		{
+			// steering off
+			SteerSwitch = !guidanceStatus;
+			LatchedOff = false;
+		}
 		switchByte = SteerSwitch << 1;
 	}
 
@@ -84,8 +94,7 @@ void ReadSwitches()
 	// current sensor
 	if (steerConfig.CurrentSensor)
 	{
-		float SensorSample = (float)adc->adc0->analogRead(PINS.CurrentSensor);
-		SensorSample = (abs(512 - SensorSample)) * 0.5;
+		float SensorSample = (((abs(6700.0 - (float)AINs.AIN2)) / 6700.0) * 255.0) * 4.0;
 		SensorReading = SensorReading * 0.7 + SensorSample * 0.3;
 		if (SensorReading >= steerConfig.PulseCountMax)
 		{
@@ -99,7 +108,7 @@ void ReadSwitches()
 	// pressure sensor
 	if (steerConfig.PressureSensor)
 	{
-		float SensorSample = (float)adc->adc0->analogRead(PINS.PressureSensor);
+		float SensorSample = (float)AINs.AIN1;
 		SensorSample *= 0.25;
 		SensorReading = SensorReading * 0.6 + SensorSample * 0.4;
 		if (SensorReading >= steerConfig.PulseCountMax)

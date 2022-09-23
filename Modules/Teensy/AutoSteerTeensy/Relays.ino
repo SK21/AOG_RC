@@ -16,27 +16,27 @@ void CheckRelays()
     NewLo = 0;
     NewHi = 0;
 
-    if (WifiSwitchesEnabled)
+    if (WifiSwitches.Enabled)
     {
         // wifi relay control
         // controls by relay # not section #
-        if (millis() - WifiSwitchesTimer > 30000) // 30 second timer
+        if (millis() - WifiSwitches.StartTime > 30000) // 30 second timer
         {
             // wifi switches have timed out
-            WifiSwitchesEnabled = false;
+            WifiSwitches.Enabled = false;
         }
         else
         {
-            if (WifiSwitches[2])
+            if (WifiSwitches.MasterOn)
             {
                 // wifi master on
-                NewLo = WifiSwitches[3];
-                NewHi = WifiSwitches[4];
+                NewLo = WifiSwitches.RelaysLo;
+                NewHi = WifiSwitches.RelaysHi;
             }
             else
             {
                 // wifi master off
-                WifiSwitchesEnabled = false;
+                WifiSwitches.MasterOn = false;
             }
         }
     }

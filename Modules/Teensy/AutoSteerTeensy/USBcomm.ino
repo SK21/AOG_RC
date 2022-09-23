@@ -4,7 +4,7 @@ byte SerialMSB;
 byte SerialLSB;
 byte SerialPacket[30];
 
-void ReceiveSerial()
+void ReceiveSerialUSB()
 {
 	if (Serial.available())
 	{
@@ -22,7 +22,7 @@ void ReceiveSerial()
 		{
 		case 32622:
 			// Teensy config
-			PGNlength = 15;
+			PGNlength = 16;
 			if (Serial.available() > PGNlength - 3)
 			{
 				SerialPGN = 0;
@@ -43,8 +43,9 @@ void ReceiveSerial()
 					PCB.IMUdelay = SerialPacket[8];
 					PCB.IMU_Interval = SerialPacket[9];
 					PCB.ZeroOffset = SerialPacket[10] | SerialPacket[11] << 8;
-					PCB.RelayControl = SerialPacket[12];
+					PCB.RS485PortNumber = SerialPacket[12];
 					PCB.IPpart3 = SerialPacket[13];
+					PCB.WemosSerialPort = SerialPacket[14];
 
 					EEPROM.put(110, PCB);
 				}
@@ -70,13 +71,13 @@ void ReceiveSerial()
 					PCB.MinSpeed = SerialPacket[2];
 					PCB.MaxSpeed = SerialPacket[3];
 					PCB.PulseCal = SerialPacket[4] | SerialPacket[5] << 8;
-					PCB.AdsWASpin = SerialPacket[6];
-					PCB.RS485PortNumber = SerialPacket[7];
+					PCB.AnalogMethod = SerialPacket[6];
+					PCB.RelayControl = SerialPacket[7];
 					PCB.ModuleID = SerialPacket[8];
 
 					uint8_t Commands = SerialPacket[9];
 					if (bitRead(Commands, 0)) PCB.UseRate = 1; else PCB.UseRate = 0;
-					if (bitRead(Commands, 1)) PCB.UseAds = 1; else PCB.UseAds = 0;
+					if (bitRead(Commands, 1)) PCB.UseTB6612 = 1; else PCB.UseTB6612 = 0;
 					if (bitRead(Commands, 2)) PCB.RelayOnSignal = 1; else PCB.RelayOnSignal = 0;
 					if (bitRead(Commands, 3)) PCB.FlowOnDirection = 1; else PCB.FlowOnDirection = 0;
 					if (bitRead(Commands, 4)) PCB.SwapRollPitch = 1; else PCB.SwapRollPitch = 0;
@@ -105,8 +106,8 @@ void ReceiveSerial()
 
 				if (GoodCRC(SerialPacket, PGNlength))
 				{
-					PINS.SteerDir = SerialPacket[2];
-					PINS.SteerPWM = SerialPacket[3];
+					PINS.Motor1Dir = SerialPacket[2];
+					PINS.Motor1PWM = SerialPacket[3];
 					PINS.STEERSW = SerialPacket[4];
 					PINS.WAS = SerialPacket[5];
 					PINS.SteerSW_Relay = SerialPacket[6];
@@ -114,8 +115,8 @@ void ReceiveSerial()
 					PINS.CurrentSensor = SerialPacket[8];
 					PINS.PressureSensor = SerialPacket[9];
 					PINS.Encoder = SerialPacket[10];
-					PINS.FlowDir = SerialPacket[11];
-					PINS.FlowPWM = SerialPacket[12];
+					PINS.Motor2Dir = SerialPacket[11];
+					PINS.Motor2PWM = SerialPacket[12];
 					PINS.SpeedPulse = SerialPacket[13];
 					PINS.RS485SendEnable = SerialPacket[14];
 

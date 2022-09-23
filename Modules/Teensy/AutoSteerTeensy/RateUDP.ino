@@ -71,9 +71,9 @@ void ReceiveRateUDP()
 	{
 		UDPrate.read(RatePacket, UDP_TX_PACKET_MAX_SIZE);
 		RatePGN = RatePacket[1] << 8 | RatePacket[0];
-
-		if (RatePGN == 32614 && len > 13)
+		switch (RatePGN)
 		{
+		case 32614:
 			//PGN32614 to Arduino from Rate Controller
 			//0	HeaderLo		102
 			//1	HeaderHi		127
@@ -94,84 +94,92 @@ void ReceiveRateUDP()
 			//11    power relay Lo      list of power type relays 0-7
 			//12    power relay Hi      list of power type relays 8-15
 			//13	crc
+			PGNlength = 14;
 
-
-			if (GoodCRC(RatePacket, 14))
+			if (len > PGNlength - 1)
 			{
-				uint8_t tmp = RatePacket[2];
-				if (ParseModID(tmp) == PCB.ModuleID)
+				if (GoodCRC(RatePacket, PGNlength))
 				{
-					byte SensorID = ParseSenID(tmp);
-					if (SensorID == 0)
+					uint8_t tmp = RatePacket[2];
+					if (ParseModID(tmp) == PCB.ModuleID)
 					{
-						RelayLo = RatePacket[3];
-						RelayHi = RatePacket[4];
-
-						// rate setting, 10 times actual
-						uint16_t tmp = RatePacket[5] | RatePacket[6] << 8 | RatePacket[7] << 16;
-						float TmpSet = (float)tmp * 0.1;
-
-						// Meter Cal, 100 times actual
-						tmp = RatePacket[8] | RatePacket[9] << 8;
-						MeterCal[SensorID] = (float)tmp * 0.01;
-
-						// command byte
-						InCommand[SensorID] = RatePacket[10];
-						if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
-
-						ControlType[SensorID] = 0;
-						if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
-						if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
-
-						MasterOn[SensorID] = ((InCommand[SensorID] & 8) == 8);
-						UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
-
-						AutoOn = ((InCommand[SensorID] & 32) == 32);
-						if (AutoOn)
+						byte SensorID = ParseSenID(tmp);
+						if (SensorID == 0)
 						{
-							RateSetting[SensorID] = TmpSet;
+							RelayLo = RatePacket[3];
+							RelayHi = RatePacket[4];
+
+							// rate setting, 10 times actual
+							uint16_t tmp = RatePacket[5] | RatePacket[6] << 8 | RatePacket[7] << 16;
+							float TmpSet = (float)tmp * 0.1;
+
+							// Meter Cal, 100 times actual
+							tmp = RatePacket[8] | RatePacket[9] << 8;
+							MeterCal[SensorID] = (float)tmp * 0.01;
+
+							// command byte
+							InCommand[SensorID] = RatePacket[10];
+							if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
+
+							ControlType[SensorID] = 0;
+							if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
+							if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
+
+							MasterOn[SensorID] = ((InCommand[SensorID] & 8) == 8);
+							UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
+
+							AutoOn = ((InCommand[SensorID] & 32) == 32);
+							if (AutoOn)
+							{
+								RateSetting[SensorID] = TmpSet;
+							}
+							else
+							{
+								ManualAdjust[SensorID] = TmpSet;
+							}
+
+							DebugOn = ((InCommand[SensorID] & 64) == 64);
+
+							// power relays
+							PowerRelayLo = RatePacket[11];
+							PowerRelayHi = RatePacket[12];
+
+							RateCommTime[SensorID] = millis();
 						}
-						else
-						{
-							ManualAdjust[SensorID] = TmpSet;
-						}
-
-						DebugOn = ((InCommand[SensorID] & 64) == 64);
-
-						// power relays
-						PowerRelayLo = RatePacket[11];
-						PowerRelayHi = RatePacket[12];
-
-						RateCommTime[SensorID] = millis();
 					}
 				}
 			}
-		}
-		else if (RatePGN == 32616 && len > 11)
-		{
+			break;
+
+		case 32616:
 			// PID to Arduino from RateController
+			PGNlength = 12;
 
-			if (GoodCRC(RatePacket, 12))
+			if (len > PGNlength - 1)
 			{
-				uint8_t tmp = RatePacket[2];
-				if (ParseModID(tmp) == PCB.ModuleID)
+				if (GoodCRC(RatePacket, PGNlength))
 				{
-					byte SensorID = ParseSenID(tmp);
-					if (SensorID == 0)
+					uint8_t tmp = RatePacket[2];
+					if (ParseModID(tmp) == PCB.ModuleID)
 					{
-						PIDkp[SensorID] = RatePacket[3];
-						PIDminPWM[SensorID] = RatePacket[4];
-						PIDLowMax[SensorID] = RatePacket[5];
-						PIDHighMax[SensorID] = RatePacket[6];
-						PIDdeadband[SensorID] = RatePacket[7];
-						PIDbrakePoint[SensorID] = RatePacket[8];
-						AdjustTime[SensorID] = RatePacket[9];
-						PIDki[SensorID] = RatePacket[10];
+						byte SensorID = ParseSenID(tmp);
+						if (SensorID == 0)
+						{
+							PIDkp[SensorID] = RatePacket[3];
+							PIDminPWM[SensorID] = RatePacket[4];
+							PIDLowMax[SensorID] = RatePacket[5];
+							PIDHighMax[SensorID] = RatePacket[6];
+							PIDdeadband[SensorID] = RatePacket[7];
+							PIDbrakePoint[SensorID] = RatePacket[8];
+							AdjustTime[SensorID] = RatePacket[9];
+							PIDki[SensorID] = RatePacket[10];
 
-						RateCommTime[SensorID] = millis();
+							RateCommTime[SensorID] = millis();
+						}
 					}
 				}
 			}
+			break;
 		}
 	}
 }
@@ -182,6 +190,12 @@ void DebugTheINO()
 	if (millis() - DebugTime > 1000)
 	{
 		DebugTime = millis();
+		//DebugVal1 = PINS.WAS;
+		//DebugVal2 = PINS.PressureSensor;
+
+		DebugVal1 = PCB.RS485PortNumber;
+		DebugVal2 = PCB.WemosSerialPort;
+		DebugVal3 = PCB.AnalogMethod;
 
 		// Serial
 		// PGNudp 2748 - 0xABC
@@ -196,10 +210,10 @@ void DebugTheINO()
 		Serial.print(DebugVal3);
 		Serial.print(", ");
 		Serial.print(DebugVal4);
-		Serial.print(",    ");
-		Serial.print(DebugCount1);
 		Serial.print(",");
-		Serial.print(DebugCount2);
+		Serial.print(DebugVal5);
+		Serial.print(",");
+		Serial.print(DebugVal6);
 
 		Serial.println("");
 
@@ -208,8 +222,8 @@ void DebugTheINO()
 		//RatePacket[1] = 0xA;
 		//RatePacket[2] = DebugVal1;
 		//RatePacket[3] = DebugVal2;
-		//RatePacket[4] = DebugCount1;
-		//RatePacket[5] = DebugCount2;
+		//RatePacket[4] = DebugVal5;
+		//RatePacket[5] = DebugVal6;
 
 		//// send to RateController
 		//UDPrate.beginPacket(RateSendIP, DestinationPortRate);
