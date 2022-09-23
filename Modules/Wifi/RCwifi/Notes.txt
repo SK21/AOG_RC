@@ -1,3 +1,0 @@
-To use remote switches connect to the wemos hotspot, password tractor99 and go to 192.168.4.1 in a web browser. A page with switch buttons will be displayed.
-
-To update the firmware Over-The-Air the wemos hotspot must be connected and use the Arduino IDE.

@@ -1,119 +1,3 @@
-# define InoDescription "RCwifi  :  11-May-2022"
-
-// used for remote section on/off to test if functional
-// for Wemos D1 mini Pro,  board: LOLIN(Wemos) D1 R2 & mini
-// OTA update from access point using Arduino IDE
-
-#include <Arduino.h>
-#include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
-#include <WiFiUdp.h>
-#include <ArduinoOTA.h>
-#include <ESP8266WebServer.h>
-#include <WiFiClient.h>
-
-ESP8266WebServer server(80);
-
-const char* ssid = "Switches";
-const char* password = "tractor99"; // needs to be at least 8 characters
-
-unsigned long BlinkTime;
-bool BlinkState;
-bool MasterOn = false;
-bool Button[16];
-
-byte SendByte;
-byte SendBit;
-
-unsigned long LoopTime;
-String tmp;
-IPAddress apIP(192, 168, 4, 1);
-byte Packet[30];
-
-void setup()
-{
-	Serial.begin(38400);
-	delay(2000);
-	Serial.println("");
-	Serial.println(InoDescription);
-
-	pinMode(LED_BUILTIN, OUTPUT);
-
-	WiFi.disconnect();
-	WiFi.mode(WIFI_AP);
-	WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-	WiFi.softAP(ssid, password);
-
-	MDNS.begin("esp8266", WiFi.softAPIP());
-	Serial.print("IP address: ");
-	Serial.println(WiFi.softAPIP());
-
-	StartOTA();
-
-	server.on("/", handleRoot);
-	server.on("/ButtonPressed", ButtonPressed);
-	server.begin();
-	Serial.println("HTTP server started");
-
-	Packet[0] = 107;
-	Packet[1] = 127;
-
-	Serial.println("Finished Setup");
-}
-
-void loop()
-{
-	ArduinoOTA.handle();
-	server.handleClient();
-	Blink();
-}
-
-void Blink()
-{
-	if (millis() - BlinkTime > 1000)
-	{
-		BlinkTime = millis();
-		BlinkState = !BlinkState;
-		digitalWrite(LED_BUILTIN, BlinkState);
-	}
-}
-
-void Send()
-{
-	// PGN32619
-	// 0    107
-	// 1    127
-	// 2    MasterOn
-	// 3	switches 0-7
-	// 4	switches 8-15
-	// 5	crc
-
-	Packet[2] = MasterOn;
-	Packet[3] = 0;
-	Packet[4] = 0;
-
-	// convert section switches to bits
-	for (int i = 0; i < 16; i++)
-	{
-		SendByte = i / 8;
-		SendBit = i - SendByte * 8;
-		if (Button[i]) bitSet(Packet[SendByte + 3], SendBit);
-	}
-
-	// crc
-	Packet[5] = CRC(5, 0);
-
-	// send
-	for (int i = 0; i < 6; i++)
-	{
-		Serial.write(Packet[i]);
-		//Serial.print(Packet[i]);
-		//if (i < 5) Serial.print(",");
-		yield();
-	}
-	Serial.println("");
-}
-
 void handleRoot()
 {
 	server.send(200, "text/html", GetPage1());
@@ -124,7 +8,7 @@ void ButtonPressed()
 	if (server.arg("Btn") == "Master")
 	{
 		MasterOn = !MasterOn;
-		Send();
+		SendSwitches();
 		handleRoot();
 	}
 	else
@@ -133,7 +17,7 @@ void ButtonPressed()
 		if (ID >= 0 && ID < 16)
 		{
 			Button[ID] = !Button[ID];
-			Send();
+			SendSwitches();
 			handleRoot();
 		}
 	}
@@ -221,8 +105,8 @@ String GetPage1()
 
 	for (int i = 0; i < 16; i++)
 	{
-		if(Button[i]) tmp = "buttonOn"; else tmp = "buttonOff";
-		st += "      <p> <input class='" + tmp + "' name='Btn' type=submit formaction='/ButtonPressed' value='"+ String(i+1) +"'> </p>";
+		if (Button[i]) tmp = "buttonOn"; else tmp = "buttonOff";
+		st += "      <p> <input class='" + tmp + "' name='Btn' type=submit formaction='/ButtonPressed' value='" + String(i + 1) + "'> </p>";
 	}
 
 	st += "    </form>";
@@ -232,25 +116,41 @@ String GetPage1()
 	return st;
 }
 
-bool GoodCRC(uint16_t Length)
+void SendSwitches()
 {
-	byte ck = CRC(Length - 1, 0);
-	bool Result = (ck == Packet[Length - 1]);
-	return Result;
-}
+	// PGN32619
+	// 0    107
+	// 1    127
+	// 2    MasterOn
+	// 3	switches 0-7
+	// 4	switches 8-15
+	// 5	crc
 
-byte CRC(int Length, byte Start)
-{
-	byte Result = 0;
-	if (Length <= sizeof(Packet))
+	Packet[0] = 107;
+	Packet[1] = 127;
+	Packet[2] = MasterOn;
+	Packet[3] = 0;
+	Packet[4] = 0;
+
+	// convert section switches to bits
+	for (int i = 0; i < 16; i++)
 	{
-		int CK = 0;
-		for (int i = Start; i < Length; i++)
-		{
-			CK += Packet[i];
-		}
-		Result = (byte)CK;
+		SendByte = i / 8;
+		SendBit = i - SendByte * 8;
+		if (Button[i]) bitSet(Packet[SendByte + 3], SendBit);
 	}
-	return Result;
+
+	// crc
+	Packet[5] = CRC(5, 0);
+
+	// send
+	for (int i = 0; i < 6; i++)
+	{
+		Serial.write(Packet[i]);
+		//Serial.print(Packet[i]);
+		//if (i < 5) Serial.print(",");
+		yield();
+	}
+	Serial.println("");
 }
 
