@@ -35,8 +35,6 @@
             this.label30 = new System.Windows.Forms.Label();
             this.tbIPaddress = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
-            this.cbRelayControl = new System.Windows.Forms.ComboBox();
             this.cbIMU = new System.Windows.Forms.ComboBox();
             this.tbZeroOffset = new System.Windows.Forms.TextBox();
             this.tbIMUinterval = new System.Windows.Forms.TextBox();
@@ -54,22 +52,20 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.cbAnalog = new System.Windows.Forms.ComboBox();
             this.ckActuator = new System.Windows.Forms.CheckBox();
             this.ckInvertRoll = new System.Windows.Forms.CheckBox();
             this.ckSwapPitchRoll = new System.Windows.Forms.CheckBox();
-            this.ckADS = new System.Windows.Forms.CheckBox();
+            this.ckOnBoard = new System.Windows.Forms.CheckBox();
             this.ckFlowOn = new System.Windows.Forms.CheckBox();
             this.ckUseRate = new System.Windows.Forms.CheckBox();
             this.ckRelayOn = new System.Windows.Forms.CheckBox();
             this.ckGyro = new System.Windows.Forms.CheckBox();
             this.tbModule = new System.Windows.Forms.TextBox();
-            this.tbRS485port = new System.Windows.Forms.TextBox();
-            this.tbAdsWasPin = new System.Windows.Forms.TextBox();
             this.tbPulseCal = new System.Windows.Forms.TextBox();
             this.tbMaxSpeed = new System.Windows.Forms.TextBox();
             this.tbMinSpeed = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -105,6 +101,12 @@
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
+            this.tbWemosSerialPort = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.tbRS485port = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.cbRelayControl = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -124,12 +126,14 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.tbRS485port);
+            this.tabPage1.Controls.Add(this.label10);
+            this.tabPage1.Controls.Add(this.tbWemosSerialPort);
+            this.tabPage1.Controls.Add(this.label31);
             this.tabPage1.Controls.Add(this.lbIPpart4);
             this.tabPage1.Controls.Add(this.label30);
             this.tabPage1.Controls.Add(this.tbIPaddress);
             this.tabPage1.Controls.Add(this.label29);
-            this.tabPage1.Controls.Add(this.label28);
-            this.tabPage1.Controls.Add(this.cbRelayControl);
             this.tabPage1.Controls.Add(this.cbIMU);
             this.tabPage1.Controls.Add(this.tbZeroOffset);
             this.tabPage1.Controls.Add(this.tbIMUinterval);
@@ -157,7 +161,7 @@
             // lbIPpart4
             // 
             this.lbIPpart4.AutoSize = true;
-            this.lbIPpart4.Location = new System.Drawing.Point(670, 231);
+            this.lbIPpart4.Location = new System.Drawing.Point(670, 211);
             this.lbIPpart4.Name = "lbIPpart4";
             this.lbIPpart4.Size = new System.Drawing.Size(45, 24);
             this.lbIPpart4.TabIndex = 21;
@@ -166,7 +170,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(528, 232);
+            this.label30.Location = new System.Drawing.Point(528, 211);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(80, 24);
             this.label30.TabIndex = 20;
@@ -174,7 +178,7 @@
             // 
             // tbIPaddress
             // 
-            this.tbIPaddress.Location = new System.Drawing.Point(614, 229);
+            this.tbIPaddress.Location = new System.Drawing.Point(614, 209);
             this.tbIPaddress.Name = "tbIPaddress";
             this.tbIPaddress.Size = new System.Drawing.Size(50, 29);
             this.tbIPaddress.TabIndex = 19;
@@ -183,35 +187,11 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(387, 231);
+            this.label29.Location = new System.Drawing.Point(387, 211);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(101, 24);
             this.label29.TabIndex = 18;
             this.label29.Text = "IP Address";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(7, 231);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(122, 24);
-            this.label28.TabIndex = 17;
-            this.label28.Text = "Relay Control";
-            // 
-            // cbRelayControl
-            // 
-            this.cbRelayControl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbRelayControl.FormattingEnabled = true;
-            this.cbRelayControl.Items.AddRange(new object[] {
-            "No Relays",
-            "RS485",
-            "PCA9555  8 relays",
-            "PCA9555  16 relays"});
-            this.cbRelayControl.Location = new System.Drawing.Point(164, 228);
-            this.cbRelayControl.Name = "cbRelayControl";
-            this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
-            this.cbRelayControl.TabIndex = 16;
-            this.cbRelayControl.SelectedIndexChanged += new System.EventHandler(this.cbRelayControl_SelectedIndexChanged);
             // 
             // cbIMU
             // 
@@ -223,7 +203,7 @@
             "CMPS14",
             "Adafruit BNO",
             "Serial IMU"});
-            this.cbIMU.Location = new System.Drawing.Point(544, 54);
+            this.cbIMU.Location = new System.Drawing.Point(544, 34);
             this.cbIMU.Name = "cbIMU";
             this.cbIMU.Size = new System.Drawing.Size(187, 32);
             this.cbIMU.TabIndex = 15;
@@ -231,7 +211,7 @@
             // 
             // tbZeroOffset
             // 
-            this.tbZeroOffset.Location = new System.Drawing.Point(614, 185);
+            this.tbZeroOffset.Location = new System.Drawing.Point(614, 165);
             this.tbZeroOffset.Name = "tbZeroOffset";
             this.tbZeroOffset.Size = new System.Drawing.Size(118, 29);
             this.tbZeroOffset.TabIndex = 14;
@@ -239,7 +219,7 @@
             // 
             // tbIMUinterval
             // 
-            this.tbIMUinterval.Location = new System.Drawing.Point(614, 141);
+            this.tbIMUinterval.Location = new System.Drawing.Point(614, 121);
             this.tbIMUinterval.Name = "tbIMUinterval";
             this.tbIMUinterval.Size = new System.Drawing.Size(118, 29);
             this.tbIMUinterval.TabIndex = 13;
@@ -248,7 +228,7 @@
             // 
             // tbIMUdelay
             // 
-            this.tbIMUdelay.Location = new System.Drawing.Point(614, 97);
+            this.tbIMUdelay.Location = new System.Drawing.Point(614, 77);
             this.tbIMUdelay.Name = "tbIMUdelay";
             this.tbIMUdelay.Size = new System.Drawing.Size(118, 29);
             this.tbIMUdelay.TabIndex = 12;
@@ -257,7 +237,7 @@
             // 
             // tbRTCM
             // 
-            this.tbRTCM.Location = new System.Drawing.Point(233, 185);
+            this.tbRTCM.Location = new System.Drawing.Point(233, 253);
             this.tbRTCM.Name = "tbRTCM";
             this.tbRTCM.Size = new System.Drawing.Size(118, 29);
             this.tbRTCM.TabIndex = 11;
@@ -266,19 +246,21 @@
             // 
             // tbRTCMserialPort
             // 
-            this.tbRTCMserialPort.Location = new System.Drawing.Point(233, 142);
+            this.tbRTCMserialPort.Location = new System.Drawing.Point(233, 122);
             this.tbRTCMserialPort.Name = "tbRTCMserialPort";
             this.tbRTCMserialPort.Size = new System.Drawing.Size(118, 29);
             this.tbRTCMserialPort.TabIndex = 10;
             this.tbRTCMserialPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbRTCMserialPort.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbRTCMserialPort_HelpRequested);
             // 
             // tbNMEAserialPort
             // 
-            this.tbNMEAserialPort.Location = new System.Drawing.Point(233, 99);
+            this.tbNMEAserialPort.Location = new System.Drawing.Point(233, 79);
             this.tbNMEAserialPort.Name = "tbNMEAserialPort";
             this.tbNMEAserialPort.Size = new System.Drawing.Size(118, 29);
             this.tbNMEAserialPort.TabIndex = 9;
             this.tbNMEAserialPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbNMEAserialPort.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbNMEAserialPort_HelpRequested);
             // 
             // cbReceiver
             // 
@@ -288,7 +270,7 @@
             "None",
             "SimpleRTK2B",
             "Sparkfun F9P"});
-            this.cbReceiver.Location = new System.Drawing.Point(164, 53);
+            this.cbReceiver.Location = new System.Drawing.Point(164, 33);
             this.cbReceiver.Name = "cbReceiver";
             this.cbReceiver.Size = new System.Drawing.Size(187, 32);
             this.cbReceiver.TabIndex = 8;
@@ -297,7 +279,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(387, 187);
+            this.label8.Location = new System.Drawing.Point(387, 167);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(143, 24);
             this.label8.TabIndex = 7;
@@ -306,7 +288,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(387, 143);
+            this.label7.Location = new System.Drawing.Point(387, 123);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(161, 24);
             this.label7.TabIndex = 6;
@@ -315,7 +297,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(387, 99);
+            this.label6.Location = new System.Drawing.Point(387, 79);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(136, 24);
             this.label6.TabIndex = 5;
@@ -324,7 +306,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(387, 58);
+            this.label5.Location = new System.Drawing.Point(387, 38);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(43, 24);
             this.label5.TabIndex = 4;
@@ -333,7 +315,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 187);
+            this.label4.Location = new System.Drawing.Point(7, 255);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(159, 24);
             this.label4.TabIndex = 3;
@@ -342,7 +324,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 143);
+            this.label3.Location = new System.Drawing.Point(7, 123);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(150, 24);
             this.label3.TabIndex = 2;
@@ -351,7 +333,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 99);
+            this.label2.Location = new System.Drawing.Point(7, 79);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(152, 24);
             this.label2.TabIndex = 1;
@@ -360,7 +342,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 57);
+            this.label1.Location = new System.Drawing.Point(7, 37);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(121, 24);
             this.label1.TabIndex = 0;
@@ -368,22 +350,22 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label28);
+            this.tabPage2.Controls.Add(this.cbRelayControl);
+            this.tabPage2.Controls.Add(this.cbAnalog);
             this.tabPage2.Controls.Add(this.ckActuator);
             this.tabPage2.Controls.Add(this.ckInvertRoll);
             this.tabPage2.Controls.Add(this.ckSwapPitchRoll);
-            this.tabPage2.Controls.Add(this.ckADS);
+            this.tabPage2.Controls.Add(this.ckOnBoard);
             this.tabPage2.Controls.Add(this.ckFlowOn);
             this.tabPage2.Controls.Add(this.ckUseRate);
             this.tabPage2.Controls.Add(this.ckRelayOn);
             this.tabPage2.Controls.Add(this.ckGyro);
             this.tabPage2.Controls.Add(this.tbModule);
-            this.tabPage2.Controls.Add(this.tbRS485port);
-            this.tabPage2.Controls.Add(this.tbAdsWasPin);
             this.tabPage2.Controls.Add(this.tbPulseCal);
             this.tabPage2.Controls.Add(this.tbMaxSpeed);
             this.tabPage2.Controls.Add(this.tbMinSpeed);
             this.tabPage2.Controls.Add(this.label9);
-            this.tabPage2.Controls.Add(this.label10);
             this.tabPage2.Controls.Add(this.label11);
             this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.label13);
@@ -396,14 +378,29 @@
             this.tabPage2.Text = "Config 2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // cbAnalog
+            // 
+            this.cbAnalog.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAnalog.FormattingEnabled = true;
+            this.cbAnalog.Items.AddRange(new object[] {
+            "ADS1115 (Teensy)",
+            "pins (Teensy)",
+            "ADS1115 (D1 Mini)"});
+            this.cbAnalog.Location = new System.Drawing.Point(544, 8);
+            this.cbAnalog.Name = "cbAnalog";
+            this.cbAnalog.Size = new System.Drawing.Size(187, 32);
+            this.cbAnalog.TabIndex = 37;
+            this.cbAnalog.SelectedIndexChanged += new System.EventHandler(this.cbAnalog_SelectedIndexChanged);
+            this.cbAnalog.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.cbAnalog_HelpRequested);
+            // 
             // ckActuator
             // 
             this.ckActuator.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckActuator.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckActuator.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckActuator.Location = new System.Drawing.Point(613, 232);
+            this.ckActuator.Location = new System.Drawing.Point(601, 232);
             this.ckActuator.Name = "ckActuator";
-            this.ckActuator.Size = new System.Drawing.Size(117, 69);
+            this.ckActuator.Size = new System.Drawing.Size(130, 69);
             this.ckActuator.TabIndex = 36;
             this.ckActuator.Text = "Use Actuator";
             this.ckActuator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -417,7 +414,7 @@
             this.ckInvertRoll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckInvertRoll.Location = new System.Drawing.Point(10, 232);
             this.ckInvertRoll.Name = "ckInvertRoll";
-            this.ckInvertRoll.Size = new System.Drawing.Size(117, 69);
+            this.ckInvertRoll.Size = new System.Drawing.Size(130, 69);
             this.ckInvertRoll.TabIndex = 35;
             this.ckInvertRoll.Text = "Invert roll";
             this.ckInvertRoll.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -430,34 +427,34 @@
             this.ckSwapPitchRoll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckSwapPitchRoll.Location = new System.Drawing.Point(10, 146);
             this.ckSwapPitchRoll.Name = "ckSwapPitchRoll";
-            this.ckSwapPitchRoll.Size = new System.Drawing.Size(117, 69);
+            this.ckSwapPitchRoll.Size = new System.Drawing.Size(130, 69);
             this.ckSwapPitchRoll.TabIndex = 34;
             this.ckSwapPitchRoll.Text = "Swap pitch roll";
             this.ckSwapPitchRoll.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSwapPitchRoll.UseVisualStyleBackColor = true;
             // 
-            // ckADS
+            // ckOnBoard
             // 
-            this.ckADS.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckADS.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckADS.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckADS.Location = new System.Drawing.Point(211, 146);
-            this.ckADS.Name = "ckADS";
-            this.ckADS.Size = new System.Drawing.Size(117, 69);
-            this.ckADS.TabIndex = 32;
-            this.ckADS.Text = "Use ADS1115";
-            this.ckADS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckADS.UseVisualStyleBackColor = true;
-            this.ckADS.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckADS_HelpRequested);
+            this.ckOnBoard.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckOnBoard.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckOnBoard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckOnBoard.Location = new System.Drawing.Point(207, 146);
+            this.ckOnBoard.Name = "ckOnBoard";
+            this.ckOnBoard.Size = new System.Drawing.Size(130, 69);
+            this.ckOnBoard.TabIndex = 32;
+            this.ckOnBoard.Text = "On-board motor driver";
+            this.ckOnBoard.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckOnBoard.UseVisualStyleBackColor = true;
+            this.ckOnBoard.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOnBoard_HelpRequested);
             // 
             // ckFlowOn
             // 
             this.ckFlowOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFlowOn.Location = new System.Drawing.Point(412, 232);
+            this.ckFlowOn.Location = new System.Drawing.Point(404, 232);
             this.ckFlowOn.Name = "ckFlowOn";
-            this.ckFlowOn.Size = new System.Drawing.Size(117, 69);
+            this.ckFlowOn.Size = new System.Drawing.Size(130, 69);
             this.ckFlowOn.TabIndex = 31;
             this.ckFlowOn.Text = "Flow on High";
             this.ckFlowOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -469,9 +466,9 @@
             this.ckUseRate.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckUseRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckUseRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckUseRate.Location = new System.Drawing.Point(613, 146);
+            this.ckUseRate.Location = new System.Drawing.Point(601, 146);
             this.ckUseRate.Name = "ckUseRate";
-            this.ckUseRate.Size = new System.Drawing.Size(117, 69);
+            this.ckUseRate.Size = new System.Drawing.Size(130, 69);
             this.ckUseRate.TabIndex = 29;
             this.ckUseRate.Text = "Use rate control";
             this.ckUseRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -482,9 +479,9 @@
             this.ckRelayOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRelayOn.Location = new System.Drawing.Point(412, 146);
+            this.ckRelayOn.Location = new System.Drawing.Point(404, 146);
             this.ckRelayOn.Name = "ckRelayOn";
-            this.ckRelayOn.Size = new System.Drawing.Size(117, 69);
+            this.ckRelayOn.Size = new System.Drawing.Size(130, 69);
             this.ckRelayOn.TabIndex = 28;
             this.ckRelayOn.Text = "Relay on High";
             this.ckRelayOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -496,9 +493,9 @@
             this.ckGyro.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckGyro.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckGyro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckGyro.Location = new System.Drawing.Point(211, 232);
+            this.ckGyro.Location = new System.Drawing.Point(207, 232);
             this.ckGyro.Name = "ckGyro";
-            this.ckGyro.Size = new System.Drawing.Size(117, 69);
+            this.ckGyro.Size = new System.Drawing.Size(130, 69);
             this.ckGyro.TabIndex = 27;
             this.ckGyro.Text = "Gyro On";
             this.ckGyro.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -511,24 +508,6 @@
             this.tbModule.Size = new System.Drawing.Size(118, 29);
             this.tbModule.TabIndex = 26;
             this.tbModule.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // tbRS485port
-            // 
-            this.tbRS485port.Location = new System.Drawing.Point(613, 54);
-            this.tbRS485port.Name = "tbRS485port";
-            this.tbRS485port.Size = new System.Drawing.Size(118, 29);
-            this.tbRS485port.TabIndex = 25;
-            this.tbRS485port.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRS485port.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbRS485port_HelpRequested);
-            // 
-            // tbAdsWasPin
-            // 
-            this.tbAdsWasPin.Location = new System.Drawing.Point(613, 10);
-            this.tbAdsWasPin.Name = "tbAdsWasPin";
-            this.tbAdsWasPin.Size = new System.Drawing.Size(118, 29);
-            this.tbAdsWasPin.TabIndex = 24;
-            this.tbAdsWasPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbAdsWasPin.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbAdsWasPin_HelpRequested);
             // 
             // tbPulseCal
             // 
@@ -564,23 +543,14 @@
             this.label9.TabIndex = 20;
             this.label9.Text = "Module ID";
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(412, 56);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(151, 24);
-            this.label10.TabIndex = 19;
-            this.label10.Text = "RS485 serial port";
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(412, 12);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(167, 24);
+            this.label11.Size = new System.Drawing.Size(116, 24);
             this.label11.TabIndex = 18;
-            this.label11.Text = "ADS1115 WAS pin";
+            this.label11.Text = "Analog Input";
             // 
             // label12
             // 
@@ -708,9 +678,9 @@
             this.label26.AutoSize = true;
             this.label26.Location = new System.Drawing.Point(405, 140);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(99, 24);
+            this.label26.Size = new System.Drawing.Size(119, 24);
             this.label26.TabIndex = 42;
-            this.label26.Text = "Rate PWM";
+            this.label26.Text = "Motor2 PWM";
             // 
             // tbDir2
             // 
@@ -741,9 +711,9 @@
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(405, 99);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(83, 24);
+            this.label21.Size = new System.Drawing.Size(103, 24);
             this.label21.TabIndex = 38;
-            this.label21.Text = "Rate DIR";
+            this.label21.Text = "Motor2 DIR";
             // 
             // label22
             // 
@@ -915,6 +885,66 @@
             this.bntOK.UseVisualStyleBackColor = true;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
+            // tbWemosSerialPort
+            // 
+            this.tbWemosSerialPort.Location = new System.Drawing.Point(233, 165);
+            this.tbWemosSerialPort.Name = "tbWemosSerialPort";
+            this.tbWemosSerialPort.Size = new System.Drawing.Size(118, 29);
+            this.tbWemosSerialPort.TabIndex = 23;
+            this.tbWemosSerialPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWemosSerialPort.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbWemosSerialPort_HelpRequested);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(7, 167);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(161, 24);
+            this.label31.TabIndex = 22;
+            this.label31.Text = "Wemos serial port";
+            // 
+            // tbRS485port
+            // 
+            this.tbRS485port.Location = new System.Drawing.Point(233, 209);
+            this.tbRS485port.Name = "tbRS485port";
+            this.tbRS485port.Size = new System.Drawing.Size(118, 29);
+            this.tbRS485port.TabIndex = 27;
+            this.tbRS485port.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbRS485port.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbRS485port_HelpRequested);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(7, 211);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(151, 24);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "RS485 serial port";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(412, 57);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(122, 24);
+            this.label28.TabIndex = 39;
+            this.label28.Text = "Relay Control";
+            // 
+            // cbRelayControl
+            // 
+            this.cbRelayControl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRelayControl.FormattingEnabled = true;
+            this.cbRelayControl.Items.AddRange(new object[] {
+            "No Relays",
+            "RS485",
+            "PCA9555  8 relays",
+            "PCA9555  16 relays"});
+            this.cbRelayControl.Location = new System.Drawing.Point(544, 53);
+            this.cbRelayControl.Name = "cbRelayControl";
+            this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
+            this.cbRelayControl.TabIndex = 38;
+            this.cbRelayControl.SelectedIndexChanged += new System.EventHandler(this.cbRelayControl_SelectedIndexChanged_1);
+            // 
             // frmPCBsettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -934,7 +964,7 @@
             this.MinimizeBox = false;
             this.Name = "frmPCBsettings";
             this.ShowInTaskbar = false;
-            this.Text = "Teensie Settings";
+            this.Text = "Teensy Settings";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmPCBsettings_FormClosed);
             this.Load += new System.EventHandler(this.frmPCBsettings_Load);
             this.tabControl1.ResumeLayout(false);
@@ -970,20 +1000,17 @@
         private System.Windows.Forms.TextBox tbRTCMserialPort;
         private System.Windows.Forms.TextBox tbNMEAserialPort;
         private System.Windows.Forms.TextBox tbModule;
-        private System.Windows.Forms.TextBox tbRS485port;
-        private System.Windows.Forms.TextBox tbAdsWasPin;
         private System.Windows.Forms.TextBox tbPulseCal;
         private System.Windows.Forms.TextBox tbMaxSpeed;
         private System.Windows.Forms.TextBox tbMinSpeed;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.CheckBox ckInvertRoll;
         private System.Windows.Forms.CheckBox ckSwapPitchRoll;
-        private System.Windows.Forms.CheckBox ckADS;
+        private System.Windows.Forms.CheckBox ckOnBoard;
         private System.Windows.Forms.CheckBox ckFlowOn;
         private System.Windows.Forms.CheckBox ckUseRate;
         private System.Windows.Forms.CheckBox ckRelayOn;
@@ -1019,12 +1046,17 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.ComboBox cbRelayControl;
         private System.Windows.Forms.Label lbIPpart4;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox tbIPaddress;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.CheckBox ckActuator;
+        private System.Windows.Forms.ComboBox cbAnalog;
+        private System.Windows.Forms.TextBox tbWemosSerialPort;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.TextBox tbRS485port;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.ComboBox cbRelayControl;
     }
 }

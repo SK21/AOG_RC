@@ -120,16 +120,7 @@
   <data name="textBox1.Text" xml:space="preserve">
     <value>PCBsetup is used to upload firmware and settings data to pcbs. To upload firmware a USB/serial connection is required. To upload settings either a USB/serial connection or an ethernet connection will work for the Nano. For the Teensie settings are uploaded over ethernet.
 
- The  Teensie default files are for the AS13 pcb. The Nano rate default files are for the RC5 or RC8 pcb. The Nano Switchbox files are for the SW2 pcb. Other pcbs can be used with the appropriate firmware. 
-
-Pin differences from default for the AS12 pcb:
-Steer switch 31
-work switch 30
-pressure sensor 25
-
-Pin differences from default for the SW1 pcb:
-Auto 5
-Master On 2</value>
+ The  Teensie default files are for the AS14 pcb. The Nano rate default files are for the RC5 or RC8 pcb. The Nano Switchbox files are for the SW2 pcb. Other pcbs can be used with the appropriate firmware. </value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

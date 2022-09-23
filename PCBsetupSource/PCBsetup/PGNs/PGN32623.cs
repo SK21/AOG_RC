@@ -12,12 +12,12 @@ namespace PCBsetup
         //3     Maximum speed
         //4     Speed pulse cal X 10 Lo
         //5     Speed pulse cal X 10 Hi
-        //6     ADS1115 WAS pin
-        //7     RS485 Serial port, 0-8
+        //6     Analog method 0 ADS1115 (Teensy), 1 pins (Teensy), 2 ADS1115 (D1 Mini)
+        //7     RelayControl 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
         //8     Module ID
         //9     Commands
         //          - use rate control
-        //          - use ADS1115
+        //          - use TB6612 motor controller
         //          - relay on high
         //          - flow on high
         //          - swap pitch for roll
@@ -39,6 +39,7 @@ namespace PCBsetup
 
         public bool Send()
         {
+            byte tmp;
             bool Checked;
             double val;
 
@@ -50,8 +51,12 @@ namespace PCBsetup
             cData[4] = (byte)(val * 10);
             cData[5] = (byte)((int)(val * 10) >> 8);
 
-            cData[6] = (byte)cf.Boxes.Value("tbAdsWasPin");
-            cData[7] = (byte)cf.Boxes.Value("tbRS485port");
+            byte.TryParse(cf.mf.Tls.LoadProperty("AnalogMethod"), out tmp);
+            cData[6] = tmp;
+
+            byte.TryParse(cf.mf.Tls.LoadProperty("RelayControl"), out tmp);
+            cData[7] = tmp;
+
             cData[8] = (byte)cf.Boxes.Value("tbModule");
 
             // check boxes

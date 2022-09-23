@@ -19,6 +19,7 @@ namespace PCBsetup.Forms
         {
             InitializeComponent();
             mf = CallingForm;
+            this.BackColor = PCBsetup.Properties.Settings.Default.DayColour;
         }
 
         private void timer1_Tick(object sender, EventArgs e)

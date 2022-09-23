@@ -8,8 +8,8 @@ namespace PCBsetup
         //0     HeaderLo    110
         //1     HeaderHi    127
         //2     Receiver    0-None, 1-SimpleRTK2B, 2-Sparkfun F9P
-        //3     NMEA serial port, 0-8
-        //4     RTCM serial port, 0-8
+        //3     NMEA serial port, 1-8
+        //4     RTCM serial port, 1-8
         //5     RTCM UDP port # lo
         //6     RTCM UDP port # Hi
         //7     IMU         0-None, 1-Sparkfun BNO, 2-CMPS14, 3-Adafruit BNO, 4 serial
@@ -17,11 +17,12 @@ namespace PCBsetup
         //9     Report Interval
         //10    Zero offset Lo
         //11    Zero offset Hi
-        //12    RelayControl 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
+        //12    RS485 Serial port, 1-8
         //13    IP address, 3rd octet
-        //14    CRC
+        //14    Wemos serial port
+        //15    CRC
 
-        private byte[] cData = new byte[15];
+        private byte[] cData = new byte[16];
         private frmPCBsettings cf;
 
         public PGN32622(frmPCBsettings CalledFrom)
@@ -56,12 +57,13 @@ namespace PCBsetup
             cData[10] = (byte)val;
             cData[11] = (byte)((int)val >> 8);
 
-            byte.TryParse(cf.mf.Tls.LoadProperty("RelayControl"), out tmp);
-            cData[12] = tmp;
+            cData[12] = (byte)cf.Boxes.Value("tbRS485port");
 
             cData[13] = (byte)cf.Boxes.Value("tbIPaddress");
 
-            cData[14] = cf.mf.Tls.CRC(cData, 14);
+            cData[14] = (byte)cf.Boxes.Value("tbWemosSerialPort");
+
+            cData[15] = cf.mf.Tls.CRC(cData, 15);
 
             bool Result = cf.mf.CommPort.Send(cData);
             //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);

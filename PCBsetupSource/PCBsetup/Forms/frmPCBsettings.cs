@@ -20,7 +20,7 @@ namespace PCBsetup.Forms
 
             mf = CallingForm;
 
-            CKs = new CheckBox[] {ckUseRate,ckADS,ckRelayOn,ckFlowOn,ckSwapPitchRoll
+            CKs = new CheckBox[] {ckUseRate,ckOnBoard,ckRelayOn,ckFlowOn,ckSwapPitchRoll
                 ,ckInvertRoll,ckGyro,ckActuator};
 
             for (int i = 0; i < CKs.Length; i++)
@@ -87,10 +87,11 @@ namespace PCBsetup.Forms
             cbIMU.SelectedIndex = 1;
             tbIMUdelay.Text = "90";
             tbIMUinterval.Text = "40";
-            tbZeroOffset.Text = "6100";
-            tbAdsWasPin.Text = "0";
-            cbRelayControl.SelectedIndex = 2;
+            tbZeroOffset.Text = "0";
+            cbAnalog.SelectedIndex = 1;
+            cbRelayControl.SelectedIndex = 0;
             tbIPaddress.Text = "1";
+            tbWemosSerialPort.Text = "1";
 
             tbMinSpeed.Text = "1";
             tbMaxSpeed.Text = "15";
@@ -100,7 +101,7 @@ namespace PCBsetup.Forms
 
             ckGyro.Checked = false;
             ckUseRate.Checked = false;
-            ckADS.Checked = false;
+            ckOnBoard.Checked = false;
             ckRelayOn.Checked = false;
             ckFlowOn.Checked = false;
             ckSwapPitchRoll.Checked = false;
@@ -168,8 +169,8 @@ namespace PCBsetup.Forms
 
         private void BuildBoxes()
         {
-            int StartID = Boxes.Add(tbNMEAserialPort, 8,1);
-            Boxes.Add(tbRTCMserialPort, 8,1);
+            int StartID = Boxes.Add(tbNMEAserialPort, 8, 1);
+            Boxes.Add(tbRTCMserialPort, 8, 1);
             Boxes.Add(tbRTCM, 9999);
             Boxes.Add(tbIMUdelay, 100);
             Boxes.Add(tbIMUinterval, 100);
@@ -178,9 +179,9 @@ namespace PCBsetup.Forms
             Boxes.Add(tbMinSpeed, 50);
             Boxes.Add(tbMaxSpeed, 50);
             Boxes.Add(tbPulseCal);
-            Boxes.Add(tbAdsWasPin, 3);
-            Boxes.Add(tbRS485port, 8,1);
+            Boxes.Add(tbRS485port, 8, 1);
             Boxes.Add(tbModule, 15);
+            Boxes.Add(tbWemosSerialPort, 8, 1);
 
             Boxes.Add(tbDir1, 41);
             Boxes.Add(tbPwm1, 41);
@@ -205,6 +206,20 @@ namespace PCBsetup.Forms
             }
         }
 
+        private void cbAnalog_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Select method to read analog signals." +
+                " (WAS, etc.)";
+
+            mf.Tls.ShowHelp(Message, "Analog Input");
+            hlpevent.Handled = true;
+        }
+
+        private void cbAnalog_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
         private void cbIMU_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -215,26 +230,31 @@ namespace PCBsetup.Forms
             SetButtons(true);
         }
 
-        private void cbRelayControl_SelectedIndexChanged(object sender, EventArgs e)
+        private void ckActuator_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            SetButtons(true);
-        }
+            string Message = "Use linear actuator to position steer motor." +
+                " Position is read on Pressure pin. Actuator is controlled" +
+                " with Motor2 Dir and Motor2 PWM pins.";
 
-        private void ckADS_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Use either the ADS1115 or the Teensy analog pin " +
-                "to read the wheel angle sensor.";
-
-            mf.Tls.ShowHelp(Message, "Use ADS1115");
+            mf.Tls.ShowHelp(Message, "Actuator");
             hlpevent.Handled = true;
         }
 
         private void ckFlowOn_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Which signal (high or low) increases the flow rate" +
-                "for rate control.";
+                " for rate control.";
 
             mf.Tls.ShowHelp(Message, "Flow on high");
+            hlpevent.Handled = true;
+        }
+
+        private void ckOnBoard_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Use On-board TB6612 motor driver to control motor 2." +
+                " Max 1.2 amps.";
+
+            mf.Tls.ShowHelp(Message, "Motor Driver");
             hlpevent.Handled = true;
         }
 
@@ -295,6 +315,9 @@ namespace PCBsetup.Forms
                 byte.TryParse(mf.Tls.LoadProperty("RelayControl"), out tmp);
                 cbRelayControl.SelectedIndex = tmp;
 
+                byte.TryParse(mf.Tls.LoadProperty("AnalogMethod"), out tmp);
+                cbAnalog.SelectedIndex = tmp;
+
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
                 {
@@ -319,6 +342,7 @@ namespace PCBsetup.Forms
                 mf.Tls.SaveProperty("GPSreceiver", cbReceiver.SelectedIndex.ToString());
                 mf.Tls.SaveProperty("IMU", cbIMU.SelectedIndex.ToString());
                 mf.Tls.SaveProperty("RelayControl", cbRelayControl.SelectedIndex.ToString());
+                mf.Tls.SaveProperty("AnalogMethod", cbAnalog.SelectedIndex.ToString());
 
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
@@ -393,15 +417,6 @@ namespace PCBsetup.Forms
             }
         }
 
-        private void tbAdsWasPin_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The pin (0-3) on the ADS1115 that is connected to the " +
-                "wheel angle sensor.";
-
-            mf.Tls.ShowHelp(Message, "ADS1115");
-            hlpevent.Handled = true;
-        }
-
         private void tbIMUdelay_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Milliseconds delay in reading the IMU. This is used to match " +
@@ -429,7 +444,7 @@ namespace PCBsetup.Forms
 
         private void tbRS485port_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "The serial port (0-8) used for RS485.";
+            string Message = "The serial port used for RS485 relay control.";
 
             mf.Tls.ShowHelp(Message, "RS485 serial port");
             hlpevent.Handled = true;
@@ -459,14 +474,34 @@ namespace PCBsetup.Forms
             Initializing = false;
         }
 
-        private void ckActuator_HelpRequested(object sender, HelpEventArgs hlpevent)
+        private void tbWemosSerialPort_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Use linear actuator to position steer motor." +
-                " Position is read on Pressure pin. Actuator is controlled" +
-                " with Rate Dir and Rate PWM pins.";
+            string Message = "Serial port Wemos D1 Mini is connected to." +
+                " Can be used for ADS1115 or remote relay control.";
 
-            mf.Tls.ShowHelp(Message, "Actuator");
+            mf.Tls.ShowHelp(Message, "Wemos D1 Mini");
             hlpevent.Handled = true;
+        }
+
+        private void tbNMEAserialPort_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "GPS data serial port from receiver.";
+
+            mf.Tls.ShowHelp(Message, "Receive GPS data");
+            hlpevent.Handled = true;
+        }
+
+        private void tbRTCMserialPort_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "GPS correction data serial port to receiver.";
+
+            mf.Tls.ShowHelp(Message, "Correction data");
+            hlpevent.Handled = true;
+        }
+
+        private void cbRelayControl_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

@@ -200,6 +200,7 @@ namespace PCBsetup.Forms
         {
             saveFileDialog1.InitialDirectory = Tls.SettingsDir();
             saveFileDialog1.Title = "New File";
+            saveFileDialog1.Filter = "Config Files|*.con";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
@@ -213,6 +214,8 @@ namespace PCBsetup.Forms
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.InitialDirectory = Tls.SettingsDir();
+            openFileDialog1.Filter = "Config Files|*.con";
+            openFileDialog1.FileName = "";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 Tls.PropertiesFile = openFileDialog1.FileName;
@@ -237,6 +240,7 @@ namespace PCBsetup.Forms
         {
             saveFileDialog1.InitialDirectory = Tls.SettingsDir();
             saveFileDialog1.Title = "Save As";
+            saveFileDialog1.Filter = "Config Files|*.con";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")

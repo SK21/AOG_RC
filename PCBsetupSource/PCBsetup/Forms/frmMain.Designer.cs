@@ -47,6 +47,7 @@
             this.nanoSwitchboxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.firmwareToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.SerialMonitorItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cboPort1 = new System.Windows.Forms.ComboBox();
             this.btnRescan = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -55,7 +56,6 @@
             this.PortIndicator1 = new System.Windows.Forms.Label();
             this.ModuleIndicator = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.SerialMonitorItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -63,7 +63,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::PCBsetup.Properties.Resources.AS13;
+            this.pictureBox1.Image = global::PCBsetup.Properties.Resources.PCB;
             this.pictureBox1.Location = new System.Drawing.Point(12, 117);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(537, 411);
@@ -146,20 +146,20 @@
             this.settingsToolStripMenuItem,
             this.firmwareToolStripMenuItem});
             this.teensieToolStripMenuItem.Name = "teensieToolStripMenuItem";
-            this.teensieToolStripMenuItem.Size = new System.Drawing.Size(91, 28);
-            this.teensieToolStripMenuItem.Text = "Teensie";
+            this.teensieToolStripMenuItem.Size = new System.Drawing.Size(85, 28);
+            this.teensieToolStripMenuItem.Text = "Teensy";
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(159, 28);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // firmwareToolStripMenuItem
             // 
             this.firmwareToolStripMenuItem.Name = "firmwareToolStripMenuItem";
-            this.firmwareToolStripMenuItem.Size = new System.Drawing.Size(159, 28);
+            this.firmwareToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
             this.firmwareToolStripMenuItem.Text = "Firmware";
             this.firmwareToolStripMenuItem.Click += new System.EventHandler(this.firmwareToolStripMenuItem_Click);
             // 
@@ -208,6 +208,13 @@
             this.firmwareToolStripMenuItem2.Size = new System.Drawing.Size(159, 28);
             this.firmwareToolStripMenuItem2.Text = "Firmware";
             this.firmwareToolStripMenuItem2.Click += new System.EventHandler(this.firmwareToolStripMenuItem2_Click);
+            // 
+            // SerialMonitorItem
+            // 
+            this.SerialMonitorItem.Name = "SerialMonitorItem";
+            this.SerialMonitorItem.Size = new System.Drawing.Size(137, 28);
+            this.SerialMonitorItem.Text = "Serial Monitor";
+            this.SerialMonitorItem.Click += new System.EventHandler(this.SerialMonitorItem_Click);
             // 
             // cboPort1
             // 
@@ -285,13 +292,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Serial Connection";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.GroupBoxPaint);
-            // 
-            // SerialMonitorItem
-            // 
-            this.SerialMonitorItem.Name = "SerialMonitorItem";
-            this.SerialMonitorItem.Size = new System.Drawing.Size(137, 28);
-            this.SerialMonitorItem.Text = "Serial Monitor";
-            this.SerialMonitorItem.Click += new System.EventHandler(this.SerialMonitorItem_Click);
             // 
             // frmMain
             // 
