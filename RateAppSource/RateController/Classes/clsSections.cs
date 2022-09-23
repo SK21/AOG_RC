@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -118,7 +119,9 @@ namespace RateController
         }
 
         public bool IsMasterOn()
-        { return MasterOn; }
+        {
+            return MasterOn; 
+        }
 
         public clsSection Item(int SectionID)
         {
@@ -250,11 +253,13 @@ namespace RateController
 
             if (SectionOnFromAOG[0] == 0 && SectionOnFromAOG[1] == 0)
             {
-                AOGmasterOff = true;
+                AOGmasterOff = true;    // simulates a momentary switch off 
+                MasterOn = false;
             }
             else
             {
-                AOGmasterOn = true;
+                AOGmasterOn = true;     // simulates a momentary switch on
+                MasterOn = true;
             }
             SendStatusUpdate(true);
         }

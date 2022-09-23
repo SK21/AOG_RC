@@ -1826,3 +1826,178 @@ C:\Users\Public\Documents\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSour
 C:\Users\Public\Documents\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 C:\Users\Public\Documents\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.exe
 C:\Users\Public\Documents\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.pdb
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.exe.config
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.exe.manifest
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.application
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.exe
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.pdb
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\de\RateController.resources.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\nl\RateController.resources.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\BetterWin32Errors.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\Keypad.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\MoreLinq.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RepeatButtonControl.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\System.IO.Ports.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\System.ValueTuple.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\BetterWin32Errors.xml
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\MoreLinq.pdb
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\MoreLinq.xml
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\System.IO.Ports.xml
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\System.ValueTuple.xml
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.SuggestedBindingRedirects.cache
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.FormAbout.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.FormPressure.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.FormSettings.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.FormStart.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmComm.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmHelp.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmMonitor.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmRelays.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmSections.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.Lang.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.Lang.de.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.Lang.nl.resources
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\de\RateController.resources.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\nl\RateController.resources.dll
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.exe.manifest
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.application
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.CopyComplete
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.exe
+C:\Users\CoxDa\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.exe.config
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.exe.manifest
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.application
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.exe
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RateController.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\de\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\nl\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\BetterWin32Errors.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\Keypad.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\MoreLinq.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\RepeatButtonControl.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\System.IO.Ports.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\System.ValueTuple.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\BetterWin32Errors.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\MoreLinq.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\MoreLinq.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\System.IO.Ports.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\bin\Debug\System.ValueTuple.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.SuggestedBindingRedirects.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.FormAbout.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.FormPressure.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.FormSettings.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.FormStart.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmComm.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmHelp.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmMonitor.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmRelays.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.frmSections.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.Lang.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.Lang.de.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.Lang.nl.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\de\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\nl\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.exe.manifest
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.application
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.csproj.CopyComplete
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.exe
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource - Debug\RateController\obj\Debug\RateController.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\RateController.exe.config
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\RateController.exe.manifest
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\RateController.application
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\RateController.exe
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\RateController.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\de\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\nl\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\BetterWin32Errors.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\Keypad.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\MoreLinq.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\RepeatButtonControl.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\System.IO.Ports.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\System.ValueTuple.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\BetterWin32Errors.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\MoreLinq.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\MoreLinq.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\System.IO.Ports.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\bin\Debug\System.ValueTuple.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.csproj.SuggestedBindingRedirects.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.FormAbout.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.FormPressure.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.FormSettings.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.FormStart.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.frmComm.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.frmHelp.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.frmMonitor.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.frmRelays.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.frmSections.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.Lang.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.Lang.de.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.Lang.nl.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\de\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\nl\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.exe.manifest
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.application
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.exe
+C:\Users\DC\OneDrive\AOG\2022\Dev\Debug\RateAppSource\RateController\obj\Debug\RateController.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\RateController.exe.config
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\RateController.exe.manifest
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\RateController.application
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\RateController.exe
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\RateController.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\de\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\nl\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\BetterWin32Errors.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\Keypad.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\MoreLinq.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\RepeatButtonControl.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\System.IO.Ports.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\System.ValueTuple.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\BetterWin32Errors.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\MoreLinq.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\MoreLinq.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\System.IO.Ports.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\bin\Debug\System.ValueTuple.xml
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.SuggestedBindingRedirects.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.FormAbout.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.FormPressure.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.FormSettings.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.FormStart.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmComm.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmHelp.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmMonitor.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmRelays.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmSections.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.Lang.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.Properties.Resources.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.Lang.de.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.Lang.nl.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.GenerateResource.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CoreCompileInputs.cache
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\de\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\nl\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.exe
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateControllerApp\RateController.exe.config
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateControllerApp\RateController.exe
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateControllerApp\RateController.pdb
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateControllerApp\de\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateControllerApp\nl\RateController.resources.dll

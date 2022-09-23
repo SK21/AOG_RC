@@ -182,6 +182,8 @@ namespace RateController
 
         public void UpdateStatus()
         {
+            try
+            {
             if (CurrentPage == 0)
             {
                 // summary
@@ -333,6 +335,11 @@ namespace RateController
             else
             {
                 MnuOptions.DropDownItems["metricToolStripMenuItem"].Image = Properties.Resources.CheckMark;
+            }
+            }
+            catch (Exception ex)
+            {
+                Tls.WriteErrorLog(ex.Message);
             }
         }
 
@@ -655,6 +662,12 @@ namespace RateController
 
             Tls.ShowHelp(Message, "Target Rate");
             hlpevent.Handled = true;
+        }
+
+        private void serialMonitorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form Monitor = new frmMonitor(this);
+            Monitor.ShowDialog();
         }
     }
 }

@@ -1537,5 +1537,14 @@ namespace RateController
         {
             SetButtons(true);
         }
+
+        private void lb2_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            // coverage
+            string Message = "Area or time units. When using time units AOG is not required.";
+
+            mf.Tls.ShowHelp(Message, "Coverage");
+            hlpevent.Handled = true;
+        }
     }
 }

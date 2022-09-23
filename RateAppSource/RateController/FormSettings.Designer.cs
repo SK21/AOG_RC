@@ -56,6 +56,9 @@ namespace RateController
             this.btnResetTank = new System.Windows.Forms.Button();
             this.btnResetCoverage = new System.Windows.Forms.Button();
             this.tbs4 = new System.Windows.Forms.TabPage();
+            this.label31 = new System.Windows.Forms.Label();
+            this.tbPIDki = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
             this.ckTimedResponse = new System.Windows.Forms.CheckBox();
             this.label30 = new System.Windows.Forms.Label();
             this.tbTimedAdjustment = new System.Windows.Forms.TextBox();
@@ -163,9 +166,6 @@ namespace RateController
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
             this.lbProduct = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
-            this.tbPIDki = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
             this.tc.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.tbs4.SuspendLayout();
@@ -400,6 +400,7 @@ namespace RateController
             this.lb2.Size = new System.Drawing.Size(88, 23);
             this.lb2.TabIndex = 113;
             this.lb2.Text = "Coverage";
+            this.lb2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lb2_HelpRequested);
             // 
             // lb6
             // 
@@ -439,6 +440,7 @@ namespace RateController
             this.AreaUnits.Size = new System.Drawing.Size(161, 31);
             this.AreaUnits.TabIndex = 3;
             this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
+            this.AreaUnits.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lb2_HelpRequested);
             // 
             // lb1
             // 
@@ -541,6 +543,39 @@ namespace RateController
             this.tbs4.TabIndex = 4;
             this.tbs4.Text = "Control";
             this.tbs4.UseVisualStyleBackColor = true;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.Location = new System.Drawing.Point(330, 57);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(72, 23);
+            this.label31.TabIndex = 144;
+            this.label31.Text = "0-25 %";
+            // 
+            // tbPIDki
+            // 
+            this.tbPIDki.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPIDki.Location = new System.Drawing.Point(260, 53);
+            this.tbPIDki.MaxLength = 8;
+            this.tbPIDki.Name = "tbPIDki";
+            this.tbPIDki.Size = new System.Drawing.Size(64, 30);
+            this.tbPIDki.TabIndex = 142;
+            this.tbPIDki.Tag = "0";
+            this.tbPIDki.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPIDki.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPIDki_HelpRequested);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label32.Location = new System.Drawing.Point(68, 57);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(177, 23);
+            this.label32.TabIndex = 143;
+            this.label32.Text = "Integral Adjustment";
+            this.label32.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPIDki_HelpRequested);
             // 
             // ckTimedResponse
             // 
@@ -1832,39 +1867,6 @@ namespace RateController
             this.lbProduct.TabIndex = 143;
             this.lbProduct.Text = "Product";
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label31.Location = new System.Drawing.Point(330, 57);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(72, 23);
-            this.label31.TabIndex = 144;
-            this.label31.Text = "0-25 %";
-            // 
-            // tbPIDki
-            // 
-            this.tbPIDki.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPIDki.Location = new System.Drawing.Point(260, 53);
-            this.tbPIDki.MaxLength = 8;
-            this.tbPIDki.Name = "tbPIDki";
-            this.tbPIDki.Size = new System.Drawing.Size(64, 30);
-            this.tbPIDki.TabIndex = 142;
-            this.tbPIDki.Tag = "0";
-            this.tbPIDki.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbPIDki.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPIDki_HelpRequested);
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label32.Location = new System.Drawing.Point(68, 57);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(177, 23);
-            this.label32.TabIndex = 143;
-            this.label32.Text = "Integral Adjustment";
-            this.label32.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPIDki_HelpRequested);
             // 
             // FormSettings
             // 
