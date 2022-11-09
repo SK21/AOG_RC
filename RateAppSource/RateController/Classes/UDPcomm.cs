@@ -191,6 +191,11 @@ namespace RateController
                                     // vr data
                                     mf.VRdata.ParseByteData(Data);
                                     break;
+
+                                case 235:
+                                    // section widths 
+                                    mf.SectionsPGN.ParseByteData(Data);
+                                    break;
                             }
                         }
                     }

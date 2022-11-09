@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -57,13 +56,14 @@ namespace RateController
         public clsSections(FormStart CallingForm)
         {
             mf = CallingForm;
-            Items = cSections.AsReadOnly(); 
+            Items = cSections.AsReadOnly();
 
             mf.AutoSteerPGN.RelaysChanged += AOGnew_RelaysChanged;
 
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
 
             ToAOG = new PGN234(mf);
+            mf.SectionsPGN.SectionsChanged += AOG_SectionsChanged;
         }
 
         public int Count
@@ -120,7 +120,7 @@ namespace RateController
 
         public bool IsMasterOn()
         {
-            return MasterOn; 
+            return MasterOn;
         }
 
         public clsSection Item(int SectionID)
@@ -245,6 +245,52 @@ namespace RateController
             return Result;
         }
 
+        private void AOG_SectionsChanged(object sender, EventArgs e)
+        {
+            double Wdth;
+            string Units;
+            if (mf.UseInches)
+            {
+                Units = "Inches";
+            }
+            else
+            {
+                Units = "cm";
+            }
+
+            string Message = "Section width changes from AOG, " + mf.SectionsPGN.SectionCount().ToString() + " section(s).";
+            Message += "\nUnits are in " + Units + ".";
+
+            for (int i = 0; i < mf.SectionsPGN.SectionCount(); i++)
+            {
+                if (mf.UseInches)
+                {
+                    Wdth = Math.Round((double)(mf.SectionsPGN.Width_cm(i)) * 0.393701);
+                }
+                else
+                {
+                    Wdth = mf.SectionsPGN.Width_cm(i);
+                }
+                Message += "\n" + "Section " + (i + 1).ToString() + "    " + Wdth.ToString();
+            }
+            Message += "\n\n Accept the changes?";
+
+            var Hlp = new frmMsgBox(mf, Message, "Section Changes");
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                // change sections
+                Count = mf.SectionsPGN.SectionCount();
+                for (int i = 0; i < mf.SectionsPGN.SectionCount(); i++)
+                {
+                    Items[i].Width_cm = (float)mf.SectionsPGN.Width_cm(i);
+                }
+                mf.Tls.ShowHelp("Sections changed. Check switch definitions.", "Sections", 5000);
+            }
+        }
+
         private void AOGnew_RelaysChanged(object sender, PGN254.RelaysChangedArgs e)
         {
             // AOG section bytes have changed
@@ -253,7 +299,7 @@ namespace RateController
 
             if (SectionOnFromAOG[0] == 0 && SectionOnFromAOG[1] == 0)
             {
-                AOGmasterOff = true;    // simulates a momentary switch off 
+                AOGmasterOff = true;    // simulates a momentary switch off
                 MasterOn = false;
             }
             else

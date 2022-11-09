@@ -18,6 +18,8 @@ namespace RateController
         public readonly int MaxSections = 16;
 
         public PGN254 AutoSteerPGN;
+        public PGN235 SectionsPGN;
+
         public double CalCounterEnd;
         public double CalCounterStart;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Hr", "Min" };
@@ -85,7 +87,9 @@ namespace RateController
             UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
 
             AutoSteerPGN = new PGN254(this);
+            SectionsPGN = new PGN235(this);
             VRdata = new PGN230(this);
+            
 
             SwitchBox = new PGN32618(this);
             SwitchIDs = new PGN32620(this);

@@ -40,11 +40,7 @@ namespace RateController
             panel1.Width = this.Width - 40;
             panel1.Height = this.Height - 40;
             label1.MaximumSize = new Size(panel1.Width - 10, 0);
-        }
 
-        private void bntOK_Click(object sender, EventArgs e)
-        {
-            Close();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -78,5 +74,6 @@ namespace RateController
         {
             Close();
         }
+
     }
 }

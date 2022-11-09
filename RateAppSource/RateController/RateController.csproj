@@ -160,6 +160,12 @@
     <Compile Include="frmMonitor.Designer.cs">
       <DependentUpon>frmMonitor.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmMsgBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMsgBox.Designer.cs">
+      <DependentUpon>frmMsgBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmRelays.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,6 +195,7 @@
     </Compile>
     <Compile Include="PGNs\PGN230.cs" />
     <Compile Include="PGNs\PGN234.cs" />
+    <Compile Include="PGNs\PGN235.cs" />
     <Compile Include="PGNs\PGN32613.cs" />
     <Compile Include="PGNs\PGN32614.cs" />
     <Compile Include="PGNs\PGN32616.cs" />
@@ -222,6 +229,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMonitor.resx">
       <DependentUpon>frmMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMsgBox.resx">
+      <DependentUpon>frmMsgBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>
