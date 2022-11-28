@@ -36,6 +36,8 @@ namespace RateController
         private double Trate;
         private bool cModuleIsReceivingData;
 
+        private bool[] SensorReceiving = new bool[2];
+
         public PGN32613(clsProduct CalledFrom)
         {
             Prod = CalledFrom;
@@ -92,15 +94,17 @@ namespace RateController
                         cPWMsetting = (Int16)(Data[10] << 8 | Data[9]) / 10.0;  // need to cast to 16 bit integer to preserve the sign bit
 
                         // status
-                        if(tmp==0)
+                        if (tmp == 0)
                         {
                             // sensor 0
                             cModuleIsReceivingData = ((Data[11] & 0b00000001) == 0b00000001);
+                            CheckReceiving(0, cModuleIsReceivingData);
                         }
                         else
                         {
                             // sensor 1
                             cModuleIsReceivingData = ((Data[11] & 0b00000010) == 0b00000010);
+                            CheckReceiving(1, cModuleIsReceivingData);
                         }
 
                         ReceiveTime = DateTime.Now;
@@ -164,7 +168,7 @@ namespace RateController
                                 byte Status;
                                 byte.TryParse(Data[11], out Status);
                                 if (tmp == 0)
-                                {   
+                                {
                                     // sensor 0
                                     cModuleIsReceivingData = ((Status & 0b00000001) == 0b00000001);
                                 }
@@ -209,6 +213,17 @@ namespace RateController
                        + ", Quantity: " + cQuantity.ToString("N2") + ", PWM:" + cPWMsetting.ToString("N2"));
                 }
             }
+        }
+
+        private void CheckReceiving(byte ID, bool Receiving)
+        {
+            if (Receiving != SensorReceiving[ID])
+            {
+                Prod.SendPID(); // update pid settings when connected
+                Prod.mf.Tls.WriteActivityLog("Sensor " + ID.ToString() + " receiving: " + Receiving.ToString());
+                //Debug.Print("Sensor " + ID.ToString() + " receiving: " + Receiving.ToString());
+            }
+            SensorReceiving[ID] = Receiving;
         }
     }
 }

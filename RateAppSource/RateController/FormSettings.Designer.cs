@@ -954,6 +954,7 @@ namespace RateController
             this.rbMultiPulse.Text = "Average Time  / pulses (< 50 ms/pulse)";
             this.rbMultiPulse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbMultiPulse.UseVisualStyleBackColor = true;
+            this.rbMultiPulse.CheckedChanged += new System.EventHandler(this.rbMultiPulse_CheckedChanged);
             this.rbMultiPulse.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbMultiPulse_HelpRequested);
             // 
             // rbSinglePulse

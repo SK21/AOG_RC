@@ -39,7 +39,8 @@ namespace RateController
             mf.Tls.LoadFormData(this);
 
             lbAppVersion.Text = mf.Tls.AppVersion() + "    " + mf.Tls.VersionDate();
-            lbIP.Text = mf.UDPmodules.LocalIP();
+            lbIP.Text = mf.UDPmodules.EthernetIP();
+            lbWifi.Text = mf.UDPmodules.WifiIP();
             this.BackColor = Properties.Settings.Default.DayColour;
         }
     }

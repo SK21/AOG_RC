@@ -85,6 +85,14 @@ namespace RateController
             }
         }
 
+        public void UpdatePID()
+        {
+            for (int i = 0; i < cProducts.Count; i++)
+            {
+                cProducts[i].SendPID();
+            }
+        }
+
         public bool UniqueModSen(int ModID, int SenID, int ProdID)
         {
             // checks if product module ID/sensor ID pair are unique

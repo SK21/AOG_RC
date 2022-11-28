@@ -647,7 +647,6 @@ namespace RateController
 
                 // send to arduino
                 RateToArduino.Send();
-                PIDtoArduino.Send();
                 if (cLogRate) LogTheRate();
             }
             else
@@ -655,6 +654,11 @@ namespace RateController
                 // connection lost
                 PauseWork = true;
             }
+        }
+
+        public void SendPID()
+        {
+            PIDtoArduino.Send();
         }
 
         public double UPMapplied()

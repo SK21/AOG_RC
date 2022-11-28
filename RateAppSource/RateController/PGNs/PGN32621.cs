@@ -21,14 +21,11 @@ namespace RateController
         private const byte cByteCount = 12;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 109;
-        private Int16[,] cPressure = new short[255, 4];
+        private UInt16[,] cPressure = new UInt16[255, 4];
         private byte HiByte;
         private byte LoByte;
         private FormStart mf;
-
         private byte ModuleID;
-
-        // modules, pressures
         private int Temp;
 
         public PGN32621(FormStart CalledFrom)
@@ -41,10 +38,10 @@ namespace RateController
             bool Result = false;
             if (Data[1] == HeaderHi & Data[0] == HeaderLo & Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
-                ModuleID = Data[3];
+                ModuleID = Data[2];
                 for (int i = 0; i < 4; i++)
                 {
-                    cPressure[ModuleID, i] = (Int16)(Data[i * 2 + 4] << 8 | Data[i * 2 + 3]);
+                    cPressure[ModuleID, i] = (UInt16)(Data[i * 2 + 4] << 8 | Data[i * 2 + 3]);
                 }
                 Result = true;
             }
@@ -69,7 +66,7 @@ namespace RateController
                         {
                             byte.TryParse(Data[i * 2 + 3], out LoByte);
                             byte.TryParse(Data[i * 2 + 4], out HiByte);
-                            cPressure[ModuleID, i] = (Int16)(HiByte << 8 | LoByte);
+                            cPressure[ModuleID, i] = (UInt16)(HiByte << 8 | LoByte);
                         }
                         Result = true;
                     }
@@ -78,7 +75,7 @@ namespace RateController
             return Result;
         }
 
-        public Int16 Pressure(byte ModuleID, byte SensorID)
+        public UInt16 Pressure(byte ModuleID, byte SensorID)
         {
             if (SensorID < 4 & ModuleID < 255)
             {

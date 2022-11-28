@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -300,12 +301,10 @@ namespace RateController
             if (SectionOnFromAOG[0] == 0 && SectionOnFromAOG[1] == 0)
             {
                 AOGmasterOff = true;    // simulates a momentary switch off
-                MasterOn = false;
             }
             else
             {
                 AOGmasterOn = true;     // simulates a momentary switch on
-                MasterOn = true;
             }
             SendStatusUpdate(true);
         }

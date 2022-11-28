@@ -394,7 +394,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Local IP.
+        ///   Looks up a localized string similar to Ethernet IP.
         /// </summary>
         internal static string lgLocalIP {
             get {
@@ -529,7 +529,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pressure.
+        ///   Looks up a localized string similar to Pressures.
         /// </summary>
         internal static string lgPressure {
             get {

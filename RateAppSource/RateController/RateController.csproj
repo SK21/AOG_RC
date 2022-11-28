@@ -178,6 +178,12 @@
     <Compile Include="frmSections.Designer.cs">
       <DependentUpon>frmSections.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmWifi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmWifi.Designer.cs">
+      <DependentUpon>frmWifi.cs</DependentUpon>
+    </Compile>
     <Compile Include="Lang.de.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -238,6 +244,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmSections.resx">
       <DependentUpon>frmSections.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmWifi.resx">
+      <DependentUpon>frmWifi.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>

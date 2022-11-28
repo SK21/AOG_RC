@@ -4,15 +4,14 @@ namespace RateController
 {
     public class clsPressure
     {
+        private string cDescription;
         private bool cEdited;
         private int cID = 0;
-
-        private string cDescription;
         private int cModuleID;
-        private int cSensorID;
+        private int cOffset;
         private int cSectionID;
+        private int cSensorID;
         private float cUnitsVolts;
-
         private FormStart mf;
         private string Name;
 
@@ -22,10 +21,6 @@ namespace RateController
             cID = ID;
             Name = "Pressure" + ID.ToString();
         }
-
-        public bool Edited { get { return cEdited; } }
-
-        public int ID { get { return cID; } }
 
         public string Description
         {
@@ -51,6 +46,12 @@ namespace RateController
             }
         }
 
+        public bool Edited
+        { get { return cEdited; } }
+
+        public int ID
+        { get { return cID; } }
+
         public int ModuleID
         {
             get { return cModuleID; }
@@ -71,26 +72,26 @@ namespace RateController
             }
         }
 
-        public int SensorID
+        public int Offset
         {
-            get { return cSensorID; }
+            get { return cOffset; }
             set
             {
-                if (value >= 0 && value < 16)
+                if (value >= 0 && value <= 3000)
                 {
-                    if (cSensorID != value)
+                    if (cOffset != value)
                     {
-                        cSensorID = value;
+                        cOffset = value;
                         cEdited = true;
                     }
                 }
                 else
                 {
-                    throw new ArgumentException("Sensor must be between 0 and 15.");
+                    throw new ArgumentException("Must be between 0 and 3000");
                 }
             }
         }
-        
+
         public int SectionID
         {
             get { return cSectionID; }
@@ -107,6 +108,26 @@ namespace RateController
                 else
                 {
                     throw new ArgumentException("Section must be between 1 and 16.");
+                }
+            }
+        }
+
+        public int SensorID
+        {
+            get { return cSensorID; }
+            set
+            {
+                if (value >= 0 && value < 16)
+                {
+                    if (cSensorID != value)
+                    {
+                        cSensorID = value;
+                        cEdited = true;
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Sensor must be between 0 and 15.");
                 }
             }
         }
@@ -138,6 +159,17 @@ namespace RateController
             int.TryParse(mf.Tls.LoadProperty(Name + "_SensorID"), out cSensorID);
             int.TryParse(mf.Tls.LoadProperty(Name + "_SectionID"), out cSectionID);
             float.TryParse(mf.Tls.LoadProperty(Name + "_UnitsVolts"), out cUnitsVolts);
+            int.TryParse(mf.Tls.LoadProperty(Name + "_Offset"), out cOffset);
+        }
+
+        public float Pressure()
+        {
+            float Result = mf.PressureData.Pressure((byte)cModuleID, (byte)ID) - cOffset;
+            if (cUnitsVolts > 0)
+            {
+                Result = Result / cUnitsVolts;
+            }
+            return Result;
         }
 
         public void Save()
@@ -149,13 +181,9 @@ namespace RateController
                 mf.Tls.SaveProperty(Name + "_SensorID", cSensorID.ToString());
                 mf.Tls.SaveProperty(Name + "_SectionID", cSectionID.ToString());
                 mf.Tls.SaveProperty(Name + "_UnitsVolts", cUnitsVolts.ToString());
+                mf.Tls.SaveProperty(Name + "_Offset", cOffset.ToString());
                 cEdited = false;
             }
-        }
-
-        public float Pressure()
-        {
-            return mf.PressureData.Pressure((byte)cModuleID, (byte)ID);
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using AgOpenGPS;
+using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using AgOpenGPS;
+using System.Xml.Linq;
 
 namespace RateController
 {
@@ -10,6 +11,7 @@ namespace RateController
     {
         private bool Initializing;
         private FormStart mf;
+
         public FormPressure(FormStart CalledFrom)
         {
             Initializing = true;
@@ -31,16 +33,16 @@ namespace RateController
                 {
                     // save changes
                     SaveGrid();
-                    mf.PressureObjects.UseAlarm = ckOffRate.Checked;
-                    mf.PressureObjects.OffPressureSetting = (byte)mf.Tls.StringToInt(tbOffRate.Text);
-                    
+                    mf.Tls.SaveProperty("ShowPressure", ckShowPressure.Checked.ToString());
+                    mf.Tls.SaveProperty("PressureID",tbPressureID.Text);
+
                     UpdateForm();
                     SetButtons(false);
                 }
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowHelp(ex.Message,"Pressure",3000,true);
+                mf.Tls.ShowHelp(ex.Message, "Pressure", 3000, true);
             }
         }
 
@@ -48,21 +50,6 @@ namespace RateController
         {
             UpdateForm();
             SetButtons(false);
-        }
-
-        private void ckOffRate_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-
-            if (ckOffRate.Checked)
-            {
-                tbOffRate.Enabled = true;
-            }
-            else
-            {
-                tbOffRate.Enabled = false;
-                tbOffRate.Text = "0";
-            }
         }
 
         private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -83,20 +70,9 @@ namespace RateController
                     break;
 
                 case 4:
-                    // section
-                    using (var form = new FormNumeric(1, 16, 0))
-                    {
-                        var result = form.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
-                            DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
-                        }
-                    }
-                    break;
-
                 case 5:
-                    // units/volt
-                    using (var form = new FormNumeric(0, 1000, 0))
+                    // units/volt, offset
+                    using (var form = new FormNumeric(0, 3000, 0))
                     {
                         var result = form.ShowDialog();
                         if (result == DialogResult.OK)
@@ -146,6 +122,11 @@ namespace RateController
             DGV.Columns[0].DefaultCellStyle.BackColor = Properties.Settings.Default.DayColour;
             DGV.Columns[6].DefaultCellStyle.BackColor = Properties.Settings.Default.DayColour;
 
+            bool show;
+            bool.TryParse(mf.Tls.LoadProperty("ShowPressure"), out show);
+            mf.ShowPressure = show;
+            ckShowPressure.Checked = show;
+
             UpdateForm();
         }
 
@@ -155,6 +136,7 @@ namespace RateController
             string cal = DGV.Rows[row].Cells[5].Value.ToString();   // cal
             return (mf.Tls.StringToInt(cal) == 0 && Des == "");
         }
+
         private void LoadGrid()
         {
             try
@@ -167,9 +149,10 @@ namespace RateController
                     Rw["Description"] = Pres.Description;
                     Rw["ModuleID"] = Pres.ModuleID;
                     Rw["SensorID"] = Pres.SensorID;
-                    Rw["SectionID"] = Pres.SectionID + 1;
                     Rw["UnitsPerVolt"] = Pres.UnitsVolts;
                     Rw["Pressure"] = Pres.Pressure();
+                    Rw["Offset"] = Pres.Offset;
+
                     dataSet1.Tables[0].Rows.Add(Rw);
                 }
             }
@@ -207,14 +190,13 @@ namespace RateController
                                 break;
 
                             case 4:
-                                // section
-                                int sec = mf.Tls.StringToInt(val) - 1;
-                                if (sec < 0) sec = 0;
-                                mf.PressureObjects.Item(i).SectionID = sec;
-                                break;
-                            case 5:
                                 // units/volts
                                 mf.PressureObjects.Item(i).UnitsVolts = (float)Convert.ToDouble(val);
+                                break;
+
+                            case 5:
+                                // offset
+                                mf.PressureObjects.Item(i).Offset = (int)Convert.ToDouble(val);
                                 break;
                         }
                     }
@@ -224,7 +206,7 @@ namespace RateController
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("FormPressure/SaveGrid: " + ex.Message);
-                mf.Tls.ShowHelp(ex.Message,"Pressure", 3000, true);
+                mf.Tls.ShowHelp(ex.Message, "Pressure", 3000, true);
             }
         }
 
@@ -256,45 +238,6 @@ namespace RateController
                     c.ForeColor = Color.Black;
                 }
             }
-            //else
-            //{
-            //    this.BackColor = Properties.Settings.Default.NightColour;
-
-            //    foreach (Control c in this.Controls)
-            //    {
-            //        c.ForeColor = Color.White;
-            //    }
-            //}
-        }
-
-        private void tbOffRate_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbOffRate.Text, out tempD);
-            using (var form = new FormNumeric(0, 40, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbOffRate.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbOffRate_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbOffRate_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbOffRate.Text, out tempInt);
-            if (tempInt < 0 || tempInt > 40)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
         }
 
         private void UpdateForm()
@@ -302,10 +245,49 @@ namespace RateController
             Initializing = true;
 
             LoadGrid();
-            ckOffRate.Checked = mf.PressureObjects.UseAlarm;
-            tbOffRate.Text = mf.PressureObjects.OffPressureSetting.ToString();
+            tbPressureID.Text = mf.Tls.LoadProperty("PressureID");
 
             Initializing = false;
+        }
+
+        private void ckShowPressure_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            LoadGrid();
+        }
+
+        private void tbPressureID_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPressureID.Text, out tempD);
+            using (var form = new FormNumeric(1, 16, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPressureID.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbPressureID_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbPressureID_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbPressureID.Text, out tempInt);
+            if (tempInt < 1 || tempInt > 16)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
         }
     }
 }

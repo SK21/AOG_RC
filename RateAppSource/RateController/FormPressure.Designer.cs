@@ -30,15 +30,15 @@ namespace RateController
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPressure));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle41 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.bntOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.dataSet1 = new System.Data.DataSet();
@@ -46,21 +46,21 @@ namespace RateController
             this.dataColumn1 = new System.Data.DataColumn();
             this.dataColumn2 = new System.Data.DataColumn();
             this.dataColumn3 = new System.Data.DataColumn();
-            this.dataColumn5 = new System.Data.DataColumn();
             this.dataColumn6 = new System.Data.DataColumn();
             this.dataColumn7 = new System.Data.DataColumn();
             this.dataColumn4 = new System.Data.DataColumn();
             this.DGV = new System.Windows.Forms.DataGridView();
+            this.ckShowPressure = new System.Windows.Forms.CheckBox();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.tbPressureID = new System.Windows.Forms.TextBox();
+            this.dataColumn5 = new System.Data.DataColumn();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.moduleIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sectionIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SensorID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.unitsPerVoltDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Offset = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pressureDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label28 = new System.Windows.Forms.Label();
-            this.tbOffRate = new System.Windows.Forms.TextBox();
-            this.ckOffRate = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
@@ -110,10 +110,10 @@ namespace RateController
             this.dataColumn1,
             this.dataColumn2,
             this.dataColumn3,
-            this.dataColumn5,
             this.dataColumn6,
             this.dataColumn7,
-            this.dataColumn4});
+            this.dataColumn4,
+            this.dataColumn5});
             this.dataTable1.TableName = "Table1";
             // 
             // dataColumn1
@@ -133,12 +133,6 @@ namespace RateController
             this.dataColumn3.ColumnName = "ModuleID";
             this.dataColumn3.DataType = typeof(short);
             // 
-            // dataColumn5
-            // 
-            this.dataColumn5.Caption = "Section ID";
-            this.dataColumn5.ColumnName = "SectionID";
-            this.dataColumn5.DataType = typeof(short);
-            // 
             // dataColumn6
             // 
             this.dataColumn6.Caption = "Units/Volt";
@@ -152,8 +146,8 @@ namespace RateController
             // 
             // dataColumn4
             // 
-            this.dataColumn4.Caption = "Sensor";
             this.dataColumn4.ColumnName = "SensorID";
+            this.dataColumn4.DataType = typeof(short);
             // 
             // DGV
             // 
@@ -162,34 +156,34 @@ namespace RateController
             this.DGV.AllowUserToResizeColumns = false;
             this.DGV.AllowUserToResizeRows = false;
             this.DGV.AutoGenerateColumns = false;
-            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle37.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle37.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle37.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle37.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle37.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DGV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle37;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DGV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ID,
             this.descriptionDataGridViewTextBoxColumn,
             this.moduleIDDataGridViewTextBoxColumn,
-            this.Column2,
-            this.sectionIDDataGridViewTextBoxColumn,
+            this.SensorID,
             this.unitsPerVoltDataGridViewTextBoxColumn,
+            this.Offset,
             this.pressureDataGridViewTextBoxColumn});
             this.DGV.DataMember = "Table1";
             this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle45.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle45.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle45.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle45.NullValue = "<dbnull>";
-            dataGridViewCellStyle45.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle45.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle45.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle45;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.NullValue = "<dbnull>";
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle9;
             this.DGV.Location = new System.Drawing.Point(15, 15);
             this.DGV.Margin = new System.Windows.Forms.Padding(6);
             this.DGV.Name = "DGV";
@@ -201,11 +195,58 @@ namespace RateController
             this.DGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGV_CellFormatting);
             this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
             // 
+            // ckShowPressure
+            // 
+            this.ckShowPressure.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckShowPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckShowPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckShowPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckShowPressure.Location = new System.Drawing.Point(15, 349);
+            this.ckShowPressure.Name = "ckShowPressure";
+            this.ckShowPressure.Size = new System.Drawing.Size(193, 34);
+            this.ckShowPressure.TabIndex = 298;
+            this.ckShowPressure.Text = "Show Pressure";
+            this.ckShowPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckShowPressure.UseVisualStyleBackColor = true;
+            this.ckShowPressure.CheckedChanged += new System.EventHandler(this.ckShowPressure_CheckedChanged);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdate.Image = ((System.Drawing.Image)(resources.GetObject("btnUpdate.Image")));
+            this.btnUpdate.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnUpdate.Location = new System.Drawing.Point(279, 332);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(124, 72);
+            this.btnUpdate.TabIndex = 299;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // tbPressureID
+            // 
+            this.tbPressureID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPressureID.Location = new System.Drawing.Point(214, 351);
+            this.tbPressureID.MaxLength = 8;
+            this.tbPressureID.Name = "tbPressureID";
+            this.tbPressureID.Size = new System.Drawing.Size(33, 30);
+            this.tbPressureID.TabIndex = 300;
+            this.tbPressureID.Text = "0";
+            this.tbPressureID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPressureID.TextChanged += new System.EventHandler(this.tbPressureID_TextChanged);
+            this.tbPressureID.Enter += new System.EventHandler(this.tbPressureID_Enter);
+            this.tbPressureID.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureID_Validating);
+            // 
+            // dataColumn5
+            // 
+            this.dataColumn5.ColumnName = "Offset";
+            // 
             // ID
             // 
             this.ID.DataPropertyName = "ID";
-            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ID.DefaultCellStyle = dataGridViewCellStyle38;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ID.DefaultCellStyle = dataGridViewCellStyle2;
             this.ID.HeaderText = "ID";
             this.ID.Name = "ID";
             this.ID.Width = 50;
@@ -213,110 +254,71 @@ namespace RateController
             // descriptionDataGridViewTextBoxColumn
             // 
             this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle39;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
             this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            this.descriptionDataGridViewTextBoxColumn.Width = 150;
+            this.descriptionDataGridViewTextBoxColumn.Width = 130;
             // 
             // moduleIDDataGridViewTextBoxColumn
             // 
             this.moduleIDDataGridViewTextBoxColumn.DataPropertyName = "ModuleID";
-            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle40.NullValue = null;
-            this.moduleIDDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle40;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.NullValue = null;
+            this.moduleIDDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
             this.moduleIDDataGridViewTextBoxColumn.HeaderText = "Module";
             this.moduleIDDataGridViewTextBoxColumn.Name = "moduleIDDataGridViewTextBoxColumn";
             this.moduleIDDataGridViewTextBoxColumn.Width = 75;
             // 
-            // Column2
+            // SensorID
             // 
-            this.Column2.DataPropertyName = "SensorID";
-            dataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle41;
-            this.Column2.HeaderText = "Sensor";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 75;
-            // 
-            // sectionIDDataGridViewTextBoxColumn
-            // 
-            this.sectionIDDataGridViewTextBoxColumn.DataPropertyName = "SectionID";
-            dataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle42.Format = "N0";
-            dataGridViewCellStyle42.NullValue = null;
-            this.sectionIDDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle42;
-            this.sectionIDDataGridViewTextBoxColumn.HeaderText = "Section";
-            this.sectionIDDataGridViewTextBoxColumn.Name = "sectionIDDataGridViewTextBoxColumn";
-            this.sectionIDDataGridViewTextBoxColumn.Width = 75;
+            this.SensorID.DataPropertyName = "SensorID";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.SensorID.DefaultCellStyle = dataGridViewCellStyle5;
+            this.SensorID.HeaderText = "Sensor";
+            this.SensorID.Name = "SensorID";
+            this.SensorID.Width = 75;
             // 
             // unitsPerVoltDataGridViewTextBoxColumn
             // 
             this.unitsPerVoltDataGridViewTextBoxColumn.DataPropertyName = "UnitsPerVolt";
-            dataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle43.Format = "N1";
-            dataGridViewCellStyle43.NullValue = null;
-            this.unitsPerVoltDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle43;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.Format = "N1";
+            dataGridViewCellStyle6.NullValue = null;
+            this.unitsPerVoltDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
             this.unitsPerVoltDataGridViewTextBoxColumn.HeaderText = "Units/Volt";
             this.unitsPerVoltDataGridViewTextBoxColumn.Name = "unitsPerVoltDataGridViewTextBoxColumn";
             this.unitsPerVoltDataGridViewTextBoxColumn.Width = 90;
+            // 
+            // Offset
+            // 
+            this.Offset.DataPropertyName = "Offset";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Offset.DefaultCellStyle = dataGridViewCellStyle7;
+            this.Offset.HeaderText = "Offset";
+            this.Offset.Name = "Offset";
+            this.Offset.Width = 90;
             // 
             // pressureDataGridViewTextBoxColumn
             // 
             this.pressureDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.pressureDataGridViewTextBoxColumn.DataPropertyName = "Pressure";
-            dataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle44.Format = "N0";
-            dataGridViewCellStyle44.NullValue = null;
-            this.pressureDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle44;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.Format = "N0";
+            dataGridViewCellStyle8.NullValue = null;
+            this.pressureDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle8;
             this.pressureDataGridViewTextBoxColumn.HeaderText = "Pressure";
             this.pressureDataGridViewTextBoxColumn.Name = "pressureDataGridViewTextBoxColumn";
             this.pressureDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(299, 355);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(29, 23);
-            this.label28.TabIndex = 300;
-            this.label28.Text = "%";
-            // 
-            // tbOffRate
-            // 
-            this.tbOffRate.Enabled = false;
-            this.tbOffRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(264, 351);
-            this.tbOffRate.MaxLength = 8;
-            this.tbOffRate.Name = "tbOffRate";
-            this.tbOffRate.Size = new System.Drawing.Size(33, 30);
-            this.tbOffRate.TabIndex = 299;
-            this.tbOffRate.Text = "20";
-            this.tbOffRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbOffRate.TextChanged += new System.EventHandler(this.tbOffRate_TextChanged);
-            this.tbOffRate.Enter += new System.EventHandler(this.tbOffRate_Enter);
-            this.tbOffRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbOffRate_Validating);
-            // 
-            // ckOffRate
-            // 
-            this.ckOffRate.AutoSize = true;
-            this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ckOffRate.Location = new System.Drawing.Point(75, 353);
-            this.ckOffRate.Name = "ckOffRate";
-            this.ckOffRate.Size = new System.Drawing.Size(183, 28);
-            this.ckOffRate.TabIndex = 298;
-            this.ckOffRate.Text = "Off-Average Alarm";
-            this.ckOffRate.UseVisualStyleBackColor = true;
-            this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
             // 
             // FormPressure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(663, 416);
-            this.Controls.Add(this.label28);
-            this.Controls.Add(this.tbOffRate);
-            this.Controls.Add(this.ckOffRate);
+            this.Controls.Add(this.tbPressureID);
+            this.Controls.Add(this.btnUpdate);
+            this.Controls.Add(this.ckShowPressure);
             this.Controls.Add(this.DGV);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.bntOK);
@@ -347,20 +349,20 @@ namespace RateController
         private System.Data.DataColumn dataColumn1;
         private System.Data.DataColumn dataColumn2;
         private System.Data.DataColumn dataColumn3;
-        private System.Data.DataColumn dataColumn5;
         private System.Data.DataColumn dataColumn6;
         private System.Data.DataColumn dataColumn7;
         private System.Windows.Forms.DataGridView DGV;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.TextBox tbOffRate;
-        private System.Windows.Forms.CheckBox ckOffRate;
         private System.Data.DataColumn dataColumn4;
+        private System.Windows.Forms.CheckBox ckShowPressure;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.TextBox tbPressureID;
+        private System.Data.DataColumn dataColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn moduleIDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sectionIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SensorID;
         private System.Windows.Forms.DataGridViewTextBoxColumn unitsPerVoltDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Offset;
         private System.Windows.Forms.DataGridViewTextBoxColumn pressureDataGridViewTextBoxColumn;
     }
 }

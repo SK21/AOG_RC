@@ -51,6 +51,10 @@ namespace RateController
         private int[] RateType = new int[5];    // 0 current rate, 1 instantaneous rate, 2 overall rate
         private bool ShowQuantityRemaining;
         private bool ShowCoverageRemaining;
+        public bool ShowPressure;
+        public byte PressureToShowID;
+
+        public string WiFiIP;
 
         public FormStart()
         {
@@ -68,6 +72,7 @@ namespace RateController
             mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
             mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
             mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
+            mnuSettings.Items["MnuPressures"].Text = Lang.lgPressure;
 
             MnuOptions.DropDownItems["MnuAbout"].Text = Lang.lgAbout;
             MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
@@ -78,18 +83,14 @@ namespace RateController
             #endregion // language
 
             Tls = new clsTools(this);
-            //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
-            UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255", false, true);       // AOG
 
-            //UDPnetwork = new UDPComm(this, 29999, 28888, 1480, "192.168.1.255");    // arduino
-            //UDPconfig = new UDPComm(this, 29900, 28800, 1482, "192.168.1.255");     // pcb config
-
-            UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
+            UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255", true, true);  // AOG
+            UDPmodules = new UDPComm(this, 29999, 28888, 1480, "");    // arduino
 
             AutoSteerPGN = new PGN254(this);
             SectionsPGN = new PGN235(this);
             VRdata = new PGN230(this);
-            
+
 
             SwitchBox = new PGN32618(this);
             SwitchIDs = new PGN32620(this);
@@ -391,8 +392,6 @@ namespace RateController
             Sections.Save();
             Products.Save();
 
-            //Tls.SaveProperty("BroadCastIP", UDPmodules.BroadCastIP);
-
             Application.Exit();
         }
 
@@ -424,6 +423,13 @@ namespace RateController
 
             LoadSettings();
             UpdateStatus();
+
+            LoadPressureSetting();
+            Products.UpdatePID();
+
+            // wifi
+            WiFiIP = Tls.LoadProperty("WifiIP");
+            UDPmodules.SetWifiEP(WiFiIP);
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -618,6 +624,52 @@ namespace RateController
         {
             UpdateStatus();
             Products.Update();
+            CheckPressure();
+        }
+
+        private void LoadPressureSetting()
+        {
+            bool show;
+            bool.TryParse(Tls.LoadProperty("ShowPressure"), out show);
+            ShowPressure = show;
+            byte.TryParse(Tls.LoadProperty("PressureID"), out PressureToShowID);
+        }
+
+        private void CheckPressure()
+        {
+            try
+            {
+                if (ShowPressure)
+                {
+                    this.Height = 285;
+                    btnSettings.Top = 182;
+                    btnLeft.Top = 182;
+                    btnRight.Top = 182;
+                    lbArduinoConnected.Top = 182;
+                    lbAogConnected.Top = 217;
+                    lbPressure.Visible = true;
+                    lbPressureValue.Visible = true;
+                    lbPressure.Text = "Pressure " + PressureToShowID.ToString();
+                    if (PressureToShowID < 1) PressureToShowID = 1;
+                    float Prs = PressureObjects.Item(PressureToShowID - 1).Pressure();
+                    lbPressureValue.Text = Prs.ToString("N1");
+                }
+                else
+                {
+                    this.Height = 256;
+                    btnSettings.Top = 153;
+                    btnLeft.Top = 153;
+                    btnRight.Top = 153;
+                    lbArduinoConnected.Top = 153;
+                    lbAogConnected.Top = 188;
+                    lbPressure.Visible = false;
+                    lbPressureValue.Visible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Tls.WriteErrorLog("FormStart/CheckPressure: " + ex.Message);
+            }
         }
 
         private void timerNano_Tick(object sender, EventArgs e)
@@ -672,6 +724,20 @@ namespace RateController
         {
             Form Monitor = new frmMonitor(this);
             Monitor.ShowDialog();
+        }
+
+        private void wifiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frmWifi = new frmWifi(this);
+            frmWifi.ShowDialog();
+        }
+
+        private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frmPressure = new FormPressure(this);
+            frmPressure.ShowDialog();
+            LoadPressureSetting();
+            CheckPressure();
         }
     }
 }

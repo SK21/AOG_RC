@@ -229,7 +229,7 @@
     <value>Load Defaults</value>
   </data>
   <data name="lgLocalIP" xml:space="preserve">
-    <value>Local IP</value>
+    <value>Ethernet IP</value>
   </data>
   <data name="lgLowMax" xml:space="preserve">
     <value>PWM Low Max</value>
@@ -274,7 +274,7 @@
     <value>PCB Config</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
-    <value>Pressure</value>
+    <value>Pressures</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Product</value>

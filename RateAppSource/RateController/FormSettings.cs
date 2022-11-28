@@ -145,6 +145,9 @@ namespace RateController
 
                     SetButtons(false);
                     UpdateForm();
+
+                    // send to modules
+                    mf.Products.UpdatePID();
                 }
                 else
                 {
@@ -1545,6 +1548,11 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Coverage");
             hlpevent.Handled = true;
+        }
+
+        private void rbMultiPulse_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

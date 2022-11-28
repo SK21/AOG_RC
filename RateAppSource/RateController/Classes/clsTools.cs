@@ -12,10 +12,11 @@ namespace RateController
     {
         private static Hashtable ht;
         private string cAppName = "RateController";
-        private string cAppVersion = "2.3.5";
+        private string cAppVersion = "2.3.6";
+        private string cVersionDate = "27-Nov-2022";
+
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "09-Nov-2022";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
@@ -329,6 +330,48 @@ namespace RateController
             }
 
             if (LogError) WriteErrorLog(Message);
+        }
+
+        public void StartWifi()
+        {
+            string SSID = LoadProperty("WifiSSID");
+            string Password = LoadProperty("WifiPassword");
+
+            string Start = "netsh wlan set hostednetwork mode=allow ssid=" + SSID + " key=" + Password + "\n";
+            Start += "netsh wlan stop hostednetwork\n";
+            Start += "netsh wlan start hostednetwork\n";
+
+            string FileName = SettingsDir() + "\\StartWifi.bat";
+            File.WriteAllText(FileName, Start);
+
+            var psi = new ProcessStartInfo();
+            psi.CreateNoWindow = true;
+            psi.WindowStyle = ProcessWindowStyle.Hidden;
+            psi.FileName = FileName;
+            psi.Verb = "runas";
+
+            var process = new Process();
+            process.StartInfo = psi;
+            process.Start();
+            process.WaitForExit();
+        }
+
+        public void StopWifi()
+        {
+            string Stop = "netsh wlan stop hostednetwork\n";
+
+            string FileName = SettingsDir() + "\\StopWifi.bat";
+            File.WriteAllText(FileName, Stop);
+
+            var psi = new ProcessStartInfo();
+            psi.CreateNoWindow = true;
+            psi.FileName = FileName;
+            psi.Verb = "runas";
+
+            var process = new Process();
+            process.StartInfo = psi;
+            process.Start();
+            process.WaitForExit();
         }
 
         public int StringToInt(string S)

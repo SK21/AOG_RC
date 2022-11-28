@@ -293,10 +293,6 @@ namespace RateController
                         Integral = 0;
                     }
                 }
-                //Debug.Print("");
-                //Debug.Print((Result*100/255).ToString());
-                //Debug.Print(Integral.ToString());
-
                 return Result;
             }
             catch (Exception)
