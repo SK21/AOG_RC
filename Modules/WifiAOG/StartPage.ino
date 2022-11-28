@@ -1,29 +1,5 @@
-void handleRoot()
-{
-	server.send(200, "text/html", GetPage1());
-}
 
-void ButtonPressed()
-{
-	if (server.arg("Btn") == "Master")
-	{
-		MasterOn = !MasterOn;
-		SendSwitches();
-		handleRoot();
-	}
-	else
-	{
-		int ID = server.arg("Btn").toInt() - 1;
-		if (ID >= 0 && ID < 16)
-		{
-			Button[ID] = !Button[ID];
-			SendSwitches();
-			handleRoot();
-		}
-	}
-}
-
-String GetPage1()
+String GetPage0()
 {
 	String st = "<HTML>";
 	st += "";
@@ -31,7 +7,7 @@ String GetPage1()
 	st += "    <META content='text/html; charset=utf-8' http-equiv=Content-Type>";
 	st += "    <meta name=vs_targetSchema content='HTML 4.0'>";
 	st += "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>";
-	st += "    <title>Temp Monitor</title>";
+	st += "    <title>Wifi AOG</title>";
 	st += "    <style>";
 	st += "      html {";
 	st += "        font-family: Helvetica;";
@@ -79,6 +55,38 @@ String GetPage1()
 	st += "        width: 30%;";
 	st += "      }";
 	st += "";
+	st += "      .button-72 {";
+	st += "        align-items: center;";
+	st += "        background-color: initial;";
+	st += "        background-image: linear-gradient(rgba(179, 132, 201, .84), rgba(57, 31, 91, .84) 50%);";
+	st += "        border-radius: 42px;";
+	st += "        border-width: 0;";
+	st += "        box-shadow: rgba(57, 31, 91, 0.24) 0 2px 2px, rgba(179, 132, 201, 0.4) 0 8px 12px;";
+	st += "        color: #FFFFFF;";
+	st += "        cursor: pointer;";
+	st += "        display: flex;";
+	st += "        font-family: Quicksand, sans-serif;";
+	st += "        font-size: 18px;";
+	st += "        font-weight: 700;";
+	st += "        justify-content: center;";
+	st += "        letter-spacing: .04em;";
+	st += "        line-height: 16px;";
+	st += "        margin: auto;";
+	st += "        padding: 18px 18px;";
+	st += "        text-align: center;";
+	st += "        text-decoration: none;";
+	st += "        text-shadow: rgba(255, 255, 255, 0.4) 0 0 4px, rgba(255, 255, 255, 0.2) 0 0 12px, rgba(57, 31, 91, 0.6) 1px 1px 4px, rgba(57, 31, 91, 0.32) 4px 4px 16px;";
+	st += "        user-select: none;";
+	st += "        -webkit-user-select: none;";
+	st += "        touch-action: manipulation;";
+	st += "        vertical-align: baseline;";
+	st += "        width:30%";
+	st += "      }";
+	st += "";
+	st += "      .InputCell {";
+	st += "        text-align: center;";
+	st += "      }";
+	st += "";
 	st += "    </style>";
 	st += "  </head>";
 	st += "";
@@ -86,7 +94,7 @@ String GetPage1()
 	st += "    <style>";
 	st += "      body {";
 	st += "        margin-top: 50px;";
-	st += "        background-color: DeepSkyBlue";
+	st += "        background-color: wheat";
 	st += "      }";
 	st += "";
 	st += "      font-family: Arial,";
@@ -95,62 +103,17 @@ String GetPage1()
 	st += "";
 	st += "    </style>";
 	st += "";
-	st += "    <h1 align=center>RateController Switches</h1>";
+	st += "    <h1 align=center>WifiAOG";
+	st += "    </h1>";
 	st += "    <form id=FORM1 method=post action='/'>&nbsp;";
 	st += "";
 	st += "";
-
-	if (MasterOn) tmp = "buttonOn"; else tmp = "buttonOff";
-	st += "      <p> <input class='" + tmp + "' name='Btn' type=submit formaction='/ButtonPressed' value='Master'> </p>";
-
-	for (int i = 0; i < 16; i++)
-	{
-		if (Button[i]) tmp = "buttonOn"; else tmp = "buttonOff";
-		st += "      <p> <input class='" + tmp + "' name='Btn' type=submit formaction='/ButtonPressed' value='" + String(i + 1) + "'> </p>";
-	}
-
+	st += "      <p> <a class='button-72' href='/page1' >Switches</a> </p>";
+	st += "      <p> <a class='button-72' href='/page2' >Network</a> </p>";
+	st += "";
 	st += "    </form>";
 	st += "";
 	st += "</HTML>";
 
 	return st;
 }
-
-void SendSwitches()
-{
-	// PGN32619
-	// 0    107
-	// 1    127
-	// 2    MasterOn
-	// 3	switches 0-7
-	// 4	switches 8-15
-	// 5	crc
-
-	Packet[0] = 107;
-	Packet[1] = 127;
-	Packet[2] = MasterOn;
-	Packet[3] = 0;
-	Packet[4] = 0;
-
-	// convert section switches to bits
-	for (int i = 0; i < 16; i++)
-	{
-		SendByte = i / 8;
-		SendBit = i - SendByte * 8;
-		if (Button[i]) bitSet(Packet[SendByte + 3], SendBit);
-	}
-
-	// crc
-	Packet[5] = CRC(5, 0);
-
-	// send
-	for (int i = 0; i < 6; i++)
-	{
-		Serial.write(Packet[i]);
-		//Serial.print(Packet[i]);
-		//if (i < 5) Serial.print(",");
-		yield();
-	}
-	Serial.println("");
-}
-
