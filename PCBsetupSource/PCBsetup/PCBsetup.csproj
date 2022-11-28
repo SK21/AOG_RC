@@ -205,6 +205,12 @@
     <Compile Include="Forms\frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmD1rate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmD1rate.Designer.cs">
+      <DependentUpon>frmD1rate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmFirmware.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -259,11 +265,18 @@
     <Compile Include="Forms\frmSwitchboxSettings.Designer.cs">
       <DependentUpon>frmSwitchboxSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmTRsettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmTRsettings.Designer.cs">
+      <DependentUpon>frmTRsettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Languages\Lang.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.resx</DependentUpon>
     </Compile>
+    <Compile Include="PGNs\PGN32500.cs" />
     <Compile Include="PGNs\PGN32622.cs" />
     <Compile Include="PGNs\PGN32623.cs" />
     <Compile Include="PGNs\PGN32624.cs" />
@@ -278,6 +291,9 @@
     <EmbeddedResource Include="Forms\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmD1rate.resx">
+      <DependentUpon>frmD1rate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmFirmware.resx">
       <DependentUpon>frmFirmware.cs</DependentUpon>
@@ -305,6 +321,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSwitchboxSettings.resx">
       <DependentUpon>frmSwitchboxSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmTRsettings.resx">
+      <DependentUpon>frmTRsettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Languages\Lang.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -342,9 +361,12 @@
     <None Include="Resources\RateOBNE.ino.hex" />
     <None Include="Resources\RCnano.ino.hex" />
     <None Include="Resources\RCnanoOldBootLoader.ino.hex" />
+    <None Include="Resources\RCteensy.ino.hex" />
     <None Include="Resources\SW.ino.hex" />
     <None Include="Resources\Switchbox.ino.hex" />
     <None Include="Resources\SwitchboxOldBootLoader.ino.hex" />
+    <None Include="Resources\WifiAOG.ino.bin" />
+    <None Include="Resources\WifiRate.ino.bin" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -392,6 +414,7 @@
     <Content Include="configurator-icon-19.ico" />
     <Content Include="Forms\Keypad.dll" />
     <Content Include="Forms\RepeatButtonControl.dll" />
+    <None Include="Resources\esptool.exe" />
     <None Include="Resources\AS13.jpg" />
     <None Include="Resources\PCB.jpg" />
   </ItemGroup>

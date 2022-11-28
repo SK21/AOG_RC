@@ -16,7 +16,6 @@ namespace PCBsetup.Forms
         public CheckBox[] CKs;
         public System.Timers.Timer timer = new System.Timers.Timer(1000);
         private frmMain mf;
-        private bool PortWasOpen = false;
         private int ProgressCount;
         private DateTime StartUpload;
         private UploadResult UploadStatus;
@@ -103,8 +102,6 @@ namespace PCBsetup.Forms
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             worker.RunWorkerCompleted +=
               new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-
-            PortWasOpen = mf.CommPort.IsOpen();
 
             UserSelectedFile = false;
             tbHexfile.Text = "Default file version date:" + mf.Tls.NanoFirmwareVersion();

@@ -79,48 +79,48 @@ namespace PCBsetup.Forms
 
         private void btnLoadDefaults_Click(object sender, EventArgs e)
         {
-            // AS13_PCB
+            // AS14 PCB
             cbReceiver.SelectedIndex = 1;
-            tbNMEAserialPort.Text = "8";
-            tbRTCMserialPort.Text = "3";
+            tbNMEAserialPort.Text = "4";
+            tbRTCMserialPort.Text = "5";
             tbRTCM.Text = "2233";
             cbIMU.SelectedIndex = 1;
             tbIMUdelay.Text = "90";
             tbIMUinterval.Text = "40";
-            tbZeroOffset.Text = "0";
+            tbZeroOffset.Text = "6500";
             cbAnalog.SelectedIndex = 1;
             cbRelayControl.SelectedIndex = 0;
             tbIPaddress.Text = "1";
-            tbWemosSerialPort.Text = "1";
+            tbWemosSerialPort.Text = "3";
 
             tbMinSpeed.Text = "1";
             tbMaxSpeed.Text = "15";
             tbPulseCal.Text = "25.5";
-            tbRS485port.Text = "7";
+            tbRS485port.Text = "8";
             tbModule.Text = "0";
 
             ckGyro.Checked = false;
             ckUseRate.Checked = false;
-            ckOnBoard.Checked = false;
+            ckOnBoard.Checked = true;
             ckRelayOn.Checked = false;
             ckFlowOn.Checked = false;
-            ckSwapPitchRoll.Checked = false;
+            ckSwapPitchRoll.Checked = true;
             ckInvertRoll.Checked = false;
             ckActuator.Checked = false;
 
-            tbDir1.Text = "22";
-            tbPwm1.Text = "23";
-            tbDir2.Text = "36";
-            tbPwm2.Text = "37";
-            tbSteerRelay.Text = "2";
-            tbWorkSwitch.Text = "32";
+            tbDir1.Text = "26";
+            tbPwm1.Text = "25";
+            tbDir2.Text = "28";
+            tbPwm2.Text = "29";
+            tbSteerRelay.Text = "36";
+            tbWorkSwitch.Text = "27";
             tbSteerSwitch.Text = "39";
             tbEncoder.Text = "38";
             tbCurrentSensor.Text = "10";
             tbWAS.Text = "25";
             tbPressureSensor.Text = "26";
-            tbSpeedPulse.Text = "11";
-            tbSendEnable.Text = "27";
+            tbSpeedPulse.Text = "37";
+            tbSendEnable.Text = "33";
         }
 
         private void btnSendToModule_Click(object sender, EventArgs e)
@@ -169,33 +169,33 @@ namespace PCBsetup.Forms
 
         private void BuildBoxes()
         {
-            int StartID = Boxes.Add(tbNMEAserialPort, 8, 1);
-            Boxes.Add(tbRTCMserialPort, 8, 1);
-            Boxes.Add(tbRTCM, 9999);
-            Boxes.Add(tbIMUdelay, 100);
-            Boxes.Add(tbIMUinterval, 100);
-            Boxes.Add(tbZeroOffset, 10000);
-            Boxes.Add(tbIPaddress, 254);
-            Boxes.Add(tbMinSpeed, 50);
-            Boxes.Add(tbMaxSpeed, 50);
-            Boxes.Add(tbPulseCal);
-            Boxes.Add(tbRS485port, 8, 1);
-            Boxes.Add(tbModule, 15);
-            Boxes.Add(tbWemosSerialPort, 8, 1);
+            int StartID = Boxes.Add(this.Text, tbNMEAserialPort, 8, 1);
+            Boxes.Add(this.Text, tbRTCMserialPort, 8, 1);
+            Boxes.Add(this.Text, tbRTCM, 9999);
+            Boxes.Add(this.Text, tbIMUdelay, 100);
+            Boxes.Add(this.Text, tbIMUinterval, 100);
+            Boxes.Add(this.Text, tbZeroOffset, 10000);
+            Boxes.Add(this.Text, tbIPaddress, 254);
+            Boxes.Add(this.Text, tbMinSpeed, 50);
+            Boxes.Add(this.Text, tbMaxSpeed, 50);
+            Boxes.Add(this.Text, tbPulseCal);
+            Boxes.Add(this.Text, tbRS485port, 8, 1);
+            Boxes.Add(this.Text, tbModule, 15);
+            Boxes.Add(this.Text, tbWemosSerialPort, 8, 1);
 
-            Boxes.Add(tbDir1, 41);
-            Boxes.Add(tbPwm1, 41);
-            Boxes.Add(tbSteerSwitch, 41);
-            Boxes.Add(tbWAS, 41);
-            Boxes.Add(tbSteerRelay, 41);
-            Boxes.Add(tbWorkSwitch, 41);
-            Boxes.Add(tbCurrentSensor, 41);
-            Boxes.Add(tbPressureSensor, 41);
-            Boxes.Add(tbEncoder, 41);
-            Boxes.Add(tbDir2, 41);
-            Boxes.Add(tbPwm2, 41);
-            Boxes.Add(tbSpeedPulse, 41);
-            int EndID = Boxes.Add(tbSendEnable, 41);
+            Boxes.Add(this.Text, tbDir1, 41);
+            Boxes.Add(this.Text, tbPwm1, 41);
+            Boxes.Add(this.Text, tbSteerSwitch, 41);
+            Boxes.Add(this.Text, tbWAS, 41);
+            Boxes.Add(this.Text, tbSteerRelay, 41);
+            Boxes.Add(this.Text, tbWorkSwitch, 41);
+            Boxes.Add(this.Text, tbCurrentSensor, 41);
+            Boxes.Add(this.Text, tbPressureSensor, 41);
+            Boxes.Add(this.Text, tbEncoder, 41);
+            Boxes.Add(this.Text, tbDir2, 41);
+            Boxes.Add(this.Text, tbPwm2, 41);
+            Boxes.Add(this.Text, tbSpeedPulse, 41);
+            int EndID = Boxes.Add(this.Text, tbSendEnable, 41);
 
             for (int i = StartID; i < EndID + 1; i++)
             {

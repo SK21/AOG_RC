@@ -18,11 +18,13 @@ namespace PCBsetup.Forms
         private frmMain mf;
         private bool UseDefault = false;
         private TeensyWatcher watcher;
+        private byte SoftwareID;    // 0 autosteer, 1 rate
 
-        public frmFirmware(frmMain CallingForm)
+        public frmFirmware(frmMain CallingForm, byte ID)
         {
             InitializeComponent();
             mf = CallingForm;
+            SoftwareID = ID;
 
             watcher = new TeensyWatcher(SynchronizationContext.Current);
             watcher.ConnectedTeensies.CollectionChanged += ConnectedTeensiesChanged;
@@ -65,7 +67,7 @@ namespace PCBsetup.Forms
         private void btnDefault_Click(object sender, EventArgs e)
         {
             UseDefault = true;
-            tbHexfile.Text = "Default file version date: " + mf.Tls.TeensyFirmwareVersion();
+            tbHexfile.Text = "Default file version date: " + mf.Tls.TeensyAutoSteerVersion();
         }
 
         private void btnDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -88,7 +90,18 @@ namespace PCBsetup.Forms
                     if (UseDefault)
                     {
                         filename = Path.GetTempFileName();
-                        File.WriteAllBytes(filename, PCBsetup.Properties.Resources.AutoSteerTeensy_ino);
+                        switch (SoftwareID)
+                        {
+                            case 1:
+                                // rate
+                                File.WriteAllBytes(filename, PCBsetup.Properties.Resources.RCteensy_ino);
+                                break;
+
+                            default:
+                                // autosteer
+                                File.WriteAllBytes(filename, PCBsetup.Properties.Resources.AutoSteerTeensy_ino);
+                                break;
+                        }
                     }
                     else
                     {
@@ -159,7 +172,20 @@ namespace PCBsetup.Forms
             this.BackColor = PCBsetup.Properties.Settings.Default.DayColour;
 
             UseDefault = true;
-            tbHexfile.Text = "Default file version date: " + mf.Tls.TeensyFirmwareVersion();
+            switch (SoftwareID)
+            {
+                case 1:
+                    // rate
+                    tbHexfile.Text = "Default file version date: " + mf.Tls.TeensyRateVersion();
+                    this.Text = "Teensy Rate Firmware";
+                    break;
+
+                default:
+                    // autosteer
+                    tbHexfile.Text = "Default file version date: " + mf.Tls.TeensyAutoSteerVersion();
+                    this.Text = "Teensy AutoSteer Firmware";
+                    break;
+            }
         }
 
         private void lbTeensies_HelpRequested(object sender, HelpEventArgs hlpevent)

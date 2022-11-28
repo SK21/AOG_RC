@@ -1,12 +1,18 @@
 ﻿using AgOpenGPS;
 using PCBsetup.Languages;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PCBsetup.Forms
 {
-    public partial class frmNanoSettings : Form
+    public partial class frmTRsettings : Form
     {
         public clsTextBoxes Boxes;
         public CheckBox[] CKs;
@@ -14,13 +20,12 @@ namespace PCBsetup.Forms
         private bool Initializing = false;
         private bool[] TabEdited;
 
-        public frmNanoSettings(frmMain CallingForm)
+        public frmTRsettings(frmMain CallingForm)
         {
             InitializeComponent();
-
             mf = CallingForm;
 
-            CKs = new CheckBox[] { ckUseMCP23017, ckNanoRelayOn, ckNanoFlowOn };
+            CKs = new CheckBox[] { ckNanoRelayOn, ckNanoFlowOn };
 
             for (int i = 0; i < CKs.Length; i++)
             {
@@ -32,7 +37,6 @@ namespace PCBsetup.Forms
             Boxes = new clsTextBoxes(mf);
             BuildBoxes();
         }
-
         private void bntOK_Click(object sender, EventArgs e)
         {
             try
@@ -80,29 +84,38 @@ namespace PCBsetup.Forms
         {
             tbNanoModuleID.Text = "0";
             tbNanoSensorCount.Text = "1";
-            ckUseMCP23017.Checked = true;
             ckNanoRelayOn.Checked = false;
             ckNanoFlowOn.Checked = false;
+            tbWemosPort.Text = "3";
 
-            tbNanoFlow1.Text = "2";
-            tbNanoFlow2.Text = "3";
-            tbNanoDir1.Text = "4";
-            tbNanoDir2.Text = "6";
-            tbNanoPWM1.Text = "5";
-            tbNanoPWM2.Text = "9";
+            tbNanoFlow1.Text = "28";
+            tbNanoDir1.Text = "37";
+            tbNanoPWM1.Text = "36";
+
+            tbNanoFlow2.Text = "29";
+            tbNanoDir2.Text = "14";
+            tbNanoPWM2.Text = "15";
 
             tbNanoIP.Text = "1";
+            cbRelayControl.SelectedIndex = 5;
+
+            tbRelay1.Text = "8";
+            tbRelay2.Text = "9";
+            tbRelay3.Text = "10";
+            tbRelay4.Text = "11";
+            tbRelay5.Text = "12";
+            tbRelay6.Text = "25";
+            tbRelay7.Text = "26";
+            tbRelay8.Text = "27";
         }
 
         private void btnSendToModule_Click(object sender, EventArgs e)
         {
             bool Sent = false;
-            try
+            try  
             {
-                PGN32625 PGN = new PGN32625(this);
+                PGN32500 PGN = new PGN32500(this);
                 Sent = PGN.Send();
-                PGN32626 PGN2 = new PGN32626(this);
-                Sent = Sent & PGN2.Send();
 
                 if (Sent)
                 {
@@ -142,30 +155,31 @@ namespace PCBsetup.Forms
             int StartID = Boxes.Add(this.Text, tbNanoModuleID, 15);
             Boxes.Add(this.Text, tbNanoSensorCount, 2);
             Boxes.Add(this.Text, tbNanoIP, 254);
+            Boxes.Add(this.Text, tbWemosPort, 8);
 
-            Boxes.Add(this.Text, tbNanoFlow1, 21);
-            Boxes.Add(this.Text, tbNanoFlow2, 21);
-            Boxes.Add(this.Text, tbNanoDir1, 21);
-            Boxes.Add(this.Text, tbNanoDir2, 21);
-            Boxes.Add(this.Text, tbNanoPWM1, 21);
-            Boxes.Add(this.Text, tbNanoPWM2, 21);
-            Boxes.Add(this.Text, tbRelay1, 21);
-            Boxes.Add(this.Text, tbRelay2, 21);
-            Boxes.Add(this.Text, tbRelay3, 21);
-            Boxes.Add(this.Text, tbRelay4, 21);
-            Boxes.Add(this.Text, tbRelay5, 21);
+            Boxes.Add(this.Text, tbNanoFlow1, 41);
+            Boxes.Add(this.Text, tbNanoFlow2, 41);
+            Boxes.Add(this.Text, tbNanoDir1, 41);
+            Boxes.Add(this.Text, tbNanoDir2, 41);
+            Boxes.Add(this.Text, tbNanoPWM1, 41);
+            Boxes.Add(this.Text, tbNanoPWM2, 41);
+            Boxes.Add(this.Text, tbRelay1, 41);
+            Boxes.Add(this.Text, tbRelay2, 41);
+            Boxes.Add(this.Text, tbRelay3, 41);
+            Boxes.Add(this.Text, tbRelay4, 41);
+            Boxes.Add(this.Text, tbRelay5, 41);
 
-            Boxes.Add(this.Text, tbRelay6, 21);
-            Boxes.Add(this.Text, tbRelay7, 21);
-            Boxes.Add(this.Text, tbRelay8, 21);
-            Boxes.Add(this.Text, tbRelay9, 21);
-            Boxes.Add(this.Text, tbRelay10, 21);
-            Boxes.Add(this.Text, tbRelay11, 21);
-            Boxes.Add(this.Text, tbRelay12, 21);
-            Boxes.Add(this.Text, tbRelay13, 21);
-            Boxes.Add(this.Text, tbRelay14, 21);
-            Boxes.Add(this.Text, tbRelay15, 21);
-            int EndID = Boxes.Add(this.Text, tbRelay16, 21);
+            Boxes.Add(this.Text, tbRelay6, 41);
+            Boxes.Add(this.Text, tbRelay7, 41);
+            Boxes.Add(this.Text, tbRelay8, 41);
+            Boxes.Add(this.Text, tbRelay9, 41);
+            Boxes.Add(this.Text, tbRelay10, 41);
+            Boxes.Add(this.Text, tbRelay11, 41);
+            Boxes.Add(this.Text, tbRelay12, 41);
+            Boxes.Add(this.Text, tbRelay13, 41);
+            Boxes.Add(this.Text, tbRelay14, 41);
+            Boxes.Add(this.Text, tbRelay15, 41);
+            int EndID = Boxes.Add(this.Text, tbRelay16, 41);
 
             for (int i = StartID; i < EndID + 1; i++)
             {
@@ -195,7 +209,7 @@ namespace PCBsetup.Forms
 
         private void ckUseMCP23017_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Use the MCP23017 to control relays or use Nano pins.";
+            string Message = "Use the MCP23017 to control relays or use Teensy pins.";
 
             mf.Tls.ShowHelp(Message, "Use MCP23017");
             hlpevent.Handled = true;
@@ -234,15 +248,21 @@ namespace PCBsetup.Forms
         {
             try
             {
+                byte tmp;
                 bool Checked;
 
                 // textboxes
                 Boxes.ReLoad();
 
+                // combo boxes
+                byte.TryParse(mf.Tls.LoadProperty(this.Text+"/"+"RelayControl"), out tmp);
+                cbRelayControl.SelectedIndex = tmp;
+
+
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
                 {
-                    bool.TryParse(mf.Tls.LoadProperty(CKs[i].Name), out Checked);
+                    bool.TryParse(mf.Tls.LoadProperty(this.Text+"/"+CKs[i].Name), out Checked);
                     CKs[i].Checked = Checked;
                 }
             }
@@ -252,18 +272,6 @@ namespace PCBsetup.Forms
             }
         }
 
-        private void Pins_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Nano pin number for each function. Digital pins 2-13. For Analog pins A0-A7 use 14-21. " +
-                "Nano relay pins only work if 'Use MCP23017' is unchecked." +
-                " \n\nIf using the ENC28J60 ethernet shield these pins are used by it and" +
-                " unavailable for relays: 7,8,10,11,12,13. It also pulls pin D2 high. " +
-                "D2 can be used if pin D2 on the shield is cut off and then mount the" +
-                " shield on top of the Nano.";
-            mf.Tls.ShowHelp(Message, "Nano Pins", 60000);
-            hlpevent.Handled = true;
-        }
-
         private void SaveSettings()
         {
             try
@@ -271,10 +279,13 @@ namespace PCBsetup.Forms
                 // textboxes
                 Boxes.Save();
 
+                // combo boxes
+                mf.Tls.SaveProperty(this.Text+"/"+"RelayControl", cbRelayControl.SelectedIndex.ToString());
+
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
                 {
-                    mf.Tls.SaveProperty(this.Text + "/" + CKs[i].Name, CKs[i].Checked.ToString());
+                    mf.Tls.SaveProperty(this.Text+"/" + CKs[i].Name, CKs[i].Checked.ToString());
                 }
             }
             catch (Exception ex)
@@ -355,6 +366,11 @@ namespace PCBsetup.Forms
             lbIPpart4.Text = (val + 207).ToString();
 
             Initializing = false;
+        }
+
+        private void cbRelayControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

@@ -161,7 +161,7 @@
             this.MinimizeBox = false;
             this.Name = "frmFirmware";
             this.ShowInTaskbar = false;
-            this.Text = "Teensie Firmware";
+            this.Text = "Teensy AutoSteer Firmware";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmFirmware_FormClosed);
             this.Load += new System.EventHandler(this.frmFirmware_Load);
             this.ResumeLayout(false);

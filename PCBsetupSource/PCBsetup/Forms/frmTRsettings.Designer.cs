@@ -1,6 +1,6 @@
 ﻿namespace PCBsetup.Forms
 {
-    partial class frmNanoSettings
+    partial class frmTRsettings
     {
         /// <summary>
         /// Required designer variable.
@@ -28,11 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmNanoSettings));
-            this.btnLoadDefaults = new System.Windows.Forms.Button();
-            this.btnSendToModule = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.bntOK = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTRsettings));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.lbIPpart4 = new System.Windows.Forms.Label();
@@ -44,7 +40,6 @@
             this.tbNanoModuleID = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ckNanoFlowOn = new System.Windows.Forms.CheckBox();
-            this.ckUseMCP23017 = new System.Windows.Forms.CheckBox();
             this.ckNanoRelayOn = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tbRelay16 = new System.Windows.Forms.TextBox();
@@ -91,72 +86,35 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbNanoFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.btnLoadDefaults = new System.Windows.Forms.Button();
+            this.btnSendToModule = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.bntOK = new System.Windows.Forms.Button();
+            this.tbWemosPort = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.cbRelayControl = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnLoadDefaults
-            // 
-            this.btnLoadDefaults.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnLoadDefaults.Location = new System.Drawing.Point(18, 533);
-            this.btnLoadDefaults.Name = "btnLoadDefaults";
-            this.btnLoadDefaults.Size = new System.Drawing.Size(115, 72);
-            this.btnLoadDefaults.TabIndex = 19;
-            this.btnLoadDefaults.Text = "Load Defaults";
-            this.btnLoadDefaults.UseVisualStyleBackColor = true;
-            this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
-            // 
-            // btnSendToModule
-            // 
-            this.btnSendToModule.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnSendToModule.Location = new System.Drawing.Point(153, 533);
-            this.btnSendToModule.Name = "btnSendToModule";
-            this.btnSendToModule.Size = new System.Drawing.Size(115, 72);
-            this.btnSendToModule.TabIndex = 18;
-            this.btnSendToModule.Text = "Send to Module";
-            this.btnSendToModule.UseVisualStyleBackColor = true;
-            this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Enabled = false;
-            this.btnCancel.Image = global::PCBsetup.Properties.Resources.Cancel64;
-            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnCancel.Location = new System.Drawing.Point(288, 533);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(115, 72);
-            this.btnCancel.TabIndex = 17;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // bntOK
-            // 
-            this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
-            this.bntOK.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.bntOK.Location = new System.Drawing.Point(423, 533);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 16;
-            this.bntOK.Text = "Close";
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(12, 12);
+            this.tabControl1.Location = new System.Drawing.Point(12, 13);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(530, 505);
-            this.tabControl1.TabIndex = 20;
+            this.tabControl1.TabIndex = 25;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label28);
+            this.tabPage1.Controls.Add(this.cbRelayControl);
+            this.tabPage1.Controls.Add(this.tbWemosPort);
+            this.tabPage1.Controls.Add(this.label25);
             this.tabPage1.Controls.Add(this.lbIPpart4);
             this.tabPage1.Controls.Add(this.label30);
             this.tabPage1.Controls.Add(this.tbNanoIP);
@@ -166,7 +124,6 @@
             this.tabPage1.Controls.Add(this.tbNanoModuleID);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.ckNanoFlowOn);
-            this.tabPage1.Controls.Add(this.ckUseMCP23017);
             this.tabPage1.Controls.Add(this.ckNanoRelayOn);
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
@@ -179,7 +136,7 @@
             // lbIPpart4
             // 
             this.lbIPpart4.AutoSize = true;
-            this.lbIPpart4.Location = new System.Drawing.Point(351, 182);
+            this.lbIPpart4.Location = new System.Drawing.Point(382, 164);
             this.lbIPpart4.Name = "lbIPpart4";
             this.lbIPpart4.Size = new System.Drawing.Size(45, 24);
             this.lbIPpart4.TabIndex = 27;
@@ -188,7 +145,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(201, 182);
+            this.label30.Location = new System.Drawing.Point(232, 164);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(80, 24);
             this.label30.TabIndex = 26;
@@ -196,7 +153,7 @@
             // 
             // tbNanoIP
             // 
-            this.tbNanoIP.Location = new System.Drawing.Point(287, 180);
+            this.tbNanoIP.Location = new System.Drawing.Point(318, 162);
             this.tbNanoIP.Name = "tbNanoIP";
             this.tbNanoIP.Size = new System.Drawing.Size(58, 29);
             this.tbNanoIP.TabIndex = 25;
@@ -205,7 +162,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(60, 182);
+            this.label29.Location = new System.Drawing.Point(91, 164);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(101, 24);
             this.label29.TabIndex = 24;
@@ -213,7 +170,7 @@
             // 
             // tbNanoSensorCount
             // 
-            this.tbNanoSensorCount.Location = new System.Drawing.Point(287, 129);
+            this.tbNanoSensorCount.Location = new System.Drawing.Point(318, 112);
             this.tbNanoSensorCount.Name = "tbNanoSensorCount";
             this.tbNanoSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbNanoSensorCount.TabIndex = 23;
@@ -223,7 +180,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(60, 131);
+            this.label2.Location = new System.Drawing.Point(91, 114);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(125, 24);
             this.label2.TabIndex = 22;
@@ -231,7 +188,7 @@
             // 
             // tbNanoModuleID
             // 
-            this.tbNanoModuleID.Location = new System.Drawing.Point(287, 78);
+            this.tbNanoModuleID.Location = new System.Drawing.Point(318, 62);
             this.tbNanoModuleID.Name = "tbNanoModuleID";
             this.tbNanoModuleID.Size = new System.Drawing.Size(58, 29);
             this.tbNanoModuleID.TabIndex = 21;
@@ -240,7 +197,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(60, 80);
+            this.label1.Location = new System.Drawing.Point(91, 64);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(96, 24);
             this.label1.TabIndex = 20;
@@ -251,7 +208,7 @@
             this.ckNanoFlowOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckNanoFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckNanoFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNanoFlowOn.Location = new System.Drawing.Point(181, 258);
+            this.ckNanoFlowOn.Location = new System.Drawing.Point(270, 316);
             this.ckNanoFlowOn.Name = "ckNanoFlowOn";
             this.ckNanoFlowOn.Size = new System.Drawing.Size(117, 69);
             this.ckNanoFlowOn.TabIndex = 19;
@@ -260,26 +217,12 @@
             this.ckNanoFlowOn.UseVisualStyleBackColor = true;
             this.ckNanoFlowOn.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckNanoFlowOn_HelpRequested);
             // 
-            // ckUseMCP23017
-            // 
-            this.ckUseMCP23017.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckUseMCP23017.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckUseMCP23017.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckUseMCP23017.Location = new System.Drawing.Point(314, 258);
-            this.ckUseMCP23017.Name = "ckUseMCP23017";
-            this.ckUseMCP23017.Size = new System.Drawing.Size(117, 69);
-            this.ckUseMCP23017.TabIndex = 18;
-            this.ckUseMCP23017.Text = "Use MCP23017";
-            this.ckUseMCP23017.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckUseMCP23017.UseVisualStyleBackColor = true;
-            this.ckUseMCP23017.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckUseMCP23017_HelpRequested);
-            // 
             // ckNanoRelayOn
             // 
             this.ckNanoRelayOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckNanoRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckNanoRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNanoRelayOn.Location = new System.Drawing.Point(48, 258);
+            this.ckNanoRelayOn.Location = new System.Drawing.Point(137, 316);
             this.ckNanoRelayOn.Name = "ckNanoRelayOn";
             this.ckNanoRelayOn.Size = new System.Drawing.Size(117, 69);
             this.ckNanoRelayOn.TabIndex = 17;
@@ -339,7 +282,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(522, 468);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Nano Pins";
+            this.tabPage2.Text = "Teensy Pins";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // tbRelay16
@@ -716,7 +659,99 @@
             this.label4.TabIndex = 24;
             this.label4.Text = "Flow 1";
             // 
-            // frmNanoSettings
+            // btnLoadDefaults
+            // 
+            this.btnLoadDefaults.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnLoadDefaults.Location = new System.Drawing.Point(18, 534);
+            this.btnLoadDefaults.Name = "btnLoadDefaults";
+            this.btnLoadDefaults.Size = new System.Drawing.Size(115, 72);
+            this.btnLoadDefaults.TabIndex = 24;
+            this.btnLoadDefaults.Text = "Load Defaults";
+            this.btnLoadDefaults.UseVisualStyleBackColor = true;
+            this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
+            // 
+            // btnSendToModule
+            // 
+            this.btnSendToModule.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnSendToModule.Location = new System.Drawing.Point(153, 534);
+            this.btnSendToModule.Name = "btnSendToModule";
+            this.btnSendToModule.Size = new System.Drawing.Size(115, 72);
+            this.btnSendToModule.TabIndex = 23;
+            this.btnSendToModule.Text = "Send to Module";
+            this.btnSendToModule.UseVisualStyleBackColor = true;
+            this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Enabled = false;
+            this.btnCancel.Image = global::PCBsetup.Properties.Resources.Cancel64;
+            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnCancel.Location = new System.Drawing.Point(288, 534);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(115, 72);
+            this.btnCancel.TabIndex = 22;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // bntOK
+            // 
+            this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
+            this.bntOK.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.bntOK.Location = new System.Drawing.Point(423, 534);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(115, 72);
+            this.bntOK.TabIndex = 21;
+            this.bntOK.Text = "Close";
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
+            // 
+            // tbWemosPort
+            // 
+            this.tbWemosPort.Location = new System.Drawing.Point(318, 212);
+            this.tbWemosPort.Name = "tbWemosPort";
+            this.tbWemosPort.Size = new System.Drawing.Size(58, 29);
+            this.tbWemosPort.TabIndex = 29;
+            this.tbWemosPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(91, 214);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(165, 24);
+            this.label25.TabIndex = 28;
+            this.label25.Text = "Wemos Serial Port";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(94, 264);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(122, 24);
+            this.label28.TabIndex = 41;
+            this.label28.Text = "Relay Control";
+            // 
+            // cbRelayControl
+            // 
+            this.cbRelayControl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRelayControl.FormattingEnabled = true;
+            this.cbRelayControl.Items.AddRange(new object[] {
+            "No Relays",
+            "RS485",
+            "PCA9555  8 relays",
+            "PCA9555  16 relays",
+            "MCP23017",
+            "Teensy GPIOs"});
+            this.cbRelayControl.Location = new System.Drawing.Point(240, 260);
+            this.cbRelayControl.Name = "cbRelayControl";
+            this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
+            this.cbRelayControl.TabIndex = 40;
+            this.cbRelayControl.SelectedIndexChanged += new System.EventHandler(this.cbRelayControl_SelectedIndexChanged);
+            // 
+            // frmTRsettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -730,12 +765,12 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmNanoSettings";
+            this.Name = "frmTRsettings";
             this.ShowInTaskbar = false;
-            this.Text = "Nano Rate Settings";
+            this.Text = "Teensy Rate Settings";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmNanoSettings_FormClosed);
             this.Load += new System.EventHandler(this.frmNanoSettings_Load);
             this.tabControl1.ResumeLayout(false);
@@ -749,20 +784,21 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnLoadDefaults;
-        private System.Windows.Forms.Button btnSendToModule;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button bntOK;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.CheckBox ckNanoFlowOn;
-        private System.Windows.Forms.CheckBox ckUseMCP23017;
-        private System.Windows.Forms.CheckBox ckNanoRelayOn;
+        private System.Windows.Forms.TextBox tbWemosPort;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label lbIPpart4;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox tbNanoIP;
+        private System.Windows.Forms.Label label29;
         private System.Windows.Forms.TextBox tbNanoSensorCount;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbNanoModuleID;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox ckNanoFlowOn;
+        private System.Windows.Forms.CheckBox ckNanoRelayOn;
+        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox tbRelay16;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox tbRelay15;
@@ -807,9 +843,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbNanoFlow1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label lbIPpart4;
-        private System.Windows.Forms.Label label30;
-        private System.Windows.Forms.TextBox tbNanoIP;
-        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Button btnLoadDefaults;
+        private System.Windows.Forms.Button btnSendToModule;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button bntOK;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.ComboBox cbRelayControl;
     }
 }

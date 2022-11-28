@@ -120,30 +120,30 @@ namespace PCBsetup.Forms
 
         private void BuildBoxes()
         {
-            Boxes.Add(tbAuto, 21);
-            Boxes.Add(tbMasterOn, 21);
-            Boxes.Add(tbMasterOff, 21);
-            Boxes.Add(tbRateUp, 21);
-            Boxes.Add(tbRateDown, 21);
-            Boxes.Add(tbIPaddress, 254); 
+            Boxes.Add(this.Text, tbAuto, 21);
+            Boxes.Add(this.Text, tbMasterOn, 21);
+            Boxes.Add(this.Text, tbMasterOff, 21);
+            Boxes.Add(this.Text, tbRateUp, 21);
+            Boxes.Add(this.Text, tbRateDown, 21);
+            Boxes.Add(this.Text, tbIPaddress, 254); 
 
-            Boxes.Add(tbSW1, 21);
-            Boxes.Add(tbSW2, 21);
-            Boxes.Add(tbSW3, 21);
-            Boxes.Add(tbSW4, 21);
-            Boxes.Add(tbSW5, 21);
-            Boxes.Add(tbSW6, 21);
-            Boxes.Add(tbSW7, 21);
-            Boxes.Add(tbSW8, 21);
+            Boxes.Add(this.Text, tbSW1, 21);
+            Boxes.Add(this.Text, tbSW2, 21);
+            Boxes.Add(this.Text, tbSW3, 21);
+            Boxes.Add(this.Text, tbSW4, 21);
+            Boxes.Add(this.Text, tbSW5, 21);
+            Boxes.Add(this.Text, tbSW6, 21);
+            Boxes.Add(this.Text, tbSW7, 21);
+            Boxes.Add(this.Text, tbSW8, 21);
 
-            Boxes.Add(tbSW9, 21);
-            Boxes.Add(tbSW10, 21);
-            Boxes.Add(tbSW11, 21);
-            Boxes.Add(tbSW12, 21);
-            Boxes.Add(tbSW13, 21);
-            Boxes.Add(tbSW14, 21);
-            Boxes.Add(tbSW15, 21);
-            Boxes.Add(tbSW16, 21);
+            Boxes.Add(this.Text, tbSW9, 21);
+            Boxes.Add(this.Text, tbSW10, 21);
+            Boxes.Add(this.Text, tbSW11, 21);
+            Boxes.Add(this.Text, tbSW12, 21);
+            Boxes.Add(this.Text, tbSW13, 21);
+            Boxes.Add(this.Text, tbSW14, 21);
+            Boxes.Add(this.Text, tbSW15, 21);
+            Boxes.Add(this.Text, tbSW16, 21);
 
             for (int i = 0; i < Boxes.Count(); i++)
             {

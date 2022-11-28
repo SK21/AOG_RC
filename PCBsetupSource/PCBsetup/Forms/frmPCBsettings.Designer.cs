@@ -31,6 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPCBsettings));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tbRS485port = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.tbWemosSerialPort = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
             this.lbIPpart4 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.tbIPaddress = new System.Windows.Forms.TextBox();
@@ -52,6 +56,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label28 = new System.Windows.Forms.Label();
+            this.cbRelayControl = new System.Windows.Forms.ComboBox();
             this.cbAnalog = new System.Windows.Forms.ComboBox();
             this.ckActuator = new System.Windows.Forms.CheckBox();
             this.ckInvertRoll = new System.Windows.Forms.CheckBox();
@@ -101,12 +107,6 @@
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
-            this.tbWemosSerialPort = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.tbRS485port = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
-            this.cbRelayControl = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -157,6 +157,42 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Config 1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tbRS485port
+            // 
+            this.tbRS485port.Location = new System.Drawing.Point(233, 209);
+            this.tbRS485port.Name = "tbRS485port";
+            this.tbRS485port.Size = new System.Drawing.Size(118, 29);
+            this.tbRS485port.TabIndex = 27;
+            this.tbRS485port.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbRS485port.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbRS485port_HelpRequested);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(7, 211);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(151, 24);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "RS485 serial port";
+            // 
+            // tbWemosSerialPort
+            // 
+            this.tbWemosSerialPort.Location = new System.Drawing.Point(233, 165);
+            this.tbWemosSerialPort.Name = "tbWemosSerialPort";
+            this.tbWemosSerialPort.Size = new System.Drawing.Size(118, 29);
+            this.tbWemosSerialPort.TabIndex = 23;
+            this.tbWemosSerialPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWemosSerialPort.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbWemosSerialPort_HelpRequested);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(7, 167);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(161, 24);
+            this.label31.TabIndex = 22;
+            this.label31.Text = "Wemos serial port";
             // 
             // lbIPpart4
             // 
@@ -377,6 +413,30 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Config 2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(412, 57);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(122, 24);
+            this.label28.TabIndex = 39;
+            this.label28.Text = "Relay Control";
+            // 
+            // cbRelayControl
+            // 
+            this.cbRelayControl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRelayControl.FormattingEnabled = true;
+            this.cbRelayControl.Items.AddRange(new object[] {
+            "No Relays",
+            "RS485",
+            "PCA9555  8 relays",
+            "PCA9555  16 relays"});
+            this.cbRelayControl.Location = new System.Drawing.Point(544, 53);
+            this.cbRelayControl.Name = "cbRelayControl";
+            this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
+            this.cbRelayControl.TabIndex = 38;
+            this.cbRelayControl.SelectedIndexChanged += new System.EventHandler(this.cbRelayControl_SelectedIndexChanged_1);
             // 
             // cbAnalog
             // 
@@ -885,66 +945,6 @@
             this.bntOK.UseVisualStyleBackColor = true;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
-            // tbWemosSerialPort
-            // 
-            this.tbWemosSerialPort.Location = new System.Drawing.Point(233, 165);
-            this.tbWemosSerialPort.Name = "tbWemosSerialPort";
-            this.tbWemosSerialPort.Size = new System.Drawing.Size(118, 29);
-            this.tbWemosSerialPort.TabIndex = 23;
-            this.tbWemosSerialPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbWemosSerialPort.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbWemosSerialPort_HelpRequested);
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(7, 167);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(161, 24);
-            this.label31.TabIndex = 22;
-            this.label31.Text = "Wemos serial port";
-            // 
-            // tbRS485port
-            // 
-            this.tbRS485port.Location = new System.Drawing.Point(233, 209);
-            this.tbRS485port.Name = "tbRS485port";
-            this.tbRS485port.Size = new System.Drawing.Size(118, 29);
-            this.tbRS485port.TabIndex = 27;
-            this.tbRS485port.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRS485port.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbRS485port_HelpRequested);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(7, 211);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(151, 24);
-            this.label10.TabIndex = 26;
-            this.label10.Text = "RS485 serial port";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(412, 57);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(122, 24);
-            this.label28.TabIndex = 39;
-            this.label28.Text = "Relay Control";
-            // 
-            // cbRelayControl
-            // 
-            this.cbRelayControl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbRelayControl.FormattingEnabled = true;
-            this.cbRelayControl.Items.AddRange(new object[] {
-            "No Relays",
-            "RS485",
-            "PCA9555  8 relays",
-            "PCA9555  16 relays"});
-            this.cbRelayControl.Location = new System.Drawing.Point(544, 53);
-            this.cbRelayControl.Name = "cbRelayControl";
-            this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
-            this.cbRelayControl.TabIndex = 38;
-            this.cbRelayControl.SelectedIndexChanged += new System.EventHandler(this.cbRelayControl_SelectedIndexChanged_1);
-            // 
             // frmPCBsettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -964,7 +964,7 @@
             this.MinimizeBox = false;
             this.Name = "frmPCBsettings";
             this.ShowInTaskbar = false;
-            this.Text = "Teensy Settings";
+            this.Text = "Teensy AutoSteer Settings";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmPCBsettings_FormClosed);
             this.Load += new System.EventHandler(this.frmPCBsettings_Load);
             this.tabControl1.ResumeLayout(false);

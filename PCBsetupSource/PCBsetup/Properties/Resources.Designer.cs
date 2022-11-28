@@ -143,6 +143,16 @@ namespace PCBsetup.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] esptool {
+            get {
+                object obj = ResourceManager.GetObject("esptool", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] Example {
             get {
                 object obj = ResourceManager.GetObject("Example", resourceCulture);
@@ -243,6 +253,16 @@ namespace PCBsetup.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] RCteensy_ino {
+            get {
+                object obj = ResourceManager.GetObject("RCteensy_ino", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] SW_ino {
             get {
                 object obj = ResourceManager.GetObject("SW_ino", resourceCulture);
@@ -287,6 +307,16 @@ namespace PCBsetup.Properties {
             get {
                 object obj = ResourceManager.GetObject("UpArrow64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] WifiAOG_ino {
+            get {
+                object obj = ResourceManager.GetObject("WifiAOG_ino", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

@@ -14,10 +14,16 @@ namespace PCBsetup
         private static Hashtable ht;
         private string cAppName = "PCBsetup";
         private string cAppVersion = "1.0.0";
-        private string cVersionDate = "22-Sep-2022";
-        private string cTeensyFirmware = "22-Sep-2022";
+        private string cVersionDate = "27-Nov-22";
+
+        private string cTeensyAutoSteerFirmware = "22-Sep-2022";
+        private string cTeensyRateVersion = "26-Nov-22";
+
         private string cNanoFirmware = "17-Jul-2022";
         private string cSwitchboxFirmware = "09-May-2022";
+
+        private string cD1RateFirmware = "27-Nov-2022";
+
         private string cPropertiesFile = "";
         private string cSettingsDir = "";
         private frmMain mf;
@@ -203,7 +209,10 @@ namespace PCBsetup
         {
             return cNanoFirmware;
         }
-
+        public string D1RateFirmware()
+        {
+            return cD1RateFirmware;
+        }
         public bool NewFile(string Name)
         {
             bool Result = false;
@@ -345,9 +354,14 @@ namespace PCBsetup
             return cSwitchboxFirmware;
         }
 
-        public string TeensyFirmwareVersion()
+        public string TeensyAutoSteerVersion()
         {
-            return cTeensyFirmware;
+            return cTeensyAutoSteerFirmware;
+        }
+
+        public string TeensyRateVersion()
+        {
+            return cTeensyRateVersion;
         }
 
         public string VersionDate()

@@ -142,6 +142,9 @@
   <data name="DnArrow641" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DnArrow641.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="esptool" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\esptool.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Example" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Example.con;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -172,6 +175,9 @@
   <data name="Rate_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Rate.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="RCteensy_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RCteensy.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="SWNE_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SWNE.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -186,5 +192,8 @@
   </data>
   <data name="UpArrow64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UpArrow64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WifiAOG_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WifiAOG.ino.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

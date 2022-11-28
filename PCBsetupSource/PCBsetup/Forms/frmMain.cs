@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using libTeensySharp;
 
 namespace PCBsetup.Forms
 {
@@ -20,6 +19,7 @@ namespace PCBsetup.Forms
         public string PortName;
         public clsTools Tls;
         public UDPComm UDPmodulesConfig;
+        private byte cModule = 0;
         private int PortID = 1;
 
         public frmMain()
@@ -58,6 +58,43 @@ namespace PCBsetup.Forms
             UpdateForm();
         }
 
+        private void btnFirmware_Click(object sender, EventArgs e)
+        {
+            switch (cModule)
+            {
+                case 0:
+                    // Teensy AutoSteer
+                    Form tmp = new frmFirmware(this, 0);
+                    tmp.ShowDialog();
+                    break;
+
+                case 1:
+                    // Teensy Rate
+                    Form tmp1 = new frmFirmware(this, 1);
+                    tmp1.ShowDialog();
+                    break;
+
+                case 2:
+                    // Nano Rate
+                    Form tmp2 = new frmNanoFirmware(this);
+                    tmp2.ShowDialog();
+                    break;
+
+                case 3:
+                    // Nano SwitchBox
+                    Form tmp3 = new frmSwitchboxFirmware(this);
+                    tmp3.ShowDialog();
+                    break;
+
+                case 4:
+                    // wifi rate
+                    Form tmp4 = new frmD1rate(this);
+                    CommPort.Close();   // needs to be closed for esptool to connect
+                    tmp4.ShowDialog();
+                    break;
+            }
+        }
+
         private void btnRescan_Click(object sender, EventArgs e)
         {
             cboPort1.Items.Clear();
@@ -67,17 +104,43 @@ namespace PCBsetup.Forms
                 cboPort1.Items.Add(s);
             }
 
-            // teensy ports
-            //var Watcher = new TeensyWatcher();
-            //foreach (var Teensy in Watcher.ConnectedTeensies)
-            //{
-            //    foreach (var port in Teensy.Ports)
-            //    {
-            //        cboPort1.Items.Add(port);
-            //    }
-            //}
-
             UpdateForm();
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            switch (cModule)
+            {
+                case 0:
+                    // Teensy AutoSteer
+                    Form tmp = new frmPCBsettings(this);
+                    tmp.ShowDialog();
+                    break;
+
+                case 1:
+                    // Teensy Rate
+                    Form tmp1 = new frmTRsettings(this);
+                    tmp1.ShowDialog();
+                    break;
+
+                case 2:
+                    // Nano Rate
+                    Form tmp2 = new frmNanoSettings(this);
+                    tmp2.ShowDialog();
+                    break;
+
+                case 3:
+                    // Nano SwitchBox
+                    Form tmp3 = new frmSwitchboxSettings(this);
+                    tmp3.ShowDialog();
+                    break;
+            }
+        }
+
+        private void cbModule_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Tls.SaveProperty("Module", cbModule.SelectedIndex.ToString());
+            cModule = (byte)cbModule.SelectedIndex;
         }
 
         private void cboPort1_SelectedIndexChanged(object sender, EventArgs e)
@@ -93,24 +156,6 @@ namespace PCBsetup.Forms
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void firmwareToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form Sec = new frmFirmware(this);
-            Sec.ShowDialog();
-        }
-
-        private void firmwareToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmNanoFirmware(this);
-            tmp.ShowDialog();
-        }
-
-        private void firmwareToolStripMenuItem2_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmSwitchboxFirmware(this);
-            tmp.ShowDialog();
         }
 
         private void frmMain_Activated(object sender, EventArgs e)
@@ -181,6 +226,10 @@ namespace PCBsetup.Forms
                         cboPort1.SelectedIndex = i;
                     }
                 }
+
+                // module
+                byte.TryParse(Tls.LoadProperty("Module"), out cModule);
+                cbModule.SelectedIndex = cModule;
             }
             catch (Exception ex)
             {
@@ -190,7 +239,7 @@ namespace PCBsetup.Forms
 
         private void ModuleIndicator_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Indicates module connected.";
+            string Message = "Indicates module connected. D1 mini does not need to be connected.";
 
             Tls.ShowHelp(Message, this.Text, 3000);
             hlpevent.Handled = true;
@@ -223,11 +272,6 @@ namespace PCBsetup.Forms
             }
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-        }
-
         private void PortIndicator1_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Indicates serial port connected.";
@@ -249,6 +293,13 @@ namespace PCBsetup.Forms
                     LoadSettings();
                 }
             }
+        }
+
+        private void SerialMonitorItem_Click(object sender, EventArgs e)
+        {
+            Form tmp = new frmMonitor(this);
+            tmp.ShowDialog();
+            //tmp.Show();
         }
 
         private void SetDayMode()
@@ -274,24 +325,6 @@ namespace PCBsetup.Forms
             }
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmPCBsettings(this);
-            tmp.ShowDialog();
-        }
-
-        private void settingsToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmNanoSettings(this);
-            tmp.ShowDialog();
-        }
-
-        private void settingsToolStripMenuItem2_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmSwitchboxSettings(this);
-            tmp.ShowDialog();
-        }
-
         private void UpdateForm()
         {
             if (CommPort.IsOpen())
@@ -313,12 +346,6 @@ namespace PCBsetup.Forms
             {
                 ModuleIndicator.Image = Properties.Resources.Off;
             }
-        }
-
-        private void SerialMonitorItem_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmMonitor(this);
-            tmp.ShowDialog();
         }
     }
 }

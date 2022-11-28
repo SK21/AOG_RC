@@ -4,6 +4,7 @@ namespace PCBsetup
 {
     public class clsTextBox
     {
+        private string cFormName;
         private int cID;
         private bool cIsNumber;
         private double cMaxValue;
@@ -21,6 +22,9 @@ namespace PCBsetup
             cMinValue = 0;
         }
 
+        public string FormName
+        { get { return cFormName; } set { cFormName = value; } }
+
         public int ID
         { get { return cID; } }
 
@@ -36,25 +40,33 @@ namespace PCBsetup
         public TextBox TB
         { get { return cTB; } set { cTB = value; } }
 
+        public string FullName()
+        {
+            return cFormName + "/" + TB.Name;
+        }
+
         public void Load()
         {
-            string Name = TB.Parent.Name + "/" + TB.Name;
             if (cIsNumber)
             {
                 double val = 0;
-                double.TryParse(mf.Tls.LoadProperty(Name), out val);
+                double.TryParse(mf.Tls.LoadProperty(FullName()), out val);
                 cTB.Text = val.ToString();
             }
             else
             {
-                cTB.Text = mf.Tls.LoadProperty(Name);
+                cTB.Text = mf.Tls.LoadProperty(FullName());
             }
+        }
+
+        public bool NameMatch(string Name)
+        {
+            return (cFormName + "/" + Name == FullName());
         }
 
         public void Save()
         {
-            string Name = TB.Parent.Name + "/" + TB.Name;
-            mf.Tls.SaveProperty(Name, cTB.Text);
+            mf.Tls.SaveProperty(FullName(), cTB.Text);
         }
 
         public double Value()

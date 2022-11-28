@@ -17,7 +17,7 @@ namespace PCBsetup
             Items = cTextBoxes.AsReadOnly();
         }
 
-        public int Add(TextBox tb, double MaxValue = 255, double MinValue = 0, bool IsNumber = true)
+        public int Add(string FormName, TextBox tb, double MaxValue = 255, double MinValue = 0, bool IsNumber = true)
         {
             clsTextBox NewBox = new clsTextBox(mf, cCounter);
             cTextBoxes.Add(NewBox);
@@ -26,6 +26,7 @@ namespace PCBsetup
             NewBox.MaxValue = MaxValue;
             NewBox.MinValue = MinValue;
             NewBox.IsNumber = IsNumber;
+            NewBox.FormName= FormName;
             NewBox.Load();
             cCounter++;
             return cCounter - 1;
@@ -88,7 +89,7 @@ namespace PCBsetup
             double Result = 0;
             for (int i = 0; i < cCounter; i++)
             {
-                if (Item(i).TB.Name == TextBoxName)
+                if(Item(i).NameMatch(TextBoxName))
                 {
                     Result = Item(i).Value();
                     break;
