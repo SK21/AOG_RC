@@ -98,7 +98,7 @@ void ReadAnalog()
 	default:
 		// use Ads from Wemos D1 Mini
 		
-		// received in ReceiveSerial3()
+		// received in ReceiveSerialWemos()
 		break;
 	}
 }

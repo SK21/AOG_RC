@@ -69,7 +69,7 @@ void ReceiveRateUDP()
 	uint16_t len = UDPrate.parsePacket();
 	if (len > 1)
 	{
-		UDPrate.read(RatePacket, UDP_TX_PACKET_MAX_SIZE);
+		UDPrate.read(RatePacket, MaxReadBuffer);
 		RatePGN = RatePacket[1] << 8 | RatePacket[0];
 		switch (RatePGN)
 		{

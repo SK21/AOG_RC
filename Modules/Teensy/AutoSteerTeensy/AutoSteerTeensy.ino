@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy   22-Sep-2022"
+# define InoDescription "AutoSteerTeensy   24-Nov-2022"
 // autosteer and rate control
 // for use with Teensy 4.1 
 
@@ -23,18 +23,18 @@ uint16_t DebugVal5;
 uint16_t DebugVal6;
 uint32_t DebugTime;
 
-struct PCBconfig	// 29 bytes
+struct PCBconfig	// 29 bytes, AS14 default
 {
 	uint8_t Receiver = 1;			// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
-	uint8_t NMEAserialPort = 8;		// from receiver
-	uint8_t	RTCMserialPort = 3;		// to receiver
-	uint8_t WemosSerialPort = 1;	// serial port connected to Wemos D1 Mini
-	uint8_t RS485PortNumber = 7;	// serial port #
+	uint8_t NMEAserialPort = 4;		// from receiver
+	uint8_t	RTCMserialPort = 5;		// to receiver
+	uint8_t WemosSerialPort = 3;	// serial port connected to Wemos D1 Mini
+	uint8_t RS485PortNumber = 8;	// serial port #
 	uint16_t RTCMport = 2233;		// local port to listen on for RTCM data
 	uint8_t IMU = 1;				// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO
 	uint8_t IMUdelay = 90;			// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
 	uint8_t IMU_Interval = 40;		// for Sparkfun 
-	uint16_t ZeroOffset = 6100;
+	uint16_t ZeroOffset = 6500;
 	uint8_t	IPpart3 = 1;			// IP address, 3rd octet.
 	uint8_t MinSpeed = 1;
 	uint8_t MaxSpeed = 15;
@@ -42,7 +42,7 @@ struct PCBconfig	// 29 bytes
 	uint8_t	AnalogMethod = 0;		// 0 use ADS1115 for WAS(AIN0), AIN1, current(AIN2), 1 use Teensy analog pin for WAS, 2 use ADS1115 from Wemos D1 Mini
 	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays
 	uint8_t ModuleID = 0;
-	uint8_t SwapRollPitch = 1;		// 0 use roll value for roll, 1 use pitch value for roll
+	uint8_t SwapRollPitch = 0;		// 0 use roll value for roll, 1 use pitch value for roll
 	uint8_t InvertRoll = 0;
 	uint8_t UseTB6612 = 0;			// 0 - don't use TB6612 motor driver, 1 - use TB6612 motor driver for motor 2
 	uint8_t GyroOn = 0;
@@ -55,21 +55,21 @@ struct PCBconfig	// 29 bytes
 
 PCBconfig PCB;
 
-struct PCBpinConfig	// 13 bytes
+struct PCBpinConfig	// 13 bytes, AS14 default
 {
-	uint8_t Motor1Dir = 22;			// motor 1 direction
-	uint8_t	Motor1PWM = 23;			// motor 1 pwm
+	uint8_t Motor1Dir = 26;			// motor 1 direction
+	uint8_t	Motor1PWM = 25;			// motor 1 pwm
 	uint8_t	STEERSW = 39;
 	uint8_t	WAS = 25;				// wheel angle sensor
-	uint8_t	SteerSW_Relay = 2;		// pin for steering disconnect relay
-	uint8_t	WORKSW = 32;
+	uint8_t	SteerSW_Relay = 36;		// pin for steering disconnect relay
+	uint8_t	WORKSW = 27;
 	uint8_t CurrentSensor = 10;
 	uint8_t	PressureSensor = 26;
 	uint8_t	Encoder = 38;
-	uint8_t	Motor2Dir = 36;			// motor 2 direction, TB6612 IN1
-	uint8_t	Motor2PWM = 37;			// motor 2 pwm, TB6612 PWM
-	uint8_t	SpeedPulse = 11;
-	uint8_t	RS485SendEnable = 27;
+	uint8_t	Motor2Dir = 28;			// motor 2 direction, TB6612 IN1
+	uint8_t	Motor2PWM = 29;			// motor 2 pwm, TB6612 PWM
+	uint8_t	SpeedPulse = 37;
+	uint8_t	RS485SendEnable = 33;
 };
 
 PCBpinConfig PINS;
@@ -95,6 +95,8 @@ struct WemosWifi
 
 WemosWifi WifiSwitches;
 
+#define MaxReadBuffer 100
+
 #define LOW_HIGH_DEGREES 5.0	//How many degrees before decreasing Max PWM
 #define CMPS14_ADDRESS 0x60 
 const int16_t AdsI2Caddress = 0x48;
@@ -115,7 +117,7 @@ uint16_t  AGIOport = 9999; // port that AGIO listens on
 // UDP Steering traffic, to and from AGIO
 EthernetUDP UDPsteering;
 uint16_t  UDPsteeringPort = 8888;		// local port to listen on
-uint8_t data[UDP_TX_PACKET_MAX_SIZE];  // Buffer For Receiving UDP Data
+uint8_t data[MaxReadBuffer];  // Buffer For Receiving UDP Data
 
 // UDP GPS traffic, NMEA from module to AGIO, RTCM from AGIO to module
 EthernetUDP UDPgps;
@@ -133,10 +135,6 @@ float IMU_Heading = 0;
 float IMU_Roll = 0;
 float IMU_Pitch = 0;
 float IMU_YawRate = 0;
-
-float Heading_Serial = 0;
-float Roll_Serial = 0;
-float Pitch_Serial = 0;
 
 // switches
 int8_t SteerSwitch = LOW;	// Low on, High off
@@ -234,13 +232,13 @@ bool UseMultiPulses[MaxFlowSensorCount];
 EthernetUDP UDPrate;
 uint16_t ListeningPortRate = 28888;
 uint16_t DestinationPortRate = 29999;
-uint8_t RateData[UDP_TX_PACKET_MAX_SIZE];  // Buffer For Receiving UDP Data
+uint8_t RateData[MaxReadBuffer];  // Buffer For Receiving UDP Data
 
 // Config port
 EthernetUDP UDPconfig;
 uint16_t ListeningPortConfig = 28800;
 uint16_t DestinationPortConfig = 29900;
-uint8_t ConfigData[UDP_TX_PACKET_MAX_SIZE];
+uint8_t ConfigData[MaxReadBuffer];
 
 uint8_t ErrorCount;
 NMEAParser<2> parser;
@@ -309,7 +307,7 @@ void setup()
 		EEPROM.get(110, PCB);
 		EEPROM.get(150, PINS);
 	}
-	
+
 	// on-board motor controller
 	digitalWrite(10, PCB.UseTB6612);	// enable motor controller
 
@@ -496,8 +494,8 @@ void setup()
 	case 1:
 	case 3:
 		// sparkfun BNO, Adafruit BNO
-		IMUaddress = 0x4B;
-		if (PCB.IMU == 3) IMUaddress = 0x4A;
+		IMUaddress = 0x4B;	// Sparkfun
+		if (PCB.IMU == 3) IMUaddress = 0x4A;	// Adafruit
 
 		ErrorCount = 0;
 		Serial.println("Starting IMU ...");

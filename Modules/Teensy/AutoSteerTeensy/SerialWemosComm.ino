@@ -8,7 +8,7 @@ void ReceiveSerialWemos()
 {
 	if (SerialWemos->available())
 	{
-		if (SerialWemos->available() > 30)
+		if (SerialWemos->available() > 50)
 		{
 			// clear buffer
 			while (SerialWemos->available())

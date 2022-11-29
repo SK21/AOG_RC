@@ -8,7 +8,7 @@ void ReceiveSerialUSB()
 {
 	if (Serial.available())
 	{
-		if (Serial.available() > 30)
+		if (Serial.available() > 50)
 		{
 			// clear buffer
 			while (Serial.available())

@@ -5,7 +5,7 @@ void ReceiveSteerUDP()
     uint16_t len = UDPsteering.parsePacket();
     if (len > 2)    // needed to ensure there is new data
     {
-        UDPsteering.read(data, UDP_TX_PACKET_MAX_SIZE);
+        UDPsteering.read(data, MaxReadBuffer);
 
         if ((data[0] == 0x80) && (data[1] == 0x81 && data[2] == 0x7F))  // 0x7F is source, AGIO
         {
