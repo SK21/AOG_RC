@@ -1,4 +1,4 @@
-# define InoDescription "WifiAOG   27-Nov-2022"
+# define InoDescription "WifiAOG   02-Dec-2022"
 // Wemos D1 mini Pro,  board: LOLIN(Wemos) D1 R2 & mini
 
 #include <ESP8266WiFi.h>
@@ -31,15 +31,12 @@ struct AnalogData
 
 AnalogData AINs;
 
-// wifi
-IPAddress DestinationIP(192, 168, 1, 255);
+// Rate
+WiFiUDP UDPrate;
 uint16_t ListeningPortRate = 28888;
-uint16_t DestinationPort = 29999;
-WiFiUDP UDPwifi;
+uint16_t DestinationPortRate = 29999;
 
-// Config port
-WiFiUDP UDPconfig;
-uint16_t ListeningPortConfig = 28800;
+IPAddress DestinationIP(192, 168, 1, 255);
 
 char WifiBuffer[512];
 
@@ -68,7 +65,7 @@ byte SendBit;
 String tmp;
 byte count;
 
-bool TeensyConnected;   // check if teensy is connected through ethernet
+bool RCteensyConnected;   // check if teensy rate is connected through ethernet
 
 void setup()
 {
@@ -102,11 +99,10 @@ void setup()
     StartOTA();
 
     CheckWifi();
-    String AP = "WifiRate " + WiFi.macAddress();
+    String AP = "WifiAOG " + WiFi.macAddress();
     WiFi.softAP(AP);
 
-    UDPwifi.begin(ListeningPortRate);
-    UDPconfig.begin(ListeningPortConfig);
+    UDPrate.begin(ListeningPortRate);
 
     Wire.begin();			// I2C on pins SCL D1, SDA D2
     // ADS1115
@@ -157,10 +153,10 @@ void loop()
     ReceiveSerial();
     ReceiveWifi();
 
-    if (millis() - LoopTime > 2000)
+    if (millis() - LoopTime > 5000)
     {
         LoopTime = millis();
-        if (!TeensyConnected && (WiFi.status() != WL_CONNECTED)) CheckWifi();
+        if (!RCteensyConnected && (WiFi.status() != WL_CONNECTED)) CheckWifi();
     }
 
     if (ADSfound)

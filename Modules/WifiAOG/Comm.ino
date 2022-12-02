@@ -1,9 +1,9 @@
 
-byte SerialMSB;
-byte SerialLSB;
 unsigned int DataPGN;
-byte Data[50];
+byte Data[100];
 byte PGNlength;
+byte MSB;
+byte LSB;
 
 bool CheckWifi()
 {
@@ -25,7 +25,7 @@ bool CheckWifi()
 		}
 		if (WiFi.status() == WL_CONNECTED)
 		{
-			UDPwifi.begin(ListeningPortRate);
+			UDPrate.begin(ListeningPortRate);
 			DestinationIP = WiFi.localIP();
 			DestinationIP[3] = 255;		// change to broadcast
 			Serial.println();
@@ -45,17 +45,10 @@ bool CheckWifi()
 
 void ReceiveWifi()
 {
-	uint16_t PacketSize = UDPwifi.parsePacket();
+	uint16_t PacketSize = UDPrate.parsePacket();
 	if (PacketSize)
 	{
-		UDPwifi.read(WifiBuffer, PacketSize);
-		Serial.write(WifiBuffer, PacketSize);
-	}
-
-	PacketSize = UDPconfig.parsePacket();
-	if (PacketSize)
-	{
-		UDPconfig.read(WifiBuffer, PacketSize);
+		UDPrate.read(WifiBuffer, PacketSize);
 		Serial.write(WifiBuffer, PacketSize);
 	}
 }
@@ -64,7 +57,7 @@ void ReceiveSerial()
 {
 	if (Serial.available())
 	{
-		if (Serial.available() > 50)
+		if (Serial.available() > 100)
 		{
 			// clear buffer
 			while (Serial.available())
@@ -72,15 +65,16 @@ void ReceiveSerial()
 				Serial.read();
 			}
 			DataPGN = 0;
+			LSB = 0;
 		}
 
 		switch (DataPGN)
 		{
 		case 32613:
+			// rate data to RC
 			PGNlength = 13;
 			if (Serial.available() > PGNlength - 3)
 			{
-				DataPGN = 0;	// reset pgn
 				Data[0] = 101;
 				Data[1] = 127;
 				for (int i = 2; i < PGNlength; i++)
@@ -88,20 +82,23 @@ void ReceiveSerial()
 					Data[i] = Serial.read();
 				}
 
-				TeensyConnected = Data[11];
+				RCteensyConnected = Data[11];
 
 				// send data over wifi
-				UDPwifi.beginPacket(DestinationIP, DestinationPort);
-				UDPwifi.write(Data, PGNlength);
-				UDPwifi.endPacket();
+				UDPrate.beginPacket(DestinationIP, DestinationPortRate);
+				UDPrate.write(Data, PGNlength);
+				UDPrate.endPacket();
+
+				DataPGN = 0;
+				LSB = 0;
 			}
 			break;
 
 		case 32621:
+			// pressure data to RC
 			PGNlength = 12;
 			if (Serial.available() > PGNlength - 3)
 			{
-				DataPGN = 0;
 				Data[0] = 109;
 				Data[1] = 127;
 				for (int i = 2; i < PGNlength; i++)
@@ -110,17 +107,19 @@ void ReceiveSerial()
 				}
 
 				// send data over wifi
-				UDPwifi.beginPacket(DestinationIP, DestinationPort);
-				UDPwifi.write(Data, PGNlength);
-				UDPwifi.endPacket();
+				UDPrate.beginPacket(DestinationIP, DestinationPortRate);
+				UDPrate.write(Data, PGNlength);
+				UDPrate.endPacket();
+
+				DataPGN = 0;
+				LSB = 0;
 			}
 			break;
-
 		default:
 			// find pgn
-			SerialMSB = Serial.read();
-			DataPGN = SerialMSB << 8 | SerialLSB;
-			SerialLSB = SerialMSB;
+			MSB = Serial.read();
+			DataPGN = MSB << 8 | LSB;
+			LSB = MSB;
 			break;
 		}
 	}
