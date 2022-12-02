@@ -71,6 +71,16 @@ namespace PCBsetup.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] AutoSteerTeensy2_ino {
+            get {
+                object obj = ResourceManager.GetObject("AutoSteerTeensy2_ino", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap bntOK_Image {

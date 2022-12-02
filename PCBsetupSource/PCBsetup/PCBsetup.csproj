@@ -352,6 +352,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Resources\AutoSteerTeensy.ino.hex" />
+    <None Include="Resources\AutoSteerTeensy2.ino.hex" />
     <None Include="Resources\Example.con" />
     <None Include="Resources\Rate.ino.hex" />
     <None Include="Resources\RateNE.ino.hex" />
