@@ -76,10 +76,6 @@ void CheckRelays()
             }
         }
         break;
-
-    default:
-        // no relays
-        break;
     }
 }
 

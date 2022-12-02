@@ -6,21 +6,9 @@
 #include <Watchdog_t4.h>	// https://github.com/tonton81/WDT_T4
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   26-Nov-2022"
+# define InoDescription "RCteensy   02-Dec-2022"
 #define MaxReadBuffer 100	// bytes
 #define MaxFlowSensorCount 2
-
-// debug variables
-byte DebugVal1;
-byte DebugVal2;
-byte DebugVal3;
-byte DebugVal4;
-uint16_t DebugVal5;
-uint16_t DebugVal6;
-unsigned long DebugTime;
-byte DebugPacket[15];
-bool DebugRemote = false;
-bool DebugIDE = false;
 
 struct ModuleConfig	// 40 bytes
 {
@@ -302,8 +290,6 @@ void loop()
 	ReceiveData();
 	Blink();
 	wdt.feed();
-
-	if (DebugRemote || DebugIDE) DebugTheINO();
 }
 
 byte ParseModID(byte ID)
@@ -402,74 +388,24 @@ void ManualControl()
 	}
 }
 
-bool State = 0;
-uint32_t BlinkTime;
-uint32_t LastBlink;
+bool State = false;
+elapsedMillis BlinkTmr;
+elapsedMicros LoopTmr;
+
 void Blink()
 {
-	if (millis() - BlinkTime > 1000)
+	if (BlinkTmr > 1000)
 	{
+		BlinkTmr = 0;
 		State = !State;
-		if (State) digitalWrite(LED_BUILTIN, HIGH);
-		else digitalWrite(LED_BUILTIN, LOW);
-		BlinkTime = millis();
-		Serial.print(" Loop interval (ms): ");
-		Serial.print((float)(micros() - LastBlink) / 1000.0, 3);
-
+		digitalWrite(LED_BUILTIN, State);
 		Serial.println(".");	// needed to allow PCBsetup to connect
+
+		Serial.print(" elapsed micros: ");
+		Serial.println(LoopTmr);
 	}
-	LastBlink = micros();
+	LoopTmr = 0;
 }
 
 
-void DebugTheINO()
-{
-	// send debug info to RateController
-	if (millis() - DebugTime > 1000)
-	{
-		DebugTime = millis();
-
-		// Serial
-		// UDPpgn 2748 - 0xABC
-		Serial.print(0xBC);
-		Serial.print(",");
-		Serial.print(0xA);
-		Serial.print(",");
-
-		Serial.print("   ");
-		Serial.print(DebugVal1);
-		Serial.print(",");
-		Serial.print(DebugVal2);
-		Serial.print(",");
-		Serial.print(DebugVal3);
-		Serial.print(",");
-
-		Serial.print("   ");
-		Serial.print(DebugVal4);
-		Serial.print(",");
-		Serial.print(DebugVal5);
-		Serial.print(",");
-		Serial.print(DebugVal6);
-
-		Serial.println("");
-
-		// UDP
-		DebugPacket[0] = 0xBC;
-		DebugPacket[1] = 0xA;
-		DebugPacket[2] = DebugVal1;
-		DebugPacket[3] = DebugVal2;
-		DebugPacket[4] = DebugVal3;
-		DebugPacket[5] = DebugVal4;
-		DebugPacket[6] = DebugVal5;
-		DebugPacket[7] = DebugVal6;
-
-		if (Ethernet.linkStatus() == LinkON)
-		{
-			// send to RateController
-			UDPcomm.beginPacket(DestinationIP, DestinationPort);
-			UDPcomm.write(DebugPacket, 8);
-			UDPcomm.endPacket();
-		}
-	}
-}
 

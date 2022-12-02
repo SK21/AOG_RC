@@ -137,6 +137,7 @@ void ReceiveData()
                 SerialWemos->read();
             }
             PGNwemos = 0;
+            LSBwemos = 0;
         }
 
         switch (PGNwemos)
@@ -189,6 +190,7 @@ void ReceiveData()
                 Serial.available();
             }
             PGNusb = 0;
+            LSBusb = 0;
         }
 
         switch (PGNusb)
@@ -231,6 +233,7 @@ void ProcessWifi(uint16_t len)
         }
         ReadPGN(len, DataWemos, PGNwemos);
         PGNwemos = 0;
+        LSBwemos = 0;
     }
 }
 
@@ -246,6 +249,7 @@ void ProcessUSB(uint16_t len)
         }
         ReadPGN(len,DataUSB,PGNusb);
         PGNusb = 0;
+        LSBusb = 0;
     }
 }
 
@@ -381,8 +385,6 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
                         {
                             Sensor[ID].ManualAdjust = TmpSet;
                         }
-
-                        DebugRemote = ((Sensor[ID].InCommand & 64) == 64);
 
                         // power relays
                         PowerRelayLo = Data[11];
