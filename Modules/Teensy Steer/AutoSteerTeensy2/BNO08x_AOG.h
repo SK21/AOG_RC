@@ -126,7 +126,7 @@ const byte CHANNEL_GYRO = 5;
 #define CALIBRATE_ACCEL_GYRO_MAG 4
 #define CALIBRATE_STOP 5
 
-#define MAX_PACKET_SIZE 128 //Packets can be up to 32k but we don't have that much RAM.
+#define MAX_PACKET_SIZE_BNO 128 //Packets can be up to 32k but we don't have that much RAM.
 #define MAX_METADATA_SIZE 9 //This is in words. There can be many but we mostly only care about the first 9 (Qs, range, etc)
 
 class BNO080
@@ -256,7 +256,7 @@ public:
 
 	//Global Variables
 	uint8_t shtpHeader[4]; //Each packet has a header of 4 bytes
-	uint8_t shtpData[MAX_PACKET_SIZE];
+	uint8_t shtpData[MAX_PACKET_SIZE_BNO];
 	uint8_t sequenceNumber[6] = {0, 0, 0, 0, 0, 0}; //There are 6 com channels. Each channel has its own seqnum
 	uint8_t commandSequenceNumber = 0;				//Commands have a seqNum as well. These are inside command packet, the header uses its own seqNum per channel
 	uint32_t metaData[MAX_METADATA_SIZE];			//There is more than 10 words in a metadata record but we'll stop at Q point 3

@@ -236,6 +236,7 @@ void DoSetup()
 
 	UDPsteering.begin(ListeningPort);
 	UDPntrip.begin(MDL.NtripPort);
+	UDPswitches.begin(ListeningPortSwitches);
 
 	// IMU
 	uint8_t IMUaddress;
@@ -316,6 +317,9 @@ void DoSetup()
 
 	noTone(MDL.SpeedPulse);
 	SteerSwitch = HIGH;
+
+	// usb host
+	myusb.begin();
 
 	Serial.println("");
 	Serial.println("Finished setup.");

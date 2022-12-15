@@ -1292,7 +1292,7 @@ boolean BNO080::receivePacket(void)
 		for (uint16_t dataSpot = 0; dataSpot < dataLength; dataSpot++)
 		{
 			uint8_t incoming = _spiPort->transfer(0xFF);
-			if (dataSpot < MAX_PACKET_SIZE)	//BNO080 can respond with upto 270 bytes, avoid overflow
+			if (dataSpot < MAX_PACKET_SIZE_BNO)	//BNO080 can respond with upto 270 bytes, avoid overflow
 				shtpData[dataSpot] = incoming; //Store data into the shtpData array
 		}
 
@@ -1364,7 +1364,7 @@ boolean BNO080::getData(uint16_t bytesRemaining)
 		for (uint8_t x = 0; x < numberOfBytesToRead; x++)
 		{
 			uint8_t incoming = _i2cPort->read();
-			if (dataSpot < MAX_PACKET_SIZE)
+			if (dataSpot < MAX_PACKET_SIZE_BNO)
 			{
 				shtpData[dataSpot++] = incoming; //Store data into the shtpData array
 			}

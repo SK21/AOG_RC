@@ -1,4 +1,4 @@
-# define InoDescription "AutoSteerTeensy2   02-Dec-2022"
+#define InoDescription "AutoSteerTeensy2   11-Dec-2022"
 // autosteer for Teensy 4.1
 
 #include <Wire.h>
@@ -8,11 +8,29 @@
 #include <Watchdog_t4.h>	// https://github.com/tonton81/WDT_T4
 #include "BNO08x_AOG.h"		// https://github.com/Math-51/Autosteer_USB_4.3.10_BN08x
 #include "zNMEAParser.h"	
+#include "USBHost_t36.h"
 
 #define MaxReadBuffer 100	// bytes
+#define MaxHostBuffer 50
 #define LOW_HIGH_DEGREES 5.0	//How many degrees before decreasing Max PWM
 #define CMPS14_ADDRESS 0x60 
 #define ADS1115_Address 0x48
+#define USBBAUD 38400
+#define CNT_DEVICES (sizeof(drivers)/sizeof(drivers[0]))
+
+// usb host
+uint32_t baud = USBBAUD;
+uint32_t format = USBHOST_SERIAL_8N1;
+USBHost myusb;
+USBHub hub1(myusb);
+USBHub hub2(myusb);
+USBHIDParser hid1(myusb);
+USBHIDParser hid2(myusb);
+USBHIDParser hid3(myusb);
+USBSerial userial(myusb);  // works only for those Serial devices who transfer <=64 bytes (like T3.x, FTDI...)
+USBDriver* drivers[] = { &hub1, &hub2, &hid1, &hid2, &hid3, &userial };
+const char* driver_names[CNT_DEVICES] = { "Hub1", "Hub2",  "HID1", "HID2", "HID3", "USERIAL1" };
+bool driver_active[CNT_DEVICES] = { false, false, false, false };
 
 struct ModuleConfig	// 34 bytes, AS14 default
 {
@@ -99,11 +117,16 @@ int16_t EEread = 0;
 #define EEP_Ident 5000	// if not in eeprom, overwrite
 #define MDL_Ident 5100
 
-// Ethernet
+// Ethernet steering
 EthernetUDP UDPsteering;	// UDP Steering traffic, to and from AGIO
 uint16_t ListeningPort = 8888;
 uint16_t DestinationPort = 9999;	// port that AGIO listens on
 IPAddress DestinationIP(MDL.ipOne, MDL.ipTwo, MDL.ipThree, 255);
+
+// Ethernet switchbox
+EthernetUDP UDPswitches;
+uint16_t ListeningPortSwitches = 28888;
+uint16_t DestinationPortSwitches = 29999;
 
 EthernetUDP UDPntrip;	// from AGIO to receiver
 char NtripBuffer[512];	// buffer for ntrip data
@@ -192,6 +215,8 @@ void loop()
 	SendSpeedPulse();
 
 	if (MDL.Receiver != 0) DoPanda();
+
+	DoHost();
 
 	Blink();
 	wdt.feed();
