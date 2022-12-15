@@ -13,6 +13,11 @@ namespace RateController
         public frmMonitor(FormStart CallingForm)
         {
             InitializeComponent();
+
+            #region // language
+            bntOK.Text = Lang.lgClose;
+            #endregion // language
+
             mf = CallingForm;
             this.BackColor = Properties.Settings.Default.DayColour;
         }

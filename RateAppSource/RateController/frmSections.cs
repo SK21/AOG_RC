@@ -26,11 +26,13 @@ namespace RateController
             DGV.Columns[1].HeaderText = Lang.lgWidth;
             DGV.Columns[2].HeaderText = Lang.lgSwitch;
             label25.Text = Lang.lgNumSections;
+
             lbWidth.Text = Lang.lgWidth;
             btnEqual.Text = Lang.lgEqual;
             btnCancel.Text = Lang.lgCancel;
             bntOK.Text = Lang.lgClose;
 
+            this.Text = Lang.lgSection;
             #endregion // language
 
             mf = CalledFrom;

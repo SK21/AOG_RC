@@ -16,6 +16,18 @@ namespace RateController
             Initializing = true;
             InitializeComponent();
 
+            #region // language
+            btnCancel.Text = Lang.lgCancel;
+            bntOK.Text = Lang.lgClose;
+
+            DGV.Columns[0].HeaderText = Lang.lgRelay;
+            DGV.Columns[1].HeaderText = Lang.lgType;
+            DGV.Columns[2].HeaderText = Lang.lgSectionNum;
+
+            this.Text = Lang.lgRelays;
+            btnLoadDefaults.Text = Lang.lgLoad_Defaults;
+            #endregion // language
+
             mf = CalledFrom;
         }
 

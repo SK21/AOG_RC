@@ -16,6 +16,22 @@ namespace RateController
         {
             Initializing = true;
             InitializeComponent();
+
+            #region // language
+            btnCancel.Text = Lang.lgCancel;
+            bntOK.Text = Lang.lgClose;
+            btnUpdate.Text = Lang.lgUpdate;
+            ckShowPressure.Text=Lang.lgShowPressure;
+
+            DGV.Columns[0].HeaderText = Lang.lgID;
+            DGV.Columns[1].HeaderText = Lang.lgDescription;
+            DGV.Columns[2].HeaderText = Lang.lgModule;
+            DGV.Columns[3].HeaderText = Lang.lgSensor;
+            DGV.Columns[4].HeaderText = Lang.lgUnitsVolt;
+            DGV.Columns[5].HeaderText = Lang.lgOffset;
+            DGV.Columns[6].HeaderText = Lang.lgPressure;
+            #endregion // language
+
             mf = CalledFrom;
             SetDayMode();
         }
@@ -217,12 +233,12 @@ namespace RateController
                 if (Edited)
                 {
                     btnCancel.Enabled = true;
-                    this.bntOK.Text = Lang.lgSave;
+                    bntOK.Text = Lang.lgSave;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
-                    this.bntOK.Text = Lang.lgClose;
+                    bntOK.Text = Lang.lgClose;
                 }
             }
         }

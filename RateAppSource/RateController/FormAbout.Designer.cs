@@ -32,7 +32,7 @@ namespace RateController
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAbout));
             this.label27 = new System.Windows.Forms.Label();
             this.lbAppVersion = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbVersion = new System.Windows.Forms.Label();
             this.bntOK = new System.Windows.Forms.Button();
             this.lbIP = new System.Windows.Forms.Label();
             this.lbWifi = new System.Windows.Forms.Label();
@@ -59,15 +59,15 @@ namespace RateController
             this.lbAppVersion.Text = "Version 2.1.9";
             this.lbAppVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label1
+            // lbVersion
             // 
-            this.label1.Font = new System.Drawing.Font("Tahoma", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(33, 2);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(203, 18);
-            this.label1.TabIndex = 181;
-            this.label1.Text = "Version";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbVersion.Font = new System.Drawing.Font("Tahoma", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbVersion.Location = new System.Drawing.Point(33, 2);
+            this.lbVersion.Name = "lbVersion";
+            this.lbVersion.Size = new System.Drawing.Size(203, 18);
+            this.lbVersion.TabIndex = 181;
+            this.lbVersion.Text = "Version";
+            this.lbVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // bntOK
             // 
@@ -122,7 +122,7 @@ namespace RateController
             this.Controls.Add(this.lbWifi);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lbIP);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbVersion);
             this.Controls.Add(this.lbAppVersion);
             this.Controls.Add(this.label27);
             this.Controls.Add(this.bntOK);
@@ -145,7 +145,7 @@ namespace RateController
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Button bntOK;
         private System.Windows.Forms.Label lbAppVersion;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbVersion;
         private System.Windows.Forms.Label lbIP;
         private System.Windows.Forms.Label lbWifi;
         private System.Windows.Forms.Label label3;

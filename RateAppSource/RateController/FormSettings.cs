@@ -22,6 +22,7 @@ namespace RateController
 
         public FormSettings(FormStart CallingForm, int Page)
         {
+            Initializing = true;
             InitializeComponent();
 
             #region // language
@@ -55,7 +56,7 @@ namespace RateController
 
             grpSensor.Text = Lang.lgSensorLocation;
             lbConID.Text = Lang.lgModuleID;
-            label26.Text = Lang.lgSensorID;
+            lbSensorID.Text = Lang.lgSensorID;
             ckSimulate.Text = Lang.lgSimulate;
 
             lb32.Text = Lang.lgUPMTarget;
@@ -66,7 +67,7 @@ namespace RateController
             lbSpeed.Text = Lang.lgSpeed;
             lbWidth.Text = Lang.lgWorkingWidthFT;
             lbWorkRate.Text = Lang.lgHectares_Hr;
-            label1.Text = Lang.lgSection;
+            lbSections.Text = Lang.lgSection;
 
             label14.Text = Lang.lgSensorTotalCounts;
             label21.Text = Lang.lgQuantityMeasured;
@@ -85,10 +86,30 @@ namespace RateController
             AreaUnits.Items[2] = Lang.lgHour;
             AreaUnits.Items[3] = Lang.lgMinute;
 
+            lbAltRate.Text = Lang.lgAltRate;
+            lbVariableRate.Text = Lang.lgVariableRate;
+            lbResponseRate.Text = Lang.lgResponerate;
+            lbIntegral.Text = Lang.lgIntegralAdjustment;
+            ckTimedResponse.Text = Lang.lgTimedAjustment;
+
+            lbSensorID.Text = Lang.lgSensorID;
+            grpRateMethod.Text = Lang.lgRateMethod;
+            rbSinglePulse.Text = Lang.lgTimeForSingle;
+            rbMultiPulse.Text = Lang.lgTimeForMulti;
+
+            lbMinimumUPM.Text = Lang.lgMinUPM;
+            ckOffRate.Text = Lang.lgOffRate;
+            lbSwitches.Text = Lang.lgSwitch;
+
+            swMasterOff.Text = Lang.lgMasterOff;
+            swMasterOn.Text = Lang.lgMasterOn;
+            swAuto.Text = Lang.lgAuto;
+            swUp.Text = Lang.lgRateUp;
+            swDown.Text = Lang.lgRateDown;
+
             #endregion // language
 
             mf = CallingForm;
-            Initializing = true;
             tbs = new TabPage[] { tbs0, tbs4, tbs6, tbs3, tbs5 };
             CurrentProduct = Page - 1;
             if (CurrentProduct < 0) CurrentProduct = 0;
@@ -1551,6 +1572,11 @@ namespace RateController
         }
 
         private void rbMultiPulse_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbProduct_Click(object sender, EventArgs e)
         {
 
         }

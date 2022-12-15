@@ -2009,3 +2009,9 @@ C:\Users\coxda\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateCont
 C:\Users\coxda\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmMsgBox.resources
 C:\Users\coxda\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmWifi.resources
 C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.frmWifi.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateControllerApp\ru\RateController.resources.dll
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.Lang.ru.resources
+C:\Users\DC\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\ru\RateController.resources.dll
+C:\Users\coxda\OneDrive\AOG\2022\Dev\RateController_Files\RateControllerApp\ru\RateController.resources.dll
+C:\Users\coxda\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\RateController.Lang.ru.resources
+C:\Users\coxda\OneDrive\AOG\2022\Dev\RateController_Files\RateAppSource\RateController\obj\Debug\ru\RateController.resources.dll

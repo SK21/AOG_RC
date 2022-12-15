@@ -161,7 +161,7 @@ namespace RateController
                 }
                 else if (value.Length == 0)
                 {
-                    cProductName = "Product " + (cProductID + 1).ToString();
+                    cProductName = Lang.lgProduct + " " + (cProductID + 1).ToString();
                 }
                 else
                 {

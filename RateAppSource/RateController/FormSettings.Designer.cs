@@ -34,9 +34,9 @@ namespace RateController
             this.tc = new System.Windows.Forms.TabControl();
             this.tbs0 = new System.Windows.Forms.TabPage();
             this.tbAltRate = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
+            this.lbAltRate = new System.Windows.Forms.Label();
             this.cbVR = new System.Windows.Forms.ComboBox();
-            this.label27 = new System.Windows.Forms.Label();
+            this.lbVariableRate = new System.Windows.Forms.Label();
             this.lb0 = new System.Windows.Forms.Label();
             this.tbProduct = new System.Windows.Forms.TextBox();
             this.VolumeUnits = new System.Windows.Forms.ComboBox();
@@ -58,7 +58,7 @@ namespace RateController
             this.tbs4 = new System.Windows.Forms.TabPage();
             this.label31 = new System.Windows.Forms.Label();
             this.tbPIDki = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
+            this.lbIntegral = new System.Windows.Forms.Label();
             this.ckTimedResponse = new System.Windows.Forms.CheckBox();
             this.label30 = new System.Windows.Forms.Label();
             this.tbTimedAdjustment = new System.Windows.Forms.TextBox();
@@ -80,19 +80,19 @@ namespace RateController
             this.tbPIDMinPWM = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tbPIDkp = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lbResponseRate = new System.Windows.Forms.Label();
             this.tbs6 = new System.Windows.Forms.TabPage();
             this.ckSimulate = new System.Windows.Forms.CheckBox();
             this.label28 = new System.Windows.Forms.Label();
             this.tbOffRate = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
+            this.lbMinimumUPM = new System.Windows.Forms.Label();
             this.tbMinUPM = new System.Windows.Forms.TextBox();
             this.ckOffRate = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpRateMethod = new System.Windows.Forms.GroupBox();
             this.rbMultiPulse = new System.Windows.Forms.RadioButton();
             this.rbSinglePulse = new System.Windows.Forms.RadioButton();
             this.grpSensor = new System.Windows.Forms.GroupBox();
-            this.label26 = new System.Windows.Forms.Label();
+            this.lbSensorID = new System.Windows.Forms.Label();
             this.tbSenID = new System.Windows.Forms.TextBox();
             this.ModuleIndicator = new System.Windows.Forms.Label();
             this.lbConID = new System.Windows.Forms.Label();
@@ -106,7 +106,7 @@ namespace RateController
             this.swThree = new System.Windows.Forms.Label();
             this.swTwo = new System.Windows.Forms.Label();
             this.swOne = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
+            this.lbSwitches = new System.Windows.Forms.Label();
             this.swMasterOn = new System.Windows.Forms.Label();
             this.tbCountsRev = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
@@ -133,7 +133,7 @@ namespace RateController
             this.sec3 = new System.Windows.Forms.Label();
             this.sec2 = new System.Windows.Forms.Label();
             this.sec1 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbSections = new System.Windows.Forms.Label();
             this.sec0 = new System.Windows.Forms.Label();
             this.lbRateAppliedData = new System.Windows.Forms.Label();
             this.lb33 = new System.Windows.Forms.Label();
@@ -170,7 +170,7 @@ namespace RateController
             this.tbs0.SuspendLayout();
             this.tbs4.SuspendLayout();
             this.tbs6.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.grpRateMethod.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.tbs3.SuspendLayout();
             this.tbs5.SuspendLayout();
@@ -193,9 +193,9 @@ namespace RateController
             // tbs0
             // 
             this.tbs0.Controls.Add(this.tbAltRate);
-            this.tbs0.Controls.Add(this.label29);
+            this.tbs0.Controls.Add(this.lbAltRate);
             this.tbs0.Controls.Add(this.cbVR);
-            this.tbs0.Controls.Add(this.label27);
+            this.tbs0.Controls.Add(this.lbVariableRate);
             this.tbs0.Controls.Add(this.lb0);
             this.tbs0.Controls.Add(this.tbProduct);
             this.tbs0.Controls.Add(this.VolumeUnits);
@@ -238,15 +238,15 @@ namespace RateController
             this.tbAltRate.Enter += new System.EventHandler(this.tbAltRate_Enter);
             this.tbAltRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbAltRate_Validating);
             // 
-            // label29
+            // lbAltRate
             // 
-            this.label29.AutoSize = true;
-            this.label29.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label29.Location = new System.Drawing.Point(40, 240);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(120, 23);
-            this.label29.TabIndex = 125;
-            this.label29.Text = "Alt. Rate (%)";
+            this.lbAltRate.AutoSize = true;
+            this.lbAltRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbAltRate.Location = new System.Drawing.Point(40, 240);
+            this.lbAltRate.Name = "lbAltRate";
+            this.lbAltRate.Size = new System.Drawing.Size(120, 23);
+            this.lbAltRate.TabIndex = 125;
+            this.lbAltRate.Text = "Alt. Rate (%)";
             // 
             // cbVR
             // 
@@ -267,16 +267,16 @@ namespace RateController
             this.cbVR.SelectedIndexChanged += new System.EventHandler(this.cbVR_SelectedIndexChanged);
             this.cbVR.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label27_HelpRequested);
             // 
-            // label27
+            // lbVariableRate
             // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(40, 278);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(121, 23);
-            this.label27.TabIndex = 123;
-            this.label27.Text = "Variable Rate";
-            this.label27.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label27_HelpRequested);
+            this.lbVariableRate.AutoSize = true;
+            this.lbVariableRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbVariableRate.Location = new System.Drawing.Point(40, 278);
+            this.lbVariableRate.Name = "lbVariableRate";
+            this.lbVariableRate.Size = new System.Drawing.Size(121, 23);
+            this.lbVariableRate.TabIndex = 123;
+            this.lbVariableRate.Text = "Variable Rate";
+            this.lbVariableRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label27_HelpRequested);
             // 
             // lb0
             // 
@@ -368,7 +368,6 @@ namespace RateController
             // 
             // lb4
             // 
-            this.lb4.AutoSize = true;
             this.lb4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lb4.Location = new System.Drawing.Point(40, 164);
             this.lb4.Name = "lb4";
@@ -513,7 +512,7 @@ namespace RateController
             // 
             this.tbs4.Controls.Add(this.label31);
             this.tbs4.Controls.Add(this.tbPIDki);
-            this.tbs4.Controls.Add(this.label32);
+            this.tbs4.Controls.Add(this.lbIntegral);
             this.tbs4.Controls.Add(this.ckTimedResponse);
             this.tbs4.Controls.Add(this.label30);
             this.tbs4.Controls.Add(this.tbTimedAdjustment);
@@ -535,7 +534,7 @@ namespace RateController
             this.tbs4.Controls.Add(this.tbPIDMinPWM);
             this.tbs4.Controls.Add(this.label3);
             this.tbs4.Controls.Add(this.tbPIDkp);
-            this.tbs4.Controls.Add(this.label2);
+            this.tbs4.Controls.Add(this.lbResponseRate);
             this.tbs4.Location = new System.Drawing.Point(4, 33);
             this.tbs4.Name = "tbs4";
             this.tbs4.Padding = new System.Windows.Forms.Padding(3);
@@ -566,16 +565,16 @@ namespace RateController
             this.tbPIDki.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPIDki.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPIDki_HelpRequested);
             // 
-            // label32
+            // lbIntegral
             // 
-            this.label32.AutoSize = true;
-            this.label32.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label32.Location = new System.Drawing.Point(68, 57);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(177, 23);
-            this.label32.TabIndex = 143;
-            this.label32.Text = "Integral Adjustment";
-            this.label32.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPIDki_HelpRequested);
+            this.lbIntegral.AutoSize = true;
+            this.lbIntegral.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbIntegral.Location = new System.Drawing.Point(68, 57);
+            this.lbIntegral.Name = "lbIntegral";
+            this.lbIntegral.Size = new System.Drawing.Size(177, 23);
+            this.lbIntegral.TabIndex = 143;
+            this.lbIntegral.Text = "Integral Adjustment";
+            this.lbIntegral.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPIDki_HelpRequested);
             // 
             // ckTimedResponse
             // 
@@ -815,26 +814,26 @@ namespace RateController
             this.tbPIDkp.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPIDkp.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label2_HelpRequested);
             // 
-            // label2
+            // lbResponseRate
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(68, 21);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(134, 23);
-            this.label2.TabIndex = 120;
-            this.label2.Text = "Response Rate";
-            this.label2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label2_HelpRequested);
+            this.lbResponseRate.AutoSize = true;
+            this.lbResponseRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbResponseRate.Location = new System.Drawing.Point(68, 21);
+            this.lbResponseRate.Name = "lbResponseRate";
+            this.lbResponseRate.Size = new System.Drawing.Size(134, 23);
+            this.lbResponseRate.TabIndex = 120;
+            this.lbResponseRate.Text = "Response Rate";
+            this.lbResponseRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label2_HelpRequested);
             // 
             // tbs6
             // 
             this.tbs6.Controls.Add(this.ckSimulate);
             this.tbs6.Controls.Add(this.label28);
             this.tbs6.Controls.Add(this.tbOffRate);
-            this.tbs6.Controls.Add(this.label25);
+            this.tbs6.Controls.Add(this.lbMinimumUPM);
             this.tbs6.Controls.Add(this.tbMinUPM);
             this.tbs6.Controls.Add(this.ckOffRate);
-            this.tbs6.Controls.Add(this.groupBox1);
+            this.tbs6.Controls.Add(this.grpRateMethod);
             this.tbs6.Controls.Add(this.grpSensor);
             this.tbs6.Location = new System.Drawing.Point(4, 33);
             this.tbs6.Name = "tbs6";
@@ -887,17 +886,16 @@ namespace RateController
             this.tbOffRate.Enter += new System.EventHandler(this.tbOffRate_Enter);
             this.tbOffRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbOffRate_Validating);
             // 
-            // label25
+            // lbMinimumUPM
             // 
-            this.label25.AutoSize = true;
-            this.label25.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(134, 267);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(130, 23);
-            this.label25.TabIndex = 114;
-            this.label25.Text = "Minimum UPM";
-            this.label25.Click += new System.EventHandler(this.label25_Click);
-            this.label25.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label25_HelpRequested);
+            this.lbMinimumUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbMinimumUPM.Location = new System.Drawing.Point(134, 267);
+            this.lbMinimumUPM.Name = "lbMinimumUPM";
+            this.lbMinimumUPM.Size = new System.Drawing.Size(130, 23);
+            this.lbMinimumUPM.TabIndex = 114;
+            this.lbMinimumUPM.Text = "Minimum UPM";
+            this.lbMinimumUPM.Click += new System.EventHandler(this.label25_Click);
+            this.lbMinimumUPM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label25_HelpRequested);
             // 
             // tbMinUPM
             // 
@@ -928,17 +926,17 @@ namespace RateController
             this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
             this.ckOffRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOffRate_HelpRequested);
             // 
-            // groupBox1
+            // grpRateMethod
             // 
-            this.groupBox1.Controls.Add(this.rbMultiPulse);
-            this.groupBox1.Controls.Add(this.rbSinglePulse);
-            this.groupBox1.Location = new System.Drawing.Point(42, 135);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(385, 117);
-            this.groupBox1.TabIndex = 20;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Rate Method";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
+            this.grpRateMethod.Controls.Add(this.rbMultiPulse);
+            this.grpRateMethod.Controls.Add(this.rbSinglePulse);
+            this.grpRateMethod.Location = new System.Drawing.Point(42, 135);
+            this.grpRateMethod.Name = "grpRateMethod";
+            this.grpRateMethod.Size = new System.Drawing.Size(385, 117);
+            this.grpRateMethod.TabIndex = 20;
+            this.grpRateMethod.TabStop = false;
+            this.grpRateMethod.Text = "Rate Method";
+            this.grpRateMethod.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
             // 
             // rbMultiPulse
             // 
@@ -978,7 +976,7 @@ namespace RateController
             // 
             // grpSensor
             // 
-            this.grpSensor.Controls.Add(this.label26);
+            this.grpSensor.Controls.Add(this.lbSensorID);
             this.grpSensor.Controls.Add(this.tbSenID);
             this.grpSensor.Controls.Add(this.ModuleIndicator);
             this.grpSensor.Controls.Add(this.lbConID);
@@ -991,16 +989,15 @@ namespace RateController
             this.grpSensor.Text = "Rate Sensor Location";
             this.grpSensor.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
             // 
-            // label26
+            // lbSensorID
             // 
-            this.label26.AutoSize = true;
-            this.label26.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(57, 77);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(93, 23);
-            this.label26.TabIndex = 151;
-            this.label26.Text = "Sensor ID";
-            this.label26.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label26_HelpRequested);
+            this.lbSensorID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSensorID.Location = new System.Drawing.Point(57, 77);
+            this.lbSensorID.Name = "lbSensorID";
+            this.lbSensorID.Size = new System.Drawing.Size(93, 23);
+            this.lbSensorID.TabIndex = 151;
+            this.lbSensorID.Text = "Sensor ID";
+            this.lbSensorID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label26_HelpRequested);
             // 
             // tbSenID
             // 
@@ -1030,7 +1027,6 @@ namespace RateController
             // 
             // lbConID
             // 
-            this.lbConID.AutoSize = true;
             this.lbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbConID.Location = new System.Drawing.Point(57, 29);
             this.lbConID.Name = "lbConID";
@@ -1064,7 +1060,7 @@ namespace RateController
             this.tbs3.Controls.Add(this.swThree);
             this.tbs3.Controls.Add(this.swTwo);
             this.tbs3.Controls.Add(this.swOne);
-            this.tbs3.Controls.Add(this.label22);
+            this.tbs3.Controls.Add(this.lbSwitches);
             this.tbs3.Controls.Add(this.swMasterOn);
             this.tbs3.Controls.Add(this.tbCountsRev);
             this.tbs3.Controls.Add(this.label24);
@@ -1091,7 +1087,7 @@ namespace RateController
             this.tbs3.Controls.Add(this.sec3);
             this.tbs3.Controls.Add(this.sec2);
             this.tbs3.Controls.Add(this.sec1);
-            this.tbs3.Controls.Add(this.label1);
+            this.tbs3.Controls.Add(this.lbSections);
             this.tbs3.Controls.Add(this.sec0);
             this.tbs3.Controls.Add(this.lbRateAppliedData);
             this.tbs3.Controls.Add(this.lb33);
@@ -1216,16 +1212,16 @@ namespace RateController
             this.swOne.Click += new System.EventHandler(this.swOne_Click);
             this.swOne.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
-            // label22
+            // lbSwitches
             // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(364, 12);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(83, 23);
-            this.label22.TabIndex = 196;
-            this.label22.Text = "Switches";
-            this.label22.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
+            this.lbSwitches.AutoSize = true;
+            this.lbSwitches.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSwitches.Location = new System.Drawing.Point(364, 12);
+            this.lbSwitches.Name = "lbSwitches";
+            this.lbSwitches.Size = new System.Drawing.Size(83, 23);
+            this.lbSwitches.TabIndex = 196;
+            this.lbSwitches.Text = "Switches";
+            this.lbSwitches.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label22_HelpRequested);
             // 
             // swMasterOn
             // 
@@ -1525,16 +1521,16 @@ namespace RateController
             this.sec1.TabIndex = 169;
             this.sec1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // label1
+            // lbSections
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(192, 294);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(79, 23);
-            this.label1.TabIndex = 168;
-            this.label1.Text = "Sections";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.lbSections.AutoSize = true;
+            this.lbSections.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSections.Location = new System.Drawing.Point(192, 294);
+            this.lbSections.Name = "lbSections";
+            this.lbSections.Size = new System.Drawing.Size(79, 23);
+            this.lbSections.TabIndex = 168;
+            this.lbSections.Text = "Sections";
+            this.lbSections.Click += new System.EventHandler(this.label1_Click);
             // 
             // sec0
             // 
@@ -1868,6 +1864,7 @@ namespace RateController
             this.lbProduct.TabIndex = 143;
             this.lbProduct.Text = "Product";
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lbProduct.Click += new System.EventHandler(this.lbProduct_Click);
             // 
             // FormSettings
             // 
@@ -1898,7 +1895,7 @@ namespace RateController
             this.tbs4.PerformLayout();
             this.tbs6.ResumeLayout(false);
             this.tbs6.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
+            this.grpRateMethod.ResumeLayout(false);
             this.grpSensor.ResumeLayout(false);
             this.grpSensor.PerformLayout();
             this.tbs3.ResumeLayout(false);
@@ -1970,7 +1967,7 @@ namespace RateController
         private System.Windows.Forms.Label sec3;
         private System.Windows.Forms.Label sec2;
         private System.Windows.Forms.Label sec1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbSections;
         private System.Windows.Forms.Label sec0;
         private System.Windows.Forms.TabPage tbs4;
         private System.Windows.Forms.TextBox tbPIDBrakePoint;
@@ -1984,7 +1981,7 @@ namespace RateController
         private System.Windows.Forms.TextBox tbPIDMinPWM;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbPIDkp;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbResponseRate;
         private System.Windows.Forms.Button btnPIDloadDefaults;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
@@ -2012,13 +2009,13 @@ namespace RateController
         private System.Windows.Forms.Label lbRPM;
         private System.Windows.Forms.Label lbProduct;
         private System.Windows.Forms.GroupBox grpSensor;
-        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label lbSensorID;
         private System.Windows.Forms.TextBox tbSenID;
         private System.Windows.Forms.Label ModuleIndicator;
         private System.Windows.Forms.Label lbConID;
         private System.Windows.Forms.TextBox tbConID;
         private System.Windows.Forms.Label swMasterOn;
-        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label lbSwitches;
         private System.Windows.Forms.Label swMasterOff;
         private System.Windows.Forms.Label swDown;
         private System.Windows.Forms.Label swUp;
@@ -2027,14 +2024,14 @@ namespace RateController
         private System.Windows.Forms.Label swThree;
         private System.Windows.Forms.Label swTwo;
         private System.Windows.Forms.Label swOne;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox grpRateMethod;
         private System.Windows.Forms.RadioButton rbMultiPulse;
         private System.Windows.Forms.RadioButton rbSinglePulse;
-        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label lbMinimumUPM;
         private System.Windows.Forms.TextBox tbMinUPM;
         private System.Windows.Forms.CheckBox ckOffRate;
         private System.Windows.Forms.ComboBox cbVR;
-        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label lbVariableRate;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox tbTimedAdjustment;
         private System.Windows.Forms.Label label28;
@@ -2042,9 +2039,9 @@ namespace RateController
         private System.Windows.Forms.CheckBox ckTimedResponse;
         private System.Windows.Forms.CheckBox ckSimulate;
         private System.Windows.Forms.TextBox tbAltRate;
-        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label lbAltRate;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.TextBox tbPIDki;
-        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label lbIntegral;
     }
 }

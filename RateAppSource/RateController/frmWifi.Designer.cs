@@ -31,19 +31,19 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmWifi));
             this.lb0 = new System.Windows.Forms.Label();
             this.tbSSID = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbPassword = new System.Windows.Forms.Label();
             this.tbPassword = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lbHeading = new System.Windows.Forms.Label();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpHotSpot = new System.Windows.Forms.GroupBox();
             this.cbNetworks = new System.Windows.Forms.ComboBox();
             this.lbIP = new System.Windows.Forms.Label();
             this.btnSetIP = new System.Windows.Forms.Button();
             this.btnRescan = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
+            this.grpHotSpot.SuspendLayout();
             this.SuspendLayout();
             // 
             // lb0
@@ -67,15 +67,15 @@
             this.tbSSID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbSSID.TextChanged += new System.EventHandler(this.tbSSID_TextChanged);
             // 
-            // label1
+            // lbPassword
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(6, 69);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(88, 23);
-            this.label1.TabIndex = 126;
-            this.label1.Text = "Password";
+            this.lbPassword.AutoSize = true;
+            this.lbPassword.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPassword.Location = new System.Drawing.Point(6, 69);
+            this.lbPassword.Name = "lbPassword";
+            this.lbPassword.Size = new System.Drawing.Size(88, 23);
+            this.lbPassword.TabIndex = 126;
+            this.lbPassword.Text = "Password";
             // 
             // tbPassword
             // 
@@ -88,15 +88,15 @@
             this.tbPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPassword.TextChanged += new System.EventHandler(this.tbPassword_TextChanged);
             // 
-            // label2
+            // lbHeading
             // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(376, 23);
-            this.label2.TabIndex = 127;
-            this.label2.Text = "Wireless Network";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbHeading.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbHeading.Location = new System.Drawing.Point(12, 9);
+            this.lbHeading.Name = "lbHeading";
+            this.lbHeading.Size = new System.Drawing.Size(376, 23);
+            this.lbHeading.TabIndex = 127;
+            this.lbHeading.Text = "Wireless Network";
+            this.lbHeading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnStop
             // 
@@ -163,21 +163,21 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // groupBox1
+            // grpHotSpot
             // 
-            this.groupBox1.Controls.Add(this.btnStart);
-            this.groupBox1.Controls.Add(this.tbSSID);
-            this.groupBox1.Controls.Add(this.lb0);
-            this.groupBox1.Controls.Add(this.btnStop);
-            this.groupBox1.Controls.Add(this.tbPassword);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(47, 124);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(307, 192);
-            this.groupBox1.TabIndex = 145;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Windows Hotspot";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            this.grpHotSpot.Controls.Add(this.btnStart);
+            this.grpHotSpot.Controls.Add(this.tbSSID);
+            this.grpHotSpot.Controls.Add(this.lb0);
+            this.grpHotSpot.Controls.Add(this.btnStop);
+            this.grpHotSpot.Controls.Add(this.tbPassword);
+            this.grpHotSpot.Controls.Add(this.lbPassword);
+            this.grpHotSpot.Location = new System.Drawing.Point(47, 124);
+            this.grpHotSpot.Name = "grpHotSpot";
+            this.grpHotSpot.Size = new System.Drawing.Size(307, 192);
+            this.grpHotSpot.TabIndex = 145;
+            this.grpHotSpot.TabStop = false;
+            this.grpHotSpot.Text = "Windows Hotspot";
+            this.grpHotSpot.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
             // cbNetworks
             // 
@@ -233,10 +233,10 @@
             this.Controls.Add(this.btnSetIP);
             this.Controls.Add(this.lbIP);
             this.Controls.Add(this.cbNetworks);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.grpHotSpot);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lbHeading);
             this.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -248,8 +248,8 @@
             this.Text = "Wifi";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmWifi_FormClosed);
             this.Load += new System.EventHandler(this.frmWifi_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.grpHotSpot.ResumeLayout(false);
+            this.grpHotSpot.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -258,14 +258,14 @@
 
         private System.Windows.Forms.Label lb0;
         private System.Windows.Forms.TextBox tbSSID;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbPassword;
         private System.Windows.Forms.TextBox tbPassword;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbHeading;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox grpHotSpot;
         private System.Windows.Forms.ComboBox cbNetworks;
         private System.Windows.Forms.Label lbIP;
         private System.Windows.Forms.Button btnSetIP;

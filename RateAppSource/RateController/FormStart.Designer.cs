@@ -71,7 +71,7 @@ namespace RateController
             this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuPressures = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.metricToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMetric = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.MnuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,6 +81,7 @@ namespace RateController
             this.MnuDeustch = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuEnglish = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuNederlands = new System.Windows.Forms.ToolStripMenuItem();
+            this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serialMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wifiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -529,7 +530,7 @@ namespace RateController
             // MnuOptions
             // 
             this.MnuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.metricToolStripMenuItem,
+            this.mnuMetric,
             this.toolStripSeparator3,
             this.MnuNew,
             this.MnuOpen,
@@ -544,13 +545,13 @@ namespace RateController
             this.MnuOptions.Size = new System.Drawing.Size(200, 42);
             this.MnuOptions.Text = "Options";
             // 
-            // metricToolStripMenuItem
+            // mnuMetric
             // 
-            this.metricToolStripMenuItem.Image = global::RateController.Properties.Resources.CheckMark;
-            this.metricToolStripMenuItem.Name = "metricToolStripMenuItem";
-            this.metricToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
-            this.metricToolStripMenuItem.Text = "Metric Units";
-            this.metricToolStripMenuItem.Click += new System.EventHandler(this.metricToolStripMenuItem_Click);
+            this.mnuMetric.Image = global::RateController.Properties.Resources.CheckMark;
+            this.mnuMetric.Name = "mnuMetric";
+            this.mnuMetric.Size = new System.Drawing.Size(215, 42);
+            this.mnuMetric.Text = "Metric Units";
+            this.mnuMetric.Click += new System.EventHandler(this.metricToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -591,7 +592,8 @@ namespace RateController
             this.MnuLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnuDeustch,
             this.MnuEnglish,
-            this.MnuNederlands});
+            this.MnuNederlands,
+            this.russianToolStripMenuItem});
             this.MnuLanguage.Image = global::RateController.Properties.Resources._7791659_language_speak_communication_speech_chat_icon;
             this.MnuLanguage.Name = "MnuLanguage";
             this.MnuLanguage.Size = new System.Drawing.Size(215, 42);
@@ -617,6 +619,13 @@ namespace RateController
             this.MnuNederlands.Size = new System.Drawing.Size(175, 28);
             this.MnuNederlands.Text = "Nederlands";
             this.MnuNederlands.Click += new System.EventHandler(this.MnuNederlands_Click);
+            // 
+            // russianToolStripMenuItem
+            // 
+            this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
+            this.russianToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
+            this.russianToolStripMenuItem.Text = "Russian";
+            this.russianToolStripMenuItem.Click += new System.EventHandler(this.russianToolStripMenuItem_Click);
             // 
             // serialMonitorToolStripMenuItem
             // 
@@ -792,7 +801,7 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem MnuComm;
         private System.Windows.Forms.ToolStripMenuItem MnuRelays;
         private System.Windows.Forms.ToolStripMenuItem MnuAbout;
-        private System.Windows.Forms.ToolStripMenuItem metricToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnuMetric;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Label lbTarget;
         private System.Windows.Forms.ToolStripMenuItem serialMonitorToolStripMenuItem;
@@ -800,5 +809,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem MnuPressures;
         private System.Windows.Forms.Label lbPressureValue;
         private System.Windows.Forms.Label lbPressure;
+        private System.Windows.Forms.ToolStripMenuItem russianToolStripMenuItem;
     }
 }

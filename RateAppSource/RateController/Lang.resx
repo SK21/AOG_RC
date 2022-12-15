@@ -129,6 +129,12 @@
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>Already Running</value>
   </data>
+  <data name="lgAltRate" xml:space="preserve">
+    <value>Alt. Rate</value>
+  </data>
+  <data name="lgAuto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Base Rate</value>
   </data>
@@ -180,6 +186,9 @@
   <data name="lgDeadband" xml:space="preserve">
     <value>Deadband</value>
   </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
   <data name="lgDestinationIP" xml:space="preserve">
     <value>Destination IP</value>
   </data>
@@ -204,17 +213,26 @@
   <data name="lgHighMax" xml:space="preserve">
     <value>PWM High Max</value>
   </data>
+  <data name="lgHotspot" xml:space="preserve">
+    <value>Windows Hotspot</value>
+  </data>
   <data name="lgHour" xml:space="preserve">
     <value>Hour</value>
   </data>
   <data name="lgHours" xml:space="preserve">
     <value>Hours</value>
   </data>
+  <data name="lgID" xml:space="preserve">
+    <value>ID</value>
+  </data>
   <data name="lgInches" xml:space="preserve">
     <value>Inches</value>
   </data>
   <data name="lgInstantRate" xml:space="preserve">
     <value>Instant Rate …</value>
+  </data>
+  <data name="lgIntegralAdjustment" xml:space="preserve">
+    <value>Integral Adjustment</value>
   </data>
   <data name="lgKPH" xml:space="preserve">
     <value>KPH</value>
@@ -234,14 +252,29 @@
   <data name="lgLowMax" xml:space="preserve">
     <value>PWM Low Max</value>
   </data>
+  <data name="lgMasterOff" xml:space="preserve">
+    <value>Master Off</value>
+  </data>
+  <data name="lgMasterOn" xml:space="preserve">
+    <value>Master On</value>
+  </data>
+  <data name="lgMetric" xml:space="preserve">
+    <value>Metric Units</value>
+  </data>
   <data name="lgMinPWM" xml:space="preserve">
     <value>PWM Minimum</value>
+  </data>
+  <data name="lgMinUPM" xml:space="preserve">
+    <value>Minimum UPM</value>
   </data>
   <data name="lgMinute" xml:space="preserve">
     <value>Minute</value>
   </data>
   <data name="lgMinutes" xml:space="preserve">
     <value>Minutes</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Module</value>
   </data>
   <data name="lgModuleID" xml:space="preserve">
     <value>Module ID</value>
@@ -261,6 +294,12 @@
   <data name="lgNumSections" xml:space="preserve">
     <value>Number of Sections</value>
   </data>
+  <data name="lgOffRate" xml:space="preserve">
+    <value>Off-rate Alarm</value>
+  </data>
+  <data name="lgOffset" xml:space="preserve">
+    <value>Offset</value>
+  </data>
   <data name="lgOpen" xml:space="preserve">
     <value>Open</value>
   </data>
@@ -270,11 +309,14 @@
   <data name="lgOverallRate" xml:space="preserve">
     <value>Overall Rate …</value>
   </data>
+  <data name="lgPassword" xml:space="preserve">
+    <value>Password</value>
+  </data>
   <data name="lgPCBconfig" xml:space="preserve">
     <value>PCB Config</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
-    <value>Pressures</value>
+    <value>Pressure</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Product</value>
@@ -297,11 +339,23 @@
   <data name="lgRate" xml:space="preserve">
     <value>Rate</value>
   </data>
+  <data name="lgRateDown" xml:space="preserve">
+    <value>Rate Down</value>
+  </data>
+  <data name="lgRateMethod" xml:space="preserve">
+    <value>Rate Method</value>
+  </data>
+  <data name="lgRateUp" xml:space="preserve">
+    <value>Rate Up</value>
+  </data>
   <data name="lgRealNano" xml:space="preserve">
     <value>Connected Module</value>
   </data>
   <data name="lgReceivePort" xml:space="preserve">
     <value>ReceivePort</value>
+  </data>
+  <data name="lgRelay" xml:space="preserve">
+    <value>Relay</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
     <value>Relays</value>
@@ -311,6 +365,9 @@
   </data>
   <data name="lgResetStart" xml:space="preserve">
     <value>Reset/Start</value>
+  </data>
+  <data name="lgResponerate" xml:space="preserve">
+    <value>Response Rate</value>
   </data>
   <data name="lgRPM" xml:space="preserve">
     <value>RPM</value>
@@ -324,6 +381,9 @@
   <data name="lgSection" xml:space="preserve">
     <value>Sections</value>
   </data>
+  <data name="lgSectionNum" xml:space="preserve">
+    <value>Section #</value>
+  </data>
   <data name="lgSections" xml:space="preserve">
     <value>Sections for this Product</value>
   </data>
@@ -332,6 +392,9 @@
   </data>
   <data name="lgSendTime" xml:space="preserve">
     <value>Send Time</value>
+  </data>
+  <data name="lgSensor" xml:space="preserve">
+    <value>Sensor</value>
   </data>
   <data name="lgSensorCounts" xml:space="preserve">
     <value>Sensor Counts/Unit</value>
@@ -345,6 +408,9 @@
   <data name="lgSensorTotalCounts" xml:space="preserve">
     <value>Sensor Counts</value>
   </data>
+  <data name="lgShowPressure" xml:space="preserve">
+    <value>Show Pressure</value>
+  </data>
   <data name="lgSimulate" xml:space="preserve">
     <value>Rate Simulation</value>
   </data>
@@ -356,6 +422,9 @@
   </data>
   <data name="lgStandard" xml:space="preserve">
     <value>Standard</value>
+  </data>
+  <data name="lgStart" xml:space="preserve">
+    <value>Start</value>
   </data>
   <data name="lgStartQuantity" xml:space="preserve">
     <value>Tank Starting Quantity</value>
@@ -381,6 +450,24 @@
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Target Rate Alt ...</value>
   </data>
+  <data name="lgTimedAjustment" xml:space="preserve">
+    <value>Timed Adjustment</value>
+  </data>
+  <data name="lgTimeForMulti" xml:space="preserve">
+    <value>Average Time / pulse (&lt;50 ms/pulse)</value>
+  </data>
+  <data name="lgTimeForSingle" xml:space="preserve">
+    <value>Time for one pulse (&gt;50 ms/pulse)</value>
+  </data>
+  <data name="lgType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="lgUnitsVolt" xml:space="preserve">
+    <value>Units/Volt</value>
+  </data>
+  <data name="lgUpdate" xml:space="preserve">
+    <value>Update</value>
+  </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Applied</value>
   </data>
@@ -389,6 +476,12 @@
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Target</value>
+  </data>
+  <data name="lgVariableRate" xml:space="preserve">
+    <value>Variable Rate</value>
+  </data>
+  <data name="lgVersion" xml:space="preserve">
+    <value>Version</value>
   </data>
   <data name="lgVersionDate" xml:space="preserve">
     <value>Version Date</value>
@@ -401,6 +494,9 @@
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Width</value>
+  </data>
+  <data name="lgWirelessNetwork" xml:space="preserve">
+    <value>Wireless Network</value>
   </data>
   <data name="lgWorkingWidthFT" xml:space="preserve">
     <value>Working Width (FT)</value>

@@ -20,6 +20,15 @@ namespace RateController
 
             btnCancel.Text = Lang.lgCancel;
             btnClose.Text = Lang.lgClose;
+            btnRescan.Text = Lang.lgRescan;
+
+            lbHeading.Text = Lang.lgWirelessNetwork;
+            grpHotSpot.Text = Lang.lgHotspot;
+            lbPassword.Text = Lang.lgPassword;
+
+            btnStop.Text = Lang.lgStop;
+            btnStart.Text = Lang.lgStart;
+            btnRescan.Text = Lang.lgRescan;
 
             #endregion // language
         }

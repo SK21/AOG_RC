@@ -79,7 +79,7 @@ namespace RateController
             MnuOptions.DropDownItems["MnuOpen"].Text = Lang.lgOpen;
             MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
             MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
-
+            MnuOptions.DropDownItems["mnuMetric"].Text = Lang.lgMetric;
             #endregion // language
 
             Tls = new clsTools(this);
@@ -335,11 +335,11 @@ namespace RateController
             // metric
             if (UseInches)
             {
-                MnuOptions.DropDownItems["metricToolStripMenuItem"].Image = Properties.Resources.Xmark;
+                MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Xmark;
             }
             else
             {
-                MnuOptions.DropDownItems["metricToolStripMenuItem"].Image = Properties.Resources.CheckMark;
+                MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.CheckMark;
             }
             }
             catch (Exception ex)
@@ -649,7 +649,7 @@ namespace RateController
                     lbAogConnected.Top = 217;
                     lbPressure.Visible = true;
                     lbPressureValue.Visible = true;
-                    lbPressure.Text = "Pressure " + PressureToShowID.ToString();
+                    lbPressure.Text = Lang.lgPressure + " " + PressureToShowID.ToString();
                     if (PressureToShowID < 1) PressureToShowID = 1;
                     float Prs = PressureObjects.Item(PressureToShowID - 1).Pressure();
                     lbPressureValue.Text = Prs.ToString("N1");
@@ -738,6 +738,13 @@ namespace RateController
             frmPressure.ShowDialog();
             LoadPressureSetting();
             CheckPressure();
+        }
+
+        private void russianToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "ru";
+            Properties.Settings.Default.Save();
+            Application.Restart();
         }
     }
 }
