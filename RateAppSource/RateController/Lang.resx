@@ -234,6 +234,9 @@
   <data name="lgIntegralAdjustment" xml:space="preserve">
     <value>Integral Adjustment</value>
   </data>
+  <data name="lgInvertSection" xml:space="preserve">
+    <value>Invert_Section</value>
+  </data>
   <data name="lgKPH" xml:space="preserve">
     <value>KPH</value>
   </data>
@@ -251,6 +254,9 @@
   </data>
   <data name="lgLowMax" xml:space="preserve">
     <value>PWM Low Max</value>
+  </data>
+  <data name="lgMaster" xml:space="preserve">
+    <value>Master</value>
   </data>
   <data name="lgMasterOff" xml:space="preserve">
     <value>Master Off</value>
@@ -314,6 +320,9 @@
   </data>
   <data name="lgPCBconfig" xml:space="preserve">
     <value>PCB Config</value>
+  </data>
+  <data name="lgPower" xml:space="preserve">
+    <value>Power</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
     <value>Pressure</value>
@@ -416,6 +425,9 @@
   </data>
   <data name="lgSimulationOff" xml:space="preserve">
     <value>Off</value>
+  </data>
+  <data name="lgSlave" xml:space="preserve">
+    <value>Slave</value>
   </data>
   <data name="lgSpeed" xml:space="preserve">
     <value>Speed</value>

@@ -412,6 +412,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invert_Section.
+        /// </summary>
+        internal static string lgInvertSection {
+            get {
+                return ResourceManager.GetString("lgInvertSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KPH.
         /// </summary>
         internal static string lgKPH {
@@ -462,6 +471,15 @@ namespace RateController {
         internal static string lgLowMax {
             get {
                 return ResourceManager.GetString("lgLowMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Master.
+        /// </summary>
+        internal static string lgMaster {
+            get {
+                return ResourceManager.GetString("lgMaster", resourceCulture);
             }
         }
         
@@ -651,6 +669,15 @@ namespace RateController {
         internal static string lgPCBconfig {
             get {
                 return ResourceManager.GetString("lgPCBconfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Power.
+        /// </summary>
+        internal static string lgPower {
+            get {
+                return ResourceManager.GetString("lgPower", resourceCulture);
             }
         }
         
@@ -957,6 +984,15 @@ namespace RateController {
         internal static string lgSimulationOff {
             get {
                 return ResourceManager.GetString("lgSimulationOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Slave.
+        /// </summary>
+        internal static string lgSlave {
+            get {
+                return ResourceManager.GetString("lgSlave", resourceCulture);
             }
         }
         

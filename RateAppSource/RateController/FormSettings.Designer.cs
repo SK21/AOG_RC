@@ -39,7 +39,6 @@ namespace RateController
             this.lbVariableRate = new System.Windows.Forms.Label();
             this.lb0 = new System.Windows.Forms.Label();
             this.tbProduct = new System.Windows.Forms.TextBox();
-            this.VolumeUnits = new System.Windows.Forms.ComboBox();
             this.ValveType = new System.Windows.Forms.ComboBox();
             this.lb5 = new System.Windows.Forms.Label();
             this.lb3 = new System.Windows.Forms.Label();
@@ -166,6 +165,7 @@ namespace RateController
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
             this.lbProduct = new System.Windows.Forms.Label();
+            this.tbVolumeUnits = new System.Windows.Forms.TextBox();
             this.tc.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.tbs4.SuspendLayout();
@@ -192,13 +192,13 @@ namespace RateController
             // 
             // tbs0
             // 
+            this.tbs0.Controls.Add(this.tbVolumeUnits);
             this.tbs0.Controls.Add(this.tbAltRate);
             this.tbs0.Controls.Add(this.lbAltRate);
             this.tbs0.Controls.Add(this.cbVR);
             this.tbs0.Controls.Add(this.lbVariableRate);
             this.tbs0.Controls.Add(this.lb0);
             this.tbs0.Controls.Add(this.tbProduct);
-            this.tbs0.Controls.Add(this.VolumeUnits);
             this.tbs0.Controls.Add(this.ValveType);
             this.tbs0.Controls.Add(this.lb5);
             this.tbs0.Controls.Add(this.lb3);
@@ -298,23 +298,6 @@ namespace RateController
             this.tbProduct.TabIndex = 0;
             this.tbProduct.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbProduct.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
-            // 
-            // VolumeUnits
-            // 
-            this.VolumeUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.VolumeUnits.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolumeUnits.FormattingEnabled = true;
-            this.VolumeUnits.Items.AddRange(new object[] {
-            "Imp. Gallons",
-            "US Gallons",
-            "Lbs",
-            "Litres",
-            "Kgs"});
-            this.VolumeUnits.Location = new System.Drawing.Point(230, 82);
-            this.VolumeUnits.Name = "VolumeUnits";
-            this.VolumeUnits.Size = new System.Drawing.Size(161, 31);
-            this.VolumeUnits.TabIndex = 2;
-            this.VolumeUnits.SelectedIndexChanged += new System.EventHandler(this.VolumeUnits_SelectedIndexChanged);
             // 
             // ValveType
             // 
@@ -1866,6 +1849,16 @@ namespace RateController
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.lbProduct.Click += new System.EventHandler(this.lbProduct_Click);
             // 
+            // tbVolumeUnits
+            // 
+            this.tbVolumeUnits.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbVolumeUnits.Location = new System.Drawing.Point(230, 83);
+            this.tbVolumeUnits.MaxLength = 15;
+            this.tbVolumeUnits.Name = "tbVolumeUnits";
+            this.tbVolumeUnits.Size = new System.Drawing.Size(161, 30);
+            this.tbVolumeUnits.TabIndex = 128;
+            this.tbVolumeUnits.TextChanged += new System.EventHandler(this.tbVolumeUnits_TextChanged);
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1912,7 +1905,6 @@ namespace RateController
         private System.Windows.Forms.TabPage tbs0;
         private System.Windows.Forms.Label lb0;
         private System.Windows.Forms.TextBox tbProduct;
-        private System.Windows.Forms.ComboBox VolumeUnits;
         private System.Windows.Forms.ComboBox ValveType;
         private System.Windows.Forms.Label lb5;
         private System.Windows.Forms.Label lb3;
@@ -2043,5 +2035,6 @@ namespace RateController
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.TextBox tbPIDki;
         private System.Windows.Forms.Label lbIntegral;
+        private System.Windows.Forms.TextBox tbVolumeUnits;
     }
 }

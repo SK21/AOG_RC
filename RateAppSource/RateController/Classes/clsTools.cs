@@ -12,8 +12,8 @@ namespace RateController
     {
         private static Hashtable ht;
         private string cAppName = "RateController";
-        private string cAppVersion = "2.3.6";
-        private string cVersionDate = "14-Dec-2022";
+        private string cAppVersion = "2.3.7";
+        private string cVersionDate = "27-Dec-2022";
 
         private string cPropertiesFile;
         private string cSettingsDir;
@@ -421,11 +421,9 @@ namespace RateController
             {
                 // SettingsDir
                 cSettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
-                if (!Directory.Exists(cSettingsDir))
-                {
-                    Directory.CreateDirectory(cSettingsDir);
-                    File.WriteAllBytes(cSettingsDir + "\\Example.rcs", Properties.Resources.Example);
-                }
+
+                if (!Directory.Exists(cSettingsDir)) Directory.CreateDirectory(cSettingsDir);
+                if (!File.Exists(cSettingsDir + "\\Example.rcs")) File.WriteAllBytes(cSettingsDir + "\\Example.rcs", Properties.Resources.Example);
 
                 OpenFile(Properties.Settings.Default.FileName);
             }

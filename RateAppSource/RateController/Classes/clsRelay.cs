@@ -39,6 +39,16 @@ namespace RateController
             }
         }
 
+        public string TypeDescription
+        {
+            get { return mf.TypeDescriptions[(int)cType]; }
+            set
+            {
+                var index = Array.IndexOf(mf.TypeDescriptions, value);
+                if (index != -1) cType = (RelayTypes)index;
+            }
+        }
+
         public int ID
         { get { return cID; } }
 

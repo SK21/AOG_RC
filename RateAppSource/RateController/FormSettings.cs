@@ -627,7 +627,7 @@ namespace RateController
             clsProduct Prd = mf.Products.Item(CurrentProduct);
 
             tbProduct.Text = Prd.ProductName;
-            VolumeUnits.SelectedIndex = Prd.QuantityUnits;
+            tbVolumeUnits.Text = Prd.QuantityDescription;
             AreaUnits.SelectedIndex = Prd.CoverageUnits;
             RateSet.Text = Prd.RateSet.ToString("N1");
             tbAltRate.Text = Prd.RateAlt.ToString("N0");
@@ -760,8 +760,8 @@ namespace RateController
             byte tempB;
             clsProduct Prd = mf.Products.Item(CurrentProduct);
 
-            Prd.QuantityUnits = Convert.ToByte(VolumeUnits.SelectedIndex);
             Prd.CoverageUnits = Convert.ToByte(AreaUnits.SelectedIndex);
+            Prd.QuantityDescription = tbVolumeUnits.Text;
 
             double.TryParse(RateSet.Text, out tempD);
             Prd.RateSet = tempD;
@@ -1557,11 +1557,6 @@ namespace RateController
             SetButtons(true);
         }
 
-        private void VolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
         private void lb2_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             // coverage
@@ -1579,6 +1574,11 @@ namespace RateController
         private void lbProduct_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void tbVolumeUnits_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

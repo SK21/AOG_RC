@@ -24,12 +24,12 @@ namespace RateController
         public double CalCounterStart;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Hr", "Min" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgHours, Lang.lgMinutes };
+        public string[] TypeDescriptions = new string[] {Lang.lgSection,Lang.lgSlave,Lang.lgMaster,Lang.lgPower,Lang.lgInvertSection};
+
         public bool DoCal;
         public PGN32621 PressureData;
         public clsPressures PressureObjects;
         public clsProducts Products;
-        public string[] QuantityAbbr = new string[] { "Imp Gal", "US Gal", "Lbs", "Ltr", "Kgs" };
-        public string[] QuantityDescriptions = new string[] { "Imp. Gallons", "US Gallons", "Lbs", "Litres", "Kgs" };
         public clsAlarm RCalarm;
         public clsRelays RelayObjects;
         public clsSections Sections;

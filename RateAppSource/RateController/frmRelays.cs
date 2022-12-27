@@ -17,6 +17,7 @@ namespace RateController
             InitializeComponent();
 
             #region // language
+
             btnCancel.Text = Lang.lgCancel;
             bntOK.Text = Lang.lgClose;
 
@@ -26,6 +27,7 @@ namespace RateController
 
             this.Text = Lang.lgRelays;
             btnLoadDefaults.Text = Lang.lgLoad_Defaults;
+
             #endregion // language
 
             mf = CalledFrom;
@@ -107,7 +109,8 @@ namespace RateController
 
         private void DGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            mf.Tls.WriteErrorLog("frmRelays/DGV_DataError: " + e.ToString());
+            mf.Tls.WriteErrorLog("frmRelays/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
+                + " Exception: " + e.Exception.ToString());
         }
 
         private void DGV_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -145,8 +148,7 @@ namespace RateController
 
             DataGridViewComboBoxColumn col = (DataGridViewComboBoxColumn)DGV.Columns[1];
             col.Name = "Type";
-            col.DataSource = Enum.GetValues(typeof(RelayTypes));
-            col.ValueType = typeof(RelayTypes);
+            col.DataSource = mf.TypeDescriptions;
 
             UpdateForm();
         }
@@ -160,7 +162,7 @@ namespace RateController
                 {
                     DataRow Rw = dataSet1.Tables[0].NewRow();
                     Rw[0] = Rly.ID + 1;
-                    Rw[1] = Rly.Type;
+                    Rw[1] = Rly.TypeDescription;
 
                     if (Rly.Type == RelayTypes.Section || Rly.Type == RelayTypes.Invert_Section)
                     {
@@ -194,8 +196,7 @@ namespace RateController
                         {
                             case 1:
                                 // Type
-                                RelayTypes tmp;
-                                if (Enum.TryParse(val, true, out tmp)) mf.RelayObjects.Item(i).Type = tmp;
+                                mf.RelayObjects.Item(i).TypeDescription = val;
                                 break;
 
                             case 2:

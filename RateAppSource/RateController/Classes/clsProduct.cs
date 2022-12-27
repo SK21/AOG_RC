@@ -15,7 +15,6 @@ namespace RateController
         private double cRateAlt = 100;
         public bool EraseArduinoQuantity = false;
         public double FlowCal = 0;
-        public byte QuantityUnits = 0;
         public double TankSize = 0;
         public byte ValveType = 0;  // 0 standard, 1 fast close, 3 motor
         public clsArduino VirtualNano;
@@ -54,6 +53,7 @@ namespace RateController
         private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
         private bool cDebugArduino = false;
         private bool cUseAltRate = false;
+        private string cQuantityDescription = "Litres";
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -274,8 +274,11 @@ namespace RateController
 
             double.TryParse(mf.Tls.LoadProperty("TankRemaining" + IDname), out TankRemaining);
             double.TryParse(mf.Tls.LoadProperty("QuantityApplied" + IDname), out cQuantityApplied);
-            byte.TryParse(mf.Tls.LoadProperty("QuantityUnits" + IDname), out QuantityUnits);
             double.TryParse(mf.Tls.LoadProperty("LastAccQuantity" + IDname), out LastAccQuantity);
+
+            cQuantityDescription = mf.Tls.LoadProperty("QuantityDescription" + IDname);
+            if (cQuantityDescription == "") cQuantityDescription = "Litres";
+
 
             double.TryParse(mf.Tls.LoadProperty("RateSet" + IDname), out cRateSet);
 
@@ -408,8 +411,8 @@ namespace RateController
 
             mf.Tls.SaveProperty("TankRemaining" + IDname, TankRemaining.ToString());
             mf.Tls.SaveProperty("QuantityApplied" + IDname, cQuantityApplied.ToString());
-            mf.Tls.SaveProperty("QuantityUnits" + IDname, QuantityUnits.ToString());
             mf.Tls.SaveProperty("LastAccQuantity" + IDname, LastAccQuantity.ToString());
+            mf.Tls.SaveProperty("QuantityDescription" + IDname, cQuantityDescription);
 
             mf.Tls.SaveProperty("RateSet" + IDname, cRateSet.ToString());
             mf.Tls.SaveProperty("RateAlt" + IDname, cRateAlt.ToString());
@@ -578,8 +581,28 @@ namespace RateController
 
         public string Units()
         {
-            string s = mf.QuantityAbbr[QuantityUnits] + " / " + mf.CoverageAbbr[CoverageUnits];
+            string s = cQuantityDescription + " / " + mf.CoverageAbbr[CoverageUnits];
             return s;
+        }
+
+        public string QuantityDescription
+        {
+            get { return cQuantityDescription; }
+            set
+            {
+                if (value.Length > 20)
+                {
+                    cQuantityDescription = value.Substring(0, 20);
+                }
+                else if (value.Length == 0)
+                {
+                    cQuantityDescription = "Litres";
+                }
+                else
+                {
+                    cQuantityDescription = value;
+                }
+            }
         }
 
         public void Update()
