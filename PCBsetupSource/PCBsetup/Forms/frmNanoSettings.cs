@@ -242,7 +242,7 @@ namespace PCBsetup.Forms
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
                 {
-                    bool.TryParse(mf.Tls.LoadProperty(CKs[i].Name), out Checked);
+                    bool.TryParse(mf.Tls.LoadProperty(this.Text + "/" + CKs[i].Name), out Checked);
                     CKs[i].Checked = Checked;
                 }
             }
@@ -355,6 +355,11 @@ namespace PCBsetup.Forms
             lbIPpart4.Text = (val + 207).ToString();
 
             Initializing = false;
+        }
+
+        private void ckUseMCP23017_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -272,6 +272,7 @@
             this.ckUseMCP23017.Text = "Use MCP23017";
             this.ckUseMCP23017.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckUseMCP23017.UseVisualStyleBackColor = true;
+            this.ckUseMCP23017.CheckedChanged += new System.EventHandler(this.ckUseMCP23017_CheckedChanged);
             this.ckUseMCP23017.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckUseMCP23017_HelpRequested);
             // 
             // ckNanoRelayOn
