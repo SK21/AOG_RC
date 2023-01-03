@@ -86,7 +86,7 @@ namespace PCBsetup.Forms
             tbNanoSensorCount.Text = "1";
             ckNanoRelayOn.Checked = false;
             ckNanoFlowOn.Checked = false;
-            tbWemosPort.Text = "3";
+            tbWemosPort.Text = "1";
 
             tbNanoFlow1.Text = "28";
             tbNanoDir1.Text = "37";

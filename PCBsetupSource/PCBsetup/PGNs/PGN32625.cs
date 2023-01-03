@@ -42,7 +42,7 @@ namespace PCBsetup
             cData[5] = 0;
             for (int i = 0; i < cf.CKs.Length; i++)
             {
-                Name = cf.CKs[i].Name;
+                Name = cf.Text + "/" + cf.CKs[i].Name;
                 bool.TryParse(cf.mf.Tls.LoadProperty(Name), out Checked);
                 if (Checked) cData[5] |= (byte)Math.Pow(2, i);
             }

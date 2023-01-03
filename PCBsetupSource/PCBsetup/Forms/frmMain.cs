@@ -239,7 +239,7 @@ namespace PCBsetup.Forms
 
         private void ModuleIndicator_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Indicates module connected. D1 mini does not need to be connected.";
+            string Message = "Indicates module connected. The ESP8266 does not need to show connection.";
 
             Tls.ShowHelp(Message, this.Text, 3000);
             hlpevent.Handled = true;
