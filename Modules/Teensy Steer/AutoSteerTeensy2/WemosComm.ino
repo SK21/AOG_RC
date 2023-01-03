@@ -3,9 +3,11 @@ byte DataWemos[MaxReadBuffer];
 uint16_t PGNwemos;
 byte MSBw;
 byte LSBw;
+elapsedMicros WemosTime;
 
 void ReceiveWemos()
 {
+
     // Wemos D1 Mini
     if (SerialWemos->available())
     {

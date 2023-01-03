@@ -26,9 +26,9 @@ void ReceiveSteerData()
                     // update IP
                     if (DataEthernet[4] == 5 && DataEthernet[5] == 201 && DataEthernet[6] == 201)
                     {
-                        MDL.ipOne = DataEthernet[7];
-                        MDL.ipTwo = DataEthernet[8];
-                        MDL.ipThree = DataEthernet[9];
+                        MDL.IP0 = DataEthernet[7];
+                        MDL.IP1 = DataEthernet[8];
+                        MDL.IP2 = DataEthernet[9];
                         EEPROM.put(110, MDL);
 
                         //reset the Teensy
@@ -75,8 +75,11 @@ void ReceiveSteerData()
                     // autosteer settings
                     steerSettings.Kp = DataEthernet[5];
                     steerSettings.highPWM = DataEthernet[6];
-                    steerSettings.lowPWM = DataEthernet[7];
                     steerSettings.minPWM = DataEthernet[8];
+
+                    //steerSettings.lowPWM = DataEthernet[7];
+                    steerSettings.lowPWM = (byte)((float)steerSettings.minPWM * 1.2);
+
                     steerSettings.steerSensorCounts = (float)DataEthernet[9];
                     steerSettings.wasOffset = DataEthernet[10] | DataEthernet[11] << 8;
                     steerSettings.AckermanFix = (float)DataEthernet[12] * 0.01;
@@ -202,7 +205,7 @@ void SendHelloReply()
 
 void SendScanIDreply()
 {
-    uint8_t scanReply[] = { 128, 129, 126, 203, 4, MDL.ipOne, MDL.ipTwo, MDL.ipThree, 126, 23 };
+    uint8_t scanReply[] = { 128, 129, MDL.IP3, 203, 4, MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3, 23 };
 
     //checksum
     int16_t CK_A = 0;

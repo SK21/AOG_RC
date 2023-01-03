@@ -172,54 +172,54 @@ void DoSetup()
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
 
 	// ADS1115
-	switch (MDL.AnalogMethod)
+	Serial.println("Starting ADS ...");
+	ErrorCount = 0;
+	while (!ADSfound)
 	{
-	case 0:
-		Serial.println("Starting ADS ...");
-		ErrorCount = 0;
-		while (!ADSfound)
-		{
-			Wire.beginTransmission(ADS1115_Address);
-			Wire.write(0b00000000);	//Point to Conversion register
-			Wire.endTransmission();
-			Wire.requestFrom(ADS1115_Address, 2);
-			ADSfound = Wire.available();
-			Serial.print(".");
-			delay(500);
-			if (ErrorCount++ > 10) break;
-		}
+		Wire.beginTransmission(ADS1115_Address);
+		Wire.write(0b00000000);	//Point to Conversion register
+		Wire.endTransmission();
+		Wire.requestFrom(ADS1115_Address, 2);
+		ADSfound = Wire.available();
+		Serial.print(".");
+		delay(500);
+		if (ErrorCount++ > 10) break;
+	}
+	Serial.println("");
+	if (ADSfound)
+	{
+		Serial.println("ADS connected.");
 		Serial.println("");
-		if (ADSfound)
-		{
-			Serial.println("ADS connected.");
-			Serial.println("");
-		}
-		else
-		{
-			Serial.println("ADS not found.");
-			Serial.println("");
-		}
-		break;
+		MDL.AnalogMethod = 0;
+	}
+	else
+	{
+		Serial.println("ADS not found.");
+		Serial.println("");
 
-	case 1:
-		Serial.println("Using Teensy pins for analog data.");
-		Serial.println("");
-		break;
+		switch (MDL.AnalogMethod)
+		{
 
-	case 2:
-		Serial.println("Using Wemos D1 Mini for analog data.");
-		Serial.println("");
-		break;
+		case 1:
+			Serial.println("Using Teensy pins for analog data.");
+			Serial.println("");
+			break;
+
+		case 2:
+			Serial.println("Using Wemos D1 Mini for analog data.");
+			Serial.println("");
+			break;
+		}
 	}
 
 	// ethernet 
 	Serial.println("Starting Ethernet ...");
-	IPAddress LocalIP(MDL.ipOne, MDL.ipTwo, MDL.ipThree, 126);
-	static uint8_t LocalMac[] = { 0x00,0x00,0x56,0x00,0x00,126 };
+	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
+	static uint8_t LocalMac[] = { 0x00,0x00,0x56,0x00,0x00,MDL.IP3 };
 
 	Ethernet.begin(LocalMac, 0);
 	Ethernet.setLocalIP(LocalIP);
-	DestinationIP = IPAddress(MDL.ipOne, MDL.ipTwo, MDL.ipThree, 255);	// update from saved data
+	DestinationIP = IPAddress(MDL.IP0, MDL.IP1, MDL.IP2, 255);	// update from saved data
 
 	Serial.print("IP Address: ");
 	Serial.println(Ethernet.localIP());
@@ -238,18 +238,46 @@ void DoSetup()
 	UDPntrip.begin(MDL.NtripPort);
 	UDPswitches.begin(ListeningPortSwitches);
 
-	// IMU
-	uint8_t IMUaddress;
-	switch (MDL.IMU)
-	{
-	case 1:
-	case 3:
-		// sparkfun BNO, Adafruit BNO
-		IMUaddress = 0x4B;	// Sparkfun
-		if (MDL.IMU == 3) IMUaddress = 0x4A;	// Adafruit
+	StartIMU();
 
+	noTone(MDL.SpeedPulse);
+	SteerSwitch = HIGH;
+
+	// usb host
+	myusb.begin();
+
+	Serial.println("");
+	Serial.println("Finished setup.");
+	Serial.println("");
+}
+
+void StartIMU()
+{
+	uint8_t IMUaddress;
+	// Sparkfun BNO
+	Serial.println("Starting Sparkfun BNO IMU ...");
+	IMUaddress = 0x4B;
+	ErrorCount = 0;
+	IMUstarted = false;
+	while (!IMUstarted)
+	{
+		IMUstarted = myIMU.begin(IMUaddress, Wire);
+		Serial.print(".");
+		delay(500);
+		if (ErrorCount++ > 10) break;
+	}
+	Serial.println("");
+
+	if (IMUstarted)
+	{
+		MDL.IMU = 1;
+	}
+	else
+	{
+		Serial.println("Sparkfun BNO failed to start.");
+		Serial.println("Starting Adafruit IMU ...");
+		IMUaddress = 0x4A;
 		ErrorCount = 0;
-		Serial.println("Starting IMU ...");
 		while (!IMUstarted)
 		{
 			IMUstarted = myIMU.begin(IMUaddress, Wire);
@@ -261,67 +289,52 @@ void DoSetup()
 
 		if (IMUstarted)
 		{
-			if (MDL.GyroOn) myIMU.enableGyro(MDL.IMU_Interval - 1);
-
-			myIMU.enableGameRotationVector(MDL.IMU_Interval); //Send data update every REPORT_INTERVAL in ms for BNO085
-
-			//Retrieve the getFeatureResponse report to check if Rotation vector report is corectly enable
-			if (myIMU.getFeatureResponseAvailable() == true)
+			MDL.IMU = 2;
+		}
+		else
+		{
+			Serial.println("Adafruit IMU failed to start.");
+			Serial.println("Starting  CMPS14 IMU  ...");
+			ErrorCount = 0;
+			while (!IMUstarted)
 			{
-				if (myIMU.checkReportEnable(SENSOR_REPORTID_GAME_ROTATION_VECTOR, MDL.IMU_Interval) == false) myIMU.printGetFeatureResponse();
-				Serial.println("BNO08x init succeeded.");
+				Wire.beginTransmission(CMPS14_ADDRESS);
+				IMUstarted = !Wire.endTransmission();
+				Serial.print(".");
+				delay(500);
+				if (ErrorCount++ > 10) break;
+			}
+			Serial.println("");
+
+			if (IMUstarted)
+			{
+				Serial.println("CMPS14 started.");
+				MDL.IMU = 3;
 			}
 			else
 			{
-				Serial.println(F("BNO08x init fails!!"));
+				// no imu
+				Serial.println("No IMU found.");
+				MDL.IMU = 0;
 			}
 		}
-		else
-		{
-			Serial.println("IMU failed to start.");
-		}
-		break;
-
-	case 2:
-		// CMPS14
-		ErrorCount = 0;
-		Serial.println("Starting  CMPS14 IMU  ...");
-		while (!IMUstarted)
-		{
-			Wire.beginTransmission(CMPS14_ADDRESS);
-			IMUstarted = !Wire.endTransmission();
-			Serial.print(".");
-			delay(500);
-			if (ErrorCount++ > 10) break;
-		}
-		Serial.println("");
-		if (IMUstarted)
-		{
-			Serial.println("IMU started.");
-		}
-		else
-		{
-			Serial.println("IMU failed to start.");
-		}
-		break;
-
-	case 4:
-		// serial imu
-		Serial.println("Using serial IMU.");
-		IMUstarted = true;
-		break;
-
-	default:
-		MDL.IMU = 0;
 	}
 
-	noTone(MDL.SpeedPulse);
-	SteerSwitch = HIGH;
+	if (MDL.IMU == 1 || MDL.IMU == 2)
+	{
+		if (MDL.GyroOn) myIMU.enableGyro(MDL.IMU_Interval - 1);
 
-	// usb host
-	myusb.begin();
+		myIMU.enableGameRotationVector(MDL.IMU_Interval); //Send data update every REPORT_INTERVAL in ms for BNO085
 
-	Serial.println("");
-	Serial.println("Finished setup.");
-	Serial.println("");
+		//Retrieve the getFeatureResponse report to check if Rotation vector report is corectly enable
+		if (myIMU.getFeatureResponseAvailable() == true)
+		{
+			if (myIMU.checkReportEnable(SENSOR_REPORTID_GAME_ROTATION_VECTOR, MDL.IMU_Interval) == false) myIMU.printGetFeatureResponse();
+			Serial.println("BNO08x init succeeded.");
+		}
+		else
+		{
+			Serial.println(F("BNO08x init fails!!"));
+		}
+	}
 }

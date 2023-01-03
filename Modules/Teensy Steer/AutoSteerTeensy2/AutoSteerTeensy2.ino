@@ -1,4 +1,4 @@
-#define InoDescription "AutoSteerTeensy2   11-Dec-2022"
+#define InoDescription "AutoSteerTeensy2   02-Jan-2023"
 // autosteer for Teensy 4.1
 
 #include <Wire.h>
@@ -46,7 +46,7 @@ struct ModuleConfig	// 34 bytes, AS14 default
 	uint8_t MinSpeed = 1;
 	uint8_t MaxSpeed = 15;
 	uint16_t PulseCal = 255;		// Hz/KMH X 10
-	uint8_t	AnalogMethod = 0;		// 0 use ADS1115 for WAS(AIN0), AIN1, current(AIN2), 1 use Teensy analog pin for WAS, 2 use ADS1115 from Wemos D1 Mini
+	uint8_t	AnalogMethod = 2;		// 0 use ADS1115 for WAS(AIN0), AIN1, current(AIN2), 1 use Teensy analog pin for WAS, 2 use ADS1115 from Wemos D1 Mini
 	uint8_t SwapRollPitch = 0;		// 0 use roll value for roll, 1 use pitch value for roll
 	uint8_t InvertRoll = 0;
 	uint8_t UseTB6612 = 0;			// 0 - don't use TB6612 motor driver, 1 - use TB6612 motor driver for motor 2
@@ -64,9 +64,10 @@ struct ModuleConfig	// 34 bytes, AS14 default
 	uint8_t PressureSensor = 26;
 	uint8_t Encoder = 38;
 	uint8_t SpeedPulse = 37;
-	uint8_t ipOne = 192;
-	uint8_t ipTwo = 168;
-	uint8_t ipThree = 1;
+	uint8_t IP0 = 192;
+	uint8_t IP1 = 168;
+	uint8_t IP2 = 1;
+	uint8_t IP3 = 126;
 };
 
 ModuleConfig MDL;
@@ -114,14 +115,14 @@ Setup steerConfig;          //9 bytes
 
 //EEPROM
 int16_t EEread = 0;
-#define EEP_Ident 5000	// if not in eeprom, overwrite
-#define MDL_Ident 5100
+#define EEP_Ident 5600	// if not in eeprom, overwrite
+#define MDL_Ident 5800
 
 // Ethernet steering
 EthernetUDP UDPsteering;	// UDP Steering traffic, to and from AGIO
 uint16_t ListeningPort = 8888;
 uint16_t DestinationPort = 9999;	// port that AGIO listens on
-IPAddress DestinationIP(MDL.ipOne, MDL.ipTwo, MDL.ipThree, 255);
+IPAddress DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
 
 // Ethernet switchbox
 EthernetUDP UDPswitches;
@@ -185,7 +186,6 @@ HardwareSerial* SerialNMEA;
 HardwareSerial* SerialWemos;
 
 byte PGNlength;
-uint32_t Analogtime;
 
 void setup()
 {
@@ -203,12 +203,7 @@ void loop()
 		if (MDL.Receiver == 0) ReadIMU();
 	}
 
-	if ((millis() - Analogtime > 5) && (MDL.AnalogMethod==0))
-	{
-		Analogtime = millis();
-		ReadAnalog();
-	}
-
+	ReadAnalog();
 	ReceiveSteerData();
 	ReceiveWemos();
 	ReceiveConfigData();
@@ -224,7 +219,9 @@ void loop()
 
 bool State = false;
 elapsedMillis BlinkTmr;
+byte ResetRead;
 elapsedMicros LoopTmr;
+uint32_t MaxLoopTime;
 
 void Blink()
 {
@@ -235,9 +232,18 @@ void Blink()
 		digitalWrite(LED_BUILTIN, State);
 		Serial.println(".");	// needed to allow PCBsetup to connect
 
-		Serial.print(" elapsed micros: ");
-		Serial.println(LoopTmr);
+		Serial.print(" Loop Time: ");
+		Serial.print(MaxLoopTime);
+
+		Serial.println("");
+
+		if (ResetRead++ > 10)
+		{
+			MaxLoopTime = 0;
+			ResetRead = 0;
+		}
 	}
+	if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
 	LoopTmr = 0;
 }
 
