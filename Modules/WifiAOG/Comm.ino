@@ -70,11 +70,34 @@ void ReceiveSerial()
 
 		switch (DataPGN)
 		{
+		case 32501:
+			// weights
+			PGNlength = 8;
+			if (Serial.available() > PGNlength - 3)
+			{
+				Data[0] = 245;
+				Data[1] = 126;
+				for (int i = 2; i < PGNlength; i++)
+				{
+					Data[i] = Serial.read();
+				}
+
+				// send data over wifi
+				UDPrate.beginPacket(DestinationIP, DestinationPortRate);
+				UDPrate.write(Data, PGNlength);
+				UDPrate.endPacket();
+
+				DataPGN = 0;
+				LSB = 0;
+			}
+			break;
+
 		case 32613:
 			// rate data to RC
 			PGNlength = 13;
 			if (Serial.available() > PGNlength - 3)
 			{
+				DebugVal1++;
 				Data[0] = 101;
 				Data[1] = 127;
 				for (int i = 2; i < PGNlength; i++)
@@ -115,6 +138,7 @@ void ReceiveSerial()
 				LSB = 0;
 			}
 			break;
+
 		default:
 			// find pgn
 			MSB = Serial.read();
@@ -156,7 +180,40 @@ void SendSwitches()
 	for (int i = 0; i < 6; i++)
 	{
 		Serial.write(Packet[i]);
-		yield();
+	}
+	Serial.println("");
+}
+
+void SendStatus()
+{
+	// PGN32503
+	// 0	247
+	// 1	126
+	// 2	RSSI
+	// 3	Status
+	//		- bit 0 Wifi connected
+	// 4	DebugVal1
+	// 5	CRC
+
+	byte Length = 6;
+	Packet[0] = 247;
+	Packet[1] = 126;
+	Packet[2] = WiFi.RSSI();
+
+	// status
+	Packet[3] = 0;
+	if (WiFi.status() == WL_CONNECTED)
+	{
+		Packet[3] |= 0b00000001;
+	}
+
+	Packet[4] = DebugVal1;
+	Packet[Length - 1] = CRC(Length - 1, 0);
+
+	// send
+	for (int i = 0; i < Length; i++)
+	{
+		Serial.write(Packet[i]);
 	}
 	Serial.println("");
 }

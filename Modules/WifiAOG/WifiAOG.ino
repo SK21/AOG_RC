@@ -1,5 +1,5 @@
-# define InoDescription "WifiAOG   02-Dec-2022"
-// Wemos D1 mini Pro,  board: LOLIN(Wemos) D1 R2 & mini
+# define InoDescription "WifiAOG   02-Jan-2022"
+// Wemos D1 mini Pro, ESP 12F,  board: LOLIN(Wemos) D1 R2 & mini
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
@@ -12,6 +12,7 @@
 
 //bool ShowWebPage = true;
 bool ShowWebPage = false;
+byte DebugVal1;
 
 struct WifiConnection
 {
@@ -43,16 +44,12 @@ char WifiBuffer[512];
 // web page
 ESP8266WebServer server(80);
 
-unsigned int dcount;
-byte dcount2;
-
 #define CheckValue 8230
 int16_t DataCheck;
 
 uint8_t ErrorCount;
 const int16_t AdsI2Caddress = 0x48;
 bool ADSfound = false;
-unsigned long LastRead;
 
 byte Packet[30];
 unsigned long LoopTime;
@@ -62,8 +59,6 @@ bool MasterOn = false;
 bool Button[16];
 byte SendByte;
 byte SendBit;
-String tmp;
-byte count;
 
 bool RCteensyConnected;   // check if teensy rate is connected through ethernet
 
@@ -153,21 +148,13 @@ void loop()
     ReceiveSerial();
     ReceiveWifi();
 
-    if (millis() - LoopTime > 5000)
+    if (millis() - LoopTime > 30000)
     {
         LoopTime = millis();
         if (!RCteensyConnected && (WiFi.status() != WL_CONNECTED)) CheckWifi();
     }
 
-    if (ADSfound)
-    {
-        if (millis() - LastRead > 5)
-        {
-            LastRead = millis();
-            ReadAnalog();
-            SendAnalog();
-        }
-    }
+    ReadAnalog();
     Blink();
 }
 
@@ -195,19 +182,32 @@ byte CRC(int Length, byte Start)
 
 bool State = 0;
 uint32_t BlinkTime;
-uint32_t LastBlink;
+uint32_t LoopTmr;
+uint32_t MaxLoopTime;
+byte ResetRead;
+
 void Blink()
 {
     if (millis() - BlinkTime > 1000)
     {
+        BlinkTime = millis();
         State = !State;
         if (State) digitalWrite(LED_BUILTIN, HIGH);
         else digitalWrite(LED_BUILTIN, LOW);
-        BlinkTime = millis();
-        //Serial.print(" Loop interval (ms): ");
-        //Serial.println((float)(micros() - LastBlink) / 1000.0, 3);
+
+        SendStatus();
+
+        //Serial.print(" MaxLoopTime micros: ");
+        //Serial.print(MaxLoopTime);
+
+        //if (ResetRead++ > 10)
+        //{
+        //    MaxLoopTime = 0;
+        //    ResetRead = 0;
+        //}
     }
-    LastBlink = micros();
+    //if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
+    //LoopTmr = micros();
 }
 
 

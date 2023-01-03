@@ -1,4 +1,5 @@
 
+String tmp;
 String GetPage1()
 {
 	String st = "<HTML>";
