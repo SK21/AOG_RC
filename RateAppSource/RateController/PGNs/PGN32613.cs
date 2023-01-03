@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -20,11 +19,15 @@ namespace RateController
         //11 Status
         //      bit 0 - sensor 0 connected
         //      bit 1 - sensor 1 connected
+        //      bit 2   - wifi rssi < -80
+        //      bit 3	- wifi rssi < -70
+        //      bit 4	- wifi rssi < -65
         //12 CRC
 
         private const byte cByteCount = 13;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 101;
+        private bool cModuleIsReceivingData;
         private double cPWMsetting;
         private double cQuantity;
         private double cUPM;
@@ -33,10 +36,9 @@ namespace RateController
         private double Ratio;
         private DateTime ReceiveTime;
 
-        private double Trate;
-        private bool cModuleIsReceivingData;
-
         private bool[] SensorReceiving = new bool[2];
+        private double Trate;
+        private byte cWifiStrength;
 
         public PGN32613(clsProduct CalledFrom)
         {
@@ -53,18 +55,6 @@ namespace RateController
             return ModuleReceiving() & ModuleSending();
         }
 
-        public bool ModuleSending()
-        {
-            if (Prod.SimulationType == SimType.VirtualNano)
-            {
-                return true;
-            }
-            else
-            {
-                return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
-            }
-        }
-
         public bool ModuleReceiving()
         {
             if (Prod.SimulationType == SimType.VirtualNano)
@@ -74,6 +64,18 @@ namespace RateController
             else
             {
                 return cModuleIsReceivingData;
+            }
+        }
+
+        public bool ModuleSending()
+        {
+            if (Prod.SimulationType == SimType.VirtualNano)
+            {
+                return true;
+            }
+            else
+            {
+                return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
             }
         }
 
@@ -106,6 +108,13 @@ namespace RateController
                             cModuleIsReceivingData = ((Data[11] & 0b00000010) == 0b00000010);
                             CheckReceiving(1, cModuleIsReceivingData);
                         }
+
+                        // wifi strength
+                        cWifiStrength = 0;
+                        if ((Data[11] & 0b00000100) == 0b00000100) cWifiStrength =1;
+                        if ((Data[11] & 0b00001000) == 0b00001000) cWifiStrength =2;
+                        if ((Data[11] & 0b00010000) == 0b00010000) cWifiStrength =3;
+                        Prod.WifiStrength = cWifiStrength;
 
                         ReceiveTime = DateTime.Now;
                         Result = true;

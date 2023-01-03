@@ -83,7 +83,7 @@ namespace RateController
             this.MnuNederlands = new System.Windows.Forms.ToolStripMenuItem();
             this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serialMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wifiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuNetwork = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -156,7 +156,7 @@ namespace RateController
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(14, 27);
+            this.btAlarm.Location = new System.Drawing.Point(66, 3);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 146;
@@ -485,13 +485,13 @@ namespace RateController
             this.MnuPressures,
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(201, 278);
+            this.mnuSettings.Size = new System.Drawing.Size(180, 256);
             // 
             // MnuProducts
             // 
             this.MnuProducts.Image = ((System.Drawing.Image)(resources.GetObject("MnuProducts.Image")));
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(200, 42);
+            this.MnuProducts.Size = new System.Drawing.Size(179, 42);
             this.MnuProducts.Text = "Products";
             this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -499,7 +499,7 @@ namespace RateController
             // 
             this.MnuSections.Image = ((System.Drawing.Image)(resources.GetObject("MnuSections.Image")));
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(200, 42);
+            this.MnuSections.Size = new System.Drawing.Size(179, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -507,7 +507,7 @@ namespace RateController
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(200, 42);
+            this.MnuComm.Size = new System.Drawing.Size(179, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -515,7 +515,7 @@ namespace RateController
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(200, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(179, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
@@ -523,7 +523,7 @@ namespace RateController
             // 
             this.MnuPressures.Image = ((System.Drawing.Image)(resources.GetObject("MnuPressures.Image")));
             this.MnuPressures.Name = "MnuPressures";
-            this.MnuPressures.Size = new System.Drawing.Size(200, 42);
+            this.MnuPressures.Size = new System.Drawing.Size(179, 42);
             this.MnuPressures.Text = "Pressures";
             this.MnuPressures.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click);
             // 
@@ -538,11 +538,11 @@ namespace RateController
             this.toolStripSeparator2,
             this.MnuLanguage,
             this.serialMonitorToolStripMenuItem,
-            this.wifiToolStripMenuItem,
+            this.mnuNetwork,
             this.MnuAbout});
             this.MnuOptions.Image = global::RateController.Properties.Resources._7504229_hamburger_menu_list_options_icon;
             this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(200, 42);
+            this.MnuOptions.Size = new System.Drawing.Size(179, 42);
             this.MnuOptions.Text = "Options";
             // 
             // mnuMetric
@@ -598,6 +598,7 @@ namespace RateController
             this.MnuLanguage.Name = "MnuLanguage";
             this.MnuLanguage.Size = new System.Drawing.Size(215, 42);
             this.MnuLanguage.Text = "Language";
+            this.MnuLanguage.Click += new System.EventHandler(this.MnuLanguage_Click);
             // 
             // MnuDeustch
             // 
@@ -635,13 +636,13 @@ namespace RateController
             this.serialMonitorToolStripMenuItem.Text = "Serial Monitor";
             this.serialMonitorToolStripMenuItem.Click += new System.EventHandler(this.serialMonitorToolStripMenuItem_Click);
             // 
-            // wifiToolStripMenuItem
+            // mnuNetwork
             // 
-            this.wifiToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("wifiToolStripMenuItem.Image")));
-            this.wifiToolStripMenuItem.Name = "wifiToolStripMenuItem";
-            this.wifiToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
-            this.wifiToolStripMenuItem.Text = "Wifi";
-            this.wifiToolStripMenuItem.Click += new System.EventHandler(this.wifiToolStripMenuItem_Click);
+            this.mnuNetwork.Image = ((System.Drawing.Image)(resources.GetObject("mnuNetwork.Image")));
+            this.mnuNetwork.Name = "mnuNetwork";
+            this.mnuNetwork.Size = new System.Drawing.Size(215, 42);
+            this.mnuNetwork.Text = "Network";
+            this.mnuNetwork.Click += new System.EventHandler(this.wifiToolStripMenuItem_Click);
             // 
             // MnuAbout
             // 
@@ -805,7 +806,7 @@ namespace RateController
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Label lbTarget;
         private System.Windows.Forms.ToolStripMenuItem serialMonitorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem wifiToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnuNetwork;
         private System.Windows.Forms.ToolStripMenuItem MnuPressures;
         private System.Windows.Forms.Label lbPressureValue;
         private System.Windows.Forms.Label lbPressure;

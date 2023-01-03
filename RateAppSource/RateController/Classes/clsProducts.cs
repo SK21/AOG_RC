@@ -68,6 +68,23 @@ namespace RateController
             }
         }
 
+        public string ProductComm(int Port)
+        {
+            string Result = "";
+            if (Port >= 0 && Port < 3)
+            {
+                for (int i = 0; i < cProducts.Count; i++)
+                {
+                    if (cProducts[i].SerialPort == Port)
+                    {
+                        Result = cProducts[i].ProductName;
+                        break;
+                    }
+                }
+            }
+            return Result;
+        }
+
         public void Save(int ProdID = 0)
         {
             if (ProdID == 0)
@@ -85,11 +102,34 @@ namespace RateController
             }
         }
 
-        public void UpdatePID()
+        public void SaveComm(string ProdName, int Port)
         {
-            for (int i = 0; i < cProducts.Count; i++)
+            if (Port >= 0 && Port < 3)
             {
-                cProducts[i].SendPID();
+                if (ProdName == "-")
+                {
+                    // remove 'Port' from all product serial ports
+                    for (int i = 0; i < cProducts.Count; i++)
+                    {
+                        if (cProducts[i].SerialPort == Port)
+                        {
+                            cProducts[i].SerialPort = -1;
+                            cProducts[i].Save();
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < cProducts.Count; i++)
+                    {
+                        if (cProducts[i].ProductName == ProdName)
+                        {
+                            cProducts[i].SerialPort = Port;
+                            cProducts[i].Save();
+                            break;
+                        }
+                    }
+                }
             }
         }
 
@@ -125,6 +165,14 @@ namespace RateController
                     cProducts[i].Save();
                 }
                 LastSave = DateTime.Now;
+            }
+        }
+
+        public void UpdatePID()
+        {
+            for (int i = 0; i < cProducts.Count; i++)
+            {
+                cProducts[i].SendPID();
             }
         }
 

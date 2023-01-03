@@ -1,42 +1,71 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
     public class clsArduino
     {
-        private readonly clsProduct RC;
+        public float Integral = 0;
+        private readonly clsProduct Prd;
 
         private bool ApplicationOn = false;
         private bool AutoOn = true;
+        private bool CalOn;
+        private byte CalPWM;
         private bool ControllerConnected;
-        private byte ControlType;        // 0 standard, 1 fast close, 2 motor
+        private ControlTypeEnum ControlType;        // 0 standard, 1 fast close, 2 motor
 
-        private int ErrorRange = 4;        // % random error in flow rate, above and below target
+        private double CurCount;
+        private double CurrentCounts;
+        private double CurrentDuration;
+        private bool cUseMultiPulse;
+        private double cScaleCounts;
+        public int ErrorRange = 4;        // % random error in flow rate, above and below target
 
         private byte InCommand;
 
         private DateTime LastPulse = DateTime.Now;
         private float LastPWM;
         private DateTime LastTime;
+        private DateTime LastScaleCountTime;
         private int LOOP_TIME = 50;
-        private float MaxSimRate = 40F;        // max rate of system in UPM
-
+        private float ManualAdjust;
+        private DateTime ManualLast;
+        private bool MasterOn = false;
         private byte MaxRPM = 255;
+        private float MaxSimRate = 40F;        // max rate of system in UPM
         private int mcID;
         private float MeterCal;
 
+        private float Oave;
+
+        private UInt16 Ocount;
+
+        private UInt32 Omax;
+
+        private UInt32 Omax2;
+
+        private UInt32 Omin;
+
+        private UInt32 Omin2;
+
+        private UInt32 Osum;
+
         // PID
         private byte PIDbrakePoint = 20;
+
         private byte PIDdeadband = 3;
         private byte PIDHighMax = 255;
-        private byte PIDkp = 20;
         private byte PIDki = 0;
+        private byte PIDkp = 20;
         private byte PIDLowMax = 100;
         private byte PIDminPWM = 50;
 
+        private byte PowerRelayHi;
+        private byte PowerRelayLo;
+        private UInt32 PPM;
         private float PPR = 1.0F;        // pulses per revolution
 
+        private double PrevCount;
         private double pulseCount;
         private float pulseDuration;
         private float Pulses = 0;
@@ -49,9 +78,8 @@ namespace RateController
         private float rateSetPoint;
         private DateTime ReceiveTime;
         private byte RelayControl;
-        private byte RelayFromAOG;
         private byte RelayHi;
-
+        private byte RelayLo;
         private float SimRPM = 0.0F;
 
         private float SimTmp;
@@ -62,6 +90,7 @@ namespace RateController
 
         private byte Temp;
 
+        private double TimedCounts;
         private DateTime TimedLast = DateTime.Now;
         private int Tmp;
         private float TotalPulses;
@@ -71,23 +100,20 @@ namespace RateController
         private float ValveAdjust = 0;   // % amount to open/close valve
         private float ValveOpen = 0;      // % valve is open
         private float ValveOpenTime = 4000;  // ms to fully open valve at max opening rate
-
-        private float ManualAdjust;
-        private DateTime ManualLast;
-
-        private bool cUseMultiPulse;
-        public float Integral = 0;
+        private double ScaleCountsChange;
 
         public clsArduino(clsProduct CalledFrom)
         {
-            RC = CalledFrom;
+            Prd = CalledFrom;
+            cScaleCounts = 50000;
+            LastScaleCountTime = DateTime.Now;
         }
 
         public void MainLoop()
         {
             // ReceiveSerial();
 
-            RelayControl = RelayFromAOG;
+            RelayControl = RelayLo;
             // RelayToAOG = 0;
 
             ControllerConnected = ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
@@ -101,62 +127,86 @@ namespace RateController
                 {
                     switch (ControlType)
                     {
-                        case 2:
+                        case ControlTypeEnum.Motor:
+                        case ControlTypeEnum.MotorWeights:
                             // motor control
                             SimulateMotor(PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
 
-                            pwmSetting = ControlMotor(PIDkp, rateError, rateSetPoint, PIDminPWM,
-                                PIDHighMax, PIDdeadband);
+                            if (CalOn)
+                            {
+                                pwmSetting = CalPWM;
+                            }
+                            else
+                            {
+                                pwmSetting = ControlMotor(PIDkp, rateError, rateSetPoint, PIDminPWM,
+                                    PIDHighMax, PIDdeadband);
+                            }
                             break;
 
                         default:
                             // valve control
 
+                            if (CalOn)
+                            {
+                                pwmSetting = CalPWM;
+                            }
+                            else
+                            {
                                 SimulateValve(PIDminPWM, PIDHighMax);
                                 rateError = rateSetPoint - GetUPM();
                                 pwmSetting = DoPID(PIDkp, rateError, rateSetPoint, PIDminPWM, PIDLowMax,
-                                    PIDHighMax, PIDbrakePoint, PIDdeadband,PIDki);
+                                    PIDHighMax, PIDbrakePoint, PIDdeadband, PIDki);
+                            }
                             break;
                     }
                 }
                 else
                 {
                     // manual control
-                    if ((DateTime.Now - ManualLast).TotalSeconds > 1.5)
+                    if (CalOn)
                     {
-                        ManualLast = DateTime.Now;
-
-                        // adjust rate
-                        if (rateSetPoint == 0) rateSetPoint = 1;
-
-                        switch (ControlType)
+                        pwmSetting = CalPWM;
+                    }
+                    else
+                    {
+                        if ((DateTime.Now - ManualLast).TotalSeconds > 1.5)
                         {
-                            case 2:
-                                // motor control
-                                if (ManualAdjust > 0)
-                                {
-                                    pwmSetting *= (float)1.10;
-                                    if (pwmSetting < 1) pwmSetting = PIDminPWM;
-                                }
-                                else if (ManualAdjust < 0)
-                                {
-                                    pwmSetting *= (float)0.90;
-                                    if (pwmSetting < PIDminPWM) pwmSetting = 0;
-                                }
-                                break;
+                            ManualLast = DateTime.Now;
 
-                            default:
-                                // valve control
-                                pwmSetting = ManualAdjust;
-                                break;
+                            // adjust rate
+                            if (rateSetPoint == 0) rateSetPoint = 1;
+
+                            switch (ControlType)
+                            {
+                                case ControlTypeEnum.Motor:
+                                case ControlTypeEnum.MotorWeights:
+                                    // motor control
+                                    if (ManualAdjust > 0)
+                                    {
+                                        pwmSetting *= (float)1.10;
+                                        if (pwmSetting < 1) pwmSetting = PIDminPWM;
+                                    }
+                                    else if (ManualAdjust < 0)
+                                    {
+                                        pwmSetting *= (float)0.90;
+                                        if (pwmSetting < PIDminPWM) pwmSetting = 0;
+                                    }
+                                    break;
+
+                                default:
+                                    // valve control
+                                    pwmSetting = ManualAdjust;
+                                    break;
+                            }
                         }
                     }
 
                     switch (ControlType)
                     {
                         // calculate application rate
-                        case 2:
+                        case ControlTypeEnum.Motor:
+                        case ControlTypeEnum.MotorWeights:
                             // motor control
                             SimulateMotor(PIDHighMax);
                             rateError = rateSetPoint - GetUPM();
@@ -170,36 +220,63 @@ namespace RateController
                     }
                 }
                 SendSerial();
+
+                if (ApplicationOn) SimulateWeightPGN();
             }
         }
 
         public void ReceiveSerial(byte[] Data)
         {
+            //PGN32614 to Arduino from Rate Controller, 16 bytes
+            //0	HeaderLo		102
+            //1	HeaderHi		127
+            //2 Controller ID
+            //3	relay Lo		0 - 7
+            //4	relay Hi		8 - 15
+            //5	rate set Lo		10 X actual
+            //6 rate set Mid
+            //7	rate set Hi		10 X actual
+            //8	Flow Cal Lo		1000 X actual
+            //9	Flow Cal Mid
+            //10 Flow Cal Hi
+            //11	Command
+            //- bit 0		    reset acc.Quantity
+            //- bit 1, 2		valve type 0 - 3
+            //- bit 3		    MasterOn
+            //- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
+            //- bit 5           AutoOn
+            //- bit 6           Debug pgn on
+            //- bit 7           Calibration on
+            //12    power relay Lo      list of power type relays 0-7
+            //13    power relay Hi      list of power type relays 8-15
+            //14    Cal PWM     calibration pwm
+            //15    crc
+
             int PGN = Data[1] << 8 | Data[0];
             if (PGN == 32614)
             {
                 mcID = Data[2];
 
-                RelayFromAOG = Data[3];
+                RelayLo = Data[3];
                 RelayHi = Data[4];
 
                 // rate setting, 10 times actual
                 double TmpSetting = ((short)(Data[7] << 16 | Data[6] << 8 | Data[5])) * 0.1;
 
-                // meter cal, 100 times actual
-                Tmp = Data[9] << 8 | Data[8];
-                MeterCal = (float)(Tmp * .01);
+                // meter cal, 1000 times actual
+                Tmp = Data[8] | Data[9] << 8 | Data[10] << 16;
+                MeterCal = (float)(Tmp * 0.001);
 
                 // command byte
-                InCommand = Data[10];
+                InCommand = Data[11];
                 if ((InCommand & 1) == 1) TotalPulses = 0;    // reset accumulated count
 
                 ControlType = 0;
                 if ((InCommand & 2) == 2) ControlType += 1;
                 if ((InCommand & 4) == 4) ControlType += 2;
 
-                SimulateFlow = ((InCommand & 8) == 8);
-
+                SimulateFlow = true;
+                MasterOn = ((InCommand & 8) == 8);
                 cUseMultiPulse = ((InCommand & 16) == 16);
 
                 AutoOn = ((InCommand & 32) == 32);
@@ -211,6 +288,12 @@ namespace RateController
                 {
                     ManualAdjust = (float)(TmpSetting);
                 }
+
+                CalOn = ((InCommand & 128) == 128);
+
+                PowerRelayLo = Data[12];
+                PowerRelayHi = Data[13];
+                CalPWM = Data[14];
 
                 ReceiveTime = DateTime.Now;
             }
@@ -229,7 +312,7 @@ namespace RateController
                 ReceiveTime = DateTime.Now;
             }
 
-            MaxSimRate = (float)(RC.TargetRate() * 1.5);
+            MaxSimRate = (float)(Prd.TargetRate() * 1.5);
         }
 
         private int ControlMotor(byte sKP, float sError, float sSetPoint, byte sMinPWM,
@@ -256,7 +339,7 @@ namespace RateController
             return (int)Result;
         }
 
-        private int DoPID(byte clKP, float clError, float clSetPoint, byte clMinPWM, byte clLowMax, byte clHighMax, byte clBrakePoint, byte clDeadband,byte clKi)
+        private int DoPID(byte clKP, float clError, float clSetPoint, byte clMinPWM, byte clLowMax, byte clHighMax, byte clBrakePoint, byte clDeadband, byte clKi)
         {
             try
             {
@@ -301,20 +384,20 @@ namespace RateController
             }
         }
 
-        UInt32 Osum;
-        UInt32 Omax;
-        UInt32 Omin;
-        UInt16 Ocount;
-        UInt32 Omax2;
-        UInt32 Omin2;
-
-        float Oave;
-        UInt32 PPM;
-        double TimedCounts;
-        double CurrentCounts;
-        double CurrentDuration;
-
         private float GetUPM()
+        {
+            if (ControlType == ControlTypeEnum.MotorWeights)
+            {
+                UPM = MeterCal * pwmSetting;
+                return UPM;
+            }
+            else
+            {
+                return GetUPMflow();
+            }
+        }
+
+        private float GetUPMflow()
         {
             if (pulseCount > 0)
             {
@@ -375,7 +458,7 @@ namespace RateController
                 Osum -= Omin;
                 Osum -= Omax2;
                 Osum -= Omin2;
-                Oave = (float)((float)Osum / 600.0);  // divide by 3 and divide by 100 
+                Oave = (float)((float)Osum / 600.0);  // divide by 3 and divide by 100
                 Osum = 0;
                 Omax = 0;
                 Omin = 5000000;
@@ -433,14 +516,12 @@ namespace RateController
             words[11] = "3";
 
             // crc
-            words[12] = RC.mf.Tls.CRC(words, 13).ToString();
+            words[12] = Prd.mf.Tls.CRC(words, 13).ToString();
 
-            RC.SerialFromAruduino(words, false);
+            Prd.SerialFromAruduino(words, false);
         }
 
-        double PrevCount;
-        double CurCount;
-        private void SimulateMotor( byte sMax)
+        private void SimulateMotor(byte sMax)
         {
             if (ApplicationOn)
             {
@@ -451,7 +532,7 @@ namespace RateController
                 SimulateTimeLast = DateTime.Now;
 
                 SimRPM += (float)(((pwmSetting / (float)sMax) * MaxRPM - SimRPM) * 0.35);    // update rpm
-                RC.mf.Tls.NoisyData(SimRPM, ErrorRange);    // add error
+                Prd.mf.Tls.NoisyData(SimRPM, ErrorRange);    // add error
                 if (SimRPM < 0) SimRPM = 0;
 
                 SimTmp = PPR * SimRPM;
@@ -466,7 +547,7 @@ namespace RateController
 
                 CurCount = SimRPM * PPR;
                 PrevCount += CurCount * (SimulateInterval / 60000.0); // counts for time slice
-                if(PrevCount>1)
+                if (PrevCount > 1)
                 {
                     pulseCount = PrevCount;
                     PrevCount = 0;
@@ -522,9 +603,9 @@ namespace RateController
             {
                 PulseTime = (float)(1.0 / Pulses);   // milliseconds for each pulse
 
-                PulseTime = (float)RC.mf.Tls.NoisyData(PulseTime, ErrorRange);
+                PulseTime = (float)Prd.mf.Tls.NoisyData(PulseTime, ErrorRange);
                 PrevCount += SimulateInterval / PulseTime; // milliseconds * pulses/millsecond = pulses
-                if(PrevCount>1)
+                if (PrevCount > 1)
                 {
                     pulseCount = PrevCount;
                     PrevCount = 0;
@@ -533,6 +614,32 @@ namespace RateController
                 // pulse duration is the time for one pulse
                 pulseDuration = PulseTime;
             }
+        }
+
+        private void SimulateWeightPGN()
+        {
+            // PGN 32501
+            byte[] Data = new byte[8];
+            Data[0] = 245;
+            Data[1] = 126;
+            Data[2] = (byte)mcID;
+
+            ScaleCountsChange = (DateTime.Now - LastScaleCountTime).TotalMinutes * rateSetPoint * Prd.ScaleCountsPerUnit;
+            LastScaleCountTime = DateTime.Now;
+            ScaleCountsChange = Prd.mf.Tls.NoisyData(ScaleCountsChange, ErrorRange);
+            cScaleCounts -= ScaleCountsChange;
+            if (cScaleCounts < 0) cScaleCounts = 50000;
+
+            int tmp = (int)cScaleCounts;
+            Data[3]=(byte)tmp; ;
+            Data[4] = ((byte)(tmp >> 8));
+            Data[5] = ((byte)(tmp >> 16));
+            Data[6] = ((byte)(tmp >> 24));
+
+            // crc
+            Data[7] = Prd.mf.Tls.CRC(Data, 7);
+
+            Prd.Scale.ParseByteData(Data);
         }
     }
 }

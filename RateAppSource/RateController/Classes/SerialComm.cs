@@ -228,7 +228,6 @@ namespace RateController
                 else
                 {
                     // check for byte data
-                    //Debug.Print(sentence);
                 }
             }
             catch (Exception ex)

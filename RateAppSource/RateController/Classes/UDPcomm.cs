@@ -14,6 +14,8 @@ namespace RateController
 
         private string cDestinationIP;
 
+        private IPAddress cEthernetEP;
+
         // local ports must be unique for each app on same pc and each class instance
         private int cReceivePort;
 
@@ -23,10 +25,9 @@ namespace RateController
         private bool cUseLoopback;
 
         // wifi endpoint address
-         private IPAddress cWiFiEP;
-       private string cWiFiIP;
+        private IPAddress cWiFiEP;
 
-        private IPAddress EthernetEP;
+        private string cWiFiIP;
 
         // local wifi ip address
         private HandleDataDelegateObj HandleDataDelegate = null;
@@ -54,6 +55,41 @@ namespace RateController
 
         // Status delegate
         private delegate void HandleDataDelegateObj(int port, byte[] msg);
+
+        public string EthernetEP
+        {
+            get { return cEthernetEP.ToString(); }
+            set
+            {
+                IPAddress IP;
+                string[] data;
+
+                if (IPAddress.TryParse(value, out IP))
+                {
+                    data = value.Split('.');
+                    cEthernetEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
+                    mf.Tls.SaveProperty("EthernetEP", value);
+                }
+            }
+        }
+
+        public string WifiEP
+        {
+            get { return cWiFiEP.ToString(); }
+            set
+            {
+                IPAddress IP;
+                string[] data;
+
+                if (IPAddress.TryParse(value, out IP))
+                {
+                    data = value.Split('.');
+                    cWiFiEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
+                    cWiFiIP = value;
+                    mf.Tls.SaveProperty("WifiIP", value);
+                }
+            }
+        }
 
         public string EthernetIP()
         {
@@ -83,7 +119,7 @@ namespace RateController
                     if (byteData.Length != 0)
                     {
                         // ethernet
-                        IPEndPoint EndPt = new IPEndPoint(EthernetEP, cSendToPort);
+                        IPEndPoint EndPt = new IPEndPoint(cEthernetEP, cSendToPort);
                         sendSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, EndPt, new AsyncCallback(SendData), null);
 
                         if (!cUseLoopback)
@@ -99,23 +135,6 @@ namespace RateController
                     mf.Tls.WriteErrorLog("UDPcomm/SendUDPMessage " + ex.Message);
                 }
             }
-        }
-
-        public bool SetWifiEP(string NewIP)
-        {
-            IPAddress IP;
-            string[] data;
-            bool Result = false;
-
-            if (IPAddress.TryParse(NewIP, out IP))
-            {
-                data = NewIP.Split('.');
-                cWiFiEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
-                cWiFiIP = NewIP;
-                mf.Tls.SaveProperty("WifiIP", NewIP);
-                Result = true;
-            }
-            return Result;
         }
 
         public void StartUDPServer()
@@ -221,10 +240,11 @@ namespace RateController
                                 mf.SwitchBox.ParseByteData(Data);
                                 break;
 
+                            case 32501:
                             case 32613:
                                 foreach (clsProduct Prod in mf.Products.Items)
                                 {
-                                    Prod.UDPcommFromArduino(Data);
+                                    Prod.UDPcommFromArduino(Data, PGN);
                                 }
                                 break;
 
@@ -301,27 +321,17 @@ namespace RateController
 
             try
             {
-                EthernetEP = IPAddress.Parse("127.0.0.1");
-                cWiFiIP = "127.0.0.1";
-                cWiFiEP = IPAddress.Parse(cWiFiIP);
-
                 // ethernet
+                cEthernetEP = IPAddress.Parse("192.168.1.255");
                 if (IPAddress.TryParse(cDestinationIP, out IP))
                 {
                     // keep pre-defined address
-                    EthernetEP = IP;
-                }
-                else
-                {
-                    Adr = GetLocalIPv4(NetworkInterfaceType.Ethernet);
-                    if (IPAddress.TryParse(Adr, out IP))
-                    {
-                        data = Adr.Split('.');
-                        EthernetEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
-                    }
+                    cEthernetEP = IP;
                 }
 
                 // wifi
+                cWiFiIP = "127.0.0.1";
+                cWiFiEP = IPAddress.Parse(cWiFiIP);
                 Adr = GetLocalIPv4(NetworkInterfaceType.Wireless80211);
                 if (IPAddress.TryParse(Adr, out IP))
                 {

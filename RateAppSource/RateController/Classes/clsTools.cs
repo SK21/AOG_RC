@@ -12,8 +12,8 @@ namespace RateController
     {
         private static Hashtable ht;
         private string cAppName = "RateController";
-        private string cAppVersion = "2.3.7";
-        private string cVersionDate = "27-Dec-2022";
+        private string cAppVersion = "2.3.8";
+        private string cVersionDate = "02-Jan-2023";
 
         private string cPropertiesFile;
         private string cSettingsDir;
@@ -214,7 +214,7 @@ namespace RateController
                 cPropertiesFile = cSettingsDir + "\\" + Name;
                 if (!File.Exists(cPropertiesFile))
                 {
-                    File.WriteAllBytes(cPropertiesFile, Properties.Resources.Example);
+                    File.CreateText(cPropertiesFile);
                     OpenFile(cPropertiesFile);
                     Result = true;
                 }

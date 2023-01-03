@@ -211,7 +211,7 @@
     <value>Hectares/Hr</value>
   </data>
   <data name="lgHighMax" xml:space="preserve">
-    <value>PWM High Max</value>
+    <value>PWM Maximum</value>
   </data>
   <data name="lgHotspot" xml:space="preserve">
     <value>Windows Hotspot</value>
@@ -288,8 +288,14 @@
   <data name="lgMotor" xml:space="preserve">
     <value>Motor</value>
   </data>
+  <data name="lgMotorWeight" xml:space="preserve">
+    <value>Motor/Weight</value>
+  </data>
   <data name="lgMPH" xml:space="preserve">
     <value>MPH</value>
+  </data>
+  <data name="lgNetwork" xml:space="preserve">
+    <value>Network</value>
   </data>
   <data name="lgNetworkConnections" xml:space="preserve">
     <value>Network Connections</value>
@@ -373,7 +379,7 @@
     <value>Rescan</value>
   </data>
   <data name="lgResetStart" xml:space="preserve">
-    <value>Reset/Start</value>
+    <value>Start</value>
   </data>
   <data name="lgResponerate" xml:space="preserve">
     <value>Response Rate</value>
@@ -485,6 +491,9 @@
   </data>
   <data name="lgUPMerror" xml:space="preserve">
     <value>Error %</value>
+  </data>
+  <data name="lgUPMPWM" xml:space="preserve">
+    <value>UPM/PWM</value>
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Target</value>

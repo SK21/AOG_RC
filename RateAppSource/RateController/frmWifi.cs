@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Windows.Forms;
@@ -22,7 +23,6 @@ namespace RateController
             btnClose.Text = Lang.lgClose;
             btnRescan.Text = Lang.lgRescan;
 
-            lbHeading.Text = Lang.lgWirelessNetwork;
             grpHotSpot.Text = Lang.lgHotspot;
             lbPassword.Text = Lang.lgPassword;
 
@@ -53,7 +53,8 @@ namespace RateController
                 mf.Tls.SaveProperty("WifiPassword", tbPassword.Text);
 
                 // IP
-                mf.UDPmodules.SetWifiEP(cbNetworks.Text);
+                mf.UDPmodules.WifiEP = cbNetworks.Text;
+                mf.UDPmodules.EthernetEP= cbEthernet.Text;
 
                 SetButtons(false);
                 UpdateForm();
@@ -119,12 +120,10 @@ namespace RateController
 
         private void LoadCombo()
         {
+            // https://stackoverflow.com/questions/6803073/get-local-ip-address
             try
             {
                 cbNetworks.Items.Clear();
-
-                // https://stackoverflow.com/questions/6803073/get-local-ip-address
-
                 foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
                 {
                     if (item.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && item.OperationalStatus == OperationalStatus.Up)
@@ -138,12 +137,43 @@ namespace RateController
                         }
                     }
                 }
-                cbNetworks.SelectedIndex = cbNetworks.FindStringExact(mf.UDPmodules.WifiIP());
+                cbNetworks.SelectedIndex = cbNetworks.FindString(SubAddress(mf.UDPmodules.WifiEP));
+
+                cbEthernet.Items.Clear();
+                foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    if (item.NetworkInterfaceType == NetworkInterfaceType.Ethernet && item.OperationalStatus == OperationalStatus.Up)
+                    {
+                        foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                        {
+                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                cbEthernet.Items.Add(ip.Address.ToString());
+                            }
+                        }
+                    }
+                }
+                cbEthernet.SelectedIndex = cbEthernet.FindString(SubAddress(mf.UDPmodules.EthernetEP));
+
             }
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("frmWifi/LoadCombo " + ex.Message);
             }
+        }
+
+        private string SubAddress(string Address)
+        {
+            IPAddress IP;
+            string[] data;
+            string Result = "";
+
+            if (IPAddress.TryParse(Address, out IP))
+            {
+                data = Address.Split('.');
+                Result = data[0] + "." + data[1] + "." + data[2];
+            }
+            return Result;
         }
 
         private void SetButtons(bool Edited)
@@ -224,10 +254,16 @@ namespace RateController
             mf.Tls.SaveProperty("WifiSSID", tbSSID.Text);
             mf.Tls.SaveProperty("WifiPassword", tbPassword.Text);
 
-            lbIP.Text = "Selected IP:  " + mf.UDPmodules.WifiIP();
-            LoadCombo();
+            lbIP.Text = "Selected subnet:  " + mf.UDPmodules.WifiEP;
+            lbEthernet.Text = "Selected subnet:  " + mf.UDPmodules.EthernetEP;
 
+            LoadCombo();
             Initializing = false;
+        }
+
+        private void btnSetEthernet_Click(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

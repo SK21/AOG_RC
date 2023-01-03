@@ -340,7 +340,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PWM High Max.
+        ///   Looks up a localized string similar to PWM Maximum.
         /// </summary>
         internal static string lgHighMax {
             get {
@@ -574,11 +574,29 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Motor/Weight.
+        /// </summary>
+        internal static string lgMotorWeight {
+            get {
+                return ResourceManager.GetString("lgMotorWeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MPH.
         /// </summary>
         internal static string lgMPH {
             get {
                 return ResourceManager.GetString("lgMPH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network.
+        /// </summary>
+        internal static string lgNetwork {
+            get {
+                return ResourceManager.GetString("lgNetwork", resourceCulture);
             }
         }
         
@@ -826,7 +844,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reset/Start.
+        ///   Looks up a localized string similar to Start.
         /// </summary>
         internal static string lgResetStart {
             get {
@@ -1164,6 +1182,15 @@ namespace RateController {
         internal static string lgUPMerror {
             get {
                 return ResourceManager.GetString("lgUPMerror", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPM/PWM.
+        /// </summary>
+        internal static string lgUPMPWM {
+            get {
+                return ResourceManager.GetString("lgUPMPWM", resourceCulture);
             }
         }
         
