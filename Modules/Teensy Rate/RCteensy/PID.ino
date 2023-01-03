@@ -1,5 +1,5 @@
-bool PauseAdjust[MaxFlowSensorCount];
-unsigned long CurrentAdjustTime[MaxFlowSensorCount];
+bool PauseAdjust[MaxProductCount];
+unsigned long CurrentAdjustTime[MaxProductCount];
 float Integral;
 
 int DoPID(byte ID)
@@ -63,7 +63,7 @@ int DoPID(byte ID)
     return Result;
 }
 
-float LastPWM[MaxFlowSensorCount];
+float LastPWM[MaxProductCount];
 int ControlMotor(byte ID)
 {
     float Result = 0;

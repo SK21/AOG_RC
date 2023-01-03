@@ -4,27 +4,32 @@
 #include <NativeEthernet.h>
 #include <NativeEthernetUdp.h>
 #include <Watchdog_t4.h>	// https://github.com/tonton81/WDT_T4
+#include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   02-Dec-2022"
+# define InoDescription "RCteensy   02-Jan-2023"
 #define MaxReadBuffer 100	// bytes
-#define MaxFlowSensorCount 2
+#define MaxProductCount 2
 
-struct ModuleConfig	// 40 bytes
+struct ModuleConfig	
 {
 	uint8_t ID = 0;
-	uint8_t SensorCount = 1;        // up to 2 sensors
-	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
+	uint8_t ProductCount = 1;       // up to 2 sensors
+	uint8_t IPpart2 = 168;			// ethernet IP address
+	uint8_t	IPpart3 = 1;
+	uint8_t IPpart4 = 200;			// 200 + ID
 	uint8_t RelayOnSignal = 0;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
-	uint8_t WemosSerialPort = 3;	// serial port to connect to Wemos D1 Mini
+	uint8_t WemosSerialPort = 1;	// serial port to connect to Wemos D1 Mini
 	uint8_t RelayPins[16];			// pin numbers when GPIOs are used for relay control (5)
+	uint8_t LOADCELL_DOUT_PIN[MaxProductCount];	
+	uint8_t LOADCELL_SCK_PIN[MaxProductCount];	
 };
 
 ModuleConfig MDL;
 
-struct SensorConfig	// 46 bytes
+struct SensorConfig	
 {
 	uint8_t FlowPin = 28;
 	uint8_t	DirPin = 37;
@@ -36,8 +41,8 @@ struct SensorConfig	// 46 bytes
 	uint16_t pwmSetting = 0;
 	uint32_t CommTime = 0;
 	byte InCommand = 0;			// command byte from RateController
-	byte ControlType = 0;		// 0 standard, 1 combo close, 2 motor
-	uint16_t TotalPulses = 0;
+	byte ControlType = 0;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight
+	uint32_t TotalPulses = 0;
 	float RateSetting = 0;
 	float MeterCal = 0;
 	float ManualAdjust = 0;
@@ -51,9 +56,11 @@ struct SensorConfig	// 46 bytes
 	byte Deadband = 3;
 	byte BrakePoint = 20;
 	byte AdjustTime = 0;
+	bool CalOn = false;
+	byte CalPWM = 0;
 };
 
-SensorConfig Sensor[MaxFlowSensorCount];
+SensorConfig Sensor[MaxProductCount];
 
 struct AnalogConfig
 {
@@ -69,7 +76,7 @@ AnalogConfig AINs;
 EthernetUDP UDPcomm;
 uint16_t ListeningPort = 28888;
 uint16_t DestinationPort = 29999;
-IPAddress DestinationIP(192, 168, MDL.IPpart3, 255);
+IPAddress DestinationIP(192, MDL.IPpart2, MDL.IPpart3, 255);
 
 // Relays
 byte RelayLo = 0;	// sections 0-7
@@ -79,7 +86,7 @@ byte PowerRelayHi;
 
 //EEPROM
 int16_t EEread = 0;
-#define MDL_Ident 1688
+#define MDL_Ident 5100
 
 // WifiSwitches connection to Wemos D1 Mini
 unsigned long WifiSwitchesTimer;
@@ -91,7 +98,6 @@ uint32_t LoopLast = LoopTime;
 const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
 
-HardwareSerial* SerialWemos;
 WDT_T4<WDT1> wdt;
 bool AutoOn = true;
 
@@ -99,13 +105,31 @@ uint8_t ErrorCount;
 bool ADSfound = false;
 const int16_t AdsI2Caddress = 0x48;
 uint32_t Analogtime;
+uint32_t SaveTime;
+
+HX711 scale[2];
+bool ScaleFound[2] = { false,false };
+
+extern float tempmonGetTemp(void);
+
+int8_t WifiRSSI;
+uint32_t WifiTime;
+uint32_t WifiLastTime;
+
+HardwareSerial* SerialWemos;
+byte ESPdebug1;
+bool ESPconnected;
 
 void setup()
 {
-	// watchdog timer
+	 //watchdog timer
 	WDT_timings_t config;
 	config.timeout = 60;	// seconds
 	wdt.begin(config);
+
+	// initial scale pins
+	MDL.LOADCELL_DOUT_PIN[0] = 16;
+	MDL.LOADCELL_SCK_PIN[0] = 17;
 
 	// eeprom
 	EEPROM.get(100, EEread);
@@ -114,23 +138,26 @@ void setup()
 		EEPROM.put(100, MDL_Ident);
 		EEPROM.put(110, MDL);
 
-		for (int i = 0; i < MaxFlowSensorCount; i++)
+		for (int i = 0; i < MaxProductCount; i++)
 		{
-			EEPROM.put(200 + i * 50, Sensor[i]);
+			EEPROM.put(200 + i * 60, Sensor[i]);
 		}
 	}
 	else
 	{
 		EEPROM.get(110, MDL);
 
-		for (int i = 0; i < MaxFlowSensorCount; i++)
+		for (int i = 0; i < MaxProductCount; i++)
 		{
-			EEPROM.get(200 + i * 50, Sensor[i]);
+			EEPROM.get(200 + i * 60, Sensor[i]);
 		}
 	}
 
-	if (MDL.SensorCount < 1) MDL.SensorCount = 1;
-	if (MDL.SensorCount > MaxFlowSensorCount) MDL.SensorCount = MaxFlowSensorCount;
+	if (MDL.ProductCount < 1) MDL.ProductCount = 1;
+	if (MDL.ProductCount > MaxProductCount) MDL.ProductCount = MaxProductCount;
+
+	MDL.IPpart4 = MDL.ID + 200;
+	if (MDL.IPpart4 > 255) MDL.IPpart4 = 255 - MDL.ID;
 
 	Serial.begin(38400);
 	delay(5000);
@@ -172,12 +199,12 @@ void setup()
 
 	// ethernet start
 	Serial.println("Starting Ethernet ...");
-	IPAddress LocalIP(192, 168, MDL.IPpart3, 201);
-	static uint8_t LocalMac[] = { 0x00,0x00,0x42,0x00,0x00,201 };
+	IPAddress LocalIP(192, MDL.IPpart2, MDL.IPpart3, MDL.IPpart4);
+	static uint8_t LocalMac[] = { 0x00,0x00,0x42,0x00,0x00,MDL.IPpart4 };
 
 	Ethernet.begin(LocalMac, 0);	//https://forum.pjrc.com/threads/65653-non-blocking-Ethernet-begin()-with-cable-disconnected-amp-static-IP
 	Ethernet.setLocalIP(LocalIP);
-	DestinationIP = IPAddress(192, 168, MDL.IPpart3, 255);	// update from saved data
+	DestinationIP = IPAddress(192, MDL.IPpart2, MDL.IPpart3, 255);	// update from saved data
 
 	Serial.print("IP Address: ");
 	Serial.println(Ethernet.localIP());
@@ -196,7 +223,7 @@ void setup()
 	UDPcomm.begin(ListeningPort);
 
 	// sensors
-	for (int i = 0; i < MDL.SensorCount; i++)
+	for (int i = 0; i < MDL.ProductCount; i++)
 	{
 		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
 		pinMode(Sensor[i].DirPin, OUTPUT);
@@ -205,7 +232,7 @@ void setup()
 		switch (i)
 		{
 		case 0:
-			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin),ISR0, FALLING);
+			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, FALLING);
 			break;
 		case 1:
 			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, FALLING);
@@ -213,7 +240,19 @@ void setup()
 		}
 	}
 
-	// Wemos D1 Mini serial port
+	// Relay Pins
+	if (MDL.RelayControl == 5)
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			if (MDL.RelayPins[i] > 0)
+			{
+				pinMode(MDL.RelayPins[i], OUTPUT);
+			}
+		}
+	}
+
+	 //Wemos D1 Mini serial port
 	switch (MDL.WemosSerialPort)
 	{
 	case 1:
@@ -243,6 +282,39 @@ void setup()
 	}
 	SerialWemos->begin(115200);
 
+	// load cell
+	for (int i = 0; i < MaxProductCount; i++)
+	{
+		Serial.print("Initializing scale ");
+		Serial.println(i);
+		ErrorCount = 0;
+		ScaleFound[i] = false;
+
+		if (MDL.LOADCELL_DOUT_PIN[i] > 1 && MDL.LOADCELL_SCK_PIN[i] > 1)
+		{
+			scale[i].begin(MDL.LOADCELL_DOUT_PIN[i], MDL.LOADCELL_SCK_PIN[i]);
+			pinMode(MDL.LOADCELL_DOUT_PIN[i], INPUT_PULLUP);
+			while (!ScaleFound[i])
+			{
+				ScaleFound[i] = scale[i].wait_ready_timeout(1000);
+				Serial.print(".");
+				delay(500);
+				if (ErrorCount++ > 5) break;
+			}
+		}
+
+		Serial.println("");
+		if (ScaleFound[i])
+		{
+			Serial.println("HX711 found.");
+		}
+		else
+		{
+			Serial.println("HX711 not found.");
+		}
+		Serial.println("");
+	}
+
 	pinMode(LED_BUILTIN, OUTPUT);
 
 	Serial.println("");
@@ -256,7 +328,7 @@ void loop()
 	{
 		LoopLast = millis();
 
-		for (int i = 0; i < MDL.SensorCount; i++)
+		for (int i = 0; i < MDL.ProductCount; i++)
 		{
 			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000) && Sensor[i].RateSetting > 0 && Sensor[i].MasterOn;
 		}
@@ -281,10 +353,23 @@ void loop()
 		SendData();
 	}
 
-	if (millis() - Analogtime > 5)
+	if (millis() - Analogtime > 2)
 	{
 		Analogtime = millis();
 		ReadAnalog();
+	}
+
+	if (millis() - SaveTime > 3600000)	// 1 hour
+	{
+		// save sensor data
+		SaveTime = millis();
+		EEPROM.put(100, MDL_Ident);
+		//EEPROM.put(110, MDL);
+
+		for (int i = 0; i < MaxProductCount; i++)
+		{
+			EEPROM.put(200 + i * 60, Sensor[i]);
+		}
 	}
 
 	ReceiveData();
@@ -330,59 +415,78 @@ byte CRC(byte Chk[], byte Length, byte Start)
 
 void AutoControl()
 {
-	for (int i = 0; i < MDL.SensorCount; i++)
+	for (int i = 0; i < MDL.ProductCount; i++)
 	{
 		Sensor[i].RateError = Sensor[i].RateSetting - Sensor[i].UPM;
 
-		switch (Sensor[i].ControlType)
+		if (Sensor[i].CalOn)
 		{
-		case 2:
-			// motor control
-			Sensor[i].pwmSetting = ControlMotor(i);
-			break;
+			// calibration mode 
+			Sensor[i].pwmSetting = Sensor[i].CalPWM;
+		}
+		else
+		{
+			// normal mode
+			switch (Sensor[i].ControlType)
+			{
+			case 2:
+			case 3:
+				// motor control
+				Sensor[i].pwmSetting = ControlMotor(i);
+				break;
 
-		default:
-			// valve control
-			Sensor[i].pwmSetting = DoPID(i);
-			break;
+			default:
+				// valve control
+				Sensor[i].pwmSetting = DoPID(i);
+				break;
+			}
 		}
 	}
 }
 
 void ManualControl()
 {
-	for (int i = 0; i < MDL.SensorCount; i++)
+	for (int i = 0; i < MDL.ProductCount; i++)
 	{
 		Sensor[i].RateError = Sensor[i].RateSetting - Sensor[i].UPM;
-
-		if (millis() - Sensor[i].ManualLast > 1000)
+		if (Sensor[i].CalOn)
 		{
-			Sensor[i].ManualLast = millis();
-
-			// adjust rate
-			if (Sensor[i].RateSetting == 0) Sensor[i].RateSetting = 1; // to make FlowEnabled
-
-			switch (Sensor[i].ControlType)
+			// calibration mode 
+			Sensor[i].pwmSetting = Sensor[i].CalPWM;
+		}
+		else
+		{
+			// normal mode
+			if (millis() - Sensor[i].ManualLast > 1000)
 			{
-			case 2:
-				// motor control
-				if (Sensor[i].ManualAdjust > 0)
-				{
-					Sensor[i].pwmSetting *= 1.10;
-					if (Sensor[i].pwmSetting < 1) Sensor[i].pwmSetting = Sensor[i].MinPWM;
-					if (Sensor[i].pwmSetting > 255) Sensor[i].pwmSetting = 255;
-				}
-				else if (Sensor[i].ManualAdjust < 0)
-				{
-					Sensor[i].pwmSetting *= 0.90;
-					if (Sensor[i].pwmSetting < Sensor[i].MinPWM) Sensor[i].pwmSetting = 0;
-				}
-				break;
+				Sensor[i].ManualLast = millis();
 
-			default:
-				// valve control
-				Sensor[i].pwmSetting = Sensor[i].ManualAdjust;
-				break;
+				// adjust rate
+				if (Sensor[i].RateSetting == 0) Sensor[i].RateSetting = 1; // to make FlowEnabled
+
+				switch (Sensor[i].ControlType)
+				{
+				case 2:
+				case 3:
+					// motor control
+					if (Sensor[i].ManualAdjust > 0)
+					{
+						Sensor[i].pwmSetting *= 1.10;
+						if (Sensor[i].pwmSetting < 1) Sensor[i].pwmSetting = Sensor[i].MinPWM;
+						if (Sensor[i].pwmSetting > 255) Sensor[i].pwmSetting = 255;
+					}
+					else if (Sensor[i].ManualAdjust < 0)
+					{
+						Sensor[i].pwmSetting *= 0.90;
+						if (Sensor[i].pwmSetting < Sensor[i].MinPWM) Sensor[i].pwmSetting = 0;
+					}
+					break;
+
+				default:
+					// valve control
+					Sensor[i].pwmSetting = Sensor[i].ManualAdjust;
+					break;
+				}
 			}
 		}
 	}
@@ -391,6 +495,8 @@ void ManualControl()
 bool State = false;
 elapsedMillis BlinkTmr;
 elapsedMicros LoopTmr;
+byte ReadReset;
+uint32_t MaxLoopTime;
 
 void Blink()
 {
@@ -401,9 +507,24 @@ void Blink()
 		digitalWrite(LED_BUILTIN, State);
 		Serial.println(".");	// needed to allow PCBsetup to connect
 
-		Serial.print(" elapsed micros: ");
-		Serial.println(LoopTmr);
+		Serial.print(" Loop micros: ");
+		Serial.print(MaxLoopTime);
+
+		Serial.print(", Chip Temp: ");
+		Serial.print(tempmonGetTemp());
+
+		Serial.print(", RSSI: ");
+		Serial.print(WifiRSSI);
+
+		Serial.println("");
+
+		if (ReadReset++ > 10)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+		}
 	}
+	if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
 	LoopTmr = 0;
 }
 

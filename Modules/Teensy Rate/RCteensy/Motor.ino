@@ -1,6 +1,6 @@
 void AdjustFlow()
 {
-    for (int i = 0; i < MDL.SensorCount; i++)
+    for (int i = 0; i < MDL.ProductCount; i++)
     {
         switch (Sensor[i].ControlType)
         {
@@ -32,7 +32,9 @@ void AdjustFlow()
                 analogWrite(Sensor[i].PWMPin, 255);
             }
             break;
+
         case 2:
+        case 3:
             // motor control
             if (Sensor[i].FlowEnabled)
             {
@@ -55,6 +57,7 @@ void AdjustFlow()
                 analogWrite (Sensor[i].PWMPin, 0);
             }
             break;
+
         default:
             // standard valve, flow control only
             if (Sensor[i].pwmSetting >= 0)
