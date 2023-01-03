@@ -21,12 +21,12 @@ void SendUDPwired()
     //12 crc
 
 
-    for (int i = 0; i < PCB.SensorCount; i++)
+    for (int i = 0; i < MDL.SensorCount; i++)
     {
         UDPpacket[0] = 101;
         UDPpacket[1] = 127;
 
-        UDPpacket[2] = BuildModSenID(PCB.ModuleID, i);
+        UDPpacket[2] = BuildModSenID(MDL.ModuleID, i);
 
         // rate applied, 10 X actual
         Temp = (UPM[i] * 10);
@@ -85,42 +85,36 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             //6 rate set Mid
             //7	rate set Hi		10 X actual
             //8	Flow Cal Lo		100 X actual
-            //9	Flow Cal Hi		
-            //10	Command
+            //9 Flow Cal Mid
+            //10 Flow Cal Hi
+            //11 Command
             //- bit 0		    reset acc.Quantity
             //- bit 1, 2		valve type 0 - 3
             //- bit 3		    MasterOn
             //- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
             //- bit 5           AutoOn
-            //11    power relay Lo      list of power type relays 0-7
-            //12    power relay Hi      list of power type relays 8-15
-            //13    crc
-            PGNlength = 14;
+            //- bit 6           Debug pgn on
+            //- bit 7           Calibration on
+            //12    power relay Lo      list of power type relays 0-7
+            //13    power relay Hi      list of power type relays 8-15
+            //14	Cal PWM		calibration pwm
+            //15	CRC
+            PGNlength = 16;
 
             if (len > PGNlength - 1)
             {
                 if (GoodCRC(Data, PGNlength))
                 {
-                    byte tmp = Data[2];
-
-                    if (ParseModID(tmp) == PCB.ModuleID)
+                    if (ParseModID(Data[2]) == MDL.ModuleID)
                     {
-                        byte SensorID = ParseSenID(tmp);
-                        if (SensorID < PCB.SensorCount)
+                        byte SensorID = ParseSenID(Data[2]);
+                        if (SensorID < MDL.SensorCount)
                         {
                             RelayLo = Data[3];
                             RelayHi = Data[4];
 
-                            // rate setting, 10 times actual
-                            int RateSet = Data[5] | Data[6] << 8 | Data[7] << 16;
-                            float TmpSet = (float)RateSet * 0.1;
-
-                            // Meter Cal, 100 times actual
-                            UnSignedTemp = Data[8] | Data[9] << 8;
-                            MeterCal[SensorID] = (float)UnSignedTemp * 0.01;
-
                             // command byte
-                            InCommand[SensorID] = Data[10];
+                            InCommand[SensorID] = Data[11];
                             if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
 
                             ControlType[SensorID] = 0;
@@ -129,22 +123,27 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
                             MasterOn[SensorID] = ((InCommand[SensorID] & 8) == 8);
                             UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
-
                             AutoOn = ((InCommand[SensorID] & 32) == 32);
+
+                            // rate setting, 10 times actual
+                            int RateSet = Data[5] | Data[6] << 8 | Data[7] << 16;
+
                             if (AutoOn)
                             {
-                                RateSetting[SensorID] = TmpSet;
+                                RateSetting[SensorID] = (float)(RateSet * 0.1);
                             }
                             else
                             {
-                                ManualAdjust[SensorID] = TmpSet;
+                                ManualAdjust[SensorID] = (float)(RateSet * 0.1);
                             }
 
-                            DebugOn = ((InCommand[SensorID] & 64) == 64);
+                            // Meter Cal, 1000 times actual
+                            uint32_t Temp = Data[8] | Data[9] << 8 | Data[10] << 16;
+                            MeterCal[SensorID] = (float)(Temp * 0.001);
 
                             // power relays
-                            PowerRelayLo = Data[11];
-                            PowerRelayHi = Data[12];
+                            PowerRelayLo = Data[12];
+                            PowerRelayHi = Data[13];
 
                             CommTime[SensorID] = millis();
                         }
@@ -162,10 +161,10 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                 if (GoodCRC(Data, PGNlength))
                 {
                     byte tmp = Data[2];
-                    if (ParseModID(tmp) == PCB.ModuleID)
+                    if (ParseModID(tmp) == MDL.ModuleID)
                     {
                         byte SensorID = ParseSenID(tmp);
-                        if (SensorID < PCB.SensorCount)
+                        if (SensorID < MDL.SensorCount)
                         {
                             PIDkp[SensorID] = Data[3];
                             PIDminPWM[SensorID] = Data[4];
@@ -249,16 +248,16 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             {
                 if (GoodCRC(Data, PGNlength))
                 {
-                    PCB.ModuleID = Data[2];
-                    PCB.SensorCount = Data[3];
-                    PCB.IPpart3 = Data[4];
+                    MDL.ModuleID = Data[2];
+                    MDL.SensorCount = Data[3];
+                    MDL.IPpart3 = Data[4];
 
                     byte tmp = Data[5];
-                    if ((tmp & 1) == 1) PCB.UseMCP23017 = 1; else PCB.UseMCP23017 = 0;
-                    if ((tmp & 2) == 2) PCB.RelayOnSignal = 1; else PCB.RelayOnSignal = 0;
-                    if ((tmp & 4) == 4) PCB.FlowOnDirection = 1; else PCB.FlowOnDirection = 0;
+                    if ((tmp & 1) == 1) MDL.UseMCP23017 = 1; else MDL.UseMCP23017 = 0;
+                    if ((tmp & 2) == 2) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
+                    if ((tmp & 4) == 4) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
 
-                    EEPROM.put(10, PCB);
+                    EEPROM.put(10, MDL);
                 }
             }
             break;
@@ -282,19 +281,19 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             {
                 if (GoodCRC(Data, PGNlength))
                 {
-                    PINS.Flow1 = Data[2];
-                    PINS.Flow2 = Data[3];
-                    PINS.Dir1 = Data[4];
-                    PINS.Dir2 = Data[5];
-                    PINS.PWM1 = Data[6];
-                    PINS.PWM2 = Data[7];
+                    MDL.Flow1 = Data[2];
+                    MDL.Flow2 = Data[3];
+                    MDL.Dir1 = Data[4];
+                    MDL.Dir2 = Data[5];
+                    MDL.PWM1 = Data[6];
+                    MDL.PWM2 = Data[7];
 
                     for (int i = 0; i < 16; i++)
                     {
-                        PINS.Relays[i] = Data[i + 8];
+                        MDL.Relays[i] = Data[i + 8];
                     }
 
-                    EEPROM.put(40, PINS);
+                    EEPROM.put(10, MDL);
 
                     //reset the arduino
                     resetFunc();

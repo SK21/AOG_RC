@@ -21,12 +21,12 @@ void SendSerial()
 	//11 Status
 	//12	crc
 
-	for (int i = 0; i < PCB.SensorCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		// UDPpgn 32613
 		SerialPacket[0] = 101;
 		SerialPacket[1] = 127;
-		SerialPacket[2] = BuildModSenID(PCB.ModuleID, i);
+		SerialPacket[2] = BuildModSenID(MDL.ModuleID, i);
 
 		// rate applied, 10 X actual
 		SerialPacket[3] = UPM[i] * 10;
@@ -34,10 +34,19 @@ void SendSerial()
 		SerialPacket[5] = (int)(UPM[i] * 10) >> 16;
 
 		// accumulated quantity, 10 X actual
-		long Units = TotalPulses[i] * 10.0 / MeterCal[i];
-		SerialPacket[6] = Units;
-		SerialPacket[7] = Units >> 8;
-		SerialPacket[8] = Units >> 16;
+		if (MeterCal[i] > 0)
+		{
+			long Units = TotalPulses[i] * 10.0 / MeterCal[i];
+			SerialPacket[6] = Units;
+			SerialPacket[7] = Units >> 8;
+			SerialPacket[8] = Units >> 16;
+		}
+		else
+		{
+			SerialPacket[6] = 0;
+			SerialPacket[7] = 0;
+			SerialPacket[8] = 0;
+		}
 
 		// pwmSetting
 		SerialPacket[9] = pwmSetting[i] * 10;
@@ -67,7 +76,7 @@ void ReceiveSerial()
 {
 	if (Serial.available())
 	{
-		if (Serial.available() > 30)
+		if (Serial.available() > 50)
 		{
 			// clear buffer
 			while (Serial.available())
@@ -90,17 +99,21 @@ void ReceiveSerial()
 			//6 rate set Mid
 			//7	rate set Hi		10 X actual
 			//8	Flow Cal Lo		100 X actual
-			//9	Flow Cal Hi
-			//10	Command
+			//9 Flow Cal Mid
+			//10 Flow Cal Hi
+			//11 Command
 			//- bit 0		    reset acc.Quantity
 			//- bit 1, 2		valve type 0 - 3
 			//- bit 3		    MasterOn
 			//- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
 			//- bit 5           AutoOn
-			//11    power relay Lo      list of power type relays 0-7
-			//12    power relay Hi      list of power type relays 8-15
-			//13	CRC
-			PGNlength = 14;
+			//- bit 6           Debug pgn on
+			//- bit 7           Calibration on
+			//12    power relay Lo      list of power type relays 0-7
+			//13    power relay Hi      list of power type relays 8-15
+			//14	Cal PWM		calibration pwm
+			//15	CRC
+			PGNlength = 16;
 
 			if (Serial.available() > PGNlength - 3)
 			{
@@ -115,24 +128,16 @@ void ReceiveSerial()
 
 				if (GoodCRC(SerialPacket, PGNlength))
 				{
-					if (ParseModID(SerialPacket[2]) == PCB.ModuleID)
+					if (ParseModID(SerialPacket[2]) == MDL.ModuleID)
 					{
 						byte SensorID = ParseSenID(SerialPacket[2]);
-						if (SensorID < PCB.SensorCount)
+						if (SensorID < MDL.SensorCount)
 						{
 							RelayLo = SerialPacket[3];
 							RelayHi = SerialPacket[4];
 
-							// rate setting, 10 times actual
-							int RateSet = SerialPacket[5] | SerialPacket[6] << 8 | SerialPacket[7] << 16;
-							float TmpSet = (float)(RateSet * 0.1);
-
-							// Meter Cal, 100 times actual
-							UnSignedTemp = SerialPacket[8] | SerialPacket[9] << 8;
-							MeterCal[SensorID] = (float)(UnSignedTemp * 0.01);
-
 							// command byte
-							InCommand[SensorID] = SerialPacket[10];
+							InCommand[SensorID] = SerialPacket[11];
 							if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
 
 							ControlType[SensorID] = 0;
@@ -141,22 +146,27 @@ void ReceiveSerial()
 
 							MasterOn[SensorID] = ((InCommand[SensorID] & 8) == 8);
 							UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
-
 							AutoOn = ((InCommand[SensorID] & 32) == 32);
+
+							// rate setting, 10 times actual
+							int RateSet = SerialPacket[5] | SerialPacket[6] << 8 | SerialPacket[7] << 16;
+
 							if (AutoOn)
 							{
-								RateSetting[SensorID] = TmpSet;
+								RateSetting[SensorID] = (float)(RateSet * 0.1);
 							}
 							else
 							{
-								ManualAdjust[SensorID] = TmpSet;
+								ManualAdjust[SensorID] = (float)(RateSet * 0.1);
 							}
 
-							DebugOn = ((InCommand[SensorID] & 64) == 64);
+							// Meter Cal, 1000 times actual
+							uint32_t Temp = SerialPacket[8] | SerialPacket[9] << 8 | SerialPacket[10] << 16;
+							MeterCal[SensorID] = (float)(Temp * 0.001);
 
 							// power relays
-							PowerRelayLo = SerialPacket[11];
-							PowerRelayHi = SerialPacket[12];
+							PowerRelayLo = SerialPacket[12];
+							PowerRelayHi = SerialPacket[13];
 
 							CommTime[SensorID] = millis();
 						}
@@ -182,10 +192,10 @@ void ReceiveSerial()
 
 				if (GoodCRC(SerialPacket, PGNlength))
 				{
-					if (ParseModID(SerialPacket[2]) == PCB.ModuleID)
+					if (ParseModID(SerialPacket[2]) == MDL.ModuleID)
 					{
 						byte SensorID = ParseSenID(SerialPacket[2]);
-						if (SensorID < PCB.SensorCount)
+						if (SensorID < MDL.SensorCount)
 						{
 							PIDkp[SensorID] = SerialPacket[3];
 							PIDminPWM[SensorID] = SerialPacket[4];
@@ -291,16 +301,16 @@ void ReceiveSerial()
 
 				if (GoodCRC(SerialPacket, PGNlength))
 				{
-					PCB.ModuleID = SerialPacket[2];
-					PCB.SensorCount = SerialPacket[3];
-					PCB.IPpart3 = SerialPacket[4];
+					MDL.ModuleID = SerialPacket[2];
+					MDL.SensorCount = SerialPacket[3];
+					MDL.IPpart3 = SerialPacket[4];
 
 					byte tmp = SerialPacket[5];
-					if ((tmp & 1) == 1) PCB.UseMCP23017 = 1; else PCB.UseMCP23017 = 0;
-					if ((tmp & 2) == 2) PCB.RelayOnSignal = 1; else PCB.RelayOnSignal = 0;
-					if ((tmp & 4) == 4) PCB.FlowOnDirection = 1; else PCB.FlowOnDirection = 0;
+					if ((tmp & 1) == 1) MDL.UseMCP23017 = 1; else MDL.UseMCP23017 = 0;
+					if ((tmp & 2) == 2) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
+					if ((tmp & 4) == 4) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
 
-					EEPROM.put(10, PCB);
+					EEPROM.put(10, MDL);
 				}
 			}
 			break;
@@ -331,19 +341,19 @@ void ReceiveSerial()
 
 				if (GoodCRC(SerialPacket, PGNlength))
 				{
-					PINS.Flow1 = SerialPacket[2];
-					PINS.Flow2 = SerialPacket[3];
-					PINS.Dir1 = SerialPacket[4];
-					PINS.Dir2 = SerialPacket[5];
-					PINS.PWM1 = SerialPacket[6];
-					PINS.PWM2 = SerialPacket[7];
+					MDL.Flow1 = SerialPacket[2];
+					MDL.Flow2 = SerialPacket[3];
+					MDL.Dir1 = SerialPacket[4];
+					MDL.Dir2 = SerialPacket[5];
+					MDL.PWM1 = SerialPacket[6];
+					MDL.PWM2 = SerialPacket[7];
 
 					for (int i = 0; i < 16; i++)
 					{
-						PINS.Relays[i] = SerialPacket[i + 8];
+						MDL.Relays[i] = SerialPacket[i + 8];
 					}
 
-					EEPROM.put(40, PINS);
+					EEPROM.put(10, MDL);
 
 					//reset the arduino
 					resetFunc();

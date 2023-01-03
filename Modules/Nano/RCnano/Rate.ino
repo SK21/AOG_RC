@@ -42,7 +42,7 @@ void ISR1()
 
 void GetUPM()
 {
-	for (int i = 0; i < PCB.SensorCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		if (PulseCount[i])
 		{

@@ -5,19 +5,18 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
-# define InoDescription "RCnano  :  17-Jul-2022"
+#include <Adafruit_BusIO_Register.h>
+#include <Adafruit_I2CDevice.h>
+#include <Adafruit_I2CRegister.h>
+#include <Adafruit_SPIDevice.h>
+
+# define InoDescription "RCnano  :  02-Jan-2023"
+const int16_t InoID = 5000;
+int16_t StoredID;
+
 # define UseEthernet 0
 
-// debug variables
-bool DebugOn = false;
-byte DebugVal1;
-byte DebugVal2;
-byte DebugVal3;
-byte DebugVal4;
-uint16_t DebugVal5;
-uint32_t DebugTime;
-
-struct PCBconfig    // 5 bytes
+struct ModuleConfig    // 5 bytes
 {
 	uint8_t ModuleID = 0;
 	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
@@ -25,18 +24,6 @@ struct PCBconfig    // 5 bytes
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t SensorCount = 1;        // up to 2 sensors
 	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
-};
-
-PCBconfig PCB;
-
-// If using the ENC28J60 ethernet shield these pins
-// are used by it and unavailable for relays:
-// 7,8,10,11,12,13. It also pulls pin D2 high.
-// D2 can be used if pin D2 on the shield is cut off
-// and then mount the shield on top of the Nano.
-
-struct PCBpinConfig // 22 bytes
-{
 	uint8_t Flow1 = 2;
 	uint8_t Flow2 = 3;
 	uint8_t Dir1 = 4;
@@ -46,7 +33,13 @@ struct PCBpinConfig // 22 bytes
 	uint8_t Relays[16];
 };
 
-PCBpinConfig PINS;
+ModuleConfig MDL;
+
+// If using the ENC28J60 ethernet shield these pins
+// are used by it and unavailable for relays:
+// 7,8,10,11,12,13. It also pulls pin D2 high.
+// D2 can be used if pin D2 on the shield is cut off
+// and then mount the shield on top of the Nano.
 
 #if UseEthernet
 // local ports on Arduino
@@ -128,7 +121,6 @@ byte PowerRelayLo;
 byte PowerRelayHi;
 
 byte Temp = 0;
-unsigned int UnSignedTemp = 0;
 bool AutoOn = true;
 
 float ManualAdjust[2];
@@ -147,48 +139,41 @@ bool UseMultiPulses[2] = { 0, 0 };   //  0 - average time for multiple pulses, 1
  //reset function
 void(*resetFunc) (void) = 0;
 
-//EEPROM
-int16_t EEread = 0;
-#define PCB_Ident 2388
-
 bool MasterOn[2];
 bool IOexpanderFound;
 uint8_t ErrorCount;
 byte PGNlength;
 
-////  function prototypes	https://forum.arduino.cc/t/declaration-of-functions/687199
-//bool GoodCRC(byte[], byte);
-//byte CRC(byte[], byte, byte);
-
 void setup()
 {
 	Serial.begin(38400);
 
-	// pcb data
-	EEPROM.get(0, EEread);              // read identifier
-	if (EEread != PCB_Ident)
+	// module data
+	EEPROM.get(0, StoredID);
+	if (StoredID == InoID)
 	{
-		EEPROM.put(0, PCB_Ident);
-		EEPROM.put(10, PCB);
-		EEPROM.put(40, PINS);
+		// load stored data
+		EEPROM.get(10, MDL);
 	}
 	else
 	{
-		EEPROM.get(10, PCB);
-		EEPROM.get(40, PINS);
+		Serial.println("Updating stored data.");
+		// update stored data
+		EEPROM.put(0, InoID);
+		EEPROM.put(10, MDL);
 	}
 
 	delay(5000);
 	Serial.println();
 	Serial.println(InoDescription);
 	Serial.print("Module ID: ");
-	Serial.println(PCB.ModuleID);
+	Serial.println(MDL.ModuleID);
 	Serial.println();
 
-	if (PCB.SensorCount < 1) PCB.SensorCount = 1;
-	if (PCB.SensorCount > 2) PCB.SensorCount = 2;
+	if (MDL.SensorCount < 1) MDL.SensorCount = 1;
+	if (MDL.SensorCount > 2) MDL.SensorCount = 2;
 
-	if (PCB.UseMCP23017)
+	if (MDL.UseMCP23017)
 	{
 		Serial.println("Using MCP23017 for relays.");
 	}
@@ -198,7 +183,7 @@ void setup()
 	}
 
 	Wire.begin();
-	if (PCB.UseMCP23017)
+	if (MDL.UseMCP23017)
 	{
 		// I/O expander on default address 0x20
 		Serial.println("");
@@ -251,19 +236,19 @@ void setup()
 		for (int i = 0; i < 16; i++)
 		{
 			// check if relay is enabled (pins 0 and 1 are for comm) and set pin mode
-			if (PINS.Relays[i] > 1) pinMode(PINS.Relays[i], OUTPUT);
+			if (MDL.Relays[i] > 1) pinMode(MDL.Relays[i], OUTPUT);
 		}
 	}
 
 	// flow
-	FlowPin[0] = PINS.Flow1;
-	FlowPin[1] = PINS.Flow2;
-	FlowDir[0] = PINS.Dir1;
-	FlowDir[1] = PINS.Dir2;
-	FlowPWM[0] = PINS.PWM1;
-	FlowPWM[1] = PINS.PWM2;
+	FlowPin[0] = MDL.Flow1;
+	FlowPin[1] = MDL.Flow2;
+	FlowDir[0] = MDL.Dir1;
+	FlowDir[1] = MDL.Dir2;
+	FlowPWM[0] = MDL.PWM1;
+	FlowPWM[1] = MDL.PWM2;
 
-	for (int i = 0; i < PCB.SensorCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		pinMode(FlowPin[i], INPUT_PULLUP);
 		pinMode(FlowDir[i], OUTPUT);
@@ -277,13 +262,13 @@ void setup()
 	Serial.println("");
 	Serial.println("Starting Ethernet ...");
 	// ethernet interface ip address
-	byte ArduinoIP[] = { 192, 168,PCB.IPpart3, 207 + PCB.ModuleID };
+	byte ArduinoIP[] = { 192, 168,MDL.IPpart3, 207 + MDL.ModuleID };
 
 	// ethernet interface Mac address
-	byte LocalMac[] = { 0x70, 0x31, 0x21, 0x2D, 0x62, PCB.ModuleID };
+	byte LocalMac[] = { 0x70, 0x31, 0x21, 0x2D, 0x62, MDL.ModuleID };
 
 	// gateway ip address
-	static byte gwip[] = { 192, 168,PCB.IPpart3, 1 };
+	static byte gwip[] = { 192, 168,MDL.IPpart3, 1 };
 
 	//DNS- you just need one anyway
 	static byte myDNS[] = { 8, 8, 8, 8 };
@@ -291,9 +276,9 @@ void setup()
 	//mask
 	static byte mask[] = { 255, 255, 255, 0 };
 
-	DestinationIP[2] = PCB.IPpart3;
+	DestinationIP[2] = MDL.IPpart3;
 
-	ether.begin(sizeof Ethernet::buffer, LocalMac, 10) != 0;
+	ether.begin(sizeof Ethernet::buffer, LocalMac, 10);
 
 	Serial.println("");
 	Serial.println("Ethernet controller found.");
@@ -315,7 +300,7 @@ void loop()
 		LoopLast = millis();
 		GetUPM();
 
-		for (int i = 0; i < PCB.SensorCount; i++)
+		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			FlowEnabled[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0) && MasterOn[i];
 		}
@@ -331,8 +316,6 @@ void loop()
 		{
 			ManualControl();
 		}
-
-		if (DebugOn) DebugTheINO();
 	}
 
 	if (millis() - SendLast > SendTime)
@@ -373,7 +356,7 @@ byte BuildModSenID(byte Mod_ID, byte Sen_ID)
 
 void AutoControl()
 {
-	for (int i = 0; i < PCB.SensorCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		rateError[i] = RateSetting[i] - UPM[i];
 
@@ -396,7 +379,7 @@ void AutoControl()
 
 void ManualControl()
 {
-	for (int i = 0; i < PCB.SensorCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		rateError[i] = RateSetting[i] - UPM[i];
 
@@ -467,48 +450,5 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-byte DebugPacket[30];
 
-void DebugTheINO()
-{
-	// send debug info to RateController
-	if (millis() - DebugTime > 1000)
-	{
-		DebugTime = millis();
-		DebugVal1 = PINS.Flow1;
-		DebugVal2 = PINS.Flow2;
-		DebugVal3 = PCB.ModuleID;
-
-		// Serial
-		// UDPpgn 2748 - 0xABC
-		Serial.print(0xBC);
-		Serial.print(",");
-		Serial.print(0xA);
-		Serial.print(",");
-		Serial.print(DebugVal1);
-		Serial.print(",");
-		Serial.print(DebugVal2);
-		Serial.print(",");
-		Serial.print(DebugVal3);
-		Serial.print(",");
-
-		Serial.print("   ");
-		Serial.print(DebugVal4);
-		Serial.print(",");
-		Serial.print(DebugVal5);
-
-		Serial.println("");
-
-#if UseEthernet
-		// UDP
-		DebugPacket[0] = 0xBC;
-		DebugPacket[1] = 0xA;
-		DebugPacket[2] = DebugVal1;
-		DebugPacket[3] = DebugVal2;
-		DebugPacket[4] = DebugVal3;
-		DebugPacket[5] = DebugVal4;
-		ether.sendUdp(DebugPacket, 12, SourcePort, DestinationIP, DestinationPort);
-#endif
-	}
-}
 
