@@ -18,7 +18,7 @@ namespace RateController
         public readonly int MaxSections = 16;
 
         public PGN254 AutoSteerPGN;
-        public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Hr", "Min" };
+        public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgHours, Lang.lgMinutes };
         public PGN32621 PressureData;
         public clsPressures PressureObjects;

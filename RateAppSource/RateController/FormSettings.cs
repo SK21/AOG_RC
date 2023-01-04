@@ -90,8 +90,8 @@ namespace RateController
 
             AreaUnits.Items[0] = Lang.lgAcres;
             AreaUnits.Items[1] = Lang.lgHectares;
-            AreaUnits.Items[2] = Lang.lgHour;
-            AreaUnits.Items[3] = Lang.lgMinute;
+            AreaUnits.Items[2] = Lang.lgMinute;
+            AreaUnits.Items[3] = Lang.lgHour;
 
             lbAltRate.Text = Lang.lgAltRate;
             lbVariableRate.Text = Lang.lgVariableRate;
