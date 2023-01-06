@@ -40,6 +40,8 @@ namespace RateController
         private double cRateSet = 0;
         private double cScaleCountsCal;
         private double cScaleTare;
+        private double cProdDensity = 0;
+        private bool cEnableProdDensity = false;
 
         private double cScaleUnitsCal;
 
@@ -163,6 +165,12 @@ namespace RateController
                 }
             }
         }
+
+        public double ProdDensity
+        { get { return cProdDensity; } set { cProdDensity = value; } }
+
+        public bool EnableProdDensity
+        { get { return cEnableProdDensity;} set { cEnableProdDensity = value; } }
 
         public int ProductID
         { get { return cProductID; } }
@@ -489,6 +497,9 @@ namespace RateController
             string StrVal = mf.Tls.LoadProperty("RateAlt" + IDname);
             if (StrVal != "") double.TryParse(StrVal, out cRateAlt);
 
+            double.TryParse(mf.Tls.LoadProperty("cProdDensity" + IDname), out cProdDensity);
+            bool.TryParse(mf.Tls.LoadProperty("cEnableProdDensity" + IDname), out cEnableProdDensity);
+
             double.TryParse(mf.Tls.LoadProperty("FlowCal" + IDname), out cMeterCal);
             double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out TankSize);
             Enum.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), true, out cControlType);
@@ -586,7 +597,14 @@ namespace RateController
                     Result = ArduinoModule.UPM() * 60;
                     break;
             }
+            
+            if (cEnableProdDensity)
+            {
+                //convert ft^3/min to lb/min
+                Result *= cProdDensity;
+            }
             return Result;
+
         }
 
         public void ResetApplied()
@@ -617,6 +635,9 @@ namespace RateController
             mf.Tls.SaveProperty("QuantityApplied" + IDname, cUnitsApplied.ToString());
             mf.Tls.SaveProperty("LastAccQuantity" + IDname, LastAccQuantity.ToString());
             mf.Tls.SaveProperty("QuantityDescription" + IDname, cQuantityDescription);
+
+            mf.Tls.SaveProperty("cProdDensity" + IDname, cProdDensity.ToString());
+            mf.Tls.SaveProperty("cEnableProdDensity" + IDname, cEnableProdDensity.ToString());
 
             mf.Tls.SaveProperty("RateSet" + IDname, cRateSet.ToString());
             mf.Tls.SaveProperty("RateAlt" + IDname, cRateAlt.ToString());
@@ -780,6 +801,10 @@ namespace RateController
                     // hours
                     V = TargetRate() / 60;
                     break;
+            }
+            if(cEnableProdDensity)
+            {
+                V /= cProdDensity;
             }
             return V;
         }

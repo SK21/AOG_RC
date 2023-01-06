@@ -694,6 +694,11 @@ namespace RateController
             tbProduct.Text = CurrentProduct.ProductName;
             tbVolumeUnits.Text = CurrentProduct.QuantityDescription;
             AreaUnits.SelectedIndex = CurrentProduct.CoverageUnits;
+            CbUseProdDensity.Checked = CurrentProduct.EnableProdDensity;
+            if(!CbUseProdDensity.Checked)
+            { CbUseProdDensity_CheckedChanged_1(CbUseProdDensity,EventArgs.Empty); }
+            ProdDensity.Text = CurrentProduct.ProdDensity.ToString("N1");
+            RateSet.Text = CurrentProduct.RateSet.ToString("N1");
             tbAltRate.Text = CurrentProduct.RateAlt.ToString("N0");
             TankSize.Text = CurrentProduct.TankSize.ToString("N0");
             ValveType.SelectedIndex = (int)CurrentProduct.ControlType;
@@ -842,6 +847,12 @@ namespace RateController
                 // set rate by product
                 double.TryParse(RateSet.Text, out tempD);
                 CurrentProduct.RateSet = tempD;
+
+                double.TryParse(ProdDensity.Text, out tempD);
+                CurrentProduct.ProdDensity = tempD;
+
+                CurrentProduct.EnableProdDensity = CbUseProdDensity.Checked;
+
 
                 double.TryParse(FlowCal.Text, out tempD);
                 CurrentProduct.MeterCal = tempD;
@@ -1205,7 +1216,7 @@ namespace RateController
         private void tbAltRate_Validating(object sender, CancelEventArgs e)
         {
             double tempD;
-            double.TryParse(RateSet.Text, out tempD);
+            double.TryParse(tbAltRate.Text, out tempD);
             if (tempD < 1 || tempD > 200)
             {
                 System.Media.SystemSounds.Exclamation.Play();
@@ -1851,6 +1862,60 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
+        }
+
+        //private void ProdDensity_Enter(object sender, EventArgs e)
+        //{
+        //    double tempD;
+        //    double.TryParse(ProdDensity.Text, out tempD);
+        //    using (var form = new FormNumeric(0, 10000, tempD))
+        //    {
+        //        var result = form.ShowDialog();
+        //        if (result == DialogResult.OK)
+        //        {
+        //            ProdDensity.Text = form.ReturnValue.ToString();
+        //        }
+        //    }
+        //}
+
+        private void ProdDensity_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(ProdDensity.Text, out tempD);
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    ProdDensity.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void ProdDensity_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void CbUseProdDensity_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (CbUseProdDensity.Checked)
+            {
+                ProdDensity.Enabled = true;
+                LabProdDensity.Enabled = true;
+            }
+            else
+            {
+                ProdDensity.Enabled = false;
+                LabProdDensity.Enabled = false;
+            }
+
+            SetButtons(true);
+        }
+
+        private void lbRateAppliedData_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
