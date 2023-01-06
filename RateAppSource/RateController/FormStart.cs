@@ -19,7 +19,7 @@ namespace RateController
 
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
-        public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgHours, Lang.lgMinutes };
+        public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
         public PGN32621 PressureData;
         public clsPressures PressureObjects;
         public byte PressureToShowID;
@@ -187,6 +187,10 @@ namespace RateController
                 if (CurrentPage == 0)
                 {
                     // summary
+                    panProducts.Visible = false;
+                    panSummary.Visible = true;
+                    panFan.Visible = false;
+
                     for (int i = 0; i < 5; i++)
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
@@ -220,9 +224,21 @@ namespace RateController
                 {
                     // product pages
                     clsProduct Prd = Products.Item(CurrentPage - 1);
+
+                    panProducts.Visible = true;
+                    panSummary.Visible = false;
+                    panProducts.Visible = (Prd.ControlType != ControlTypeEnum.Fan);
+                    panFan.Visible = (Prd.ControlType == ControlTypeEnum.Fan);
+
+                    lbFan.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
+                    lbTargetRPM.Text = Prd.TargetRate().ToString("N0");
+                    lbCurrentRPM.Text= Prd.SmoothRate().ToString("N0");
+                    lbOn.Visible = Prd.FanOn;
+                    lbOff.Visible = !Prd.FanOn;
+
                     lbProduct.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
-                    lblUnits.Text = Prd.Units();
                     SetRate.Text = Prd.TargetRate().ToString("N1");
+                    lblUnits.Text = Prd.Units();
 
                     if (ShowCoverageRemaining)
                     {
@@ -333,17 +349,6 @@ namespace RateController
                 else
                 {
                     lbAogConnected.BackColor = Color.Red;
-                }
-
-                if (CurrentPage == 0)
-                {
-                    panProducts.Visible = false;
-                    panSummary.Visible = true;
-                }
-                else
-                {
-                    panProducts.Visible = true;
-                    panSummary.Visible = false;
                 }
 
                 // alarm
@@ -464,13 +469,13 @@ namespace RateController
 
             // UDP
             UDPmodules.StartUDPServer();
-            if (!UDPmodules.isUDPSendConnected)
+            if (!UDPmodules.IsUDPSendConnected)
             {
                 Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true, true);
             }
 
             UDPaog.StartUDPServer();
-            if (!UDPaog.isUDPSendConnected)
+            if (!UDPaog.IsUDPSendConnected)
             {
                 Tls.ShowHelp("UDPagio failed to start.", "", 3000, true, true);
             }
@@ -734,6 +739,9 @@ namespace RateController
                 {
                     Indicators[i].BackColor = Properties.Settings.Default.DayColour;
                 }
+
+                lbOn.BackColor= Properties.Settings.Default.DayColour;
+                lbOff.BackColor = Properties.Settings.Default.DayColour;
             }
             else
             {
@@ -747,6 +755,9 @@ namespace RateController
                 {
                     Indicators[i].BackColor = Properties.Settings.Default.NightColour;
                 }
+
+                lbOn.BackColor = Properties.Settings.Default.NightColour;
+                lbOff.BackColor = Properties.Settings.Default.NightColour;
             }
         }
 
@@ -768,9 +779,14 @@ namespace RateController
             frmWifi.ShowDialog();
         }
 
-        private void MnuLanguage_Click(object sender, EventArgs e)
+        private void btnStart_Click(object sender, EventArgs e)
         {
+            Products.Item(CurrentPage - 1).FanOn = true;
+        }
 
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            Products.Item(CurrentPage - 1).FanOn = false;
         }
     }
 }

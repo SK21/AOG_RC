@@ -14,11 +14,10 @@ namespace RateController
         private bool AutoChanged;
         private bool AutoLast;
         private DateTime AutoTime;
-        private float[] cProdWorkedArea_ha = new float[16];
         private List<clsSection> cSections = new List<clsSection>();
         private float cWorkingWidth_cm;
 
-        private int EraseDelay = 50;
+        private readonly int EraseDelay = 50;
         private bool MasterChanged;
         private bool MasterLast;
         private bool MasterOn;

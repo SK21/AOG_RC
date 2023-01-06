@@ -70,7 +70,6 @@ namespace RateController
             {
                 tbMonitor.Text = mf.SER[CommPort].Log();
                 tbMonitor.Select(tbMonitor.Text.Length, 0);
-                //tbMonitor.Focus();
                 tbMonitor.ScrollToCaret();
             }
         }

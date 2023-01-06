@@ -6,19 +6,23 @@ namespace RateController
 {
     public class SerialComm
     {
-        public SerialPort ArduinoPort = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
-        public int RCportBaud = 38400;
-        public string RCportName;
+        private SerialPort cArduinoPort = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
+        private int cRCportBaud = 38400;
+        private string cRCportName;
         private readonly FormStart mf;
         private int cPortNumber;
 
         private byte HiByte;
-        private String ID;
+        private readonly String ID;
         private byte LoByte;
         private string cLog;
 
         // prevent UI lock-up by only sending serial data after verfying connection
         private bool SerialActive = false;
+
+        public SerialPort ArduinoPort { get => cArduinoPort; set => cArduinoPort = value; }
+        public int RCportBaud { get => cRCportBaud; set => cRCportBaud = value; }
+        public string RCportName { get => cRCportName; set => cRCportName = value; }
 
         public SerialComm(FormStart CallingForm, int PortNumber)
         {
@@ -143,7 +147,7 @@ namespace RateController
         public void SendData(byte[] Data)
         {
             // send to arduino rate controller
-            if (ArduinoPort.IsOpen & SerialActive)
+            if (ArduinoPort.IsOpen && SerialActive)
             {
                 try
                 {

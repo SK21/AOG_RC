@@ -22,7 +22,7 @@ namespace RateController
         private const byte cByteCount = 6;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
-        private FormStart mf;
+        private readonly FormStart mf;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[21];
 
@@ -48,7 +48,7 @@ namespace RateController
         {
             bool Result = false;
 
-            if (Data[0] == HeaderLo & Data[1] == HeaderHi & Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
+            if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 SW[0] = mf.Tls.BitRead(Data[2], 0);     // auto on
                 SW[1] = mf.Tls.BitRead(Data[2], 1);     // master on

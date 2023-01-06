@@ -5,33 +5,27 @@ namespace RateController
 {
     public class clsAlarm
     {
+        private bool AlarmColour;
         private double AlarmDelay;
+        private Button cAlarmButton;
         private bool cShowAlarm;
         private bool cSilenceAlarm;
         private FormStart mf;
-        private Button cAlarmButton;
-        private bool AlarmColour;
-        private bool cRateAlarm;
-        private bool cPressureAlarm;
-        private string cMessage;
-
         private System.Media.SoundPlayer Sounds;
-        private System.IO.Stream Str;
 
         public clsAlarm(FormStart CallingFrom, Button AlarmButton)
         {
             mf = CallingFrom;
             cAlarmButton = AlarmButton;
-            Str = Properties.Resources.Loud_Alarm_Clock_Buzzer_Muk1984_493547174;
+            System.IO.Stream Str = Properties.Resources.Loud_Alarm_Clock_Buzzer_Muk1984_493547174;
             Sounds = new System.Media.SoundPlayer(Str);
         }
 
-        public void Silence() { cSilenceAlarm = true; }
-
         public void CheckAlarms()
         {
-            cRateAlarm = mf.Products.AlarmOn();
-            cPressureAlarm = mf.PressureObjects.AlarmOn();
+            bool cRateAlarm = mf.Products.AlarmOn();
+            bool cPressureAlarm = mf.PressureObjects.AlarmOn();
+            string cMessage;
 
             if (cRateAlarm || cPressureAlarm)
             {
@@ -74,5 +68,8 @@ namespace RateController
                 cAlarmButton.Visible = false;
             }
         }
+
+        public void Silence()
+        { cSilenceAlarm = true; }
     }
 }

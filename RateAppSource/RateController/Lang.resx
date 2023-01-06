@@ -201,6 +201,9 @@
   <data name="lgEqual" xml:space="preserve">
     <value>=1</value>
   </data>
+  <data name="lgFan" xml:space="preserve">
+    <value>Fan</value>
+  </data>
   <data name="lgFirmware" xml:space="preserve">
     <value>Firmware</value>
   </data>

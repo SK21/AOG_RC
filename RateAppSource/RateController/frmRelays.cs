@@ -79,7 +79,6 @@ namespace RateController
                 {
                     case 1:
                         // type, make combobox drop down
-                        //SendKeys.Send("{F4}");
                         break;
 
                     case 2:

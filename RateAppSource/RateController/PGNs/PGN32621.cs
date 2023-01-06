@@ -21,12 +21,9 @@ namespace RateController
         private const byte cByteCount = 12;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 109;
+        private readonly FormStart mf;
         private UInt16[,] cPressure = new UInt16[255, 4];
-        private byte HiByte;
-        private byte LoByte;
-        private FormStart mf;
         private byte ModuleID;
-        private int Temp;
 
         public PGN32621(FormStart CalledFrom)
         {
@@ -36,7 +33,7 @@ namespace RateController
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
-            if (Data[1] == HeaderHi & Data[0] == HeaderLo & Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
+            if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 ModuleID = Data[2];
                 for (int i = 0; i < 4; i++)
@@ -50,7 +47,11 @@ namespace RateController
 
         public bool ParseStringData(string[] Data)
         {
+            int Temp;
+            byte HiByte;
+            byte LoByte;
             bool Result = false;
+
             if (Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 int.TryParse(Data[0], out Temp);
@@ -77,7 +78,7 @@ namespace RateController
 
         public UInt16 Pressure(byte ModuleID, byte SensorID)
         {
-            if (SensorID < 4 & ModuleID < 255)
+            if (SensorID < 4 && ModuleID < 255)
             {
                 return cPressure[ModuleID, SensorID];
             }

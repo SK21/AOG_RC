@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
     public enum ControlTypeEnum
-    { Standard, FastClose, Motor, MotorWeights }
+    { Standard, FastClose, Motor, MotorWeights, Fan }
 
     public class clsProduct
     {
@@ -11,12 +12,11 @@ namespace RateController
 
         public PGN32613 ArduinoModule;
         public byte CoverageUnits = 0;
-        public bool EraseAccumulatedUnits = false;
+        private bool cEraseAccumulatedUnits = false;
         public PGN32614 RateToArduino;
         public PGN32501 Scale;
         public double TankSize = 0;
         public clsArduino VirtualNano;
-        private double AccumulatedUnits;
         private double CalPWMave;
         private double cCalEnd;
         private byte cCalPWM;
@@ -67,8 +67,8 @@ namespace RateController
 
         private bool SwitchIDsSent;
         private double UnitsOffset = 0;
-        private DateTime UpdateStartTime;
         private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
+        private bool cFanOn;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -104,6 +104,15 @@ namespace RateController
             set
             {
                 cCalPWM = value;
+            }
+        }
+
+        public bool FanOn
+        {
+            get { return cFanOn; }
+            set
+            {
+                cFanOn = value;
             }
         }
 
@@ -155,7 +164,7 @@ namespace RateController
             }
         }
 
-        public int ID
+        public int ProductID
         { get { return cProductID; } }
 
         public bool LogRate
@@ -181,7 +190,7 @@ namespace RateController
             get { return cMinUPM; }
             set
             {
-                if (value >= 0 & value < 1000)
+                if (value >= 0 && value < 1000)
                 {
                     cMinUPM = value;
                 }
@@ -292,7 +301,10 @@ namespace RateController
         { get { return cRateAlt; } set { cRateAlt = value; } }
 
         public double RateSet
-        { get { return cRateSet; } set { cRateSet = value; } }
+        {
+            get { return cRateSet; }
+            set { cRateSet = value; } 
+        }
 
         public double ScaleCountsPerUnit
         {
@@ -409,10 +421,11 @@ namespace RateController
         private string IDname
         { get { return cProductID.ToString(); } }
 
+        public bool EraseAccumulatedUnits { get => cEraseAccumulatedUnits; set => cEraseAccumulatedUnits = value; }
+
         public double AverageRate()
         {
-            if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected()
-                & cHectaresPerMinute > 0 & Coverage > 0)
+            if (ProductOn() && Coverage > 0)
             {
                 return (cUnitsApplied / Coverage);
             }
@@ -434,7 +447,7 @@ namespace RateController
 
         public double CurrentRate()
         {
-            if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected() & cHectaresPerMinute > 0)
+            if (ProductOn())
             {
                 return RateApplied();
             }
@@ -550,37 +563,30 @@ namespace RateController
 
         public double RateApplied()
         {
-            if (cHectaresPerMinute > 0)
+            double Result = 0;
+            switch (CoverageUnits)
             {
-                double V = 0;
-                switch (CoverageUnits)
-                {
-                    case 0:
-                        // acres
-                        V = ArduinoModule.UPM() / (cHectaresPerMinute * 2.47);
-                        break;
+                case 0:
+                    // acres
+                    if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / (cHectaresPerMinute * 2.47);
+                    break;
 
-                    case 1:
-                        // hectares
-                        V = ArduinoModule.UPM() / cHectaresPerMinute;
-                        break;
+                case 1:
+                    // hectares
+                    if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / cHectaresPerMinute;
+                    break;
 
-                    case 2:
-                        // minutes
-                        V = ArduinoModule.UPM();
-                        break;
+                case 2:
+                    // minutes
+                    Result = ArduinoModule.UPM();
+                    break;
 
-                    default:
-                        // hours
-                        V = ArduinoModule.UPM() * 60;
-                        break;
-                }
-                return V;
+                default:
+                    // hours
+                    Result = ArduinoModule.UPM() * 60;
+                    break;
             }
-            else
-            {
-                return 0;
-            }
+            return Result;
         }
 
         public void ResetApplied()
@@ -659,7 +665,7 @@ namespace RateController
             bool Result = false;    // return true if there is good comm
             try
             {
-                if (RealNano & SimulationType == SimType.VirtualNano)
+                if (RealNano && SimulationType == SimType.VirtualNano)
                 {
                     // block PGN32613 from real nano when simulation is with virtual nano
                 }
@@ -679,32 +685,44 @@ namespace RateController
             return Result;
         }
 
+        private bool ProductOn()
+        {
+            bool Result = false;
+            if (ControlType == ControlTypeEnum.Fan)
+            {
+                Result = ArduinoModule.Connected();
+            }
+            else
+            {
+                Result = (ArduinoModule.Connected() && mf.AutoSteerPGN.Connected() && cHectaresPerMinute > 0);
+            }
+            return Result;
+        }
+
         public double SmoothRate()
         {
-            if (ArduinoModule.Connected() & mf.AutoSteerPGN.Connected() & cHectaresPerMinute > 0)
+            double Result = 0;
+            if (ProductOn())
             {
                 if (TargetRate() > 0)
                 {
                     double Rt = RateApplied() / TargetRate();
 
-                    if (Rt >= .9 & Rt <= 1.1 & mf.SwitchBox.SwitchOn(SwIDs.Auto))
+                    if (Rt >= .9 && Rt <= 1.1 && mf.SwitchBox.SwitchOn(SwIDs.Auto))
                     {
-                        return TargetRate();
+                        Result = TargetRate();
                     }
                     else
                     {
-                        return RateApplied();
+                        Result = RateApplied();
                     }
                 }
                 else
                 {
-                    return RateApplied();
+                    Result = RateApplied();
                 }
             }
-            else
-            {
-                return 0;
-            }
+            return Result;
         }
 
         public double Speed()
@@ -728,7 +746,7 @@ namespace RateController
                 double Percent = mf.VRdata.Rate(VRconversion[cVariableRate]);
                 if ((int)Percent != 255)
                 {
-                    Result = (double)Percent / 100.0 * cRateSet;
+                    Result = Percent / 100.0 * cRateSet;
                 }
             }
             return Result;
@@ -737,6 +755,10 @@ namespace RateController
         public double TargetUPM() // returns units per minute set rate
         {
             double V = 0;
+            if(cProductID==1)
+                {
+                V = 0;
+            }
             switch (CoverageUnits)
             {
                 case 0:
@@ -801,6 +823,8 @@ namespace RateController
 
         public void Update()
         {
+            DateTime UpdateStartTime; 
+            
             if (ArduinoModule.ModuleSending() && (mf.AutoSteerPGN.Connected() || CoverageUnits > 1))
             {
                 if (!SwitchIDsSent)
@@ -814,7 +838,7 @@ namespace RateController
                 CurrentMinutes = (UpdateStartTime - LastUpdateTime).TotalMinutes;
                 LastUpdateTime = UpdateStartTime;
 
-                if (CurrentMinutes < 0 | CurrentMinutes > 1 | PauseWork)
+                if (CurrentMinutes < 0 || CurrentMinutes > 1 || PauseWork)
                 {
                     CurrentMinutes = 0;
                     PauseWork = false;
@@ -951,7 +975,7 @@ namespace RateController
                 if ((DateTime.Now - ScaleCalTime).TotalMinutes > 10)
                 {
                     // calculate 10 minute average metercal
-                    double CountsApplied = (double)(ScaleCountsStart - NetScaleCounts()) / 10.0;
+                    double CountsApplied = (ScaleCountsStart - NetScaleCounts()) / 10.0;
                     if (CalPWMave > 0) cScaleCountsCal = CountsApplied / CalPWMave;
 
                     ScaleCalTime = DateTime.Now;
@@ -1001,6 +1025,8 @@ namespace RateController
 
         private void UpdateUnitsApplied()
         {
+            double AccumulatedUnits;
+
             if (ControlType == ControlTypeEnum.MotorWeights)
             {
                 if (LastScaleCounts >= NetScaleCounts() && cScaleUnitsCal > 0)

@@ -97,7 +97,7 @@ namespace RateController
         public clsPressure Item(int PressureID)
         {
             int IDX = ListId(PressureID);
-            if (IDX == -1) throw new IndexOutOfRangeException();
+            if (IDX == -1) throw new ArgumentOutOfRangeException();
             return cPressures[IDX];
         }
 

@@ -313,6 +313,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fan.
+        /// </summary>
+        internal static string lgFan {
+            get {
+                return ResourceManager.GetString("lgFan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Firmware.
         /// </summary>
         internal static string lgFirmware {

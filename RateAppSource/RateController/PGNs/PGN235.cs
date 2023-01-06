@@ -15,8 +15,8 @@ namespace RateController
         // 38   CRC
 
         private byte cSectionCount;
-        private int[] cWidth_cm = new int[16];
-        private FormStart mf;
+        private readonly int[] cWidth_cm = new int[16];
+        private readonly FormStart mf;
 
         public PGN235(FormStart CalledFrom)
         {

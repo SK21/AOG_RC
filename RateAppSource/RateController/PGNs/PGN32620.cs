@@ -22,13 +22,13 @@
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 108;
         private byte[] Data = new byte[cByteCount];
-        private FormStart mf;
+        private readonly FormStart mf;
 
         public PGN32620(FormStart CallingForm)
         {
             mf = CallingForm;
-            Data[0] = 127;
-            Data[1] = 108;
+            Data[0] = HeaderHi;
+            Data[1] = HeaderLo;
         }
 
         public void Send()

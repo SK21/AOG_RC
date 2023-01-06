@@ -1,8 +1,10 @@
 ﻿using AgOpenGPS;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
 namespace RateController
@@ -36,11 +38,11 @@ namespace RateController
             #region // language
 
             lbProduct.Text = Lang.lgProduct;
-            tc.TabPages[0].Text = Lang.lgRate;
-            tc.TabPages[1].Text = Lang.lgControl;
-            tc.TabPages[2].Text = Lang.lgOptions;
-            tc.TabPages[3].Text = Lang.lgDiagnostics;
-            tc.TabPages[4].Text = Lang.lgCalibrate;
+            tcProducts.TabPages[0].Text = Lang.lgRate;
+            tcProducts.TabPages[1].Text = Lang.lgControl;
+            tcProducts.TabPages[2].Text = Lang.lgOptions;
+            tcProducts.TabPages[3].Text = Lang.lgDiagnostics;
+            tcProducts.TabPages[4].Text = Lang.lgCalibrate;
             btnCancel.Text = Lang.lgCancel;
             bntOK.Text = Lang.lgClose;
 
@@ -87,6 +89,7 @@ namespace RateController
             ValveType.Items[1] = Lang.lgComboClose;
             ValveType.Items[2] = Lang.lgMotor;
             ValveType.Items[3] = Lang.lgMotorWeight;
+            ValveType.Items[4] = Lang.lgFan;
 
             AreaUnits.Items[0] = Lang.lgAcres;
             AreaUnits.Items[1] = Lang.lgHectares;
@@ -118,6 +121,7 @@ namespace RateController
 
             mf = CallingForm;
             tbs = new TabPage[] { tbs0, tbs4, tbs6, tbs3, tbs5 };
+
             if (Page == 0)
             {
                 CurrentProduct = mf.Products.Item(0);
@@ -166,16 +170,6 @@ namespace RateController
                     mf.Sections.CheckSwitchDefinitions();
 
                     string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
-
-                    switch (SelectedSimulation)
-                    {
-                        case SimType.VirtualNano:
-                            break;
-
-                        case SimType.RealNano:
-                        default:
-                            break;
-                    }
 
                     SetButtons(false);
                     UpdateForm();
@@ -239,7 +233,7 @@ namespace RateController
                 CurrentProduct.DoCal = true;
                 CurrentProduct.CalStart = CurrentProduct.UnitsApplied();
                 SetCalButtons();
-                WtStart[CurrentProduct.ID] = DateTime.Now;
+                WtStart[CurrentProduct.ProductID] = DateTime.Now;
                 lbWTcal.Text = "0.0";
                 lbWTquantity.Text = "0.0";
             }
@@ -263,14 +257,14 @@ namespace RateController
             if (CurrentProduct.ControlType == ControlTypeEnum.MotorWeights)
             {
                 // calibrate by weight
-                WtTimeEnd[CurrentProduct.ID] = DateTime.Now;
+                WtTimeEnd[CurrentProduct.ProductID] = DateTime.Now;
                 double tmp = CurrentProduct.CalEnd - CurrentProduct.CalStart;
                 if (tmp > 0)
                 {
                     lbWTquantity.Text = tmp.ToString("N1");
 
                     // UPM/PWM
-                    WtSpan = (WtTimeEnd[CurrentProduct.ID] - WtStart[CurrentProduct.ID]);
+                    WtSpan = (WtTimeEnd[CurrentProduct.ProductID] - WtStart[CurrentProduct.ProductID]);
                     double Minutes = WtSpan.TotalSeconds / 60.0;
                     double UPM = 0;
                     if (Minutes > 0)
@@ -300,9 +294,9 @@ namespace RateController
 
         private void btnLeft_Click(object sender, EventArgs e)
         {
-            if (CurrentProduct.ID > 0)
+            if (CurrentProduct.ProductID > 0)
             {
-                CurrentProduct = mf.Products.Item(CurrentProduct.ID - 1);
+                CurrentProduct = mf.Products.Item(CurrentProduct.ProductID - 1);
                 ShowSpan();
                 UpdateForm();
             }
@@ -355,9 +349,9 @@ namespace RateController
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            if (CurrentProduct.ID < 4)
+            if (CurrentProduct.ProductID < 4)
             {
-                CurrentProduct = mf.Products.Item(CurrentProduct.ID + 1);
+                CurrentProduct = mf.Products.Item(CurrentProduct.ProductID + 1);
                 ShowSpan();
                 UpdateForm();
             }
@@ -389,7 +383,7 @@ namespace RateController
             byte.TryParse(tbSenID.Text, out SenID);
             bool Unique = false;
 
-            if (mf.Products.UniqueModSen(ModID, SenID, CurrentProduct.ID))
+            if (mf.Products.UniqueModSen(ModID, SenID, CurrentProduct.ProductID))
             {
                 Unique = true;
             }
@@ -398,7 +392,7 @@ namespace RateController
                 // set unique pair
                 for (int i = 0; i < 16; i++)
                 {
-                    Unique = mf.Products.UniqueModSen(i, SenID, CurrentProduct.ID);
+                    Unique = mf.Products.UniqueModSen(i, SenID, CurrentProduct.ProductID);
                     if (Unique)
                     {
                         Initializing = true;
@@ -685,13 +679,22 @@ namespace RateController
 
         private void LoadSettings()
         {
+            if (CurrentProduct.ControlType == ControlTypeEnum.Fan)
+            {
+                tbTargetRPM.Text = CurrentProduct.RateSet.ToString("N1");
+                tbCountsRPM.Text = CurrentProduct.MeterCal.ToString("N3");
+            }
+            else
+            {
+                RateSet.Text = CurrentProduct.RateSet.ToString("N1");
+                FlowCal.Text = CurrentProduct.MeterCal.ToString("N3");
+            }
+
             byte tempB;
             tbProduct.Text = CurrentProduct.ProductName;
             tbVolumeUnits.Text = CurrentProduct.QuantityDescription;
             AreaUnits.SelectedIndex = CurrentProduct.CoverageUnits;
-            RateSet.Text = CurrentProduct.RateSet.ToString("N1");
             tbAltRate.Text = CurrentProduct.RateAlt.ToString("N0");
-            FlowCal.Text = CurrentProduct.MeterCal.ToString("N3");
             TankSize.Text = CurrentProduct.TankSize.ToString("N0");
             ValveType.SelectedIndex = (int)CurrentProduct.ControlType;
             cbVR.SelectedIndex = CurrentProduct.VariableRate;
@@ -821,22 +824,39 @@ namespace RateController
             int tempInt;
             byte tempB;
 
-            CurrentProduct.CoverageUnits = Convert.ToByte(AreaUnits.SelectedIndex);
-            CurrentProduct.QuantityDescription = tbVolumeUnits.Text;
+            CurrentProduct.ControlType = (ControlTypeEnum)(ValveType.SelectedIndex);
 
-            double.TryParse(RateSet.Text, out tempD);
-            CurrentProduct.RateSet = tempD;
+            if (CurrentProduct.ControlType == ControlTypeEnum.Fan)
+            {
+                // set rate by fan
+                double.TryParse(tbTargetRPM.Text, out tempD);
+                CurrentProduct.RateSet = tempD;
+
+                double.TryParse(tbCountsRPM.Text, out tempD);
+                CurrentProduct.MeterCal = tempD;
+
+                CurrentProduct.CoverageUnits = 2;   // minutes
+            }
+            else
+            {
+                // set rate by product
+                double.TryParse(RateSet.Text, out tempD);
+                CurrentProduct.RateSet = tempD;
+
+                double.TryParse(FlowCal.Text, out tempD);
+                CurrentProduct.MeterCal = tempD;
+
+                CurrentProduct.CoverageUnits = Convert.ToByte(AreaUnits.SelectedIndex);
+            }
+
+            CurrentProduct.QuantityDescription = tbVolumeUnits.Text;
 
             double.TryParse(tbAltRate.Text, out tempD);
             CurrentProduct.RateAlt = tempD;
 
-            double.TryParse(FlowCal.Text, out tempD);
-            CurrentProduct.MeterCal = tempD;
 
             double.TryParse(TankSize.Text, out tempD);
             CurrentProduct.TankSize = tempD;
-
-            CurrentProduct.ControlType = (ControlTypeEnum)(ValveType.SelectedIndex);
 
             CurrentProduct.VariableRate = Convert.ToByte(cbVR.SelectedIndex);
 
@@ -996,15 +1016,15 @@ namespace RateController
 
             // fix backcolor
             this.BackColor = Properties.Settings.Default.DayColour;
-            for (int i = 0; i < tc.TabCount; i++)
+            for (int i = 0; i < tcProducts.TabCount; i++)
             {
-                tc.TabPages[i].BackColor = Properties.Settings.Default.DayColour;
+                tcProducts.TabPages[i].BackColor = Properties.Settings.Default.DayColour;
             }
         }
 
         private void SetModuleIndicator()
         {
-            if (mf.Products.Item(CurrentProduct.ID).ArduinoModule.Connected())
+            if (mf.Products.Item(CurrentProduct.ProductID).ArduinoModule.Connected())
             {
                 ModuleIndicator.Image = Properties.Resources.On;
             }
@@ -1035,11 +1055,11 @@ namespace RateController
         {
             if (CurrentProduct.DoCal)
             {
-                WtSpan = (DateTime.Now - WtStart[CurrentProduct.ID]);
+                WtSpan = (DateTime.Now - WtStart[CurrentProduct.ProductID]);
             }
             else
             {
-                WtSpan = (WtTimeEnd[CurrentProduct.ID] - WtStart[CurrentProduct.ID]);
+                WtSpan = (WtTimeEnd[CurrentProduct.ProductID] - WtStart[CurrentProduct.ProductID]);
             }
             lbWTtime.Text = WtSpan.Minutes.ToString("00") + ":" + WtSpan.Seconds.ToString("00");
         }
@@ -1330,16 +1350,6 @@ namespace RateController
                     min = 1;
                     break;
 
-                case 2:
-                    max = 255;
-                    min = 50;
-                    break;
-
-                case 7:
-                    max = 25;
-                    min = 0;
-                    break;
-
                 default:
                     max = 100;
                     min = 1;
@@ -1374,16 +1384,6 @@ namespace RateController
                 case 1:
                     max = 10;
                     min = 1;
-                    break;
-
-                case 2:
-                    max = 255;
-                    min = 50;
-                    break;
-
-                case 7:
-                    max = 25;
-                    min = 0;
                     break;
 
                 default:
@@ -1626,7 +1626,7 @@ namespace RateController
             SetDayMode();
             SetCalDescription();
 
-            lbProduct.Text = (CurrentProduct.ID + 1).ToString() + ". " + CurrentProduct.ProductName;
+            lbProduct.Text = (CurrentProduct.ProductID + 1).ToString() + ". " + CurrentProduct.ProductName;
             if (CurrentProduct.SimulationType != SimType.None)
             {
                 lbProduct.Text = lbProduct.Text + "   Simulation";
@@ -1641,6 +1641,15 @@ namespace RateController
                 lbProduct.BorderStyle = BorderStyle.None;
             }
 
+            tbTare.Text = CurrentProduct.ScaleTare.ToString("N0");
+
+            Initializing = false;
+            UpdateSwitches();
+            UpdateOnTypeChange();
+        }
+
+        void UpdateOnTypeChange()
+        {
             // calibration panels
             pnlFlow.Visible = CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             pnlWeight.Visible = CurrentProduct.ControlType == ControlTypeEnum.MotorWeights;
@@ -1650,10 +1659,8 @@ namespace RateController
             TankRemain.Enabled = CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             btnResetTank.Enabled = CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
 
-            tbTare.Text = CurrentProduct.ScaleTare.ToString("N0");
-
-            Initializing = false;
-            UpdateSwitches();
+            pnlFan.Visible = (CurrentProduct.ControlType == ControlTypeEnum.Fan);
+            pnlMain.Visible = (CurrentProduct.ControlType != ControlTypeEnum.Fan);
         }
 
         private void UpdateSwitches()
@@ -1745,14 +1752,7 @@ namespace RateController
             SetButtons(true);
             SetCalButtons();
             SetCalDescription();
-
-            // calibration panels
-            pnlFlow.Visible = CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
-            pnlWeight.Visible = CurrentProduct.ControlType == ControlTypeEnum.MotorWeights;
-
-            TankSize.Enabled = CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
-            TankRemain.Enabled = CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
-            btnResetTank.Enabled = CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
+            UpdateOnTypeChange();
         }
 
         private void WeightCal_Enter(object sender, EventArgs e)
@@ -1787,6 +1787,66 @@ namespace RateController
             double tempD;
             double.TryParse(tbScaleCountsPerUnit.Text, out tempD);
             if (tempD < 1 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbTargetRPM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbTargetRPM.Text, out tempD);
+            using (var form = new FormNumeric(0, 50000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbTargetRPM.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbTargetRPM_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbTargetRPM_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbTargetRPM.Text, out tempD);
+            if (tempD < 0 || tempD > 50000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbCountsRPM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbCountsRPM.Text, out tempD);
+            using (var form = new FormNumeric(0, 50000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbCountsRPM.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbCountsRPM_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbCountsRPM_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbTargetRPM.Text, out tempD);
+            if (tempD < 0 || tempD > 50000)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;

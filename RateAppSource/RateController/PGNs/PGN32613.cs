@@ -31,14 +31,11 @@ namespace RateController
         private double cPWMsetting;
         private double cQuantity;
         private double cUPM;
-        private clsProduct Prod;
+        private readonly clsProduct Prod;
 
-        private double Ratio;
         private DateTime ReceiveTime;
 
         private bool[] SensorReceiving = new bool[2];
-        private double Trate;
-        private byte cWifiStrength;
 
         public PGN32613(clsProduct CalledFrom)
         {
@@ -52,7 +49,7 @@ namespace RateController
 
         public bool Connected()
         {
-            return ModuleReceiving() & ModuleSending();
+            return ModuleReceiving() && ModuleSending();
         }
 
         public bool ModuleReceiving()
@@ -81,7 +78,9 @@ namespace RateController
 
         public bool ParseByteData(byte[] Data)
         {
+            byte cWifiStrength; 
             bool Result = false;
+
             if (Data[1] == HeaderHi && Data[0] == HeaderLo &&
                 Data.Length >= cByteCount && Prod.mf.Tls.GoodCRC(Data))
             {
@@ -211,6 +210,9 @@ namespace RateController
 
         private void CheckRate()
         {
+            double Ratio;
+            double Trate;
+
             Trate = Prod.TargetUPM();
             if (Trate > 0 && cUPM > 0)
             {

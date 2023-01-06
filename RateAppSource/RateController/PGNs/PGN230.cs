@@ -22,7 +22,7 @@
 
         private byte[] cRate = new byte[10];
         private int Length = 16;
-        private FormStart mf;
+        private readonly FormStart mf;
 
         public PGN230(FormStart CalledFrom)
         {
