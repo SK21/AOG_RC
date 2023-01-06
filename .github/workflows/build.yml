@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize, reopened]
     
 env:
-  SOLUTION_FILE_PATH: ./RCsource/RateController.sln
+  SOLUTION_FILE_PATH: ./RateAppSource/RateController.sln
   BUILD_CONFIGURATION: Release
     
 jobs:
