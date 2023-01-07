@@ -139,7 +139,7 @@
     <Compile Include="FormStart.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormStart.Designer.cs">
+    <Compile Include="FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
     </Compile>
     <Compile Include="frmComm.cs">
