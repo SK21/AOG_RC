@@ -43,6 +43,7 @@ namespace RateController
         public void Send()
         {
             double Tmp = 0;
+            double RateSet;
 
             cData[2] = Prod.mf.Tls.BuildModSenID(Prod.ModuleID, Prod.SensorID);
             //cData[3] = Prod.mf.Sections.SectionLo();
@@ -55,26 +56,31 @@ namespace RateController
             // rate set
             if (Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn)
             {
-                Tmp = 0;
+                RateSet = 0;
             }
             else
             {
                 if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto))
                 {
                     // auto rate
-                    Tmp = Prod.TargetUPM() * 10.0;
-                    if (Tmp < (Prod.MinUPM * 10.0)) Tmp = Prod.MinUPM * 10.0;
+                    RateSet = Prod.TargetUPM() * 10.0;
+                    if (RateSet < (Prod.MinUPM * 10.0)) RateSet = Prod.MinUPM * 10.0;
                 }
                 else
                 {
                     // manual rate
-                    Tmp = (Prod.ManualAdjust * 10.0);
+                    RateSet = (Prod.ManualAdjust * 10.0);
                 }
             }
 
-            cData[5] = (byte)Tmp;
-            cData[6] = (byte)((int)Tmp >> 8);
-            cData[7] = (byte)((int)Tmp >> 16);
+            if (Prod.EnableProdDensity)
+            {
+                RateSet = (RateSet / Prod.ProdDensity) * 100;
+            }
+
+            cData[5] = (byte)RateSet;
+            cData[6] = (byte)((int)RateSet >> 8);
+            cData[7] = (byte)((int)RateSet >> 16);
 
             // flow cal
             Tmp = Prod.MeterCal * 1000.0;

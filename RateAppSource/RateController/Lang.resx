@@ -130,7 +130,7 @@
     <value>Already Running</value>
   </data>
   <data name="lgAltRate" xml:space="preserve">
-    <value>Alt. Rate</value>
+    <value>Alt. Rate (%)</value>
   </data>
   <data name="lgAuto" xml:space="preserve">
     <value>Auto</value>

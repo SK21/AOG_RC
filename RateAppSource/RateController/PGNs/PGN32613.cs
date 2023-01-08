@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -205,7 +206,12 @@ namespace RateController
 
         public double UPM()
         {
-            return cUPM;
+            double Result = cUPM;
+            if (Prod.EnableProdDensity && Prod.ProdDensity > 0)
+            {
+                Result = (cUPM / 100) * Prod.ProdDensity;
+            }
+            return Result;
         }
 
         private void CheckRate()

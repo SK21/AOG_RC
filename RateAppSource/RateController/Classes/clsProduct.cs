@@ -597,12 +597,7 @@ namespace RateController
                     Result = ArduinoModule.UPM() * 60;
                     break;
             }
-            
-            if (cEnableProdDensity)
-            {
-                //convert ft^3/min to lb/min
-                Result *= cProdDensity;
-            }
+
             return Result;
 
         }
@@ -801,10 +796,6 @@ namespace RateController
                     // hours
                     V = TargetRate() / 60;
                     break;
-            }
-            if(cEnableProdDensity)
-            {
-                V /= cProdDensity;
             }
             return V;
         }

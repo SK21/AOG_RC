@@ -29,7 +29,7 @@ namespace RateController
         private DateTime ManualLast;
         private bool MasterOn = false;
         private byte MaxRPM = 255;
-        private float MaxSimRate = 40F;        // max rate of system in UPM
+        private float MaxSimUPM = 40F;        // max rate of system in UPM
         private int mcID;
         private float MeterCal;
 
@@ -247,6 +247,7 @@ namespace RateController
 
             byte InCommand;
             int Tmp;
+            double RateIn = 0;
 
             int PGN = Data[1] << 8 | Data[0];
             if (PGN == 32614)
@@ -258,7 +259,7 @@ namespace RateController
 
                 // rate setting, 10 times actual
                 Tmp = Data[5] | Data[6] << 8 | Data[7] << 16;
-                double TmpSetting = (double)Tmp * 0.1;
+                RateIn = (double)Tmp * 0.1;
 
                 // meter cal, 1000 times actual
                 Tmp = Data[8] | Data[9] << 8 | Data[10] << 16;
@@ -279,11 +280,11 @@ namespace RateController
                 AutoOn = ((InCommand & 64) == 64);
                 if (AutoOn)
                 {
-                    rateSetPoint = (float)(TmpSetting);
+                    rateSetPoint = (float)(RateIn);
                 }
                 else
                 {
-                    ManualAdjust = (float)(TmpSetting);
+                    ManualAdjust = (float)(RateIn);
                 }
 
                 CalOn = ((InCommand & 128) == 128);
@@ -309,7 +310,10 @@ namespace RateController
                 ReceiveTime = DateTime.Now;
             }
 
-            MaxSimRate = (float)(Prd.TargetRate() * 1.5);
+            if (RateIn > MaxSimUPM)
+            {
+                MaxSimUPM = (float)(RateIn * 1.5);
+            }
         }
 
         private int ControlMotor(byte sKP, float sError, float sSetPoint, byte sMinPWM,
@@ -601,7 +605,7 @@ namespace RateController
                 ValveOpen = 0;
             }
 
-            SimUPM = (float)(MaxSimRate * ValveOpen / 100.0);
+            SimUPM = (float)(MaxSimUPM * ValveOpen / 100.0);
 
             Pulses = (float)((SimUPM * MeterCal) / 60000.0);  // (Units/min * pulses/Unit) = pulses/min / 60000 = pulses/millisecond
             if (Pulses == 0)

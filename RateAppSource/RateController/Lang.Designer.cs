@@ -97,7 +97,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Alt. Rate.
+        ///   Looks up a localized string similar to Alt. Rate (%).
         /// </summary>
         internal static string lgAltRate {
             get {

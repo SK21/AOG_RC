@@ -93,6 +93,8 @@ namespace RateController
             this.lbPressureValue = new System.Windows.Forms.Label();
             this.lbPressure = new System.Windows.Forms.Label();
             this.panFan = new System.Windows.Forms.Panel();
+            this.lbOn = new System.Windows.Forms.Label();
+            this.lbOff = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
@@ -101,8 +103,6 @@ namespace RateController
             this.lbFanRate = new System.Windows.Forms.Label();
             this.lbCurrentRPM = new System.Windows.Forms.Label();
             this.lbFan = new System.Windows.Forms.Label();
-            this.lbOff = new System.Windows.Forms.Label();
-            this.lbOn = new System.Windows.Forms.Label();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -745,6 +745,30 @@ namespace RateController
             this.panFan.Size = new System.Drawing.Size(270, 150);
             this.panFan.TabIndex = 157;
             // 
+            // lbOn
+            // 
+            this.lbOn.BackColor = System.Drawing.SystemColors.Control;
+            this.lbOn.Cursor = System.Windows.Forms.Cursors.Default;
+            this.lbOn.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOn.Image = global::RateController.Properties.Resources.OnSmall;
+            this.lbOn.Location = new System.Drawing.Point(235, 3);
+            this.lbOn.Name = "lbOn";
+            this.lbOn.Size = new System.Drawing.Size(30, 23);
+            this.lbOn.TabIndex = 169;
+            this.lbOn.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lbOff
+            // 
+            this.lbOff.BackColor = System.Drawing.SystemColors.Control;
+            this.lbOff.Cursor = System.Windows.Forms.Cursors.Default;
+            this.lbOff.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOff.Image = global::RateController.Properties.Resources.OffSmall;
+            this.lbOff.Location = new System.Drawing.Point(235, 3);
+            this.lbOff.Name = "lbOff";
+            this.lbOff.Size = new System.Drawing.Size(30, 23);
+            this.lbOff.TabIndex = 168;
+            this.lbOff.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // groupBox1
             // 
             this.groupBox1.Location = new System.Drawing.Point(9, 24);
@@ -824,30 +848,6 @@ namespace RateController
             this.lbFan.TabIndex = 158;
             this.lbFan.Text = "Herbicide";
             // 
-            // lbOff
-            // 
-            this.lbOff.BackColor = System.Drawing.SystemColors.Control;
-            this.lbOff.Cursor = System.Windows.Forms.Cursors.Default;
-            this.lbOff.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOff.Image = global::RateController.Properties.Resources.OffSmall;
-            this.lbOff.Location = new System.Drawing.Point(235, 3);
-            this.lbOff.Name = "lbOff";
-            this.lbOff.Size = new System.Drawing.Size(30, 23);
-            this.lbOff.TabIndex = 168;
-            this.lbOff.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lbOn
-            // 
-            this.lbOn.BackColor = System.Drawing.SystemColors.Control;
-            this.lbOn.Cursor = System.Windows.Forms.Cursors.Default;
-            this.lbOn.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOn.Image = global::RateController.Properties.Resources.OnSmall;
-            this.lbOn.Location = new System.Drawing.Point(235, 3);
-            this.lbOn.Name = "lbOn";
-            this.lbOn.Size = new System.Drawing.Size(30, 23);
-            this.lbOn.TabIndex = 169;
-            this.lbOn.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -860,9 +860,9 @@ namespace RateController
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.btnSettings);
-            this.Controls.Add(this.panFan);
             this.Controls.Add(this.panProducts);
             this.Controls.Add(this.panSummary);
+            this.Controls.Add(this.panFan);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

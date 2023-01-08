@@ -482,7 +482,7 @@ namespace RateController
         {
             double tempD;
             double.TryParse(FlowCal.Text, out tempD);
-            using (var form = new FormNumeric(1, 10000, tempD))
+            using (var form = new FormNumeric(0.01, 10000, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -501,7 +501,7 @@ namespace RateController
         {
             double tempD;
             double.TryParse(FlowCal.Text, out tempD);
-            if (tempD < 1 || tempD > 10000)
+            if (tempD < 0.01 || tempD > 10000)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -1359,6 +1359,11 @@ namespace RateController
                     min = 1;
                     break;
 
+                case 4:
+                    max = 25;
+                    min = 0;
+                    break;
+
                 default:
                     max = 100;
                     min = 1;
@@ -1393,6 +1398,11 @@ namespace RateController
                 case 1:
                     max = 10;
                     min = 1;
+                    break;
+
+                case 4:
+                    max = 25;
+                    min = 0;
                     break;
 
                 default:
