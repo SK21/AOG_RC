@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - Fan
+      - Fan-Density
   pull_request:
     types: [opened, synchronize, reopened]
     
