@@ -73,10 +73,7 @@ namespace RateController
                 }
             }
 
-            if (Prod.EnableProdDensity)
-            {
-                RateSet = (RateSet / Prod.ProdDensity) * 100;
-            }
+            if (Prod.EnableProdDensity && Prod.ProdDensity > 0) RateSet = (RateSet / Prod.ProdDensity) * 100;
 
             cData[5] = (byte)RateSet;
             cData[6] = (byte)((int)RateSet >> 8);

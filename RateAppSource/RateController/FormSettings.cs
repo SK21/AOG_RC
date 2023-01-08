@@ -1864,7 +1864,7 @@ namespace RateController
         private void tbCountsRPM_Validating(object sender, CancelEventArgs e)
         {
             double tempD;
-            double.TryParse(tbTargetRPM.Text, out tempD);
+            double.TryParse(tbCountsRPM.Text, out tempD);
             if (tempD < 0 || tempD > 50000)
             {
                 System.Media.SystemSounds.Exclamation.Play();

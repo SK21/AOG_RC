@@ -108,7 +108,7 @@ namespace RateController
 
             bool ControllerConnected = ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
 
-            ApplicationOn = (ControllerConnected && (RelayControl != 0) && (rateSetPoint > 0)) | (ControlType == ControlTypeEnum.Fan);
+            ApplicationOn = (ControllerConnected && (RelayControl != 0) && (rateSetPoint > 0)) || (ControlType == ControlTypeEnum.Fan);
 
             if ((DateTime.Now - LastTime).TotalMilliseconds >= LOOP_TIME)
             {
@@ -321,21 +321,18 @@ namespace RateController
         {
             float Result = 0;
             float ErrorPercent = 0;
-            if (sSetPoint > 0)
+            if (sSetPoint > 0 && ApplicationOn)
             {
-                if (ApplicationOn)
+                Result = LastPWM;
+                ErrorPercent = (float)(Math.Abs(sError / sSetPoint) * 100.0);
+                float Max = (float)sHighMax;
+
+                if (ErrorPercent > (float)sDeadband)
                 {
-                    Result = LastPWM;
-                    ErrorPercent = (float)(Math.Abs(sError / sSetPoint) * 100.0);
-                    float Max = (float)sHighMax;
+                    Result += (float)((float)sKP / 255.0) * sError;
 
-                    if (ErrorPercent > (float)sDeadband)
-                    {
-                        Result += (float)((float)sKP / 255.0) * sError;
-
-                        if (Result > Max) Result = Max;
-                        if (Result < sMinPWM) Result = (float)sMinPWM;
-                    }
+                    if (Result > Max) Result = Max;
+                    if (Result < sMinPWM) Result = (float)sMinPWM;
                 }
             }
 
