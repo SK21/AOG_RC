@@ -10,8 +10,13 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
+uint32_t Debug1;
+float Debug2;
+byte Debug3;
+byte Debug4;
+
 # define InoDescription "RCnano  :  10-Jan-2023"
-const int16_t InoID = 5100;
+const int16_t InoID = 5200;
 int16_t StoredID;
 
 # define UseEthernet 1
@@ -106,7 +111,7 @@ byte PIDbrakePoint[] = { 20, 20 };
 byte AdjustTime[2];
 
 byte InCommand[] = { 0, 0 };		// command byte from RateController
-byte ControlType[] = { 0, 0 };  // 0 standard, 1 Fast Close, 2 Motor
+byte ControlType[] = { 0, 0 };  // 0 standard, 1 Fast Close, 2 Motor, 3 Motor/weight, 4 fan
 
 unsigned long TotalPulses[2];
 unsigned long CommTime[2];
@@ -302,8 +307,11 @@ void loop()
 
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			FlowEnabled[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0) && MasterOn[i];
+			FlowEnabled[i] = (millis() - CommTime[i] < 4000)
+				&& ((RateSetting[i] > 0 && MasterOn[i]) || (ControlType[i] == 4));
 		}
+		Debug1 = FlowEnabled[1];
+		Debug4 = MasterOn[1];
 
 		CheckRelays();
 		AdjustFlow();
@@ -335,6 +343,8 @@ void loop()
 #endif
 
 	ReceiveSerial();
+
+	DebugTheIno();
 }
 
 byte ParseModID(byte ID)
@@ -363,6 +373,8 @@ void AutoControl()
 		switch (ControlType[i])
 		{
 		case 2:
+		case 3:
+		case 4:
 			// motor control
 			pwmSetting[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
 				PIDHighMax[i], PIDdeadband[i], i);
@@ -393,6 +405,8 @@ void ManualControl()
 			switch (ControlType[i])
 			{
 			case 2:
+			case 3:
+			case 4:
 				// motor control
 				if (ManualAdjust[i] > 0)
 				{
@@ -451,4 +465,26 @@ byte CRC(byte Chk[], byte Length, byte Start)
 }
 
 
+uint32_t DebugTime;
 
+void DebugTheIno()
+{
+	if (millis() - DebugTime > 1000)
+	{
+		DebugTime = millis();
+
+		Serial.print(Debug1);
+		Serial.print(", ");
+
+		Serial.print(Debug2, 3);
+		Serial.print(", ");
+
+		Serial.print(Debug3);
+		Serial.print(", ");
+
+		Serial.print(Debug4);
+		Serial.print(", ");
+
+		Serial.println("");
+	}
+}
