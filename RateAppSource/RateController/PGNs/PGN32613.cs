@@ -171,7 +171,7 @@ namespace RateController
                                 byte.TryParse(Data[9], out pwmLo);
                                 byte.TryParse(Data[10], out pwmHi);
 
-                                cPWMsetting = (double)((Int16)(pwmHi << 8 | pwmLo)) / 10.0;
+                                cPWMsetting = (double)((Int16)(pwmHi << 8 | pwmLo));
 
                                 // status
                                 byte Status;

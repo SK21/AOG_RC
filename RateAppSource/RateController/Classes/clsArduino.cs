@@ -511,9 +511,9 @@ namespace RateController
             words[8] = Temp.ToString();
 
             //pwmSetting
-            Temp = (byte)((int)(pwmSetting * 10));
+            Temp = (byte)((int)(pwmSetting));
             words[9] = Temp.ToString();
-            Temp = (byte)((int)(pwmSetting * 10) >> 8);
+            Temp = (byte)((int)(pwmSetting) >> 8);
             words[10] = Temp.ToString();
 
             // status
