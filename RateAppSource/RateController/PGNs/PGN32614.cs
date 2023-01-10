@@ -11,7 +11,7 @@ namespace RateController
         //2     Mod/Sen ID          0-15/0-15
         //3	    relay Lo		    0-7
         //4 	relay Hi		    8-15
-        //5	    rate set Lo		    10 X actual
+        //5	    rate set Lo		    1000 X actual
         //6     rate set Mid
         //7	    rate set Hi
         //8	    Flow Cal Lo	        1000 X actual 
@@ -63,17 +63,17 @@ namespace RateController
                 if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto))
                 {
                     // auto rate
-                    RateSet = Prod.TargetUPM() * 10.0;
-                    if (RateSet < (Prod.MinUPM * 10.0)) RateSet = Prod.MinUPM * 10.0;
+                    RateSet = Prod.TargetUPM() * 1000.0;
+                    if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPM * 1000.0;
                 }
                 else
                 {
                     // manual rate
-                    RateSet = (Prod.ManualAdjust * 10.0);
+                    RateSet = (Prod.ManualAdjust * 1000.0);
                 }
             }
 
-            if (Prod.EnableProdDensity && Prod.ProdDensity > 0) RateSet = (RateSet / Prod.ProdDensity) * 100;
+            if (Prod.EnableProdDensity && Prod.ProdDensity > 0) RateSet = (RateSet / Prod.ProdDensity);
 
             cData[5] = (byte)RateSet;
             cData[6] = (byte)((int)RateSet >> 8);

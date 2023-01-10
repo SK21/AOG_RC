@@ -10,7 +10,7 @@ void SendSerial()
 	//0	HeaderLo		101
 	//1	HeaderHi		127
 	//2 Controller ID
-	//3	rate applied Lo 	10 X actual
+	//3	rate applied Lo 	1000 X actual
 	//4 rate applied Mid
 	//5	rate applied Hi
 	//6	acc.Quantity Lo		10 X actual
@@ -28,8 +28,8 @@ void SendSerial()
 		SerialPacket[1] = 127;
 		SerialPacket[2] = BuildModSenID(MDL.ModuleID, i);
 
-		// rate applied, 10 X actual
-		uint32_t Applied = UPM[i] * 10;
+		// rate applied, 1000 X actual
+		uint32_t Applied = UPM[i] * 1000;
 		SerialPacket[3] = Applied;
 		SerialPacket[4] = Applied >> 8;
 		SerialPacket[5] = Applied > 16;
@@ -96,7 +96,7 @@ void ReceiveSerial()
 			//2 Controller ID
 			//3	relay Lo		0 - 7
 			//4	relay Hi		8 - 15
-			//5	rate set Lo		10 X actual
+			//5	rate set Lo		1000 X actual
 			//6 rate set Mid
 			//7	rate set Hi		10 X actual
 			//8	Flow Cal Lo		100 X actual
@@ -154,11 +154,11 @@ void ReceiveSerial()
 
 							if (AutoOn)
 							{
-								RateSetting[SensorID] = (float)(RateSet * 0.1);
+								RateSetting[SensorID] = (float)(RateSet * 0.001);
 							}
 							else
 							{
-								ManualAdjust[SensorID] = (float)(RateSet * 0.1);
+								ManualAdjust[SensorID] = (float)(RateSet * 0.001);
 							}
 
 							// Meter Cal, 1000 times actual

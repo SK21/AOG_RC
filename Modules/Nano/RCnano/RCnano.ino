@@ -10,10 +10,10 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-uint32_t Debug1;
+float Debug1;
 float Debug2;
-byte Debug3;
-byte Debug4;
+float Debug3;
+float Debug4;
 
 # define InoDescription "RCnano  :  10-Jan-2023"
 const int16_t InoID = 5200;
@@ -310,8 +310,6 @@ void loop()
 			FlowEnabled[i] = (millis() - CommTime[i] < 4000)
 				&& ((RateSetting[i] > 0 && MasterOn[i]) || (ControlType[i] == 4));
 		}
-		Debug1 = FlowEnabled[1];
-		Debug4 = MasterOn[1];
 
 		CheckRelays();
 		AdjustFlow();
@@ -473,16 +471,18 @@ void DebugTheIno()
 	{
 		DebugTime = millis();
 
-		Serial.print(Debug1);
+		Serial.println("");
+
+		Serial.print(Debug1,3);
 		Serial.print(", ");
 
 		Serial.print(Debug2, 3);
 		Serial.print(", ");
 
-		Serial.print(Debug3);
+		Serial.print(Debug3,3);
 		Serial.print(", ");
 
-		Serial.print(Debug4);
+		Serial.print(Debug4,3);
 		Serial.print(", ");
 
 		Serial.println("");

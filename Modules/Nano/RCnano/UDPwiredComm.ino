@@ -9,7 +9,7 @@ void SendUDPwired()
     //0	HeaderLo		101
     //1	HeaderHi		127
     //2 Controller ID
-    //3	rate applied Lo 	10 X actual
+    //3	rate applied Lo 	1000 X actual
     //4 rate applied Mid
     //5	rate applied Hi
     //6	acc.Quantity Lo		10 X actual
@@ -28,8 +28,9 @@ void SendUDPwired()
 
         UDPpacket[2] = BuildModSenID(MDL.ModuleID, i);
 
-        // rate applied, 10 X actual
-        uint32_t Applied = UPM[i] * 10;
+        // rate applied, 1000 X actual
+        uint32_t Applied = UPM[i] * 1000;
+        Debug4 = Applied;
         UDPpacket[3] = Applied;
         UDPpacket[4] = Applied >> 8;
         UDPpacket[5] = Applied >> 16;
@@ -83,9 +84,9 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             //2 Controller ID
             //3	relay Lo		0 - 7
             //4	relay Hi		8 - 15
-            //5	rate set Lo		10 X actual
+            //5	rate set Lo		1000 X actual
             //6 rate set Mid
-            //7	rate set Hi		10 X actual
+            //7	rate set Hi		
             //8	Flow Cal Lo		100 X actual
             //9 Flow Cal Mid
             //10 Flow Cal Hi
@@ -127,20 +128,17 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             UseMultiPulses[SensorID] = ((InCommand[SensorID] & 32) == 32);
                             AutoOn = ((InCommand[SensorID] & 64) == 64);
 
-                            // rate setting, 10 times actual
+                            // rate setting, 1000 times actual
                             uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
 
                             if (AutoOn)
                             {
-                                RateSetting[SensorID] = (float)(RateSet * 0.1);
+                                RateSetting[SensorID] = (float)(RateSet * 0.001);
                             }
                             else
                             {
-                                ManualAdjust[SensorID] = (float)(RateSet * 0.1);
+                                ManualAdjust[SensorID] = (float)(RateSet * 0.001);
                             }
-
-                            Debug2 = RateSetting[1];
-                            Debug3 = AutoOn;
 
                             // Meter Cal, 1000 times actual
                             uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;

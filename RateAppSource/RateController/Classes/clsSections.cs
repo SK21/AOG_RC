@@ -141,16 +141,6 @@ namespace RateController
             }
         }
 
-        public byte SectionHi()
-        {
-            return SectionControlByte[1];
-        }
-
-        public byte SectionLo()
-        {
-            return SectionControlByte[0];
-        }
-
         public void SendStatusUpdate(bool SourceAOG = false)
         {
             bool SectionSwitchesChanged = false;
@@ -292,6 +282,7 @@ namespace RateController
             if (SectionOnFromAOG[0] == 0 && SectionOnFromAOG[1] == 0)
             {
                 AOGmasterOff = true;    // simulates a momentary switch off
+                // don't include AOGmasterOn=false, sections won't come on after u-turn
             }
             else
             {
@@ -597,11 +588,6 @@ namespace RateController
         {
             // switch box switches have changed
             SendStatusUpdate();
-        }
-
-        public class MasterChangedArgs : EventArgs
-        {
-            public bool MasterOn { get; set; }
         }
     }
 }
