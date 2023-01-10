@@ -93,7 +93,7 @@ namespace RateController
                     {
                         cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 10.0;
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
-                        cPWMsetting = (Int16)(Data[10] << 8 | Data[9]) / 10.0;  // need to cast to 16 bit integer to preserve the sign bit
+                        cPWMsetting = (Int16)(Data[10] << 8 | Data[9]);  // need to cast to 16 bit integer to preserve the sign bit
 
                         // status
                         if (tmp == 0)
