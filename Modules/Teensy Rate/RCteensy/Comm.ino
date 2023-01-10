@@ -49,14 +49,15 @@ void SendData()
 		DataOut[2] = BuildModSenID(MDL.ID, i);
 
 		// rate applied, 10 X actual
-		DataOut[3] = Sensor[i].UPM * 10;
-		DataOut[4] = (int)(Sensor[i].UPM * 10) >> 8;
-		DataOut[5] = (int)(Sensor[i].UPM * 10) >> 16;
+		uint32_t Applied = Sensor[i].UPM * 10;
+		DataOut[3] = Applied;
+		DataOut[4] = Applied >> 8;
+		DataOut[5] = Applied >> 16;
 
 		// accumulated quantity, 10 X actual
 		if (Sensor[i].MeterCal > 0)
 		{
-			long Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
+			uint32_t Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
 			DataOut[6] = Units;
 			DataOut[7] = Units >> 8;
 			DataOut[8] = Units >> 16;
@@ -69,8 +70,8 @@ void SendData()
 		}
 
 		// pwmSetting
-		DataOut[9] = Sensor[i].pwmSetting * 10;
-		DataOut[10] = (Sensor[i].pwmSetting * 10) >> 8;
+		DataOut[9] = Sensor[i].pwmSetting;
+		DataOut[10] = Sensor[i].pwmSetting >> 8;
 
 		// status
 		// bit 0    - sensor 0 receiving rate controller data
@@ -555,7 +556,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 						Sensor[ID].CalOn = ((Sensor[ID].InCommand & 128) == 128);
 
 						// rate setting, 10 times actual
-						int RateSet = Data[5] | Data[6] << 8 | Data[7] << 16;
+						uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
 						if (AutoOn)
 						{
 							Sensor[ID].RateSetting = (float)RateSet * 0.1;
@@ -566,7 +567,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 						}
 
 						// Meter Cal, 1000 X actual
-						uint32_t Temp = Data[8] | Data[9] << 8 | Data[10] << 16;
+						uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
 						Sensor[ID].MeterCal = (float)Temp * 0.001;
 
 						// power relays
