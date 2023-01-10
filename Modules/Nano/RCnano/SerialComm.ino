@@ -29,14 +29,15 @@ void SendSerial()
 		SerialPacket[2] = BuildModSenID(MDL.ModuleID, i);
 
 		// rate applied, 10 X actual
-		SerialPacket[3] = UPM[i] * 10;
-		SerialPacket[4] = (int)(UPM[i] * 10) >> 8;
-		SerialPacket[5] = (int)(UPM[i] * 10) >> 16;
+		uint32_t Applied = UPM[i] * 10;
+		SerialPacket[3] = Applied;
+		SerialPacket[4] = Applied >> 8;
+		SerialPacket[5] = Applied > 16;
 
 		// accumulated quantity, 10 X actual
 		if (MeterCal[i] > 0)
 		{
-			long Units = TotalPulses[i] * 10.0 / MeterCal[i];
+			uint32_t Units = TotalPulses[i] * 10.0 / MeterCal[i];
 			SerialPacket[6] = Units;
 			SerialPacket[7] = Units >> 8;
 			SerialPacket[8] = Units >> 16;
@@ -49,8 +50,8 @@ void SendSerial()
 		}
 
 		// pwmSetting
-		SerialPacket[9] = pwmSetting[i] * 10;
-		SerialPacket[10] = (pwmSetting[i] * 10) >> 8;
+		SerialPacket[9] = pwmSetting[i];
+		SerialPacket[10] = pwmSetting[i] >> 8;
 
 		// status
 		// bit 0    - sensor 0 receiving rate controller data
@@ -149,7 +150,7 @@ void ReceiveSerial()
 							AutoOn = ((InCommand[SensorID] & 32) == 32);
 
 							// rate setting, 10 times actual
-							int RateSet = SerialPacket[5] | SerialPacket[6] << 8 | SerialPacket[7] << 16;
+							uint32_t RateSet = SerialPacket[5] | (uint32_t)SerialPacket[6] << 8 | (uint32_t)SerialPacket[7] << 16;
 
 							if (AutoOn)
 							{
@@ -161,7 +162,7 @@ void ReceiveSerial()
 							}
 
 							// Meter Cal, 1000 times actual
-							uint32_t Temp = SerialPacket[8] | SerialPacket[9] << 8 | SerialPacket[10] << 16;
+							uint32_t Temp = SerialPacket[8] | (uint32_t)SerialPacket[9] << 8 | (uint32_t)SerialPacket[10] << 16;
 							MeterCal[SensorID] = (float)(Temp * 0.001);
 
 							// power relays
