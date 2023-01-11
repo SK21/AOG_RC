@@ -435,7 +435,9 @@ namespace RateController
         {
             if (ProductOn() && Coverage > 0)
             {
-                return (cUnitsApplied / Coverage);
+                double V = (cUnitsApplied / Coverage);
+                if (cEnableProdDensity && cProdDensity > 0) V *= cProdDensity;
+                return V; 
             }
             else
             {
@@ -457,7 +459,9 @@ namespace RateController
         {
             if (ProductOn())
             {
-                return RateApplied();
+                double V = RateApplied();
+                if (cEnableProdDensity && cProdDensity > 0) V *= cProdDensity;
+                return V;
             }
             else
             {
@@ -720,9 +724,12 @@ namespace RateController
             double Result = 0;
             if (ProductOn())
             {
+                double Ra = RateApplied();
+                if (cEnableProdDensity && cProdDensity > 0) Ra *= cProdDensity;
+
                 if (TargetRate() > 0)
                 {
-                    double Rt = RateApplied() / TargetRate();
+                    double Rt = Ra / TargetRate();
 
                     if (Rt >= .9 && Rt <= 1.1 && mf.SwitchBox.SwitchOn(SwIDs.Auto))
                     {
@@ -730,12 +737,12 @@ namespace RateController
                     }
                     else
                     {
-                        Result = RateApplied();
+                        Result = Ra;
                     }
                 }
                 else
                 {
-                    Result = RateApplied();
+                    Result = Ra;
                 }
             }
             return Result;
@@ -797,6 +804,10 @@ namespace RateController
                     V = TargetRate() / 60;
                     break;
             }
+
+            // added this back in to change from lb/min to ft^3/min, Moved from PGN32614.
+            if (cEnableProdDensity && cProdDensity > 0) { V /= cProdDensity; }
+
             return V;
         }
 
@@ -941,6 +952,11 @@ namespace RateController
             {
                 Result = ArduinoModule.UPM();
             }
+
+            //added this back in. and now I am taking it back out. The only place the density needs to be added back in is
+            // for the displayed rate on the form start.
+            //if (cEnableProdDensity && cProdDensity > 0) Result *= cProdDensity;
+
             return Result;
         }
 

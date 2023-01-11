@@ -788,5 +788,6 @@ namespace RateController
         {
             Products.Item(CurrentPage - 1).FanOn = false;
         }
+
     }
 }

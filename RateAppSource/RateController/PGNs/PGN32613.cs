@@ -207,10 +207,12 @@ namespace RateController
         public double UPM()
         {
             double Result = cUPM;
-            if (Prod.EnableProdDensity && Prod.ProdDensity > 0)
-            {
-                Result = (cUPM ) * Prod.ProdDensity;
-            }
+            // commented this out and moved it back to clsProduct.
+
+            //if (Prod.EnableProdDensity && Prod.ProdDensity > 0)
+            //{
+            //    Result = (cUPM / 100) * Prod.ProdDensity;
+            //}
             return Result;
         }
 

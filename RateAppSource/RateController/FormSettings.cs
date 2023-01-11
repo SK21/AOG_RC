@@ -1617,6 +1617,7 @@ namespace RateController
             if (CurrentProduct.CountsRev > 0)
             {
                 float RPM = (float)((CurrentProduct.MeterCal * Applied) / CurrentProduct.CountsRev);
+                //if (CurrentProduct.EnableProdDensity && CurrentProduct.ProdDensity > 0) RPM /= (float)CurrentProduct.ProdDensity;
                 lbRPM.Text = RPM.ToString("N0");
             }
             else

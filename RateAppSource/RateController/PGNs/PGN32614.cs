@@ -73,7 +73,8 @@ namespace RateController
                 }
             }
 
-            if (Prod.EnableProdDensity && Prod.ProdDensity > 0) RateSet = (RateSet / Prod.ProdDensity);
+            //I moved this back to cls Product to adjust prod.TargetUPM
+            //if (Prod.EnableProdDensity && Prod.ProdDensity > 0) RateSet = (RateSet / Prod.ProdDensity) * 100;
 
             cData[5] = (byte)RateSet;
             cData[6] = (byte)((int)RateSet >> 8);
