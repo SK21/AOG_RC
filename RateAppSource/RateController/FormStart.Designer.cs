@@ -160,7 +160,7 @@ namespace RateController
             this.panProducts.Controls.Add(this.lbRemaining);
             this.panProducts.Controls.Add(this.btAlarm);
             this.panProducts.Location = new System.Drawing.Point(0, 0);
-            this.panProducts.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.panProducts.Margin = new System.Windows.Forms.Padding(6);
             this.panProducts.Name = "panProducts";
             this.panProducts.Size = new System.Drawing.Size(542, 288);
             this.panProducts.TabIndex = 50;
@@ -182,9 +182,9 @@ namespace RateController
             // groupBox3
             // 
             this.groupBox3.Location = new System.Drawing.Point(18, 46);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox3.Size = new System.Drawing.Size(504, 2);
             this.groupBox3.TabIndex = 158;
             this.groupBox3.TabStop = false;
@@ -263,7 +263,7 @@ namespace RateController
             // lbRateAmount
             // 
             this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAmount.Location = new System.Drawing.Point(376, 58);
+            this.lbRateAmount.Location = new System.Drawing.Point(376, 61);
             this.lbRateAmount.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbRateAmount.Name = "lbRateAmount";
             this.lbRateAmount.Size = new System.Drawing.Size(178, 44);
@@ -303,7 +303,7 @@ namespace RateController
             this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btAlarm.Location = new System.Drawing.Point(132, 6);
-            this.btAlarm.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btAlarm.Margin = new System.Windows.Forms.Padding(6);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(336, 231);
             this.btAlarm.TabIndex = 146;
@@ -331,7 +331,7 @@ namespace RateController
             this.panSummary.Controls.Add(this.prd0);
             this.panSummary.Controls.Add(this.rt0);
             this.panSummary.Location = new System.Drawing.Point(0, 0);
-            this.panSummary.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.panSummary.Margin = new System.Windows.Forms.Padding(6);
             this.panSummary.Name = "panSummary";
             this.panSummary.Size = new System.Drawing.Size(540, 288);
             this.panSummary.TabIndex = 100;
@@ -709,7 +709,7 @@ namespace RateController
             // 
             this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
             this.btnRight.Location = new System.Drawing.Point(276, 294);
-            this.btnRight.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnRight.Margin = new System.Windows.Forms.Padding(6);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(126, 119);
             this.btnRight.TabIndex = 143;
@@ -720,7 +720,7 @@ namespace RateController
             // 
             this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
             this.btnLeft.Location = new System.Drawing.Point(142, 294);
-            this.btnLeft.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnLeft.Margin = new System.Windows.Forms.Padding(6);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(120, 119);
             this.btnLeft.TabIndex = 142;
@@ -732,7 +732,7 @@ namespace RateController
             this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
             this.btnSettings.Location = new System.Drawing.Point(8, 294);
-            this.btnSettings.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnSettings.Margin = new System.Windows.Forms.Padding(6);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(120, 119);
             this.btnSettings.TabIndex = 73;
@@ -778,7 +778,7 @@ namespace RateController
             this.panFan.Controls.Add(this.lbCurrentRPM);
             this.panFan.Controls.Add(this.lbFan);
             this.panFan.Location = new System.Drawing.Point(0, 0);
-            this.panFan.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.panFan.Margin = new System.Windows.Forms.Padding(6);
             this.panFan.Name = "panFan";
             this.panFan.Size = new System.Drawing.Size(540, 288);
             this.panFan.TabIndex = 157;
@@ -812,9 +812,9 @@ namespace RateController
             // groupBox1
             // 
             this.groupBox1.Location = new System.Drawing.Point(18, 46);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox1.Size = new System.Drawing.Size(504, 2);
             this.groupBox1.TabIndex = 165;
             this.groupBox1.TabStop = false;
@@ -823,7 +823,7 @@ namespace RateController
             // 
             this.btnStart.Image = ((System.Drawing.Image)(resources.GetObject("btnStart.Image")));
             this.btnStart.Location = new System.Drawing.Point(14, 165);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(6);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(248, 119);
             this.btnStart.TabIndex = 164;
@@ -834,7 +834,7 @@ namespace RateController
             // 
             this.btnStop.Image = ((System.Drawing.Image)(resources.GetObject("btnStop.Image")));
             this.btnStop.Location = new System.Drawing.Point(292, 165);
-            this.btnStop.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnStop.Margin = new System.Windows.Forms.Padding(6);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(248, 119);
             this.btnStop.TabIndex = 163;
@@ -915,7 +915,7 @@ namespace RateController
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormStart";
