@@ -21,7 +21,7 @@ unsigned long Omin2[2];
 void ISR0()
 {
 	static unsigned long PulseTime;
-	if (millis() - PulseTime > 10)
+	if (millis() - PulseTime > 3)
 	{
 		Duration[0] = millis() - PulseTime;
 		PulseTime = millis();
@@ -32,7 +32,7 @@ void ISR0()
 void ISR1()
 {
 	static unsigned long PulseTime;
-	if (millis() - PulseTime > 10)
+	if (millis() - PulseTime > 3)
 	{
 		Duration[1] = millis() - PulseTime;
 		PulseTime = millis();

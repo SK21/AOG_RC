@@ -32,7 +32,7 @@ void SendSerial()
 		uint32_t Applied = UPM[i] * 1000;
 		SerialPacket[3] = Applied;
 		SerialPacket[4] = Applied >> 8;
-		SerialPacket[5] = Applied > 16;
+		SerialPacket[5] = Applied >> 16;
 
 		// accumulated quantity, 10 X actual
 		if (MeterCal[i] > 0)
