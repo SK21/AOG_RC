@@ -82,31 +82,32 @@ namespace PCBsetup.Forms
 
         private void btnLoadDefaults_Click(object sender, EventArgs e)
         {
-            tbNanoModuleID.Text = "0";
-            tbNanoSensorCount.Text = "1";
+            tbTRModuleID.Text = "0";
+            tbTRSensorCount.Text = "1";
             ckNanoRelayOn.Checked = false;
             ckNanoFlowOn.Checked = false;
-            tbWemosPort.Text = "1";
+            tbTRWemosPort.Text = "1";
+            tbTRDebounce.Text = "3";
 
-            tbNanoFlow1.Text = "28";
-            tbNanoDir1.Text = "37";
-            tbNanoPWM1.Text = "36";
+            tbTRFlow1.Text = "28";
+            tbTRDir1.Text = "37";
+            tbTRPWM1.Text = "36";
 
-            tbNanoFlow2.Text = "29";
-            tbNanoDir2.Text = "14";
-            tbNanoPWM2.Text = "15";
+            tbTRFlow2.Text = "29";
+            tbTRDir2.Text = "14";
+            tbTRPWM2.Text = "15";
 
-            tbNanoIP.Text = "1";
-            cbRelayControl.SelectedIndex = 5;
+            tbTRIP.Text = "1";
+            cbTRRelayControl.SelectedIndex = 5;
 
-            tbRelay1.Text = "8";
-            tbRelay2.Text = "9";
-            tbRelay3.Text = "10";
-            tbRelay4.Text = "11";
-            tbRelay5.Text = "12";
-            tbRelay6.Text = "25";
-            tbRelay7.Text = "26";
-            tbRelay8.Text = "27";
+            tbTRRelay1.Text = "8";
+            tbTRRelay2.Text = "9";
+            tbTRRelay3.Text = "10";
+            tbTRRelay4.Text = "11";
+            tbTRRelay5.Text = "12";
+            tbTRRelay6.Text = "25";
+            tbTRRelay7.Text = "26";
+            tbTRRelay8.Text = "27";
         }
 
         private void btnSendToModule_Click(object sender, EventArgs e)
@@ -152,34 +153,34 @@ namespace PCBsetup.Forms
 
         private void BuildBoxes()
         {
-            int StartID = Boxes.Add(this.Text, tbNanoModuleID, 15);
-            Boxes.Add(this.Text, tbNanoSensorCount, 2);
-            Boxes.Add(this.Text, tbNanoIP, 254);
-            Boxes.Add(this.Text, tbWemosPort, 8);
+            int StartID = Boxes.Add(this.Text, tbTRModuleID, 15);
+            Boxes.Add(this.Text, tbTRSensorCount, 2);
+            Boxes.Add(this.Text, tbTRIP, 254);
+            Boxes.Add(this.Text, tbTRWemosPort, 8);
 
-            Boxes.Add(this.Text, tbNanoFlow1, 41);
-            Boxes.Add(this.Text, tbNanoFlow2, 41);
-            Boxes.Add(this.Text, tbNanoDir1, 41);
-            Boxes.Add(this.Text, tbNanoDir2, 41);
-            Boxes.Add(this.Text, tbNanoPWM1, 41);
-            Boxes.Add(this.Text, tbNanoPWM2, 41);
-            Boxes.Add(this.Text, tbRelay1, 41);
-            Boxes.Add(this.Text, tbRelay2, 41);
-            Boxes.Add(this.Text, tbRelay3, 41);
-            Boxes.Add(this.Text, tbRelay4, 41);
-            Boxes.Add(this.Text, tbRelay5, 41);
+            Boxes.Add(this.Text, tbTRFlow1, 41);
+            Boxes.Add(this.Text, tbTRFlow2, 41);
+            Boxes.Add(this.Text, tbTRDir1, 41);
+            Boxes.Add(this.Text, tbTRDir2, 41);
+            Boxes.Add(this.Text, tbTRPWM1, 41);
+            Boxes.Add(this.Text, tbTRPWM2, 41);
+            Boxes.Add(this.Text, tbTRRelay1, 41);
+            Boxes.Add(this.Text, tbTRRelay2, 41);
+            Boxes.Add(this.Text, tbTRRelay3, 41);
+            Boxes.Add(this.Text, tbTRRelay4, 41);
+            Boxes.Add(this.Text, tbTRRelay5, 41);
 
-            Boxes.Add(this.Text, tbRelay6, 41);
-            Boxes.Add(this.Text, tbRelay7, 41);
-            Boxes.Add(this.Text, tbRelay8, 41);
-            Boxes.Add(this.Text, tbRelay9, 41);
-            Boxes.Add(this.Text, tbRelay10, 41);
-            Boxes.Add(this.Text, tbRelay11, 41);
-            Boxes.Add(this.Text, tbRelay12, 41);
-            Boxes.Add(this.Text, tbRelay13, 41);
-            Boxes.Add(this.Text, tbRelay14, 41);
-            Boxes.Add(this.Text, tbRelay15, 41);
-            int EndID = Boxes.Add(this.Text, tbRelay16, 41);
+            Boxes.Add(this.Text, tbTRRelay6, 41);
+            Boxes.Add(this.Text, tbTRRelay7, 41);
+            Boxes.Add(this.Text, tbTRRelay8, 41);
+            Boxes.Add(this.Text, tbTRRelay9, 41);
+            Boxes.Add(this.Text, tbTRRelay10, 41);
+            Boxes.Add(this.Text, tbTRRelay11, 41);
+            Boxes.Add(this.Text, tbTRRelay12, 41);
+            Boxes.Add(this.Text, tbTRRelay13, 41);
+            Boxes.Add(this.Text, tbTRRelay14, 41);
+            Boxes.Add(this.Text, tbTRRelay15, 41);
+            int EndID = Boxes.Add(this.Text, tbTRRelay16, 41);
 
             for (int i = StartID; i < EndID + 1; i++)
             {
@@ -188,6 +189,8 @@ namespace PCBsetup.Forms
                 Boxes.Item(i).TB.TextChanged += tb_TextChanged;
                 Boxes.Item(i).TB.Validating += tb_Validating;
             }
+
+            Boxes.Add(this.Text, tbTRDebounce, 100);
         }
 
         private void ckNanoFlowOn_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -255,8 +258,8 @@ namespace PCBsetup.Forms
                 Boxes.ReLoad();
 
                 // combo boxes
-                byte.TryParse(mf.Tls.LoadProperty(this.Text+"/"+"RelayControl"), out tmp);
-                cbRelayControl.SelectedIndex = tmp;
+                byte.TryParse(mf.Tls.LoadProperty(this.Text+"/"+"TRRelayControl"), out tmp);
+                cbTRRelayControl.SelectedIndex = tmp;
 
 
                 // check boxes
@@ -280,7 +283,7 @@ namespace PCBsetup.Forms
                 Boxes.Save();
 
                 // combo boxes
-                mf.Tls.SaveProperty(this.Text+"/"+"RelayControl", cbRelayControl.SelectedIndex.ToString());
+                mf.Tls.SaveProperty(this.Text+"/"+"TRRelayControl", cbTRRelayControl.SelectedIndex.ToString());
 
                 // check boxes
                 for (int i = 0; i < CKs.Length; i++)
@@ -362,8 +365,8 @@ namespace PCBsetup.Forms
             LoadSettings();
 
             // IP address
-            double val = Boxes.Value("tbNanoModuleID");
-            lbIPpart4.Text = (val + 207).ToString();
+            double val = Boxes.Value("tbTRModuleID");
+            lbIPpart4.Text = "." + (val + 60).ToString();
 
             Initializing = false;
         }
@@ -371,6 +374,14 @@ namespace PCBsetup.Forms
         private void cbRelayControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void tbTRDebounce_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Mimiumum milliseconds between sensor pulses.";
+
+            mf.Tls.ShowHelp(Message, "Debounce");
+            hlpevent.Handled = true;
         }
     }
 }
