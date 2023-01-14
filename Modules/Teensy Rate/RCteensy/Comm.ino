@@ -13,7 +13,7 @@ byte DataEthernet[MaxReadBuffer];
 
 byte DataOut[50];
 
-const byte PGN32500Length = 31;
+const byte PGN32500Length = 32;
 const byte PGN32501Length = 8;
 const byte PGN32502Length = 7;
 const byte PGN32503Length = 6;
@@ -399,8 +399,9 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		// 11       Sensor 1, flow pin
 		// 12       Sensor 1, dir pin
 		// 13       Sensor 1, pwm pin
-		// 14-29    Relay pins 0-15
-		// 30       CRC
+		// 14-29    Relay pins 0-15\
+		// 30		debounce minimum ms
+		// 31       CRC
 
 		if (len > PGN32500Length - 1)
 		{
@@ -436,6 +437,8 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				{
 					EEPROM.put(200 + i * 50, Sensor[i]);
 				}
+
+				MDL.Debounce = Data[30];
 
 				// restart the Teensy
 				SCB_AIRCR = 0x05FA0004;
@@ -517,7 +520,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		//10 Flow Cal Hi
 		//11	Command
 		//- bit 0		    reset acc.Quantity
-		//- bit 1, 2		valve type 0 - 3
+		//- bit 1, 2		valve type 0 - 4
 		//- bit 3		    MasterOn
 		//- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
 		//- bit 5           AutoOn

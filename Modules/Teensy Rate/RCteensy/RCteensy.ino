@@ -7,9 +7,14 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   02-Jan-2023"
+# define InoDescription "RCteensy   13-Jan-2023"
+
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
+
+//EEPROM
+int16_t EEread = 0;
+#define MDL_Ident 5300
 
 struct ModuleConfig	
 {
@@ -17,7 +22,7 @@ struct ModuleConfig
 	uint8_t ProductCount = 1;       // up to 2 sensors
 	uint8_t IPpart2 = 168;			// ethernet IP address
 	uint8_t	IPpart3 = 1;
-	uint8_t IPpart4 = 200;			// 200 + ID
+	uint8_t IPpart4 = 60;			// 60 + ID
 	uint8_t RelayOnSignal = 0;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
@@ -25,6 +30,7 @@ struct ModuleConfig
 	uint8_t RelayPins[16];			// pin numbers when GPIOs are used for relay control (5)
 	uint8_t LOADCELL_DOUT_PIN[MaxProductCount];	
 	uint8_t LOADCELL_SCK_PIN[MaxProductCount];	
+	uint8_t Debounce = 3;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
@@ -41,7 +47,7 @@ struct SensorConfig
 	uint16_t pwmSetting = 0;
 	uint32_t CommTime = 0;
 	byte InCommand = 0;			// command byte from RateController
-	byte ControlType = 0;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight
+	byte ControlType = 0;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan
 	uint32_t TotalPulses = 0;
 	float RateSetting = 0;
 	float MeterCal = 0;
@@ -83,10 +89,6 @@ byte RelayLo = 0;	// sections 0-7
 byte RelayHi = 0;	// sections 8-15
 byte PowerRelayLo;
 byte PowerRelayHi;
-
-//EEPROM
-int16_t EEread = 0;
-#define MDL_Ident 5100
 
 // WifiSwitches connection to Wemos D1 Mini
 unsigned long WifiSwitchesTimer;
@@ -156,7 +158,7 @@ void setup()
 	if (MDL.ProductCount < 1) MDL.ProductCount = 1;
 	if (MDL.ProductCount > MaxProductCount) MDL.ProductCount = MaxProductCount;
 
-	MDL.IPpart4 = MDL.ID + 200;
+	MDL.IPpart4 = MDL.ID + 60;
 	if (MDL.IPpart4 > 255) MDL.IPpart4 = 255 - MDL.ID;
 
 	Serial.begin(38400);
@@ -330,7 +332,8 @@ void loop()
 
 		for (int i = 0; i < MDL.ProductCount; i++)
 		{
-			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000) && Sensor[i].RateSetting > 0 && Sensor[i].MasterOn;
+			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000)
+				&& ((Sensor[i].RateSetting > 0 && Sensor[i].MasterOn) || (Sensor[i].ControlType == 4));
 		}
 
 		GetUPM();
@@ -431,6 +434,7 @@ void AutoControl()
 			{
 			case 2:
 			case 3:
+			case 4:
 				// motor control
 				Sensor[i].pwmSetting = ControlMotor(i);
 				break;
@@ -468,6 +472,7 @@ void ManualControl()
 				{
 				case 2:
 				case 3:
+				case 4:
 					// motor control
 					if (Sensor[i].ManualAdjust > 0)
 					{
