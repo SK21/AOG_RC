@@ -92,6 +92,7 @@ namespace PCBsetup.Forms
             tbNanoPWM2.Text = "9";
 
             tbNanoIP.Text = "1";
+            tbNanoDebounce.Text = "3";
         }
 
         private void btnSendToModule_Click(object sender, EventArgs e)
@@ -174,6 +175,8 @@ namespace PCBsetup.Forms
                 Boxes.Item(i).TB.TextChanged += tb_TextChanged;
                 Boxes.Item(i).TB.Validating += tb_Validating;
             }
+
+            Boxes.Add(this.Text, tbNanoDebounce, 100);
         }
 
         private void ckNanoFlowOn_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -352,7 +355,7 @@ namespace PCBsetup.Forms
 
             // IP address
             double val = Boxes.Value("tbNanoModuleID");
-            lbIPpart4.Text = (val + 207).ToString();
+            lbIPpart4.Text = "." + (val + 50).ToString();
 
             Initializing = false;
         }
@@ -360,6 +363,14 @@ namespace PCBsetup.Forms
         private void ckUseMCP23017_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void tbNanoDebounce_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Mimiumum milliseconds between sensor pulses.";
+
+            mf.Tls.ShowHelp(Message, "Debounce");
+            hlpevent.Handled = true;
         }
     }
 }

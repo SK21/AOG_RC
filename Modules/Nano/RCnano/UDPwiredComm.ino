@@ -30,7 +30,6 @@ void SendUDPwired()
 
         // rate applied, 1000 X actual
         uint32_t Applied = UPM[i] * 1000;
-        Debug4 = Applied;
         UDPpacket[3] = Applied;
         UDPpacket[4] = Applied >> 8;
         UDPpacket[5] = Applied >> 16;
@@ -233,7 +232,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             break;
 
         case 32625:
-            // from rate controller, 7 bytes
+            // from rate controller, 8 bytes
             // Nano config
             // 0    113
             // 1    127
@@ -244,8 +243,9 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             //      - UseMCP23017
             //      - RelyOnSignal
             //      - FlowOnSignal
-            // 6    crc
-            PGNlength = 7;
+            // 6    minimum ms debounce
+            // 7    crc
+            PGNlength = 8;
 
             if (len > PGNlength - 1)
             {
@@ -259,6 +259,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                     if ((tmp & 1) == 1) MDL.UseMCP23017 = 1; else MDL.UseMCP23017 = 0;
                     if ((tmp & 2) == 2) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
                     if ((tmp & 4) == 4) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
+
+                    MDL.Debounce = Data[6];
 
                     EEPROM.put(10, MDL);
                 }
