@@ -10,13 +10,8 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-float Debug1;
-float Debug2;
-float Debug3;
-float Debug4;
-
-# define InoDescription "RCnano  :  10-Jan-2023"
-const int16_t InoID = 5200;
+# define InoDescription "RCnano  :  13-Jan-2023"
+const int16_t InoID = 5300;
 int16_t StoredID;
 
 # define UseEthernet 1
@@ -36,6 +31,7 @@ struct ModuleConfig    // 5 bytes
 	uint8_t PWM1 = 5;
 	uint8_t PWM2 = 9;
 	uint8_t Relays[16];
+	uint8_t Debounce = 3;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
@@ -334,15 +330,13 @@ void loop()
 	}
 
 #if UseEthernet
-	delay(10);
+	//delay(10);
 
 	//this must be called for ethercard functions to work.
 	ether.packetLoop(ether.packetReceive());
 #endif
 
 	ReceiveSerial();
-
-	DebugTheIno();
 }
 
 byte ParseModID(byte ID)
@@ -463,28 +457,3 @@ byte CRC(byte Chk[], byte Length, byte Start)
 }
 
 
-uint32_t DebugTime;
-
-void DebugTheIno()
-{
-	if (millis() - DebugTime > 1000)
-	{
-		DebugTime = millis();
-
-		Serial.println("");
-
-		Serial.print(Debug1,3);
-		Serial.print(", ");
-
-		Serial.print(Debug2, 3);
-		Serial.print(", ");
-
-		Serial.print(Debug3,3);
-		Serial.print(", ");
-
-		Serial.print(Debug4,3);
-		Serial.print(", ");
-
-		Serial.println("");
-	}
-}

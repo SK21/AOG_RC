@@ -22,7 +22,7 @@ namespace PCBsetup
         // 6        Relay control type  0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
         // 7        Wemos serial port
         // 8        Sensor 0, flow pin
-        // 9       Sensor 0, dir pin
+        // 9        Sensor 0, dir pin
         // 10       Sensor 0, pwm pin
         // 11       Sensor 1, flow pin
         // 12       Sensor 1, dir pin
