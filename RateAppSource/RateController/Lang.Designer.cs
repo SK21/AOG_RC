@@ -1114,6 +1114,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Time.
+        /// </summary>
+        internal static string lgTime {
+            get {
+                return ResourceManager.GetString("lgTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Timed Adjustment.
         /// </summary>
         internal static string lgTimedAjustment {
