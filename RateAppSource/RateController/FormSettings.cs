@@ -120,6 +120,8 @@ namespace RateController
             swUp.Text = Lang.lgRateUp;
             swDown.Text = Lang.lgRateDown;
 
+            label34.Text = Lang.lgTime;
+
             #endregion // language
 
             mf = CallingForm;
