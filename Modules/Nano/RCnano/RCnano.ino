@@ -10,8 +10,8 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  10-Jan-2023"
-const int16_t InoID = 5100;
+# define InoDescription "RCnano  :  13-Jan-2023"
+const int16_t InoID = 5300;
 int16_t StoredID;
 
 # define UseEthernet 1
@@ -31,6 +31,7 @@ struct ModuleConfig    // 5 bytes
 	uint8_t PWM1 = 5;
 	uint8_t PWM2 = 9;
 	uint8_t Relays[16];
+	uint8_t Debounce = 3;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
@@ -106,7 +107,7 @@ byte PIDbrakePoint[] = { 20, 20 };
 byte AdjustTime[2];
 
 byte InCommand[] = { 0, 0 };		// command byte from RateController
-byte ControlType[] = { 0, 0 };  // 0 standard, 1 Fast Close, 2 Motor
+byte ControlType[] = { 0, 0 };  // 0 standard, 1 Fast Close, 2 Motor, 3 Motor/weight, 4 fan
 
 unsigned long TotalPulses[2];
 unsigned long CommTime[2];
@@ -302,7 +303,8 @@ void loop()
 
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			FlowEnabled[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0) && MasterOn[i];
+			FlowEnabled[i] = (millis() - CommTime[i] < 4000)
+				&& ((RateSetting[i] > 0 && MasterOn[i]) || (ControlType[i] == 4));
 		}
 
 		CheckRelays();
@@ -328,7 +330,7 @@ void loop()
 	}
 
 #if UseEthernet
-	delay(10);
+	//delay(10);
 
 	//this must be called for ethercard functions to work.
 	ether.packetLoop(ether.packetReceive());
@@ -363,6 +365,8 @@ void AutoControl()
 		switch (ControlType[i])
 		{
 		case 2:
+		case 3:
+		case 4:
 			// motor control
 			pwmSetting[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
 				PIDHighMax[i], PIDdeadband[i], i);
@@ -393,6 +397,8 @@ void ManualControl()
 			switch (ControlType[i])
 			{
 			case 2:
+			case 3:
+			case 4:
 				// motor control
 				if (ManualAdjust[i] > 0)
 				{
@@ -449,6 +455,5 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	Result = (byte)CK;
 	return Result;
 }
-
 
 

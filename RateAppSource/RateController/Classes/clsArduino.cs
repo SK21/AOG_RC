@@ -233,13 +233,12 @@ namespace RateController
             //9	Flow Cal Mid
             //10 Flow Cal Hi
             //11	Command
-            //- bit 0		    reset acc.Quantity
-            //- bit 1, 2		valve type 0 - 3
-            //- bit 3		    MasterOn
-            //- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
-            //- bit 5           AutoOn
-            //- bit 6           Debug pgn on
-            //- bit 7           Calibration on
+            //	        - bit 0		    reset acc.Quantity
+            //	        - bit 1,2,3		control type 0-4
+            //	        - bit 4		    MasterOn
+            //          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
+            //          - bit 6         AutoOn
+            //          - bit 7         Calibration On
             //12    power relay Lo      list of power type relays 0-7
             //13    power relay Hi      list of power type relays 8-15
             //14    Cal PWM     calibration pwm
@@ -511,9 +510,9 @@ namespace RateController
             words[8] = Temp.ToString();
 
             //pwmSetting
-            Temp = (byte)((int)(pwmSetting * 10));
+            Temp = (byte)((int)(pwmSetting));
             words[9] = Temp.ToString();
-            Temp = (byte)((int)(pwmSetting * 10) >> 8);
+            Temp = (byte)((int)(pwmSetting) >> 8);
             words[10] = Temp.ToString();
 
             // status

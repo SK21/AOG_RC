@@ -9,13 +9,13 @@ namespace RateController
         //0	HeaderLo		    101
         //1	HeaderHi		    127
         //2 Mod/Sen ID          0-15/0-15
-        //3	rate applied Lo 	10 X actual
+        //3	rate applied Lo 	1000 X actual
         //4 rate applied Mid
         //5	rate applied Hi
         //6	acc.Quantity Lo		10 X actual
         //7	acc.Quantity Mid
         //8 acc.Quantity Hi
-        //9 PWM Lo              10 X actual
+        //9 PWM Lo              
         //10 PWM Hi
         //11 Status
         //      bit 0 - sensor 0 connected
@@ -91,9 +91,9 @@ namespace RateController
                     tmp = Prod.mf.Tls.ParseSenID(Data[2]);
                     if (Prod.SensorID == tmp)
                     {
-                        cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 10.0;
+                        cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 1000.0;
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
-                        cPWMsetting = (Int16)(Data[10] << 8 | Data[9]) / 10.0;  // need to cast to 16 bit integer to preserve the sign bit
+                        cPWMsetting = (Int16)(Data[10] << 8 | Data[9]);  // need to cast to 16 bit integer to preserve the sign bit
 
                         // status
                         if (tmp == 0)
@@ -159,7 +159,7 @@ namespace RateController
                                 byte.TryParse(Data[3], out RateLo);
                                 byte.TryParse(Data[4], out RateMid);
                                 byte.TryParse(Data[5], out RateHi);
-                                cUPM = (RateHi << 16 | RateMid << 8 | RateLo) / 10.0;
+                                cUPM = (RateHi << 16 | RateMid << 8 | RateLo) / 1000.0;
 
                                 // accumulated quantity
                                 byte.TryParse(Data[6], out QuantityLo);
@@ -171,7 +171,7 @@ namespace RateController
                                 byte.TryParse(Data[9], out pwmLo);
                                 byte.TryParse(Data[10], out pwmHi);
 
-                                cPWMsetting = (double)((Int16)(pwmHi << 8 | pwmLo)) / 10.0;
+                                cPWMsetting = (double)((Int16)(pwmHi << 8 | pwmLo));
 
                                 // status
                                 byte Status;
@@ -207,10 +207,12 @@ namespace RateController
         public double UPM()
         {
             double Result = cUPM;
-            if (Prod.EnableProdDensity && Prod.ProdDensity > 0)
-            {
-                Result = (cUPM / 100) * Prod.ProdDensity;
-            }
+            // commented this out and moved it back to clsProduct.
+
+            //if (Prod.EnableProdDensity && Prod.ProdDensity > 0)
+            //{
+            //    Result = (cUPM / 100) * Prod.ProdDensity;
+            //}
             return Result;
         }
 

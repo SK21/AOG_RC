@@ -13,7 +13,7 @@ byte DataEthernet[MaxReadBuffer];
 
 byte DataOut[50];
 
-const byte PGN32500Length = 31;
+const byte PGN32500Length = 32;
 const byte PGN32501Length = 8;
 const byte PGN32502Length = 7;
 const byte PGN32503Length = 6;
@@ -31,7 +31,7 @@ void SendData()
 	//0	HeaderLo		101
 	//1	HeaderHi		127
 	//2 Mod/Sen ID      0-15/0-15
-	//3	rate applied Lo 	10 X actual
+	//3	rate applied Lo 	1000 X actual
 	//4 rate applied Mid
 	//5	rate applied Hi
 	//6	acc.Quantity Lo		10 X actual
@@ -49,14 +49,15 @@ void SendData()
 		DataOut[2] = BuildModSenID(MDL.ID, i);
 
 		// rate applied, 10 X actual
-		DataOut[3] = Sensor[i].UPM * 10;
-		DataOut[4] = (int)(Sensor[i].UPM * 10) >> 8;
-		DataOut[5] = (int)(Sensor[i].UPM * 10) >> 16;
+		uint32_t Applied = Sensor[i].UPM * 1000;
+		DataOut[3] = Applied;
+		DataOut[4] = Applied >> 8;
+		DataOut[5] = Applied >> 16;
 
 		// accumulated quantity, 10 X actual
 		if (Sensor[i].MeterCal > 0)
 		{
-			long Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
+			uint32_t Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
 			DataOut[6] = Units;
 			DataOut[7] = Units >> 8;
 			DataOut[8] = Units >> 16;
@@ -69,8 +70,8 @@ void SendData()
 		}
 
 		// pwmSetting
-		DataOut[9] = Sensor[i].pwmSetting * 10;
-		DataOut[10] = (Sensor[i].pwmSetting * 10) >> 8;
+		DataOut[9] = Sensor[i].pwmSetting;
+		DataOut[10] = Sensor[i].pwmSetting >> 8;
 
 		// status
 		// bit 0    - sensor 0 receiving rate controller data
@@ -398,8 +399,9 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		// 11       Sensor 1, flow pin
 		// 12       Sensor 1, dir pin
 		// 13       Sensor 1, pwm pin
-		// 14-29    Relay pins 0-15
-		// 30       CRC
+		// 14-29    Relay pins 0-15\
+		// 30		debounce minimum ms
+		// 31       CRC
 
 		if (len > PGN32500Length - 1)
 		{
@@ -435,6 +437,8 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				{
 					EEPROM.put(200 + i * 50, Sensor[i]);
 				}
+
+				MDL.Debounce = Data[30];
 
 				// restart the Teensy
 				SCB_AIRCR = 0x05FA0004;
@@ -508,15 +512,15 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		//2 Controller ID
 		//3	relay Lo		0 - 7
 		//4	relay Hi		8 - 15
-		//5	rate set Lo		10 X actual
+		//5	rate set Lo		1000 X actual
 		//6 rate set Mid
-		//7	rate set Hi		10 X actual
+		//7	rate set Hi		
 		//8	Flow Cal Lo		1000 X actual
 		//9	Flow Cal Mid
 		//10 Flow Cal Hi
 		//11	Command
 		//- bit 0		    reset acc.Quantity
-		//- bit 1, 2		valve type 0 - 3
+		//- bit 1, 2		valve type 0 - 4
 		//- bit 3		    MasterOn
 		//- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
 		//- bit 5           AutoOn
@@ -555,18 +559,18 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 						Sensor[ID].CalOn = ((Sensor[ID].InCommand & 128) == 128);
 
 						// rate setting, 10 times actual
-						int RateSet = Data[5] | Data[6] << 8 | Data[7] << 16;
+						uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
 						if (AutoOn)
 						{
-							Sensor[ID].RateSetting = (float)RateSet * 0.1;
+							Sensor[ID].RateSetting = (float)RateSet * 0.001;
 						}
 						else
 						{
-							Sensor[ID].ManualAdjust = (float)RateSet * 0.1;
+							Sensor[ID].ManualAdjust = (float)RateSet * 0.001;
 						}
 
 						// Meter Cal, 1000 X actual
-						uint32_t Temp = Data[8] | Data[9] << 8 | Data[10] << 16;
+						uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
 						Sensor[ID].MeterCal = (float)Temp * 0.001;
 
 						// power relays

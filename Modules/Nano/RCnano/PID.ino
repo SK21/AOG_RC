@@ -86,7 +86,6 @@ int ControlMotor(byte sKP, float sError, float sSetPoint, byte sMinPWM,
             if (Result < sMinPWM) Result = (float)sMinPWM;
         }
     }
-
     LastPWM[SensorID] = Result;
     return (int)Result;
 }

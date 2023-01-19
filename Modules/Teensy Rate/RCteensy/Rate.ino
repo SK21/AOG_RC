@@ -16,13 +16,11 @@ unsigned long Omax[MaxProductCount];
 unsigned long Omin[MaxProductCount];
 byte Ocount[MaxProductCount];
 float Oave[MaxProductCount];
-unsigned long Omax2[MaxProductCount];
-unsigned long Omin2[MaxProductCount];
 
 void ISR0()
 {
 	static unsigned long PulseTime;
-	if (millis() - PulseTime > 10)
+	if (millis() - PulseTime > MDL.Debounce)
 	{
 		Duration[0] = millis() - PulseTime;
 		PulseTime = millis();
@@ -33,7 +31,7 @@ void ISR0()
 void ISR1()
 {
 	static unsigned long PulseTime;
-	if (millis() - PulseTime > 10)
+	if (millis() - PulseTime > MDL.Debounce)
 	{
 		Duration[1] = millis() - PulseTime;
 		PulseTime = millis();
@@ -100,35 +98,20 @@ void GetUPMflow(int ID)
 
 	if (millis() - LastPulse[ID] > 4000)	PPM[ID] = 0;	// check for no flow
 
-	// double olympic average
+	// olympic average
 	Osum[ID] += PPM[ID];
-	if (Omax[ID] < PPM[ID])
-	{
-		Omax2[ID] = Omax[ID];
-		Omax[ID] = PPM[ID];
-	}
-	else if (Omax2[ID] < PPM[ID]) Omax2[ID] = PPM[ID];
-
-	if (Omin[ID] > PPM[ID])
-	{
-		Omin2[ID] = Omin[ID];
-		Omin[ID] = PPM[ID];
-	}
-	else if (Omin2[ID] > PPM[ID]) Omin2[ID] = PPM[ID];
+	if (Omax[ID] < PPM[ID]) Omax[ID] = PPM[ID];
+	if (Omin[ID] > PPM[ID]) Omin[ID] = PPM[ID];
 
 	Ocount[ID]++;
-	if (Ocount[ID] > 9)
+	if (Ocount[ID] > 4)
 	{
 		Osum[ID] -= Omax[ID];
 		Osum[ID] -= Omin[ID];
-		Osum[ID] -= Omax2[ID];
-		Osum[ID] -= Omin2[ID];
-		Oave[ID] = (float)Osum[ID] / 600.0;	// divide by 6 samples and divide by 100 for decimal place
+ 		Oave[ID] = (float)Osum[ID] / 300.0;	// divide by 3 samples and divide by 100 for decimal place
 		Osum[ID] = 0;
 		Omax[ID] = 0;
 		Omin[ID] = 5000000;
-		Omax2[ID] = 0;
-		Omin2[ID] = 5000000;
 		Ocount[ID] = 0;
 	}
 

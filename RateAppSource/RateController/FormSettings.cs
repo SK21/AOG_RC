@@ -1218,7 +1218,7 @@ namespace RateController
         private void tbAltRate_Validating(object sender, CancelEventArgs e)
         {
             double tempD;
-            double.TryParse(RateSet.Text, out tempD);
+            double.TryParse(tbAltRate.Text, out tempD);
             if (tempD < 1 || tempD > 200)
             {
                 System.Media.SystemSounds.Exclamation.Play();
@@ -1621,6 +1621,7 @@ namespace RateController
             if (CurrentProduct.CountsRev > 0)
             {
                 float RPM = (float)((CurrentProduct.MeterCal * Applied) / CurrentProduct.CountsRev);
+                //if (CurrentProduct.EnableProdDensity && CurrentProduct.ProdDensity > 0) RPM /= (float)CurrentProduct.ProdDensity;
                 lbRPM.Text = RPM.ToString("N0");
             }
             else

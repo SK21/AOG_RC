@@ -24,20 +24,13 @@ namespace RateController
         private DateTime MasterTime;
         private FormStart mf;
 
-        // sent back to AOG, see PGN234, byte 5
-        private byte OutCommand;
-
+        private byte OutCommand;    // sent back to AOG, see PGN234, byte 5
         private byte OutLast;
         private bool PinState;
-
-        // rate change amount for each step.  ex: 0.10 means 10% for each step
-        private float RateCalcFactor = 0.05F;
-
+        private float RateCalcFactor = 0.05F; // rate change amount for each step.  ex: 0.10 means 10% for each step
         private DateTime RateLastTime;
-
-        // used by RateController
+       
         private byte[] SectionControlByte = new byte[2];
-
         private byte[] SectionControlLast = new byte[2];
         private byte[] SectionOffToAOG = new byte[2];
         private byte[] SectionOffToAOGlast = new byte[2];
@@ -46,9 +39,7 @@ namespace RateController
         private byte[] SectionOnToAOG = new byte[2];
         private byte[] SectionOnToAOGlast = new byte[2];
 
-        // ms between adjustments
-        private int StepDelay = 500;
-
+        private int StepDelay = 500; // ms between adjustments
         private DateTime SWreadTime;
         private int Tmp;
         private PGN234 ToAOG;
@@ -150,16 +141,6 @@ namespace RateController
             }
         }
 
-        public byte SectionHi()
-        {
-            return SectionControlByte[1];
-        }
-
-        public byte SectionLo()
-        {
-            return SectionControlByte[0];
-        }
-
         public void SendStatusUpdate(bool SourceAOG = false)
         {
             bool SectionSwitchesChanged = false;
@@ -175,6 +156,7 @@ namespace RateController
 
                 AOGmasterOn = false;
                 AOGmasterOff = false;
+                MasterOn = true;
             }
 
             bool RelaysChanged = UpdateSectionsOn();
@@ -300,6 +282,7 @@ namespace RateController
             if (SectionOnFromAOG[0] == 0 && SectionOnFromAOG[1] == 0)
             {
                 AOGmasterOff = true;    // simulates a momentary switch off
+                // don't include AOGmasterOn=false, sections won't come on after u-turn
             }
             else
             {
@@ -605,11 +588,6 @@ namespace RateController
         {
             // switch box switches have changed
             SendStatusUpdate();
-        }
-
-        public class MasterChangedArgs : EventArgs
-        {
-            public bool MasterOn { get; set; }
         }
     }
 }
