@@ -16,6 +16,7 @@ namespace RateController
     {
         public readonly int MaxRelays = 16;
         public readonly int MaxSections = 16;
+        public readonly int MaxProducts = 6;    // last two are fans 
 
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
@@ -41,6 +42,7 @@ namespace RateController
         public PGN230 VRdata;
         public string WiFiIP;
         private int CurrentPage;
+        private clsProduct Prd;
 
         private Label[] Indicators;
         private Label[] ProdName;
@@ -49,6 +51,8 @@ namespace RateController
         private int[] RateType = new int[5];    // 0 current rate, 1 instantaneous rate, 2 overall rate
         private bool ShowCoverageRemaining;
         private bool ShowQuantityRemaining;
+
+        private DateTime MenuLongPress;
 
         public FormStart()
         {
@@ -100,9 +104,9 @@ namespace RateController
                 SER[i] = new SerialComm(this, i);
             }
 
-            ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4 };
-            Rates = new Label[] { rt0, rt1, rt2, rt3, rt4 };
-            Indicators = new Label[] { idc0, idc1, idc2, idc3, idc4 };
+            ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4,prd5};
+            Rates = new Label[] { rt0, rt1, rt2, rt3, rt4,rt5 };
+            Indicators = new Label[] { idc0, idc1, idc2, idc3, idc4 ,idc5};
 
             UseInches = true;
 
@@ -184,14 +188,14 @@ namespace RateController
         {
             try
             {
+                if(CurrentPage>0) Prd = Products.Item(CurrentPage - 1);
+
+                FormatDisplay();
+
                 if (CurrentPage == 0)
                 {
                     // summary
-                    panProducts.Visible = false;
-                    panSummary.Visible = true;
-                    panFan.Visible = false;
-
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < MaxProducts; i++)
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
 
@@ -223,13 +227,6 @@ namespace RateController
                 else
                 {
                     // product pages
-                    clsProduct Prd = Products.Item(CurrentPage - 1);
-
-                    panProducts.Visible = true;
-                    panSummary.Visible = false;
-                    panProducts.Visible = (Prd.ControlType != ControlTypeEnum.Fan);
-                    panFan.Visible = (Prd.ControlType == ControlTypeEnum.Fan);
-
                     lbFan.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
                     lbTargetRPM.Text = Prd.TargetRate().ToString("N0");
                     lbCurrentRPM.Text= Prd.SmoothRate().ToString("N0");
@@ -386,7 +383,7 @@ namespace RateController
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            if (CurrentPage < 5)
+            if (CurrentPage < MaxProducts)
             {
                 CurrentPage++;
                 UpdateStatus();
@@ -409,12 +406,12 @@ namespace RateController
             {
                 if (ShowPressure)
                 {
-                    this.Height = 285;
-                    btnSettings.Top = 182;
-                    btnLeft.Top = 182;
-                    btnRight.Top = 182;
-                    lbArduinoConnected.Top = 182;
-                    lbAogConnected.Top = 217;
+                    //this.Height = 285;
+                    //btnSettings.Top = 182;
+                    //btnLeft.Top = 182;
+                    //btnRight.Top = 182;
+                    //lbArduinoConnected.Top = 182;
+                    //lbAogConnected.Top = 217;
                     lbPressure.Visible = true;
                     lbPressureValue.Visible = true;
                     lbPressure.Text = Lang.lgPressure + " " + PressureToShowID.ToString();
@@ -424,12 +421,12 @@ namespace RateController
                 }
                 else
                 {
-                    this.Height = 256;
-                    btnSettings.Top = 153;
-                    btnLeft.Top = 153;
-                    btnRight.Top = 153;
-                    lbArduinoConnected.Top = 153;
-                    lbAogConnected.Top = 188;
+                    //this.Height = 256;
+                    //btnSettings.Top = 153;
+                    //btnLeft.Top = 153;
+                    //btnRight.Top = 153;
+                    //lbArduinoConnected.Top = 153;
+                    //lbAogConnected.Top = 188;
                     lbPressure.Visible = false;
                     lbPressureValue.Visible = false;
                 }
@@ -437,6 +434,93 @@ namespace RateController
             catch (Exception ex)
             {
                 Tls.WriteErrorLog("FormStart/CheckPressure: " + ex.Message);
+            }
+        }
+
+        private void FormatDisplay()
+        {
+            try
+            {
+
+                this.Width = 290;
+                if (CurrentPage == 0)
+                {
+                    // summary panel
+                    panSummary.Visible = true;
+                    panFan.Visible = false;
+                    panProducts.Visible = false;
+                    panSummary.Top = 0;
+                    panSummary.Left = 0;
+
+                    this.Height = 283;
+                    btnSettings.Top = 180;
+                    btnLeft.Top = 180;
+                    btnRight.Top = 180;
+                    lbArduinoConnected.Top = 180;
+                    lbAogConnected.Top = 214;
+                }
+                else
+                {
+                    panSummary.Visible = false;
+                    if (Prd.ControlType == ControlTypeEnum.Fan)
+                    {
+                        // fan panel
+                        panProducts.Visible = false;
+                        panFan.Visible = true;
+                        panFan.Top = 0;
+                        panFan.Left = 0;
+
+                        this.Height = 257;
+                        btnSettings.Top = 154;
+                        btnLeft.Top = 154;
+                        btnRight.Top = 154;
+                        lbArduinoConnected.Top = 154;
+                        lbAogConnected.Top = 188;
+                        lbPressure.Visible = false;
+                        lbPressureValue.Visible = false;
+                    }
+                    else
+                    {
+                        panProducts.Visible = true;
+                        panFan.Visible = false;
+                        panProducts.Top = 0;
+                        panProducts.Left = 0;
+
+                        if (ShowPressure)
+                        {
+                            // product panel with pressure
+                            this.Height = 283;
+                            btnSettings.Top = 179;
+                            btnLeft.Top = 179;
+                            btnRight.Top = 179;
+                            lbArduinoConnected.Top = 179;
+                            lbAogConnected.Top = 213;
+
+                            lbPressure.Visible = true;
+                            lbPressureValue.Visible = true;
+                            lbPressure.Text = Lang.lgPressure + " " + PressureToShowID.ToString();
+                            if (PressureToShowID < 1) PressureToShowID = 1;
+                            float Prs = PressureObjects.Item(PressureToShowID - 1).Pressure();
+                            lbPressureValue.Text = Prs.ToString("N1");
+                        }
+                        else
+                        {
+                            // product panel
+                            this.Height = 257;
+                            btnSettings.Top = 154;
+                            btnLeft.Top = 154;
+                            btnRight.Top = 154;
+                            lbArduinoConnected.Top = 154;
+                            lbAogConnected.Top = 188;
+                            lbPressure.Visible = false;
+                            lbPressureValue.Visible = false;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Tls.WriteErrorLog("FormStart/FormatDisplay: " + ex.Message);
             }
         }
 
@@ -683,7 +767,7 @@ namespace RateController
             Form frmPressure = new FormPressure(this);
             frmPressure.ShowDialog();
             LoadPressureSetting();
-            CheckPressure();
+            FormatDisplay();
         }
 
         private void productsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -735,7 +819,7 @@ namespace RateController
                     c.ForeColor = Color.Black;
                 }
 
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     Indicators[i].BackColor = Properties.Settings.Default.DayColour;
                 }
@@ -751,7 +835,7 @@ namespace RateController
                     c.ForeColor = Color.White;
                 }
 
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 7; i++)
                 {
                     Indicators[i].BackColor = Properties.Settings.Default.NightColour;
                 }
@@ -765,7 +849,6 @@ namespace RateController
         {
             UpdateStatus();
             Products.Update();
-            CheckPressure();
         }
 
         private void timerNano_Tick(object sender, EventArgs e)
@@ -787,6 +870,26 @@ namespace RateController
         private void btnStop_Click(object sender, EventArgs e)
         {
             Products.Item(CurrentPage - 1).FanOn = false;
+        }
+
+        private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frmFull = new frmFullScreen();
+            frmFull.Show();
+        }
+
+        private void btnSettings_MouseDown(object sender, MouseEventArgs e)
+        {
+            MenuLongPress = DateTime.Now;
+        }
+
+        private void btnSettings_MouseUp(object sender, MouseEventArgs e)
+        {
+            if((DateTime.Now-MenuLongPress).TotalSeconds>2)
+            {
+                Form frmFull = new frmFullScreen();
+                frmFull.Show();
+            }
         }
     }
 }

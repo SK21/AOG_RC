@@ -112,6 +112,9 @@
     <Compile Include="Classes\clsProduct.cs" />
     <Compile Include="Classes\SerialComm.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
+    <Compile Include="Classes\VerticalProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +150,12 @@
     </Compile>
     <Compile Include="frmComm.Designer.cs">
       <DependentUpon>frmComm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmFullScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmFullScreen.Designer.cs">
+      <DependentUpon>frmFullScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="frmHelp.cs">
       <SubType>Form</SubType>
@@ -235,6 +244,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmComm.resx">
       <DependentUpon>frmComm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmFullScreen.resx">
+      <DependentUpon>frmFullScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmHelp.resx">
       <DependentUpon>frmHelp.cs</DependentUpon>

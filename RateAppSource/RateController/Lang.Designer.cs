@@ -790,7 +790,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rate Method.
+        ///   Looks up a localized string similar to Sensor Method.
         /// </summary>
         internal static string lgRateMethod {
             get {
@@ -970,7 +970,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rate Sensor Location.
+        ///   Looks up a localized string similar to Sensor Location.
         /// </summary>
         internal static string lgSensorLocation {
             get {
@@ -997,7 +997,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rate Simulation.
+        ///   Looks up a localized string similar to Simulation.
         /// </summary>
         internal static string lgSimulate {
             get {

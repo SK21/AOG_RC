@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RCnano", "RCnano.vcxproj", "{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Debug|ARM.ActiveCfg = Debug|ARM
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Debug|ARM.Build.0 = Debug|ARM
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Debug|ARM.Deploy.0 = Debug|ARM
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Debug|ARM64.Build.0 = Debug|ARM64
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Release|ARM.ActiveCfg = Release|ARM
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Release|ARM.Build.0 = Release|ARM
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Release|ARM.Deploy.0 = Release|ARM
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Release|ARM64.ActiveCfg = Release|ARM64
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Release|ARM64.Build.0 = Release|ARM64
+		{BAEC53B5-4F60-4B79-B5A7-F55E523DBB39}.Release|ARM64.Deploy.0 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E11B2A5-71C1-4923-AF51-E0F7DE1F217D}
+	EndGlobalSection
+EndGlobal

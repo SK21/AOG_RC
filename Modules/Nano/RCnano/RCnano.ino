@@ -10,11 +10,11 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  02-Jan-2023"
-const int16_t InoID = 5000;
+# define InoDescription "RCnano  :  10-Jan-2023"
+const int16_t InoID = 5100;
 int16_t StoredID;
 
-# define UseEthernet 0
+# define UseEthernet 1
 
 struct ModuleConfig    // 5 bytes
 {
@@ -262,7 +262,7 @@ void setup()
 	Serial.println("");
 	Serial.println("Starting Ethernet ...");
 	// ethernet interface ip address
-	byte ArduinoIP[] = { 192, 168,MDL.IPpart3, 207 + MDL.ModuleID };
+	byte ArduinoIP[] = { 192, 168,MDL.IPpart3, 50 + MDL.ModuleID };
 
 	// ethernet interface Mac address
 	byte LocalMac[] = { 0x70, 0x31, 0x21, 0x2D, 0x62, MDL.ModuleID };

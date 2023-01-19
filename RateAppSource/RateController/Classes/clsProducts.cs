@@ -8,7 +8,6 @@ namespace RateController
         public IList<clsProduct> Items; // access records by index
         private List<clsProduct> cProducts = new List<clsProduct>();
         private DateTime LastSave;
-        private int MaxRecords = 5;
         private FormStart mf;
 
         public clsProducts(FormStart CallingForm)
@@ -22,7 +21,7 @@ namespace RateController
             double AlarmSetPoint;
             bool cAlarmOn = false;
 
-            for (int i = 0; i < MaxRecords; i++)
+            for (int i = 0; i < mf.MaxProducts; i++)
             {
                 if ((cProducts[i].WorkRate() > 0) && (cProducts[i].UseOffRateAlarm))
                 {
@@ -61,7 +60,7 @@ namespace RateController
         public void Load()
         {
             cProducts.Clear();
-            for (int i = 0; i < MaxRecords; i++)
+            for (int i = 0; i < mf.MaxProducts; i++)
             {
                 clsProduct Prod = new clsProduct(mf, i);
                 cProducts.Add(Prod);
@@ -151,14 +150,14 @@ namespace RateController
 
         public void Update()
         {
-            for (int i = 0; i < MaxRecords; i++)
+            for (int i = 0; i < mf.MaxProducts; i++)
             {
                 cProducts[i].Update();
             }
 
             if ((DateTime.Now - LastSave).TotalSeconds > 60)
             {
-                for (int i = 0; i < MaxRecords; i++)
+                for (int i = 0; i < mf.MaxProducts; i++)
                 {
                     cProducts[i].Save();
                 }
@@ -176,7 +175,7 @@ namespace RateController
 
         public void UpdateVirtualNano()
         {
-            for (int i = 0; i < MaxRecords; i++)
+            for (int i = 0; i < mf.MaxProducts; i++)
             {
                 if (cProducts[i].SimulationType == SimType.VirtualNano) cProducts[i].VirtualNano.MainLoop();
             }

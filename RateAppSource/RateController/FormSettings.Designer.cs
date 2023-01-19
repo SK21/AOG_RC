@@ -33,6 +33,11 @@ namespace RateController
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.tcProducts = new System.Windows.Forms.TabControl();
             this.tbs0 = new System.Windows.Forms.TabPage();
+            this.pnlFan = new System.Windows.Forms.Panel();
+            this.lbCountsRPM = new System.Windows.Forms.Label();
+            this.tbCountsRPM = new System.Windows.Forms.TextBox();
+            this.lbTargetRPM = new System.Windows.Forms.Label();
+            this.tbTargetRPM = new System.Windows.Forms.TextBox();
             this.lb0 = new System.Windows.Forms.Label();
             this.tbProduct = new System.Windows.Forms.TextBox();
             this.ValveType = new System.Windows.Forms.ComboBox();
@@ -59,11 +64,6 @@ namespace RateController
             this.lb1 = new System.Windows.Forms.Label();
             this.RateSet = new System.Windows.Forms.TextBox();
             this.lbAltRate = new System.Windows.Forms.Label();
-            this.pnlFan = new System.Windows.Forms.Panel();
-            this.lbCountsRPM = new System.Windows.Forms.Label();
-            this.tbCountsRPM = new System.Windows.Forms.TextBox();
-            this.lbTargetRPM = new System.Windows.Forms.Label();
-            this.tbTargetRPM = new System.Windows.Forms.TextBox();
             this.tbs4 = new System.Windows.Forms.TabPage();
             this.label31 = new System.Windows.Forms.Label();
             this.tbPIDki = new System.Windows.Forms.TextBox();
@@ -189,8 +189,8 @@ namespace RateController
             this.lbProduct = new System.Windows.Forms.Label();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
-            this.pnlMain.SuspendLayout();
             this.pnlFan.SuspendLayout();
+            this.pnlMain.SuspendLayout();
             this.tbs4.SuspendLayout();
             this.tbs6.SuspendLayout();
             this.grpRateMethod.SuspendLayout();
@@ -217,20 +217,77 @@ namespace RateController
             // 
             // tbs0
             // 
+            this.tbs0.Controls.Add(this.pnlFan);
             this.tbs0.Controls.Add(this.lb0);
             this.tbs0.Controls.Add(this.tbProduct);
             this.tbs0.Controls.Add(this.ValveType);
             this.tbs0.Controls.Add(this.lb5);
             this.tbs0.Controls.Add(this.pnlMain);
-            this.tbs0.Controls.Add(this.pnlFan);
             this.tbs0.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbs0.Location = new System.Drawing.Point(4, 33);
             this.tbs0.Name = "tbs0";
-            this.tbs0.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs0.Padding = new System.Windows.Forms.Padding(3);
             this.tbs0.Size = new System.Drawing.Size(484, 427);
             this.tbs0.TabIndex = 0;
             this.tbs0.Text = "Rate";
             this.tbs0.UseVisualStyleBackColor = true;
+            // 
+            // pnlFan
+            // 
+            this.pnlFan.Controls.Add(this.lbCountsRPM);
+            this.pnlFan.Controls.Add(this.tbCountsRPM);
+            this.pnlFan.Controls.Add(this.lbTargetRPM);
+            this.pnlFan.Controls.Add(this.tbTargetRPM);
+            this.pnlFan.Location = new System.Drawing.Point(37, 3);
+            this.pnlFan.Name = "pnlFan";
+            this.pnlFan.Size = new System.Drawing.Size(444, 421);
+            this.pnlFan.TabIndex = 145;
+            // 
+            // lbCountsRPM
+            // 
+            this.lbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCountsRPM.Location = new System.Drawing.Point(0, 10);
+            this.lbCountsRPM.Name = "lbCountsRPM";
+            this.lbCountsRPM.Size = new System.Drawing.Size(186, 23);
+            this.lbCountsRPM.TabIndex = 117;
+            this.lbCountsRPM.Text = "Sensor Counts / Rev";
+            // 
+            // tbCountsRPM
+            // 
+            this.tbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbCountsRPM.Location = new System.Drawing.Point(192, 6);
+            this.tbCountsRPM.MaxLength = 8;
+            this.tbCountsRPM.Name = "tbCountsRPM";
+            this.tbCountsRPM.Size = new System.Drawing.Size(102, 30);
+            this.tbCountsRPM.TabIndex = 116;
+            this.tbCountsRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbCountsRPM.TextChanged += new System.EventHandler(this.tbCountsRPM_TextChanged);
+            this.tbCountsRPM.Enter += new System.EventHandler(this.tbCountsRPM_Enter);
+            this.tbCountsRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRPM_Validating);
+            // 
+            // lbTargetRPM
+            // 
+            this.lbTargetRPM.AutoSize = true;
+            this.lbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTargetRPM.Location = new System.Drawing.Point(0, 50);
+            this.lbTargetRPM.Name = "lbTargetRPM";
+            this.lbTargetRPM.Size = new System.Drawing.Size(108, 23);
+            this.lbTargetRPM.TabIndex = 114;
+            this.lbTargetRPM.Text = "Target RPM";
+            // 
+            // tbTargetRPM
+            // 
+            this.tbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbTargetRPM.Location = new System.Drawing.Point(192, 46);
+            this.tbTargetRPM.MaxLength = 8;
+            this.tbTargetRPM.Name = "tbTargetRPM";
+            this.tbTargetRPM.Size = new System.Drawing.Size(102, 30);
+            this.tbTargetRPM.TabIndex = 113;
+            this.tbTargetRPM.Text = "0";
+            this.tbTargetRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbTargetRPM.TextChanged += new System.EventHandler(this.tbTargetRPM_TextChanged);
+            this.tbTargetRPM.Enter += new System.EventHandler(this.tbTargetRPM_Enter);
+            this.tbTargetRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbTargetRPM_Validating);
             // 
             // lb0
             // 
@@ -262,8 +319,7 @@ namespace RateController
             "Standard Valve",
             "Fast Close Valve",
             "Motor",
-            "Motor/Weights",
-            "Fan"});
+            "Motor/Weights"});
             this.ValveType.Location = new System.Drawing.Point(230, 43);
             this.ValveType.Name = "ValveType";
             this.ValveType.Size = new System.Drawing.Size(161, 31);
@@ -323,7 +379,7 @@ namespace RateController
             // 
             this.CbUseProdDensity.AutoSize = true;
             this.CbUseProdDensity.Location = new System.Drawing.Point(170, 120);
-            this.CbUseProdDensity.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CbUseProdDensity.Margin = new System.Windows.Forms.Padding(2);
             this.CbUseProdDensity.Name = "CbUseProdDensity";
             this.CbUseProdDensity.Size = new System.Drawing.Size(15, 14);
             this.CbUseProdDensity.TabIndex = 133;
@@ -574,63 +630,6 @@ namespace RateController
             this.lbAltRate.TabIndex = 125;
             this.lbAltRate.Text = "Alt. Rate (%)";
             // 
-            // pnlFan
-            // 
-            this.pnlFan.Controls.Add(this.lbCountsRPM);
-            this.pnlFan.Controls.Add(this.tbCountsRPM);
-            this.pnlFan.Controls.Add(this.lbTargetRPM);
-            this.pnlFan.Controls.Add(this.tbTargetRPM);
-            this.pnlFan.Location = new System.Drawing.Point(37, 80);
-            this.pnlFan.Name = "pnlFan";
-            this.pnlFan.Size = new System.Drawing.Size(444, 306);
-            this.pnlFan.TabIndex = 145;
-            // 
-            // lbCountsRPM
-            // 
-            this.lbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCountsRPM.Location = new System.Drawing.Point(2, 10);
-            this.lbCountsRPM.Name = "lbCountsRPM";
-            this.lbCountsRPM.Size = new System.Drawing.Size(197, 23);
-            this.lbCountsRPM.TabIndex = 117;
-            this.lbCountsRPM.Text = "Sensor Counts / RPM";
-            // 
-            // tbCountsRPM
-            // 
-            this.tbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCountsRPM.Location = new System.Drawing.Point(205, 7);
-            this.tbCountsRPM.MaxLength = 8;
-            this.tbCountsRPM.Name = "tbCountsRPM";
-            this.tbCountsRPM.Size = new System.Drawing.Size(102, 30);
-            this.tbCountsRPM.TabIndex = 116;
-            this.tbCountsRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbCountsRPM.TextChanged += new System.EventHandler(this.tbCountsRPM_TextChanged);
-            this.tbCountsRPM.Enter += new System.EventHandler(this.tbCountsRPM_Enter);
-            this.tbCountsRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRPM_Validating);
-            // 
-            // lbTargetRPM
-            // 
-            this.lbTargetRPM.AutoSize = true;
-            this.lbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTargetRPM.Location = new System.Drawing.Point(2, 49);
-            this.lbTargetRPM.Name = "lbTargetRPM";
-            this.lbTargetRPM.Size = new System.Drawing.Size(108, 23);
-            this.lbTargetRPM.TabIndex = 114;
-            this.lbTargetRPM.Text = "Target RPM";
-            // 
-            // tbTargetRPM
-            // 
-            this.tbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTargetRPM.Location = new System.Drawing.Point(205, 46);
-            this.tbTargetRPM.MaxLength = 8;
-            this.tbTargetRPM.Name = "tbTargetRPM";
-            this.tbTargetRPM.Size = new System.Drawing.Size(102, 30);
-            this.tbTargetRPM.TabIndex = 113;
-            this.tbTargetRPM.Text = "0";
-            this.tbTargetRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbTargetRPM.TextChanged += new System.EventHandler(this.tbTargetRPM_TextChanged);
-            this.tbTargetRPM.Enter += new System.EventHandler(this.tbTargetRPM_Enter);
-            this.tbTargetRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbTargetRPM_Validating);
-            // 
             // tbs4
             // 
             this.tbs4.Controls.Add(this.label31);
@@ -651,7 +650,7 @@ namespace RateController
             this.tbs4.Controls.Add(this.lbResponseRate);
             this.tbs4.Location = new System.Drawing.Point(4, 33);
             this.tbs4.Name = "tbs4";
-            this.tbs4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs4.Padding = new System.Windows.Forms.Padding(3);
             this.tbs4.Size = new System.Drawing.Size(484, 427);
             this.tbs4.TabIndex = 4;
             this.tbs4.Text = "Control";
@@ -864,7 +863,7 @@ namespace RateController
             this.ckSimulate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckSimulate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckSimulate.Location = new System.Drawing.Point(134, 352);
-            this.ckSimulate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ckSimulate.Margin = new System.Windows.Forms.Padding(2);
             this.ckSimulate.Name = "ckSimulate";
             this.ckSimulate.Size = new System.Drawing.Size(193, 34);
             this.ckSimulate.TabIndex = 117;
@@ -959,7 +958,7 @@ namespace RateController
             this.rbMultiPulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.rbMultiPulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbMultiPulse.Location = new System.Drawing.Point(13, 73);
-            this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbMultiPulse.Name = "rbMultiPulse";
             this.rbMultiPulse.Size = new System.Drawing.Size(362, 37);
             this.rbMultiPulse.TabIndex = 1;
@@ -977,7 +976,7 @@ namespace RateController
             this.rbSinglePulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.rbSinglePulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbSinglePulse.Location = new System.Drawing.Point(13, 25);
-            this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbSinglePulse.Name = "rbSinglePulse";
             this.rbSinglePulse.Size = new System.Drawing.Size(362, 37);
             this.rbSinglePulse.TabIndex = 0;
@@ -1711,7 +1710,7 @@ namespace RateController
             this.tbs5.Controls.Add(this.pnlFlow);
             this.tbs5.Location = new System.Drawing.Point(4, 33);
             this.tbs5.Name = "tbs5";
-            this.tbs5.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs5.Padding = new System.Windows.Forms.Padding(3);
             this.tbs5.Size = new System.Drawing.Size(484, 427);
             this.tbs5.TabIndex = 5;
             this.tbs5.Text = "Calibrate";
@@ -1842,6 +1841,7 @@ namespace RateController
             this.lbWTcalAverage.Size = new System.Drawing.Size(102, 30);
             this.lbWTcalAverage.TabIndex = 205;
             this.lbWTcalAverage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbWTcalAverage.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbWTcalAverage_HelpRequested);
             // 
             // label22
             // 
@@ -1876,6 +1876,7 @@ namespace RateController
             this.lbWTquantity.Size = new System.Drawing.Size(102, 30);
             this.lbWTquantity.TabIndex = 202;
             this.lbWTquantity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbWTquantity.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbWTquantity_HelpRequested);
             // 
             // lbWTtime
             // 
@@ -1886,6 +1887,7 @@ namespace RateController
             this.lbWTtime.Size = new System.Drawing.Size(102, 30);
             this.lbWTtime.TabIndex = 201;
             this.lbWTtime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbWTtime.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbWTtime_HelpRequested);
             // 
             // label34
             // 
@@ -1906,6 +1908,7 @@ namespace RateController
             this.lbWTcal.Size = new System.Drawing.Size(102, 30);
             this.lbWTcal.TabIndex = 199;
             this.lbWTcal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbWTcal.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbWTcal_HelpRequested);
             // 
             // lbWeightMeasured
             // 
@@ -2142,10 +2145,10 @@ namespace RateController
             this.tcProducts.ResumeLayout(false);
             this.tbs0.ResumeLayout(false);
             this.tbs0.PerformLayout();
-            this.pnlMain.ResumeLayout(false);
-            this.pnlMain.PerformLayout();
             this.pnlFan.ResumeLayout(false);
             this.pnlFan.PerformLayout();
+            this.pnlMain.ResumeLayout(false);
+            this.pnlMain.PerformLayout();
             this.tbs4.ResumeLayout(false);
             this.tbs4.PerformLayout();
             this.tbs6.ResumeLayout(false);

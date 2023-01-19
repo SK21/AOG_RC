@@ -25,31 +25,32 @@ void SendUDPwired()
     {
         UDPpacket[0] = 101;
         UDPpacket[1] = 127;
-
         UDPpacket[2] = BuildModSenID(MDL.ModuleID, i);
 
         // rate applied, 10 X actual
-        Temp = (UPM[i] * 10);
-        UDPpacket[3] = Temp;
-        Temp = (int)(UPM[i] * 10) >> 8;
-        UDPpacket[4] = Temp;
-        Temp = (int)(UPM[i] * 10) >> 16;
-        UDPpacket[5] = Temp;
+        uint32_t Applied = UPM[i] * 10;
+        UDPpacket[3] = Applied;
+        UDPpacket[4] = Applied >> 8;
+        UDPpacket[5] = Applied >> 16;
 
         // accumulated quantity, 10 X actual
-        long Units = TotalPulses[i] * 10.0 / MeterCal[i];
-        Temp = Units;
-        UDPpacket[6] = Temp;
-        Temp = Units >> 8;
-        UDPpacket[7] = Temp;
-        Temp = Units >> 16;
-        UDPpacket[8] = Temp;
+        if (MeterCal[i] > 0)
+        {
+            uint32_t Units = TotalPulses[i] * 10.0 / MeterCal[i];
+            UDPpacket[6] = Units;
+            UDPpacket[7] = Units >> 8;
+            UDPpacket[8] = Units >> 16;
+        }
+        else
+        {
+            UDPpacket[6] = 0;
+            UDPpacket[7] = 0;
+            UDPpacket[8] = 0;
+        }
 
         //pwmSetting
-        Temp = (byte)(pwmSetting[i] * 10);
-        UDPpacket[9] = Temp;
-        Temp = (byte)((pwmSetting[i] * 10) >> 8);
-        UDPpacket[10] = Temp;
+        UDPpacket[9] = pwmSetting[i];
+        UDPpacket[10] = pwmSetting[i] >> 8;
 
         // status
         // bit 0    - sensor 0 receiving rate controller data
@@ -126,7 +127,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             AutoOn = ((InCommand[SensorID] & 32) == 32);
 
                             // rate setting, 10 times actual
-                            int RateSet = Data[5] | Data[6] << 8 | Data[7] << 16;
+                            uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
 
                             if (AutoOn)
                             {
@@ -138,8 +139,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             }
 
                             // Meter Cal, 1000 times actual
-                            uint32_t Temp = Data[8] | Data[9] << 8 | Data[10] << 16;
-                            MeterCal[SensorID] = (float)(Temp * 0.001);
+                            uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
+                            MeterCal[SensorID] = Temp * 0.001;
 
                             // power relays
                             PowerRelayLo = Data[12];

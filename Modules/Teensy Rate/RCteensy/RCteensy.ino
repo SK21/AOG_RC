@@ -11,7 +11,11 @@
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
 
-struct ModuleConfig	
+//EEPROM
+int16_t EEread = 0;
+#define MDL_Ident 4700
+
+struct ModuleConfig
 {
 	uint8_t ID = 0;
 	uint8_t ProductCount = 1;       // up to 2 sensors
@@ -83,10 +87,6 @@ byte RelayLo = 0;	// sections 0-7
 byte RelayHi = 0;	// sections 8-15
 byte PowerRelayLo;
 byte PowerRelayHi;
-
-//EEPROM
-int16_t EEread = 0;
-#define MDL_Ident 5100
 
 // WifiSwitches connection to Wemos D1 Mini
 unsigned long WifiSwitchesTimer;

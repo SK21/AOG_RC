@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Forms.VisualStyles;
 
 namespace RateController
 {
@@ -86,6 +87,12 @@ namespace RateController
             Scale = new PGN32501(this);
             cLogRate = true;
             cScaleUnitsCal = 1;
+
+            if (cProductID > mf.MaxProducts - 3)
+            {
+                cControlType = ControlTypeEnum.Fan;
+                ProductName = "fan";
+            }
         }
 
         public double CalEnd
@@ -133,7 +140,17 @@ namespace RateController
         public ControlTypeEnum ControlType
         {
             get { return cControlType; }
-            set { cControlType = value; }
+            set
+            {
+                if (cProductID > mf.MaxProducts - 3)
+                {
+                    cControlType = ControlTypeEnum.Fan;
+                }
+                else
+                {
+                    cControlType = value;
+                }
+            }
         }
 
         public int CountsRev
@@ -267,20 +284,36 @@ namespace RateController
 
         public string ProductName
         {
-            get { return cProductName; }
+            get
+            {
+                if(cControlType==ControlTypeEnum.Fan)
+                {
+                    int tmp = 3 - (mf.MaxProducts - cProductID);
+                    cProductName = "Fan " + tmp.ToString();
+                }
+                return cProductName;
+            }
             set
             {
-                if (value.Length > 20)
+                if (cControlType == ControlTypeEnum.Fan)
                 {
-                    cProductName = value.Substring(0, 20);
-                }
-                else if (value.Length == 0)
-                {
-                    cProductName = Lang.lgProduct;
+                    int tmp = 3 - (mf.MaxProducts - cProductID);
+                    cProductName = "Fan " + tmp.ToString();
                 }
                 else
                 {
-                    cProductName = value;
+                    if (value.Length > 20)
+                    {
+                        cProductName = value.Substring(0, 20);
+                    }
+                    else if (value.Length == 0)
+                    {
+                        cProductName = Lang.lgProduct;
+                    }
+                    else
+                    {
+                        cProductName = value;
+                    }
                 }
             }
         }

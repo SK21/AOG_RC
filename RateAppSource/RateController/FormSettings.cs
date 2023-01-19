@@ -20,15 +20,18 @@ namespace RateController
         private double CalculatedCPU;
         private clsProduct CurrentProduct;
         private bool Initializing = false;
-        private double[] MaxError = new double[5];
+        private double[] MaxError = new double[6];
         private TextBox[] PIDs;
         private Label[] Sec;
         private SimType SelectedSimulation;
         private bool[] SwON = new bool[9];
         private TabPage[] tbs;
         private TimeSpan WtSpan;
-        private DateTime[] WtStart = new DateTime[5];
-        private DateTime[] WtTimeEnd = new DateTime[5];
+        private DateTime[] WtStart = new DateTime[6];
+        private DateTime[] WtTimeEnd = new DateTime[6];
+
+        private TabPage Temp1;
+        private TabPage Temp2;
 
         public FormSettings(FormStart CallingForm, int Page)
         {
@@ -89,7 +92,7 @@ namespace RateController
             ValveType.Items[1] = Lang.lgComboClose;
             ValveType.Items[2] = Lang.lgMotor;
             ValveType.Items[3] = Lang.lgMotorWeight;
-            ValveType.Items[4] = Lang.lgFan;
+            //ValveType.Items[4] = Lang.lgFan;
 
             AreaUnits.Items[0] = Lang.lgAcres;
             AreaUnits.Items[1] = Lang.lgHectares;
@@ -212,7 +215,7 @@ namespace RateController
 
         private void btnCalCopy_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Copies the calculated sensor counts/unit to the Rate page " +
+            string Message = "Copies the calculated sensor calibration to the Rate page " +
                 "for the product.";
 
             mf.Tls.ShowHelp(Message, "Copy");
@@ -349,7 +352,7 @@ namespace RateController
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            if (CurrentProduct.ProductID < 4)
+            if (CurrentProduct.ProductID < mf.MaxProducts - 1)
             {
                 CurrentProduct = mf.Products.Item(CurrentProduct.ProductID + 1);
                 ShowSpan();
@@ -700,8 +703,9 @@ namespace RateController
             ProdDensity.Text = CurrentProduct.ProdDensity.ToString("N1");
             tbAltRate.Text = CurrentProduct.RateAlt.ToString("N0");
             TankSize.Text = CurrentProduct.TankSize.ToString("N0");
-            ValveType.SelectedIndex = (int)CurrentProduct.ControlType;
             cbVR.SelectedIndex = CurrentProduct.VariableRate;
+
+            if(CurrentProduct.ControlType!=ControlTypeEnum.Fan) ValveType.SelectedIndex = (int)CurrentProduct.ControlType;
 
             TankRemain.Text = CurrentProduct.TankStart.ToString("N0");
 
@@ -1645,7 +1649,19 @@ namespace RateController
             SetDayMode();
             SetCalDescription();
 
-            lbProduct.Text = (CurrentProduct.ProductID + 1).ToString() + ". " + CurrentProduct.ProductName;
+            if (CurrentProduct.ProductID == mf.MaxProducts - 1)
+            {
+                lbProduct.Text = "Fan 2";
+            }
+            else if (CurrentProduct.ProductID == mf.MaxProducts - 2)
+            {
+                lbProduct.Text = "Fan 1";
+            }
+            else
+            {
+                lbProduct.Text = (CurrentProduct.ProductID + 1).ToString() + ". " + CurrentProduct.ProductName;
+            }
+
             if (CurrentProduct.SimulationType != SimType.None)
             {
                 lbProduct.Text = lbProduct.Text + "   Simulation";
@@ -1665,6 +1681,27 @@ namespace RateController
             Initializing = false;
             UpdateSwitches();
             UpdateOnTypeChange();
+
+            if (CurrentProduct.ControlType == ControlTypeEnum.Fan)
+            {
+                if (tcProducts.TabCount > 4)
+                {
+                    // remove tabs
+                    Temp1 = tcProducts.TabPages[3];
+                    Temp2 = tcProducts.TabPages[4];
+                    tcProducts.Controls.Remove(Temp1);
+                    tcProducts.Controls.Remove(Temp2);
+                }
+            }
+            else
+            {
+                if (tcProducts.TabCount < 5)
+                {
+                    // add back the removed tabs
+                    tcProducts.TabPages.Add(Temp1);
+                    tcProducts.TabPages.Add(Temp2);
+                }
+            }
         }
 
         void UpdateOnTypeChange()
@@ -1790,7 +1827,7 @@ namespace RateController
 
         private void WeightCal_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "The number of weigh scale counts for each unit of weight. ";
+            string Message = "This is used to calibrate the scale. It is the number of weigh scale counts for each unit of weight. ";
 
             mf.Tls.ShowHelp(Message, "Weight Cal", 15000);
             hlpevent.Handled = true;
@@ -1905,6 +1942,38 @@ namespace RateController
             }
 
             SetButtons(true);
+        }
+
+        private void lbWTcalAverage_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The average UPM/PWM as the application is being used.";
+
+            mf.Tls.ShowHelp(Message, "Average", 15000);
+            hlpevent.Handled = true;
+        }
+
+        private void lbWTtime_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The time of calibration.";
+
+            mf.Tls.ShowHelp(Message, "Time", 15000);
+            hlpevent.Handled = true;
+        }
+
+        private void lbWTquantity_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The quantity of product measured during calibration.";
+
+            mf.Tls.ShowHelp(Message, "Quantity", 15000);
+            hlpevent.Handled = true;
+        }
+
+        private void lbWTcal_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The UPM/PWM result of calibration.";
+
+            mf.Tls.ShowHelp(Message, "UPM/PWM", 15000);
+            hlpevent.Handled = true;
         }
     }
 }

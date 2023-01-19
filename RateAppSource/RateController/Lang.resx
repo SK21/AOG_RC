@@ -361,7 +361,7 @@
     <value>Rate Down</value>
   </data>
   <data name="lgRateMethod" xml:space="preserve">
-    <value>Rate Method</value>
+    <value>Sensor Method</value>
   </data>
   <data name="lgRateUp" xml:space="preserve">
     <value>Rate Up</value>
@@ -421,7 +421,7 @@
     <value>Sensor ID</value>
   </data>
   <data name="lgSensorLocation" xml:space="preserve">
-    <value>Rate Sensor Location</value>
+    <value>Sensor Location</value>
   </data>
   <data name="lgSensorTotalCounts" xml:space="preserve">
     <value>Sensor Counts</value>
@@ -430,7 +430,7 @@
     <value>Show Pressure</value>
   </data>
   <data name="lgSimulate" xml:space="preserve">
-    <value>Rate Simulation</value>
+    <value>Simulation</value>
   </data>
   <data name="lgSimulationOff" xml:space="preserve">
     <value>Off</value>
