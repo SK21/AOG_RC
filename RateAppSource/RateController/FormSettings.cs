@@ -1333,7 +1333,7 @@ namespace RateController
 
                 case 2:
                     max = 255;
-                    min = 50;
+                    min = 5;
                     break;
 
                 case 7:
@@ -1379,7 +1379,7 @@ namespace RateController
 
                 case 2:
                     max = 255;
-                    min = 50;
+                    min = 5;
                     break;
 
                 case 7:

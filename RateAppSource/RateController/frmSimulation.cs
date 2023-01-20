@@ -25,49 +25,26 @@ namespace RateController
             {
                 case SimType.VirtualNano:
                     rbRate.Checked = true;
-                    if (mf.UseInches)
-                    {
-                        lbMPH.Text = Lang.lgMPH;
-                    }
-                    else
-                    {
-                        lbMPH.Text = Lang.lgKPH;
-                    }
-                    tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
                     break;
 
                 case SimType.Speed:
                     rbSpeed.Checked = true;
-                    if (mf.UseInches)
-                    {
-                        lbMPH.Text = Lang.lgMPH;
-                    }
-                    else
-                    {
-                        lbMPH.Text = Lang.lgKPH;
-                    }
-                    tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1"); 
-                    break;
-
-                case SimType.PWM:
-                    rbPWM.Checked = true;
-                    lbMPH.Text = "PWM";
-                    tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimPWM.ToString("N0"); 
                     break;
 
                 default:
                     rbOff.Checked = true;
-                    if (mf.UseInches)
-                    {
-                        lbMPH.Text = Lang.lgMPH;
-                    }
-                    else
-                    {
-                        lbMPH.Text = Lang.lgKPH;
-                    }
-                    tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
                     break;
             }
+
+            if (mf.UseInches)
+            {
+                lbMPH.Text = Lang.lgMPH;
+            }
+            else
+            {
+                lbMPH.Text = Lang.lgKPH;
+            }
+            tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
         }
 
         private void frmSimulation_FormClosed(object sender, FormClosedEventArgs e)
@@ -76,6 +53,7 @@ namespace RateController
             {
                 mf.Tls.SaveFormData(this);
             }
+            mf.SimFormLoaded = false;
         }
 
         private void frmSimulation_Load(object sender, EventArgs e)
@@ -96,38 +74,18 @@ namespace RateController
 
         private void tbSpeed_Enter(object sender, EventArgs e)
         {
-            switch (CurrentSim)
+            double tempD;
+            double.TryParse(tbSpeed.Text, out tempD);
+            using (var form = new FormNumeric(1, 20, tempD))
             {
-                case SimType.PWM:
-                    byte temp;
-                    byte.TryParse(tbSpeed.Text, out temp);
-                    using (var form = new FormNumeric(1, 255, temp))
-                    {
-                        var result = form.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
-                            tbSpeed.Text = form.ReturnValue.ToString("N0");
-                            mf.Products.Item(mf.CurrentProduct()).SimPWM = (byte)form.ReturnValue;
-                        }
-                    }
-                    this.ActiveControl = lbMPH;
-                    break;
-
-                default:
-                    double tempD;
-                    double.TryParse(tbSpeed.Text, out tempD);
-                    using (var form = new FormNumeric(1, 20, tempD))
-                    {
-                        var result = form.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
-                            tbSpeed.Text = form.ReturnValue.ToString("N1");
-                            mf.Products.Item(mf.CurrentProduct()).SimSpeed = form.ReturnValue;
-                        }
-                    }
-                    this.ActiveControl = lbMPH;
-                    break;
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSpeed.Text = form.ReturnValue.ToString("N1");
+                    mf.Products.Item(mf.CurrentProduct()).SimSpeed = form.ReturnValue;
+                }
             }
+            this.ActiveControl = lbMPH;
         }
 
         private void UpdateForm()
@@ -137,7 +95,6 @@ namespace RateController
                 if (CurrentSim != SimType.VirtualNano)
                 {
                     CurrentSim = SimType.VirtualNano;
-                    mf.Products.Item(mf.CurrentProduct()).SimulationType = CurrentSim;
                 }
             }
             else if (rbSpeed.Checked)
@@ -145,26 +102,6 @@ namespace RateController
                 if (CurrentSim != SimType.Speed)
                 {
                     CurrentSim = SimType.Speed;
-                    mf.Products.Item(mf.CurrentProduct()).SimulationType = CurrentSim;
-                    if (mf.UseInches)
-                    {
-                        lbMPH.Text = Lang.lgMPH;
-                    }
-                    else
-                    {
-                        lbMPH.Text = Lang.lgKPH;
-                    }
-                    tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
-                }
-            }
-            else if (rbPWM.Checked)
-            {
-                if (CurrentSim != SimType.PWM)
-                {
-                    CurrentSim = SimType.PWM;
-                    mf.Products.Item(mf.CurrentProduct()).SimulationType = CurrentSim;
-                    lbMPH.Text = "PWM";
-                    tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimPWM.ToString("N0");
                 }
             }
             else
@@ -173,9 +110,19 @@ namespace RateController
                 if (CurrentSim != SimType.None)
                 {
                     CurrentSim = SimType.None;
-                    mf.Products.Item(mf.CurrentProduct()).SimulationType = CurrentSim;
                 }
             }
+
+            mf.Products.Item(mf.CurrentProduct()).SimulationType = CurrentSim;
+            if (mf.UseInches)
+            {
+                lbMPH.Text = Lang.lgMPH;
+            }
+            else
+            {
+                lbMPH.Text = Lang.lgKPH;
+            }
+            tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
         }
     }
 }

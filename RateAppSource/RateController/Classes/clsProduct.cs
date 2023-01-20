@@ -72,7 +72,6 @@ namespace RateController
         private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
 
         private double cSimSpeed;
-        private byte cSimPWM;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -208,8 +207,6 @@ namespace RateController
                 }
             }
         }
-
-        public byte SimPWM { get { return cSimPWM; } set { cSimPWM = value; } }
 
         public byte ModuleID
         {
@@ -562,7 +559,6 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("ScaleTare" + IDname), out cScaleTare);
 
             double.TryParse(mf.Tls.LoadProperty("SimSpeed" + IDname), out cSimSpeed);
-            byte.TryParse(mf.Tls.LoadProperty("SimPWM" + IDname), out cSimPWM);
         }
 
         public double PWM()
@@ -671,7 +667,6 @@ namespace RateController
             mf.Tls.SaveProperty("ScaleTare" + IDname, cScaleTare.ToString());
 
             mf.Tls.SaveProperty("SimSpeed" + IDname, cSimSpeed.ToString());
-            mf.Tls.SaveProperty("SimPWM" + IDname, cSimPWM.ToString());
         }
 
         public void SendPID()
@@ -734,9 +729,35 @@ namespace RateController
 
         public double Speed()
         {
-            if (mf.UseInches)
+            if (cSimulationType == SimType.Speed)
             {
-                return mf.AutoSteerPGN.Speed_KMH() * 0.621371;
+                return cSimSpeed;
+            }
+            else
+            {
+                if (mf.UseInches)
+                {
+                    return mf.AutoSteerPGN.Speed_KMH() * 0.621371;
+                }
+                else
+                {
+                    return mf.AutoSteerPGN.Speed_KMH();
+                }
+            }
+        }
+
+        private double KMH()
+        {
+            if (cSimulationType == SimType.Speed)
+            {
+                if (mf.UseInches)
+                {
+                    return cSimSpeed / 0.621371;
+                }
+                else
+                {
+                    return cSimSpeed;
+                }
             }
             else
             {
@@ -826,7 +847,8 @@ namespace RateController
 
         public void Update()
         {
-            if (ArduinoModule.ModuleSending() && (mf.AutoSteerPGN.Connected() || CoverageUnits > 1))
+            if (ArduinoModule.ModuleSending() && (mf.AutoSteerPGN.Connected() || CoverageUnits > 1)
+                ||cSimulationType==SimType.Speed)
             {
                 if (!SwitchIDsSent)
                 {
@@ -857,7 +879,7 @@ namespace RateController
                     }
                 }
 
-                cHectaresPerMinute = (cWorkingWidth_cm / 100.0) * mf.AutoSteerPGN.Speed_KMH() / 600.0;
+                cHectaresPerMinute = (cWorkingWidth_cm / 100.0) * KMH() / 600.0;
                 CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
 
                 //coverage

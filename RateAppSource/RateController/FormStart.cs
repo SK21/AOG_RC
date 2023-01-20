@@ -10,7 +10,6 @@ namespace RateController
         None,
         VirtualNano,
         Speed,
-        PWM
     }
 
     public partial class FormStart : Form
@@ -51,7 +50,7 @@ namespace RateController
         private bool ShowCoverageRemaining;
         private bool ShowQuantityRemaining;
 
-        private bool SimFormLoaded;
+        public bool SimFormLoaded;
         public event EventHandler ProductChanged;
         private int CurrentPageLast;
 
