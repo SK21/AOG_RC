@@ -145,6 +145,8 @@ namespace RateController
             this.btnCalCopy = new System.Windows.Forms.Button();
             this.btnCalStart = new System.Windows.Forms.Button();
             this.pnlWeight = new System.Windows.Forms.Panel();
+            this.tbTare = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.btnTare = new System.Windows.Forms.Button();
             this.tbScaleCountsPerUnit = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -176,8 +178,6 @@ namespace RateController
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
             this.lbProduct = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tbTare = new System.Windows.Forms.TextBox();
             this.tc.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.tbs4.SuspendLayout();
@@ -748,10 +748,10 @@ namespace RateController
             this.ckSimulate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSimulate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckSimulate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSimulate.Location = new System.Drawing.Point(134, 352);
+            this.ckSimulate.Location = new System.Drawing.Point(12, 270);
             this.ckSimulate.Margin = new System.Windows.Forms.Padding(2);
             this.ckSimulate.Name = "ckSimulate";
-            this.ckSimulate.Size = new System.Drawing.Size(193, 34);
+            this.ckSimulate.Size = new System.Drawing.Size(57, 34);
             this.ckSimulate.TabIndex = 117;
             this.ckSimulate.Text = "Simulate Rate ";
             this.ckSimulate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -763,7 +763,7 @@ namespace RateController
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(381, 310);
+            this.label28.Location = new System.Drawing.Point(341, 304);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(29, 23);
             this.label28.TabIndex = 116;
@@ -774,7 +774,7 @@ namespace RateController
             // 
             this.tbOffRate.Enabled = false;
             this.tbOffRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(342, 306);
+            this.tbOffRate.Location = new System.Drawing.Point(302, 300);
             this.tbOffRate.MaxLength = 8;
             this.tbOffRate.Name = "tbOffRate";
             this.tbOffRate.Size = new System.Drawing.Size(33, 30);
@@ -789,7 +789,7 @@ namespace RateController
             // lbMinimumUPM
             // 
             this.lbMinimumUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinimumUPM.Location = new System.Drawing.Point(134, 267);
+            this.lbMinimumUPM.Location = new System.Drawing.Point(94, 261);
             this.lbMinimumUPM.Name = "lbMinimumUPM";
             this.lbMinimumUPM.Size = new System.Drawing.Size(130, 23);
             this.lbMinimumUPM.TabIndex = 114;
@@ -800,7 +800,7 @@ namespace RateController
             // tbMinUPM
             // 
             this.tbMinUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinUPM.Location = new System.Drawing.Point(342, 264);
+            this.tbMinUPM.Location = new System.Drawing.Point(302, 257);
             this.tbMinUPM.MaxLength = 8;
             this.tbMinUPM.Name = "tbMinUPM";
             this.tbMinUPM.Size = new System.Drawing.Size(67, 30);
@@ -816,7 +816,7 @@ namespace RateController
             this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOffRate.Location = new System.Drawing.Point(133, 304);
+            this.ckOffRate.Location = new System.Drawing.Point(93, 298);
             this.ckOffRate.Name = "ckOffRate";
             this.ckOffRate.Size = new System.Drawing.Size(193, 34);
             this.ckOffRate.TabIndex = 1;
@@ -1660,6 +1660,28 @@ namespace RateController
             this.pnlWeight.Size = new System.Drawing.Size(472, 295);
             this.pnlWeight.TabIndex = 170;
             // 
+            // tbTare
+            // 
+            this.tbTare.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbTare.Location = new System.Drawing.Point(324, 254);
+            this.tbTare.MaxLength = 8;
+            this.tbTare.Name = "tbTare";
+            this.tbTare.Size = new System.Drawing.Size(102, 30);
+            this.tbTare.TabIndex = 212;
+            this.tbTare.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbTare.TextChanged += new System.EventHandler(this.tbTare_TextChanged);
+            this.tbTare.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnTare_HelpRequested);
+            this.tbTare.Enter += new System.EventHandler(this.tbTare_Enter);
+            this.tbTare.Validating += new System.ComponentModel.CancelEventHandler(this.tbTare_Validating);
+            // 
+            // label6
+            // 
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label6.Location = new System.Drawing.Point(38, 178);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(388, 2);
+            this.label6.TabIndex = 211;
+            // 
             // btnTare
             // 
             this.btnTare.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1979,28 +2001,6 @@ namespace RateController
             this.lbProduct.Text = "Product";
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.lbProduct.Click += new System.EventHandler(this.lbProduct_Click);
-            // 
-            // label6
-            // 
-            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label6.Location = new System.Drawing.Point(38, 178);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(388, 2);
-            this.label6.TabIndex = 211;
-            // 
-            // tbTare
-            // 
-            this.tbTare.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTare.Location = new System.Drawing.Point(324, 254);
-            this.tbTare.MaxLength = 8;
-            this.tbTare.Name = "tbTare";
-            this.tbTare.Size = new System.Drawing.Size(102, 30);
-            this.tbTare.TabIndex = 212;
-            this.tbTare.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbTare.TextChanged += new System.EventHandler(this.tbTare_TextChanged);
-            this.tbTare.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnTare_HelpRequested);
-            this.tbTare.Enter += new System.EventHandler(this.tbTare_Enter);
-            this.tbTare.Validating += new System.ComponentModel.CancelEventHandler(this.tbTare_Validating);
             // 
             // FormSettings
             // 

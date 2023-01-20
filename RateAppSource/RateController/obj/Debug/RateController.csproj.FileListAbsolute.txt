@@ -2081,3 +2081,4 @@ C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.exe
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.pdb
+C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmSimulation.resources

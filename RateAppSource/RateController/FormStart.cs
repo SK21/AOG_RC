@@ -9,7 +9,8 @@ namespace RateController
     {
         None,
         VirtualNano,
-        RealNano
+        Speed,
+        PWM
     }
 
     public partial class FormStart : Form
@@ -40,7 +41,7 @@ namespace RateController
         public bool UseInches;
         public PGN230 VRdata;
         public string WiFiIP;
-        private int CurrentPage;
+        private int cCurrentPage;
 
         private Label[] Indicators;
         private Label[] ProdName;
@@ -49,6 +50,10 @@ namespace RateController
         private int[] RateType = new int[5];    // 0 current rate, 1 instantaneous rate, 2 overall rate
         private bool ShowCoverageRemaining;
         private bool ShowQuantityRemaining;
+
+        private bool SimFormLoaded;
+        public event EventHandler ProductChanged;
+        private int CurrentPageLast;
 
         public FormStart()
         {
@@ -81,7 +86,7 @@ namespace RateController
             Tls = new clsTools(this);
 
             UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255", true, true);  // AOG
-            UDPmodules = new UDPComm(this, 29999, 28888, 1480 );    // arduino
+            UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
 
             AutoSteerPGN = new PGN254(this);
             SectionsPGN = new PGN235(this);
@@ -112,15 +117,15 @@ namespace RateController
             timerMain.Interval = 1000;
         }
 
-        public byte CurrentProduct()
+        public int CurrentProduct()
         {
-            if (CurrentPage < 2)
+            if (cCurrentPage < 2)
             {
-                return 1;
+                return 0;
             }
             else
             {
-                return (byte)CurrentPage;
+                return cCurrentPage - 1;
             }
         }
 
@@ -184,7 +189,7 @@ namespace RateController
         {
             try
             {
-                if (CurrentPage == 0)
+                if (cCurrentPage == 0)
                 {
                     // summary
                     for (int i = 0; i < 5; i++)
@@ -219,8 +224,8 @@ namespace RateController
                 else
                 {
                     // product pages
-                    clsProduct Prd = Products.Item(CurrentPage - 1);
-                    lbProduct.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
+                    clsProduct Prd = Products.Item(cCurrentPage - 1);
+                    lbProduct.Text = cCurrentPage.ToString() + ". " + Prd.ProductName;
                     lblUnits.Text = Prd.Units();
                     SetRate.Text = Prd.TargetRate().ToString("N1");
 
@@ -282,7 +287,7 @@ namespace RateController
                         TankRemain.Text = Prd.UnitsApplied().ToString("N1");
                     }
 
-                    switch (RateType[CurrentPage - 1])
+                    switch (RateType[cCurrentPage - 1])
                     {
                         case 1:
                             lbRate.Text = Lang.lgInstantRate;
@@ -335,7 +340,7 @@ namespace RateController
                     lbAogConnected.BackColor = Color.Red;
                 }
 
-                if (CurrentPage == 0)
+                if (cCurrentPage == 0)
                 {
                     panProducts.Visible = false;
                     panSummary.Visible = true;
@@ -358,6 +363,12 @@ namespace RateController
                 {
                     MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.CheckMark;
                 }
+
+                if (cCurrentPage != CurrentPageLast)
+                {
+                    CurrentPageLast = cCurrentPage;
+                    ProductChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
             catch (Exception ex)
             {
@@ -372,18 +383,18 @@ namespace RateController
 
         private void btnLeft_Click(object sender, EventArgs e)
         {
-            if (CurrentPage > 0)
+            if (cCurrentPage > 0)
             {
-                CurrentPage--;
+                cCurrentPage--;
                 UpdateStatus();
             }
         }
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            if (CurrentPage < 5)
+            if (cCurrentPage < 5)
             {
-                CurrentPage++;
+                cCurrentPage++;
                 UpdateStatus();
             }
         }
@@ -440,7 +451,7 @@ namespace RateController
             if (this.WindowState == FormWindowState.Normal)
             {
                 Tls.SaveFormData(this);
-                Tls.SaveProperty("CurrentPage", CurrentPage.ToString());
+                Tls.SaveProperty("CurrentPage", cCurrentPage.ToString());
             }
 
             Sections.Save();
@@ -451,8 +462,8 @@ namespace RateController
 
         private void FormStart_Load(object sender, EventArgs e)
         {
-            CurrentPage = 5;
-            int.TryParse(Tls.LoadProperty("CurrentPage"), out CurrentPage);
+            cCurrentPage = 5;
+            int.TryParse(Tls.LoadProperty("CurrentPage"), out cCurrentPage);
 
             Tls.LoadFormData(this);
 
@@ -547,8 +558,8 @@ namespace RateController
 
         private void lbRate_Click(object sender, EventArgs e)
         {
-            RateType[CurrentPage - 1]++;
-            if (RateType[CurrentPage - 1] > 2) RateType[CurrentPage - 1] = 0;
+            RateType[cCurrentPage - 1]++;
+            if (RateType[cCurrentPage - 1] > 2) RateType[cCurrentPage - 1] = 0;
             UpdateStatus();
         }
 
@@ -578,12 +589,12 @@ namespace RateController
             if (lbTarget.Text == Lang.lgTargetRate)
             {
                 lbTarget.Text = Lang.lgTargetRateAlt;
-                Products.Item(CurrentPage - 1).UseAltRate = true;
+                Products.Item(cCurrentPage - 1).UseAltRate = true;
             }
             else
             {
                 lbTarget.Text = Lang.lgTargetRate;
-                Products.Item(CurrentPage - 1).UseAltRate = false;
+                Products.Item(cCurrentPage - 1).UseAltRate = false;
             }
         }
 
@@ -683,7 +694,7 @@ namespace RateController
 
         private void productsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new FormSettings(this, CurrentPage);
+            Form frm = new FormSettings(this, cCurrentPage);
             frm.ShowDialog();
         }
 
@@ -771,6 +782,16 @@ namespace RateController
         private void MnuLanguage_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void simulationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!SimFormLoaded)
+            {
+                Form frmSim = new frmSimulation(this);
+                frmSim.Show();
+                SimFormLoaded = true;
+            }
         }
     }
 }

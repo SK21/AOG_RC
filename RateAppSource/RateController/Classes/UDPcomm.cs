@@ -207,6 +207,7 @@ namespace RateController
                 if (Data.Length > 1)
                 {
                     PGN = Data[0] << 8 | Data[1];   // AGIO big endian
+                    //Debug.Print(PGN.ToString());
                     if (PGN == 32897)
                     {
                         if (Data.Length > 2)

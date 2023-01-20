@@ -92,6 +92,7 @@ namespace RateController
             this.btnSettings = new System.Windows.Forms.Button();
             this.lbPressureValue = new System.Windows.Forms.Label();
             this.lbPressure = new System.Windows.Forms.Label();
+            this.simulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -485,13 +486,13 @@ namespace RateController
             this.MnuPressures,
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(180, 256);
+            this.mnuSettings.Size = new System.Drawing.Size(201, 278);
             // 
             // MnuProducts
             // 
             this.MnuProducts.Image = ((System.Drawing.Image)(resources.GetObject("MnuProducts.Image")));
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(179, 42);
+            this.MnuProducts.Size = new System.Drawing.Size(200, 42);
             this.MnuProducts.Text = "Products";
             this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -499,7 +500,7 @@ namespace RateController
             // 
             this.MnuSections.Image = ((System.Drawing.Image)(resources.GetObject("MnuSections.Image")));
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(179, 42);
+            this.MnuSections.Size = new System.Drawing.Size(200, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -507,7 +508,7 @@ namespace RateController
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(179, 42);
+            this.MnuComm.Size = new System.Drawing.Size(200, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -515,7 +516,7 @@ namespace RateController
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(179, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(200, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
@@ -523,7 +524,7 @@ namespace RateController
             // 
             this.MnuPressures.Image = ((System.Drawing.Image)(resources.GetObject("MnuPressures.Image")));
             this.MnuPressures.Name = "MnuPressures";
-            this.MnuPressures.Size = new System.Drawing.Size(179, 42);
+            this.MnuPressures.Size = new System.Drawing.Size(200, 42);
             this.MnuPressures.Text = "Pressures";
             this.MnuPressures.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click);
             // 
@@ -539,10 +540,11 @@ namespace RateController
             this.MnuLanguage,
             this.serialMonitorToolStripMenuItem,
             this.mnuNetwork,
+            this.simulationToolStripMenuItem,
             this.MnuAbout});
             this.MnuOptions.Image = global::RateController.Properties.Resources._7504229_hamburger_menu_list_options_icon;
             this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(179, 42);
+            this.MnuOptions.Size = new System.Drawing.Size(200, 42);
             this.MnuOptions.Text = "Options";
             // 
             // mnuMetric
@@ -717,6 +719,13 @@ namespace RateController
             this.lbPressure.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbPressure.Visible = false;
             // 
+            // simulationToolStripMenuItem
+            // 
+            this.simulationToolStripMenuItem.Name = "simulationToolStripMenuItem";
+            this.simulationToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
+            this.simulationToolStripMenuItem.Text = "Simulation";
+            this.simulationToolStripMenuItem.Click += new System.EventHandler(this.simulationToolStripMenuItem_Click);
+            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -811,5 +820,6 @@ namespace RateController
         private System.Windows.Forms.Label lbPressureValue;
         private System.Windows.Forms.Label lbPressure;
         private System.Windows.Forms.ToolStripMenuItem russianToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem simulationToolStripMenuItem;
     }
 }

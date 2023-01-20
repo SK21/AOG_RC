@@ -389,7 +389,7 @@ namespace RateController
                             ChangeAmount *= (1 - RateCalcFactor);
                         }
                     }
-                    clsProduct Prd = mf.Products.Item(mf.CurrentProduct() - 1);
+                    clsProduct Prd = mf.Products.Item(mf.CurrentProduct());
 
                     // set manual adjustment rate
                     double Dir = -1.0;
@@ -433,7 +433,7 @@ namespace RateController
                     OutCommand = mf.Tls.BitClear(OutCommand, 3);
                     OutCommand = mf.Tls.BitClear(OutCommand, 4);
                     OutCommand = mf.Tls.BitClear(OutCommand, 5);
-                    mf.Products.Item(mf.CurrentProduct() - 1).ManualAdjust = 0;
+                    mf.Products.Item(mf.CurrentProduct()).ManualAdjust = 0;
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -70,6 +71,9 @@ namespace RateController
         private DateTime UpdateStartTime;
         private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
 
+        private double cSimSpeed;
+        private byte cSimPWM;
+
         public clsProduct(FormStart CallingForm, int ProdID)
         {
             mf = CallingForm;
@@ -104,6 +108,19 @@ namespace RateController
             set
             {
                 cCalPWM = value;
+            }
+        }
+
+        public double SimSpeed
+        {
+            get { return cSimSpeed; }
+            set
+            {
+                if(value>0 && value <20)
+                {
+                    cSimSpeed = value;
+                    Debug.Print("New value for product "+ID.ToString()+" : " + cSimSpeed.ToString());
+                }
             }
         }
 
@@ -191,6 +208,8 @@ namespace RateController
                 }
             }
         }
+
+        public byte SimPWM { get { return cSimPWM; } set { cSimPWM = value; } }
 
         public byte ModuleID
         {
@@ -541,6 +560,9 @@ namespace RateController
 
             double.TryParse(mf.Tls.LoadProperty("ScaleUnitsCal" + IDname), out cScaleUnitsCal);
             double.TryParse(mf.Tls.LoadProperty("ScaleTare" + IDname), out cScaleTare);
+
+            double.TryParse(mf.Tls.LoadProperty("SimSpeed" + IDname), out cSimSpeed);
+            byte.TryParse(mf.Tls.LoadProperty("SimPWM" + IDname), out cSimPWM);
         }
 
         public double PWM()
@@ -647,6 +669,9 @@ namespace RateController
 
             mf.Tls.SaveProperty("ScaleUnitsCal" + IDname, cScaleUnitsCal.ToString());
             mf.Tls.SaveProperty("ScaleTare" + IDname, cScaleTare.ToString());
+
+            mf.Tls.SaveProperty("SimSpeed" + IDname, cSimSpeed.ToString());
+            mf.Tls.SaveProperty("SimPWM" + IDname, cSimPWM.ToString());
         }
 
         public void SendPID()

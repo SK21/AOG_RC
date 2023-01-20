@@ -174,7 +174,6 @@ namespace RateController
                         case SimType.VirtualNano:
                             break;
 
-                        case SimType.RealNano:
                         default:
                             break;
                     }
