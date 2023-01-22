@@ -39,7 +39,7 @@
             // tbSpeed
             // 
             this.tbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSpeed.Location = new System.Drawing.Point(129, 60);
+            this.tbSpeed.Location = new System.Drawing.Point(134, 60);
             this.tbSpeed.Margin = new System.Windows.Forms.Padding(6);
             this.tbSpeed.MaxLength = 8;
             this.tbSpeed.Name = "tbSpeed";
@@ -54,10 +54,10 @@
             this.rbRate.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.rbRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbRate.Location = new System.Drawing.Point(129, 13);
+            this.rbRate.Location = new System.Drawing.Point(134, 13);
             this.rbRate.Margin = new System.Windows.Forms.Padding(4);
             this.rbRate.Name = "rbRate";
-            this.rbRate.Size = new System.Drawing.Size(108, 36);
+            this.rbRate.Size = new System.Drawing.Size(113, 36);
             this.rbRate.TabIndex = 1;
             this.rbRate.Tag = "0";
             this.rbRate.Text = "Rate";
@@ -70,10 +70,10 @@
             this.rbSpeed.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.rbSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbSpeed.Location = new System.Drawing.Point(13, 57);
+            this.rbSpeed.Location = new System.Drawing.Point(11, 57);
             this.rbSpeed.Margin = new System.Windows.Forms.Padding(4);
             this.rbSpeed.Name = "rbSpeed";
-            this.rbSpeed.Size = new System.Drawing.Size(108, 36);
+            this.rbSpeed.Size = new System.Drawing.Size(113, 36);
             this.rbSpeed.TabIndex = 2;
             this.rbSpeed.Tag = "0";
             this.rbSpeed.Text = "Speed";
@@ -84,12 +84,12 @@
             // lbMPH
             // 
             this.lbMPH.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMPH.Location = new System.Drawing.Point(185, 59);
+            this.lbMPH.Location = new System.Drawing.Point(190, 59);
             this.lbMPH.Name = "lbMPH";
-            this.lbMPH.Size = new System.Drawing.Size(52, 30);
+            this.lbMPH.Size = new System.Drawing.Size(55, 30);
             this.lbMPH.TabIndex = 152;
             this.lbMPH.Text = "MPH";
-            this.lbMPH.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbMPH.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // rbOff
             // 
@@ -100,7 +100,7 @@
             this.rbOff.Location = new System.Drawing.Point(13, 13);
             this.rbOff.Margin = new System.Windows.Forms.Padding(4);
             this.rbOff.Name = "rbOff";
-            this.rbOff.Size = new System.Drawing.Size(108, 36);
+            this.rbOff.Size = new System.Drawing.Size(113, 36);
             this.rbOff.TabIndex = 0;
             this.rbOff.TabStop = true;
             this.rbOff.Tag = "0";
@@ -113,7 +113,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(243, 100);
+            this.ClientSize = new System.Drawing.Size(260, 104);
             this.Controls.Add(this.rbOff);
             this.Controls.Add(this.lbMPH);
             this.Controls.Add(this.rbSpeed);

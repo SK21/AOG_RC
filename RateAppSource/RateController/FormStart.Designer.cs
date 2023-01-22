@@ -84,6 +84,7 @@ namespace RateController
             this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serialMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuNetwork = new System.Windows.Forms.ToolStripMenuItem();
+            this.simulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -92,7 +93,6 @@ namespace RateController
             this.btnSettings = new System.Windows.Forms.Button();
             this.lbPressureValue = new System.Windows.Forms.Label();
             this.lbPressure = new System.Windows.Forms.Label();
-            this.simulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -646,6 +646,14 @@ namespace RateController
             this.mnuNetwork.Text = "Network";
             this.mnuNetwork.Click += new System.EventHandler(this.wifiToolStripMenuItem_Click);
             // 
+            // simulationToolStripMenuItem
+            // 
+            this.simulationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("simulationToolStripMenuItem.Image")));
+            this.simulationToolStripMenuItem.Name = "simulationToolStripMenuItem";
+            this.simulationToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
+            this.simulationToolStripMenuItem.Text = "Simulation";
+            this.simulationToolStripMenuItem.Click += new System.EventHandler(this.simulationToolStripMenuItem_Click);
+            // 
             // MnuAbout
             // 
             this.MnuAbout.Image = global::RateController.Properties.Resources.R674d5dd067acbd409ff50db6d0647f5d;
@@ -718,13 +726,6 @@ namespace RateController
             this.lbPressure.Text = "Pressure 1";
             this.lbPressure.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbPressure.Visible = false;
-            // 
-            // simulationToolStripMenuItem
-            // 
-            this.simulationToolStripMenuItem.Name = "simulationToolStripMenuItem";
-            this.simulationToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
-            this.simulationToolStripMenuItem.Text = "Simulation";
-            this.simulationToolStripMenuItem.Click += new System.EventHandler(this.simulationToolStripMenuItem_Click);
             // 
             // FormStart
             // 

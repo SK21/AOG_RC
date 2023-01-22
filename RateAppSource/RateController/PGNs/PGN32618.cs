@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace RateController
 {
@@ -25,6 +26,7 @@ namespace RateController
         private FormStart mf;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[21];
+        private bool[] SWlast=new bool[21];
 
         public PGN32618(FormStart CalledFrom)
         {
@@ -69,9 +71,22 @@ namespace RateController
             }
             if (Result)
             {
-                SwitchPGNargs args = new SwitchPGNargs();
-                args.Switches = SW;
-                SwitchPGNreceived?.Invoke(this, args);
+                for (int k = 0; k < SW.Length; k++)
+                {
+                    if (SW[k] != SWlast[k])
+                    {
+                        // check if switches have changed and raise event
+                        SwitchPGNargs args = new SwitchPGNargs();
+                        args.Switches = SW;
+                        SwitchPGNreceived?.Invoke(this, args);
+
+                        for (int j = 0; j < SW.Length; j++)
+                        {
+                            SWlast[j] = SW[j];
+                        }
+                        break;
+                    }
+                }
             }
             return Result;
         }

@@ -107,7 +107,9 @@
     <Compile Include="Classes\clsRelay.cs" />
     <Compile Include="Classes\clsRelays.cs" />
     <Compile Include="Classes\clsSection.cs" />
+    <Compile Include="Classes\clsSectionControl.cs" />
     <Compile Include="Classes\clsSections.cs" />
+    <Compile Include="Classes\clsSectionsNew.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsProduct.cs" />
     <Compile Include="Classes\SerialComm.cs" />

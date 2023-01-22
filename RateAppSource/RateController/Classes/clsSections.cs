@@ -14,11 +14,10 @@ namespace RateController
         private bool AutoChanged;
         private bool AutoLast;
         private DateTime AutoTime;
-        private float[] cProdWorkedArea_ha = new float[16];
         private List<clsSection> cSections = new List<clsSection>();
         private float cWorkingWidth_cm;
 
-        private int EraseDelay = 50;
+        private readonly int EraseDelay = 50;
         private bool MasterChanged;
         private bool MasterLast;
         private bool MasterOn;
@@ -389,7 +388,7 @@ namespace RateController
                             ChangeAmount *= (1 - RateCalcFactor);
                         }
                     }
-                    clsProduct Prd = mf.Products.Item(mf.CurrentProduct());
+                    clsProduct Prd = mf.Products.Item(mf.CurrentProduct() - 1);
 
                     // set manual adjustment rate
                     double Dir = -1.0;
@@ -433,7 +432,7 @@ namespace RateController
                     OutCommand = mf.Tls.BitClear(OutCommand, 3);
                     OutCommand = mf.Tls.BitClear(OutCommand, 4);
                     OutCommand = mf.Tls.BitClear(OutCommand, 5);
-                    mf.Products.Item(mf.CurrentProduct()).ManualAdjust = 0;
+                    mf.Products.Item(mf.CurrentProduct() - 1).ManualAdjust = 0;
                 }
             }
         }
