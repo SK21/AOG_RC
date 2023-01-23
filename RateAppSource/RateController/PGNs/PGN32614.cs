@@ -103,7 +103,7 @@ namespace RateController
                     break;
             }
 
-            if (Prod.mf.Sections.IsMasterOn()) cData[11] |= 0b00001000;
+            if (Prod.mf.SectionControl.IsMasterOn()) cData[11] |= 0b00001000;
             if (Prod.UseMultiPulse) cData[11] |= 0b00010000;
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[11] |= 0b00100000;
             if (Prod.DebugArduino) cData[11] |= 0b01000000;

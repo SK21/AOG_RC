@@ -17,6 +17,7 @@ namespace RateController
         public readonly int MaxRelays = 16;
         public readonly int MaxSections = 16;
 
+        public clsSectionControl SectionControl;
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgHours, Lang.lgMinutes };
@@ -112,6 +113,7 @@ namespace RateController
 
             PressureObjects = new clsPressures(this);
             RelayObjects = new clsRelays(this);
+            SectionControl = new clsSectionControl(this);
 
             timerMain.Interval = 1000;
         }

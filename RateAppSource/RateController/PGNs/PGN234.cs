@@ -41,16 +41,16 @@ namespace RateController
         }
 
         public byte Command
-        { set { cData[5] = value; } }
+        { get { return cData[5]; } set { cData[5] = value; } }
 
         public byte OffHi
         { set { cData[12] = value; } }
         public byte OffLo
-        { set { cData[10] = value; } }
+        { get { return cData[10]; } set { cData[10] = value; } }
         public byte OnHi
         { set { cData[11] = value; } }
         public byte OnLo
-        { set { cData[9] = value; } }
+        { get { return cData[9]; } set { cData[9] = value; } }
 
         public void Send()
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace RateController
@@ -73,7 +74,7 @@ namespace RateController
             {
                 for (int k = 0; k < SW.Length; k++)
                 {
-                    if (SW[k] != SWlast[k])
+                    if ((SW[k] != SWlast[k]) | SW[3] | SW[4])   // check if rate up or rate down is being held on
                     {
                         // check if switches have changed and raise event
                         SwitchPGNargs args = new SwitchPGNargs();
