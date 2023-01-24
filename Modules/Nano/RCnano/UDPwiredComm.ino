@@ -97,7 +97,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             //- bit 7           Calibration on
             //12    power relay Lo      list of power type relays 0-7
             //13    power relay Hi      list of power type relays 8-15
-            //14	Cal PWM		calibration pwm
+            //14	Manual PWM		calibration pwm
             //15	CRC
             PGNlength = 16;
 
@@ -113,6 +113,14 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             RelayLo = Data[3];
                             RelayHi = Data[4];
 
+                            // rate setting, 10 times actual
+                            int RateSet = Data[5] | Data[6] << 8 | Data[7] << 16;
+                            RateSetting[SensorID] = (float)(RateSet * 0.1);
+
+                            // Meter Cal, 1000 times actual
+                            uint32_t Temp = Data[8] | Data[9] << 8 | Data[10] << 16;
+                            MeterCal[SensorID] = (float)(Temp * 0.001);
+
                             // command byte
                             InCommand[SensorID] = Data[11];
                             if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
@@ -125,27 +133,11 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
                             AutoOn = ((InCommand[SensorID] & 32) == 32);
 
-                            // rate setting, 10 times actual
-                            int RateSet = Data[5] | Data[6] << 8 | Data[7] << 16;
-                            Serial.print("RateSet ");
-                            Serial.println(RateSet);
-
-                            if (AutoOn)
-                            {
-                                RateSetting[SensorID] = (float)(RateSet * 0.1);
-                            }
-                            else
-                            {
-                                ManualAdjust[SensorID] = (float)(RateSet * 0.1);
-                            }
-
-                            // Meter Cal, 1000 times actual
-                            uint32_t Temp = Data[8] | Data[9] << 8 | Data[10] << 16;
-                            MeterCal[SensorID] = (float)(Temp * 0.001);
-
                             // power relays
                             PowerRelayLo = Data[12];
                             PowerRelayHi = Data[13];
+
+                            ManualAdjust[SensorID] = Data[14];
 
                             CommTime[SensorID] = millis();
                         }

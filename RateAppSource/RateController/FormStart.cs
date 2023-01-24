@@ -51,7 +51,6 @@ namespace RateController
         private bool ShowCoverageRemaining;
         private bool ShowQuantityRemaining;
 
-        public bool SimFormLoaded;
         public event EventHandler ProductChanged;
         private int CurrentPageLast;
 
@@ -703,8 +702,11 @@ namespace RateController
 
         private void productsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new FormSettings(this, cCurrentPage);
-            frm.ShowDialog();
+            if ((Application.OpenForms["FormSettings"] as FormSettings) == null)
+            {
+                Form frm = new FormSettings(this, cCurrentPage);
+                frm.Show();
+            }
         }
 
         private void russianToolStripMenuItem_Click(object sender, EventArgs e)
@@ -795,11 +797,10 @@ namespace RateController
 
         private void simulationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!SimFormLoaded)
+            if ((Application.OpenForms["frmSimulation"] as frmSimulation) == null)
             {
-                Form frmSim = new frmSimulation(this);
-                frmSim.Show();
-                SimFormLoaded = true;
+                Form frm = new frmSimulation(this);
+                frm.Show();
             }
         }
     }

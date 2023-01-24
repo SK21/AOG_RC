@@ -106,7 +106,7 @@ byte PIDbrakePoint[] = { 20, 20 };
 byte AdjustTime[2];
 
 byte InCommand[] = { 0, 0 };		// command byte from RateController
-byte ControlType[] = { 0, 0 };  // 0 standard, 1 Fast Close, 2 Motor
+byte ControlType[] = { 0, 0 };		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 Fan
 
 unsigned long TotalPulses[2];
 unsigned long CommTime[2];
@@ -123,7 +123,7 @@ byte PowerRelayHi;
 byte Temp = 0;
 bool AutoOn = true;
 
-float ManualAdjust[2];
+byte ManualAdjust[2];
 unsigned long ManualLast[2];
 
 // WifiSwitches connection to Wemos D1 Mini
@@ -360,9 +360,11 @@ void AutoControl()
 	{
 		rateError[i] = RateSetting[i] - UPM[i];
 
-		switch (ControlType[i])
+		switch (ControlType[i])	// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 Fan
 		{
 		case 2:
+		case 3:
+		case 4:
 			// motor control
 			pwmSetting[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
 				PIDHighMax[i], PIDdeadband[i], i);
@@ -381,38 +383,7 @@ void ManualControl()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		rateError[i] = RateSetting[i] - UPM[i];
-
-		if (millis() - ManualLast[i] > 1000)
-		{
-			ManualLast[i] = millis();
-
-			// adjust rate
-			if (RateSetting[i] == 0) RateSetting[i] = 1; // to make FlowEnabled
-
-			switch (ControlType[i])
-			{
-			case 2:
-				// motor control
-				if (ManualAdjust[i] > 0)
-				{
-					pwmSetting[i] *= 1.10;
-					if (pwmSetting[i] < 1) pwmSetting[i] = PIDminPWM[i];
-					if (pwmSetting[i] > 255) pwmSetting[i] = 255;
-				}
-				else if (ManualAdjust[i] < 0)
-				{
-					pwmSetting[i] *= 0.90;
-					if (pwmSetting[i] < PIDminPWM[i]) pwmSetting[i] = 0;
-				}
-				break;
-
-			default:
-				// valve control
-				pwmSetting[i] = ManualAdjust[i];
-				break;
-			}
-		}
+		pwmSetting[i] = ManualAdjust[i];
 	}
 }
 

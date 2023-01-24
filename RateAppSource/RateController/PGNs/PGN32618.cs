@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
 
 namespace RateController
 {
@@ -27,7 +25,7 @@ namespace RateController
         private FormStart mf;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[21];
-        private bool[] SWlast=new bool[21];
+        private bool[] SWlast = new bool[21];
 
         public PGN32618(FormStart CalledFrom)
         {
@@ -37,10 +35,7 @@ namespace RateController
 
         public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
 
-        public class SwitchPGNargs : EventArgs
-        {
-            public bool[] Switches { get; set; }
-        }
+        public bool[] Switches { get { return SW; } }
 
         public bool Connected()
         {
@@ -110,6 +105,58 @@ namespace RateController
             return Result;
         }
 
+        public void PressSwitch(SwIDs ID)
+        {
+            ReceiveTime = DateTime.Now;
+
+            switch (ID)
+            {
+                case SwIDs.MasterOn:
+                    SW[1] = true;
+                    SW[2] = false;
+                    break;
+
+                case SwIDs.MasterOff:
+                    SW[1] = false;
+                    SW[2] = true;
+                    break;
+
+                case SwIDs.RateUp:
+                    SW[3] = true;
+                    SW[4] = false;
+                    break;
+
+                case SwIDs.RateDown:
+                    SW[3] = false;
+                    SW[4] = true;
+                    break;
+
+                default:
+                    SW[(int)ID] = !SW[(int)ID];
+                    break;
+            }
+            SwitchPGNargs args = new SwitchPGNargs();
+            args.Switches = SW;
+            SwitchPGNreceived?.Invoke(this, args);
+
+            // turn off momentary switches
+            switch (ID)
+            {
+                case SwIDs.Auto:
+                case SwIDs.MasterOn:
+                case SwIDs.MasterOff:
+                case SwIDs.RateUp:
+                case SwIDs.RateDown:
+                    SW[1] = false;
+                    SW[2] = false;
+                    SW[3] = false;
+                    SW[4] = false;
+                    args.Switches = SW;
+                    SwitchPGNreceived?.Invoke(this, args);
+                    break;
+            }
+        }
+
         public bool SectionSwitchOn(int ID)
         {
             bool Result = false;
@@ -125,35 +172,9 @@ namespace RateController
             return SW[(int)ID];
         }
 
-        public void PressSwitch(SwIDs ID)
+        public class SwitchPGNargs : EventArgs
         {
-            ReceiveTime = DateTime.Now;
-            
-            switch (ID)
-            {
-                case SwIDs.MasterOn:
-                    SW[1] = true;
-                    SW[2] = false;
-                    break;
-                case SwIDs.MasterOff:
-                    SW[1] = false;
-                    SW[2] = true;
-                    break;
-                case SwIDs.RateUp:
-                    SW[3] = true;
-                    SW[4] = false;
-                    break;
-                case SwIDs.RateDown:
-                    SW[3] = false;
-                    SW[4] = true;
-                    break;
-                default:
-                    SW[(int)ID] = !SW[(int)ID];
-                    break;
-            }
-            SwitchPGNargs args = new SwitchPGNargs();
-            args.Switches = SW;
-            SwitchPGNreceived?.Invoke(this, args);
+            public bool[] Switches { get; set; }
         }
     }
 }

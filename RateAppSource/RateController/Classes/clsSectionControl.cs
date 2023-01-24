@@ -158,7 +158,7 @@ namespace RateController
                     else
                     {
                         // manual rate
-                        Prd.ManualAdjust += Prd.PIDminPWM * RateStep * Dir;
+                        Prd.CalPWM += (int)(5 * Dir);
                     }
                 }
             }

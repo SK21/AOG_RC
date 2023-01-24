@@ -28,7 +28,7 @@ namespace RateController
         private bool cDoCal;
         private double cHectaresPerMinute;
         private bool cLogRate;
-        private double cManualAdjust = 0;
+        private byte cManualAdjust = 0;
         private double cMeterCal = 0;
         private double cMinUPM;
         private int cModID;
@@ -101,12 +101,14 @@ namespace RateController
             }
         }
 
-        public byte CalPWM
+        public int CalPWM
         {
             get { return cCalPWM; }
             set
             {
-                cCalPWM = value;
+                if (value < 0) cCalPWM = 0;
+                else if (value > 255) cCalPWM = 255;
+                else cCalPWM = (byte)value;
             }
         }
 
@@ -177,7 +179,7 @@ namespace RateController
         public bool LogRate
         { get { return cLogRate; } set { cLogRate = value; } }
 
-        public double ManualAdjust
+        public byte ManualAdjust
         { get { return cManualAdjust; } set { cManualAdjust = value; } }
 
         public double MeterCal

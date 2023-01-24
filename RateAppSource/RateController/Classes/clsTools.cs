@@ -319,17 +319,24 @@ namespace RateController
         public void ShowHelp(string Message, string Title = "Help",
             int timeInMsec = 30000, bool LogError = false, bool Modal = false)
         {
-            var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
-            if (Modal)
+            try
             {
-                Hlp.ShowDialog();
-            }
-            else
-            {
-                Hlp.Show();
-            }
+                var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
+                if (Modal)
+                {
+                    Hlp.ShowDialog();
+                }
+                else
+                {
+                    Hlp.Show();
+                }
 
-            if (LogError) WriteErrorLog(Message);
+                if (LogError) WriteErrorLog(Message);
+
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void StartWifi()

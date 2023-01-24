@@ -41,7 +41,7 @@ struct SensorConfig
 	uint16_t pwmSetting = 0;
 	uint32_t CommTime = 0;
 	byte InCommand = 0;			// command byte from RateController
-	byte ControlType = 0;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight
+	byte ControlType = 0;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 Fan
 	uint32_t TotalPulses = 0;
 	float RateSetting = 0;
 	float MeterCal = 0;

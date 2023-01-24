@@ -49,6 +49,12 @@ namespace RateController
                 lbMPH.Text = Lang.lgKPH;
             }
             tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
+            tbPWM.Text = mf.Products.Item(mf.CurrentProduct()).CalPWM.ToString("N0");
+        }
+
+        private void bntOK_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private void frmSimulation_FormClosed(object sender, FormClosedEventArgs e)
@@ -57,14 +63,16 @@ namespace RateController
             {
                 mf.Tls.SaveFormData(this);
             }
-            mf.SimFormLoaded = false;
+            timer1.Enabled = false;
         }
 
         private void frmSimulation_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
             UpdateForm();
+            SwON = mf.SwitchBox.Switches;
             UpdateSwitches();
+            timer1.Enabled = true;
         }
 
         private void grpSections_Paint(object sender, PaintEventArgs e)
@@ -191,84 +199,145 @@ namespace RateController
         {
             if (SwON[0])
             {
-                swAuto.BackColor = Color.LightGreen;
+                btAuto.BackColor = Color.LightGreen;
             }
             else
             {
-                swAuto.BackColor = Color.Red;
+                btAuto.BackColor = Color.Red;
             }
 
             if (SwON[1])
             {
-                swMasterOn.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swMasterOn.BackColor = Properties.Settings.Default.DayColour;
+                ckMaster.BackColor = Color.LightGreen;
             }
 
             if (SwON[2])
             {
-                swMasterOff.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swMasterOff.BackColor = Properties.Settings.Default.DayColour;
+                ckMaster.BackColor = Color.Red;
             }
 
             if (SwON[3])
             {
-                swUp.BackColor = Color.LightGreen;
+                btnUp.BackColor = Color.LightGreen;
             }
             else
             {
-                swUp.BackColor = Properties.Settings.Default.DayColour;
+                btnUp.BackColor = Properties.Settings.Default.DayColour;
             }
 
             if (SwON[4])
             {
-                swDown.BackColor = Color.LightGreen;
+                btnDown.BackColor = Color.LightGreen;
             }
             else
             {
-                swDown.BackColor = Properties.Settings.Default.DayColour;
+                btnDown.BackColor = Properties.Settings.Default.DayColour;
             }
 
             if (SwON[5])
             {
-                swOne.BackColor = Color.LightGreen;
+                btn1.BackColor = Color.LightGreen;
             }
             else
             {
-                swOne.BackColor = Color.Red;
+                btn1.BackColor = Color.Red;
             }
 
             if (SwON[6])
             {
-                swTwo.BackColor = Color.LightGreen;
+                btn2.BackColor = Color.LightGreen;
             }
             else
             {
-                swTwo.BackColor = Color.Red;
+                btn2.BackColor = Color.Red;
             }
 
             if (SwON[7])
             {
-                swThree.BackColor = Color.LightGreen;
+                btn3.BackColor = Color.LightGreen;
             }
             else
             {
-                swThree.BackColor = Color.Red;
+                btn3.BackColor = Color.Red;
             }
 
             if (SwON[8])
             {
-                swFour.BackColor = Color.LightGreen;
+                btn4.BackColor = Color.LightGreen;
             }
             else
             {
-                swFour.BackColor = Color.Red;
+                btn4.BackColor = Color.Red;
             }
+        }
+
+
+        private void ckMaster_CheckedChanged(object sender, EventArgs e)
+        {
+            if(ckMaster.Checked)
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+            }
+            else
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+            }
+        }
+
+        private void btn1_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw0);
+        }
+
+        private void btn2_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw1);
+        }
+
+        private void btn3_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw2);
+        }
+
+        private void btn4_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw3);
+        }
+
+        private void btAuto_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.Auto);
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            UpdateProduct();
+        }
+
+        private void tbPWM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSpeed.Text, out tempD);
+            using (var form = new FormNumeric(0,255, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSpeed.Text = form.ReturnValue.ToString("N0");
+                    mf.Products.Item(mf.CurrentProduct()).CalPWM = (byte)form.ReturnValue;
+                }
+            }
+            this.ActiveControl = lbMPH;
         }
     }
 }

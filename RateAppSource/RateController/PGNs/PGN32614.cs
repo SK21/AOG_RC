@@ -66,6 +66,8 @@ namespace RateController
                 Tmp = (Prod.ManualAdjust * 10.0);
             }
 
+            Debug.Print(Tmp.ToString());
+
             cData[5] = (byte)Tmp;
             cData[6] = (byte)((int)Tmp >> 8);
             cData[7] = (byte)((int)Tmp >> 16);
@@ -118,7 +120,7 @@ namespace RateController
             }
 
             // pwm cal
-            cData[14] = Prod.CalPWM;
+            cData[14] = (byte)Prod.CalPWM;
 
             // CRC
             cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);

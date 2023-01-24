@@ -806,7 +806,7 @@ namespace RateController
             // 
             this.ckOffRate.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckOffRate.Location = new System.Drawing.Point(116, 343);
             this.ckOffRate.Name = "ckOffRate";
@@ -833,7 +833,7 @@ namespace RateController
             // rbMultiPulse
             // 
             this.rbMultiPulse.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbMultiPulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbMultiPulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbMultiPulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbMultiPulse.Location = new System.Drawing.Point(13, 73);
             this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
@@ -851,7 +851,7 @@ namespace RateController
             // 
             this.rbSinglePulse.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbSinglePulse.Checked = true;
-            this.rbSinglePulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbSinglePulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbSinglePulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbSinglePulse.Location = new System.Drawing.Point(13, 25);
             this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
