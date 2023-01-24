@@ -427,7 +427,7 @@
     <value>Show Pressure</value>
   </data>
   <data name="lgSimulate" xml:space="preserve">
-    <value>Rate Simulation</value>
+    <value>Simulation</value>
   </data>
   <data name="lgSimulationOff" xml:space="preserve">
     <value>Off</value>

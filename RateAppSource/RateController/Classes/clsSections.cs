@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Media;
 
 namespace RateController
 {
@@ -19,7 +20,58 @@ namespace RateController
         {
             mf = CallingForm;
             Items = cSections.AsReadOnly();
+            mf.SectionsPGN.SectionsChanged += AOG_SectionsChanged;
         }
+
+        private void AOG_SectionsChanged(object sender, EventArgs e)
+        {
+            double Wdth;
+            string Units;
+
+            SystemSounds.Asterisk.Play();
+
+            if (mf.UseInches)
+            {
+                Units = "Inches";
+            }
+            else
+            {
+                Units = "cm";
+            }
+
+            string Message = "Section width changes from AOG, " + mf.SectionsPGN.SectionCount().ToString() + " section(s).";
+            Message += "\nUnits are in " + Units + ".";
+
+            for (int i = 0; i < mf.SectionsPGN.SectionCount(); i++)
+            {
+                if (mf.UseInches)
+                {
+                    Wdth = Math.Round((double)(mf.SectionsPGN.Width_cm(i)) * 0.393701);
+                }
+                else
+                {
+                    Wdth = mf.SectionsPGN.Width_cm(i);
+                }
+                Message += "\n" + "Section " + (i + 1).ToString() + "    " + Wdth.ToString();
+            }
+            Message += "\n\n Accept the changes?";
+
+            var Hlp = new frmMsgBox(mf, Message, "Section Changes");
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                // change sections
+                Count = mf.SectionsPGN.SectionCount();
+                for (int i = 0; i < mf.SectionsPGN.SectionCount(); i++)
+                {
+                    Items[i].Width_cm = (float)mf.SectionsPGN.Width_cm(i);
+                }
+                mf.Tls.ShowHelp("Sections changed. Check switch definitions.", "Sections", 5000);
+            }
+        }
+
 
         public int Count
         {
@@ -90,7 +142,7 @@ namespace RateController
                 Sec.Load();
                 cSections.Add(Sec);
             }
-            UpdateSectionsOn(Rlys0, Rlys1);
+            UpdateSectionsOn();
         }
 
         public void Save()
@@ -131,11 +183,17 @@ namespace RateController
             return Result;
         }
 
-        public bool UpdateSectionsOn(byte OnLo, byte OnHi)
+        public bool UpdateSectionsOn(byte OnLo = 0, byte OnHi = 0, bool UseCurrent = true)
         {
             // returns true if section on status has changed for any section
             bool Result = false;
             bool tmp = false;
+
+            if (UseCurrent)
+            {
+                OnLo = Rlys0;
+                OnHi = Rlys1;
+            }
 
             if (OnLoLast != OnLo || OnHiLast != OnHi)
             {

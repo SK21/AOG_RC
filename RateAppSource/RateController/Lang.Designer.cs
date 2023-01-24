@@ -988,7 +988,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rate Simulation.
+        ///   Looks up a localized string similar to Simulation.
         /// </summary>
         internal static string lgSimulate {
             get {

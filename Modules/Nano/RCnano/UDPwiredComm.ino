@@ -127,6 +127,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
                             // rate setting, 10 times actual
                             int RateSet = Data[5] | Data[6] << 8 | Data[7] << 16;
+                            Serial.print("RateSet ");
+                            Serial.println(RateSet);
 
                             if (AutoOn)
                             {

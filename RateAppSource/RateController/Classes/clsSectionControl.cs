@@ -82,7 +82,7 @@ namespace RateController
                 ToAOG.Send();
             }
             // update sections
-            mf.Sections.UpdateSectionsOn(CTL.RC0, CTL.RC1);
+            mf.Sections.UpdateSectionsOn(CTL.RC0, CTL.RC1, false);
         }
 
         private void AutoSteerPGN_RelaysChanged(object sender, PGN254.RelaysChangedArgs e)

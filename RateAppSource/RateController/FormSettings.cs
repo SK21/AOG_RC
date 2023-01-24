@@ -21,12 +21,12 @@ namespace RateController
         private double[] MaxError = new double[5];
         private TextBox[] PIDs;
         private Label[] Sec;
-        private SimType SelectedSimulation;
         private bool[] SwON = new bool[9];
         private TabPage[] tbs;
         private TimeSpan WtSpan;
         private DateTime[] WtStart = new DateTime[5];
         private DateTime[] WtTimeEnd = new DateTime[5];
+        private SimType CurrentSim;
 
         public FormSettings(FormStart CallingForm, int Page)
         {
@@ -62,7 +62,7 @@ namespace RateController
             grpSensor.Text = Lang.lgSensorLocation;
             lbConID.Text = Lang.lgModuleID;
             lbSensorID.Text = Lang.lgSensorID;
-            ckSimulate.Text = Lang.lgSimulate;
+            grpSim.Text = Lang.lgSimulate;
 
             lb32.Text = Lang.lgUPMTarget;
             lb33.Text = Lang.lgUPMApplied;
@@ -106,7 +106,7 @@ namespace RateController
 
             lbMinimumUPM.Text = Lang.lgMinUPM;
             ckOffRate.Text = Lang.lgOffRate;
-            lbSwitches.Text = Lang.lgSwitch;
+            grpSwitches.Text = Lang.lgSwitch;
 
             swMasterOff.Text = Lang.lgMasterOff;
             swMasterOn.Text = Lang.lgMasterOn;
@@ -168,15 +168,6 @@ namespace RateController
                     mf.Sections.CheckSwitchDefinitions();
 
                     string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
-
-                    switch (SelectedSimulation)
-                    {
-                        case SimType.VirtualNano:
-                            break;
-
-                        default:
-                            break;
-                    }
 
                     SetButtons(false);
                     UpdateForm();
@@ -438,29 +429,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void ckSimulate_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-            if (ckSimulate.Checked)
-            {
-                SelectedSimulation = SimType.VirtualNano;
-            }
-            else
-            {
-                SelectedSimulation = SimType.None;
-            }
-        }
-
-        private void ckSimulate_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Simulate flow rate without needing an attached arduino module. It will " +
-                "simulate a varying random rate 4% above or below the target rate. Uncheck for " +
-                "normal operation.";
-
-            mf.Tls.ShowHelp(Message, "Simulate Rate");
-            hlpevent.Handled = true;
-        }
-
         private void ckTimedResponse_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -538,7 +506,6 @@ namespace RateController
         {
             mf.Tls.LoadFormData(this);
             timer1.Enabled = true;
-
             UpdateForm();
         }
 
@@ -557,14 +524,6 @@ namespace RateController
             string Message = "How fast the valve/motor responds to rate changes.";
 
             mf.Tls.ShowHelp(Message, "Response Rate");
-            hlpevent.Handled = true;
-        }
-
-        private void label22_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Used to test if Switchbox switches are working.";
-
-            mf.Tls.ShowHelp(Message, "Switches");
             hlpevent.Handled = true;
         }
 
@@ -686,7 +645,7 @@ namespace RateController
 
         private void LoadSettings()
         {
-            byte tempB;
+            //byte tempB;
             tbProduct.Text = CurrentProduct.ProductName;
             tbVolumeUnits.Text = CurrentProduct.QuantityDescription;
             AreaUnits.SelectedIndex = CurrentProduct.CoverageUnits;
@@ -704,9 +663,6 @@ namespace RateController
             string tmp = CurrentProduct.ModuleID.ToString();
             if (tmp == "99") tmp = "";
             tbConID.Text = tmp;
-
-            SelectedSimulation = CurrentProduct.SimulationType;
-            ckSimulate.Checked = (SelectedSimulation == SimType.VirtualNano);
 
             // PID
             tbPIDkp.Text = CurrentProduct.PIDkp.ToString("N0");
@@ -734,12 +690,12 @@ namespace RateController
             rbMultiPulse.Checked = (CurrentProduct.UseMultiPulse);
 
             // load defaults if blank
-            byte.TryParse(tbPIDkp.Text, out tempB);
-            if (tempB == 0)
-            {
-                LoadDefaults();
-                SaveSettings();
-            }
+            //byte.TryParse(tbPIDkp.Text, out tempB);
+            //if (tempB == 0)
+            //{
+            //    LoadDefaults();
+            //    SaveSettings();
+            //}
 
             tbMinUPM.Text = CurrentProduct.MinUPM.ToString("N1");
             ckOffRate.Checked = CurrentProduct.UseOffRateAlarm;
@@ -747,6 +703,26 @@ namespace RateController
             tbWTpwm.Text = CurrentProduct.CalPWM.ToString("N0");
             tbScaleCountsPerUnit.Text = CurrentProduct.ScaleCountsPerUnit.ToString("N1");
             SetCalButtons();
+            SetSimButtons();
+        }
+
+        private void SetSimButtons()
+        {
+            SimType tmp = CurrentProduct.SimulationType;
+            switch (tmp)
+            {
+                case SimType.None:
+                    rbOff.Checked = true;
+                    break;
+                case SimType.VirtualNano:
+                    rbRate.Checked = true;
+                    break;
+                case SimType.Speed:
+                    rbSpeed.Checked = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void RateSet_Enter(object sender, EventArgs e)
@@ -843,8 +819,6 @@ namespace RateController
 
             double.TryParse(TankRemain.Text, out tempD);
             CurrentProduct.TankStart = tempD;
-
-            CurrentProduct.SimulationType = SelectedSimulation;
             CurrentProduct.ProductName = tbProduct.Text;
 
             byte.TryParse(tbConID.Text, out tempB);
@@ -900,6 +874,34 @@ namespace RateController
 
             double.TryParse(tbTare.Text, out tempD);
             CurrentProduct.ScaleTare = tempD;
+
+            // sims
+            if (rbRate.Checked)
+            {
+                if (CurrentSim != SimType.VirtualNano)
+                {
+                    CurrentSim = SimType.VirtualNano;
+                    mf.Sections.UpdateSectionsOn();
+                }
+            }
+            else if (rbSpeed.Checked)
+            {
+                if (CurrentSim != SimType.Speed)
+                {
+                    CurrentSim = SimType.Speed;
+                    mf.Sections.UpdateSectionsOn();
+                }
+            }
+            else
+            {
+                // default to off
+                if (CurrentSim != SimType.None)
+                {
+                    CurrentSim = SimType.None;
+                    mf.Sections.UpdateSectionsOn();
+                }
+            }
+            mf.Products.Item(mf.CurrentProduct()).SimulationType = CurrentSim;
 
             CurrentProduct.Save();
         }
@@ -1063,7 +1065,7 @@ namespace RateController
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
             SwON = e.Switches;
-            UpdateSwitches();
+            //UpdateSwitches();
         }
 
         private void swMasterOff_Click(object sender, EventArgs e)
@@ -1627,11 +1629,28 @@ namespace RateController
             SetDayMode();
             SetCalDescription();
 
+            if (mf.UseInches)
+            {
+                lbMPH.Text = Lang.lgMPH;
+            }
+            else
+            {
+                lbMPH.Text = Lang.lgKPH;
+            }
+            tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
+
+            UpdateDiags();
+            LoadSettings();
+            SetVCNpid();
+            SetModuleIndicator();
+            SetCalButtons();
+            SetDayMode();
+            SetCalDescription();
+
             lbProduct.Text = (CurrentProduct.ID + 1).ToString() + ". " + CurrentProduct.ProductName;
             if (CurrentProduct.SimulationType != SimType.None)
             {
                 lbProduct.Text = lbProduct.Text + "   Simulation";
-                //lbProduct.ForeColor = mf.SimColor;
                 lbProduct.BackColor = mf.SimColor;
                 lbProduct.BorderStyle = BorderStyle.FixedSingle;
             }
@@ -1792,6 +1811,36 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
+        }
+
+        private void tbSpeed_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSpeed.Text, out tempD);
+            using (var form = new FormNumeric(1, 20, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSpeed.Text = form.ReturnValue.ToString("N1");
+                    mf.Products.Item(mf.CurrentProduct()).SimSpeed = form.ReturnValue;
+                }
+            }
+        }
+
+        private void rbOff_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void rbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Simulate flow rate without needing an attached arduino module. It will " +
+                "simulate a varying random rate 4% above or below the target rate. Uncheck for " +
+                "normal operation.";
+
+            mf.Tls.ShowHelp(Message, "Simulate Rate");
+            hlpevent.Handled = true;
         }
     }
 }

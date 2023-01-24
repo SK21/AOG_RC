@@ -449,14 +449,22 @@ namespace RateController
 
         private void FormRateControl_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
+            try
             {
-                Tls.SaveFormData(this);
-                Tls.SaveProperty("CurrentPage", cCurrentPage.ToString());
-            }
+                if (this.WindowState == FormWindowState.Normal)
+                {
+                    Tls.SaveFormData(this);
+                    Tls.SaveProperty("CurrentPage", cCurrentPage.ToString());
+                }
 
-            Sections.Save();
-            Products.Save();
+                SwitchBox.PressSwitch(SwIDs.MasterOff);
+
+                Sections.Save();
+                Products.Save();
+            }
+            catch (Exception)
+            {
+            }
 
             Application.Exit();
         }
