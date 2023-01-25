@@ -159,23 +159,6 @@ namespace RateController
             this.label16 = new System.Windows.Forms.Label();
             this.lbFlowMeasured = new System.Windows.Forms.Label();
             this.lbCalCPU = new System.Windows.Forms.Label();
-            this.tbs7 = new System.Windows.Forms.TabPage();
-            this.grpSim = new System.Windows.Forms.GroupBox();
-            this.rbOff = new System.Windows.Forms.RadioButton();
-            this.rbRate = new System.Windows.Forms.RadioButton();
-            this.lbMPH = new System.Windows.Forms.Label();
-            this.tbSpeed = new System.Windows.Forms.TextBox();
-            this.rbSpeed = new System.Windows.Forms.RadioButton();
-            this.grpSwitches = new System.Windows.Forms.GroupBox();
-            this.swMasterOff = new System.Windows.Forms.Label();
-            this.swDown = new System.Windows.Forms.Label();
-            this.swUp = new System.Windows.Forms.Label();
-            this.swAuto = new System.Windows.Forms.Label();
-            this.swFour = new System.Windows.Forms.Label();
-            this.swThree = new System.Windows.Forms.Label();
-            this.swTwo = new System.Windows.Forms.Label();
-            this.swOne = new System.Windows.Forms.Label();
-            this.swMasterOn = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -194,9 +177,6 @@ namespace RateController
             this.tbs5.SuspendLayout();
             this.pnlWeight.SuspendLayout();
             this.pnlFlow.SuspendLayout();
-            this.tbs7.SuspendLayout();
-            this.grpSim.SuspendLayout();
-            this.grpSwitches.SuspendLayout();
             this.SuspendLayout();
             // 
             // tc
@@ -206,7 +186,6 @@ namespace RateController
             this.tc.Controls.Add(this.tbs6);
             this.tc.Controls.Add(this.tbs3);
             this.tc.Controls.Add(this.tbs5);
-            this.tc.Controls.Add(this.tbs7);
             this.tc.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tc.Location = new System.Drawing.Point(12, 41);
             this.tc.Name = "tc";
@@ -1783,234 +1762,6 @@ namespace RateController
             this.lbCalCPU.TabIndex = 164;
             this.lbCalCPU.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tbs7
-            // 
-            this.tbs7.Controls.Add(this.grpSim);
-            this.tbs7.Controls.Add(this.grpSwitches);
-            this.tbs7.Location = new System.Drawing.Point(4, 33);
-            this.tbs7.Name = "tbs7";
-            this.tbs7.Padding = new System.Windows.Forms.Padding(3);
-            this.tbs7.Size = new System.Drawing.Size(484, 396);
-            this.tbs7.TabIndex = 7;
-            this.tbs7.Text = "Sim";
-            this.tbs7.UseVisualStyleBackColor = true;
-            // 
-            // grpSim
-            // 
-            this.grpSim.Controls.Add(this.rbOff);
-            this.grpSim.Controls.Add(this.rbRate);
-            this.grpSim.Controls.Add(this.lbMPH);
-            this.grpSim.Controls.Add(this.tbSpeed);
-            this.grpSim.Controls.Add(this.rbSpeed);
-            this.grpSim.Location = new System.Drawing.Point(256, 52);
-            this.grpSim.Name = "grpSim";
-            this.grpSim.Size = new System.Drawing.Size(128, 201);
-            this.grpSim.TabIndex = 156;
-            this.grpSim.TabStop = false;
-            this.grpSim.Text = "Simulation";
-            this.grpSim.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // rbOff
-            // 
-            this.rbOff.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbOff.Checked = true;
-            this.rbOff.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbOff.Location = new System.Drawing.Point(7, 29);
-            this.rbOff.Margin = new System.Windows.Forms.Padding(4);
-            this.rbOff.Name = "rbOff";
-            this.rbOff.Size = new System.Drawing.Size(113, 36);
-            this.rbOff.TabIndex = 0;
-            this.rbOff.TabStop = true;
-            this.rbOff.Tag = "0";
-            this.rbOff.Text = "Off";
-            this.rbOff.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbOff.UseVisualStyleBackColor = true;
-            this.rbOff.CheckedChanged += new System.EventHandler(this.rbOff_CheckedChanged);
-            // 
-            // rbRate
-            // 
-            this.rbRate.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbRate.Location = new System.Drawing.Point(7, 73);
-            this.rbRate.Margin = new System.Windows.Forms.Padding(4);
-            this.rbRate.Name = "rbRate";
-            this.rbRate.Size = new System.Drawing.Size(113, 36);
-            this.rbRate.TabIndex = 1;
-            this.rbRate.Tag = "0";
-            this.rbRate.Text = "Rate";
-            this.rbRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbRate.UseVisualStyleBackColor = true;
-            this.rbRate.Click += new System.EventHandler(this.rbOff_CheckedChanged);
-            this.rbRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbRate_HelpRequested);
-            // 
-            // lbMPH
-            // 
-            this.lbMPH.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMPH.Location = new System.Drawing.Point(65, 159);
-            this.lbMPH.Name = "lbMPH";
-            this.lbMPH.Size = new System.Drawing.Size(55, 30);
-            this.lbMPH.TabIndex = 152;
-            this.lbMPH.Text = "MPH";
-            this.lbMPH.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tbSpeed
-            // 
-            this.tbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSpeed.Location = new System.Drawing.Point(9, 160);
-            this.tbSpeed.Margin = new System.Windows.Forms.Padding(6);
-            this.tbSpeed.MaxLength = 8;
-            this.tbSpeed.Name = "tbSpeed";
-            this.tbSpeed.Size = new System.Drawing.Size(47, 30);
-            this.tbSpeed.TabIndex = 4;
-            this.tbSpeed.Text = "10.5";
-            this.tbSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbSpeed.Enter += new System.EventHandler(this.tbSpeed_Enter);
-            // 
-            // rbSpeed
-            // 
-            this.rbSpeed.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbSpeed.Location = new System.Drawing.Point(7, 117);
-            this.rbSpeed.Margin = new System.Windows.Forms.Padding(4);
-            this.rbSpeed.Name = "rbSpeed";
-            this.rbSpeed.Size = new System.Drawing.Size(113, 36);
-            this.rbSpeed.TabIndex = 2;
-            this.rbSpeed.Tag = "0";
-            this.rbSpeed.Text = "Speed";
-            this.rbSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbSpeed.UseVisualStyleBackColor = true;
-            this.rbSpeed.Click += new System.EventHandler(this.rbOff_CheckedChanged);
-            // 
-            // grpSwitches
-            // 
-            this.grpSwitches.Controls.Add(this.swMasterOff);
-            this.grpSwitches.Controls.Add(this.swDown);
-            this.grpSwitches.Controls.Add(this.swUp);
-            this.grpSwitches.Controls.Add(this.swAuto);
-            this.grpSwitches.Controls.Add(this.swFour);
-            this.grpSwitches.Controls.Add(this.swThree);
-            this.grpSwitches.Controls.Add(this.swTwo);
-            this.grpSwitches.Controls.Add(this.swOne);
-            this.grpSwitches.Controls.Add(this.swMasterOn);
-            this.grpSwitches.Location = new System.Drawing.Point(110, 52);
-            this.grpSwitches.Name = "grpSwitches";
-            this.grpSwitches.Size = new System.Drawing.Size(124, 281);
-            this.grpSwitches.TabIndex = 154;
-            this.grpSwitches.TabStop = false;
-            this.grpSwitches.Text = "Switches";
-            this.grpSwitches.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // swMasterOff
-            // 
-            this.swMasterOff.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.swMasterOff.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.swMasterOff.Location = new System.Drawing.Point(6, 53);
-            this.swMasterOff.Name = "swMasterOff";
-            this.swMasterOff.Size = new System.Drawing.Size(110, 23);
-            this.swMasterOff.TabIndex = 213;
-            this.swMasterOff.Text = "Master Off";
-            this.swMasterOff.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.swMasterOff.Click += new System.EventHandler(this.swMasterOff_Click);
-            // 
-            // swDown
-            // 
-            this.swDown.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.swDown.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.swDown.Location = new System.Drawing.Point(6, 249);
-            this.swDown.Name = "swDown";
-            this.swDown.Size = new System.Drawing.Size(110, 23);
-            this.swDown.TabIndex = 212;
-            this.swDown.Text = "Rate Down";
-            this.swDown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.swDown.Click += new System.EventHandler(this.swDown_Click);
-            // 
-            // swUp
-            // 
-            this.swUp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.swUp.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.swUp.Location = new System.Drawing.Point(6, 221);
-            this.swUp.Name = "swUp";
-            this.swUp.Size = new System.Drawing.Size(110, 23);
-            this.swUp.TabIndex = 211;
-            this.swUp.Text = "Rate Up";
-            this.swUp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.swUp.Click += new System.EventHandler(this.swUp_Click);
-            // 
-            // swAuto
-            // 
-            this.swAuto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.swAuto.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.swAuto.Location = new System.Drawing.Point(6, 193);
-            this.swAuto.Name = "swAuto";
-            this.swAuto.Size = new System.Drawing.Size(110, 23);
-            this.swAuto.TabIndex = 210;
-            this.swAuto.Text = "Auto";
-            this.swAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.swAuto.Click += new System.EventHandler(this.swAuto_Click);
-            // 
-            // swFour
-            // 
-            this.swFour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.swFour.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.swFour.Location = new System.Drawing.Point(6, 165);
-            this.swFour.Name = "swFour";
-            this.swFour.Size = new System.Drawing.Size(110, 23);
-            this.swFour.TabIndex = 209;
-            this.swFour.Text = "4";
-            this.swFour.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.swFour.Click += new System.EventHandler(this.swFour_Click);
-            // 
-            // swThree
-            // 
-            this.swThree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.swThree.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.swThree.Location = new System.Drawing.Point(6, 137);
-            this.swThree.Name = "swThree";
-            this.swThree.Size = new System.Drawing.Size(110, 23);
-            this.swThree.TabIndex = 208;
-            this.swThree.Text = "3";
-            this.swThree.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.swThree.Click += new System.EventHandler(this.swThree_Click);
-            // 
-            // swTwo
-            // 
-            this.swTwo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.swTwo.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.swTwo.Location = new System.Drawing.Point(6, 109);
-            this.swTwo.Name = "swTwo";
-            this.swTwo.Size = new System.Drawing.Size(110, 23);
-            this.swTwo.TabIndex = 207;
-            this.swTwo.Text = "2";
-            this.swTwo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.swTwo.Click += new System.EventHandler(this.swTwo_Click);
-            // 
-            // swOne
-            // 
-            this.swOne.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.swOne.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.swOne.Location = new System.Drawing.Point(6, 81);
-            this.swOne.Name = "swOne";
-            this.swOne.Size = new System.Drawing.Size(110, 23);
-            this.swOne.TabIndex = 206;
-            this.swOne.Text = "1";
-            this.swOne.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.swOne.Click += new System.EventHandler(this.swOne_Click);
-            // 
-            // swMasterOn
-            // 
-            this.swMasterOn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.swMasterOn.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.swMasterOn.Location = new System.Drawing.Point(6, 25);
-            this.swMasterOn.Name = "swMasterOn";
-            this.swMasterOn.Size = new System.Drawing.Size(110, 23);
-            this.swMasterOn.TabIndex = 205;
-            this.swMasterOn.Text = "Master On";
-            this.swMasterOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.swMasterOn.Click += new System.EventHandler(this.swMasterOn_Click);
-            // 
             // timer1
             // 
             this.timer1.Interval = 1000;
@@ -2123,10 +1874,6 @@ namespace RateController
             this.pnlWeight.PerformLayout();
             this.pnlFlow.ResumeLayout(false);
             this.pnlFlow.PerformLayout();
-            this.tbs7.ResumeLayout(false);
-            this.grpSim.ResumeLayout(false);
-            this.grpSim.PerformLayout();
-            this.grpSwitches.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2269,22 +2016,5 @@ namespace RateController
         private System.Windows.Forms.Button btnTare;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tbTare;
-        private System.Windows.Forms.TabPage tbs7;
-        private System.Windows.Forms.GroupBox grpSwitches;
-        private System.Windows.Forms.GroupBox grpSim;
-        private System.Windows.Forms.RadioButton rbOff;
-        private System.Windows.Forms.RadioButton rbRate;
-        private System.Windows.Forms.Label lbMPH;
-        private System.Windows.Forms.TextBox tbSpeed;
-        private System.Windows.Forms.RadioButton rbSpeed;
-        private System.Windows.Forms.Label swMasterOff;
-        private System.Windows.Forms.Label swDown;
-        private System.Windows.Forms.Label swUp;
-        private System.Windows.Forms.Label swAuto;
-        private System.Windows.Forms.Label swFour;
-        private System.Windows.Forms.Label swThree;
-        private System.Windows.Forms.Label swTwo;
-        private System.Windows.Forms.Label swOne;
-        private System.Windows.Forms.Label swMasterOn;
     }
 }

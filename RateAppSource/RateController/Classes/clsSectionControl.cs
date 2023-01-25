@@ -202,7 +202,7 @@ namespace RateController
             {
                 if (CTL.AutoOn)
                 {
-                    if (mf.AutoSteerPGN.Connected())
+                    if (mf.AutoSteerPGN.Connected() && mf.SimMode!=SimType.Speed)
                     {
                         // aog connected, only send which switches that are off
                         CTL.Rlys0_On = 0;

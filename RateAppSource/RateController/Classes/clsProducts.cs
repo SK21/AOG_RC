@@ -180,7 +180,7 @@ namespace RateController
         {
             for (int i = 0; i < MaxRecords; i++)
             {
-                if (cProducts[i].SimulationType == SimType.VirtualNano) cProducts[i].VirtualNano.MainLoop();
+                if (cProducts[i].mf.SimMode == SimType.VirtualNano) cProducts[i].VirtualNano.MainLoop();
             }
         }
 

@@ -46,7 +46,6 @@ namespace RateController
 
         private int cSenID;
         private int cSerialPort;
-        private SimType cSimulationType = 0;
         private double cTankStart = 0;
         private double cUnitsApplied = 0;
         private double CurrentMinutes;
@@ -71,7 +70,6 @@ namespace RateController
         private DateTime UpdateStartTime;
         private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
 
-        private double cSimSpeed;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -109,19 +107,6 @@ namespace RateController
                 if (value < 0) cCalPWM = 0;
                 else if (value > 255) cCalPWM = 255;
                 else cCalPWM = (byte)value;
-            }
-        }
-
-        public double SimSpeed
-        {
-            get { return cSimSpeed; }
-            set
-            {
-                if(value>0 && value <20)
-                {
-                    cSimSpeed = value;
-                    Debug.Print("New value for product "+ID.ToString()+" : " + cSimSpeed.ToString());
-                }
             }
         }
 
@@ -375,9 +360,6 @@ namespace RateController
             }
         }
 
-        public SimType SimulationType
-        { get { return cSimulationType; } set { cSimulationType = value; } }
-
         public double TankStart
         {
             get { return cTankStart; }
@@ -497,7 +479,6 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("FlowCal" + IDname), out cMeterCal);
             double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out TankSize);
             Enum.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), true, out cControlType);
-            Enum.TryParse(mf.Tls.LoadProperty("cSimulationType" + IDname), true, out cSimulationType);
 
             cProductName = mf.Tls.LoadProperty("ProductName" + IDname);
 
@@ -559,8 +540,6 @@ namespace RateController
 
             double.TryParse(mf.Tls.LoadProperty("ScaleUnitsCal" + IDname), out cScaleUnitsCal);
             double.TryParse(mf.Tls.LoadProperty("ScaleTare" + IDname), out cScaleTare);
-
-            double.TryParse(mf.Tls.LoadProperty("SimSpeed" + IDname), out cSimSpeed);
         }
 
         public double PWM()
@@ -637,7 +616,6 @@ namespace RateController
             mf.Tls.SaveProperty("FlowCal" + IDname, cMeterCal.ToString());
             mf.Tls.SaveProperty("TankSize" + IDname, TankSize.ToString());
             mf.Tls.SaveProperty("ValveType" + IDname, cControlType.ToString());
-            mf.Tls.SaveProperty("cSimulationType" + IDname, cSimulationType.ToString());
 
             mf.Tls.SaveProperty("ProductName" + IDname, cProductName);
 
@@ -667,8 +645,6 @@ namespace RateController
 
             mf.Tls.SaveProperty("ScaleUnitsCal" + IDname, cScaleUnitsCal.ToString());
             mf.Tls.SaveProperty("ScaleTare" + IDname, cScaleTare.ToString());
-
-            mf.Tls.SaveProperty("SimSpeed" + IDname, cSimSpeed.ToString());
         }
 
         public void SendPID()
@@ -681,7 +657,7 @@ namespace RateController
             bool Result = false;    // return true if there is good comm
             try
             {
-                if (RealNano & SimulationType == SimType.VirtualNano)
+                if (RealNano & mf.SimMode == SimType.VirtualNano)
                 {
                     // block PGN32613 from real nano when simulation is with virtual nano
                 }
@@ -731,9 +707,9 @@ namespace RateController
 
         public double Speed()
         {
-            if (cSimulationType == SimType.Speed)
+            if (mf.SimMode == SimType.Speed)
             {
-                return cSimSpeed;
+                return mf.SimSpeed;
             }
             else
             {
@@ -750,15 +726,15 @@ namespace RateController
 
         private double KMH()
         {
-            if (cSimulationType == SimType.Speed)
+            if (mf.SimMode == SimType.Speed)
             {
                 if (mf.UseInches)
                 {
-                    return cSimSpeed / 0.621371;
+                    return mf.SimSpeed / 0.621371;
                 }
                 else
                 {
-                    return cSimSpeed;
+                    return mf.SimSpeed;
                 }
             }
             else
@@ -814,7 +790,7 @@ namespace RateController
         {
             try
             {
-                if (SimulationType != SimType.VirtualNano)  // block pgns from real nano when simulation is with virtual nano
+                if (mf.SimMode != SimType.VirtualNano)  // block pgns from real nano when simulation is with virtual nano
                 {
                     switch (PGN)
                     {
@@ -850,7 +826,7 @@ namespace RateController
         public void Update()
         {
             if (ArduinoModule.ModuleSending() && (mf.AutoSteerPGN.Connected() || CoverageUnits > 1)
-                ||cSimulationType==SimType.Speed)
+                ||mf.SimMode ==SimType.Speed)
             {
                 if (!SwitchIDsSent)
                 {
@@ -936,7 +912,7 @@ namespace RateController
             {
                 if (cScaleUnitsCal > 0)
                 {
-                    if (cSimulationType == SimType.VirtualNano)
+                    if (mf.SimMode == SimType.VirtualNano)
                     {
                         Result = mf.Tls.NoisyData(PWM() * MeterCal , VirtualNano.ErrorRange);
                     }

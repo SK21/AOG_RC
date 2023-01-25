@@ -15,16 +15,16 @@ namespace RateController
         {
             mf = CallingForm;
             InitializeComponent();
-            UpdateProduct();
+            UpdateSim();
 
             mf.ProductChanged += Mf_ProductChanged;
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             this.BackColor = Properties.Settings.Default.DayColour;
         }
 
-        public void UpdateProduct()
+        public void UpdateSim()
         {
-            CurrentSim = mf.Products.Item(mf.CurrentProduct()).SimulationType;
+            CurrentSim = mf.SimMode;
             switch (CurrentSim)
             {
                 case SimType.VirtualNano:
@@ -48,7 +48,7 @@ namespace RateController
             {
                 lbMPH.Text = Lang.lgKPH;
             }
-            tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
+            tbSpeed.Text = mf.SimSpeed.ToString("N1");
             tbPWM.Text = mf.Products.Item(mf.CurrentProduct()).CalPWM.ToString("N0");
         }
 
@@ -83,7 +83,7 @@ namespace RateController
 
         private void Mf_ProductChanged(object sender, EventArgs e)
         {
-            UpdateProduct();
+            UpdateSim();
         }
 
         private void rbOff_Click(object sender, EventArgs e)
@@ -152,7 +152,7 @@ namespace RateController
                 if (result == DialogResult.OK)
                 {
                     tbSpeed.Text = form.ReturnValue.ToString("N1");
-                    mf.Products.Item(mf.CurrentProduct()).SimSpeed = form.ReturnValue;
+                    mf.SimSpeed = form.ReturnValue;
                 }
             }
             this.ActiveControl = lbMPH;
@@ -183,7 +183,7 @@ namespace RateController
                 }
             }
 
-            mf.Products.Item(mf.CurrentProduct()).SimulationType = CurrentSim;
+            mf.SimMode = CurrentSim;
             if (mf.UseInches)
             {
                 lbMPH.Text = Lang.lgMPH;
@@ -192,7 +192,7 @@ namespace RateController
             {
                 lbMPH.Text = Lang.lgKPH;
             }
-            tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
+            tbSpeed.Text = mf.SimSpeed.ToString("N1");
         }
 
         private void UpdateSwitches()
@@ -321,7 +321,7 @@ namespace RateController
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            UpdateProduct();
+            UpdateSim();
         }
 
         private void tbPWM_Enter(object sender, EventArgs e)

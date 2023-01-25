@@ -9,7 +9,7 @@ namespace RateController
     {
         None,
         VirtualNano,
-        Speed,
+        Speed
     }
 
     public partial class FormStart : Form
@@ -53,6 +53,8 @@ namespace RateController
 
         public event EventHandler ProductChanged;
         private int CurrentPageLast;
+        public SimType SimMode = SimType.None;
+        private double cSimSpeed = 0;
 
         public FormStart()
         {
@@ -135,12 +137,12 @@ namespace RateController
             SetDayMode();
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
-            bool tmp;
-            if (bool.TryParse(Tls.LoadProperty("UseInches"), out tmp)) UseInches = tmp;
+            if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) UseInches = tmp;
+
+            if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd)) cSimSpeed = Spd;
 
             Sections.Load();
             Sections.CheckSwitchDefinitions();
-
             Products.Load();
             PressureObjects.Load();
             RelayObjects.Load();
@@ -196,7 +198,7 @@ namespace RateController
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
 
-                        if (Products.Item(i).SimulationType == SimType.None)
+                        if (SimMode == SimType.None)
                         {
                             ProdName[i].ForeColor = SystemColors.ControlText;
                             ProdName[i].BackColor = Properties.Settings.Default.DayColour;
@@ -305,7 +307,7 @@ namespace RateController
                             break;
                     }
 
-                    if (Prd.SimulationType == SimType.None)
+                    if (SimMode == SimType.None)
                     {
                         if (Prd.ArduinoModule.ModuleSending())
                         {
@@ -460,6 +462,8 @@ namespace RateController
 
                 Sections.Save();
                 Products.Save();
+
+                Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
             }
             catch (Exception)
             {
@@ -801,6 +805,15 @@ namespace RateController
             {
                 Form frm = new frmSimulation(this);
                 frm.Show();
+            }
+        }
+
+        public double SimSpeed
+        {
+            get { return cSimSpeed; }
+            set
+            {
+                if(value>=0 && value<20) { cSimSpeed = value; }
             }
         }
     }

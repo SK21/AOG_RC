@@ -140,7 +140,7 @@
             // CRC
             Data[11] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
-            if (Prod.SimulationType == SimType.VirtualNano)
+            if (Prod.mf.SimMode == SimType.VirtualNano)
             {
                 Prod.VirtualNano.ReceiveSerial(Data);
             }

@@ -126,7 +126,7 @@ namespace RateController
             cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
 
             // send
-            if (Prod.SimulationType == SimType.VirtualNano)
+            if (Prod.mf.SimMode == SimType.VirtualNano)
             {
                 Prod.VirtualNano.ReceiveSerial(cData);
             }

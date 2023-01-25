@@ -26,7 +26,6 @@ namespace RateController
         private TimeSpan WtSpan;
         private DateTime[] WtStart = new DateTime[5];
         private DateTime[] WtTimeEnd = new DateTime[5];
-        private SimType CurrentSim;
 
         public FormSettings(FormStart CallingForm, int Page)
         {
@@ -62,7 +61,6 @@ namespace RateController
             grpSensor.Text = Lang.lgSensorLocation;
             lbConID.Text = Lang.lgModuleID;
             lbSensorID.Text = Lang.lgSensorID;
-            grpSim.Text = Lang.lgSimulate;
 
             lb32.Text = Lang.lgUPMTarget;
             lb33.Text = Lang.lgUPMApplied;
@@ -106,14 +104,6 @@ namespace RateController
 
             lbMinimumUPM.Text = Lang.lgMinUPM;
             ckOffRate.Text = Lang.lgOffRate;
-            grpSwitches.Text = Lang.lgSwitch;
-
-            swMasterOff.Text = Lang.lgMasterOff;
-            swMasterOn.Text = Lang.lgMasterOn;
-            swAuto.Text = Lang.lgAuto;
-            swUp.Text = Lang.lgRateUp;
-            swDown.Text = Lang.lgRateDown;
-
             label34.Text = Lang.lgTime;
 
             #endregion // language
@@ -703,26 +693,6 @@ namespace RateController
             tbWTpwm.Text = CurrentProduct.CalPWM.ToString("N0");
             tbScaleCountsPerUnit.Text = CurrentProduct.ScaleCountsPerUnit.ToString("N1");
             SetCalButtons();
-            SetSimButtons();
-        }
-
-        private void SetSimButtons()
-        {
-            SimType tmp = CurrentProduct.SimulationType;
-            switch (tmp)
-            {
-                case SimType.None:
-                    rbOff.Checked = true;
-                    break;
-                case SimType.VirtualNano:
-                    rbRate.Checked = true;
-                    break;
-                case SimType.Speed:
-                    rbSpeed.Checked = true;
-                    break;
-                default:
-                    break;
-            }
         }
 
         private void RateSet_Enter(object sender, EventArgs e)
@@ -874,34 +844,6 @@ namespace RateController
 
             double.TryParse(tbTare.Text, out tempD);
             CurrentProduct.ScaleTare = tempD;
-
-            // sims
-            if (rbRate.Checked)
-            {
-                if (CurrentSim != SimType.VirtualNano)
-                {
-                    CurrentSim = SimType.VirtualNano;
-                    mf.Sections.UpdateSectionsOn();
-                }
-            }
-            else if (rbSpeed.Checked)
-            {
-                if (CurrentSim != SimType.Speed)
-                {
-                    CurrentSim = SimType.Speed;
-                    mf.Sections.UpdateSectionsOn();
-                }
-            }
-            else
-            {
-                // default to off
-                if (CurrentSim != SimType.None)
-                {
-                    CurrentSim = SimType.None;
-                    mf.Sections.UpdateSectionsOn();
-                }
-            }
-            mf.Products.Item(mf.CurrentProduct()).SimulationType = CurrentSim;
 
             CurrentProduct.Save();
         }
@@ -1629,16 +1571,6 @@ namespace RateController
             SetDayMode();
             SetCalDescription();
 
-            if (mf.UseInches)
-            {
-                lbMPH.Text = Lang.lgMPH;
-            }
-            else
-            {
-                lbMPH.Text = Lang.lgKPH;
-            }
-            tbSpeed.Text = mf.Products.Item(mf.CurrentProduct()).SimSpeed.ToString("N1");
-
             UpdateDiags();
             LoadSettings();
             SetVCNpid();
@@ -1648,7 +1580,7 @@ namespace RateController
             SetCalDescription();
 
             lbProduct.Text = (CurrentProduct.ID + 1).ToString() + ". " + CurrentProduct.ProductName;
-            if (CurrentProduct.SimulationType != SimType.None)
+            if (mf.SimMode != SimType.None)
             {
                 lbProduct.Text = lbProduct.Text + "   Simulation";
                 lbProduct.BackColor = mf.SimColor;
@@ -1673,91 +1605,6 @@ namespace RateController
             tbTare.Text = CurrentProduct.ScaleTare.ToString("N0");
 
             Initializing = false;
-            UpdateSwitches();
-        }
-
-        private void UpdateSwitches()
-        {
-            if (SwON[0])
-            {
-                swAuto.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swAuto.BackColor = Color.Red;
-            }
-
-            if (SwON[1])
-            {
-                swMasterOn.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swMasterOn.BackColor = tbs3.BackColor;
-            }
-
-            if (SwON[2])
-            {
-                swMasterOff.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swMasterOff.BackColor = tbs3.BackColor;
-            }
-
-            if (SwON[3])
-            {
-                swUp.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swUp.BackColor = tbs3.BackColor;
-            }
-
-            if (SwON[4])
-            {
-                swDown.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swDown.BackColor = tbs3.BackColor;
-            }
-
-            if (SwON[5])
-            {
-                swOne.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swOne.BackColor = Color.Red;
-            }
-
-            if (SwON[6])
-            {
-                swTwo.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swTwo.BackColor = Color.Red;
-            }
-
-            if (SwON[7])
-            {
-                swThree.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swThree.BackColor = Color.Red;
-            }
-
-            if (SwON[8])
-            {
-                swFour.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                swFour.BackColor = Color.Red;
-            }
         }
 
         private void ValveType_SelectedIndexChanged(object sender, EventArgs e)
@@ -1811,36 +1658,6 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
-        }
-
-        private void tbSpeed_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbSpeed.Text, out tempD);
-            using (var form = new FormNumeric(1, 20, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbSpeed.Text = form.ReturnValue.ToString("N1");
-                    mf.Products.Item(mf.CurrentProduct()).SimSpeed = form.ReturnValue;
-                }
-            }
-        }
-
-        private void rbOff_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void rbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Simulate flow rate without needing an attached arduino module. It will " +
-                "simulate a varying random rate 4% above or below the target rate. Uncheck for " +
-                "normal operation.";
-
-            mf.Tls.ShowHelp(Message, "Simulate Rate");
-            hlpevent.Handled = true;
         }
     }
 }
