@@ -1,5 +1,6 @@
 ﻿using AgOpenGPS;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -33,6 +34,10 @@ namespace RateController
 
                 case SimType.Speed:
                     rbSpeed.Checked = true;
+                    if(mf.SectionControl.MasterOn())
+                    {
+                        mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+                    }
                     break;
 
                 default:
@@ -50,11 +55,61 @@ namespace RateController
             }
             tbSpeed.Text = mf.SimSpeed.ToString("N1");
             tbPWM.Text = mf.Products.Item(mf.CurrentProduct()).CalPWM.ToString("N0");
+            tbPWM.Enabled = !mf.SwitchBox.Switches[0];
+            tbSpeed.Enabled = (CurrentSim == SimType.Speed);
+
         }
 
         private void bntOK_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btAuto_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.Auto);
+        }
+
+        private void btn1_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw0);
+        }
+
+        private void btn2_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw1);
+        }
+
+        private void btn3_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw2);
+        }
+
+        private void btn4_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.sw3);
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+        }
+
+        private void ckMaster_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckMaster.Checked)
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+            }
+            else
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+            }
         }
 
         private void frmSimulation_FormClosed(object sender, FormClosedEventArgs e)
@@ -142,6 +197,22 @@ namespace RateController
             mf.SwitchBox.PressSwitch(SwIDs.RateUp);
         }
 
+        private void tbPWM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSpeed.Text, out tempD);
+            using (var form = new FormNumeric(0, 255, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSpeed.Text = form.ReturnValue.ToString("N0");
+                    mf.Products.Item(mf.CurrentProduct()).CalPWM = (byte)form.ReturnValue;
+                }
+            }
+            this.ActiveControl = lbMPH;
+        }
+
         private void tbSpeed_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -156,6 +227,11 @@ namespace RateController
                 }
             }
             this.ActiveControl = lbMPH;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            UpdateSim();
         }
 
         private void UpdateForm()
@@ -269,75 +345,6 @@ namespace RateController
             {
                 btn4.BackColor = Color.Red;
             }
-        }
-
-
-        private void ckMaster_CheckedChanged(object sender, EventArgs e)
-        {
-            if(ckMaster.Checked)
-            {
-                mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
-            }
-            else
-            {
-                mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
-            }
-        }
-
-        private void btn1_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw0);
-        }
-
-        private void btn2_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw1);
-        }
-
-        private void btn3_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw2);
-        }
-
-        private void btn4_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw3);
-        }
-
-        private void btAuto_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.Auto);
-        }
-
-        private void btnUp_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
-        }
-
-        private void btnDown_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            UpdateSim();
-        }
-
-        private void tbPWM_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbSpeed.Text, out tempD);
-            using (var form = new FormNumeric(0,255, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbSpeed.Text = form.ReturnValue.ToString("N0");
-                    mf.Products.Item(mf.CurrentProduct()).CalPWM = (byte)form.ReturnValue;
-                }
-            }
-            this.ActiveControl = lbMPH;
         }
     }
 }

@@ -90,9 +90,9 @@ namespace RateController
             CTL.AOGRlys0 = e.RelayLo;
             CTL.AOGRlys1 = e.RelayHi;
 
-            if (mf.SwitchBox.Connected())
+            if (mf.SwitchBox.Connected() || mf.SimMode == SimType.Speed)
             {
-                if (CTL.AutoOn)
+                if (CTL.AutoOn && mf.SimMode != SimType.Speed)
                 {
                     // auto on, only send off bytes
                     CTL.Rlys0_On = 0;
@@ -143,7 +143,7 @@ namespace RateController
                     RateStep++;
                     if (RateStep > 4) RateStep = 4;
 
-                    int ID = mf.CurrentProduct() - 1;
+                    int ID = mf.CurrentProduct();
                     if (ID < 0) ID = 0;
                     clsProduct Prd = mf.Products.Item(ID);
 
@@ -249,9 +249,14 @@ namespace RateController
             ReadRateSwitches();
         }
     
-        public bool IsMasterOn()
+        public bool MasterOn()
         {
             return CTL.MasterOn;
+        }
+
+        public bool AutoOn()
+        {
+            return CTL.AutoOn;
         }
     }
 }

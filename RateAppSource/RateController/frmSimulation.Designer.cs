@@ -36,19 +36,19 @@
             this.lbMPH = new System.Windows.Forms.Label();
             this.rbOff = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.grpSim = new System.Windows.Forms.GroupBox();
-            this.bntOK = new System.Windows.Forms.Button();
             this.ckMaster = new System.Windows.Forms.CheckBox();
+            this.btnDown = new System.Windows.Forms.Button();
             this.btn1 = new System.Windows.Forms.Button();
             this.btn2 = new System.Windows.Forms.Button();
+            this.btnUp = new System.Windows.Forms.Button();
             this.btn3 = new System.Windows.Forms.Button();
             this.btn4 = new System.Windows.Forms.Button();
             this.btAuto = new System.Windows.Forms.Button();
-            this.btnUp = new System.Windows.Forms.Button();
-            this.btnDown = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.grpSim = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tbPWM = new System.Windows.Forms.TextBox();
+            this.bntOK = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.grpSim.SuspendLayout();
             this.SuspendLayout();
@@ -56,7 +56,7 @@
             // tbSpeed
             // 
             this.tbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSpeed.Location = new System.Drawing.Point(8, 209);
+            this.tbSpeed.Location = new System.Drawing.Point(8, 222);
             this.tbSpeed.Margin = new System.Windows.Forms.Padding(6);
             this.tbSpeed.MaxLength = 8;
             this.tbSpeed.Name = "tbSpeed";
@@ -74,10 +74,10 @@
             this.rbRate.Location = new System.Drawing.Point(8, 89);
             this.rbRate.Margin = new System.Windows.Forms.Padding(4);
             this.rbRate.Name = "rbRate";
-            this.rbRate.Size = new System.Drawing.Size(113, 50);
+            this.rbRate.Size = new System.Drawing.Size(113, 63);
             this.rbRate.TabIndex = 1;
             this.rbRate.Tag = "0";
-            this.rbRate.Text = "Rate";
+            this.rbRate.Text = "Arduino Module";
             this.rbRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbRate.UseVisualStyleBackColor = true;
             this.rbRate.Click += new System.EventHandler(this.rbOff_Click);
@@ -87,7 +87,7 @@
             this.rbSpeed.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbSpeed.Location = new System.Drawing.Point(8, 149);
+            this.rbSpeed.Location = new System.Drawing.Point(8, 162);
             this.rbSpeed.Margin = new System.Windows.Forms.Padding(4);
             this.rbSpeed.Name = "rbSpeed";
             this.rbSpeed.Size = new System.Drawing.Size(113, 50);
@@ -101,7 +101,7 @@
             // lbMPH
             // 
             this.lbMPH.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMPH.Location = new System.Drawing.Point(65, 208);
+            this.lbMPH.Location = new System.Drawing.Point(65, 221);
             this.lbMPH.Name = "lbMPH";
             this.lbMPH.Size = new System.Drawing.Size(55, 32);
             this.lbMPH.TabIndex = 152;
@@ -144,38 +144,6 @@
             this.groupBox1.Text = "Switches";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
             // 
-            // grpSim
-            // 
-            this.grpSim.Controls.Add(this.label1);
-            this.grpSim.Controls.Add(this.tbPWM);
-            this.grpSim.Controls.Add(this.rbOff);
-            this.grpSim.Controls.Add(this.rbRate);
-            this.grpSim.Controls.Add(this.lbMPH);
-            this.grpSim.Controls.Add(this.tbSpeed);
-            this.grpSim.Controls.Add(this.rbSpeed);
-            this.grpSim.Location = new System.Drawing.Point(114, 5);
-            this.grpSim.Name = "grpSim";
-            this.grpSim.Size = new System.Drawing.Size(128, 302);
-            this.grpSim.TabIndex = 155;
-            this.grpSim.TabStop = false;
-            this.grpSim.Text = "Simulation";
-            this.grpSim.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // bntOK
-            // 
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(121, 313);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 156;
-            this.bntOK.Text = "Close";
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
             // ckMaster
             // 
             this.ckMaster.Appearance = System.Windows.Forms.Appearance.Button;
@@ -189,6 +157,16 @@
             this.ckMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMaster.UseVisualStyleBackColor = true;
             this.ckMaster.CheckedChanged += new System.EventHandler(this.ckMaster_CheckedChanged);
+            // 
+            // btnDown
+            // 
+            this.btnDown.Location = new System.Drawing.Point(6, 318);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(89, 56);
+            this.btnDown.TabIndex = 166;
+            this.btnDown.Text = "Rate Down";
+            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
             // 
             // btn1
             // 
@@ -209,6 +187,16 @@
             this.btn2.Text = "2";
             this.btn2.UseVisualStyleBackColor = true;
             this.btn2.Click += new System.EventHandler(this.btn2_Click);
+            // 
+            // btnUp
+            // 
+            this.btnUp.Location = new System.Drawing.Point(6, 256);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(89, 56);
+            this.btnUp.TabIndex = 165;
+            this.btnUp.Text = "Rate Up";
+            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             // 
             // btn3
             // 
@@ -240,35 +228,27 @@
             this.btAuto.UseVisualStyleBackColor = true;
             this.btAuto.Click += new System.EventHandler(this.btAuto_Click);
             // 
-            // btnUp
+            // grpSim
             // 
-            this.btnUp.Location = new System.Drawing.Point(6, 256);
-            this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(89, 56);
-            this.btnUp.TabIndex = 165;
-            this.btnUp.Text = "Rate Up";
-            this.btnUp.UseVisualStyleBackColor = true;
-            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
-            // 
-            // btnDown
-            // 
-            this.btnDown.Location = new System.Drawing.Point(6, 318);
-            this.btnDown.Name = "btnDown";
-            this.btnDown.Size = new System.Drawing.Size(89, 56);
-            this.btnDown.TabIndex = 166;
-            this.btnDown.Text = "Rate Down";
-            this.btnDown.UseVisualStyleBackColor = true;
-            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 500;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.grpSim.Controls.Add(this.label1);
+            this.grpSim.Controls.Add(this.tbPWM);
+            this.grpSim.Controls.Add(this.rbOff);
+            this.grpSim.Controls.Add(this.rbRate);
+            this.grpSim.Controls.Add(this.lbMPH);
+            this.grpSim.Controls.Add(this.tbSpeed);
+            this.grpSim.Controls.Add(this.rbSpeed);
+            this.grpSim.Location = new System.Drawing.Point(114, 5);
+            this.grpSim.Name = "grpSim";
+            this.grpSim.Size = new System.Drawing.Size(128, 302);
+            this.grpSim.TabIndex = 155;
+            this.grpSim.TabStop = false;
+            this.grpSim.Text = "Simulation";
+            this.grpSim.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
             // 
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(65, 256);
+            this.label1.Location = new System.Drawing.Point(65, 261);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 32);
             this.label1.TabIndex = 159;
@@ -278,7 +258,7 @@
             // tbPWM
             // 
             this.tbPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPWM.Location = new System.Drawing.Point(9, 257);
+            this.tbPWM.Location = new System.Drawing.Point(9, 262);
             this.tbPWM.Margin = new System.Windows.Forms.Padding(6);
             this.tbPWM.MaxLength = 8;
             this.tbPWM.Name = "tbPWM";
@@ -287,6 +267,26 @@
             this.tbPWM.Text = "10.5";
             this.tbPWM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPWM.Enter += new System.EventHandler(this.tbPWM_Enter);
+            // 
+            // bntOK
+            // 
+            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
+            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.bntOK.Location = new System.Drawing.Point(121, 313);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(115, 72);
+            this.bntOK.TabIndex = 156;
+            this.bntOK.Text = "Close";
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 500;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // frmSimulation
             // 

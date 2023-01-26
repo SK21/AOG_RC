@@ -209,21 +209,31 @@ namespace RateController
 
         private void btnCalStart_Click(object sender, EventArgs e)
         {
-            byte tmp = 0;
-            byte.TryParse(tbWTpwm.Text, out tmp);
-            if (tmp == 0 && CurrentProduct.ControlType == ControlTypeEnum.MotorWeights)
+            try
             {
-                mf.Tls.ShowHelp("PWM must be greater than 0.", "Weight Cal", 15000);
+                byte tmp = 0;
+                byte.TryParse(tbWTpwm.Text, out tmp);
+                if (tmp == 0 && CurrentProduct.ControlType == ControlTypeEnum.MotorWeights)
+                {
+                    mf.Tls.ShowHelp("PWM must be greater than 0.", "Weight Cal", 15000);
+                }
+                else
+                {
+                    CurrentProduct.CalPWM = tmp;
+                    CurrentProduct.DoCal = true;
+                    CurrentProduct.CalStart = CurrentProduct.UnitsApplied();
+                    SetCalButtons();
+                    WtStart[CurrentProduct.ID] = DateTime.Now;
+                    lbWTcal.Text = "0.0";
+                    lbWTquantity.Text = "0.0";
+
+                    if (mf.SectionControl.AutoOn()) mf.SwitchBox.PressSwitch(SwIDs.Auto); // turn auto off
+                    mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CurrentProduct.CalPWM = tmp;
-                CurrentProduct.DoCal = true;
-                CurrentProduct.CalStart = CurrentProduct.UnitsApplied();
-                SetCalButtons();
-                WtStart[CurrentProduct.ID] = DateTime.Now;
-                lbWTcal.Text = "0.0";
-                lbWTquantity.Text = "0.0";
+                mf.Tls.ShowHelp("FormSettings/btnCalStart " + ex.Message);
             }
         }
 
@@ -237,6 +247,8 @@ namespace RateController
 
         private void btnCalStop_Click(object sender, EventArgs e)
         {
+            try
+            {
             CurrentProduct.CalEnd = CurrentProduct.UnitsApplied();
             CurrentProduct.DoCal = false;
             SetCalButtons();
@@ -271,6 +283,12 @@ namespace RateController
             {
                 // calibrate by flow meter counts
                 lbFlowMeterCounts.Text = FlowMeterCounts().ToString("N0");
+            }
+            mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp("FormSettings/btnCalStop " + ex.Message);
             }
         }
 
