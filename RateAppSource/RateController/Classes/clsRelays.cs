@@ -5,16 +5,18 @@ namespace RateController
 {
     public class clsRelays
     {
-        public IList<clsRelay> Items;
+        private IList<clsRelay> cItems;
         private int cPowerRelays;
-        private List<clsRelay> cRelays = new List<clsRelay>();
-        private FormStart mf;
+        private readonly List<clsRelay> cRelays = new List<clsRelay>();
+        private readonly FormStart mf;
 
         public clsRelays(FormStart CallingForm)
         {
             mf = CallingForm;
             Items = cRelays.AsReadOnly();
         }
+
+        public IList<clsRelay> Items { get => cItems; set => cItems = value; }
 
         public int Count()
         {
@@ -24,7 +26,7 @@ namespace RateController
         public clsRelay Item(int RelayID)
         {
             int IDX = ListID(RelayID);
-            if (IDX == -1) throw new IndexOutOfRangeException();
+            if (IDX == -1) throw new ArgumentOutOfRangeException();
             return cRelays[IDX];
         }
 

@@ -15,9 +15,10 @@ namespace PCBsetup
         //      - Use MCP23107 
         //      - Relay on high
         //      - Flow on high
-        //6     crc
+        //6     debounce minimum ms
+        //7     crc
 
-        private byte[] cData = new byte[7];
+        private byte[] cData = new byte[8];
         private frmNanoSettings cf;
         private string Name;
 
@@ -47,8 +48,10 @@ namespace PCBsetup
                 if (Checked) cData[5] |= (byte)Math.Pow(2, i);
             }
 
+            cData[6] = (byte)cf.Boxes.Value("tbNanoDebounce");
+
             // crc  
-            cData[6] = cf.mf.Tls.CRC(cData, 6);
+            cData[7] = cf.mf.Tls.CRC(cData, 7);
 
             Result = cf.mf.CommPort.Send(cData);
             //cf.mf.UDPmodulesConfig.SendUDPMessage(cData);

@@ -22,7 +22,7 @@ namespace RateController
         private const byte cByteCount = 6;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
-        private FormStart mf;
+        private readonly FormStart mf;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[21];
         private bool[] SWlast = new bool[21];
@@ -34,8 +34,12 @@ namespace RateController
         }
 
         public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
-
         public bool[] Switches { get { return SW; } }
+
+        public class SwitchPGNargs : EventArgs
+        {
+            public bool[] Switches { get; set; }
+        }
 
         public bool Connected()
         {
@@ -46,7 +50,7 @@ namespace RateController
         {
             bool Result = false;
 
-            if (Data[0] == HeaderLo & Data[1] == HeaderHi & Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
+            if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 SW[0] = mf.Tls.BitRead(Data[2], 0);     // auto on
                 SW[1] = mf.Tls.BitRead(Data[2], 1);     // master on
@@ -105,32 +109,43 @@ namespace RateController
             return Result;
         }
 
+        public bool SectionSwitchOn(int ID)
+        {
+            bool Result = false;
+            if ((ID >= 0) && (ID <= 15))
+            {
+                Result = SW[ID + (int)SwIDs.sw0];
+            }
+            return Result;
+        }
+
+        public bool SwitchOn(SwIDs ID)
+        {
+            return SW[(int)ID];
+        }
+
         public void PressSwitch(SwIDs ID)
         {
             ReceiveTime = DateTime.Now;
-
+            
             switch (ID)
             {
                 case SwIDs.MasterOn:
                     SW[1] = true;
                     SW[2] = false;
                     break;
-
                 case SwIDs.MasterOff:
                     SW[1] = false;
                     SW[2] = true;
                     break;
-
                 case SwIDs.RateUp:
                     SW[3] = true;
                     SW[4] = false;
                     break;
-
                 case SwIDs.RateDown:
                     SW[3] = false;
                     SW[4] = true;
                     break;
-
                 default:
                     SW[(int)ID] = !SW[(int)ID];
                     break;
@@ -155,26 +170,6 @@ namespace RateController
                     SwitchPGNreceived?.Invoke(this, args);
                     break;
             }
-        }
-
-        public bool SectionSwitchOn(int ID)
-        {
-            bool Result = false;
-            if ((ID >= 0) && (ID <= 15))
-            {
-                Result = SW[ID + (int)SwIDs.sw0];
-            }
-            return Result;
-        }
-
-        public bool SwitchOn(SwIDs ID)
-        {
-            return SW[(int)ID];
-        }
-
-        public class SwitchPGNargs : EventArgs
-        {
-            public bool[] Switches { get; set; }
         }
     }
 }

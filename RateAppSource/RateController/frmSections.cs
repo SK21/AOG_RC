@@ -354,8 +354,8 @@ namespace RateController
         {
             if (mf.UseInches)
             {
-                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth()).ToString("N0")+" Inches";
-                lbFeet.Text = (mf.Sections.TotalWidth() / 12).ToString("N1") + "  FT";
+                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth(true)).ToString("N0")+" Inches";
+                lbFeet.Text = (mf.Sections.TotalWidth(true) / 12).ToString("N1") + "  FT";
                 lbFeet.Visible = true;
             }
             else

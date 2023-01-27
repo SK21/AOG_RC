@@ -10,7 +10,7 @@ void SendSerial()
 	//0	HeaderLo		101
 	//1	HeaderHi		127
 	//2 Controller ID
-	//3	rate applied Lo 	10 X actual
+	//3	rate applied Lo 	1000 X actual
 	//4 rate applied Mid
 	//5	rate applied Hi
 	//6	acc.Quantity Lo		10 X actual
@@ -28,15 +28,16 @@ void SendSerial()
 		SerialPacket[1] = 127;
 		SerialPacket[2] = BuildModSenID(MDL.ModuleID, i);
 
-		// rate applied, 10 X actual
-		SerialPacket[3] = UPM[i] * 10;
-		SerialPacket[4] = (int)(UPM[i] * 10) >> 8;
-		SerialPacket[5] = (int)(UPM[i] * 10) >> 16;
+		// rate applied, 1000 X actual
+		uint32_t Applied = UPM[i] * 1000;
+		SerialPacket[3] = Applied;
+		SerialPacket[4] = Applied >> 8;
+		SerialPacket[5] = Applied >> 16;
 
 		// accumulated quantity, 10 X actual
 		if (MeterCal[i] > 0)
 		{
-			long Units = TotalPulses[i] * 10.0 / MeterCal[i];
+			uint32_t Units = TotalPulses[i] * 10.0 / MeterCal[i];
 			SerialPacket[6] = Units;
 			SerialPacket[7] = Units >> 8;
 			SerialPacket[8] = Units >> 16;
@@ -49,8 +50,8 @@ void SendSerial()
 		}
 
 		// pwmSetting
-		SerialPacket[9] = pwmSetting[i] * 10;
-		SerialPacket[10] = (pwmSetting[i] * 10) >> 8;
+		SerialPacket[9] = pwmSetting[i];
+		SerialPacket[10] = pwmSetting[i] >> 8;
 
 		// status
 		// bit 0    - sensor 0 receiving rate controller data
@@ -95,23 +96,22 @@ void ReceiveSerial()
 			//2 Controller ID
 			//3	relay Lo		0 - 7
 			//4	relay Hi		8 - 15
-			//5	rate set Lo		10 X actual
+			//5	rate set Lo		1000 X actual
 			//6 rate set Mid
 			//7	rate set Hi		10 X actual
 			//8	Flow Cal Lo		100 X actual
 			//9 Flow Cal Mid
 			//10 Flow Cal Hi
 			//11 Command
-			//- bit 0		    reset acc.Quantity
-			//- bit 1, 2		valve type 0 - 3
-			//- bit 3		    MasterOn
-			//- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
-			//- bit 5           AutoOn
-			//- bit 6           Debug pgn on
-			//- bit 7           Calibration on
+			//	        - bit 0		    reset acc.Quantity
+			//	        - bit 1,2,3		control type 0-4
+			//	        - bit 4		    MasterOn
+			//          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
+			//          - bit 6         AutoOn
+			//          - bit 7         Calibration On
 			//12    power relay Lo      list of power type relays 0-7
 			//13    power relay Hi      list of power type relays 8-15
-			//14	Cal PWM		calibration pwm
+			//14	manual pwm
 			//15	CRC
 			PGNlength = 16;
 
@@ -136,6 +136,14 @@ void ReceiveSerial()
 							RelayLo = SerialPacket[3];
 							RelayHi = SerialPacket[4];
 
+							// rate setting, 1000 times actual
+							uint32_t RateSet = SerialPacket[5] | (uint32_t)SerialPacket[6] << 8 | (uint32_t)SerialPacket[7] << 16;
+							RateSetting[SensorID] = (float)(RateSet * 0.001);
+
+							// Meter Cal, 1000 times actual
+							uint32_t Temp = SerialPacket[8] | (uint32_t)SerialPacket[9] << 8 | (uint32_t)SerialPacket[10] << 16;
+							MeterCal[SensorID] = (float)(Temp * 0.001);
+
 							// command byte
 							InCommand[SensorID] = SerialPacket[11];
 							if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
@@ -143,30 +151,17 @@ void ReceiveSerial()
 							ControlType[SensorID] = 0;
 							if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
 							if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
+							if ((InCommand[SensorID] & 8) == 8) ControlType[SensorID] += 4;
 
-							MasterOn[SensorID] = ((InCommand[SensorID] & 8) == 8);
-							UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
-							AutoOn = ((InCommand[SensorID] & 32) == 32);
-
-							// rate setting, 10 times actual
-							int RateSet = SerialPacket[5] | SerialPacket[6] << 8 | SerialPacket[7] << 16;
-
-							if (AutoOn)
-							{
-								RateSetting[SensorID] = (float)(RateSet * 0.1);
-							}
-							else
-							{
-								ManualAdjust[SensorID] = (float)(RateSet * 0.1);
-							}
-
-							// Meter Cal, 1000 times actual
-							uint32_t Temp = SerialPacket[8] | SerialPacket[9] << 8 | SerialPacket[10] << 16;
-							MeterCal[SensorID] = (float)(Temp * 0.001);
+							MasterOn[SensorID] = ((InCommand[SensorID] & 16) == 16);
+							UseMultiPulses[SensorID] = ((InCommand[SensorID] & 32) == 32);
+							AutoOn = ((InCommand[SensorID] & 64) == 64);
 
 							// power relays
 							PowerRelayLo = SerialPacket[12];
 							PowerRelayHi = SerialPacket[13];
+
+							ManualAdjust[SensorID] = SerialPacket[14];
 
 							CommTime[SensorID] = millis();
 						}
@@ -176,8 +171,27 @@ void ReceiveSerial()
 			break;
 
 		case 32616:
-			// PID to Arduino from RateController, 12 bytes
-			PGNlength = 12;
+			// PID to Arduino from RateController
+			// 0    104
+			// 1    127
+			// 2    Mod/Sen ID     0-15/0-15
+			// 3    KP 0
+			// 4    KP 1
+			// 5    KP 2
+			// 6    KP 3
+			// 7    KI 0
+			// 8    KI 1
+			// 9    KI 2
+			// 10   KI 3
+			// 11   KD 0
+			// 12   KD 1
+			// 13   KD 2
+			// 14   KD 3
+			// 15   MinPWM
+			// 16   MaxPWM
+			// 17   CRC
+
+			PGNlength = 18;
 
 			if (Serial.available() > PGNlength - 3)
 			{
@@ -197,14 +211,17 @@ void ReceiveSerial()
 						byte SensorID = ParseSenID(SerialPacket[2]);
 						if (SensorID < MDL.SensorCount)
 						{
-							PIDkp[SensorID] = SerialPacket[3];
-							PIDminPWM[SensorID] = SerialPacket[4];
-							PIDLowMax[SensorID] = SerialPacket[5];
-							PIDHighMax[SensorID] = SerialPacket[6];
-							PIDdeadband[SensorID] = SerialPacket[7];
-							PIDbrakePoint[SensorID] = SerialPacket[8];
-							AdjustTime[SensorID] = SerialPacket[9];
-							PIDki[SensorID] = SerialPacket[10];
+							uint32_t tmp = SerialPacket[3] | (uint32_t)SerialPacket[4] << 8 | (uint32_t)SerialPacket[5] << 16 | (uint32_t)SerialPacket[6] << 24;
+							PIDkp[SensorID] = (float)(tmp * 0.0001);
+
+							tmp = SerialPacket[7] | (uint32_t)SerialPacket[8] << 8 | (uint32_t)SerialPacket[9] << 16 | (uint32_t)SerialPacket[10] << 24;
+							PIDki[SensorID] = (float)(tmp * 0.0001);
+
+							tmp = SerialPacket[11] | (uint32_t)SerialPacket[12] << 8 | (uint32_t)SerialPacket[13] << 16 | (uint32_t)SerialPacket[14] << 24;
+							PIDkd[SensorID] = (float)(tmp * 0.0001);
+
+							MinPWM[SensorID] = SerialPacket[15];
+							MaxPWM[SensorID] = SerialPacket[16];
 
 							CommTime[SensorID] = millis();
 						}
@@ -275,7 +292,7 @@ void ReceiveSerial()
 			break;
 
 		case 32625:
-			// from rate controller, 7 bytes
+			// from rate controller, 8 bytes
 			// Nano config
 			// 0    113
 			// 1    127
@@ -286,8 +303,9 @@ void ReceiveSerial()
 			//      - UseMCP23017
 			//      - RelyOnSignal
 			//      - FlowOnSignal
-			// 6	crc
-			PGNlength = 7;
+			// 6    minimum ms debounce
+			// 7    crc
+			PGNlength = 8;
 
 			if (Serial.available() > PGNlength - 3)
 			{
@@ -309,6 +327,8 @@ void ReceiveSerial()
 					if ((tmp & 1) == 1) MDL.UseMCP23017 = 1; else MDL.UseMCP23017 = 0;
 					if ((tmp & 2) == 2) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
 					if ((tmp & 4) == 4) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
+
+					MDL.Debounce = SerialPacket[6];
 
 					EEPROM.put(10, MDL);
 				}

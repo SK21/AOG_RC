@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Timers;
 
 namespace RateController
 {
@@ -158,7 +156,7 @@ namespace RateController
                     else
                     {
                         // manual rate
-                        Prd.CalPWM += (int)(5 * Dir);
+                        Prd.ManualPWM += (int)(5 * Dir);
                     }
                 }
             }

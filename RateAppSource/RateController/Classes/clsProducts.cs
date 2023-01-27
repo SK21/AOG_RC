@@ -6,7 +6,6 @@ namespace RateController
     public class clsProducts
     {
         public IList<clsProduct> Items; // access records by index
-        private double AlarmSetPoint;
         private List<clsProduct> cProducts = new List<clsProduct>();
         private DateTime LastSave;
         private int MaxRecords = 5;
@@ -20,10 +19,12 @@ namespace RateController
 
         public bool AlarmOn()
         {
+            double AlarmSetPoint;
             bool cAlarmOn = false;
+
             for (int i = 0; i < MaxRecords; i++)
             {
-                if ((cProducts[i].WorkRate() > 0) & (cProducts[i].UseOffRateAlarm))
+                if ((cProducts[i].WorkRate() > 0) && (cProducts[i].UseOffRateAlarm))
                 {
                     // too low?
                     AlarmSetPoint = (100 - cProducts[i].OffRateSetting) / 100.0;
@@ -53,7 +54,7 @@ namespace RateController
         public clsProduct Item(int ProdID)  // access records by Product ID
         {
             int IDX = ListID(ProdID);
-            if (IDX == -1) throw new ArgumentException("Invalid index. (clsProducts)");
+            if (IDX == -1) throw new ArgumentOutOfRangeException();
             return cProducts[IDX];
         }
 
@@ -139,13 +140,10 @@ namespace RateController
             bool Result = true;
             for (int i = 0; i < Count(); i++)
             {
-                if (cProducts[i].ID != ProdID)  // exclude current product
+                if ((cProducts[i].ID != ProdID) && (cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID))
                 {
-                    if (cProducts[i].ModuleID == ModID & cProducts[i].SensorID == SenID)
-                    {
-                        Result = false;
-                        break;
-                    }
+                    Result = false;
+                    break;
                 }
             }
             return Result;
@@ -180,7 +178,7 @@ namespace RateController
         {
             for (int i = 0; i < MaxRecords; i++)
             {
-                if (cProducts[i].mf.SimMode == SimType.VirtualNano) cProducts[i].VirtualNano.MainLoop();
+                if (mf.SimMode == SimType.VirtualNano) cProducts[i].VirtualNano.MainLoop();
             }
         }
 

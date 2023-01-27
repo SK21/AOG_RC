@@ -19,7 +19,6 @@ namespace RateController
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 245;
         private readonly clsProduct Prod;
-        private byte[] cData = new byte[cByteCount];
         private long cCounts;
 
         public PGN32501(clsProduct CalledFrom)

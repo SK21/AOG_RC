@@ -20,7 +20,7 @@ namespace RateController
         public clsSectionControl SectionControl;
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
-        public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgHours, Lang.lgMinutes };
+        public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
         public PGN32621 PressureData;
         public clsPressures PressureObjects;
         public byte PressureToShowID;
@@ -41,7 +41,7 @@ namespace RateController
         public bool UseInches;
         public PGN230 VRdata;
         public string WiFiIP;
-        private int cCurrentPage;
+        private int CurrentPage;
 
         private Label[] Indicators;
         private Label[] ProdName;
@@ -87,7 +87,7 @@ namespace RateController
             Tls = new clsTools(this);
 
             UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255", true, true);  // AOG
-            UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
+            UDPmodules = new UDPComm(this, 29999, 28888, 1480 );    // arduino
 
             AutoSteerPGN = new PGN254(this);
             SectionsPGN = new PGN235(this);
@@ -121,13 +121,13 @@ namespace RateController
 
         public int CurrentProduct()
         {
-            if (cCurrentPage < 2)
+            if (CurrentPage < 2)
             {
                 return 0;
             }
             else
             {
-                return cCurrentPage - 1;
+                return CurrentPage - 1;
             }
         }
 
@@ -137,12 +137,13 @@ namespace RateController
             SetDayMode();
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
-            if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) UseInches = tmp;
-
+            bool tmp;
+            if (bool.TryParse(Tls.LoadProperty("UseInches"), out tmp)) UseInches = tmp;
             if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd)) cSimSpeed = Spd;
 
             Sections.Load();
             Sections.CheckSwitchDefinitions();
+
             Products.Load();
             PressureObjects.Load();
             RelayObjects.Load();
@@ -191,9 +192,13 @@ namespace RateController
         {
             try
             {
-                if (cCurrentPage == 0)
+                if (CurrentPage == 0)
                 {
                     // summary
+                    panProducts.Visible = false;
+                    panSummary.Visible = true;
+                    panFan.Visible = false;
+
                     for (int i = 0; i < 5; i++)
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
@@ -206,7 +211,6 @@ namespace RateController
                         }
                         else
                         {
-                            //ProdName[i].ForeColor = SimColor;
                             ProdName[i].BackColor = SimColor;
                             ProdName[i].BorderStyle = BorderStyle.FixedSingle;
                         }
@@ -226,10 +230,22 @@ namespace RateController
                 else
                 {
                     // product pages
-                    clsProduct Prd = Products.Item(cCurrentPage - 1);
-                    lbProduct.Text = cCurrentPage.ToString() + ". " + Prd.ProductName;
-                    lblUnits.Text = Prd.Units();
+                    clsProduct Prd = Products.Item(CurrentPage - 1);
+
+                    panProducts.Visible = true;
+                    panSummary.Visible = false;
+                    panProducts.Visible = (Prd.ControlType != ControlTypeEnum.Fan);
+                    panFan.Visible = (Prd.ControlType == ControlTypeEnum.Fan);
+
+                    lbFan.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
+                    lbTargetRPM.Text = Prd.TargetRate().ToString("N0");
+                    lbCurrentRPM.Text= Prd.SmoothRate().ToString("N0");
+                    lbOn.Visible = Prd.FanOn;
+                    lbOff.Visible = !Prd.FanOn;
+
+                    lbProduct.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
                     SetRate.Text = Prd.TargetRate().ToString("N1");
+                    lblUnits.Text = Prd.Units();
 
                     if (ShowCoverageRemaining)
                     {
@@ -289,7 +305,7 @@ namespace RateController
                         TankRemain.Text = Prd.UnitsApplied().ToString("N1");
                     }
 
-                    switch (RateType[cCurrentPage - 1])
+                    switch (RateType[CurrentPage - 1])
                     {
                         case 1:
                             lbRate.Text = Lang.lgInstantRate;
@@ -342,17 +358,6 @@ namespace RateController
                     lbAogConnected.BackColor = Color.Red;
                 }
 
-                if (cCurrentPage == 0)
-                {
-                    panProducts.Visible = false;
-                    panSummary.Visible = true;
-                }
-                else
-                {
-                    panProducts.Visible = true;
-                    panSummary.Visible = false;
-                }
-
                 // alarm
                 RCalarm.CheckAlarms();
 
@@ -366,9 +371,9 @@ namespace RateController
                     MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.CheckMark;
                 }
 
-                if (cCurrentPage != CurrentPageLast)
+                if (CurrentPage != CurrentPageLast)
                 {
-                    CurrentPageLast = cCurrentPage;
+                    CurrentPageLast = CurrentPage;
                     ProductChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -385,18 +390,18 @@ namespace RateController
 
         private void btnLeft_Click(object sender, EventArgs e)
         {
-            if (cCurrentPage > 0)
+            if (CurrentPage > 0)
             {
-                cCurrentPage--;
+                CurrentPage--;
                 UpdateStatus();
             }
         }
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            if (cCurrentPage < 5)
+            if (CurrentPage < 5)
             {
-                cCurrentPage++;
+                CurrentPage++;
                 UpdateStatus();
             }
         }
@@ -455,14 +460,11 @@ namespace RateController
                 if (this.WindowState == FormWindowState.Normal)
                 {
                     Tls.SaveFormData(this);
-                    Tls.SaveProperty("CurrentPage", cCurrentPage.ToString());
+                    Tls.SaveProperty("CurrentPage", CurrentPage.ToString());
                 }
-
-                SwitchBox.PressSwitch(SwIDs.MasterOff);
 
                 Sections.Save();
                 Products.Save();
-
                 Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
             }
             catch (Exception)
@@ -474,8 +476,8 @@ namespace RateController
 
         private void FormStart_Load(object sender, EventArgs e)
         {
-            cCurrentPage = 5;
-            int.TryParse(Tls.LoadProperty("CurrentPage"), out cCurrentPage);
+            CurrentPage = 5;
+            int.TryParse(Tls.LoadProperty("CurrentPage"), out CurrentPage);
 
             Tls.LoadFormData(this);
 
@@ -487,13 +489,13 @@ namespace RateController
 
             // UDP
             UDPmodules.StartUDPServer();
-            if (!UDPmodules.isUDPSendConnected)
+            if (!UDPmodules.IsUDPSendConnected)
             {
                 Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true, true);
             }
 
             UDPaog.StartUDPServer();
-            if (!UDPaog.isUDPSendConnected)
+            if (!UDPaog.IsUDPSendConnected)
             {
                 Tls.ShowHelp("UDPagio failed to start.", "", 3000, true, true);
             }
@@ -570,8 +572,8 @@ namespace RateController
 
         private void lbRate_Click(object sender, EventArgs e)
         {
-            RateType[cCurrentPage - 1]++;
-            if (RateType[cCurrentPage - 1] > 2) RateType[cCurrentPage - 1] = 0;
+            RateType[CurrentPage - 1]++;
+            if (RateType[CurrentPage - 1] > 2) RateType[CurrentPage - 1] = 0;
             UpdateStatus();
         }
 
@@ -601,12 +603,12 @@ namespace RateController
             if (lbTarget.Text == Lang.lgTargetRate)
             {
                 lbTarget.Text = Lang.lgTargetRateAlt;
-                Products.Item(cCurrentPage - 1).UseAltRate = true;
+                Products.Item(CurrentPage - 1).UseAltRate = true;
             }
             else
             {
                 lbTarget.Text = Lang.lgTargetRate;
-                Products.Item(cCurrentPage - 1).UseAltRate = false;
+                Products.Item(CurrentPage - 1).UseAltRate = false;
             }
         }
 
@@ -708,7 +710,7 @@ namespace RateController
         {
             if ((Application.OpenForms["FormSettings"] as FormSettings) == null)
             {
-                Form frm = new FormSettings(this, cCurrentPage);
+                Form frm = new FormSettings(this, CurrentPage);
                 frm.Show();
             }
         }
@@ -760,6 +762,9 @@ namespace RateController
                 {
                     Indicators[i].BackColor = Properties.Settings.Default.DayColour;
                 }
+
+                lbOn.BackColor= Properties.Settings.Default.DayColour;
+                lbOff.BackColor = Properties.Settings.Default.DayColour;
             }
             else
             {
@@ -773,6 +778,9 @@ namespace RateController
                 {
                     Indicators[i].BackColor = Properties.Settings.Default.NightColour;
                 }
+
+                lbOn.BackColor = Properties.Settings.Default.NightColour;
+                lbOff.BackColor = Properties.Settings.Default.NightColour;
             }
         }
 
@@ -794,26 +802,30 @@ namespace RateController
             frmWifi.ShowDialog();
         }
 
-        private void MnuLanguage_Click(object sender, EventArgs e)
+        private void btnStart_Click(object sender, EventArgs e)
         {
-
+            Products.Item(CurrentPage - 1).FanOn = true;
         }
 
         private void simulationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if ((Application.OpenForms["frmSimulation"] as frmSimulation) == null)
+            if ((Application.OpenForms["frmSimulation"] as frmSwitches) == null)
             {
-                Form frm = new frmSimulation(this);
+                Form frm = new frmSwitches(this);
                 frm.Show();
             }
         }
 
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            Products.Item(CurrentPage - 1).FanOn = false;
+        }
         public double SimSpeed
         {
             get { return cSimSpeed; }
             set
             {
-                if(value>=0 && value<20) { cSimSpeed = value; }
+                if (value >= 0 && value < 20) { cSimSpeed = value; }
             }
         }
     }

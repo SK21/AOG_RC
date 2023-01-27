@@ -27,10 +27,10 @@ namespace RateController
         private float KalP = 1.0F;
         private float KalPc = 0.0F;
         private float KalResult = 0.0F;
-        private FormStart mf;
+        private readonly FormStart mf;
 
-        private float KalVariance = 0.01F;   // larger is more filtering
-        private float KalProcess = 0.005F;  // smaller is more filtering
+        private readonly float KalVariance = 0.01F;   // larger is more filtering
+        private readonly float KalProcess = 0.005F;  // smaller is more filtering
         private DateTime ReceiveTime;
 
         private byte RelayHiLast;

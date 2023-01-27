@@ -13,7 +13,7 @@ namespace RateController
         private static Hashtable ht;
         private string cAppName = "RateController";
         private string cAppVersion = "2.3.8";
-        private string cVersionDate = "02-Jan-2023";
+        private string cVersionDate = "26-Jan-2023";
 
         private string cPropertiesFile;
         private string cSettingsDir;
@@ -319,24 +319,17 @@ namespace RateController
         public void ShowHelp(string Message, string Title = "Help",
             int timeInMsec = 30000, bool LogError = false, bool Modal = false)
         {
-            try
+            var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
+            if (Modal)
             {
-                var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
-                if (Modal)
-                {
-                    Hlp.ShowDialog();
-                }
-                else
-                {
-                    Hlp.Show();
-                }
-
-                if (LogError) WriteErrorLog(Message);
-
+                Hlp.ShowDialog();
             }
-            catch (Exception)
+            else
             {
+                Hlp.Show();
             }
+
+            if (LogError) WriteErrorLog(Message);
         }
 
         public void StartWifi()

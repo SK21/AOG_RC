@@ -9,7 +9,7 @@ void SendUDPwired()
     //0	HeaderLo		101
     //1	HeaderHi		127
     //2 Controller ID
-    //3	rate applied Lo 	10 X actual
+    //3	rate applied Lo 	1000 X actual
     //4 rate applied Mid
     //5	rate applied Hi
     //6	acc.Quantity Lo		10 X actual
@@ -28,28 +28,30 @@ void SendUDPwired()
 
         UDPpacket[2] = BuildModSenID(MDL.ModuleID, i);
 
-        // rate applied, 10 X actual
-        Temp = (UPM[i] * 10);
-        UDPpacket[3] = Temp;
-        Temp = (int)(UPM[i] * 10) >> 8;
-        UDPpacket[4] = Temp;
-        Temp = (int)(UPM[i] * 10) >> 16;
-        UDPpacket[5] = Temp;
+        // rate applied, 1000 X actual
+        uint32_t Applied = UPM[i] * 1000;
+        UDPpacket[3] = Applied;
+        UDPpacket[4] = Applied >> 8;
+        UDPpacket[5] = Applied >> 16;
 
         // accumulated quantity, 10 X actual
-        long Units = TotalPulses[i] * 10.0 / MeterCal[i];
-        Temp = Units;
-        UDPpacket[6] = Temp;
-        Temp = Units >> 8;
-        UDPpacket[7] = Temp;
-        Temp = Units >> 16;
-        UDPpacket[8] = Temp;
+        if (MeterCal[i] > 0)
+        {
+            uint32_t Units = TotalPulses[i] * 10.0 / MeterCal[i];
+            UDPpacket[6] = Units;
+            UDPpacket[7] = Units >> 8;
+            UDPpacket[8] = Units >> 16;
+        }
+        else
+        {
+            UDPpacket[6] = 0;
+            UDPpacket[7] = 0;
+            UDPpacket[8] = 0;
+        }
 
         //pwmSetting
-        Temp = (byte)(pwmSetting[i] * 10);
-        UDPpacket[9] = Temp;
-        Temp = (byte)((pwmSetting[i] * 10) >> 8);
-        UDPpacket[10] = Temp;
+        UDPpacket[9] = pwmSetting[i];
+        UDPpacket[10] = pwmSetting[i] >> 8;
 
         // status
         // bit 0    - sensor 0 receiving rate controller data
@@ -81,23 +83,22 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             //2 Controller ID
             //3	relay Lo		0 - 7
             //4	relay Hi		8 - 15
-            //5	rate set Lo		10 X actual
+            //5	rate set Lo		1000 X actual
             //6 rate set Mid
-            //7	rate set Hi		10 X actual
+            //7	rate set Hi		
             //8	Flow Cal Lo		100 X actual
             //9 Flow Cal Mid
             //10 Flow Cal Hi
             //11 Command
-            //- bit 0		    reset acc.Quantity
-            //- bit 1, 2		valve type 0 - 3
-            //- bit 3		    MasterOn
-            //- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
-            //- bit 5           AutoOn
-            //- bit 6           Debug pgn on
-            //- bit 7           Calibration on
+            //	        - bit 0		    reset acc.Quantity
+            //	        - bit 1,2,3		control type 0-4
+            //	        - bit 4		    MasterOn
+            //          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
+            //          - bit 6         AutoOn
+            //          - bit 7         Calibration On
             //12    power relay Lo      list of power type relays 0-7
             //13    power relay Hi      list of power type relays 8-15
-            //14	Manual PWM		calibration pwm
+            //14	Cal PWM		calibration pwm
             //15	CRC
             PGNlength = 16;
 
@@ -113,13 +114,13 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             RelayLo = Data[3];
                             RelayHi = Data[4];
 
-                            // rate setting, 10 times actual
-                            int RateSet = Data[5] | Data[6] << 8 | Data[7] << 16;
-                            RateSetting[SensorID] = (float)(RateSet * 0.1);
+                            // rate setting, 1000 times actual
+                            uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
+                            RateSetting[SensorID] = (float)(RateSet * 0.001);
 
                             // Meter Cal, 1000 times actual
-                            uint32_t Temp = Data[8] | Data[9] << 8 | Data[10] << 16;
-                            MeterCal[SensorID] = (float)(Temp * 0.001);
+                            uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
+                            MeterCal[SensorID] = Temp * 0.001;
 
                             // command byte
                             InCommand[SensorID] = Data[11];
@@ -128,10 +129,11 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             ControlType[SensorID] = 0;
                             if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
                             if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
+                            if ((InCommand[SensorID] & 8) == 8) ControlType[SensorID] += 4;
 
-                            MasterOn[SensorID] = ((InCommand[SensorID] & 8) == 8);
-                            UseMultiPulses[SensorID] = ((InCommand[SensorID] & 16) == 16);
-                            AutoOn = ((InCommand[SensorID] & 32) == 32);
+                            MasterOn[SensorID] = ((InCommand[SensorID] & 16) == 16);
+                            UseMultiPulses[SensorID] = ((InCommand[SensorID] & 32) == 32);
+                            AutoOn = ((InCommand[SensorID] & 64) == 64);
 
                             // power relays
                             PowerRelayLo = Data[12];
@@ -147,8 +149,27 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             break;
 
         case 32616:
-            // PID to Arduino from RateController, 12 bytes
-            PGNlength = 12;
+            // PID to Arduino from RateController
+            // 0    104
+            // 1    127
+            // 2    Mod/Sen ID     0-15/0-15
+            // 3    KP 0
+            // 4    KP 1
+            // 5    KP 2
+            // 6    KP 3
+            // 7    KI 0
+            // 8    KI 1
+            // 9    KI 2
+            // 10   KI 3
+            // 11   KD 0
+            // 12   KD 1
+            // 13   KD 2
+            // 14   KD 3
+            // 15   MinPWM
+            // 16   MaxPWM
+            // 17   CRC
+
+            PGNlength = 18;
 
             if (len > PGNlength - 1)
             {
@@ -160,14 +181,17 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                         byte SensorID = ParseSenID(tmp);
                         if (SensorID < MDL.SensorCount)
                         {
-                            PIDkp[SensorID] = Data[3];
-                            PIDminPWM[SensorID] = Data[4];
-                            PIDLowMax[SensorID] = Data[5];
-                            PIDHighMax[SensorID] = Data[6];
-                            PIDdeadband[SensorID] = Data[7];
-                            PIDbrakePoint[SensorID] = Data[8];
-                            AdjustTime[SensorID] = Data[9];
-                            PIDki[SensorID] = Data[10];
+                            uint32_t tmp = Data[3] | (uint32_t)Data[4] << 8 | (uint32_t)Data[5] << 16 | (uint32_t)Data[6] << 24;
+                            PIDkp[SensorID] = (float)(tmp * 0.0001);
+
+                            tmp = Data[7] | (uint32_t)Data[8] << 8 | (uint32_t)Data[9] << 16 | (uint32_t)Data[10] << 24;
+                            PIDki[SensorID] = (float)(tmp * 0.0001);
+
+                            tmp = Data[11] | (uint32_t)Data[12] << 8 | (uint32_t)Data[13] << 16 | (uint32_t)Data[14] << 24;
+                            PIDkd[SensorID] = (float)(tmp * 0.0001);
+
+                            MinPWM[SensorID] = Data[15];
+                            MaxPWM[SensorID] = Data[16];
 
                             CommTime[SensorID] = millis();
                         }
@@ -224,7 +248,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             break;
 
         case 32625:
-            // from rate controller, 7 bytes
+            // from rate controller, 8 bytes
             // Nano config
             // 0    113
             // 1    127
@@ -235,8 +259,9 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             //      - UseMCP23017
             //      - RelyOnSignal
             //      - FlowOnSignal
-            // 6    crc
-            PGNlength = 7;
+            // 6    minimum ms debounce
+            // 7    crc
+            PGNlength = 8;
 
             if (len > PGNlength - 1)
             {
@@ -250,6 +275,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                     if ((tmp & 1) == 1) MDL.UseMCP23017 = 1; else MDL.UseMCP23017 = 0;
                     if ((tmp & 2) == 2) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
                     if ((tmp & 4) == 4) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
+
+                    MDL.Debounce = Data[6];
 
                     EEPROM.put(10, MDL);
                 }

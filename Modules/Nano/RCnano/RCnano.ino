@@ -1,3 +1,5 @@
+#include <SPI.h>
+#include <Adafruit_MCP23008.h>
 #include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
 #include <Adafruit_MCP23XXX.h>
@@ -10,7 +12,7 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  02-Jan-2023"
+# define InoDescription "RCnano  :  26-Jan-2023"
 const int16_t InoID = 4000;
 int16_t StoredID;
 
@@ -31,6 +33,7 @@ struct ModuleConfig    // 5 bytes
 	uint8_t PWM1 = 5;
 	uint8_t PWM2 = 9;
 	uint8_t Relays[16];
+	uint8_t Debounce = 3;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
@@ -96,17 +99,14 @@ float UPM[2];   // UPM rate
 int pwmSetting[2];
 
 // PID
-byte PIDkp[] = { 20, 20 };
-byte PIDki[] = { 0,0 };
-byte PIDminPWM[] = { 50, 50 };
-byte PIDLowMax[] = { 100, 100 };
-byte PIDHighMax[] = { 255, 255 };
-byte PIDdeadband[] = { 3, 3 };
-byte PIDbrakePoint[] = { 20, 20 };
-byte AdjustTime[2];
+float PIDkp[2];
+float PIDki[2];
+float PIDkd[2];
+byte MinPWM[2];
+byte MaxPWM[2];
 
 byte InCommand[] = { 0, 0 };		// command byte from RateController
-byte ControlType[] = { 0, 0 };		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 Fan
+byte ControlType[] = { 0, 0 };		// 0 standard, 1 Fast Close, 2 Motor, 3 Motor/weight, 4 fan
 
 unsigned long TotalPulses[2];
 unsigned long CommTime[2];
@@ -123,7 +123,7 @@ byte PowerRelayHi;
 byte Temp = 0;
 bool AutoOn = true;
 
-byte ManualAdjust[2];
+float ManualAdjust[2];
 unsigned long ManualLast[2];
 
 // WifiSwitches connection to Wemos D1 Mini
@@ -143,6 +143,9 @@ bool MasterOn[2];
 bool IOexpanderFound;
 uint8_t ErrorCount;
 byte PGNlength;
+
+byte BrakePoint = 30;	// %
+byte Deadband = 3;		// %
 
 void setup()
 {
@@ -262,7 +265,7 @@ void setup()
 	Serial.println("");
 	Serial.println("Starting Ethernet ...");
 	// ethernet interface ip address
-	byte ArduinoIP[] = { 192, 168,MDL.IPpart3, 207 + MDL.ModuleID };
+	byte ArduinoIP[] = { 192, 168,MDL.IPpart3, 50 + MDL.ModuleID };
 
 	// ethernet interface Mac address
 	byte LocalMac[] = { 0x70, 0x31, 0x21, 0x2D, 0x62, MDL.ModuleID };
@@ -302,7 +305,8 @@ void loop()
 
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			FlowEnabled[i] = (millis() - CommTime[i] < 4000) && (RateSetting[i] > 0) && MasterOn[i];
+			FlowEnabled[i] = (millis() - CommTime[i] < 4000)
+				&& ((RateSetting[i] > 0 && MasterOn[i]) || ((ControlType[i] == 4) && (RateSetting[i] > 0)));
 		}
 
 		CheckRelays();
@@ -328,7 +332,7 @@ void loop()
 	}
 
 #if UseEthernet
-	delay(10);
+	//delay(10);
 
 	//this must be called for ethercard functions to work.
 	ether.packetLoop(ether.packetReceive());
@@ -360,20 +364,18 @@ void AutoControl()
 	{
 		rateError[i] = RateSetting[i] - UPM[i];
 
-		switch (ControlType[i])	// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 Fan
+		switch (ControlType[i])
 		{
 		case 2:
 		case 3:
 		case 4:
 			// motor control
-			pwmSetting[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
-				PIDHighMax[i], PIDdeadband[i], i);
+			pwmSetting[i] = PIDmotor(PIDkp[i], PIDkd[i], rateError[i], RateSetting[i], MinPWM[i], MaxPWM[i], i);
 			break;
 
 		default:
 			// valve control
-			pwmSetting[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
-				PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i, PIDki[i]);
+			pwmSetting[i] = PIDvalve(PIDkp[i], PIDki[i], rateError[i], RateSetting[i], MinPWM[i], MaxPWM[i], i);
 			break;
 		}
 	}
@@ -420,6 +422,5 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	Result = (byte)CK;
 	return Result;
 }
-
 
 

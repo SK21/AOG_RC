@@ -8,11 +8,11 @@ namespace RateController
 {
     public class UDPComm
     {
-        public bool isUDPSendConnected;
+        private bool cIsUDPSendConnected;
         private readonly FormStart mf;
         private byte[] buffer = new byte[1024];
 
-        private string cDestinationIP;
+        private readonly string cDestinationIP;
 
         private IPAddress cEthernetEP;
 
@@ -22,7 +22,7 @@ namespace RateController
         private int cSendFromPort;
         private int cSendToPort;
         private bool cUpdateDestinationIP;
-        private bool cUseLoopback;
+        private readonly bool cUseLoopback;
 
         // wifi endpoint address
         private IPAddress cWiFiEP;
@@ -91,6 +91,8 @@ namespace RateController
             }
         }
 
+        public bool IsUDPSendConnected { get => cIsUDPSendConnected; set => cIsUDPSendConnected = value; }
+
         public string EthernetIP()
         {
             string Adr;
@@ -112,7 +114,7 @@ namespace RateController
         //sends byte array
         public void SendUDPMessage(byte[] byteData)
         {
-            if (isUDPSendConnected)
+            if (IsUDPSendConnected)
             {
                 try
                 {
@@ -160,7 +162,7 @@ namespace RateController
 
                 // Start listening for incoming data
                 recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref client, new AsyncCallback(ReceiveData), recvSocket);
-                isUDPSendConnected = true;
+                IsUDPSendConnected = true;
             }
             catch (Exception e)
             {
@@ -207,7 +209,6 @@ namespace RateController
                 if (Data.Length > 1)
                 {
                     PGN = Data[0] << 8 | Data[1];   // AGIO big endian
-                    //Debug.Print(PGN.ToString());
                     if (PGN == 32897)
                     {
                         if (Data.Length > 2)

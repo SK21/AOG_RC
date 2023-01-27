@@ -130,7 +130,7 @@
     <value>Already Running</value>
   </data>
   <data name="lgAltRate" xml:space="preserve">
-    <value>Alt. Rate</value>
+    <value>Alt. Rate (%)</value>
   </data>
   <data name="lgAuto" xml:space="preserve">
     <value>Auto</value>
@@ -186,6 +186,9 @@
   <data name="lgDeadband" xml:space="preserve">
     <value>Deadband</value>
   </data>
+  <data name="lgDerivative" xml:space="preserve">
+    <value>Derivative</value>
+  </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Description</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="lgEqual" xml:space="preserve">
     <value>=1</value>
+  </data>
+  <data name="lgFan" xml:space="preserve">
+    <value>Fan</value>
   </data>
   <data name="lgFirmware" xml:space="preserve">
     <value>Firmware</value>
@@ -231,8 +237,8 @@
   <data name="lgInstantRate" xml:space="preserve">
     <value>Instant Rate …</value>
   </data>
-  <data name="lgIntegralAdjustment" xml:space="preserve">
-    <value>Integral Adjustment</value>
+  <data name="lgIntegral" xml:space="preserve">
+    <value>Integral</value>
   </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Invert_Section</value>
@@ -342,6 +348,15 @@
   <data name="lgProducts" xml:space="preserve">
     <value>Products</value>
   </data>
+  <data name="lgProportional" xml:space="preserve">
+    <value>Proportional</value>
+  </data>
+  <data name="lgPWMmax" xml:space="preserve">
+    <value>PWM Maximum</value>
+  </data>
+  <data name="lgPWMmin" xml:space="preserve">
+    <value>PWM Minimum</value>
+  </data>
   <data name="lgQuantity" xml:space="preserve">
     <value>Quantity</value>
   </data>
@@ -380,9 +395,6 @@
   </data>
   <data name="lgResetStart" xml:space="preserve">
     <value>Start</value>
-  </data>
-  <data name="lgResponerate" xml:space="preserve">
-    <value>Response Rate</value>
   </data>
   <data name="lgRPM" xml:space="preserve">
     <value>RPM</value>
@@ -427,7 +439,7 @@
     <value>Show Pressure</value>
   </data>
   <data name="lgSimulate" xml:space="preserve">
-    <value>Simulation</value>
+    <value>Rate Simulation</value>
   </data>
   <data name="lgSimulationOff" xml:space="preserve">
     <value>Off</value>
@@ -467,9 +479,6 @@
   </data>
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Target Rate Alt ...</value>
-  </data>
-  <data name="lgTime" xml:space="preserve">
-    <value>Time</value>
   </data>
   <data name="lgTimedAjustment" xml:space="preserve">
     <value>Timed Adjustment</value>

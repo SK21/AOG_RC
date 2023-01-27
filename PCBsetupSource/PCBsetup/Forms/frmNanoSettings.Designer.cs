@@ -91,6 +91,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbNanoFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.tbNanoDebounce = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -157,6 +159,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.tbNanoDebounce);
+            this.tabPage1.Controls.Add(this.label25);
             this.tabPage1.Controls.Add(this.lbIPpart4);
             this.tabPage1.Controls.Add(this.label30);
             this.tabPage1.Controls.Add(this.tbNanoIP);
@@ -179,16 +183,16 @@
             // lbIPpart4
             // 
             this.lbIPpart4.AutoSize = true;
-            this.lbIPpart4.Location = new System.Drawing.Point(351, 182);
+            this.lbIPpart4.Location = new System.Drawing.Point(351, 180);
             this.lbIPpart4.Name = "lbIPpart4";
             this.lbIPpart4.Size = new System.Drawing.Size(45, 24);
             this.lbIPpart4.TabIndex = 27;
-            this.lbIPpart4.Text = ".126";
+            this.lbIPpart4.Text = ".xxx";
             // 
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(201, 182);
+            this.label30.Location = new System.Drawing.Point(201, 180);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(80, 24);
             this.label30.TabIndex = 26;
@@ -196,7 +200,7 @@
             // 
             // tbNanoIP
             // 
-            this.tbNanoIP.Location = new System.Drawing.Point(287, 180);
+            this.tbNanoIP.Location = new System.Drawing.Point(287, 178);
             this.tbNanoIP.Name = "tbNanoIP";
             this.tbNanoIP.Size = new System.Drawing.Size(58, 29);
             this.tbNanoIP.TabIndex = 25;
@@ -205,7 +209,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(60, 182);
+            this.label29.Location = new System.Drawing.Point(60, 180);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(101, 24);
             this.label29.TabIndex = 24;
@@ -213,7 +217,7 @@
             // 
             // tbNanoSensorCount
             // 
-            this.tbNanoSensorCount.Location = new System.Drawing.Point(287, 129);
+            this.tbNanoSensorCount.Location = new System.Drawing.Point(287, 128);
             this.tbNanoSensorCount.Name = "tbNanoSensorCount";
             this.tbNanoSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbNanoSensorCount.TabIndex = 23;
@@ -223,7 +227,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(60, 131);
+            this.label2.Location = new System.Drawing.Point(60, 130);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(125, 24);
             this.label2.TabIndex = 22;
@@ -251,7 +255,7 @@
             this.ckNanoFlowOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckNanoFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckNanoFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNanoFlowOn.Location = new System.Drawing.Point(181, 258);
+            this.ckNanoFlowOn.Location = new System.Drawing.Point(181, 311);
             this.ckNanoFlowOn.Name = "ckNanoFlowOn";
             this.ckNanoFlowOn.Size = new System.Drawing.Size(117, 69);
             this.ckNanoFlowOn.TabIndex = 19;
@@ -265,7 +269,7 @@
             this.ckUseMCP23017.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckUseMCP23017.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckUseMCP23017.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckUseMCP23017.Location = new System.Drawing.Point(314, 258);
+            this.ckUseMCP23017.Location = new System.Drawing.Point(314, 311);
             this.ckUseMCP23017.Name = "ckUseMCP23017";
             this.ckUseMCP23017.Size = new System.Drawing.Size(117, 69);
             this.ckUseMCP23017.TabIndex = 18;
@@ -280,7 +284,7 @@
             this.ckNanoRelayOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckNanoRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckNanoRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNanoRelayOn.Location = new System.Drawing.Point(48, 258);
+            this.ckNanoRelayOn.Location = new System.Drawing.Point(48, 311);
             this.ckNanoRelayOn.Name = "ckNanoRelayOn";
             this.ckNanoRelayOn.Size = new System.Drawing.Size(117, 69);
             this.ckNanoRelayOn.TabIndex = 17;
@@ -717,6 +721,24 @@
             this.label4.TabIndex = 24;
             this.label4.Text = "Flow 1";
             // 
+            // tbNanoDebounce
+            // 
+            this.tbNanoDebounce.Location = new System.Drawing.Point(287, 228);
+            this.tbNanoDebounce.Name = "tbNanoDebounce";
+            this.tbNanoDebounce.Size = new System.Drawing.Size(58, 29);
+            this.tbNanoDebounce.TabIndex = 29;
+            this.tbNanoDebounce.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbNanoDebounce.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbNanoDebounce_HelpRequested);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(60, 230);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(99, 24);
+            this.label25.TabIndex = 28;
+            this.label25.Text = "Debounce";
+            // 
             // frmNanoSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -812,5 +834,7 @@
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox tbNanoIP;
         private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.TextBox tbNanoDebounce;
+        private System.Windows.Forms.Label label25;
     }
 }

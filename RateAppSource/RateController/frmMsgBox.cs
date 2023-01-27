@@ -13,7 +13,10 @@ namespace RateController
     public partial class frmMsgBox : Form
     {
         private FormStart mf;
-        public bool Result;
+        private bool cResult;
+
+        public bool Result { get => cResult; set => cResult = value; }
+
         public frmMsgBox(FormStart CallingForm, string Message, string Title = "Help")
         {
             mf = CallingForm;

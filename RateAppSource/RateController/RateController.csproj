@@ -134,13 +134,13 @@
     <Compile Include="FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSettings.Designer.cs">
+    <Compile Include="FormSettings.designer.cs">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="FormStart.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormStart.Designer.cs">
+    <Compile Include="FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
     </Compile>
     <Compile Include="frmComm.cs">
@@ -179,11 +179,11 @@
     <Compile Include="frmSections.Designer.cs">
       <DependentUpon>frmSections.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSimulation.cs">
+    <Compile Include="frmSwitches.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSimulation.Designer.cs">
-      <DependentUpon>frmSimulation.cs</DependentUpon>
+    <Compile Include="frmSwitches.Designer.cs">
+      <DependentUpon>frmSwitches.cs</DependentUpon>
     </Compile>
     <Compile Include="frmWifi.cs">
       <SubType>Form</SubType>
@@ -258,8 +258,8 @@
     <EmbeddedResource Include="frmSections.resx">
       <DependentUpon>frmSections.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSimulation.resx">
-      <DependentUpon>frmSimulation.cs</DependentUpon>
+    <EmbeddedResource Include="frmSwitches.resx">
+      <DependentUpon>frmSwitches.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmWifi.resx">
       <DependentUpon>frmWifi.cs</DependentUpon>

@@ -8,11 +8,11 @@ namespace RateController
     public class clsRelay
     {
         private string cDescription;
-        private int cID;
+        private readonly int cID;
         private bool cRelayOn = false;
         private int cSectionID;
         private RelayTypes cType = RelayTypes.Section;
-        private FormStart mf;
+        private readonly FormStart mf;
 
         public clsRelay(FormStart CallingFrom, int ID)
         {

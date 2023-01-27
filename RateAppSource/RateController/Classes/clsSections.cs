@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Media;
 
 namespace RateController
 {
     public class clsSections
     {
-        public IList<clsSection> Items; // to use ForEach
+        // to use ForEach
+        public IList<clsSection> Items;
         private List<clsSection> cSections = new List<clsSection>();
-        private float cWorkingWidth_cm;
         private FormStart mf;
         private byte OnHiLast;
         private byte OnLoLast;
@@ -27,9 +26,6 @@ namespace RateController
         {
             double Wdth;
             string Units;
-
-            SystemSounds.Asterisk.Play();
-
             if (mf.UseInches)
             {
                 Units = "Inches";
@@ -72,7 +68,6 @@ namespace RateController
             }
         }
 
-
         public int Count
         {
             get
@@ -84,7 +79,6 @@ namespace RateController
                 }
                 return tmp;
             }
-
             set
             {
                 if (value < 0 | value > 16)
@@ -163,7 +157,31 @@ namespace RateController
             return Rlys0;
         }
 
-        public float TotalWidth(bool UseInches = true)
+        public float WorkingWidth(bool UseInches)
+        {
+            float Result = 0;
+            float cWorkingWidth_cm = 0;
+
+            for (int i = 0; i < 16; i++)
+            {
+                if (mf.Sections.Item(i).IsON)
+                {
+                    cWorkingWidth_cm += Item(i).Width_cm;
+                }
+            }
+
+            if (UseInches)
+            {
+                Result = (float)((cWorkingWidth_cm / 100.0) * 3.28);   // feet
+            }
+            else
+            {
+                Result = (float)(cWorkingWidth_cm / 100.0);    // meters
+            }
+            return Result;
+        }
+
+        public float TotalWidth(bool UseInches)
         {
             float Result = 0;
             for (int i = 0; i < 16; i++)
@@ -195,7 +213,7 @@ namespace RateController
                 OnHi = Rlys1;
             }
 
-            if (OnLoLast != OnLo || OnHiLast != OnHi)
+            if (OnLoLast != OnLo || OnHiLast != OnHi||!mf.SectionControl.MasterOn())
             {
                 OnLoLast = OnLo;
                 OnHiLast = OnHi;
@@ -205,7 +223,6 @@ namespace RateController
 
                 try
                 {
-                    cWorkingWidth_cm = 0;
                     for (int i = 0; i < 16; i++)
                     {
                         tmp = cSections[i].IsON;
@@ -218,8 +235,6 @@ namespace RateController
                             cSections[i].IsON = mf.Tls.BitRead(Rlys1, i - 8);
                         }
                         if (cSections[i].IsON != tmp) Result = true;
-                        if (cSections[i].IsON) cWorkingWidth_cm += cSections
-                        [i].Width_cm;
                     }
                 }
                 catch (Exception ex)

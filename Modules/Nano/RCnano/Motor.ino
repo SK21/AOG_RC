@@ -33,6 +33,8 @@ void AdjustFlow()
             }
             break;
         case 2:
+        case 3:
+        case 4:
             // motor control
             if (FlowEnabled[i])
             {

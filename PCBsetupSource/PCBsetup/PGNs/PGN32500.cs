@@ -22,15 +22,16 @@ namespace PCBsetup
         // 6        Relay control type  0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
         // 7        Wemos serial port
         // 8        Sensor 0, flow pin
-        // 9       Sensor 0, dir pin
+        // 9        Sensor 0, dir pin
         // 10       Sensor 0, pwm pin
         // 11       Sensor 1, flow pin
         // 12       Sensor 1, dir pin
         // 13       Sensor 1, pwm pin
         // 14-29    Relay pins 0-15
-        // 30       CRC
+        // 30       debounce minimum ms
+        // 31       CRC
 
-        private byte[] cData = new byte[31];
+        private byte[] cData = new byte[32];
         private frmTRsettings cf;
         private string Name;
 
@@ -47,10 +48,10 @@ namespace PCBsetup
             bool Checked;
 
             // text boxes
-            cData[2] = (byte)cf.Boxes.Value("tbNanoModuleID");
-            cData[3] = (byte)cf.Boxes.Value("tbNanoSensorCount");
-            cData[4] = (byte)cf.Boxes.Value("tbNanoIP");
-            cData[7] = (byte)cf.Boxes.Value("tbWemosPort");
+            cData[2] = (byte)cf.Boxes.Value("tbTRModuleID");
+            cData[3] = (byte)cf.Boxes.Value("tbTRSensorCount");
+            cData[4] = (byte)cf.Boxes.Value("tbTRIP");
+            cData[7] = (byte)cf.Boxes.Value("tbTRWemosPort");
 
             // check boxes
             cData[5] = 0;
@@ -62,36 +63,38 @@ namespace PCBsetup
             }
 
             // combo boxes
-            byte.TryParse(cf.mf.Tls.LoadProperty(cf.Text + "/" + "RelayControl"), out tmp);
+            byte.TryParse(cf.mf.Tls.LoadProperty(cf.Text + "/" + "TRRelayControl"), out tmp);
             cData[6] = tmp;
 
             // pins
-            cData[8] = (byte)cf.Boxes.Value("tbNanoFlow1");
-            cData[9] = (byte)cf.Boxes.Value("tbNanoDir1");
-            cData[10] = (byte)cf.Boxes.Value("tbNanoPWM1");
-            cData[11] = (byte)cf.Boxes.Value("tbNanoFlow2");
-            cData[12] = (byte)cf.Boxes.Value("tbNanoDir2");
-            cData[13] = (byte)cf.Boxes.Value("tbNanoPWM2");
+            cData[8] = (byte)cf.Boxes.Value("tbTRFlow1");
+            cData[9] = (byte)cf.Boxes.Value("tbTRDir1");
+            cData[10] = (byte)cf.Boxes.Value("tbTRPWM1");
+            cData[11] = (byte)cf.Boxes.Value("tbTRFlow2");
+            cData[12] = (byte)cf.Boxes.Value("tbTRDir2");
+            cData[13] = (byte)cf.Boxes.Value("tbTRPWM2");
 
-            cData[14] = (byte)cf.Boxes.Value("tbRelay1");
-            cData[15] = (byte)cf.Boxes.Value("tbRelay2");
-            cData[16] = (byte)cf.Boxes.Value("tbRelay3");
-            cData[17] = (byte)cf.Boxes.Value("tbRelay4");
-            cData[18] = (byte)cf.Boxes.Value("tbRelay5");
-            cData[19] = (byte)cf.Boxes.Value("tbRelay6");
-            cData[20] = (byte)cf.Boxes.Value("tbRelay7");
-            cData[21] = (byte)cf.Boxes.Value("tbRelay8");
+            cData[14] = (byte)cf.Boxes.Value("tbTRRelay1");
+            cData[15] = (byte)cf.Boxes.Value("tbTRRelay2");
+            cData[16] = (byte)cf.Boxes.Value("tbTRRelay3");
+            cData[17] = (byte)cf.Boxes.Value("tbTRRelay4");
+            cData[18] = (byte)cf.Boxes.Value("tbTRRelay5");
+            cData[19] = (byte)cf.Boxes.Value("tbTRRelay6");
+            cData[20] = (byte)cf.Boxes.Value("tbTRRelay7");
+            cData[21] = (byte)cf.Boxes.Value("tbTRRelay8");
 
-            cData[22] = (byte)cf.Boxes.Value("tbRelay9");
-            cData[23] = (byte)cf.Boxes.Value("tbRelay10");
-            cData[24] = (byte)cf.Boxes.Value("tbRelay11");
-            cData[25] = (byte)cf.Boxes.Value("tbRelay12");
-            cData[26] = (byte)cf.Boxes.Value("tbRelay13");
-            cData[27] = (byte)cf.Boxes.Value("tbRelay14");
-            cData[28] = (byte)cf.Boxes.Value("tbRelay15");
-            cData[29] = (byte)cf.Boxes.Value("tbRelay16");
+            cData[22] = (byte)cf.Boxes.Value("tbTRRelay9");
+            cData[23] = (byte)cf.Boxes.Value("tbTRRelay10");
+            cData[24] = (byte)cf.Boxes.Value("tbTRRelay11");
+            cData[25] = (byte)cf.Boxes.Value("tbTRRelay12");
+            cData[26] = (byte)cf.Boxes.Value("tbTRRelay13");
+            cData[27] = (byte)cf.Boxes.Value("tbTRRelay14");
+            cData[28] = (byte)cf.Boxes.Value("tbTRRelay15");
+            cData[29] = (byte)cf.Boxes.Value("tbTRRelay16");
 
-            cData[30] = cf.mf.Tls.CRC(cData, 30);
+            cData[30] = (byte)cf.Boxes.Value("tbTRDebounce");
+
+            cData[31] = cf.mf.Tls.CRC(cData, 31);
             bool Result = cf.mf.CommPort.Send(cData);
             return Result;
         }
