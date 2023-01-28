@@ -32,7 +32,7 @@ void ISR0()
 		dur = 4294967295 + micronow - PulseTime;
 	}
 
-	if (dur > MDL.Debounce*1000)
+	if (dur > MDL.Debounce * 1000)
 	{
 		Duration[0] = dur;
 		PulseTime = micronow;
@@ -55,7 +55,7 @@ void ISR1()
 	{
 		dur = 4294967295 + micronow - PulseTime;
 	}
-	if (dur > MDL.Debounce*1000)
+	if (dur > MDL.Debounce * 1000)
 	{
 		Duration[1] = dur;
 		PulseTime = micronow;
@@ -135,4 +135,3 @@ void GetUPM()
 		}
 	}
 }
-

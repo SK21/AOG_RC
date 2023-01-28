@@ -1,4 +1,3 @@
-
 byte SerialMSB;
 byte SerialLSB;
 unsigned int SerialPGN;
@@ -59,7 +58,7 @@ void SendSerial()
 		SerialPacket[11] = 0;
 		if (millis() - CommTime[0] < 4000) SerialPacket[11] |= 0b00000001;
 		if (millis() - CommTime[1] < 4000) SerialPacket[11] |= 0b00000010;
-		
+
 		// crc
 		SerialPacket[12] = CRC(SerialPacket, 12, 0);
 
@@ -111,7 +110,7 @@ void ReceiveSerial()
 			//          - bit 7         Calibration On
 			//12    power relay Lo      list of power type relays 0-7
 			//13    power relay Hi      list of power type relays 8-15
-			//14	manual pwm
+			//14	Cal PWM		calibration pwm
 			//15	CRC
 			PGNlength = 16;
 
@@ -136,14 +135,6 @@ void ReceiveSerial()
 							RelayLo = SerialPacket[3];
 							RelayHi = SerialPacket[4];
 
-							// rate setting, 1000 times actual
-							uint32_t RateSet = SerialPacket[5] | (uint32_t)SerialPacket[6] << 8 | (uint32_t)SerialPacket[7] << 16;
-							RateSetting[SensorID] = (float)(RateSet * 0.001);
-
-							// Meter Cal, 1000 times actual
-							uint32_t Temp = SerialPacket[8] | (uint32_t)SerialPacket[9] << 8 | (uint32_t)SerialPacket[10] << 16;
-							MeterCal[SensorID] = (float)(Temp * 0.001);
-
 							// command byte
 							InCommand[SensorID] = SerialPacket[11];
 							if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
@@ -157,11 +148,25 @@ void ReceiveSerial()
 							UseMultiPulses[SensorID] = ((InCommand[SensorID] & 32) == 32);
 							AutoOn = ((InCommand[SensorID] & 64) == 64);
 
+							// rate setting, 10 times actual
+							uint32_t RateSet = SerialPacket[5] | (uint32_t)SerialPacket[6] << 8 | (uint32_t)SerialPacket[7] << 16;
+
+							if (AutoOn)
+							{
+								RateSetting[SensorID] = (float)(RateSet * 0.001);
+							}
+							else
+							{
+								ManualAdjust[SensorID] = (float)(RateSet * 0.001);
+							}
+
+							// Meter Cal, 1000 times actual
+							uint32_t Temp = SerialPacket[8] | (uint32_t)SerialPacket[9] << 8 | (uint32_t)SerialPacket[10] << 16;
+							MeterCal[SensorID] = (float)(Temp * 0.001);
+
 							// power relays
 							PowerRelayLo = SerialPacket[12];
 							PowerRelayHi = SerialPacket[13];
-
-							ManualAdjust[SensorID] = SerialPacket[14];
 
 							CommTime[SensorID] = millis();
 						}
@@ -390,4 +395,3 @@ void ReceiveSerial()
 		}
 	}
 }
-

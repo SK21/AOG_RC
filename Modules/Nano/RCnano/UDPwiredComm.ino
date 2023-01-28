@@ -114,14 +114,6 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             RelayLo = Data[3];
                             RelayHi = Data[4];
 
-                            // rate setting, 1000 times actual
-                            uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
-                            RateSetting[SensorID] = (float)(RateSet * 0.001);
-
-                            // Meter Cal, 1000 times actual
-                            uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
-                            MeterCal[SensorID] = Temp * 0.001;
-
                             // command byte
                             InCommand[SensorID] = Data[11];
                             if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
@@ -135,11 +127,25 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             UseMultiPulses[SensorID] = ((InCommand[SensorID] & 32) == 32);
                             AutoOn = ((InCommand[SensorID] & 64) == 64);
 
+                            // rate setting, 1000 times actual
+                            uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
+
+                            if (AutoOn)
+                            {
+                                RateSetting[SensorID] = (float)(RateSet * 0.001);
+                            }
+                            else
+                            {
+                                ManualAdjust[SensorID] = (float)(RateSet * 0.001);
+                            }
+
+                            // Meter Cal, 1000 times actual
+                            uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
+                            MeterCal[SensorID] = Temp * 0.001;
+
                             // power relays
                             PowerRelayLo = Data[12];
                             PowerRelayHi = Data[13];
-
-                            ManualAdjust[SensorID] = Data[14];
 
                             CommTime[SensorID] = millis();
                         }
