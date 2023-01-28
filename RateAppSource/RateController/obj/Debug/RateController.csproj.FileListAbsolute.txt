@@ -2180,3 +2180,4 @@ F:\Temp\Micros_PID\RateAppSource\RateController\obj\Debug\nl\RateController.reso
 F:\Temp\Micros_PID\RateAppSource\RateController\obj\Debug\ru\RateController.resources.dll
 F:\Temp\Micros_PID\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 F:\Temp\Micros_PID\RateAppSource\RateController\obj\Debug\RateController.frmSwitches.resources
+C:\Users\jimcr\source\repos\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmSwitches.resources
