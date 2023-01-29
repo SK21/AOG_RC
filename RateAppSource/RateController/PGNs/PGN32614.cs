@@ -128,7 +128,7 @@ namespace RateController
                 cData[13] = (byte)(Power >> 8);
             }
 
-            // pwm cal
+            // manual cal
             if (Prod.mf.SectionControl.MasterOn())
             {
                 cData[14] = (byte)Prod.ManualPWM;

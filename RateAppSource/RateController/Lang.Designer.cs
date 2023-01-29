@@ -754,7 +754,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Products.
+        ///   Looks up a localized string similar to Products/Fans.
         /// </summary>
         internal static string lgProducts {
             get {

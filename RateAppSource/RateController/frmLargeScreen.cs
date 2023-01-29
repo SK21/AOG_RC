@@ -57,6 +57,10 @@ namespace RateController
             ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
             mnuSettings.Show(ptLowerLeft);
         }
+        public int CurrentProduct()
+        {
+            return Prd.ID;
+        }
 
         private void frmLargeScreen_FormClosed(object sender, FormClosedEventArgs e)
         {

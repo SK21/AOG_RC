@@ -56,9 +56,11 @@ namespace RateController
         private int CurrentPageLast;
         public SimType SimMode = SimType.None;
         private double cSimSpeed = 0;
+
         public bool UseLargeScreen = false;
         public bool LargeScreenExit = false;
         public bool LargeScreenRestart = false;
+        public frmLargeScreen Lscrn;
 
         public FormStart()
         {
@@ -127,16 +129,19 @@ namespace RateController
             get { return cUseInches; }
             set { cUseInches = value; }
         }
+
         public int CurrentProduct()
         {
-            if (CurrentPage < 2)
+            int Result = 0;
+            if (UseLargeScreen)
             {
-                return 0;
+                Result = Lscrn.CurrentProduct();
             }
             else
             {
-                return CurrentPage - 1;
+                if (CurrentPage > 1) Result = CurrentPage - 1;
             }
+            return Result;
         }
 
         public void LoadSettings()
@@ -584,8 +589,8 @@ namespace RateController
             if(UseLargeScreen)
             {
                 this.WindowState = FormWindowState.Minimized;
-                Form LS = new frmLargeScreen(this);
-                LS.ShowDialog();
+                Lscrn = new frmLargeScreen(this);
+                Lscrn.Show();
             }
         }
 
@@ -922,8 +927,8 @@ namespace RateController
             LargeScreenExit = false;
             LargeScreenRestart = false;
             this.WindowState = FormWindowState.Minimized;
-            Form LS = new frmLargeScreen(this);
-            LS.Show();
+            Lscrn = new frmLargeScreen(this);
+            Lscrn.Show();
         }
 
         private void FormStart_Activated(object sender, EventArgs e)

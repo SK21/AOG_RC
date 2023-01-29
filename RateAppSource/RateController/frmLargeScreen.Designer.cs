@@ -430,21 +430,21 @@
             this.MnuPressures,
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(180, 256);
+            this.mnuSettings.Size = new System.Drawing.Size(219, 278);
             // 
             // MnuProducts
             // 
             this.MnuProducts.Image = ((System.Drawing.Image)(resources.GetObject("MnuProducts.Image")));
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(179, 42);
-            this.MnuProducts.Text = "Products";
+            this.MnuProducts.Size = new System.Drawing.Size(218, 42);
+            this.MnuProducts.Text = "Products/Fans";
             this.MnuProducts.Click += new System.EventHandler(this.MnuProducts_Click);
             // 
             // MnuSections
             // 
             this.MnuSections.Image = ((System.Drawing.Image)(resources.GetObject("MnuSections.Image")));
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(179, 42);
+            this.MnuSections.Size = new System.Drawing.Size(218, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.MnuSections_Click);
             // 
@@ -452,7 +452,7 @@
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(179, 42);
+            this.MnuComm.Size = new System.Drawing.Size(218, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -460,7 +460,7 @@
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(179, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(218, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click);
             // 
@@ -468,7 +468,7 @@
             // 
             this.MnuPressures.Image = ((System.Drawing.Image)(resources.GetObject("MnuPressures.Image")));
             this.MnuPressures.Name = "MnuPressures";
-            this.MnuPressures.Size = new System.Drawing.Size(179, 42);
+            this.MnuPressures.Size = new System.Drawing.Size(218, 42);
             this.MnuPressures.Text = "Pressures";
             this.MnuPressures.Click += new System.EventHandler(this.MnuPressures_Click);
             // 
@@ -489,7 +489,7 @@
             this.MnuAbout});
             this.MnuOptions.Image = global::RateController.Properties.Resources._7504229_hamburger_menu_list_options_icon;
             this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(179, 42);
+            this.MnuOptions.Size = new System.Drawing.Size(218, 42);
             this.MnuOptions.Text = "Options";
             // 
             // simulationToolStripMenuItem

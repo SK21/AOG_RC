@@ -82,7 +82,6 @@ namespace RateController
             }
             // update sections
             mf.Sections.UpdateSectionsOn(CTL.RC0, CTL.RC1, false);
-            Debug.Print(CTL.RC0.ToString() + ", " + CTL.RC1.ToString());
         }
 
         private void AutoSteerPGN_RelaysChanged(object sender, PGN254.RelaysChangedArgs e)

@@ -604,7 +604,7 @@ namespace RateController
             }
             else
             {
-                RateSet.Text = CurrentProduct.RateSet.ToString("N1");
+                lbBaseRate.Text = CurrentProduct.RateSet.ToString("N1");
                 FlowCal.Text = CurrentProduct.MeterCal.ToString("N3");
             }
 
@@ -659,13 +659,13 @@ namespace RateController
         private void RateSet_Enter(object sender, EventArgs e)
         {
             double tempD;
-            double.TryParse(RateSet.Text, out tempD);
+            double.TryParse(lbBaseRate.Text, out tempD);
             using (var form = new FormNumeric(0, 50000, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    RateSet.Text = form.ReturnValue.ToString();
+                    lbBaseRate.Text = form.ReturnValue.ToString();
                 }
             }
         }
@@ -678,7 +678,7 @@ namespace RateController
         private void RateSet_Validating(object sender, CancelEventArgs e)
         {
             double tempD;
-            double.TryParse(RateSet.Text, out tempD);
+            double.TryParse(lbBaseRate.Text, out tempD);
             if (tempD < 0 || tempD > 50000)
             {
                 System.Media.SystemSounds.Exclamation.Play();
@@ -745,7 +745,7 @@ namespace RateController
             else
             {
                 // set rate by product
-                double.TryParse(RateSet.Text, out TempDB);
+                double.TryParse(lbBaseRate.Text, out TempDB);
                 CurrentProduct.RateSet = TempDB;
 
                 double.TryParse(ProdDensity.Text, out TempDB);
