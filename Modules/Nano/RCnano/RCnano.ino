@@ -12,7 +12,7 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  27-Jan-2023"
+# define InoDescription "RCnano  :  29-Jan-2023"
 const int16_t InoID = 4000;
 int16_t StoredID;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -81,6 +82,7 @@ namespace RateController
             }
             // update sections
             mf.Sections.UpdateSectionsOn(CTL.RC0, CTL.RC1, false);
+            Debug.Print(CTL.RC0.ToString() + ", " + CTL.RC1.ToString());
         }
 
         private void AutoSteerPGN_RelaysChanged(object sender, PGN254.RelaysChangedArgs e)
@@ -189,7 +191,7 @@ namespace RateController
                         }
                         else
                         {
-                            CTL.SBRlys1 = mf.Tls.BitSet(CTL.SBRlys1, Sec.ID);
+                            CTL.SBRlys1 = mf.Tls.BitSet(CTL.SBRlys1, Sec.ID - 8);
                         }
                     }
                 }

@@ -92,7 +92,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             //11 Command
             //	        - bit 0		    reset acc.Quantity
             //	        - bit 1,2,3		control type 0-4
-            //	        - bit 4		    MasterOn
+            //	        - bit 4		    MasterOn, or true if no switchbox
             //          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
             //          - bit 6         AutoOn
             //          - bit 7         Calibration On

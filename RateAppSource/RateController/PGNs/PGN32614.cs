@@ -1,4 +1,6 @@
 ﻿
+using System.Runtime.InteropServices;
+
 namespace RateController
 {
     public class PGN32614
@@ -105,7 +107,15 @@ namespace RateController
                     break;
             }
 
-            if (Prod.mf.SectionControl.MasterOn()) cData[11] |= 0b00010000;
+            if (Prod.mf.SwitchBox.Connected())
+            {
+                if (Prod.mf.SectionControl.MasterOn()) cData[11] |= 0b00010000;
+            }
+            else
+            {
+                cData[11] |= 0b00010000;
+            }
+            
             if (Prod.UseMultiPulse) cData[11] |= 0b00100000;
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[11] |= 0b01000000;
             if (Prod.DoCal && Prod.ControlType == ControlTypeEnum.MotorWeights) cData[11] |= 0b10000000;
