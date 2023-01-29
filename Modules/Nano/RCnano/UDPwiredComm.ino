@@ -98,7 +98,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             //          - bit 7         Calibration On
             //12    power relay Lo      list of power type relays 0-7
             //13    power relay Hi      list of power type relays 8-15
-            //14	Cal PWM		calibration pwm
+            //14	manual pwm
             //15	CRC
             PGNlength = 16;
 
@@ -114,6 +114,14 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             RelayLo = Data[3];
                             RelayHi = Data[4];
 
+                            // rate setting, 1000 times actual
+                            uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
+                            RateSetting[SensorID] = (float)(RateSet * 0.001);
+
+                            // Meter Cal, 1000 times actual
+                            uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
+                            MeterCal[SensorID] = Temp * 0.001;
+
                             // command byte
                             InCommand[SensorID] = Data[11];
                             if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
@@ -127,25 +135,11 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             UseMultiPulses[SensorID] = ((InCommand[SensorID] & 32) == 32);
                             AutoOn = ((InCommand[SensorID] & 64) == 64);
 
-                            // rate setting, 1000 times actual
-                            uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
-
-                            if (AutoOn)
-                            {
-                                RateSetting[SensorID] = (float)(RateSet * 0.001);
-                            }
-                            else
-                            {
-                                ManualAdjust[SensorID] = (float)(RateSet * 0.001);
-                            }
-
-                            // Meter Cal, 1000 times actual
-                            uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
-                            MeterCal[SensorID] = Temp * 0.001;
-
                             // power relays
                             PowerRelayLo = Data[12];
                             PowerRelayHi = Data[13];
+
+                            ManualAdjust[SensorID] = Data[14];
 
                             CommTime[SensorID] = millis();
                         }
@@ -155,8 +149,27 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             break;
 
         case 32616:
-            // PID to Arduino from RateController, 12 bytes
-            PGNlength = 12;
+            // PID to Arduino from RateController
+            // 0    104
+            // 1    127
+            // 2    Mod/Sen ID     0-15/0-15
+            // 3    KP 0
+            // 4    KP 1
+            // 5    KP 2
+            // 6    KP 3
+            // 7    KI 0
+            // 8    KI 1
+            // 9    KI 2
+            // 10   KI 3
+            // 11   KD 0
+            // 12   KD 1
+            // 13   KD 2
+            // 14   KD 3
+            // 15   MinPWM
+            // 16   MaxPWM
+            // 17   CRC
+
+            PGNlength = 18;
 
             if (len > PGNlength - 1)
             {
@@ -168,14 +181,17 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                         byte SensorID = ParseSenID(tmp);
                         if (SensorID < MDL.SensorCount)
                         {
-                            PIDkp[SensorID] = Data[3];
-                            PIDminPWM[SensorID] = Data[4];
-                            PIDLowMax[SensorID] = Data[5];
-                            PIDHighMax[SensorID] = Data[6];
-                            PIDdeadband[SensorID] = Data[7];
-                            PIDbrakePoint[SensorID] = Data[8];
-                            AdjustTime[SensorID] = Data[9];
-                            PIDki[SensorID] = Data[10];
+                            uint32_t tmp = Data[3] | (uint32_t)Data[4] << 8 | (uint32_t)Data[5] << 16 | (uint32_t)Data[6] << 24;
+                            PIDkp[SensorID] = (float)(tmp * 0.0001);
+
+                            tmp = Data[7] | (uint32_t)Data[8] << 8 | (uint32_t)Data[9] << 16 | (uint32_t)Data[10] << 24;
+                            PIDki[SensorID] = (float)(tmp * 0.0001);
+
+                            tmp = Data[11] | (uint32_t)Data[12] << 8 | (uint32_t)Data[13] << 16 | (uint32_t)Data[14] << 24;
+                            PIDkd[SensorID] = (float)(tmp * 0.0001);
+
+                            MinPWM[SensorID] = Data[15];
+                            MaxPWM[SensorID] = Data[16];
 
                             CommTime[SensorID] = millis();
                         }

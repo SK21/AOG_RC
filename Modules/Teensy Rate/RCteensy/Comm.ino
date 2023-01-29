@@ -19,7 +19,7 @@ const byte PGN32502Length = 7;
 const byte PGN32503Length = 6;
 const byte PGN32613Length = 13;
 const byte PGN32614Length = 16;
-const byte PGN32616Length = 12;
+const byte PGN32616Length = 18;
 const byte PGN32619Length = 6;
 const byte PGN32621Length = 12;
 
@@ -525,10 +525,9 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		//- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
 		//- bit 5           AutoOn
 		//- bit 6           Debug pgn on
-		//- bit 7           Calibration on
 		//12    power relay Lo      list of power type relays 0-7
 		//13    power relay Hi      list of power type relays 8-15
-		//14    Cal PWM     calibration pwm
+		//14    manual pwm
 		//15    crc
 
 		if (len > PGN32614Length - 1)
@@ -545,6 +544,14 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 						RelayLo = Data[3];
 						RelayHi = Data[4];
 
+						// rate setting, 1000 times actual
+						uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
+						Sensor[ID].RateSetting = (float)(RateSet * 0.001);
+
+						// Meter Cal, 1000 X actual
+						uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
+						Sensor[ID].MeterCal = (float)Temp * 0.001;
+
 						// command byte
 						Sensor[ID].InCommand = Data[11];
 						if ((Sensor[ID].InCommand & 1) == 1) Sensor[ID].TotalPulses = 0; // reset accumulated count
@@ -552,33 +559,18 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 						Sensor[ID].ControlType = 0;
 						if ((Sensor[ID].InCommand & 2) == 2) Sensor[ID].ControlType += 1;
 						if ((Sensor[ID].InCommand & 4) == 4) Sensor[ID].ControlType += 2;
+						if ((Sensor[ID].InCommand & 8) == 8) Sensor[ID].ControlType += 4;
 
 						Sensor[ID].MasterOn = ((Sensor[ID].InCommand & 8) == 8);
 						Sensor[ID].UseMultiPulses = ((Sensor[ID].InCommand & 16) == 16);
 						AutoOn = ((Sensor[ID].InCommand & 32) == 32);
-						Sensor[ID].CalOn = ((Sensor[ID].InCommand & 128) == 128);
-
-						// rate setting, 10 times actual
-						uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
-						if (AutoOn)
-						{
-							Sensor[ID].RateSetting = (float)RateSet * 0.001;
-						}
-						else
-						{
-							Sensor[ID].ManualAdjust = (float)RateSet * 0.001;
-						}
-
-						// Meter Cal, 1000 X actual
-						uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
-						Sensor[ID].MeterCal = (float)Temp * 0.001;
 
 						// power relays
 						PowerRelayLo = Data[12];
 						PowerRelayHi = Data[13];
 
-						// cal
-						Sensor[ID].CalPWM = Data[14];
+						// manual control
+						Sensor[ID].ManualAdjust = Data[14];
 
 						Sensor[ID].CommTime = millis();
 					}
@@ -588,7 +580,25 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		break;
 
 	case 32616:
-		// PID to Arduino from RateController, 12 bytes
+		// PID to Arduino from RateController
+		// 0    104
+		// 1    127
+		// 2    Mod/Sen ID     0-15/0-15
+		// 3    KP 0
+		// 4    KP 1
+		// 5    KP 2
+		// 6    KP 3
+		// 7    KI 0
+		// 8    KI 1
+		// 9    KI 2
+		// 10   KI 3
+		// 11   KD 0
+		// 12   KD 1
+		// 13   KD 2
+		// 14   KD 3
+		// 15   MinPWM
+		// 16   MaxPWM
+		// 17   CRC
 
 		if (len > PGN32616Length - 1)
 		{
@@ -600,14 +610,17 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 					byte ID = ParseSenID(tmp);
 					if (ID < MDL.ProductCount)
 					{
-						Sensor[ID].KP = Data[3];
-						Sensor[ID].MinPWM = Data[4];
-						Sensor[ID].LowMax = Data[5];
-						Sensor[ID].HighMax = Data[6];
-						Sensor[ID].Deadband = Data[7];
-						Sensor[ID].BrakePoint = Data[8];
-						Sensor[ID].AdjustTime = Data[9];
-						Sensor[ID].KI = Data[10];
+						uint32_t tmp = Data[3] | (uint32_t)Data[4] << 8 | (uint32_t)Data[5] << 16 | (uint32_t)Data[6] << 24;
+						Sensor[ID].KP = (float)(tmp * 0.0001);
+
+						tmp = Data[7] | (uint32_t)Data[8] << 8 | (uint32_t)Data[9] << 16 | (uint32_t)Data[10] << 24;
+						Sensor[ID].KI = (float)(tmp * 0.0001);
+
+						tmp = Data[11] | (uint32_t)Data[12] << 8 | (uint32_t)Data[13] << 16 | (uint32_t)Data[14] << 24;
+						Sensor[ID].KD = (float)(tmp * 0.0001);
+
+						Sensor[ID].MinPWM = Data[15];
+						Sensor[ID].MaxPWM = Data[16];
 					}
 				}
 			}

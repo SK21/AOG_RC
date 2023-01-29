@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System;
-
+﻿
 namespace RateController
 {
     public class PGN32614
@@ -26,7 +24,7 @@ namespace RateController
         //          - bit 7         Calibration On
         //12    power relay Lo      list of power type relays 0-7
         //13    power relay Hi      list of power type relays 8-15
-        //14    Cal PWM             PWM setting for weight calibration
+        //14    manual pwm
         //15    CRC
 
         private const byte cByteCount = 16;
@@ -60,21 +58,9 @@ namespace RateController
             }
             else
             {
-                if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto))
-                {
-                    // auto rate
-                    RateSet = Prod.TargetUPM() * 1000.0;
-                    if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPM * 1000.0;
-                }
-                else
-                {
-                    // manual rate
-                    RateSet = (Prod.ManualAdjust * 1000.0);
-                }
+                RateSet = Prod.TargetUPM() * 1000.0;
+                if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPM * 1000.0;
             }
-
-            //I moved this back to cls Product to adjust prod.TargetUPM
-            //if (Prod.EnableProdDensity && Prod.ProdDensity > 0) RateSet = (RateSet / Prod.ProdDensity) * 100;
 
             cData[5] = (byte)RateSet;
             cData[6] = (byte)((int)RateSet >> 8);
@@ -119,7 +105,7 @@ namespace RateController
                     break;
             }
 
-            if (Prod.mf.Sections.IsMasterOn()) cData[11] |= 0b00010000;
+            if (Prod.mf.SectionControl.MasterOn()) cData[11] |= 0b00010000;
             if (Prod.UseMultiPulse) cData[11] |= 0b00100000;
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[11] |= 0b01000000;
             if (Prod.DoCal && Prod.ControlType == ControlTypeEnum.MotorWeights) cData[11] |= 0b10000000;
@@ -133,13 +119,20 @@ namespace RateController
             }
 
             // pwm cal
-            cData[14] = Prod.CalPWM;
+            if (Prod.mf.SectionControl.MasterOn())
+            {
+                cData[14] = (byte)Prod.ManualPWM;
+            }
+            else
+            {
+                cData[14] = 0;
+            }
 
             // CRC
             cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
 
             // send
-            if (Prod.SimulationType == SimType.VirtualNano)
+            if (Prod.mf.SimMode == SimType.VirtualNano)
             {
                 Prod.VirtualNano.ReceiveSerial(cData);
             }

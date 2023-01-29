@@ -139,7 +139,7 @@ namespace RateController
             bool Result = true;
             for (int i = 0; i < Count(); i++)
             {
-                if ((cProducts[i].ProductID != ProdID) && (cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID))
+                if ((cProducts[i].ID != ProdID) && (cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID))
                 {
                     Result = false;
                     break;
@@ -177,7 +177,7 @@ namespace RateController
         {
             for (int i = 0; i < mf.MaxProducts; i++)
             {
-                if (cProducts[i].SimulationType == SimType.VirtualNano) cProducts[i].VirtualNano.MainLoop();
+                if (mf.SimMode == SimType.VirtualNano) cProducts[i].VirtualNano.MainLoop();
             }
         }
 
@@ -185,7 +185,7 @@ namespace RateController
         {
             for (int i = 0; i < cProducts.Count; i++)
             {
-                if (cProducts[i].ProductID == ProdID) return i;
+                if (cProducts[i].ID == ProdID) return i;
             }
             return -1;
         }

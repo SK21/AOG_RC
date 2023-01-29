@@ -88,6 +88,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -107,6 +108,7 @@
     <Compile Include="Classes\clsRelay.cs" />
     <Compile Include="Classes\clsRelays.cs" />
     <Compile Include="Classes\clsSection.cs" />
+    <Compile Include="Classes\clsSectionControl.cs" />
     <Compile Include="Classes\clsSections.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsProduct.cs" />
@@ -126,6 +128,12 @@
     </Compile>
     <Compile Include="FormNumeric.Designer.cs">
       <DependentUpon>FormNumeric.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPIDGraph.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPIDGraph.designer.cs">
+      <DependentUpon>FormPIDGraph.cs</DependentUpon>
     </Compile>
     <Compile Include="FormPressure.cs">
       <SubType>Form</SubType>
@@ -151,17 +159,17 @@
     <Compile Include="frmComm.Designer.cs">
       <DependentUpon>frmComm.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmFullScreen.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmFullScreen.Designer.cs">
-      <DependentUpon>frmFullScreen.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmHelp.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmHelp.Designer.cs">
       <DependentUpon>frmHelp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLargeScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLargeScreen.Designer.cs">
+      <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMonitor.cs">
       <SubType>Form</SubType>
@@ -186,6 +194,12 @@
     </Compile>
     <Compile Include="frmSections.Designer.cs">
       <DependentUpon>frmSections.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSwitches.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSwitches.Designer.cs">
+      <DependentUpon>frmSwitches.cs</DependentUpon>
     </Compile>
     <Compile Include="frmWifi.cs">
       <SubType>Form</SubType>
@@ -233,6 +247,9 @@
     <EmbeddedResource Include="FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormPIDGraph.resx">
+      <DependentUpon>FormPIDGraph.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormPressure.resx">
       <DependentUpon>FormPressure.cs</DependentUpon>
     </EmbeddedResource>
@@ -245,11 +262,11 @@
     <EmbeddedResource Include="frmComm.resx">
       <DependentUpon>frmComm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmFullScreen.resx">
-      <DependentUpon>frmFullScreen.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmHelp.resx">
       <DependentUpon>frmHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLargeScreen.resx">
+      <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMonitor.resx">
       <DependentUpon>frmMonitor.cs</DependentUpon>
@@ -262,6 +279,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmSections.resx">
       <DependentUpon>frmSections.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSwitches.resx">
+      <DependentUpon>frmSwitches.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmWifi.resx">
       <DependentUpon>frmWifi.cs</DependentUpon>

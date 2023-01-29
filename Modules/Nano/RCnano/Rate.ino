@@ -19,10 +19,23 @@ float Oave[2];
 void ISR0()
 {
 	static unsigned long PulseTime;
-	if (millis() - PulseTime > MDL.Debounce)
+	unsigned long micronow;
+	unsigned long dur;
+
+	micronow = micros();
+	if (PulseTime > micronow)
 	{
-		Duration[0] = millis() - PulseTime;
-		PulseTime = millis();
+		dur = micronow - PulseTime;
+	}
+	else
+	{
+		dur = 4294967295 + micronow - PulseTime;
+	}
+
+	if (dur > MDL.Debounce*1000)
+	{
+		Duration[0] = dur;
+		PulseTime = micronow;
 		PulseCount[0]++;
 	}
 }
@@ -30,10 +43,22 @@ void ISR0()
 void ISR1()
 {
 	static unsigned long PulseTime;
-	if (millis() - PulseTime > MDL.Debounce)
+	unsigned long micronow;
+	unsigned long dur;
+
+	micronow = micros();
+	if (PulseTime > micronow)
 	{
-		Duration[1] = millis() - PulseTime;
-		PulseTime = millis();
+		dur = micronow - PulseTime;
+	}
+	else
+	{
+		dur = 4294967295 + micronow - PulseTime;
+	}
+	if (dur > MDL.Debounce*1000)
+	{
+		Duration[1] = dur;
+		PulseTime = micronow;
 		PulseCount[1]++;
 	}
 }
@@ -71,7 +96,7 @@ void GetUPM()
 				}
 				else
 				{
-					PPM[i] = 6000000 / CurrentDuration;	// 100 X actual
+					PPM[i] = 6000000000 / CurrentDuration;	// 100 X actual
 				}
 			}
 
@@ -95,7 +120,7 @@ void GetUPM()
 			Oave[i] = (float)Osum[i] / 300.0;	// divide by 3 and divide by 100 
 			Osum[i] = 0;
 			Omax[i] = 0;
-			Omin[i] = 5000000;
+			Omin[i] = 5000000000;
 			Ocount[i] = 0;
 		}
 

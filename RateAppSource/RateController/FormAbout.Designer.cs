@@ -52,9 +52,9 @@ namespace RateController
             // lbAppVersion
             // 
             this.lbAppVersion.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAppVersion.Location = new System.Drawing.Point(33, 20);
+            this.lbAppVersion.Location = new System.Drawing.Point(0, 20);
             this.lbAppVersion.Name = "lbAppVersion";
-            this.lbAppVersion.Size = new System.Drawing.Size(203, 18);
+            this.lbAppVersion.Size = new System.Drawing.Size(280, 18);
             this.lbAppVersion.TabIndex = 180;
             this.lbAppVersion.Text = "Version 2.1.9";
             this.lbAppVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -62,9 +62,9 @@ namespace RateController
             // lbVersion
             // 
             this.lbVersion.Font = new System.Drawing.Font("Tahoma", 11.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVersion.Location = new System.Drawing.Point(33, 2);
+            this.lbVersion.Location = new System.Drawing.Point(0, 2);
             this.lbVersion.Name = "lbVersion";
-            this.lbVersion.Size = new System.Drawing.Size(203, 18);
+            this.lbVersion.Size = new System.Drawing.Size(280, 18);
             this.lbVersion.TabIndex = 181;
             this.lbVersion.Text = "Version";
             this.lbVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -75,7 +75,7 @@ namespace RateController
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(77, 127);
+            this.bntOK.Location = new System.Drawing.Point(83, 126);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 0;
@@ -100,9 +100,9 @@ namespace RateController
             this.lbWifi.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbWifi.Location = new System.Drawing.Point(122, 87);
             this.lbWifi.Name = "lbWifi";
-            this.lbWifi.Size = new System.Drawing.Size(56, 23);
+            this.lbWifi.Size = new System.Drawing.Size(148, 23);
             this.lbWifi.TabIndex = 184;
-            this.lbWifi.Text = "-.-.-.-";
+            this.lbWifi.Text = "192.168.255.255";
             // 
             // label3
             // 
@@ -118,7 +118,7 @@ namespace RateController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(264, 211);
+            this.ClientSize = new System.Drawing.Size(283, 206);
             this.Controls.Add(this.lbWifi);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lbIP);

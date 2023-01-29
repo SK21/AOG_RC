@@ -7,14 +7,14 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   13-Jan-2023"
+# define InoDescription "RCteensy   27-Jan-2023"
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
 
 //EEPROM
 int16_t EEread = 0;
-#define MDL_Ident 5300
+#define MDL_Ident 5100
 
 struct ModuleConfig	
 {
@@ -52,18 +52,14 @@ struct SensorConfig
 	float RateSetting = 0;
 	float MeterCal = 0;
 	float ManualAdjust = 0;
-	uint16_t ManualLast = 0;
 	bool UseMultiPulses = 0;	// 0 - time for one pulse, 1 - average time for multiple pulses
 	byte KP = 20;
 	byte KI = 0;
+	byte KD = 0;
 	byte MinPWM = 50;
-	byte LowMax = 100;
-	byte HighMax = 255;
+	byte MaxPWM = 255;
 	byte Deadband = 3;
 	byte BrakePoint = 20;
-	byte AdjustTime = 0;
-	bool CalOn = false;
-	byte CalPWM = 0;
 };
 
 SensorConfig Sensor[MaxProductCount];
@@ -332,8 +328,10 @@ void loop()
 
 		for (int i = 0; i < MDL.ProductCount; i++)
 		{
-			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000)
-				&& ((Sensor[i].RateSetting > 0 && Sensor[i].MasterOn) || (Sensor[i].ControlType == 4));
+			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000) &&
+				((Sensor[i].RateSetting > 0 && Sensor[i].MasterOn)
+					|| ((Sensor[i].ControlType == 4) && (Sensor[i].RateSetting > 0))
+					|| (!AutoOn && Sensor[i].MasterOn));
 		}
 
 		GetUPM();
@@ -422,28 +420,19 @@ void AutoControl()
 	{
 		Sensor[i].RateError = Sensor[i].RateSetting - Sensor[i].UPM;
 
-		if (Sensor[i].CalOn)
+		switch (Sensor[i].ControlType)
 		{
-			// calibration mode 
-			Sensor[i].pwmSetting = Sensor[i].CalPWM;
-		}
-		else
-		{
-			// normal mode
-			switch (Sensor[i].ControlType)
-			{
-			case 2:
-			case 3:
-			case 4:
-				// motor control
-				Sensor[i].pwmSetting = ControlMotor(i);
-				break;
+		case 2:
+		case 3:
+		case 4:
+			// motor control
+			Sensor[i].pwmSetting = PIDmotor(i);
+			break;
 
-			default:
-				// valve control
-				Sensor[i].pwmSetting = DoPID(i);
-				break;
-			}
+		default:
+			// valve control
+			Sensor[i].pwmSetting = PIDvalve(i);
+			break;
 		}
 	}
 }
@@ -452,48 +441,7 @@ void ManualControl()
 {
 	for (int i = 0; i < MDL.ProductCount; i++)
 	{
-		Sensor[i].RateError = Sensor[i].RateSetting - Sensor[i].UPM;
-		if (Sensor[i].CalOn)
-		{
-			// calibration mode 
-			Sensor[i].pwmSetting = Sensor[i].CalPWM;
-		}
-		else
-		{
-			// normal mode
-			if (millis() - Sensor[i].ManualLast > 1000)
-			{
-				Sensor[i].ManualLast = millis();
-
-				// adjust rate
-				if (Sensor[i].RateSetting == 0) Sensor[i].RateSetting = 1; // to make FlowEnabled
-
-				switch (Sensor[i].ControlType)
-				{
-				case 2:
-				case 3:
-				case 4:
-					// motor control
-					if (Sensor[i].ManualAdjust > 0)
-					{
-						Sensor[i].pwmSetting *= 1.10;
-						if (Sensor[i].pwmSetting < 1) Sensor[i].pwmSetting = Sensor[i].MinPWM;
-						if (Sensor[i].pwmSetting > 255) Sensor[i].pwmSetting = 255;
-					}
-					else if (Sensor[i].ManualAdjust < 0)
-					{
-						Sensor[i].pwmSetting *= 0.90;
-						if (Sensor[i].pwmSetting < Sensor[i].MinPWM) Sensor[i].pwmSetting = 0;
-					}
-					break;
-
-				default:
-					// valve control
-					Sensor[i].pwmSetting = Sensor[i].ManualAdjust;
-					break;
-				}
-			}
-		}
+		Sensor[i].pwmSetting = Sensor[i].ManualAdjust;
 	}
 }
 

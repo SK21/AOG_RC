@@ -73,6 +73,12 @@ namespace RateController
             }
         }
 
+        public void Close()
+        {
+            recvSocket.Close();
+            sendSocket.Close();
+        }
+
         public string WifiEP
         {
             get { return cWiFiEP.ToString(); }
@@ -166,7 +172,8 @@ namespace RateController
             }
             catch (Exception e)
             {
-                mf.Tls.ShowHelp("UDP start error: \n" + e.Message, "Comm", 3000, true);
+                //mf.Tls.ShowHelp("UDP start error: \n" + e.Message, "Comm", 3000, true);
+                mf.Tls.WriteErrorLog("StartUDPServer: \n" + e.Message);
             }
         }
 
@@ -297,9 +304,10 @@ namespace RateController
             {
                 // do nothing
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                mf.Tls.ShowHelp("ReceiveData Error \n" + e.Message, "Comm", 3000, true);
+                //mf.Tls.ShowHelp("ReceiveData Error \n" + e.Message, "Comm", 3000, true);
+                mf.Tls.WriteErrorLog("UDPcomm/ReceiveData " + ex.Message);
             }
         }
 

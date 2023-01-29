@@ -9,7 +9,7 @@ namespace RateController
     {
         None,
         VirtualNano,
-        RealNano
+        Speed
     }
 
     public partial class FormStart : Form
@@ -18,6 +18,7 @@ namespace RateController
         public readonly int MaxSections = 16;
         public readonly int MaxProducts = 6;    // last two are fans 
 
+        public clsSectionControl SectionControl;
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
@@ -38,21 +39,26 @@ namespace RateController
         public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower, Lang.lgInvertSection };
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
-        public bool UseInches;
+        public bool cUseInches;
         public PGN230 VRdata;
         public string WiFiIP;
         private int CurrentPage;
-        private clsProduct Prd;
 
         private Label[] Indicators;
         private Label[] ProdName;
         private Label[] Rates;
 
-        private int[] RateType = new int[5];    // 0 current rate, 1 instantaneous rate, 2 overall rate
+        private int[] RateType = new int[6];    // 0 current rate, 1 instantaneous rate, 2 overall rate
         private bool ShowCoverageRemaining;
         private bool ShowQuantityRemaining;
 
-        private DateTime MenuLongPress;
+        public event EventHandler ProductChanged;
+        private int CurrentPageLast;
+        public SimType SimMode = SimType.None;
+        private double cSimSpeed = 0;
+        public bool UseLargeScreen = false;
+        public bool LargeScreenExit = false;
+        public bool LargeScreenRestart = false;
 
         public FormStart()
         {
@@ -104,27 +110,32 @@ namespace RateController
                 SER[i] = new SerialComm(this, i);
             }
 
-            ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4,prd5};
-            Rates = new Label[] { rt0, rt1, rt2, rt3, rt4,rt5 };
-            Indicators = new Label[] { idc0, idc1, idc2, idc3, idc4 ,idc5};
+            ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4, prd5 };
+            Rates = new Label[] { rt0, rt1, rt2, rt3, rt4, rt5 };
+            Indicators = new Label[] { idc0, idc1, idc2, idc3, idc4, idc5 };
 
-            UseInches = true;
+            cUseInches = true;
 
             PressureObjects = new clsPressures(this);
             RelayObjects = new clsRelays(this);
+            SectionControl = new clsSectionControl(this);
 
             timerMain.Interval = 1000;
         }
-
-        public byte CurrentProduct()
+        public bool UseInches
+        {
+            get { return cUseInches; }
+            set { cUseInches = value; }
+        }
+        public int CurrentProduct()
         {
             if (CurrentPage < 2)
             {
-                return 1;
+                return 0;
             }
             else
             {
-                return (byte)CurrentPage;
+                return CurrentPage - 1;
             }
         }
 
@@ -134,8 +145,9 @@ namespace RateController
             SetDayMode();
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
-            bool tmp;
-            if (bool.TryParse(Tls.LoadProperty("UseInches"), out tmp)) UseInches = tmp;
+            if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
+            if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd)) cSimSpeed = Spd;
+            if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS)) UseLargeScreen = LS;
 
             Sections.Load();
             Sections.CheckSwitchDefinitions();
@@ -188,18 +200,20 @@ namespace RateController
         {
             try
             {
-                if(CurrentPage>0) Prd = Products.Item(CurrentPage - 1);
-
                 FormatDisplay();
 
                 if (CurrentPage == 0)
                 {
                     // summary
+                    panProducts.Visible = false;
+                    panSummary.Visible = true;
+                    panFan.Visible = false;
+
                     for (int i = 0; i < MaxProducts; i++)
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
 
-                        if (Products.Item(i).SimulationType == SimType.None)
+                        if (SimMode == SimType.None)
                         {
                             ProdName[i].ForeColor = SystemColors.ControlText;
                             ProdName[i].BackColor = Properties.Settings.Default.DayColour;
@@ -207,7 +221,6 @@ namespace RateController
                         }
                         else
                         {
-                            //ProdName[i].ForeColor = SimColor;
                             ProdName[i].BackColor = SimColor;
                             ProdName[i].BorderStyle = BorderStyle.FixedSingle;
                         }
@@ -227,6 +240,13 @@ namespace RateController
                 else
                 {
                     // product pages
+                    clsProduct Prd = Products.Item(CurrentPage - 1);
+
+                    panProducts.Visible = true;
+                    panSummary.Visible = false;
+                    panProducts.Visible = (Prd.ControlType != ControlTypeEnum.Fan);
+                    panFan.Visible = (Prd.ControlType == ControlTypeEnum.Fan);
+
                     lbFan.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
                     lbTargetRPM.Text = Prd.TargetRate().ToString("N0");
                     lbCurrentRPM.Text= Prd.SmoothRate().ToString("N0");
@@ -313,7 +333,7 @@ namespace RateController
                             break;
                     }
 
-                    if (Prd.SimulationType == SimType.None)
+                    if (SimMode == SimType.None)
                     {
                         if (Prd.ArduinoModule.ModuleSending())
                         {
@@ -352,13 +372,19 @@ namespace RateController
                 RCalarm.CheckAlarms();
 
                 // metric
-                if (UseInches)
+                if (cUseInches)
                 {
                     MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Xmark;
                 }
                 else
                 {
                     MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.CheckMark;
+                }
+
+                if (CurrentPage != CurrentPageLast)
+                {
+                    CurrentPageLast = CurrentPage;
+                    ProductChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
             catch (Exception ex)
@@ -400,47 +426,13 @@ namespace RateController
             SetDayMode();
         }
 
-        private void CheckPressure()
-        {
-            try
-            {
-                if (ShowPressure)
-                {
-                    //this.Height = 285;
-                    //btnSettings.Top = 182;
-                    //btnLeft.Top = 182;
-                    //btnRight.Top = 182;
-                    //lbArduinoConnected.Top = 182;
-                    //lbAogConnected.Top = 217;
-                    lbPressure.Visible = true;
-                    lbPressureValue.Visible = true;
-                    lbPressure.Text = Lang.lgPressure + " " + PressureToShowID.ToString();
-                    if (PressureToShowID < 1) PressureToShowID = 1;
-                    float Prs = PressureObjects.Item(PressureToShowID - 1).Pressure();
-                    lbPressureValue.Text = Prs.ToString("N1");
-                }
-                else
-                {
-                    //this.Height = 256;
-                    //btnSettings.Top = 153;
-                    //btnLeft.Top = 153;
-                    //btnRight.Top = 153;
-                    //lbArduinoConnected.Top = 153;
-                    //lbAogConnected.Top = 188;
-                    lbPressure.Visible = false;
-                    lbPressureValue.Visible = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Tls.WriteErrorLog("FormStart/CheckPressure: " + ex.Message);
-            }
-        }
-
         private void FormatDisplay()
         {
             try
             {
+                int ID = CurrentPage - 1;
+                if (ID < 0) ID = 0;
+                clsProduct Prd = Products.Item(ID);
 
                 this.Width = 290;
                 if (CurrentPage == 0)
@@ -524,16 +516,28 @@ namespace RateController
             }
         }
 
+
         private void FormRateControl_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
+            try
             {
-                Tls.SaveFormData(this);
-                Tls.SaveProperty("CurrentPage", CurrentPage.ToString());
-            }
+                if (this.WindowState == FormWindowState.Normal)
+                {
+                    Tls.SaveFormData(this);
+                    Tls.SaveProperty("CurrentPage", CurrentPage.ToString());
+                }
 
-            Sections.Save();
-            Products.Save();
+                Sections.Save();
+                Products.Save();
+                Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
+                Tls.SaveProperty("UseLargeScreen", UseLargeScreen.ToString());
+
+                UDPaog.Close();
+                UDPmodules.Close();
+            }
+            catch (Exception)
+            {
+            }
 
             Application.Exit();
         }
@@ -576,6 +580,13 @@ namespace RateController
 
             // ethernet
             UDPmodules.EthernetEP = Tls.LoadProperty("EthernetEP");
+
+            if(UseLargeScreen)
+            {
+                this.WindowState = FormWindowState.Minimized;
+                Form LS = new frmLargeScreen(this);
+                LS.ShowDialog();
+            }
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -705,8 +716,8 @@ namespace RateController
 
         private void metricToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UseInches = !UseInches;
-            Tls.SaveProperty("UseInches", UseInches.ToString());
+            cUseInches = !cUseInches;
+            Tls.SaveProperty("UseInches", cUseInches.ToString());
         }
 
         private void MnuAbout_Click_1(object sender, EventArgs e)
@@ -721,7 +732,7 @@ namespace RateController
             frm.ShowDialog();
         }
 
-        private void MnuDeustch_Click(object sender, EventArgs e)
+        public void MnuDeustch_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "de";
             Properties.Settings.Default.Save();
@@ -772,8 +783,17 @@ namespace RateController
 
         private void productsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //check if window already exists
+            Form fs = Application.OpenForms["FormSettings"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
             Form frm = new FormSettings(this, CurrentPage);
-            frm.ShowDialog();
+            frm.Show();
         }
 
         private void russianToolStripMenuItem_Click(object sender, EventArgs e)
@@ -819,7 +839,7 @@ namespace RateController
                     c.ForeColor = Color.Black;
                 }
 
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     Indicators[i].BackColor = Properties.Settings.Default.DayColour;
                 }
@@ -835,7 +855,7 @@ namespace RateController
                     c.ForeColor = Color.White;
                 }
 
-                for (int i = 0; i < 7; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     Indicators[i].BackColor = Properties.Settings.Default.NightColour;
                 }
@@ -867,28 +887,54 @@ namespace RateController
             Products.Item(CurrentPage - 1).FanOn = true;
         }
 
+        private void simulationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //check if window already exists
+            Form fs = Application.OpenForms["frmSimulation"];
+
+            if (fs == null)
+            {
+                Form frm = new frmSwitches(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
         private void btnStop_Click(object sender, EventArgs e)
         {
             Products.Item(CurrentPage - 1).FanOn = false;
         }
-
-        private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        public double SimSpeed
         {
-            Form frmFull = new frmFullScreen();
-            frmFull.Show();
-        }
-
-        private void btnSettings_MouseDown(object sender, MouseEventArgs e)
-        {
-            MenuLongPress = DateTime.Now;
-        }
-
-        private void btnSettings_MouseUp(object sender, MouseEventArgs e)
-        {
-            if((DateTime.Now-MenuLongPress).TotalSeconds>2)
+            get { return cSimSpeed; }
+            set
             {
-                Form frmFull = new frmFullScreen();
-                frmFull.Show();
+                if (value >= 0 && value < 20) { cSimSpeed = value; }
+            }
+        }
+
+        private void largeScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UseLargeScreen = true;
+            LargeScreenExit = false;
+            LargeScreenRestart = false;
+            this.WindowState = FormWindowState.Minimized;
+            Form LS = new frmLargeScreen(this);
+            LS.Show();
+        }
+
+        private void FormStart_Activated(object sender, EventArgs e)
+        {
+            if(LargeScreenRestart)
+            {
+                Application.Restart();
+            }
+            else if(LargeScreenExit)
+            {
+                Application.Exit();
             }
         }
     }

@@ -268,6 +268,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Derivative.
+        /// </summary>
+        internal static string lgDerivative {
+            get {
+                return ResourceManager.GetString("lgDerivative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         internal static string lgDescription {
@@ -412,11 +421,11 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Integral Adjustment.
+        ///   Looks up a localized string similar to Integral.
         /// </summary>
-        internal static string lgIntegralAdjustment {
+        internal static string lgIntegral {
             get {
-                return ResourceManager.GetString("lgIntegralAdjustment", resourceCulture);
+                return ResourceManager.GetString("lgIntegral", resourceCulture);
             }
         }
         
@@ -700,6 +709,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PID Tuning Chart.
+        /// </summary>
+        internal static string lgPIDTune {
+            get {
+                return ResourceManager.GetString("lgPIDTune", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Power.
         /// </summary>
         internal static string lgPower {
@@ -741,6 +759,33 @@ namespace RateController {
         internal static string lgProducts {
             get {
                 return ResourceManager.GetString("lgProducts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proportional.
+        /// </summary>
+        internal static string lgProportional {
+            get {
+                return ResourceManager.GetString("lgProportional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PWM Maximum.
+        /// </summary>
+        internal static string lgPWMmax {
+            get {
+                return ResourceManager.GetString("lgPWMmax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PWM Minimum.
+        /// </summary>
+        internal static string lgPWMmin {
+            get {
+                return ResourceManager.GetString("lgPWMmin", resourceCulture);
             }
         }
         
@@ -790,7 +835,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sensor Method.
+        ///   Looks up a localized string similar to Rate Method.
         /// </summary>
         internal static string lgRateMethod {
             get {
@@ -858,15 +903,6 @@ namespace RateController {
         internal static string lgResetStart {
             get {
                 return ResourceManager.GetString("lgResetStart", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Response Rate.
-        /// </summary>
-        internal static string lgResponerate {
-            get {
-                return ResourceManager.GetString("lgResponerate", resourceCulture);
             }
         }
         
@@ -970,7 +1006,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sensor Location.
+        ///   Looks up a localized string similar to Rate Sensor Location.
         /// </summary>
         internal static string lgSensorLocation {
             get {
@@ -997,7 +1033,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Simulation.
+        ///   Looks up a localized string similar to Rate Simulation.
         /// </summary>
         internal static string lgSimulate {
             get {
@@ -1119,15 +1155,6 @@ namespace RateController {
         internal static string lgTargetRateAlt {
             get {
                 return ResourceManager.GetString("lgTargetRateAlt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Time.
-        /// </summary>
-        internal static string lgTime {
-            get {
-                return ResourceManager.GetString("lgTime", resourceCulture);
             }
         }
         

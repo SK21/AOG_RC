@@ -1,3 +1,5 @@
+#include <SPI.h>
+#include <Adafruit_MCP23008.h>
 #include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
 #include <Adafruit_MCP23XXX.h>
@@ -10,8 +12,8 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  13-Jan-2023"
-const int16_t InoID = 5300;
+# define InoDescription "RCnano  :  27-Jan-2023"
+const int16_t InoID = 4000;
 int16_t StoredID;
 
 # define UseEthernet 1
@@ -22,8 +24,8 @@ struct ModuleConfig    // 5 bytes
 	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
 	uint8_t RelayOnSignal = 0;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
-	uint8_t SensorCount = 1;        // up to 2 sensors
-	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
+	uint8_t SensorCount = 2;        // up to 2 sensors
+	uint8_t	IPpart3 = 3;			// IP address, 3rd octet
 	uint8_t Flow1 = 2;
 	uint8_t Flow2 = 3;
 	uint8_t Dir1 = 4;
@@ -97,17 +99,14 @@ float UPM[2];   // UPM rate
 int pwmSetting[2];
 
 // PID
-byte PIDkp[] = { 20, 20 };
-byte PIDki[] = { 0,0 };
-byte PIDminPWM[] = { 50, 50 };
-byte PIDLowMax[] = { 100, 100 };
-byte PIDHighMax[] = { 255, 255 };
-byte PIDdeadband[] = { 3, 3 };
-byte PIDbrakePoint[] = { 20, 20 };
-byte AdjustTime[2];
+float PIDkp[2];
+float PIDki[2];
+float PIDkd[2];
+byte MinPWM[2];
+byte MaxPWM[2];
 
 byte InCommand[] = { 0, 0 };		// command byte from RateController
-byte ControlType[] = { 0, 0 };  // 0 standard, 1 Fast Close, 2 Motor, 3 Motor/weight, 4 fan
+byte ControlType[] = { 0, 0 };		// 0 standard, 1 Fast Close, 2 Motor, 3 Motor/weight, 4 fan
 
 unsigned long TotalPulses[2];
 unsigned long CommTime[2];
@@ -144,6 +143,9 @@ bool MasterOn[2];
 bool IOexpanderFound;
 uint8_t ErrorCount;
 byte PGNlength;
+
+byte BrakePoint = 30;	// %
+byte Deadband = 3;		// %
 
 void setup()
 {
@@ -304,7 +306,9 @@ void loop()
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			FlowEnabled[i] = (millis() - CommTime[i] < 4000)
-				&& ((RateSetting[i] > 0 && MasterOn[i]) || (ControlType[i] == 4));
+				&& ((RateSetting[i] > 0 && MasterOn[i])
+					|| ((ControlType[i] == 4) && (RateSetting[i] > 0))
+						|| (!AutoOn && MasterOn[i]));
 		}
 
 		CheckRelays();
@@ -368,14 +372,12 @@ void AutoControl()
 		case 3:
 		case 4:
 			// motor control
-			pwmSetting[i] = ControlMotor(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i],
-				PIDHighMax[i], PIDdeadband[i], i);
+			pwmSetting[i] = PIDmotor(PIDkp[i], PIDki[i], PIDkd[i], rateError[i], RateSetting[i], MinPWM[i], MaxPWM[i], i);
 			break;
 
 		default:
 			// valve control
-			pwmSetting[i] = DoPID(PIDkp[i], rateError[i], RateSetting[i], PIDminPWM[i], PIDLowMax[i],
-				PIDHighMax[i], PIDbrakePoint[i], PIDdeadband[i], i, PIDki[i]);
+			pwmSetting[i] = PIDvalve(PIDkp[i], PIDki[i], PIDkd[i], rateError[i], RateSetting[i], MinPWM[i], MaxPWM[i], i);
 			break;
 		}
 	}
@@ -385,40 +387,7 @@ void ManualControl()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		rateError[i] = RateSetting[i] - UPM[i];
-
-		if (millis() - ManualLast[i] > 1000)
-		{
-			ManualLast[i] = millis();
-
-			// adjust rate
-			if (RateSetting[i] == 0) RateSetting[i] = 1; // to make FlowEnabled
-
-			switch (ControlType[i])
-			{
-			case 2:
-			case 3:
-			case 4:
-				// motor control
-				if (ManualAdjust[i] > 0)
-				{
-					pwmSetting[i] *= 1.10;
-					if (pwmSetting[i] < 1) pwmSetting[i] = PIDminPWM[i];
-					if (pwmSetting[i] > 255) pwmSetting[i] = 255;
-				}
-				else if (ManualAdjust[i] < 0)
-				{
-					pwmSetting[i] *= 0.90;
-					if (pwmSetting[i] < PIDminPWM[i]) pwmSetting[i] = 0;
-				}
-				break;
-
-			default:
-				// valve control
-				pwmSetting[i] = ManualAdjust[i];
-				break;
-			}
-		}
+		pwmSetting[i] = ManualAdjust[i];
 	}
 }
 

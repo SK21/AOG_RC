@@ -25,6 +25,7 @@ namespace RateController
         private readonly FormStart mf;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[21];
+        private bool[] SWlast = new bool[21];
 
         public PGN32618(FormStart CalledFrom)
         {
@@ -33,6 +34,7 @@ namespace RateController
         }
 
         public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
+        public bool[] Switches { get { return SW; } }
 
         public class SwitchPGNargs : EventArgs
         {
@@ -69,9 +71,22 @@ namespace RateController
             }
             if (Result)
             {
-                SwitchPGNargs args = new SwitchPGNargs();
-                args.Switches = SW;
-                SwitchPGNreceived?.Invoke(this, args);
+                for (int k = 0; k < SW.Length; k++)
+                {
+                    if ((SW[k] != SWlast[k]) || SW[3] || SW[4])   // check if rate up or rate down is being held on
+                    {
+                        // check if switches have changed and raise event
+                        SwitchPGNargs args = new SwitchPGNargs();
+                        args.Switches = SW;
+                        SwitchPGNreceived?.Invoke(this, args);
+
+                        for (int j = 0; j < SW.Length; j++)
+                        {
+                            SWlast[j] = SW[j];
+                        }
+                        break;
+                    }
+                }
             }
             return Result;
         }
@@ -138,6 +153,23 @@ namespace RateController
             SwitchPGNargs args = new SwitchPGNargs();
             args.Switches = SW;
             SwitchPGNreceived?.Invoke(this, args);
+
+            // turn off momentary switches
+            switch (ID)
+            {
+                case SwIDs.Auto:
+                case SwIDs.MasterOn:
+                case SwIDs.MasterOff:
+                case SwIDs.RateUp:
+                case SwIDs.RateDown:
+                    SW[1] = false;
+                    SW[2] = false;
+                    SW[3] = false;
+                    SW[4] = false;
+                    args.Switches = SW;
+                    SwitchPGNreceived?.Invoke(this, args);
+                    break;
+            }
         }
     }
 }

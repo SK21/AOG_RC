@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Windows.Forms.VisualStyles;
+using System.Globalization;
 
 namespace RateController
 {
@@ -20,7 +20,7 @@ namespace RateController
         public clsArduino VirtualNano;
         private double CalPWMave;
         private double cCalEnd;
-        private byte cCalPWM;
+        private byte cManualPWM;
         private double cCalStart;
         private ControlTypeEnum cControlType = 0;
         private int cCountsRev;
@@ -28,7 +28,6 @@ namespace RateController
         private bool cDoCal;
         private double cHectaresPerMinute;
         private bool cLogRate;
-        private double cManualAdjust = 0;
         private double cMeterCal = 0;
         private double cMinUPM;
         private int cModID;
@@ -36,7 +35,7 @@ namespace RateController
         private double Coverage = 0;
         private int cProductID;
         private string cProductName = "";
-        private string cQuantityDescription = "Litres";
+        private string cQuantityDescription = "Lbs";
         private double cRateAlt = 100;
         private double cRateSet = 0;
         private double cScaleCountsCal;
@@ -48,7 +47,6 @@ namespace RateController
 
         private int cSenID;
         private int cSerialPort;
-        private SimType cSimulationType = 0;
         private double cTankStart = 0;
         private double cUnitsApplied = 0;
         private double CurrentMinutes;
@@ -58,7 +56,6 @@ namespace RateController
         private bool cUseOffRateAlarm;
         private byte cVariableRate = 0;
         private byte cWifiStrength;
-        private double cWorkingWidth_cm;
         private double LastAccQuantity = 0;
         private double LastScaleCounts = 0;
         private DateTime LastUpdateTime;
@@ -107,12 +104,14 @@ namespace RateController
             }
         }
 
-        public byte CalPWM
+        public int ManualPWM
         {
-            get { return cCalPWM; }
+            get { return cManualPWM; }
             set
             {
-                cCalPWM = value;
+                if (value < 0) cManualPWM = 0;
+                else if (value > 255) cManualPWM = 255;
+                else cManualPWM = (byte)value;
             }
         }
 
@@ -139,7 +138,17 @@ namespace RateController
 
         public ControlTypeEnum ControlType
         {
-            get { return cControlType; }
+            get
+            { 
+                if(cProductID> mf.MaxProducts - 3) 
+                {
+                    return ControlTypeEnum.Fan;
+                }
+                else
+                {
+                    return cControlType;
+                }
+            }
             set
             {
                 if (cProductID > mf.MaxProducts - 3)
@@ -189,14 +198,11 @@ namespace RateController
         public bool EnableProdDensity
         { get { return cEnableProdDensity;} set { cEnableProdDensity = value; } }
 
-        public int ProductID
+        public int ID
         { get { return cProductID; } }
 
         public bool LogRate
         { get { return cLogRate; } set { cLogRate = value; } }
-
-        public double ManualAdjust
-        { get { return cManualAdjust; } set { cManualAdjust = value; } }
 
         public double MeterCal
         {
@@ -258,35 +264,26 @@ namespace RateController
             }
         }
 
-        public byte PIDbrakepoint
-        { get { return PIDtoArduino.BrakePoint; } set { PIDtoArduino.BrakePoint = value; } }
+        public byte PIDmax
+        { get { return PIDtoArduino.MaxPWM; } set { PIDtoArduino.MaxPWM = value; } }
 
-        public byte PIDdeadband
-        { get { return PIDtoArduino.DeadBand; } set { PIDtoArduino.DeadBand = value; } }
-
-        public byte PIDHighMax
-        { get { return PIDtoArduino.HighMax; } set { PIDtoArduino.HighMax = value; } }
-
-        public byte PIDki
+        public double PIDki
         { get { return PIDtoArduino.KI; } set { PIDtoArduino.KI = value; } }
 
-        public byte PIDkp
+        public double PIDkp
         { get { return PIDtoArduino.KP; } set { PIDtoArduino.KP = value; } }
 
-        public byte PIDLowMax
-        { get { return PIDtoArduino.LowMax; } set { PIDtoArduino.LowMax = value; } }
+        public double PIDkd
+        { get { return PIDtoArduino.KD; } set { PIDtoArduino.KD = value; } }
 
-        public byte PIDminPWM
+        public byte PIDmin
         { get { return PIDtoArduino.MinPWM; } set { PIDtoArduino.MinPWM = value; } }
-
-        public byte PIDTimed
-        { get { return PIDtoArduino.TimedAdjustment; } set { PIDtoArduino.TimedAdjustment = value; } }
 
         public string ProductName
         {
             get
             {
-                if(cControlType==ControlTypeEnum.Fan)
+                if (cControlType == ControlTypeEnum.Fan)
                 {
                     int tmp = 3 - (mf.MaxProducts - cProductID);
                     cProductName = "Fan " + tmp.ToString();
@@ -329,7 +326,7 @@ namespace RateController
                 }
                 else if (value.Length == 0)
                 {
-                    cQuantityDescription = "Litres";
+                    cQuantityDescription = "Lbs";
                 }
                 else
                 {
@@ -409,9 +406,6 @@ namespace RateController
                 }
             }
         }
-
-        public SimType SimulationType
-        { get { return cSimulationType; } set { cSimulationType = value; } }
 
         public double TankStart
         {
@@ -518,6 +512,7 @@ namespace RateController
         {
             int tmp;
             byte val;
+            double TempDB;
 
             double.TryParse(mf.Tls.LoadProperty("Coverage" + IDname), out Coverage);
             byte.TryParse(mf.Tls.LoadProperty("CoverageUnits" + IDname), out CoverageUnits);
@@ -527,54 +522,18 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("LastAccQuantity" + IDname), out LastAccQuantity);
 
             cQuantityDescription = mf.Tls.LoadProperty("QuantityDescription" + IDname);
-            if (cQuantityDescription == "") cQuantityDescription = "Litres";
+            if (cQuantityDescription == "") cQuantityDescription = "Lbs";
 
             double.TryParse(mf.Tls.LoadProperty("RateSet" + IDname), out cRateSet);
-
-            string StrVal = mf.Tls.LoadProperty("RateAlt" + IDname);
-            if (StrVal != "") double.TryParse(StrVal, out cRateAlt);
+            double.TryParse(mf.Tls.LoadProperty("RateAlt" + IDname), out cRateAlt);
 
             double.TryParse(mf.Tls.LoadProperty("cProdDensity" + IDname), out cProdDensity);
             bool.TryParse(mf.Tls.LoadProperty("cEnableProdDensity" + IDname), out cEnableProdDensity);
 
             double.TryParse(mf.Tls.LoadProperty("FlowCal" + IDname), out cMeterCal);
             double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out TankSize);
-            Enum.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), true, out cControlType);
-            Enum.TryParse(mf.Tls.LoadProperty("cSimulationType" + IDname), true, out cSimulationType);
 
             cProductName = mf.Tls.LoadProperty("ProductName" + IDname);
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("KP" + IDname), out val);
-            PIDtoArduino.KP = val;
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("KI" + IDname), out val);
-            PIDtoArduino.KI = val;
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("PIDMinPWM" + IDname), out val);
-            PIDtoArduino.MinPWM = val;
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("PIDLowMax" + IDname), out val);
-            PIDtoArduino.LowMax = val;
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("PIDHighMax" + IDname), out val);
-            PIDtoArduino.HighMax = val;
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("PIDdeadband" + IDname), out val);
-            PIDtoArduino.DeadBand = val;
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("PIDbrakepoint" + IDname), out val);
-            PIDtoArduino.BrakePoint = val;
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("TimedAdjustment" + IDname), out val);
-            PIDtoArduino.TimedAdjustment = val;
 
             bool.TryParse(mf.Tls.LoadProperty("UseMultiPulse" + IDname), out cUseMultiPulse);
             int.TryParse(mf.Tls.LoadProperty("CountsRev" + IDname), out cCountsRev);
@@ -597,11 +556,40 @@ namespace RateController
             cSerialPort = tmp;
 
             val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("CalPWM" + IDname), out val);
-            cCalPWM = val;
+            byte.TryParse(mf.Tls.LoadProperty("ManualPWM" + IDname), out val);
+            cManualPWM = val;
 
             double.TryParse(mf.Tls.LoadProperty("ScaleUnitsCal" + IDname), out cScaleUnitsCal);
             double.TryParse(mf.Tls.LoadProperty("ScaleTare" + IDname), out cScaleTare);
+
+            TempDB = 0;
+            double.TryParse(mf.Tls.LoadProperty("KP" + IDname), out TempDB);
+            PIDtoArduino.KP = TempDB;
+
+            TempDB = 0;
+            double.TryParse(mf.Tls.LoadProperty("KI" + IDname), out TempDB);
+            PIDtoArduino.KI = TempDB;
+
+            TempDB = 0;
+            double.TryParse(mf.Tls.LoadProperty("KD" + IDname), out TempDB);
+            PIDtoArduino.KD = TempDB;
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("MinPWM" + IDname), out val);
+            PIDtoArduino.MinPWM = val;
+
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("MaxPWM" + IDname), out val);
+            PIDtoArduino.MaxPWM = val;
+
+            if (ID > mf.MaxProducts - 3)
+            {
+                cControlType = ControlTypeEnum.Fan;
+            }
+            else
+            {
+                Enum.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), true, out cControlType);
+            }
         }
 
         public double PWM()
@@ -676,19 +664,8 @@ namespace RateController
             mf.Tls.SaveProperty("FlowCal" + IDname, cMeterCal.ToString());
             mf.Tls.SaveProperty("TankSize" + IDname, TankSize.ToString());
             mf.Tls.SaveProperty("ValveType" + IDname, cControlType.ToString());
-            mf.Tls.SaveProperty("cSimulationType" + IDname, cSimulationType.ToString());
 
             mf.Tls.SaveProperty("ProductName" + IDname, cProductName);
-
-            mf.Tls.SaveProperty("KP" + IDname, PIDtoArduino.KP.ToString());
-            mf.Tls.SaveProperty("KI" + IDname, PIDtoArduino.KI.ToString());
-            mf.Tls.SaveProperty("PIDMinPWM" + IDname, PIDtoArduino.MinPWM.ToString());
-            mf.Tls.SaveProperty("PIDLowMax" + IDname, PIDtoArduino.LowMax.ToString());
-
-            mf.Tls.SaveProperty("PIDHighMax" + IDname, PIDtoArduino.HighMax.ToString());
-            mf.Tls.SaveProperty("PIDdeadband" + IDname, PIDtoArduino.DeadBand.ToString());
-            mf.Tls.SaveProperty("PIDbrakepoint" + IDname, PIDtoArduino.BrakePoint.ToString());
-            mf.Tls.SaveProperty("TimedAdjustment" + IDname, PIDtoArduino.TimedAdjustment.ToString());
 
             mf.Tls.SaveProperty("UseMultiPulse" + IDname, cUseMultiPulse.ToString());
             mf.Tls.SaveProperty("CountsRev" + IDname, cCountsRev.ToString());
@@ -702,10 +679,16 @@ namespace RateController
             mf.Tls.SaveProperty("MinUPM" + IDname, cMinUPM.ToString());
             mf.Tls.SaveProperty("VariableRate" + IDname, cVariableRate.ToString());
             mf.Tls.SaveProperty("SerialPort" + IDname, cSerialPort.ToString());
-            mf.Tls.SaveProperty("CalPWM" + IDname, cCalPWM.ToString());
+            mf.Tls.SaveProperty("ManualPWM" + IDname, cManualPWM.ToString());
 
             mf.Tls.SaveProperty("ScaleUnitsCal" + IDname, cScaleUnitsCal.ToString());
             mf.Tls.SaveProperty("ScaleTare" + IDname, cScaleTare.ToString());
+
+            mf.Tls.SaveProperty("KP" + IDname, PIDtoArduino.KP.ToString());
+            mf.Tls.SaveProperty("KI" + IDname, PIDtoArduino.KI.ToString());
+            mf.Tls.SaveProperty("KD" + IDname, PIDtoArduino.KD.ToString());
+            mf.Tls.SaveProperty("MinPWM" + IDname, PIDtoArduino.MinPWM.ToString());
+            mf.Tls.SaveProperty("MaxPWM" + IDname, PIDtoArduino.MaxPWM.ToString());
         }
 
         public void SendPID()
@@ -718,7 +701,7 @@ namespace RateController
             bool Result = false;    // return true if there is good comm
             try
             {
-                if (RealNano && SimulationType == SimType.VirtualNano)
+                if (RealNano && mf.SimMode == SimType.VirtualNano)
                 {
                     // block PGN32613 from real nano when simulation is with virtual nano
                 }
@@ -783,9 +766,35 @@ namespace RateController
 
         public double Speed()
         {
-            if (mf.UseInches)
+            if (mf.SimMode == SimType.Speed)
             {
-                return mf.AutoSteerPGN.Speed_KMH() * 0.621371;
+                return mf.SimSpeed;
+            }
+            else
+            {
+                if (mf.UseInches)
+                {
+                    return mf.AutoSteerPGN.Speed_KMH() * 0.621371;
+                }
+                else
+                {
+                    return mf.AutoSteerPGN.Speed_KMH();
+                }
+            }
+        }
+       
+        private double KMH()
+        {
+            if (mf.SimMode == SimType.Speed)
+            {
+                if (mf.UseInches)
+                {
+                    return mf.SimSpeed / 0.621371;  // convert mph back to kmh
+                }
+                else
+                {
+                    return mf.SimSpeed;
+                }
             }
             else
             {
@@ -811,10 +820,6 @@ namespace RateController
         public double TargetUPM() // returns units per minute set rate
         {
             double V = 0;
-            if(cProductID==1)
-                {
-                V = 0;
-            }
             switch (CoverageUnits)
             {
                 case 0:
@@ -848,7 +853,7 @@ namespace RateController
         {
             try
             {
-                if (SimulationType != SimType.VirtualNano)  // block pgns from real nano when simulation is with virtual nano
+                if (mf.SimMode != SimType.VirtualNano)  // block pgns from real nano when simulation is with virtual nano
                 {
                     switch (PGN)
                     {
@@ -883,9 +888,10 @@ namespace RateController
 
         public void Update()
         {
-            DateTime UpdateStartTime; 
-            
-            if (ArduinoModule.ModuleSending() && (mf.AutoSteerPGN.Connected() || CoverageUnits > 1))
+            DateTime UpdateStartTime;
+
+            if (ArduinoModule.ModuleSending() && (mf.AutoSteerPGN.Connected() || CoverageUnits > 1)
+                || mf.SimMode == SimType.Speed)
             {
                 if (!SwitchIDsSent)
                 {
@@ -905,18 +911,7 @@ namespace RateController
                 }
 
                 // update worked area
-                CurrentWorkedArea_Hc = 0;
-                cWorkingWidth_cm = 0;
-
-                for (int i = 0; i < 16; i++)
-                {
-                    if (mf.Sections.Item(i).IsON)
-                    {
-                        cWorkingWidth_cm += mf.Sections.Item(i).Width_cm;
-                    }
-                }
-
-                cHectaresPerMinute = (cWorkingWidth_cm / 100.0) * mf.AutoSteerPGN.Speed_KMH() / 600.0;
+                cHectaresPerMinute = mf.Sections.WorkingWidth(false) * KMH()/ 600.0;
                 CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
 
                 //coverage
@@ -971,7 +966,7 @@ namespace RateController
             {
                 if (cScaleUnitsCal > 0)
                 {
-                    if (cSimulationType == SimType.VirtualNano)
+                    if (mf.SimMode == SimType.VirtualNano)
                     {
                         Result = mf.Tls.NoisyData(PWM() * MeterCal , VirtualNano.ErrorRange);
                     }
@@ -985,11 +980,6 @@ namespace RateController
             {
                 Result = ArduinoModule.UPM();
             }
-
-            //added this back in. and now I am taking it back out. The only place the density needs to be added back in is
-            // for the displayed rate on the form start.
-            //if (cEnableProdDensity && cProdDensity > 0) Result *= cProdDensity;
-
             return Result;
         }
 
@@ -1005,28 +995,21 @@ namespace RateController
             }
         }
 
-        public double Width()
-        {
-            if (mf.UseInches)
-            {
-                return (cWorkingWidth_cm / 100) * 3.28;
-            }
-            else
-            {
-                return (cWorkingWidth_cm / 100);
-            }
-        }
-
         public double WorkRate()
         {
-            if (mf.UseInches)
+            double Result = 0;
+            if (mf.Sections.WorkingWidth(true) > 0)
             {
-                return cHectaresPerMinute * 2.47105 * 60;
+                if (mf.UseInches)
+                {
+                    Result = cHectaresPerMinute * 2.47105 * 60.0;
+                }
+                else
+                {
+                    Result = cHectaresPerMinute * 60.0;
+                }
             }
-            else
-            {
-                return cHectaresPerMinute * 60;
-            }
+            return Result;
         }
 
         private void GetScaleCountsCal()

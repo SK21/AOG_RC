@@ -55,7 +55,7 @@ namespace RateController
 
         public bool ModuleReceiving()
         {
-            if (Prod.SimulationType == SimType.VirtualNano)
+            if (Prod.mf.SimMode == SimType.VirtualNano)
             {
                 return true;
             }
@@ -67,7 +67,7 @@ namespace RateController
 
         public bool ModuleSending()
         {
-            if (Prod.SimulationType == SimType.VirtualNano)
+            if (Prod.mf.SimMode == SimType.VirtualNano)
             {
                 return true;
             }

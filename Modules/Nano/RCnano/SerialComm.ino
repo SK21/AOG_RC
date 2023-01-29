@@ -111,7 +111,7 @@ void ReceiveSerial()
 			//          - bit 7         Calibration On
 			//12    power relay Lo      list of power type relays 0-7
 			//13    power relay Hi      list of power type relays 8-15
-			//14	Cal PWM		calibration pwm
+			//14	manual pwm
 			//15	CRC
 			PGNlength = 16;
 
@@ -136,6 +136,14 @@ void ReceiveSerial()
 							RelayLo = SerialPacket[3];
 							RelayHi = SerialPacket[4];
 
+							// rate setting, 1000 times actual
+							uint32_t RateSet = SerialPacket[5] | (uint32_t)SerialPacket[6] << 8 | (uint32_t)SerialPacket[7] << 16;
+							RateSetting[SensorID] = (float)(RateSet * 0.001);
+
+							// Meter Cal, 1000 times actual
+							uint32_t Temp = SerialPacket[8] | (uint32_t)SerialPacket[9] << 8 | (uint32_t)SerialPacket[10] << 16;
+							MeterCal[SensorID] = (float)(Temp * 0.001);
+
 							// command byte
 							InCommand[SensorID] = SerialPacket[11];
 							if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
@@ -149,25 +157,11 @@ void ReceiveSerial()
 							UseMultiPulses[SensorID] = ((InCommand[SensorID] & 32) == 32);
 							AutoOn = ((InCommand[SensorID] & 64) == 64);
 
-							// rate setting, 10 times actual
-							uint32_t RateSet = SerialPacket[5] | (uint32_t)SerialPacket[6] << 8 | (uint32_t)SerialPacket[7] << 16;
-
-							if (AutoOn)
-							{
-								RateSetting[SensorID] = (float)(RateSet * 0.001);
-							}
-							else
-							{
-								ManualAdjust[SensorID] = (float)(RateSet * 0.001);
-							}
-
-							// Meter Cal, 1000 times actual
-							uint32_t Temp = SerialPacket[8] | (uint32_t)SerialPacket[9] << 8 | (uint32_t)SerialPacket[10] << 16;
-							MeterCal[SensorID] = (float)(Temp * 0.001);
-
 							// power relays
 							PowerRelayLo = SerialPacket[12];
 							PowerRelayHi = SerialPacket[13];
+
+							ManualAdjust[SensorID] = SerialPacket[14];
 
 							CommTime[SensorID] = millis();
 						}
@@ -177,8 +171,27 @@ void ReceiveSerial()
 			break;
 
 		case 32616:
-			// PID to Arduino from RateController, 12 bytes
-			PGNlength = 12;
+			// PID to Arduino from RateController
+			// 0    104
+			// 1    127
+			// 2    Mod/Sen ID     0-15/0-15
+			// 3    KP 0
+			// 4    KP 1
+			// 5    KP 2
+			// 6    KP 3
+			// 7    KI 0
+			// 8    KI 1
+			// 9    KI 2
+			// 10   KI 3
+			// 11   KD 0
+			// 12   KD 1
+			// 13   KD 2
+			// 14   KD 3
+			// 15   MinPWM
+			// 16   MaxPWM
+			// 17   CRC
+
+			PGNlength = 18;
 
 			if (Serial.available() > PGNlength - 3)
 			{
@@ -198,14 +211,17 @@ void ReceiveSerial()
 						byte SensorID = ParseSenID(SerialPacket[2]);
 						if (SensorID < MDL.SensorCount)
 						{
-							PIDkp[SensorID] = SerialPacket[3];
-							PIDminPWM[SensorID] = SerialPacket[4];
-							PIDLowMax[SensorID] = SerialPacket[5];
-							PIDHighMax[SensorID] = SerialPacket[6];
-							PIDdeadband[SensorID] = SerialPacket[7];
-							PIDbrakePoint[SensorID] = SerialPacket[8];
-							AdjustTime[SensorID] = SerialPacket[9];
-							PIDki[SensorID] = SerialPacket[10];
+							uint32_t tmp = SerialPacket[3] | (uint32_t)SerialPacket[4] << 8 | (uint32_t)SerialPacket[5] << 16 | (uint32_t)SerialPacket[6] << 24;
+							PIDkp[SensorID] = (float)(tmp * 0.0001);
+
+							tmp = SerialPacket[7] | (uint32_t)SerialPacket[8] << 8 | (uint32_t)SerialPacket[9] << 16 | (uint32_t)SerialPacket[10] << 24;
+							PIDki[SensorID] = (float)(tmp * 0.0001);
+
+							tmp = SerialPacket[11] | (uint32_t)SerialPacket[12] << 8 | (uint32_t)SerialPacket[13] << 16 | (uint32_t)SerialPacket[14] << 24;
+							PIDkd[SensorID] = (float)(tmp * 0.0001);
+
+							MinPWM[SensorID] = SerialPacket[15];
+							MaxPWM[SensorID] = SerialPacket[16];
 
 							CommTime[SensorID] = millis();
 						}

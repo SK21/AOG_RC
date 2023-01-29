@@ -205,7 +205,10 @@ void SendHelloReply()
 
 void SendScanIDreply()
 {
-    uint8_t scanReply[] = { 128, 129, MDL.IP3, 203, 4, MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3, 23 };
+    IPAddress rem_ip = UDPsteering.remoteIP();
+
+    uint8_t scanReply[] = { 128, 129, MDL.IP3, 203, 7, MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3,
+                            rem_ip[0],rem_ip[1],rem_ip[2], 23 };
 
     //checksum
     int16_t CK_A = 0;

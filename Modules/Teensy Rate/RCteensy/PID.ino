@@ -1,87 +1,71 @@
-bool PauseAdjust[MaxProductCount];
-unsigned long CurrentAdjustTime[MaxProductCount];
-float Integral;
 
-int DoPID(byte ID)
+unsigned long CurrentAdjustTime[MaxProductCount];
+float ErrorPercentLast[2];
+float Integral;
+float LastPWM[MaxProductCount];
+
+int PIDvalve(byte ID)
 {
     int Result = 0;
-    if (!PauseAdjust[ID] || Sensor[ID].AdjustTime == 0) // AdjustTime==0 disables timed adjustment
+    if (Sensor[ID].FlowEnabled)
     {
-        // adjusting rate
-        if (Sensor[ID].FlowEnabled)
-        {
-            float ErrorPercent = abs(Sensor[ID].RateError / Sensor[ID].RateSetting);
-            float ErrorBrake = (float)((float)(Sensor[ID].BrakePoint / 100.0));
-            float Max = (float)Sensor[ID].HighMax;
+        float ErrorPercent = abs(Sensor[ID].RateError / Sensor[ID].RateSetting);
+        float ErrorBrake = (float)((float)(Sensor[ID].BrakePoint / 100.0));
+        float Max = (float)Sensor[ID].MaxPWM;
 
-            if (ErrorPercent > ((float)(Sensor[ID].Deadband / 100.0)))
+        if (ErrorPercent > ((float)(Sensor[ID].Deadband / 100.0)))
+        {
+            if (ErrorPercent <= ErrorBrake) Max = Sensor[ID].MinPWM * 3.0;
+
+            Result = (int)((Sensor[ID].KP * Sensor[ID].RateError) + (Integral * Sensor[ID].KI / 255.0));
+
+            bool IsPositive = (Result > 0);
+            Result = abs(Result);
+
+            if (Result != 0)
             {
-                if (ErrorPercent <= ErrorBrake) Max = Sensor[ID].LowMax;
-
-                Result = (int)((Sensor[ID].KP * Sensor[ID].RateError) + (Integral * Sensor[ID].KI / 255.0));
-
-                bool IsPositive = (Result > 0);
-                Result = abs(Result);
-
-                if (Result != 0)
-                {
-                    // limit integral size
-                    if ((Integral / Result) < 4) Integral += Sensor[ID].RateError / 3.0;
-                }
-
-                if (Result > Max) Result = (int)Max;
-                else if (Result < Sensor[ID].MinPWM) Result = (int)Sensor[ID].MinPWM;
-
-                if (!IsPositive) Result *= -1;
+                // limit integral size
+                if ((Integral / Result) < 4) Integral += Sensor[ID].RateError / 3.0;
             }
-            else
-            {
-                // reset time since no adjustment was made
-                CurrentAdjustTime[ID] = millis();
 
-                Integral = 0;
-            }
-        }
+            if (Result > Max) Result = (int)Max;
+            else if (Result < Sensor[ID].MinPWM) Result = (int)Sensor[ID].MinPWM;
 
-        if ((millis() - CurrentAdjustTime[ID]) > Sensor[ID].AdjustTime)
-        {
-            // switch state
-            CurrentAdjustTime[ID] = millis();
-            PauseAdjust[ID] = !PauseAdjust[ID];
+            if (!IsPositive) Result *= -1;
         }
-    }
-    else
-    {
-        // pausing adjustment, 3 X AdjustTime
-        if ((millis() - CurrentAdjustTime[ID]) > Sensor[ID].AdjustTime * 3)
+        else
         {
-            // switch state
-            CurrentAdjustTime[ID] = millis();
-            PauseAdjust[ID] = !PauseAdjust[ID];
+            Integral = 0;
         }
     }
     return Result;
 }
 
-float LastPWM[MaxProductCount];
-int ControlMotor(byte ID)
+int PIDmotor(byte ID)
 {
     float Result = 0;
     float ErrorPercent = 0;
 
-    if (Sensor[ID].FlowEnabled && Sensor[ID].RateSetting > 0)
+    if (Sensor[ID].FlowEnabled)
     {
         Result = LastPWM[ID];
-        ErrorPercent = abs(Sensor[ID].RateError / Sensor[ID].RateSetting) * 100.0;
-        if (ErrorPercent > (float)Sensor[ID].Deadband)
-        {
-            Result += ((float)Sensor[ID].KP / 255.0) * Sensor[ID].RateError * 5.0;
+        ErrorPercent = Sensor[ID].RateError / Sensor[ID].RateSetting * 100.0;
 
-            if (Result > (float)Sensor[ID].HighMax) Result = (float)Sensor[ID].HighMax;
-            if (Result < Sensor[ID].MinPWM) Result = (float)Sensor[ID].MinPWM;
+        if (abs(ErrorPercent) > (float)Sensor[ID].Deadband)
+        {
+            Result += Sensor[ID].KP * ErrorPercent;
+
+            unsigned long elapsedTime = millis() - CurrentAdjustTime[ID];
+            CurrentAdjustTime[ID] = millis();
+
+            Result += (float)Sensor[ID].KD * (ErrorPercent - ErrorPercentLast[ID]) / (elapsedTime * 0.001) * 0.001;
+
+            ErrorPercentLast[ID] = ErrorPercent;
+
+            if (Result < Sensor[ID].MinPWM) Result = Sensor[ID].MinPWM;
+            if (Result > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM;
         }
     }
-
     LastPWM[ID] = Result;
     return (int)Result;
 }

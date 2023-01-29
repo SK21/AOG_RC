@@ -1,88 +1,98 @@
-bool AdjustState[] = { true,true,true,true,true }; // false - pause adjusting, true - adjust
-unsigned long CurrentAdjustTime[2];
+
+unsigned long CurrentAdjustTime[2]; 
+float ErrorPercentLast[2];
+float ErrorPercentCum[2];
 float Integral;
+float LastPWM[2];
 
-int DoPID(byte sKP, float sError, float sSetPoint, byte sMinPWM,
-    byte sLowMax, byte sHighMax, byte sBrakePoint, byte sDeadband,
-    byte SensorID, byte sKI)
+int PIDvalve(float sKP, float sKI, float sKD, float sError, float sSetPoint, byte sMinPWM, byte sMaxPWM, byte SensorID)
 {
-    int Result = 0;
-    if (AdjustState[SensorID] || AdjustTime[SensorID] == 0) // AdjustTime==0 disables timed adjustment
+    float Result = 0;
+
+    if (FlowEnabled[SensorID] && sSetPoint > 0)
     {
-        // adjusting rate
-        if (FlowEnabled[SensorID])
+        float ErrorPercent = sError / sSetPoint * 100.0;
+
+        if (abs(ErrorPercent) > (float)Deadband)
         {
-            float ErrorPercent = abs(sError / sSetPoint);
-            float ErrorBrake = (float)((float)(sBrakePoint / 100.0));
-            float Max = (float)sHighMax;
+            Result = (sKP * ErrorPercent) + Integral;
 
-            if (ErrorPercent > ((float)(sDeadband / 100.0)))
+            unsigned long elapsedTime = millis() - CurrentAdjustTime[SensorID];
+            CurrentAdjustTime[SensorID] = millis();
+
+            ErrorPercentCum[SensorID] += ErrorPercent * (elapsedTime * 0.001);
+
+            Integral += sKI * ErrorPercentCum[SensorID];
+            if (Integral > 50) Integral = 50;
+            if (Integral < -50) Integral = -50;
+
+            Result += Integral;
+
+            //add in derivative term to dampen effect of the correction.
+            Result += (float)sKD * (ErrorPercent - ErrorPercentLast[SensorID]) / (elapsedTime * 0.001) * 0.001;
+
+            ErrorPercentLast[SensorID] = ErrorPercent;
+
+            bool IsPositive = (Result > 0);
+            Result = abs(Result);
+
+            if (Result < sMinPWM)
             {
-                if (ErrorPercent <= ErrorBrake) Max = sLowMax;
-
-                Result = (int)((sKP * sError) + (Integral * sKI / 255.0));
-
-                bool IsPositive = (Result > 0);
-                Result = abs(Result);
-
-                if (Result != 0)
-                {
-                    // limit integral size
-                    if ((Integral / Result) < 4) Integral += sError / 3.0;
-                }
-
-                if (Result > Max) Result = (int)Max;
-                else if (Result < sMinPWM) Result = sMinPWM;
-
-                if (!IsPositive) Result *= -1;
+                Result = sMinPWM;
             }
             else
             {
-                // reset time since no adjustment was made
-                CurrentAdjustTime[SensorID] = millis();
-
-                Integral = 0;
+                if (ErrorPercent < BrakePoint)
+                {
+                    if (Result > sMinPWM * 3.0) Result = sMinPWM * 3.0;
+                }
+                else
+                {
+                    if (Result > sMaxPWM) Result = sMaxPWM;
+                }
             }
-        }
 
-        if ((millis() - CurrentAdjustTime[SensorID]) > AdjustTime[SensorID])
+            if (!IsPositive) Result *= -1;
+        }
+        else
         {
-            // switch state
-            CurrentAdjustTime[SensorID] = millis();
-            AdjustState[SensorID] = !AdjustState[SensorID];
+            Integral = 0;
         }
     }
-    else
-    {
-        // pausing adjustment, 3 X AdjustTime
-        if ((millis() - CurrentAdjustTime[SensorID]) > AdjustTime[SensorID] * 3)
-        {
-            // switch state
-            CurrentAdjustTime[SensorID] = millis();
-            AdjustState[SensorID] = !AdjustState[SensorID];
-        }
-    }
-    return Result;
+    return (int)Result;
 }
 
-float LastPWM[2];
-int ControlMotor(byte sKP, float sError, float sSetPoint, byte sMinPWM,
-    byte sHighMax, byte sDeadband, byte SensorID)
+int PIDmotor(float sKP, float sKI, float sKD, float sError, float sSetPoint, byte sMinPWM, byte sMaxPWM, byte SensorID)
 {
     float Result = 0;
     float ErrorPercent = 0;
 
-    if (FlowEnabled[SensorID])
+    if (FlowEnabled[SensorID] && sSetPoint > 0)
     {
         Result = LastPWM[SensorID];
-        ErrorPercent = abs(sError / sSetPoint) * 100.0;
-        float Max = (float)sHighMax;
+        ErrorPercent = sError / sSetPoint * 100.0; 
 
-        if (ErrorPercent > (float)sDeadband)
+        if (abs(ErrorPercent) > (float)Deadband)
         {
-            Result += ((float)sKP / 255.0) * sError * 5.0;
+            Result += sKP * ErrorPercent;
 
-            if (Result > Max) Result = Max;
+            unsigned long elapsedTime = millis() - CurrentAdjustTime[SensorID];
+            CurrentAdjustTime[SensorID] = millis();
+
+            ErrorPercentCum[SensorID] += ErrorPercent * (elapsedTime * 0.001);
+
+            Integral += sKI * ErrorPercentCum[SensorID];
+            if (Integral > 50) Integral = 50;
+            if (Integral < -50) Integral = -50;
+
+            Result += Integral;
+
+            //add in derivative term to dampen effect of the correction.
+            Result += (float)sKD * (ErrorPercent - ErrorPercentLast[SensorID]) / (elapsedTime * 0.001) * 0.001;
+
+            ErrorPercentLast[SensorID] = ErrorPercent;
+
+            if (Result > sMaxPWM) Result = (float)sMaxPWM;
             if (Result < sMinPWM) Result = (float)sMinPWM;
         }
     }

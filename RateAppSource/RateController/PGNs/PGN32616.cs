@@ -1,4 +1,7 @@
-﻿namespace RateController
+﻿using System;
+using System.Windows.Forms.VisualStyles;
+
+namespace RateController
 {
     public class PGN32616
     {
@@ -6,120 +9,73 @@
         // 0    104
         // 1    127
         // 2    Mod/Sen ID     0-15/0-15
-        // 3    KP
-        // 4    MinPWM
-        // 5    LowMax
-        // 6    HighMax
-        // 7    Deadband
-        // 8    BrakePoint
-        // 9    Timed Adjustment    0-disabled
-        // 10   KI
-        // 11   CRC
+        // 3    KP 0
+        // 4    KP 1
+        // 5    KP 2
+        // 6    KP 3
+        // 7    KI 0
+        // 8    KI 1
+        // 9    KI 2
+        // 10   KI 3
+        // 11   KD 0
+        // 12   KD 1
+        // 13   KD 2
+        // 14   KD 3
+        // 15   MinPWM
+        // 16   MaxPWM
+        // 17   CRC
 
-        private const byte cByteCount = 12;
+        private const byte cByteCount = 18;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 104;
         private readonly clsProduct Prod;
-        private byte cBrakePoint;
-        private byte cDeadBand;
-        private byte cHighMax;
-        private byte cKP;
-        private byte cKI;
-        private byte cLowMax;
+        private double cKD;
+        private double cKI;
+        private double cKP;
+        private byte cMaxPWM;
         private byte cMinPWM;
-        private byte cTimedAdjustment;
+
+        private UInt32 Temp;
 
         public PGN32616(clsProduct CalledFrom)
         {
             Prod = CalledFrom;
 
-            cKP = 50;
+            cMinPWM = 0;
+            cMaxPWM = 0;
+            cKP = 1;
             cKI = 0;
-            cMinPWM = 30;
-            cLowMax = 75;
-            cHighMax = 100;
-            cDeadBand = 4;
-            cBrakePoint = 20;
-            cTimedAdjustment = 0;
+            cKD = 0;
         }
 
-        public byte BrakePoint
+        public double KD
         {
-            get { return cBrakePoint; }
-            set
-            {
-                if (value <= 100) cBrakePoint = value;
-            }
+            get { return cKD; }
+            set { cKD = value; }
         }
 
-        public byte DeadBand
-        {
-            get { return cDeadBand; }
-            set
-            {
-                if (value <= 100) cDeadBand = value;
-            }
-        }
-
-        public byte HighMax
-        {
-            get { return cHighMax; }
-            set
-            {
-                if (value <= 100) cHighMax = value;
-            }
-        }
-
-        public byte KP
-        {
-            get { return cKP; }
-            set
-            {
-                if (value <= 100) cKP = value;
-            }
-        }
-
-        public byte KI
+        public double KI
         {
             get { return cKI; }
-            set
-            {
-                if (value <= 100) cKI = value;
-            }
+            set { cKI = value; }
         }
 
-        public byte LowMax
+        public double KP
         {
-            get { return cLowMax; }
-            set
-            {
-                if (value <= 100) cLowMax = value;
-            }
+            get { return cKP; }
+            set { cKP = value; }
+        }
+
+        public byte MaxPWM
+        {
+            get { return cMaxPWM; }
+            set { cMaxPWM = value; }
         }
 
         public byte MinPWM
         {
             get { return cMinPWM; }
-            set
-            {
-                if (value <= 100) cMinPWM = value;
-            }
-        }
-
-        public byte TimedAdjustment
-        {
-            get { return cTimedAdjustment; }
-            set
-            {
-                if (value >= 50)
-                {
-                    cTimedAdjustment = value;
-                }
-                else
-                {
-                    cTimedAdjustment = 0;
-                }
-            }
+            set { cMinPWM = value; }
         }
 
         public void Send()
@@ -128,19 +84,35 @@
             Data[0] = HeaderLo;
             Data[1] = HeaderHi;
             Data[2] = Prod.mf.Tls.BuildModSenID(Prod.ModuleID, Prod.SensorID);
-            Data[3] = (byte)(255 * cKP / 100);
-            Data[4] = (byte)(255 * cMinPWM / 100);
-            Data[5] = (byte)(255 * cLowMax / 100);
-            Data[6] = (byte)(255 * cHighMax / 100);
-            Data[7] = cDeadBand;
-            Data[8] = cBrakePoint;
-            Data[9] = cTimedAdjustment;
-            Data[10] = (byte)(255 * cKI / 100);
+
+            // KP
+            Temp = (uint)(cKP * 10000);
+            Data[3] = (byte)Temp;
+            Data[4] = (byte)((UInt32)Temp >> 8);
+            Data[5] = (byte)((UInt32)Temp >> 16);
+            Data[6] = (byte)((UInt32)Temp >> 24);
+
+            // KI
+            Temp = (uint)(cKI * 10000);
+            Data[7] = (byte)Temp;
+            Data[8] = (byte)((UInt32)Temp >> 8);
+            Data[9] = (byte)((UInt32)Temp >> 16);
+            Data[10] = (byte)((UInt32)Temp >> 24);
+
+            // KD
+            Temp = (uint)(cKD * 10000);
+            Data[11] = (byte)Temp;
+            Data[12] = (byte)((UInt32)Temp >> 8);
+            Data[13] = (byte)((UInt32)Temp >> 16);
+            Data[14] = (byte)((UInt32)Temp >> 24);
+
+            Data[15] = MinPWM;
+            Data[16] = MaxPWM;
 
             // CRC
-            Data[11] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
+            Data[17] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
-            if (Prod.SimulationType == SimType.VirtualNano)
+            if (Prod.mf.SimMode == SimType.VirtualNano)
             {
                 Prod.VirtualNano.ReceiveSerial(Data);
             }
