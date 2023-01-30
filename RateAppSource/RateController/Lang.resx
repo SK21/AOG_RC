@@ -433,7 +433,7 @@
     <value>Sensor ID</value>
   </data>
   <data name="lgSensorLocation" xml:space="preserve">
-    <value>Rate Sensor Location</value>
+    <value>Sensor Location</value>
   </data>
   <data name="lgSensorTotalCounts" xml:space="preserve">
     <value>Sensor Counts</value>

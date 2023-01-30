@@ -1325,6 +1325,7 @@ namespace RateController
 
             lbRateSetData.Text = Target.ToString("N1");
             lbRateAppliedData.Text = Applied.ToString("N1");
+            lbFanRPMvalue.Text = Applied.ToString("N0");
 
             if (Target > 0)
             {
@@ -1335,8 +1336,10 @@ namespace RateController
                 if (IsNegative) RateError *= -1;
             }
             lbErrorPercent.Text = RateError.ToString("N1");
+            lbFanErrorValue.Text = RateError.ToString("N1");
 
             lbPWMdata.Text = CurrentProduct.PWM().ToString("N0");
+            lbFanPWMvalue.Text = CurrentProduct.PWM().ToString("N0");
 
             lbWidthData.Text = mf.Sections.WorkingWidth(mf.UseInches).ToString("N1");
             lbWorkRateData.Text = CurrentProduct.WorkRate().ToString("N1");

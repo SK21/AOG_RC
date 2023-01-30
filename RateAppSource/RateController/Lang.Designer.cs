@@ -1006,7 +1006,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rate Sensor Location.
+        ///   Looks up a localized string similar to Sensor Location.
         /// </summary>
         internal static string lgSensorLocation {
             get {
