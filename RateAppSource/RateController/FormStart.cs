@@ -586,12 +586,7 @@ namespace RateController
             // ethernet
             UDPmodules.EthernetEP = Tls.LoadProperty("EthernetEP");
 
-            if(UseLargeScreen)
-            {
-                this.WindowState = FormWindowState.Minimized;
-                Lscrn = new frmLargeScreen(this);
-                Lscrn.Show();
-            }
+            if(UseLargeScreen) StartLargeScreen();
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -923,12 +918,7 @@ namespace RateController
 
         private void largeScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UseLargeScreen = true;
-            LargeScreenExit = false;
-            LargeScreenRestart = false;
-            this.WindowState = FormWindowState.Minimized;
-            Lscrn = new frmLargeScreen(this);
-            Lscrn.Show();
+            StartLargeScreen();
         }
 
         private void FormStart_Activated(object sender, EventArgs e)
@@ -941,6 +931,18 @@ namespace RateController
             {
                 Application.Exit();
             }
+        }
+
+        private void StartLargeScreen()
+        {
+            UseLargeScreen = true;
+            LargeScreenExit = false;
+            LargeScreenRestart = false;
+            this.WindowState = FormWindowState.Minimized;
+            this.ShowInTaskbar = false;
+            Lscrn = new frmLargeScreen(this);
+            Lscrn.ShowInTaskbar = true;
+            Lscrn.Show();
         }
     }
 }

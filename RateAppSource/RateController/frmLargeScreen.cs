@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RateController
@@ -81,11 +82,12 @@ namespace RateController
             mf.Tls.LoadFormData(this);
             UpdateForm();
             timerMain.Enabled = true;
+            this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
         }
 
         private void lbAogConnected_Click(object sender, EventArgs e)
         {
-            //this.WindowState = FormWindowState.Minimized;
+            this.WindowState = FormWindowState.Minimized;
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
@@ -348,6 +350,8 @@ namespace RateController
 
         private void mnuStandard_Click(object sender, EventArgs e)
         {
+            this.ShowInTaskbar = false;
+            mf.ShowInTaskbar = true;
             mf.UseLargeScreen = false;
             this.Close();
         }
