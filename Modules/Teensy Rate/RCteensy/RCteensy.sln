@@ -5,8 +5,6 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RCteensy", "RCteensy.vcxproj", "{1C3F4BC5-D89F-4EC3-8CDD-6EC256C1AB2D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Calibration", "C:\Users\DC\Documents\Arduino\My Examples\Calibration\Calibration.vcxproj", "{495A99F3-30AC-44AF-813D-B7525A94C2BA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -27,18 +25,6 @@ Global
 		{1C3F4BC5-D89F-4EC3-8CDD-6EC256C1AB2D}.Release|ARM64.ActiveCfg = Release|ARM64
 		{1C3F4BC5-D89F-4EC3-8CDD-6EC256C1AB2D}.Release|ARM64.Build.0 = Release|ARM64
 		{1C3F4BC5-D89F-4EC3-8CDD-6EC256C1AB2D}.Release|ARM64.Deploy.0 = Release|ARM64
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Debug|ARM.ActiveCfg = Debug|ARM
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Debug|ARM.Build.0 = Debug|ARM
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Debug|ARM.Deploy.0 = Debug|ARM
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Debug|ARM64.Build.0 = Debug|ARM64
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Debug|ARM64.Deploy.0 = Debug|ARM64
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Release|ARM.ActiveCfg = Release|ARM
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Release|ARM.Build.0 = Release|ARM
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Release|ARM.Deploy.0 = Release|ARM
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Release|ARM64.ActiveCfg = Release|ARM64
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Release|ARM64.Build.0 = Release|ARM64
-		{495A99F3-30AC-44AF-813D-B7525A94C2BA}.Release|ARM64.Deploy.0 = Release|ARM64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -430,7 +430,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				}
 
 				// save
-				EEPROM.put(100, MDL_Ident);
+				EEPROM.put(100, DataID);
 				EEPROM.put(110, MDL);
 
 				for (int i = 0; i < MaxProductCount; i++)
@@ -464,7 +464,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				MDL.IPpart3 = Data[3];
 
 				// save
-				EEPROM.put(100, MDL_Ident);
+				EEPROM.put(100, DataID);
 				EEPROM.put(110, MDL);
 
 				for (int i = 0; i < MaxProductCount; i++)

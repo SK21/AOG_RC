@@ -20,10 +20,23 @@ float Oave[MaxProductCount];
 void ISR0()
 {
 	static unsigned long PulseTime;
-	if (millis() - PulseTime > MDL.Debounce)
+	unsigned long micronow;
+	unsigned long dur;
+
+	micronow = micros();
+	if (PulseTime > micronow)
 	{
-		Duration[0] = millis() - PulseTime;
-		PulseTime = millis();
+		dur = micronow - PulseTime;
+	}
+	else
+	{
+		dur = 0xFFFFFFFF + micronow - PulseTime;
+	}
+
+	if (dur > MDL.Debounce * 1000)
+	{
+		Duration[0] = dur;
+		PulseTime = micronow;
 		PulseCount[0]++;
 	}
 }
@@ -31,10 +44,23 @@ void ISR0()
 void ISR1()
 {
 	static unsigned long PulseTime;
-	if (millis() - PulseTime > MDL.Debounce)
+	unsigned long micronow;
+	unsigned long dur;
+
+	micronow = micros();
+	if (PulseTime > micronow)
 	{
-		Duration[1] = millis() - PulseTime;
-		PulseTime = millis();
+		dur = micronow - PulseTime;
+	}
+	else
+	{
+		dur = 0xFFFFFFFF + micronow - PulseTime;
+	}
+
+	if (dur > MDL.Debounce * 1000)
+	{
+		Duration[1] = dur;
+		PulseTime = micronow;
 		PulseCount[1]++;
 	}
 }
@@ -87,7 +113,7 @@ void GetUPMflow(int ID)
 			}
 			else
 			{
-				PPM[ID] = 6000000 / CurrentDuration;	// 100 X actual
+				PPM[ID] = 6000000000 / CurrentDuration;	// 100 X actual
 			}
 		}
 
@@ -111,7 +137,7 @@ void GetUPMflow(int ID)
  		Oave[ID] = (float)Osum[ID] / 300.0;	// divide by 3 samples and divide by 100 for decimal place
 		Osum[ID] = 0;
 		Omax[ID] = 0;
-		Omin[ID] = 5000000;
+		Omin[ID] = 5000000000;
 		Ocount[ID] = 0;
 	}
 

@@ -7,14 +7,13 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   27-Jan-2023"
+# define InoDescription "RCteensy   30-Jan-2023"
+
+#define DataID 5100		// change to send defaults to eeprom
+int16_t StoredID = 0;	// ID stored in eeprom
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
-
-//EEPROM
-int16_t EEread = 0;
-#define MDL_Ident 5100
 
 struct ModuleConfig	
 {
@@ -53,10 +52,10 @@ struct SensorConfig
 	float MeterCal = 0;
 	float ManualAdjust = 0;
 	bool UseMultiPulses = 0;	// 0 - time for one pulse, 1 - average time for multiple pulses
-	byte KP = 20;
+	byte KP = 5;
 	byte KI = 0;
 	byte KD = 0;
-	byte MinPWM = 50;
+	byte MinPWM = 5;
 	byte MaxPWM = 255;
 	byte Deadband = 3;
 	byte BrakePoint = 20;
@@ -130,10 +129,10 @@ void setup()
 	MDL.LOADCELL_SCK_PIN[0] = 17;
 
 	// eeprom
-	EEPROM.get(100, EEread);
-	if (EEread != MDL_Ident)
+	EEPROM.get(100, StoredID);
+	if (StoredID != DataID)
 	{
-		EEPROM.put(100, MDL_Ident);
+		EEPROM.put(100, DataID);
 		EEPROM.put(110, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
@@ -364,7 +363,7 @@ void loop()
 	{
 		// save sensor data
 		SaveTime = millis();
-		EEPROM.put(100, MDL_Ident);
+		EEPROM.put(100, DataID);
 		//EEPROM.put(110, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
