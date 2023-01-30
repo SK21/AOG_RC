@@ -45,6 +45,11 @@ namespace RateController
             this.BackColor = Properties.Settings.Default.DayColour;
         }
 
+        public int CurrentProduct()
+        {
+            return Prd.ID;
+        }
+
         private void bntOK_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -56,10 +61,6 @@ namespace RateController
             Point ptLowerLeft = new Point(0, btnSender.Height);
             ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
             mnuSettings.Show(ptLowerLeft);
-        }
-        public int CurrentProduct()
-        {
-            return Prd.ID;
         }
 
         private void frmLargeScreen_FormClosed(object sender, FormClosedEventArgs e)
@@ -80,6 +81,146 @@ namespace RateController
             mf.Tls.LoadFormData(this);
             UpdateForm();
             timerMain.Enabled = true;
+        }
+
+        private void lbAogConnected_Click(object sender, EventArgs e)
+        {
+            //this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void lbCoverage_Click(object sender, EventArgs e)
+        {
+            ShowCoverageRemaining = !ShowCoverageRemaining;
+            UpdateForm();
+        }
+
+        private void lbFan1_Click(object sender, EventArgs e)
+        {
+            //check if window already exists
+            Form fs = Application.OpenForms["FormSettings"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormSettings(mf, mf.MaxProducts - 1);
+            frm.Show();
+        }
+
+        private void lbFan2_Click(object sender, EventArgs e)
+        {
+            //check if window already exists
+            Form fs = Application.OpenForms["FormSettings"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormSettings(mf, mf.MaxProducts);
+            frm.Show();
+        }
+
+        private void lbName0_Click(object sender, EventArgs e)
+        {
+            Prd = mf.Products.Item(0);
+            UpdateForm();
+
+            //check if window already exists
+            Form fs = Application.OpenForms["FormSettings"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormSettings(mf, Prd.ID + 1);
+            frm.Show();
+        }
+
+        private void lbName1_Click(object sender, EventArgs e)
+        {
+            Prd = mf.Products.Item(1);
+            UpdateForm();
+
+            //check if window already exists
+            Form fs = Application.OpenForms["FormSettings"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormSettings(mf, Prd.ID + 1);
+            frm.Show();
+        }
+
+        private void lbName2_Click(object sender, EventArgs e)
+        {
+            Prd = mf.Products.Item(2);
+            UpdateForm();
+
+            //check if window already exists
+            Form fs = Application.OpenForms["FormSettings"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormSettings(mf, Prd.ID + 1);
+            frm.Show();
+        }
+
+        private void lbName3_Click(object sender, EventArgs e)
+        {
+            Prd = mf.Products.Item(3);
+            UpdateForm();
+
+            //check if window already exists
+            Form fs = Application.OpenForms["FormSettings"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormSettings(mf, Prd.ID + 1);
+            frm.Show();
+        }
+
+        private void lbQuantity_Click(object sender, EventArgs e)
+        {
+            ShowQuantityRemaining = !ShowQuantityRemaining;
+            UpdateForm();
+        }
+
+        private void lbRate_Click(object sender, EventArgs e)
+        {
+            RateType++;
+            if (RateType > 2) RateType = 0;
+            UpdateForm();
+        }
+
+        private void lbTarget_Click(object sender, EventArgs e)
+        {
+            if (lbTarget.Text == Lang.lgTargetRate)
+            {
+                lbTarget.Text = Lang.lgTargetRateAlt;
+                Prd.UseAltRate = true;
+            }
+            else
+            {
+                lbTarget.Text = Lang.lgTargetRate;
+                Prd.UseAltRate = false;
+            }
         }
 
         private void MnuAbout_Click(object sender, EventArgs e)
@@ -239,6 +380,11 @@ namespace RateController
             {
                 fs.Focus();
             }
+        }
+
+        private void timerMain_Tick(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void UpdateForm()
@@ -514,26 +660,50 @@ namespace RateController
             verticalProgressBar3.Value = Level;
 
             // fans
-            clsProduct prd = mf.Products.Item(mf.MaxProducts - 2);
-            lbRPM1.Text = prd.CurrentRate().ToString("N0") + " RPM";
-            if (prd.CurrentRate() > 0 || prd.FanOn)
+            if (mf.SimMode == SimType.None)
             {
-                lbFan1pic.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                lbFan1pic.BackColor = Color.Red;
-            }
+                // fan 1
+                clsProduct prd = mf.Products.Item(mf.MaxProducts - 2);
+                lbRPM1.Text = prd.CurrentRate().ToString("N0") + " RPM";
+                if (prd.ArduinoModule.ModuleSending())
+                {
+                    if (prd.ArduinoModule.ModuleReceiving())
+                    {
+                        lbFan1.BackColor = Color.LightGreen;
+                    }
+                    else
+                    {
+                        lbFan1.BackColor = Color.LightBlue;
+                    }
+                }
+                else
+                {
+                    lbFan1.BackColor = Color.Red;
+                }
 
-            prd = mf.Products.Item(mf.MaxProducts - 1);
-            lbRPM2.Text = prd.CurrentRate().ToString("N0") + " RPM";
-            if (prd.CurrentRate() > 0 || prd.FanOn)
-            {
-                lbFan2pic.BackColor = Color.LightGreen;
+                // fan 2
+                prd = mf.Products.Item(mf.MaxProducts - 1);
+                lbRPM2.Text = prd.CurrentRate().ToString("N0") + " RPM";
+                if (prd.ArduinoModule.ModuleSending())
+                {
+                    if (prd.ArduinoModule.ModuleReceiving())
+                    {
+                        lbFan2.BackColor = Color.LightGreen;
+                    }
+                    else
+                    {
+                        lbFan2.BackColor = Color.LightBlue;
+                    }
+                }
+                else
+                {
+                    lbFan2.BackColor = Color.Red;
+                }
             }
             else
             {
-                lbFan2pic.BackColor = Color.Red;
+                lbFan1.BackColor = mf.SimColor;
+                lbFan2.BackColor = mf.SimColor;
             }
         }
 
@@ -559,56 +729,6 @@ namespace RateController
         {
             Prd = mf.Products.Item(3);
             UpdateForm();
-        }
-
-        private void lbRate_Click(object sender, EventArgs e)
-        {
-            RateType++;
-            if (RateType > 2) RateType = 0;
-            UpdateForm();
-        }
-
-        private void lbTarget_Click(object sender, EventArgs e)
-        {
-            if (lbTarget.Text == Lang.lgTargetRate)
-            {
-                lbTarget.Text = Lang.lgTargetRateAlt;
-                Prd.UseAltRate = true;
-            }
-            else
-            {
-                lbTarget.Text = Lang.lgTargetRate;
-                Prd.UseAltRate = false;
-            }
-        }
-
-        private void lbCoverage_Click(object sender, EventArgs e)
-        {
-            ShowCoverageRemaining = !ShowCoverageRemaining;
-            UpdateForm();
-        }
-
-        private void lbQuantity_Click(object sender, EventArgs e)
-        {
-            ShowQuantityRemaining = !ShowQuantityRemaining;
-            UpdateForm();
-        }
-
-        private void timerMain_Tick(object sender, EventArgs e)
-        {
-            UpdateForm();
-        }
-
-        private void lbFan1pic_Click(object sender, EventArgs e)
-        {
-            clsProduct prd = mf.Products.Item(mf.MaxProducts - 2);
-            prd.FanOn = !prd.FanOn;
-        }
-
-        private void lbFan2pic_Click(object sender, EventArgs e)
-        {
-            clsProduct prd = mf.Products.Item(mf.MaxProducts - 1);
-            prd.FanOn = !prd.FanOn;
         }
     }
 }

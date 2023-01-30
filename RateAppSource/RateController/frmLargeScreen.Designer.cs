@@ -48,9 +48,7 @@
             this.lbRate = new System.Windows.Forms.Label();
             this.lbTarget = new System.Windows.Forms.Label();
             this.lbQuantityAmount = new System.Windows.Forms.Label();
-            this.lbFan1 = new System.Windows.Forms.Label();
             this.lbRPM1 = new System.Windows.Forms.Label();
-            this.lbFan2 = new System.Windows.Forms.Label();
             this.lbRPM2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.verticalProgressBar1 = new RateController.VerticalProgressBar();
@@ -84,8 +82,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
-            this.lbFan1pic = new System.Windows.Forms.Label();
-            this.lbFan2pic = new System.Windows.Forms.Label();
+            this.lbFan1 = new System.Windows.Forms.Label();
+            this.lbFan2 = new System.Windows.Forms.Label();
             this.panel0.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -127,6 +125,7 @@
             this.lbName0.TabIndex = 2;
             this.lbName0.Text = "1";
             this.lbName0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbName0.Click += new System.EventHandler(this.lbName0_Click);
             // 
             // lbName1
             // 
@@ -140,6 +139,7 @@
             this.lbName1.TabIndex = 3;
             this.lbName1.Text = "2";
             this.lbName1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbName1.Click += new System.EventHandler(this.lbName1_Click);
             // 
             // lbName2
             // 
@@ -153,6 +153,7 @@
             this.lbName2.TabIndex = 4;
             this.lbName2.Text = "3";
             this.lbName2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbName2.Click += new System.EventHandler(this.lbName2_Click);
             // 
             // lbName3
             // 
@@ -166,6 +167,7 @@
             this.lbName3.TabIndex = 5;
             this.lbName3.Text = "4";
             this.lbName3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbName3.Click += new System.EventHandler(this.lbName3_Click);
             // 
             // lbUnits
             // 
@@ -182,20 +184,21 @@
             this.lbAogConnected.BackColor = System.Drawing.Color.LightGreen;
             this.lbAogConnected.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbAogConnected.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAogConnected.Location = new System.Drawing.Point(296, 199);
+            this.lbAogConnected.Location = new System.Drawing.Point(326, 195);
             this.lbAogConnected.Name = "lbAogConnected";
-            this.lbAogConnected.Size = new System.Drawing.Size(63, 27);
+            this.lbAogConnected.Size = new System.Drawing.Size(58, 58);
             this.lbAogConnected.TabIndex = 172;
             this.lbAogConnected.Text = "AOG";
             this.lbAogConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbAogConnected.Click += new System.EventHandler(this.lbAogConnected_Click);
             // 
             // btnSettings
             // 
             this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
-            this.btnSettings.Location = new System.Drawing.Point(270, 235);
+            this.btnSettings.Location = new System.Drawing.Point(264, 195);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(115, 72);
+            this.btnSettings.Size = new System.Drawing.Size(58, 58);
             this.btnSettings.TabIndex = 171;
             this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnSettings.UseVisualStyleBackColor = true;
@@ -207,7 +210,7 @@
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(270, 316);
+            this.bntOK.Location = new System.Drawing.Point(268, 259);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 170;
@@ -308,21 +311,10 @@
             this.lbQuantityAmount.Text = "500,000";
             this.lbQuantityAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lbFan1
-            // 
-            this.lbFan1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFan1.Location = new System.Drawing.Point(10, 268);
-            this.lbFan1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.lbFan1.Name = "lbFan1";
-            this.lbFan1.Size = new System.Drawing.Size(94, 23);
-            this.lbFan1.TabIndex = 156;
-            this.lbFan1.Text = "Fan 1";
-            this.lbFan1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lbRPM1
             // 
             this.lbRPM1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRPM1.Location = new System.Drawing.Point(10, 292);
+            this.lbRPM1.Location = new System.Drawing.Point(12, 308);
             this.lbRPM1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbRPM1.Name = "lbRPM1";
             this.lbRPM1.Size = new System.Drawing.Size(94, 23);
@@ -330,21 +322,10 @@
             this.lbRPM1.Text = "4000 RPM";
             this.lbRPM1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lbFan2
-            // 
-            this.lbFan2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFan2.Location = new System.Drawing.Point(140, 268);
-            this.lbFan2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.lbFan2.Name = "lbFan2";
-            this.lbFan2.Size = new System.Drawing.Size(94, 23);
-            this.lbFan2.TabIndex = 157;
-            this.lbFan2.Text = "Fan 2";
-            this.lbFan2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lbRPM2
             // 
             this.lbRPM2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRPM2.Location = new System.Drawing.Point(140, 292);
+            this.lbRPM2.Location = new System.Drawing.Point(139, 308);
             this.lbRPM2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbRPM2.Name = "lbRPM2";
             this.lbRPM2.Size = new System.Drawing.Size(94, 23);
@@ -430,7 +411,7 @@
             this.MnuPressures,
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(219, 278);
+            this.mnuSettings.Size = new System.Drawing.Size(219, 256);
             // 
             // MnuProducts
             // 
@@ -629,34 +610,42 @@
             this.timerMain.Interval = 1000;
             this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
             // 
-            // lbFan1pic
+            // lbFan1
             // 
-            this.lbFan1pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFan1pic.Image = ((System.Drawing.Image)(resources.GetObject("lbFan1pic.Image")));
-            this.lbFan1pic.Location = new System.Drawing.Point(10, 320);
-            this.lbFan1pic.Name = "lbFan1pic";
-            this.lbFan1pic.Size = new System.Drawing.Size(94, 68);
-            this.lbFan1pic.TabIndex = 179;
-            this.lbFan1pic.Click += new System.EventHandler(this.lbFan1pic_Click);
+            this.lbFan1.BackColor = System.Drawing.Color.LightGreen;
+            this.lbFan1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFan1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFan1.Location = new System.Drawing.Point(14, 280);
+            this.lbFan1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lbFan1.Name = "lbFan1";
+            this.lbFan1.Size = new System.Drawing.Size(90, 28);
+            this.lbFan1.TabIndex = 181;
+            this.lbFan1.Text = "Fan 1";
+            this.lbFan1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbFan1.Click += new System.EventHandler(this.lbFan1_Click);
             // 
-            // lbFan2pic
+            // lbFan2
             // 
-            this.lbFan2pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFan2pic.Image = ((System.Drawing.Image)(resources.GetObject("lbFan2pic.Image")));
-            this.lbFan2pic.Location = new System.Drawing.Point(140, 320);
-            this.lbFan2pic.Name = "lbFan2pic";
-            this.lbFan2pic.Size = new System.Drawing.Size(94, 68);
-            this.lbFan2pic.TabIndex = 180;
-            this.lbFan2pic.Click += new System.EventHandler(this.lbFan2pic_Click);
+            this.lbFan2.BackColor = System.Drawing.Color.LightGreen;
+            this.lbFan2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFan2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFan2.Location = new System.Drawing.Point(141, 280);
+            this.lbFan2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lbFan2.Name = "lbFan2";
+            this.lbFan2.Size = new System.Drawing.Size(90, 28);
+            this.lbFan2.TabIndex = 182;
+            this.lbFan2.Text = "Fan 2";
+            this.lbFan2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbFan2.Click += new System.EventHandler(this.lbFan2_Click);
             // 
             // frmLargeScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.ClientSize = new System.Drawing.Size(390, 397);
-            this.Controls.Add(this.lbFan2pic);
-            this.Controls.Add(this.lbFan1pic);
+            this.ClientSize = new System.Drawing.Size(390, 337);
+            this.Controls.Add(this.lbFan2);
+            this.Controls.Add(this.lbFan1);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -672,9 +661,7 @@
             this.Controls.Add(this.lbRate);
             this.Controls.Add(this.lbTarget);
             this.Controls.Add(this.lbQuantityAmount);
-            this.Controls.Add(this.lbFan1);
             this.Controls.Add(this.lbRPM1);
-            this.Controls.Add(this.lbFan2);
             this.Controls.Add(this.lbRPM2);
             this.Controls.Add(this.lbName3);
             this.Controls.Add(this.lbName2);
@@ -721,9 +708,7 @@
         private System.Windows.Forms.Label lbRate;
         private System.Windows.Forms.Label lbTarget;
         private System.Windows.Forms.Label lbQuantityAmount;
-        private System.Windows.Forms.Label lbFan1;
         private System.Windows.Forms.Label lbRPM1;
-        private System.Windows.Forms.Label lbFan2;
         private System.Windows.Forms.Label lbRPM2;
         private System.Windows.Forms.Panel panel1;
         private VerticalProgressBar verticalProgressBar1;
@@ -757,7 +742,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Timer timerMain;
-        private System.Windows.Forms.Label lbFan1pic;
-        private System.Windows.Forms.Label lbFan2pic;
+        private System.Windows.Forms.Label lbFan1;
+        private System.Windows.Forms.Label lbFan2;
     }
 }

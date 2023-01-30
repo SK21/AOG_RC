@@ -882,6 +882,7 @@ namespace RateController
 
                 ModuleIndicator.BackColor = Properties.Settings.Default.DayColour;
                 lbProduct.BackColor = Properties.Settings.Default.DayColour;
+                lbFanStarted.BackColor = Properties.Settings.Default.DayColour;
 
                 foreach (Control c in this.Controls)
                 {
@@ -930,6 +931,18 @@ namespace RateController
             else
             {
                 ModuleIndicator.Image = Properties.Resources.Off;
+            }
+        }
+
+        private void SetFanStarted()
+        {
+            if(CurrentProduct.FanOn)
+            {
+                lbFanStarted.Image = Properties.Resources.On;
+            }
+            else
+            {
+                lbFanStarted.Image = Properties.Resources.Off;
             }
         }
 
@@ -1291,6 +1304,7 @@ namespace RateController
             UpdateDiags();
             if (CurrentProduct.DoCal) lbFlowMeterCounts.Text = RunningCounts().ToString("N0");
             SetModuleIndicator();
+            SetFanStarted();
             ShowSpan();
         }
 
@@ -1403,6 +1417,7 @@ namespace RateController
             UpdateDiags();
             LoadSettings();
             SetModuleIndicator();
+            SetFanStarted();
             SetCalButtons();
             SetDayMode();
             SetCalDescription();
@@ -1778,6 +1793,21 @@ namespace RateController
             //
             Form formG = new FormPIDGraph(this);
             formG.Show(this);
+        }
+
+        private void label26_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            CurrentProduct.FanOn = true;
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            CurrentProduct.FanOn = false;
         }
     }
 }
