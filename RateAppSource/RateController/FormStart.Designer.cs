@@ -48,6 +48,9 @@ namespace RateController
             this.lbRemaining = new System.Windows.Forms.Label();
             this.btAlarm = new System.Windows.Forms.Button();
             this.panSummary = new System.Windows.Forms.Panel();
+            this.idc5 = new System.Windows.Forms.Label();
+            this.rt5 = new System.Windows.Forms.Label();
+            this.prd5 = new System.Windows.Forms.Label();
             this.idc0 = new System.Windows.Forms.Label();
             this.prd4 = new System.Windows.Forms.Label();
             this.rt4 = new System.Windows.Forms.Label();
@@ -105,9 +108,6 @@ namespace RateController
             this.lbFanRate = new System.Windows.Forms.Label();
             this.lbCurrentRPM = new System.Windows.Forms.Label();
             this.lbFan = new System.Windows.Forms.Label();
-            this.prd5 = new System.Windows.Forms.Label();
-            this.rt5 = new System.Windows.Forms.Label();
-            this.idc5 = new System.Windows.Forms.Label();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -291,14 +291,13 @@ namespace RateController
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(336, 171);
+            this.btAlarm.Location = new System.Drawing.Point(192, 330);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 146;
             this.btAlarm.Text = "Rate  Alarm  Pressure Alarm";
             this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btAlarm.UseVisualStyleBackColor = true;
-            this.btAlarm.Visible = false;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
             // 
             // panSummary
@@ -325,6 +324,38 @@ namespace RateController
             this.panSummary.Name = "panSummary";
             this.panSummary.Size = new System.Drawing.Size(270, 200);
             this.panSummary.TabIndex = 100;
+            // 
+            // idc5
+            // 
+            this.idc5.BackColor = System.Drawing.SystemColors.Control;
+            this.idc5.Cursor = System.Windows.Forms.Cursors.Default;
+            this.idc5.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.idc5.Image = ((System.Drawing.Image)(resources.GetObject("idc5.Image")));
+            this.idc5.Location = new System.Drawing.Point(240, 145);
+            this.idc5.Name = "idc5";
+            this.idc5.Size = new System.Drawing.Size(30, 23);
+            this.idc5.TabIndex = 125;
+            this.idc5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // rt5
+            // 
+            this.rt5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rt5.Location = new System.Drawing.Point(148, 145);
+            this.rt5.Name = "rt5";
+            this.rt5.Size = new System.Drawing.Size(90, 23);
+            this.rt5.TabIndex = 124;
+            this.rt5.Text = "0";
+            this.rt5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // prd5
+            // 
+            this.prd5.Cursor = System.Windows.Forms.Cursors.Default;
+            this.prd5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.prd5.Location = new System.Drawing.Point(3, 145);
+            this.prd5.Name = "prd5";
+            this.prd5.Size = new System.Drawing.Size(143, 23);
+            this.prd5.TabIndex = 123;
+            this.prd5.Text = "6";
             // 
             // idc0
             // 
@@ -872,38 +903,6 @@ namespace RateController
             this.lbFan.Size = new System.Drawing.Size(198, 23);
             this.lbFan.TabIndex = 158;
             this.lbFan.Text = "Herbicide";
-            // 
-            // prd5
-            // 
-            this.prd5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.prd5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.prd5.Location = new System.Drawing.Point(3, 145);
-            this.prd5.Name = "prd5";
-            this.prd5.Size = new System.Drawing.Size(143, 23);
-            this.prd5.TabIndex = 123;
-            this.prd5.Text = "6";
-            // 
-            // rt5
-            // 
-            this.rt5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rt5.Location = new System.Drawing.Point(148, 145);
-            this.rt5.Name = "rt5";
-            this.rt5.Size = new System.Drawing.Size(90, 23);
-            this.rt5.TabIndex = 124;
-            this.rt5.Text = "0";
-            this.rt5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // idc5
-            // 
-            this.idc5.BackColor = System.Drawing.SystemColors.Control;
-            this.idc5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc5.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc5.Image = ((System.Drawing.Image)(resources.GetObject("idc5.Image")));
-            this.idc5.Location = new System.Drawing.Point(240, 145);
-            this.idc5.Name = "idc5";
-            this.idc5.Size = new System.Drawing.Size(30, 23);
-            this.idc5.TabIndex = 125;
-            this.idc5.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // FormStart
             // 

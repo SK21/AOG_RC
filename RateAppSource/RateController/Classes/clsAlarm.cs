@@ -49,6 +49,8 @@ namespace RateController
                 }
 
                 cAlarmButton.Visible = cShowAlarm;
+                cAlarmButton.BringToFront();
+
                 AlarmColour = !AlarmColour;
                 if (AlarmColour)
                 {

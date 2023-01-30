@@ -12,6 +12,7 @@ namespace RateController
         private int RateType = 0;   // 0 current rate, 1 instantaneous rate, 2 overall rate
         private bool ShowCoverageRemaining = false;
         private bool ShowQuantityRemaining = true;
+        public clsAlarm RCalarm;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -44,6 +45,7 @@ namespace RateController
             mf = CallingForm;
             Prd = mf.Products.Item(0);
             this.BackColor = Properties.Settings.Default.DayColour;
+            RCalarm = new clsAlarm(mf, btAlarm);
         }
 
         public int CurrentProduct()
@@ -709,6 +711,8 @@ namespace RateController
                 lbFan1.BackColor = mf.SimColor;
                 lbFan2.BackColor = mf.SimColor;
             }
+
+            RCalarm.CheckAlarms();
         }
 
         private void verticalProgressBar1_Click(object sender, EventArgs e)
@@ -733,6 +737,74 @@ namespace RateController
         {
             Prd = mf.Products.Item(3);
             UpdateForm();
+        }
+
+        private void lbName0_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Indicates if the sensor is connected. Click to access settings.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void verticalProgressBar0_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Indicates quantity remaining. Click to select product and view" +
+                " the product's information.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void lbAogConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Indicates AOG is connected. Click to minimize window.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void lbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "1 - Current Rate, shows" +
+                " the target rate when it is within 10% of target. Outside this range it" +
+                " shows the exact rate being applied. \n 2 - Instant Rate, shows the exact rate." +
+                "\n 3 - Overall, averages total quantity applied over area done." +
+                "\n Press to change.";
+
+            mf.Tls.ShowHelp(Message, "Rate");
+            hlpevent.Handled = true;
+        }
+
+        private void lbTarget_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Press to switch between base rate and alternate rate.";
+
+            mf.Tls.ShowHelp(Message, "Target Rate");
+            hlpevent.Handled = true;
+        }
+
+        private void lbCoverage_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Shows either coverage done or area that can be done with the remaining quantity." +
+                "\n Press to change.";
+
+            mf.Tls.ShowHelp(Message, "Coverage");
+            hlpevent.Handled = true;
+        }
+
+        private void lbQuantity_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Shows either quantity applied or quantity remaining." +
+                "\n Press to change.";
+
+            mf.Tls.ShowHelp(Message, "Remaining");
+            hlpevent.Handled = true;
+        }
+
+        private void btAlarm_Click(object sender, EventArgs e)
+        {
+            RCalarm.Silence();
         }
     }
 }

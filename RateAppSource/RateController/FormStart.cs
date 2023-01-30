@@ -374,7 +374,7 @@ namespace RateController
                 }
 
                 // alarm
-                RCalarm.CheckAlarms();
+                if(!UseLargeScreen) RCalarm.CheckAlarms();
 
                 // metric
                 if (cUseInches)
@@ -440,6 +440,10 @@ namespace RateController
                 clsProduct Prd = Products.Item(ID);
 
                 this.Width = 290;
+
+                btAlarm.Top = 21;
+                btAlarm.Left = 33;
+
                 if (CurrentPage == 0)
                 {
                     // summary panel
