@@ -332,6 +332,31 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\icons8-cancel-40.png" />
+    <None Include="Resources\monitor.png" />
+    <None Include="Resources\icons8-check-circle-48.png" />
+    <None Include="Resources\close.png" />
+    <None Include="Resources\OpenFile.png" />
+    <None Include="Resources\FileNew.png" />
+    <None Include="Resources\switch.png" />
+    <None Include="Resources\Menu.png" />
+    <None Include="Resources\pressure.png" />
+    <None Include="Resources\Comm.jpg" />
+    <None Include="Resources\Sec1.PNG" />
+    <None Include="Resources\spray2.png" />
+    <None Include="Resources\Stop_Normal_Red_Icon_64 %282%29.jpg" />
+    <None Include="Resources\SettingsGear64.png" />
+    <None Include="Resources\Stop_Normal_Red_Icon_64.png" />
+    <None Include="Resources\Start_Icon_64.png" />
+    <None Include="Resources\ArrowRight1.png" />
+    <None Include="Resources\ArrowLeft1.png" />
+    <None Include="Resources\ArrowLeft.png" />
+    <None Include="Resources\ArrowRight.png" />
+    <None Include="Resources\save-icon-23.jpg" />
+    <None Include="Resources\Save.jpg" />
+    <None Include="Resources\ConS_SourcesRoll.png" />
+    <None Include="Resources\Cancel64.png" />
+    <None Include="Resources\OK64.png" />
     <None Include="Resources\AutoSteerTeensy.ino.hex" />
     <None Include="Resources\mcp23017_Adafruit.jpg" />
     <None Include="Resources\Industry-Circuit-icon.png" />
@@ -350,11 +375,7 @@
     <None Include="Resources\Alarm.bmp" />
     <None Include="Resources\OffSmall1.bmp" />
     <None Include="Resources\RateControlOff.png" />
-    <None Include="Resources\ArrowRight1.png" />
-    <None Include="Resources\ArrowLeft1.png" />
     <None Include="Resources\R674d5dd067acbd409ff50db6d0647f5d.png" />
-    <None Include="Resources\ArrowRight.png" />
-    <None Include="Resources\ArrowLeft.png" />
     <None Include="Images\DnArrow64.png" />
     <Content Include="Images\close.png" />
     <None Include="Images\Off.png" />

@@ -17,12 +17,27 @@ namespace RateController
 
         public bool Result { get => cResult; set => cResult = value; }
 
-        public frmMsgBox(FormStart CallingForm, string Message, string Title = "Help")
+        public frmMsgBox(FormStart CallingForm, string Message, string Title = "Help", bool Shrink = false)
         {
             mf = CallingForm;
             InitializeComponent();
             this.Text = Title;
             label1.Text = Message;
+
+            if(Shrink)
+            {
+                panel1.Height = 60;
+                this.Height = 198;
+                btnCancel.Top = 78;
+                bntOK.Top = 78;
+            }
+            else
+            {
+                panel1.Height = 303;
+                this.Height = 441;
+                btnCancel.Top = 321;
+                bntOK.Top = 321;
+            }
         }
 
         private void frmMsgBox_Load(object sender, EventArgs e)

@@ -23,6 +23,7 @@ namespace RateController
 
         private TabPage Temp1;
         private TabPage Temp2;
+        private bool FormEdited = false;
 
         public FormSettings(FormStart CallingForm, int Page)
         {
@@ -37,8 +38,6 @@ namespace RateController
             tcProducts.TabPages[2].Text = Lang.lgOptions;
             tcProducts.TabPages[3].Text = Lang.lgDiagnostics;
             tcProducts.TabPages[4].Text = Lang.lgCalibrate;
-            btnCancel.Text = Lang.lgCancel;
-            bntOK.Text = Lang.lgClose;
 
             lb0.Text = Lang.lgProductName;
             lb5.Text = Lang.lgControlType;
@@ -132,8 +131,7 @@ namespace RateController
 
         private void bntOK_Click(object sender, EventArgs e)
         {
-            Button ButtonClicked = (Button)sender;
-            if (ButtonClicked.Text == Lang.lgClose)
+            if (!FormEdited)
             {
                 this.Close();
             }
@@ -829,17 +827,19 @@ namespace RateController
                 if (Edited)
                 {
                     btnCancel.Enabled = true;
-                    this.bntOK.Text = Lang.lgSave;
                     btnLeft.Enabled = false;
                     btnRight.Enabled = false;
+                    btnOK.Image = Properties.Resources.Save;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
-                    this.bntOK.Text = Lang.lgClose;
                     btnLeft.Enabled = true;
                     btnRight.Enabled = true;
+                    btnOK.Image = Properties.Resources.OK;
                 }
+
+                FormEdited = Edited;
             }
         }
 

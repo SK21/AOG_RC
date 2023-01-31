@@ -31,14 +31,13 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLargeScreen));
             this.panel0 = new System.Windows.Forms.Panel();
+            this.verticalProgressBar0 = new RateController.VerticalProgressBar();
             this.lbName0 = new System.Windows.Forms.Label();
             this.lbName1 = new System.Windows.Forms.Label();
             this.lbName2 = new System.Windows.Forms.Label();
             this.lbName3 = new System.Windows.Forms.Label();
             this.lbUnits = new System.Windows.Forms.Label();
             this.lbAogConnected = new System.Windows.Forms.Label();
-            this.btnSettings = new System.Windows.Forms.Button();
-            this.bntOK = new System.Windows.Forms.Button();
             this.lbRateAmount = new System.Windows.Forms.Label();
             this.lbTargetAmount = new System.Windows.Forms.Label();
             this.lbCoverageAmount = new System.Windows.Forms.Label();
@@ -50,8 +49,11 @@
             this.lbRPM1 = new System.Windows.Forms.Label();
             this.lbRPM2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.verticalProgressBar1 = new RateController.VerticalProgressBar();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.verticalProgressBar2 = new RateController.VerticalProgressBar();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.verticalProgressBar3 = new RateController.VerticalProgressBar();
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,10 +83,8 @@
             this.lbFan1 = new System.Windows.Forms.Label();
             this.lbFan2 = new System.Windows.Forms.Label();
             this.btAlarm = new System.Windows.Forms.Button();
-            this.verticalProgressBar3 = new RateController.VerticalProgressBar();
-            this.verticalProgressBar2 = new RateController.VerticalProgressBar();
-            this.verticalProgressBar1 = new RateController.VerticalProgressBar();
-            this.verticalProgressBar0 = new RateController.VerticalProgressBar();
+            this.btnSettings = new System.Windows.Forms.Button();
+            this.bntOK = new System.Windows.Forms.Button();
             this.panel0.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -102,6 +102,19 @@
             this.panel0.Size = new System.Drawing.Size(90, 128);
             this.panel0.TabIndex = 1;
             // 
+            // verticalProgressBar0
+            // 
+            this.verticalProgressBar0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.verticalProgressBar0.ForeColor = System.Drawing.Color.LimeGreen;
+            this.verticalProgressBar0.Location = new System.Drawing.Point(3, 3);
+            this.verticalProgressBar0.Name = "verticalProgressBar0";
+            this.verticalProgressBar0.Size = new System.Drawing.Size(83, 120);
+            this.verticalProgressBar0.TabIndex = 0;
+            this.verticalProgressBar0.Tag = "0";
+            this.verticalProgressBar0.Value = 95;
+            this.verticalProgressBar0.Click += new System.EventHandler(this.verticalProgressBar1_Click);
+            this.verticalProgressBar0.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
+            // 
             // lbName0
             // 
             this.lbName0.BackColor = System.Drawing.Color.LightGreen;
@@ -111,7 +124,7 @@
             this.lbName0.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbName0.Name = "lbName0";
             this.lbName0.Size = new System.Drawing.Size(90, 28);
-            this.lbName0.TabIndex = 2;
+            this.lbName0.TabIndex = 0;
             this.lbName0.Text = "1";
             this.lbName0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbName0.Click += new System.EventHandler(this.lbName0_Click);
@@ -126,7 +139,7 @@
             this.lbName1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbName1.Name = "lbName1";
             this.lbName1.Size = new System.Drawing.Size(90, 28);
-            this.lbName1.TabIndex = 3;
+            this.lbName1.TabIndex = 1;
             this.lbName1.Text = "2";
             this.lbName1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbName1.Click += new System.EventHandler(this.lbName1_Click);
@@ -141,7 +154,7 @@
             this.lbName2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbName2.Name = "lbName2";
             this.lbName2.Size = new System.Drawing.Size(90, 28);
-            this.lbName2.TabIndex = 4;
+            this.lbName2.TabIndex = 2;
             this.lbName2.Text = "3";
             this.lbName2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbName2.Click += new System.EventHandler(this.lbName2_Click);
@@ -156,7 +169,7 @@
             this.lbName3.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbName3.Name = "lbName3";
             this.lbName3.Size = new System.Drawing.Size(90, 28);
-            this.lbName3.TabIndex = 5;
+            this.lbName3.TabIndex = 3;
             this.lbName3.Text = "4";
             this.lbName3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbName3.Click += new System.EventHandler(this.lbName3_Click);
@@ -185,33 +198,6 @@
             this.lbAogConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbAogConnected.Click += new System.EventHandler(this.lbAogConnected_Click);
             this.lbAogConnected.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbAogConnected_HelpRequested);
-            // 
-            // btnSettings
-            // 
-            this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
-            this.btnSettings.Location = new System.Drawing.Point(264, 195);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(58, 58);
-            this.btnSettings.TabIndex = 171;
-            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnSettings.UseVisualStyleBackColor = true;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
-            // 
-            // bntOK
-            // 
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(268, 259);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 170;
-            this.bntOK.Text = "Close";
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // lbRateAmount
             // 
@@ -341,6 +327,19 @@
             this.panel1.Size = new System.Drawing.Size(90, 128);
             this.panel1.TabIndex = 176;
             // 
+            // verticalProgressBar1
+            // 
+            this.verticalProgressBar1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.verticalProgressBar1.ForeColor = System.Drawing.Color.LimeGreen;
+            this.verticalProgressBar1.Location = new System.Drawing.Point(3, 3);
+            this.verticalProgressBar1.Name = "verticalProgressBar1";
+            this.verticalProgressBar1.Size = new System.Drawing.Size(83, 120);
+            this.verticalProgressBar1.TabIndex = 0;
+            this.verticalProgressBar1.Tag = "1";
+            this.verticalProgressBar1.Value = 30;
+            this.verticalProgressBar1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
+            this.verticalProgressBar1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
+            // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
@@ -349,7 +348,20 @@
             this.panel2.Location = new System.Drawing.Point(198, 38);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(90, 128);
-            this.panel2.TabIndex = 177;
+            this.panel2.TabIndex = 4;
+            // 
+            // verticalProgressBar2
+            // 
+            this.verticalProgressBar2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.verticalProgressBar2.ForeColor = System.Drawing.Color.LimeGreen;
+            this.verticalProgressBar2.Location = new System.Drawing.Point(3, 3);
+            this.verticalProgressBar2.Name = "verticalProgressBar2";
+            this.verticalProgressBar2.Size = new System.Drawing.Size(83, 120);
+            this.verticalProgressBar2.TabIndex = 0;
+            this.verticalProgressBar2.Tag = "2";
+            this.verticalProgressBar2.Value = 5;
+            this.verticalProgressBar2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
+            this.verticalProgressBar2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // panel3
             // 
@@ -360,6 +372,19 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(90, 128);
             this.panel3.TabIndex = 178;
+            // 
+            // verticalProgressBar3
+            // 
+            this.verticalProgressBar3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.verticalProgressBar3.ForeColor = System.Drawing.Color.LimeGreen;
+            this.verticalProgressBar3.Location = new System.Drawing.Point(3, 3);
+            this.verticalProgressBar3.Name = "verticalProgressBar3";
+            this.verticalProgressBar3.Size = new System.Drawing.Size(83, 120);
+            this.verticalProgressBar3.TabIndex = 0;
+            this.verticalProgressBar3.Tag = "3";
+            this.verticalProgressBar3.Value = 40;
+            this.verticalProgressBar3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
+            this.verticalProgressBar3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // mnuSettings
             // 
@@ -377,7 +402,7 @@
             // 
             // MnuProducts
             // 
-            this.MnuProducts.Image = ((System.Drawing.Image)(resources.GetObject("MnuProducts.Image")));
+            this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
             this.MnuProducts.Name = "MnuProducts";
             this.MnuProducts.Size = new System.Drawing.Size(218, 42);
             this.MnuProducts.Text = "Products/Fans";
@@ -385,7 +410,7 @@
             // 
             // MnuSections
             // 
-            this.MnuSections.Image = ((System.Drawing.Image)(resources.GetObject("MnuSections.Image")));
+            this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
             this.MnuSections.Name = "MnuSections";
             this.MnuSections.Size = new System.Drawing.Size(218, 42);
             this.MnuSections.Text = "Sections";
@@ -393,7 +418,7 @@
             // 
             // MnuComm
             // 
-            this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
+            this.MnuComm.Image = global::RateController.Properties.Resources.Comm;
             this.MnuComm.Name = "MnuComm";
             this.MnuComm.Size = new System.Drawing.Size(218, 42);
             this.MnuComm.Text = "Comm";
@@ -409,7 +434,7 @@
             // 
             // MnuPressures
             // 
-            this.MnuPressures.Image = ((System.Drawing.Image)(resources.GetObject("MnuPressures.Image")));
+            this.MnuPressures.Image = global::RateController.Properties.Resources.pressure;
             this.MnuPressures.Name = "MnuPressures";
             this.MnuPressures.Size = new System.Drawing.Size(218, 42);
             this.MnuPressures.Text = "Pressures";
@@ -430,14 +455,15 @@
             this.MnuLanguage,
             this.serialMonitorToolStripMenuItem,
             this.MnuAbout});
-            this.MnuOptions.Image = global::RateController.Properties.Resources._7504229_hamburger_menu_list_options_icon;
+            this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
             this.MnuOptions.Name = "MnuOptions";
             this.MnuOptions.Size = new System.Drawing.Size(218, 42);
             this.MnuOptions.Text = "Options";
+            this.MnuOptions.Click += new System.EventHandler(this.MnuOptions_Click);
             // 
             // simulationToolStripMenuItem
             // 
-            this.simulationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("simulationToolStripMenuItem.Image")));
+            this.simulationToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
             this.simulationToolStripMenuItem.Name = "simulationToolStripMenuItem";
             this.simulationToolStripMenuItem.Size = new System.Drawing.Size(241, 42);
             this.simulationToolStripMenuItem.Text = "Switches";
@@ -466,7 +492,7 @@
             // 
             // MnuNew
             // 
-            this.MnuNew.Image = global::RateController.Properties.Resources.FileNew;
+            this.MnuNew.Image = global::RateController.Properties.Resources.FileNew1;
             this.MnuNew.Name = "MnuNew";
             this.MnuNew.Size = new System.Drawing.Size(241, 42);
             this.MnuNew.Text = "New file";
@@ -474,7 +500,7 @@
             // 
             // MnuOpen
             // 
-            this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile;
+            this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile1;
             this.MnuOpen.Name = "MnuOpen";
             this.MnuOpen.Size = new System.Drawing.Size(241, 42);
             this.MnuOpen.Text = "Open";
@@ -482,7 +508,7 @@
             // 
             // MnuSaveAs
             // 
-            this.MnuSaveAs.Image = global::RateController.Properties.Resources.close1;
+            this.MnuSaveAs.Image = global::RateController.Properties.Resources.close2;
             this.MnuSaveAs.Name = "MnuSaveAs";
             this.MnuSaveAs.Size = new System.Drawing.Size(241, 42);
             this.MnuSaveAs.Text = "Save As";
@@ -495,7 +521,7 @@
             // 
             // mnuMetric
             // 
-            this.mnuMetric.Image = global::RateController.Properties.Resources.CheckMark;
+            this.mnuMetric.Image = global::RateController.Properties.Resources.Check;
             this.mnuMetric.Name = "mnuMetric";
             this.mnuMetric.Size = new System.Drawing.Size(241, 42);
             this.mnuMetric.Text = "Metric Units";
@@ -508,7 +534,7 @@
             this.MnuEnglish,
             this.MnuNederlands,
             this.russianToolStripMenuItem});
-            this.MnuLanguage.Image = global::RateController.Properties.Resources._7791659_language_speak_communication_speech_chat_icon;
+            this.MnuLanguage.Image = global::RateController.Properties.Resources.Language;
             this.MnuLanguage.Name = "MnuLanguage";
             this.MnuLanguage.Size = new System.Drawing.Size(241, 42);
             this.MnuLanguage.Text = "Language";
@@ -543,7 +569,7 @@
             // 
             // serialMonitorToolStripMenuItem
             // 
-            this.serialMonitorToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("serialMonitorToolStripMenuItem.Image")));
+            this.serialMonitorToolStripMenuItem.Image = global::RateController.Properties.Resources.monitor;
             this.serialMonitorToolStripMenuItem.Name = "serialMonitorToolStripMenuItem";
             this.serialMonitorToolStripMenuItem.Size = new System.Drawing.Size(241, 42);
             this.serialMonitorToolStripMenuItem.Text = "Serial Monitor";
@@ -551,7 +577,7 @@
             // 
             // MnuAbout
             // 
-            this.MnuAbout.Image = global::RateController.Properties.Resources.R674d5dd067acbd409ff50db6d0647f5d;
+            this.MnuAbout.Image = global::RateController.Properties.Resources.About;
             this.MnuAbout.Name = "MnuAbout";
             this.MnuAbout.Size = new System.Drawing.Size(241, 42);
             this.MnuAbout.Text = "About";
@@ -616,57 +642,32 @@
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
             // 
-            // verticalProgressBar3
+            // btnSettings
             // 
-            this.verticalProgressBar3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.verticalProgressBar3.ForeColor = System.Drawing.Color.LimeGreen;
-            this.verticalProgressBar3.Location = new System.Drawing.Point(3, 3);
-            this.verticalProgressBar3.Name = "verticalProgressBar3";
-            this.verticalProgressBar3.Size = new System.Drawing.Size(83, 120);
-            this.verticalProgressBar3.TabIndex = 0;
-            this.verticalProgressBar3.Tag = "3";
-            this.verticalProgressBar3.Value = 40;
-            this.verticalProgressBar3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
-            this.verticalProgressBar3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
+            this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSettings.Image = global::RateController.Properties.Resources.SettingsGear64;
+            this.btnSettings.Location = new System.Drawing.Point(264, 195);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(58, 58);
+            this.btnSettings.TabIndex = 171;
+            this.btnSettings.TabStop = false;
+            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
-            // verticalProgressBar2
+            // bntOK
             // 
-            this.verticalProgressBar2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.verticalProgressBar2.ForeColor = System.Drawing.Color.LimeGreen;
-            this.verticalProgressBar2.Location = new System.Drawing.Point(3, 3);
-            this.verticalProgressBar2.Name = "verticalProgressBar2";
-            this.verticalProgressBar2.Size = new System.Drawing.Size(83, 120);
-            this.verticalProgressBar2.TabIndex = 0;
-            this.verticalProgressBar2.Tag = "2";
-            this.verticalProgressBar2.Value = 5;
-            this.verticalProgressBar2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
-            this.verticalProgressBar2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
-            // 
-            // verticalProgressBar1
-            // 
-            this.verticalProgressBar1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.verticalProgressBar1.ForeColor = System.Drawing.Color.LimeGreen;
-            this.verticalProgressBar1.Location = new System.Drawing.Point(3, 3);
-            this.verticalProgressBar1.Name = "verticalProgressBar1";
-            this.verticalProgressBar1.Size = new System.Drawing.Size(83, 120);
-            this.verticalProgressBar1.TabIndex = 0;
-            this.verticalProgressBar1.Tag = "1";
-            this.verticalProgressBar1.Value = 30;
-            this.verticalProgressBar1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
-            this.verticalProgressBar1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
-            // 
-            // verticalProgressBar0
-            // 
-            this.verticalProgressBar0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.verticalProgressBar0.ForeColor = System.Drawing.Color.LimeGreen;
-            this.verticalProgressBar0.Location = new System.Drawing.Point(3, 3);
-            this.verticalProgressBar0.Name = "verticalProgressBar0";
-            this.verticalProgressBar0.Size = new System.Drawing.Size(83, 120);
-            this.verticalProgressBar0.TabIndex = 0;
-            this.verticalProgressBar0.Tag = "0";
-            this.verticalProgressBar0.Value = 95;
-            this.verticalProgressBar0.Click += new System.EventHandler(this.verticalProgressBar1_Click);
-            this.verticalProgressBar0.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
+            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.bntOK.Image = global::RateController.Properties.Resources.OK;
+            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.bntOK.Location = new System.Drawing.Point(264, 259);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(120, 72);
+            this.bntOK.TabIndex = 170;
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // frmLargeScreen
             // 
@@ -708,6 +709,8 @@
             this.ShowInTaskbar = false;
             this.Text = "RateController";
             this.TopMost = true;
+            this.Activated += new System.EventHandler(this.frmLargeScreen_Activated);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmLargeScreen_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmLargeScreen_FormClosed);
             this.Load += new System.EventHandler(this.frmLargeScreen_Load);
             this.panel0.ResumeLayout(false);

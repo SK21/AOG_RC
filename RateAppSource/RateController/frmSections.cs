@@ -14,6 +14,7 @@ namespace RateController
         private FormStart mf;
         private byte SecCount;
         private bool UseInches;
+        private bool FormEdited;
 
         public frmSections(FormStart CalledFrom)
         {
@@ -29,9 +30,6 @@ namespace RateController
 
             lbWidth.Text = Lang.lgWidth;
             btnEqual.Text = Lang.lgEqual;
-            btnCancel.Text = Lang.lgCancel;
-            bntOK.Text = Lang.lgClose;
-
             this.Text = Lang.lgSection;
             #endregion // language
 
@@ -44,8 +42,7 @@ namespace RateController
         {
             try
             {
-                Button ButtonClicked = (Button)sender;
-                if (ButtonClicked.Text == Lang.lgClose)
+                if (!FormEdited)
                 {
                     this.Close();
                 }
@@ -259,15 +256,17 @@ namespace RateController
                 if (Edited)
                 {
                     btnCancel.Enabled = true;
-                    this.bntOK.Text = Lang.lgSave;
+                    bntOK.Image = Properties.Resources.Save;
                     btnEqual.Enabled = false;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
-                    this.bntOK.Text = Lang.lgClose;
+                    bntOK.Image = Properties.Resources.OK;
                     btnEqual.Enabled = true;
                 }
+
+                FormEdited = Edited;
             }
         }
 

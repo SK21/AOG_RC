@@ -42,7 +42,7 @@
             this.dataType = new System.Data.DataColumn();
             this.dataSection = new System.Data.DataColumn();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.bntOK = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
             this.btnLoadDefaults = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
@@ -154,38 +154,36 @@
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCancel.Enabled = false;
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(151, 389);
+            this.btnCancel.Location = new System.Drawing.Point(255, 388);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(115, 72);
+            this.btnCancel.Size = new System.Drawing.Size(72, 72);
             this.btnCancel.TabIndex = 138;
-            this.btnCancel.Text = "Cancel";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // bntOK
+            // btnOK
             // 
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(296, 389);
-            this.bntOK.Margin = new System.Windows.Forms.Padding(6);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 139;
-            this.bntOK.Text = "Close";
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
+            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnOK.Image = global::RateController.Properties.Resources.OK;
+            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnOK.Location = new System.Drawing.Point(339, 388);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(6);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.TabIndex = 139;
+            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // btnLoadDefaults
             // 
             this.btnLoadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLoadDefaults.Location = new System.Drawing.Point(21, 389);
+            this.btnLoadDefaults.Location = new System.Drawing.Point(146, 388);
             this.btnLoadDefaults.Name = "btnLoadDefaults";
             this.btnLoadDefaults.Size = new System.Drawing.Size(100, 72);
             this.btnLoadDefaults.TabIndex = 140;
@@ -200,7 +198,7 @@
             this.ClientSize = new System.Drawing.Size(432, 475);
             this.Controls.Add(this.btnLoadDefaults);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.bntOK);
+            this.Controls.Add(this.btnOK);
             this.Controls.Add(this.DGV);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -225,7 +223,7 @@
 
         private System.Windows.Forms.DataGridView DGV;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button bntOK;
+        private System.Windows.Forms.Button btnOK;
         private System.Data.DataSet dataSet1;
         private System.Data.DataTable dataTable1;
         private System.Data.DataColumn dataRelay;

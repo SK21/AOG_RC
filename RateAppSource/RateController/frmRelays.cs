@@ -10,6 +10,7 @@ namespace RateController
     {
         private bool Initializing;
         private FormStart mf;
+        private bool FormEdited;
 
         public frmRelays(FormStart CalledFrom)
         {
@@ -17,9 +18,6 @@ namespace RateController
             InitializeComponent();
 
             #region // language
-
-            btnCancel.Text = Lang.lgCancel;
-            bntOK.Text = Lang.lgClose;
 
             DGV.Columns[0].HeaderText = Lang.lgRelay;
             DGV.Columns[1].HeaderText = Lang.lgType;
@@ -37,7 +35,7 @@ namespace RateController
         {
             try
             {
-                if (bntOK.Text == Lang.lgClose)
+                if (!FormEdited)
                 {
                     this.Close();
                 }
@@ -220,13 +218,15 @@ namespace RateController
                 if (Edited)
                 {
                     btnCancel.Enabled = true;
-                    this.bntOK.Text = Lang.lgSave;
+                    btnOK.Image = Properties.Resources.Save;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
-                    this.bntOK.Text = Lang.lgClose;
+                    btnOK.Image = Properties.Resources.OK;
                 }
+
+                FormEdited = Edited;
             }
         }
 

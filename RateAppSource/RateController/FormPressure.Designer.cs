@@ -29,7 +29,6 @@ namespace RateController
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPressure));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -39,8 +38,7 @@ namespace RateController
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.bntOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPressure));
             this.dataSet1 = new System.Data.DataSet();
             this.dataTable1 = new System.Data.DataTable();
             this.dataColumn1 = new System.Data.DataColumn();
@@ -49,11 +47,8 @@ namespace RateController
             this.dataColumn6 = new System.Data.DataColumn();
             this.dataColumn7 = new System.Data.DataColumn();
             this.dataColumn4 = new System.Data.DataColumn();
-            this.DGV = new System.Windows.Forms.DataGridView();
-            this.ckShowPressure = new System.Windows.Forms.CheckBox();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.tbPressureID = new System.Windows.Forms.TextBox();
             this.dataColumn5 = new System.Data.DataColumn();
+            this.DGV = new System.Windows.Forms.DataGridView();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.moduleIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -61,42 +56,15 @@ namespace RateController
             this.unitsPerVoltDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Offset = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pressureDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ckShowPressure = new System.Windows.Forms.CheckBox();
+            this.tbPressureID = new System.Windows.Forms.TextBox();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             this.SuspendLayout();
-            // 
-            // bntOK
-            // 
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = ((System.Drawing.Image)(resources.GetObject("bntOK.Image")));
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(536, 332);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 261;
-            this.bntOK.Text = "Close";
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
-            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(412, 332);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(115, 72);
-            this.btnCancel.TabIndex = 296;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // dataSet1
             // 
@@ -149,6 +117,10 @@ namespace RateController
             this.dataColumn4.ColumnName = "SensorID";
             this.dataColumn4.DataType = typeof(short);
             // 
+            // dataColumn5
+            // 
+            this.dataColumn5.ColumnName = "Offset";
+            // 
             // DGV
             // 
             this.DGV.AllowUserToAddRows = false;
@@ -194,53 +166,6 @@ namespace RateController
             this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
             this.DGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGV_CellFormatting);
             this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
-            // 
-            // ckShowPressure
-            // 
-            this.ckShowPressure.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckShowPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckShowPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckShowPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckShowPressure.Location = new System.Drawing.Point(15, 349);
-            this.ckShowPressure.Name = "ckShowPressure";
-            this.ckShowPressure.Size = new System.Drawing.Size(193, 34);
-            this.ckShowPressure.TabIndex = 298;
-            this.ckShowPressure.Text = "Show Pressure";
-            this.ckShowPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckShowPressure.UseVisualStyleBackColor = true;
-            this.ckShowPressure.CheckedChanged += new System.EventHandler(this.ckShowPressure_CheckedChanged);
-            // 
-            // btnUpdate
-            // 
-            this.btnUpdate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdate.Image = ((System.Drawing.Image)(resources.GetObject("btnUpdate.Image")));
-            this.btnUpdate.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnUpdate.Location = new System.Drawing.Point(279, 332);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(124, 72);
-            this.btnUpdate.TabIndex = 299;
-            this.btnUpdate.Text = "Update";
-            this.btnUpdate.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-            // 
-            // tbPressureID
-            // 
-            this.tbPressureID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPressureID.Location = new System.Drawing.Point(214, 351);
-            this.tbPressureID.MaxLength = 8;
-            this.tbPressureID.Name = "tbPressureID";
-            this.tbPressureID.Size = new System.Drawing.Size(33, 30);
-            this.tbPressureID.TabIndex = 300;
-            this.tbPressureID.Text = "0";
-            this.tbPressureID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbPressureID.TextChanged += new System.EventHandler(this.tbPressureID_TextChanged);
-            this.tbPressureID.Enter += new System.EventHandler(this.tbPressureID_Enter);
-            this.tbPressureID.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureID_Validating);
-            // 
-            // dataColumn5
-            // 
-            this.dataColumn5.ColumnName = "Offset";
             // 
             // ID
             // 
@@ -311,6 +236,77 @@ namespace RateController
             this.pressureDataGridViewTextBoxColumn.Name = "pressureDataGridViewTextBoxColumn";
             this.pressureDataGridViewTextBoxColumn.ReadOnly = true;
             // 
+            // ckShowPressure
+            // 
+            this.ckShowPressure.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckShowPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckShowPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckShowPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckShowPressure.Location = new System.Drawing.Point(42, 351);
+            this.ckShowPressure.Name = "ckShowPressure";
+            this.ckShowPressure.Size = new System.Drawing.Size(193, 34);
+            this.ckShowPressure.TabIndex = 298;
+            this.ckShowPressure.Text = "Show Pressure";
+            this.ckShowPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckShowPressure.UseVisualStyleBackColor = true;
+            this.ckShowPressure.CheckedChanged += new System.EventHandler(this.ckShowPressure_CheckedChanged);
+            // 
+            // tbPressureID
+            // 
+            this.tbPressureID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPressureID.Location = new System.Drawing.Point(241, 353);
+            this.tbPressureID.MaxLength = 8;
+            this.tbPressureID.Name = "tbPressureID";
+            this.tbPressureID.Size = new System.Drawing.Size(33, 30);
+            this.tbPressureID.TabIndex = 300;
+            this.tbPressureID.Text = "0";
+            this.tbPressureID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPressureID.TextChanged += new System.EventHandler(this.tbPressureID_TextChanged);
+            this.tbPressureID.Enter += new System.EventHandler(this.tbPressureID_Enter);
+            this.tbPressureID.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureID_Validating);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdate.Image = global::RateController.Properties.Resources.Update;
+            this.btnUpdate.Location = new System.Drawing.Point(417, 332);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(72, 72);
+            this.btnUpdate.TabIndex = 299;
+            this.btnUpdate.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
+            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnCancel.Location = new System.Drawing.Point(498, 332);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.TabIndex = 296;
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnOK
+            // 
+            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnOK.Image = global::RateController.Properties.Resources.OK;
+            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnOK.Location = new System.Drawing.Point(579, 332);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.TabIndex = 261;
+            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
+            // 
             // FormPressure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -321,7 +317,7 @@ namespace RateController
             this.Controls.Add(this.ckShowPressure);
             this.Controls.Add(this.DGV);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.bntOK);
+            this.Controls.Add(this.btnOK);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -342,7 +338,7 @@ namespace RateController
         }
 
         #endregion
-        private System.Windows.Forms.Button bntOK;
+        private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
         private System.Data.DataSet dataSet1;
         private System.Data.DataTable dataTable1;

@@ -98,14 +98,13 @@
             // 
             this.btnStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnStop.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnStop.Image = ((System.Drawing.Image)(resources.GetObject("btnStop.Image")));
+            this.btnStop.Image = global::RateController.Properties.Resources.Start;
             this.btnStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStop.Location = new System.Drawing.Point(37, 105);
+            this.btnStop.Location = new System.Drawing.Point(113, 111);
             this.btnStop.Margin = new System.Windows.Forms.Padding(6);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(115, 72);
+            this.btnStop.Size = new System.Drawing.Size(72, 72);
             this.btnStop.TabIndex = 140;
-            this.btnStop.Text = "Stop";
             this.btnStop.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
@@ -114,14 +113,13 @@
             // 
             this.btnStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnStart.Image = ((System.Drawing.Image)(resources.GetObject("btnStart.Image")));
+            this.btnStart.Image = global::RateController.Properties.Resources.Stop;
             this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStart.Location = new System.Drawing.Point(229, 105);
+            this.btnStart.Location = new System.Drawing.Point(197, 111);
             this.btnStart.Margin = new System.Windows.Forms.Padding(6);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(115, 72);
+            this.btnStart.Size = new System.Drawing.Size(72, 72);
             this.btnStart.TabIndex = 141;
-            this.btnStart.Text = "Start";
             this.btnStart.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
@@ -131,14 +129,13 @@
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCancel.Enabled = false;
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(142, 441);
+            this.btnCancel.Location = new System.Drawing.Point(227, 441);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(115, 72);
+            this.btnCancel.Size = new System.Drawing.Size(72, 72);
             this.btnCancel.TabIndex = 143;
-            this.btnCancel.Text = "Cancel";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -147,14 +144,13 @@
             // 
             this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnClose.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
+            this.btnClose.Image = global::RateController.Properties.Resources.OK;
             this.btnClose.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnClose.Location = new System.Drawing.Point(268, 441);
+            this.btnClose.Location = new System.Drawing.Point(311, 441);
             this.btnClose.Margin = new System.Windows.Forms.Padding(6);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(115, 72);
+            this.btnClose.Size = new System.Drawing.Size(72, 72);
             this.btnClose.TabIndex = 144;
-            this.btnClose.Text = "Close";
             this.btnClose.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
@@ -209,13 +205,12 @@
             // btnRescan
             // 
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRescan.Image = ((System.Drawing.Image)(resources.GetObject("btnRescan.Image")));
+            this.btnRescan.Image = global::RateController.Properties.Resources.Update;
             this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRescan.Location = new System.Drawing.Point(8, 441);
+            this.btnRescan.Location = new System.Drawing.Point(146, 441);
             this.btnRescan.Name = "btnRescan";
-            this.btnRescan.Size = new System.Drawing.Size(124, 72);
+            this.btnRescan.Size = new System.Drawing.Size(72, 72);
             this.btnRescan.TabIndex = 151;
-            this.btnRescan.Text = "Rescan";
             this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnRescan.UseVisualStyleBackColor = true;
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);

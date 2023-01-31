@@ -14,10 +14,6 @@ namespace RateController
         {
             InitializeComponent();
 
-            #region // language
-            bntOK.Text = Lang.lgClose;
-            #endregion // language
-
             mf = CallingForm;
             this.BackColor = Properties.Settings.Default.DayColour;
         }

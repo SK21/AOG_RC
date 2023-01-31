@@ -11,6 +11,7 @@ namespace RateController
     {
         private bool Initializing;
         private FormStart mf;
+        private bool FormEdited = false;
 
         public FormPressure(FormStart CalledFrom)
         {
@@ -18,9 +19,6 @@ namespace RateController
             InitializeComponent();
 
             #region // language
-            btnCancel.Text = Lang.lgCancel;
-            bntOK.Text = Lang.lgClose;
-            btnUpdate.Text = Lang.lgUpdate;
             ckShowPressure.Text=Lang.lgShowPressure;
 
             DGV.Columns[0].HeaderText = Lang.lgID;
@@ -40,8 +38,7 @@ namespace RateController
         {
             try
             {
-                Button ButtonClicked = (Button)sender;
-                if (ButtonClicked.Text == Lang.lgClose)
+                if (!FormEdited)
                 {
                     this.Close();
                 }
@@ -50,7 +47,7 @@ namespace RateController
                     // save changes
                     SaveGrid();
                     mf.Tls.SaveProperty("ShowPressure", ckShowPressure.Checked.ToString());
-                    mf.Tls.SaveProperty("PressureID",tbPressureID.Text);
+                    mf.Tls.SaveProperty("PressureID", tbPressureID.Text);
 
                     UpdateForm();
                     SetButtons(false);
@@ -233,13 +230,15 @@ namespace RateController
                 if (Edited)
                 {
                     btnCancel.Enabled = true;
-                    bntOK.Text = Lang.lgSave;
+                    btnOK.Image = Properties.Resources.Save;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
-                    bntOK.Text = Lang.lgClose;
+                    btnOK.Image = Properties.Resources.OK;
                 }
+
+                FormEdited = Edited;
             }
         }
 

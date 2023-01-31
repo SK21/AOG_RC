@@ -46,7 +46,6 @@ namespace RateController
             this.lbRateAmount = new System.Windows.Forms.Label();
             this.lbCoverage = new System.Windows.Forms.Label();
             this.lbRemaining = new System.Windows.Forms.Label();
-            this.btAlarm = new System.Windows.Forms.Button();
             this.panSummary = new System.Windows.Forms.Panel();
             this.idc5 = new System.Windows.Forms.Label();
             this.rt5 = new System.Windows.Forms.Label();
@@ -92,22 +91,23 @@ namespace RateController
             this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.btnRight = new System.Windows.Forms.Button();
-            this.btnLeft = new System.Windows.Forms.Button();
-            this.btnSettings = new System.Windows.Forms.Button();
             this.lbPressureValue = new System.Windows.Forms.Label();
             this.lbPressure = new System.Windows.Forms.Label();
             this.panFan = new System.Windows.Forms.Panel();
+            this.btnStop = new System.Windows.Forms.Button();
             this.lbOn = new System.Windows.Forms.Label();
             this.lbOff = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnStart = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
             this.lbTargetRPM = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lbFanRate = new System.Windows.Forms.Label();
             this.lbCurrentRPM = new System.Windows.Forms.Label();
             this.lbFan = new System.Windows.Forms.Label();
+            this.btnRight = new System.Windows.Forms.Button();
+            this.btnLeft = new System.Windows.Forms.Button();
+            this.btnSettings = new System.Windows.Forms.Button();
+            this.btAlarm = new System.Windows.Forms.Button();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -284,21 +284,6 @@ namespace RateController
             this.lbRemaining.Text = "Quantity Applied ...";
             this.lbRemaining.Click += new System.EventHandler(this.label34_Click);
             this.lbRemaining.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
-            // 
-            // btAlarm
-            // 
-            this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
-            this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(192, 330);
-            this.btAlarm.Name = "btAlarm";
-            this.btAlarm.Size = new System.Drawing.Size(168, 120);
-            this.btAlarm.TabIndex = 146;
-            this.btAlarm.Text = "Rate  Alarm  Pressure Alarm";
-            this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btAlarm.UseVisualStyleBackColor = true;
-            this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
             // 
             // panSummary
             // 
@@ -539,7 +524,7 @@ namespace RateController
             // 
             // MnuProducts
             // 
-            this.MnuProducts.Image = ((System.Drawing.Image)(resources.GetObject("MnuProducts.Image")));
+            this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
             this.MnuProducts.Name = "MnuProducts";
             this.MnuProducts.Size = new System.Drawing.Size(179, 42);
             this.MnuProducts.Text = "Products";
@@ -547,7 +532,7 @@ namespace RateController
             // 
             // MnuSections
             // 
-            this.MnuSections.Image = ((System.Drawing.Image)(resources.GetObject("MnuSections.Image")));
+            this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
             this.MnuSections.Name = "MnuSections";
             this.MnuSections.Size = new System.Drawing.Size(179, 42);
             this.MnuSections.Text = "Sections";
@@ -555,7 +540,7 @@ namespace RateController
             // 
             // MnuComm
             // 
-            this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
+            this.MnuComm.Image = global::RateController.Properties.Resources.Comm;
             this.MnuComm.Name = "MnuComm";
             this.MnuComm.Size = new System.Drawing.Size(179, 42);
             this.MnuComm.Text = "Comm";
@@ -571,7 +556,7 @@ namespace RateController
             // 
             // MnuPressures
             // 
-            this.MnuPressures.Image = ((System.Drawing.Image)(resources.GetObject("MnuPressures.Image")));
+            this.MnuPressures.Image = global::RateController.Properties.Resources.pressure;
             this.MnuPressures.Name = "MnuPressures";
             this.MnuPressures.Size = new System.Drawing.Size(179, 42);
             this.MnuPressures.Text = "Pressures";
@@ -592,14 +577,14 @@ namespace RateController
             this.MnuLanguage,
             this.serialMonitorToolStripMenuItem,
             this.MnuAbout});
-            this.MnuOptions.Image = global::RateController.Properties.Resources._7504229_hamburger_menu_list_options_icon;
+            this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
             this.MnuOptions.Name = "MnuOptions";
             this.MnuOptions.Size = new System.Drawing.Size(179, 42);
             this.MnuOptions.Text = "Options";
             // 
             // simulationToolStripMenuItem
             // 
-            this.simulationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("simulationToolStripMenuItem.Image")));
+            this.simulationToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
             this.simulationToolStripMenuItem.Name = "simulationToolStripMenuItem";
             this.simulationToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
             this.simulationToolStripMenuItem.Text = "Switches";
@@ -628,7 +613,7 @@ namespace RateController
             // 
             // MnuNew
             // 
-            this.MnuNew.Image = global::RateController.Properties.Resources.FileNew;
+            this.MnuNew.Image = global::RateController.Properties.Resources.FileNew1;
             this.MnuNew.Name = "MnuNew";
             this.MnuNew.Size = new System.Drawing.Size(215, 42);
             this.MnuNew.Text = "New file";
@@ -636,7 +621,7 @@ namespace RateController
             // 
             // MnuOpen
             // 
-            this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile;
+            this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile1;
             this.MnuOpen.Name = "MnuOpen";
             this.MnuOpen.Size = new System.Drawing.Size(215, 42);
             this.MnuOpen.Text = "Open";
@@ -644,7 +629,7 @@ namespace RateController
             // 
             // MnuSaveAs
             // 
-            this.MnuSaveAs.Image = global::RateController.Properties.Resources.close1;
+            this.MnuSaveAs.Image = global::RateController.Properties.Resources.close2;
             this.MnuSaveAs.Name = "MnuSaveAs";
             this.MnuSaveAs.Size = new System.Drawing.Size(215, 42);
             this.MnuSaveAs.Text = "Save As";
@@ -657,7 +642,7 @@ namespace RateController
             // 
             // mnuMetric
             // 
-            this.mnuMetric.Image = global::RateController.Properties.Resources.CheckMark;
+            this.mnuMetric.Image = global::RateController.Properties.Resources.Check;
             this.mnuMetric.Name = "mnuMetric";
             this.mnuMetric.Size = new System.Drawing.Size(215, 42);
             this.mnuMetric.Text = "Metric Units";
@@ -670,7 +655,7 @@ namespace RateController
             this.MnuEnglish,
             this.MnuNederlands,
             this.russianToolStripMenuItem});
-            this.MnuLanguage.Image = global::RateController.Properties.Resources._7791659_language_speak_communication_speech_chat_icon;
+            this.MnuLanguage.Image = global::RateController.Properties.Resources.Language;
             this.MnuLanguage.Name = "MnuLanguage";
             this.MnuLanguage.Size = new System.Drawing.Size(215, 42);
             this.MnuLanguage.Text = "Language";
@@ -705,7 +690,7 @@ namespace RateController
             // 
             // serialMonitorToolStripMenuItem
             // 
-            this.serialMonitorToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("serialMonitorToolStripMenuItem.Image")));
+            this.serialMonitorToolStripMenuItem.Image = global::RateController.Properties.Resources.monitor;
             this.serialMonitorToolStripMenuItem.Name = "serialMonitorToolStripMenuItem";
             this.serialMonitorToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
             this.serialMonitorToolStripMenuItem.Text = "Serial Monitor";
@@ -713,7 +698,7 @@ namespace RateController
             // 
             // MnuAbout
             // 
-            this.MnuAbout.Image = global::RateController.Properties.Resources.R674d5dd067acbd409ff50db6d0647f5d;
+            this.MnuAbout.Image = global::RateController.Properties.Resources.About;
             this.MnuAbout.Name = "MnuAbout";
             this.MnuAbout.Size = new System.Drawing.Size(215, 42);
             this.MnuAbout.Text = "About";
@@ -728,38 +713,6 @@ namespace RateController
             // 
             this.saveFileDialog1.DefaultExt = "rcs";
             this.saveFileDialog1.Filter = "RC Settings|*.rcs";
-            // 
-            // btnRight
-            // 
-            this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
-            this.btnRight.Location = new System.Drawing.Point(138, 153);
-            this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(63, 62);
-            this.btnRight.TabIndex = 143;
-            this.btnRight.UseVisualStyleBackColor = true;
-            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
-            // 
-            // btnLeft
-            // 
-            this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
-            this.btnLeft.Location = new System.Drawing.Point(71, 153);
-            this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(60, 62);
-            this.btnLeft.TabIndex = 142;
-            this.btnLeft.UseVisualStyleBackColor = true;
-            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
-            // 
-            // btnSettings
-            // 
-            this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
-            this.btnSettings.Location = new System.Drawing.Point(4, 153);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(60, 62);
-            this.btnSettings.TabIndex = 73;
-            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnSettings.UseVisualStyleBackColor = true;
-            this.btnSettings.Click += new System.EventHandler(this.button3_Click);
             // 
             // lbPressureValue
             // 
@@ -786,11 +739,11 @@ namespace RateController
             // 
             // panFan
             // 
+            this.panFan.Controls.Add(this.btnStop);
             this.panFan.Controls.Add(this.lbOn);
             this.panFan.Controls.Add(this.lbOff);
             this.panFan.Controls.Add(this.groupBox1);
             this.panFan.Controls.Add(this.btnStart);
-            this.panFan.Controls.Add(this.btnStop);
             this.panFan.Controls.Add(this.lbTargetRPM);
             this.panFan.Controls.Add(this.label4);
             this.panFan.Controls.Add(this.lbFanRate);
@@ -798,8 +751,19 @@ namespace RateController
             this.panFan.Controls.Add(this.lbFan);
             this.panFan.Location = new System.Drawing.Point(618, 327);
             this.panFan.Name = "panFan";
-            this.panFan.Size = new System.Drawing.Size(270, 150);
+            this.panFan.Size = new System.Drawing.Size(270, 161);
             this.panFan.TabIndex = 157;
+            // 
+            // btnStop
+            // 
+            this.btnStop.BackColor = System.Drawing.Color.Transparent;
+            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
+            this.btnStop.Location = new System.Drawing.Point(138, 86);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(68, 68);
+            this.btnStop.TabIndex = 199;
+            this.btnStop.UseVisualStyleBackColor = false;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // lbOn
             // 
@@ -835,23 +799,13 @@ namespace RateController
             // 
             // btnStart
             // 
-            this.btnStart.Image = ((System.Drawing.Image)(resources.GetObject("btnStart.Image")));
-            this.btnStart.Location = new System.Drawing.Point(7, 86);
+            this.btnStart.Image = global::RateController.Properties.Resources.Start;
+            this.btnStart.Location = new System.Drawing.Point(64, 86);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(124, 62);
+            this.btnStart.Size = new System.Drawing.Size(68, 68);
             this.btnStart.TabIndex = 164;
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            // 
-            // btnStop
-            // 
-            this.btnStop.Image = ((System.Drawing.Image)(resources.GetObject("btnStop.Image")));
-            this.btnStop.Location = new System.Drawing.Point(146, 86);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(124, 62);
-            this.btnStop.TabIndex = 163;
-            this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // lbTargetRPM
             // 
@@ -904,6 +858,53 @@ namespace RateController
             this.lbFan.TabIndex = 158;
             this.lbFan.Text = "Herbicide";
             // 
+            // btnRight
+            // 
+            this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
+            this.btnRight.Location = new System.Drawing.Point(138, 153);
+            this.btnRight.Name = "btnRight";
+            this.btnRight.Size = new System.Drawing.Size(63, 62);
+            this.btnRight.TabIndex = 143;
+            this.btnRight.UseVisualStyleBackColor = true;
+            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
+            this.btnLeft.Location = new System.Drawing.Point(71, 153);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(60, 62);
+            this.btnLeft.TabIndex = 142;
+            this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSettings.Image = global::RateController.Properties.Resources.SettingsGear64;
+            this.btnSettings.Location = new System.Drawing.Point(4, 153);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(60, 62);
+            this.btnSettings.TabIndex = 73;
+            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // btAlarm
+            // 
+            this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btAlarm.Image = global::RateController.Properties.Resources.Alarm1;
+            this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btAlarm.Location = new System.Drawing.Point(192, 330);
+            this.btAlarm.Name = "btAlarm";
+            this.btAlarm.Size = new System.Drawing.Size(168, 120);
+            this.btAlarm.TabIndex = 146;
+            this.btAlarm.Text = "Rate  Alarm  Pressure Alarm";
+            this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btAlarm.UseVisualStyleBackColor = true;
+            this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
+            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -930,6 +931,7 @@ namespace RateController
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Transparent;
             this.Activated += new System.EventHandler(this.FormStart_Activated);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStart_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormRateControl_FormClosed);
             this.Load += new System.EventHandler(this.FormStart_Load);
             this.panProducts.ResumeLayout(false);
@@ -1009,7 +1011,6 @@ namespace RateController
         private System.Windows.Forms.Label lbCurrentRPM;
         private System.Windows.Forms.Label lbFan;
         private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbOn;
         private System.Windows.Forms.Label lbOff;
@@ -1018,5 +1019,6 @@ namespace RateController
         private System.Windows.Forms.Label idc5;
         private System.Windows.Forms.Label rt5;
         private System.Windows.Forms.Label prd5;
+        private System.Windows.Forms.Button btnStop;
     }
 }

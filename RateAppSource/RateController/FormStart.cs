@@ -210,10 +210,6 @@ namespace RateController
                 if (CurrentPage == 0)
                 {
                     // summary
-                    panProducts.Visible = false;
-                    panSummary.Visible = true;
-                    panFan.Visible = false;
-
                     for (int i = 0; i < MaxProducts; i++)
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
@@ -246,11 +242,6 @@ namespace RateController
                 {
                     // product pages
                     clsProduct Prd = Products.Item(CurrentPage - 1);
-
-                    panProducts.Visible = true;
-                    panSummary.Visible = false;
-                    panProducts.Visible = (Prd.ControlType != ControlTypeEnum.Fan);
-                    panFan.Visible = (Prd.ControlType == ControlTypeEnum.Fan);
 
                     lbFan.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
                     lbTargetRPM.Text = Prd.TargetRate().ToString("N0");
@@ -379,11 +370,11 @@ namespace RateController
                 // metric
                 if (cUseInches)
                 {
-                    MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Xmark;
+                    MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Cancel40;
                 }
                 else
                 {
-                    MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.CheckMark;
+                    MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Check;
                 }
 
                 if (CurrentPage != CurrentPageLast)
@@ -443,6 +434,7 @@ namespace RateController
 
                 btAlarm.Top = 21;
                 btAlarm.Left = 33;
+                btAlarm.Visible = false;
 
                 if (CurrentPage == 0)
                 {
@@ -933,7 +925,7 @@ namespace RateController
             }
             else if(LargeScreenExit)
             {
-                Application.Exit();
+                this.Close();
             }
         }
 
@@ -947,6 +939,18 @@ namespace RateController
             Lscrn = new frmLargeScreen(this);
             Lscrn.ShowInTaskbar = true;
             Lscrn.Show();
+        }
+
+        private void FormStart_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!LargeScreenExit)
+            {
+                var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true);
+                Hlp.ShowDialog();
+                bool Result = Hlp.Result;
+                Hlp.Close();
+                if (!Result) e.Cancel = true;
+            }
         }
     }
 }

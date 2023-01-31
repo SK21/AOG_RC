@@ -11,6 +11,7 @@ namespace RateController
     {
         private bool Initializing;
         private FormStart mf;
+        private bool FormEdited;
 
         public frmWifi(FormStart CalledFrom)
         {
@@ -19,16 +20,8 @@ namespace RateController
 
             #region // language
 
-            btnCancel.Text = Lang.lgCancel;
-            btnClose.Text = Lang.lgClose;
-            btnRescan.Text = Lang.lgRescan;
-
             grpHotSpot.Text = Lang.lgHotspot;
             lbPassword.Text = Lang.lgPassword;
-
-            btnStop.Text = Lang.lgStop;
-            btnStart.Text = Lang.lgStart;
-            btnRescan.Text = Lang.lgRescan;
 
             #endregion // language
         }
@@ -41,8 +34,7 @@ namespace RateController
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            Button ButtonClicked = (Button)sender;
-            if (ButtonClicked.Text == Lang.lgClose)
+            if (!FormEdited)
             {
                 this.Close();
             }
@@ -183,7 +175,7 @@ namespace RateController
                 if (Edited)
                 {
                     btnCancel.Enabled = true;
-                    this.btnClose.Text = Lang.lgSave;
+                    btnClose.Image = Properties.Resources.Save;
 
                     btnStop.Enabled = false;
                     btnStart.Enabled = false;
@@ -196,7 +188,7 @@ namespace RateController
                 else
                 {
                     btnCancel.Enabled = false;
-                    this.btnClose.Text = Lang.lgClose;
+                    btnClose.Image = Properties.Resources.OK;
 
                     btnStop.Enabled = true;
                     btnStart.Enabled = true;
@@ -206,6 +198,8 @@ namespace RateController
                     tbSSID.Enabled = true;
                     tbPassword.Enabled = true;
                 }
+
+                FormEdited = Edited;
             }
         }
 

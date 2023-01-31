@@ -14,7 +14,6 @@ namespace RateController
             #region // language
 
             label27.Text = Lang.lgLocalIP;
-            bntOK.Text = Lang.lgClose;
             this.Text = Lang.lgAbout;
             lbVersion.Text = Lang.lgVersion;
 

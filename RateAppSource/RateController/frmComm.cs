@@ -18,8 +18,6 @@ namespace RateController
             btnConnect1.Text = Lang.lgConnect;
             btnConnect2.Text = Lang.lgConnect;
             btnConnect3.Text = Lang.lgConnect;
-            btnRescan.Text = Lang.lgRescan;
-            bntOK.Text = Lang.lgClose;
 
             #endregion // language
         }

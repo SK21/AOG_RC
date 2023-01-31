@@ -607,11 +607,11 @@ namespace RateController
             // metric
             if (mf.UseInches)
             {
-                MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Xmark;
+                MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Cancel40;
             }
             else
             {
-                MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.CheckMark;
+                MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Check;
             }
 
             // aog
@@ -805,6 +805,25 @@ namespace RateController
         private void btAlarm_Click(object sender, EventArgs e)
         {
             RCalarm.Silence();
+        }
+
+        private void frmLargeScreen_Activated(object sender, EventArgs e)
+        {
+            lbName0.Focus();
+        }
+
+        private void MnuOptions_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void frmLargeScreen_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var Hlp = new frmMsgBox(mf, "Confirm Exit?", "Exit", true);
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (!Result) e.Cancel = true;
         }
     }
 }
