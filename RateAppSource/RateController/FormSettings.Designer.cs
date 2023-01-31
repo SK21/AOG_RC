@@ -276,6 +276,8 @@ namespace RateController
             // 
             // btnStart
             // 
+            this.btnStart.FlatAppearance.BorderSize = 0;
+            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStart.Image = global::RateController.Properties.Resources.Start;
             this.btnStart.Location = new System.Drawing.Point(162, 308);
             this.btnStart.Name = "btnStart";
@@ -286,6 +288,8 @@ namespace RateController
             // 
             // btnStop
             // 
+            this.btnStop.FlatAppearance.BorderSize = 0;
+            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStop.Image = global::RateController.Properties.Resources.Stop;
             this.btnStop.Location = new System.Drawing.Point(240, 308);
             this.btnStop.Name = "btnStop";
@@ -2039,28 +2043,37 @@ namespace RateController
             // 
             // btnRight
             // 
+            this.btnRight.BackColor = System.Drawing.Color.Transparent;
+            this.btnRight.FlatAppearance.BorderSize = 0;
+            this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
             this.btnRight.Location = new System.Drawing.Point(272, 513);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(72, 72);
             this.btnRight.TabIndex = 141;
-            this.btnRight.UseVisualStyleBackColor = true;
+            this.btnRight.UseVisualStyleBackColor = false;
             this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
             // 
             // btnLeft
             // 
+            this.btnLeft.BackColor = System.Drawing.Color.Transparent;
+            this.btnLeft.FlatAppearance.BorderSize = 0;
+            this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnLeft.Image")));
             this.btnLeft.Location = new System.Drawing.Point(194, 513);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(72, 72);
             this.btnLeft.TabIndex = 140;
-            this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.UseVisualStyleBackColor = false;
             this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
             // btnCancel
             // 
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -2069,12 +2082,15 @@ namespace RateController
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
             this.btnCancel.TabIndex = 134;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOK
             // 
+            this.btnOK.BackColor = System.Drawing.Color.Transparent;
             this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnOK.FlatAppearance.BorderSize = 0;
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.OK;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -2083,7 +2099,7 @@ namespace RateController
             this.btnOK.Size = new System.Drawing.Size(72, 72);
             this.btnOK.TabIndex = 0;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // FormSettings

@@ -332,6 +332,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\Stop2.png" />
+    <None Include="Resources\Stop.png" />
+    <None Include="Resources\boundaryStop.png" />
     <None Include="Resources\RC_logo.png" />
     <None Include="Resources\UpArrow64.png" />
     <None Include="Resources\DnArrow64.png" />

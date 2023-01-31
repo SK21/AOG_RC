@@ -96,7 +96,10 @@
             // 
             // btnStop
             // 
+            this.btnStop.BackColor = System.Drawing.Color.Transparent;
             this.btnStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnStop.FlatAppearance.BorderSize = 0;
+            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStop.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnStop.Image = global::RateController.Properties.Resources.Start;
             this.btnStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -106,12 +109,15 @@
             this.btnStop.Size = new System.Drawing.Size(72, 72);
             this.btnStop.TabIndex = 140;
             this.btnStop.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // btnStart
             // 
+            this.btnStart.BackColor = System.Drawing.Color.Transparent;
             this.btnStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnStart.FlatAppearance.BorderSize = 0;
+            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnStart.Image = global::RateController.Properties.Resources.Stop;
             this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -121,13 +127,16 @@
             this.btnStart.Size = new System.Drawing.Size(72, 72);
             this.btnStart.TabIndex = 141;
             this.btnStart.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.UseVisualStyleBackColor = false;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // btnCancel
             // 
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -137,12 +146,15 @@
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
             this.btnCancel.TabIndex = 143;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnClose
             // 
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
             this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnClose.Image = global::RateController.Properties.Resources.OK;
             this.btnClose.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -152,7 +164,7 @@
             this.btnClose.Size = new System.Drawing.Size(72, 72);
             this.btnClose.TabIndex = 144;
             this.btnClose.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // grpHotSpot
@@ -204,6 +216,9 @@
             // 
             // btnRescan
             // 
+            this.btnRescan.BackColor = System.Drawing.Color.Transparent;
+            this.btnRescan.FlatAppearance.BorderSize = 0;
+            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.Image = global::RateController.Properties.Resources.Update;
             this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -212,7 +227,7 @@
             this.btnRescan.Size = new System.Drawing.Size(72, 72);
             this.btnRescan.TabIndex = 151;
             this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnRescan.UseVisualStyleBackColor = true;
+            this.btnRescan.UseVisualStyleBackColor = false;
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             // 
             // groupBox1

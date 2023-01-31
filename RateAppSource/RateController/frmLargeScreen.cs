@@ -245,7 +245,7 @@ namespace RateController
         {
             Properties.Settings.Default.setF_culture = "de";
             Properties.Settings.Default.Save();
-            mf.LargeScreenRestart = true;
+            mf.Restart = true;
             this.Close();
         }
 
@@ -253,7 +253,7 @@ namespace RateController
         {
             Properties.Settings.Default.setF_culture = "en";
             Properties.Settings.Default.Save();
-            mf.LargeScreenRestart = true;
+            mf.Restart = true;
             this.Close();
         }
 
@@ -267,7 +267,7 @@ namespace RateController
         {
             Properties.Settings.Default.setF_culture = "nl";
             Properties.Settings.Default.Save();
-            mf.LargeScreenRestart = true;
+            mf.Restart = true;
             this.Close();
         }
 
@@ -365,7 +365,7 @@ namespace RateController
         {
             Properties.Settings.Default.setF_culture = "ru";
             Properties.Settings.Default.Save();
-            mf.LargeScreenRestart = true;
+            mf.Restart = true;
             this.Close();
         }
 
@@ -822,7 +822,7 @@ namespace RateController
 
         private void frmLargeScreen_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!SwitchingScreens)
+            if (!SwitchingScreens && !mf.Restart)
             {
                 var Hlp = new frmMsgBox(mf, "Confirm Exit?", "Exit", true);
                 Hlp.ShowDialog();

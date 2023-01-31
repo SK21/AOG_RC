@@ -60,7 +60,10 @@ namespace RateController
             // 
             // bntOK
             // 
+            this.bntOK.BackColor = System.Drawing.Color.Transparent;
             this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bntOK.FlatAppearance.BorderSize = 0;
+            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = global::RateController.Properties.Resources.OK;
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -69,7 +72,7 @@ namespace RateController
             this.bntOK.Size = new System.Drawing.Size(72, 72);
             this.bntOK.TabIndex = 136;
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.UseVisualStyleBackColor = false;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // groupBox4
@@ -350,6 +353,9 @@ namespace RateController
             // 
             // btnRescan
             // 
+            this.btnRescan.BackColor = System.Drawing.Color.Transparent;
+            this.btnRescan.FlatAppearance.BorderSize = 0;
+            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.Image = global::RateController.Properties.Resources.Update;
             this.btnRescan.Location = new System.Drawing.Point(334, 334);
@@ -357,7 +363,7 @@ namespace RateController
             this.btnRescan.Size = new System.Drawing.Size(72, 72);
             this.btnRescan.TabIndex = 150;
             this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnRescan.UseVisualStyleBackColor = true;
+            this.btnRescan.UseVisualStyleBackColor = false;
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             // 
             // frmComm

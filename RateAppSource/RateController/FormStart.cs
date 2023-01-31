@@ -57,9 +57,9 @@ namespace RateController
         public SimType SimMode = SimType.None;
         private double cSimSpeed = 0;
 
-        public bool UseLargeScreen = false;
+        private bool cUseLargeScreen = false;
         public bool LargeScreenExit = false;
-        public bool LargeScreenRestart = false;
+        public bool Restart = false;
         public frmLargeScreen Lscrn;
 
         public FormStart()
@@ -130,10 +130,20 @@ namespace RateController
             set { cUseInches = value; }
         }
 
+        public bool UseLargeScreen
+        {
+            get { return cUseLargeScreen; }
+            set
+            {
+                cUseLargeScreen = value;
+                Tls.SaveProperty("UseLargeScreen", cUseLargeScreen.ToString());
+            }
+        }
+
         public int CurrentProduct()
         {
             int Result = 0;
-            if (UseLargeScreen)
+            if (cUseLargeScreen)
             {
                 Result = Lscrn.CurrentProduct();
             }
@@ -152,7 +162,7 @@ namespace RateController
 
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
             if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd)) cSimSpeed = Spd;
-            if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS)) UseLargeScreen = LS;
+            if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS)) cUseLargeScreen = LS;
 
             Sections.Load();
             Sections.CheckSwitchDefinitions();
@@ -365,7 +375,7 @@ namespace RateController
                 }
 
                 // alarm
-                if(!UseLargeScreen) RCalarm.CheckAlarms();
+                if(!cUseLargeScreen) RCalarm.CheckAlarms();
 
                 // metric
                 if (cUseInches)
@@ -531,7 +541,6 @@ namespace RateController
                 Sections.Save();
                 Products.Save();
                 Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
-                Tls.SaveProperty("UseLargeScreen", UseLargeScreen.ToString());
 
                 UDPaog.Close();
                 UDPmodules.Close();
@@ -582,7 +591,7 @@ namespace RateController
             // ethernet
             UDPmodules.EthernetEP = Tls.LoadProperty("EthernetEP");
 
-            if(UseLargeScreen) StartLargeScreen();
+            if(cUseLargeScreen) StartLargeScreen();
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -732,6 +741,7 @@ namespace RateController
         {
             Properties.Settings.Default.setF_culture = "de";
             Properties.Settings.Default.Save();
+            Restart = true;
             Application.Restart();
         }
 
@@ -739,6 +749,7 @@ namespace RateController
         {
             Properties.Settings.Default.setF_culture = "en";
             Properties.Settings.Default.Save();
+            Restart = true;
             Application.Restart();
         }
 
@@ -746,6 +757,7 @@ namespace RateController
         {
             Properties.Settings.Default.setF_culture = "nl";
             Properties.Settings.Default.Save();
+            Restart = true;
             Application.Restart();
         }
 
@@ -796,6 +808,7 @@ namespace RateController
         {
             Properties.Settings.Default.setF_culture = "ru";
             Properties.Settings.Default.Save();
+            Restart = true;
             Application.Restart();
         }
 
@@ -919,7 +932,7 @@ namespace RateController
 
         private void FormStart_Activated(object sender, EventArgs e)
         {
-            if(LargeScreenRestart)
+            if(Restart)
             {
                 Application.Restart();
             }
@@ -933,7 +946,7 @@ namespace RateController
         {
             UseLargeScreen = true;
             LargeScreenExit = false;
-            LargeScreenRestart = false;
+            Restart = false;
             this.WindowState = FormWindowState.Minimized;
             this.ShowInTaskbar = false;
             Lscrn = new frmLargeScreen(this);
@@ -943,7 +956,7 @@ namespace RateController
 
         private void FormStart_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!LargeScreenExit)
+            if (!LargeScreenExit && !Restart)
             {
                 var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true);
                 Hlp.ShowDialog();

@@ -16,7 +16,7 @@
 const int16_t InoID = 4000;
 int16_t StoredID;
 
-# define UseEthernet 1
+# define UseEthernet 0
 
 struct ModuleConfig    // 5 bytes
 {
