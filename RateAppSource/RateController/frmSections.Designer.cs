@@ -43,13 +43,13 @@ namespace RateController
             this.dataColumn1 = new System.Data.DataColumn();
             this.dataColumn2 = new System.Data.DataColumn();
             this.dataColumn3 = new System.Data.DataColumn();
-            this.btnEqual = new System.Windows.Forms.Button();
             this.lbWidth = new System.Windows.Forms.Label();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.bntOK = new System.Windows.Forms.Button();
             this.tbSectionCount = new System.Windows.Forms.TextBox();
             this.label25 = new System.Windows.Forms.Label();
             this.lbFeet = new System.Windows.Forms.Label();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.bntOK = new System.Windows.Forms.Button();
+            this.btnEqual = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
@@ -147,21 +147,6 @@ namespace RateController
             this.dataColumn3.ColumnName = "Switch";
             this.dataColumn3.DataType = typeof(short);
             // 
-            // btnEqual
-            // 
-            this.btnEqual.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEqual.Image = ((System.Drawing.Image)(resources.GetObject("btnEqual.Image")));
-            this.btnEqual.Location = new System.Drawing.Point(101, 397);
-            this.btnEqual.Margin = new System.Windows.Forms.Padding(6);
-            this.btnEqual.Name = "btnEqual";
-            this.btnEqual.Size = new System.Drawing.Size(115, 72);
-            this.btnEqual.TabIndex = 15;
-            this.btnEqual.Text = "=1";
-            this.btnEqual.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEqual.UseVisualStyleBackColor = true;
-            this.btnEqual.Click += new System.EventHandler(this.button1_Click);
-            this.btnEqual.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnEqual_HelpRequested);
-            // 
             // lbWidth
             // 
             this.lbWidth.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -172,37 +157,6 @@ namespace RateController
             this.lbWidth.TabIndex = 12;
             this.lbWidth.Text = "Width:  1200 Inches";
             this.lbWidth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
-            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(228, 397);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
-            this.btnCancel.TabIndex = 136;
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // bntOK
-            // 
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = global::RateController.Properties.Resources.OK;
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(312, 397);
-            this.bntOK.Margin = new System.Windows.Forms.Padding(6);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(72, 72);
-            this.bntOK.TabIndex = 137;
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // tbSectionCount
             // 
@@ -238,6 +192,53 @@ namespace RateController
             this.lbFeet.TabIndex = 138;
             this.lbFeet.Text = "100.6 FT";
             this.lbFeet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
+            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnCancel.Location = new System.Drawing.Point(228, 397);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.TabIndex = 136;
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // bntOK
+            // 
+            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.bntOK.Image = global::RateController.Properties.Resources.OK;
+            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.bntOK.Location = new System.Drawing.Point(312, 397);
+            this.bntOK.Margin = new System.Windows.Forms.Padding(6);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(72, 72);
+            this.bntOK.TabIndex = 137;
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
+            // 
+            // btnEqual
+            // 
+            this.btnEqual.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEqual.Image = global::RateController.Properties.Resources.Copy;
+            this.btnEqual.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnEqual.Location = new System.Drawing.Point(115, 397);
+            this.btnEqual.Margin = new System.Windows.Forms.Padding(6);
+            this.btnEqual.Name = "btnEqual";
+            this.btnEqual.Size = new System.Drawing.Size(101, 72);
+            this.btnEqual.TabIndex = 15;
+            this.btnEqual.Text = "=1";
+            this.btnEqual.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnEqual.UseVisualStyleBackColor = true;
+            this.btnEqual.Click += new System.EventHandler(this.button1_Click);
+            this.btnEqual.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnEqual_HelpRequested);
             // 
             // frmSections
             // 

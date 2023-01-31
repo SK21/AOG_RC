@@ -332,6 +332,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\RC_logo.png" />
+    <None Include="Resources\UpArrow64.png" />
+    <None Include="Resources\DnArrow64.png" />
+    <None Include="Resources\RClogo.png" />
+    <None Include="Resources\Save.png" />
+    <None Include="Resources\RateControlOff.png" />
+    <None Include="Resources\SwitchScreens.png" />
+    <None Include="Resources\wifi.png" />
+    <None Include="Resources\Sec1.PNG" />
+    <None Include="Resources\Industry-Circuit-icon.png" />
+    <None Include="Resources\cableusb_119960.png" />
+    <None Include="Resources\Alarm1.png" />
+    <None Include="Resources\Language.png" />
     <None Include="Resources\icons8-cancel-40.png" />
     <None Include="Resources\monitor.png" />
     <None Include="Resources\icons8-check-circle-48.png" />
@@ -342,7 +355,6 @@
     <None Include="Resources\Menu.png" />
     <None Include="Resources\pressure.png" />
     <None Include="Resources\Comm.jpg" />
-    <None Include="Resources\Sec1.PNG" />
     <None Include="Resources\spray2.png" />
     <None Include="Resources\Stop_Normal_Red_Icon_64 %282%29.jpg" />
     <None Include="Resources\SettingsGear64.png" />
@@ -359,8 +371,6 @@
     <None Include="Resources\OK64.png" />
     <None Include="Resources\AutoSteerTeensy.ino.hex" />
     <None Include="Resources\mcp23017_Adafruit.jpg" />
-    <None Include="Resources\Industry-Circuit-icon.png" />
-    <None Include="Resources\cableusb_119960.png" />
     <None Include="Resources\7791659_language_speak_communication_speech_chat_icon.png" />
     <None Include="Resources\7504229_hamburger_menu_list_options_icon.png" />
     <None Include="Resources\RCnano.ino.hex" />
@@ -369,12 +379,10 @@
     <None Include="Resources\3556117_arrow_ui_up_icon.png" />
     <None Include="Resources\wrench.png" />
     <None Include="Resources\Upload.bmp" />
-    <None Include="Resources\Alarm1.png" />
     <None Include="Resources\Example.rcs" />
     <None Include="Resources\Loud_Alarm_Clock_Buzzer-Muk1984-493547174.wav" />
     <None Include="Resources\Alarm.bmp" />
     <None Include="Resources\OffSmall1.bmp" />
-    <None Include="Resources\RateControlOff.png" />
     <None Include="Resources\R674d5dd067acbd409ff50db6d0647f5d.png" />
     <None Include="Images\DnArrow64.png" />
     <Content Include="Images\close.png" />
@@ -383,6 +391,7 @@
     <None Include="Images\FileNew.png" />
     <None Include="Images\icons8-check-circle-48.png" />
     <None Include="Images\icons8-cancel-40.png" />
+    <None Include="Images\Copy.png" />
     <Content Include="Images\OK64.png" />
     <None Include="Images\OnSmall.png" />
     <None Include="Images\On.png" />
@@ -393,6 +402,7 @@
     <None Include="Images\WindowDayMode.png" />
     <None Include="Images\WindowNightMode.png" />
     <None Include="Images\UpArrow64.png" />
+    <None Include="Images\Stop_Normal_Red_Icon_64.png" />
     <Content Include="RateControlOff.ico" />
   </ItemGroup>
   <ItemGroup>

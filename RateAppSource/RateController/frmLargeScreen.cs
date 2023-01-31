@@ -13,6 +13,7 @@ namespace RateController
         private bool ShowCoverageRemaining = false;
         private bool ShowQuantityRemaining = true;
         public clsAlarm RCalarm;
+        private bool SwitchingScreens = false;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -85,6 +86,7 @@ namespace RateController
             UpdateForm();
             timerMain.Enabled = true;
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+            SwitchingScreens = false;
         }
 
         private void lbAogConnected_Click(object sender, EventArgs e)
@@ -355,6 +357,7 @@ namespace RateController
             this.ShowInTaskbar = false;
             mf.ShowInTaskbar = true;
             mf.UseLargeScreen = false;
+            SwitchingScreens = true;
             this.Close();
         }
 
@@ -819,11 +822,14 @@ namespace RateController
 
         private void frmLargeScreen_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var Hlp = new frmMsgBox(mf, "Confirm Exit?", "Exit", true);
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (!Result) e.Cancel = true;
+            if (!SwitchingScreens)
+            {
+                var Hlp = new frmMsgBox(mf, "Confirm Exit?", "Exit", true);
+                Hlp.ShowDialog();
+                bool Result = Hlp.Result;
+                Hlp.Close();
+                if (!Result) e.Cancel = true;
+            }
         }
     }
 }

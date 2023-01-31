@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormNumeric));
             this.tboxNumber = new System.Windows.Forms.TextBox();
             this.lblMax = new System.Windows.Forms.Label();
             this.lblMin = new System.Windows.Forms.Label();
@@ -84,7 +85,7 @@
             this.btnDistanceUp.FlatAppearance.BorderSize = 2;
             this.btnDistanceUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDistanceUp.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDistanceUp.Image = global::RateController.Properties.Resources.UpArrow64;
+            this.btnDistanceUp.Image = ((System.Drawing.Image)(resources.GetObject("btnDistanceUp.Image")));
             this.btnDistanceUp.Location = new System.Drawing.Point(71, 3);
             this.btnDistanceUp.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnDistanceUp.Name = "btnDistanceUp";
@@ -101,7 +102,7 @@
             this.btnDistanceDn.FlatAppearance.BorderSize = 2;
             this.btnDistanceDn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDistanceDn.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDistanceDn.Image = global::RateController.Properties.Resources.DnArrow64;
+            this.btnDistanceDn.Image = ((System.Drawing.Image)(resources.GetObject("btnDistanceDn.Image")));
             this.btnDistanceDn.Location = new System.Drawing.Point(2, 3);
             this.btnDistanceDn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnDistanceDn.Name = "btnDistanceDn";
@@ -124,6 +125,7 @@
             this.Controls.Add(this.lblMin);
             this.Controls.Add(this.lblMax);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormNumeric";

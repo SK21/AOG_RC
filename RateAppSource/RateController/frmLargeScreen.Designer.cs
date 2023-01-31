@@ -418,7 +418,7 @@
             // 
             // MnuComm
             // 
-            this.MnuComm.Image = global::RateController.Properties.Resources.Comm;
+            this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
             this.MnuComm.Size = new System.Drawing.Size(218, 42);
             this.MnuComm.Text = "Comm";
@@ -471,7 +471,7 @@
             // 
             // mnuNetwork
             // 
-            this.mnuNetwork.Image = ((System.Drawing.Image)(resources.GetObject("mnuNetwork.Image")));
+            this.mnuNetwork.Image = global::RateController.Properties.Resources.wifi;
             this.mnuNetwork.Name = "mnuNetwork";
             this.mnuNetwork.Size = new System.Drawing.Size(241, 42);
             this.mnuNetwork.Text = "Network";
@@ -534,7 +534,7 @@
             this.MnuEnglish,
             this.MnuNederlands,
             this.russianToolStripMenuItem});
-            this.MnuLanguage.Image = global::RateController.Properties.Resources.Language;
+            this.MnuLanguage.Image = ((System.Drawing.Image)(resources.GetObject("MnuLanguage.Image")));
             this.MnuLanguage.Name = "MnuLanguage";
             this.MnuLanguage.Size = new System.Drawing.Size(241, 42);
             this.MnuLanguage.Text = "Language";

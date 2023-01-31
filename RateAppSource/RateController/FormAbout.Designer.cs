@@ -33,10 +33,10 @@ namespace RateController
             this.label27 = new System.Windows.Forms.Label();
             this.lbAppVersion = new System.Windows.Forms.Label();
             this.lbVersion = new System.Windows.Forms.Label();
-            this.bntOK = new System.Windows.Forms.Button();
             this.lbIP = new System.Windows.Forms.Label();
             this.lbWifi = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.bntOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label27
@@ -69,20 +69,6 @@ namespace RateController
             this.lbVersion.Text = "Version";
             this.lbVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // bntOK
-            // 
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = global::RateController.Properties.Resources.OK;
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(83, 126);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 0;
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
             // lbIP
             // 
             this.lbIP.AutoSize = true;
@@ -112,6 +98,20 @@ namespace RateController
             this.label3.Size = new System.Drawing.Size(64, 23);
             this.label3.TabIndex = 183;
             this.label3.Text = "Wifi IP";
+            // 
+            // bntOK
+            // 
+            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.bntOK.Image = global::RateController.Properties.Resources.OK;
+            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.bntOK.Location = new System.Drawing.Point(83, 126);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(115, 72);
+            this.bntOK.TabIndex = 0;
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // FormAbout
             // 

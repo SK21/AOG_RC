@@ -47,26 +47,45 @@ namespace RateController
             this.lbCoverage = new System.Windows.Forms.Label();
             this.lbRemaining = new System.Windows.Forms.Label();
             this.panSummary = new System.Windows.Forms.Panel();
-            this.idc5 = new System.Windows.Forms.Label();
             this.rt5 = new System.Windows.Forms.Label();
             this.prd5 = new System.Windows.Forms.Label();
-            this.idc0 = new System.Windows.Forms.Label();
             this.prd4 = new System.Windows.Forms.Label();
             this.rt4 = new System.Windows.Forms.Label();
-            this.idc4 = new System.Windows.Forms.Label();
             this.prd3 = new System.Windows.Forms.Label();
             this.rt3 = new System.Windows.Forms.Label();
-            this.idc3 = new System.Windows.Forms.Label();
             this.prd2 = new System.Windows.Forms.Label();
             this.rt2 = new System.Windows.Forms.Label();
-            this.idc2 = new System.Windows.Forms.Label();
             this.prd1 = new System.Windows.Forms.Label();
             this.rt1 = new System.Windows.Forms.Label();
-            this.idc1 = new System.Windows.Forms.Label();
             this.prd0 = new System.Windows.Forms.Label();
             this.rt0 = new System.Windows.Forms.Label();
             this.timerNano = new System.Windows.Forms.Timer(this.components);
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.lbPressureValue = new System.Windows.Forms.Label();
+            this.lbPressure = new System.Windows.Forms.Label();
+            this.panFan = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbTargetRPM = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lbFanRate = new System.Windows.Forms.Label();
+            this.lbCurrentRPM = new System.Windows.Forms.Label();
+            this.lbFan = new System.Windows.Forms.Label();
+            this.btnRight = new System.Windows.Forms.Button();
+            this.btnLeft = new System.Windows.Forms.Button();
+            this.btnSettings = new System.Windows.Forms.Button();
+            this.idc5 = new System.Windows.Forms.Label();
+            this.idc0 = new System.Windows.Forms.Label();
+            this.idc4 = new System.Windows.Forms.Label();
+            this.idc3 = new System.Windows.Forms.Label();
+            this.idc2 = new System.Windows.Forms.Label();
+            this.idc1 = new System.Windows.Forms.Label();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.lbOn = new System.Windows.Forms.Label();
+            this.lbOff = new System.Windows.Forms.Label();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.btAlarm = new System.Windows.Forms.Button();
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,25 +108,6 @@ namespace RateController
             this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serialMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.lbPressureValue = new System.Windows.Forms.Label();
-            this.lbPressure = new System.Windows.Forms.Label();
-            this.panFan = new System.Windows.Forms.Panel();
-            this.btnStop = new System.Windows.Forms.Button();
-            this.lbOn = new System.Windows.Forms.Label();
-            this.lbOff = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnStart = new System.Windows.Forms.Button();
-            this.lbTargetRPM = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lbFanRate = new System.Windows.Forms.Label();
-            this.lbCurrentRPM = new System.Windows.Forms.Label();
-            this.lbFan = new System.Windows.Forms.Label();
-            this.btnRight = new System.Windows.Forms.Button();
-            this.btnLeft = new System.Windows.Forms.Button();
-            this.btnSettings = new System.Windows.Forms.Button();
-            this.btAlarm = new System.Windows.Forms.Button();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -310,18 +310,6 @@ namespace RateController
             this.panSummary.Size = new System.Drawing.Size(270, 200);
             this.panSummary.TabIndex = 100;
             // 
-            // idc5
-            // 
-            this.idc5.BackColor = System.Drawing.SystemColors.Control;
-            this.idc5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc5.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc5.Image = ((System.Drawing.Image)(resources.GetObject("idc5.Image")));
-            this.idc5.Location = new System.Drawing.Point(240, 145);
-            this.idc5.Name = "idc5";
-            this.idc5.Size = new System.Drawing.Size(30, 23);
-            this.idc5.TabIndex = 125;
-            this.idc5.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // rt5
             // 
             this.rt5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -341,18 +329,6 @@ namespace RateController
             this.prd5.Size = new System.Drawing.Size(143, 23);
             this.prd5.TabIndex = 123;
             this.prd5.Text = "6";
-            // 
-            // idc0
-            // 
-            this.idc0.BackColor = System.Drawing.SystemColors.Control;
-            this.idc0.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc0.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc0.Image = global::RateController.Properties.Resources.OffSmall;
-            this.idc0.Location = new System.Drawing.Point(240, 0);
-            this.idc0.Name = "idc0";
-            this.idc0.Size = new System.Drawing.Size(30, 23);
-            this.idc0.TabIndex = 122;
-            this.idc0.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // prd4
             // 
@@ -374,18 +350,6 @@ namespace RateController
             this.rt4.Text = "0";
             this.rt4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // idc4
-            // 
-            this.idc4.BackColor = System.Drawing.SystemColors.Control;
-            this.idc4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc4.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc4.Image = ((System.Drawing.Image)(resources.GetObject("idc4.Image")));
-            this.idc4.Location = new System.Drawing.Point(240, 116);
-            this.idc4.Name = "idc4";
-            this.idc4.Size = new System.Drawing.Size(30, 23);
-            this.idc4.TabIndex = 119;
-            this.idc4.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // prd3
             // 
             this.prd3.Cursor = System.Windows.Forms.Cursors.Default;
@@ -405,18 +369,6 @@ namespace RateController
             this.rt3.TabIndex = 117;
             this.rt3.Text = "0";
             this.rt3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // idc3
-            // 
-            this.idc3.BackColor = System.Drawing.SystemColors.Control;
-            this.idc3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc3.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc3.Image = ((System.Drawing.Image)(resources.GetObject("idc3.Image")));
-            this.idc3.Location = new System.Drawing.Point(240, 87);
-            this.idc3.Name = "idc3";
-            this.idc3.Size = new System.Drawing.Size(30, 23);
-            this.idc3.TabIndex = 116;
-            this.idc3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // prd2
             // 
@@ -438,18 +390,6 @@ namespace RateController
             this.rt2.Text = "0";
             this.rt2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // idc2
-            // 
-            this.idc2.BackColor = System.Drawing.SystemColors.Control;
-            this.idc2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc2.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc2.Image = ((System.Drawing.Image)(resources.GetObject("idc2.Image")));
-            this.idc2.Location = new System.Drawing.Point(240, 58);
-            this.idc2.Name = "idc2";
-            this.idc2.Size = new System.Drawing.Size(30, 23);
-            this.idc2.TabIndex = 113;
-            this.idc2.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // prd1
             // 
             this.prd1.Cursor = System.Windows.Forms.Cursors.Default;
@@ -469,18 +409,6 @@ namespace RateController
             this.rt1.TabIndex = 111;
             this.rt1.Text = "0";
             this.rt1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // idc1
-            // 
-            this.idc1.BackColor = System.Drawing.SystemColors.Control;
-            this.idc1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc1.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc1.Image = ((System.Drawing.Image)(resources.GetObject("idc1.Image")));
-            this.idc1.Location = new System.Drawing.Point(240, 29);
-            this.idc1.Name = "idc1";
-            this.idc1.Size = new System.Drawing.Size(30, 23);
-            this.idc1.TabIndex = 110;
-            this.idc1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // prd0
             // 
@@ -521,188 +449,6 @@ namespace RateController
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
             this.mnuSettings.Size = new System.Drawing.Size(180, 256);
-            // 
-            // MnuProducts
-            // 
-            this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
-            this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(179, 42);
-            this.MnuProducts.Text = "Products";
-            this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
-            // 
-            // MnuSections
-            // 
-            this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
-            this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(179, 42);
-            this.MnuSections.Text = "Sections";
-            this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
-            // 
-            // MnuComm
-            // 
-            this.MnuComm.Image = global::RateController.Properties.Resources.Comm;
-            this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(179, 42);
-            this.MnuComm.Text = "Comm";
-            this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
-            // 
-            // MnuRelays
-            // 
-            this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
-            this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(179, 42);
-            this.MnuRelays.Text = "Relays";
-            this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
-            // 
-            // MnuPressures
-            // 
-            this.MnuPressures.Image = global::RateController.Properties.Resources.pressure;
-            this.MnuPressures.Name = "MnuPressures";
-            this.MnuPressures.Size = new System.Drawing.Size(179, 42);
-            this.MnuPressures.Text = "Pressures";
-            this.MnuPressures.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click);
-            // 
-            // MnuOptions
-            // 
-            this.MnuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.simulationToolStripMenuItem,
-            this.mnuNetwork,
-            this.largeScreenToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.MnuNew,
-            this.MnuOpen,
-            this.MnuSaveAs,
-            this.toolStripSeparator2,
-            this.mnuMetric,
-            this.MnuLanguage,
-            this.serialMonitorToolStripMenuItem,
-            this.MnuAbout});
-            this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
-            this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(179, 42);
-            this.MnuOptions.Text = "Options";
-            // 
-            // simulationToolStripMenuItem
-            // 
-            this.simulationToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
-            this.simulationToolStripMenuItem.Name = "simulationToolStripMenuItem";
-            this.simulationToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
-            this.simulationToolStripMenuItem.Text = "Switches";
-            this.simulationToolStripMenuItem.Click += new System.EventHandler(this.simulationToolStripMenuItem_Click);
-            // 
-            // mnuNetwork
-            // 
-            this.mnuNetwork.Image = ((System.Drawing.Image)(resources.GetObject("mnuNetwork.Image")));
-            this.mnuNetwork.Name = "mnuNetwork";
-            this.mnuNetwork.Size = new System.Drawing.Size(215, 42);
-            this.mnuNetwork.Text = "Network";
-            this.mnuNetwork.Click += new System.EventHandler(this.wifiToolStripMenuItem_Click);
-            // 
-            // largeScreenToolStripMenuItem
-            // 
-            this.largeScreenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("largeScreenToolStripMenuItem.Image")));
-            this.largeScreenToolStripMenuItem.Name = "largeScreenToolStripMenuItem";
-            this.largeScreenToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
-            this.largeScreenToolStripMenuItem.Text = "Large Screen";
-            this.largeScreenToolStripMenuItem.Click += new System.EventHandler(this.largeScreenToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(212, 6);
-            // 
-            // MnuNew
-            // 
-            this.MnuNew.Image = global::RateController.Properties.Resources.FileNew1;
-            this.MnuNew.Name = "MnuNew";
-            this.MnuNew.Size = new System.Drawing.Size(215, 42);
-            this.MnuNew.Text = "New file";
-            this.MnuNew.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
-            // 
-            // MnuOpen
-            // 
-            this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile1;
-            this.MnuOpen.Name = "MnuOpen";
-            this.MnuOpen.Size = new System.Drawing.Size(215, 42);
-            this.MnuOpen.Text = "Open";
-            this.MnuOpen.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
-            // 
-            // MnuSaveAs
-            // 
-            this.MnuSaveAs.Image = global::RateController.Properties.Resources.close2;
-            this.MnuSaveAs.Name = "MnuSaveAs";
-            this.MnuSaveAs.Size = new System.Drawing.Size(215, 42);
-            this.MnuSaveAs.Text = "Save As";
-            this.MnuSaveAs.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
-            // 
-            // mnuMetric
-            // 
-            this.mnuMetric.Image = global::RateController.Properties.Resources.Check;
-            this.mnuMetric.Name = "mnuMetric";
-            this.mnuMetric.Size = new System.Drawing.Size(215, 42);
-            this.mnuMetric.Text = "Metric Units";
-            this.mnuMetric.Click += new System.EventHandler(this.metricToolStripMenuItem_Click);
-            // 
-            // MnuLanguage
-            // 
-            this.MnuLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MnuDeustch,
-            this.MnuEnglish,
-            this.MnuNederlands,
-            this.russianToolStripMenuItem});
-            this.MnuLanguage.Image = global::RateController.Properties.Resources.Language;
-            this.MnuLanguage.Name = "MnuLanguage";
-            this.MnuLanguage.Size = new System.Drawing.Size(215, 42);
-            this.MnuLanguage.Text = "Language";
-            // 
-            // MnuDeustch
-            // 
-            this.MnuDeustch.Name = "MnuDeustch";
-            this.MnuDeustch.Size = new System.Drawing.Size(175, 28);
-            this.MnuDeustch.Text = "Deustch";
-            this.MnuDeustch.Click += new System.EventHandler(this.MnuDeustch_Click);
-            // 
-            // MnuEnglish
-            // 
-            this.MnuEnglish.Name = "MnuEnglish";
-            this.MnuEnglish.Size = new System.Drawing.Size(175, 28);
-            this.MnuEnglish.Text = "English";
-            this.MnuEnglish.Click += new System.EventHandler(this.MnuEnglish_Click);
-            // 
-            // MnuNederlands
-            // 
-            this.MnuNederlands.Name = "MnuNederlands";
-            this.MnuNederlands.Size = new System.Drawing.Size(175, 28);
-            this.MnuNederlands.Text = "Nederlands";
-            this.MnuNederlands.Click += new System.EventHandler(this.MnuNederlands_Click);
-            // 
-            // russianToolStripMenuItem
-            // 
-            this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-            this.russianToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
-            this.russianToolStripMenuItem.Text = "Russian";
-            this.russianToolStripMenuItem.Click += new System.EventHandler(this.russianToolStripMenuItem_Click);
-            // 
-            // serialMonitorToolStripMenuItem
-            // 
-            this.serialMonitorToolStripMenuItem.Image = global::RateController.Properties.Resources.monitor;
-            this.serialMonitorToolStripMenuItem.Name = "serialMonitorToolStripMenuItem";
-            this.serialMonitorToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
-            this.serialMonitorToolStripMenuItem.Text = "Serial Monitor";
-            this.serialMonitorToolStripMenuItem.Click += new System.EventHandler(this.serialMonitorToolStripMenuItem_Click);
-            // 
-            // MnuAbout
-            // 
-            this.MnuAbout.Image = global::RateController.Properties.Resources.About;
-            this.MnuAbout.Name = "MnuAbout";
-            this.MnuAbout.Size = new System.Drawing.Size(215, 42);
-            this.MnuAbout.Text = "About";
-            this.MnuAbout.Click += new System.EventHandler(this.MnuAbout_Click_1);
             // 
             // openFileDialog1
             // 
@@ -754,41 +500,6 @@ namespace RateController
             this.panFan.Size = new System.Drawing.Size(270, 161);
             this.panFan.TabIndex = 157;
             // 
-            // btnStop
-            // 
-            this.btnStop.BackColor = System.Drawing.Color.Transparent;
-            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
-            this.btnStop.Location = new System.Drawing.Point(138, 86);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(68, 68);
-            this.btnStop.TabIndex = 199;
-            this.btnStop.UseVisualStyleBackColor = false;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
-            // 
-            // lbOn
-            // 
-            this.lbOn.BackColor = System.Drawing.SystemColors.Control;
-            this.lbOn.Cursor = System.Windows.Forms.Cursors.Default;
-            this.lbOn.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOn.Image = global::RateController.Properties.Resources.OnSmall;
-            this.lbOn.Location = new System.Drawing.Point(235, 3);
-            this.lbOn.Name = "lbOn";
-            this.lbOn.Size = new System.Drawing.Size(30, 23);
-            this.lbOn.TabIndex = 169;
-            this.lbOn.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lbOff
-            // 
-            this.lbOff.BackColor = System.Drawing.SystemColors.Control;
-            this.lbOff.Cursor = System.Windows.Forms.Cursors.Default;
-            this.lbOff.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOff.Image = global::RateController.Properties.Resources.OffSmall;
-            this.lbOff.Location = new System.Drawing.Point(235, 3);
-            this.lbOff.Name = "lbOff";
-            this.lbOff.Size = new System.Drawing.Size(30, 23);
-            this.lbOff.TabIndex = 168;
-            this.lbOff.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // groupBox1
             // 
             this.groupBox1.Location = new System.Drawing.Point(9, 24);
@@ -796,16 +507,6 @@ namespace RateController
             this.groupBox1.Size = new System.Drawing.Size(252, 1);
             this.groupBox1.TabIndex = 165;
             this.groupBox1.TabStop = false;
-            // 
-            // btnStart
-            // 
-            this.btnStart.Image = global::RateController.Properties.Resources.Start;
-            this.btnStart.Location = new System.Drawing.Point(64, 86);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(68, 68);
-            this.btnStart.TabIndex = 164;
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // lbTargetRPM
             // 
@@ -890,6 +591,123 @@ namespace RateController
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.button3_Click);
             // 
+            // idc5
+            // 
+            this.idc5.BackColor = System.Drawing.SystemColors.Control;
+            this.idc5.Cursor = System.Windows.Forms.Cursors.Default;
+            this.idc5.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.idc5.Image = ((System.Drawing.Image)(resources.GetObject("idc5.Image")));
+            this.idc5.Location = new System.Drawing.Point(240, 145);
+            this.idc5.Name = "idc5";
+            this.idc5.Size = new System.Drawing.Size(30, 23);
+            this.idc5.TabIndex = 125;
+            this.idc5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // idc0
+            // 
+            this.idc0.BackColor = System.Drawing.SystemColors.Control;
+            this.idc0.Cursor = System.Windows.Forms.Cursors.Default;
+            this.idc0.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.idc0.Image = global::RateController.Properties.Resources.OffSmall;
+            this.idc0.Location = new System.Drawing.Point(240, 0);
+            this.idc0.Name = "idc0";
+            this.idc0.Size = new System.Drawing.Size(30, 23);
+            this.idc0.TabIndex = 122;
+            this.idc0.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // idc4
+            // 
+            this.idc4.BackColor = System.Drawing.SystemColors.Control;
+            this.idc4.Cursor = System.Windows.Forms.Cursors.Default;
+            this.idc4.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.idc4.Image = ((System.Drawing.Image)(resources.GetObject("idc4.Image")));
+            this.idc4.Location = new System.Drawing.Point(240, 116);
+            this.idc4.Name = "idc4";
+            this.idc4.Size = new System.Drawing.Size(30, 23);
+            this.idc4.TabIndex = 119;
+            this.idc4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // idc3
+            // 
+            this.idc3.BackColor = System.Drawing.SystemColors.Control;
+            this.idc3.Cursor = System.Windows.Forms.Cursors.Default;
+            this.idc3.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.idc3.Image = ((System.Drawing.Image)(resources.GetObject("idc3.Image")));
+            this.idc3.Location = new System.Drawing.Point(240, 87);
+            this.idc3.Name = "idc3";
+            this.idc3.Size = new System.Drawing.Size(30, 23);
+            this.idc3.TabIndex = 116;
+            this.idc3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // idc2
+            // 
+            this.idc2.BackColor = System.Drawing.SystemColors.Control;
+            this.idc2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.idc2.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.idc2.Image = ((System.Drawing.Image)(resources.GetObject("idc2.Image")));
+            this.idc2.Location = new System.Drawing.Point(240, 58);
+            this.idc2.Name = "idc2";
+            this.idc2.Size = new System.Drawing.Size(30, 23);
+            this.idc2.TabIndex = 113;
+            this.idc2.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // idc1
+            // 
+            this.idc1.BackColor = System.Drawing.SystemColors.Control;
+            this.idc1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.idc1.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.idc1.Image = ((System.Drawing.Image)(resources.GetObject("idc1.Image")));
+            this.idc1.Location = new System.Drawing.Point(240, 29);
+            this.idc1.Name = "idc1";
+            this.idc1.Size = new System.Drawing.Size(30, 23);
+            this.idc1.TabIndex = 110;
+            this.idc1.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // btnStop
+            // 
+            this.btnStop.BackColor = System.Drawing.SystemColors.Control;
+            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
+            this.btnStop.Location = new System.Drawing.Point(138, 86);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(68, 68);
+            this.btnStop.TabIndex = 199;
+            this.btnStop.UseVisualStyleBackColor = false;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
+            // lbOn
+            // 
+            this.lbOn.BackColor = System.Drawing.SystemColors.Control;
+            this.lbOn.Cursor = System.Windows.Forms.Cursors.Default;
+            this.lbOn.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOn.Image = global::RateController.Properties.Resources.OnSmall;
+            this.lbOn.Location = new System.Drawing.Point(235, 3);
+            this.lbOn.Name = "lbOn";
+            this.lbOn.Size = new System.Drawing.Size(30, 23);
+            this.lbOn.TabIndex = 169;
+            this.lbOn.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lbOff
+            // 
+            this.lbOff.BackColor = System.Drawing.SystemColors.Control;
+            this.lbOff.Cursor = System.Windows.Forms.Cursors.Default;
+            this.lbOff.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOff.Image = global::RateController.Properties.Resources.OffSmall;
+            this.lbOff.Location = new System.Drawing.Point(235, 3);
+            this.lbOff.Name = "lbOff";
+            this.lbOff.Size = new System.Drawing.Size(30, 23);
+            this.lbOff.TabIndex = 168;
+            this.lbOff.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // btnStart
+            // 
+            this.btnStart.Image = global::RateController.Properties.Resources.Start;
+            this.btnStart.Location = new System.Drawing.Point(64, 86);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(68, 68);
+            this.btnStart.TabIndex = 164;
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            // 
             // btAlarm
             // 
             this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -904,6 +722,188 @@ namespace RateController
             this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
+            // 
+            // MnuProducts
+            // 
+            this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
+            this.MnuProducts.Name = "MnuProducts";
+            this.MnuProducts.Size = new System.Drawing.Size(179, 42);
+            this.MnuProducts.Text = "Products";
+            this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
+            // 
+            // MnuSections
+            // 
+            this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
+            this.MnuSections.Name = "MnuSections";
+            this.MnuSections.Size = new System.Drawing.Size(179, 42);
+            this.MnuSections.Text = "Sections";
+            this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
+            // 
+            // MnuComm
+            // 
+            this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
+            this.MnuComm.Name = "MnuComm";
+            this.MnuComm.Size = new System.Drawing.Size(179, 42);
+            this.MnuComm.Text = "Comm";
+            this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
+            // 
+            // MnuRelays
+            // 
+            this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
+            this.MnuRelays.Name = "MnuRelays";
+            this.MnuRelays.Size = new System.Drawing.Size(179, 42);
+            this.MnuRelays.Text = "Relays";
+            this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
+            // 
+            // MnuPressures
+            // 
+            this.MnuPressures.Image = global::RateController.Properties.Resources.pressure;
+            this.MnuPressures.Name = "MnuPressures";
+            this.MnuPressures.Size = new System.Drawing.Size(179, 42);
+            this.MnuPressures.Text = "Pressures";
+            this.MnuPressures.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click);
+            // 
+            // MnuOptions
+            // 
+            this.MnuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.simulationToolStripMenuItem,
+            this.mnuNetwork,
+            this.largeScreenToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.MnuNew,
+            this.MnuOpen,
+            this.MnuSaveAs,
+            this.toolStripSeparator2,
+            this.mnuMetric,
+            this.MnuLanguage,
+            this.serialMonitorToolStripMenuItem,
+            this.MnuAbout});
+            this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
+            this.MnuOptions.Name = "MnuOptions";
+            this.MnuOptions.Size = new System.Drawing.Size(179, 42);
+            this.MnuOptions.Text = "Options";
+            // 
+            // simulationToolStripMenuItem
+            // 
+            this.simulationToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
+            this.simulationToolStripMenuItem.Name = "simulationToolStripMenuItem";
+            this.simulationToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
+            this.simulationToolStripMenuItem.Text = "Switches";
+            this.simulationToolStripMenuItem.Click += new System.EventHandler(this.simulationToolStripMenuItem_Click);
+            // 
+            // mnuNetwork
+            // 
+            this.mnuNetwork.Image = global::RateController.Properties.Resources.wifi;
+            this.mnuNetwork.Name = "mnuNetwork";
+            this.mnuNetwork.Size = new System.Drawing.Size(215, 42);
+            this.mnuNetwork.Text = "Network";
+            this.mnuNetwork.Click += new System.EventHandler(this.wifiToolStripMenuItem_Click);
+            // 
+            // largeScreenToolStripMenuItem
+            // 
+            this.largeScreenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("largeScreenToolStripMenuItem.Image")));
+            this.largeScreenToolStripMenuItem.Name = "largeScreenToolStripMenuItem";
+            this.largeScreenToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
+            this.largeScreenToolStripMenuItem.Text = "Large Screen";
+            this.largeScreenToolStripMenuItem.Click += new System.EventHandler(this.largeScreenToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(212, 6);
+            // 
+            // MnuNew
+            // 
+            this.MnuNew.Image = global::RateController.Properties.Resources.FileNew1;
+            this.MnuNew.Name = "MnuNew";
+            this.MnuNew.Size = new System.Drawing.Size(215, 42);
+            this.MnuNew.Text = "New file";
+            this.MnuNew.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // MnuOpen
+            // 
+            this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile1;
+            this.MnuOpen.Name = "MnuOpen";
+            this.MnuOpen.Size = new System.Drawing.Size(215, 42);
+            this.MnuOpen.Text = "Open";
+            this.MnuOpen.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+            // 
+            // MnuSaveAs
+            // 
+            this.MnuSaveAs.Image = global::RateController.Properties.Resources.close2;
+            this.MnuSaveAs.Name = "MnuSaveAs";
+            this.MnuSaveAs.Size = new System.Drawing.Size(215, 42);
+            this.MnuSaveAs.Text = "Save As";
+            this.MnuSaveAs.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
+            // 
+            // mnuMetric
+            // 
+            this.mnuMetric.Image = global::RateController.Properties.Resources.Check;
+            this.mnuMetric.Name = "mnuMetric";
+            this.mnuMetric.Size = new System.Drawing.Size(215, 42);
+            this.mnuMetric.Text = "Metric Units";
+            this.mnuMetric.Click += new System.EventHandler(this.metricToolStripMenuItem_Click);
+            // 
+            // MnuLanguage
+            // 
+            this.MnuLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MnuDeustch,
+            this.MnuEnglish,
+            this.MnuNederlands,
+            this.russianToolStripMenuItem});
+            this.MnuLanguage.Image = ((System.Drawing.Image)(resources.GetObject("MnuLanguage.Image")));
+            this.MnuLanguage.Name = "MnuLanguage";
+            this.MnuLanguage.Size = new System.Drawing.Size(215, 42);
+            this.MnuLanguage.Text = "Language";
+            // 
+            // MnuDeustch
+            // 
+            this.MnuDeustch.Name = "MnuDeustch";
+            this.MnuDeustch.Size = new System.Drawing.Size(175, 28);
+            this.MnuDeustch.Text = "Deustch";
+            this.MnuDeustch.Click += new System.EventHandler(this.MnuDeustch_Click);
+            // 
+            // MnuEnglish
+            // 
+            this.MnuEnglish.Name = "MnuEnglish";
+            this.MnuEnglish.Size = new System.Drawing.Size(175, 28);
+            this.MnuEnglish.Text = "English";
+            this.MnuEnglish.Click += new System.EventHandler(this.MnuEnglish_Click);
+            // 
+            // MnuNederlands
+            // 
+            this.MnuNederlands.Name = "MnuNederlands";
+            this.MnuNederlands.Size = new System.Drawing.Size(175, 28);
+            this.MnuNederlands.Text = "Nederlands";
+            this.MnuNederlands.Click += new System.EventHandler(this.MnuNederlands_Click);
+            // 
+            // russianToolStripMenuItem
+            // 
+            this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
+            this.russianToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
+            this.russianToolStripMenuItem.Text = "Russian";
+            this.russianToolStripMenuItem.Click += new System.EventHandler(this.russianToolStripMenuItem_Click);
+            // 
+            // serialMonitorToolStripMenuItem
+            // 
+            this.serialMonitorToolStripMenuItem.Image = global::RateController.Properties.Resources.monitor;
+            this.serialMonitorToolStripMenuItem.Name = "serialMonitorToolStripMenuItem";
+            this.serialMonitorToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
+            this.serialMonitorToolStripMenuItem.Text = "Serial Monitor";
+            this.serialMonitorToolStripMenuItem.Click += new System.EventHandler(this.serialMonitorToolStripMenuItem_Click);
+            // 
+            // MnuAbout
+            // 
+            this.MnuAbout.Image = global::RateController.Properties.Resources.About;
+            this.MnuAbout.Name = "MnuAbout";
+            this.MnuAbout.Size = new System.Drawing.Size(215, 42);
+            this.MnuAbout.Text = "About";
+            this.MnuAbout.Click += new System.EventHandler(this.MnuAbout_Click_1);
             // 
             // FormStart
             // 
