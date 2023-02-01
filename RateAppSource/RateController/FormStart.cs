@@ -544,6 +544,10 @@ namespace RateController
 
                 UDPaog.Close();
                 UDPmodules.Close();
+
+                timerMain.Enabled = false;
+                timerNano.Enabled = false;
+                timerPIDs.Enabled = false;
             }
             catch (Exception)
             {
@@ -964,6 +968,11 @@ namespace RateController
                 Hlp.Close();
                 if (!Result) e.Cancel = true;
             }
+        }
+
+        private void timerPIDs_Tick(object sender, EventArgs e)
+        {
+            Products.UpdatePID();
         }
     }
 }

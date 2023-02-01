@@ -108,6 +108,7 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
+            this.timerPIDs = new System.Windows.Forms.Timer(this.components);
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -919,6 +920,12 @@ namespace RateController
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
             // 
+            // timerPIDs
+            // 
+            this.timerPIDs.Enabled = true;
+            this.timerPIDs.Interval = 5000;
+            this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
+            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1034,5 +1041,6 @@ namespace RateController
         private System.Windows.Forms.Label rt5;
         private System.Windows.Forms.Label prd5;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.Timer timerPIDs;
     }
 }

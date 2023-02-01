@@ -106,7 +106,7 @@ void ReceiveSerial()
 			//	        - bit 0		    reset acc.Quantity
 			//	        - bit 1,2,3		control type 0-4
 			//	        - bit 4		    MasterOn
-			//          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
+			//          - bit 5         0 - time for one pulse, 1 - average time for multiple pulses
 			//          - bit 6         AutoOn
 			//          - bit 7         Calibration On
 			//12    power relay Lo      list of power type relays 0-7

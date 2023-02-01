@@ -126,9 +126,9 @@ namespace RateController
         private void AddToLog(string NewData)
         {
             cLog += NewData + "\n";
-            if (cLog.Length > 10000)
+            if (cLog.Length > 100000)
             {
-                cLog = cLog.Substring(cLog.Length - 9800, 9800);
+                cLog = cLog.Substring(cLog.Length - 98000, 98000);
             }
         }
 

@@ -18,6 +18,9 @@ int16_t StoredID;
 
 # define UseEthernet 0
 
+float debug1;
+float debug2;
+
 struct ModuleConfig    // 5 bytes
 {
 	uint8_t ModuleID = 0;
@@ -298,6 +301,8 @@ void setup()
 
 void loop()
 {
+	//DebugTheIno();
+
 	if (millis() - LoopLast >= LOOP_TIME)
 	{
 		LoopLast = millis();
@@ -425,4 +430,32 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
+
+uint32_t DebugTime;
+void DebugTheIno()
+{
+	if (millis() - DebugTime > 1000)
+	{
+		DebugTime = millis();
+		Serial.println("");
+		Serial.print(FlowEnabled[0]);
+
+		Serial.print(", ");
+		Serial.print(pwmSetting[0]);
+
+		Serial.print(", ");
+		Serial.print(debug1);
+
+		Serial.print(", ");
+		Serial.print(debug2);
+
+		Serial.print(", ");
+		Serial.print(UPM[0], 3);
+
+		Serial.print(", ");
+		Serial.print(rateError[0]);
+
+		Serial.println("");
+	}
+}
 

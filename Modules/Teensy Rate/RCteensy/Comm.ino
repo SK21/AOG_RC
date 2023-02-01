@@ -522,7 +522,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		//- bit 0		    reset acc.Quantity
 		//- bit 1, 2		valve type 0 - 4
 		//- bit 3		    MasterOn
-		//- bit 4           0 - average time for multiple pulses, 1 - time for one pulse
+		//- bit 4           0 - time for one pulse, 1 - average time for multiple pulses
 		//- bit 5           AutoOn
 		//- bit 6           Debug pgn on
 		//12    power relay Lo      list of power type relays 0-7

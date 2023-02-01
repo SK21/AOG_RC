@@ -100,13 +100,11 @@ namespace RateController
                         {
                             // sensor 0
                             cModuleIsReceivingData = ((Data[11] & 0b00000001) == 0b00000001);
-                            CheckReceiving(0, cModuleIsReceivingData);
                         }
                         else
                         {
                             // sensor 1
                             cModuleIsReceivingData = ((Data[11] & 0b00000010) == 0b00000010);
-                            CheckReceiving(1, cModuleIsReceivingData);
                         }
 
                         // wifi strength
@@ -207,12 +205,6 @@ namespace RateController
         public double UPM()
         {
             double Result = cUPM;
-            // commented this out and moved it back to clsProduct.
-
-            //if (Prod.EnableProdDensity && Prod.ProdDensity > 0)
-            //{
-            //    Result = (cUPM / 100) * Prod.ProdDensity;
-            //}
             return Result;
         }
 
@@ -238,9 +230,7 @@ namespace RateController
         {
             if (Receiving != SensorReceiving[ID])
             {
-                Prod.SendPID(); // update pid settings when connected
                 Prod.mf.Tls.WriteActivityLog("Sensor " + ID.ToString() + " receiving: " + Receiving.ToString());
-                //Debug.Print("Sensor " + ID.ToString() + " receiving: " + Receiving.ToString());
             }
             SensorReceiving[ID] = Receiving;
         }

@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace RateController
@@ -21,7 +22,7 @@ namespace RateController
         //	        - bit 0		    reset acc.Quantity
         //	        - bit 1,2,3		control type 0-4
         //	        - bit 4		    MasterOn
-        //          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
+        //          - bit 5         0 - time for one pulse, 1 - average time for multiple pulses
         //          - bit 6         AutoOn
         //          - bit 7         Calibration On
         //12    power relay Lo      list of power type relays 0-7
@@ -115,7 +116,7 @@ namespace RateController
             {
                 cData[11] |= 0b00010000;
             }
-            
+
             if (Prod.UseMultiPulse) cData[11] |= 0b00100000;
             if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[11] |= 0b01000000;
             if (Prod.DoCal && Prod.ControlType == ControlTypeEnum.MotorWeights) cData[11] |= 0b10000000;
@@ -148,8 +149,19 @@ namespace RateController
             }
             else
             {
+                //PrintData();
+
                 Prod.mf.SendSerial(cData);
                 Prod.mf.UDPmodules.SendUDPMessage(cData);
+            }
+        }
+
+        private void PrintData()
+        {
+            Debug.Print("");
+            for (int i = 0; i < cByteCount; i++)
+            {
+                Debug.Print(i.ToString() + ": " + cData[i]);
             }
         }
     }
