@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace RateController
 {
@@ -134,17 +135,23 @@ namespace RateController
             else if (mf.SwitchBox.SwitchOn(SwIDs.RateDown)) Dir = -1;
             else RateStep = 0;
 
-            if (Dir != 0)
+            int ID = mf.CurrentProduct();
+            if (ID < 0) ID = 0;
+            clsProduct Prd = mf.Products.Item(ID);
+
+            if (Dir == 0)
             {
+                // stop manual adjusting flow valve when rate adjust buttons are not pushed
+                if (!mf.SwitchBox.SwitchOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Standard || Prd.ControlType == ControlTypeEnum.FastClose)) Prd.ManualPWM = 0;
+            }
+            else
+            {
+                // adjust rate
                 if ((DateTime.Now - RateReadLast).TotalMilliseconds > StepDelay)
                 {
                     RateReadLast = DateTime.Now;
                     RateStep++;
                     if (RateStep > 4) RateStep = 4;
-
-                    int ID = mf.CurrentProduct();
-                    if (ID < 0) ID = 0;
-                    clsProduct Prd = mf.Products.Item(ID);
 
                     if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
                     {
@@ -157,7 +164,16 @@ namespace RateController
                     else
                     {
                         // manual rate
-                        Prd.ManualPWM += (int)(5 * Dir);
+                        if (Prd.ControlType == ControlTypeEnum.Standard || Prd.ControlType == ControlTypeEnum.FastClose)
+                        {
+                            // adjust flow valve
+                            Prd.ManualPWM = (int)(Prd.PIDmin * RateStep * Dir);
+                        }
+                        else
+                        {
+                            // adjust motor
+                            Prd.ManualPWM += (int)(5 * Dir);
+                        }
                     }
                 }
             }

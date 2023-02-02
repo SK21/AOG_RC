@@ -94,7 +94,6 @@ namespace RateController
             this.lbPressureValue = new System.Windows.Forms.Label();
             this.lbPressure = new System.Windows.Forms.Label();
             this.panFan = new System.Windows.Forms.Panel();
-            this.btnStop = new System.Windows.Forms.Button();
             this.lbOn = new System.Windows.Forms.Label();
             this.lbOff = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -109,6 +108,7 @@ namespace RateController
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
             this.timerPIDs = new System.Windows.Forms.Timer(this.components);
+            this.btnStop = new System.Windows.Forms.Button();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -750,23 +750,10 @@ namespace RateController
             this.panFan.Controls.Add(this.lbFanRate);
             this.panFan.Controls.Add(this.lbCurrentRPM);
             this.panFan.Controls.Add(this.lbFan);
-            this.panFan.Location = new System.Drawing.Point(618, 327);
+            this.panFan.Location = new System.Drawing.Point(616, 372);
             this.panFan.Name = "panFan";
             this.panFan.Size = new System.Drawing.Size(270, 161);
             this.panFan.TabIndex = 157;
-            // 
-            // btnStop
-            // 
-            this.btnStop.BackColor = System.Drawing.Color.Transparent;
-            this.btnStop.FlatAppearance.BorderSize = 0;
-            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
-            this.btnStop.Location = new System.Drawing.Point(138, 86);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(68, 68);
-            this.btnStop.TabIndex = 199;
-            this.btnStop.UseVisualStyleBackColor = false;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // lbOn
             // 
@@ -926,6 +913,17 @@ namespace RateController
             this.timerPIDs.Interval = 5000;
             this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
             // 
+            // btnStop
+            // 
+            this.btnStop.FlatAppearance.BorderSize = 0;
+            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
+            this.btnStop.Location = new System.Drawing.Point(138, 85);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(72, 72);
+            this.btnStop.TabIndex = 199;
+            this.btnStop.UseVisualStyleBackColor = true;
+            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1040,7 +1038,7 @@ namespace RateController
         private System.Windows.Forms.Label idc5;
         private System.Windows.Forms.Label rt5;
         private System.Windows.Forms.Label prd5;
-        private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Timer timerPIDs;
+        private System.Windows.Forms.Button btnStop;
     }
 }

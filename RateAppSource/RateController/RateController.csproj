@@ -153,6 +153,12 @@
     <Compile Include="FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmCalibration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCalibration.Designer.cs">
+      <DependentUpon>frmCalibration.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmComm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -259,6 +265,9 @@
     <EmbeddedResource Include="FormStart.resx">
       <DependentUpon>FormStart.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmCalibration.resx">
+      <DependentUpon>frmCalibration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmComm.resx">
       <DependentUpon>frmComm.cs</DependentUpon>
     </EmbeddedResource>
@@ -332,6 +341,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\VehFileLoad.png" />
+    <None Include="Resources\Chart.png" />
+    <None Include="Resources\FileCopy.png" />
     <None Include="Resources\Stop2.png" />
     <None Include="Resources\Stop.png" />
     <None Include="Resources\boundaryStop.png" />

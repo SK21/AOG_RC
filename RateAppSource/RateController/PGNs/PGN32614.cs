@@ -24,7 +24,6 @@ namespace RateController
         //	        - bit 4		    MasterOn
         //          - bit 5         0 - time for one pulse, 1 - average time for multiple pulses
         //          - bit 6         AutoOn
-        //          - bit 7         Calibration On
         //12    power relay Lo      list of power type relays 0-7
         //13    power relay Hi      list of power type relays 8-15
         //14    manual pwm
@@ -118,8 +117,7 @@ namespace RateController
             }
 
             if (Prod.UseMultiPulse) cData[11] |= 0b00100000;
-            if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto)) cData[11] |= 0b01000000;
-            if (Prod.DoCal && Prod.ControlType == ControlTypeEnum.MotorWeights) cData[11] |= 0b10000000;
+            if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto) && !Prod.mf.RateCalibrationOn) cData[11] |= 0b01000000;
 
             // power relays
             for (int i = 0; i < 16; i++)
@@ -149,7 +147,7 @@ namespace RateController
             }
             else
             {
-                //PrintData();
+                PrintData();
 
                 Prod.mf.SendSerial(cData);
                 Prod.mf.UDPmodules.SendUDPMessage(cData);

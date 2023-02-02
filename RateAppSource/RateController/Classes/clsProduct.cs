@@ -18,7 +18,6 @@ namespace RateController
         public PGN32501 Scale;
         public double TankSize = 0;
         public clsArduino VirtualNano;
-        private double CalPWMave;
         private double cCalEnd;
         private byte cManualPWM;
         private double cCalStart;
@@ -38,7 +37,6 @@ namespace RateController
         private string cQuantityDescription = "Lbs";
         private double cRateAlt = 100;
         private double cRateSet = 0;
-        private double cScaleCountsCal;
         private double cScaleTare;
         private double cProdDensity = 0;
         private bool cEnableProdDensity = false;
@@ -61,9 +59,6 @@ namespace RateController
         private DateTime LastUpdateTime;
         private bool PauseWork = false;
         private PGN32616 PIDtoArduino;
-        private DateTime ScaleCalTime;
-
-        private double ScaleCountsStart;
 
         private bool SwitchIDsSent;
         private double UnitsOffset = 0;
@@ -97,7 +92,7 @@ namespace RateController
             get { return cCalEnd; }
             set
             {
-                if (cDoCal && value > cCalStart)
+                if (cDoCal && value >= cCalStart)
                 {
                     cCalEnd = value;
                 }
@@ -954,7 +949,6 @@ namespace RateController
 
             if (cControlType == ControlTypeEnum.MotorWeights)
             {
-                GetScaleCountsCal();
                 UpdateUnitsApplied();
             }
         }
@@ -983,18 +977,6 @@ namespace RateController
             return Result;
         }
 
-        public double UPMperPWM()
-        {
-            if (cScaleUnitsCal > 0)
-            {
-                return cScaleCountsCal / cScaleUnitsCal;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
         public double WorkRate()
         {
             double Result = 0;
@@ -1010,34 +992,6 @@ namespace RateController
                 }
             }
             return Result;
-        }
-
-        private void GetScaleCountsCal()
-        {
-            // (counts per minute)/PWM, 10 minute average
-            if (cHectaresPerMinute > 0 && ScaleCountsStart > NetScaleCounts() && !PauseWork)
-            {
-                // 10 minute average pwm, (600 seconds)
-                CalPWMave = (CalPWMave * 599.0 / 600.0) + (PWM() / 600.0);
-
-                if ((DateTime.Now - ScaleCalTime).TotalMinutes > 10)
-                {
-                    // calculate 10 minute average metercal
-                    double CountsApplied = (ScaleCountsStart - NetScaleCounts()) / 10.0;
-                    if (CalPWMave > 0) cScaleCountsCal = CountsApplied / CalPWMave;
-
-                    ScaleCalTime = DateTime.Now;
-                    ScaleCountsStart = NetScaleCounts();
-                }
-            }
-            else
-            {
-                // reset
-                ScaleCalTime = DateTime.Now;
-                ScaleCountsStart = NetScaleCounts();
-                CalPWMave = PWM();
-                if (cScaleCountsCal == 0) cScaleCountsCal = cMeterCal * cScaleUnitsCal;
-            }
         }
 
         private void LogTheRate()

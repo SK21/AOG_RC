@@ -62,6 +62,8 @@ namespace RateController
         public bool Restart = false;
         public frmLargeScreen Lscrn;
 
+        public bool RateCalibrationOn = false;
+
         public FormStart()
         {
             InitializeComponent();

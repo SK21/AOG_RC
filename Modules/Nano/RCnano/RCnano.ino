@@ -450,10 +450,7 @@ void DebugTheIno()
 		Serial.print(debug2);
 
 		Serial.print(", ");
-		Serial.print(UPM[0], 3);
-
-		Serial.print(", ");
-		Serial.print(rateError[0]);
+		Serial.print(AutoOn);
 
 		Serial.println("");
 	}

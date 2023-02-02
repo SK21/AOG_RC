@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>104, 17</value>
+  </metadata>
+  <metadata name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>244, 17</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnResetCoverage.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -158,28 +167,6 @@
         vYdwp+qvE1WRLW4GO8GiyC25/98WtkRtDB8sPRb4Xitvu1+XV39JeAZvRK7lJ2Av+cPWLFio70U0zuWE
         PQ3r3xKNP3JZ/m3HDUSt+jtRbx3EODhRQxZDseKEdK80CLb8VlgIHcEOuLqMgPsd51HmcEmSJEmSJEn+
         txQU/ACylOqhR/3kyAAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>104, 17</value>
-  </metadata>
-  <metadata name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>244, 17</value>
-  </metadata>
-  <data name="btnLeft.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAFEAAABRCAYAAACqj0o2AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGUSURBVHhe7ZvRTcMwFEU7AhMgRmCEjsAIHaEjdBO+
-        mKP//DACIzACHFdOZVluGycvVIFzpCuB/fGiQ9VLE3cjIiIiIiIiIiIiIiIi6+Dx7f2Z7POv0gvyHsgn
-        OeQl6QV5H+RbiRNB3GsWqMQpIG1fCFRiLwh7qQQqsQdkpSb+KuQpsQdEDU1cC1TiWBA1NHErSrwFksom
-        bkWJ10BQ3cStKPESyGk1cStKbIGYS03cihJrkHKtiVs5ksPMbPP4NH9b7T3lrbS3K/fy8olynezy8n3g
-        Aq418VI5C0k/V3ul4PQHO+/l5RPlOjnm5d+H4beaeKn8DYkMHtPES2X9Ehk6tomXyrolMrCniZfKeiUy
-        rLeJl8qqJd6rSOr4SgyI74kBWbfEBENt5wgY7P+JETDcTywRcAF+dp4LF+BdnAi4CO8nRoAc72xHgCCf
-        sUSAJJ/2RYAonzvPBVGegIgAWZ7FiQBhngqLAGmeT4wAcWVjK3EqyPPM9lyQNzS2EueAwNTYfo9FRERE
-        RERERERERETk37LZ/AD2bx9yW2G7tgAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
