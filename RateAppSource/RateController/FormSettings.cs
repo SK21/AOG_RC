@@ -385,24 +385,24 @@ namespace RateController
             {
                 Unique = true;
             }
-            else
-            {
-                // set unique pair
-                for (int i = 0; i < 16; i++)
-                {
-                    Unique = mf.Products.UniqueModSen(i, SenID, CurrentProduct.ID);
-                    if (Unique)
-                    {
-                        Initializing = true;
-                        tbConID.Text = i.ToString();
-                        Initializing = false;
+            //else
+            //{
+            //    // set unique pair
+            //    for (int i = 0; i < 16; i++)
+            //    {
+            //        Unique = mf.Products.UniqueModSen(i, SenID, CurrentProduct.ID);
+            //        if (Unique)
+            //        {
+            //            Initializing = true;
+            //            tbConID.Text = i.ToString();
+            //            Initializing = false;
 
-                        mf.Tls.ShowHelp("Module set to " + i.ToString() + "\n Module/Sensor pair must be unique. Change as necessary.", "Help", 3000);
+            //            mf.Tls.ShowHelp("Module set to " + i.ToString() + "\n Module/Sensor pair must be unique. Change as necessary.", "Help", 3000);
 
-                        break;
-                    }
-                }
-            }
+            //            break;
+            //        }
+            //    }
+            //}
             return Unique;
         }
 
@@ -780,8 +780,9 @@ namespace RateController
 
             CurrentProduct.ProductName = tbProduct.Text;
 
-            byte.TryParse(tbConID.Text, out tempB);
-            CurrentProduct.ModuleID = tempB;
+            byte.TryParse(tbConID.Text, out byte tmp1);
+            byte.TryParse(tbSenID.Text, out byte tmp2);
+            CurrentProduct.ChangeID(tmp1, tmp2);
 
             // PID
             double.TryParse(tbKP.Text, out TempDB);
@@ -801,9 +802,6 @@ namespace RateController
 
             int.TryParse(tbCountsRev.Text, out tempInt);
             CurrentProduct.CountsRev = tempInt;
-
-            byte.TryParse(tbSenID.Text, out tempB);
-            CurrentProduct.SensorID = tempB;
 
             CurrentProduct.UseMultiPulse = (rbMultiPulse.Checked);
 

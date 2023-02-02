@@ -227,6 +227,20 @@ namespace RateController
             }
         }
 
+        public bool ChangeID(int ModID, int SenID)
+        {
+            bool Result = false;
+            if (ModID < 16 && SenID < 16)
+            {
+                if (mf.Products.UniqueModSen(ModID, SenID, cProductID))
+                {
+                    cModID = ModID;
+                    cSenID = SenID;
+                }
+            }
+            return Result;
+        }
+
         public byte ModuleID
         {
             get { return (byte)cModID; }
@@ -533,12 +547,9 @@ namespace RateController
             bool.TryParse(mf.Tls.LoadProperty("UseMultiPulse" + IDname), out cUseMultiPulse);
             int.TryParse(mf.Tls.LoadProperty("CountsRev" + IDname), out cCountsRev);
 
-            int.TryParse(mf.Tls.LoadProperty("SensorID" + IDname), out tmp);
-            SensorID = (byte)tmp;
-
-            tmp = 0;
-            int.TryParse(mf.Tls.LoadProperty("ModuleID" + IDname), out tmp);
-            ModuleID = (byte)tmp;
+            int.TryParse(mf.Tls.LoadProperty("SensorID" + IDname), out int tmp1);
+            int.TryParse(mf.Tls.LoadProperty("ModuleID" + IDname), out int tmp2);
+            ChangeID(tmp1, tmp2);
 
             bool.TryParse(mf.Tls.LoadProperty("OffRateAlarm" + IDname), out cUseOffRateAlarm);
             byte.TryParse(mf.Tls.LoadProperty("OffRateSetting" + IDname), out cOffRateSetting);
