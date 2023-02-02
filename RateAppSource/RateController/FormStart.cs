@@ -902,26 +902,6 @@ namespace RateController
             Products.Item(CurrentPage - 1).FanOn = true;
         }
 
-        private void simulationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = Application.OpenForms["frmSimulation"];
-
-            if (fs == null)
-            {
-                Form frm = new frmSwitches(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            Products.Item(CurrentPage - 1).FanOn = false;
-        }
         public double SimSpeed
         {
             get { return cSimSpeed; }
@@ -975,6 +955,22 @@ namespace RateController
         private void timerPIDs_Tick(object sender, EventArgs e)
         {
             Products.UpdatePID();
+        }
+
+        private void switchesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //check if window already exists
+            Form fs = Application.OpenForms["frmSimulation"];
+
+            if (fs == null)
+            {
+                Form frm = new frmSwitches(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
     }
 }

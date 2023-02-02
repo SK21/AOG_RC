@@ -13,7 +13,7 @@
 #include <Adafruit_SPIDevice.h>
 
 # define InoDescription "RCnano  :  29-Jan-2023"
-const int16_t InoID = 4000;
+const int16_t InoID = 4155;
 int16_t StoredID;
 
 # define UseEthernet 0
@@ -23,7 +23,7 @@ float debug2;
 
 struct ModuleConfig    // 5 bytes
 {
-	uint8_t ModuleID = 0;
+	uint8_t ModuleID = 1;
 	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
 	uint8_t RelayOnSignal = 0;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction

@@ -375,22 +375,6 @@ namespace RateController
             Monitor.ShowDialog();
         }
 
-        private void simulationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = Application.OpenForms["frmSimulation"];
-
-            if (fs == null)
-            {
-                Form frm = new frmSwitches(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
         private void timerMain_Tick(object sender, EventArgs e)
         {
             UpdateForm();
@@ -829,6 +813,22 @@ namespace RateController
                 bool Result = Hlp.Result;
                 Hlp.Close();
                 if (!Result) e.Cancel = true;
+            }
+        }
+
+        private void switchesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //check if window already exists
+            Form fs = Application.OpenForms["frmSimulation"];
+
+            if (fs == null)
+            {
+                Form frm = new frmSwitches(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
             }
         }
     }

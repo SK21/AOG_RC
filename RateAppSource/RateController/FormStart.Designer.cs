@@ -73,7 +73,6 @@ namespace RateController
             this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuPressures = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.simulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuNetwork = new System.Windows.Forms.ToolStripMenuItem();
             this.largeScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -94,6 +93,7 @@ namespace RateController
             this.lbPressureValue = new System.Windows.Forms.Label();
             this.lbPressure = new System.Windows.Forms.Label();
             this.panFan = new System.Windows.Forms.Panel();
+            this.btnStop = new System.Windows.Forms.Button();
             this.lbOn = new System.Windows.Forms.Label();
             this.lbOff = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -108,7 +108,7 @@ namespace RateController
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
             this.timerPIDs = new System.Windows.Forms.Timer(this.components);
-            this.btnStop = new System.Windows.Forms.Button();
+            this.switchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -516,18 +516,19 @@ namespace RateController
             this.mnuSettings.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnuProducts,
             this.MnuSections,
+            this.switchesToolStripMenuItem,
             this.MnuComm,
             this.MnuRelays,
             this.MnuPressures,
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(180, 256);
+            this.mnuSettings.Size = new System.Drawing.Size(180, 298);
             // 
             // MnuProducts
             // 
             this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(179, 42);
+            this.MnuProducts.Size = new System.Drawing.Size(200, 42);
             this.MnuProducts.Text = "Products";
             this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -535,7 +536,7 @@ namespace RateController
             // 
             this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(179, 42);
+            this.MnuSections.Size = new System.Drawing.Size(200, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -543,7 +544,7 @@ namespace RateController
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(179, 42);
+            this.MnuComm.Size = new System.Drawing.Size(200, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -551,7 +552,7 @@ namespace RateController
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(179, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(200, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
@@ -559,14 +560,13 @@ namespace RateController
             // 
             this.MnuPressures.Image = global::RateController.Properties.Resources.pressure;
             this.MnuPressures.Name = "MnuPressures";
-            this.MnuPressures.Size = new System.Drawing.Size(179, 42);
+            this.MnuPressures.Size = new System.Drawing.Size(200, 42);
             this.MnuPressures.Text = "Pressures";
             this.MnuPressures.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click);
             // 
             // MnuOptions
             // 
             this.MnuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.simulationToolStripMenuItem,
             this.mnuNetwork,
             this.largeScreenToolStripMenuItem,
             this.toolStripSeparator3,
@@ -582,14 +582,6 @@ namespace RateController
             this.MnuOptions.Name = "MnuOptions";
             this.MnuOptions.Size = new System.Drawing.Size(179, 42);
             this.MnuOptions.Text = "Options";
-            // 
-            // simulationToolStripMenuItem
-            // 
-            this.simulationToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
-            this.simulationToolStripMenuItem.Name = "simulationToolStripMenuItem";
-            this.simulationToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
-            this.simulationToolStripMenuItem.Text = "Switches";
-            this.simulationToolStripMenuItem.Click += new System.EventHandler(this.simulationToolStripMenuItem_Click);
             // 
             // mnuNetwork
             // 
@@ -755,6 +747,17 @@ namespace RateController
             this.panFan.Size = new System.Drawing.Size(270, 161);
             this.panFan.TabIndex = 157;
             // 
+            // btnStop
+            // 
+            this.btnStop.FlatAppearance.BorderSize = 0;
+            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
+            this.btnStop.Location = new System.Drawing.Point(138, 85);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(72, 72);
+            this.btnStop.TabIndex = 199;
+            this.btnStop.UseVisualStyleBackColor = true;
+            // 
             // lbOn
             // 
             this.lbOn.BackColor = System.Drawing.SystemColors.Control;
@@ -913,16 +916,13 @@ namespace RateController
             this.timerPIDs.Interval = 5000;
             this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
             // 
-            // btnStop
+            // switchesToolStripMenuItem
             // 
-            this.btnStop.FlatAppearance.BorderSize = 0;
-            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
-            this.btnStop.Location = new System.Drawing.Point(138, 85);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(72, 72);
-            this.btnStop.TabIndex = 199;
-            this.btnStop.UseVisualStyleBackColor = true;
+            this.switchesToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
+            this.switchesToolStripMenuItem.Name = "switchesToolStripMenuItem";
+            this.switchesToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.switchesToolStripMenuItem.Text = "Switches";
+            this.switchesToolStripMenuItem.Click += new System.EventHandler(this.switchesToolStripMenuItem_Click);
             // 
             // FormStart
             // 
@@ -1033,12 +1033,12 @@ namespace RateController
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbOn;
         private System.Windows.Forms.Label lbOff;
-        private System.Windows.Forms.ToolStripMenuItem simulationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem largeScreenToolStripMenuItem;
         private System.Windows.Forms.Label idc5;
         private System.Windows.Forms.Label rt5;
         private System.Windows.Forms.Label prd5;
         private System.Windows.Forms.Timer timerPIDs;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.ToolStripMenuItem switchesToolStripMenuItem;
     }
 }

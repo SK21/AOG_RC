@@ -33,23 +33,12 @@ namespace RateController
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.tcProducts = new System.Windows.Forms.TabControl();
             this.tbs0 = new System.Windows.Forms.TabPage();
-            this.pnlFan = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.lbFanErrorValue = new System.Windows.Forms.Label();
-            this.lbFanError = new System.Windows.Forms.Label();
-            this.lbFanRPMvalue = new System.Windows.Forms.Label();
-            this.lbFanRPM = new System.Windows.Forms.Label();
-            this.lbFanPWMvalue = new System.Windows.Forms.Label();
-            this.lbFanPWM = new System.Windows.Forms.Label();
-            this.lbCountsRPM = new System.Windows.Forms.Label();
-            this.tbCountsRPM = new System.Windows.Forms.TextBox();
-            this.lbTargetRPM = new System.Windows.Forms.Label();
-            this.tbTargetRPM = new System.Windows.Forms.TextBox();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.LabProdDensity = new System.Windows.Forms.Label();
             this.CbUseProdDensity = new System.Windows.Forms.CheckBox();
             this.ProdDensity = new System.Windows.Forms.TextBox();
             this.lbSensorCounts = new System.Windows.Forms.Label();
+            this.btnResetCoverage = new System.Windows.Forms.Button();
             this.AreaUnits = new System.Windows.Forms.ComboBox();
             this.tbVolumeUnits = new System.Windows.Forms.TextBox();
             this.btnResetTank = new System.Windows.Forms.Button();
@@ -58,6 +47,7 @@ namespace RateController
             this.TankRemain = new System.Windows.Forms.TextBox();
             this.FlowCal = new System.Windows.Forms.TextBox();
             this.lb6 = new System.Windows.Forms.Label();
+            this.btnResetQuantity = new System.Windows.Forms.Button();
             this.tbAltRate = new System.Windows.Forms.TextBox();
             this.lb3 = new System.Windows.Forms.Label();
             this.cbVR = new System.Windows.Forms.ComboBox();
@@ -69,7 +59,24 @@ namespace RateController
             this.tbProduct = new System.Windows.Forms.TextBox();
             this.ValveType = new System.Windows.Forms.ComboBox();
             this.lb5 = new System.Windows.Forms.Label();
+            this.pnlFan = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lbFanStarted = new System.Windows.Forms.Label();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.lbFanErrorValue = new System.Windows.Forms.Label();
+            this.lbFanError = new System.Windows.Forms.Label();
+            this.lbFanRPMvalue = new System.Windows.Forms.Label();
+            this.lbFanRPM = new System.Windows.Forms.Label();
+            this.lbFanPWMvalue = new System.Windows.Forms.Label();
+            this.lbFanPWM = new System.Windows.Forms.Label();
+            this.lbCountsRPM = new System.Windows.Forms.Label();
+            this.tbCountsRPM = new System.Windows.Forms.TextBox();
+            this.lbTargetRPM = new System.Windows.Forms.Label();
+            this.tbTargetRPM = new System.Windows.Forms.TextBox();
             this.tbs4 = new System.Windows.Forms.TabPage();
+            this.btnTuningGraph = new System.Windows.Forms.Button();
+            this.btnPIDloadDefaults = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -97,6 +104,7 @@ namespace RateController
             this.grpSensor = new System.Windows.Forms.GroupBox();
             this.lbSensorID = new System.Windows.Forms.Label();
             this.tbSenID = new System.Windows.Forms.TextBox();
+            this.ModuleIndicator = new System.Windows.Forms.Label();
             this.lbConID = new System.Windows.Forms.Label();
             this.tbConID = new System.Windows.Forms.TextBox();
             this.tbs3 = new System.Windows.Forms.TabPage();
@@ -125,50 +133,6 @@ namespace RateController
             this.lb34 = new System.Windows.Forms.Label();
             this.lbWorkRateData = new System.Windows.Forms.Label();
             this.lbWorkRate = new System.Windows.Forms.Label();
-            this.tbs5 = new System.Windows.Forms.TabPage();
-            this.pnlWeight = new System.Windows.Forms.Panel();
-            this.grpScale = new System.Windows.Forms.GroupBox();
-            this.tbScaleCountsPerUnit = new System.Windows.Forms.TextBox();
-            this.tbTare = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.btnTare = new System.Windows.Forms.Button();
-            this.tbWTpwm = new System.Windows.Forms.TextBox();
-            this.lbWTquantity = new System.Windows.Forms.Label();
-            this.lbWTtime = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.lbWTcal = new System.Windows.Forms.Label();
-            this.lbWeightMeasured = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.pnlFlow = new System.Windows.Forms.Panel();
-            this.tbFLpwm = new System.Windows.Forms.TextBox();
-            this.lbFLtime = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.lbFlowMeterCounts = new System.Windows.Forms.Label();
-            this.btnCalCalculate = new System.Windows.Forms.Button();
-            this.tbCalMeasured = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.lbFlowMeasured = new System.Windows.Forms.Label();
-            this.lbCalCPU = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.lbProduct = new System.Windows.Forms.Label();
-            this.grpFlowPWM = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.grpWeightPWM = new System.Windows.Forms.GroupBox();
-            this.btnRight = new System.Windows.Forms.Button();
-            this.btnLeft = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnResetCoverage = new System.Windows.Forms.Button();
-            this.btnResetQuantity = new System.Windows.Forms.Button();
-            this.lbFanStarted = new System.Windows.Forms.Label();
-            this.btnStart = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
-            this.btnTuningGraph = new System.Windows.Forms.Button();
-            this.btnPIDloadDefaults = new System.Windows.Forms.Button();
-            this.ModuleIndicator = new System.Windows.Forms.Label();
             this.sec15 = new System.Windows.Forms.Label();
             this.sec14 = new System.Windows.Forms.Label();
             this.sec13 = new System.Windows.Forms.Label();
@@ -185,28 +149,64 @@ namespace RateController
             this.sec2 = new System.Windows.Forms.Label();
             this.sec1 = new System.Windows.Forms.Label();
             this.sec0 = new System.Windows.Forms.Label();
+            this.tbs5 = new System.Windows.Forms.TabPage();
             this.btnCalCopy = new System.Windows.Forms.Button();
             this.btnCalStop = new System.Windows.Forms.Button();
             this.btnCalStart = new System.Windows.Forms.Button();
-            this.btnWeightDown = new System.Windows.Forms.Button();
-            this.btnWeightUp = new System.Windows.Forms.Button();
+            this.pnlFlow = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.grpFlowPWM = new System.Windows.Forms.GroupBox();
             this.btnFlowDown = new System.Windows.Forms.Button();
             this.btnFlowUp = new System.Windows.Forms.Button();
+            this.tbFLpwm = new System.Windows.Forms.TextBox();
+            this.lbFLtime = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.lbFlowMeterCounts = new System.Windows.Forms.Label();
+            this.btnCalCalculate = new System.Windows.Forms.Button();
+            this.tbCalMeasured = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.lbFlowMeasured = new System.Windows.Forms.Label();
+            this.lbCalCPU = new System.Windows.Forms.Label();
+            this.pnlWeight = new System.Windows.Forms.Panel();
+            this.grpWeightPWM = new System.Windows.Forms.GroupBox();
+            this.btnWeightDown = new System.Windows.Forms.Button();
+            this.tbWTpwm = new System.Windows.Forms.TextBox();
+            this.btnWeightUp = new System.Windows.Forms.Button();
+            this.grpScale = new System.Windows.Forms.GroupBox();
+            this.tbScaleCountsPerUnit = new System.Windows.Forms.TextBox();
+            this.tbTare = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnTare = new System.Windows.Forms.Button();
+            this.lbWTquantity = new System.Windows.Forms.Label();
+            this.lbWTtime = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.lbWTcal = new System.Windows.Forms.Label();
+            this.lbWeightMeasured = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.lbProduct = new System.Windows.Forms.Label();
+            this.btnRight = new System.Windows.Forms.Button();
+            this.btnLeft = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
-            this.pnlFan.SuspendLayout();
             this.pnlMain.SuspendLayout();
+            this.pnlFan.SuspendLayout();
             this.tbs4.SuspendLayout();
             this.tbs6.SuspendLayout();
             this.grpRateMethod.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.tbs3.SuspendLayout();
             this.tbs5.SuspendLayout();
-            this.pnlWeight.SuspendLayout();
-            this.grpScale.SuspendLayout();
             this.pnlFlow.SuspendLayout();
             this.grpFlowPWM.SuspendLayout();
+            this.pnlWeight.SuspendLayout();
             this.grpWeightPWM.SuspendLayout();
+            this.grpScale.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcProducts
@@ -225,12 +225,12 @@ namespace RateController
             // 
             // tbs0
             // 
+            this.tbs0.Controls.Add(this.pnlFan);
             this.tbs0.Controls.Add(this.pnlMain);
             this.tbs0.Controls.Add(this.lb0);
             this.tbs0.Controls.Add(this.tbProduct);
             this.tbs0.Controls.Add(this.ValveType);
             this.tbs0.Controls.Add(this.lb5);
-            this.tbs0.Controls.Add(this.pnlFan);
             this.tbs0.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbs0.Location = new System.Drawing.Point(4, 33);
             this.tbs0.Name = "tbs0";
@@ -239,144 +239,6 @@ namespace RateController
             this.tbs0.TabIndex = 0;
             this.tbs0.Text = "Rate";
             this.tbs0.UseVisualStyleBackColor = true;
-            // 
-            // pnlFan
-            // 
-            this.pnlFan.Controls.Add(this.label7);
-            this.pnlFan.Controls.Add(this.lbFanStarted);
-            this.pnlFan.Controls.Add(this.btnStart);
-            this.pnlFan.Controls.Add(this.btnStop);
-            this.pnlFan.Controls.Add(this.lbFanErrorValue);
-            this.pnlFan.Controls.Add(this.lbFanError);
-            this.pnlFan.Controls.Add(this.lbFanRPMvalue);
-            this.pnlFan.Controls.Add(this.lbFanRPM);
-            this.pnlFan.Controls.Add(this.lbFanPWMvalue);
-            this.pnlFan.Controls.Add(this.lbFanPWM);
-            this.pnlFan.Controls.Add(this.lbCountsRPM);
-            this.pnlFan.Controls.Add(this.tbCountsRPM);
-            this.pnlFan.Controls.Add(this.lbTargetRPM);
-            this.pnlFan.Controls.Add(this.tbTargetRPM);
-            this.pnlFan.Location = new System.Drawing.Point(0, 3);
-            this.pnlFan.Name = "pnlFan";
-            this.pnlFan.Size = new System.Drawing.Size(481, 424);
-            this.pnlFan.TabIndex = 145;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(80, 266);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(71, 23);
-            this.label7.TabIndex = 201;
-            this.label7.Text = "Started";
-            // 
-            // lbFanErrorValue
-            // 
-            this.lbFanErrorValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFanErrorValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanErrorValue.Location = new System.Drawing.Point(279, 177);
-            this.lbFanErrorValue.Name = "lbFanErrorValue";
-            this.lbFanErrorValue.Size = new System.Drawing.Size(102, 30);
-            this.lbFanErrorValue.TabIndex = 196;
-            this.lbFanErrorValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbFanError
-            // 
-            this.lbFanError.AutoSize = true;
-            this.lbFanError.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanError.Location = new System.Drawing.Point(76, 181);
-            this.lbFanError.Name = "lbFanError";
-            this.lbFanError.Size = new System.Drawing.Size(77, 23);
-            this.lbFanError.TabIndex = 197;
-            this.lbFanError.Text = "Error %";
-            // 
-            // lbFanRPMvalue
-            // 
-            this.lbFanRPMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFanRPMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanRPMvalue.Location = new System.Drawing.Point(279, 136);
-            this.lbFanRPMvalue.Name = "lbFanRPMvalue";
-            this.lbFanRPMvalue.Size = new System.Drawing.Size(102, 30);
-            this.lbFanRPMvalue.TabIndex = 194;
-            this.lbFanRPMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbFanRPM
-            // 
-            this.lbFanRPM.AutoSize = true;
-            this.lbFanRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanRPM.Location = new System.Drawing.Point(76, 140);
-            this.lbFanRPM.Name = "lbFanRPM";
-            this.lbFanRPM.Size = new System.Drawing.Size(116, 23);
-            this.lbFanRPM.TabIndex = 195;
-            this.lbFanRPM.Text = "Current RPM";
-            // 
-            // lbFanPWMvalue
-            // 
-            this.lbFanPWMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFanPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanPWMvalue.Location = new System.Drawing.Point(279, 218);
-            this.lbFanPWMvalue.Name = "lbFanPWMvalue";
-            this.lbFanPWMvalue.Size = new System.Drawing.Size(102, 30);
-            this.lbFanPWMvalue.TabIndex = 190;
-            this.lbFanPWMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbFanPWMvalue.Click += new System.EventHandler(this.label26_Click);
-            // 
-            // lbFanPWM
-            // 
-            this.lbFanPWM.AutoSize = true;
-            this.lbFanPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanPWM.Location = new System.Drawing.Point(76, 222);
-            this.lbFanPWM.Name = "lbFanPWM";
-            this.lbFanPWM.Size = new System.Drawing.Size(52, 23);
-            this.lbFanPWM.TabIndex = 191;
-            this.lbFanPWM.Text = "PWM";
-            // 
-            // lbCountsRPM
-            // 
-            this.lbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCountsRPM.Location = new System.Drawing.Point(76, 58);
-            this.lbCountsRPM.Name = "lbCountsRPM";
-            this.lbCountsRPM.Size = new System.Drawing.Size(197, 23);
-            this.lbCountsRPM.TabIndex = 117;
-            this.lbCountsRPM.Text = "Sensor Counts / RPM";
-            // 
-            // tbCountsRPM
-            // 
-            this.tbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCountsRPM.Location = new System.Drawing.Point(279, 54);
-            this.tbCountsRPM.MaxLength = 8;
-            this.tbCountsRPM.Name = "tbCountsRPM";
-            this.tbCountsRPM.Size = new System.Drawing.Size(102, 30);
-            this.tbCountsRPM.TabIndex = 116;
-            this.tbCountsRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbCountsRPM.TextChanged += new System.EventHandler(this.tbCountsRPM_TextChanged);
-            this.tbCountsRPM.Enter += new System.EventHandler(this.tbCountsRPM_Enter);
-            this.tbCountsRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRPM_Validating);
-            // 
-            // lbTargetRPM
-            // 
-            this.lbTargetRPM.AutoSize = true;
-            this.lbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTargetRPM.Location = new System.Drawing.Point(76, 99);
-            this.lbTargetRPM.Name = "lbTargetRPM";
-            this.lbTargetRPM.Size = new System.Drawing.Size(108, 23);
-            this.lbTargetRPM.TabIndex = 114;
-            this.lbTargetRPM.Text = "Target RPM";
-            // 
-            // tbTargetRPM
-            // 
-            this.tbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTargetRPM.Location = new System.Drawing.Point(279, 95);
-            this.tbTargetRPM.MaxLength = 8;
-            this.tbTargetRPM.Name = "tbTargetRPM";
-            this.tbTargetRPM.Size = new System.Drawing.Size(102, 30);
-            this.tbTargetRPM.TabIndex = 113;
-            this.tbTargetRPM.Text = "0";
-            this.tbTargetRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbTargetRPM.TextChanged += new System.EventHandler(this.tbTargetRPM_TextChanged);
-            this.tbTargetRPM.Enter += new System.EventHandler(this.tbTargetRPM_Enter);
-            this.tbTargetRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbTargetRPM_Validating);
             // 
             // pnlMain
             // 
@@ -449,6 +311,21 @@ namespace RateController
             this.lbSensorCounts.TabIndex = 115;
             this.lbSensorCounts.Text = "Sensor Counts / Unit";
             this.lbSensorCounts.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lb4_HelpRequested);
+            // 
+            // btnResetCoverage
+            // 
+            this.btnResetCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnResetCoverage.Image = ((System.Drawing.Image)(resources.GetObject("btnResetCoverage.Image")));
+            this.btnResetCoverage.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnResetCoverage.Location = new System.Drawing.Point(316, 182);
+            this.btnResetCoverage.Name = "btnResetCoverage";
+            this.btnResetCoverage.Size = new System.Drawing.Size(124, 72);
+            this.btnResetCoverage.TabIndex = 8;
+            this.btnResetCoverage.Text = "Coverage";
+            this.btnResetCoverage.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnResetCoverage.UseVisualStyleBackColor = true;
+            this.btnResetCoverage.Click += new System.EventHandler(this.btnResetCoverage_Click);
+            this.btnResetCoverage.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnResetCoverage_HelpRequested);
             // 
             // AreaUnits
             // 
@@ -551,6 +428,21 @@ namespace RateController
             this.lb6.Size = new System.Drawing.Size(90, 23);
             this.lb6.TabIndex = 116;
             this.lb6.Text = "Tank Size";
+            // 
+            // btnResetQuantity
+            // 
+            this.btnResetQuantity.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnResetQuantity.Image = ((System.Drawing.Image)(resources.GetObject("btnResetQuantity.Image")));
+            this.btnResetQuantity.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnResetQuantity.Location = new System.Drawing.Point(316, 262);
+            this.btnResetQuantity.Name = "btnResetQuantity";
+            this.btnResetQuantity.Size = new System.Drawing.Size(124, 72);
+            this.btnResetQuantity.TabIndex = 10;
+            this.btnResetQuantity.Text = "Quantity";
+            this.btnResetQuantity.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnResetQuantity.UseVisualStyleBackColor = true;
+            this.btnResetQuantity.Click += new System.EventHandler(this.btnResetQuantity_Click);
+            this.btnResetQuantity.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnResetQuantity_HelpRequested);
             // 
             // tbAltRate
             // 
@@ -689,6 +581,179 @@ namespace RateController
             this.lb5.Text = "Control Type";
             this.lb5.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lb5_HelpRequested);
             // 
+            // pnlFan
+            // 
+            this.pnlFan.Controls.Add(this.label7);
+            this.pnlFan.Controls.Add(this.lbFanStarted);
+            this.pnlFan.Controls.Add(this.btnStart);
+            this.pnlFan.Controls.Add(this.btnStop);
+            this.pnlFan.Controls.Add(this.lbFanErrorValue);
+            this.pnlFan.Controls.Add(this.lbFanError);
+            this.pnlFan.Controls.Add(this.lbFanRPMvalue);
+            this.pnlFan.Controls.Add(this.lbFanRPM);
+            this.pnlFan.Controls.Add(this.lbFanPWMvalue);
+            this.pnlFan.Controls.Add(this.lbFanPWM);
+            this.pnlFan.Controls.Add(this.lbCountsRPM);
+            this.pnlFan.Controls.Add(this.tbCountsRPM);
+            this.pnlFan.Controls.Add(this.lbTargetRPM);
+            this.pnlFan.Controls.Add(this.tbTargetRPM);
+            this.pnlFan.Location = new System.Drawing.Point(0, 3);
+            this.pnlFan.Name = "pnlFan";
+            this.pnlFan.Size = new System.Drawing.Size(481, 424);
+            this.pnlFan.TabIndex = 145;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(80, 266);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(71, 23);
+            this.label7.TabIndex = 201;
+            this.label7.Text = "Started";
+            // 
+            // lbFanStarted
+            // 
+            this.lbFanStarted.BackColor = System.Drawing.SystemColors.Control;
+            this.lbFanStarted.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanStarted.Image = global::RateController.Properties.Resources.Off;
+            this.lbFanStarted.Location = new System.Drawing.Point(310, 259);
+            this.lbFanStarted.Name = "lbFanStarted";
+            this.lbFanStarted.Size = new System.Drawing.Size(41, 37);
+            this.lbFanStarted.TabIndex = 200;
+            this.lbFanStarted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnStart
+            // 
+            this.btnStart.FlatAppearance.BorderSize = 0;
+            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStart.Image = global::RateController.Properties.Resources.Start;
+            this.btnStart.Location = new System.Drawing.Point(162, 308);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(72, 72);
+            this.btnStart.TabIndex = 199;
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            // 
+            // btnStop
+            // 
+            this.btnStop.FlatAppearance.BorderSize = 0;
+            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
+            this.btnStop.Location = new System.Drawing.Point(240, 308);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(72, 72);
+            this.btnStop.TabIndex = 198;
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
+            // lbFanErrorValue
+            // 
+            this.lbFanErrorValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFanErrorValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanErrorValue.Location = new System.Drawing.Point(279, 177);
+            this.lbFanErrorValue.Name = "lbFanErrorValue";
+            this.lbFanErrorValue.Size = new System.Drawing.Size(102, 30);
+            this.lbFanErrorValue.TabIndex = 196;
+            this.lbFanErrorValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbFanError
+            // 
+            this.lbFanError.AutoSize = true;
+            this.lbFanError.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanError.Location = new System.Drawing.Point(76, 181);
+            this.lbFanError.Name = "lbFanError";
+            this.lbFanError.Size = new System.Drawing.Size(77, 23);
+            this.lbFanError.TabIndex = 197;
+            this.lbFanError.Text = "Error %";
+            // 
+            // lbFanRPMvalue
+            // 
+            this.lbFanRPMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFanRPMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanRPMvalue.Location = new System.Drawing.Point(279, 136);
+            this.lbFanRPMvalue.Name = "lbFanRPMvalue";
+            this.lbFanRPMvalue.Size = new System.Drawing.Size(102, 30);
+            this.lbFanRPMvalue.TabIndex = 194;
+            this.lbFanRPMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbFanRPM
+            // 
+            this.lbFanRPM.AutoSize = true;
+            this.lbFanRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanRPM.Location = new System.Drawing.Point(76, 140);
+            this.lbFanRPM.Name = "lbFanRPM";
+            this.lbFanRPM.Size = new System.Drawing.Size(116, 23);
+            this.lbFanRPM.TabIndex = 195;
+            this.lbFanRPM.Text = "Current RPM";
+            // 
+            // lbFanPWMvalue
+            // 
+            this.lbFanPWMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFanPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanPWMvalue.Location = new System.Drawing.Point(279, 218);
+            this.lbFanPWMvalue.Name = "lbFanPWMvalue";
+            this.lbFanPWMvalue.Size = new System.Drawing.Size(102, 30);
+            this.lbFanPWMvalue.TabIndex = 190;
+            this.lbFanPWMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbFanPWMvalue.Click += new System.EventHandler(this.label26_Click);
+            // 
+            // lbFanPWM
+            // 
+            this.lbFanPWM.AutoSize = true;
+            this.lbFanPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanPWM.Location = new System.Drawing.Point(76, 222);
+            this.lbFanPWM.Name = "lbFanPWM";
+            this.lbFanPWM.Size = new System.Drawing.Size(52, 23);
+            this.lbFanPWM.TabIndex = 191;
+            this.lbFanPWM.Text = "PWM";
+            // 
+            // lbCountsRPM
+            // 
+            this.lbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCountsRPM.Location = new System.Drawing.Point(76, 58);
+            this.lbCountsRPM.Name = "lbCountsRPM";
+            this.lbCountsRPM.Size = new System.Drawing.Size(197, 23);
+            this.lbCountsRPM.TabIndex = 117;
+            this.lbCountsRPM.Text = "Sensor Counts / RPM";
+            // 
+            // tbCountsRPM
+            // 
+            this.tbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbCountsRPM.Location = new System.Drawing.Point(279, 54);
+            this.tbCountsRPM.MaxLength = 8;
+            this.tbCountsRPM.Name = "tbCountsRPM";
+            this.tbCountsRPM.Size = new System.Drawing.Size(102, 30);
+            this.tbCountsRPM.TabIndex = 116;
+            this.tbCountsRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbCountsRPM.TextChanged += new System.EventHandler(this.tbCountsRPM_TextChanged);
+            this.tbCountsRPM.Enter += new System.EventHandler(this.tbCountsRPM_Enter);
+            this.tbCountsRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRPM_Validating);
+            // 
+            // lbTargetRPM
+            // 
+            this.lbTargetRPM.AutoSize = true;
+            this.lbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTargetRPM.Location = new System.Drawing.Point(76, 99);
+            this.lbTargetRPM.Name = "lbTargetRPM";
+            this.lbTargetRPM.Size = new System.Drawing.Size(108, 23);
+            this.lbTargetRPM.TabIndex = 114;
+            this.lbTargetRPM.Text = "Target RPM";
+            // 
+            // tbTargetRPM
+            // 
+            this.tbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbTargetRPM.Location = new System.Drawing.Point(279, 95);
+            this.tbTargetRPM.MaxLength = 8;
+            this.tbTargetRPM.Name = "tbTargetRPM";
+            this.tbTargetRPM.Size = new System.Drawing.Size(102, 30);
+            this.tbTargetRPM.TabIndex = 113;
+            this.tbTargetRPM.Text = "0";
+            this.tbTargetRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbTargetRPM.TextChanged += new System.EventHandler(this.tbTargetRPM_TextChanged);
+            this.tbTargetRPM.Enter += new System.EventHandler(this.tbTargetRPM_Enter);
+            this.tbTargetRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbTargetRPM_Validating);
+            // 
             // tbs4
             // 
             this.tbs4.Controls.Add(this.btnTuningGraph);
@@ -715,6 +780,40 @@ namespace RateController
             this.tbs4.TabIndex = 4;
             this.tbs4.Text = "Control";
             this.tbs4.UseVisualStyleBackColor = true;
+            // 
+            // btnTuningGraph
+            // 
+            this.btnTuningGraph.BackColor = System.Drawing.Color.Transparent;
+            this.btnTuningGraph.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnTuningGraph.FlatAppearance.BorderSize = 0;
+            this.btnTuningGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTuningGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnTuningGraph.Image = global::RateController.Properties.Resources.Chart;
+            this.btnTuningGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnTuningGraph.Location = new System.Drawing.Point(241, 293);
+            this.btnTuningGraph.Name = "btnTuningGraph";
+            this.btnTuningGraph.Size = new System.Drawing.Size(72, 72);
+            this.btnTuningGraph.TabIndex = 155;
+            this.btnTuningGraph.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnTuningGraph.UseVisualStyleBackColor = false;
+            this.btnTuningGraph.Click += new System.EventHandler(this.btnTuningGraph_Click);
+            // 
+            // btnPIDloadDefaults
+            // 
+            this.btnPIDloadDefaults.BackColor = System.Drawing.Color.Transparent;
+            this.btnPIDloadDefaults.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPIDloadDefaults.FlatAppearance.BorderSize = 0;
+            this.btnPIDloadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPIDloadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnPIDloadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
+            this.btnPIDloadDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnPIDloadDefaults.Location = new System.Drawing.Point(135, 293);
+            this.btnPIDloadDefaults.Name = "btnPIDloadDefaults";
+            this.btnPIDloadDefaults.Size = new System.Drawing.Size(72, 72);
+            this.btnPIDloadDefaults.TabIndex = 154;
+            this.btnPIDloadDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnPIDloadDefaults.UseVisualStyleBackColor = false;
+            this.btnPIDloadDefaults.Click += new System.EventHandler(this.btnPIDloadDefaults_Click);
             // 
             // label12
             // 
@@ -1064,6 +1163,17 @@ namespace RateController
             this.tbSenID.Enter += new System.EventHandler(this.tbSenID_Enter);
             this.tbSenID.Validating += new System.ComponentModel.CancelEventHandler(this.tbSenID_Validating);
             // 
+            // ModuleIndicator
+            // 
+            this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
+            this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
+            this.ModuleIndicator.Location = new System.Drawing.Point(256, 45);
+            this.ModuleIndicator.Name = "ModuleIndicator";
+            this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
+            this.ModuleIndicator.TabIndex = 149;
+            this.ModuleIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lbConID
             // 
             this.lbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1396,531 +1506,6 @@ namespace RateController
             this.lbWorkRate.TabIndex = 152;
             this.lbWorkRate.Text = "Hectares/hr";
             // 
-            // tbs5
-            // 
-            this.tbs5.Controls.Add(this.btnCalCopy);
-            this.tbs5.Controls.Add(this.btnCalStop);
-            this.tbs5.Controls.Add(this.btnCalStart);
-            this.tbs5.Controls.Add(this.pnlFlow);
-            this.tbs5.Controls.Add(this.pnlWeight);
-            this.tbs5.Location = new System.Drawing.Point(4, 33);
-            this.tbs5.Name = "tbs5";
-            this.tbs5.Padding = new System.Windows.Forms.Padding(3);
-            this.tbs5.Size = new System.Drawing.Size(484, 427);
-            this.tbs5.TabIndex = 5;
-            this.tbs5.Text = "Calibrate";
-            this.tbs5.UseVisualStyleBackColor = true;
-            // 
-            // pnlWeight
-            // 
-            this.pnlWeight.Controls.Add(this.grpWeightPWM);
-            this.pnlWeight.Controls.Add(this.grpScale);
-            this.pnlWeight.Controls.Add(this.lbWTquantity);
-            this.pnlWeight.Controls.Add(this.lbWTtime);
-            this.pnlWeight.Controls.Add(this.label34);
-            this.pnlWeight.Controls.Add(this.lbWTcal);
-            this.pnlWeight.Controls.Add(this.lbWeightMeasured);
-            this.pnlWeight.Controls.Add(this.label37);
-            this.pnlWeight.Controls.Add(this.label27);
-            this.pnlWeight.Location = new System.Drawing.Point(6, 6);
-            this.pnlWeight.Name = "pnlWeight";
-            this.pnlWeight.Size = new System.Drawing.Size(472, 326);
-            this.pnlWeight.TabIndex = 170;
-            // 
-            // grpScale
-            // 
-            this.grpScale.Controls.Add(this.tbScaleCountsPerUnit);
-            this.grpScale.Controls.Add(this.tbTare);
-            this.grpScale.Controls.Add(this.label4);
-            this.grpScale.Controls.Add(this.btnTare);
-            this.grpScale.Location = new System.Drawing.Point(35, 226);
-            this.grpScale.Name = "grpScale";
-            this.grpScale.Size = new System.Drawing.Size(402, 94);
-            this.grpScale.TabIndex = 213;
-            this.grpScale.TabStop = false;
-            this.grpScale.Text = "Scale";
-            this.grpScale.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // tbScaleCountsPerUnit
-            // 
-            this.tbScaleCountsPerUnit.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbScaleCountsPerUnit.Location = new System.Drawing.Point(288, 21);
-            this.tbScaleCountsPerUnit.MaxLength = 8;
-            this.tbScaleCountsPerUnit.Name = "tbScaleCountsPerUnit";
-            this.tbScaleCountsPerUnit.Size = new System.Drawing.Size(102, 30);
-            this.tbScaleCountsPerUnit.TabIndex = 207;
-            this.tbScaleCountsPerUnit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbScaleCountsPerUnit.TextChanged += new System.EventHandler(this.WeightCal_TextChanged);
-            this.tbScaleCountsPerUnit.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.WeightCal_HelpRequested);
-            this.tbScaleCountsPerUnit.Enter += new System.EventHandler(this.WeightCal_Enter);
-            this.tbScaleCountsPerUnit.Validating += new System.ComponentModel.CancelEventHandler(this.WeightCal_Validating);
-            // 
-            // tbTare
-            // 
-            this.tbTare.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTare.Location = new System.Drawing.Point(288, 57);
-            this.tbTare.MaxLength = 8;
-            this.tbTare.Name = "tbTare";
-            this.tbTare.Size = new System.Drawing.Size(102, 30);
-            this.tbTare.TabIndex = 212;
-            this.tbTare.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbTare.TextChanged += new System.EventHandler(this.tbTare_TextChanged);
-            this.tbTare.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnTare_HelpRequested);
-            this.tbTare.Enter += new System.EventHandler(this.tbTare_Enter);
-            this.tbTare.Validating += new System.ComponentModel.CancelEventHandler(this.tbTare_Validating);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(14, 25);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(203, 23);
-            this.label4.TabIndex = 206;
-            this.label4.Text = "Counts / Unit of weight";
-            // 
-            // btnTare
-            // 
-            this.btnTare.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTare.Location = new System.Drawing.Point(19, 56);
-            this.btnTare.Name = "btnTare";
-            this.btnTare.Size = new System.Drawing.Size(177, 32);
-            this.btnTare.TabIndex = 210;
-            this.btnTare.Text = "Tare";
-            this.btnTare.UseVisualStyleBackColor = true;
-            this.btnTare.Click += new System.EventHandler(this.btnTare_Click);
-            this.btnTare.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnTare_HelpRequested);
-            // 
-            // tbWTpwm
-            // 
-            this.tbWTpwm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWTpwm.Location = new System.Drawing.Point(289, 28);
-            this.tbWTpwm.MaxLength = 8;
-            this.tbWTpwm.Name = "tbWTpwm";
-            this.tbWTpwm.Size = new System.Drawing.Size(102, 30);
-            this.tbWTpwm.TabIndex = 203;
-            this.tbWTpwm.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbWTpwm.TextChanged += new System.EventHandler(this.tbWTpwm_TextChanged);
-            this.tbWTpwm.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbWTpwm_HelpRequested);
-            this.tbWTpwm.Enter += new System.EventHandler(this.tbWTpwm_Enter);
-            this.tbWTpwm.Validating += new System.ComponentModel.CancelEventHandler(this.tbWTpwm_Validating);
-            // 
-            // lbWTquantity
-            // 
-            this.lbWTquantity.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbWTquantity.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWTquantity.Location = new System.Drawing.Point(325, 66);
-            this.lbWTquantity.Name = "lbWTquantity";
-            this.lbWTquantity.Size = new System.Drawing.Size(102, 30);
-            this.lbWTquantity.TabIndex = 202;
-            this.lbWTquantity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbWTtime
-            // 
-            this.lbWTtime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbWTtime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWTtime.Location = new System.Drawing.Point(325, 26);
-            this.lbWTtime.Name = "lbWTtime";
-            this.lbWTtime.Size = new System.Drawing.Size(102, 30);
-            this.lbWTtime.TabIndex = 201;
-            this.lbWTtime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label34.Location = new System.Drawing.Point(35, 30);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(51, 23);
-            this.label34.TabIndex = 200;
-            this.label34.Text = "Time";
-            // 
-            // lbWTcal
-            // 
-            this.lbWTcal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbWTcal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWTcal.Location = new System.Drawing.Point(325, 106);
-            this.lbWTcal.Name = "lbWTcal";
-            this.lbWTcal.Size = new System.Drawing.Size(102, 30);
-            this.lbWTcal.TabIndex = 199;
-            this.lbWTcal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lbWTcal.Click += new System.EventHandler(this.lbWTcal_Click);
-            // 
-            // lbWeightMeasured
-            // 
-            this.lbWeightMeasured.AutoSize = true;
-            this.lbWeightMeasured.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWeightMeasured.Location = new System.Drawing.Point(38, 70);
-            this.lbWeightMeasured.Name = "lbWeightMeasured";
-            this.lbWeightMeasured.Size = new System.Drawing.Size(169, 23);
-            this.lbWeightMeasured.TabIndex = 198;
-            this.lbWeightMeasured.Text = "Quantity measured";
-            this.lbWeightMeasured.Click += new System.EventHandler(this.lbWeightMeasured_Click);
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label37.Location = new System.Drawing.Point(38, 110);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(96, 23);
-            this.label37.TabIndex = 197;
-            this.label37.Text = "UPM/PWM";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(206, 6);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(69, 23);
-            this.label27.TabIndex = 195;
-            this.label27.Text = "Weight";
-            // 
-            // pnlFlow
-            // 
-            this.pnlFlow.Controls.Add(this.label1);
-            this.pnlFlow.Controls.Add(this.grpFlowPWM);
-            this.pnlFlow.Controls.Add(this.lbFLtime);
-            this.pnlFlow.Controls.Add(this.label8);
-            this.pnlFlow.Controls.Add(this.lbFlowMeterCounts);
-            this.pnlFlow.Controls.Add(this.btnCalCalculate);
-            this.pnlFlow.Controls.Add(this.tbCalMeasured);
-            this.pnlFlow.Controls.Add(this.label14);
-            this.pnlFlow.Controls.Add(this.lbFlowMeasured);
-            this.pnlFlow.Controls.Add(this.lbCalCPU);
-            this.pnlFlow.Location = new System.Drawing.Point(6, 6);
-            this.pnlFlow.Name = "pnlFlow";
-            this.pnlFlow.Size = new System.Drawing.Size(472, 326);
-            this.pnlFlow.TabIndex = 169;
-            // 
-            // tbFLpwm
-            // 
-            this.tbFLpwm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbFLpwm.Location = new System.Drawing.Point(288, 28);
-            this.tbFLpwm.MaxLength = 8;
-            this.tbFLpwm.Name = "tbFLpwm";
-            this.tbFLpwm.Size = new System.Drawing.Size(102, 30);
-            this.tbFLpwm.TabIndex = 207;
-            this.tbFLpwm.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbFLpwm.TextChanged += new System.EventHandler(this.tbWTpwm_TextChanged);
-            this.tbFLpwm.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFLpwm_HelpRequested);
-            this.tbFLpwm.Enter += new System.EventHandler(this.tbFLpwm_Enter);
-            this.tbFLpwm.Validating += new System.ComponentModel.CancelEventHandler(this.tbFLpwm_Validating);
-            // 
-            // lbFLtime
-            // 
-            this.lbFLtime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFLtime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFLtime.Location = new System.Drawing.Point(327, 42);
-            this.lbFLtime.Name = "lbFLtime";
-            this.lbFLtime.Size = new System.Drawing.Size(102, 30);
-            this.lbFLtime.TabIndex = 206;
-            this.lbFLtime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(38, 46);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(51, 23);
-            this.label8.TabIndex = 205;
-            this.label8.Text = "Time";
-            // 
-            // lbFlowMeterCounts
-            // 
-            this.lbFlowMeterCounts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFlowMeterCounts.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFlowMeterCounts.Location = new System.Drawing.Point(327, 91);
-            this.lbFlowMeterCounts.Name = "lbFlowMeterCounts";
-            this.lbFlowMeterCounts.Size = new System.Drawing.Size(102, 30);
-            this.lbFlowMeterCounts.TabIndex = 167;
-            this.lbFlowMeterCounts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnCalCalculate
-            // 
-            this.btnCalCalculate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCalCalculate.Location = new System.Drawing.Point(42, 188);
-            this.btnCalCalculate.Name = "btnCalCalculate";
-            this.btnCalCalculate.Size = new System.Drawing.Size(195, 32);
-            this.btnCalCalculate.TabIndex = 169;
-            this.btnCalCalculate.Text = "Sensor Counts/Unit";
-            this.btnCalCalculate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCalCalculate.UseVisualStyleBackColor = true;
-            this.btnCalCalculate.Click += new System.EventHandler(this.btnCalCalculate_Click);
-            // 
-            // tbCalMeasured
-            // 
-            this.tbCalMeasured.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCalMeasured.Location = new System.Drawing.Point(327, 140);
-            this.tbCalMeasured.MaxLength = 8;
-            this.tbCalMeasured.Name = "tbCalMeasured";
-            this.tbCalMeasured.Size = new System.Drawing.Size(102, 30);
-            this.tbCalMeasured.TabIndex = 165;
-            this.tbCalMeasured.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbCalMeasured.Click += new System.EventHandler(this.tbCalMeasured_Click);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(38, 95);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(136, 23);
-            this.label14.TabIndex = 117;
-            this.label14.Text = "Sensor Counts ";
-            // 
-            // lbFlowMeasured
-            // 
-            this.lbFlowMeasured.AutoSize = true;
-            this.lbFlowMeasured.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFlowMeasured.Location = new System.Drawing.Point(38, 144);
-            this.lbFlowMeasured.Name = "lbFlowMeasured";
-            this.lbFlowMeasured.Size = new System.Drawing.Size(169, 23);
-            this.lbFlowMeasured.TabIndex = 120;
-            this.lbFlowMeasured.Text = "Quantity measured";
-            // 
-            // lbCalCPU
-            // 
-            this.lbCalCPU.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbCalCPU.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCalCPU.Location = new System.Drawing.Point(327, 189);
-            this.lbCalCPU.Name = "lbCalCPU";
-            this.lbCalCPU.Size = new System.Drawing.Size(102, 30);
-            this.lbCalCPU.TabIndex = 164;
-            this.lbCalCPU.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.DefaultExt = "rcs";
-            // 
-            // lbProduct
-            // 
-            this.lbProduct.BackColor = System.Drawing.SystemColors.Control;
-            this.lbProduct.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbProduct.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lbProduct.Location = new System.Drawing.Point(12, 9);
-            this.lbProduct.Name = "lbProduct";
-            this.lbProduct.Size = new System.Drawing.Size(488, 23);
-            this.lbProduct.TabIndex = 143;
-            this.lbProduct.Text = "Product";
-            this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // grpFlowPWM
-            // 
-            this.grpFlowPWM.Controls.Add(this.btnFlowDown);
-            this.grpFlowPWM.Controls.Add(this.btnFlowUp);
-            this.grpFlowPWM.Controls.Add(this.tbFLpwm);
-            this.grpFlowPWM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpFlowPWM.Location = new System.Drawing.Point(35, 222);
-            this.grpFlowPWM.Name = "grpFlowPWM";
-            this.grpFlowPWM.Size = new System.Drawing.Size(402, 79);
-            this.grpFlowPWM.TabIndex = 207;
-            this.grpFlowPWM.TabStop = false;
-            this.grpFlowPWM.Text = "PWM";
-            this.grpFlowPWM.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(216, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 23);
-            this.label1.TabIndex = 208;
-            this.label1.Text = "Flow";
-            // 
-            // grpWeightPWM
-            // 
-            this.grpWeightPWM.Controls.Add(this.btnWeightDown);
-            this.grpWeightPWM.Controls.Add(this.tbWTpwm);
-            this.grpWeightPWM.Controls.Add(this.btnWeightUp);
-            this.grpWeightPWM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpWeightPWM.Location = new System.Drawing.Point(35, 137);
-            this.grpWeightPWM.Name = "grpWeightPWM";
-            this.grpWeightPWM.Size = new System.Drawing.Size(402, 79);
-            this.grpWeightPWM.TabIndex = 214;
-            this.grpWeightPWM.TabStop = false;
-            this.grpWeightPWM.Text = "PWM";
-            this.grpWeightPWM.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // btnRight
-            // 
-            this.btnRight.BackColor = System.Drawing.Color.Transparent;
-            this.btnRight.FlatAppearance.BorderSize = 0;
-            this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
-            this.btnRight.Location = new System.Drawing.Point(272, 513);
-            this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(72, 72);
-            this.btnRight.TabIndex = 141;
-            this.btnRight.UseVisualStyleBackColor = false;
-            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
-            // 
-            // btnLeft
-            // 
-            this.btnLeft.BackColor = System.Drawing.Color.Transparent;
-            this.btnLeft.FlatAppearance.BorderSize = 0;
-            this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
-            this.btnLeft.Location = new System.Drawing.Point(194, 513);
-            this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(72, 72);
-            this.btnLeft.TabIndex = 140;
-            this.btnLeft.UseVisualStyleBackColor = false;
-            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
-            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
-            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(350, 513);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
-            this.btnCancel.TabIndex = 134;
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnOK
-            // 
-            this.btnOK.BackColor = System.Drawing.Color.Transparent;
-            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnOK.FlatAppearance.BorderSize = 0;
-            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnOK.Image = global::RateController.Properties.Resources.OK;
-            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(428, 513);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
-            this.btnOK.TabIndex = 0;
-            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnOK.UseVisualStyleBackColor = false;
-            this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
-            // btnResetCoverage
-            // 
-            this.btnResetCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetCoverage.Image = ((System.Drawing.Image)(resources.GetObject("btnResetCoverage.Image")));
-            this.btnResetCoverage.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnResetCoverage.Location = new System.Drawing.Point(316, 182);
-            this.btnResetCoverage.Name = "btnResetCoverage";
-            this.btnResetCoverage.Size = new System.Drawing.Size(124, 72);
-            this.btnResetCoverage.TabIndex = 8;
-            this.btnResetCoverage.Text = "Coverage";
-            this.btnResetCoverage.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnResetCoverage.UseVisualStyleBackColor = true;
-            this.btnResetCoverage.Click += new System.EventHandler(this.btnResetCoverage_Click);
-            this.btnResetCoverage.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnResetCoverage_HelpRequested);
-            // 
-            // btnResetQuantity
-            // 
-            this.btnResetQuantity.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetQuantity.Image = ((System.Drawing.Image)(resources.GetObject("btnResetQuantity.Image")));
-            this.btnResetQuantity.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnResetQuantity.Location = new System.Drawing.Point(316, 262);
-            this.btnResetQuantity.Name = "btnResetQuantity";
-            this.btnResetQuantity.Size = new System.Drawing.Size(124, 72);
-            this.btnResetQuantity.TabIndex = 10;
-            this.btnResetQuantity.Text = "Quantity";
-            this.btnResetQuantity.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnResetQuantity.UseVisualStyleBackColor = true;
-            this.btnResetQuantity.Click += new System.EventHandler(this.btnResetQuantity_Click);
-            this.btnResetQuantity.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnResetQuantity_HelpRequested);
-            // 
-            // lbFanStarted
-            // 
-            this.lbFanStarted.BackColor = System.Drawing.SystemColors.Control;
-            this.lbFanStarted.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanStarted.Image = global::RateController.Properties.Resources.Off;
-            this.lbFanStarted.Location = new System.Drawing.Point(310, 259);
-            this.lbFanStarted.Name = "lbFanStarted";
-            this.lbFanStarted.Size = new System.Drawing.Size(41, 37);
-            this.lbFanStarted.TabIndex = 200;
-            this.lbFanStarted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnStart
-            // 
-            this.btnStart.FlatAppearance.BorderSize = 0;
-            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStart.Image = global::RateController.Properties.Resources.Start;
-            this.btnStart.Location = new System.Drawing.Point(162, 308);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(72, 72);
-            this.btnStart.TabIndex = 199;
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            // 
-            // btnStop
-            // 
-            this.btnStop.FlatAppearance.BorderSize = 0;
-            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
-            this.btnStop.Location = new System.Drawing.Point(240, 308);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(72, 72);
-            this.btnStop.TabIndex = 198;
-            this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
-            // 
-            // btnTuningGraph
-            // 
-            this.btnTuningGraph.BackColor = System.Drawing.Color.Transparent;
-            this.btnTuningGraph.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnTuningGraph.FlatAppearance.BorderSize = 0;
-            this.btnTuningGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTuningGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnTuningGraph.Image = global::RateController.Properties.Resources.Chart;
-            this.btnTuningGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTuningGraph.Location = new System.Drawing.Point(241, 293);
-            this.btnTuningGraph.Name = "btnTuningGraph";
-            this.btnTuningGraph.Size = new System.Drawing.Size(72, 72);
-            this.btnTuningGraph.TabIndex = 155;
-            this.btnTuningGraph.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnTuningGraph.UseVisualStyleBackColor = false;
-            this.btnTuningGraph.Click += new System.EventHandler(this.btnTuningGraph_Click);
-            // 
-            // btnPIDloadDefaults
-            // 
-            this.btnPIDloadDefaults.BackColor = System.Drawing.Color.Transparent;
-            this.btnPIDloadDefaults.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnPIDloadDefaults.FlatAppearance.BorderSize = 0;
-            this.btnPIDloadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPIDloadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnPIDloadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnPIDloadDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnPIDloadDefaults.Location = new System.Drawing.Point(135, 293);
-            this.btnPIDloadDefaults.Name = "btnPIDloadDefaults";
-            this.btnPIDloadDefaults.Size = new System.Drawing.Size(72, 72);
-            this.btnPIDloadDefaults.TabIndex = 154;
-            this.btnPIDloadDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnPIDloadDefaults.UseVisualStyleBackColor = false;
-            this.btnPIDloadDefaults.Click += new System.EventHandler(this.btnPIDloadDefaults_Click);
-            // 
-            // ModuleIndicator
-            // 
-            this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
-            this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(256, 45);
-            this.ModuleIndicator.Name = "ModuleIndicator";
-            this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
-            this.ModuleIndicator.TabIndex = 149;
-            this.ModuleIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // sec15
             // 
             this.sec15.BackColor = System.Drawing.SystemColors.Control;
@@ -2113,6 +1698,21 @@ namespace RateController
             this.sec0.TabIndex = 167;
             this.sec0.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // tbs5
+            // 
+            this.tbs5.Controls.Add(this.btnCalCopy);
+            this.tbs5.Controls.Add(this.btnCalStop);
+            this.tbs5.Controls.Add(this.btnCalStart);
+            this.tbs5.Controls.Add(this.pnlFlow);
+            this.tbs5.Controls.Add(this.pnlWeight);
+            this.tbs5.Location = new System.Drawing.Point(4, 33);
+            this.tbs5.Name = "tbs5";
+            this.tbs5.Padding = new System.Windows.Forms.Padding(3);
+            this.tbs5.Size = new System.Drawing.Size(484, 427);
+            this.tbs5.TabIndex = 5;
+            this.tbs5.Text = "Calibrate";
+            this.tbs5.UseVisualStyleBackColor = true;
+            // 
             // btnCalCopy
             // 
             this.btnCalCopy.BackColor = System.Drawing.Color.Transparent;
@@ -2154,31 +1754,46 @@ namespace RateController
             this.btnCalStart.Click += new System.EventHandler(this.btnCalStart_Click);
             this.btnCalStart.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnCalStart_HelpRequested);
             // 
-            // btnWeightDown
+            // pnlFlow
             // 
-            this.btnWeightDown.BackColor = System.Drawing.Color.Transparent;
-            this.btnWeightDown.FlatAppearance.BorderSize = 0;
-            this.btnWeightDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnWeightDown.Image = global::RateController.Properties.Resources.DnArrow64;
-            this.btnWeightDown.Location = new System.Drawing.Point(166, 13);
-            this.btnWeightDown.Name = "btnWeightDown";
-            this.btnWeightDown.Size = new System.Drawing.Size(72, 61);
-            this.btnWeightDown.TabIndex = 209;
-            this.btnWeightDown.UseVisualStyleBackColor = false;
-            this.btnWeightDown.Click += new System.EventHandler(this.btnWeightDown_Click);
+            this.pnlFlow.Controls.Add(this.label1);
+            this.pnlFlow.Controls.Add(this.grpFlowPWM);
+            this.pnlFlow.Controls.Add(this.lbFLtime);
+            this.pnlFlow.Controls.Add(this.label8);
+            this.pnlFlow.Controls.Add(this.lbFlowMeterCounts);
+            this.pnlFlow.Controls.Add(this.btnCalCalculate);
+            this.pnlFlow.Controls.Add(this.tbCalMeasured);
+            this.pnlFlow.Controls.Add(this.label14);
+            this.pnlFlow.Controls.Add(this.lbFlowMeasured);
+            this.pnlFlow.Controls.Add(this.lbCalCPU);
+            this.pnlFlow.Location = new System.Drawing.Point(6, 6);
+            this.pnlFlow.Name = "pnlFlow";
+            this.pnlFlow.Size = new System.Drawing.Size(472, 326);
+            this.pnlFlow.TabIndex = 169;
             // 
-            // btnWeightUp
+            // label1
             // 
-            this.btnWeightUp.BackColor = System.Drawing.Color.Transparent;
-            this.btnWeightUp.FlatAppearance.BorderSize = 0;
-            this.btnWeightUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnWeightUp.Image = global::RateController.Properties.Resources.UpArrow64;
-            this.btnWeightUp.Location = new System.Drawing.Point(88, 13);
-            this.btnWeightUp.Name = "btnWeightUp";
-            this.btnWeightUp.Size = new System.Drawing.Size(72, 61);
-            this.btnWeightUp.TabIndex = 208;
-            this.btnWeightUp.UseVisualStyleBackColor = false;
-            this.btnWeightUp.Click += new System.EventHandler(this.btnWeightUp_Click);
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(216, 10);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(48, 23);
+            this.label1.TabIndex = 208;
+            this.label1.Text = "Flow";
+            // 
+            // grpFlowPWM
+            // 
+            this.grpFlowPWM.Controls.Add(this.btnFlowDown);
+            this.grpFlowPWM.Controls.Add(this.btnFlowUp);
+            this.grpFlowPWM.Controls.Add(this.tbFLpwm);
+            this.grpFlowPWM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpFlowPWM.Location = new System.Drawing.Point(35, 222);
+            this.grpFlowPWM.Name = "grpFlowPWM";
+            this.grpFlowPWM.Size = new System.Drawing.Size(402, 79);
+            this.grpFlowPWM.TabIndex = 207;
+            this.grpFlowPWM.TabStop = false;
+            this.grpFlowPWM.Text = "PWM";
+            this.grpFlowPWM.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
             // 
             // btnFlowDown
             // 
@@ -2206,6 +1821,391 @@ namespace RateController
             this.btnFlowUp.UseVisualStyleBackColor = false;
             this.btnFlowUp.Click += new System.EventHandler(this.btnFlowUp_Click);
             // 
+            // tbFLpwm
+            // 
+            this.tbFLpwm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbFLpwm.Location = new System.Drawing.Point(288, 28);
+            this.tbFLpwm.MaxLength = 8;
+            this.tbFLpwm.Name = "tbFLpwm";
+            this.tbFLpwm.Size = new System.Drawing.Size(102, 30);
+            this.tbFLpwm.TabIndex = 207;
+            this.tbFLpwm.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbFLpwm.TextChanged += new System.EventHandler(this.tbWTpwm_TextChanged);
+            this.tbFLpwm.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFLpwm_HelpRequested);
+            this.tbFLpwm.Enter += new System.EventHandler(this.tbFLpwm_Enter);
+            this.tbFLpwm.Validating += new System.ComponentModel.CancelEventHandler(this.tbFLpwm_Validating);
+            // 
+            // lbFLtime
+            // 
+            this.lbFLtime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFLtime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFLtime.Location = new System.Drawing.Point(327, 42);
+            this.lbFLtime.Name = "lbFLtime";
+            this.lbFLtime.Size = new System.Drawing.Size(102, 30);
+            this.lbFLtime.TabIndex = 206;
+            this.lbFLtime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(38, 46);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(51, 23);
+            this.label8.TabIndex = 205;
+            this.label8.Text = "Time";
+            // 
+            // lbFlowMeterCounts
+            // 
+            this.lbFlowMeterCounts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFlowMeterCounts.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFlowMeterCounts.Location = new System.Drawing.Point(327, 91);
+            this.lbFlowMeterCounts.Name = "lbFlowMeterCounts";
+            this.lbFlowMeterCounts.Size = new System.Drawing.Size(102, 30);
+            this.lbFlowMeterCounts.TabIndex = 167;
+            this.lbFlowMeterCounts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnCalCalculate
+            // 
+            this.btnCalCalculate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCalCalculate.Location = new System.Drawing.Point(42, 188);
+            this.btnCalCalculate.Name = "btnCalCalculate";
+            this.btnCalCalculate.Size = new System.Drawing.Size(195, 32);
+            this.btnCalCalculate.TabIndex = 169;
+            this.btnCalCalculate.Text = "Sensor Counts/Unit";
+            this.btnCalCalculate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCalCalculate.UseVisualStyleBackColor = true;
+            this.btnCalCalculate.Click += new System.EventHandler(this.btnCalCalculate_Click);
+            // 
+            // tbCalMeasured
+            // 
+            this.tbCalMeasured.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbCalMeasured.Location = new System.Drawing.Point(327, 140);
+            this.tbCalMeasured.MaxLength = 8;
+            this.tbCalMeasured.Name = "tbCalMeasured";
+            this.tbCalMeasured.Size = new System.Drawing.Size(102, 30);
+            this.tbCalMeasured.TabIndex = 165;
+            this.tbCalMeasured.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbCalMeasured.Click += new System.EventHandler(this.tbCalMeasured_Click);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(38, 95);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(136, 23);
+            this.label14.TabIndex = 117;
+            this.label14.Text = "Sensor Counts ";
+            // 
+            // lbFlowMeasured
+            // 
+            this.lbFlowMeasured.AutoSize = true;
+            this.lbFlowMeasured.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFlowMeasured.Location = new System.Drawing.Point(38, 144);
+            this.lbFlowMeasured.Name = "lbFlowMeasured";
+            this.lbFlowMeasured.Size = new System.Drawing.Size(169, 23);
+            this.lbFlowMeasured.TabIndex = 120;
+            this.lbFlowMeasured.Text = "Quantity measured";
+            // 
+            // lbCalCPU
+            // 
+            this.lbCalCPU.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbCalCPU.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCalCPU.Location = new System.Drawing.Point(327, 189);
+            this.lbCalCPU.Name = "lbCalCPU";
+            this.lbCalCPU.Size = new System.Drawing.Size(102, 30);
+            this.lbCalCPU.TabIndex = 164;
+            this.lbCalCPU.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pnlWeight
+            // 
+            this.pnlWeight.Controls.Add(this.grpWeightPWM);
+            this.pnlWeight.Controls.Add(this.grpScale);
+            this.pnlWeight.Controls.Add(this.lbWTquantity);
+            this.pnlWeight.Controls.Add(this.lbWTtime);
+            this.pnlWeight.Controls.Add(this.label34);
+            this.pnlWeight.Controls.Add(this.lbWTcal);
+            this.pnlWeight.Controls.Add(this.lbWeightMeasured);
+            this.pnlWeight.Controls.Add(this.label37);
+            this.pnlWeight.Controls.Add(this.label27);
+            this.pnlWeight.Location = new System.Drawing.Point(6, 6);
+            this.pnlWeight.Name = "pnlWeight";
+            this.pnlWeight.Size = new System.Drawing.Size(472, 326);
+            this.pnlWeight.TabIndex = 170;
+            // 
+            // grpWeightPWM
+            // 
+            this.grpWeightPWM.Controls.Add(this.btnWeightDown);
+            this.grpWeightPWM.Controls.Add(this.tbWTpwm);
+            this.grpWeightPWM.Controls.Add(this.btnWeightUp);
+            this.grpWeightPWM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpWeightPWM.Location = new System.Drawing.Point(35, 137);
+            this.grpWeightPWM.Name = "grpWeightPWM";
+            this.grpWeightPWM.Size = new System.Drawing.Size(402, 79);
+            this.grpWeightPWM.TabIndex = 214;
+            this.grpWeightPWM.TabStop = false;
+            this.grpWeightPWM.Text = "PWM";
+            this.grpWeightPWM.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
+            // 
+            // btnWeightDown
+            // 
+            this.btnWeightDown.BackColor = System.Drawing.Color.Transparent;
+            this.btnWeightDown.FlatAppearance.BorderSize = 0;
+            this.btnWeightDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnWeightDown.Image = global::RateController.Properties.Resources.DnArrow64;
+            this.btnWeightDown.Location = new System.Drawing.Point(166, 13);
+            this.btnWeightDown.Name = "btnWeightDown";
+            this.btnWeightDown.Size = new System.Drawing.Size(72, 61);
+            this.btnWeightDown.TabIndex = 209;
+            this.btnWeightDown.UseVisualStyleBackColor = false;
+            this.btnWeightDown.Click += new System.EventHandler(this.btnWeightDown_Click);
+            // 
+            // tbWTpwm
+            // 
+            this.tbWTpwm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbWTpwm.Location = new System.Drawing.Point(289, 28);
+            this.tbWTpwm.MaxLength = 8;
+            this.tbWTpwm.Name = "tbWTpwm";
+            this.tbWTpwm.Size = new System.Drawing.Size(102, 30);
+            this.tbWTpwm.TabIndex = 203;
+            this.tbWTpwm.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbWTpwm.TextChanged += new System.EventHandler(this.tbWTpwm_TextChanged);
+            this.tbWTpwm.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbWTpwm_HelpRequested);
+            this.tbWTpwm.Enter += new System.EventHandler(this.tbWTpwm_Enter);
+            this.tbWTpwm.Validating += new System.ComponentModel.CancelEventHandler(this.tbWTpwm_Validating);
+            // 
+            // btnWeightUp
+            // 
+            this.btnWeightUp.BackColor = System.Drawing.Color.Transparent;
+            this.btnWeightUp.FlatAppearance.BorderSize = 0;
+            this.btnWeightUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnWeightUp.Image = global::RateController.Properties.Resources.UpArrow64;
+            this.btnWeightUp.Location = new System.Drawing.Point(88, 13);
+            this.btnWeightUp.Name = "btnWeightUp";
+            this.btnWeightUp.Size = new System.Drawing.Size(72, 61);
+            this.btnWeightUp.TabIndex = 208;
+            this.btnWeightUp.UseVisualStyleBackColor = false;
+            this.btnWeightUp.Click += new System.EventHandler(this.btnWeightUp_Click);
+            // 
+            // grpScale
+            // 
+            this.grpScale.Controls.Add(this.tbScaleCountsPerUnit);
+            this.grpScale.Controls.Add(this.tbTare);
+            this.grpScale.Controls.Add(this.label4);
+            this.grpScale.Controls.Add(this.btnTare);
+            this.grpScale.Location = new System.Drawing.Point(35, 226);
+            this.grpScale.Name = "grpScale";
+            this.grpScale.Size = new System.Drawing.Size(402, 94);
+            this.grpScale.TabIndex = 213;
+            this.grpScale.TabStop = false;
+            this.grpScale.Text = "Scale";
+            this.grpScale.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
+            // 
+            // tbScaleCountsPerUnit
+            // 
+            this.tbScaleCountsPerUnit.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbScaleCountsPerUnit.Location = new System.Drawing.Point(288, 21);
+            this.tbScaleCountsPerUnit.MaxLength = 8;
+            this.tbScaleCountsPerUnit.Name = "tbScaleCountsPerUnit";
+            this.tbScaleCountsPerUnit.Size = new System.Drawing.Size(102, 30);
+            this.tbScaleCountsPerUnit.TabIndex = 207;
+            this.tbScaleCountsPerUnit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbScaleCountsPerUnit.TextChanged += new System.EventHandler(this.WeightCal_TextChanged);
+            this.tbScaleCountsPerUnit.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.WeightCal_HelpRequested);
+            this.tbScaleCountsPerUnit.Enter += new System.EventHandler(this.WeightCal_Enter);
+            this.tbScaleCountsPerUnit.Validating += new System.ComponentModel.CancelEventHandler(this.WeightCal_Validating);
+            // 
+            // tbTare
+            // 
+            this.tbTare.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbTare.Location = new System.Drawing.Point(288, 57);
+            this.tbTare.MaxLength = 8;
+            this.tbTare.Name = "tbTare";
+            this.tbTare.Size = new System.Drawing.Size(102, 30);
+            this.tbTare.TabIndex = 212;
+            this.tbTare.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbTare.TextChanged += new System.EventHandler(this.tbTare_TextChanged);
+            this.tbTare.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnTare_HelpRequested);
+            this.tbTare.Enter += new System.EventHandler(this.tbTare_Enter);
+            this.tbTare.Validating += new System.ComponentModel.CancelEventHandler(this.tbTare_Validating);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(14, 25);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(203, 23);
+            this.label4.TabIndex = 206;
+            this.label4.Text = "Counts / Unit of weight";
+            // 
+            // btnTare
+            // 
+            this.btnTare.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTare.Location = new System.Drawing.Point(19, 56);
+            this.btnTare.Name = "btnTare";
+            this.btnTare.Size = new System.Drawing.Size(177, 32);
+            this.btnTare.TabIndex = 210;
+            this.btnTare.Text = "Tare";
+            this.btnTare.UseVisualStyleBackColor = true;
+            this.btnTare.Click += new System.EventHandler(this.btnTare_Click);
+            this.btnTare.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnTare_HelpRequested);
+            // 
+            // lbWTquantity
+            // 
+            this.lbWTquantity.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbWTquantity.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWTquantity.Location = new System.Drawing.Point(325, 66);
+            this.lbWTquantity.Name = "lbWTquantity";
+            this.lbWTquantity.Size = new System.Drawing.Size(102, 30);
+            this.lbWTquantity.TabIndex = 202;
+            this.lbWTquantity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lbWTtime
+            // 
+            this.lbWTtime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbWTtime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWTtime.Location = new System.Drawing.Point(325, 26);
+            this.lbWTtime.Name = "lbWTtime";
+            this.lbWTtime.Size = new System.Drawing.Size(102, 30);
+            this.lbWTtime.TabIndex = 201;
+            this.lbWTtime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label34.Location = new System.Drawing.Point(35, 30);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(51, 23);
+            this.label34.TabIndex = 200;
+            this.label34.Text = "Time";
+            // 
+            // lbWTcal
+            // 
+            this.lbWTcal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbWTcal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWTcal.Location = new System.Drawing.Point(325, 106);
+            this.lbWTcal.Name = "lbWTcal";
+            this.lbWTcal.Size = new System.Drawing.Size(102, 30);
+            this.lbWTcal.TabIndex = 199;
+            this.lbWTcal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbWTcal.Click += new System.EventHandler(this.lbWTcal_Click);
+            // 
+            // lbWeightMeasured
+            // 
+            this.lbWeightMeasured.AutoSize = true;
+            this.lbWeightMeasured.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWeightMeasured.Location = new System.Drawing.Point(38, 70);
+            this.lbWeightMeasured.Name = "lbWeightMeasured";
+            this.lbWeightMeasured.Size = new System.Drawing.Size(169, 23);
+            this.lbWeightMeasured.TabIndex = 198;
+            this.lbWeightMeasured.Text = "Quantity measured";
+            this.lbWeightMeasured.Click += new System.EventHandler(this.lbWeightMeasured_Click);
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.Location = new System.Drawing.Point(38, 110);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(96, 23);
+            this.label37.TabIndex = 197;
+            this.label37.Text = "UPM/PWM";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(206, 6);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(69, 23);
+            this.label27.TabIndex = 195;
+            this.label27.Text = "Weight";
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "rcs";
+            // 
+            // lbProduct
+            // 
+            this.lbProduct.BackColor = System.Drawing.SystemColors.Control;
+            this.lbProduct.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbProduct.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lbProduct.Location = new System.Drawing.Point(12, 9);
+            this.lbProduct.Name = "lbProduct";
+            this.lbProduct.Size = new System.Drawing.Size(488, 23);
+            this.lbProduct.TabIndex = 143;
+            this.lbProduct.Text = "Product";
+            this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // btnRight
+            // 
+            this.btnRight.BackColor = System.Drawing.Color.Transparent;
+            this.btnRight.FlatAppearance.BorderSize = 0;
+            this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
+            this.btnRight.Location = new System.Drawing.Point(272, 513);
+            this.btnRight.Name = "btnRight";
+            this.btnRight.Size = new System.Drawing.Size(72, 72);
+            this.btnRight.TabIndex = 141;
+            this.btnRight.UseVisualStyleBackColor = false;
+            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.BackColor = System.Drawing.Color.Transparent;
+            this.btnLeft.FlatAppearance.BorderSize = 0;
+            this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
+            this.btnLeft.Location = new System.Drawing.Point(194, 513);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(72, 72);
+            this.btnLeft.TabIndex = 140;
+            this.btnLeft.UseVisualStyleBackColor = false;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
+            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnCancel.Location = new System.Drawing.Point(350, 513);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.TabIndex = 134;
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnOK
+            // 
+            this.btnOK.BackColor = System.Drawing.Color.Transparent;
+            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnOK.FlatAppearance.BorderSize = 0;
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnOK.Image = global::RateController.Properties.Resources.OK;
+            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnOK.Location = new System.Drawing.Point(428, 513);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.TabIndex = 0;
+            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2231,10 +2231,10 @@ namespace RateController
             this.tcProducts.ResumeLayout(false);
             this.tbs0.ResumeLayout(false);
             this.tbs0.PerformLayout();
-            this.pnlFan.ResumeLayout(false);
-            this.pnlFan.PerformLayout();
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
+            this.pnlFan.ResumeLayout(false);
+            this.pnlFan.PerformLayout();
             this.tbs4.ResumeLayout(false);
             this.tbs4.PerformLayout();
             this.tbs6.ResumeLayout(false);
@@ -2245,16 +2245,16 @@ namespace RateController
             this.tbs3.ResumeLayout(false);
             this.tbs3.PerformLayout();
             this.tbs5.ResumeLayout(false);
-            this.pnlWeight.ResumeLayout(false);
-            this.pnlWeight.PerformLayout();
-            this.grpScale.ResumeLayout(false);
-            this.grpScale.PerformLayout();
             this.pnlFlow.ResumeLayout(false);
             this.pnlFlow.PerformLayout();
             this.grpFlowPWM.ResumeLayout(false);
             this.grpFlowPWM.PerformLayout();
+            this.pnlWeight.ResumeLayout(false);
+            this.pnlWeight.PerformLayout();
             this.grpWeightPWM.ResumeLayout(false);
             this.grpWeightPWM.PerformLayout();
+            this.grpScale.ResumeLayout(false);
+            this.grpScale.PerformLayout();
             this.ResumeLayout(false);
 
         }

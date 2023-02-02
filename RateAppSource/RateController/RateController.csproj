@@ -153,12 +153,6 @@
     <Compile Include="FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmCalibration.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmCalibration.Designer.cs">
-      <DependentUpon>frmCalibration.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmComm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -264,9 +258,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormStart.resx">
       <DependentUpon>FormStart.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmCalibration.resx">
-      <DependentUpon>frmCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmComm.resx">
       <DependentUpon>frmComm.cs</DependentUpon>
