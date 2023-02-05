@@ -1,5 +1,5 @@
 # define InoDescription "WifiAOG   02-Jan-2022"
-// Wemos D1 mini Pro, ESP 12F,  board: LOLIN(Wemos) D1 R2 & mini
+// Wemos D1 mini Pro, ESP 12F    board: LOLIN(Wemos) D1 R2 & mini
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>

@@ -18,7 +18,7 @@ const byte PGN32501Length = 8;
 const byte PGN32502Length = 7;
 const byte PGN32503Length = 6;
 const byte PGN32613Length = 13;
-const byte PGN32614Length = 16;
+const byte PGN32614Length = 17;
 const byte PGN32616Length = 18;
 const byte PGN32619Length = 6;
 const byte PGN32621Length = 12;
@@ -527,8 +527,9 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		//- bit 6           Debug pgn on
 		//12    power relay Lo      list of power type relays 0-7
 		//13    power relay Hi      list of power type relays 8-15
-		//14    manual pwm
-		//15    crc
+		//14	manual pwm Lo
+		//15    manual pwm Hi
+		//16	CRC
 
 		if (len > PGN32614Length - 1)
 		{
@@ -570,7 +571,8 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 						PowerRelayHi = Data[13];
 
 						// manual control
-						Sensor[ID].ManualAdjust = Data[14];
+						int16_t tmp = Data[14] | Data[15] << 8;
+						Sensor[ID].ManualAdjust = tmp;
 
 						Sensor[ID].CommTime = millis();
 					}
