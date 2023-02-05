@@ -841,7 +841,7 @@ namespace RateController
         private void serialMonitorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form Monitor = new frmMonitor(this);
-            Monitor.ShowDialog();
+            Monitor.Show();
         }
 
         private void SetDayMode()
@@ -884,6 +884,7 @@ namespace RateController
         {
             UpdateStatus();
             Products.Update();
+            SectionControl.ReadRateSwitches();
         }
 
         private void timerNano_Tick(object sender, EventArgs e)

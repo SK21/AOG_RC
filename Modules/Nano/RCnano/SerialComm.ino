@@ -111,13 +111,13 @@ void ReceiveSerial()
 			//          - bit 7         Calibration On
 			//12    power relay Lo      list of power type relays 0-7
 			//13    power relay Hi      list of power type relays 8-15
-			//14	manual pwm
-			//15	CRC
-			PGNlength = 16;
+			//14	manual pwm Lo
+			//15	manual pwm Hi
+			//16	CRC
+			PGNlength = 17;
 
 			if (Serial.available() > PGNlength - 3)
 			{
-
 				SerialPGN = 0;	// reset pgn
 				SerialPacket[0] = 102;
 				SerialPacket[1] = 127;
@@ -161,7 +161,8 @@ void ReceiveSerial()
 							PowerRelayLo = SerialPacket[12];
 							PowerRelayHi = SerialPacket[13];
 
-							ManualAdjust[SensorID] = SerialPacket[14];
+							int16_t tmp = SerialPacket[14] | SerialPacket[15] << 8;
+							ManualAdjust[SensorID] = tmp;
 
 							CommTime[SensorID] = millis();
 						}
@@ -222,8 +223,6 @@ void ReceiveSerial()
 
 							MinPWM[SensorID] = SerialPacket[15];
 							MaxPWM[SensorID] = SerialPacket[16];
-
-							CommTime[SensorID] = millis();
 						}
 					}
 				}

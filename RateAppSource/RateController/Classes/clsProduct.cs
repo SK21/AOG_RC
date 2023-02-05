@@ -5,7 +5,7 @@ using System.Globalization;
 namespace RateController
 {
     public enum ControlTypeEnum
-    { Standard, FastClose, Motor, MotorWeights, Fan }
+    { Valve, ComboClose, Motor, MotorWeights, Fan }
 
     public class clsProduct
     {
@@ -19,7 +19,7 @@ namespace RateController
         public double TankSize = 0;
         public clsArduino VirtualNano;
         private double cCalEnd;
-        private byte cManualPWM;
+        private int cManualPWM;
         private double cCalStart;
         private ControlTypeEnum cControlType = 0;
         private int cCountsRev;
@@ -104,9 +104,18 @@ namespace RateController
             get { return cManualPWM; }
             set
             {
-                if (value < 0) cManualPWM = 0;
-                else if (value > 255) cManualPWM = 255;
-                else cManualPWM = (byte)value;
+                if (cControlType == ControlTypeEnum.Valve || cControlType == ControlTypeEnum.ComboClose)
+                {
+                    if (value < -255) cManualPWM = -255;
+                    else if (value > 255) cManualPWM = 255;
+                    else cManualPWM = value;
+                }
+                else
+                {
+                    if (value < 0) cManualPWM = 0;
+                    else if (value > 255) cManualPWM = 255;
+                    else cManualPWM = (byte)value;
+                }
             }
         }
 
@@ -547,9 +556,10 @@ namespace RateController
             bool.TryParse(mf.Tls.LoadProperty("UseMultiPulse" + IDname), out cUseMultiPulse);
             int.TryParse(mf.Tls.LoadProperty("CountsRev" + IDname), out cCountsRev);
 
-            int.TryParse(mf.Tls.LoadProperty("SensorID" + IDname), out int tmp1);
-            int.TryParse(mf.Tls.LoadProperty("ModuleID" + IDname), out int tmp2);
+            int.TryParse(mf.Tls.LoadProperty("ModuleID" + IDname), out int tmp1);
+            int.TryParse(mf.Tls.LoadProperty("SensorID" + IDname), out int tmp2);
             ChangeID(tmp1, tmp2);
+
 
             bool.TryParse(mf.Tls.LoadProperty("OffRateAlarm" + IDname), out cUseOffRateAlarm);
             byte.TryParse(mf.Tls.LoadProperty("OffRateSetting" + IDname), out cOffRateSetting);
@@ -561,9 +571,9 @@ namespace RateController
             int.TryParse(mf.Tls.LoadProperty("SerialPort" + IDname), out tmp);
             cSerialPort = tmp;
 
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("ManualPWM" + IDname), out val);
-            cManualPWM = val;
+            tmp = 0;
+            int.TryParse(mf.Tls.LoadProperty("ManualPWM" + IDname), out tmp);
+            cManualPWM = tmp;
 
             double.TryParse(mf.Tls.LoadProperty("ScaleUnitsCal" + IDname), out cScaleUnitsCal);
             double.TryParse(mf.Tls.LoadProperty("ScaleTare" + IDname), out cScaleTare);

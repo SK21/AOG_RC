@@ -372,7 +372,7 @@ namespace RateController
         private void serialMonitorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form Monitor = new frmMonitor(mf);
-            Monitor.ShowDialog();
+            Monitor.Show();
         }
 
         private void timerMain_Tick(object sender, EventArgs e)

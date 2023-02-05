@@ -49,6 +49,7 @@
             this.tbPWM = new System.Windows.Forms.TextBox();
             this.bntOK = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tmrRelease = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.grpSim.SuspendLayout();
             this.SuspendLayout();
@@ -150,6 +151,7 @@
             // ckMaster
             // 
             this.ckMaster.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMaster.BackColor = System.Drawing.Color.Red;
             this.ckMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckMaster.Location = new System.Drawing.Point(6, 28);
@@ -158,7 +160,7 @@
             this.ckMaster.TabIndex = 159;
             this.ckMaster.Text = "Master";
             this.ckMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckMaster.UseVisualStyleBackColor = true;
+            this.ckMaster.UseVisualStyleBackColor = false;
             this.ckMaster.CheckedChanged += new System.EventHandler(this.ckMaster_CheckedChanged);
             // 
             // btnDown
@@ -169,7 +171,8 @@
             this.btnDown.TabIndex = 166;
             this.btnDown.Text = "Rate Down";
             this.btnDown.UseVisualStyleBackColor = true;
-            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
+            this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseDown);
+            this.btnDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseUp);
             // 
             // btn1
             // 
@@ -199,7 +202,8 @@
             this.btnUp.TabIndex = 165;
             this.btnUp.Text = "Rate Up";
             this.btnUp.UseVisualStyleBackColor = true;
-            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
+            this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
+            this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
             // 
             // btn3
             // 
@@ -294,6 +298,11 @@
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // tmrRelease
+            // 
+            this.tmrRelease.Interval = 500;
+            this.tmrRelease.Tick += new System.EventHandler(this.tmrRelease_Tick);
+            // 
             // frmSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -343,5 +352,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbPWM;
+        private System.Windows.Forms.Timer tmrRelease;
     }
 }

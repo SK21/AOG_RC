@@ -15,9 +15,7 @@ int PIDvalve(float sKP, float sKI, float sKD, float sError, float sSetPoint, byt
 
         if (abs(ErrorPercent) > (float)Deadband)
         {
-        debug2=sKP;
             Result = (sKP * ErrorPercent) + Integral;
-            debug1 = Result;
 
             unsigned long elapsedTime = millis() - CurrentAdjustTime[SensorID];
             CurrentAdjustTime[SensorID] = millis();

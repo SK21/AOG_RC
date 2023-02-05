@@ -192,7 +192,7 @@ namespace RateController
         {
             try
             {
-                if (CurrentProduct.ControlType != ControlTypeEnum.Standard && CurrentProduct.ControlType != ControlTypeEnum.FastClose)
+                if (CurrentProduct.ControlType != ControlTypeEnum.Valve && CurrentProduct.ControlType != ControlTypeEnum.ComboClose)
                 {
                     // set motor speed
                     byte tmp = 0;
@@ -1514,7 +1514,7 @@ namespace RateController
             pnlMain.Visible = (CurrentProduct.ControlType != ControlTypeEnum.Fan);
 
             // tb flow pwm
-            if (CurrentProduct.ControlType == ControlTypeEnum.Standard || CurrentProduct.ControlType == ControlTypeEnum.FastClose)
+            if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
             {
                 tbFLpwm.Visible = false;
                 grpFlowPWM.Text = "Rate";
@@ -1892,7 +1892,7 @@ namespace RateController
 
         private void btnFlowUp_Click(object sender, EventArgs e)
         {
-            if (CurrentProduct.ControlType == ControlTypeEnum.Standard || CurrentProduct.ControlType == ControlTypeEnum.FastClose)
+            if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
             {
                 mf.SwitchBox.PressSwitch(SwIDs.RateUp);
             }
@@ -1907,7 +1907,7 @@ namespace RateController
 
         private void btnFlowDown_Click(object sender, EventArgs e)
         {
-            if (CurrentProduct.ControlType == ControlTypeEnum.Standard || CurrentProduct.ControlType == ControlTypeEnum.FastClose)
+            if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
             {
                 mf.SwitchBox.PressSwitch(SwIDs.RateDown);
             }

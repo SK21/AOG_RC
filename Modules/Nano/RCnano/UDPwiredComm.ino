@@ -98,9 +98,10 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             //          - bit 7         Calibration On
             //12    power relay Lo      list of power type relays 0-7
             //13    power relay Hi      list of power type relays 8-15
-            //14	manual pwm
-            //15	CRC
-            PGNlength = 16;
+            //14	manual pwm Lo
+            //15    manual pwm Hi
+            //16	CRC
+            PGNlength = 17;
 
             if (len > PGNlength - 1)
             {
@@ -139,7 +140,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                             PowerRelayLo = Data[12];
                             PowerRelayHi = Data[13];
 
-                            ManualAdjust[SensorID] = Data[14];
+                            int16_t tmp = Data[14] | Data[15] << 8;
+                            ManualAdjust[SensorID] = tmp;
 
                             CommTime[SensorID] = millis();
                         }
@@ -192,8 +194,6 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
                             MinPWM[SensorID] = Data[15];
                             MaxPWM[SensorID] = Data[16];
-
-                            CommTime[SensorID] = millis();
                         }
                     }
                 }

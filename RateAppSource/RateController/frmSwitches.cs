@@ -1,6 +1,5 @@
 ﻿using AgOpenGPS;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -10,8 +9,11 @@ namespace RateController
     {
         private SimType CurrentSim;
         private FormStart mf;
-        private bool[] SwON = new bool[9];
         private SimType SimLast;
+        private bool[] SwON = new bool[9];
+
+        private bool UpPressed;
+        private bool DownPressed;
 
         public frmSwitches(FormStart CallingForm)
         {
@@ -22,48 +24,6 @@ namespace RateController
             mf.ProductChanged += Mf_ProductChanged;
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             this.BackColor = Properties.Settings.Default.DayColour;
-        }
-
-        public void UpdateSim()
-        {
-            CurrentSim = mf.SimMode;
-            switch (CurrentSim)
-            {
-                case SimType.VirtualNano:
-                    rbRate.Checked = true;
-                    break;
-
-                case SimType.Speed:
-                    rbSpeed.Checked = true;
-                    if (CurrentSim != SimLast && mf.SectionControl.MasterOn())
-                    {
-                        ckMaster.Checked = true;
-                    }
-                    break;
-
-                default:
-                    rbOff.Checked = true;
-                    if (CurrentSim != SimLast)
-                    {
-                        ckMaster.Checked = false;
-                    }
-                    break;
-            }
-
-            if (mf.UseInches)
-            {
-                lbMPH.Text = Lang.lgMPH;
-            }
-            else
-            {
-                lbMPH.Text = Lang.lgKPH;
-            }
-            tbSpeed.Text = mf.SimSpeed.ToString("N1");
-            tbPWM.Text = mf.Products.Item(mf.CurrentProduct()).ManualPWM.ToString("N0");
-            tbPWM.Enabled = !mf.SwitchBox.Switches[0];
-            tbSpeed.Enabled = (CurrentSim == SimType.Speed);
-
-            SimLast = CurrentSim;
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -96,14 +56,28 @@ namespace RateController
             mf.SwitchBox.PressSwitch(SwIDs.sw3);
         }
 
-        private void btnDown_Click(object sender, EventArgs e)
+        private void btnDown_MouseDown(object sender, MouseEventArgs e)
         {
+            DownPressed = true;
             mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+            tmrRelease.Enabled = true;
         }
 
-        private void btnUp_Click(object sender, EventArgs e)
+        private void btnDown_MouseUp(object sender, MouseEventArgs e)
         {
+            DownPressed = false;
+        }
+
+        private void btnUp_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpPressed = true;
             mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+            tmrRelease.Enabled = true;
+        }
+
+        private void btnUp_MouseUp(object sender, MouseEventArgs e)
+        {
+            UpPressed = false;
         }
 
         private void ckMaster_CheckedChanged(object sender, EventArgs e)
@@ -150,6 +124,22 @@ namespace RateController
         private void rbOff_Click(object sender, EventArgs e)
         {
             UpdateForm();
+        }
+
+        private void rbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Simulate a rate module.";
+
+            mf.Tls.ShowHelp(Message, "Arduino");
+            hlpevent.Handled = true;
+        }
+
+        private void rbSpeed_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Simulate a speed. Can be used to replace a GPS speed source.";
+
+            mf.Tls.ShowHelp(Message, "Speed");
+            hlpevent.Handled = true;
         }
 
         private void swAuto_Click(object sender, EventArgs e)
@@ -219,6 +209,14 @@ namespace RateController
             this.ActiveControl = lbMPH;
         }
 
+        private void tbPWM_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Used to set the manual rate of application (0 to 255) or valve adjustment (-255 to 255)";
+
+            mf.Tls.ShowHelp(Message, "PWM");
+            hlpevent.Handled = true;
+        }
+
         private void tbSpeed_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -235,9 +233,27 @@ namespace RateController
             this.ActiveControl = lbMPH;
         }
 
+        private void tbSpeed_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The simulated speed.";
+
+            mf.Tls.ShowHelp(Message, "Speed");
+            hlpevent.Handled = true;
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateSim();
+            UpdateSwitches();
+        }
+
+        private void tmrRelease_Tick(object sender, EventArgs e)
+        {
+            if (!UpPressed && !DownPressed)
+            {
+                mf.SwitchBox.ReleaseMomentary();
+                tmrRelease.Enabled = false;
+            }
         }
 
         private void UpdateForm()
@@ -275,6 +291,48 @@ namespace RateController
                 lbMPH.Text = Lang.lgKPH;
             }
             tbSpeed.Text = mf.SimSpeed.ToString("N1");
+        }
+
+        private void UpdateSim()
+        {
+            CurrentSim = mf.SimMode;
+            switch (CurrentSim)
+            {
+                case SimType.VirtualNano:
+                    rbRate.Checked = true;
+                    break;
+
+                case SimType.Speed:
+                    rbSpeed.Checked = true;
+                    if (CurrentSim != SimLast && mf.SectionControl.MasterOn())
+                    {
+                        ckMaster.Checked = true;
+                    }
+                    break;
+
+                default:
+                    rbOff.Checked = true;
+                    if (CurrentSim != SimLast)
+                    {
+                        ckMaster.Checked = false;
+                    }
+                    break;
+            }
+
+            if (mf.UseInches)
+            {
+                lbMPH.Text = Lang.lgMPH;
+            }
+            else
+            {
+                lbMPH.Text = Lang.lgKPH;
+            }
+            tbSpeed.Text = mf.SimSpeed.ToString("N1");
+            tbPWM.Text = mf.Products.Item(mf.CurrentProduct()).ManualPWM.ToString("N0");
+            tbPWM.Enabled = !mf.SwitchBox.Switches[0];
+            tbSpeed.Enabled = (CurrentSim == SimType.Speed);
+
+            SimLast = CurrentSim;
         }
 
         private void UpdateSwitches()
@@ -351,38 +409,6 @@ namespace RateController
             {
                 btn4.BackColor = Color.Red;
             }
-        }
-
-        private void rbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Simulate a rate module.";
-
-            mf.Tls.ShowHelp(Message, "Arduino");
-            hlpevent.Handled = true;
-        }
-
-        private void rbSpeed_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Simulate a speed. Can be used to replace a GPS speed source.";
-
-            mf.Tls.ShowHelp(Message, "Speed");
-            hlpevent.Handled = true;
-        }
-
-        private void tbSpeed_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The simulated speed.";
-
-            mf.Tls.ShowHelp(Message, "Speed");
-            hlpevent.Handled = true;
-        }
-
-        private void tbPWM_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Used to set the manual rate of application (0-255).";
-
-            mf.Tls.ShowHelp(Message, "PWM");
-            hlpevent.Handled = true;
         }
     }
 }

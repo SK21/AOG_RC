@@ -12,18 +12,19 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  29-Jan-2023"
-const int16_t InoID = 4155;
+# define InoDescription "RCnano  :  04-Feb-2023"
+const int16_t InoID = 5100;
 int16_t StoredID;
 
 # define UseEthernet 0
 
 float debug1;
 float debug2;
+float debug3;
 
 struct ModuleConfig    // 5 bytes
 {
-	uint8_t ModuleID = 1;
+	uint8_t ModuleID = 0;
 	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
 	uint8_t RelayOnSignal = 0;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
@@ -339,8 +340,6 @@ void loop()
 	}
 
 #if UseEthernet
-	//delay(10);
-
 	//this must be called for ethercard functions to work.
 	ether.packetLoop(ether.packetReceive());
 #endif
@@ -446,8 +445,11 @@ void DebugTheIno()
 		Serial.print(", ");
 		Serial.print(debug1);
 
-		Serial.print(", ");
-		Serial.print(debug2);
+		//Serial.print(", ");
+		//Serial.print(debug2);
+
+		//Serial.print(", ");
+		//Serial.print(debug3);
 
 		Serial.print(", ");
 		Serial.print(AutoOn);

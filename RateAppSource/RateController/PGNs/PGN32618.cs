@@ -26,11 +26,19 @@ namespace RateController
         private DateTime ReceiveTime;
         private bool[] SW = new bool[21];
         private bool[] SWlast = new bool[21];
+        private bool cMasterOn = false;
+        private bool cRateUp = false;
+        private bool cRateDown = false;
+        private bool cAutoOn = true;
+        private byte[] DataLast;
+        private byte[] PressedData;
 
         public PGN32618(FormStart CalledFrom)
         {
             mf = CalledFrom;
             SW[(int)SwIDs.Auto] = true; // default to auto in case of no switchbox
+            DataLast = new byte[cByteCount];
+            PressedData = new byte[cByteCount];
         }
 
         public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
@@ -46,17 +54,66 @@ namespace RateController
             return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
         }
 
+        public bool MasterOn
+        {
+            get { return cMasterOn; }
+            set { cMasterOn = value; }
+        }
+
+        public bool RateUp
+        {
+            get { return cRateUp; }
+            set { cRateUp= value; }
+        }
+
+        public bool RateDown
+        {
+            get { return cRateDown; }
+            set { cRateDown= value; }
+        }
+
+        public bool AutoOn
+        {
+            get { return cAutoOn; }
+            set { cAutoOn = value; }
+        }
+
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
 
             if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
-                SW[0] = mf.Tls.BitRead(Data[2], 0);     // auto on
+                // auto
+                SW[0] = mf.Tls.BitRead(Data[2], 0);     
+                cAutoOn = SW[0];
+
+                // master
                 SW[1] = mf.Tls.BitRead(Data[2], 1);     // master on
                 SW[2] = mf.Tls.BitRead(Data[2], 2);     // master off
+
+                if (SW[1]) cMasterOn = true;
+                else if (SW[2]) cMasterOn = false;
+
+                // rate 
                 SW[3] = mf.Tls.BitRead(Data[2], 3);     // rate up
                 SW[4] = mf.Tls.BitRead(Data[2], 4);     // rate down
+
+                if (SW[3])
+                {
+                    cRateUp = true;
+                    cRateDown = false;
+                }
+                else if (SW[4])
+                {
+                    cRateUp = false;
+                    cRateDown = true;
+                }
+                else if (!SW[3] && !SW[4])
+                {
+                    cRateUp = false;
+                    cRateDown = false;
+                }
 
                 for (int i = 0; i < 2; i++)
                 {
@@ -66,27 +123,14 @@ namespace RateController
                     }
                 }
 
+                DataLast = Data;
+
+                SwitchPGNargs args = new SwitchPGNargs();
+                args.Switches = SW;
+                SwitchPGNreceived?.Invoke(this, args);
+
                 ReceiveTime = DateTime.Now;
                 Result = true;
-            }
-            if (Result)
-            {
-                for (int k = 0; k < SW.Length; k++)
-                {
-                    if ((SW[k] != SWlast[k]) || SW[3] || SW[4])   // check if rate up or rate down is being held on
-                    {
-                        // check if switches have changed and raise event
-                        SwitchPGNargs args = new SwitchPGNargs();
-                        args.Switches = SW;
-                        SwitchPGNreceived?.Invoke(this, args);
-
-                        for (int j = 0; j < SW.Length; j++)
-                        {
-                            SWlast[j] = SW[j];
-                        }
-                        break;
-                    }
-                }
             }
             return Result;
         }
@@ -126,50 +170,94 @@ namespace RateController
 
         public void PressSwitch(SwIDs ID)
         {
-            ReceiveTime = DateTime.Now;
-            
-            switch (ID)
-            {
-                case SwIDs.MasterOn:
-                    SW[1] = true;
-                    SW[2] = false;
-                    break;
-                case SwIDs.MasterOff:
-                    SW[1] = false;
-                    SW[2] = true;
-                    break;
-                case SwIDs.RateUp:
-                    SW[3] = true;
-                    SW[4] = false;
-                    break;
-                case SwIDs.RateDown:
-                    SW[3] = false;
-                    SW[4] = true;
-                    break;
-                default:
-                    SW[(int)ID] = !SW[(int)ID];
-                    break;
-            }
-            SwitchPGNargs args = new SwitchPGNargs();
-            args.Switches = SW;
-            SwitchPGNreceived?.Invoke(this, args);
-
-            // turn off momentary switches
+            PressedData = DataLast;
+            PressedData[0] = HeaderLo;
+            PressedData[1] = HeaderHi;
             switch (ID)
             {
                 case SwIDs.Auto:
+                    if (cAutoOn)
+                    {
+                        // turn off
+                        PressedData[2] = mf.Tls.BitClear(PressedData[2], 0);
+                    }
+                    else
+                    {
+                        // turn on
+                        PressedData[2] = mf.Tls.BitSet(PressedData[2], 0);
+                    }
+                    break;
+
                 case SwIDs.MasterOn:
+                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 1);
+                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 2);
+                    break;
+
                 case SwIDs.MasterOff:
+                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 1);
+                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 2);
+                    break;
+
                 case SwIDs.RateUp:
+                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 3);
+                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 4);
+                    break;
+
                 case SwIDs.RateDown:
-                    SW[1] = false;
-                    SW[2] = false;
-                    SW[3] = false;
-                    SW[4] = false;
-                    args.Switches = SW;
-                    SwitchPGNreceived?.Invoke(this, args);
+                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 3);
+                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 4);
+                    break;
+
+                default:
+                    int Num = (int)ID - 5;
+
+                    if (Num < 8)
+                    {
+                        if (SW[(int)ID])
+                        {
+                            // turn off, lo
+                            PressedData[3] = mf.Tls.BitClear(PressedData[3], Num);
+                        }
+                        else
+                        {
+                            // turn on, lo
+                            PressedData[3] = mf.Tls.BitSet(PressedData[3], Num);
+                        }
+                    }
+                    else
+                    {
+                        if (SW[(int)ID])
+                        {
+                            // turn off, hi
+                            PressedData[4] = mf.Tls.BitClear(PressedData[4], Num - 8);
+                        }
+                        else
+                        {
+                            // turn on, hi
+                            PressedData[4] = mf.Tls.BitSet(PressedData[4], Num - 8);
+                        }
+                    }
                     break;
             }
+
+            PressedData[5] = mf.Tls.CRC(PressedData, 4);
+            ParseByteData(PressedData);
+        }
+
+        public void ReleaseMomentary()
+        {
+            // release momentary buttons
+           if(cAutoOn)
+            {
+                PressedData[2] = 1;
+            }
+            else
+            {
+                PressedData[2] = 0;
+            }
+
+            PressedData[5] = mf.Tls.CRC(PressedData, 4);
+            ParseByteData(PressedData);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -26,10 +27,11 @@ namespace RateController
         //          - bit 6         AutoOn
         //12    power relay Lo      list of power type relays 0-7
         //13    power relay Hi      list of power type relays 8-15
-        //14    manual pwm
-        //15    CRC
+        //14    manual pwm Lo
+        //15    manual pwm Hi
+        //16    CRC
 
-        private const byte cByteCount = 16;
+        private const byte cByteCount = 17;
         private readonly clsProduct Prod;
         private byte[] cData = new byte[cByteCount];
 
@@ -81,7 +83,7 @@ namespace RateController
 
             switch (Prod.ControlType)
             {
-                case ControlTypeEnum.FastClose:
+                case ControlTypeEnum.ComboClose:
                     cData[11] &= 0b11110001; // clear bit 1, 2, 3
                     cData[11] |= 0b00000010; // set bit 1
                     break;
@@ -131,6 +133,7 @@ namespace RateController
             if (Prod.mf.SectionControl.MasterOn())
             {
                 cData[14] = (byte)Prod.ManualPWM;
+                cData[15] = (byte)(Prod.ManualPWM >> 8);
             }
             else
             {
@@ -147,7 +150,7 @@ namespace RateController
             }
             else
             {
-                PrintData();
+                //PrintData();
 
                 Prod.mf.SendSerial(cData);
                 Prod.mf.UDPmodules.SendUDPMessage(cData);
@@ -156,10 +159,21 @@ namespace RateController
 
         private void PrintData()
         {
-            Debug.Print("");
-            for (int i = 0; i < cByteCount; i++)
+            //for (int i = 0; i < cByteCount; i++)
+            //{
+            //    Debug.Print(i.ToString() + ": " + cData[i]);
+            //}
+            //Debug.Print((DateTime.Now - Last).TotalMilliseconds.ToString());
+            //Last = DateTime.Now;
+
+            //if(Prod.ID==0) Debug.Print("Send manual pwm: " + cData[14].ToString());
+
+            if (Prod.ID == 0)
             {
-                Debug.Print(i.ToString() + ": " + cData[i]);
+                Debug.Print("");
+                Debug.Print("ManualPWM: " + Prod.ManualPWM.ToString() + "  14: " + cData[14].ToString() + "  15: " + cData[15].ToString());
+                Int16 Num = (Int16)(cData[14] | cData[15] << 8);
+                Debug.Print(Num.ToString());
             }
         }
     }

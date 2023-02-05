@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace RateController
 {
@@ -8,36 +6,42 @@ namespace RateController
     {
         public struct CTLbytes
         {
+            public byte AOGRlys0;
+            public byte AOGRlys1;
             public bool AutoOn;
             public bool MasterOn;
             public bool RateDown;
             public bool RateUp;
 
-            public byte Rlys0_On;      // section relays 0-7
-            public byte Rlys1_On;      // section relays 8-15
-
-            public byte Rlys0_Off;
-            public byte Rlys1_Off;
-
-            public byte SBRlys0;    // relays 0-7 based on switchbox switch positions
-            public byte SBRlys1;    // relays 8-15 based on switchbox switch positions
-
-            public byte AOGRlys0;
-            public byte AOGRlys1;
-
             public byte RC0;
             public byte RC1;
-
+            public byte Rlys0_Off;
+            public byte Rlys0_On;      // section relays 0-7
+            public byte Rlys1_Off;
+            public byte Rlys1_On;      // section relays 8-15
+            public byte SBRlys0;    // relays 0-7 based on switchbox switch positions
+            public byte SBRlys1;    // relays 8-15 based on switchbox switch positions
             public byte SwHi;       // switches 0-7
             public byte SwLo;       // switches 8-15
         }
 
+        public struct State
+        {
+            public bool Changed;
+            public bool Pressed;
+            public bool Released;
+        }
+
+        private DateTime AdjustTime;
         private CTLbytes CTL = new CTLbytes();
+        private State CurrentState;
         private FormStart mf;
 
-        private DateTime RateReadLast;
+        private State PreviousState;
+        private double RateDir;
         private int RateStep;
-        private int StepDelay = 1000;            // ms between rate adjustments
+
+        private int StepDelay = 1000;   // ms between rate adjustments
         private double StepMultiplier = 0.05;   // rate change amount for each step
         private PGN234 ToAOG;
 
@@ -58,6 +62,94 @@ namespace RateController
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
 
             ToAOG = new PGN234(mf);
+        }
+
+        public bool AutoOn()
+        {
+            return CTL.AutoOn;
+        }
+
+        public bool MasterOn()
+        {
+            return CTL.MasterOn;
+        }
+
+        public void ReadRateSwitches()
+        {
+            if (mf.SwitchBox.RateUp)
+            {
+                CurrentState.Pressed = true;
+                CurrentState.Released = false;
+                CurrentState.Changed = PreviousState.Released;
+                RateDir = 1;
+            }
+            else if (mf.SwitchBox.RateDown)
+            {
+                CurrentState.Pressed = true;
+                CurrentState.Released = false;
+                CurrentState.Changed = PreviousState.Released;
+                RateDir = -1;
+            }
+            else
+            {
+                CurrentState.Released = true;
+                CurrentState.Pressed = false;
+                CurrentState.Changed = PreviousState.Pressed;
+                RateStep = 0;
+            }
+            PreviousState = CurrentState;
+
+            if (CurrentState.Pressed)
+            {
+                // adjust rate
+                if ((DateTime.Now - AdjustTime).TotalMilliseconds > StepDelay)
+                {
+                    AdjustTime = DateTime.Now;
+
+                    int ID = mf.CurrentProduct();
+                    if (ID < 0) ID = 0;
+                    clsProduct Prd = mf.Products.Item(ID);
+
+                    RateStep++;
+                    if (RateStep > 4) RateStep = 4;
+
+                    if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
+                    {
+                        // auto rate
+                        double CurrentRate = Prd.RateSet;
+                        if (CurrentRate == 0) CurrentRate = 1;
+                        CurrentRate += CurrentRate * StepMultiplier * RateStep * RateDir;
+                        Prd.RateSet = CurrentRate;
+                    }
+                    else
+                    {
+                        // manual rate
+                        if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose)
+                        {
+                            // adjust flow valve
+                            Prd.ManualPWM = (int)(Prd.PIDmin * RateStep * RateDir);
+                        }
+                        else
+                        {
+                            // adjust motor
+                            Prd.ManualPWM += (int)(5 * RateDir);
+                        }
+                    }
+                }
+            }
+
+            if (CurrentState.Released && CurrentState.Changed)
+            {
+                // stop manual adjusting flow valve when rate adjust buttons are not pushed
+                int ID = mf.CurrentProduct();
+                if (ID < 0) ID = 0;
+                clsProduct Prd = mf.Products.Item(ID);
+
+                if (!mf.SwitchBox.SwitchOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
+                {
+                    Prd.ManualPWM = 0;
+                }
+            }
         }
 
         public void UpdateSectionStatus(bool UpdateAOG = false)
@@ -127,58 +219,6 @@ namespace RateController
             UpdateSectionStatus(CTL.Rlys0_On != CTL.AOGRlys0 || CTL.Rlys1_On != CTL.AOGRlys1);
         }
 
-        private void ReadRateSwitches()
-        {
-            double Dir = 0;
-
-            if (mf.SwitchBox.SwitchOn(SwIDs.RateUp)) Dir = 1;
-            else if (mf.SwitchBox.SwitchOn(SwIDs.RateDown)) Dir = -1;
-            else RateStep = 0;
-
-            int ID = mf.CurrentProduct();
-            if (ID < 0) ID = 0;
-            clsProduct Prd = mf.Products.Item(ID);
-
-            if (Dir == 0)
-            {
-                // stop manual adjusting flow valve when rate adjust buttons are not pushed
-                if (!mf.SwitchBox.SwitchOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Standard || Prd.ControlType == ControlTypeEnum.FastClose)) Prd.ManualPWM = 0;
-            }
-            else
-            {
-                // adjust rate
-                if ((DateTime.Now - RateReadLast).TotalMilliseconds > StepDelay)
-                {
-                    RateReadLast = DateTime.Now;
-                    RateStep++;
-                    if (RateStep > 4) RateStep = 4;
-
-                    if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
-                    {
-                        // auto rate
-                        double CurrentRate = Prd.RateSet;
-                        if (CurrentRate == 0) CurrentRate = 1;
-                        CurrentRate += CurrentRate * StepMultiplier * RateStep * Dir;
-                        Prd.RateSet = CurrentRate;
-                    }
-                    else
-                    {
-                        // manual rate
-                        if (Prd.ControlType == ControlTypeEnum.Standard || Prd.ControlType == ControlTypeEnum.FastClose)
-                        {
-                            // adjust flow valve
-                            Prd.ManualPWM = (int)(Prd.PIDmin * RateStep * Dir);
-                        }
-                        else
-                        {
-                            // adjust motor
-                            Prd.ManualPWM += (int)(5 * Dir);
-                        }
-                    }
-                }
-            }
-        }
-
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
             CTL.AutoOn = mf.SwitchBox.SwitchOn(SwIDs.Auto);
@@ -217,7 +257,7 @@ namespace RateController
             {
                 if (CTL.AutoOn)
                 {
-                    if (mf.AutoSteerPGN.Connected() && mf.SimMode!=SimType.Speed)
+                    if (mf.AutoSteerPGN.Connected() && mf.SimMode != SimType.Speed)
                     {
                         // aog connected, only send which switches that are off
                         CTL.Rlys0_On = 0;
@@ -232,8 +272,8 @@ namespace RateController
                         // no aog, match switchbox
                         CTL.Rlys0_On = CTL.SBRlys0;
                         CTL.Rlys1_On = CTL.SBRlys1;
-                        CTL.Rlys0_Off= (byte)~CTL.Rlys0_On;
-                        CTL.Rlys1_Off= (byte)~CTL.Rlys1_On;
+                        CTL.Rlys0_Off = (byte)~CTL.Rlys0_On;
+                        CTL.Rlys1_Off = (byte)~CTL.Rlys1_On;
                         CTL.RC0 = CTL.SBRlys0;
                         CTL.RC1 = CTL.SBRlys1;
                     }
@@ -262,16 +302,6 @@ namespace RateController
 
             UpdateSectionStatus(true);
             ReadRateSwitches();
-        }
-    
-        public bool MasterOn()
-        {
-            return CTL.MasterOn;
-        }
-
-        public bool AutoOn()
-        {
-            return CTL.AutoOn;
         }
     }
 }
