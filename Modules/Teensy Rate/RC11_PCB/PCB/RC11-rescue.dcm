@@ -1,0 +1,7 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP PCA9306DCUR-MyLib
+F http://www.ti.com/lit/gpn/pca9306
+$ENDCMP
+#
+#End Doc Library

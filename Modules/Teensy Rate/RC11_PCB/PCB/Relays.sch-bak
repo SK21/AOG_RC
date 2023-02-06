@@ -1,0 +1,625 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 4 6
+Title "Relays"
+Date "2022-12-24"
+Rev "RC11"
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L RC10-rescue:LED-Device D?
+U 1 1 638652C9
+P 7250 3750
+AR Path="/638652C9" Ref="D?"  Part="1" 
+AR Path="/638555A6/638652C9" Ref="D5"  Part="1" 
+F 0 "D5" V 7289 3632 50  0000 R CNN
+F 1 "LED" V 7198 3632 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 7250 3750 50  0001 C CNN
+F 3 "~" H 7250 3750 50  0001 C CNN
+	1    7250 3750
+	-1   0    0    1   
+$EndComp
+$Comp
+L RC10-rescue:R-Device R?
+U 1 1 638652CF
+P 6950 3750
+AR Path="/638652CF" Ref="R?"  Part="1" 
+AR Path="/638555A6/638652CF" Ref="R5"  Part="1" 
+F 0 "R5" V 7050 3700 50  0000 L CNN
+F 1 "500" V 6950 3700 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6880 3750 50  0001 C CNN
+F 3 "~" H 6950 3750 50  0001 C CNN
+	1    6950 3750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RC10-rescue:LED-Device D?
+U 1 1 638652D8
+P 7250 4300
+AR Path="/638652D8" Ref="D?"  Part="1" 
+AR Path="/638555A6/638652D8" Ref="D6"  Part="1" 
+F 0 "D6" V 7289 4182 50  0000 R CNN
+F 1 "LED" V 7198 4182 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 7250 4300 50  0001 C CNN
+F 3 "~" H 7250 4300 50  0001 C CNN
+	1    7250 4300
+	-1   0    0    1   
+$EndComp
+$Comp
+L RC10-rescue:R-Device R?
+U 1 1 638652DE
+P 6950 4300
+AR Path="/638652DE" Ref="R?"  Part="1" 
+AR Path="/638555A6/638652DE" Ref="R6"  Part="1" 
+F 0 "R6" V 7050 4250 50  0000 L CNN
+F 1 "500" V 6950 4250 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6880 4300 50  0001 C CNN
+F 3 "~" H 6950 4300 50  0001 C CNN
+	1    6950 4300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RC10-rescue:LED-Device D?
+U 1 1 638652E8
+P 7250 4850
+AR Path="/638652E8" Ref="D?"  Part="1" 
+AR Path="/638555A6/638652E8" Ref="D7"  Part="1" 
+F 0 "D7" V 7289 4732 50  0000 R CNN
+F 1 "LED" V 7198 4732 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 7250 4850 50  0001 C CNN
+F 3 "~" H 7250 4850 50  0001 C CNN
+	1    7250 4850
+	-1   0    0    1   
+$EndComp
+$Comp
+L RC10-rescue:R-Device R?
+U 1 1 638652EE
+P 6950 4850
+AR Path="/638652EE" Ref="R?"  Part="1" 
+AR Path="/638555A6/638652EE" Ref="R7"  Part="1" 
+F 0 "R7" V 7050 4800 50  0000 L CNN
+F 1 "500" V 6950 4800 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6880 4850 50  0001 C CNN
+F 3 "~" H 6950 4850 50  0001 C CNN
+	1    6950 4850
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RC10-rescue:LED-Device D?
+U 1 1 638652F8
+P 7250 5400
+AR Path="/638652F8" Ref="D?"  Part="1" 
+AR Path="/638555A6/638652F8" Ref="D8"  Part="1" 
+F 0 "D8" V 7289 5282 50  0000 R CNN
+F 1 "LED" V 7198 5282 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 7250 5400 50  0001 C CNN
+F 3 "~" H 7250 5400 50  0001 C CNN
+	1    7250 5400
+	-1   0    0    1   
+$EndComp
+$Comp
+L RC10-rescue:R-Device R?
+U 1 1 638652FE
+P 6950 5400
+AR Path="/638652FE" Ref="R?"  Part="1" 
+AR Path="/638555A6/638652FE" Ref="R8"  Part="1" 
+F 0 "R8" V 7050 5350 50  0000 L CNN
+F 1 "500" V 6950 5350 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6880 5400 50  0001 C CNN
+F 3 "~" H 6950 5400 50  0001 C CNN
+	1    6950 5400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RC10-rescue:LED-Device D?
+U 1 1 63865308
+P 7250 5950
+AR Path="/63865308" Ref="D?"  Part="1" 
+AR Path="/638555A6/63865308" Ref="D9"  Part="1" 
+F 0 "D9" V 7289 5832 50  0000 R CNN
+F 1 "LED" V 7198 5832 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 7250 5950 50  0001 C CNN
+F 3 "~" H 7250 5950 50  0001 C CNN
+	1    7250 5950
+	-1   0    0    1   
+$EndComp
+$Comp
+L RC10-rescue:R-Device R?
+U 1 1 6386530E
+P 6950 5950
+AR Path="/6386530E" Ref="R?"  Part="1" 
+AR Path="/638555A6/6386530E" Ref="R9"  Part="1" 
+F 0 "R9" V 7050 5900 50  0000 L CNN
+F 1 "500" V 6950 5900 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6880 5950 50  0001 C CNN
+F 3 "~" H 6950 5950 50  0001 C CNN
+	1    6950 5950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RC10-rescue:LED-Device D?
+U 1 1 63865318
+P 7250 6500
+AR Path="/63865318" Ref="D?"  Part="1" 
+AR Path="/638555A6/63865318" Ref="D10"  Part="1" 
+F 0 "D10" V 7289 6382 50  0000 R CNN
+F 1 "LED" V 7198 6382 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 7250 6500 50  0001 C CNN
+F 3 "~" H 7250 6500 50  0001 C CNN
+	1    7250 6500
+	-1   0    0    1   
+$EndComp
+$Comp
+L RC10-rescue:R-Device R?
+U 1 1 6386531E
+P 6950 6500
+AR Path="/6386531E" Ref="R?"  Part="1" 
+AR Path="/638555A6/6386531E" Ref="R10"  Part="1" 
+F 0 "R10" V 7050 6450 50  0000 L CNN
+F 1 "500" V 6950 6450 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6880 6500 50  0001 C CNN
+F 3 "~" H 6950 6500 50  0001 C CNN
+	1    6950 6500
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 2950 2    50   Input ~ 0
+R2
+Text GLabel 6800 3500 2    50   Input ~ 0
+R3
+Text GLabel 6800 4050 2    50   Input ~ 0
+R4
+Text GLabel 6800 4600 2    50   Input ~ 0
+R5
+Text GLabel 6800 5150 2    50   Input ~ 0
+R6
+Text GLabel 6800 5700 2    50   Input ~ 0
+R7
+Text GLabel 6800 6250 2    50   Input ~ 0
+R8
+$Comp
+L RC10-rescue:GND-power #PWR042
+U 1 1 635F6905
+P 7650 6500
+F 0 "#PWR042" H 7650 6250 50  0001 C CNN
+F 1 "GND" H 7655 6327 50  0000 C CNN
+F 2 "" H 7650 6500 50  0001 C CNN
+F 3 "" H 7650 6500 50  0001 C CNN
+	1    7650 6500
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:HF3FF_012-1HST_257_-MyLib RLY1
+U 1 1 635FD5AD
+P 5500 2300
+F 0 "RLY1" H 6150 2565 50  0000 C CNN
+F 1 "HF3FF_012-1HST_257_" H 6150 2474 50  0000 C CNN
+F 2 "MyFootprints:HF3FF0121HST257" H 6650 2400 50  0001 L CNN
+F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 6650 2300 50  0001 L CNN
+F 4 "HF3FF Series 15 A SPST 12 VDC PCB Mount Sealed Subminiature High Power Relay" H 6650 2200 50  0001 L CNN "Description"
+F 5 "15.9" H 6650 2100 50  0001 L CNN "Height"
+F 6 "Hongfa" H 6650 2000 50  0001 L CNN "Manufacturer_Name"
+F 7 "HF3FF/012-1HST(257)" H 6650 1900 50  0001 L CNN "Manufacturer_Part_Number"
+	1    5500 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:HF3FF_012-1HST_257_-MyLib RLY2
+U 1 1 635FD856
+P 5500 2850
+F 0 "RLY2" H 6150 3115 50  0000 C CNN
+F 1 "HF3FF_012-1HST_257_" H 6150 3024 50  0000 C CNN
+F 2 "MyFootprints:HF3FF0121HST257" H 6650 2950 50  0001 L CNN
+F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 6650 2850 50  0001 L CNN
+F 4 "HF3FF Series 15 A SPST 12 VDC PCB Mount Sealed Subminiature High Power Relay" H 6650 2750 50  0001 L CNN "Description"
+F 5 "15.9" H 6650 2650 50  0001 L CNN "Height"
+F 6 "Hongfa" H 6650 2550 50  0001 L CNN "Manufacturer_Name"
+F 7 "HF3FF/012-1HST(257)" H 6650 2450 50  0001 L CNN "Manufacturer_Part_Number"
+	1    5500 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:HF3FF_012-1HST_257_-MyLib RLY3
+U 1 1 635FDF03
+P 5500 3400
+F 0 "RLY3" H 6150 3665 50  0000 C CNN
+F 1 "HF3FF_012-1HST_257_" H 6150 3574 50  0000 C CNN
+F 2 "MyFootprints:HF3FF0121HST257" H 6650 3500 50  0001 L CNN
+F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 6650 3400 50  0001 L CNN
+F 4 "HF3FF Series 15 A SPST 12 VDC PCB Mount Sealed Subminiature High Power Relay" H 6650 3300 50  0001 L CNN "Description"
+F 5 "15.9" H 6650 3200 50  0001 L CNN "Height"
+F 6 "Hongfa" H 6650 3100 50  0001 L CNN "Manufacturer_Name"
+F 7 "HF3FF/012-1HST(257)" H 6650 3000 50  0001 L CNN "Manufacturer_Part_Number"
+	1    5500 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:HF3FF_012-1HST_257_-MyLib RLY4
+U 1 1 635FE513
+P 5500 3950
+F 0 "RLY4" H 6150 4215 50  0000 C CNN
+F 1 "HF3FF_012-1HST_257_" H 6150 4124 50  0000 C CNN
+F 2 "MyFootprints:HF3FF0121HST257" H 6650 4050 50  0001 L CNN
+F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 6650 3950 50  0001 L CNN
+F 4 "HF3FF Series 15 A SPST 12 VDC PCB Mount Sealed Subminiature High Power Relay" H 6650 3850 50  0001 L CNN "Description"
+F 5 "15.9" H 6650 3750 50  0001 L CNN "Height"
+F 6 "Hongfa" H 6650 3650 50  0001 L CNN "Manufacturer_Name"
+F 7 "HF3FF/012-1HST(257)" H 6650 3550 50  0001 L CNN "Manufacturer_Part_Number"
+	1    5500 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:HF3FF_012-1HST_257_-MyLib RLY5
+U 1 1 635FEB37
+P 5500 4500
+F 0 "RLY5" H 6150 4765 50  0000 C CNN
+F 1 "HF3FF_012-1HST_257_" H 6150 4674 50  0000 C CNN
+F 2 "MyFootprints:HF3FF0121HST257" H 6650 4600 50  0001 L CNN
+F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 6650 4500 50  0001 L CNN
+F 4 "HF3FF Series 15 A SPST 12 VDC PCB Mount Sealed Subminiature High Power Relay" H 6650 4400 50  0001 L CNN "Description"
+F 5 "15.9" H 6650 4300 50  0001 L CNN "Height"
+F 6 "Hongfa" H 6650 4200 50  0001 L CNN "Manufacturer_Name"
+F 7 "HF3FF/012-1HST(257)" H 6650 4100 50  0001 L CNN "Manufacturer_Part_Number"
+	1    5500 4500
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:HF3FF_012-1HST_257_-MyLib RLY6
+U 1 1 635FEF2F
+P 5500 5050
+F 0 "RLY6" H 6150 5315 50  0000 C CNN
+F 1 "HF3FF_012-1HST_257_" H 6150 5224 50  0000 C CNN
+F 2 "MyFootprints:HF3FF0121HST257" H 6650 5150 50  0001 L CNN
+F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 6650 5050 50  0001 L CNN
+F 4 "HF3FF Series 15 A SPST 12 VDC PCB Mount Sealed Subminiature High Power Relay" H 6650 4950 50  0001 L CNN "Description"
+F 5 "15.9" H 6650 4850 50  0001 L CNN "Height"
+F 6 "Hongfa" H 6650 4750 50  0001 L CNN "Manufacturer_Name"
+F 7 "HF3FF/012-1HST(257)" H 6650 4650 50  0001 L CNN "Manufacturer_Part_Number"
+	1    5500 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:HF3FF_012-1HST_257_-MyLib RLY7
+U 1 1 635FF3DA
+P 5500 5600
+F 0 "RLY7" H 6150 5865 50  0000 C CNN
+F 1 "HF3FF_012-1HST_257_" H 6150 5774 50  0000 C CNN
+F 2 "MyFootprints:HF3FF0121HST257" H 6650 5700 50  0001 L CNN
+F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 6650 5600 50  0001 L CNN
+F 4 "HF3FF Series 15 A SPST 12 VDC PCB Mount Sealed Subminiature High Power Relay" H 6650 5500 50  0001 L CNN "Description"
+F 5 "15.9" H 6650 5400 50  0001 L CNN "Height"
+F 6 "Hongfa" H 6650 5300 50  0001 L CNN "Manufacturer_Name"
+F 7 "HF3FF/012-1HST(257)" H 6650 5200 50  0001 L CNN "Manufacturer_Part_Number"
+	1    5500 5600
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:R-Device R?
+U 1 1 638652C0
+P 6950 3200
+AR Path="/638652C0" Ref="R?"  Part="1" 
+AR Path="/638555A6/638652C0" Ref="R4"  Part="1" 
+F 0 "R4" V 7050 3150 50  0000 L CNN
+F 1 "500" V 6950 3150 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6880 3200 50  0001 C CNN
+F 3 "~" H 6950 3200 50  0001 C CNN
+	1    6950 3200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RC10-rescue:LED-Device D?
+U 1 1 638652BA
+P 7250 3200
+AR Path="/638652BA" Ref="D?"  Part="1" 
+AR Path="/638555A6/638652BA" Ref="D4"  Part="1" 
+F 0 "D4" V 7289 3082 50  0000 R CNN
+F 1 "LED" V 7198 3082 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 7250 3200 50  0001 C CNN
+F 3 "~" H 7250 3200 50  0001 C CNN
+	1    7250 3200
+	-1   0    0    1   
+$EndComp
+$Comp
+L RC10-rescue:+12V-power #PWR041
+U 1 1 63667E05
+P 5300 2200
+F 0 "#PWR041" H 5300 2050 50  0001 C CNN
+F 1 "+12V" H 5315 2373 50  0000 C CNN
+F 2 "" H 5300 2200 50  0001 C CNN
+F 3 "" H 5300 2200 50  0001 C CNN
+	1    5300 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:GND-power #PWR040
+U 1 1 635E7579
+P 3550 4900
+F 0 "#PWR040" H 3550 4650 50  0001 C CNN
+F 1 "GND" H 3555 4727 50  0000 C CNN
+F 2 "" H 3550 4900 50  0001 C CNN
+F 3 "" H 3550 4900 50  0001 C CNN
+	1    3550 4900
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:LED-Device D?
+U 1 1 63865295
+P 7250 2650
+AR Path="/63865295" Ref="D?"  Part="1" 
+AR Path="/638555A6/63865295" Ref="D3"  Part="1" 
+F 0 "D3" V 7289 2532 50  0000 R CNN
+F 1 "LED" V 7198 2532 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 7250 2650 50  0001 C CNN
+F 3 "~" H 7250 2650 50  0001 C CNN
+	1    7250 2650
+	-1   0    0    1   
+$EndComp
+$Comp
+L RC10-rescue:R-Device R?
+U 1 1 6386529B
+P 6950 2650
+AR Path="/6386529B" Ref="R?"  Part="1" 
+AR Path="/638555A6/6386529B" Ref="R3"  Part="1" 
+F 0 "R3" V 7050 2600 50  0000 L CNN
+F 1 "500" V 6950 2600 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6880 2650 50  0001 C CNN
+F 3 "~" H 6950 2650 50  0001 C CNN
+	1    6950 2650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RC10-rescue:ULN2803A-Transistor_Array U?
+U 1 1 63865208
+P 3550 4200
+AR Path="/63865208" Ref="U?"  Part="1" 
+AR Path="/638555A6/63865208" Ref="U3"  Part="1" 
+F 0 "U3" H 3550 4767 50  0000 C CNN
+F 1 "ULN2803A" H 3550 4676 50  0000 C CNN
+F 2 "Package_SO:SOP-18_7x12.5mm_P1.27mm" H 3600 3550 50  0001 L CNN
+F 3 "http://www.ti.com/lit/ds/symlink/uln2803a.pdf" H 3650 4000 50  0001 C CNN
+	1    3550 4200
+	1    0    0    -1  
+$EndComp
+Text GLabel 6800 2400 2    50   Input ~ 0
+R1
+Wire Wire Line
+	5500 2400 5300 2400
+Wire Wire Line
+	5300 2400 5300 2200
+Wire Wire Line
+	6800 2650 6800 2400
+Wire Wire Line
+	7400 2650 7650 2650
+Wire Wire Line
+	6800 2950 6800 3200
+Wire Wire Line
+	7400 3200 7650 3200
+Connection ~ 7650 3200
+Wire Wire Line
+	6800 3500 6800 3750
+Wire Wire Line
+	7400 3750 7650 3750
+Connection ~ 7650 3750
+Wire Wire Line
+	6800 4050 6800 4300
+Wire Wire Line
+	7400 4300 7650 4300
+Connection ~ 7650 4300
+Wire Wire Line
+	6800 4850 6800 4600
+Wire Wire Line
+	7400 4850 7650 4850
+Connection ~ 7650 4850
+Wire Wire Line
+	6800 5400 6800 5150
+Wire Wire Line
+	7400 5400 7650 5400
+Connection ~ 7650 5400
+Wire Wire Line
+	6800 5950 6800 5700
+Wire Wire Line
+	7400 5950 7650 5950
+Connection ~ 7650 5950
+Wire Wire Line
+	6800 6500 6800 6250
+Wire Wire Line
+	7400 6500 7650 6500
+Connection ~ 7650 6500
+Wire Wire Line
+	5300 2400 5300 2950
+Wire Wire Line
+	5300 6250 5500 6250
+Connection ~ 5300 2400
+Wire Wire Line
+	5500 5700 5300 5700
+Connection ~ 5300 5700
+Wire Wire Line
+	5300 5700 5300 6250
+Wire Wire Line
+	5500 5150 5300 5150
+Connection ~ 5300 5150
+Wire Wire Line
+	5300 5150 5300 5700
+Wire Wire Line
+	5500 4600 5300 4600
+Connection ~ 5300 4600
+Wire Wire Line
+	5300 4600 5300 5150
+Wire Wire Line
+	5500 4050 5300 4050
+Connection ~ 5300 4050
+Wire Wire Line
+	5300 4050 5300 4600
+Wire Wire Line
+	5500 3500 5300 3500
+Connection ~ 5300 3500
+Wire Wire Line
+	5300 3500 5300 4050
+Wire Wire Line
+	5500 2950 5300 2950
+Connection ~ 5300 2950
+Wire Wire Line
+	5300 2950 5300 3500
+$Comp
+L RC10-rescue:HF3FF_012-1HST_257_-MyLib RLY8
+U 1 1 635B8C7F
+P 5500 6150
+F 0 "RLY8" H 6150 6415 50  0000 C CNN
+F 1 "HF3FF_012-1HST_257_" H 6150 6324 50  0000 C CNN
+F 2 "MyFootprints:HF3FF0121HST257" H 6650 6250 50  0001 L CNN
+F 3 "http://www.hongfaamerica.com/hq/PDF/HF3FF_en.pdf" H 6650 6150 50  0001 L CNN
+F 4 "HF3FF Series 15 A SPST 12 VDC PCB Mount Sealed Subminiature High Power Relay" H 6650 6050 50  0001 L CNN "Description"
+F 5 "15.9" H 6650 5950 50  0001 L CNN "Height"
+F 6 "Hongfa" H 6650 5850 50  0001 L CNN "Manufacturer_Name"
+F 7 "HF3FF/012-1HST(257)" H 6650 5750 50  0001 L CNN "Manufacturer_Part_Number"
+	1    5500 6150
+	1    0    0    -1  
+$EndComp
+Text GLabel 3150 4700 0    50   Input ~ 0
+RLY1
+Text GLabel 3150 4600 0    50   Input ~ 0
+RLY2
+Text GLabel 3150 4500 0    50   Input ~ 0
+RLY3
+Text GLabel 3150 4400 0    50   Input ~ 0
+RLY4
+Text GLabel 3150 4300 0    50   Input ~ 0
+RLY5
+Text GLabel 3150 4200 0    50   Input ~ 0
+RLY6
+Text GLabel 3150 4100 0    50   Input ~ 0
+RLY7
+Text GLabel 3150 4000 0    50   Input ~ 0
+RLY8
+$Comp
+L RC10-rescue:+12V-power #PWR0101
+U 1 1 637A955A
+P 4000 3700
+F 0 "#PWR0101" H 4000 3550 50  0001 C CNN
+F 1 "+12V" H 4015 3873 50  0000 C CNN
+F 2 "" H 4000 3700 50  0001 C CNN
+F 3 "" H 4000 3700 50  0001 C CNN
+	1    4000 3700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3950 3900 4000 3900
+Wire Wire Line
+	4000 3900 4000 3700
+Wire Wire Line
+	3950 4000 5100 4000
+Wire Wire Line
+	5100 4000 5100 6150
+Wire Wire Line
+	5100 6150 5500 6150
+Wire Wire Line
+	3950 4100 5050 4100
+Wire Wire Line
+	5050 4100 5050 5600
+Wire Wire Line
+	5050 5600 5500 5600
+Wire Wire Line
+	3950 4200 5000 4200
+Wire Wire Line
+	5000 4200 5000 5050
+Wire Wire Line
+	5000 5050 5500 5050
+Wire Wire Line
+	3950 4300 4950 4300
+Wire Wire Line
+	4950 4300 4950 4500
+Wire Wire Line
+	4950 4500 5500 4500
+Wire Wire Line
+	3950 4400 4900 4400
+Wire Wire Line
+	4900 4400 4900 3950
+Wire Wire Line
+	4900 3950 5500 3950
+Wire Wire Line
+	3950 4500 4850 4500
+Wire Wire Line
+	4850 4500 4850 3400
+Wire Wire Line
+	4850 3400 5500 3400
+Wire Wire Line
+	4800 4600 4800 2850
+Wire Wire Line
+	4800 2850 5500 2850
+Wire Wire Line
+	3950 4600 4800 4600
+Wire Wire Line
+	3950 4700 4750 4700
+Wire Wire Line
+	4750 4700 4750 2300
+Wire Wire Line
+	4750 2300 5500 2300
+Wire Wire Line
+	7650 2650 7650 3200
+Wire Wire Line
+	7650 3200 7650 3750
+Wire Wire Line
+	7650 3750 7650 4300
+Wire Wire Line
+	7650 4300 7650 4850
+Wire Wire Line
+	7650 4850 7650 5400
+Wire Wire Line
+	7650 5400 7650 5950
+Wire Wire Line
+	7650 5950 7650 6500
+$Comp
+L RC10-rescue:+12V-power #PWR0109
+U 1 1 63A80B64
+P 7800 2300
+F 0 "#PWR0109" H 7800 2150 50  0001 C CNN
+F 1 "+12V" H 7815 2473 50  0000 C CNN
+F 2 "" H 7800 2300 50  0001 C CNN
+F 3 "" H 7800 2300 50  0001 C CNN
+	1    7800 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6800 2300 7800 2300
+Wire Wire Line
+	6800 6150 7800 6150
+Wire Wire Line
+	7800 6150 7800 5600
+Connection ~ 7800 2300
+Wire Wire Line
+	6800 5600 7800 5600
+Connection ~ 7800 5600
+Wire Wire Line
+	7800 5600 7800 5050
+Wire Wire Line
+	6800 4500 7800 4500
+Connection ~ 7800 4500
+Wire Wire Line
+	7800 4500 7800 3950
+Wire Wire Line
+	6800 3400 7800 3400
+Connection ~ 7800 3400
+Wire Wire Line
+	7800 3400 7800 2850
+Wire Wire Line
+	6800 2850 7800 2850
+Connection ~ 7800 2850
+Wire Wire Line
+	7800 2850 7800 2300
+Wire Wire Line
+	6800 5050 7800 5050
+Connection ~ 7800 5050
+Wire Wire Line
+	7800 5050 7800 4500
+Wire Wire Line
+	6800 3950 7800 3950
+Connection ~ 7800 3950
+Wire Wire Line
+	7800 3950 7800 3400
+$EndSCHEMATC

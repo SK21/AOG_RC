@@ -1,0 +1,440 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 6 6
+Title "Analog"
+Date "2022-12-24"
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L RC11-rescue:Conn_01x10_Female-Connector J19
+U 1 1 6377A950
+P 3900 4250
+F 0 "J19" H 3950 4900 50  0000 C CNN
+F 1 "ADS1115 - 1001001" H 3950 4800 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x10_P2.54mm_Vertical" H 3900 4250 50  0001 C CNN
+F 3 "~" H 3900 4250 50  0001 C CNN
+	1    3900 4250
+	-1   0    0    -1  
+$EndComp
+Text Notes 3600 3850 0    50   ~ 0
+VDD
+Text Notes 3600 3950 0    50   ~ 0
+GND
+Text Notes 3600 4050 0    50   ~ 0
+SCL
+Text Notes 3600 4150 0    50   ~ 0
+SDA
+Text Notes 3600 4250 0    50   ~ 0
+ADDR
+Text Notes 3600 4350 0    50   ~ 0
+ALERT
+Text Notes 3600 4450 0    50   ~ 0
+AIN0
+Text Notes 3600 4550 0    50   ~ 0
+AIN1
+Text Notes 3600 4650 0    50   ~ 0
+AIN2
+Text Notes 3600 4750 0    50   ~ 0
+AIN3
+$Comp
+L RC11-rescue:+5V-power #PWR050
+U 1 1 6377E02D
+P 6150 3300
+F 0 "#PWR050" H 6150 3150 50  0001 C CNN
+F 1 "+5V" H 6165 3473 50  0000 C CNN
+F 2 "" H 6150 3300 50  0001 C CNN
+F 3 "" H 6150 3300 50  0001 C CNN
+	1    6150 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC11-rescue:+5V-power #PWR045
+U 1 1 6377E4FB
+P 5650 2500
+F 0 "#PWR045" H 5650 2350 50  0001 C CNN
+F 1 "+5V" H 5665 2673 50  0000 C CNN
+F 2 "" H 5650 2500 50  0001 C CNN
+F 3 "" H 5650 2500 50  0001 C CNN
+	1    5650 2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC11-rescue:GND-power #PWR047
+U 1 1 6377EAD7
+P 4550 4250
+F 0 "#PWR047" H 4550 4000 50  0001 C CNN
+F 1 "GND" H 4600 4100 50  0000 C CNN
+F 2 "" H 4550 4250 50  0001 C CNN
+F 3 "" H 4550 4250 50  0001 C CNN
+	1    4550 4250
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC11-rescue:GND-power #PWR052
+U 1 1 6377F6D1
+P 7800 4250
+F 0 "#PWR052" H 7800 4000 50  0001 C CNN
+F 1 "GND" H 7805 4077 50  0000 C CNN
+F 2 "" H 7800 4250 50  0001 C CNN
+F 3 "" H 7800 4250 50  0001 C CNN
+	1    7800 4250
+	1    0    0    -1  
+$EndComp
+NoConn ~ 4100 4350
+NoConn ~ 4100 4650
+NoConn ~ 4100 4750
+$Comp
+L RC11-rescue:R-Device R18
+U 1 1 637805BF
+P 5850 3450
+F 0 "R18" H 5920 3496 50  0000 L CNN
+F 1 "341" H 5920 3405 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 5780 3450 50  0001 C CNN
+F 3 "~" H 5850 3450 50  0001 C CNN
+	1    5850 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC11-rescue:R-Device R19
+U 1 1 637809AE
+P 6150 3450
+F 0 "R19" H 6220 3496 50  0000 L CNN
+F 1 "341" H 6220 3405 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6080 3450 50  0001 C CNN
+F 3 "~" H 6150 3450 50  0001 C CNN
+	1    6150 3450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5850 3600 5850 4050
+$Comp
+L RC11-rescue:R-Device R20
+U 1 1 637813CC
+P 6450 3450
+F 0 "R20" H 6520 3496 50  0000 L CNN
+F 1 "200K" H 6520 3405 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6380 3450 50  0001 C CNN
+F 3 "~" H 6450 3450 50  0001 C CNN
+	1    6450 3450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5850 4050 6600 4050
+Connection ~ 5850 4050
+Wire Wire Line
+	6150 3600 6150 3950
+Connection ~ 6150 3950
+Wire Wire Line
+	6150 3950 6600 3950
+Wire Wire Line
+	6450 3600 6450 4150
+Wire Wire Line
+	6450 4250 6600 4250
+Wire Wire Line
+	6450 4150 6600 4150
+Connection ~ 6450 4150
+Wire Wire Line
+	6450 4150 6450 4250
+Wire Wire Line
+	6150 3950 6150 4150
+Wire Wire Line
+	5850 3300 6150 3300
+Wire Wire Line
+	6150 3300 6450 3300
+Connection ~ 6150 3300
+$Comp
+L RC11-rescue:R-Device R21
+U 1 1 6378442F
+P 8300 3450
+F 0 "R21" H 8370 3496 50  0000 L CNN
+F 1 "217" H 8370 3405 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 8230 3450 50  0001 C CNN
+F 3 "~" H 8300 3450 50  0001 C CNN
+	1    8300 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC11-rescue:R-Device R22
+U 1 1 63784AC9
+P 8600 3450
+F 0 "R22" H 8670 3496 50  0000 L CNN
+F 1 "217" H 8670 3405 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 8530 3450 50  0001 C CNN
+F 3 "~" H 8600 3450 50  0001 C CNN
+	1    8600 3450
+	1    0    0    -1  
+$EndComp
+Text GLabel 8700 4050 2    50   Input ~ 0
+SCL_Teensy
+Text GLabel 8700 3950 2    50   Input ~ 0
+SDA_Teensy
+Wire Wire Line
+	7800 3950 8600 3950
+Wire Wire Line
+	7800 4050 8300 4050
+Connection ~ 8300 4050
+$Comp
+L RC11-rescue:+3.3V-power #PWR053
+U 1 1 63786771
+P 8300 3300
+F 0 "#PWR053" H 8300 3150 50  0001 C CNN
+F 1 "+3.3V" H 8315 3473 50  0000 C CNN
+F 2 "" H 8300 3300 50  0001 C CNN
+F 3 "" H 8300 3300 50  0001 C CNN
+	1    8300 3300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8300 3300 8600 3300
+Connection ~ 8300 3300
+Wire Wire Line
+	7800 4150 8150 4150
+Wire Wire Line
+	8150 3300 8300 3300
+$Comp
+L RC11-rescue:ADS1115IDGS-Analog_ADC U6
+U 1 1 6383A113
+P 4900 3000
+AR Path="/6383A113" Ref="U6"  Part="1" 
+AR Path="/637D746E/6383A113" Ref="U6"  Part="1" 
+F 0 "U6" H 4900 3681 50  0000 C CNN
+F 1 "ADS1115IDGS - 1001000" H 4900 3590 50  0000 C CNN
+F 2 "Package_SO:TSSOP-10_3x3mm_P0.5mm" H 4900 2500 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/ads1113.pdf" H 4850 2100 50  0001 C CNN
+	1    4900 3000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 3850 4300 3850
+Wire Wire Line
+	4100 3950 4550 3950
+Wire Wire Line
+	4100 4050 5550 4050
+Wire Wire Line
+	4100 4150 5500 4150
+Wire Wire Line
+	4100 4250 4300 4250
+$Comp
+L RC11-rescue:GND-power #PWR03
+U 1 1 638444B3
+P 4900 3400
+F 0 "#PWR03" H 4900 3150 50  0001 C CNN
+F 1 "GND" H 4905 3227 50  0000 C CNN
+F 2 "" H 4900 3400 50  0001 C CNN
+F 3 "" H 4900 3400 50  0001 C CNN
+	1    4900 3400
+	1    0    0    -1  
+$EndComp
+NoConn ~ 4500 3200
+NoConn ~ 4500 3100
+NoConn ~ 5300 2800
+Wire Wire Line
+	5300 3000 5550 3000
+Wire Wire Line
+	5550 3000 5550 4050
+Connection ~ 5550 4050
+Wire Wire Line
+	5550 4050 5850 4050
+Wire Wire Line
+	5300 3100 5500 3100
+Wire Wire Line
+	5500 3100 5500 4150
+Connection ~ 5500 4150
+Wire Wire Line
+	5500 4150 6150 4150
+Wire Wire Line
+	4500 3000 4400 3000
+Wire Wire Line
+	4400 3000 4400 4550
+Wire Wire Line
+	4100 4550 4400 4550
+Connection ~ 4400 4550
+Wire Wire Line
+	4500 2900 4350 2900
+Wire Wire Line
+	4350 2900 4350 4450
+Wire Wire Line
+	4100 4450 4350 4450
+Connection ~ 4350 4450
+$Comp
+L RC11-rescue:GND-power #PWR056
+U 1 1 6384A40B
+P 5300 3200
+F 0 "#PWR056" H 5300 2950 50  0001 C CNN
+F 1 "GND" H 5305 3027 50  0000 C CNN
+F 2 "" H 5300 3200 50  0001 C CNN
+F 3 "" H 5300 3200 50  0001 C CNN
+	1    5300 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4300 4250 4300 3850
+Connection ~ 4300 3850
+Wire Wire Line
+	4300 3850 5650 3850
+Wire Wire Line
+	4550 4250 4550 3950
+$Comp
+L RC10-rescue:C-Device C?
+U 1 1 6384FD76
+P 5900 2650
+AR Path="/6384FD76" Ref="C?"  Part="1" 
+AR Path="/637D746E/6384FD76" Ref="C11"  Part="1" 
+F 0 "C11" H 6015 2696 50  0000 L CNN
+F 1 "0.1uF" H 6015 2605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 5938 2500 50  0001 C CNN
+F 3 "~" H 5900 2650 50  0001 C CNN
+	1    5900 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC10-rescue:GND-power #PWR?
+U 1 1 6384FD7C
+P 5900 2800
+AR Path="/6384FD7C" Ref="#PWR?"  Part="1" 
+AR Path="/637D746E/6384FD7C" Ref="#PWR057"  Part="1" 
+F 0 "#PWR057" H 5900 2550 50  0001 C CNN
+F 1 "GND" H 5850 2650 50  0000 C CNN
+F 2 "" H 5900 2800 50  0001 C CNN
+F 3 "" H 5900 2800 50  0001 C CNN
+	1    5900 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5650 2500 4900 2500
+Wire Wire Line
+	5650 2500 5650 3850
+Connection ~ 5650 2500
+Wire Wire Line
+	5650 2500 5900 2500
+Text GLabel 5100 5500 1    50   Input ~ 0
+AIN1
+Wire Wire Line
+	4750 5700 4750 5750
+Wire Wire Line
+	4800 5700 4750 5700
+$Comp
+L RC11-rescue:GND-power #PWR054
+U 1 1 6380CD75
+P 4750 5750
+F 0 "#PWR054" H 4750 5500 50  0001 C CNN
+F 1 "GND" H 4755 5577 50  0000 C CNN
+F 2 "" H 4750 5750 50  0001 C CNN
+F 3 "" H 4750 5750 50  0001 C CNN
+	1    4750 5750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5450 5700 5450 5650
+Wire Wire Line
+	5400 5700 5450 5700
+$Comp
+L RC11-rescue:+5V-power #PWR055
+U 1 1 6380CD69
+P 5450 5650
+F 0 "#PWR055" H 5450 5500 50  0001 C CNN
+F 1 "+5V" H 5465 5823 50  0000 C CNN
+F 2 "" H 5450 5650 50  0001 C CNN
+F 3 "" H 5450 5650 50  0001 C CNN
+	1    5450 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC11-rescue:BAV99-Diode D12
+U 1 1 6380CC0F
+P 5100 5700
+F 0 "D12" H 5100 5823 50  0000 C CNN
+F 1 "BAV99" H 5100 5914 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5100 5200 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/BAV99_SER.pdf" H 5100 5700 50  0001 C CNN
+	1    5100 5700
+	1    0    0    1   
+$EndComp
+Text GLabel 5100 4800 1    50   Input ~ 0
+AIN0
+Wire Wire Line
+	4750 5000 4750 5050
+Wire Wire Line
+	4800 5000 4750 5000
+$Comp
+L RC11-rescue:GND-power #PWR048
+U 1 1 63788E2A
+P 4750 5050
+F 0 "#PWR048" H 4750 4800 50  0001 C CNN
+F 1 "GND" H 4755 4877 50  0000 C CNN
+F 2 "" H 4750 5050 50  0001 C CNN
+F 3 "" H 4750 5050 50  0001 C CNN
+	1    4750 5050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5450 5000 5450 4950
+Wire Wire Line
+	5400 5000 5450 5000
+$Comp
+L RC11-rescue:+5V-power #PWR051
+U 1 1 6378831C
+P 5450 4950
+F 0 "#PWR051" H 5450 4800 50  0001 C CNN
+F 1 "+5V" H 5465 5123 50  0000 C CNN
+F 2 "" H 5450 4950 50  0001 C CNN
+F 3 "" H 5450 4950 50  0001 C CNN
+	1    5450 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L RC11-rescue:BAV99-Diode D11
+U 1 1 63787D10
+P 5100 5000
+F 0 "D11" H 5100 5123 50  0000 C CNN
+F 1 "BAV99" H 5100 5214 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5100 4500 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/BAV99_SER.pdf" H 5100 5000 50  0001 C CNN
+	1    5100 5000
+	1    0    0    1   
+$EndComp
+$Comp
+L RC11-rescue:PCA9306DCUR-MyLib IC3
+U 1 1 6377C511
+P 7800 4250
+F 0 "IC3" H 8400 3685 50  0000 C CNN
+F 1 "PCA9306DCUR" H 8400 3776 50  0000 C CNN
+F 2 "MyFootprints:PCA9306DCUR" H 8850 4350 50  0001 L CNN
+F 3 "http://www.ti.com/lit/gpn/pca9306" H 8850 4250 50  0001 L CNN
+F 4 "2-Bit Bidirectional I2C Bus and SMBus Voltage-Level Shifter" H 8850 4150 50  0001 L CNN "Description"
+F 5 "0.9" H 8850 4050 50  0001 L CNN "Height"
+F 6 "595-PCA9306DCUR" H 8850 3950 50  0001 L CNN "Mouser Part Number"
+F 7 "https://www.mouser.co.uk/ProductDetail/Texas-Instruments/PCA9306DCUR?qs=wgAEGBTxy7nQr5PRxNBUNA%3D%3D" H 8850 3850 50  0001 L CNN "Mouser Price/Stock"
+F 8 "Texas Instruments" H 8850 3750 50  0001 L CNN "Manufacturer_Name"
+F 9 "PCA9306DCUR" H 8850 3650 50  0001 L CNN "Manufacturer_Part_Number"
+	1    7800 4250
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5100 5500 4400 5500
+Wire Wire Line
+	4400 4550 4400 5500
+Wire Wire Line
+	5100 4800 4350 4800
+Wire Wire Line
+	4350 4450 4350 4800
+Wire Wire Line
+	8300 3600 8300 4050
+Wire Wire Line
+	8600 3600 8600 3950
+Wire Wire Line
+	8150 3300 8150 4150
+Wire Wire Line
+	8600 3950 8700 3950
+Connection ~ 8600 3950
+Wire Wire Line
+	8300 4050 8700 4050
+$EndSCHEMATC

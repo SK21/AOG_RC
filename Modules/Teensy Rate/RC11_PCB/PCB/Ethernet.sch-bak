@@ -1,0 +1,198 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 6
+Title "Ethernet"
+Date "2022-11-05"
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L RC10-rescue:HR911105A-MyLib J12
+U 1 1 639DE898
+P 6700 3850
+F 0 "J12" H 6700 4517 50  0000 C CNN
+F 1 "HR911105A" H 6700 4426 50  0000 C CNN
+F 2 "MyFootprints:HR911105A" V 6700 3875 50  0001 C CNN
+F 3 "~" V 6700 3875 50  0001 C CNN
+	1    6700 3850
+	-1   0    0    1   
+$EndComp
+$Comp
+L RC10-rescue:GND-power #PWR026
+U 1 1 63A813D0
+P 6300 4250
+F 0 "#PWR026" H 6300 4000 50  0001 C CNN
+F 1 "GND" H 6305 4077 50  0000 C CNN
+F 2 "" H 6300 4250 50  0001 C CNN
+F 3 "" H 6300 4250 50  0001 C CNN
+	1    6300 4250
+	1    0    0    -1  
+$EndComp
+NoConn ~ 6300 4150
+Wire Wire Line
+	6550 3350 6800 3350
+Wire Wire Line
+	6800 3350 7400 3350
+Connection ~ 6800 3350
+$Comp
+L RC10-rescue:GND-power #PWR027
+U 1 1 63A837F8
+P 7400 4150
+F 0 "#PWR027" H 7400 3900 50  0001 C CNN
+F 1 "GND" H 7405 3977 50  0000 C CNN
+F 2 "" H 7400 4150 50  0001 C CNN
+F 3 "" H 7400 4150 50  0001 C CNN
+	1    7400 4150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7100 4150 7400 4150
+Wire Wire Line
+	7100 3650 7400 3650
+Wire Wire Line
+	7400 3650 7400 4150
+Connection ~ 7400 4150
+Wire Wire Line
+	7400 3650 7400 3350
+Connection ~ 7400 3650
+$Comp
+L RC10-rescue:Conn_02x03_Odd_Even-Connector_Generic J11
+U 1 1 63649D53
+P 4900 3900
+F 0 "J11" H 4950 4217 50  0000 C CNN
+F 1 "Teensy_Ethernet" H 4950 4126 50  0000 C CNN
+F 2 "Connector_PinHeader_2.00mm:PinHeader_2x03_P2.00mm_Vertical" H 4900 3900 50  0001 C CNN
+F 3 "~" H 4900 3900 50  0001 C CNN
+	1    4900 3900
+	-1   0    0    1   
+$EndComp
+Text Notes 4350 3800 0    50   ~ 0
+T+
+Text Notes 4300 3900 0    50   ~ 0
+GND
+Text Notes 4350 4000 0    50   ~ 0
+R-
+Text Notes 5250 3800 0    50   ~ 0
+T-
+Text Notes 5250 3900 0    50   ~ 0
+LED
+Text Notes 5250 4000 0    50   ~ 0
+R+
+Wire Wire Line
+	6300 3650 5600 3650
+Wire Wire Line
+	6300 3750 5700 3750
+Wire Wire Line
+	5700 3750 5700 4000
+Wire Wire Line
+	5700 4000 5100 4000
+$Comp
+L RC10-rescue:GND-power #PWR025
+U 1 1 6364B546
+P 5950 4500
+F 0 "#PWR025" H 5950 4250 50  0001 C CNN
+F 1 "GND" H 5955 4327 50  0000 C CNN
+F 2 "" H 5950 4500 50  0001 C CNN
+F 3 "" H 5950 4500 50  0001 C CNN
+	1    5950 4500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6300 3850 5950 3850
+Wire Wire Line
+	5950 3850 5950 3950
+Wire Wire Line
+	5950 4450 5950 4500
+$Comp
+L RC10-rescue:CP-Device C8
+U 1 1 6364C6DA
+P 5950 4300
+F 0 "C8" H 6068 4346 50  0000 L CNN
+F 1 "0.1uF" H 6068 4255 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 5988 4150 50  0001 C CNN
+F 3 "~" H 5950 4300 50  0001 C CNN
+	1    5950 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6300 3950 5950 3950
+Connection ~ 5950 3950
+Wire Wire Line
+	5950 3950 5950 4150
+Wire Wire Line
+	6300 4050 5700 4050
+Wire Wire Line
+	5700 4050 5700 4200
+$Comp
+L RC10-rescue:GND-power #PWR024
+U 1 1 6364DD32
+P 4200 4100
+F 0 "#PWR024" H 4200 3850 50  0001 C CNN
+F 1 "GND" H 4205 3927 50  0000 C CNN
+F 2 "" H 4200 4100 50  0001 C CNN
+F 3 "" H 4200 4100 50  0001 C CNN
+	1    4200 4100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4600 3900 4200 3900
+Wire Wire Line
+	4200 3900 4200 4100
+Wire Wire Line
+	5100 3900 5600 3900
+Wire Wire Line
+	5600 3900 5600 4750
+Wire Wire Line
+	5600 4750 7100 4750
+Wire Wire Line
+	7100 4750 7100 4250
+Wire Wire Line
+	4200 3550 4200 3800
+Wire Wire Line
+	4200 3800 4600 3800
+Wire Wire Line
+	4200 3550 6300 3550
+Wire Wire Line
+	4300 4000 4300 4200
+Wire Wire Line
+	4300 4200 5700 4200
+Wire Wire Line
+	4300 4000 4600 4000
+Wire Wire Line
+	5100 3800 5600 3800
+Wire Wire Line
+	5600 3800 5600 3650
+$Comp
+L RC10-rescue:R-Device R11
+U 1 1 63622197
+P 7200 3100
+F 0 "R11" H 7270 3146 50  0000 L CNN
+F 1 "150" H 7270 3055 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 7130 3100 50  0001 C CNN
+F 3 "~" H 7200 3100 50  0001 C CNN
+	1    7200 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7100 3550 7200 3550
+Wire Wire Line
+	7200 3550 7200 3250
+$Comp
+L RC10-rescue:+5V-power #PWR0104
+U 1 1 636CBDB6
+P 7200 2950
+F 0 "#PWR0104" H 7200 2800 50  0001 C CNN
+F 1 "+5V" H 7215 3123 50  0000 C CNN
+F 2 "" H 7200 2950 50  0001 C CNN
+F 3 "" H 7200 2950 50  0001 C CNN
+	1    7200 2950
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
