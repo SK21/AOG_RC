@@ -11,12 +11,12 @@ int PIDvalve(byte ID)
 
     if (Sensor[ID].FlowEnabled && Sensor[ID].RateSetting>0)
     {
-        float ErrorPercent = Sensor[ID].RateError / Sensor[ID].RateSetting;
+        float ErrorPercent = Sensor[ID].RateError / Sensor[ID].RateSetting * 100.0;
 
         if (abs(ErrorPercent) > (float)Sensor[ID].Deadband)
         {
             Result = (Sensor[ID].KP * ErrorPercent) + Integral;
-            
+
             unsigned long elapsedTime = millis() - CurrentAdjustTime[ID];
             CurrentAdjustTime[ID] = millis();
 

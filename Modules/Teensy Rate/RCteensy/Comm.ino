@@ -174,7 +174,6 @@ void SendData()
 			DataOut[2] = BuildModSenID(MDL.ID, i);
 
 			long tmp = scale[i].read();
-
 			if (tmp > 0)
 			{
 				DataOut[3] = (byte)tmp;
@@ -264,7 +263,7 @@ void ReceiveData()
 
 		case 32503:
 			ProcessWifi(PGN32503Length);
-			break;
+		break;
 
 		case 32614:
 			ProcessWifi(PGN32614Length);
@@ -519,12 +518,12 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		//9	Flow Cal Mid
 		//10 Flow Cal Hi
 		//11	Command
-		//- bit 0		    reset acc.Quantity
-		//- bit 1, 2		valve type 0 - 4
-		//- bit 3		    MasterOn
-		//- bit 4           0 - time for one pulse, 1 - average time for multiple pulses
-		//- bit 5           AutoOn
-		//- bit 6           Debug pgn on
+		//	        - bit 0		    reset acc.Quantity
+		//	        - bit 1,2,3		control type 0-4
+		//	        - bit 4		    MasterOn, or true if no switchbox
+		//          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
+		//          - bit 6         AutoOn
+		//          - bit 7         Calibration On
 		//12    power relay Lo      list of power type relays 0-7
 		//13    power relay Hi      list of power type relays 8-15
 		//14	manual pwm Lo
@@ -562,9 +561,9 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 						if ((Sensor[ID].InCommand & 4) == 4) Sensor[ID].ControlType += 2;
 						if ((Sensor[ID].InCommand & 8) == 8) Sensor[ID].ControlType += 4;
 
-						Sensor[ID].MasterOn = ((Sensor[ID].InCommand & 8) == 8);
-						Sensor[ID].UseMultiPulses = ((Sensor[ID].InCommand & 16) == 16);
-						AutoOn = ((Sensor[ID].InCommand & 32) == 32);
+						Sensor[ID].MasterOn = ((Sensor[ID].InCommand & 16) == 16);
+						Sensor[ID].UseMultiPulses = ((Sensor[ID].InCommand & 32) == 32);
+						AutoOn = ((Sensor[ID].InCommand & 64) == 64);
 
 						// power relays
 						PowerRelayLo = Data[12];

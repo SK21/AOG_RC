@@ -70,7 +70,7 @@ int PIDmotor(float sKP, float sKI, float sKD, float sError, float sSetPoint, byt
     if (FlowEnabled[SensorID] && sSetPoint > 0)
     {
         Result = LastPWM[SensorID];
-        ErrorPercent = sError / sSetPoint * 100.0; 
+        ErrorPercent = sError / sSetPoint * 100.0;
 
         if (abs(ErrorPercent) > (float)Deadband)
         {
@@ -95,6 +95,10 @@ int PIDmotor(float sKP, float sKI, float sKD, float sError, float sSetPoint, byt
             if (Result > sMaxPWM) Result = (float)sMaxPWM;
             if (Result < sMinPWM) Result = (float)sMinPWM;
         }
+    }
+    else
+    {
+        Integral = 0;
     }
     LastPWM[SensorID] = Result;
     return (int)Result;

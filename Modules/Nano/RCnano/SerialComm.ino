@@ -99,7 +99,7 @@ void ReceiveSerial()
 			//5	rate set Lo		1000 X actual
 			//6 rate set Mid
 			//7	rate set Hi		10 X actual
-			//8	Flow Cal Lo		100 X actual
+			//8	Flow Cal Lo		1000 X actual
 			//9 Flow Cal Mid
 			//10 Flow Cal Hi
 			//11 Command
@@ -108,7 +108,6 @@ void ReceiveSerial()
 			//	        - bit 4		    MasterOn
 			//          - bit 5         0 - time for one pulse, 1 - average time for multiple pulses
 			//          - bit 6         AutoOn
-			//          - bit 7         Calibration On
 			//12    power relay Lo      list of power type relays 0-7
 			//13    power relay Hi      list of power type relays 8-15
 			//14	manual pwm Lo

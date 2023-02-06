@@ -7,28 +7,32 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   04-Feb-2023"
+# define InoDescription "RCteensy   06-Feb-2023"
 
-#define DataID 4250		// change to send defaults to eeprom
+#define DataID 5000		// change to send defaults to eeprom
 int16_t StoredID = 0;	// Defaults ID stored in eeprom
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
 
+float debug1;
+float debug2;
+float debug3;
+
 struct ModuleConfig	
 {
 	uint8_t ID = 0;
-	uint8_t ProductCount = 1;       // up to 2 sensors
+	uint8_t ProductCount = 2;       // up to 2 sensors
 	uint8_t IPpart2 = 168;			// ethernet IP address
-	uint8_t	IPpart3 = 1;
+	uint8_t	IPpart3 = 3;
 	uint8_t IPpart4 = 60;			// 60 + ID
-	uint8_t RelayOnSignal = 0;	    // value that turns on relays
+	uint8_t RelayOnSignal = 1;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
-	uint8_t RelayControl = 0;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
+	uint8_t RelayControl = 5;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
 	uint8_t WemosSerialPort = 1;	// serial port to connect to Wemos D1 Mini
 	uint8_t RelayPins[16];			// pin numbers when GPIOs are used for relay control (5)
-	uint8_t LOADCELL_DOUT_PIN[MaxProductCount];	
-	uint8_t LOADCELL_SCK_PIN[MaxProductCount];	
+	uint8_t LOADCELL_DOUT_PIN[MaxProductCount];
+	uint8_t LOADCELL_SCK_PIN[MaxProductCount];
 	uint8_t Debounce = 3;			// minimum ms pin change
 };
 
@@ -36,9 +40,9 @@ ModuleConfig MDL;
 
 struct SensorConfig	
 {
-	uint8_t FlowPin = 28;
-	uint8_t	DirPin = 37;
-	uint8_t	PWMPin = 36;
+	uint8_t FlowPin = 0;
+	uint8_t	DirPin = 0;
+	uint8_t	PWMPin = 0;
 	bool MasterOn = false;
 	bool FlowEnabled = false;
 	float RateError = 0;		// rate error X 1000
@@ -52,9 +56,9 @@ struct SensorConfig
 	float MeterCal = 0;
 	float ManualAdjust = 0;
 	bool UseMultiPulses = 0;	// 0 - time for one pulse, 1 - average time for multiple pulses
-	byte KP = 5;
-	byte KI = 0;
-	byte KD = 0;
+	float KP = 5;
+	float KI = 0;
+	float KD = 0;
 	byte MinPWM = 5;
 	byte MaxPWM = 255;
 	byte Deadband = 3;
@@ -104,9 +108,6 @@ const int16_t AdsI2Caddress = 0x48;
 uint32_t Analogtime;
 uint32_t SaveTime;
 
-HX711 scale[2];
-bool ScaleFound[2] = { false,false };
-
 extern float tempmonGetTemp(void);
 
 int8_t WifiRSSI;
@@ -116,6 +117,9 @@ uint32_t WifiLastTime;
 HardwareSerial* SerialWemos;
 byte ESPdebug1;
 bool ESPconnected;
+
+HX711 scale[2];
+bool ScaleFound[2] = { false,false };
 
 void setup()
 {
@@ -127,6 +131,19 @@ void setup()
 	// initial scale pins
 	MDL.LOADCELL_DOUT_PIN[0] = 16;
 	MDL.LOADCELL_SCK_PIN[0] = 17;
+
+	// default relay pins, RC11
+	uint8_t Pins[] = { 8,9,10,11,12,25,26,27,0,0,0,0,0,0,0,0 };
+	memcpy(MDL.RelayPins, Pins, 16);
+
+	// default flow pins
+	Sensor[0].FlowPin = 28;
+	Sensor[0].DirPin = 37;
+	Sensor[0].PWMPin = 36;
+
+	Sensor[1].FlowPin = 29;
+	Sensor[1].DirPin = 14;
+	Sensor[1].PWMPin = 15;
 
 	// eeprom
 	EEPROM.get(100, StoredID);
@@ -148,8 +165,8 @@ void setup()
 		{
 			EEPROM.get(200 + i * 60, Sensor[i]);
 		}
-	}
-
+	}	
+	
 	if (MDL.ProductCount < 1) MDL.ProductCount = 1;
 	if (MDL.ProductCount > MaxProductCount) MDL.ProductCount = MaxProductCount;
 
@@ -205,7 +222,7 @@ void setup()
 
 	Serial.print("IP Address: ");
 	Serial.println(Ethernet.localIP());
-	delay(1000);
+	delay(1500);
 	if (Ethernet.linkStatus() == LinkON)
 	{
 		Serial.println("Ethernet Connected.");
@@ -467,6 +484,18 @@ void Blink()
 
 		Serial.print(", RSSI: ");
 		Serial.print(WifiRSSI);
+
+		//Serial.print(", ");
+		//Serial.print(WifiTime);
+		//
+		//Serial.print(", ");
+		//Serial.print(debug1);
+
+		//Serial.print(", ");
+		//Serial.print(debug2);
+
+		//Serial.print(", ");
+		//Serial.print(debug3);
 
 		Serial.println("");
 

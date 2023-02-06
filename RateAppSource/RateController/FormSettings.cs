@@ -220,7 +220,7 @@ namespace RateController
                 lbWTquantity.Text = "0.0";
                 lbFlowMeterCounts.Text = "0.0";
 
-                mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+                //mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
             }
             catch (Exception ex)
             {
@@ -276,7 +276,7 @@ namespace RateController
                     // calibrate by flow meter counts
                     lbFlowMeterCounts.Text = FlowMeterCounts().ToString("N0");
                 }
-                mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+                //mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
             }
             catch (Exception ex)
             {
