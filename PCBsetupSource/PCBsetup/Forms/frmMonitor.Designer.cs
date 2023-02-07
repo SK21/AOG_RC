@@ -51,15 +51,16 @@ namespace PCBsetup.Forms
             // 
             // bntOK
             // 
+            this.bntOK.BackColor = System.Drawing.Color.Transparent;
+            this.bntOK.FlatAppearance.BorderSize = 0;
+            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
-            this.bntOK.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.bntOK.Location = new System.Drawing.Point(460, 525);
             this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
+            this.bntOK.Size = new System.Drawing.Size(72, 72);
             this.bntOK.TabIndex = 21;
-            this.bntOK.Text = "Close";
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.UseVisualStyleBackColor = false;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // timer1
@@ -71,7 +72,7 @@ namespace PCBsetup.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(590, 609);
+            this.ClientSize = new System.Drawing.Size(590, 601);
             this.Controls.Add(this.bntOK);
             this.Controls.Add(this.tbMonitor);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

@@ -43,52 +43,57 @@
             // 
             // btnBrowse
             // 
+            this.btnBrowse.BackColor = System.Drawing.Color.Transparent;
+            this.btnBrowse.FlatAppearance.BorderSize = 0;
+            this.btnBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowse.Image = global::PCBsetup.Properties.Resources.btnBrowse_Image;
-            this.btnBrowse.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnBrowse.Location = new System.Drawing.Point(26, 157);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(115, 72);
             this.btnBrowse.TabIndex = 3;
-            this.btnBrowse.Text = "Browse";
             this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.UseVisualStyleBackColor = false;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // btnDefault
             // 
-            this.btnDefault.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnDefault.BackColor = System.Drawing.Color.Transparent;
+            this.btnDefault.FlatAppearance.BorderSize = 0;
+            this.btnDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDefault.Image = global::PCBsetup.Properties.Resources.VehFileLoad;
             this.btnDefault.Location = new System.Drawing.Point(151, 157);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(115, 72);
             this.btnDefault.TabIndex = 2;
-            this.btnDefault.Text = "Use Default";
-            this.btnDefault.UseVisualStyleBackColor = true;
+            this.btnDefault.UseVisualStyleBackColor = false;
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
             // 
             // btnUpload
             // 
-            this.btnUpload.Image = global::PCBsetup.Properties.Resources.btnUpload_Image;
-            this.btnUpload.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnUpload.BackColor = System.Drawing.Color.Transparent;
+            this.btnUpload.FlatAppearance.BorderSize = 0;
+            this.btnUpload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpload.Image = global::PCBsetup.Properties.Resources.UpArrow64;
             this.btnUpload.Location = new System.Drawing.Point(276, 157);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(115, 72);
             this.btnUpload.TabIndex = 0;
-            this.btnUpload.Text = "Upload";
             this.btnUpload.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnUpload.UseVisualStyleBackColor = true;
+            this.btnUpload.UseVisualStyleBackColor = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
             // bntOK
             // 
+            this.bntOK.BackColor = System.Drawing.Color.Transparent;
+            this.bntOK.FlatAppearance.BorderSize = 0;
+            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
-            this.bntOK.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.bntOK.Location = new System.Drawing.Point(401, 157);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 1;
-            this.bntOK.Text = "Close";
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.UseVisualStyleBackColor = false;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // tbHexfile

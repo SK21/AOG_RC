@@ -19,6 +19,7 @@ namespace PCBsetup.Forms
         public frmMain mf;
         private bool Initializing = false;
         private bool[] TabEdited;
+        private bool FormEdited = false;
 
         public frmTRsettings(frmMain CallingForm)
         {
@@ -41,8 +42,7 @@ namespace PCBsetup.Forms
         {
             try
             {
-                Button ButtonClicked = (Button)sender;
-                if (ButtonClicked.Text == PCBsetup.Languages.Lang.lgClose)
+                if (!FormEdited)
                 {
                     bool Edited = false;
                     for (int i = 0; i < 2; i++)
@@ -304,16 +304,18 @@ namespace PCBsetup.Forms
                 if (Edited)
                 {
                     btnCancel.Enabled = true;
-                    this.bntOK.Text = Lang.lgSave;
+                    bntOK.Image = Properties.Resources.Save;
                     btnSendToModule.Enabled = false;
                     TabEdited[tabControl1.SelectedIndex] = true;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
-                    this.bntOK.Text = Lang.lgClose;
+                    bntOK.Image = Properties.Resources.bntOK_Image;
                     btnSendToModule.Enabled = true;
                 }
+
+                FormEdited = Edited;
             }
         }
 

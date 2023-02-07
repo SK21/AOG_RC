@@ -32,9 +32,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lbAppVersion = new System.Windows.Forms.Label();
             this.lbIP = new System.Windows.Forms.Label();
-            this.bntOK = new System.Windows.Forms.Button();
             this.lbIPdes = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.bntOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -69,19 +69,6 @@
             this.lbIP.Text = "192.168.5.100";
             this.lbIP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // bntOK
-            // 
-            this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
-            this.bntOK.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.bntOK.Location = new System.Drawing.Point(136, 466);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(115, 72);
-            this.bntOK.TabIndex = 3;
-            this.bntOK.Text = "Close";
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
             // lbIPdes
             // 
             this.lbIPdes.AutoSize = true;
@@ -102,6 +89,20 @@
             this.textBox1.Size = new System.Drawing.Size(363, 383);
             this.textBox1.TabIndex = 6;
             this.textBox1.Text = resources.GetString("textBox1.Text");
+            // 
+            // bntOK
+            // 
+            this.bntOK.BackColor = System.Drawing.Color.Transparent;
+            this.bntOK.FlatAppearance.BorderSize = 0;
+            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
+            this.bntOK.Location = new System.Drawing.Point(157, 466);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(72, 72);
+            this.bntOK.TabIndex = 3;
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = false;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // frmAbout
             // 

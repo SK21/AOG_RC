@@ -35,6 +35,8 @@
             this.bntOK = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tbNanoDebounce = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.lbIPpart4 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.tbNanoIP = new System.Windows.Forms.TextBox();
@@ -91,8 +93,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbNanoFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.tbNanoDebounce = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -100,51 +100,57 @@
             // 
             // btnLoadDefaults
             // 
-            this.btnLoadDefaults.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnLoadDefaults.BackColor = System.Drawing.Color.Transparent;
+            this.btnLoadDefaults.FlatAppearance.BorderSize = 0;
+            this.btnLoadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoadDefaults.Image = global::PCBsetup.Properties.Resources.VehFileLoad;
             this.btnLoadDefaults.Location = new System.Drawing.Point(18, 533);
             this.btnLoadDefaults.Name = "btnLoadDefaults";
             this.btnLoadDefaults.Size = new System.Drawing.Size(115, 72);
             this.btnLoadDefaults.TabIndex = 19;
-            this.btnLoadDefaults.Text = "Load Defaults";
-            this.btnLoadDefaults.UseVisualStyleBackColor = true;
+            this.btnLoadDefaults.UseVisualStyleBackColor = false;
             this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
             // 
             // btnSendToModule
             // 
-            this.btnSendToModule.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnSendToModule.BackColor = System.Drawing.Color.Transparent;
+            this.btnSendToModule.FlatAppearance.BorderSize = 0;
+            this.btnSendToModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSendToModule.Image = global::PCBsetup.Properties.Resources.UpArrow64;
             this.btnSendToModule.Location = new System.Drawing.Point(153, 533);
             this.btnSendToModule.Name = "btnSendToModule";
             this.btnSendToModule.Size = new System.Drawing.Size(115, 72);
             this.btnSendToModule.TabIndex = 18;
-            this.btnSendToModule.Text = "Send to Module";
-            this.btnSendToModule.UseVisualStyleBackColor = true;
+            this.btnSendToModule.UseVisualStyleBackColor = false;
             this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
             // 
             // btnCancel
             // 
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Image = global::PCBsetup.Properties.Resources.Cancel64;
-            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnCancel.Location = new System.Drawing.Point(288, 533);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(115, 72);
             this.btnCancel.TabIndex = 17;
-            this.btnCancel.Text = "Cancel";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // bntOK
             // 
+            this.bntOK.BackColor = System.Drawing.Color.Transparent;
+            this.bntOK.FlatAppearance.BorderSize = 0;
+            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
-            this.bntOK.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.bntOK.Location = new System.Drawing.Point(423, 533);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 16;
-            this.bntOK.Text = "Close";
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.UseVisualStyleBackColor = false;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // tabControl1
@@ -179,6 +185,24 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Config 1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tbNanoDebounce
+            // 
+            this.tbNanoDebounce.Location = new System.Drawing.Point(287, 228);
+            this.tbNanoDebounce.Name = "tbNanoDebounce";
+            this.tbNanoDebounce.Size = new System.Drawing.Size(58, 29);
+            this.tbNanoDebounce.TabIndex = 29;
+            this.tbNanoDebounce.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbNanoDebounce.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbNanoDebounce_HelpRequested);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(60, 230);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(99, 24);
+            this.label25.TabIndex = 28;
+            this.label25.Text = "Debounce";
             // 
             // lbIPpart4
             // 
@@ -720,24 +744,6 @@
             this.label4.Size = new System.Drawing.Size(66, 24);
             this.label4.TabIndex = 24;
             this.label4.Text = "Flow 1";
-            // 
-            // tbNanoDebounce
-            // 
-            this.tbNanoDebounce.Location = new System.Drawing.Point(287, 228);
-            this.tbNanoDebounce.Name = "tbNanoDebounce";
-            this.tbNanoDebounce.Size = new System.Drawing.Size(58, 29);
-            this.tbNanoDebounce.TabIndex = 29;
-            this.tbNanoDebounce.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbNanoDebounce.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbNanoDebounce_HelpRequested);
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(60, 230);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(99, 24);
-            this.label25.TabIndex = 28;
-            this.label25.Text = "Debounce";
             // 
             // frmNanoSettings
             // 

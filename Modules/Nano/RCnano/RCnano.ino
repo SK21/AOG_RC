@@ -12,8 +12,8 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  04-Feb-2023"
-const int16_t InoID = 4900;	// change to send defaults to eeprom
+# define InoDescription "RCnano  :  07-Feb-2023"
+const int16_t InoID = 4600;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
 # define UseEthernet 0

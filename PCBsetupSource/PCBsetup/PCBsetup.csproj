@@ -373,48 +373,28 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\bntOK.Image.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\btnBrowse.Image.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\btnUpload.Image.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Cancel64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\DnArrow64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\DnArrow641.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\FileNew.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Off.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\On.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\OpenFile.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\SWNE.ino.hex" />
     <None Include="Resources\SWOB.ino.hex" />
     <None Include="Resources\SWOBNE.ino.hex" />
-    <None Include="Resources\UpArrow64.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="configurator-icon-19.ico" />
     <Content Include="Forms\Keypad.dll" />
     <Content Include="Forms\RepeatButtonControl.dll" />
+    <None Include="Resources\Save.png" />
+    <None Include="Resources\VehFileLoad.png" />
+    <None Include="Resources\btnBrowse.Image.png" />
+    <None Include="Resources\OpenFile.png" />
+    <None Include="Resources\On.png" />
+    <None Include="Resources\Off.png" />
+    <None Include="Resources\FileNew.png" />
+    <None Include="Resources\close.png" />
+    <None Include="Resources\Cancel64.png" />
+    <None Include="Resources\btnUpload.Image.png" />
+    <None Include="Resources\UpArrow64.png" />
+    <None Include="Resources\DnArrow64.png" />
+    <None Include="Resources\DnArrow641.png" />
+    <None Include="Resources\bntOK.Image.png" />
     <None Include="Resources\esptool.exe" />
     <None Include="Resources\AS13.jpg" />
     <None Include="Resources\PCB.jpg" />

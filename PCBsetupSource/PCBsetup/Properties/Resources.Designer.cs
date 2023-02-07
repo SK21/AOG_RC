@@ -201,16 +201,6 @@ namespace PCBsetup.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap PCB {
-            get {
-                object obj = ResourceManager.GetObject("PCB", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] Rate_ino {
@@ -261,6 +251,16 @@ namespace PCBsetup.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Save {
+            get {
+                object obj = ResourceManager.GetObject("Save", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] SW_ino {
@@ -306,6 +306,16 @@ namespace PCBsetup.Properties {
         internal static System.Drawing.Bitmap UpArrow64 {
             get {
                 object obj = ResourceManager.GetObject("UpArrow64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap VehFileLoad {
+            get {
+                object obj = ResourceManager.GetObject("VehFileLoad", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -7,9 +7,9 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   06-Feb-2023"
+# define InoDescription "RCteensy   07-Feb-2023"
 
-#define DataID 5000		// change to send defaults to eeprom
+#define DataID 4600		// change to send defaults to eeprom
 int16_t StoredID = 0;	// Defaults ID stored in eeprom
 
 #define MaxReadBuffer 100	// bytes
@@ -24,7 +24,7 @@ struct ModuleConfig
 	uint8_t ID = 0;
 	uint8_t ProductCount = 2;       // up to 2 sensors
 	uint8_t IPpart2 = 168;			// ethernet IP address
-	uint8_t	IPpart3 = 3;
+	uint8_t	IPpart3 = 1;
 	uint8_t IPpart4 = 60;			// 60 + ID
 	uint8_t RelayOnSignal = 1;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction

@@ -31,6 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTRsettings));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tbTRDebounce = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.cbTRRelayControl = new System.Windows.Forms.ComboBox();
             this.tbTRWemosPort = new System.Windows.Forms.TextBox();
@@ -94,8 +96,6 @@
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.bntOK = new System.Windows.Forms.Button();
-            this.tbTRDebounce = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -136,6 +136,24 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Config 1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tbTRDebounce
+            // 
+            this.tbTRDebounce.Location = new System.Drawing.Point(318, 233);
+            this.tbTRDebounce.Name = "tbTRDebounce";
+            this.tbTRDebounce.Size = new System.Drawing.Size(58, 29);
+            this.tbTRDebounce.TabIndex = 43;
+            this.tbTRDebounce.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbTRDebounce.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbTRDebounce_HelpRequested);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(91, 235);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(99, 24);
+            this.label26.TabIndex = 42;
+            this.label26.Text = "Debounce";
             // 
             // label28
             // 
@@ -708,70 +726,58 @@
             // 
             // btnLoadDefaults
             // 
-            this.btnLoadDefaults.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnLoadDefaults.BackColor = System.Drawing.Color.Transparent;
+            this.btnLoadDefaults.FlatAppearance.BorderSize = 0;
+            this.btnLoadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoadDefaults.Image = global::PCBsetup.Properties.Resources.VehFileLoad;
             this.btnLoadDefaults.Location = new System.Drawing.Point(18, 534);
             this.btnLoadDefaults.Name = "btnLoadDefaults";
             this.btnLoadDefaults.Size = new System.Drawing.Size(115, 72);
             this.btnLoadDefaults.TabIndex = 24;
-            this.btnLoadDefaults.Text = "Load Defaults";
-            this.btnLoadDefaults.UseVisualStyleBackColor = true;
+            this.btnLoadDefaults.UseVisualStyleBackColor = false;
             this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
             // 
             // btnSendToModule
             // 
-            this.btnSendToModule.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnSendToModule.BackColor = System.Drawing.Color.Transparent;
+            this.btnSendToModule.FlatAppearance.BorderSize = 0;
+            this.btnSendToModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSendToModule.Image = global::PCBsetup.Properties.Resources.UpArrow64;
             this.btnSendToModule.Location = new System.Drawing.Point(153, 534);
             this.btnSendToModule.Name = "btnSendToModule";
             this.btnSendToModule.Size = new System.Drawing.Size(115, 72);
             this.btnSendToModule.TabIndex = 23;
-            this.btnSendToModule.Text = "Send to Module";
-            this.btnSendToModule.UseVisualStyleBackColor = true;
+            this.btnSendToModule.UseVisualStyleBackColor = false;
             this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
             // 
             // btnCancel
             // 
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Image = global::PCBsetup.Properties.Resources.Cancel64;
-            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnCancel.Location = new System.Drawing.Point(288, 534);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(115, 72);
             this.btnCancel.TabIndex = 22;
-            this.btnCancel.Text = "Cancel";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // bntOK
             // 
+            this.bntOK.BackColor = System.Drawing.Color.Transparent;
+            this.bntOK.FlatAppearance.BorderSize = 0;
+            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
-            this.bntOK.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.bntOK.Location = new System.Drawing.Point(423, 534);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 21;
-            this.bntOK.Text = "Close";
             this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = true;
+            this.bntOK.UseVisualStyleBackColor = false;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
-            // tbTRDebounce
-            // 
-            this.tbTRDebounce.Location = new System.Drawing.Point(318, 233);
-            this.tbTRDebounce.Name = "tbTRDebounce";
-            this.tbTRDebounce.Size = new System.Drawing.Size(58, 29);
-            this.tbTRDebounce.TabIndex = 43;
-            this.tbTRDebounce.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbTRDebounce.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbTRDebounce_HelpRequested);
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(91, 235);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(99, 24);
-            this.label26.TabIndex = 42;
-            this.label26.Text = "Debounce";
             // 
             // frmTRsettings
             // 

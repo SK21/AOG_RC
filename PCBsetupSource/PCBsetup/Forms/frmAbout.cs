@@ -16,7 +16,6 @@ namespace PCBsetup.Forms
             #region // language
 
             lbIPdes.Text = Lang.lgLocalIP;
-            bntOK.Text = Lang.lgClose;
 
             #endregion // language
 
