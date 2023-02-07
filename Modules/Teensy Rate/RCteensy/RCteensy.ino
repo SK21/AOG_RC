@@ -9,7 +9,7 @@
 // rate control with Teensy 4.1
 # define InoDescription "RCteensy   07-Feb-2023"
 
-#define DataID 4600		// change to send defaults to eeprom
+#define DataID 4650		// change to send defaults to eeprom
 int16_t StoredID = 0;	// Defaults ID stored in eeprom
 
 #define MaxReadBuffer 100	// bytes

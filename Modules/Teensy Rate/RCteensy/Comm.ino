@@ -434,7 +434,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 
 				for (int i = 0; i < MaxProductCount; i++)
 				{
-					EEPROM.put(200 + i * 50, Sensor[i]);
+					EEPROM.put(200 + i * 60, Sensor[i]);
 				}
 
 				MDL.Debounce = Data[30];
