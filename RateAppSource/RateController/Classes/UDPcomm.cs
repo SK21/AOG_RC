@@ -185,7 +185,7 @@ namespace RateController
         private void AddressChanged(object sender, EventArgs e)
         {
             if (cUpdateDestinationIP) SetEndPoints();
-            mf.Tls.WriteActivityLog("Network Address Changed");
+            mf.Tls.WriteActivityLog("UDPcomm: Network Address Changed");
         }
 
         private string GetLocalIPv4(NetworkInterfaceType _type)
@@ -245,8 +245,8 @@ namespace RateController
                         PGN = Data[1] << 8 | Data[0];   // rc modules little endian
                         switch (PGN)
                         {
-                            case 32618:
-                                mf.SwitchBox.ParseByteData(Data);
+                            case 32503:
+                                mf.WifiStatus.ParseByteData(Data);
                                 break;
 
                             case 32501:
@@ -255,6 +255,10 @@ namespace RateController
                                 {
                                     Prod.UDPcommFromArduino(Data, PGN);
                                 }
+                                break;
+
+                            case 32618:
+                                mf.SwitchBox.ParseByteData(Data);
                                 break;
 
                             case 32621:

@@ -1,4 +1,4 @@
-# define InoDescription "WifiAOG   02-Jan-2022"
+# define InoDescription "WifiAOG   09-Feb-2022"
 // Wemos D1 mini Pro, ESP 12F    board: LOLIN(Wemos) D1 R2 & mini
 
 #include <ESP8266WiFi.h>
@@ -12,7 +12,6 @@
 
 //bool ShowWebPage = true;
 bool ShowWebPage = false;
-byte DebugVal1;
 
 struct WifiConnection
 {
@@ -60,7 +59,16 @@ bool Button[16];
 byte SendByte;
 byte SendBit;
 
-bool RCteensyConnected;   // check if teensy rate is connected through ethernet
+bool RCteensyConnected;   // check if teensy rate is receiving data
+byte ModuleID;
+byte DebugVal1;
+byte DebugVal2;
+bool UDPreceive;
+uint32_t WifiTime;
+bool ReStartingUDP;
+byte RestartCount;
+uint32_t TeensyTime;
+bool TeensyConnected;
 
 void setup()
 {
@@ -97,7 +105,7 @@ void setup()
     String AP = "WifiAOG " + WiFi.macAddress();
     WiFi.softAP(AP);
 
-    UDPrate.begin(ListeningPortRate);
+    StartUDP();
 
     Wire.begin();			// I2C on pins SCL D1, SDA D2
     // ADS1115
@@ -144,17 +152,10 @@ void loop()
 {
     ArduinoOTA.handle();
     server.handleClient();
-
     ReceiveSerial();
     ReceiveWifi();
-
-    if (millis() - LoopTime > 30000)
-    {
-        LoopTime = millis();
-        if (!RCteensyConnected && (WiFi.status() != WL_CONNECTED)) CheckWifi();
-    }
-
     ReadAnalog();
+    CheckConnection();
     Blink();
 }
 
@@ -209,5 +210,6 @@ void Blink()
     //if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
     //LoopTmr = micros();
 }
+
 
 

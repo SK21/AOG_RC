@@ -79,7 +79,7 @@ namespace RateController
 
         public bool ParseByteData(byte[] Data)
         {
-            byte cWifiStrength; 
+            byte cWifiStrength;
             bool Result = false;
 
             if (Data[1] == HeaderHi && Data[0] == HeaderLo &&
@@ -100,6 +100,7 @@ namespace RateController
                         {
                             // sensor 0
                             cModuleIsReceivingData = ((Data[11] & 0b00000001) == 0b00000001);
+                            CheckReceiving(0, cModuleIsReceivingData);
                         }
                         else
                         {
@@ -109,9 +110,9 @@ namespace RateController
 
                         // wifi strength
                         cWifiStrength = 0;
-                        if ((Data[11] & 0b00000100) == 0b00000100) cWifiStrength =1;
-                        if ((Data[11] & 0b00001000) == 0b00001000) cWifiStrength =2;
-                        if ((Data[11] & 0b00010000) == 0b00010000) cWifiStrength =3;
+                        if ((Data[11] & 0b00000100) == 0b00000100) cWifiStrength = 1;
+                        if ((Data[11] & 0b00001000) == 0b00001000) cWifiStrength = 2;
+                        if ((Data[11] & 0b00010000) == 0b00010000) cWifiStrength = 3;
                         Prod.WifiStrength = cWifiStrength;
 
                         ReceiveTime = DateTime.Now;
@@ -230,9 +231,9 @@ namespace RateController
         {
             if (Receiving != SensorReceiving[ID])
             {
+                SensorReceiving[ID] = Receiving;
                 Prod.mf.Tls.WriteActivityLog("Sensor " + ID.ToString() + " receiving: " + Receiving.ToString());
             }
-            SensorReceiving[ID] = Receiving;
         }
     }
 }

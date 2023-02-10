@@ -16,7 +16,7 @@ byte DataOut[50];
 const byte PGN32500Length = 32;
 const byte PGN32501Length = 8;
 const byte PGN32502Length = 7;
-const byte PGN32503Length = 6;
+const byte PGN32503Length = 8;
 const byte PGN32613Length = 13;
 const byte PGN32614Length = 17;
 const byte PGN32616Length = 18;
@@ -434,7 +434,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 
 				for (int i = 0; i < MaxProductCount; i++)
 				{
-					EEPROM.put(200 + i * 60, Sensor[i]);
+					EEPROM.put(200 + i * 80, Sensor[i]);
 				}
 
 				MDL.Debounce = Data[30];
@@ -468,7 +468,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 
 				for (int i = 0; i < MaxProductCount; i++)
 				{
-					EEPROM.put(200 + i * 50, Sensor[i]);
+					EEPROM.put(200 + i * 80, Sensor[i]);
 				}
 
 				// restart the Teensy
@@ -478,25 +478,27 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		break;
 
 	case 32503:
-		// PGN32503
+		// to Rate Controller from WifiAOG
 		// 0	247
 		// 1	126
-		// 2	RSSI
-		// 3	Status
+		// 2	Module ID
+		// 3	RSSI
+		// 4	Status
 		//		- bit 0 Wifi connected
-		// 4	DebugVal1
-		// 5	CRC
+		// 5	DebugVal1
+		// 6	DebugVal2
+		// 7	CRC
 
 		if (len > PGN32503Length - 1)
 		{
 			if (GoodCRC(Data, PGN32503Length))
 			{
-				WifiRSSI = Data[2];
+				WifiRSSI = Data[3];
 
 				// Status
-				ESPconnected = ((Data[3] & 1) == 1);
+				ESPconnected = ((Data[4] & 1) == 1);
 
-				ESPdebug1 = Data[4];
+				ESPdebug1 = Data[5];
 
 				WifiTime = millis() - WifiLastTime;
 				WifiLastTime = millis();

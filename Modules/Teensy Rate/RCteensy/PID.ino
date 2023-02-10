@@ -23,8 +23,13 @@ int PIDvalve(byte ID)
             ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001);
 
             Integral += Sensor[ID].KI * ErrorPercentCum[ID];
-            if (Integral > 50) Integral = 50;
-            if (Integral < -50) Integral = -50;
+            if (Integral > 10) Integral = 10;
+            if (Integral < -10) Integral = -10;
+            if (Sensor[ID].KI == 0)
+            {
+                Integral = 0;
+                ErrorPercentCum[ID] = 0;
+            }
 
             Result += Integral;
 
@@ -81,8 +86,14 @@ int PIDmotor(byte ID)
             ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001);
 
             Integral += Sensor[ID].KI * ErrorPercentCum[ID];
-            if (Integral > 50) Integral = 50;
-            if (Integral < -50) Integral = -50;
+            if (Integral > 10) Integral = 10;
+            if (Integral < -10) Integral = -10;
+            if (Sensor[ID].KI == 0)
+            {
+                Integral = 0;
+                ErrorPercentCum[ID] = 0;
+            }
+
 
             Result += Integral;
 
@@ -93,7 +104,12 @@ int PIDmotor(byte ID)
             if (Result < Sensor[ID].MinPWM) Result = (float)Sensor[ID].MinPWM;
             if (Result > Sensor[ID].MaxPWM) Result = (float)Sensor[ID].MaxPWM;
         }
+        else
+        {
+            Integral = 0;
+        }
     }
+
     LastPWM[ID] = Result;
     return (int)Result;
 }

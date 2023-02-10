@@ -231,6 +231,7 @@
     <Compile Include="PGNs\PGN234.cs" />
     <Compile Include="PGNs\PGN235.cs" />
     <Compile Include="PGNs\PGN32501.cs" />
+    <Compile Include="PGNs\PGN32503.cs" />
     <Compile Include="PGNs\PGN32613.cs" />
     <Compile Include="PGNs\PGN32614.cs" />
     <Compile Include="PGNs\PGN32616.cs" />

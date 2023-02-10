@@ -394,7 +394,7 @@ namespace RateController
             {
                 string FileName = cSettingsDir + "\\Activity Log.txt";
                 TrimFile(FileName);
-                File.AppendAllText(FileName, DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss") + "  -  " + Message + "\r\n");
+                File.AppendAllText(FileName, DateTime.Now.ToString("dd-MMM-yy hh:mm:ss.fff tt") + "  -  " + Message + "\r\n");
             }
             catch (Exception ex)
             {

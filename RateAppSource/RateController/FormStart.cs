@@ -63,6 +63,7 @@ namespace RateController
         public frmLargeScreen Lscrn;
 
         public bool RateCalibrationOn = false;
+        public PGN32503 WifiStatus;
 
         public FormStart()
         {
@@ -125,6 +126,8 @@ namespace RateController
             SectionControl = new clsSectionControl(this);
 
             timerMain.Interval = 1000;
+
+            WifiStatus = new PGN32503(this);
         }
         public bool UseInches
         {

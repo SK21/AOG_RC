@@ -7,9 +7,9 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   07-Feb-2023"
+# define InoDescription "RCteensy   09-Feb-2023"
 
-#define DataID 4650		// change to send defaults to eeprom
+#define DataID 5600		// change to send defaults to eeprom
 int16_t StoredID = 0;	// Defaults ID stored in eeprom
 
 #define MaxReadBuffer 100	// bytes
@@ -145,6 +145,18 @@ void setup()
 	Sensor[1].DirPin = 14;
 	Sensor[1].PWMPin = 15;
 
+	// default pid
+	Sensor[0].MinPWM = 5;
+	Sensor[0].MaxPWM = 50;
+	Sensor[0].Deadband = 3;
+	Sensor[0].BrakePoint = 20;
+
+	Sensor[1].MinPWM = 5;
+	Sensor[1].MaxPWM = 50;
+	Sensor[1].Deadband = 3;
+	Sensor[1].BrakePoint = 20;
+
+
 	// eeprom
 	EEPROM.get(100, StoredID);
 	if (StoredID != DataID)
@@ -154,7 +166,7 @@ void setup()
 
 		for (int i = 0; i < MaxProductCount; i++)
 		{
-			EEPROM.put(200 + i * 60, Sensor[i]);
+			EEPROM.put(200 + i * 80, Sensor[i]);
 		}
 	}
 	else
@@ -163,10 +175,10 @@ void setup()
 
 		for (int i = 0; i < MaxProductCount; i++)
 		{
-			EEPROM.get(200 + i * 60, Sensor[i]);
+			EEPROM.get(200 + i * 80, Sensor[i]);
 		}
 	}	
-	
+
 	if (MDL.ProductCount < 1) MDL.ProductCount = 1;
 	if (MDL.ProductCount > MaxProductCount) MDL.ProductCount = MaxProductCount;
 
