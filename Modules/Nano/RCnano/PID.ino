@@ -20,11 +20,16 @@ int PIDvalve(float sKP, float sKI, float sKD, float sError, float sSetPoint, byt
             unsigned long elapsedTime = millis() - CurrentAdjustTime[SensorID];
             CurrentAdjustTime[SensorID] = millis();
 
-            ErrorPercentCum[SensorID] += ErrorPercent * (elapsedTime * 0.001);
+            ErrorPercentCum[SensorID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
 
             Integral += sKI * ErrorPercentCum[SensorID];
-            if (Integral > 50) Integral = 50;
-            if (Integral < -50) Integral = -50;
+            if (Integral > 10) Integral = 10;
+            if (Integral < -10) Integral = -10;
+            if (sKI == 0)
+            {
+                Integral = 0;
+                ErrorPercentCum[SensorID] = 0;
+            }
 
             Result += Integral;
 
@@ -79,11 +84,16 @@ int PIDmotor(float sKP, float sKI, float sKD, float sError, float sSetPoint, byt
             unsigned long elapsedTime = millis() - CurrentAdjustTime[SensorID];
             CurrentAdjustTime[SensorID] = millis();
 
-            ErrorPercentCum[SensorID] += ErrorPercent * (elapsedTime * 0.001);
+            ErrorPercentCum[SensorID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
 
             Integral += sKI * ErrorPercentCum[SensorID];
-            if (Integral > 50) Integral = 50;
-            if (Integral < -50) Integral = -50;
+            if (Integral > 10) Integral = 10;
+            if (Integral < -10) Integral = -10;
+            if (sKI == 0)
+            {
+                Integral = 0;
+                ErrorPercentCum[SensorID] = 0;
+            }
 
             Result += Integral;
 

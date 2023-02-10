@@ -7,9 +7,9 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   09-Feb-2023"
+# define InoDescription "RCteensy   10-Feb-2023"
 
-#define DataID 5600		// change to send defaults to eeprom
+#define DataID 4700		// change to send defaults to eeprom
 int16_t StoredID = 0;	// Defaults ID stored in eeprom
 
 #define MaxReadBuffer 100	// bytes

@@ -20,7 +20,7 @@ int PIDvalve(byte ID)
             unsigned long elapsedTime = millis() - CurrentAdjustTime[ID];
             CurrentAdjustTime[ID] = millis();
 
-            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001);
+            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
 
             Integral += Sensor[ID].KI * ErrorPercentCum[ID];
             if (Integral > 10) Integral = 10;
@@ -83,7 +83,7 @@ int PIDmotor(byte ID)
             unsigned long elapsedTime = millis() - CurrentAdjustTime[ID];
             CurrentAdjustTime[ID] = millis();
 
-            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001);
+            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
 
             Integral += Sensor[ID].KI * ErrorPercentCum[ID];
             if (Integral > 10) Integral = 10;
