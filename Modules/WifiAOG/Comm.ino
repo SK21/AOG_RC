@@ -4,107 +4,57 @@ byte Data[100];
 byte PGNlength;
 byte MSB;
 byte LSB;
+bool EthernetConnected;
 
-void StartUDP()
+void CheckWifi()
 {
-	UDPrate.stop();
-	delay(500);
-	UDPrate.begin(ListeningPortRate);
-
-	// clear buffer
-	uint16_t PacketSize = UDPrate.parsePacket();
-	if(PacketSize) UDPrate.read(WifiBuffer, PacketSize);
-
-	RestartCount++;
-	DebugVal1 = RestartCount;
-
-	// if Teensy is sending but not receiving, restart esp8266
-	if (RestartCount > 20 && TeensyConnected) ESP.restart();
-}
-
-void CheckConnection()
-{
-	if (UDPreceive)
+	if (millis() - WifiTime > 60000)
 	{
-		ReStartingUDP = false;
-	}
-	else
-	{
-		// not receiving
-		if (ReStartingUDP)
+		if (WiFi.status() != WL_CONNECTED)
 		{
-			if (millis() - WifiTime > 4000)
+			WiFi.disconnect();
+			delay(500);
+			WiFi.mode(WIFI_AP_STA);
+
+			WiFi.begin(WC.SSID, WC.Password);
+			Serial.println();
+			Serial.println("Connecting to Wifi");
+			unsigned long WifiConnectStart = millis();
+
+			while ((WiFi.status() != WL_CONNECTED) && ((millis() - WifiConnectStart) < 15000))
 			{
-				StartUDP();
-				ReStartingUDP = false;
+				delay(500);
+				Serial.print(".");
+			}
+			if (WiFi.status() == WL_CONNECTED)
+			{
+				UDPrate.begin(ListeningPortRate);
+				DestinationIP = WiFi.localIP();
+				DestinationIP[3] = 255;		// change to broadcast
+				Serial.println();
+				Serial.println("Connected.");
+				Serial.print("IP: ");
+				Serial.println(WiFi.localIP());
+			}
+			else
+			{
+				Serial.println();
+				Serial.println("Not connected");
 			}
 		}
-		else
-		{
-			ReStartingUDP = true;
-			WifiTime = millis();
-		}
+		WifiTime = millis();
 	}
-
-	if (millis() - LoopTime > 30000)
-	{
-		LoopTime = millis();
-		if (!RCteensyConnected && (WiFi.status() != WL_CONNECTED)) CheckWifi();
-	}
-
-	TeensyConnected = (millis() - TeensyTime < 4000);
-	if (!TeensyConnected) RCteensyConnected = false;
-}
-
-bool CheckWifi()
-{
-	if (WiFi.status() != WL_CONNECTED)
-	{
-		WiFi.disconnect();
-		delay(500);
-		WiFi.mode(WIFI_AP_STA);
-
-		WiFi.begin(WC.SSID, WC.Password);
-		Serial.println();
-		Serial.println("Connecting to Wifi");
-		unsigned long WifiConnectStart = millis();
-
-		while ((WiFi.status() != WL_CONNECTED) && ((millis() - WifiConnectStart) < 15000))
-		{
-			delay(500);
-			Serial.print(".");
-		}
-		if (WiFi.status() == WL_CONNECTED)
-		{
-			UDPrate.begin(ListeningPortRate);
-			DestinationIP = WiFi.localIP();
-			DestinationIP[3] = 255;		// change to broadcast
-			Serial.println();
-			Serial.println("Connected.");
-			Serial.print("IP: ");
-			Serial.println(WiFi.localIP());
-		}
-		else
-		{
-			Serial.println();
-			Serial.println("Not connected");
-		}
-		LoopTime = millis();	// reset to give time to check if teensy connected
-	}
-	return (WiFi.status() == WL_CONNECTED);
 }
 
 void ReceiveWifi()
 {
 	uint16_t PacketSize = UDPrate.parsePacket();
-	UDPreceive = (PacketSize);
 
 	if (PacketSize)
 	{
 		int Count = UDPrate.read(WifiBuffer, PacketSize);
 
-		DebugVal2 = Count;
-
+		yield();
 		Serial.write(WifiBuffer, Count);
 	}
 }
@@ -118,6 +68,7 @@ void ReceiveSerial()
 			// clear buffer
 			while (Serial.available())
 			{
+				yield();
 				Serial.read();
 			}
 			DataPGN = 0;
@@ -157,6 +108,7 @@ void ReceiveSerial()
 				Data[1] = 127;
 				for (int i = 2; i < PGNlength; i++)
 				{
+					yield();
 					Data[i] = Serial.read();
 				}
 
@@ -170,8 +122,8 @@ void ReceiveSerial()
 
 				TeensyTime = millis();
 
-				RCteensyConnected = ((Data[11] & 0b00000001) == 0b00000001) || ((Data[11] & 0b00000010) == 0b00000010);
 				ModuleID = Data[2] >> 4;
+				EthernetConnected = ((Data[11] & 0b00100000) == 0b00100000);
 			}
 			break;
 
@@ -184,6 +136,7 @@ void ReceiveSerial()
 				Data[1] = 127;
 				for (int i = 2; i < PGNlength; i++)
 				{
+					yield();
 					Data[i] = Serial.read();
 				}
 
@@ -248,44 +201,35 @@ void SendStatus()
 	// 0	247
 	// 1	126
 	// 2	Module ID
-	// 3	RSSI
-	// 4	Status
+	// 3	dBm lo
+	// 4	dBm Hi
+	// 5	Status
 	//		- bit 0 Wifi connected
-	//		- bit 1 Restarting UDP
-	// 5	DebugVal1
-	// 6	DebugVal2
-	// 7	CRC
+	//		- bit 1 Teensy connected
+	//		- bit 2 Teensy ethernet connected
+	// 6	DebugVal1
+	// 7	DebugVal2
+	// 8	CRC
 
-	byte Length = 8;
+	byte Length = 9;
 	Packet[0] = 247;
 	Packet[1] = 126;
 	Packet[2] = ModuleID;
 	Packet[3] = WiFi.RSSI();
+	Packet[4] = WiFi.RSSI() >> 8;
 
 	// status
-	Packet[4] = 0;
-	if (WiFi.status() == WL_CONNECTED)
-	{
-		Packet[4] |= 0b00000001;
-	}
+	Packet[5] = 0;
+	if (WiFi.status() == WL_CONNECTED) Packet[5] |= 0b00000001;
 
-	if (ReStartingUDP)
-	{
-		Packet[4] |= 0b00000010;
-	}
+	TeensyConnected = (millis() - TeensyTime < 4000);
+	if (TeensyConnected) Packet[5] |= 0b00000010;
 
-	if (RCteensyConnected)
-	{
-		Packet[4] |= 0b00000100;
-	}
+	if (EthernetConnected) Packet[5] |= 0b00000100;
 
-	if (TeensyConnected)
-	{
-		Packet[4] |= 0b00001000;
-	}
+	Packet[6] = DebugVal1;
+	Packet[7] = DebugVal2;
 
-	Packet[5] = DebugVal1;
-	Packet[6] = DebugVal2;
 	Packet[Length - 1] = CRC(Length - 1, 0);
 
 	// send to serial

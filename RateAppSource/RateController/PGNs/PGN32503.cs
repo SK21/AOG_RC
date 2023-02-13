@@ -13,21 +13,23 @@ namespace RateController
         // 0	247
         // 1	126
         // 2	Module ID
-        // 3	RSSI
-        // 4	Status
+        // 3	dBm lo
+        // 4	dBm Hi
+        // 5	Status
         //		- bit 0 Wifi connected
-        // 5	DebugVal1
-        // 6	DebugVal2
-        // 7	CRC
+        //		- bit 1 Teensy connected
+        // 6	DebugVal1
+        // 7	DebugVal2
+        // 8	CRC
 
-        private const byte cByteCount = 8;
+        private const byte cByteCount = 9;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 247;
         private FormStart mf;
 
         public struct ModuleData
         {
-            public int RSSI;
+            public Int16 RSSI;
             public byte Status;
             public byte DebugVal1;
             public byte DebugVal2;
@@ -49,15 +51,17 @@ namespace RateController
                 byte ID = Data[2];
                 if (ID < 20)
                 {
-                    MDL[ID].RSSI = (Data[3] & 0b01111111) * -1;
-                    MDL[ID].Status = Data[4];
-                    MDL[ID].DebugVal1 = Data[5];
-                    MDL[ID].DebugVal2 = Data[6];
+                    MDL[ID].RSSI = (short)(Data[3] | Data[4] << 8);
+                    MDL[ID].Status = Data[5];
+                    MDL[ID].DebugVal1 = Data[6];
+                    MDL[ID].DebugVal2 = Data[7];
                     Result = true;
-                    Debug.Print(ID.ToString() + ", " + MDL[ID].RSSI.ToString() + ", "
-                        + MDL[ID].Status.ToString() + ", "
-                        + MDL[ID].DebugVal1.ToString() + " "
-                        + MDL[ID].DebugVal2.ToString());
+
+
+                    //Debug.Print(ID.ToString() + ", " + MDL[ID].RSSI.ToString()
+                    //    + ", " + Data[5].ToString()
+                    //    + ", " + Data[6].ToString()
+                    //    + ", " + Data[7].ToString());
                 }
             }
             return Result;

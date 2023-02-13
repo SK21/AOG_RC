@@ -592,10 +592,10 @@ namespace RateController
 
         private void LoadDefaults()
         {
-            tbKP.Text = "5.0000";
+            tbKP.Text = "1.0000";
             tbKI.Text = "0";
             tbKD.Text = "0";
-            tbMaxPWM.Text = "255";
+            tbMaxPWM.Text = "100";
             tbMinPWM.Text = "5";
         }
 

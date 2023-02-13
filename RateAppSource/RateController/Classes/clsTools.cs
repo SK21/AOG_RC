@@ -13,7 +13,7 @@ namespace RateController
         private static Hashtable ht;
         private string cAppName = "RateController";
         private string cAppVersion = "2.4.0";
-        private string cVersionDate = "04-Feb-2023";
+        private string cVersionDate = "12-Feb-2023";
 
         private string cPropertiesFile;
         private string cSettingsDir;
@@ -388,13 +388,17 @@ namespace RateController
             return cVersionDate;
         }
 
-        public void WriteActivityLog(string Message)
+        public void WriteActivityLog(string Message, bool Newline = false)
         {
+            string Line = "";
             try
             {
                 string FileName = cSettingsDir + "\\Activity Log.txt";
                 TrimFile(FileName);
-                File.AppendAllText(FileName, DateTime.Now.ToString("dd-MMM-yy hh:mm:ss.fff tt") + "  -  " + Message + "\r\n");
+
+                if (Newline) Line = "\r\n";
+
+                File.AppendAllText(FileName, Line + DateTime.Now.ToString("dd-MMM-yy hh:mm:ss.fff tt") + "  -  " + Message + "\r\n");
             }
             catch (Exception ex)
             {

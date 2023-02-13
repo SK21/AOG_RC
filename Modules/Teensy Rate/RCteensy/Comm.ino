@@ -16,7 +16,7 @@ byte DataOut[50];
 const byte PGN32500Length = 32;
 const byte PGN32501Length = 8;
 const byte PGN32502Length = 7;
-const byte PGN32503Length = 8;
+const byte PGN32503Length = 9;
 const byte PGN32613Length = 13;
 const byte PGN32614Length = 17;
 const byte PGN32616Length = 18;
@@ -79,6 +79,7 @@ void SendData()
 		// bit 2    - wifi rssi < -80
 		// bit 3	- wifi rssi < -70
 		// bit 4	- wifi rssi < -65
+		// bit 5	- Ethernet connected
 		DataOut[11] = 0;
 		if (millis()-Sensor[0].CommTime < 4000) DataOut[11] |= 0b00000001;
 		if (millis()-Sensor[1].CommTime < 4000) DataOut[11] |= 0b00000010;
@@ -86,11 +87,11 @@ void SendData()
 		// wifi
 		if (ESPconnected)
 		{
-			if (WifiRSSI < -80)
+			if (Wifi_dBm < -80)
 			{
 				DataOut[11] |= 0b00000100;
 			}
-			else if (WifiRSSI < -70)
+			else if (Wifi_dBm < -70)
 			{
 				DataOut[11] |= 0b00001000;
 			}
@@ -99,6 +100,8 @@ void SendData()
 				DataOut[11] |= 0b00010000;
 			}
 		}
+
+		if (Ethernet.linkStatus() == LinkON) DataOut[11] |= 0b00100000;
 
 		// crc
 		DataOut[12] = CRC(DataOut, PGN32613Length - 1, 0);
@@ -478,27 +481,29 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		break;
 
 	case 32503:
-		// to Rate Controller from WifiAOG
+		// WifiAOG status
 		// 0	247
 		// 1	126
 		// 2	Module ID
-		// 3	RSSI
-		// 4	Status
+		// 3	dBm lo
+		// 4	dBm Hi
+		// 5	Status
 		//		- bit 0 Wifi connected
-		// 5	DebugVal1
-		// 6	DebugVal2
-		// 7	CRC
+		//		- bit 1 Teensy connected
+		// 6	DebugVal1
+		// 7	DebugVal2
+		// 8	CRC
 
 		if (len > PGN32503Length - 1)
 		{
 			if (GoodCRC(Data, PGN32503Length))
 			{
-				WifiRSSI = Data[3];
+				Wifi_dBm = Data[3] | Data[4] << 8;
 
 				// Status
-				ESPconnected = ((Data[4] & 1) == 1);
+				ESPconnected = ((Data[5] & 1) == 1);
 
-				ESPdebug1 = Data[5];
+				ESPdebug1 = Data[6];
 
 				WifiTime = millis() - WifiLastTime;
 				WifiLastTime = millis();

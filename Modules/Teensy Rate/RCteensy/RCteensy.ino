@@ -7,9 +7,9 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   10-Feb-2023"
+# define InoDescription "RCteensy   12-Feb-2023"
 
-#define DataID 4700		// change to send defaults to eeprom
+#define DataID 4000		// change to send defaults to eeprom
 int16_t StoredID = 0;	// Defaults ID stored in eeprom
 
 #define MaxReadBuffer 100	// bytes
@@ -110,7 +110,7 @@ uint32_t SaveTime;
 
 extern float tempmonGetTemp(void);
 
-int8_t WifiRSSI;
+int8_t Wifi_dBm;
 uint32_t WifiTime;
 uint32_t WifiLastTime;
 
@@ -494,8 +494,8 @@ void Blink()
 		Serial.print(", Chip Temp: ");
 		Serial.print(tempmonGetTemp());
 
-		Serial.print(", RSSI: ");
-		Serial.print(WifiRSSI);
+		Serial.print(", Wifi dBm: ");
+		Serial.print(Wifi_dBm);
 
 		//Serial.print(", ");
 		//Serial.print(WifiTime);

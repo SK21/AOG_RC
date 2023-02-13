@@ -34,6 +34,7 @@ namespace RateController
         private const byte cByteCount = 17;
         private readonly clsProduct Prod;
         private byte[] cData = new byte[cByteCount];
+        public DateTime SendTime;
 
         public PGN32614(clsProduct CalledFrom)
         {
@@ -154,6 +155,8 @@ namespace RateController
 
                 Prod.mf.SendSerial(cData);
                 Prod.mf.UDPmodules.SendUDPMessage(cData);
+
+                SendTime = DateTime.Now;
             }
         }
 

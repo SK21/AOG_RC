@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RateController
 {
@@ -232,7 +233,12 @@ namespace RateController
             if (Receiving != SensorReceiving[ID])
             {
                 SensorReceiving[ID] = Receiving;
-                Prod.mf.Tls.WriteActivityLog("Sensor " + ID.ToString() + " receiving: " + Receiving.ToString());
+                Prod.mf.Tls.WriteActivityLog("Sensor " + ID.ToString() + " receiving: " + Receiving.ToString(), Receiving);
+
+                //if (!Receiving)
+                //{
+                //    Prod.mf.Tls.WriteActivityLog("PGN32614 last send time: " + Prod.RateToArduino.SendTime.ToString("hh:mm:ss.fff tt"));
+                //}
             }
         }
     }

@@ -55,8 +55,17 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.verticalProgressBar3 = new RateController.VerticalProgressBar();
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.timerMain = new System.Windows.Forms.Timer(this.components);
+            this.lbFan1 = new System.Windows.Forms.Label();
+            this.lbFan2 = new System.Windows.Forms.Label();
+            this.btAlarm = new System.Windows.Forms.Button();
+            this.btnSettings = new System.Windows.Forms.Button();
+            this.bntOK = new System.Windows.Forms.Button();
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuPressures = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,15 +85,6 @@
             this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serialMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.timerMain = new System.Windows.Forms.Timer(this.components);
-            this.lbFan1 = new System.Windows.Forms.Label();
-            this.lbFan2 = new System.Windows.Forms.Label();
-            this.btAlarm = new System.Windows.Forms.Button();
-            this.btnSettings = new System.Windows.Forms.Button();
-            this.bntOK = new System.Windows.Forms.Button();
-            this.switchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel0.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -399,7 +399,99 @@
             this.MnuPressures,
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(219, 320);
+            this.mnuSettings.Size = new System.Drawing.Size(219, 298);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.DefaultExt = "rcs";
+            this.openFileDialog1.Filter = "RC Settings|*.rcs";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "rcs";
+            this.saveFileDialog1.Filter = "RC Settings|*.rcs";
+            // 
+            // timerMain
+            // 
+            this.timerMain.Interval = 1000;
+            this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
+            // 
+            // lbFan1
+            // 
+            this.lbFan1.BackColor = System.Drawing.Color.LightGreen;
+            this.lbFan1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFan1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFan1.Location = new System.Drawing.Point(14, 280);
+            this.lbFan1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lbFan1.Name = "lbFan1";
+            this.lbFan1.Size = new System.Drawing.Size(90, 28);
+            this.lbFan1.TabIndex = 181;
+            this.lbFan1.Text = "Fan 1";
+            this.lbFan1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbFan1.Click += new System.EventHandler(this.lbFan1_Click);
+            this.lbFan1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbName0_HelpRequested);
+            // 
+            // lbFan2
+            // 
+            this.lbFan2.BackColor = System.Drawing.Color.LightGreen;
+            this.lbFan2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFan2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFan2.Location = new System.Drawing.Point(141, 280);
+            this.lbFan2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lbFan2.Name = "lbFan2";
+            this.lbFan2.Size = new System.Drawing.Size(90, 28);
+            this.lbFan2.TabIndex = 182;
+            this.lbFan2.Text = "Fan 2";
+            this.lbFan2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbFan2.Click += new System.EventHandler(this.lbFan2_Click);
+            // 
+            // btAlarm
+            // 
+            this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
+            this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btAlarm.Location = new System.Drawing.Point(198, 40);
+            this.btAlarm.Name = "btAlarm";
+            this.btAlarm.Size = new System.Drawing.Size(168, 120);
+            this.btAlarm.TabIndex = 183;
+            this.btAlarm.Text = "Rate  Alarm  Pressure Alarm";
+            this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btAlarm.UseVisualStyleBackColor = true;
+            this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.BackColor = System.Drawing.Color.Transparent;
+            this.btnSettings.FlatAppearance.BorderSize = 0;
+            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSettings.Image = global::RateController.Properties.Resources.SettingsGear64;
+            this.btnSettings.Location = new System.Drawing.Point(264, 195);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(58, 58);
+            this.btnSettings.TabIndex = 171;
+            this.btnSettings.TabStop = false;
+            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnSettings.UseVisualStyleBackColor = false;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
+            // bntOK
+            // 
+            this.bntOK.BackColor = System.Drawing.Color.Transparent;
+            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bntOK.FlatAppearance.BorderSize = 0;
+            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.bntOK.Image = global::RateController.Properties.Resources.SwitchOff;
+            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.bntOK.Location = new System.Drawing.Point(264, 259);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(120, 72);
+            this.bntOK.TabIndex = 170;
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = false;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // MnuProducts
             // 
@@ -416,6 +508,14 @@
             this.MnuSections.Size = new System.Drawing.Size(218, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.MnuSections_Click);
+            // 
+            // switchesToolStripMenuItem
+            // 
+            this.switchesToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
+            this.switchesToolStripMenuItem.Name = "switchesToolStripMenuItem";
+            this.switchesToolStripMenuItem.Size = new System.Drawing.Size(218, 42);
+            this.switchesToolStripMenuItem.Text = "Switches";
+            this.switchesToolStripMenuItem.Click += new System.EventHandler(this.switchesToolStripMenuItem_Click);
             // 
             // MnuComm
             // 
@@ -574,106 +674,6 @@
             this.MnuAbout.Size = new System.Drawing.Size(241, 42);
             this.MnuAbout.Text = "About";
             this.MnuAbout.Click += new System.EventHandler(this.MnuAbout_Click);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.DefaultExt = "rcs";
-            this.openFileDialog1.Filter = "RC Settings|*.rcs";
-            // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.DefaultExt = "rcs";
-            this.saveFileDialog1.Filter = "RC Settings|*.rcs";
-            // 
-            // timerMain
-            // 
-            this.timerMain.Interval = 1000;
-            this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
-            // 
-            // lbFan1
-            // 
-            this.lbFan1.BackColor = System.Drawing.Color.LightGreen;
-            this.lbFan1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFan1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFan1.Location = new System.Drawing.Point(14, 280);
-            this.lbFan1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.lbFan1.Name = "lbFan1";
-            this.lbFan1.Size = new System.Drawing.Size(90, 28);
-            this.lbFan1.TabIndex = 181;
-            this.lbFan1.Text = "Fan 1";
-            this.lbFan1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbFan1.Click += new System.EventHandler(this.lbFan1_Click);
-            this.lbFan1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbName0_HelpRequested);
-            // 
-            // lbFan2
-            // 
-            this.lbFan2.BackColor = System.Drawing.Color.LightGreen;
-            this.lbFan2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFan2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFan2.Location = new System.Drawing.Point(141, 280);
-            this.lbFan2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.lbFan2.Name = "lbFan2";
-            this.lbFan2.Size = new System.Drawing.Size(90, 28);
-            this.lbFan2.TabIndex = 182;
-            this.lbFan2.Text = "Fan 2";
-            this.lbFan2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbFan2.Click += new System.EventHandler(this.lbFan2_Click);
-            // 
-            // btAlarm
-            // 
-            this.btAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btAlarm.Image = ((System.Drawing.Image)(resources.GetObject("btAlarm.Image")));
-            this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(198, 40);
-            this.btAlarm.Name = "btAlarm";
-            this.btAlarm.Size = new System.Drawing.Size(168, 120);
-            this.btAlarm.TabIndex = 183;
-            this.btAlarm.Text = "Rate  Alarm  Pressure Alarm";
-            this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btAlarm.UseVisualStyleBackColor = true;
-            this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
-            // 
-            // btnSettings
-            // 
-            this.btnSettings.BackColor = System.Drawing.Color.Transparent;
-            this.btnSettings.FlatAppearance.BorderSize = 0;
-            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSettings.Image = global::RateController.Properties.Resources.SettingsGear64;
-            this.btnSettings.Location = new System.Drawing.Point(264, 195);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(58, 58);
-            this.btnSettings.TabIndex = 171;
-            this.btnSettings.TabStop = false;
-            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnSettings.UseVisualStyleBackColor = false;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
-            // 
-            // bntOK
-            // 
-            this.bntOK.BackColor = System.Drawing.Color.Transparent;
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.FlatAppearance.BorderSize = 0;
-            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = global::RateController.Properties.Resources.OK;
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(264, 259);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(120, 72);
-            this.bntOK.TabIndex = 170;
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = false;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
-            // switchesToolStripMenuItem
-            // 
-            this.switchesToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
-            this.switchesToolStripMenuItem.Name = "switchesToolStripMenuItem";
-            this.switchesToolStripMenuItem.Size = new System.Drawing.Size(218, 42);
-            this.switchesToolStripMenuItem.Text = "Switches";
-            this.switchesToolStripMenuItem.Click += new System.EventHandler(this.switchesToolStripMenuItem_Click);
             // 
             // frmLargeScreen
             // 
