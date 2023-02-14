@@ -905,9 +905,9 @@ namespace RateController
         public void Update()
         {
             DateTime UpdateStartTime;
-
-            if (ArduinoModule.ModuleSending() && (mf.AutoSteerPGN.Connected() || CoverageUnits > 1)
-                || mf.SimMode == SimType.Speed)
+            if (ArduinoModule.ModuleSending())
+            //if (ArduinoModule.ModuleSending() && (mf.AutoSteerPGN.Connected() || CoverageUnits > 1)
+            //    || mf.SimMode == SimType.Speed)
             {
                 if (!SwitchIDsSent)
                 {

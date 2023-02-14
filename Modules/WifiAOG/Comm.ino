@@ -8,7 +8,7 @@ bool EthernetConnected;
 
 void CheckWifi()
 {
-	if (millis() - WifiTime > 60000)
+	if (millis() - WifiTime > 60000)	// allow time for web server to run, ie: set network
 	{
 		if (WiFi.status() != WL_CONNECTED)
 		{
@@ -21,7 +21,7 @@ void CheckWifi()
 			Serial.println("Connecting to Wifi");
 			unsigned long WifiConnectStart = millis();
 
-			while ((WiFi.status() != WL_CONNECTED) && ((millis() - WifiConnectStart) < 15000))
+			while ((WiFi.status() != WL_CONNECTED) && ((millis() - WifiConnectStart) < 10000))
 			{
 				delay(500);
 				Serial.print(".");
@@ -49,11 +49,9 @@ void CheckWifi()
 void ReceiveWifi()
 {
 	uint16_t PacketSize = UDPrate.parsePacket();
-
 	if (PacketSize)
 	{
 		int Count = UDPrate.read(WifiBuffer, PacketSize);
-
 		yield();
 		Serial.write(WifiBuffer, Count);
 	}
@@ -124,6 +122,7 @@ void ReceiveSerial()
 
 				ModuleID = Data[2] >> 4;
 				EthernetConnected = ((Data[11] & 0b00100000) == 0b00100000);
+				ResetIno = ((Data[11] & 0b01000000) == 0b01000000);
 			}
 			break;
 
@@ -225,7 +224,7 @@ void SendStatus()
 	TeensyConnected = (millis() - TeensyTime < 4000);
 	if (TeensyConnected) Packet[5] |= 0b00000010;
 
-	if (EthernetConnected) Packet[5] |= 0b00000100;
+	if (EthernetConnected && TeensyConnected) Packet[5] |= 0b00000100;
 
 	Packet[6] = DebugVal1;
 	Packet[7] = DebugVal2;

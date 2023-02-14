@@ -14,6 +14,7 @@ namespace RateController
         private bool ShowQuantityRemaining = true;
         public clsAlarm RCalarm;
         private bool SwitchingScreens = false;
+        private Color RateColour = Color.DarkOliveGreen;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -45,18 +46,22 @@ namespace RateController
 
             mf = CallingForm;
             Prd = mf.Products.Item(0);
-            this.BackColor = Properties.Settings.Default.DayColour;
             RCalarm = new clsAlarm(mf, btAlarm);
+
+            this.BackColor = Properties.Settings.Default.DayColour;
+            pnlRate0.BackColor = Properties.Settings.Default.DayColour;
+            pnlRate1.BackColor = Properties.Settings.Default.DayColour;
+            pnlRate1.BackColor = Properties.Settings.Default.DayColour;
+            pnlRate1.BackColor = Properties.Settings.Default.DayColour;
+            pnlQuantity0.BackColor = Properties.Settings.Default.DayColour;
+            pnlQuantity1.BackColor = Properties.Settings.Default.DayColour;
+            pnlQuantity2.BackColor = Properties.Settings.Default.DayColour;
+            pnlQuantity3.BackColor = Properties.Settings.Default.DayColour;
         }
 
         public int CurrentProduct()
         {
             return Prd.ID;
-        }
-
-        private void bntOK_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -385,34 +390,34 @@ namespace RateController
             // set highlight
             if (mf.SimMode == SimType.VirtualNano)
             {
-                panel0.BackColor = mf.SimColor;
-                panel1.BackColor = mf.SimColor;
-                panel2.BackColor = mf.SimColor;
-                panel3.BackColor = mf.SimColor;
+                pnlSelect0.BackColor = mf.SimColor;
+                pnlSelect1.BackColor = mf.SimColor;
+                pnlSelect2.BackColor = mf.SimColor;
+                pnlSelect3.BackColor = mf.SimColor;
             }
             else
             {
-                panel0.BackColor = Properties.Settings.Default.DayColour;
-                panel1.BackColor = Properties.Settings.Default.DayColour;
-                panel2.BackColor = Properties.Settings.Default.DayColour;
-                panel3.BackColor = Properties.Settings.Default.DayColour;
+                pnlSelect0.BackColor = Properties.Settings.Default.DayColour;
+                pnlSelect1.BackColor = Properties.Settings.Default.DayColour;
+                pnlSelect2.BackColor = Properties.Settings.Default.DayColour;
+                pnlSelect3.BackColor = Properties.Settings.Default.DayColour;
             }
             switch (Prd.ID)
             {
                 case 0:
-                    panel0.BackColor = SystemColors.Highlight;
+                    pnlSelect0.BackColor = SystemColors.Highlight;
                     break;
 
                 case 1:
-                    panel1.BackColor = SystemColors.Highlight;
+                    pnlSelect1.BackColor = SystemColors.Highlight;
                     break;
 
                 case 2:
-                    panel2.BackColor = SystemColors.Highlight;
+                    pnlSelect2.BackColor = SystemColors.Highlight;
                     break;
 
                 case 3:
-                    panel3.BackColor = SystemColors.Highlight;
+                    pnlSelect3.BackColor = SystemColors.Highlight;
                     break;
             }
 
@@ -611,7 +616,8 @@ namespace RateController
                 lbAogConnected.BackColor = Color.Red;
             }
 
-            // bins
+            // graphs
+            // product 0
             clsProduct PD = mf.Products.Item(0);
             double Size = PD.TankSize;
             double Rem = PD.TankStart - PD.UnitsApplied();
@@ -620,8 +626,26 @@ namespace RateController
             int Level = (int)(Rem / Size * 100);
             if (Level > 100) Level = 100;
             if (Level < 0) Level = 0;
-            verticalProgressBar0.Value = Level;
+            pbQuantity0.Value = Level;
 
+            double Rt = PD.SmoothRate();
+            double Tg = PD.TargetRate();
+            int RtLevel = 0;
+            if (Tg > 0) RtLevel = (int)((Rt / Tg) * 50) - 30;
+            if (RtLevel > 40) RtLevel = 40;
+            if(RtLevel< 0) RtLevel = 0;
+            if (Tg > 0 && RtLevel < 1) RtLevel = 1;
+            if (RtLevel > 25 || RtLevel < 15)
+            {
+                pbRate0.ForeColor = Color.Red;
+            }
+            else
+            {
+                pbRate0.ForeColor = RateColour;
+            }
+            pbRate0.Value = RtLevel;
+
+            // product 1
             PD = mf.Products.Item(1);
             Size = PD.TankSize;
             Rem = PD.TankStart - PD.UnitsApplied();
@@ -630,8 +654,26 @@ namespace RateController
             Level = (int)(Rem / Size * 100);
             if (Level > 100) Level = 100;
             if (Level < 0) Level = 0;
-            verticalProgressBar1.Value = Level;
+            pbQuantity1.Value = Level;
 
+            Rt = PD.SmoothRate();
+            Tg = PD.TargetRate();
+            RtLevel = 0;
+            if (Tg > 0) RtLevel = (int)((Rt / Tg) * 50) - 30;
+            if (RtLevel > 40) RtLevel = 40;
+            if (RtLevel < 0) RtLevel = 0;
+            if (Tg > 0 && RtLevel < 1) RtLevel = 1;
+            if (RtLevel > 25 || RtLevel < 15)
+            {
+                pbRate1.ForeColor = Color.Red;
+            }
+            else
+            {
+                pbRate1.ForeColor = RateColour;
+            }
+            pbRate1.Value = RtLevel;
+
+            // product 2
             PD = mf.Products.Item(2);
             Size = PD.TankSize;
             Rem = PD.TankStart - PD.UnitsApplied();
@@ -640,8 +682,26 @@ namespace RateController
             Level = (int)(Rem / Size * 100);
             if (Level > 100) Level = 100;
             if (Level < 0) Level = 0;
-            verticalProgressBar2.Value = Level;
+            pbQuantity2.Value = Level;
 
+            Rt = PD.SmoothRate();
+            Tg = PD.TargetRate();
+            RtLevel = 0;
+            if (Tg > 0) RtLevel = (int)((Rt / Tg) * 50) - 30;
+            if (RtLevel > 40) RtLevel = 40;
+            if (RtLevel < 0) RtLevel = 0;
+            if (Tg > 0 && RtLevel < 1) RtLevel = 1;
+            if (RtLevel > 25 || RtLevel < 15)
+            {
+                pbRate2.ForeColor = Color.Red;
+            }
+            else
+            {
+                pbRate2.ForeColor = RateColour;
+            }
+            pbRate2.Value = RtLevel;
+
+            // product 3
             PD = mf.Products.Item(3);
             Size = PD.TankSize;
             Rem = PD.TankStart - PD.UnitsApplied();
@@ -650,7 +710,24 @@ namespace RateController
             Level = (int)(Rem / Size * 100);
             if (Level > 100) Level = 100;
             if (Level < 0) Level = 0;
-            verticalProgressBar3.Value = Level;
+            pbQuantity3.Value = Level;
+
+            Rt = PD.SmoothRate();
+            Tg = PD.TargetRate();
+            RtLevel = 0;
+            if (Tg > 0) RtLevel = (int)((Rt / Tg) * 50) - 30;
+            if (RtLevel > 40) RtLevel = 40;
+            if (RtLevel < 0) RtLevel = 0;
+            if (Tg > 0 && RtLevel < 1) RtLevel = 1;
+            if (RtLevel > 25 || RtLevel < 15)
+            {
+                pbRate3.ForeColor = Color.Red;
+            }
+            else
+            {
+                pbRate3.ForeColor = RateColour;
+            }
+            pbRate3.Value = RtLevel;
 
             // fans
             if (mf.SimMode == SimType.None)
@@ -697,6 +774,28 @@ namespace RateController
             {
                 lbFan1.BackColor = mf.SimColor;
                 lbFan2.BackColor = mf.SimColor;
+            }
+
+            // fan 1 button
+            clsProduct fn = mf.Products.Item(mf.MaxProducts - 2);
+            if (fn.FanOn)
+            {
+                btnFan1.Image = Properties.Resources.FanOn;
+            }
+            else
+            {
+                btnFan1.Image = Properties.Resources.FanOff;
+            }
+
+            // fan 2 button
+            fn = mf.Products.Item(mf.MaxProducts - 1);
+            if (fn.FanOn)
+            {
+                btnFan2.Image = Properties.Resources.FanOn;
+            }
+            else
+            {
+                btnFan2.Image = Properties.Resources.FanOff;
             }
 
             RCalarm.CheckAlarms();
@@ -830,6 +929,30 @@ namespace RateController
             {
                 fs.Focus();
             }
+        }
+
+        private void btnFan1_Click(object sender, EventArgs e)
+        {
+            clsProduct fn = mf.Products.Item(mf.MaxProducts - 2);
+            fn.FanOn = !fn.FanOn;
+        }
+
+        private void btnFan2_Click(object sender, EventArgs e)
+        {
+            clsProduct fn = mf.Products.Item(mf.MaxProducts - 1);
+            fn.FanOn = !fn.FanOn;
+        }
+
+        private void pbRate0_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Indicates Current rate compared to Target rate." +
+                " Target rate is the centre of the graph. " +
+                "Within 10 % of target, the graph is yellow, otherwise red." +
+                " Click to select product and view" +
+                " the product's information.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
         }
     }
 }

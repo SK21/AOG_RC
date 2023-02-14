@@ -7,17 +7,12 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   12-Feb-2023"
+# define InoDescription "RCteensy   13-Feb-2023"
 
-#define DataID 4000		// change to send defaults to eeprom
-int16_t StoredID = 0;	// Defaults ID stored in eeprom
+#define InoID 4000		// change to load default values
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
-
-float debug1;
-float debug2;
-float debug3;
 
 struct ModuleConfig	
 {
@@ -121,6 +116,13 @@ bool ESPconnected;
 HX711 scale[2];
 bool ScaleFound[2] = { false,false };
 
+const byte ResetPin = 33;
+bool ResetESP8266 = false;
+
+float debug1;
+float debug2;
+float debug3;
+
 void setup()
 {
 	 //watchdog timer
@@ -158,18 +160,9 @@ void setup()
 
 
 	// eeprom
+	int16_t StoredID;
 	EEPROM.get(100, StoredID);
-	if (StoredID != DataID)
-	{
-		EEPROM.put(100, DataID);
-		EEPROM.put(110, MDL);
-
-		for (int i = 0; i < MaxProductCount; i++)
-		{
-			EEPROM.put(200 + i * 80, Sensor[i]);
-		}
-	}
-	else
+	if (StoredID == InoID)
 	{
 		EEPROM.get(110, MDL);
 
@@ -177,7 +170,17 @@ void setup()
 		{
 			EEPROM.get(200 + i * 80, Sensor[i]);
 		}
-	}	
+	}
+	else
+	{
+		EEPROM.put(100, InoID);
+		EEPROM.put(110, MDL);
+
+		for (int i = 0; i < MaxProductCount; i++)
+		{
+			EEPROM.put(200 + i * 80, Sensor[i]);
+		}
+	}
 
 	if (MDL.ProductCount < 1) MDL.ProductCount = 1;
 	if (MDL.ProductCount > MaxProductCount) MDL.ProductCount = MaxProductCount;
@@ -343,6 +346,8 @@ void setup()
 
 	pinMode(LED_BUILTIN, OUTPUT);
 
+	pinMode(ResetPin, INPUT_PULLUP);
+
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
@@ -392,7 +397,7 @@ void loop()
 	{
 		// save sensor data
 		SaveTime = millis();
-		EEPROM.put(100, DataID);
+		EEPROM.put(100, InoID);
 		//EEPROM.put(110, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
@@ -403,6 +408,7 @@ void loop()
 
 	ReceiveData();
 	Blink();
+	CheckResetButton();
 	wdt.feed();
 }
 
@@ -488,13 +494,13 @@ void Blink()
 		digitalWrite(LED_BUILTIN, State);
 		Serial.println(".");	// needed to allow PCBsetup to connect
 
-		Serial.print(" Loop micros: ");
+		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
 
-		Serial.print(", Chip Temp: ");
+		Serial.print(", Temp: ");
 		Serial.print(tempmonGetTemp());
 
-		Serial.print(", Wifi dBm: ");
+		Serial.print(", dBm: ");
 		Serial.print(Wifi_dBm);
 
 		//Serial.print(", ");
@@ -507,7 +513,7 @@ void Blink()
 		//Serial.print(debug2);
 
 		//Serial.print(", ");
-		//Serial.print(debug3);
+		//Serial.print(digitalRead(ResetPin));
 
 		Serial.println("");
 
@@ -519,6 +525,42 @@ void Blink()
 	}
 	if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
 	LoopTmr = 0;
+}
+
+uint32_t ResetTime;
+bool ResetTimerOn;
+void CheckResetButton()
+{
+	if (digitalRead(ResetPin))
+	{
+		ResetTimerOn = false;
+	}
+	else
+	{
+		if (ResetTimerOn)
+		{
+			if (millis() - ResetTime > 5000)
+			{
+				// notify esp8266
+				ResetESP8266 = true;
+			}
+
+			if (millis() - ResetTime > 6000)
+			{
+				// change ID to cause defaults to load on startup
+				EEPROM.put(100, InoID + 1);
+				delay(100);
+
+				// restart the Teensy
+				SCB_AIRCR = 0x05FA0004;
+			}
+		}
+		else
+		{
+			ResetTime = millis();
+			ResetTimerOn = true;
+		}
+	}
 }
 
 

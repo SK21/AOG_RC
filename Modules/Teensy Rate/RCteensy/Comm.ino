@@ -80,6 +80,7 @@ void SendData()
 		// bit 3	- wifi rssi < -70
 		// bit 4	- wifi rssi < -65
 		// bit 5	- Ethernet connected
+		// bit 6	- reset esp8266
 		DataOut[11] = 0;
 		if (millis()-Sensor[0].CommTime < 4000) DataOut[11] |= 0b00000001;
 		if (millis()-Sensor[1].CommTime < 4000) DataOut[11] |= 0b00000010;
@@ -102,6 +103,8 @@ void SendData()
 		}
 
 		if (Ethernet.linkStatus() == LinkON) DataOut[11] |= 0b00100000;
+
+		if (ResetESP8266) DataOut[11] |= 0b01000000;
 
 		// crc
 		DataOut[12] = CRC(DataOut, PGN32613Length - 1, 0);
@@ -432,7 +435,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				}
 
 				// save
-				EEPROM.put(100, DataID);
+				EEPROM.put(100, InoID);
 				EEPROM.put(110, MDL);
 
 				for (int i = 0; i < MaxProductCount; i++)
@@ -466,7 +469,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				MDL.IPpart3 = Data[3];
 
 				// save
-				EEPROM.put(100, DataID);
+				EEPROM.put(100, InoID);
 				EEPROM.put(110, MDL);
 
 				for (int i = 0; i < MaxProductCount; i++)

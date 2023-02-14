@@ -33,7 +33,7 @@ void handleCredentials()
 	server.send(200, "text/html", GetPage0());
 
 	EEPROM.begin(512);
-	EEPROM.put(0, CheckValue);
+	EEPROM.put(0, InoID);
 	EEPROM.put(10, WC);
 	EEPROM.commit();
 

@@ -333,6 +333,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\FanOn.png" />
+    <None Include="Resources\FanOff.png" />
     <None Include="Resources\SwitchOff.png" />
     <None Include="Resources\VehFileLoad.png" />
     <None Include="Resources\Chart.png" />

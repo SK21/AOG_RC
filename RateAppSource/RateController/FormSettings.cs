@@ -1433,6 +1433,16 @@ namespace RateController
                 lbProduct.BackColor = Properties.Settings.Default.DayColour;
                 lbProduct.BorderStyle = BorderStyle.None;
             }
+
+            // fan button
+            if(CurrentProduct.FanOn)
+            {
+                btnFan.Image = Properties.Resources.FanOn;
+            }
+            else
+            {
+                btnFan.Image = Properties.Resources.FanOff;
+            }
         }
 
         private void UpdateForm()
@@ -1831,21 +1841,6 @@ namespace RateController
             formG.Show(this);
         }
 
-        private void label26_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            CurrentProduct.FanOn = true;
-        }
-
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            CurrentProduct.FanOn = false;
-        }
-
         private void tbFLpwm_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -1934,6 +1929,11 @@ namespace RateController
             Tmp -= 5;
             if (Tmp < 0) Tmp = 0;
             tbWTpwm.Text = Tmp.ToString();
+        }
+
+        private void btnFan_Click(object sender, EventArgs e)
+        {
+            CurrentProduct.FanOn = !CurrentProduct.FanOn;
         }
     }
 }

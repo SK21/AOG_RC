@@ -1,5 +1,8 @@
-# define InoDescription "WifiAOG   12-Feb-2022"
+
 // Wemos D1 mini Pro, ESP 12F    board: LOLIN(Wemos) D1 R2 & mini  or NodeMCU 1.0 (ESP-12E Module)
+# define InoDescription "WifiAOG   13-Feb-2022"
+
+#define InoID 8230  // change to load default values
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
@@ -12,6 +15,7 @@
 
 //bool ShowWebPage = true;
 bool ShowWebPage = false;
+bool ResetIno = false;
 
 struct WifiConnection
 {
@@ -42,9 +46,6 @@ char WifiBuffer[512];
 
 // web page
 ESP8266WebServer server(80);
-
-#define CheckValue 8230
-int16_t DataCheck;
 
 uint8_t ErrorCount;
 const int16_t AdsI2Caddress = 0x48;
@@ -83,14 +84,15 @@ void setup()
     str.toCharArray(WC.Password, str.length() + 1);
 
     EEPROM.begin(512);
-    EEPROM.get(0, DataCheck);
-    if (DataCheck == CheckValue)
+    int16_t StoredID;
+    EEPROM.get(0, StoredID);
+    if (StoredID == InoID)
     {
         EEPROM.get(10, WC);
     }
     else
     {
-        EEPROM.put(0, CheckValue);
+        EEPROM.put(0, InoID);
         EEPROM.put(10, WC);
         EEPROM.commit();
     }
@@ -153,6 +155,7 @@ void loop()
     ReadAnalog();
     CheckWifi();
     Blink();
+    CheckReset();
 }
 
 bool GoodCRC(uint16_t Length)
@@ -205,6 +208,16 @@ void Blink()
     }
     //if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
     //LoopTmr = micros();
+}
+
+void CheckReset()
+{
+    if (ResetIno)
+    {
+        EEPROM.put(0, InoID + 1);
+        delay(100);
+        ESP.restart();
+    }
 }
 
 
