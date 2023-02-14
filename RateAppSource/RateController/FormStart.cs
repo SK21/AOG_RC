@@ -65,6 +65,8 @@ namespace RateController
         public bool RateCalibrationOn = false;
         public PGN32503 WifiStatus;
 
+        private bool LoadError = false;
+
         public FormStart()
         {
             InitializeComponent();
@@ -563,44 +565,55 @@ namespace RateController
 
         private void FormStart_Load(object sender, EventArgs e)
         {
-            CurrentPage = 5;
-            int.TryParse(Tls.LoadProperty("CurrentPage"), out CurrentPage);
-
-            Tls.LoadFormData(this);
-
-            if (Tls.PrevInstance())
+            try
             {
-                Tls.ShowHelp(Lang.lgAlreadyRunning, "Help", 3000);
-                this.Close();
-            }
+                CurrentPage = 5;
+                int.TryParse(Tls.LoadProperty("CurrentPage"), out CurrentPage);
 
-            // UDP
-            UDPmodules.StartUDPServer();
-            if (!UDPmodules.IsUDPSendConnected)
+                Tls.LoadFormData(this);
+
+                if (Tls.PrevInstance())
+                {
+                    Tls.ShowHelp(Lang.lgAlreadyRunning, "Help", 3000);
+                    this.Close();
+                }
+
+                // UDP
+                UDPmodules.StartUDPServer();
+                if (!UDPmodules.IsUDPSendConnected)
+                {
+                    Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true, true);
+                }
+
+                UDPaog.StartUDPServer();
+                if (!UDPaog.IsUDPSendConnected)
+                {
+                    Tls.ShowHelp("UDPagio failed to start.", "", 3000, true, true);
+                }
+
+                LoadSettings();
+                UpdateStatus();
+
+                LoadPressureSetting();
+                Products.UpdatePID();
+
+                // wifi
+                WiFiIP = Tls.LoadProperty("WifiIP");
+                UDPmodules.WifiEP = WiFiIP;
+
+                // ethernet
+                UDPmodules.EthernetEP = Tls.LoadProperty("EthernetEP");
+
+                if (cUseLargeScreen) StartLargeScreen();
+
+                timerMain.Enabled = true;
+            }
+            catch (Exception ex)
             {
-                Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true, true);
+                Tls.ShowHelp("Failed to load properly: " + ex.Message, "Help", 30000, true);
+                LoadError = true;
+                Close();
             }
-
-            UDPaog.StartUDPServer();
-            if (!UDPaog.IsUDPSendConnected)
-            {
-                Tls.ShowHelp("UDPagio failed to start.", "", 3000, true, true);
-            }
-
-            LoadSettings();
-            UpdateStatus();
-
-            LoadPressureSetting();
-            Products.UpdatePID();
-
-            // wifi
-            WiFiIP = Tls.LoadProperty("WifiIP");
-            UDPmodules.WifiEP = WiFiIP;
-
-            // ethernet
-            UDPmodules.EthernetEP = Tls.LoadProperty("EthernetEP");
-
-            if(cUseLargeScreen) StartLargeScreen();
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -946,7 +959,7 @@ namespace RateController
 
         private void FormStart_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!LargeScreenExit && !Restart)
+            if (!LargeScreenExit && !Restart && !LoadError)
             {
                 var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true);
                 Hlp.ShowDialog();

@@ -69,6 +69,7 @@ namespace RateController
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuPressures = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,7 +109,6 @@ namespace RateController
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
             this.timerPIDs = new System.Windows.Forms.Timer(this.components);
-            this.switchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -117,7 +117,6 @@ namespace RateController
             // 
             // timerMain
             // 
-            this.timerMain.Enabled = true;
             this.timerMain.Interval = 1000;
             this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
             // 
@@ -528,7 +527,7 @@ namespace RateController
             // 
             this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(200, 42);
+            this.MnuProducts.Size = new System.Drawing.Size(179, 42);
             this.MnuProducts.Text = "Products";
             this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -536,15 +535,23 @@ namespace RateController
             // 
             this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(200, 42);
+            this.MnuSections.Size = new System.Drawing.Size(179, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
+            // 
+            // switchesToolStripMenuItem
+            // 
+            this.switchesToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
+            this.switchesToolStripMenuItem.Name = "switchesToolStripMenuItem";
+            this.switchesToolStripMenuItem.Size = new System.Drawing.Size(179, 42);
+            this.switchesToolStripMenuItem.Text = "Switches";
+            this.switchesToolStripMenuItem.Click += new System.EventHandler(this.switchesToolStripMenuItem_Click);
             // 
             // MnuComm
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(200, 42);
+            this.MnuComm.Size = new System.Drawing.Size(179, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -552,7 +559,7 @@ namespace RateController
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(200, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(179, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
@@ -560,7 +567,7 @@ namespace RateController
             // 
             this.MnuPressures.Image = global::RateController.Properties.Resources.pressure;
             this.MnuPressures.Name = "MnuPressures";
-            this.MnuPressures.Size = new System.Drawing.Size(200, 42);
+            this.MnuPressures.Size = new System.Drawing.Size(179, 42);
             this.MnuPressures.Text = "Pressures";
             this.MnuPressures.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click);
             // 
@@ -915,14 +922,6 @@ namespace RateController
             this.timerPIDs.Enabled = true;
             this.timerPIDs.Interval = 5000;
             this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
-            // 
-            // switchesToolStripMenuItem
-            // 
-            this.switchesToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
-            this.switchesToolStripMenuItem.Name = "switchesToolStripMenuItem";
-            this.switchesToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
-            this.switchesToolStripMenuItem.Text = "Switches";
-            this.switchesToolStripMenuItem.Click += new System.EventHandler(this.switchesToolStripMenuItem_Click);
             // 
             // FormStart
             // 
