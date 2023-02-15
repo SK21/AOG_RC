@@ -947,7 +947,7 @@ namespace RateController
         {
             string Message = "Indicates Current rate compared to Target rate." +
                 " Target rate is the centre of the graph. " +
-                "Within 10 % of target, the graph is yellow, otherwise red." +
+                "Within 10 % of target, the graph is dark green, otherwise red." +
                 " Click to select product and view" +
                 " the product's information.";
 

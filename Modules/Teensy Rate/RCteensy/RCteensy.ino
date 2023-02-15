@@ -7,7 +7,7 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   13-Feb-2023"
+# define InoDescription "RCteensy   14-Feb-2023"
 
 #define InoID 4000		// change to load default values
 
@@ -24,7 +24,7 @@ struct ModuleConfig
 	uint8_t RelayOnSignal = 1;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t RelayControl = 5;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
-	uint8_t WemosSerialPort = 1;	// serial port to connect to Wemos D1 Mini
+	uint8_t ESP8266SerialPort = 1;	// serial port to connect to ESP8266
 	uint8_t RelayPins[16];			// pin numbers when GPIOs are used for relay control (5)
 	uint8_t LOADCELL_DOUT_PIN[MaxProductCount];
 	uint8_t LOADCELL_SCK_PIN[MaxProductCount];
@@ -84,7 +84,7 @@ byte RelayHi = 0;	// sections 8-15
 byte PowerRelayLo;
 byte PowerRelayHi;
 
-// WifiSwitches connection to Wemos D1 Mini
+// WifiSwitches connection to ESP8266
 unsigned long WifiSwitchesTimer;
 bool WifiSwitchesEnabled = false;
 byte WifiSwitches[6];
@@ -109,7 +109,7 @@ int8_t Wifi_dBm;
 uint32_t WifiTime;
 uint32_t WifiLastTime;
 
-HardwareSerial* SerialWemos;
+HardwareSerial* SerialESP8266;
 byte ESPdebug1;
 bool ESPconnected;
 
@@ -281,35 +281,35 @@ void setup()
 		}
 	}
 
-	 //Wemos D1 Mini serial port
-	switch (MDL.WemosSerialPort)
+	 //ESP8266 serial port
+	switch (MDL.ESP8266SerialPort)
 	{
 	case 1:
-		SerialWemos = &Serial1;
+		SerialESP8266 = &Serial1;
 		break;
 	case 2:
-		SerialWemos = &Serial2;
+		SerialESP8266 = &Serial2;
 		break;
 	case 3:
-		SerialWemos = &Serial3;
+		SerialESP8266 = &Serial3;
 		break;
 	case 4:
-		SerialWemos = &Serial4;
+		SerialESP8266 = &Serial4;
 		break;
 	case 5:
-		SerialWemos = &Serial5;
+		SerialESP8266 = &Serial5;
 		break;
 	case 6:
-		SerialWemos = &Serial6;
+		SerialESP8266 = &Serial6;
 		break;
 	case 7:
-		SerialWemos = &Serial7;
+		SerialESP8266 = &Serial7;
 		break;
 	default:
-		SerialWemos = &Serial8;
+		SerialESP8266 = &Serial8;
 		break;
 	}
-	SerialWemos->begin(115200);
+	SerialESP8266->begin(115200);
 
 	// load cell
 	for (int i = 0; i < MaxProductCount; i++)
@@ -484,6 +484,7 @@ elapsedMillis BlinkTmr;
 elapsedMicros LoopTmr;
 byte ReadReset;
 uint32_t MaxLoopTime;
+bool ResetTimerOn;
 
 void Blink()
 {
@@ -513,7 +514,7 @@ void Blink()
 		//Serial.print(debug2);
 
 		//Serial.print(", ");
-		//Serial.print(digitalRead(ResetPin));
+		//Serial.print(ResetTimerOn);
 
 		Serial.println("");
 
@@ -528,7 +529,6 @@ void Blink()
 }
 
 uint32_t ResetTime;
-bool ResetTimerOn;
 void CheckResetButton()
 {
 	if (digitalRead(ResetPin))

@@ -97,7 +97,9 @@ namespace RateController
 
             Tls = new clsTools(this);
 
+            //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
             UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255", true, true);  // AOG
+
             UDPmodules = new UDPComm(this, 29999, 28888, 1480 );    // arduino
 
             AutoSteerPGN = new PGN254(this);
@@ -399,6 +401,17 @@ namespace RateController
                     CurrentPageLast = CurrentPage;
                     ProductChanged?.Invoke(this, EventArgs.Empty);
                 }
+
+                // fan button
+                if (Products.Item(CurrentPage - 1).FanOn)
+                {
+                    btnFan.Image = Properties.Resources.FanOn;
+                }
+                else
+                {
+                    btnFan.Image = Properties.Resources.FanOff;
+                }
+
             }
             catch (Exception ex)
             {
@@ -914,11 +927,6 @@ namespace RateController
             frmWifi.ShowDialog();
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            Products.Item(CurrentPage - 1).FanOn = true;
-        }
-
         public double SimSpeed
         {
             get { return cSimSpeed; }
@@ -988,6 +996,11 @@ namespace RateController
             {
                 fs.Focus();
             }
+        }
+
+        private void btnFan_Click(object sender, EventArgs e)
+        {
+            Products.Item(CurrentPage - 1).FanOn = !Products.Item(CurrentPage - 1).FanOn;
         }
     }
 }

@@ -12,7 +12,6 @@
 #include <EEPROM.h>
 #include <Wire.h>
 
-
 //bool ShowWebPage = true;
 bool ShowWebPage = false;
 bool ResetIno = false;
@@ -215,8 +214,10 @@ void CheckReset()
     if (ResetIno)
     {
         EEPROM.put(0, InoID + 1);
+        EEPROM.commit();
         delay(100);
-        ESP.restart();
+        ResetIno = 0;
+        ESP.reset();
     }
 }
 

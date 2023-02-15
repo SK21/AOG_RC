@@ -1,13 +1,13 @@
-byte MSBwemos;
-byte LSBwemos;
+byte MSB_ESP8266;
+byte LSB_ESP8266;
 byte MSBusb;
 byte LSBusb;
 
-uint16_t PGNwemos;
+uint16_t PGN_ESP8266;
 uint16_t PGNusb;
 uint16_t PGNethernet;
 
-byte DataWemos[MaxReadBuffer];
+byte DataESP8266[MaxReadBuffer];
 byte DataUSB[MaxReadBuffer];
 byte DataEthernet[MaxReadBuffer];
 
@@ -110,7 +110,7 @@ void SendData()
 		DataOut[12] = CRC(DataOut, PGN32613Length - 1, 0);
 
 		// to wifi
-		SerialWemos->write(DataOut, PGN32613Length);
+		SerialESP8266->write(DataOut, PGN32613Length);
 
 		// to ethernet
 		if (Ethernet.linkStatus() == LinkON)
@@ -150,7 +150,7 @@ void SendData()
 	DataOut[11] = CRC(DataOut, PGN32621Length - 1, 0);
 
 	// to wifi
-	SerialWemos->write(DataOut, PGN32621Length);
+	SerialESP8266->write(DataOut, PGN32621Length);
 
 	// to ethernet
 	if (Ethernet.linkStatus() == LinkON)
@@ -190,7 +190,7 @@ void SendData()
 				DataOut[7] = CRC(DataOut, PGN32501Length - 1, 0);
 
 				// to wifi
-				SerialWemos->write(DataOut, PGN32501Length);
+				SerialESP8266->write(DataOut, PGN32501Length);
 
 				// to ethernet
 				if (Ethernet.linkStatus() == LinkON)
@@ -226,7 +226,7 @@ void SendData()
 	//DataOut[7] = CRC(DataOut, PGN32501Length - 1, 0);
 
 	//// to wifi
-	//SerialWemos->write(DataOut, PGN32501Length);
+	//SerialESP8266->write(DataOut, PGN32501Length);
 	//Debug2++;
 
 	//// to ethernet
@@ -243,21 +243,21 @@ void SendData()
 
 void ReceiveData()
 {
-	// wifi from wemos d1 mini
-	if (SerialWemos->available())
+	// wifi from ESP8266
+	if (SerialESP8266->available())
 	{
-		if (SerialWemos->available() > MaxReadBuffer)
+		if (SerialESP8266->available() > MaxReadBuffer)
 		{
 			// clear buffer
-			while (SerialWemos->available())
+			while (SerialESP8266->available())
 			{
-				SerialWemos->read();
+				SerialESP8266->read();
 			}
-			PGNwemos = 0;
-			LSBwemos = 0;
+			PGN_ESP8266 = 0;
+			LSB_ESP8266 = 0;
 		}
 
-		switch (PGNwemos)
+		switch (PGN_ESP8266)
 		{
 		case 32500:
 			ProcessWifi(PGN32500Length);
@@ -285,9 +285,9 @@ void ReceiveData()
 
 		default:
 			// find pgn
-			MSBwemos = SerialWemos->read();
-			PGNwemos = MSBwemos << 8 | LSBwemos;
-			LSBwemos = MSBwemos;
+			MSB_ESP8266 = SerialESP8266->read();
+			PGN_ESP8266 = MSB_ESP8266 << 8 | LSB_ESP8266;
+			LSB_ESP8266 = MSB_ESP8266;
 			break;
 		}
 	}
@@ -352,17 +352,17 @@ void ReceiveData()
 
 void ProcessWifi(uint16_t len)
 {
-	if (SerialWemos->available() > len - 3)
+	if (SerialESP8266->available() > len - 3)
 	{
-		DataWemos[0] = (byte)PGNwemos;
-		DataWemos[1] = (byte)(PGNwemos >> 8);
+		DataESP8266[0] = (byte)PGN_ESP8266;
+		DataESP8266[1] = (byte)(PGN_ESP8266 >> 8);
 		for (int i = 2; i < len; i++)
 		{
-			DataWemos[i] = SerialWemos->read();
+			DataESP8266[i] = SerialESP8266->read();
 		}
-		ReadPGN(len, DataWemos, PGNwemos);
-		PGNwemos = 0;
-		LSBwemos = 0;
+		ReadPGN(len, DataESP8266, PGN_ESP8266);
+		PGN_ESP8266 = 0;
+		LSB_ESP8266 = 0;
 	}
 }
 
@@ -397,7 +397,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		//          - Relay on high
 		//          - Flow on high
 		// 6        Relay control type  0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
-		// 7        Wemos serial port
+		// 7        ESP8266 serial port
 		// 8        Sensor 0, flow pin
 		// 9        Sensor 0, dir pin
 		// 10       Sensor 0, pwm pin
@@ -421,7 +421,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				if ((tmp & 2) == 2) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
 
 				MDL.RelayControl = Data[6];
-				MDL.WemosSerialPort = Data[7];
+				MDL.ESP8266SerialPort = Data[7];
 				Sensor[0].FlowPin = Data[8];
 				Sensor[0].DirPin = Data[9];
 				Sensor[0].PWMPin = Data[10];
@@ -639,7 +639,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		break;
 
 	case 32619:
-		// from Wemos D1 mini, 6 bytes
+		// from ESP8266, 6 bytes
 		// section buttons
 
 		if (len > PGN32619Length - 1)

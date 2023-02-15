@@ -94,11 +94,9 @@ namespace RateController
             this.lbPressureValue = new System.Windows.Forms.Label();
             this.lbPressure = new System.Windows.Forms.Label();
             this.panFan = new System.Windows.Forms.Panel();
-            this.btnStop = new System.Windows.Forms.Button();
             this.lbOn = new System.Windows.Forms.Label();
             this.lbOff = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnStart = new System.Windows.Forms.Button();
             this.lbTargetRPM = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lbFanRate = new System.Windows.Forms.Label();
@@ -109,6 +107,7 @@ namespace RateController
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
             this.timerPIDs = new System.Windows.Forms.Timer(this.components);
+            this.btnFan = new System.Windows.Forms.Button();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -739,11 +738,10 @@ namespace RateController
             // 
             // panFan
             // 
-            this.panFan.Controls.Add(this.btnStop);
+            this.panFan.Controls.Add(this.btnFan);
             this.panFan.Controls.Add(this.lbOn);
             this.panFan.Controls.Add(this.lbOff);
             this.panFan.Controls.Add(this.groupBox1);
-            this.panFan.Controls.Add(this.btnStart);
             this.panFan.Controls.Add(this.lbTargetRPM);
             this.panFan.Controls.Add(this.label4);
             this.panFan.Controls.Add(this.lbFanRate);
@@ -753,17 +751,6 @@ namespace RateController
             this.panFan.Name = "panFan";
             this.panFan.Size = new System.Drawing.Size(270, 161);
             this.panFan.TabIndex = 157;
-            // 
-            // btnStop
-            // 
-            this.btnStop.FlatAppearance.BorderSize = 0;
-            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStop.Image = global::RateController.Properties.Resources.Stop;
-            this.btnStop.Location = new System.Drawing.Point(138, 85);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(72, 72);
-            this.btnStop.TabIndex = 199;
-            this.btnStop.UseVisualStyleBackColor = true;
             // 
             // lbOn
             // 
@@ -796,19 +783,6 @@ namespace RateController
             this.groupBox1.Size = new System.Drawing.Size(252, 1);
             this.groupBox1.TabIndex = 165;
             this.groupBox1.TabStop = false;
-            // 
-            // btnStart
-            // 
-            this.btnStart.BackColor = System.Drawing.Color.Transparent;
-            this.btnStart.FlatAppearance.BorderSize = 0;
-            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStart.Image = global::RateController.Properties.Resources.Start;
-            this.btnStart.Location = new System.Drawing.Point(64, 86);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(68, 68);
-            this.btnStart.TabIndex = 164;
-            this.btnStart.UseVisualStyleBackColor = false;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // lbTargetRPM
             // 
@@ -923,6 +897,19 @@ namespace RateController
             this.timerPIDs.Interval = 5000;
             this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
             // 
+            // btnFan
+            // 
+            this.btnFan.BackColor = System.Drawing.Color.Transparent;
+            this.btnFan.FlatAppearance.BorderSize = 0;
+            this.btnFan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFan.Image = global::RateController.Properties.Resources.FanOff;
+            this.btnFan.Location = new System.Drawing.Point(117, 98);
+            this.btnFan.Name = "btnFan";
+            this.btnFan.Size = new System.Drawing.Size(50, 50);
+            this.btnFan.TabIndex = 203;
+            this.btnFan.UseVisualStyleBackColor = false;
+            this.btnFan.Click += new System.EventHandler(this.btnFan_Click);
+            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1028,7 +1015,6 @@ namespace RateController
         private System.Windows.Forms.Label lbFanRate;
         private System.Windows.Forms.Label lbCurrentRPM;
         private System.Windows.Forms.Label lbFan;
-        private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbOn;
         private System.Windows.Forms.Label lbOff;
@@ -1037,7 +1023,7 @@ namespace RateController
         private System.Windows.Forms.Label rt5;
         private System.Windows.Forms.Label prd5;
         private System.Windows.Forms.Timer timerPIDs;
-        private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.ToolStripMenuItem switchesToolStripMenuItem;
+        private System.Windows.Forms.Button btnFan;
     }
 }
