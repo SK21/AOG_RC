@@ -64,6 +64,8 @@ namespace RateController
         private double UnitsOffset = 0;
         private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
         private bool cFanOn;
+        private bool cOnScreen;
+        private bool cConstantUPM;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -126,6 +128,18 @@ namespace RateController
             {
                 cFanOn = value;
             }
+        }
+
+        public bool ConstantUPM
+        {
+            get { return cConstantUPM; }
+            set { cConstantUPM = value; }
+        }
+
+        public bool OnScreen
+        {
+            get { return cOnScreen; }
+            set { cOnScreen = value; }
         }
 
         public double CalStart
@@ -606,6 +620,17 @@ namespace RateController
             {
                 Enum.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), true, out cControlType);
             }
+
+            if (bool.TryParse(mf.Tls.LoadProperty("OnScreen" + IDname), out bool OS))
+            {
+                cOnScreen = OS;
+            }
+            else
+            {
+                cOnScreen = true;
+            }
+
+            bool.TryParse(mf.Tls.LoadProperty("ConstantUPM" + IDname), out cConstantUPM);
         }
 
         public double PWM()
@@ -620,12 +645,29 @@ namespace RateController
             {
                 case 0:
                     // acres
-                    if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / (cHectaresPerMinute * 2.47);
+                    if (cConstantUPM)
+                    {
+                        // same upm no matter how many sections are on
+                        double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        if (HPM > 0) Result = ArduinoModule.UPM() / (HPM * 2.47);
+                    }
+                    else
+                    {
+                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / (cHectaresPerMinute * 2.47);
+                    }
                     break;
 
                 case 1:
                     // hectares
-                    if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / cHectaresPerMinute;
+                    if (cConstantUPM)
+                    {
+                        double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        if (HPM > 0) Result = ArduinoModule.UPM() / HPM;
+                    }
+                    else
+                    {
+                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / cHectaresPerMinute;
+                    }
                     break;
 
                 case 2:
@@ -705,6 +747,9 @@ namespace RateController
             mf.Tls.SaveProperty("KD" + IDname, PIDtoArduino.KD.ToString());
             mf.Tls.SaveProperty("MinPWM" + IDname, PIDtoArduino.MinPWM.ToString());
             mf.Tls.SaveProperty("MaxPWM" + IDname, PIDtoArduino.MaxPWM.ToString());
+
+            mf.Tls.SaveProperty("OnScreen" + IDname, cOnScreen.ToString());
+            mf.Tls.SaveProperty("ConstantUPM" + IDname, cConstantUPM.ToString());
         }
 
         public void SendPID()
@@ -840,12 +885,28 @@ namespace RateController
             {
                 case 0:
                     // acres
-                    V = TargetRate() * cHectaresPerMinute * 2.47;
+                    if (cConstantUPM)
+                    {
+                        double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        V = TargetRate() * HPM * 2.47;
+                    }
+                    else
+                    {
+                        V = TargetRate() * cHectaresPerMinute * 2.47;
+                    }
                     break;
 
                 case 1:
                     // hectares
-                    V = TargetRate() * cHectaresPerMinute;
+                    if (cConstantUPM)
+                    {
+                        double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        V = TargetRate() * HPM;
+                    }
+                    else
+                    {
+                        V = TargetRate() * cHectaresPerMinute;
+                    }
                     break;
 
                 case 2:

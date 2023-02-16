@@ -353,13 +353,13 @@ namespace RateController
         {
             if (mf.UseInches)
             {
-                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth(true)).ToString("N0")+" Inches";
-                lbFeet.Text = (mf.Sections.TotalWidth(true) / 12).ToString("N1") + "  FT";
+                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth(true) / 12).ToString("N0") + " Inches";
+                lbFeet.Text = (mf.Sections.TotalWidth(true)).ToString("N1") + "  FT";
                 lbFeet.Visible = true;
             }
             else
             {
-                lbWidth.Text = Lang.lgWidth + ":  " + mf.Sections.TotalWidth(false).ToString("N0")+" cm";
+                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth(false) * 100).ToString("N0") + " cm";
                 lbFeet.Visible = false;
             }
         }

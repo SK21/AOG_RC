@@ -184,19 +184,23 @@ namespace RateController
         public float TotalWidth(bool UseInches)
         {
             float Result = 0;
+            float cWorkingWidth_cm = 0;
+
             for (int i = 0; i < 16; i++)
             {
                 if (cSections[i].Enabled)
                 {
-                    if (UseInches)
-                    {
-                        Result += cSections[i].Width_inches;
-                    }
-                    else
-                    {
-                        Result += cSections[i].Width_cm;
-                    }
+                    cWorkingWidth_cm += Item(i).Width_cm;
                 }
+            }
+
+            if (UseInches)
+            {
+                Result = (float)((cWorkingWidth_cm / 100.0) * 3.28);   // feet
+            }
+            else
+            {
+                Result = (float)(cWorkingWidth_cm / 100.0);    // meters
             }
             return Result;
         }

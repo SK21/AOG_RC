@@ -659,6 +659,10 @@ namespace RateController
             tbFLpwm.Text = CurrentProduct.ManualPWM.ToString("N0");
             tbScaleCountsPerUnit.Text = CurrentProduct.ScaleCountsPerUnit.ToString("N1");
             SetCalButtons();
+
+            ckOnScreen.Checked = CurrentProduct.OnScreen;
+
+            ckConstantUPM.Checked = CurrentProduct.ConstantUPM;
         }
 
         private void RateSet_Enter(object sender, EventArgs e)
@@ -830,6 +834,10 @@ namespace RateController
 
             double.TryParse(tbTare.Text, out TempDB);
             CurrentProduct.ScaleTare = TempDB;
+
+            CurrentProduct.ConstantUPM = ckConstantUPM.Checked;
+
+            CurrentProduct.OnScreen = ckOnScreen.Checked;
 
             CurrentProduct.Save();
         }
@@ -1934,6 +1942,32 @@ namespace RateController
         private void btnFan_Click(object sender, EventArgs e)
         {
             CurrentProduct.FanOn = !CurrentProduct.FanOn;
+        }
+
+        private void ckOnScreen_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckConstantUPM_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckOnScreen_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Show on Large Screen.";
+
+            mf.Tls.ShowHelp(Message, "On Screen");
+            hlpevent.Handled = true;
+        }
+
+        private void ckConstantUPM_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "UPM does not vary with the number of sections on or off.";
+
+            mf.Tls.ShowHelp(Message, "Constant UPM");
+            hlpevent.Handled = true;
         }
     }
 }
