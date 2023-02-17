@@ -302,7 +302,7 @@ void setup()
 
 void loop()
 {
-	DebugTheIno();
+	//DebugTheIno();
 
 	if (millis() - LoopLast >= LOOP_TIME)
 	{
