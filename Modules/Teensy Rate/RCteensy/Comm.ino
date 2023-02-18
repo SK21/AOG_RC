@@ -42,7 +42,7 @@ void SendData()
 	//11 Status
 	//12 crc
 
-	for (int i = 0; i < MDL.ProductCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		DataOut[0] = 101;
 		DataOut[1] = 127;
@@ -413,7 +413,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 			if (GoodCRC(Data, PGN32500Length))
 			{
 				MDL.ID = Data[2];
-				MDL.ProductCount = Data[3];
+				MDL.SensorCount = Data[3];
 				MDL.IPpart3 = Data[4];
 
 				byte tmp = Data[5];
@@ -549,7 +549,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				if (ParseModID(tmp) == MDL.ID)
 				{
 					byte ID = ParseSenID(tmp);  // sensor ID
-					if (ID < MDL.ProductCount)
+					if (ID < MDL.SensorCount)
 					{
 						RelayLo = Data[3];
 						RelayHi = Data[4];
@@ -571,7 +571,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 						if ((Sensor[ID].InCommand & 4) == 4) Sensor[ID].ControlType += 2;
 						if ((Sensor[ID].InCommand & 8) == 8) Sensor[ID].ControlType += 4;
 
-						Sensor[ID].MasterOn = ((Sensor[ID].InCommand & 16) == 16);
+						MasterOn = ((Sensor[ID].InCommand & 16) == 16);
 						Sensor[ID].UseMultiPulses = ((Sensor[ID].InCommand & 32) == 32);
 						AutoOn = ((Sensor[ID].InCommand & 64) == 64);
 
@@ -619,7 +619,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				if (ParseModID(tmp) == MDL.ID)
 				{
 					byte ID = ParseSenID(tmp);
-					if (ID < MDL.ProductCount)
+					if (ID < MDL.SensorCount)
 					{
 						uint32_t tmp = Data[3] | (uint32_t)Data[4] << 8 | (uint32_t)Data[5] << 16 | (uint32_t)Data[6] << 24;
 						Sensor[ID].KP = (float)(tmp * 0.0001);

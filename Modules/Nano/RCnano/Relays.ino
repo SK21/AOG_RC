@@ -31,7 +31,7 @@ void CheckRelays()
             }
         }
     }
-    else if (FlowEnabled[0] || FlowEnabled[1])
+    else if (Sensor[0].FlowEnabled || Sensor[1].FlowEnabled)
     {
         {
             // normal relay control

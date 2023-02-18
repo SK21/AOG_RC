@@ -26,18 +26,18 @@ void SendUDPwired()
         UDPpacket[0] = 101;
         UDPpacket[1] = 127;
 
-        UDPpacket[2] = BuildModSenID(MDL.ModuleID, i);
+        UDPpacket[2] = BuildModSenID(MDL.ID, i);
 
         // rate applied, 1000 X actual
-        uint32_t Applied = UPM[i] * 1000;
+        uint32_t Applied = Sensor[i].UPM * 1000;
         UDPpacket[3] = Applied;
         UDPpacket[4] = Applied >> 8;
         UDPpacket[5] = Applied >> 16;
 
         // accumulated quantity, 10 X actual
-        if (MeterCal[i] > 0)
+        if (Sensor[i].MeterCal > 0)
         {
-            uint32_t Units = TotalPulses[i] * 10.0 / MeterCal[i];
+            uint32_t Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
             UDPpacket[6] = Units;
             UDPpacket[7] = Units >> 8;
             UDPpacket[8] = Units >> 16;
@@ -50,15 +50,15 @@ void SendUDPwired()
         }
 
         //pwmSetting
-        UDPpacket[9] = pwmSetting[i];
-        UDPpacket[10] = pwmSetting[i] >> 8;
+        UDPpacket[9] = Sensor[i].pwmSetting;
+        UDPpacket[10] = Sensor[i].pwmSetting >> 8;
 
         // status
         // bit 0    - sensor 0 receiving rate controller data
         // bit 1    - sensor 1 receiving rate controller data
         UDPpacket[11] = 0;
-        if (millis() - CommTime[0] < 4000) UDPpacket[11] |= 0b00000001;
-        if (millis() - CommTime[1] < 4000) UDPpacket[11] |= 0b00000010;
+        if (millis() - Sensor[0].CommTime < 4000) UDPpacket[11] |= 0b00000001;
+        if (millis() - Sensor[1].CommTime < 4000) UDPpacket[11] |= 0b00000010;
 
         // crc
         UDPpacket[12] = CRC(UDPpacket, 12, 0);
@@ -107,7 +107,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             {
                 if (GoodCRC(Data, PGNlength))
                 {
-                    if (ParseModID(Data[2]) == MDL.ModuleID)
+                    if (ParseModID(Data[2]) == MDL.ID)
                     {
                         byte SensorID = ParseSenID(Data[2]);
                         if (SensorID < MDL.SensorCount)
@@ -117,33 +117,33 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
                             // rate setting, 1000 times actual
                             uint32_t RateSet = Data[5] | (uint32_t)Data[6] << 8 | (uint32_t)Data[7] << 16;
-                            RateSetting[SensorID] = (float)(RateSet * 0.001);
+                            Sensor[SensorID].RateSetting = (float)(RateSet * 0.001);
 
                             // Meter Cal, 1000 times actual
                             uint32_t Temp = Data[8] | (uint32_t)Data[9] << 8 | (uint32_t)Data[10] << 16;
-                            MeterCal[SensorID] = Temp * 0.001;
+                            Sensor[SensorID].MeterCal = Temp * 0.001;
 
                             // command byte
-                            InCommand[SensorID] = Data[11];
-                            if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
+                            Sensor[SensorID].InCommand = Data[11];
+                            if ((Sensor[SensorID].InCommand & 1) == 1) Sensor[SensorID].TotalPulses = 0;	// reset accumulated count
 
-                            ControlType[SensorID] = 0;
-                            if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
-                            if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
-                            if ((InCommand[SensorID] & 8) == 8) ControlType[SensorID] += 4;
+                            Sensor[SensorID].ControlType = 0;
+                            if ((Sensor[SensorID].InCommand & 2) == 2) Sensor[SensorID].ControlType += 1;
+                            if ((Sensor[SensorID].InCommand & 4) == 4) Sensor[SensorID].ControlType += 2;
+                            if ((Sensor[SensorID].InCommand & 8) == 8) Sensor[SensorID].ControlType += 4;
 
-                            MasterOn[SensorID] = ((InCommand[SensorID] & 16) == 16);
-                            UseMultiPulses[SensorID] = ((InCommand[SensorID] & 32) == 32);
-                            AutoOn = ((InCommand[SensorID] & 64) == 64);
+                            MasterOn = ((Sensor[SensorID].InCommand & 16) == 16);
+                            Sensor[SensorID].UseMultiPulses = ((Sensor[SensorID].InCommand & 32) == 32);
+                            AutoOn = ((Sensor[SensorID].InCommand & 64) == 64);
 
                             // power relays
                             PowerRelayLo = Data[12];
                             PowerRelayHi = Data[13];
 
                             int16_t tmp = Data[14] | Data[15] << 8;
-                            ManualAdjust[SensorID] = tmp;
+                            Sensor[SensorID].ManualAdjust = tmp;
 
-                            CommTime[SensorID] = millis();
+                            Sensor[SensorID].CommTime = millis();
                         }
                     }
                 }
@@ -178,22 +178,22 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                 if (GoodCRC(Data, PGNlength))
                 {
                     byte tmp = Data[2];
-                    if (ParseModID(tmp) == MDL.ModuleID)
+                    if (ParseModID(tmp) == MDL.ID)
                     {
                         byte SensorID = ParseSenID(tmp);
                         if (SensorID < MDL.SensorCount)
                         {
                             uint32_t tmp = Data[3] | (uint32_t)Data[4] << 8 | (uint32_t)Data[5] << 16 | (uint32_t)Data[6] << 24;
-                            PIDkp[SensorID] = (float)(tmp * 0.0001);
+                            Sensor[SensorID].KP = (float)(tmp * 0.0001);
 
                             tmp = Data[7] | (uint32_t)Data[8] << 8 | (uint32_t)Data[9] << 16 | (uint32_t)Data[10] << 24;
-                            PIDki[SensorID] = (float)(tmp * 0.0001);
+                            Sensor[SensorID].KI = (float)(tmp * 0.0001);
 
                             tmp = Data[11] | (uint32_t)Data[12] << 8 | (uint32_t)Data[13] << 16 | (uint32_t)Data[14] << 24;
-                            PIDkd[SensorID] = (float)(tmp * 0.0001);
+                            Sensor[SensorID].KD = (float)(tmp * 0.0001);
 
-                            MinPWM[SensorID] = Data[15];
-                            MaxPWM[SensorID] = Data[16];
+                            Sensor[SensorID].MinPWM = Data[15];
+                            Sensor[SensorID].MaxPWM = Data[16];
                         }
                     }
                 }
@@ -252,7 +252,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             // Nano config
             // 0    113
             // 1    127
-            // 2    ModuleID
+            // 2    ID
             // 3    SensorCount
             // 4    IP address
             // 5    Commands
@@ -267,7 +267,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             {
                 if (GoodCRC(Data, PGNlength))
                 {
-                    MDL.ModuleID = Data[2];
+                    MDL.ID = Data[2];
                     MDL.SensorCount = Data[3];
                     MDL.IPpart3 = Data[4];
 
@@ -302,12 +302,12 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             {
                 if (GoodCRC(Data, PGNlength))
                 {
-                    MDL.Flow1 = Data[2];
-                    MDL.Flow2 = Data[3];
-                    MDL.Dir1 = Data[4];
-                    MDL.Dir2 = Data[5];
-                    MDL.PWM1 = Data[6];
-                    MDL.PWM2 = Data[7];
+                    Sensor[0].FlowPin = Data[2];
+                    Sensor[1].FlowPin = Data[3];
+                    Sensor[0].DirPin = Data[4];
+                    Sensor[1].DirPin = Data[5];
+                    Sensor[0].PWMPin = Data[6];
+                    Sensor[1].PWMPin = Data[7];
 
                     for (int i = 0; i < 16; i++)
                     {
@@ -315,6 +315,11 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                     }
 
                     EEPROM.put(10, MDL);
+
+                    for (int i = 0; i < MaxProductCount; i++)
+                    {
+                        EEPROM.put(100 + i * 80, Sensor[i]);
+                    }
 
                     //reset the arduino
                     resetFunc();

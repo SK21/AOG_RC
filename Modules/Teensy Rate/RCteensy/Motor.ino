@@ -1,6 +1,6 @@
 void AdjustFlow()
 {
-    for (int i = 0; i < MDL.ProductCount; i++)
+    for (int i = 0; i < MDL.SensorCount; i++)
     {
         switch (Sensor[i].ControlType)
         {

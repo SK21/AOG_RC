@@ -7,9 +7,9 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   14-Feb-2023"
+# define InoDescription "RCteensy   18-Feb-2023"
 
-#define InoID 4000		// change to load default values
+#define InoID 1802		// change to load default values
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
@@ -17,7 +17,7 @@
 struct ModuleConfig	
 {
 	uint8_t ID = 0;
-	uint8_t ProductCount = 2;       // up to 2 sensors
+	uint8_t SensorCount = 2;       // up to 2 sensors
 	uint8_t IPpart2 = 168;			// ethernet IP address
 	uint8_t	IPpart3 = 1;
 	uint8_t IPpart4 = 60;			// 60 + ID
@@ -33,12 +33,11 @@ struct ModuleConfig
 
 ModuleConfig MDL;
 
-struct SensorConfig	
+struct SensorConfig
 {
-	uint8_t FlowPin = 0;
-	uint8_t	DirPin = 0;
-	uint8_t	PWMPin = 0;
-	bool MasterOn = false;
+	uint8_t FlowPin;
+	uint8_t DirPin;
+	uint8_t PWMPin;
 	bool FlowEnabled = false;
 	float RateError = 0;		// rate error X 1000
 	float UPM = 0;				// upm X 1000
@@ -95,6 +94,7 @@ const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
 
 WDT_T4<WDT1> wdt;
+bool MasterOn = false;
 bool AutoOn = true;
 
 uint8_t ErrorCount;
@@ -182,8 +182,8 @@ void setup()
 		}
 	}
 
-	if (MDL.ProductCount < 1) MDL.ProductCount = 1;
-	if (MDL.ProductCount > MaxProductCount) MDL.ProductCount = MaxProductCount;
+	if (MDL.SensorCount < 1) MDL.SensorCount = 1;
+	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
 
 	MDL.IPpart4 = MDL.ID + 60;
 	if (MDL.IPpart4 > 255) MDL.IPpart4 = 255 - MDL.ID;
@@ -252,7 +252,7 @@ void setup()
 	UDPcomm.begin(ListeningPort);
 
 	// sensors
-	for (int i = 0; i < MDL.ProductCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
 		pinMode(Sensor[i].DirPin, OUTPUT);
@@ -359,12 +359,12 @@ void loop()
 	{
 		LoopLast = millis();
 
-		for (int i = 0; i < MDL.ProductCount; i++)
+		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000) &&
-				((Sensor[i].RateSetting > 0 && Sensor[i].MasterOn)
+				((Sensor[i].RateSetting > 0 && MasterOn)
 					|| ((Sensor[i].ControlType == 4) && (Sensor[i].RateSetting > 0))
-					|| (!AutoOn && Sensor[i].MasterOn));
+					|| (!AutoOn && MasterOn));
 		}
 
 		GetUPM();
@@ -450,7 +450,7 @@ byte CRC(byte Chk[], byte Length, byte Start)
 
 void AutoControl()
 {
-	for (int i = 0; i < MDL.ProductCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		Sensor[i].RateError = Sensor[i].RateSetting - Sensor[i].UPM;
 
@@ -473,7 +473,7 @@ void AutoControl()
 
 void ManualControl()
 {
-	for (int i = 0; i < MDL.ProductCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		Sensor[i].pwmSetting = Sensor[i].ManualAdjust;
 	}

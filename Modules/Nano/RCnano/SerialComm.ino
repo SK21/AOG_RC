@@ -26,18 +26,18 @@ void SendSerial()
 		// UDPpgn 32613
 		SerialPacket[0] = 101;
 		SerialPacket[1] = 127;
-		SerialPacket[2] = BuildModSenID(MDL.ModuleID, i);
+		SerialPacket[2] = BuildModSenID(MDL.ID, i);
 
 		// rate applied, 1000 X actual
-		uint32_t Applied = UPM[i] * 1000;
+		uint32_t Applied = Sensor[i].UPM * 1000;
 		SerialPacket[3] = Applied;
 		SerialPacket[4] = Applied >> 8;
 		SerialPacket[5] = Applied >> 16;
 
 		// accumulated quantity, 10 X actual
-		if (MeterCal[i] > 0)
+		if (Sensor[i].MeterCal > 0)
 		{
-			uint32_t Units = TotalPulses[i] * 10.0 / MeterCal[i];
+			uint32_t Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
 			SerialPacket[6] = Units;
 			SerialPacket[7] = Units >> 8;
 			SerialPacket[8] = Units >> 16;
@@ -50,15 +50,15 @@ void SendSerial()
 		}
 
 		// pwmSetting
-		SerialPacket[9] = pwmSetting[i];
-		SerialPacket[10] = pwmSetting[i] >> 8;
+		SerialPacket[9] = Sensor[i].pwmSetting;
+		SerialPacket[10] = Sensor[i].pwmSetting >> 8;
 
 		// status
 		// bit 0    - sensor 0 receiving rate controller data
 		// bit 1    - sensor 1 receiving rate controller data
 		SerialPacket[11] = 0;
-		if (millis() - CommTime[0] < 4000) SerialPacket[11] |= 0b00000001;
-		if (millis() - CommTime[1] < 4000) SerialPacket[11] |= 0b00000010;
+		if (millis() - Sensor[0].CommTime < 4000) SerialPacket[11] |= 0b00000001;
+		if (millis() - Sensor[1].CommTime < 4000) SerialPacket[11] |= 0b00000010;
 		
 		// crc
 		SerialPacket[12] = CRC(SerialPacket, 12, 0);
@@ -127,7 +127,7 @@ void ReceiveSerial()
 
 				if (GoodCRC(SerialPacket, PGNlength))
 				{
-					if (ParseModID(SerialPacket[2]) == MDL.ModuleID)
+					if (ParseModID(SerialPacket[2]) == MDL.ID)
 					{
 						byte SensorID = ParseSenID(SerialPacket[2]);
 						if (SensorID < MDL.SensorCount)
@@ -137,33 +137,33 @@ void ReceiveSerial()
 
 							// rate setting, 1000 times actual
 							uint32_t RateSet = SerialPacket[5] | (uint32_t)SerialPacket[6] << 8 | (uint32_t)SerialPacket[7] << 16;
-							RateSetting[SensorID] = (float)(RateSet * 0.001);
+							Sensor[SensorID].RateSetting = (float)(RateSet * 0.001);
 
 							// Meter Cal, 1000 times actual
 							uint32_t Temp = SerialPacket[8] | (uint32_t)SerialPacket[9] << 8 | (uint32_t)SerialPacket[10] << 16;
-							MeterCal[SensorID] = (float)(Temp * 0.001);
+							Sensor[SensorID].MeterCal = (float)(Temp * 0.001);
 
 							// command byte
-							InCommand[SensorID] = SerialPacket[11];
-							if ((InCommand[SensorID] & 1) == 1) TotalPulses[SensorID] = 0;	// reset accumulated count
+							Sensor[SensorID].InCommand = SerialPacket[11];
+							if ((Sensor[SensorID].InCommand & 1) == 1) Sensor[SensorID].TotalPulses = 0;	// reset accumulated count
 
-							ControlType[SensorID] = 0;
-							if ((InCommand[SensorID] & 2) == 2) ControlType[SensorID] += 1;
-							if ((InCommand[SensorID] & 4) == 4) ControlType[SensorID] += 2;
-							if ((InCommand[SensorID] & 8) == 8) ControlType[SensorID] += 4;
+							Sensor[SensorID].ControlType = 0;
+							if ((Sensor[SensorID].InCommand & 2) == 2) Sensor[SensorID].ControlType += 1;
+							if ((Sensor[SensorID].InCommand & 4) == 4) Sensor[SensorID].ControlType += 2;
+							if ((Sensor[SensorID].InCommand & 8) == 8) Sensor[SensorID].ControlType += 4;
 
-							MasterOn[SensorID] = ((InCommand[SensorID] & 16) == 16);
-							UseMultiPulses[SensorID] = ((InCommand[SensorID] & 32) == 32);
-							AutoOn = ((InCommand[SensorID] & 64) == 64);
+							MasterOn = ((Sensor[SensorID].InCommand & 16) == 16);
+							Sensor[SensorID].UseMultiPulses = ((Sensor[SensorID].InCommand & 32) == 32);
+							AutoOn = ((Sensor[SensorID].InCommand & 64) == 64);
 
 							// power relays
 							PowerRelayLo = SerialPacket[12];
 							PowerRelayHi = SerialPacket[13];
 
 							int16_t tmp = SerialPacket[14] | SerialPacket[15] << 8;
-							ManualAdjust[SensorID] = tmp;
+							Sensor[SensorID].ManualAdjust = tmp;
 
-							CommTime[SensorID] = millis();
+							Sensor[SensorID].CommTime = millis();
 						}
 					}
 				}
@@ -206,22 +206,22 @@ void ReceiveSerial()
 
 				if (GoodCRC(SerialPacket, PGNlength))
 				{
-					if (ParseModID(SerialPacket[2]) == MDL.ModuleID)
+					if (ParseModID(SerialPacket[2]) == MDL.ID)
 					{
 						byte SensorID = ParseSenID(SerialPacket[2]);
 						if (SensorID < MDL.SensorCount)
 						{
 							uint32_t tmp = SerialPacket[3] | (uint32_t)SerialPacket[4] << 8 | (uint32_t)SerialPacket[5] << 16 | (uint32_t)SerialPacket[6] << 24;
-							PIDkp[SensorID] = (float)(tmp * 0.0001);
+							Sensor[SensorID].KP = (float)(tmp * 0.0001);
 
 							tmp = SerialPacket[7] | (uint32_t)SerialPacket[8] << 8 | (uint32_t)SerialPacket[9] << 16 | (uint32_t)SerialPacket[10] << 24;
-							PIDki[SensorID] = (float)(tmp * 0.0001);
+							Sensor[SensorID].KI = (float)(tmp * 0.0001);
 
 							tmp = SerialPacket[11] | (uint32_t)SerialPacket[12] << 8 | (uint32_t)SerialPacket[13] << 16 | (uint32_t)SerialPacket[14] << 24;
-							PIDkd[SensorID] = (float)(tmp * 0.0001);
+							Sensor[SensorID].KD = (float)(tmp * 0.0001);
 
-							MinPWM[SensorID] = SerialPacket[15];
-							MaxPWM[SensorID] = SerialPacket[16];
+							Sensor[SensorID].MinPWM = SerialPacket[15];
+							Sensor[SensorID].MaxPWM = SerialPacket[16];
 						}
 					}
 				}
@@ -294,7 +294,7 @@ void ReceiveSerial()
 			// Nano config
 			// 0    113
 			// 1    127
-			// 2    ModuleID
+			// 2    ID
 			// 3    SensorCount
 			// 4	IP address
 			// 5    Commands
@@ -317,7 +317,7 @@ void ReceiveSerial()
 
 				if (GoodCRC(SerialPacket, PGNlength))
 				{
-					MDL.ModuleID = SerialPacket[2];
+					MDL.ID = SerialPacket[2];
 					MDL.SensorCount = SerialPacket[3];
 					MDL.IPpart3 = SerialPacket[4];
 
@@ -359,12 +359,12 @@ void ReceiveSerial()
 
 				if (GoodCRC(SerialPacket, PGNlength))
 				{
-					MDL.Flow1 = SerialPacket[2];
-					MDL.Flow2 = SerialPacket[3];
-					MDL.Dir1 = SerialPacket[4];
-					MDL.Dir2 = SerialPacket[5];
-					MDL.PWM1 = SerialPacket[6];
-					MDL.PWM2 = SerialPacket[7];
+					Sensor[0].FlowPin = SerialPacket[2];
+					Sensor[1].FlowPin = SerialPacket[3];
+					Sensor[0].DirPin = SerialPacket[4];
+					Sensor[1].DirPin = SerialPacket[5];
+					Sensor[0].PWMPin = SerialPacket[6];
+					Sensor[1].PWMPin = SerialPacket[7];
 
 					for (int i = 0; i < 16; i++)
 					{
@@ -372,6 +372,11 @@ void ReceiveSerial()
 					}
 
 					EEPROM.put(10, MDL);
+
+					for (int i = 0; i < MaxProductCount; i++)
+					{
+						EEPROM.put(100 + i * 80, Sensor[i]);
+					}
 
 					//reset the arduino
 					resetFunc();

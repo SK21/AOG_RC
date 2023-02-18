@@ -75,7 +75,7 @@ void GetUPM()
 			CurrentDuration = Duration[i];
 			interrupts();
 
-			if (UseMultiPulses[i])
+			if (Sensor[i].UseMultiPulses)
 			{
 				// low ms/pulse, use pulses over time
 				TimedCounts[i] += CurrentCount;
@@ -102,7 +102,7 @@ void GetUPM()
 
 
 			LastPulse[i] = millis();
-			TotalPulses[i] += CurrentCount;
+			Sensor[i].TotalPulses += CurrentCount;
 		}
 
 		if (millis() - LastPulse[i] > 4000)	PPM[i] = 0;	// check for no flow
@@ -125,13 +125,13 @@ void GetUPM()
 		}
 
 		// units per minute
-		if (MeterCal[i] > 0)
+		if (Sensor[i].MeterCal > 0)
 		{
-			UPM[i] = Oave[i] / MeterCal[i];
+			Sensor[i].UPM = Oave[i] / Sensor[i].MeterCal;
 		}
 		else
 		{
-			UPM[i] = 0;
+			Sensor[i].UPM = 0;
 		}
 	}
 }

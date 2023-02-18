@@ -13,35 +13,53 @@
 #include <Adafruit_SPIDevice.h>
 
 # define InoDescription "RCnano  :  18-Feb-2023"
-const int16_t InoID = 5122;	// change to send defaults to eeprom
+const int16_t InoID = 1802;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
 # define UseEthernet 0
+#define MaxProductCount 2
 
-float debug1;
-float debug2;
-float debug3;
-float debug4;
-
-struct ModuleConfig    // 5 bytes
+struct ModuleConfig    
 {
-	uint8_t ModuleID = 0;
-	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
-	uint8_t RelayOnSignal = 0;	    // value that turns on relays
-	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
+	uint8_t ID = 0;
 	uint8_t SensorCount = 2;        // up to 2 sensors
 	uint8_t	IPpart3 = 3;			// IP address, 3rd octet
-	uint8_t Flow1 = 2;
-	uint8_t Flow2 = 3;
-	uint8_t Dir1 = 4;
-	uint8_t Dir2 = 6;
-	uint8_t PWM1 = 5;
-	uint8_t PWM2 = 9;
+	uint8_t RelayOnSignal = 0;	    // value that turns on relays
+	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
+	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
 	uint8_t Relays[16];
 	uint8_t Debounce = 3;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
+
+struct SensorConfig
+{
+	uint8_t FlowPin;
+	uint8_t DirPin;
+	uint8_t PWMPin;
+	bool FlowEnabled = false;
+	float RateError = 0;		// rate error X 1000
+	float UPM = 0;				// upm X 1000
+	uint16_t pwmSetting = 0;
+	uint32_t CommTime = 0;
+	byte InCommand = 0;			// command byte from RateController
+	byte ControlType = 0;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan
+	uint32_t TotalPulses = 0;
+	float RateSetting = 0;
+	float MeterCal = 0;
+	float ManualAdjust = 0;
+	bool UseMultiPulses = 0;	// 0 - time for one pulse, 1 - average time for multiple pulses
+	float KP = 5;
+	float KI = 0;
+	float KD = 0;
+	byte MinPWM = 5;
+	byte MaxPWM = 255;
+	byte Deadband = 3;
+	byte BrakePoint = 20;
+};
+
+SensorConfig Sensor[MaxProductCount];
 
 // If using the ENC28J60 ethernet shield these pins
 // are used by it and unavailable for relays:
@@ -86,38 +104,11 @@ Adafruit_MCP23X17 mcp;
 #define Relay15 1
 #define Relay16 0
 
-// flow
-byte FlowPin[2];
-byte FlowDir[2];
-byte FlowPWM[2];
-
-bool FlowEnabled[] = { false, false };
-float rateError[] = { 0, 0 };
-
 const uint16_t LOOP_TIME = 50;      //in msec = 20hz
 uint32_t LoopLast = LOOP_TIME;
 
 const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
-
-float UPM[2];   // UPM rate
-int pwmSetting[2];
-
-// PID
-float PIDkp[2];
-float PIDki[2];
-float PIDkd[2];
-byte MinPWM[2];
-byte MaxPWM[2];
-
-byte InCommand[] = { 0, 0 };		// command byte from RateController
-byte ControlType[] = { 0, 0 };		// 0 standard, 1 Fast Close, 2 Motor, 3 Motor/weight, 4 fan
-
-unsigned long TotalPulses[2];
-unsigned long CommTime[2];
-
-float RateSetting[] = { 0.0, 0.0 };	// auto UPM setting
-float MeterCal[] = { 1.0, 1.0 };	// pulses per Unit
 
 //bit 0 is section 0
 byte RelayLo = 0;	// sections 0-7
@@ -125,11 +116,8 @@ byte RelayHi = 0;	// sections 8-15
 byte PowerRelayLo;
 byte PowerRelayHi;
 
-byte Temp = 0;
 bool AutoOn = true;
-
-float ManualAdjust[2];
-unsigned long ManualLast[2];
+bool MasterOn = true;
 
 // WifiSwitches connection to Wemos D1 Mini
 // Use Serial RX, remove RX wire before uploading
@@ -139,29 +127,54 @@ byte WifiSwitches[6];
 
 byte SwitchBytes[8];
 byte SectionSwitchID[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-bool UseMultiPulses[2] = { 0, 0 };   //  0 - average time for multiple pulses, 1 - time for one pulse
 
  //reset function
 void(*resetFunc) (void) = 0;
 
-bool MasterOn[2];
 bool IOexpanderFound;
 uint8_t ErrorCount;
 byte PGNlength;
 
-byte BrakePoint = 30;	// %
-byte Deadband = 3;		// %
+float debug1;
+float debug2;
+float debug3;
+float debug4;
 
 void setup()
 {
 	Serial.begin(38400);
 
-	// module data
+	// default flow pins
+	Sensor[0].FlowPin = 2;
+	Sensor[0].DirPin = 4;
+	Sensor[0].PWMPin = 5;
+
+	Sensor[1].FlowPin = 3;
+	Sensor[1].DirPin = 6;
+	Sensor[1].PWMPin = 9;
+
+	// default pid
+	Sensor[0].MinPWM = 5;
+	Sensor[0].MaxPWM = 50;
+	Sensor[0].Deadband = 3;
+	Sensor[0].BrakePoint = 20;
+
+	Sensor[1].MinPWM = 5;
+	Sensor[1].MaxPWM = 50;
+	Sensor[1].Deadband = 3;
+	Sensor[1].BrakePoint = 20;
+
+	// eeprom
 	EEPROM.get(0, StoredID);
 	if (StoredID == InoID)
 	{
 		// load stored data
 		EEPROM.get(10, MDL);
+
+		for (int i = 0; i < MaxProductCount; i++)
+		{
+			EEPROM.get(100 + i * 80, Sensor[i]);
+		}
 	}
 	else
 	{
@@ -169,13 +182,18 @@ void setup()
 		// update stored data
 		EEPROM.put(0, InoID);
 		EEPROM.put(10, MDL);
+
+		for (int i = 0; i < MaxProductCount; i++)
+		{
+			EEPROM.put(100 + i * 80, Sensor[i]);
+		}
 	}
 
 	delay(5000);
 	Serial.println();
 	Serial.println(InoDescription);
 	Serial.print("Module ID: ");
-	Serial.println(MDL.ModuleID);
+	Serial.println(MDL.ID);
 	Serial.println();
 
 	if (MDL.SensorCount < 1) MDL.SensorCount = 1;
@@ -248,32 +266,24 @@ void setup()
 		}
 	}
 
-	// flow
-	FlowPin[0] = MDL.Flow1;
-	FlowPin[1] = MDL.Flow2;
-	FlowDir[0] = MDL.Dir1;
-	FlowDir[1] = MDL.Dir2;
-	FlowPWM[0] = MDL.PWM1;
-	FlowPWM[1] = MDL.PWM2;
-
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		pinMode(FlowPin[i], INPUT_PULLUP);
-		pinMode(FlowDir[i], OUTPUT);
-		pinMode(FlowPWM[i], OUTPUT);
+		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
+		pinMode(Sensor[i].DirPin, OUTPUT);
+		pinMode(Sensor[i].PWMPin, OUTPUT);
 	}
 
-	attachInterrupt(digitalPinToInterrupt(FlowPin[0]), ISR0, FALLING);
-	attachInterrupt(digitalPinToInterrupt(FlowPin[1]), ISR1, FALLING);
+	attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0, FALLING);
+	attachInterrupt(digitalPinToInterrupt(Sensor[1].FlowPin), ISR1, FALLING);
 
 #if UseEthernet
 	Serial.println("");
 	Serial.println("Starting Ethernet ...");
 	// ethernet interface ip address
-	byte ArduinoIP[] = { 192, 168,MDL.IPpart3, 50 + MDL.ModuleID };
+	byte ArduinoIP[] = { 192, 168,MDL.IPpart3, 50 + MDL.ID };
 
 	// ethernet interface Mac address
-	byte LocalMac[] = { 0x70, 0x31, 0x21, 0x2D, 0x62, MDL.ModuleID };
+	byte LocalMac[] = { 0x70, 0x31, 0x21, 0x2D, 0x62, MDL.ID };
 
 	// gateway ip address
 	static byte gwip[] = { 192, 168,MDL.IPpart3, 1 };
@@ -312,10 +322,10 @@ void loop()
 
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			FlowEnabled[i] = (millis() - CommTime[i] < 4000)
-				&& ((RateSetting[i] > 0 && MasterOn[i])
-					|| ((ControlType[i] == 4) && (RateSetting[i] > 0))
-						|| (!AutoOn && MasterOn[i]));
+			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000)
+				&& ((Sensor[i].RateSetting > 0 && MasterOn)
+					|| ((Sensor[i].ControlType == 4) && (Sensor[i].RateSetting > 0))
+						|| (!AutoOn && MasterOn));
 		}
 
 		CheckRelays();
@@ -369,20 +379,20 @@ void AutoControl()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		rateError[i] = RateSetting[i] - UPM[i];
+		Sensor[i].RateError = Sensor[i].RateSetting - Sensor[i].UPM;
 
-		switch (ControlType[i])
+		switch (Sensor[i].ControlType)
 		{
 		case 2:
 		case 3:
 		case 4:
 			// motor control
-			pwmSetting[i] = PIDmotor(PIDkp[i], PIDki[i], PIDkd[i], rateError[i], RateSetting[i], MinPWM[i], MaxPWM[i], i);
+			Sensor[i].pwmSetting = PIDmotor(i);
 			break;
 
 		default:
 			// valve control
-			pwmSetting[i] = PIDvalve(PIDkp[i], PIDki[i], PIDkd[i], rateError[i], RateSetting[i], MinPWM[i], MaxPWM[i], i);
+			Sensor[i].pwmSetting = PIDvalve(i);
 			break;
 		}
 	}
@@ -392,7 +402,7 @@ void ManualControl()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		pwmSetting[i] = ManualAdjust[i];
+		Sensor[i].pwmSetting = Sensor[i].ManualAdjust;
 	}
 }
 
@@ -437,11 +447,7 @@ void DebugTheIno()
 	if (millis() - DebugTime > 1000)
 	{
 		DebugTime = millis();
-		//Serial.println("");
-		//Serial.print(FlowEnabled[0]);
-
-		//Serial.print(", ");
-		//Serial.print(pwmSetting[0]);
+		Serial.println("");
 
 		Serial.print(", ");
 		Serial.print(debug1);

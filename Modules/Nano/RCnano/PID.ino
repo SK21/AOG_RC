@@ -1,59 +1,59 @@
 
-unsigned long CurrentAdjustTime[2]; 
-float ErrorPercentLast[2];
-float ErrorPercentCum[2];
-float Integral;
-float LastPWM[2];
+unsigned long CurrentAdjustTime[MaxProductCount];
+float ErrorPercentLast[MaxProductCount];
+float ErrorPercentCum[MaxProductCount];
+float Integral[MaxProductCount];
+float LastPWM[MaxProductCount];
 
-int PIDvalve(float sKP, float sKI, float sKD, float sError, float sSetPoint, byte sMinPWM, byte sMaxPWM, byte SensorID)
+int PIDvalve(byte ID)
 {
     float Result = 0;
 
-    if (FlowEnabled[SensorID] && sSetPoint > 0)
+    if (Sensor[ID].FlowEnabled && Sensor[ID].RateSetting > 0)
     {
-        float ErrorPercent = sError / sSetPoint * 100.0;
+        float ErrorPercent = Sensor[ID].RateError / Sensor[ID].RateSetting * 100.0;
 
-        if (abs(ErrorPercent) > (float)Deadband)
+        if (abs(ErrorPercent) > (float)Sensor[ID].Deadband)
         {
-            Result = sKP * ErrorPercent;
+            Result = Sensor[ID].KP * ErrorPercent;
 
-            unsigned long elapsedTime = millis() - CurrentAdjustTime[SensorID];
-            CurrentAdjustTime[SensorID] = millis();
+            unsigned long elapsedTime = millis() - CurrentAdjustTime[ID];
+            CurrentAdjustTime[ID] = millis();
 
-            ErrorPercentCum[SensorID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
+            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
 
-            Integral += sKI * ErrorPercentCum[SensorID];
-            if (Integral > 10) Integral = 10;
-            if (Integral < -10) Integral = -10;
-            if (sKI == 0)
+            Integral[ID] += Sensor[ID].KI * ErrorPercentCum[ID];
+            if (Integral[ID] > 10) Integral[ID] = 10;
+            if (Integral[ID] < -10) Integral[ID] = -10;
+            if (Sensor[ID].KI == 0)
             {
-                Integral = 0;
-                ErrorPercentCum[SensorID] = 0;
+                Integral[ID] = 0;
+                ErrorPercentCum[ID] = 0;
             }
 
-            Result += Integral;
+            Result += Integral[ID];
 
             //add in derivative term to dampen effect of the correction.
-            Result += (float)sKD * (ErrorPercent - ErrorPercentLast[SensorID]) / (elapsedTime * 0.001) * 0.001;
+            Result += (float)Sensor[ID].KD * (ErrorPercent - ErrorPercentLast[ID]) / (elapsedTime * 0.001) * 0.001;
 
-            ErrorPercentLast[SensorID] = ErrorPercent;
+            ErrorPercentLast[ID] = ErrorPercent;
 
             bool IsPositive = (Result > 0);
             Result = abs(Result);
 
-            if (Result < sMinPWM)
+            if (Result < Sensor[ID].MinPWM)
             {
-                Result = sMinPWM;
+                Result = Sensor[ID].MinPWM;
             }
             else
             {
-                if (ErrorPercent < BrakePoint)
+                if (ErrorPercent < Sensor[ID].BrakePoint)
                 {
-                    if (Result > sMinPWM * 3.0) Result = sMinPWM * 3.0;
+                    if (Result > Sensor[ID].MinPWM * 3.0) Result = Sensor[ID].MinPWM * 3.0;
                 }
                 else
                 {
-                    if (Result > sMaxPWM) Result = sMaxPWM;
+                    if (Result > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM;
                 }
             }
 
@@ -61,55 +61,56 @@ int PIDvalve(float sKP, float sKI, float sKD, float sError, float sSetPoint, byt
         }
         else
         {
-            Integral = 0;
+            Integral[ID] = 0;
         }
     }
     return (int)Result;
 }
 
-int PIDmotor(float sKP, float sKI, float sKD, float sError, float sSetPoint, byte sMinPWM, byte sMaxPWM, byte SensorID)
+int PIDmotor(byte ID)
 {
     float Result = 0;
     float ErrorPercent = 0;
 
-    if (FlowEnabled[SensorID] && sSetPoint > 0)
+    if (Sensor[ID].FlowEnabled && Sensor[ID].RateSetting > 0)
     {
-        Result = LastPWM[SensorID];
-        ErrorPercent = sError / sSetPoint * 100.0;
+        Result = LastPWM[ID];
+        ErrorPercent = Sensor[ID].RateError / Sensor[ID].RateSetting * 100.0;
 
-        if (abs(ErrorPercent) > (float)Deadband)
+        if (abs(ErrorPercent) > (float)Sensor[ID].Deadband)
         {
-            Result += sKP * ErrorPercent;
+            Result += Sensor[ID].KP * ErrorPercent;
 
-            unsigned long elapsedTime = millis() - CurrentAdjustTime[SensorID];
-            CurrentAdjustTime[SensorID] = millis();
+            unsigned long elapsedTime = millis() - CurrentAdjustTime[ID];
+            CurrentAdjustTime[ID] = millis();
 
-            ErrorPercentCum[SensorID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
+            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
 
-            Integral += sKI * ErrorPercentCum[SensorID];
-            if (Integral > 10) Integral = 10;
-            if (Integral < -10) Integral = -10;
-            if (sKI == 0)
+            Integral[ID] += Sensor[ID].KI * ErrorPercentCum[ID];
+            if (Integral[ID] > 10) Integral[ID] = 10;
+            if (Integral[ID] < -10) Integral[ID] = -10;
+            if (Sensor[ID].KI == 0)
             {
-                Integral = 0;
-                ErrorPercentCum[SensorID] = 0;
+                Integral[ID] = 0;
+                ErrorPercentCum[ID] = 0;
             }
 
-            Result += Integral;
+            Result += Integral[ID];
 
             //add in derivative term to dampen effect of the correction.
-            Result += (float)sKD * (ErrorPercent - ErrorPercentLast[SensorID]) / (elapsedTime * 0.001) * 0.001;
+            Result += (float)Sensor[ID].KD * (ErrorPercent - ErrorPercentLast[ID]) / (elapsedTime * 0.001) * 0.001;
 
-            ErrorPercentLast[SensorID] = ErrorPercent;
+            ErrorPercentLast[ID] = ErrorPercent;
 
-            if (Result > sMaxPWM) Result = (float)sMaxPWM;
-            if (Result < sMinPWM) Result = (float)sMinPWM;
+            if (Result > Sensor[ID].MaxPWM) Result = (float)Sensor[ID].MaxPWM;
+            if (Result < Sensor[ID].MinPWM) Result = (float)Sensor[ID].MinPWM;
         }
     }
     else
     {
-        Integral = 0;
+        Integral[ID] = 0;
     }
-    LastPWM[SensorID] = Result;
+
+    LastPWM[ID] = Result;
     return (int)Result;
 }

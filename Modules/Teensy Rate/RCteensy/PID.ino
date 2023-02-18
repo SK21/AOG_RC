@@ -2,7 +2,7 @@
 unsigned long CurrentAdjustTime[MaxProductCount];
 float ErrorPercentLast[MaxProductCount];
 float ErrorPercentCum[MaxProductCount];
-float Integral;
+float Integral[MaxProductCount];
 float LastPWM[MaxProductCount];
 
 int PIDvalve(byte ID)
@@ -22,16 +22,16 @@ int PIDvalve(byte ID)
 
             ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
 
-            Integral += Sensor[ID].KI * ErrorPercentCum[ID];
-            if (Integral > 10) Integral = 10;
-            if (Integral < -10) Integral = -10;
+            Integral[ID] += Sensor[ID].KI * ErrorPercentCum[ID];
+            if (Integral[ID] > 10) Integral[ID] = 10;
+            if (Integral[ID] < -10) Integral[ID] = -10;
             if (Sensor[ID].KI == 0)
             {
-                Integral = 0;
+                Integral[ID] = 0;
                 ErrorPercentCum[ID] = 0;
             }
 
-            Result += Integral;
+            Result += Integral[ID];
 
             Result += (float)Sensor[ID].KD * (ErrorPercent - ErrorPercentLast[ID]) / (elapsedTime * 0.001) * 0.001;
 
@@ -60,7 +60,7 @@ int PIDvalve(byte ID)
         }
         else
         {
-            Integral = 0;
+            Integral[ID] = 0;
         }
     }
     return (int)Result;
@@ -85,17 +85,17 @@ int PIDmotor(byte ID)
 
             ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
 
-            Integral += Sensor[ID].KI * ErrorPercentCum[ID];
-            if (Integral > 10) Integral = 10;
-            if (Integral < -10) Integral = -10;
+            Integral[ID] += Sensor[ID].KI * ErrorPercentCum[ID];
+            if (Integral[ID] > 10) Integral[ID] = 10;
+            if (Integral[ID] < -10) Integral[ID] = -10;
             if (Sensor[ID].KI == 0)
             {
-                Integral = 0;
+                Integral[ID] = 0;
                 ErrorPercentCum[ID] = 0;
             }
 
 
-            Result += Integral;
+            Result += Integral[ID];
 
             Result += (float)Sensor[ID].KD * (ErrorPercent - ErrorPercentLast[ID]) / (elapsedTime * 0.001) * 0.001;
 
@@ -106,7 +106,7 @@ int PIDmotor(byte ID)
         }
         else
         {
-            Integral = 0;
+            Integral[ID] = 0;
         }
     }
 

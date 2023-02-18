@@ -67,7 +67,7 @@ void ISR1()
 
 void GetUPM()
 {
-	for (int i = 0; i < MDL.ProductCount; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		if (Sensor[i].ControlType == 3)
 		{
