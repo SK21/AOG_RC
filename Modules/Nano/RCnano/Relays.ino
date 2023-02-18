@@ -77,7 +77,7 @@ void CheckRelays()
             {
                 if (MDL.Relays[i] > 1) // check if relay is enabled
                 {
-                    if (bitRead(Rlys, i)) digitalWrite(MDL.Relays[i], MDL.RelayOnSignal); else digitalWrite(MDL.Relays[i], !MDL.RelayOnSignal);
+                    if (bitRead(Rlys, i)) digitalWrite(MDL.Relays[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.Relays[i + j * 8], !MDL.RelayOnSignal);
                 }
             }
         }

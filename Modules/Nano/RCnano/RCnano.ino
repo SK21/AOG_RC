@@ -12,8 +12,8 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  10-Feb-2023"
-const int16_t InoID = 4700;	// change to send defaults to eeprom
+# define InoDescription "RCnano  :  18-Feb-2023"
+const int16_t InoID = 5122;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
 # define UseEthernet 0
@@ -21,6 +21,7 @@ int16_t StoredID;			// Defaults ID stored in eeprom
 float debug1;
 float debug2;
 float debug3;
+float debug4;
 
 struct ModuleConfig    // 5 bytes
 {
@@ -436,23 +437,26 @@ void DebugTheIno()
 	if (millis() - DebugTime > 1000)
 	{
 		DebugTime = millis();
-		Serial.println("");
-		Serial.print(FlowEnabled[0]);
+		//Serial.println("");
+		//Serial.print(FlowEnabled[0]);
 
-		Serial.print(", ");
-		Serial.print(pwmSetting[0]);
+		//Serial.print(", ");
+		//Serial.print(pwmSetting[0]);
 
 		Serial.print(", ");
 		Serial.print(debug1);
 
-		//Serial.print(", ");
-		//Serial.print(debug2);
-
-		//Serial.print(", ");
-		//Serial.print(debug3);
+		Serial.print(", ");
+		Serial.print(debug2);
 
 		Serial.print(", ");
-		Serial.print(AutoOn);
+		Serial.print(debug3);
+
+		Serial.print(", ");
+		Serial.print(debug4);
+
+		//Serial.print(", ");
+		//Serial.print(AutoOn);
 
 		Serial.println("");
 	}

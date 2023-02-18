@@ -37,8 +37,6 @@ void SendUDPwired()
         // accumulated quantity, 10 X actual
         if (MeterCal[i] > 0)
         {
-            debug1 = MeterCal[0];
-
             uint32_t Units = TotalPulses[i] * 10.0 / MeterCal[i];
             UDPpacket[6] = Units;
             UDPpacket[7] = Units >> 8;

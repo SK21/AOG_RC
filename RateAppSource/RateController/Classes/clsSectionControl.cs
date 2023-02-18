@@ -50,7 +50,7 @@ namespace RateController
             mf = CallingForm;
 
             CTL.AutoOn = true;
-            CTL.MasterOn = false;
+            CTL.MasterOn = true;
             CTL.RateUp = false;
             CTL.RateDown = false;
             CTL.SwLo = 0;
