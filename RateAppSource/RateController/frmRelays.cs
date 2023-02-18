@@ -24,8 +24,6 @@ namespace RateController
             DGV.Columns[2].HeaderText = Lang.lgSectionNum;
 
             this.Text = Lang.lgRelays;
-            btnLoadDefaults.Text = Lang.lgLoad_Defaults;
-
             #endregion // language
 
             mf = CalledFrom;
@@ -219,11 +217,13 @@ namespace RateController
                 {
                     btnCancel.Enabled = true;
                     btnOK.Image = Properties.Resources.Save;
+                    btnLoadDefaults.Enabled = false;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
                     btnOK.Image = Properties.Resources.OK;
+                    btnLoadDefaults.Enabled = true;
                 }
 
                 FormEdited = Edited;

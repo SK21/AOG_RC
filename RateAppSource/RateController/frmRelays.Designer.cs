@@ -192,11 +192,11 @@
             this.btnLoadDefaults.FlatAppearance.BorderSize = 0;
             this.btnLoadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLoadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLoadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
             this.btnLoadDefaults.Location = new System.Drawing.Point(146, 388);
             this.btnLoadDefaults.Name = "btnLoadDefaults";
             this.btnLoadDefaults.Size = new System.Drawing.Size(100, 72);
             this.btnLoadDefaults.TabIndex = 140;
-            this.btnLoadDefaults.Text = "Load Defaults";
             this.btnLoadDefaults.UseVisualStyleBackColor = false;
             this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
             // 
