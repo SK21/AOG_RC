@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - Master
+      - master
   pull_request:
     types: [opened, synchronize, reopened]
     
