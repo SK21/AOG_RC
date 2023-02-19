@@ -66,7 +66,7 @@ namespace PCBsetup.Forms
                 File.WriteAllBytes(PathName + "//esptool.exe", PCBsetup.Properties.Resources.esptool);
 
                 string cmd = PathName + "//esptool.exe";
-                string arg = "--port " + mf.PortName + " --baud " + "115200" + " write_flash 0x0 " + NewBin;
+                string arg = "--port " + mf.SelectedPortName() + " --baud " + "115200" + " write_flash 0x0 " + NewBin;
 
                 Process myProcess = null;
                 myProcess = Process.Start(cmd, arg);
@@ -104,7 +104,7 @@ namespace PCBsetup.Forms
             UserSelectedFile = false;
             tbHexfile.Text = "Default file version date:" + mf.Tls.D1RateFirmware();
             SetButtons(false);
-            lbPort.Text = "Serial Port: " + mf.PortName;
+            lbPort.Text = "Serial Port: " + mf.SelectedPortName();
         }
 
         private void SetButtons(bool Edited)
@@ -121,6 +121,22 @@ namespace PCBsetup.Forms
                 btnDefault.Enabled = true;
                 btnUpload.Enabled = true;
             }
+        }
+
+        private void btnUpload_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Upload to module.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void btnDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Load defaults.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
         }
     }
 }

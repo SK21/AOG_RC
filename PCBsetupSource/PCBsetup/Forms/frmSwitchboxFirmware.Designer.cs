@@ -93,6 +93,7 @@
             this.btnDefault.TabIndex = 2;
             this.btnDefault.UseVisualStyleBackColor = false;
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
+            this.btnDefault.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnDefault_HelpRequested);
             // 
             // btnUpload
             // 
@@ -107,6 +108,7 @@
             this.btnUpload.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnUpload.UseVisualStyleBackColor = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
+            this.btnUpload.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnUpload_HelpRequested);
             // 
             // bntOK
             // 
@@ -156,6 +158,7 @@
             this.Controls.Add(this.progressBar1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;

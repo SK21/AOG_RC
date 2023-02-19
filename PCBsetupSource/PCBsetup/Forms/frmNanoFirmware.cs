@@ -229,7 +229,7 @@ namespace PCBsetup.Forms
                     new ArduinoSketchUploaderOptions()
                     {
                         FileName = @HexFile,
-                        PortName = mf.PortName,
+                        PortName = mf.SelectedPortName(),
                         ArduinoModel = Model
                     });
 
@@ -270,6 +270,22 @@ namespace PCBsetup.Forms
             mf.CommPort.Open();
             bntOK.Enabled = true;
             WatchDogTimer.Enabled = false;
+        }
+
+        private void btnDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Load defaults.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void btnUpload_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Upload to module.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
         }
     }
 }

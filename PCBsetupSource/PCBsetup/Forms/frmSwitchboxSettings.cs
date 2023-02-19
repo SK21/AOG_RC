@@ -287,5 +287,29 @@ namespace PCBsetup.Forms
         {
 
         }
+
+        private void btnSendToModule_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Send to module.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void btnLoadDefaults_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Load defaults.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void tbAuto_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Pin number for function. For A0-A7 use 14-21.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
     }
 }

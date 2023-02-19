@@ -92,6 +92,7 @@
             this.btnLoadDefaults.TabIndex = 23;
             this.btnLoadDefaults.UseVisualStyleBackColor = false;
             this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
+            this.btnLoadDefaults.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnLoadDefaults_HelpRequested);
             // 
             // btnSendToModule
             // 
@@ -105,6 +106,7 @@
             this.btnSendToModule.TabIndex = 22;
             this.btnSendToModule.UseVisualStyleBackColor = false;
             this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
+            this.btnSendToModule.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendToModule_HelpRequested);
             // 
             // btnCancel
             // 
@@ -159,6 +161,7 @@
             this.tbAuto.Size = new System.Drawing.Size(58, 29);
             this.tbAuto.TabIndex = 25;
             this.tbAuto.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbAuto.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbAuto_HelpRequested);
             // 
             // label1
             // 

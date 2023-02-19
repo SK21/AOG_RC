@@ -374,5 +374,29 @@ namespace PCBsetup.Forms
             mf.Tls.ShowHelp(Message, "Debounce");
             hlpevent.Handled = true;
         }
+
+        private void btnSendToModule_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Upload to module.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void btnLoadDefaults_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Load defaults.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void tbNanoFlow1_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Pin number for function. For A0-A7 use 14-21.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
     }
 }

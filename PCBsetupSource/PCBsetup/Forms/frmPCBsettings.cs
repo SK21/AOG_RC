@@ -505,5 +505,21 @@ namespace PCBsetup.Forms
         {
             SetButtons(true);
         }
+
+        private void btnSendToModule_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Upload to module.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void btnLoadDefaults_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Load defaults.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
     }
 }

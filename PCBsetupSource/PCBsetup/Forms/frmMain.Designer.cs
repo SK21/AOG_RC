@@ -61,7 +61,7 @@
             this.SerialMonitorItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(459, 32);
+            this.menuStrip1.Size = new System.Drawing.Size(438, 32);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -130,15 +130,16 @@
             this.cboPort1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPort1.DropDownWidth = 145;
             this.cboPort1.FormattingEnabled = true;
-            this.cboPort1.Location = new System.Drawing.Point(221, 28);
+            this.cboPort1.Location = new System.Drawing.Point(6, 28);
             this.cboPort1.Name = "cboPort1";
-            this.cboPort1.Size = new System.Drawing.Size(114, 32);
+            this.cboPort1.Size = new System.Drawing.Size(398, 32);
             this.cboPort1.TabIndex = 3;
             this.cboPort1.SelectedIndexChanged += new System.EventHandler(this.cboPort1_SelectedIndexChanged);
+            this.cboPort1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.cboPort1_HelpRequested);
             // 
             // btnRescan
             // 
-            this.btnRescan.Location = new System.Drawing.Point(116, 26);
+            this.btnRescan.Location = new System.Drawing.Point(117, 69);
             this.btnRescan.Name = "btnRescan";
             this.btnRescan.Size = new System.Drawing.Size(99, 37);
             this.btnRescan.TabIndex = 5;
@@ -155,7 +156,7 @@
             this.btnConnect1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnConnect1.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnConnect1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConnect1.Location = new System.Drawing.Point(5, 26);
+            this.btnConnect1.Location = new System.Drawing.Point(6, 69);
             this.btnConnect1.Name = "btnConnect1";
             this.btnConnect1.Size = new System.Drawing.Size(105, 37);
             this.btnConnect1.TabIndex = 123;
@@ -168,7 +169,7 @@
             this.PortIndicator1.BackColor = System.Drawing.SystemColors.Control;
             this.PortIndicator1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PortIndicator1.Image = global::PCBsetup.Properties.Resources.Off;
-            this.PortIndicator1.Location = new System.Drawing.Point(341, 26);
+            this.PortIndicator1.Location = new System.Drawing.Point(316, 69);
             this.PortIndicator1.Name = "PortIndicator1";
             this.PortIndicator1.Size = new System.Drawing.Size(41, 37);
             this.PortIndicator1.TabIndex = 124;
@@ -180,7 +181,7 @@
             this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
             this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ModuleIndicator.Image = global::PCBsetup.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(388, 26);
+            this.ModuleIndicator.Location = new System.Drawing.Point(363, 69);
             this.ModuleIndicator.Name = "ModuleIndicator";
             this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
             this.ModuleIndicator.TabIndex = 125;
@@ -196,7 +197,7 @@
             this.groupBox1.Controls.Add(this.btnConnect1);
             this.groupBox1.Location = new System.Drawing.Point(12, 35);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(438, 76);
+            this.groupBox1.Size = new System.Drawing.Size(412, 117);
             this.groupBox1.TabIndex = 126;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Serial Connection";
@@ -211,9 +212,9 @@
             "Nano Rate",
             "Nano SwitchBox",
             "Wifi AOG"});
-            this.cbModule.Location = new System.Drawing.Point(12, 121);
+            this.cbModule.Location = new System.Drawing.Point(12, 160);
             this.cbModule.Name = "cbModule";
-            this.cbModule.Size = new System.Drawing.Size(199, 32);
+            this.cbModule.Size = new System.Drawing.Size(182, 32);
             this.cbModule.TabIndex = 127;
             this.cbModule.SelectedIndexChanged += new System.EventHandler(this.cbModule_SelectedIndexChanged);
             // 
@@ -222,7 +223,7 @@
             this.btnSettings.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSettings.Location = new System.Drawing.Point(226, 117);
+            this.btnSettings.Location = new System.Drawing.Point(200, 158);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(105, 37);
             this.btnSettings.TabIndex = 128;
@@ -235,7 +236,7 @@
             this.btnFirmware.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnFirmware.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnFirmware.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFirmware.Location = new System.Drawing.Point(345, 117);
+            this.btnFirmware.Location = new System.Drawing.Point(319, 158);
             this.btnFirmware.Name = "btnFirmware";
             this.btnFirmware.Size = new System.Drawing.Size(105, 37);
             this.btnFirmware.TabIndex = 129;
@@ -247,7 +248,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(459, 167);
+            this.ClientSize = new System.Drawing.Size(438, 203);
             this.Controls.Add(this.btnFirmware);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.cbModule);

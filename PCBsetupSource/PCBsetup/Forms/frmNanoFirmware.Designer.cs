@@ -67,6 +67,7 @@
             this.btnDefault.TabIndex = 2;
             this.btnDefault.UseVisualStyleBackColor = false;
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
+            this.btnDefault.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnDefault_HelpRequested);
             // 
             // btnUpload
             // 
@@ -81,6 +82,7 @@
             this.btnUpload.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnUpload.UseVisualStyleBackColor = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
+            this.btnUpload.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnUpload_HelpRequested);
             // 
             // bntOK
             // 

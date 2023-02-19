@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.IO.Ports;
+using System.Linq;
+using System.Management;
 using System.Windows.Forms;
 
 namespace PCBsetup.Forms
@@ -16,11 +19,11 @@ namespace PCBsetup.Forms
     public partial class frmMain : Form
     {
         public SerialComm CommPort;
-        public string PortName;
         public clsTools Tls;
         public UDPComm UDPmodulesConfig;
         private byte cModule = 0;
         private int PortID = 1;
+        private string cSelectedPortName;
 
         public frmMain()
         {
@@ -31,9 +34,22 @@ namespace PCBsetup.Forms
             CommPort.ModuleConnected += CommPort_ModuleConnected;
         }
 
+        private string TrimPortName(string portName)
+        {
+            string tmp = portName;
+            int End = tmp.IndexOf(" - ");
+            if (End > 0) tmp = tmp.Substring(0, End);
+            return tmp;
+        }
+
+        public string SelectedPortName()
+        {
+            return cSelectedPortName;
+        }
+
         public bool OpenComm()
         {
-            CommPort.SCportName = cboPort1.Text;
+            CommPort.SCportName = TrimPortName(cboPort1.Text);
             CommPort.SCportBaud = 38400;
             CommPort.Open();
             return CommPort.IsOpen();
@@ -97,13 +113,7 @@ namespace PCBsetup.Forms
 
         private void btnRescan_Click(object sender, EventArgs e)
         {
-            cboPort1.Items.Clear();
-            // nano ports
-            foreach (String s in System.IO.Ports.SerialPort.GetPortNames())
-            {
-                cboPort1.Items.Add(s);
-            }
-
+            LoadPortsCombo();
             UpdateForm();
         }
 
@@ -141,11 +151,6 @@ namespace PCBsetup.Forms
         {
             Tls.SaveProperty("Module", cbModule.SelectedIndex.ToString());
             cModule = (byte)cbModule.SelectedIndex;
-        }
-
-        private void cboPort1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            PortName = cboPort1.SelectedItem.ToString();
         }
 
         private void CommPort_ModuleConnected(object sender, EventArgs e)
@@ -197,17 +202,33 @@ namespace PCBsetup.Forms
             Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
+        private void LoadPortsCombo()
+        {
+            //https://stackoverflow.com/questions/2837985/getting-serial-port-information
+
+            cboPort1.Items.Clear();
+            using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
+            {
+                var portnames = SerialPort.GetPortNames();
+                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
+
+                var portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n))).ToList();
+
+                foreach (string s in portList)
+                {
+                    Console.WriteLine(s);
+                    cboPort1.Items.Add(s);
+                }
+            }
+        }
+
         private void LoadSettings()
         {
             try
             {
                 this.Text = "PCBsetup [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
-                cboPort1.Items.Clear();
-                foreach (String s in System.IO.Ports.SerialPort.GetPortNames())
-                {
-                    cboPort1.Items.Add(s);
-                }
+                LoadPortsCombo();
 
                 // start comm port
                 string ID = "_" + PortID.ToString();
@@ -220,7 +241,7 @@ namespace PCBsetup.Forms
                 else
                 {
                     // select previous port
-                    int i = cboPort1.FindStringExact(tmp);
+                    int i = cboPort1.FindString(tmp);
                     if (i != -1)
                     {
                         cboPort1.SelectedIndex = i;
@@ -346,6 +367,19 @@ namespace PCBsetup.Forms
             {
                 ModuleIndicator.Image = Properties.Resources.Off;
             }
+        }
+
+        private void cboPort1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cSelectedPortName = TrimPortName(cboPort1.SelectedItem.ToString());
+        }
+
+        private void cboPort1_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "List of connected serial ports. If 'CH340' is shown use 'Old Bootloader'.";
+
+            Tls.ShowHelp(Message, this.Text);
+            hlpevent.Handled = true;
         }
     }
 }

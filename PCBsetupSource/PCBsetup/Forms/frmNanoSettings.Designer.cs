@@ -110,6 +110,7 @@
             this.btnLoadDefaults.TabIndex = 19;
             this.btnLoadDefaults.UseVisualStyleBackColor = false;
             this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
+            this.btnLoadDefaults.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnLoadDefaults_HelpRequested);
             // 
             // btnSendToModule
             // 
@@ -123,6 +124,7 @@
             this.btnSendToModule.TabIndex = 18;
             this.btnSendToModule.UseVisualStyleBackColor = false;
             this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
+            this.btnSendToModule.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendToModule_HelpRequested);
             // 
             // btnCancel
             // 
@@ -735,6 +737,7 @@
             this.tbNanoFlow1.Size = new System.Drawing.Size(58, 29);
             this.tbNanoFlow1.TabIndex = 25;
             this.tbNanoFlow1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbNanoFlow1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbNanoFlow1_HelpRequested);
             // 
             // label4
             // 
