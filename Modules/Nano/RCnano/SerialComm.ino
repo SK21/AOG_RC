@@ -98,7 +98,7 @@ void ReceiveSerial()
 			//4	relay Hi		8 - 15
 			//5	rate set Lo		1000 X actual
 			//6 rate set Mid
-			//7	rate set Hi		10 X actual
+			//7	rate set Hi		
 			//8	Flow Cal Lo		1000 X actual
 			//9 Flow Cal Mid
 			//10 Flow Cal Hi

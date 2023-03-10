@@ -7,28 +7,28 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   18-Feb-2023"
+# define InoDescription "RCteensy   10-Mar-2023"
 
-#define InoID 1802		// change to load default values
+#define InoID 1003		// change to load default values
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
 
 struct ModuleConfig	
 {
-	uint8_t ID = 0;
-	uint8_t SensorCount = 2;       // up to 2 sensors
-	uint8_t IPpart2 = 168;			// ethernet IP address
-	uint8_t	IPpart3 = 1;
-	uint8_t IPpart4 = 60;			// 60 + ID
-	uint8_t RelayOnSignal = 1;	    // value that turns on relays
-	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
-	uint8_t RelayControl = 5;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
-	uint8_t ESP8266SerialPort = 1;	// serial port to connect to ESP8266
+	uint8_t ID;
+	uint8_t SensorCount;       // up to 2 sensors
+	uint8_t IPpart2;			// ethernet IP address
+	uint8_t	IPpart3;
+	uint8_t IPpart4;			// 60 + ID
+	uint8_t RelayOnSignal;	    // value that turns on relays
+	uint8_t FlowOnDirection;	// sets on value for flow valve or sets motor direction
+	uint8_t RelayControl;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
+	uint8_t ESP8266SerialPort;	// serial port to connect to ESP8266
 	uint8_t RelayPins[16];			// pin numbers when GPIOs are used for relay control (5)
-	uint8_t LOADCELL_DOUT_PIN[MaxProductCount];
-	uint8_t LOADCELL_SCK_PIN[MaxProductCount];
-	uint8_t Debounce = 3;			// minimum ms pin change
+	uint8_t LOADCELL_DOUT_PIN[2];
+	uint8_t LOADCELL_SCK_PIN[2];
+	uint8_t Debounce;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
@@ -38,28 +38,28 @@ struct SensorConfig
 	uint8_t FlowPin;
 	uint8_t DirPin;
 	uint8_t PWMPin;
-	bool FlowEnabled = false;
-	float RateError = 0;		// rate error X 1000
-	float UPM = 0;				// upm X 1000
-	uint16_t pwmSetting = 0;
-	uint32_t CommTime = 0;
-	byte InCommand = 0;			// command byte from RateController
-	byte ControlType = 0;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan
-	uint32_t TotalPulses = 0;
-	float RateSetting = 0;
-	float MeterCal = 0;
-	float ManualAdjust = 0;
-	bool UseMultiPulses = 0;	// 0 - time for one pulse, 1 - average time for multiple pulses
-	float KP = 5;
-	float KI = 0;
-	float KD = 0;
-	byte MinPWM = 5;
-	byte MaxPWM = 255;
-	byte Deadband = 3;
-	byte BrakePoint = 20;
+	bool FlowEnabled;
+	float RateError;		// rate error X 1000
+	float UPM;				// upm X 1000
+	uint16_t pwmSetting;
+	uint32_t CommTime;
+	byte InCommand;			// command byte from RateController
+	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan
+	uint32_t TotalPulses;
+	float RateSetting;
+	float MeterCal;
+	float ManualAdjust;
+	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
+	float KP;
+	float KI;
+	float KD;
+	byte MinPWM;
+	byte MaxPWM;
+	byte Deadband;
+	byte BrakePoint;
 };
 
-SensorConfig Sensor[MaxProductCount];
+SensorConfig Sensor[2];
 
 struct AnalogConfig
 {
@@ -130,7 +130,15 @@ void setup()
 	config.timeout = 60;	// seconds
 	wdt.begin(config);
 
-	// initial scale pins
+	// default module values
+	MDL.SensorCount = 2;
+	MDL.IPpart2 = 168;
+	MDL.IPpart3 = 1;
+	MDL.IPpart2 = 60;
+	MDL.RelayOnSignal = 1;
+	MDL.RelayControl = 5;
+	MDL.ESP8266SerialPort = 1;
+	MDL.Debounce = 3;
 	MDL.LOADCELL_DOUT_PIN[0] = 16;
 	MDL.LOADCELL_SCK_PIN[0] = 17;
 
@@ -148,22 +156,35 @@ void setup()
 	Sensor[1].PWMPin = 15;
 
 	// default pid
+	Sensor[0].KP = 5;
+	Sensor[0].KI = 0;
+	Sensor[0].KD = 0;
 	Sensor[0].MinPWM = 5;
 	Sensor[0].MaxPWM = 50;
 	Sensor[0].Deadband = 3;
 	Sensor[0].BrakePoint = 20;
 
+	Sensor[1].KP = 5;
+	Sensor[1].KI = 0;
+	Sensor[1].KD = 0;
 	Sensor[1].MinPWM = 5;
 	Sensor[1].MaxPWM = 50;
 	Sensor[1].Deadband = 3;
 	Sensor[1].BrakePoint = 20;
 
+	Serial.begin(38400);
+	delay(5000);
+	Serial.println("");
+	Serial.println(InoDescription);
+	Serial.println("");
 
 	// eeprom
 	int16_t StoredID;
 	EEPROM.get(100, StoredID);
 	if (StoredID == InoID)
 	{
+		// load stored data
+		Serial.println("Loading stored settings.");
 		EEPROM.get(110, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
@@ -173,6 +194,8 @@ void setup()
 	}
 	else
 	{
+		// update stored data
+		Serial.println("Updating stored data.");
 		EEPROM.put(100, InoID);
 		EEPROM.put(110, MDL);
 
@@ -188,10 +211,7 @@ void setup()
 	MDL.IPpart4 = MDL.ID + 60;
 	if (MDL.IPpart4 > 255) MDL.IPpart4 = 255 - MDL.ID;
 
-	Serial.begin(38400);
-	delay(5000);
-	Serial.println();
-	Serial.println(InoDescription);
+	Serial.println("");
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
 	Serial.println();

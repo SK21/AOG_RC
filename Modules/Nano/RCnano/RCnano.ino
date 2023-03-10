@@ -12,8 +12,8 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  18-Feb-2023"
-const int16_t InoID = 1802;	// change to send defaults to eeprom
+# define InoDescription "RCnano  :  10-Mar-2023"
+const int16_t InoID = 1003;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
 # define UseEthernet 0
@@ -21,14 +21,14 @@ int16_t StoredID;			// Defaults ID stored in eeprom
 
 struct ModuleConfig    
 {
-	uint8_t ID = 0;
-	uint8_t SensorCount = 2;        // up to 2 sensors
-	uint8_t	IPpart3 = 3;			// IP address, 3rd octet
-	uint8_t RelayOnSignal = 0;	    // value that turns on relays
-	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
-	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
+	uint8_t ID;
+	uint8_t SensorCount;        // up to 2 sensors
+	uint8_t	IPpart3;			// IP address, 3rd octet
+	uint8_t RelayOnSignal;	    // value that turns on relays
+	uint8_t FlowOnDirection;	// sets on value for flow valve or sets motor direction
+	uint8_t UseMCP23017;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
 	uint8_t Relays[16];
-	uint8_t Debounce = 3;			// minimum ms pin change
+	uint8_t Debounce;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
@@ -38,28 +38,28 @@ struct SensorConfig
 	uint8_t FlowPin;
 	uint8_t DirPin;
 	uint8_t PWMPin;
-	bool FlowEnabled = false;
-	float RateError = 0;		// rate error X 1000
-	float UPM = 0;				// upm X 1000
-	uint16_t pwmSetting = 0;
-	uint32_t CommTime = 0;
-	byte InCommand = 0;			// command byte from RateController
-	byte ControlType = 0;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan
-	uint32_t TotalPulses = 0;
-	float RateSetting = 0;
-	float MeterCal = 0;
-	float ManualAdjust = 0;
-	bool UseMultiPulses = 0;	// 0 - time for one pulse, 1 - average time for multiple pulses
-	float KP = 5;
-	float KI = 0;
-	float KD = 0;
-	byte MinPWM = 5;
-	byte MaxPWM = 255;
-	byte Deadband = 3;
-	byte BrakePoint = 20;
+	bool FlowEnabled;
+	float RateError;		// rate error X 1000
+	float UPM;				// upm X 1000
+	uint16_t pwmSetting;
+	uint32_t CommTime;
+	byte InCommand;			// command byte from RateController
+	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan
+	uint32_t TotalPulses;
+	float RateSetting;
+	float MeterCal;
+	float ManualAdjust;
+	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
+	float KP;
+	float KI;
+	float KD;
+	byte MinPWM;
+	byte MaxPWM;
+	byte Deadband;
+	byte BrakePoint;
 };
 
-SensorConfig Sensor[MaxProductCount];
+SensorConfig Sensor[2];
 
 // If using the ENC28J60 ethernet shield these pins
 // are used by it and unavailable for relays:
@@ -142,7 +142,14 @@ float debug4;
 
 void setup()
 {
-	Serial.begin(38400);
+	// default module values
+	MDL.ID = 0;
+	MDL.SensorCount = 2;
+	MDL.IPpart3 = 3;
+	MDL.RelayOnSignal = 0;
+	MDL.FlowOnDirection = 0;
+	MDL.UseMCP23017 = 1;
+	MDL.Debounce = 3;
 
 	// default flow pins
 	Sensor[0].FlowPin = 2;
@@ -164,11 +171,19 @@ void setup()
 	Sensor[1].Deadband = 3;
 	Sensor[1].BrakePoint = 20;
 
+	Serial.begin(38400);
+	delay(5000);
+	Serial.println();
+	Serial.println(InoDescription);
+	Serial.println();
+
 	// eeprom
 	EEPROM.get(0, StoredID);
+
 	if (StoredID == InoID)
 	{
 		// load stored data
+		Serial.println("Loading stored settings.");
 		EEPROM.get(10, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
@@ -178,8 +193,8 @@ void setup()
 	}
 	else
 	{
-		Serial.println("Updating stored data.");
 		// update stored data
+		Serial.println("Updating stored data.");
 		EEPROM.put(0, InoID);
 		EEPROM.put(10, MDL);
 
@@ -189,9 +204,6 @@ void setup()
 		}
 	}
 
-	delay(5000);
-	Serial.println();
-	Serial.println(InoDescription);
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
 	Serial.println();
@@ -442,6 +454,10 @@ byte CRC(byte Chk[], byte Length, byte Start)
 
 
 uint32_t DebugTime;
+uint32_t MaxLoopTime;
+uint32_t LoopTmr;
+byte ReadReset;
+
 void DebugTheIno()
 {
 	if (millis() - DebugTime > 1000)
@@ -449,22 +465,33 @@ void DebugTheIno()
 		DebugTime = millis();
 		Serial.println("");
 
+		Serial.print(" Micros: ");
+		Serial.print(MaxLoopTime);
+
 		Serial.print(", ");
 		Serial.print(debug1);
 
 		Serial.print(", ");
 		Serial.print(debug2);
 
-		Serial.print(", ");
-		Serial.print(debug3);
+		//Serial.print(", ");
+		//Serial.print(debug3);
 
-		Serial.print(", ");
-		Serial.print(debug4);
+		//Serial.print(", ");
+		//Serial.print(debug4);
 
 		//Serial.print(", ");
 		//Serial.print(AutoOn);
 
 		Serial.println("");
+
+		if (ReadReset++ > 10)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+		}
 	}
+	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
+	LoopTmr = micros();
 }
 

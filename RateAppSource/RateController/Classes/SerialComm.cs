@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Windows.Forms;
 
 namespace RateController
 {
@@ -130,6 +131,7 @@ namespace RateController
             {
                 cLog = cLog.Substring(cLog.Length - 98000, 98000);
             }
+            cLog = cLog.Replace("\0", string.Empty);
         }
 
         public bool PortOpen()
