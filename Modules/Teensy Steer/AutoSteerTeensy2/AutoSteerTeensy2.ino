@@ -1,5 +1,3 @@
-#define InoDescription "AutoSteerTeensy2   02-Jan-2023"
-// autosteer for Teensy 4.1
 
 #include <Wire.h>
 #include <EEPROM.h> 
@@ -9,6 +7,11 @@
 #include "BNO08x_AOG.h"		// https://github.com/Math-51/Autosteer_USB_4.3.10_BN08x
 #include "zNMEAParser.h"	
 #include "USBHost_t36.h"
+
+// autosteer for Teensy 4.1
+#define InoDescription "AutoSteerTeensy2   10-Mar-2023"
+
+#define InoID 1003	// if not in eeprom, overwrite
 
 #define MaxReadBuffer 100	// bytes
 #define MaxHostBuffer 50
@@ -34,40 +37,40 @@ bool driver_active[CNT_DEVICES] = { false, false, false, false };
 
 struct ModuleConfig	// 34 bytes, AS14 default
 {
-	uint8_t Receiver = 1;			// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
-	uint8_t SerialReceiveGPS = 4;		// from receiver
-	uint8_t	SerialSendNtrip = 5;		// to receiver
-	uint8_t WemosSerialPort = 3;	// serial port connected to Wemos D1 Mini
-	uint16_t NtripPort = 2233;		// local port to listen on for NTRIP data
-	uint8_t IMU = 1;				// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO
-	uint8_t IMUdelay = 90;			// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
-	uint8_t IMU_Interval = 40;		// for Sparkfun 
-	uint16_t ZeroOffset = 6500;
-	uint8_t MinSpeed = 1;
-	uint8_t MaxSpeed = 15;
-	uint16_t PulseCal = 255;		// Hz/KMH X 10
-	uint8_t	AnalogMethod = 2;		// 0 use ADS1115 for WAS(AIN0), AIN1, current(AIN2), 1 use Teensy analog pin for WAS, 2 use ADS1115 from Wemos D1 Mini
-	uint8_t SwapRollPitch = 0;		// 0 use roll value for roll, 1 use pitch value for roll
-	uint8_t InvertRoll = 0;
-	uint8_t UseTB6612 = 0;			// 0 - don't use TB6612 motor driver, 1 - use TB6612 motor driver for motor 2
-	uint8_t GyroOn = 0;
-	uint8_t UseLinearActuator = 0;	// to engage or retract steering motor, uses motor 2
-	uint8_t	GGAlast = 1;
-	uint8_t Dir1 = 26;
-	uint8_t PWM1 = 25;
-	uint8_t Dir2 = 28;				// motor 2 direction, TB6612 IN1
-	uint8_t PWM2 = 29;				// motor 2 pwm, TB6612 PWM	
-	uint8_t SteerSw_Relay = 36;		// pin for steering disconnect relay
-	uint8_t SteerSw = 39;
-	uint8_t WorkSw = 27;
-	uint8_t CurrentSensor = 10;
-	uint8_t PressureSensor = 26;
-	uint8_t Encoder = 38;
-	uint8_t SpeedPulse = 37;
-	uint8_t IP0 = 192;
-	uint8_t IP1 = 168;
-	uint8_t IP2 = 1;
-	uint8_t IP3 = 126;
+	uint8_t Receiver;			// 0 none, 1 SimpleRTK2B, 2 Sparkfun F9p
+	uint8_t SerialReceiveGPS;		// from receiver
+	uint8_t	SerialSendNtrip;		// to receiver
+	uint8_t WemosSerialPort;	// serial port connected to Wemos D1 Mini
+	uint16_t NtripPort;			// local port to listen on for NTRIP data
+	uint8_t IMU;				// 0 none, 1 Sparkfun BNO, 2 CMPS14, 3 Adafruit BNO
+	uint8_t IMUdelay;			// how many ms after last sentence should imu sample, 90 for SparkFun, 4 for CMPS14   
+	uint8_t IMU_Interval;		// for Sparkfun 
+	uint16_t ZeroOffset;
+	uint8_t MinSpeed;
+	uint8_t MaxSpeed;
+	uint16_t PulseCal;			// Hz/KMH X 10
+	uint8_t	AnalogMethod;		// 0 use ADS1115 for WAS(AIN0), AIN1, current(AIN2), 1 use Teensy analog pin for WAS, 2 use ADS1115 from Wemos D1 Mini
+	uint8_t SwapRollPitch;		// 0 use roll value for roll, 1 use pitch value for roll
+	uint8_t InvertRoll;
+	uint8_t UseTB6612;			// 0 - don't use TB6612 motor driver, 1 - use TB6612 motor driver for motor 2
+	uint8_t GyroOn;
+	uint8_t UseLinearActuator;	// to engage or retract steering motor, uses motor 2
+	uint8_t	GGAlast;
+	uint8_t Dir1;
+	uint8_t PWM1;
+	uint8_t Dir2;				// motor 2 direction, TB6612 IN1
+	uint8_t PWM2;				// motor 2 pwm, TB6612 PWM	
+	uint8_t SteerSw_Relay;		// pin for steering disconnect relay
+	uint8_t SteerSw;
+	uint8_t WorkSw;
+	uint8_t CurrentSensor;
+	uint8_t PressureSensor;
+	uint8_t Encoder;
+	uint8_t SpeedPulse;
+	uint8_t IP0;
+	uint8_t IP1;
+	uint8_t IP2;
+	uint8_t IP3;
 };
 
 ModuleConfig MDL;
@@ -84,39 +87,34 @@ PCBanalog AINs;
 
 struct Storage 
 {
-	uint8_t Kp = 40;  //proportional gain
-	uint8_t lowPWM = 10;  //band of no action
-	int16_t wasOffset = 0;
-	uint8_t minPWM = 9;
-	uint8_t highPWM = 60;//max PWM value
-	float steerSensorCounts = 30;
-	float AckermanFix = 1;     //sent as percent
+	uint8_t Kp;			//proportional gain
+	uint8_t lowPWM;		//band of no action
+	int16_t wasOffset;
+	uint8_t minPWM;
+	uint8_t highPWM;	//max PWM value
+	float steerSensorCounts;
+	float AckermanFix;	//sent as percent
 };  
 
-Storage steerSettings;  //11 bytes
+Storage steerSettings; 
 
 struct Setup
 {
-	uint8_t InvertWAS = 0;
-	uint8_t IsRelayActiveHigh = 0; //if zero, active low (default)
-	uint8_t MotorDriveDirection = 0;
-	uint8_t SingleInputWAS = 1;
-	uint8_t CytronDriver = 1;
-	uint8_t SteerSwitch = 0;  //1 if switch selected
-	uint8_t SteerButton = 0;  //1 if button selected
-	uint8_t ShaftEncoder = 0;
-	uint8_t PressureSensor = 0;
-	uint8_t CurrentSensor = 0;
-	uint8_t PulseCountMax = 5;
-	uint8_t IsDanfoss = 0;
+	uint8_t InvertWAS;
+	uint8_t IsRelayActiveHigh; //if zero, active low (default)
+	uint8_t MotorDriveDirection;
+	uint8_t SingleInputWAS;
+	uint8_t CytronDriver;
+	uint8_t SteerSwitch;  //1 if switch selected
+	uint8_t SteerButton;  //1 if button selected
+	uint8_t ShaftEncoder;
+	uint8_t PressureSensor;
+	uint8_t CurrentSensor;
+	uint8_t PulseCountMax;
+	uint8_t IsDanfoss;
 };  
 
-Setup steerConfig;          //9 bytes
-
-//EEPROM
-int16_t EEread = 0;
-#define EEP_Ident 5600	// if not in eeprom, overwrite
-#define MDL_Ident 5800
+Setup steerConfig;         
 
 // Ethernet steering
 EthernetUDP UDPsteering;	// UDP Steering traffic, to and from AGIO

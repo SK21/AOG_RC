@@ -204,6 +204,7 @@ void setup()
 		}
 	}
 
+	Serial.println("");
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
 	Serial.println();
