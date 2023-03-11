@@ -19,16 +19,16 @@ int16_t StoredID;			// Defaults ID stored in eeprom
 # define UseEthernet 0
 #define MaxProductCount 2
 
-struct ModuleConfig    
+struct ModuleConfig
 {
-	uint8_t ID;
-	uint8_t SensorCount;        // up to 2 sensors
-	uint8_t	IPpart3;			// IP address, 3rd octet
-	uint8_t RelayOnSignal;	    // value that turns on relays
-	uint8_t FlowOnDirection;	// sets on value for flow valve or sets motor direction
-	uint8_t UseMCP23017;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
+	uint8_t ID = 0;
+	uint8_t SensorCount = 2;        // up to 2 sensors
+	uint8_t	IPpart3 = 3;			// IP address, 3rd octet
+	uint8_t RelayOnSignal = 0;	    // value that turns on relays
+	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
+	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
 	uint8_t Relays[16];
-	uint8_t Debounce;			// minimum ms pin change
+	uint8_t Debounce = 3;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
@@ -142,15 +142,6 @@ float debug4;
 
 void setup()
 {
-	// default module values
-	MDL.ID = 0;
-	MDL.SensorCount = 2;
-	MDL.IPpart3 = 3;
-	MDL.RelayOnSignal = 0;
-	MDL.FlowOnDirection = 0;
-	MDL.UseMCP23017 = 1;
-	MDL.Debounce = 3;
-
 	// default flow pins
 	Sensor[0].FlowPin = 2;
 	Sensor[0].DirPin = 4;
