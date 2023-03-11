@@ -8,72 +8,16 @@ void DoSetup()
 
 	pinMode(LED_BUILTIN, OUTPUT);
 
-	// defaults
-	MDL.Receiver = 1;
-	MDL.SerialReceiveGPS = 4;
-	MDL.SerialSendNtrip = 3;
-	MDL.NtripPort = 2233;
-	MDL.IMU = 1;
-	MDL.IMUdelay = 90;
-	MDL.IMU_Interval = 40;
-	MDL.MinSpeed = 1;
-	MDL.MaxSpeed = 15;
-	MDL.PulseCal = 255;
-	MDL.AnalogMethod = 2;
-	MDL.SwapRollPitch = 0;
-	MDL.InvertRoll = 0;
-	MDL.UseTB6612 = 0;
-	MDL.GyroOn = 0;
-	MDL.UseLinearActuator = 0;
-	MDL.GGAlast = 1;
-	MDL.Dir1 = 26;
-	MDL.PWM1 = 25;
-	MDL.Dir2 = 28;
-	MDL.PWM2 = 29;
-	MDL.SteerSw_Relay = 36;
-	MDL.SteerSw = 39;
-	MDL.WorkSw = 27;
-	MDL.CurrentSensor = 10;
-	MDL.PressureSensor = 26;
-	MDL.Encoder = 38;
-	MDL.SpeedPulse = 37;
-	MDL.IP0 = 192;
-	MDL.IP1 = 168;
-	MDL.IP2 = 1;
-	MDL.IP3 = 126;
-
-	steerSettings.Kp = 40;
-	steerSettings.lowPWM = 10;
-	steerSettings.wasOffset = 0;
-	steerSettings.minPWM = 9;
-	steerSettings.highPWM = 60;
-	steerSettings.steerSensorCounts = 30;
-	steerSettings.AckermanFix = 1;
-
-	steerConfig.InvertWAS = 0;
-	steerConfig.IsRelayActiveHigh = 0;
-	steerConfig.MotorDriveDirection = 0;
-	steerConfig.SingleInputWAS = 1;
-	steerConfig.CytronDriver = 1;
-	steerConfig.SteerSwitch = 0;
-	steerConfig.SteerButton = 0;
-	steerConfig.ShaftEncoder = 0;
-	steerConfig.PressureSensor = 0;
-	steerConfig.CurrentSensor = 0;
-	steerConfig.PulseCountMax = 5;
-	steerConfig.IsDanfoss = 0;
-
 	Serial.begin(38400);
 	delay(5000);
 	Serial.println();
 	Serial.println(InoDescription);
 	Serial.println();
 
-	int16_t StoredID;
-	EEPROM.get(0, StoredID);              // read identifier
-	if (StoredID != InoID)   // check on first start and write EEPROM
+	EEPROM.get(0, EEread);              // read identifier
+	if (EEread != EEP_Ident)   // check on first start and write EEPROM
 	{
-		EEPROM.put(0, InoID);
+		EEPROM.put(0, EEP_Ident);
 		EEPROM.put(10, steerSettings);
 		EEPROM.put(40, steerConfig);
 	}
@@ -84,11 +28,11 @@ void DoSetup()
 	}
 
 	// module data
-	EEPROM.get(100, StoredID);
+	EEPROM.get(100, EEread);
 
-	if (StoredID != InoID)
+	if (EEread != MDL_Ident)
 	{
-		EEPROM.put(100, InoID);
+		EEPROM.put(100, MDL_Ident);
 		EEPROM.put(110, MDL);
 	}
 	else
