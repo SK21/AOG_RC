@@ -373,7 +373,17 @@ namespace RateController
         public double RateSet
         {
             get { return cRateSet; }
-            set { cRateSet = value; } 
+            set
+            {
+                if (value < 0 || value > 50000)
+                {
+                    throw new ArgumentException("Must be between 0 and 50,000");
+                }
+                else
+                {
+                    cRateSet = value;
+                }
+            }
         }
 
         public double ScaleCountsPerUnit
@@ -557,6 +567,8 @@ namespace RateController
             if (cQuantityDescription == "") cQuantityDescription = "Lbs";
 
             double.TryParse(mf.Tls.LoadProperty("RateSet" + IDname), out cRateSet);
+            if (cRateSet < 0 || cRateSet > 50000) cRateSet = 0;
+
             double.TryParse(mf.Tls.LoadProperty("RateAlt" + IDname), out cRateAlt);
 
             double.TryParse(mf.Tls.LoadProperty("cProdDensity" + IDname), out cProdDensity);
