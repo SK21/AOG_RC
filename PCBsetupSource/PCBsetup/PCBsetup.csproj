@@ -366,6 +366,8 @@
     <None Include="Resources\RCnanoOldBootLoader.ino.hex" />
     <None Include="Resources\RCteensy.ino.hex" />
     <None Include="Resources\SW.ino.hex" />
+    <None Include="Resources\SWarduinoNB.ino.hex" />
+    <None Include="Resources\SWarduinoOB.ino.hex" />
     <None Include="Resources\Switchbox.ino.hex" />
     <None Include="Resources\SwitchboxOldBootLoader.ino.hex" />
     <None Include="Resources\WifiAOG.ino.bin" />

@@ -243,9 +243,9 @@ namespace PCBsetup.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] SW_ino {
+        internal static byte[] SWarduinoNB_ino {
             get {
-                object obj = ResourceManager.GetObject("SW_ino", resourceCulture);
+                object obj = ResourceManager.GetObject("SWarduinoNB_ino", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -253,29 +253,9 @@ namespace PCBsetup.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] SWNE_ino {
+        internal static byte[] SWarduinoOB_ino {
             get {
-                object obj = ResourceManager.GetObject("SWNE_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] SWOB_ino {
-            get {
-                object obj = ResourceManager.GetObject("SWOB_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] SWOBNE_ino {
-            get {
-                object obj = ResourceManager.GetObject("SWOBNE_ino", resourceCulture);
+                object obj = ResourceManager.GetObject("SWarduinoOB_ino", resourceCulture);
                 return ((byte[])(obj));
             }
         }

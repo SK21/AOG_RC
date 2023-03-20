@@ -27,7 +27,7 @@ namespace PCBsetup.Forms
             InitializeComponent();
             mf = CallingForm;
 
-            CKs = new CheckBox[] { ckSWethernet, ckSWOldBootloader };
+            CKs = new CheckBox[] { ckSWOldBootloader };
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -182,29 +182,17 @@ namespace PCBsetup.Forms
                 }
                 else
                 {
-                    if (ckSWethernet.Checked && ckSWOldBootloader.Checked)
+                    if (ckSWOldBootloader.Checked)
                     {
-                        // ethernet, old bootloader
+                        // old bootloader
                         HexFile = Path.GetTempFileName();
-                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.SWOB_ino);
+                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.SWarduinoOB_ino);
                     }
-                    else if (ckSWethernet.Checked && !ckSWOldBootloader.Checked)
+                    else 
                     {
-                        // ethernet, new bootloader
+                        // new bootloader
                         HexFile = Path.GetTempFileName();
-                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.SW_ino);
-                    }
-                    else if (!ckSWethernet.Checked && !ckSWOldBootloader.Checked)
-                    {
-                        // no ethernet, new bootloader
-                        HexFile = Path.GetTempFileName();
-                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.SWNE_ino);
-                    }
-                    else if (!ckSWethernet.Checked && ckSWOldBootloader.Checked)
-                    {
-                        // no ethernet, old bootloader
-                        HexFile = Path.GetTempFileName();
-                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.SWOBNE_ino);
+                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.SWarduinoNB_ino);
                     }
                 }
 

@@ -1,4 +1,3 @@
-#include <SPI.h>
 #include <Adafruit_MCP23008.h>
 #include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
@@ -11,10 +10,11 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
+#include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "RCnano  :  19-Mar-2023"
-const int16_t InoID = 1903;	// change to send defaults to eeprom
+# define InoDescription "RCnano  :  20-Mar-2023"
+const int16_t InoID = 2003;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
 #define MaxProductCount 2
@@ -23,7 +23,7 @@ struct ModuleConfig
 {
 	uint8_t ID = 0;
 	uint8_t SensorCount = 2;        // up to 2 sensors
-	uint8_t	IPpart3 = 3;			// IP address, 3rd octet
+	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
 	uint8_t RelayOnSignal = 0;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
@@ -163,15 +163,13 @@ void setup()
 	Sensor[1].BrakePoint = 20;
 
 	Serial.begin(38400);
-	delay(5000);
+	delay(2000);
 	Serial.println();
 	Serial.println(InoDescription);
 	Serial.println();
 
 	// eeprom
 	EEPROM.get(0, StoredID);
-	Serial.println(StoredID);
-	Serial.println(InoID);
 
 	if (StoredID == InoID)
 	{
@@ -197,6 +195,7 @@ void setup()
 		}
 	}
 
+	Serial.println("");
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
 	Serial.println();
@@ -315,6 +314,7 @@ void setup()
 	}
 	else
 	{
+		Serial.println("");
 		Serial.println("Ethernet controller not found.");
 	}
 

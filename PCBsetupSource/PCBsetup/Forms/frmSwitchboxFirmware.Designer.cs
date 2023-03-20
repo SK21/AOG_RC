@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSwitchboxFirmware));
             this.ckSWOldBootloader = new System.Windows.Forms.CheckBox();
-            this.ckSWethernet = new System.Windows.Forms.CheckBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnDefault = new System.Windows.Forms.Button();
             this.btnUpload = new System.Windows.Forms.Button();
@@ -39,6 +38,7 @@
             this.tbHexfile = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.WatchDogTimer = new System.Windows.Forms.Timer(this.components);
+            this.label26 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ckSWOldBootloader
@@ -54,26 +54,13 @@
             this.ckSWOldBootloader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSWOldBootloader.UseVisualStyleBackColor = true;
             // 
-            // ckSWethernet
-            // 
-            this.ckSWethernet.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckSWethernet.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckSWethernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSWethernet.Location = new System.Drawing.Point(275, 54);
-            this.ckSWethernet.Name = "ckSWethernet";
-            this.ckSWethernet.Size = new System.Drawing.Size(117, 69);
-            this.ckSWethernet.TabIndex = 24;
-            this.ckSWethernet.Text = "Use Ethernet";
-            this.ckSWethernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckSWethernet.UseVisualStyleBackColor = true;
-            // 
             // btnBrowse
             // 
             this.btnBrowse.BackColor = System.Drawing.Color.Transparent;
             this.btnBrowse.FlatAppearance.BorderSize = 0;
             this.btnBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowse.Image = global::PCBsetup.Properties.Resources.btnBrowse_Image;
-            this.btnBrowse.Location = new System.Drawing.Point(25, 157);
+            this.btnBrowse.Location = new System.Drawing.Point(23, 179);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(115, 72);
             this.btnBrowse.TabIndex = 3;
@@ -87,7 +74,7 @@
             this.btnDefault.FlatAppearance.BorderSize = 0;
             this.btnDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDefault.Image = global::PCBsetup.Properties.Resources.VehFileLoad;
-            this.btnDefault.Location = new System.Drawing.Point(150, 157);
+            this.btnDefault.Location = new System.Drawing.Point(148, 179);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(115, 72);
             this.btnDefault.TabIndex = 2;
@@ -101,7 +88,7 @@
             this.btnUpload.FlatAppearance.BorderSize = 0;
             this.btnUpload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpload.Image = global::PCBsetup.Properties.Resources.UpArrow64;
-            this.btnUpload.Location = new System.Drawing.Point(275, 157);
+            this.btnUpload.Location = new System.Drawing.Point(273, 179);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(115, 72);
             this.btnUpload.TabIndex = 0;
@@ -116,7 +103,7 @@
             this.bntOK.FlatAppearance.BorderSize = 0;
             this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
-            this.bntOK.Location = new System.Drawing.Point(400, 157);
+            this.bntOK.Location = new System.Drawing.Point(398, 179);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 1;
@@ -143,13 +130,21 @@
             this.WatchDogTimer.Interval = 1000;
             this.WatchDogTimer.Tick += new System.EventHandler(this.WatchDogTimer_Tick);
             // 
+            // label26
+            // 
+            this.label26.Location = new System.Drawing.Point(21, 141);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(494, 35);
+            this.label26.TabIndex = 133;
+            this.label26.Text = "Disconnect Nano from ethernet shield before uploading.";
+            // 
             // frmSwitchboxFirmware
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(542, 240);
+            this.ClientSize = new System.Drawing.Size(542, 266);
+            this.Controls.Add(this.label26);
             this.Controls.Add(this.ckSWOldBootloader);
-            this.Controls.Add(this.ckSWethernet);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnDefault);
             this.Controls.Add(this.btnUpload);
@@ -176,7 +171,6 @@
         #endregion
 
         private System.Windows.Forms.CheckBox ckSWOldBootloader;
-        private System.Windows.Forms.CheckBox ckSWethernet;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnDefault;
         private System.Windows.Forms.Button btnUpload;
@@ -184,5 +178,6 @@
         private System.Windows.Forms.TextBox tbHexfile;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Timer WatchDogTimer;
+        private System.Windows.Forms.Label label26;
     }
 }

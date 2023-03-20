@@ -1,12 +1,13 @@
 #include <EtherCard.h>
 #include <EEPROM.h>
+#include <SPI.h>
 
-# define InoDescription "SWarduino  :  09-May-2022"
 // Nano board for rate control switches
+# define InoDescription "SWarduino  :  20-Mar-2023"
+const int16_t InoID = 2003;	// change to send defaults to eeprom
+int16_t StoredID;			// Defaults ID stored in eeprom	
 
-#define UseEthernet 0
-
-struct PCBconfig
+struct ModuleConfig
 {
 	// SW2 pcb
 	uint8_t	Auto = A5;
@@ -18,9 +19,8 @@ struct PCBconfig
 	uint8_t PinIDs[16];
 };
 
-PCBconfig PCB;
+ModuleConfig MDL;
 
-#if UseEthernet
 // local ports on Arduino
 unsigned int ListeningPort = 28888;	// to listen on
 unsigned int SourcePort = 6200;		// to send from
@@ -30,8 +30,8 @@ byte DestinationIP[] = { 192, 168, 1, 255 };	// broadcast 255
 unsigned int DestinationPort = 29999; // Rate Controller listening port
 
 byte Ethernet::buffer[500]; // udp send and receive buffer
-bool EthernetEnabled = false;
-#endif
+bool ENCfound;
+static byte selectPin = 10;
 
 //PGN 32618 to send data back
 byte Pins[5];
@@ -46,63 +46,64 @@ uint16_t PGN;
 //reset function
 void(*resetFunc) (void) = 0;
 
-//EEPROM
-int16_t EEread = 0;
-#define PCB_Ident 8120
-
 void setup()
 {
 	Serial.begin(38400);
 
-	delay(5000);
+	delay(2000);
 	Serial.println();
 	Serial.println(InoDescription);
 	Serial.println();
 
 	// defaults
-	PCB.PinIDs[0] = A4;
-	PCB.PinIDs[1] = 9;
-	PCB.PinIDs[2] = 6;
-	PCB.PinIDs[3] = 4;
+	MDL.PinIDs[0] = A4;
+	MDL.PinIDs[1] = 9;
+	MDL.PinIDs[2] = 6;
+	MDL.PinIDs[3] = 4;
 
 	for (int i = 4; i < 16; i++)
 	{
-		PCB.PinIDs[i] = 0;
+		MDL.PinIDs[i] = 0;
 	}
 
-	// stored pcb data
-	EEPROM.get(0, EEread);              // read identifier
-	if (EEread != PCB_Ident)
+	//eeprom
+	EEPROM.get(0, StoredID);
+
+	if (StoredID == InoID)
 	{
-		EEPROM.put(0, PCB_Ident);
-		EEPROM.put(10, PCB);
+		// load stored data
+		Serial.println("Loading stored settings.");
+		EEPROM.get(10, MDL);
 	}
 	else
 	{
-		EEPROM.get(10, PCB);
+		// update stored data
+		Serial.println("Updating stored data.");
+		EEPROM.put(0, InoID);
+		EEPROM.put(10, MDL);
 	}
 
-	pinMode(PCB.Auto, INPUT_PULLUP);
-	pinMode(PCB.MasterOn, INPUT_PULLUP);
-	pinMode(PCB.MasterOff, INPUT_PULLUP);
-	pinMode(PCB.RateUp, INPUT_PULLUP);
-	pinMode(PCB.RateDown, INPUT_PULLUP);
+	pinMode(MDL.Auto, INPUT_PULLUP);
+	pinMode(MDL.MasterOn, INPUT_PULLUP);
+	pinMode(MDL.MasterOff, INPUT_PULLUP);
+	pinMode(MDL.RateUp, INPUT_PULLUP);
+	pinMode(MDL.RateDown, INPUT_PULLUP);
 
 	for (int i = 0; i < 16; i++)
 	{
-		if (PCB.PinIDs[i] > 0) pinMode(PCB.PinIDs[i], INPUT_PULLUP);
+		if (MDL.PinIDs[i] > 0) pinMode(MDL.PinIDs[i], INPUT_PULLUP);
 	}
 
-#if UseEthernet
+	Serial.println("");
 	Serial.println("Starting Ethernet ...");
 	// ethernet interface ip address
-	byte ArduinoIP[] = { 192,168,PCB.IPpart3,188 };
+	byte ArduinoIP[] = { 192,168,MDL.IPpart3,188 };
 
 	// ethernet interface Mac address
 	byte LocalMac[] = { 0x70,0x62,0x21,0x2D,0x31,188 };
 
 	// gateway ip address
-	byte gwip[] = { 192,168,PCB.IPpart3,1 };
+	byte gwip[] = { 192,168,MDL.IPpart3,1 };
 
 	//DNS- you just need one anyway
 	static byte myDNS[] = { 8,8,8,8 };
@@ -110,24 +111,25 @@ void setup()
 	//mask
 	static byte mask[] = { 255,255,255,0 };
 
-	DestinationIP[2] = PCB.IPpart3;
+	DestinationIP[2] = MDL.IPpart3;
 
-	while (!EthernetEnabled)
+	ENCfound = ShieldFound();
+	if (ENCfound)
 	{
-		EthernetEnabled = (ether.begin(sizeof Ethernet::buffer, LocalMac, 10) != 0);
-		Serial.print(".");
+		ether.begin(sizeof Ethernet::buffer, LocalMac, selectPin);
+		Serial.println("");
+		Serial.println("Ethernet controller found.");
+		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
+		ether.printIp("IP Address:     ", ether.myip);
+
+		//register sub for received data
+		//ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
 	}
-
-	Serial.println("");
-	Serial.println("Ethernet controller found.");
-	ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
-	ether.printIp("IP Address:     ", ether.myip);
-
-	//register sub for received data
-	//ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
-#endif
-	pinMode(LED_BUILTIN, OUTPUT);
-	digitalWrite(LED_BUILTIN, LOW);
+	else
+	{
+		Serial.println("");
+		Serial.println("Ethernet controller not found.");
+	}
 
 	Serial.println("");
 	Serial.println("Finished Setup.");
@@ -143,11 +145,11 @@ void loop()
 		Packet[1] = 127;
 
 		// read switches
-		Pins[0] = !digitalRead(PCB.Auto);
-		Pins[1] = !digitalRead(PCB.MasterOn);
-		Pins[2] = !digitalRead(PCB.MasterOff);
-		Pins[3] = !digitalRead(PCB.RateUp);
-		Pins[4] = !digitalRead(PCB.RateDown);
+		Pins[0] = !digitalRead(MDL.Auto);
+		Pins[1] = !digitalRead(MDL.MasterOn);
+		Pins[2] = !digitalRead(MDL.MasterOff);
+		Pins[3] = !digitalRead(MDL.RateUp);
+		Pins[4] = !digitalRead(MDL.RateDown);
 
 		Packet[2] = 0;
 		for (int i = 0; i < 5; i++)
@@ -160,15 +162,15 @@ void loop()
 		Packet[4] = 0;
 		for (int i = 0; i < 16; i++)
 		{
-			if (PCB.PinIDs[i] > 0)
+			if (MDL.PinIDs[i] > 0)
 			{
 				if (i < 8)
 				{
-					if (!digitalRead(PCB.PinIDs[i])) Packet[3] = Packet[3] | (1 << i);
+					if (!digitalRead(MDL.PinIDs[i])) Packet[3] = Packet[3] | (1 << i);
 				}
 				else
 				{
-					if (!digitalRead(PCB.PinIDs[i])) Packet[4] = Packet[4] | (1 << (i - 8));
+					if (!digitalRead(MDL.PinIDs[i])) Packet[4] = Packet[4] | (1 << (i - 8));
 				}
 			}
 		}
@@ -176,10 +178,11 @@ void loop()
 		Packet[5] = CRC(5, 0);
 
 		// PGN 32618
-#if UseEthernet
+		if (ENCfound)
+		{
 			// send UDP
-		ether.sendUdp(Packet, 6, SourcePort, DestinationIP, DestinationPort);
-#endif
+			ether.sendUdp(Packet, 6, SourcePort, DestinationIP, DestinationPort);
+		}
 
 		// send serial
 		for (int i = 0; i < 6; i++)
@@ -194,10 +197,11 @@ void loop()
 
 	ReceiveSerial();
 
-#if UseEthernet
-	//this must be called for ethercard functions to work.
-	ether.packetLoop(ether.packetReceive());
-#endif
+	if (ENCfound)
+	{
+		//this must be called for ethercard functions to work.
+		ether.packetLoop(ether.packetReceive());
+	}
 }
 
 void ReceiveSerial()
@@ -219,18 +223,18 @@ void ReceiveSerial()
 
 				if (GoodCRC(25))
 				{
-					PCB.Auto = Packet[2];
-					PCB.MasterOn = Packet[3];
-					PCB.MasterOff = Packet[4];
-					PCB.RateUp = Packet[5];
-					PCB.RateDown = Packet[6];
-					PCB.IPpart3 = Packet[7];
+					MDL.Auto = Packet[2];
+					MDL.MasterOn = Packet[3];
+					MDL.MasterOff = Packet[4];
+					MDL.RateUp = Packet[5];
+					MDL.RateDown = Packet[6];
+					MDL.IPpart3 = Packet[7];
 
 					for (int i = 8; i < 24; i++)
 					{
-						PCB.PinIDs[i - 8] = Packet[i];
+						MDL.PinIDs[i - 8] = Packet[i];
 					}
-					EEPROM.put(10, PCB);
+					EEPROM.put(10, MDL);
 					resetFunc();
 				}
 			}

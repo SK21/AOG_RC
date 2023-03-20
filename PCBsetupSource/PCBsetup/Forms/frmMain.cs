@@ -319,8 +319,8 @@ namespace PCBsetup.Forms
         private void SerialMonitorItem_Click(object sender, EventArgs e)
         {
             Form tmp = new frmMonitor(this);
-            //tmp.ShowDialog();
-            tmp.Show();
+            tmp.ShowDialog();
+            //tmp.Show();
         }
 
         private void SetDayMode()
