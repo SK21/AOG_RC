@@ -354,6 +354,8 @@
     <None Include="Resources\AutoSteerTeensy.ino.hex" />
     <None Include="Resources\AutoSteerTeensy2.ino.hex" />
     <None Include="Resources\Example.con" />
+    <None Include="Resources\NanoRateNB.ino.hex" />
+    <None Include="Resources\NanoRateOB.ino.hex" />
     <None Include="Resources\Rate.ino.hex" />
     <None Include="Resources\RateNE.ino.hex" />
     <None Include="Resources\RateOB.ino.hex" />
@@ -396,7 +398,6 @@
     <None Include="Resources\DnArrow641.png" />
     <None Include="Resources\bntOK.Image.png" />
     <None Include="Resources\esptool.exe" />
-    <None Include="Resources\AS13.jpg" />
     <None Include="Resources\PCB.jpg" />
   </ItemGroup>
   <ItemGroup>

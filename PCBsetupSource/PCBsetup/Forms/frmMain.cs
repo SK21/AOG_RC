@@ -319,8 +319,8 @@ namespace PCBsetup.Forms
         private void SerialMonitorItem_Click(object sender, EventArgs e)
         {
             Form tmp = new frmMonitor(this);
-            tmp.ShowDialog();
-            //tmp.Show();
+            //tmp.ShowDialog();
+            tmp.Show();
         }
 
         private void SetDayMode()
@@ -376,7 +376,7 @@ namespace PCBsetup.Forms
 
         private void cboPort1_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "List of connected serial ports. If 'CH340' is shown use 'Old Bootloader'.";
+            string Message = "List of connected serial ports.";
 
             Tls.ShowHelp(Message, this.Text);
             hlpevent.Handled = true;

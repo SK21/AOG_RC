@@ -151,6 +151,12 @@
   <data name="FileNew" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FileNew.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NanoRateNB_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NanoRateNB.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="NanoRateOB_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NanoRateOB.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -159,18 +165,6 @@
   </data>
   <data name="OpenFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RateNE_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RateNE.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="RateOBNE_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RateOBNE.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="RateOB_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RateOB.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Rate_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Rate.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="RCteensy_ino" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RCteensy.ino.hex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

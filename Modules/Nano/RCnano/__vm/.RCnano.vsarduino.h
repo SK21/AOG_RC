@@ -16,6 +16,7 @@
 #include <arduino.h>
 #include <pins_arduino.h> 
 #include "..\RCnano.ino"
+#include "..\CheckShield.ino"
 #include "..\Motor.ino"
 #include "..\PID.ino"
 #include "..\Rate.ino"

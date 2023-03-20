@@ -3,7 +3,6 @@
 #include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
 #include <Adafruit_MCP23XXX.h>
-#include <EtherCard.h>
 #include <Wire.h>
 #include <EEPROM.h>
 
@@ -12,11 +11,12 @@
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_SPIDevice.h>
 
-# define InoDescription "RCnano  :  10-Mar-2023"
-const int16_t InoID = 1003;	// change to send defaults to eeprom
+#include <EtherCard.h>
+
+# define InoDescription "RCnano  :  19-Mar-2023"
+const int16_t InoID = 1903;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
-# define UseEthernet 0
 #define MaxProductCount 2
 
 struct ModuleConfig
@@ -67,7 +67,6 @@ SensorConfig Sensor[2];
 // D2 can be used if pin D2 on the shield is cut off
 // and then mount the shield on top of the Nano.
 
-#if UseEthernet
 // local ports on Arduino
 unsigned int ListeningPort = 28888;	// to listen on
 unsigned int SourcePort = 6100;		// to send from
@@ -77,7 +76,8 @@ byte DestinationIP[] = { 192, 168, 1, 255 };	// broadcast 255
 unsigned int DestinationPort = 29999; // Rate Controller listening port
 
 byte Ethernet::buffer[500]; // udp send and receive buffer
-#endif
+bool ENCfound;
+static byte selectPin = 10;
 
 Adafruit_MCP23X17 mcp;
 
@@ -170,6 +170,8 @@ void setup()
 
 	// eeprom
 	EEPROM.get(0, StoredID);
+	Serial.println(StoredID);
+	Serial.println(InoID);
 
 	if (StoredID == InoID)
 	{
@@ -279,9 +281,9 @@ void setup()
 	attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0, FALLING);
 	attachInterrupt(digitalPinToInterrupt(Sensor[1].FlowPin), ISR1, FALLING);
 
-#if UseEthernet
 	Serial.println("");
 	Serial.println("Starting Ethernet ...");
+
 	// ethernet interface ip address
 	byte ArduinoIP[] = { 192, 168,MDL.IPpart3, 50 + MDL.ID };
 
@@ -299,16 +301,22 @@ void setup()
 
 	DestinationIP[2] = MDL.IPpart3;
 
-	ether.begin(sizeof Ethernet::buffer, LocalMac, 10);
+	ENCfound = ShieldFound();
+	if (ENCfound)
+	{
+		ether.begin(sizeof Ethernet::buffer, LocalMac, selectPin);
+		Serial.println("");
+		Serial.println("Ethernet controller found.");
+		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
+		ether.printIp("IP Address:     ", ether.myip);
 
-	Serial.println("");
-	Serial.println("Ethernet controller found.");
-	ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
-	ether.printIp("IP Address:     ", ether.myip);
-
-	//register sub for received data
-	ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
-#endif
+		//register sub for received data
+		ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
+	}
+	else
+	{
+		Serial.println("Ethernet controller not found.");
+	}
 
 	Serial.println("");
 	Serial.println("Finished Setup.");
@@ -348,15 +356,14 @@ void loop()
 	{
 		SendLast = millis();
 		SendSerial();
-#if UseEthernet
 		SendUDPwired();
-#endif
 	}
 
-#if UseEthernet
-	//this must be called for ethercard functions to work.
-	ether.packetLoop(ether.packetReceive());
-#endif
+	if (ENCfound)
+	{
+		//this must be called for ethercard functions to work.
+		ether.packetLoop(ether.packetReceive());
+	}
 
 	ReceiveSerial();
 }

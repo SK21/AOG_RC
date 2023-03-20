@@ -171,6 +171,26 @@ namespace PCBsetup.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] NanoRateNB_ino {
+            get {
+                object obj = ResourceManager.GetObject("NanoRateNB_ino", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] NanoRateOB_ino {
+            get {
+                object obj = ResourceManager.GetObject("NanoRateOB_ino", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Off {
@@ -197,46 +217,6 @@ namespace PCBsetup.Properties {
             get {
                 object obj = ResourceManager.GetObject("OpenFile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Rate_ino {
-            get {
-                object obj = ResourceManager.GetObject("Rate_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] RateNE_ino {
-            get {
-                object obj = ResourceManager.GetObject("RateNE_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] RateOB_ino {
-            get {
-                object obj = ResourceManager.GetObject("RateOB_ino", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] RateOBNE_ino {
-            get {
-                object obj = ResourceManager.GetObject("RateOBNE_ino", resourceCulture);
-                return ((byte[])(obj));
             }
         }
         

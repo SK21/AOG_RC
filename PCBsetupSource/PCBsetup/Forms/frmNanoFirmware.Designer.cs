@@ -36,9 +36,9 @@
             this.bntOK = new System.Windows.Forms.Button();
             this.tbHexfile = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.ckRtEthernet = new System.Windows.Forms.CheckBox();
             this.ckRtOldBootloader = new System.Windows.Forms.CheckBox();
             this.WatchDogTimer = new System.Windows.Forms.Timer(this.components);
+            this.label26 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnBrowse
@@ -47,7 +47,7 @@
             this.btnBrowse.FlatAppearance.BorderSize = 0;
             this.btnBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowse.Image = global::PCBsetup.Properties.Resources.btnBrowse_Image;
-            this.btnBrowse.Location = new System.Drawing.Point(26, 157);
+            this.btnBrowse.Location = new System.Drawing.Point(26, 178);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(115, 72);
             this.btnBrowse.TabIndex = 3;
@@ -61,7 +61,7 @@
             this.btnDefault.FlatAppearance.BorderSize = 0;
             this.btnDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDefault.Image = global::PCBsetup.Properties.Resources.VehFileLoad;
-            this.btnDefault.Location = new System.Drawing.Point(151, 157);
+            this.btnDefault.Location = new System.Drawing.Point(151, 178);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(115, 72);
             this.btnDefault.TabIndex = 2;
@@ -75,7 +75,7 @@
             this.btnUpload.FlatAppearance.BorderSize = 0;
             this.btnUpload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpload.Image = global::PCBsetup.Properties.Resources.UpArrow64;
-            this.btnUpload.Location = new System.Drawing.Point(276, 157);
+            this.btnUpload.Location = new System.Drawing.Point(276, 178);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(115, 72);
             this.btnUpload.TabIndex = 0;
@@ -90,7 +90,7 @@
             this.bntOK.FlatAppearance.BorderSize = 0;
             this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
-            this.bntOK.Location = new System.Drawing.Point(401, 157);
+            this.bntOK.Location = new System.Drawing.Point(401, 178);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 1;
@@ -112,19 +112,6 @@
             this.progressBar1.Size = new System.Drawing.Size(240, 20);
             this.progressBar1.TabIndex = 10;
             // 
-            // ckRtEthernet
-            // 
-            this.ckRtEthernet.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckRtEthernet.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckRtEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRtEthernet.Location = new System.Drawing.Point(276, 54);
-            this.ckRtEthernet.Name = "ckRtEthernet";
-            this.ckRtEthernet.Size = new System.Drawing.Size(117, 69);
-            this.ckRtEthernet.TabIndex = 16;
-            this.ckRtEthernet.Text = "Use Ethernet";
-            this.ckRtEthernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckRtEthernet.UseVisualStyleBackColor = true;
-            // 
             // ckRtOldBootloader
             // 
             this.ckRtOldBootloader.Appearance = System.Windows.Forms.Appearance.Button;
@@ -142,13 +129,21 @@
             // 
             this.WatchDogTimer.Interval = 1000;
             // 
+            // label26
+            // 
+            this.label26.Location = new System.Drawing.Point(22, 140);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(494, 35);
+            this.label26.TabIndex = 132;
+            this.label26.Text = "Disconnect Nano from ethernet shield before uploading.";
+            // 
             // frmNanoFirmware
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(542, 241);
+            this.ClientSize = new System.Drawing.Size(542, 275);
+            this.Controls.Add(this.label26);
             this.Controls.Add(this.ckRtOldBootloader);
-            this.Controls.Add(this.ckRtEthernet);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnDefault);
             this.Controls.Add(this.btnUpload);
@@ -180,8 +175,8 @@
         private System.Windows.Forms.Button bntOK;
         private System.Windows.Forms.TextBox tbHexfile;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.CheckBox ckRtEthernet;
         private System.Windows.Forms.CheckBox ckRtOldBootloader;
         private System.Windows.Forms.Timer WatchDogTimer;
+        private System.Windows.Forms.Label label26;
     }
 }

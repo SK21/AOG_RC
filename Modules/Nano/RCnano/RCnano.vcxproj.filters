@@ -22,6 +22,7 @@
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="SerialComm.ino" />
     <ClCompile Include="UDPwiredComm.ino" />
+    <ClCompile Include="CheckShield.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCnano.vsarduino.h">

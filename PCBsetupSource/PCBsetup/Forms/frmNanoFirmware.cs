@@ -27,7 +27,7 @@ namespace PCBsetup.Forms
             InitializeComponent();
             mf = CallingForm;
 
-            CKs = new CheckBox[] { ckRtEthernet, ckRtOldBootloader };
+            CKs = new CheckBox[] {  ckRtOldBootloader };
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -182,29 +182,17 @@ namespace PCBsetup.Forms
                 }
                 else
                 {
-                    if (ckRtEthernet.Checked && ckRtOldBootloader.Checked)
+                    if (ckRtOldBootloader.Checked)
                     {
-                        // ethernet, old bootloader
+                        // old bootloader
                         HexFile = Path.GetTempFileName();
-                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.RateOB_ino);
+                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.NanoRateOB_ino);
                     }
-                    else if (ckRtEthernet.Checked && !ckRtOldBootloader.Checked)
+                    else 
                     {
-                        // ethernet, new bootloader
+                        // new bootloader
                         HexFile = Path.GetTempFileName();
-                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.Rate_ino);
-                    }
-                    else if (!ckRtEthernet.Checked && !ckRtOldBootloader.Checked)
-                    {
-                        // no ethernet, new bootloader
-                        HexFile = Path.GetTempFileName();
-                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.RateNE_ino);
-                    }
-                    else if (!ckRtEthernet.Checked && ckRtOldBootloader.Checked)
-                    {
-                        // no ethernet, old bootloader
-                        HexFile = Path.GetTempFileName();
-                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.RateOBNE_ino);
+                        File.WriteAllBytes(HexFile, PCBsetup.Properties.Resources.NanoRateNB_ino);
                     }
                 }
 

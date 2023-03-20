@@ -93,6 +93,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbNanoFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -104,7 +105,7 @@
             this.btnLoadDefaults.FlatAppearance.BorderSize = 0;
             this.btnLoadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLoadDefaults.Image = global::PCBsetup.Properties.Resources.VehFileLoad;
-            this.btnLoadDefaults.Location = new System.Drawing.Point(18, 533);
+            this.btnLoadDefaults.Location = new System.Drawing.Point(18, 554);
             this.btnLoadDefaults.Name = "btnLoadDefaults";
             this.btnLoadDefaults.Size = new System.Drawing.Size(115, 72);
             this.btnLoadDefaults.TabIndex = 19;
@@ -118,7 +119,7 @@
             this.btnSendToModule.FlatAppearance.BorderSize = 0;
             this.btnSendToModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSendToModule.Image = global::PCBsetup.Properties.Resources.UpArrow64;
-            this.btnSendToModule.Location = new System.Drawing.Point(153, 533);
+            this.btnSendToModule.Location = new System.Drawing.Point(153, 554);
             this.btnSendToModule.Name = "btnSendToModule";
             this.btnSendToModule.Size = new System.Drawing.Size(115, 72);
             this.btnSendToModule.TabIndex = 18;
@@ -133,7 +134,7 @@
             this.btnCancel.FlatAppearance.BorderSize = 0;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Image = global::PCBsetup.Properties.Resources.Cancel64;
-            this.btnCancel.Location = new System.Drawing.Point(288, 533);
+            this.btnCancel.Location = new System.Drawing.Point(288, 554);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(115, 72);
             this.btnCancel.TabIndex = 17;
@@ -147,7 +148,7 @@
             this.bntOK.FlatAppearance.BorderSize = 0;
             this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bntOK.Image = global::PCBsetup.Properties.Resources.bntOK_Image;
-            this.bntOK.Location = new System.Drawing.Point(423, 533);
+            this.bntOK.Location = new System.Drawing.Point(423, 554);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 16;
@@ -748,11 +749,20 @@
             this.label4.TabIndex = 24;
             this.label4.Text = "Flow 1";
             // 
+            // label26
+            // 
+            this.label26.Location = new System.Drawing.Point(12, 520);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(526, 31);
+            this.label26.TabIndex = 131;
+            this.label26.Text = "Disconnect Nano from ethernet shield before uploading.";
+            // 
             // frmNanoSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(554, 619);
+            this.ClientSize = new System.Drawing.Size(554, 635);
+            this.Controls.Add(this.label26);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnLoadDefaults);
             this.Controls.Add(this.btnSendToModule);
@@ -845,5 +855,6 @@
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.TextBox tbNanoDebounce;
         private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label26;
     }
 }
