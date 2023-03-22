@@ -1,8 +1,6 @@
 volatile unsigned long Duration[2];
-volatile byte PulseCount[2];
+volatile unsigned long PulseCount[2];
 unsigned long LastPulse[2];
-int pulseint = 0;
-unsigned long durations[4];
 
 unsigned long TimedCounts[2];
 unsigned long RateInterval[2];
@@ -17,27 +15,16 @@ unsigned long Omax[2];
 unsigned long Omin[2];
 byte Ocount[2];
 float Oave[2];
+unsigned long Omax2[2];
+unsigned long Omin2[2];
 
 void ISR0()
 {
 	static unsigned long PulseTime;
-	unsigned long micronow;
-	unsigned long dur;
-
-	micronow = micros();
-	if (PulseTime > micronow)
+	if (millis() - PulseTime > 10)
 	{
-		dur = micronow - PulseTime;
-	}
-	else
-	{
-		dur = 4294967295 + micronow - PulseTime;
-	}
-
-	if (dur > MDL.Debounce * 1000)
-	{
-		Duration[0] = dur;
-		PulseTime = micronow;
+		Duration[0] = millis() - PulseTime;
+		PulseTime = millis();
 		PulseCount[0]++;
 	}
 }
@@ -45,34 +32,10 @@ void ISR0()
 void ISR1()
 {
 	static unsigned long PulseTime;
-	unsigned long micronow;
-	unsigned long dur;
-
-	micronow = micros();
-	if (PulseTime > micronow)
+	if (millis() - PulseTime > 10)
 	{
-		dur = micronow - PulseTime;
-	}
-	else
-	{
-		dur = 4294967295 + micronow - PulseTime;
-	}
-	if (dur > MDL.Debounce * 1000)
-	{
-		dur = micronow - PulseTime;
-	}
-	else
-	{
-		dur = 4294967295 + micronow - PulseTime;
-	}
-	if (dur > MDL.Debounce*1000)
-	{
-		Duration[1] = dur;
-		PulseTime = micronow;
-
-		Duration[1] = dur;
-		durations[pulseint] = dur;
-		PulseTime = micronow;
+		Duration[1] = millis() - PulseTime;
+		PulseTime = millis();
 		PulseCount[1]++;
 	}
 }
@@ -89,18 +52,8 @@ void GetUPM()
 			CurrentDuration = Duration[i];
 			interrupts();
 
-			if (Sensor[i].UseMultiPulses)
+			if (UseMultiPulses[i])
 			{
-				//code to average the pulses for a full rotation
-				long rotduration = 0;
-				for (int j = 0; j < 4; j++)
-				{
-					rotduration += durations[j];
-				}
-				
-				CurrentDuration = rotduration / 4;
-
-				/*******************************
 				// low ms/pulse, use pulses over time
 				TimedCounts[i] += CurrentCount;
 				RateInterval[i] = millis() - RateTimeLast[i];
@@ -110,7 +63,6 @@ void GetUPM()
 					PPM[i] = (6000000 * TimedCounts[i]) / RateInterval[i];	// 100 X actual
 					TimedCounts[i] = 0;
 				}
-				/******************************************/
 			}
 			else
 			{
@@ -121,50 +73,58 @@ void GetUPM()
 				}
 				else
 				{
-					PPM[i] = 6000000000 / CurrentDuration;	// 100 X actual
+					PPM[i] = 6000000 / CurrentDuration;	// 100 X actual
 				}
 			}
 
 
 			LastPulse[i] = millis();
-			Sensor[i].TotalPulses += CurrentCount;
+			TotalPulses[i] += CurrentCount;
 		}
 
 		if (millis() - LastPulse[i] > 4000)	PPM[i] = 0;	// check for no flow
 
-		// olympic average
-		/*************************************************************
-		// olympic average
+		// double olympic average
 		Osum[i] += PPM[i];
-		if (Omax[i] < PPM[i]) Omax[i] = PPM[i];
-		if (Omin[i] > PPM[i]) Omin[i] = PPM[i];
+		if (Omax[i] < PPM[i])
+		{
+			Omax2[i] = Omax[i];
+			Omax[i] = PPM[i];
+		}
+		else if (Omax2[i] < PPM[i]) Omax2[i] = PPM[i];
+
+		if (Omin[i] > PPM[i])
+		{
+			Omin2[i] = Omin[i];
+			Omin[i] = PPM[i];
+		}
+		else if (Omin2[i] > PPM[i]) Omin2[i] = PPM[i];
 
 		Ocount[i]++;
 		if (Ocount[i] > 9)
 		{
 			Osum[i] -= Omax[i];
 			Osum[i] -= Omin[i];
-			Oave[i] = (float)Osum[i] / 300.0;	// divide by 3 and divide by 100 
+			Osum[i] -= Omax2[i];
+			Osum[i] -= Omin2[i];
+			Oave[i] = (float)Osum[i] / 600.0;	// divide by 6 and divide by 100 
 			Osum[i] = 0;
 			Omax[i] = 0;
-			Omin[i] = 5000000000;
+			Omin[i] = 5000000;
+			Omax2[i] = 0;
+			Omin2[i] = 5000000;
 			Ocount[i] = 0;
 		}
 
-		**********************************************************/
-
 		// units per minute
-		if (Sensor[i].MeterCal > 0)
+		if (MeterCal[i] > 0)
 		{
-			Sensor[i].UPM = Oave[i] / Sensor[i].MeterCal;
-			//UPM[i] = Oave[i] / MeterCal[i];
-
-			UPM[i] = PPM[i] / MeterCal[i]
-
+			UPM[i] = Oave[i] / MeterCal[i];
 		}
 		else
 		{
-			Sensor[i].UPM = 0;
+			UPM[i] = 0;
 		}
 	}
 }
+

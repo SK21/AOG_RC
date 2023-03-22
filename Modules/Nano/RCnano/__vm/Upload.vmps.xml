@@ -1,8 +1,0 @@
-<VisualMicro>
-    <Platform Name="arduino16x" Package="arduino" Platform="avr" Architecture="avr">
-    </Platform>
-    <VCCodeModel>
-      <VCCodeMacros />
-    </VCCodeModel>
-  </Program>
-</VisualMicro>
