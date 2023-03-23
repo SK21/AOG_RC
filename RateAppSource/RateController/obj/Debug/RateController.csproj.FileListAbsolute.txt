@@ -2255,3 +2255,6 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Deb
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.exe
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.pdb
+C:\Users\jimcr\source\repos\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormPIDGraph.resources
+C:\Users\jimcr\source\repos\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmLargeScreen.resources
+C:\Users\jimcr\source\repos\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmSwitches.resources

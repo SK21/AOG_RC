@@ -59,6 +59,7 @@ namespace RateController
 
         private bool cUseLargeScreen = false;
         public bool LargeScreenExit = false;
+        public bool cUseTransparent = false;
         public bool Restart = false;
         public frmLargeScreen Lscrn;
 
@@ -149,6 +150,16 @@ namespace RateController
             }
         }
 
+        public bool UseTransparent
+        {
+            get { return cUseTransparent; }
+            set
+            {
+                cUseTransparent = value;
+                Tls.SaveProperty("UseTransparent", cUseTransparent.ToString());
+            }
+        }
+
         public int CurrentProduct()
         {
             int Result = 0;
@@ -172,6 +183,7 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
             if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd)) cSimSpeed = Spd;
             if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS)) cUseLargeScreen = LS;
+            if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
 
             Sections.Load();
             Sections.CheckSwitchDefinitions();
@@ -962,6 +974,7 @@ namespace RateController
             this.ShowInTaskbar = false;
             Lscrn = new frmLargeScreen(this);
             Lscrn.ShowInTaskbar = true;
+            Lscrn.SetTransparent(cUseTransparent);
             Lscrn.Show();
         }
 
