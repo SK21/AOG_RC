@@ -63,6 +63,41 @@ namespace RateController
             pnlQuantity1.BackColor = Properties.Settings.Default.DayColour;
             pnlQuantity2.BackColor = Properties.Settings.Default.DayColour;
             pnlQuantity3.BackColor = Properties.Settings.Default.DayColour;
+
+            foreach(Control Ctrl in Controls)
+            {
+                if(Ctrl.Name !="btnSettings")
+                {
+                    Ctrl.MouseDown += mouseMove_MouseDown;
+                    Ctrl.MouseMove += mouseMove_MouseMove;
+                }
+            }
+        }
+
+        private void SetFont()
+        {
+            if (transparentToolStripMenuItem.Checked)
+            {
+                foreach (Control Ctrl in Controls)
+                {
+                    if (Ctrl.Name != "lbName0" && Ctrl.Name != "lbName1" && Ctrl.Name != "lbName2" && Ctrl.Name != "lbName3"
+                        && Ctrl.Name != "lbAogConnected" && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2")
+                    {
+                        Ctrl.Font = new Font("Candara Light", 14);
+                    }
+                    else
+                    {
+                        Ctrl.Font = new Font("Candara Light", 14, FontStyle.Bold);
+                    }
+                }
+            }
+            else
+            {
+                foreach (Control Ctrl in Controls)
+                {
+                    Ctrl.Font = new Font("Tahoma", 14);
+                }
+            }
         }
 
         public void SetTransparent(bool frmtrans)
@@ -122,6 +157,7 @@ namespace RateController
                 btnSettings.BackColor = Color.Transparent;
 
             }
+            SetFont();
         }
 
         public int CurrentProduct()

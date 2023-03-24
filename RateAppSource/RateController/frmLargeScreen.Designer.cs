@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLargeScreen));
             this.pnlQuantity0 = new System.Windows.Forms.Panel();
-            this.pbQuantity0 = new RateController.VerticalProgressBar();
             this.lbName0 = new System.Windows.Forms.Label();
             this.lbName1 = new System.Windows.Forms.Label();
             this.lbName2 = new System.Windows.Forms.Label();
@@ -49,11 +48,8 @@
             this.lbRPM1 = new System.Windows.Forms.Label();
             this.lbRPM2 = new System.Windows.Forms.Label();
             this.pnlQuantity1 = new System.Windows.Forms.Panel();
-            this.pbQuantity1 = new RateController.VerticalProgressBar();
             this.pnlQuantity2 = new System.Windows.Forms.Panel();
-            this.pbQuantity2 = new RateController.VerticalProgressBar();
             this.pnlQuantity3 = new System.Windows.Forms.Panel();
-            this.pbQuantity3 = new RateController.VerticalProgressBar();
             this.btAlarm = new System.Windows.Forms.Button();
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,13 +89,17 @@
             this.pnlSelect1 = new System.Windows.Forms.Panel();
             this.pnlSelect0 = new System.Windows.Forms.Panel();
             this.pnlRate3 = new System.Windows.Forms.Panel();
-            this.pbRate3 = new RateController.VerticalProgressBar();
             this.pnlRate2 = new System.Windows.Forms.Panel();
-            this.pbRate2 = new RateController.VerticalProgressBar();
             this.pnlRate1 = new System.Windows.Forms.Panel();
-            this.pbRate1 = new RateController.VerticalProgressBar();
             this.pnlRate0 = new System.Windows.Forms.Panel();
             this.pbRate0 = new RateController.VerticalProgressBar();
+            this.pbRate1 = new RateController.VerticalProgressBar();
+            this.pbRate2 = new RateController.VerticalProgressBar();
+            this.pbRate3 = new RateController.VerticalProgressBar();
+            this.pbQuantity3 = new RateController.VerticalProgressBar();
+            this.pbQuantity2 = new RateController.VerticalProgressBar();
+            this.pbQuantity1 = new RateController.VerticalProgressBar();
+            this.pbQuantity0 = new RateController.VerticalProgressBar();
             this.pnlQuantity0.SuspendLayout();
             this.pnlQuantity1.SuspendLayout();
             this.pnlQuantity2.SuspendLayout();
@@ -116,35 +116,20 @@
             this.pnlQuantity0.BackColor = System.Drawing.Color.Transparent;
             this.pnlQuantity0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlQuantity0.Controls.Add(this.pbQuantity0);
-            this.pnlQuantity0.Location = new System.Drawing.Point(104, 73);
-            this.pnlQuantity0.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlQuantity0.Location = new System.Drawing.Point(52, 38);
             this.pnlQuantity0.Name = "pnlQuantity0";
-            this.pnlQuantity0.Size = new System.Drawing.Size(86, 244);
+            this.pnlQuantity0.Size = new System.Drawing.Size(44, 128);
             this.pnlQuantity0.TabIndex = 1;
-            // 
-            // pbQuantity0
-            // 
-            this.pbQuantity0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbQuantity0.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity0.Location = new System.Drawing.Point(6, 6);
-            this.pbQuantity0.Margin = new System.Windows.Forms.Padding(6);
-            this.pbQuantity0.Name = "pbQuantity0";
-            this.pbQuantity0.Size = new System.Drawing.Size(72, 231);
-            this.pbQuantity0.TabIndex = 0;
-            this.pbQuantity0.Tag = "0";
-            this.pbQuantity0.Value = 95;
-            this.pbQuantity0.Click += new System.EventHandler(this.verticalProgressBar1_Click);
-            this.pbQuantity0.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // lbName0
             // 
             this.lbName0.BackColor = System.Drawing.Color.LightGreen;
             this.lbName0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbName0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbName0.Location = new System.Drawing.Point(12, 8);
-            this.lbName0.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbName0.Location = new System.Drawing.Point(6, 4);
+            this.lbName0.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbName0.Name = "lbName0";
-            this.lbName0.Size = new System.Drawing.Size(178, 52);
+            this.lbName0.Size = new System.Drawing.Size(90, 28);
             this.lbName0.TabIndex = 0;
             this.lbName0.Text = "1";
             this.lbName0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -156,10 +141,10 @@
             this.lbName1.BackColor = System.Drawing.Color.LightGreen;
             this.lbName1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbName1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbName1.Location = new System.Drawing.Point(204, 8);
-            this.lbName1.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbName1.Location = new System.Drawing.Point(102, 4);
+            this.lbName1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbName1.Name = "lbName1";
-            this.lbName1.Size = new System.Drawing.Size(178, 52);
+            this.lbName1.Size = new System.Drawing.Size(90, 28);
             this.lbName1.TabIndex = 1;
             this.lbName1.Text = "2";
             this.lbName1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -171,10 +156,10 @@
             this.lbName2.BackColor = System.Drawing.Color.LightGreen;
             this.lbName2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbName2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbName2.Location = new System.Drawing.Point(396, 8);
-            this.lbName2.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbName2.Location = new System.Drawing.Point(198, 4);
+            this.lbName2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbName2.Name = "lbName2";
-            this.lbName2.Size = new System.Drawing.Size(178, 52);
+            this.lbName2.Size = new System.Drawing.Size(90, 28);
             this.lbName2.TabIndex = 2;
             this.lbName2.Text = "3";
             this.lbName2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -186,10 +171,10 @@
             this.lbName3.BackColor = System.Drawing.Color.Red;
             this.lbName3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbName3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbName3.Location = new System.Drawing.Point(588, 8);
-            this.lbName3.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbName3.Location = new System.Drawing.Point(294, 4);
+            this.lbName3.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbName3.Name = "lbName3";
-            this.lbName3.Size = new System.Drawing.Size(178, 52);
+            this.lbName3.Size = new System.Drawing.Size(90, 28);
             this.lbName3.TabIndex = 3;
             this.lbName3.Text = "4";
             this.lbName3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -199,10 +184,9 @@
             // lbUnits
             // 
             this.lbUnits.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbUnits.Location = new System.Drawing.Point(532, 325);
-            this.lbUnits.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lbUnits.Location = new System.Drawing.Point(266, 169);
             this.lbUnits.Name = "lbUnits";
-            this.lbUnits.Size = new System.Drawing.Size(244, 44);
+            this.lbUnits.Size = new System.Drawing.Size(122, 23);
             this.lbUnits.TabIndex = 173;
             this.lbUnits.Text = "Imp Gal/Acre";
             this.lbUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -212,10 +196,9 @@
             this.lbAogConnected.BackColor = System.Drawing.Color.LightGreen;
             this.lbAogConnected.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbAogConnected.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAogConnected.Location = new System.Drawing.Point(652, 398);
-            this.lbAogConnected.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lbAogConnected.Location = new System.Drawing.Point(326, 207);
             this.lbAogConnected.Name = "lbAogConnected";
-            this.lbAogConnected.Size = new System.Drawing.Size(114, 110);
+            this.lbAogConnected.Size = new System.Drawing.Size(58, 58);
             this.lbAogConnected.TabIndex = 172;
             this.lbAogConnected.Text = "AOG";
             this.lbAogConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -225,10 +208,10 @@
             // lbRateAmount
             // 
             this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAmount.Location = new System.Drawing.Point(360, 325);
-            this.lbRateAmount.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbRateAmount.Location = new System.Drawing.Point(180, 169);
+            this.lbRateAmount.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbRateAmount.Name = "lbRateAmount";
-            this.lbRateAmount.Size = new System.Drawing.Size(156, 44);
+            this.lbRateAmount.Size = new System.Drawing.Size(78, 23);
             this.lbRateAmount.TabIndex = 169;
             this.lbRateAmount.Text = "7.5";
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -236,10 +219,10 @@
             // lbTargetAmount
             // 
             this.lbTargetAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTargetAmount.Location = new System.Drawing.Point(360, 371);
-            this.lbTargetAmount.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbTargetAmount.Location = new System.Drawing.Point(180, 193);
+            this.lbTargetAmount.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbTargetAmount.Name = "lbTargetAmount";
-            this.lbTargetAmount.Size = new System.Drawing.Size(156, 44);
+            this.lbTargetAmount.Size = new System.Drawing.Size(78, 23);
             this.lbTargetAmount.TabIndex = 168;
             this.lbTargetAmount.Text = "7.8";
             this.lbTargetAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -247,10 +230,10 @@
             // lbCoverageAmount
             // 
             this.lbCoverageAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCoverageAmount.Location = new System.Drawing.Point(360, 417);
-            this.lbCoverageAmount.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbCoverageAmount.Location = new System.Drawing.Point(180, 217);
+            this.lbCoverageAmount.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbCoverageAmount.Name = "lbCoverageAmount";
-            this.lbCoverageAmount.Size = new System.Drawing.Size(156, 44);
+            this.lbCoverageAmount.Size = new System.Drawing.Size(78, 23);
             this.lbCoverageAmount.TabIndex = 167;
             this.lbCoverageAmount.Text = "142.8";
             this.lbCoverageAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -258,10 +241,10 @@
             // lbCoverage
             // 
             this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCoverage.Location = new System.Drawing.Point(12, 417);
-            this.lbCoverage.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbCoverage.Location = new System.Drawing.Point(6, 217);
+            this.lbCoverage.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbCoverage.Name = "lbCoverage";
-            this.lbCoverage.Size = new System.Drawing.Size(328, 44);
+            this.lbCoverage.Size = new System.Drawing.Size(164, 23);
             this.lbCoverage.TabIndex = 166;
             this.lbCoverage.Text = "Coverage";
             this.lbCoverage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -271,10 +254,10 @@
             // lbQuantity
             // 
             this.lbQuantity.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbQuantity.Location = new System.Drawing.Point(12, 463);
-            this.lbQuantity.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbQuantity.Location = new System.Drawing.Point(6, 241);
+            this.lbQuantity.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbQuantity.Name = "lbQuantity";
-            this.lbQuantity.Size = new System.Drawing.Size(328, 44);
+            this.lbQuantity.Size = new System.Drawing.Size(164, 23);
             this.lbQuantity.TabIndex = 165;
             this.lbQuantity.Text = "Quantity";
             this.lbQuantity.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -284,10 +267,10 @@
             // lbRate
             // 
             this.lbRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRate.Location = new System.Drawing.Point(12, 325);
-            this.lbRate.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbRate.Location = new System.Drawing.Point(6, 169);
+            this.lbRate.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbRate.Name = "lbRate";
-            this.lbRate.Size = new System.Drawing.Size(328, 44);
+            this.lbRate.Size = new System.Drawing.Size(164, 23);
             this.lbRate.TabIndex = 164;
             this.lbRate.Text = "Current Rate";
             this.lbRate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -297,10 +280,10 @@
             // lbTarget
             // 
             this.lbTarget.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTarget.Location = new System.Drawing.Point(12, 371);
-            this.lbTarget.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbTarget.Location = new System.Drawing.Point(6, 193);
+            this.lbTarget.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbTarget.Name = "lbTarget";
-            this.lbTarget.Size = new System.Drawing.Size(328, 44);
+            this.lbTarget.Size = new System.Drawing.Size(164, 23);
             this.lbTarget.TabIndex = 163;
             this.lbTarget.Text = "Target Rate";
             this.lbTarget.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -310,10 +293,10 @@
             // lbQuantityAmount
             // 
             this.lbQuantityAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbQuantityAmount.Location = new System.Drawing.Point(360, 463);
-            this.lbQuantityAmount.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbQuantityAmount.Location = new System.Drawing.Point(180, 241);
+            this.lbQuantityAmount.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbQuantityAmount.Name = "lbQuantityAmount";
-            this.lbQuantityAmount.Size = new System.Drawing.Size(156, 44);
+            this.lbQuantityAmount.Size = new System.Drawing.Size(78, 23);
             this.lbQuantityAmount.TabIndex = 162;
             this.lbQuantityAmount.Text = "500,000";
             this.lbQuantityAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -321,10 +304,10 @@
             // lbRPM1
             // 
             this.lbRPM1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRPM1.Location = new System.Drawing.Point(140, 592);
-            this.lbRPM1.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbRPM1.Location = new System.Drawing.Point(70, 308);
+            this.lbRPM1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbRPM1.Name = "lbRPM1";
-            this.lbRPM1.Size = new System.Drawing.Size(188, 42);
+            this.lbRPM1.Size = new System.Drawing.Size(94, 22);
             this.lbRPM1.TabIndex = 159;
             this.lbRPM1.Text = "4000 RPM";
             this.lbRPM1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -332,10 +315,10 @@
             // lbRPM2
             // 
             this.lbRPM2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRPM2.Location = new System.Drawing.Point(548, 592);
-            this.lbRPM2.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbRPM2.Location = new System.Drawing.Point(274, 308);
+            this.lbRPM2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbRPM2.Name = "lbRPM2";
-            this.lbRPM2.Size = new System.Drawing.Size(188, 44);
+            this.lbRPM2.Size = new System.Drawing.Size(94, 23);
             this.lbRPM2.TabIndex = 158;
             this.lbRPM2.Text = "2500 RPM";
             this.lbRPM2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -345,50 +328,20 @@
             this.pnlQuantity1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.pnlQuantity1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlQuantity1.Controls.Add(this.pbQuantity1);
-            this.pnlQuantity1.Location = new System.Drawing.Point(296, 73);
-            this.pnlQuantity1.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlQuantity1.Location = new System.Drawing.Point(148, 38);
             this.pnlQuantity1.Name = "pnlQuantity1";
-            this.pnlQuantity1.Size = new System.Drawing.Size(86, 244);
+            this.pnlQuantity1.Size = new System.Drawing.Size(44, 128);
             this.pnlQuantity1.TabIndex = 176;
-            // 
-            // pbQuantity1
-            // 
-            this.pbQuantity1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbQuantity1.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity1.Location = new System.Drawing.Point(6, 6);
-            this.pbQuantity1.Margin = new System.Windows.Forms.Padding(6);
-            this.pbQuantity1.Name = "pbQuantity1";
-            this.pbQuantity1.Size = new System.Drawing.Size(72, 231);
-            this.pbQuantity1.TabIndex = 0;
-            this.pbQuantity1.Tag = "1";
-            this.pbQuantity1.Value = 30;
-            this.pbQuantity1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
-            this.pbQuantity1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // pnlQuantity2
             // 
             this.pnlQuantity2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.pnlQuantity2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlQuantity2.Controls.Add(this.pbQuantity2);
-            this.pnlQuantity2.Location = new System.Drawing.Point(488, 73);
-            this.pnlQuantity2.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlQuantity2.Location = new System.Drawing.Point(244, 38);
             this.pnlQuantity2.Name = "pnlQuantity2";
-            this.pnlQuantity2.Size = new System.Drawing.Size(86, 244);
+            this.pnlQuantity2.Size = new System.Drawing.Size(44, 128);
             this.pnlQuantity2.TabIndex = 4;
-            // 
-            // pbQuantity2
-            // 
-            this.pbQuantity2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbQuantity2.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity2.Location = new System.Drawing.Point(6, 6);
-            this.pbQuantity2.Margin = new System.Windows.Forms.Padding(6);
-            this.pbQuantity2.Name = "pbQuantity2";
-            this.pbQuantity2.Size = new System.Drawing.Size(72, 231);
-            this.pbQuantity2.TabIndex = 0;
-            this.pbQuantity2.Tag = "2";
-            this.pbQuantity2.Value = 5;
-            this.pbQuantity2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
-            this.pbQuantity2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // pnlQuantity3
             // 
@@ -396,25 +349,10 @@
             this.pnlQuantity3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlQuantity3.Controls.Add(this.pbQuantity3);
             this.pnlQuantity3.Controls.Add(this.btAlarm);
-            this.pnlQuantity3.Location = new System.Drawing.Point(680, 73);
-            this.pnlQuantity3.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlQuantity3.Location = new System.Drawing.Point(340, 38);
             this.pnlQuantity3.Name = "pnlQuantity3";
-            this.pnlQuantity3.Size = new System.Drawing.Size(86, 244);
+            this.pnlQuantity3.Size = new System.Drawing.Size(44, 128);
             this.pnlQuantity3.TabIndex = 178;
-            // 
-            // pbQuantity3
-            // 
-            this.pbQuantity3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbQuantity3.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity3.Location = new System.Drawing.Point(6, 6);
-            this.pbQuantity3.Margin = new System.Windows.Forms.Padding(6);
-            this.pbQuantity3.Name = "pbQuantity3";
-            this.pbQuantity3.Size = new System.Drawing.Size(72, 231);
-            this.pbQuantity3.TabIndex = 0;
-            this.pbQuantity3.Tag = "3";
-            this.pbQuantity3.Value = 40;
-            this.pbQuantity3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
-            this.pbQuantity3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // btAlarm
             // 
@@ -422,10 +360,9 @@
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = global::RateController.Properties.Resources.Alarm1;
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(-258, 6);
-            this.btAlarm.Margin = new System.Windows.Forms.Padding(6);
+            this.btAlarm.Location = new System.Drawing.Point(-129, 3);
             this.btAlarm.Name = "btAlarm";
-            this.btAlarm.Size = new System.Drawing.Size(336, 231);
+            this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 183;
             this.btAlarm.Text = "Rate  Alarm  Pressure Alarm";
             this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -446,13 +383,13 @@
             this.MnuOptions,
             this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(360, 420);
+            this.mnuSettings.Size = new System.Drawing.Size(219, 340);
             // 
             // MnuProducts
             // 
             this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(359, 52);
+            this.MnuProducts.Size = new System.Drawing.Size(218, 42);
             this.MnuProducts.Text = "Products/Fans";
             this.MnuProducts.Click += new System.EventHandler(this.MnuProducts_Click);
             // 
@@ -460,7 +397,7 @@
             // 
             this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(359, 52);
+            this.MnuSections.Size = new System.Drawing.Size(218, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.MnuSections_Click);
             // 
@@ -468,7 +405,7 @@
             // 
             this.switchesToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
             this.switchesToolStripMenuItem.Name = "switchesToolStripMenuItem";
-            this.switchesToolStripMenuItem.Size = new System.Drawing.Size(359, 52);
+            this.switchesToolStripMenuItem.Size = new System.Drawing.Size(218, 42);
             this.switchesToolStripMenuItem.Text = "Switches";
             this.switchesToolStripMenuItem.Click += new System.EventHandler(this.switchesToolStripMenuItem_Click);
             // 
@@ -476,7 +413,7 @@
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(359, 52);
+            this.MnuComm.Size = new System.Drawing.Size(218, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -484,7 +421,7 @@
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(359, 52);
+            this.MnuRelays.Size = new System.Drawing.Size(218, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click);
             // 
@@ -492,7 +429,7 @@
             // 
             this.MnuPressures.Image = global::RateController.Properties.Resources.pressure;
             this.MnuPressures.Name = "MnuPressures";
-            this.MnuPressures.Size = new System.Drawing.Size(359, 52);
+            this.MnuPressures.Size = new System.Drawing.Size(218, 42);
             this.MnuPressures.Text = "Pressures";
             this.MnuPressures.Click += new System.EventHandler(this.MnuPressures_Click);
             // 
@@ -513,7 +450,7 @@
             this.MnuAbout});
             this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
             this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(359, 52);
+            this.MnuOptions.Size = new System.Drawing.Size(218, 42);
             this.MnuOptions.Text = "Options";
             this.MnuOptions.Click += new System.EventHandler(this.MnuOptions_Click);
             // 
@@ -521,7 +458,7 @@
             // 
             this.mnuNetwork.Image = global::RateController.Properties.Resources.wifi;
             this.mnuNetwork.Name = "mnuNetwork";
-            this.mnuNetwork.Size = new System.Drawing.Size(440, 54);
+            this.mnuNetwork.Size = new System.Drawing.Size(241, 42);
             this.mnuNetwork.Text = "Network";
             this.mnuNetwork.Click += new System.EventHandler(this.mnuNetwork_Click);
             // 
@@ -529,27 +466,27 @@
             // 
             this.mnuStandard.Image = ((System.Drawing.Image)(resources.GetObject("mnuStandard.Image")));
             this.mnuStandard.Name = "mnuStandard";
-            this.mnuStandard.Size = new System.Drawing.Size(440, 54);
+            this.mnuStandard.Size = new System.Drawing.Size(241, 42);
             this.mnuStandard.Text = "Standard Screen";
             this.mnuStandard.Click += new System.EventHandler(this.mnuStandard_Click);
             // 
             // transparentToolStripMenuItem
             // 
             this.transparentToolStripMenuItem.Name = "transparentToolStripMenuItem";
-            this.transparentToolStripMenuItem.Size = new System.Drawing.Size(440, 54);
+            this.transparentToolStripMenuItem.Size = new System.Drawing.Size(241, 42);
             this.transparentToolStripMenuItem.Text = "Transparent";
             this.transparentToolStripMenuItem.Click += new System.EventHandler(this.transparentToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(437, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(238, 6);
             // 
             // MnuNew
             // 
             this.MnuNew.Image = global::RateController.Properties.Resources.FileNew1;
             this.MnuNew.Name = "MnuNew";
-            this.MnuNew.Size = new System.Drawing.Size(440, 54);
+            this.MnuNew.Size = new System.Drawing.Size(241, 42);
             this.MnuNew.Text = "New file";
             this.MnuNew.Click += new System.EventHandler(this.MnuNew_Click);
             // 
@@ -557,7 +494,7 @@
             // 
             this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile1;
             this.MnuOpen.Name = "MnuOpen";
-            this.MnuOpen.Size = new System.Drawing.Size(440, 54);
+            this.MnuOpen.Size = new System.Drawing.Size(241, 42);
             this.MnuOpen.Text = "Open";
             this.MnuOpen.Click += new System.EventHandler(this.MnuOpen_Click);
             // 
@@ -565,20 +502,20 @@
             // 
             this.MnuSaveAs.Image = global::RateController.Properties.Resources.close2;
             this.MnuSaveAs.Name = "MnuSaveAs";
-            this.MnuSaveAs.Size = new System.Drawing.Size(440, 54);
+            this.MnuSaveAs.Size = new System.Drawing.Size(241, 42);
             this.MnuSaveAs.Text = "Save As";
             this.MnuSaveAs.Click += new System.EventHandler(this.MnuSaveAs_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(437, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(238, 6);
             // 
             // mnuMetric
             // 
             this.mnuMetric.Image = global::RateController.Properties.Resources.Check;
             this.mnuMetric.Name = "mnuMetric";
-            this.mnuMetric.Size = new System.Drawing.Size(440, 54);
+            this.mnuMetric.Size = new System.Drawing.Size(241, 42);
             this.mnuMetric.Text = "Metric Units";
             this.mnuMetric.Click += new System.EventHandler(this.mnuMetric_Click);
             // 
@@ -591,34 +528,34 @@
             this.russianToolStripMenuItem});
             this.MnuLanguage.Image = ((System.Drawing.Image)(resources.GetObject("MnuLanguage.Image")));
             this.MnuLanguage.Name = "MnuLanguage";
-            this.MnuLanguage.Size = new System.Drawing.Size(440, 54);
+            this.MnuLanguage.Size = new System.Drawing.Size(241, 42);
             this.MnuLanguage.Text = "Language";
             // 
             // MnuDeustch
             // 
             this.MnuDeustch.Name = "MnuDeustch";
-            this.MnuDeustch.Size = new System.Drawing.Size(347, 54);
+            this.MnuDeustch.Size = new System.Drawing.Size(175, 28);
             this.MnuDeustch.Text = "Deustch";
             this.MnuDeustch.Click += new System.EventHandler(this.MnuDeustch_Click);
             // 
             // MnuEnglish
             // 
             this.MnuEnglish.Name = "MnuEnglish";
-            this.MnuEnglish.Size = new System.Drawing.Size(347, 54);
+            this.MnuEnglish.Size = new System.Drawing.Size(175, 28);
             this.MnuEnglish.Text = "English";
             this.MnuEnglish.Click += new System.EventHandler(this.MnuEnglish_Click);
             // 
             // MnuNederlands
             // 
             this.MnuNederlands.Name = "MnuNederlands";
-            this.MnuNederlands.Size = new System.Drawing.Size(347, 54);
+            this.MnuNederlands.Size = new System.Drawing.Size(175, 28);
             this.MnuNederlands.Text = "Nederlands";
             this.MnuNederlands.Click += new System.EventHandler(this.MnuNederlands_Click);
             // 
             // russianToolStripMenuItem
             // 
             this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-            this.russianToolStripMenuItem.Size = new System.Drawing.Size(347, 54);
+            this.russianToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
             this.russianToolStripMenuItem.Text = "Russian";
             this.russianToolStripMenuItem.Click += new System.EventHandler(this.russianToolStripMenuItem_Click);
             // 
@@ -626,7 +563,7 @@
             // 
             this.serialMonitorToolStripMenuItem.Image = global::RateController.Properties.Resources.monitor;
             this.serialMonitorToolStripMenuItem.Name = "serialMonitorToolStripMenuItem";
-            this.serialMonitorToolStripMenuItem.Size = new System.Drawing.Size(440, 54);
+            this.serialMonitorToolStripMenuItem.Size = new System.Drawing.Size(241, 42);
             this.serialMonitorToolStripMenuItem.Text = "Serial Monitor";
             this.serialMonitorToolStripMenuItem.Click += new System.EventHandler(this.serialMonitorToolStripMenuItem_Click);
             // 
@@ -634,14 +571,14 @@
             // 
             this.MnuAbout.Image = global::RateController.Properties.Resources.About;
             this.MnuAbout.Name = "MnuAbout";
-            this.MnuAbout.Size = new System.Drawing.Size(440, 54);
+            this.MnuAbout.Size = new System.Drawing.Size(241, 42);
             this.MnuAbout.Text = "About";
             this.MnuAbout.Click += new System.EventHandler(this.MnuAbout_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(359, 52);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(218, 42);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -665,10 +602,10 @@
             this.lbFan1.BackColor = System.Drawing.Color.LightGreen;
             this.lbFan1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbFan1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFan1.Location = new System.Drawing.Point(144, 540);
-            this.lbFan1.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbFan1.Location = new System.Drawing.Point(72, 281);
+            this.lbFan1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbFan1.Name = "lbFan1";
-            this.lbFan1.Size = new System.Drawing.Size(178, 50);
+            this.lbFan1.Size = new System.Drawing.Size(90, 27);
             this.lbFan1.TabIndex = 181;
             this.lbFan1.Text = "Fan 1";
             this.lbFan1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -680,10 +617,10 @@
             this.lbFan2.BackColor = System.Drawing.Color.LightGreen;
             this.lbFan2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbFan2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFan2.Location = new System.Drawing.Point(552, 538);
-            this.lbFan2.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.lbFan2.Location = new System.Drawing.Point(276, 280);
+            this.lbFan2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbFan2.Name = "lbFan2";
-            this.lbFan2.Size = new System.Drawing.Size(178, 52);
+            this.lbFan2.Size = new System.Drawing.Size(90, 28);
             this.lbFan2.TabIndex = 182;
             this.lbFan2.Text = "Fan 2";
             this.lbFan2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -695,10 +632,9 @@
             this.btnFan1.FlatAppearance.BorderSize = 0;
             this.btnFan1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFan1.Image = global::RateController.Properties.Resources.FanOn;
-            this.btnFan1.Location = new System.Drawing.Point(24, 527);
-            this.btnFan1.Margin = new System.Windows.Forms.Padding(6);
+            this.btnFan1.Location = new System.Drawing.Point(12, 274);
             this.btnFan1.Name = "btnFan1";
-            this.btnFan1.Size = new System.Drawing.Size(100, 96);
+            this.btnFan1.Size = new System.Drawing.Size(50, 50);
             this.btnFan1.TabIndex = 185;
             this.btnFan1.UseVisualStyleBackColor = false;
             this.btnFan1.Click += new System.EventHandler(this.btnFan1_Click);
@@ -709,10 +645,9 @@
             this.btnFan2.FlatAppearance.BorderSize = 0;
             this.btnFan2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFan2.Image = global::RateController.Properties.Resources.FanOff;
-            this.btnFan2.Location = new System.Drawing.Point(432, 527);
-            this.btnFan2.Margin = new System.Windows.Forms.Padding(6);
+            this.btnFan2.Location = new System.Drawing.Point(216, 274);
             this.btnFan2.Name = "btnFan2";
-            this.btnFan2.Size = new System.Drawing.Size(100, 96);
+            this.btnFan2.Size = new System.Drawing.Size(50, 50);
             this.btnFan2.TabIndex = 184;
             this.btnFan2.UseVisualStyleBackColor = false;
             this.btnFan2.Click += new System.EventHandler(this.btnFan2_Click);
@@ -724,10 +659,9 @@
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSettings.Image = global::RateController.Properties.Resources.SettingsGear64;
-            this.btnSettings.Location = new System.Drawing.Point(528, 398);
-            this.btnSettings.Margin = new System.Windows.Forms.Padding(6);
+            this.btnSettings.Location = new System.Drawing.Point(264, 207);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(116, 112);
+            this.btnSettings.Size = new System.Drawing.Size(58, 58);
             this.btnSettings.TabIndex = 171;
             this.btnSettings.TabStop = false;
             this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -737,37 +671,33 @@
             // pnlSelect3
             // 
             this.pnlSelect3.BackColor = System.Drawing.SystemColors.Highlight;
-            this.pnlSelect3.Location = new System.Drawing.Point(588, 62);
-            this.pnlSelect3.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlSelect3.Location = new System.Drawing.Point(294, 32);
             this.pnlSelect3.Name = "pnlSelect3";
-            this.pnlSelect3.Size = new System.Drawing.Size(180, 10);
+            this.pnlSelect3.Size = new System.Drawing.Size(90, 5);
             this.pnlSelect3.TabIndex = 186;
             // 
             // pnlSelect2
             // 
             this.pnlSelect2.BackColor = System.Drawing.SystemColors.Highlight;
-            this.pnlSelect2.Location = new System.Drawing.Point(396, 62);
-            this.pnlSelect2.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlSelect2.Location = new System.Drawing.Point(198, 32);
             this.pnlSelect2.Name = "pnlSelect2";
-            this.pnlSelect2.Size = new System.Drawing.Size(180, 10);
+            this.pnlSelect2.Size = new System.Drawing.Size(90, 5);
             this.pnlSelect2.TabIndex = 187;
             // 
             // pnlSelect1
             // 
             this.pnlSelect1.BackColor = System.Drawing.SystemColors.Highlight;
-            this.pnlSelect1.Location = new System.Drawing.Point(204, 62);
-            this.pnlSelect1.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlSelect1.Location = new System.Drawing.Point(102, 32);
             this.pnlSelect1.Name = "pnlSelect1";
-            this.pnlSelect1.Size = new System.Drawing.Size(180, 10);
+            this.pnlSelect1.Size = new System.Drawing.Size(90, 5);
             this.pnlSelect1.TabIndex = 188;
             // 
             // pnlSelect0
             // 
             this.pnlSelect0.BackColor = System.Drawing.Color.Transparent;
-            this.pnlSelect0.Location = new System.Drawing.Point(12, 62);
-            this.pnlSelect0.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlSelect0.Location = new System.Drawing.Point(6, 32);
             this.pnlSelect0.Name = "pnlSelect0";
-            this.pnlSelect0.Size = new System.Drawing.Size(180, 10);
+            this.pnlSelect0.Size = new System.Drawing.Size(90, 5);
             this.pnlSelect0.TabIndex = 189;
             // 
             // pnlRate3
@@ -775,107 +705,151 @@
             this.pnlRate3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.pnlRate3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlRate3.Controls.Add(this.pbRate3);
-            this.pnlRate3.Location = new System.Drawing.Point(588, 73);
-            this.pnlRate3.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlRate3.Location = new System.Drawing.Point(294, 38);
             this.pnlRate3.Name = "pnlRate3";
-            this.pnlRate3.Size = new System.Drawing.Size(86, 244);
+            this.pnlRate3.Size = new System.Drawing.Size(44, 128);
             this.pnlRate3.TabIndex = 190;
-            // 
-            // pbRate3
-            // 
-            this.pbRate3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbRate3.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbRate3.Location = new System.Drawing.Point(6, 6);
-            this.pbRate3.Margin = new System.Windows.Forms.Padding(6);
-            this.pbRate3.Maximum = 40;
-            this.pbRate3.Name = "pbRate3";
-            this.pbRate3.Size = new System.Drawing.Size(72, 231);
-            this.pbRate3.TabIndex = 3;
-            this.pbRate3.Tag = "1";
-            this.pbRate3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
-            this.pbRate3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
             // 
             // pnlRate2
             // 
             this.pnlRate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.pnlRate2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlRate2.Controls.Add(this.pbRate2);
-            this.pnlRate2.Location = new System.Drawing.Point(396, 73);
-            this.pnlRate2.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlRate2.Location = new System.Drawing.Point(198, 38);
             this.pnlRate2.Name = "pnlRate2";
-            this.pnlRate2.Size = new System.Drawing.Size(86, 244);
+            this.pnlRate2.Size = new System.Drawing.Size(44, 128);
             this.pnlRate2.TabIndex = 191;
-            // 
-            // pbRate2
-            // 
-            this.pbRate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbRate2.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbRate2.Location = new System.Drawing.Point(6, 6);
-            this.pbRate2.Margin = new System.Windows.Forms.Padding(6);
-            this.pbRate2.Maximum = 40;
-            this.pbRate2.Name = "pbRate2";
-            this.pbRate2.Size = new System.Drawing.Size(72, 231);
-            this.pbRate2.TabIndex = 2;
-            this.pbRate2.Tag = "1";
-            this.pbRate2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
-            this.pbRate2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
             // 
             // pnlRate1
             // 
             this.pnlRate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.pnlRate1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlRate1.Controls.Add(this.pbRate1);
-            this.pnlRate1.Location = new System.Drawing.Point(204, 73);
-            this.pnlRate1.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlRate1.Location = new System.Drawing.Point(102, 38);
             this.pnlRate1.Name = "pnlRate1";
-            this.pnlRate1.Size = new System.Drawing.Size(86, 244);
+            this.pnlRate1.Size = new System.Drawing.Size(44, 128);
             this.pnlRate1.TabIndex = 192;
-            // 
-            // pbRate1
-            // 
-            this.pbRate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbRate1.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbRate1.Location = new System.Drawing.Point(6, 6);
-            this.pbRate1.Margin = new System.Windows.Forms.Padding(6);
-            this.pbRate1.Maximum = 40;
-            this.pbRate1.Name = "pbRate1";
-            this.pbRate1.Size = new System.Drawing.Size(72, 231);
-            this.pbRate1.TabIndex = 2;
-            this.pbRate1.Tag = "1";
-            this.pbRate1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
-            this.pbRate1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
             // 
             // pnlRate0
             // 
             this.pnlRate0.BackColor = System.Drawing.Color.Transparent;
             this.pnlRate0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlRate0.Controls.Add(this.pbRate0);
-            this.pnlRate0.Location = new System.Drawing.Point(12, 73);
-            this.pnlRate0.Margin = new System.Windows.Forms.Padding(6);
+            this.pnlRate0.Location = new System.Drawing.Point(6, 38);
             this.pnlRate0.Name = "pnlRate0";
-            this.pnlRate0.Size = new System.Drawing.Size(86, 244);
+            this.pnlRate0.Size = new System.Drawing.Size(44, 128);
             this.pnlRate0.TabIndex = 193;
             // 
             // pbRate0
             // 
             this.pbRate0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.pbRate0.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbRate0.Location = new System.Drawing.Point(6, 6);
-            this.pbRate0.Margin = new System.Windows.Forms.Padding(6);
+            this.pbRate0.Location = new System.Drawing.Point(3, 3);
             this.pbRate0.Maximum = 40;
             this.pbRate0.Name = "pbRate0";
-            this.pbRate0.Size = new System.Drawing.Size(72, 231);
+            this.pbRate0.Size = new System.Drawing.Size(36, 120);
             this.pbRate0.TabIndex = 1;
             this.pbRate0.Tag = "0";
             this.pbRate0.Click += new System.EventHandler(this.verticalProgressBar1_Click);
             this.pbRate0.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
             // 
+            // pbRate1
+            // 
+            this.pbRate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbRate1.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbRate1.Location = new System.Drawing.Point(3, 3);
+            this.pbRate1.Maximum = 40;
+            this.pbRate1.Name = "pbRate1";
+            this.pbRate1.Size = new System.Drawing.Size(36, 120);
+            this.pbRate1.TabIndex = 2;
+            this.pbRate1.Tag = "1";
+            this.pbRate1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
+            this.pbRate1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
+            // 
+            // pbRate2
+            // 
+            this.pbRate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbRate2.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbRate2.Location = new System.Drawing.Point(3, 3);
+            this.pbRate2.Maximum = 40;
+            this.pbRate2.Name = "pbRate2";
+            this.pbRate2.Size = new System.Drawing.Size(36, 120);
+            this.pbRate2.TabIndex = 2;
+            this.pbRate2.Tag = "1";
+            this.pbRate2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
+            this.pbRate2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
+            // 
+            // pbRate3
+            // 
+            this.pbRate3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbRate3.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbRate3.Location = new System.Drawing.Point(3, 3);
+            this.pbRate3.Maximum = 40;
+            this.pbRate3.Name = "pbRate3";
+            this.pbRate3.Size = new System.Drawing.Size(36, 120);
+            this.pbRate3.TabIndex = 3;
+            this.pbRate3.Tag = "1";
+            this.pbRate3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
+            this.pbRate3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
+            // 
+            // pbQuantity3
+            // 
+            this.pbQuantity3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbQuantity3.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbQuantity3.Location = new System.Drawing.Point(3, 3);
+            this.pbQuantity3.Name = "pbQuantity3";
+            this.pbQuantity3.Size = new System.Drawing.Size(36, 120);
+            this.pbQuantity3.TabIndex = 0;
+            this.pbQuantity3.Tag = "3";
+            this.pbQuantity3.Value = 40;
+            this.pbQuantity3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
+            this.pbQuantity3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
+            // 
+            // pbQuantity2
+            // 
+            this.pbQuantity2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbQuantity2.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbQuantity2.Location = new System.Drawing.Point(3, 3);
+            this.pbQuantity2.Name = "pbQuantity2";
+            this.pbQuantity2.Size = new System.Drawing.Size(36, 120);
+            this.pbQuantity2.TabIndex = 0;
+            this.pbQuantity2.Tag = "2";
+            this.pbQuantity2.Value = 5;
+            this.pbQuantity2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
+            this.pbQuantity2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
+            // 
+            // pbQuantity1
+            // 
+            this.pbQuantity1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbQuantity1.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbQuantity1.Location = new System.Drawing.Point(3, 3);
+            this.pbQuantity1.Name = "pbQuantity1";
+            this.pbQuantity1.Size = new System.Drawing.Size(36, 120);
+            this.pbQuantity1.TabIndex = 0;
+            this.pbQuantity1.Tag = "1";
+            this.pbQuantity1.Value = 30;
+            this.pbQuantity1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
+            this.pbQuantity1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
+            // 
+            // pbQuantity0
+            // 
+            this.pbQuantity0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbQuantity0.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbQuantity0.Location = new System.Drawing.Point(3, 3);
+            this.pbQuantity0.Name = "pbQuantity0";
+            this.pbQuantity0.Size = new System.Drawing.Size(36, 120);
+            this.pbQuantity0.TabIndex = 0;
+            this.pbQuantity0.Tag = "0";
+            this.pbQuantity0.Value = 95;
+            this.pbQuantity0.Click += new System.EventHandler(this.verticalProgressBar1_Click);
+            this.pbQuantity0.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
+            // 
             // frmLargeScreen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.ClientSize = new System.Drawing.Size(780, 648);
+            this.ClientSize = new System.Drawing.Size(390, 337);
             this.Controls.Add(this.pnlRate0);
             this.Controls.Add(this.pnlRate1);
             this.Controls.Add(this.pnlRate2);
@@ -912,7 +886,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmLargeScreen";
