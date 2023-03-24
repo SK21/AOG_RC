@@ -45,7 +45,7 @@ int PIDvalve(float sKP, float sKI, float sKD, float sError, float sSetPoint, byt
             }
             else
             {
-                if (ErrorPercent < (float)BrakePoint / 100.0)
+                if (abs(ErrorPercent) < (float)BrakePoint / 100.0)
                 {
                     if (Result > (float)sMinPWM * 3.0) Result = (float)sMinPWM * 3.0;
                 }
