@@ -15,6 +15,12 @@ namespace RateController
         public clsAlarm RCalarm;
         private bool SwitchingScreens = false;
         private Color RateColour = Color.DarkOliveGreen;
+        private int TransTopOffset = 30;
+        private int TransLeftOffset = 6;
+        private int windowTop = 0;
+        private int windowLeft = 0;
+        private int mouseX = 0;
+        private int mouseY = 0;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -57,6 +63,101 @@ namespace RateController
             pnlQuantity1.BackColor = Properties.Settings.Default.DayColour;
             pnlQuantity2.BackColor = Properties.Settings.Default.DayColour;
             pnlQuantity3.BackColor = Properties.Settings.Default.DayColour;
+
+            foreach(Control Ctrl in Controls)
+            {
+                if(Ctrl.Name !="btnSettings")
+                {
+                    Ctrl.MouseDown += mouseMove_MouseDown;
+                    Ctrl.MouseMove += mouseMove_MouseMove;
+                }
+            }
+        }
+
+        private void SetFont()
+        {
+            if (transparentToolStripMenuItem.Checked)
+            {
+                foreach (Control Ctrl in Controls)
+                {
+                    if (Ctrl.Name != "lbName0" && Ctrl.Name != "lbName1" && Ctrl.Name != "lbName2" && Ctrl.Name != "lbName3"
+                        && Ctrl.Name != "lbAogConnected" && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2")
+                    {
+                        Ctrl.Font = new Font("Candara Light", 14);
+                    }
+                    else
+                    {
+                        Ctrl.Font = new Font("Candara Light", 14, FontStyle.Bold);
+                    }
+                }
+            }
+            else
+            {
+                foreach (Control Ctrl in Controls)
+                {
+                    Ctrl.Font = new Font("Tahoma", 14);
+                }
+            }
+        }
+
+        public void SetTransparent(bool frmtrans)
+        {
+            transparentToolStripMenuItem.Checked = frmtrans;
+            if (transparentToolStripMenuItem.Checked)
+            {
+                mf.UseTransparent = true;
+                this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
+                //this.Opacity = 0;
+                this.HelpButton = false;
+                this.ControlBox = false;
+                this.FormBorderStyle = FormBorderStyle.None;
+                this.Top += TransTopOffset;
+                this.Left += TransLeftOffset;
+                Color txtcolor = SystemColors.ControlLightLight;
+                lbRate.ForeColor = txtcolor;
+                lbTarget.ForeColor = txtcolor;
+                lbCoverage.ForeColor = txtcolor;
+                lbQuantity.ForeColor = txtcolor;
+                lbRateAmount.ForeColor = txtcolor;
+                lbTargetAmount.ForeColor = txtcolor;
+                lbCoverageAmount.ForeColor = txtcolor;
+                lbQuantityAmount.ForeColor = txtcolor;
+                lbRPM1.ForeColor = txtcolor;
+                lbRPM2.ForeColor = txtcolor;
+                lbUnits.ForeColor = txtcolor;
+
+                btnSettings.BackColor = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.NightColour : Properties.Settings.Default.DayColour;
+
+
+            }
+            else
+            {
+                mf.UseTransparent = false;
+                this.TransparencyKey = Color.Transparent;
+                //this.Opacity = 100;
+                this.HelpButton = true;
+                this.ControlBox = true;
+                this.FormBorderStyle = FormBorderStyle.FixedDialog;
+                this.Top += -TransTopOffset;
+                this.Left += -TransLeftOffset;
+
+                Color txtcolor = SystemColors.ControlText;
+                lbRate.ForeColor = txtcolor;
+                lbTarget.ForeColor = txtcolor;
+                lbCoverage.ForeColor = txtcolor;
+                lbQuantity.ForeColor = txtcolor;
+                lbRateAmount.ForeColor = txtcolor;
+                lbTargetAmount.ForeColor = txtcolor;
+                lbCoverageAmount.ForeColor = txtcolor;
+                lbQuantityAmount.ForeColor = txtcolor;
+                lbRPM1.ForeColor = txtcolor;
+                lbRPM2.ForeColor = txtcolor;
+                lbUnits.ForeColor = txtcolor;
+
+                btnSettings.BackColor = Color.Transparent;
+
+            }
+            SetFont();
         }
 
         public int CurrentProduct()
@@ -75,6 +176,14 @@ namespace RateController
         private void frmLargeScreen_FormClosed(object sender, FormClosedEventArgs e)
         {
             timerMain.Enabled = false;
+            if (mf.UseTransparent)
+            {
+                // move the window back to the default location
+                this.Top += -TransTopOffset;
+                this.Left += -TransLeftOffset;
+            }
+
+
 
             if (this.WindowState == FormWindowState.Normal)
             {
@@ -84,7 +193,7 @@ namespace RateController
             if (mf.UseLargeScreen) mf.LargeScreenExit = true;
             mf.WindowState = FormWindowState.Normal;
         }
-
+        
         private void frmLargeScreen_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
@@ -96,7 +205,7 @@ namespace RateController
 
         private void lbAogConnected_Click(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Minimized;
+            if (!mf.UseTransparent) this.WindowState = FormWindowState.Minimized;
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
@@ -992,5 +1101,48 @@ namespace RateController
             mf.Tls.ShowHelp(Message);
             hlpevent.Handled = true;
         }
+
+        private void transparentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            transparentToolStripMenuItem.Checked = !transparentToolStripMenuItem.Checked;
+            SetTransparent(transparentToolStripMenuItem.Checked);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            this.Close();
+
+        }
+
+        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
+        {
+
+            // Log the current window location and the mouse location.
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+                mouseX = e.X;
+                mouseY = e.Y;
+            }
+        }
+
+        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+                
+                Point pos = new Point(0,0);
+
+                pos.X = windowLeft + e.X - mouseX;
+                pos.Y = windowTop + e.Y - mouseY;
+                this.Location = pos;
+
+            }
+        }
+
     }
 }
