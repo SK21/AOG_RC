@@ -11,16 +11,16 @@ int PIDvalve(byte ID)
 
     if (Sensor[ID].FlowEnabled && Sensor[ID].RateSetting > 0)
     {
-        float ErrorPercent = Sensor[ID].RateError / Sensor[ID].RateSetting * 100.0;
+        float ErrorPercent = Sensor[ID].RateError / Sensor[ID].RateSetting;
 
-        if (abs(ErrorPercent) > (float)Sensor[ID].Deadband)
+        if (abs(ErrorPercent) > (float)Sensor[ID].Deadband / 100.0)
         {
             Result = Sensor[ID].KP * ErrorPercent;
 
             unsigned long elapsedTime = millis() - CurrentAdjustTime[ID];
             CurrentAdjustTime[ID] = millis();
 
-            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
+            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001);
 
             Integral[ID] += Sensor[ID].KI * ErrorPercentCum[ID];
             if (Integral[ID] > 10) Integral[ID] = 10;
@@ -47,7 +47,7 @@ int PIDvalve(byte ID)
             }
             else
             {
-                if (ErrorPercent < Sensor[ID].BrakePoint)
+                if (abs(ErrorPercent) < (float)Sensor[ID].BrakePoint / 100.0)
                 {
                     if (Result > Sensor[ID].MinPWM * 3.0) Result = Sensor[ID].MinPWM * 3.0;
                 }
@@ -75,16 +75,16 @@ int PIDmotor(byte ID)
     if (Sensor[ID].FlowEnabled && Sensor[ID].RateSetting > 0)
     {
         Result = LastPWM[ID];
-        ErrorPercent = Sensor[ID].RateError / Sensor[ID].RateSetting * 100.0;
+        ErrorPercent = Sensor[ID].RateError / Sensor[ID].RateSetting;
 
-        if (abs(ErrorPercent) > (float)Sensor[ID].Deadband)
+        if (abs(ErrorPercent) > (float)Sensor[ID].Deadband / 100.0)
         {
-            Result += Sensor[ID].KP * ErrorPercent;
+            Result += Sensor[ID].KP * ErrorPercent / 25.5;
 
             unsigned long elapsedTime = millis() - CurrentAdjustTime[ID];
             CurrentAdjustTime[ID] = millis();
 
-            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001) * 0.001;
+            ErrorPercentCum[ID] += ErrorPercent * (elapsedTime * 0.001);
 
             Integral[ID] += Sensor[ID].KI * ErrorPercentCum[ID];
             if (Integral[ID] > 10) Integral[ID] = 10;

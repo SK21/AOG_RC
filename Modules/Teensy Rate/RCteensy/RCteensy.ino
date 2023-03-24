@@ -7,9 +7,9 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   10-Mar-2023"
+# define InoDescription "RCteensy   23-Mar-2023"
 
-#define InoID 1003		// change to load default values
+#define InoID 2303		// change to load default values
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
