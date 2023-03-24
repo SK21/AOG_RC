@@ -2258,6 +2258,3 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Deb
 C:\Users\jimcr\source\repos\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormPIDGraph.resources
 C:\Users\jimcr\source\repos\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmLargeScreen.resources
 C:\Users\jimcr\source\repos\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmSwitches.resources
-F:\Temp\RateAppSource\RateController\obj\Debug\RateController.FormPIDGraph.resources
-F:\Temp\RateAppSource\RateController\obj\Debug\RateController.frmLargeScreen.resources
-F:\Temp\RateAppSource\RateController\obj\Debug\RateController.frmSwitches.resources
