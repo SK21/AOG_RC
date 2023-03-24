@@ -41,7 +41,7 @@ struct SensorConfig
 	bool FlowEnabled;
 	float RateError;		// rate error X 1000
 	float UPM;				// upm X 1000
-	uint16_t pwmSetting;
+	int pwmSetting;
 	uint32_t CommTime;
 	byte InCommand;			// command byte from RateController
 	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan
@@ -492,4 +492,3 @@ void DebugTheIno()
 	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
 	LoopTmr = micros();
 }
-
