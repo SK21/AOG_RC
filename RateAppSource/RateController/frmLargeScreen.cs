@@ -199,7 +199,6 @@ namespace RateController
             mf.Tls.LoadFormData(this);
             UpdateForm();
             timerMain.Enabled = true;
-            this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
             SwitchingScreens = false;
         }
 
@@ -393,13 +392,13 @@ namespace RateController
 
         private void MnuNew_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
+            saveFileDialog1.InitialDirectory = mf.Tls.FilesDir();
             saveFileDialog1.Title = "New File";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
                 {
-                    mf.Tls.NewFile(saveFileDialog1.FileName);
+                    mf.Tls.OpenFile(saveFileDialog1.FileName);
                     mf.LoadSettings();
                     UpdateForm();
                 }
@@ -408,7 +407,7 @@ namespace RateController
 
         private void MnuOpen_Click(object sender, EventArgs e)
         {
-            openFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
+            openFileDialog1.InitialDirectory = mf.Tls.FilesDir();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 mf.Tls.PropertiesFile = openFileDialog1.FileName;
@@ -447,7 +446,7 @@ namespace RateController
 
         private void MnuSaveAs_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
+            saveFileDialog1.InitialDirectory = mf.Tls.FilesDir();
             saveFileDialog1.Title = "Save As";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -496,6 +495,8 @@ namespace RateController
 
         private void UpdateForm()
         {
+            this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+            
             // set highlight
             if (mf.SimMode == SimType.VirtualNano)
             {
@@ -713,6 +714,16 @@ namespace RateController
             else
             {
                 MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Check;
+            }
+
+            // transparent
+            if(mf.UseTransparent)
+            {
+                MnuOptions.DropDownItems["transparentToolStripMenuItem"].Image = Properties.Resources.Check;
+            }
+            else
+            {
+                MnuOptions.DropDownItems["transparentToolStripMenuItem"].Image = Properties.Resources.Cancel40;
             }
 
             // aog

@@ -10,10 +10,10 @@ namespace RateController
 {
     public class clsTools
     {
-        private static Hashtable ht;
+        private static Hashtable HTfiles;
         private string cAppName = "RateController";
-        private string cAppVersion = "3.4.1";
-        private string cVersionDate = "19-Mar-2023";
+        private string cAppVersion = "3.5.0";
+        private string cVersionDate = "25-Mar-2023";
 
         private string cPropertiesFile;
         private string cSettingsDir;
@@ -23,6 +23,7 @@ namespace RateController
         {
             mf = CallingForm;
             CheckFolders();
+            OpenFile(Properties.Settings.Default.FileName);
         }
 
         public string PropertiesFile
@@ -201,29 +202,8 @@ namespace RateController
         public string LoadProperty(string Key)
         {
             string Prop = "";
-            if (ht.Contains(Key)) Prop = ht[Key].ToString();
+            if (HTfiles.Contains(Key)) Prop = HTfiles[Key].ToString();
             return Prop;
-        }
-
-        public bool NewFile(string Name)
-        {
-            bool Result = false;
-            try
-            {
-                Name = Path.GetFileName(Name);
-                cPropertiesFile = cSettingsDir + "\\" + Name;
-                if (!File.Exists(cPropertiesFile))
-                {
-                    File.CreateText(cPropertiesFile);
-                    OpenFile(cPropertiesFile);
-                    Result = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("clsTools: NewFile: " + ex.Message);
-            }
-            return Result;
         }
 
         public double NoisyData(double CurrentData, double ErrorPercent = 5.0)
@@ -272,12 +252,16 @@ namespace RateController
         {
             try
             {
-                NewFile = Path.GetFileName(NewFile);
-                cPropertiesFile = cSettingsDir + "\\" + NewFile;
+                string PathName = Path.GetDirectoryName(NewFile); // only works if file name present
+                string FileName = Path.GetFileName(NewFile);
+                if (FileName == "") PathName = NewFile;     // no file name present, fix path name
+                if (Directory.Exists(PathName)) Properties.Settings.Default.FilesDir = PathName; // set the new files dir
+
+                cPropertiesFile = Properties.Settings.Default.FilesDir + "\\" + FileName;
                 if (!File.Exists(cPropertiesFile)) File.Create(cPropertiesFile).Dispose();
 
                 SaveProperties();
-                Properties.Settings.Default.FileName = NewFile;
+                Properties.Settings.Default.FileName = FileName;
                 Properties.Settings.Default.Save();
             }
             catch (Exception ex)
@@ -295,17 +279,17 @@ namespace RateController
         public void SaveProperty(string Key, string Value)
         {
             bool Changed = false;
-            if (ht.Contains(Key))
+            if (HTfiles.Contains(Key))
             {
-                if (!ht[Key].ToString().Equals(Value))
+                if (!HTfiles[Key].ToString().Equals(Value))
                 {
-                    ht[Key] = Value;
+                    HTfiles[Key] = Value;
                     Changed = true;
                 }
             }
             else
             {
-                ht.Add(Key, Value);
+                HTfiles.Add(Key, Value);
                 Changed = true;
             }
             if (Changed) SaveProperties();
@@ -314,6 +298,11 @@ namespace RateController
         public string SettingsDir()
         {
             return cSettingsDir;
+        }
+
+        public string FilesDir()
+        {
+            return Properties.Settings.Default.FilesDir;
         }
 
         public void ShowHelp(string Message, string Title = "Help",
@@ -429,7 +418,8 @@ namespace RateController
                 if (!Directory.Exists(cSettingsDir)) Directory.CreateDirectory(cSettingsDir);
                 if (!File.Exists(cSettingsDir + "\\Example.rcs")) File.WriteAllBytes(cSettingsDir + "\\Example.rcs", Properties.Resources.Example);
 
-                OpenFile(Properties.Settings.Default.FileName);
+                string FilesDir = Properties.Settings.Default.FilesDir;
+                if (!Directory.Exists(FilesDir)) Properties.Settings.Default.FilesDir = cSettingsDir;
             }
             catch (Exception)
             {
@@ -441,14 +431,14 @@ namespace RateController
             // property:  key=value  ex: "LastFile=Main.mdb"
             try
             {
-                ht = new Hashtable();
+                HTfiles = new Hashtable();
                 string[] lines = System.IO.File.ReadAllLines(path);
                 foreach (string line in lines)
                 {
                     if (line.Contains("=") && !String.IsNullOrEmpty(line.Split('=')[0]) && !String.IsNullOrEmpty(line.Split('=')[1]))
                     {
                         string[] splitText = line.Split('=');
-                        ht.Add(splitText[0], splitText[1]);
+                        HTfiles.Add(splitText[0], splitText[1]);
                     }
                 }
             }
@@ -458,16 +448,20 @@ namespace RateController
             }
         }
 
-        private void OpenFile(string NewFile)
+        public void OpenFile(string NewFile)
         {
             try
             {
-                NewFile = Path.GetFileName(NewFile);
-                cPropertiesFile = cSettingsDir + "\\" + NewFile;
+                string PathName=Path.GetDirectoryName(NewFile); // only works if file name present
+                string FileName = Path.GetFileName(NewFile);
+                if (FileName == "") PathName = NewFile;     // no file name present, fix path name
+                if(Directory.Exists(PathName)) Properties.Settings.Default.FilesDir = PathName; // set the new files dir
+
+                cPropertiesFile = Properties.Settings.Default.FilesDir + "\\" + FileName;
                 if (!File.Exists(cPropertiesFile)) File.Create(cPropertiesFile).Dispose();
 
                 LoadProperties(cPropertiesFile);
-                Properties.Settings.Default.FileName = NewFile;
+                Properties.Settings.Default.FileName = FileName;
                 Properties.Settings.Default.Save();
             }
             catch (Exception ex)
@@ -480,9 +474,9 @@ namespace RateController
         {
             try
             {
-                string[] NewLines = new string[ht.Count];
+                string[] NewLines = new string[HTfiles.Count];
                 int i = -1;
-                foreach (DictionaryEntry Pair in ht)
+                foreach (DictionaryEntry Pair in HTfiles)
                 {
                     i++;
                     NewLines[i] = Pair.Key.ToString() + "=" + Pair.Value.ToString();

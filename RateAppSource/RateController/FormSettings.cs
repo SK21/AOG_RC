@@ -113,8 +113,8 @@ namespace RateController
                 CurrentProduct = mf.Products.Item(Page - 1);
             }
 
-            openFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
-            saveFileDialog1.InitialDirectory = mf.Tls.SettingsDir();
+            openFileDialog1.InitialDirectory = mf.Tls.FilesDir();
+            saveFileDialog1.InitialDirectory = mf.Tls.FilesDir();
 
             Sec = new Label[] { sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10, sec11, sec12, sec13, sec14, sec15 };
         }

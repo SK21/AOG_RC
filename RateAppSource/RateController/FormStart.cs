@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -178,7 +179,6 @@ namespace RateController
         {
             StartSerial();
             SetDayMode();
-            this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
             if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd)) cSimSpeed = Spd;
@@ -236,6 +236,8 @@ namespace RateController
         {
             try
             {
+                this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+
                 FormatDisplay();
 
                 if (CurrentPage == 0)
@@ -415,7 +417,7 @@ namespace RateController
                 }
 
                 // fan button
-                if (Products.Item(CurrentPage - 1).FanOn)
+                if (CurrentPage>0 && Products.Item(CurrentPage - 1).FanOn)
                 {
                     btnFan.Image = Properties.Resources.FanOn;
                 }
@@ -757,7 +759,7 @@ namespace RateController
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog1.InitialDirectory = Tls.SettingsDir();
+            openFileDialog1.InitialDirectory = Tls.FilesDir();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 Tls.PropertiesFile = openFileDialog1.FileName;
@@ -816,13 +818,13 @@ namespace RateController
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.InitialDirectory = Tls.SettingsDir();
+            saveFileDialog1.InitialDirectory = Tls.FilesDir();
             saveFileDialog1.Title = "New File";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
                 {
-                    Tls.NewFile(saveFileDialog1.FileName);
+                    Tls.OpenFile(saveFileDialog1.FileName);
                     LoadSettings();
                 }
             }
@@ -861,7 +863,7 @@ namespace RateController
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.InitialDirectory = Tls.SettingsDir();
+            saveFileDialog1.InitialDirectory = Tls.FilesDir();
             saveFileDialog1.Title = "Save As";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
