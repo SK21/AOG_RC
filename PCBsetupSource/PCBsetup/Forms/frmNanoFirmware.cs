@@ -12,6 +12,7 @@ namespace PCBsetup.Forms
     {
         // requires the NuGet packages ArduinoUploader, IntelHexFormatReader, SerialPortStream
         // right click on project name in the solution explorer and select "Manage NuGet Packages..."
+        // https://github.com/twinearthsoftware/ArduinoSketchUploader
 
         public CheckBox[] CKs;
         public System.Timers.Timer timer = new System.Timers.Timer(1000);
@@ -19,6 +20,7 @@ namespace PCBsetup.Forms
         private int ProgressCount;
         private DateTime StartUpload;
         private UploadResult UploadStatus;
+        private string UploadError;
         private bool UserSelectedFile = true;
         private BackgroundWorker worker = new BackgroundWorker();
 
@@ -105,6 +107,8 @@ namespace PCBsetup.Forms
 
             UserSelectedFile = false;
             tbHexfile.Text = "Default file version date:" + mf.Tls.NanoFirmwareVersion();
+
+            lbWarning.Visible = !ckRtOldBootloader.Checked;
         }
 
         private void LoadSettings()
@@ -175,6 +179,7 @@ namespace PCBsetup.Forms
             {
                 string HexFile = "";
                 UploadStatus = UploadResult.Failed;
+                UploadError = "";
 
                 if (UserSelectedFile)
                 {
@@ -232,6 +237,8 @@ namespace PCBsetup.Forms
                 {
                     UploadStatus = UploadResult.Sync_Error;
                 }
+                UploadError = ex.Message;
+                mf.Tls.WriteErrorLog(ex.Message);
 
                 timer.Stop();
             }
@@ -251,7 +258,7 @@ namespace PCBsetup.Forms
                     break;
 
                 default:
-                    mf.Tls.ShowHelp("File could not be uploaded.", this.Text, 5000, false, true);
+                    mf.Tls.ShowHelp("File could not be uploaded. \n" + UploadError, this.Text, 5000, false, true);
                     break;
             }
 
@@ -274,6 +281,11 @@ namespace PCBsetup.Forms
 
             mf.Tls.ShowHelp(Message);
             hlpevent.Handled = true;
+        }
+
+        private void ckRtOldBootloader_CheckedChanged(object sender, EventArgs e)
+        {
+            lbWarning.Visible = !ckRtOldBootloader.Checked;
         }
     }
 }

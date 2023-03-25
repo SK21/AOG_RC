@@ -38,7 +38,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.ckRtOldBootloader = new System.Windows.Forms.CheckBox();
             this.WatchDogTimer = new System.Windows.Forms.Timer(this.components);
-            this.label26 = new System.Windows.Forms.Label();
+            this.lbWarning = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnBrowse
@@ -124,25 +124,26 @@
             this.ckRtOldBootloader.Text = "Use Old Bootloader";
             this.ckRtOldBootloader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckRtOldBootloader.UseVisualStyleBackColor = true;
+            this.ckRtOldBootloader.CheckedChanged += new System.EventHandler(this.ckRtOldBootloader_CheckedChanged);
             // 
             // WatchDogTimer
             // 
             this.WatchDogTimer.Interval = 1000;
             // 
-            // label26
+            // lbWarning
             // 
-            this.label26.Location = new System.Drawing.Point(22, 140);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(494, 35);
-            this.label26.TabIndex = 132;
-            this.label26.Text = "Disconnect Nano from ethernet shield before uploading.";
+            this.lbWarning.Location = new System.Drawing.Point(22, 140);
+            this.lbWarning.Name = "lbWarning";
+            this.lbWarning.Size = new System.Drawing.Size(494, 35);
+            this.lbWarning.TabIndex = 132;
+            this.lbWarning.Text = "Disconnect Nano from ethernet shield before uploading.";
             // 
             // frmNanoFirmware
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(542, 275);
-            this.Controls.Add(this.label26);
+            this.Controls.Add(this.lbWarning);
             this.Controls.Add(this.ckRtOldBootloader);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnDefault);
@@ -177,6 +178,6 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.CheckBox ckRtOldBootloader;
         private System.Windows.Forms.Timer WatchDogTimer;
-        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label lbWarning;
     }
 }

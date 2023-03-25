@@ -105,6 +105,8 @@ namespace PCBsetup.Forms
 
             UserSelectedFile = false;
             tbHexfile.Text = "Default file version date:" + mf.Tls.SwitchboxFirmwareVersion();
+
+            lbWarning.Visible = !ckSWOldBootloader.Checked;
         }
 
         private void LoadSettings()
@@ -274,6 +276,11 @@ namespace PCBsetup.Forms
 
             mf.Tls.ShowHelp(Message);
             hlpevent.Handled = true;
+        }
+
+        private void ckSWOldBootloader_CheckedChanged(object sender, EventArgs e)
+        {
+            lbWarning.Visible = !ckSWOldBootloader.Checked;
         }
     }
 }

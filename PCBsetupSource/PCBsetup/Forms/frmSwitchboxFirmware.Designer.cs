@@ -38,7 +38,7 @@
             this.tbHexfile = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.WatchDogTimer = new System.Windows.Forms.Timer(this.components);
-            this.label26 = new System.Windows.Forms.Label();
+            this.lbWarning = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ckSWOldBootloader
@@ -53,6 +53,7 @@
             this.ckSWOldBootloader.Text = "Use Old Bootloader";
             this.ckSWOldBootloader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSWOldBootloader.UseVisualStyleBackColor = true;
+            this.ckSWOldBootloader.CheckedChanged += new System.EventHandler(this.ckSWOldBootloader_CheckedChanged);
             // 
             // btnBrowse
             // 
@@ -130,20 +131,20 @@
             this.WatchDogTimer.Interval = 1000;
             this.WatchDogTimer.Tick += new System.EventHandler(this.WatchDogTimer_Tick);
             // 
-            // label26
+            // lbWarning
             // 
-            this.label26.Location = new System.Drawing.Point(21, 141);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(494, 35);
-            this.label26.TabIndex = 133;
-            this.label26.Text = "Disconnect Nano from ethernet shield before uploading.";
+            this.lbWarning.Location = new System.Drawing.Point(21, 141);
+            this.lbWarning.Name = "lbWarning";
+            this.lbWarning.Size = new System.Drawing.Size(494, 35);
+            this.lbWarning.TabIndex = 133;
+            this.lbWarning.Text = "Disconnect Nano from ethernet shield before uploading.";
             // 
             // frmSwitchboxFirmware
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(542, 266);
-            this.Controls.Add(this.label26);
+            this.Controls.Add(this.lbWarning);
             this.Controls.Add(this.ckSWOldBootloader);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnDefault);
@@ -178,6 +179,6 @@
         private System.Windows.Forms.TextBox tbHexfile;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Timer WatchDogTimer;
-        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label lbWarning;
     }
 }
