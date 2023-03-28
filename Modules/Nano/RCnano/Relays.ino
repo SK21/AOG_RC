@@ -44,7 +44,7 @@ void CheckRelays()
     NewLo |= PowerRelayLo;
     NewHi |= PowerRelayHi;
 
-    if (MDL.UseMCP23017 == 1)
+/*    if (MDL.UseMCP23017 == 1)
     {
         if (IOexpanderFound)
         {
@@ -69,6 +69,7 @@ void CheckRelays()
     }
     else
     {
+    */
         // use Nano pins
         for (int j = 0; j < 2; j++)
         {
@@ -81,5 +82,5 @@ void CheckRelays()
                 }
             }
         }
-    }
+    //}
 }

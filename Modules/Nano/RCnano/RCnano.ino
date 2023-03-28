@@ -1,7 +1,7 @@
-#include <Adafruit_MCP23008.h>
-#include <Adafruit_MCP23X08.h>
-#include <Adafruit_MCP23X17.h>
-#include <Adafruit_MCP23XXX.h>
+//#include <Adafruit_MCP23008.h>
+//#include <Adafruit_MCP23X08.h>
+//#include <Adafruit_MCP23X17.h>
+//#include <Adafruit_MCP23XXX.h>
 #include <Wire.h>
 #include <EEPROM.h>
 
@@ -13,7 +13,7 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "RCnano  :  23-Mar-2023"
+# define InoDescription "RCnano  :  27-Mar-2023 - YEI Fan Average"
 const int16_t InoID = 2303;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
@@ -79,7 +79,7 @@ byte Ethernet::buffer[500]; // udp send and receive buffer
 bool ENCfound;
 static byte selectPin = 10;
 
-Adafruit_MCP23X17 mcp;
+//Adafruit_MCP23X17 mcp;
 
 // Pin number is an integer in the range 0-15,
 // where pins numbered from 0 to 7 are on Port A, GPA0 = 0,
@@ -230,6 +230,7 @@ void setup()
 		}
 
 		Serial.println("");
+   /*
 		if (IOexpanderFound)
 		{
 			Serial.println("I/O Expander found.");
@@ -257,8 +258,9 @@ void setup()
 		}
 		else
 		{
+   */
 			Serial.println("I/O Expander not found.");
-		}
+		//}
 	}
 	else
 	{
