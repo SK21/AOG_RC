@@ -13,8 +13,8 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "RCnano  :  28-Mar-2023"
-const int16_t InoID = 2803;	// change to send defaults to eeprom
+# define InoDescription "RCnano  :  29-Mar-2023"
+const int16_t InoID = 2903;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
 #define MaxProductCount 2
@@ -357,7 +357,7 @@ void loop()
 	if (millis() - SendLast > SendTime)
 	{
 		SendLast = millis();
-		//SendSerial();
+		SendSerial();
 		SendUDPwired();
 	}
 
