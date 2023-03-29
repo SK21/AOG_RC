@@ -81,7 +81,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             switch (UDPpgn)
             {
             case 32614:
-                //PGN32614 to Arduino from Rate Controller, 14 bytes
+                //PGN32614 to Arduino from Rate Controller
                 //0	HeaderLo		102
                 //1	HeaderHi		127
                 //2 Controller ID
@@ -99,12 +99,12 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                 //	        - bit 4		    MasterOn, or true if no switchbox
                 //          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
                 //          - bit 6         AutoOn
-                //          - bit 7         Calibration On
                 //12    power relay Lo      list of power type relays 0-7
                 //13    power relay Hi      list of power type relays 8-15
                 //14	manual pwm Lo
                 //15    manual pwm Hi
                 //16	CRC
+
                 PGNlength = 17;
 
                 if (len > PGNlength - 1)
@@ -137,7 +137,17 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                                 if ((Sensor[SensorID].InCommand & 8) == 8) Sensor[SensorID].ControlType += 4;
 
                                 MasterOn = ((Sensor[SensorID].InCommand & 16) == 16);
+
                                 Sensor[SensorID].UseMultiPulses = ((Sensor[SensorID].InCommand & 32) == 32);
+                                if (Sensor[SensorID].UseMultiPulses)
+                                {
+                                    Sensor[SensorID].Debounce = MDL.Debounce;
+                                }
+                                else
+                                {
+                                    Sensor[SensorID].Debounce = MDL.Debounce * 5;
+                                }
+
                                 AutoOn = ((Sensor[SensorID].InCommand & 64) == 64);
 
                                 // power relays
@@ -263,7 +273,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                 //      - UseMCP23017
                 //      - RelyOnSignal
                 //      - FlowOnSignal
-                // 6    minimum ms debounce
+                // 6    Debounce
                 // 7    crc
                 PGNlength = 8;
 

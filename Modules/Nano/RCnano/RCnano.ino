@@ -13,8 +13,8 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "RCnano  :  23-Mar-2023"
-const int16_t InoID = 2303;	// change to send defaults to eeprom
+# define InoDescription "RCnano  :  28-Mar-2023"
+const int16_t InoID = 2803;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
 #define MaxProductCount 2
@@ -28,7 +28,7 @@ struct ModuleConfig
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
 	uint8_t Relays[16];
-	uint8_t Debounce = 3;			// minimum ms pin change
+	uint8_t Debounce = 3;			// minimum ms pin change, base debounce
 };
 
 ModuleConfig MDL;
@@ -49,7 +49,6 @@ struct SensorConfig
 	float RateSetting;
 	float MeterCal;
 	float ManualAdjust;
-	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
 	float KP;
 	float KI;
 	float KD;
@@ -57,6 +56,8 @@ struct SensorConfig
 	byte MaxPWM;
 	byte Deadband;
 	byte BrakePoint;
+	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
+	uint8_t Debounce;
 };
 
 SensorConfig Sensor[2];
@@ -75,7 +76,7 @@ unsigned int SourcePort = 6100;		// to send from
 byte DestinationIP[] = { 192, 168, 1, 255 };	// broadcast 255
 unsigned int DestinationPort = 29999; // Rate Controller listening port
 
-byte Ethernet::buffer[500]; // udp send and receive buffer
+byte Ethernet::buffer[300]; // udp send and receive buffer
 bool ENCfound;
 static byte selectPin = 10;
 
@@ -273,6 +274,7 @@ void setup()
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
+		//pinMode(Sensor[i].FlowPin, INPUT);	// for direct connection to inductive sensor
 		pinMode(Sensor[i].DirPin, OUTPUT);
 		pinMode(Sensor[i].PWMPin, OUTPUT);
 	}
@@ -355,7 +357,7 @@ void loop()
 	if (millis() - SendLast > SendTime)
 	{
 		SendLast = millis();
-		SendSerial();
+		//SendSerial();
 		SendUDPwired();
 	}
 
@@ -466,11 +468,11 @@ void DebugTheIno()
 		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
 
-		Serial.print(", ");
-		Serial.print(debug1);
+		//Serial.print(", ");
+		//Serial.print(debug1);
 
-		Serial.print(", ");
-		Serial.print(debug2);
+		//Serial.print(", ");
+		//Serial.print(debug2);
 
 		//Serial.print(", ");
 		//Serial.print(debug3);
@@ -478,8 +480,8 @@ void DebugTheIno()
 		//Serial.print(", ");
 		//Serial.print(debug4);
 
-		//Serial.print(", ");
-		//Serial.print(AutoOn);
+		Serial.print(", ");
+		Serial.print(Sensor[1].Debounce);
 
 		Serial.println("");
 

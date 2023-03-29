@@ -90,7 +90,7 @@ void ReceiveSerial()
 		switch (SerialPGN)
 		{
 		case 32614:
-			//PGN32614 to Arduino from Rate Controller, 14 bytes
+			//PGN32614 to Arduino from Rate Controller
 			//0	HeaderLo		102
 			//1	HeaderHi		127
 			//2 Controller ID
@@ -113,6 +113,7 @@ void ReceiveSerial()
 			//14	manual pwm Lo
 			//15	manual pwm Hi
 			//16	CRC
+
 			PGNlength = 17;
 
 			if (Serial.available() > PGNlength - 3)
@@ -153,7 +154,17 @@ void ReceiveSerial()
 							if ((Sensor[SensorID].InCommand & 8) == 8) Sensor[SensorID].ControlType += 4;
 
 							MasterOn = ((Sensor[SensorID].InCommand & 16) == 16);
+
 							Sensor[SensorID].UseMultiPulses = ((Sensor[SensorID].InCommand & 32) == 32);
+							if (Sensor[SensorID].UseMultiPulses)
+							{
+								Sensor[SensorID].Debounce = MDL.Debounce;
+							}
+							else
+							{
+								Sensor[SensorID].Debounce = MDL.Debounce * 5;
+							}
+							
 							AutoOn = ((Sensor[SensorID].InCommand & 64) == 64);
 
 							// power relays
@@ -301,8 +312,9 @@ void ReceiveSerial()
 			//      - UseMCP23017
 			//      - RelyOnSignal
 			//      - FlowOnSignal
-			// 6    minimum ms debounce
+			// 6    Debounce
 			// 7    crc
+
 			PGNlength = 8;
 
 			if (Serial.available() > PGNlength - 3)
