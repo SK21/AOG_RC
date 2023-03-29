@@ -10,6 +10,8 @@ namespace RateController
         private FormStart mf;
         private clsProduct Prd;
         private int RateType = 0;   // 0 current rate, 1 instantaneous rate, 2 overall rate
+        private int Fan1RateType = 0;
+        private int Fan2RateType = 0;
         private bool ShowCoverageRemaining = false;
         private bool ShowQuantityRemaining = true;
         public clsAlarm RCalarm;
@@ -856,7 +858,16 @@ namespace RateController
             {
                 // fan 1
                 clsProduct prd = mf.Products.Item(mf.MaxProducts - 2);
-                lbRPM1.Text = prd.CurrentRate().ToString("N0") + " RPM";
+
+                if (Fan1RateType == 1)
+                {
+                    lbRPM1.Text = prd.CurrentRate().ToString("N0") + " RPM-I";
+                }
+                else
+                {
+                    lbRPM1.Text = prd.SmoothRate().ToString("N0") + " RPM";
+                }
+
                 if (prd.ArduinoModule.ModuleSending())
                 {
                     if (prd.ArduinoModule.ModuleReceiving())
@@ -875,7 +886,15 @@ namespace RateController
 
                 // fan 2
                 prd = mf.Products.Item(mf.MaxProducts - 1);
-                lbRPM2.Text = prd.CurrentRate().ToString("N0") + " RPM";
+                if (Fan2RateType == 1)
+                {
+                    lbRPM2.Text = prd.CurrentRate().ToString("N0") + " RPM-I";
+                }
+                else
+                {
+                    lbRPM2.Text = prd.SmoothRate().ToString("N0") + " RPM";
+                }
+
                 if (prd.ArduinoModule.ModuleSending())
                 {
                     if (prd.ArduinoModule.ModuleReceiving())
@@ -1157,5 +1176,18 @@ namespace RateController
             }
         }
 
+        private void lbRPM1_Click(object sender, EventArgs e)
+        {
+            Fan1RateType++;
+            if (Fan1RateType > 1) Fan1RateType = 0;
+            UpdateForm();
+        }
+
+        private void lbRPM2_Click(object sender, EventArgs e)
+        {
+            Fan2RateType++;
+            if (Fan2RateType > 1) Fan2RateType = 0;
+            UpdateForm();
+        }
     }
 }

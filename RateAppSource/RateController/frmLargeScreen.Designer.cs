@@ -324,6 +324,7 @@
             this.lbRPM1.TabIndex = 159;
             this.lbRPM1.Text = "4000 RPM";
             this.lbRPM1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbRPM1.Click += new System.EventHandler(this.lbRPM1_Click);
             // 
             // lbRPM2
             // 
@@ -335,6 +336,7 @@
             this.lbRPM2.TabIndex = 158;
             this.lbRPM2.Text = "2500 RPM";
             this.lbRPM2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbRPM2.Click += new System.EventHandler(this.lbRPM2_Click);
             // 
             // pnlQuantity1
             // 
@@ -435,7 +437,7 @@
             this.MnuOptions,
             this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(219, 362);
+            this.mnuSettings.Size = new System.Drawing.Size(219, 340);
             // 
             // MnuProducts
             // 
