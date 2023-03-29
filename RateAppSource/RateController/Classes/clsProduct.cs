@@ -968,7 +968,7 @@ namespace RateController
 
         public string Units()
         {
-            string s = cQuantityDescription + " / " + mf.CoverageAbbr[CoverageUnits];
+            string s = cQuantityDescription + "/" + mf.CoverageAbbr[CoverageUnits];
             return s;
         }
 

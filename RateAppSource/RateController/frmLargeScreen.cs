@@ -80,16 +80,20 @@ namespace RateController
         {
             if (transparentToolStripMenuItem.Checked)
             {
+                string TransparentFont = "MS Gothic";
+                //string TransparentFont = "Courier New";
+                //string TransparentFont = "Candara Light";
+
                 foreach (Control Ctrl in Controls)
                 {
                     if (Ctrl.Name != "lbName0" && Ctrl.Name != "lbName1" && Ctrl.Name != "lbName2" && Ctrl.Name != "lbName3"
-                        && Ctrl.Name != "lbAogConnected" && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2")
+                         && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2")
                     {
-                        Ctrl.Font = new Font("Candara Light", 14);
+                        Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
                     }
                     else
                     {
-                        Ctrl.Font = new Font("Candara Light", 14, FontStyle.Bold);
+                        Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
                     }
                 }
             }
@@ -128,7 +132,7 @@ namespace RateController
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
 
-                btnSettings.BackColor = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.NightColour : Properties.Settings.Default.DayColour;
+                //btnMenu.BackColor = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.NightColour : Properties.Settings.Default.DayColour;
 
 
             }
@@ -156,7 +160,7 @@ namespace RateController
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
 
-                btnSettings.BackColor = Color.Transparent;
+                //btnMenu.BackColor = Color.Transparent;
 
             }
             SetFont();
@@ -177,19 +181,17 @@ namespace RateController
 
         private void frmLargeScreen_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                mf.Tls.SaveFormData(this);
+            }
+
             timerMain.Enabled = false;
             if (mf.UseTransparent)
             {
                 // move the window back to the default location
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
-            }
-
-
-
-            if (this.WindowState == FormWindowState.Normal)
-            {
-                mf.Tls.SaveFormData(this);
             }
 
             if (mf.UseLargeScreen) mf.LargeScreenExit = true;
@@ -204,11 +206,6 @@ namespace RateController
             UpdateForm();
             timerMain.Enabled = true;
             SwitchingScreens = false;
-        }
-
-        private void lbAogConnected_Click(object sender, EventArgs e)
-        {
-            if (!mf.UseTransparent) this.WindowState = FormWindowState.Minimized;
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
@@ -733,11 +730,11 @@ namespace RateController
             // aog
             if (mf.AutoSteerPGN.Connected())
             {
-                lbAogConnected.BackColor = Color.LightGreen;
+                btnMenu.Image = Properties.Resources.GreenGear;
             }
             else
             {
-                lbAogConnected.BackColor = Color.Red;
+                btnMenu.Image = Properties.Resources.RedGear;
             }
 
             // graphs
@@ -1016,14 +1013,6 @@ namespace RateController
         {
             string Message = "Indicates quantity remaining. Click to select product and view" +
                 " the product's information.";
-
-            mf.Tls.ShowHelp(Message);
-            hlpevent.Handled = true;
-        }
-
-        private void lbAogConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Indicates AOG is connected. Click to minimize window.";
 
             mf.Tls.ShowHelp(Message);
             hlpevent.Handled = true;

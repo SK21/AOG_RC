@@ -263,6 +263,16 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap GreenGear {
+            get {
+                object obj = ResourceManager.GetObject("GreenGear", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Industry_Circuit_icon {
             get {
                 object obj = ResourceManager.GetObject("Industry-Circuit-icon", resourceCulture);
@@ -385,6 +395,16 @@ namespace RateController.Properties {
         internal static System.Drawing.Bitmap RC_logo {
             get {
                 object obj = ResourceManager.GetObject("RC_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RedGear {
+            get {
+                object obj = ResourceManager.GetObject("RedGear", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

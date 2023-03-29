@@ -333,6 +333,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\GreenGear.png" />
+    <None Include="Resources\RedGear.png" />
+    <None Include="Resources\GreenGear %282%29.png" />
     <None Include="Resources\FanOn.png" />
     <None Include="Resources\FanOff.png" />
     <None Include="Resources\SwitchOff.png" />
