@@ -92,6 +92,8 @@ namespace RateController
             this.tbKP = new System.Windows.Forms.TextBox();
             this.lbProportional = new System.Windows.Forms.Label();
             this.tbs6 = new System.Windows.Forms.TabPage();
+            this.ckConstantUPM = new System.Windows.Forms.CheckBox();
+            this.ckOnScreen = new System.Windows.Forms.CheckBox();
             this.label28 = new System.Windows.Forms.Label();
             this.tbOffRate = new System.Windows.Forms.TextBox();
             this.lbMinimumUPM = new System.Windows.Forms.Label();
@@ -191,8 +193,7 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.ckOnScreen = new System.Windows.Forms.CheckBox();
-            this.ckConstantUPM = new System.Windows.Forms.CheckBox();
+            this.ckDefault = new System.Windows.Forms.CheckBox();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -984,6 +985,7 @@ namespace RateController
             // 
             // tbs6
             // 
+            this.tbs6.Controls.Add(this.ckDefault);
             this.tbs6.Controls.Add(this.ckConstantUPM);
             this.tbs6.Controls.Add(this.ckOnScreen);
             this.tbs6.Controls.Add(this.label28);
@@ -999,6 +1001,38 @@ namespace RateController
             this.tbs6.TabIndex = 6;
             this.tbs6.Text = "Options";
             this.tbs6.UseVisualStyleBackColor = true;
+            // 
+            // ckConstantUPM
+            // 
+            this.ckConstantUPM.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckConstantUPM.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckConstantUPM.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckConstantUPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckConstantUPM.Location = new System.Drawing.Point(44, 325);
+            this.ckConstantUPM.Name = "ckConstantUPM";
+            this.ckConstantUPM.Size = new System.Drawing.Size(150, 32);
+            this.ckConstantUPM.TabIndex = 118;
+            this.ckConstantUPM.Text = "Constant UPM";
+            this.ckConstantUPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckConstantUPM.UseVisualStyleBackColor = true;
+            this.ckConstantUPM.CheckedChanged += new System.EventHandler(this.ckConstantUPM_CheckedChanged);
+            this.ckConstantUPM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckConstantUPM_HelpRequested);
+            // 
+            // ckOnScreen
+            // 
+            this.ckOnScreen.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckOnScreen.Location = new System.Drawing.Point(44, 277);
+            this.ckOnScreen.Name = "ckOnScreen";
+            this.ckOnScreen.Size = new System.Drawing.Size(150, 32);
+            this.ckOnScreen.TabIndex = 117;
+            this.ckOnScreen.Text = "On Screen";
+            this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckOnScreen.UseVisualStyleBackColor = true;
+            this.ckOnScreen.CheckedChanged += new System.EventHandler(this.ckOnScreen_CheckedChanged);
+            this.ckOnScreen.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOnScreen_HelpRequested);
             // 
             // label28
             // 
@@ -2196,37 +2230,21 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
-            // ckOnScreen
+            // ckDefault
             // 
-            this.ckOnScreen.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOnScreen.Location = new System.Drawing.Point(44, 300);
-            this.ckOnScreen.Name = "ckOnScreen";
-            this.ckOnScreen.Size = new System.Drawing.Size(135, 32);
-            this.ckOnScreen.TabIndex = 117;
-            this.ckOnScreen.Text = "On Screen";
-            this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOnScreen.UseVisualStyleBackColor = true;
-            this.ckOnScreen.CheckedChanged += new System.EventHandler(this.ckOnScreen_CheckedChanged);
-            this.ckOnScreen.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOnScreen_HelpRequested);
-            // 
-            // ckConstantUPM
-            // 
-            this.ckConstantUPM.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckConstantUPM.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckConstantUPM.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckConstantUPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckConstantUPM.Location = new System.Drawing.Point(44, 354);
-            this.ckConstantUPM.Name = "ckConstantUPM";
-            this.ckConstantUPM.Size = new System.Drawing.Size(150, 32);
-            this.ckConstantUPM.TabIndex = 118;
-            this.ckConstantUPM.Text = "Constant UPM";
-            this.ckConstantUPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckConstantUPM.UseVisualStyleBackColor = true;
-            this.ckConstantUPM.CheckedChanged += new System.EventHandler(this.ckConstantUPM_CheckedChanged);
-            this.ckConstantUPM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckConstantUPM_HelpRequested);
+            this.ckDefault.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDefault.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDefault.Location = new System.Drawing.Point(44, 373);
+            this.ckDefault.Name = "ckDefault";
+            this.ckDefault.Size = new System.Drawing.Size(150, 32);
+            this.ckDefault.TabIndex = 119;
+            this.ckDefault.Text = "Default Product";
+            this.ckDefault.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDefault.UseVisualStyleBackColor = true;
+            this.ckDefault.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
+            this.ckDefault.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckDefault_HelpRequested);
             // 
             // FormSettings
             // 
@@ -2445,5 +2463,6 @@ namespace RateController
         private System.Windows.Forms.Button btnFan;
         private System.Windows.Forms.CheckBox ckConstantUPM;
         private System.Windows.Forms.CheckBox ckOnScreen;
+        private System.Windows.Forms.CheckBox ckDefault;
     }
 }

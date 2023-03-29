@@ -197,6 +197,8 @@ namespace RateController
         private void frmLargeScreen_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
+            Prd = mf.Products.Item(mf.DefaultProduct);
+
             UpdateForm();
             timerMain.Enabled = true;
             SwitchingScreens = false;

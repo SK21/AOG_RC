@@ -68,6 +68,7 @@ namespace RateController
         public PGN32503 WifiStatus;
 
         private bool LoadError = false;
+        private int cDefaultProduct = 0;
 
         public FormStart()
         {
@@ -102,7 +103,7 @@ namespace RateController
             //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
             UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255", true, true);  // AOG
 
-            UDPmodules = new UDPComm(this, 29999, 28888, 1480 );    // arduino
+            UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
 
             AutoSteerPGN = new PGN254(this);
             SectionsPGN = new PGN235(this);
@@ -191,6 +192,26 @@ namespace RateController
             Products.Load();
             PressureObjects.Load();
             RelayObjects.Load();
+
+            LoadDefaultProduct();
+        }
+
+        private void LoadDefaultProduct()
+        {
+            if (int.TryParse(Tls.LoadProperty("DefaultProduct"), out int DP)) cDefaultProduct = DP;
+            int count = 0;
+            int tmp = 0;
+            foreach (clsProduct Prd in Products.Items)
+            {
+                if (Prd.OnScreen && Prd.ID < MaxProducts - 2)
+                {
+                    count++;
+                    tmp = Prd.ID;
+                }
+            }
+            if (count == 1) DefaultProduct = tmp;
+
+            CurrentPage = cDefaultProduct + 1;
         }
 
         public void SendSerial(byte[] Data)
@@ -278,7 +299,7 @@ namespace RateController
 
                     lbFan.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
                     lbTargetRPM.Text = Prd.TargetRate().ToString("N0");
-                    lbCurrentRPM.Text= Prd.SmoothRate().ToString("N0");
+                    lbCurrentRPM.Text = Prd.SmoothRate().ToString("N0");
                     lbOn.Visible = Prd.FanOn;
                     lbOff.Visible = !Prd.FanOn;
 
@@ -398,7 +419,7 @@ namespace RateController
                 }
 
                 // alarm
-                if(!cUseLargeScreen) RCalarm.CheckAlarms();
+                if (!cUseLargeScreen) RCalarm.CheckAlarms();
 
                 // metric
                 if (cUseInches)
@@ -417,7 +438,7 @@ namespace RateController
                 }
 
                 // fan button
-                if (CurrentPage>0 && Products.Item(CurrentPage - 1).FanOn)
+                if (CurrentPage > 0 && Products.Item(CurrentPage - 1).FanOn)
                 {
                     btnFan.Image = Properties.Resources.FanOn;
                 }
@@ -902,7 +923,7 @@ namespace RateController
                     Indicators[i].BackColor = Properties.Settings.Default.DayColour;
                 }
 
-                lbOn.BackColor= Properties.Settings.Default.DayColour;
+                lbOn.BackColor = Properties.Settings.Default.DayColour;
                 lbOff.BackColor = Properties.Settings.Default.DayColour;
             }
             else
@@ -957,11 +978,11 @@ namespace RateController
 
         private void FormStart_Activated(object sender, EventArgs e)
         {
-            if(Restart)
+            if (Restart)
             {
                 Application.Restart();
             }
-            else if(LargeScreenExit)
+            else if (LargeScreenExit)
             {
                 this.Close();
             }
@@ -1016,6 +1037,19 @@ namespace RateController
         private void btnFan_Click(object sender, EventArgs e)
         {
             Products.Item(CurrentPage - 1).FanOn = !Products.Item(CurrentPage - 1).FanOn;
+        }
+
+        public int DefaultProduct
+        {
+            get { return cDefaultProduct; }
+            set
+            {
+                if (value >= 0 && value < MaxProducts - 2)
+                {
+                    cDefaultProduct = value;
+                    Tls.SaveProperty("DefaultProduct", cDefaultProduct.ToString());
+                }
+            }
         }
     }
 }

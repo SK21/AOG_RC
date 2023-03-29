@@ -840,6 +840,8 @@ namespace RateController
             CurrentProduct.OnScreen = ckOnScreen.Checked;
 
             CurrentProduct.Save();
+
+            if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
         }
 
         private void SetButtons(bool Edited)
@@ -1480,7 +1482,6 @@ namespace RateController
 
             if (mf.SimMode != SimType.None)
             {
-                //lbProduct.Text = lbProduct.Text;
                 lbProduct.BackColor = mf.SimColor;
                 lbProduct.BorderStyle = BorderStyle.FixedSingle;
             }
@@ -1492,12 +1493,14 @@ namespace RateController
             }
 
             tbTare.Text = CurrentProduct.ScaleTare.ToString("N0");
+            ckDefault.Checked = (mf.DefaultProduct == CurrentProduct.ID);
 
             Initializing = false;
             UpdateOnTypeChange();
 
             if (CurrentProduct.ControlType == ControlTypeEnum.Fan)
             {
+                ckDefault.Visible = false;
                 if (tcProducts.TabCount > 4)
                 {
                     // remove tabs
@@ -1509,6 +1512,7 @@ namespace RateController
             }
             else
             {
+                ckDefault.Visible = true;
                 if (tcProducts.TabCount < 5)
                 {
                     // add back the removed tabs
@@ -1967,6 +1971,19 @@ namespace RateController
             string Message = "UPM does not vary with the number of sections on or off.";
 
             mf.Tls.ShowHelp(Message, "Constant UPM");
+            hlpevent.Handled = true;
+        }
+
+        private void ckDefault_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Product that is loaded at startup.";
+
+            mf.Tls.ShowHelp(Message, "Default Product");
             hlpevent.Handled = true;
         }
     }

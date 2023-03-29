@@ -176,7 +176,6 @@ unsigned long GetAvgDuration(int ID)
 {
 	unsigned long dursum = 0;
 
-
 	noInterrupts();
 	for (int i = 0; i < avgPulses; i++)
 	{
@@ -244,7 +243,7 @@ void GetUPMflow(int ID)
 	}
 
 	// check for no flow
-	if (millis() - LastPulse[ID] > 4000)
+	if (millis() - LastPulse[ID] > 2000)
 	{
 		PPM[ID] = 0;
 		Osum[ID] = 0;
