@@ -65,6 +65,7 @@ namespace RateController
         private byte[] VRconversion = { 255, 0, 1, 2, 3, 4 };   // 255 = off
         private bool cFanOn;
         private bool cOnScreen;
+        private bool cBumpButtons;
         private bool cConstantUPM;
 
         public clsProduct(FormStart CallingForm, int ProdID)
@@ -140,6 +141,12 @@ namespace RateController
         {
             get { return cOnScreen; }
             set { cOnScreen = value; }
+        }
+
+        public bool BumpButtons
+        {
+            get { return cBumpButtons; }
+            set { cBumpButtons = value; }
         }
 
         public double CalStart
@@ -544,7 +551,9 @@ namespace RateController
         {
             if (cScaleUnitsCal > 0)
             {
-                return NetScaleCounts() / cScaleUnitsCal;
+                double V = NetScaleCounts() / cScaleUnitsCal;
+                if (cEnableProdDensity && cProdDensity > 0) V *= cProdDensity;
+                return V;
             }
             else
             {
@@ -642,6 +651,23 @@ namespace RateController
             else
             {
                 cOnScreen = true;
+            }
+
+            if (bool.TryParse(mf.Tls.LoadProperty("BumpButtons" + IDname), out bool BB))
+            {
+                if (cOnScreen)
+                {
+                    cBumpButtons = false;
+                }
+                else
+                {
+                    cBumpButtons = BB;
+                }
+                
+            }
+            else
+            {
+                cBumpButtons = false;
             }
 
             bool.TryParse(mf.Tls.LoadProperty("ConstantUPM" + IDname), out cConstantUPM);
@@ -763,6 +789,7 @@ namespace RateController
             mf.Tls.SaveProperty("MaxPWM" + IDname, PIDtoArduino.MaxPWM.ToString());
 
             mf.Tls.SaveProperty("OnScreen" + IDname, cOnScreen.ToString());
+            mf.Tls.SaveProperty("BumpButtons" + IDname, cBumpButtons.ToString());
             mf.Tls.SaveProperty("ConstantUPM" + IDname, cConstantUPM.ToString());
         }
 

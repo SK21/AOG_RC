@@ -61,7 +61,7 @@
             this.tbSpeed.Margin = new System.Windows.Forms.Padding(6);
             this.tbSpeed.MaxLength = 8;
             this.tbSpeed.Name = "tbSpeed";
-            this.tbSpeed.Size = new System.Drawing.Size(47, 30);
+            this.tbSpeed.Size = new System.Drawing.Size(47, 53);
             this.tbSpeed.TabIndex = 4;
             this.tbSpeed.Text = "10.5";
             this.tbSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -202,6 +202,7 @@
             this.btnUp.TabIndex = 165;
             this.btnUp.Text = "Rate Up";
             this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
             this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
             // 
@@ -269,7 +270,7 @@
             this.tbPWM.Margin = new System.Windows.Forms.Padding(6);
             this.tbPWM.MaxLength = 8;
             this.tbPWM.Name = "tbPWM";
-            this.tbPWM.Size = new System.Drawing.Size(47, 30);
+            this.tbPWM.Size = new System.Drawing.Size(47, 53);
             this.tbPWM.TabIndex = 158;
             this.tbPWM.Text = "10.5";
             this.tbPWM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -305,7 +306,7 @@
             // 
             // frmSwitches
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(22F, 44F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(248, 401);
             this.Controls.Add(this.bntOK);

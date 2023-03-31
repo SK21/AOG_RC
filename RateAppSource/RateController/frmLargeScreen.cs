@@ -21,6 +21,9 @@ namespace RateController
         private int windowLeft = 0;
         private int mouseX = 0;
         private int mouseY = 0;
+        private bool[] SwON = new bool[9];
+        private bool UpPressed;
+        private bool DownPressed;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -53,6 +56,7 @@ namespace RateController
             mf = CallingForm;
             Prd = mf.Products.Item(0);
             RCalarm = new clsAlarm(mf, btAlarm);
+            mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
 
             this.BackColor = Properties.Settings.Default.DayColour;
             pnlRate0.BackColor = Properties.Settings.Default.DayColour;
@@ -84,6 +88,10 @@ namespace RateController
                         && Ctrl.Name != "lbAogConnected" && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2")
                     {
                         Ctrl.Font = new Font("Candara Light", 14);
+                    }
+                    else if (Ctrl.Name == "lbAogConnected")
+                    {
+                        Ctrl.Font = new Font("Candra Light", 11, FontStyle.Bold);
                     }
                     else
                     {
@@ -202,10 +210,11 @@ namespace RateController
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
             SwitchingScreens = false;
         }
-
+        
         private void lbAogConnected_Click(object sender, EventArgs e)
         {
-            if (!mf.UseTransparent) this.WindowState = FormWindowState.Minimized;
+            //if (!mf.UseTransparent) this.WindowState = FormWindowState.Minimized;
+            mf.SwitchBox.PressSwitch(SwIDs.Auto);
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
@@ -492,6 +501,7 @@ namespace RateController
         private void timerMain_Tick(object sender, EventArgs e)
         {
             UpdateForm();
+            UpdateSwitches();
         }
 
         private void UpdateForm()
@@ -718,11 +728,13 @@ namespace RateController
             // aog
             if (mf.AutoSteerPGN.Connected())
             {
-                lbAogConnected.BackColor = Color.LightGreen;
+                //lbAogConnected.BackColor = Color.LightGreen;
+                btnSettings.BackColor = Color.LightGreen;
             }
             else
             {
-                lbAogConnected.BackColor = Color.Red;
+                //lbAogConnected.BackColor = Color.Red;
+                btnSettings.BackColor = Color.Red;
             }
 
             // graphs
@@ -918,7 +930,7 @@ namespace RateController
             pnlRate0.Visible = Prd.OnScreen;
             pnlQuantity0.Visible = Prd.OnScreen;
             pnlSelect0.Visible = Prd.OnScreen;
-
+            
             Prd = mf.Products.Item(1);
             lbName1.Visible = Prd.OnScreen;
             pnlRate1.Visible = Prd.OnScreen;
@@ -946,6 +958,48 @@ namespace RateController
             lbFan2.Visible = Prd.OnScreen;
             lbRPM2.Visible = Prd.OnScreen;
             btnFan2.Visible = Prd.OnScreen;
+
+            for (int i=0; i < 5; i++)
+            {
+                if (i == 4)
+                {
+                    btnUp.Visible = false;
+                    btnDown.Visible = false;
+                }
+                else
+                {
+                    Prd = mf.Products.Item(i);
+                    if (Prd.BumpButtons)
+                    {
+                        btnUp.Visible = true;
+                        btnDown.Visible = true;
+                        if (transparentToolStripMenuItem.Checked)
+                        {
+                            btnUp.BackColor = Color.LightGreen;
+                            btnDown.BackColor = Color.LightGreen;
+                        }
+                        Label prodLabel = ((Label)this.Controls.Find("lbName" + i, true)[0]);
+                        ProgressBar prodBar = ((ProgressBar)this.Controls.Find("pbRate" + i, true)[0]);
+                        int posx = prodLabel.Left;
+                        int posy = prodLabel.Top;
+                        int width = prodLabel.Width;
+                        int H1 = prodLabel.Height;
+                        int H2 = prodBar.Height;
+
+                        btnUp.Left = posx;
+                        btnUp.Top = posy;
+                        btnUp.Width = width;
+                        btnUp.Height = (H1 + H2) / 2;
+                        btnDown.Left = posx;
+                        btnDown.Top = posy + btnUp.Height + 10;
+                        btnDown.Width = width;
+                        btnDown.Height = btnUp.Height;
+
+                        break;
+
+                    }
+                }
+            }
         }
 
         private void verticalProgressBar1_Click(object sender, EventArgs e)
@@ -1141,6 +1195,75 @@ namespace RateController
                 pos.Y = windowTop + e.Y - mouseY;
                 this.Location = pos;
 
+            }
+        }
+
+        private void btnDown_MouseDown(object sender, MouseEventArgs e)
+        {
+            DownPressed = true;
+            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+            tmrRelease.Enabled = true;
+        }
+
+        private void btnDown_MouseUp(object sender, MouseEventArgs e)
+        {
+            DownPressed = false;
+        }
+
+        private void btnUp_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpPressed = true;
+            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+            tmrRelease.Enabled = true;
+        }
+
+        private void btnUp_MouseUp(object sender, MouseEventArgs e)
+        {
+            UpPressed = false;
+        }
+
+        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
+        {
+            SwON = e.Switches;
+            UpdateSwitches();
+        }
+
+        private void tmrRelease_Tick(object sender, EventArgs e)
+        {
+            if (!UpPressed && !DownPressed)
+            {
+                mf.SwitchBox.ReleaseMomentary();
+                tmrRelease.Enabled = false;
+            }
+        }
+
+        private void UpdateSwitches()
+        {
+            if (SwON[0])
+            {
+                lbAogConnected.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                lbAogConnected.BackColor = Color.Red;
+            }
+
+            if (SwON[3])
+            {
+                btnUp.BackColor = Color.Blue;
+            }
+            else
+            {
+                btnUp.BackColor = SystemColors.ButtonFace;
+            }
+
+            if (SwON[4])
+            {
+                btnDown.BackColor = Color.Blue;
+            }
+            else
+            {
+                btnDown.BackColor = SystemColors.ButtonFace;
             }
         }
 

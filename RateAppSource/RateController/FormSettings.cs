@@ -662,6 +662,10 @@ namespace RateController
 
             ckOnScreen.Checked = CurrentProduct.OnScreen;
 
+            ckBumpButtons.Enabled = !ckOnScreen.Checked;
+            ckBumpButtons.Checked = CurrentProduct.BumpButtons;
+
+
             ckConstantUPM.Checked = CurrentProduct.ConstantUPM;
         }
 
@@ -838,6 +842,7 @@ namespace RateController
             CurrentProduct.ConstantUPM = ckConstantUPM.Checked;
 
             CurrentProduct.OnScreen = ckOnScreen.Checked;
+            CurrentProduct.BumpButtons = ckBumpButtons.Checked;
 
             CurrentProduct.Save();
         }
@@ -1945,6 +1950,20 @@ namespace RateController
         }
 
         private void ckOnScreen_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckOnScreen.Checked)
+            {
+                ckBumpButtons.Checked = false;
+                ckBumpButtons.Enabled = false;
+            }
+            else
+            {
+                ckBumpButtons.Enabled = true;
+            }
+            SetButtons(true);
+        }
+
+        private void ckBumpButtons_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }

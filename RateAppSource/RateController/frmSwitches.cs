@@ -410,5 +410,10 @@ namespace RateController
                 btn4.BackColor = Color.Red;
             }
         }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
