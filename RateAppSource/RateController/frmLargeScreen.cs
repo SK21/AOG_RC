@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace RateController
@@ -78,6 +79,74 @@ namespace RateController
             }
         }
 
+        //public enum GWL
+        //{
+        //    ExStyle = -20
+        //}
+
+        //public enum WS_EX
+        //{
+        //    Transparent = 0x20,
+        //    Layered = 0x80000
+        //}
+
+        //public enum LWA
+        //{
+        //    ColorKey = 0x1,
+        //    Alpha = 0x2
+        //}
+
+        //[DllImport("user32.dll", EntryPoint = "GetWindowLong")]
+        //public static extern int GetWindowLong(IntPtr hWnd, GWL nIndex);
+
+        //[DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+        //public static extern int SetWindowLong(IntPtr hWnd, GWL nIndex, int dwNewLong);
+
+        //[DllImport("user32.dll", EntryPoint = "SetLayeredWindowAttributes")]
+        //public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, int crKey, byte alpha, LWA dwFlags);
+
+        //protected override void OnShown(EventArgs e)
+        //{
+        //    base.OnShown(e);
+        //    //SetTransparent(transparentToolStripMenuItem.Checked);
+
+        //    int wl = GetWindowLong(this.Handle, GWL.ExStyle);
+        //    wl = wl | 0x80000 | 0x20;
+        //    SetWindowLong(this.Handle, GWL.ExStyle, wl);
+
+        //    SetLayeredWindowAttributes(this.Handle, Color.Transparent.ToArgb(), 255, LWA.ColorKey);
+        //}
+
+        //protected override void WndProc(ref Message m)
+        //{
+        //    const uint WM_NCHITTEST = 0x84;
+
+        //    const int HTTRANSPARENT = -1;
+        //    const int HTCLIENT = 1;
+        //    const int HTCAPTION = 2;
+        //    // ... or define an enum with all the values
+
+        //    if (m.Msg == WM_NCHITTEST)
+        //    {
+        //        //// If it's the message we want, handle it.
+        //        //if (penMode)
+        //        //{
+        //        //    // If we're drawing, we want to see mouse events like normal.
+        //        //    m.Result = new IntPtr(HTCLIENT);
+        //        //}
+        //        //else
+        //        //{
+        //            // Otherwise, we want to pass mouse events on to the desktop,
+        //            // as if we were not even here.
+        //            m.Result = new IntPtr(HTTRANSPARENT);
+        //        //}
+        //        return;  // bail out because we've handled the message
+        //    }
+
+        //    // Otherwise, call the base class implementation for default processing.
+        //    base.WndProc(ref m);
+        //}
+
         private void SetFont()
         {
             if (transparentToolStripMenuItem.Checked)
@@ -114,8 +183,13 @@ namespace RateController
             if (transparentToolStripMenuItem.Checked)
             {
                 mf.UseTransparent = true;
+                //SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+                //SetStyle(ControlStyles.)
                 this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
-                //this.Opacity = 0;
+                //this.BackColor = Color.Transparent;
+                //this.TransparencyKey = Color.Transparent;
+                
+                //this.Opacity =0;
                 this.HelpButton = false;
                 this.ControlBox = false;
                 this.FormBorderStyle = FormBorderStyle.None;
@@ -142,6 +216,7 @@ namespace RateController
             {
                 mf.UseTransparent = false;
                 this.TransparencyKey = Color.Transparent;
+                this.BackColor = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
                 //this.Opacity = 100;
                 this.HelpButton = true;
                 this.ControlBox = true;

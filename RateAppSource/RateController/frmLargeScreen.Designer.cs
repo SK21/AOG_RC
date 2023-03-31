@@ -272,6 +272,7 @@
             // 
             // lbRate
             // 
+            this.lbRate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.lbRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbRate.Location = new System.Drawing.Point(12, 325);
             this.lbRate.Margin = new System.Windows.Forms.Padding(10, 0, 10, 0);
