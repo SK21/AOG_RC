@@ -1006,6 +1006,8 @@ namespace RateController
             if (!LargeScreenExit && !Restart && !LoadError)
             {
                 var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true);
+                Hlp.TopMost = true;
+                
                 Hlp.ShowDialog();
                 bool Result = Hlp.Result;
                 Hlp.Close();

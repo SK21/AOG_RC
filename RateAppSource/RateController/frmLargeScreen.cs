@@ -23,6 +23,11 @@ namespace RateController
         private int windowLeft = 0;
         private int mouseX = 0;
         private int mouseY = 0;
+        private bool[] SwON = new bool[9];
+        private bool UpPressed;
+        private bool DownPressed;
+        private bool masterOn;
+        private bool automode;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -56,6 +61,8 @@ namespace RateController
             Prd = mf.Products.Item(0);
             RCalarm = new clsAlarm(mf, btAlarm);
 
+            mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
+
             this.BackColor = Properties.Settings.Default.DayColour;
             pnlRate0.BackColor = Properties.Settings.Default.DayColour;
             pnlRate1.BackColor = Properties.Settings.Default.DayColour;
@@ -65,13 +72,20 @@ namespace RateController
             pnlQuantity1.BackColor = Properties.Settings.Default.DayColour;
             pnlQuantity2.BackColor = Properties.Settings.Default.DayColour;
             pnlQuantity3.BackColor = Properties.Settings.Default.DayColour;
+            btnUp.BackColor = Properties.Settings.Default.DayColour;
+            btnDown.BackColor = Properties.Settings.Default.DayColour;
+
 
             foreach(Control Ctrl in Controls)
             {
-                if(Ctrl.Name !="btnSettings")
+                if(Ctrl.Name !="btnSettings" && Ctrl.Name!="btAuto")
                 {
                     Ctrl.MouseDown += mouseMove_MouseDown;
                     Ctrl.MouseMove += mouseMove_MouseMove;
+                }
+                else if (Ctrl.Name == "btAuto")
+                {
+                    Ctrl.MouseDown += btAuto_MouseDown;
                 }
             }
         }
@@ -87,9 +101,14 @@ namespace RateController
                 foreach (Control Ctrl in Controls)
                 {
                     if (Ctrl.Name != "lbName0" && Ctrl.Name != "lbName1" && Ctrl.Name != "lbName2" && Ctrl.Name != "lbName3"
-                         && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2")
+                         && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2" && Ctrl.Name != "btAuto" && Ctrl.Name != "lblManAuto")
                     {
                         Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
+                    }
+                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "lblManAuto")
+                    {
+                        Ctrl.Font = new Font(TransparentFont, 10, FontStyle.Bold);
+                        
                     }
                     else
                     {
@@ -112,6 +131,7 @@ namespace RateController
             if (transparentToolStripMenuItem.Checked)
             {
                 mf.UseTransparent = true;
+                this.Text = string.Empty;
                 this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
                 //this.Opacity = 0;
                 this.HelpButton = false;
@@ -131,6 +151,7 @@ namespace RateController
                 lbRPM1.ForeColor = txtcolor;
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
+                lblManAuto.ForeColor = txtcolor;
 
                 //btnMenu.BackColor = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.NightColour : Properties.Settings.Default.DayColour;
 
@@ -139,6 +160,7 @@ namespace RateController
             else
             {
                 mf.UseTransparent = false;
+                this.Text = "RateController";
                 this.TransparencyKey = Color.Transparent;
                 //this.Opacity = 100;
                 this.HelpButton = true;
@@ -159,6 +181,7 @@ namespace RateController
                 lbRPM1.ForeColor = txtcolor;
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
+                lblManAuto.ForeColor = txtcolor;
 
                 //btnMenu.BackColor = Color.Transparent;
 
@@ -975,6 +998,43 @@ namespace RateController
             lbFan2.Visible = Prd.OnScreen;
             lbRPM2.Visible = Prd.OnScreen;
             btnFan2.Visible = Prd.OnScreen;
+
+            for (int i = 0; i < 5; i++)
+            {
+                Prd = mf.Products.Item(i);
+                if (i == 4)
+                {
+                    btnDown.Visible = false;
+                    btnDown.Enabled = false;
+                    btnUp.Visible = false;
+                    btnUp.Enabled = false;
+                }
+                else if (Prd.BumpButtons)
+                {
+                    btnUp.Visible = true;
+                    btnDown.Visible = true;
+                    btnUp.Enabled = true;
+                    btnDown.Enabled = true;
+
+                    Label posLbl = (Label) (this.Controls.Find("lbName" + i, true)[0]);
+                    ProgressBar posPb = (ProgressBar)(this.Controls.Find("pbRate" + i, true)[0]);
+
+                    int posX = posLbl.Left;
+                    int posY = posLbl.Top;
+                    int Width = posLbl.Width;
+                    int Height = posPb.Height + posLbl.Height;
+
+                    btnUp.Left = posX;
+                    btnDown.Left = posX;
+                    btnUp.Width = Width;
+                    btnDown.Width = Width;
+                    btnUp.Top = posY;
+                    btnUp.Height = (Height +10) / 2;
+                    btnDown.Top = posY + btnUp.Height + 10;
+                    btnDown.Height = btnUp.Height;
+                    break;
+                }
+            }
         }
 
         private void verticalProgressBar1_Click(object sender, EventArgs e)
@@ -1076,6 +1136,7 @@ namespace RateController
             if (!SwitchingScreens && !mf.Restart)
             {
                 var Hlp = new frmMsgBox(mf, "Confirm Exit?", "Exit", true);
+                Hlp.TopMost = true;
                 Hlp.ShowDialog();
                 bool Result = Hlp.Result;
                 Hlp.Close();
@@ -1136,6 +1197,46 @@ namespace RateController
 
         }
 
+        private void btAuto_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                //switch from auto to manual, or manual to auto.
+                if (automode)
+                {
+                    if (SwON[0])
+                    {
+                        // turn off auto mode
+                        mf.SwitchBox.PressSwitch(SwIDs.Auto);
+                    }
+                    automode = !automode;
+                    lblManAuto.Text = "MASTER";
+
+                }
+                else
+                {
+                    mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+                    automode = !automode;
+                    lblManAuto.Text = "AUTO";
+                }
+            }
+        }
+
+        private void mainform_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && transparentToolStripMenuItem.Checked)
+            {
+                this.FormBorderStyle = FormBorderStyle.FixedSingle;
+                tmrBorder.Start();
+            }
+        }
+
+        private void tmrBorder_tick(object sender, EventArgs e)
+        {
+            this.FormBorderStyle = FormBorderStyle.None;
+            tmrBorder.Stop();
+        }
+
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
 
@@ -1177,6 +1278,126 @@ namespace RateController
             Fan2RateType++;
             if (Fan2RateType > 1) Fan2RateType = 0;
             UpdateForm();
+        }
+
+        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
+        {
+            SwON = e.Switches;
+            UpdateSwitches();
+        }
+
+        private void btAuto_Click(object sender, EventArgs e)
+        {
+            if (automode)
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.Auto);
+            }
+            else
+            {
+                if (masterOn) { mf.SwitchBox.PressSwitch(SwIDs.MasterOff); }
+                else { mf.SwitchBox.PressSwitch(SwIDs.MasterOn); }
+            }
+
+        }
+
+        private void btnDown_MouseDown(object sender, MouseEventArgs e)
+        {
+            DownPressed = true;
+            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+            tmrRelease.Enabled = true;
+        }
+
+        private void btnDown_MouseUp(object sender, MouseEventArgs e)
+        {
+            DownPressed = false;
+        }
+
+        private void btnUp_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpPressed = true;
+            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+            tmrRelease.Enabled = true;
+        }
+
+        private void btnUp_MouseUp(object sender, MouseEventArgs e)
+        {
+            UpPressed = false;
+        }
+
+        private void tmrRelease_Tick(object sender, EventArgs e)
+        {
+            if (!UpPressed && !DownPressed)
+            {
+                mf.SwitchBox.ReleaseMomentary();
+                tmrRelease.Enabled = false;
+            }
+        }
+
+        private void UpdateSwitches()
+        {
+            if (SwON[0])
+            {
+                btAuto.BackColor = Color.LightGreen;
+                btAuto.Text = "AUTO";
+                btAuto.ForeColor = Color.Black;
+                automode = true;
+                lblManAuto.Text = "AUTO";
+            }
+            //else
+            //{
+            //    btAuto.BackColor = Color.Red;
+            //}
+
+            else if (SwON[1])
+            {
+                btAuto.BackColor = Color.Yellow;
+                btAuto.Text = "ON";
+                btAuto.ForeColor = Color.Black;
+                automode = false;
+                masterOn = true;
+                lblManAuto.Text = "MASTER";
+            }
+
+            else if (SwON[2])
+            {
+                btAuto.BackColor = Color.Red;
+                btAuto.Text = "OFF";
+                btAuto.ForeColor = Color.White;
+                masterOn = false;
+            }
+            else
+            {
+                btAuto.BackColor = Color.Red;
+                btAuto.Text = "OFF";
+                btAuto.ForeColor = Color.White;
+                automode = true;
+
+                lblManAuto.Text = "AUTO";
+            }
+
+            if (SwON[3])
+            {
+                btnUp.BackColor = Color.Blue;
+            }
+            else
+            {
+                btnUp.BackColor = Properties.Settings.Default.DayColour;
+            }
+
+            if (SwON[4])
+            {
+                btnDown.BackColor = Color.Blue;
+            }
+            else
+            {
+                btnDown.BackColor = Properties.Settings.Default.DayColour;
+            }
+        }
+
+        private void btMinimize_Click(object sender, EventArgs e)
+        {
+            Form restoreform = new RCRestore(this);
+            restoreform.Show();
         }
     }
 }
