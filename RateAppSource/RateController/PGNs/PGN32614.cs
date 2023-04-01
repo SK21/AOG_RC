@@ -110,7 +110,7 @@ namespace RateController
                     break;
             }
 
-            if (Prod.mf.SwitchBox.Connected())
+            if (Prod.mf.SwitchBox.Connected()) // || Prod.mf.UseLargeScreen)
             {
                 if (Prod.mf.SectionControl.MasterOn() || Prod.DoCal) cData[11] |= 0b00010000;
             }

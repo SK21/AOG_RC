@@ -1320,62 +1320,69 @@ namespace RateController
 
         private void UpdateSwitches()
         {
-            if (SwON[0])
+            try
             {
-                btAuto.BackColor = Color.LightGreen;
-                btAuto.Text = "AUTO";
-                btAuto.ForeColor = Color.Black;
-                automode = true;
-                lblManAuto.Text = "AUTO";
-            }
-            //else
-            //{
-            //    btAuto.BackColor = Color.Red;
-            //}
+                if (SwON[0])
+                {
+                    btAuto.BackColor = Color.LightGreen;
+                    btAuto.Text = "AUTO";
+                    btAuto.ForeColor = Color.Black;
+                    automode = true;
+                    lblManAuto.Text = "AUTO";
+                }
+                //else
+                //{
+                //    btAuto.BackColor = Color.Red;
+                //}
 
-            else if (SwON[1])
-            {
-                btAuto.BackColor = Color.Yellow;
-                btAuto.Text = "ON";
-                btAuto.ForeColor = Color.Black;
-                automode = false;
-                masterOn = true;
-                lblManAuto.Text = "MASTER";
-            }
+                else if (SwON[1])
+                {
+                    btAuto.BackColor = Color.Yellow;
+                    btAuto.Text = "ON";
+                    btAuto.ForeColor = Color.Black;
+                    automode = false;
+                    masterOn = true;
+                    lblManAuto.Text = "MASTER";
+                }
 
-            else if (SwON[2])
-            {
-                btAuto.BackColor = Color.Red;
-                btAuto.Text = "OFF";
-                btAuto.ForeColor = Color.White;
-                masterOn = false;
-            }
-            else
-            {
-                btAuto.BackColor = Color.Red;
-                btAuto.Text = "OFF";
-                btAuto.ForeColor = Color.White;
-                automode = true;
+                else if (SwON[2])
+                {
+                    btAuto.BackColor = Color.Red;
+                    btAuto.Text = "OFF";
+                    btAuto.ForeColor = Color.White;
+                    masterOn = false;
+                }
+                else
+                {
+                    btAuto.BackColor = Color.Red;
+                    btAuto.Text = "OFF";
+                    btAuto.ForeColor = Color.White;
+                    automode = true;
 
-                lblManAuto.Text = "AUTO";
-            }
+                    lblManAuto.Text = "AUTO";
+                }
 
-            if (SwON[3])
-            {
-                btnUp.BackColor = Color.Blue;
-            }
-            else
-            {
-                btnUp.BackColor = Properties.Settings.Default.DayColour;
-            }
+                if (SwON[3])
+                {
+                    btnUp.BackColor = Color.Blue;
+                }
+                else
+                {
+                    btnUp.BackColor = Properties.Settings.Default.DayColour;
+                }
 
-            if (SwON[4])
-            {
-                btnDown.BackColor = Color.Blue;
+                if (SwON[4])
+                {
+                    btnDown.BackColor = Color.Blue;
+                }
+                else
+                {
+                    btnDown.BackColor = Properties.Settings.Default.DayColour;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                btnDown.BackColor = Properties.Settings.Default.DayColour;
+                mf.Tls.WriteErrorLog("frmLargeScreen/UpdateSwitches: " + ex.Message);
             }
         }
 
