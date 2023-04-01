@@ -1,6 +1,7 @@
 ﻿using AgOpenGPS;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -257,6 +258,9 @@ namespace RateController
                 // exit manual mode by making sure auto is on  
                 if (!mf.SectionControl.AutoOn()) mf.SwitchBox.PressSwitch(SwIDs.Auto);
 
+                CalTimeEnd[CurrentProduct.ID] = DateTime.Now;
+                CalTimeSpan = (CalTimeEnd[CurrentProduct.ID] - CalTimeStart[CurrentProduct.ID]);
+
                 CurrentProduct.DoCal = false;
                 CurrentProduct.RateToArduino.Send();    // shut off
 
@@ -272,8 +276,6 @@ namespace RateController
                 SetCalButtons();
                 btnCalCopy.Focus();
 
-                CalTimeEnd[CurrentProduct.ID] = DateTime.Now;
-                CalTimeSpan = (CalTimeEnd[CurrentProduct.ID] - CalTimeStart[CurrentProduct.ID]);
                 if (CurrentProduct.ControlType == ControlTypeEnum.MotorWeights)
                 {
                     // calibrate by weight

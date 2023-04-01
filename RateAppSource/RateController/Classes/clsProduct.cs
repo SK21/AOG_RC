@@ -95,7 +95,7 @@ namespace RateController
             get { return cCalEnd; }
             set
             {
-                if (cDoCal && value >= cCalStart)
+                if (value >= cCalStart)
                 {
                     cCalEnd = value;
                 }

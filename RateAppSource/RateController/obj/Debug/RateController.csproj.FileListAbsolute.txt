@@ -2299,3 +2299,4 @@ F:\Temp\fixcal2\RateAppSource\RateController\obj\Debug\ru\RateController.resourc
 F:\Temp\fixcal2\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 F:\Temp\fixcal2\RateAppSource\RateController\obj\Debug\RateController.exe
 F:\Temp\fixcal2\RateAppSource\RateController\obj\Debug\RateController.pdb
+C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.RCRestore.resources
