@@ -993,7 +993,9 @@ namespace RateController
 
         public double UnitsApplied()
         {
-            return cUnitsApplied;
+            double Result = cUnitsApplied;
+            if (cEnableProdDensity && cProdDensity > 0) Result *= cProdDensity;
+            return Result;
         }
 
         public void Update()

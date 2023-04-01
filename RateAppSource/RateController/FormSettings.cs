@@ -192,35 +192,49 @@ namespace RateController
         {
             try
             {
-                if (CurrentProduct.ControlType != ControlTypeEnum.Valve && CurrentProduct.ControlType != ControlTypeEnum.ComboClose)
+                // enter manual mode by making sure auto is off 
+                if (mf.SectionControl.AutoOn()) mf.SwitchBox.PressSwitch(SwIDs.Auto);
+
+                switch (CurrentProduct.ControlType)
                 {
-                    // set motor speed
-                    byte tmp = 0;
+                    case ControlTypeEnum.Valve:
+                    case ControlTypeEnum.ComboClose:
+                        CurrentProduct.DoCal = true;
+                        CurrentProduct.CalStart = CurrentProduct.UnitsApplied();
+                        SetCalButtons();
+                        CalTimeStart[CurrentProduct.ID] = DateTime.Now;
+                        lbWTcal.Text = "0.0";
+                        lbWTquantity.Text = "0.0";
+                        lbFlowMeterCounts.Text = "0.0";
+                        break;
 
-                    if (pnlFlow.Visible)
-                    {
-                        // use flow pwm value
-                        byte.TryParse(tbFLpwm.Text, out tmp);
-                    }
-                    else
-                    {
-                        // use weight pwm value
-                        byte.TryParse(tbWTpwm.Text, out tmp);
-                    }
+                    case ControlTypeEnum.Motor:
+                        if (byte.TryParse(tbFLpwm.Text, out byte tmp)) CurrentProduct.ManualPWM = tmp;
+                        CurrentProduct.DoCal = true;
+                        CurrentProduct.CalStart = CurrentProduct.UnitsApplied();
+                        SetCalButtons();
+                        CalTimeStart[CurrentProduct.ID] = DateTime.Now;
+                        lbWTcal.Text = "0.0";
+                        lbWTquantity.Text = "0.0";
+                        lbFlowMeterCounts.Text = "0.0";
+                        break;
 
-                    CurrentProduct.ManualPWM = tmp;
+                    case ControlTypeEnum.MotorWeights:
+                        if (byte.TryParse(tbWTpwm.Text, out byte wt)) CurrentProduct.ManualPWM = wt;
+                        CurrentProduct.DoCal = true;
+                        CurrentProduct.CalStart = CurrentProduct.UnitsApplied();
+                        SetCalButtons();
+                        CalTimeStart[CurrentProduct.ID] = DateTime.Now;
+                        lbWTcal.Text = "0.0";
+                        lbWTquantity.Text = "0.0";
+                        lbFlowMeterCounts.Text = "0.0";
+                        break;
+
+                    case ControlTypeEnum.Fan:
+                        // no calibration
+                        break;
                 }
 
-                CurrentProduct.DoCal = true;
-                mf.RateCalibrationOn = true;
-                CurrentProduct.CalStart = CurrentProduct.UnitsApplied();
-                SetCalButtons();
-                CalTimeStart[CurrentProduct.ID] = DateTime.Now;
-                lbWTcal.Text = "0.0";
-                lbWTquantity.Text = "0.0";
-                lbFlowMeterCounts.Text = "0.0";
-
-                //mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
             }
             catch (Exception ex)
             {
@@ -240,9 +254,21 @@ namespace RateController
         {
             try
             {
-                CurrentProduct.CalEnd = CurrentProduct.UnitsApplied();
+                // exit manual mode by making sure auto is on  
+                if (!mf.SectionControl.AutoOn()) mf.SwitchBox.PressSwitch(SwIDs.Auto);
+
                 CurrentProduct.DoCal = false;
-                mf.RateCalibrationOn = false;
+                CurrentProduct.RateToArduino.Send();    // shut off
+
+                // wait for flow to stop
+                DateTime WaitTime = DateTime.Now;
+                mf.Tls.ShowHelp("Calculating...", "Calibration", 5000, false, true);
+                while ((DateTime.Now - WaitTime).TotalSeconds < 5)
+                {
+
+                }
+
+                CurrentProduct.CalEnd = CurrentProduct.UnitsApplied();
                 SetCalButtons();
                 btnCalCopy.Focus();
 
@@ -276,7 +302,6 @@ namespace RateController
                     // calibrate by flow meter counts
                     lbFlowMeterCounts.Text = FlowMeterCounts().ToString("N0");
                 }
-                //mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
             }
             catch (Exception ex)
             {
@@ -884,10 +909,10 @@ namespace RateController
             btnTare.Enabled = !CurrentProduct.DoCal;
             tbTare.Enabled = !CurrentProduct.DoCal;
             tbFLpwm.Enabled = !CurrentProduct.DoCal;
-            btnFlowUp.Enabled = !CurrentProduct.DoCal;
-            btnFlowDown.Enabled = !CurrentProduct.DoCal;
-            btnWeightUp.Enabled = !CurrentProduct.DoCal;
-            btnWeightDown.Enabled = !CurrentProduct.DoCal;
+            //btnFlowUp.Enabled = !CurrentProduct.DoCal;
+            //btnFlowDown.Enabled = !CurrentProduct.DoCal;
+            //btnWeightUp.Enabled = !CurrentProduct.DoCal;
+            //btnWeightDown.Enabled = !CurrentProduct.DoCal;
         }
 
         private void SetCalDescription()
@@ -2008,6 +2033,60 @@ namespace RateController
             string Message = "Product that is loaded at startup.";
 
             mf.Tls.ShowHelp(Message, "Default Product");
+            hlpevent.Handled = true;
+        }
+
+        private void btnFlowUp_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+            }
+            else
+            {
+                int.TryParse(tbFLpwm.Text, out int Tmp);
+                Tmp += 5;
+                if (Tmp > 255) Tmp = 255;
+                tbFLpwm.Text = Tmp.ToString();
+            }
+        }
+
+        private void btnFlowUp_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
+            {
+                mf.SwitchBox.ReleaseSwitch(SwIDs.RateUp);
+            }
+        }
+
+        private void btnFlowDown_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+            }
+            else
+            {
+                int.TryParse(tbFLpwm.Text, out int Tmp);
+                Tmp -= 5;
+                if (Tmp < 0) Tmp = 0;
+                tbFLpwm.Text = Tmp.ToString();
+            }
+        }
+
+        private void btnFlowDown_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
+            {
+                mf.SwitchBox.ReleaseSwitch(SwIDs.RateDown);
+            }
+        }
+
+        private void btnCalCalculate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Calculate the calibration value.";
+
+            mf.Tls.ShowHelp(Message, "Calculate");
             hlpevent.Handled = true;
         }
     }

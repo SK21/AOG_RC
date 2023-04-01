@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 
 namespace RateController
 {
@@ -23,15 +24,20 @@ namespace RateController
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
         private readonly FormStart mf;
+        private bool cAutoOn = true;
+        private bool cMasterOn = false;
+        private bool cRateDown = false;
+        private bool cRateUp = false;
+        private byte[] DataLast;
+        private bool DownPressed;
+        private bool MasterPressed;
+        private byte[] PressedData;
         private DateTime ReceiveTime;
+        private System.Timers.Timer ReleaseTimer;
         private bool[] SW = new bool[21];
         private bool[] SWlast = new bool[21];
-        private bool cMasterOn = false;
-        private bool cRateUp = false;
-        private bool cRateDown = false;
-        private bool cAutoOn = true;
-        private byte[] DataLast;
-        private byte[] PressedData;
+        private bool UpPressed;
+        private int ReleaseCount;
 
         public PGN32618(FormStart CalledFrom)
         {
@@ -39,43 +45,32 @@ namespace RateController
             SW[(int)SwIDs.Auto] = true; // default to auto in case of no switchbox
             DataLast = new byte[cByteCount];
             PressedData = new byte[cByteCount];
+
+            ReleaseTimer = new System.Timers.Timer();
+            ReleaseTimer.Elapsed += ReleaseTimer_Elapsed;
+            ReleaseTimer.Interval = 500;
         }
 
         public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
-        public bool[] Switches { get { return SW; } }
 
-        public class SwitchPGNargs : EventArgs
+        public bool RateDown
         {
-            public bool[] Switches { get; set; }
-        }
-
-        public bool Connected()
-        {
-            return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
-        }
-
-        public bool MasterOn
-        {
-            get { return cMasterOn; }
-            set { cMasterOn = value; }
+            get { return cRateDown; }
+            set { cRateDown = value; }
         }
 
         public bool RateUp
         {
             get { return cRateUp; }
-            set { cRateUp= value; }
+            set { cRateUp = value; }
         }
 
-        public bool RateDown
-        {
-            get { return cRateDown; }
-            set { cRateDown= value; }
-        }
+        public bool[] Switches
+        { get { return SW; } }
 
-        public bool AutoOn
+        public bool Connected()
         {
-            get { return cAutoOn; }
-            set { cAutoOn = value; }
+            return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
         }
 
         public bool ParseByteData(byte[] Data)
@@ -85,7 +80,7 @@ namespace RateController
             if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 // auto
-                SW[0] = mf.Tls.BitRead(Data[2], 0);     
+                SW[0] = mf.Tls.BitRead(Data[2], 0);
                 cAutoOn = SW[0];
 
                 // master
@@ -95,7 +90,7 @@ namespace RateController
                 if (SW[1]) cMasterOn = true;
                 else if (SW[2]) cMasterOn = false;
 
-                // rate 
+                // rate
                 SW[3] = mf.Tls.BitRead(Data[2], 3);     // rate up
                 SW[4] = mf.Tls.BitRead(Data[2], 4);     // rate down
 
@@ -153,21 +148,6 @@ namespace RateController
             return Result;
         }
 
-        public bool SectionSwitchOn(int ID)
-        {
-            bool Result = false;
-            if ((ID >= 0) && (ID <= 15))
-            {
-                Result = SW[ID + (int)SwIDs.sw0];
-            }
-            return Result;
-        }
-
-        public bool SwitchOn(SwIDs ID)
-        {
-            return SW[(int)ID];
-        }
-
         public void PressSwitch(SwIDs ID)
         {
             PressedData = DataLast;
@@ -189,23 +169,45 @@ namespace RateController
                     break;
 
                 case SwIDs.MasterOn:
-                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 1);
-                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 2);
+                    if (!MasterPressed)
+                    {
+                        PressedData[2] = mf.Tls.BitSet(PressedData[2], 1);
+                        PressedData[2] = mf.Tls.BitClear(PressedData[2], 2);
+                    }
+
+                    MasterPressed = true;
+                    ReleaseTimer.Enabled = true;
+
                     break;
 
                 case SwIDs.MasterOff:
-                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 1);
-                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 2);
+                    if (!MasterPressed)
+                    {
+                        PressedData[2] = mf.Tls.BitClear(PressedData[2], 1);
+                        PressedData[2] = mf.Tls.BitSet(PressedData[2], 2);
+                    }
+
+                    MasterPressed = true;
+                    ReleaseTimer.Enabled = true;
+
                     break;
 
                 case SwIDs.RateUp:
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 3);
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 4);
+
+                    UpPressed = true;
+                    ReleaseTimer.Enabled = true;
+
                     break;
 
                 case SwIDs.RateDown:
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 3);
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 4);
+
+                    DownPressed = true;
+                    ReleaseTimer.Enabled = true;
+
                     break;
 
                 default:
@@ -244,20 +246,58 @@ namespace RateController
             ParseByteData(PressedData);
         }
 
-        public void ReleaseMomentary()
+        public void ReleaseSwitch(SwIDs ID)
         {
-            // release momentary buttons
-           if(cAutoOn)
+            // for momentary switches Rate Up, Rate Down, Master
+            switch (ID)
             {
-                PressedData[2] = 1;
-            }
-            else
-            {
-                PressedData[2] = 0;
-            }
+                case SwIDs.MasterOn:
+                case SwIDs.MasterOff:
+                    MasterPressed = false;
+                    break;
 
-            PressedData[5] = mf.Tls.CRC(PressedData, 4);
-            ParseByteData(PressedData);
+                case SwIDs.RateUp:
+                    UpPressed = false;
+                    break;
+
+                case SwIDs.RateDown:
+                    DownPressed = false;
+                    break;
+            }
+        }
+
+        public bool SwitchOn(SwIDs ID)
+        {
+            return SW[(int)ID];
+        }
+
+        private void ReleaseTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            ReleaseCount++; // check for no ReleaseSwitch statement, max 2 seconds
+
+            if ((!UpPressed && !DownPressed && !MasterPressed) || ReleaseCount > 4)
+            {
+                // release momentary buttons
+                if (cAutoOn)
+                {
+                    PressedData[2] = 1;
+                }
+                else
+                {
+                    PressedData[2] = 0;
+                }
+
+                PressedData[5] = mf.Tls.CRC(PressedData, 4);
+                ParseByteData(PressedData);
+
+                ReleaseTimer.Enabled = false;
+                ReleaseCount = 0;
+            }
+        }
+
+        public class SwitchPGNargs : EventArgs
+        {
+            public bool[] Switches { get; set; }
         }
     }
 }
