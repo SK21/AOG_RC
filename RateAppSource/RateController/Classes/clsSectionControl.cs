@@ -118,7 +118,16 @@ namespace RateController
                         // auto rate
                         double CurrentRate = Prd.RateSet;
                         if (CurrentRate == 0) CurrentRate = 1;
-                        CurrentRate += CurrentRate * StepMultiplier * RateStep * RateDir;
+
+                        if (RateDir == 1)
+                        {
+                            CurrentRate = CurrentRate * (1 + (StepMultiplier * RateStep));
+                        }
+                        else
+                        {
+                            CurrentRate = CurrentRate / (1 + (StepMultiplier * RateStep));
+                        }
+                        
                         Prd.RateSet = CurrentRate;
                     }
                     else

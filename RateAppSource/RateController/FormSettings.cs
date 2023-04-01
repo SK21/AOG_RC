@@ -661,6 +661,7 @@ namespace RateController
             SetCalButtons();
 
             ckOnScreen.Checked = CurrentProduct.OnScreen;
+            ckBumpButtons.Checked = CurrentProduct.BumpButtons;
 
             ckConstantUPM.Checked = CurrentProduct.ConstantUPM;
         }
@@ -838,6 +839,7 @@ namespace RateController
             CurrentProduct.ConstantUPM = ckConstantUPM.Checked;
 
             CurrentProduct.OnScreen = ckOnScreen.Checked;
+            CurrentProduct.BumpButtons = ckBumpButtons.Checked;
 
             CurrentProduct.Save();
 
@@ -1455,6 +1457,11 @@ namespace RateController
             }
         }
 
+        private void setBumpButtonVisibility(bool visible)
+        {
+            ckBumpButtons.Visible = visible;
+            ckBumpButtons.Enabled = visible;
+        }
         private void UpdateForm()
         {
             Initializing = true;
@@ -1470,14 +1477,17 @@ namespace RateController
             if (CurrentProduct.ID == mf.MaxProducts - 1)
             {
                 lbProduct.Text = "Fan 2";
+                setBumpButtonVisibility(false);
             }
             else if (CurrentProduct.ID == mf.MaxProducts - 2)
             {
                 lbProduct.Text = "Fan 1";
+                setBumpButtonVisibility(false);
             }
             else
             {
                 lbProduct.Text = (CurrentProduct.ID + 1).ToString() + ". " + CurrentProduct.ProductName;
+                setBumpButtonVisibility(true);
             }
 
             if (mf.SimMode != SimType.None)
@@ -1949,6 +1959,20 @@ namespace RateController
         }
 
         private void ckOnScreen_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckOnScreen.Checked)
+            {
+                ckBumpButtons.Checked = false;
+                ckBumpButtons.Enabled = false;
+            }
+            else
+            {
+                ckBumpButtons.Enabled = true;
+            }
+            SetButtons(true);
+        }
+
+        private void ckBumpButtons_CheckChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }

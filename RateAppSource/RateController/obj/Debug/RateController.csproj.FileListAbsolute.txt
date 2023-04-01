@@ -2261,3 +2261,4 @@ C:\Users\jimcr\source\repos\AOG_RC\RateAppSource\RateController\obj\Debug\RateCo
 F:\Temp\RateAppSource\RateController\obj\Debug\RateController.FormPIDGraph.resources
 F:\Temp\RateAppSource\RateController\obj\Debug\RateController.frmLargeScreen.resources
 F:\Temp\RateAppSource\RateController\obj\Debug\RateController.frmSwitches.resources
+C:\Users\jimcr\Source\Repos\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.RCRestore.resources
