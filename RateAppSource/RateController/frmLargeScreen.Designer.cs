@@ -102,6 +102,7 @@
             this.btnDown = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
             this.btAuto = new System.Windows.Forms.Button();
+            this.tmrRelease = new System.Windows.Forms.Timer(this.components);
             this.btMinimize = new System.Windows.Forms.Button();
             this.lblManAuto = new System.Windows.Forms.Label();
             this.tmrBorder = new System.Windows.Forms.Timer(this.components);
@@ -844,6 +845,7 @@
             this.btnDown.Size = new System.Drawing.Size(44, 29);
             this.btnDown.TabIndex = 196;
             this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
             this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseDown);
             this.btnDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseUp);
             // 
@@ -856,6 +858,7 @@
             this.btnUp.Size = new System.Drawing.Size(44, 29);
             this.btnUp.TabIndex = 195;
             this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
             this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
             // 
@@ -873,6 +876,11 @@
             this.btAuto.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btAuto.UseVisualStyleBackColor = false;
             this.btAuto.Click += new System.EventHandler(this.btAuto_Click);
+            // 
+            // tmrRelease
+            // 
+            this.tmrRelease.Interval = 500;
+            this.tmrRelease.Tick += new System.EventHandler(this.tmrRelease_Tick);
             // 
             // btMinimize
             // 
@@ -1049,6 +1057,7 @@
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btAuto;
+        private System.Windows.Forms.Timer tmrRelease;
         private System.Windows.Forms.Button btMinimize;
         private System.Windows.Forms.Label lblManAuto;
         private System.Windows.Forms.Timer tmrBorder;

@@ -26,6 +26,9 @@ namespace RateController
         private TabPage Temp2;
         private bool FormEdited = false;
 
+        private bool UpPressed;
+        private bool DownPressed;
+
         public FormSettings(FormStart CallingForm, int Page)
         {
             Initializing = true;
@@ -2043,6 +2046,8 @@ namespace RateController
             if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
             {
                 mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+                UpPressed = true;
+                tmrRelease.Enabled = false;
             }
             else
             {
@@ -2057,7 +2062,7 @@ namespace RateController
         {
             if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
             {
-                mf.SwitchBox.ReleaseSwitch(SwIDs.RateUp);
+                UpPressed = false;
             }
         }
 
@@ -2065,7 +2070,9 @@ namespace RateController
         {
             if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
             {
+                DownPressed = true;
                 mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+                tmrRelease.Enabled = true;
             }
             else
             {
@@ -2080,7 +2087,7 @@ namespace RateController
         {
             if (CurrentProduct.ControlType == ControlTypeEnum.Valve || CurrentProduct.ControlType == ControlTypeEnum.ComboClose)
             {
-                mf.SwitchBox.ReleaseSwitch(SwIDs.RateDown);
+                DownPressed = false;
             }
         }
 
@@ -2090,6 +2097,15 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Calculate");
             hlpevent.Handled = true;
+        }
+
+        private void tmrRelease_Tick(object sender, EventArgs e)
+        {
+            if (!UpPressed && !DownPressed)
+            {
+                mf.SwitchBox.ReleaseMomentary();
+                tmrRelease.Enabled = false;
+            }
         }
     }
 }

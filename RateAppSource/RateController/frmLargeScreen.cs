@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -24,6 +25,8 @@ namespace RateController
         private int mouseX = 0;
         private int mouseY = 0;
         private bool[] SwON = new bool[9];
+        private bool UpPressed;
+        private bool DownPressed;
         private bool masterOn;
         private bool automode;
 
@@ -1300,96 +1303,118 @@ namespace RateController
 
         private void btnDown_MouseDown(object sender, MouseEventArgs e)
         {
-            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+            //DownPressed = true;
+            //mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+            //tmrRelease.Enabled = true;
         }
 
         private void btnDown_MouseUp(object sender, MouseEventArgs e)
         {
-            mf.SwitchBox.ReleaseSwitch(SwIDs.RateDown);
+            //DownPressed = false;
         }
 
         private void btnUp_MouseDown(object sender, MouseEventArgs e)
         {
-            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+            //UpPressed = true;
+            //mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+            //tmrRelease.Enabled = true;
         }
 
         private void btnUp_MouseUp(object sender, MouseEventArgs e)
         {
-            mf.SwitchBox.ReleaseSwitch(SwIDs.RateUp);
+            //UpPressed = false;
+        }
+
+        private void tmrRelease_Tick(object sender, EventArgs e)
+        {
+            if (!UpPressed && !DownPressed)
+            {
+                mf.SwitchBox.ReleaseMomentary();
+                tmrRelease.Enabled = false;
+            }
         }
 
         private void UpdateSwitches()
         {
-            try
+            if (SwON[0])
             {
-                if (SwON[0])
-                {
-                    btAuto.BackColor = Color.LightGreen;
-                    btAuto.Text = "AUTO";
-                    btAuto.ForeColor = Color.Black;
-                    automode = true;
-                    lblManAuto.Text = "AUTO";
-                }
-                //else
-                //{
-                //    btAuto.BackColor = Color.Red;
-                //}
-
-                else if (SwON[1])
-                {
-                    btAuto.BackColor = Color.Yellow;
-                    btAuto.Text = "ON";
-                    btAuto.ForeColor = Color.Black;
-                    automode = false;
-                    masterOn = true;
-                    lblManAuto.Text = "MASTER";
-                }
-
-                else if (SwON[2])
-                {
-                    btAuto.BackColor = Color.Red;
-                    btAuto.Text = "OFF";
-                    btAuto.ForeColor = Color.White;
-                    masterOn = false;
-                }
-                else
-                {
-                    btAuto.BackColor = Color.Red;
-                    btAuto.Text = "OFF";
-                    btAuto.ForeColor = Color.White;
-                    automode = true;
-
-                    lblManAuto.Text = "AUTO";
-                }
-
-                if (SwON[3])
-                {
-                    btnUp.BackColor = Color.Blue;
-                }
-                else
-                {
-                    btnUp.BackColor = Properties.Settings.Default.DayColour;
-                }
-
-                if (SwON[4])
-                {
-                    btnDown.BackColor = Color.Blue;
-                }
-                else
-                {
-                    btnDown.BackColor = Properties.Settings.Default.DayColour;
-                }
+                btAuto.BackColor = Color.LightGreen;
+                btAuto.Text = "AUTO";
+                btAuto.ForeColor = Color.Black;
+                automode = true;
+                lblManAuto.Text = "AUTO";
             }
-            catch (Exception ex)
+            //else
+            //{
+            //    btAuto.BackColor = Color.Red;
+            //}
+
+            else if (SwON[1])
             {
-                mf.Tls.WriteErrorLog("frmLargeScreen/UpdateSwitches: " + ex.Message);
+                btAuto.BackColor = Color.Yellow;
+                btAuto.Text = "ON";
+                btAuto.ForeColor = Color.Black;
+                automode = false;
+                masterOn = true;
+                lblManAuto.Text = "MASTER";
             }
+
+            else if (SwON[2])
+            {
+                btAuto.BackColor = Color.Red;
+                btAuto.Text = "OFF";
+                btAuto.ForeColor = Color.White;
+                masterOn = false;
+            }
+            else
+            {
+                btAuto.BackColor = Color.Red;
+                btAuto.Text = "OFF";
+                btAuto.ForeColor = Color.White;
+                automode = true;
+
+                lblManAuto.Text = "AUTO";
+            }
+
+            if (SwON[3])
+            {
+                btnUp.BackColor = Color.Blue;
+            }
+            else
+            {
+                btnUp.BackColor = Properties.Settings.Default.DayColour;
+            }
+
+            if (SwON[4])
+            {
+                btnDown.BackColor = Color.Blue;
+            }
+            else
+            {
+                btnDown.BackColor = Properties.Settings.Default.DayColour;
+            }
+
+            //Debug.Print("------------");
+            //Debug.Print("automode: " + automode.ToString());
+            //Debug.Print("Auto: " + SwON[0].ToString());
+            //Debug.Print("Master: " + masterOn.ToString());
+            //Debug.Print("Master2: " + mf.SwitchBox.MasterOn.ToString());
         }
 
         private void btMinimize_Click(object sender, EventArgs e)
         {
             Form restoreform = new RCRestore(this);
             restoreform.Show();
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            Prd.RateSet = Prd.RateSet * 1.05;
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            Prd.RateSet = Prd.RateSet / 1.05;
         }
     }
 }

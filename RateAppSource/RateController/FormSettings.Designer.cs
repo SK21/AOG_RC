@@ -195,6 +195,7 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.tmrRelease = new System.Windows.Forms.Timer(this.components);
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -237,7 +238,7 @@ namespace RateController
             this.tbs0.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbs0.Location = new System.Drawing.Point(4, 33);
             this.tbs0.Name = "tbs0";
-            this.tbs0.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs0.Padding = new System.Windows.Forms.Padding(3);
             this.tbs0.Size = new System.Drawing.Size(484, 427);
             this.tbs0.TabIndex = 0;
             this.tbs0.Text = "Rate";
@@ -493,7 +494,7 @@ namespace RateController
             // 
             this.CbUseProdDensity.AutoSize = true;
             this.CbUseProdDensity.Location = new System.Drawing.Point(170, 120);
-            this.CbUseProdDensity.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CbUseProdDensity.Margin = new System.Windows.Forms.Padding(2);
             this.CbUseProdDensity.Name = "CbUseProdDensity";
             this.CbUseProdDensity.Size = new System.Drawing.Size(15, 14);
             this.CbUseProdDensity.TabIndex = 133;
@@ -765,7 +766,7 @@ namespace RateController
             this.tbs4.Controls.Add(this.lbProportional);
             this.tbs4.Location = new System.Drawing.Point(4, 33);
             this.tbs4.Name = "tbs4";
-            this.tbs4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs4.Padding = new System.Windows.Forms.Padding(3);
             this.tbs4.Size = new System.Drawing.Size(484, 427);
             this.tbs4.TabIndex = 4;
             this.tbs4.Text = "Control";
@@ -1150,7 +1151,7 @@ namespace RateController
             this.rbMultiPulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.rbMultiPulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbMultiPulse.Location = new System.Drawing.Point(13, 73);
-            this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbMultiPulse.Name = "rbMultiPulse";
             this.rbMultiPulse.Size = new System.Drawing.Size(362, 37);
             this.rbMultiPulse.TabIndex = 1;
@@ -1168,7 +1169,7 @@ namespace RateController
             this.rbSinglePulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.rbSinglePulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbSinglePulse.Location = new System.Drawing.Point(13, 25);
-            this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbSinglePulse.Name = "rbSinglePulse";
             this.rbSinglePulse.Size = new System.Drawing.Size(362, 37);
             this.rbSinglePulse.TabIndex = 0;
@@ -1764,7 +1765,7 @@ namespace RateController
             this.tbs5.Controls.Add(this.pnlWeight);
             this.tbs5.Location = new System.Drawing.Point(4, 33);
             this.tbs5.Name = "tbs5";
-            this.tbs5.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tbs5.Padding = new System.Windows.Forms.Padding(3);
             this.tbs5.Size = new System.Drawing.Size(484, 427);
             this.tbs5.TabIndex = 5;
             this.tbs5.Text = "Calibrate";
@@ -2266,12 +2267,17 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
+            // tmrRelease
+            // 
+            this.tmrRelease.Interval = 500;
+            this.tmrRelease.Tick += new System.EventHandler(this.tmrRelease_Tick);
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(513, 552);
+            this.ClientSize = new System.Drawing.Size(513, 596);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
@@ -2485,5 +2491,6 @@ namespace RateController
         private System.Windows.Forms.CheckBox ckOnScreen;
         private System.Windows.Forms.CheckBox ckDefault;
         private System.Windows.Forms.CheckBox ckBumpButtons;
+        private System.Windows.Forms.Timer tmrRelease;
     }
 }

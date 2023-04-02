@@ -36,6 +36,7 @@
             this.lbMPH = new System.Windows.Forms.Label();
             this.rbOff = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnMaster = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.btn1 = new System.Windows.Forms.Button();
             this.btn2 = new System.Windows.Forms.Button();
@@ -48,7 +49,7 @@
             this.tbPWM = new System.Windows.Forms.TextBox();
             this.bntOK = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnMaster = new System.Windows.Forms.Button();
+            this.tmrRelease = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.grpSim.SuspendLayout();
             this.SuspendLayout();
@@ -146,6 +147,18 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Switches";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
+            // 
+            // btnMaster
+            // 
+            this.btnMaster.BackColor = System.Drawing.Color.LightGreen;
+            this.btnMaster.Location = new System.Drawing.Point(7, 28);
+            this.btnMaster.Name = "btnMaster";
+            this.btnMaster.Size = new System.Drawing.Size(89, 32);
+            this.btnMaster.TabIndex = 167;
+            this.btnMaster.Text = "Master";
+            this.btnMaster.UseVisualStyleBackColor = false;
+            this.btnMaster.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseDown);
+            this.btnMaster.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseUp);
             // 
             // btnDown
             // 
@@ -282,17 +295,10 @@
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // btnMaster
+            // tmrRelease
             // 
-            this.btnMaster.BackColor = System.Drawing.Color.LightGreen;
-            this.btnMaster.Location = new System.Drawing.Point(7, 28);
-            this.btnMaster.Name = "btnMaster";
-            this.btnMaster.Size = new System.Drawing.Size(89, 32);
-            this.btnMaster.TabIndex = 167;
-            this.btnMaster.Text = "Master";
-            this.btnMaster.UseVisualStyleBackColor = false;
-            this.btnMaster.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseDown);
-            this.btnMaster.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseUp);
+            this.tmrRelease.Interval = 500;
+            this.tmrRelease.Tick += new System.EventHandler(this.tmrRelease_Tick);
             // 
             // frmSwitches
             // 
@@ -343,5 +349,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbPWM;
         private System.Windows.Forms.Button btnMaster;
+        private System.Windows.Forms.Timer tmrRelease;
     }
 }

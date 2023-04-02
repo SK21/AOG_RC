@@ -11,6 +11,9 @@ namespace RateController
         private FormStart mf;
         private SimType SimLast;
         private bool[] SwON = new bool[9];
+        private bool UpPressed;
+        private bool DownPressed;
+        private bool MasterPressed;
 
         public frmSwitches(FormStart CallingForm)
         {
@@ -56,21 +59,25 @@ namespace RateController
         private void btnDown_MouseDown(object sender, MouseEventArgs e)
         {
             mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+            DownPressed = true;
+            tmrRelease.Enabled = true;
         }
 
         private void btnDown_MouseUp(object sender, MouseEventArgs e)
         {
-            mf.SwitchBox.ReleaseSwitch(SwIDs.RateDown);
+            DownPressed = false;
         }
 
         private void btnUp_MouseDown(object sender, MouseEventArgs e)
         {
             mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+            UpPressed = true;
+            tmrRelease.Enabled = true;
         }
 
         private void btnUp_MouseUp(object sender, MouseEventArgs e)
         {
-            mf.SwitchBox.ReleaseSwitch(SwIDs.RateUp);
+            UpPressed = false;
         }
 
         private void frmSimulation_FormClosed(object sender, FormClosedEventArgs e)
@@ -380,22 +387,28 @@ namespace RateController
             if (mf.SectionControl.MasterOn())
             {
                 mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+                MasterPressed = true;
+                tmrRelease.Enabled = true;
             }
             else
             {
                 mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+                MasterPressed = true;
+                tmrRelease.Enabled = true;
             }
         }
 
         private void btnMaster_MouseUp(object sender, MouseEventArgs e)
         {
-            if (mf.SectionControl.MasterOn())
+            MasterPressed = false;
+        }
+
+        private void tmrRelease_Tick(object sender, EventArgs e)
+        {
+            if (!UpPressed && !DownPressed && !MasterPressed)
             {
-                mf.SwitchBox.ReleaseSwitch(SwIDs.MasterOff);
-            }
-            else
-            {
-                mf.SwitchBox.ReleaseSwitch(SwIDs.MasterOn);
+                mf.SwitchBox.ReleaseMomentary();
+                tmrRelease.Enabled = false;
             }
         }
     }
