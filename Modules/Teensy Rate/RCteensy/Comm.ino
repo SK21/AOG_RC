@@ -533,7 +533,6 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		//	        - bit 4		    MasterOn, or true if no switchbox
 		//          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
 		//          - bit 6         AutoOn
-		//          - bit 7         Calibration On
 		//12    power relay Lo      list of power type relays 0-7
 		//13    power relay Hi      list of power type relays 8-15
 		//14	manual pwm Lo
@@ -573,6 +572,15 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 
 						MasterOn = ((Sensor[ID].InCommand & 16) == 16);
 						Sensor[ID].UseMultiPulses = ((Sensor[ID].InCommand & 32) == 32);
+						if (Sensor[ID].UseMultiPulses)
+						{
+							Sensor[ID].Debounce = MDL.Debounce;
+						}
+						else
+						{
+							Sensor[ID].Debounce = MDL.Debounce * 5;
+						}
+
 						AutoOn = ((Sensor[ID].InCommand & 64) == 64);
 
 						// power relays

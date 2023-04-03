@@ -7,28 +7,28 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   23-Mar-2023"
+# define InoDescription "RCteensy   03-Apr-2023"
 
-#define InoID 2303		// change to load default values
+#define InoID 0304		// change to load default values
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
 
 struct ModuleConfig	
 {
-	uint8_t ID;
-	uint8_t SensorCount;       // up to 2 sensors
-	uint8_t IPpart2;			// ethernet IP address
-	uint8_t	IPpart3;
-	uint8_t IPpart4;			// 60 + ID
-	uint8_t RelayOnSignal;	    // value that turns on relays
-	uint8_t FlowOnDirection;	// sets on value for flow valve or sets motor direction
-	uint8_t RelayControl;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
-	uint8_t ESP8266SerialPort;	// serial port to connect to ESP8266
-	uint8_t RelayPins[16];			// pin numbers when GPIOs are used for relay control (5)
-	uint8_t LOADCELL_DOUT_PIN[2];
-	uint8_t LOADCELL_SCK_PIN[2];
-	uint8_t Debounce;			// minimum ms pin change
+	uint8_t ID = 0;
+	uint8_t SensorCount = 2;       // up to 2 sensors
+	uint8_t IPpart2 = 168;			// ethernet IP address
+	uint8_t	IPpart3 = 1;
+	uint8_t IPpart4 = 60;			// 60 + ID
+	uint8_t RelayOnSignal = 1;	    // value that turns on relays
+	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
+	uint8_t RelayControl = 5;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
+	uint8_t ESP8266SerialPort = 1;	// serial port to connect to ESP8266
+	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,0,0,0,0,0,0,0,0 };		// pin numbers when GPIOs are used for relay control (5), default RC11
+	uint8_t LOADCELL_DOUT_PIN[2] = { 16,0 };
+	uint8_t LOADCELL_SCK_PIN[2] = { 17,0 };
+	uint8_t Debounce = 3;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
@@ -57,6 +57,7 @@ struct SensorConfig
 	byte MaxPWM;
 	byte Deadband;
 	byte BrakePoint;
+	uint8_t Debounce;
 };
 
 SensorConfig Sensor[2];
@@ -129,22 +130,6 @@ void setup()
 	WDT_timings_t config;
 	config.timeout = 60;	// seconds
 	wdt.begin(config);
-
-	// default module values
-	MDL.SensorCount = 2;
-	MDL.IPpart2 = 168;
-	MDL.IPpart3 = 1;
-	MDL.IPpart2 = 60;
-	MDL.RelayOnSignal = 1;
-	MDL.RelayControl = 5;
-	MDL.ESP8266SerialPort = 1;
-	MDL.Debounce = 3;
-	MDL.LOADCELL_DOUT_PIN[0] = 16;
-	MDL.LOADCELL_SCK_PIN[0] = 17;
-
-	// default relay pins, RC11
-	uint8_t Pins[] = { 8,9,10,11,12,25,26,27,0,0,0,0,0,0,0,0 };
-	memcpy(MDL.RelayPins, Pins, 16);
 
 	// default flow pins
 	Sensor[0].FlowPin = 28;
@@ -526,12 +511,12 @@ void Blink()
 
 		//Serial.print(", ");
 		//Serial.print(WifiTime);
-		//
+		
 		//Serial.print(", ");
-		//Serial.print(debug1);
+		//Serial.print(AutoOn);
 
 		//Serial.print(", ");
-		//Serial.print(debug2);
+		//Serial.print(MasterOn);
 
 		//Serial.print(", ");
 		//Serial.print(ResetTimerOn);
