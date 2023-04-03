@@ -1165,10 +1165,6 @@ namespace RateController
                 if (!EraseAccumulatedUnits)
                 {
                     AccumulatedUnits = ArduinoModule.AccumulatedQuantity();
-                    if (cEnableProdDensity && ProdDensity > 0.0)
-                    {
-                        AccumulatedUnits *= ProdDensity;
-                    }
                     if ((AccumulatedUnits + UnitsOffset) < cUnitsApplied)
                     {
                         // account for arduino losing accumulated quantity, ex: power loss
