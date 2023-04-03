@@ -51,22 +51,27 @@ namespace RateController
             public bool[] Switches { get; set; }
         }
 
-        public bool Connected(bool PhysicalOnly = false)     
+        public bool Connected()
         {
-            bool Result = false;
-
-            if (PhysicalOnly)
-            {
-                Result = (DateTime.Now - ReceiveTime).TotalSeconds < 4;
-            }
-            else
-            {
-                // physical or virtual switchbox
-                Result = (((DateTime.Now - ReceiveTime).TotalSeconds < 4) || mf.UseLargeScreen);
-            }
-
-            return Result;
+            return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
         }
+
+        //public bool Connected(bool PhysicalOnly = false)     
+        //{
+        //    bool Result = false;
+
+        //    if (PhysicalOnly)
+        //    {
+        //        Result = (DateTime.Now - ReceiveTime).TotalSeconds < 4;
+        //    }
+        //    else
+        //    {
+        //        // physical or virtual switchbox
+        //        Result = (((DateTime.Now - ReceiveTime).TotalSeconds < 4) || mf.UseLargeScreen);
+        //    }
+
+        //    return Result;
+        //}
 
         public bool MasterOn
         {
@@ -132,8 +137,6 @@ namespace RateController
                 // section switches
                 if (LargeScreenSwitches)
                 {
-                    Debug.Print("Assign MasterOn value to switches");
-
                     // virtual switchbox used
                     for (int i = 0; i < 2; i++)
                     {
@@ -154,7 +157,6 @@ namespace RateController
                 }
                 else
                 {
-                    Debug.Print("Physical switchbox");
                     // physical switchbox used
                     for (int i = 0; i < 2; i++)
                     {
@@ -164,47 +166,6 @@ namespace RateController
                         }
                     }
                 }
-
-
-
-                //if (Connected(true))
-                //{
-                //    Debug.Print("Physical switchbox");
-                //    // physical switchbox used
-                //    for (int i = 0; i < 2; i++)
-                //    {
-                //        for (int j = 0; j < 8; j++)
-                //        {
-                //            SW[5 + j + i * 8] = mf.Tls.BitRead(Data[i + 3], j);
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    if (mf.UseLargeScreen)
-                //    {
-                //        Debug.Print("Assign MasterOn value to switches");
-
-                //        // virtual switchbox used
-                //        for (int i = 0; i < 2; i++)
-                //        {
-                //            for (int j = 0; j < 8; j++)
-                //            {
-                //                if (i == 0)
-                //                {
-                //                    //SW[5 + j + i * 8] = mf.Tls.BitRead(mf.AutoSteerPGN.RelayLo, j);
-                //                    SW[5 + j + i * 8] = MasterOn;
-                //                }
-                //                else
-                //                {
-                //                    //SW[5 + j + i * 8] = mf.Tls.BitRead(mf.AutoSteerPGN.RelayHi, j);
-                //                    SW[5 + j + i * 8] = MasterOn;
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
-
                 DataLast = Data;
 
                 SwitchPGNargs args = new SwitchPGNargs();
@@ -274,15 +235,11 @@ namespace RateController
                 case SwIDs.MasterOn:
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 1);
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 2);
-                    Debug.Print("------------");
-                    Debug.Print("MasterOn pressed");
                     break;
 
                 case SwIDs.MasterOff:
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 1);
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 2);
-                    Debug.Print("------------");
-                    Debug.Print("MasterOff pressed");
                     break;
 
                 case SwIDs.RateUp:

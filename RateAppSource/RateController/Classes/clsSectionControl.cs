@@ -191,7 +191,6 @@ namespace RateController
                     ToAOG.Command = 2;
                 }
 
-                Debug.Print("UpdateSectionStatus/send to AOG");
                 ToAOG.Send();
             }
             // update sections
@@ -242,7 +241,6 @@ namespace RateController
 
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
-            Debug.Print("clsSectionControl/SwitchBox_SwitchPGNreceived");
             CTL.AutoOn = mf.SwitchBox.SwitchOn(SwIDs.Auto);
 
             // set relay bytes based on switchbox
@@ -273,8 +271,6 @@ namespace RateController
                     }
                 }
             }
-            Debug.Print("MasterOn: " + CTL.MasterOn.ToString());
-            Debug.Print("SBRlys0: " + CTL.SBRlys0.ToString());
 
             // set section relay bytes
             if (CTL.MasterOn)

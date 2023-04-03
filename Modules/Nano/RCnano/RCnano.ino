@@ -468,20 +468,17 @@ void DebugTheIno()
 		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
 
-		//Serial.print(", ");
-		//Serial.print(debug1);
-
-		//Serial.print(", ");
-		//Serial.print(debug2);
-
-		//Serial.print(", ");
-		//Serial.print(debug3);
-
-		//Serial.print(", ");
-		//Serial.print(debug4);
+		Serial.print(", ");
+		Serial.print(debug1);
 
 		Serial.print(", ");
-		Serial.print(Sensor[1].Debounce);
+		Serial.print(debug2);
+
+		Serial.print(", ");
+		Serial.print(debug3);
+
+		Serial.print(", ");
+		Serial.print(debug4);
 
 		Serial.println("");
 

@@ -1213,28 +1213,6 @@ namespace RateController
                 }
 
                 UpdateSwitches();
-
-
-                ////switch from auto to manual, or manual to auto.
-                //if (automode)
-                //{
-                //    //if (SwON[0])
-                //    //{
-                //    //    // turn off auto mode
-                //    //    mf.SwitchBox.PressSwitch(SwIDs.Auto);
-                //    //}
-                //    automode = !automode;
-                //    UpdateSwitches();
-                //    //lblManAuto.Text = "MASTER";
-
-                //}
-                //else
-                //{
-                //    //mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
-                //    automode = !automode;
-                //    UpdateSwitches();
-                //    //lblManAuto.Text = "AUTO";
-                //}
             }
         }
 
@@ -1387,46 +1365,6 @@ namespace RateController
                 }
             }
 
-            //if (SwON[0])
-            //{
-            //    btAuto.BackColor = Color.LightGreen;
-            //    btAuto.Text = "AUTO";
-            //    btAuto.ForeColor = Color.Black;
-            //    automode = true;
-            //    lblManAuto.Text = "AUTO";
-            //}
-            ////else
-            ////{
-            ////    btAuto.BackColor = Color.Red;
-            ////}
-
-            //else if (SwON[1])
-            //{
-            //    btAuto.BackColor = Color.Yellow;
-            //    btAuto.Text = "ON";
-            //    btAuto.ForeColor = Color.Black;
-            //    automode = false;
-            //    masterOn = true;
-            //    lblManAuto.Text = "MASTER";
-            //}
-
-            //else if (SwON[2])
-            //{
-            //    btAuto.BackColor = Color.Red;
-            //    btAuto.Text = "OFF";
-            //    btAuto.ForeColor = Color.White;
-            //    masterOn = false;
-            //}
-            //else
-            //{
-            //    btAuto.BackColor = Color.Red;
-            //    btAuto.Text = "OFF";
-            //    btAuto.ForeColor = Color.White;
-            //    automode = true;
-
-            //    lblManAuto.Text = "AUTO";
-            //}
-
             if (SwON[3])
             {
                 btnUp.BackColor = Color.Blue;
@@ -1444,12 +1382,6 @@ namespace RateController
             {
                 btnDown.BackColor = Properties.Settings.Default.DayColour;
             }
-
-            Debug.Print("automode: " + automode.ToString());
-            Debug.Print("Auto: " + SwON[0].ToString());
-            Debug.Print("Master: " + masterOn.ToString());
-            Debug.Print("Master2: " + mf.SwitchBox.MasterOn.ToString());
-            Debug.Print("RelayLo: " + mf.SectionControl.Rlys0_On().ToString());
         }
 
         private void btMinimize_Click(object sender, EventArgs e)
@@ -1460,12 +1392,26 @@ namespace RateController
 
         private void btnUp_Click(object sender, EventArgs e)
         {
-            Prd.RateSet = Prd.RateSet * 1.05;
+            if (SwON[0])
+            {
+                Prd.RateSet = Prd.RateSet * 1.05;
+            }
+            else
+            {
+                Prd.ManualPWM += 5;
+            }
         }
 
         private void btnDown_Click(object sender, EventArgs e)
         {
-            Prd.RateSet = Prd.RateSet / 1.05;
+            if (SwON[0])
+            {
+                Prd.RateSet = Prd.RateSet / 1.05;
+            }
+            else
+            {
+                Prd.ManualPWM -= 5;
+            }
         }
     }
 }
