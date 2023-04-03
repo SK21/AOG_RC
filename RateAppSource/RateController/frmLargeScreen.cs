@@ -1399,5 +1399,15 @@ namespace RateController
             Form restoreform = new RCRestore(this);
             restoreform.Show();
         }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            Prd.RateSet *=  1.05;
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            Prd.RateSet /= 1.05;
+        }
     }
 }
