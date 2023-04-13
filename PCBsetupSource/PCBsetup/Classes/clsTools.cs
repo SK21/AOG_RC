@@ -14,12 +14,12 @@ namespace PCBsetup
         private static Hashtable ht;
         private string cAppName = "PCBsetup";
         private string cAppVersion = "1.0.0";
-        private string cVersionDate = "23-Mar-2023";
+        private string cVersionDate = "13-Apr-2023";
 
         private string cTeensyAutoSteerFirmware = "02-Jan-2023";
-        private string cTeensyRateVersion = "23-Mar-2023";
+        private string cTeensyRateVersion = "03-Apr-2023";
 
-        private string cNanoFirmware = "23-Mar-2023";
+        private string cNanoFirmware = "29-Mar-2023";   // rate
         private string cSwitchboxFirmware = "20-Mar-2023";
 
         private string cWifiAOGFirmware = "14-Feb-2023";
