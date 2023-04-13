@@ -87,88 +87,95 @@ namespace RateController
 
         public void ReadRateSwitches()
         {
-            if (mf.SwitchBox.RateUp)
+            try
             {
-                CurrentState.Pressed = true;
-                CurrentState.Released = false;
-                CurrentState.Changed = PreviousState.Released;
-                RateDir = 1;
-            }
-            else if (mf.SwitchBox.RateDown)
-            {
-                CurrentState.Pressed = true;
-                CurrentState.Released = false;
-                CurrentState.Changed = PreviousState.Released;
-                RateDir = -1;
-            }
-            else
-            {
-                CurrentState.Released = true;
-                CurrentState.Pressed = false;
-                CurrentState.Changed = PreviousState.Pressed;
-                RateStep = 0;
-            }
-            PreviousState = CurrentState;
-
-            if (CurrentState.Pressed)
-            {
-                // adjust rate
-                if ((DateTime.Now - AdjustTime).TotalMilliseconds > StepDelay)
+                if (mf.SwitchBox.RateUp)
                 {
-                    AdjustTime = DateTime.Now;
+                    CurrentState.Pressed = true;
+                    CurrentState.Released = false;
+                    CurrentState.Changed = PreviousState.Released;
+                    RateDir = 1;
+                }
+                else if (mf.SwitchBox.RateDown)
+                {
+                    CurrentState.Pressed = true;
+                    CurrentState.Released = false;
+                    CurrentState.Changed = PreviousState.Released;
+                    RateDir = -1;
+                }
+                else
+                {
+                    CurrentState.Released = true;
+                    CurrentState.Pressed = false;
+                    CurrentState.Changed = PreviousState.Pressed;
+                    RateStep = 0;
+                }
+                PreviousState = CurrentState;
 
+                if (CurrentState.Pressed)
+                {
+                    // adjust rate
+                    if ((DateTime.Now - AdjustTime).TotalMilliseconds > StepDelay)
+                    {
+                        AdjustTime = DateTime.Now;
+
+                        int ID = mf.CurrentProduct();
+                        if (ID < 0) ID = 0;
+                        clsProduct Prd = mf.Products.Item(ID);
+
+                        RateStep++;
+                        if (RateStep > 4) RateStep = 4;
+
+                        if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
+                        {
+                            // auto rate
+                            double CurrentRate = Prd.RateSet;
+                            if (CurrentRate == 0) CurrentRate = 1;
+
+                            if (RateDir == 1)
+                            {
+                                CurrentRate = CurrentRate * (1 + (StepMultiplier * RateStep));
+                            }
+                            else
+                            {
+                                CurrentRate = CurrentRate / (1 + (StepMultiplier * RateStep));
+                            }
+
+                            Prd.RateSet = CurrentRate;
+                        }
+                        else
+                        {
+                            // manual rate
+                            if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose)
+                            {
+                                // adjust flow valve
+                                Prd.ManualPWM = (int)(Prd.PIDmin * RateStep * RateDir);
+                            }
+                            else
+                            {
+                                // adjust motor
+                                Prd.ManualPWM += (int)(5 * RateDir);
+                            }
+                        }
+                    }
+                }
+
+                if (CurrentState.Released && CurrentState.Changed)
+                {
+                    // stop manual adjusting flow valve when rate adjust buttons are not pushed
                     int ID = mf.CurrentProduct();
                     if (ID < 0) ID = 0;
                     clsProduct Prd = mf.Products.Item(ID);
 
-                    RateStep++;
-                    if (RateStep > 4) RateStep = 4;
-
-                    if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
+                    if (!mf.SwitchBox.SwitchOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
                     {
-                        // auto rate
-                        double CurrentRate = Prd.RateSet;
-                        if (CurrentRate == 0) CurrentRate = 1;
-
-                        if (RateDir == 1)
-                        {
-                            CurrentRate = CurrentRate * (1 + (StepMultiplier * RateStep));
-                        }
-                        else
-                        {
-                            CurrentRate = CurrentRate / (1 + (StepMultiplier * RateStep));
-                        }
-                        
-                        Prd.RateSet = CurrentRate;
-                    }
-                    else
-                    {
-                        // manual rate
-                        if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose)
-                        {
-                            // adjust flow valve
-                            Prd.ManualPWM = (int)(Prd.PIDmin * RateStep * RateDir);
-                        }
-                        else
-                        {
-                            // adjust motor
-                            Prd.ManualPWM += (int)(5 * RateDir);
-                        }
+                        Prd.ManualPWM = 0;
                     }
                 }
             }
-
-            if (CurrentState.Released && CurrentState.Changed)
+            catch (Exception ex)
             {
-                // stop manual adjusting flow valve when rate adjust buttons are not pushed
-                int ID = mf.CurrentProduct();
-                if (ID < 0) ID = 0;
-                clsProduct Prd = mf.Products.Item(ID);
-
-                if (!mf.SwitchBox.SwitchOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
-                {
-                    Prd.ManualPWM = 0;
-                }
+                mf.Tls.WriteErrorLog("clsSectionControl/ " + ex.Message);
             }
         }
 

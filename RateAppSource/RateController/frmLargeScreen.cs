@@ -25,8 +25,6 @@ namespace RateController
         private int mouseX = 0;
         private int mouseY = 0;
         private bool[] SwON = new bool[9];
-        private bool UpPressed;
-        private bool DownPressed;
         private bool masterOn;
         private bool automode = true;
 
@@ -1292,39 +1290,6 @@ namespace RateController
                 else { mf.SwitchBox.PressSwitch(SwIDs.MasterOn,true); }
             }
 
-        }
-
-        private void btnDown_MouseDown(object sender, MouseEventArgs e)
-        {
-            //DownPressed = true;
-            //mf.SwitchBox.PressSwitch(SwIDs.RateDown);
-            //tmrRelease.Enabled = true;
-        }
-
-        private void btnDown_MouseUp(object sender, MouseEventArgs e)
-        {
-            //DownPressed = false;
-        }
-
-        private void btnUp_MouseDown(object sender, MouseEventArgs e)
-        {
-            //UpPressed = true;
-            //mf.SwitchBox.PressSwitch(SwIDs.RateUp);
-            //tmrRelease.Enabled = true;
-        }
-
-        private void btnUp_MouseUp(object sender, MouseEventArgs e)
-        {
-            //UpPressed = false;
-        }
-
-        private void tmrRelease_Tick(object sender, EventArgs e)
-        {
-            if (!UpPressed && !DownPressed)
-            {
-                mf.SwitchBox.ReleaseMomentary();
-                tmrRelease.Enabled = false;
-            }
         }
 
         private void UpdateSwitches()
