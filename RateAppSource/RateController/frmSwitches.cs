@@ -11,9 +11,9 @@ namespace RateController
         private FormStart mf;
         private SimType SimLast;
         private bool[] SwON = new bool[9];
-
         private bool UpPressed;
         private bool DownPressed;
+        private bool MasterPressed;
 
         public frmSwitches(FormStart CallingForm)
         {
@@ -58,8 +58,8 @@ namespace RateController
 
         private void btnDown_MouseDown(object sender, MouseEventArgs e)
         {
-            DownPressed = true;
             mf.SwitchBox.PressSwitch(SwIDs.RateDown);
+            DownPressed = true;
             tmrRelease.Enabled = true;
         }
 
@@ -70,26 +70,14 @@ namespace RateController
 
         private void btnUp_MouseDown(object sender, MouseEventArgs e)
         {
-            UpPressed = true;
             mf.SwitchBox.PressSwitch(SwIDs.RateUp);
+            UpPressed = true;
             tmrRelease.Enabled = true;
         }
 
         private void btnUp_MouseUp(object sender, MouseEventArgs e)
         {
             UpPressed = false;
-        }
-
-        private void ckMaster_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ckMaster.Checked)
-            {
-                mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
-            }
-            else
-            {
-                mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
-            }
         }
 
         private void frmSimulation_FormClosed(object sender, FormClosedEventArgs e)
@@ -247,15 +235,6 @@ namespace RateController
             UpdateSwitches();
         }
 
-        private void tmrRelease_Tick(object sender, EventArgs e)
-        {
-            if (!UpPressed && !DownPressed)
-            {
-                mf.SwitchBox.ReleaseMomentary();
-                tmrRelease.Enabled = false;
-            }
-        }
-
         private void UpdateForm()
         {
             if (rbRate.Checked)
@@ -304,18 +283,10 @@ namespace RateController
 
                 case SimType.Speed:
                     rbSpeed.Checked = true;
-                    if (CurrentSim != SimLast && mf.SectionControl.MasterOn())
-                    {
-                        ckMaster.Checked = true;
-                    }
                     break;
 
                 default:
                     rbOff.Checked = true;
-                    if (CurrentSim != SimLast)
-                    {
-                        ckMaster.Checked = false;
-                    }
                     break;
             }
 
@@ -348,12 +319,12 @@ namespace RateController
 
             if (SwON[1])
             {
-                ckMaster.BackColor = Color.LightGreen;
+                btnMaster.BackColor = Color.LightGreen;
             }
 
             if (SwON[2])
             {
-                ckMaster.BackColor = Color.Red;
+                btnMaster.BackColor = Color.Red;
             }
 
             if (SwON[3])
@@ -408,6 +379,36 @@ namespace RateController
             else
             {
                 btn4.BackColor = Color.Red;
+            }
+        }
+
+        private void btnMaster_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (mf.SectionControl.MasterOn())
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+                MasterPressed = true;
+                tmrRelease.Enabled = true;
+            }
+            else
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+                MasterPressed = true;
+                tmrRelease.Enabled = true;
+            }
+        }
+
+        private void btnMaster_MouseUp(object sender, MouseEventArgs e)
+        {
+            MasterPressed = false;
+        }
+
+        private void tmrRelease_Tick(object sender, EventArgs e)
+        {
+            if (!UpPressed && !DownPressed && !MasterPressed)
+            {
+                mf.SwitchBox.ReleaseMomentary();
+                tmrRelease.Enabled = false;
             }
         }
     }

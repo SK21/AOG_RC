@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -32,6 +33,7 @@ namespace RateController
         private bool cAutoOn = true;
         private byte[] DataLast;
         private byte[] PressedData;
+        private bool LargeScreenSwitches;
 
         public PGN32618(FormStart CalledFrom)
         {
@@ -51,8 +53,25 @@ namespace RateController
 
         public bool Connected()
         {
-            return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
+            return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
         }
+
+        //public bool Connected(bool PhysicalOnly = false)     
+        //{
+        //    bool Result = false;
+
+        //    if (PhysicalOnly)
+        //    {
+        //        Result = (DateTime.Now - ReceiveTime).TotalSeconds < 4;
+        //    }
+        //    else
+        //    {
+        //        // physical or virtual switchbox
+        //        Result = (((DateTime.Now - ReceiveTime).TotalSeconds < 4) || mf.UseLargeScreen);
+        //    }
+
+        //    return Result;
+        //}
 
         public bool MasterOn
         {
@@ -63,13 +82,13 @@ namespace RateController
         public bool RateUp
         {
             get { return cRateUp; }
-            set { cRateUp= value; }
+            set { cRateUp = value; }
         }
 
         public bool RateDown
         {
             get { return cRateDown; }
-            set { cRateDown= value; }
+            set { cRateDown = value; }
         }
 
         public bool AutoOn
@@ -85,7 +104,7 @@ namespace RateController
             if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 // auto
-                SW[0] = mf.Tls.BitRead(Data[2], 0);     
+                SW[0] = mf.Tls.BitRead(Data[2], 0);
                 cAutoOn = SW[0];
 
                 // master
@@ -115,14 +134,38 @@ namespace RateController
                     cRateDown = false;
                 }
 
-                for (int i = 0; i < 2; i++)
+                // section switches
+                if (LargeScreenSwitches)
                 {
-                    for (int j = 0; j < 8; j++)
+                    // virtual switchbox used
+                    for (int i = 0; i < 2; i++)
                     {
-                        SW[5 + j + i * 8] = mf.Tls.BitRead(Data[i + 3], j);
+                        for (int j = 0; j < 8; j++)
+                        {
+                            if (i == 0)
+                            {
+                                //SW[5 + j + i * 8] = mf.Tls.BitRead(mf.AutoSteerPGN.RelayLo, j);
+                                SW[5 + j + i * 8] = MasterOn;
+                            }
+                            else
+                            {
+                                //SW[5 + j + i * 8] = mf.Tls.BitRead(mf.AutoSteerPGN.RelayHi, j);
+                                SW[5 + j + i * 8] = MasterOn;
+                            }
+                        }
                     }
                 }
-
+                else
+                {
+                    // physical switchbox used
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < 8; j++)
+                        {
+                            SW[5 + j + i * 8] = mf.Tls.BitRead(Data[i + 3], j);
+                        }
+                    }
+                }
                 DataLast = Data;
 
                 SwitchPGNargs args = new SwitchPGNargs();
@@ -132,6 +175,7 @@ namespace RateController
                 ReceiveTime = DateTime.Now;
                 Result = true;
             }
+            LargeScreenSwitches = false;
             return Result;
         }
 
@@ -168,7 +212,7 @@ namespace RateController
             return SW[(int)ID];
         }
 
-        public void PressSwitch(SwIDs ID)
+        public void PressSwitch(SwIDs ID,bool FromLargeScreen=false)
         {
             PressedData = DataLast;
             PressedData[0] = HeaderLo;
@@ -241,13 +285,14 @@ namespace RateController
             }
 
             PressedData[5] = mf.Tls.CRC(PressedData, 4);
+            LargeScreenSwitches = FromLargeScreen;
             ParseByteData(PressedData);
         }
 
         public void ReleaseMomentary()
         {
             // release momentary buttons
-           if(cAutoOn)
+            if (cAutoOn)
             {
                 PressedData[2] = 1;
             }

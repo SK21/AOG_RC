@@ -94,7 +94,6 @@ int PIDmotor(byte ID)
                 ErrorPercentCum[ID] = 0;
             }
 
-
             Result += Integral[ID];
 
             Result += (float)Sensor[ID].KD * (ErrorPercent - ErrorPercentLast[ID]) / (elapsedTime * 0.001) * 0.001;

@@ -36,7 +36,7 @@
             this.lbMPH = new System.Windows.Forms.Label();
             this.rbOff = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ckMaster = new System.Windows.Forms.CheckBox();
+            this.btnMaster = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.btn1 = new System.Windows.Forms.Button();
             this.btn2 = new System.Windows.Forms.Button();
@@ -132,7 +132,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.ckMaster);
+            this.groupBox1.Controls.Add(this.btnMaster);
             this.groupBox1.Controls.Add(this.btnDown);
             this.groupBox1.Controls.Add(this.btn1);
             this.groupBox1.Controls.Add(this.btn2);
@@ -148,20 +148,17 @@
             this.groupBox1.Text = "Switches";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
             // 
-            // ckMaster
+            // btnMaster
             // 
-            this.ckMaster.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckMaster.BackColor = System.Drawing.Color.Red;
-            this.ckMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMaster.Location = new System.Drawing.Point(6, 28);
-            this.ckMaster.Name = "ckMaster";
-            this.ckMaster.Size = new System.Drawing.Size(89, 32);
-            this.ckMaster.TabIndex = 159;
-            this.ckMaster.Text = "Master";
-            this.ckMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckMaster.UseVisualStyleBackColor = false;
-            this.ckMaster.CheckedChanged += new System.EventHandler(this.ckMaster_CheckedChanged);
+            this.btnMaster.BackColor = System.Drawing.Color.LightGreen;
+            this.btnMaster.Location = new System.Drawing.Point(7, 28);
+            this.btnMaster.Name = "btnMaster";
+            this.btnMaster.Size = new System.Drawing.Size(89, 32);
+            this.btnMaster.TabIndex = 167;
+            this.btnMaster.Text = "Master";
+            this.btnMaster.UseVisualStyleBackColor = false;
+            this.btnMaster.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseDown);
+            this.btnMaster.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseUp);
             // 
             // btnDown
             // 
@@ -341,7 +338,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox grpSim;
         private System.Windows.Forms.Button bntOK;
-        private System.Windows.Forms.CheckBox ckMaster;
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btn1;
         private System.Windows.Forms.Button btn2;
@@ -352,6 +348,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbPWM;
+        private System.Windows.Forms.Button btnMaster;
         private System.Windows.Forms.Timer tmrRelease;
     }
 }

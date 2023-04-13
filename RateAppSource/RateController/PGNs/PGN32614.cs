@@ -110,9 +110,9 @@ namespace RateController
                     break;
             }
 
-            if (Prod.mf.SwitchBox.Connected())
+            if (Prod.mf.SwitchBox.Connected()) // || Prod.mf.UseLargeScreen)
             {
-                if (Prod.mf.SectionControl.MasterOn()) cData[11] |= 0b00010000;
+                if (Prod.mf.SectionControl.MasterOn() || Prod.DoCal) cData[11] |= 0b00010000;
             }
             else
             {
@@ -120,7 +120,7 @@ namespace RateController
             }
 
             if (Prod.UseMultiPulse) cData[11] |= 0b00100000;
-            if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto) && !Prod.mf.RateCalibrationOn) cData[11] |= 0b01000000;
+            if (Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto) && !Prod.DoCal) cData[11] |= 0b01000000;
 
             // power relays
             for (int i = 0; i < 16; i++)
@@ -131,7 +131,7 @@ namespace RateController
             }
 
             // manual cal
-            if (Prod.mf.SectionControl.MasterOn())
+            if (Prod.mf.SectionControl.MasterOn() || Prod.DoCal)
             {
                 cData[14] = (byte)Prod.ManualPWM;
                 cData[15] = (byte)(Prod.ManualPWM >> 8);
@@ -159,24 +159,27 @@ namespace RateController
                 SendTime = DateTime.Now;
             }
         }
-
         private void PrintData()
         {
-            //for (int i = 0; i < cByteCount; i++)
-            //{
-            //    Debug.Print(i.ToString() + ": " + cData[i]);
-            //}
-            //Debug.Print((DateTime.Now - Last).TotalMilliseconds.ToString());
-            //Last = DateTime.Now;
-
-            //if(Prod.ID==0) Debug.Print("Send manual pwm: " + cData[14].ToString());
-
-            if (Prod.ID == 0)
+            if (Prod.ID == 1)
             {
-                Debug.Print("");
-                Debug.Print("ManualPWM: " + Prod.ManualPWM.ToString() + "  14: " + cData[14].ToString() + "  15: " + cData[15].ToString());
+                Debug.Print("------------------------");
+                Debug.Print("Module: " + Prod.ModuleID.ToString() + "   Product ID: " + Prod.ID.ToString());
+                for (int i = 0; i < cByteCount; i++)
+                {
+                    if (i == 11)
+                    {
+                        Debug.Print(i.ToString() + ": " + Convert.ToString(cData[i], 2).PadLeft(8, '0'));
+                    }
+                    else
+                    {
+                        Debug.Print(i.ToString() + ": " + cData[i]);
+                    }
+                }
+
                 Int16 Num = (Int16)(cData[14] | cData[15] << 8);
-                Debug.Print(Num.ToString());
+                Debug.Print("");
+                Debug.Print("ManualPWM: " + Num.ToString());
             }
         }
     }

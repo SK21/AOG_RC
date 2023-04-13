@@ -95,7 +95,7 @@ namespace RateController
             get { return cCalEnd; }
             set
             {
-                if (cDoCal && value >= cCalStart)
+                if (value >= cCalStart)
                 {
                     cCalEnd = value;
                 }
@@ -377,21 +377,20 @@ namespace RateController
         }
 
         public double RateAlt
-        { get { return cRateAlt; } set { cRateAlt = value; } }
+        {
+            get { return cRateAlt; }
+            set
+            {
+                if (value >= 0 && value < 151) cRateAlt = value;
+            }
+        }
 
         public double RateSet
         {
             get { return cRateSet; }
             set
             {
-                if (value < 0 || value > 50000)
-                {
-                    throw new ArgumentException("Must be between 0 and 50,000");
-                }
-                else
-                {
-                    cRateSet = value;
-                }
+                if (value >= 0 && value < 50001) cRateSet = value;
             }
         }
 
@@ -993,7 +992,9 @@ namespace RateController
 
         public double UnitsApplied()
         {
-            return cUnitsApplied;
+            double Result = cUnitsApplied;
+            if (cEnableProdDensity && cProdDensity > 0) Result *= cProdDensity;
+            return Result;
         }
 
         public void Update()

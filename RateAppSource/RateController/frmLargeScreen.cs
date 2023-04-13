@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -24,10 +25,8 @@ namespace RateController
         private int mouseX = 0;
         private int mouseY = 0;
         private bool[] SwON = new bool[9];
-        private bool UpPressed;
-        private bool DownPressed;
         private bool masterOn;
-        private bool automode;
+        private bool automode = true;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -1201,24 +1200,17 @@ namespace RateController
         {
             if (e.Button == MouseButtons.Right)
             {
-                //switch from auto to manual, or manual to auto.
+                automode = !automode;
                 if (automode)
                 {
-                    if (SwON[0])
-                    {
-                        // turn off auto mode
-                        mf.SwitchBox.PressSwitch(SwIDs.Auto);
-                    }
-                    automode = !automode;
-                    lblManAuto.Text = "MASTER";
-
+                    lblManAuto.Text = "AUTO";
                 }
                 else
                 {
-                    mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
-                    automode = !automode;
-                    lblManAuto.Text = "AUTO";
+                    lblManAuto.Text = "MASTER";
                 }
+
+                UpdateSwitches();
             }
         }
 
@@ -1290,89 +1282,52 @@ namespace RateController
         {
             if (automode)
             {
-                mf.SwitchBox.PressSwitch(SwIDs.Auto);
+                mf.SwitchBox.PressSwitch(SwIDs.Auto, true);
             }
             else
             {
-                if (masterOn) { mf.SwitchBox.PressSwitch(SwIDs.MasterOff); }
-                else { mf.SwitchBox.PressSwitch(SwIDs.MasterOn); }
+                if (masterOn) { mf.SwitchBox.PressSwitch(SwIDs.MasterOff,true); }
+                else { mf.SwitchBox.PressSwitch(SwIDs.MasterOn,true); }
             }
 
-        }
-
-        private void btnDown_MouseDown(object sender, MouseEventArgs e)
-        {
-            DownPressed = true;
-            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
-            tmrRelease.Enabled = true;
-        }
-
-        private void btnDown_MouseUp(object sender, MouseEventArgs e)
-        {
-            DownPressed = false;
-        }
-
-        private void btnUp_MouseDown(object sender, MouseEventArgs e)
-        {
-            UpPressed = true;
-            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
-            tmrRelease.Enabled = true;
-        }
-
-        private void btnUp_MouseUp(object sender, MouseEventArgs e)
-        {
-            UpPressed = false;
-        }
-
-        private void tmrRelease_Tick(object sender, EventArgs e)
-        {
-            if (!UpPressed && !DownPressed)
-            {
-                mf.SwitchBox.ReleaseMomentary();
-                tmrRelease.Enabled = false;
-            }
         }
 
         private void UpdateSwitches()
         {
-            if (SwON[0])
+            if (automode)
             {
-                btAuto.BackColor = Color.LightGreen;
-                btAuto.Text = "AUTO";
-                btAuto.ForeColor = Color.Black;
-                automode = true;
-                lblManAuto.Text = "AUTO";
-            }
-            //else
-            //{
-            //    btAuto.BackColor = Color.Red;
-            //}
-
-            else if (SwON[1])
-            {
-                btAuto.BackColor = Color.Yellow;
-                btAuto.Text = "ON";
-                btAuto.ForeColor = Color.Black;
-                automode = false;
-                masterOn = true;
-                lblManAuto.Text = "MASTER";
-            }
-
-            else if (SwON[2])
-            {
-                btAuto.BackColor = Color.Red;
-                btAuto.Text = "OFF";
-                btAuto.ForeColor = Color.White;
-                masterOn = false;
+                // show auto button
+                if (SwON[0])
+                {
+                    btAuto.BackColor = Color.LightGreen;
+                    btAuto.Text = "AUTO";
+                    btAuto.ForeColor = Color.Black;
+                }
+                else
+                {
+                    btAuto.BackColor = Color.Red;
+                    btAuto.Text = "OFF";
+                    btAuto.ForeColor = Color.White;
+                }
             }
             else
             {
-                btAuto.BackColor = Color.Red;
-                btAuto.Text = "OFF";
-                btAuto.ForeColor = Color.White;
-                automode = true;
-
-                lblManAuto.Text = "AUTO";
+                // show master button
+                if(mf.SwitchBox.MasterOn)
+                {
+                    btAuto.BackColor = Color.Yellow;
+                    btAuto.Text = "ON";
+                    btAuto.ForeColor = Color.Black;
+                    automode = false;
+                    masterOn = true;
+                }
+                else
+                {
+                    btAuto.BackColor = Color.Red;
+                    btAuto.Text = "OFF";
+                    btAuto.ForeColor = Color.White;
+                    masterOn = false;
+                }
             }
 
             if (SwON[3])
@@ -1398,6 +1353,30 @@ namespace RateController
         {
             Form restoreform = new RCRestore(this);
             restoreform.Show();
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            if (SwON[0])
+            {
+                Prd.RateSet = Prd.RateSet * 1.05;
+            }
+            else
+            {
+                Prd.ManualPWM += 5;
+            }
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            if (SwON[0])
+            {
+                Prd.RateSet = Prd.RateSet / 1.05;
+            }
+            else
+            {
+                Prd.ManualPWM -= 5;
+            }
         }
     }
 }
