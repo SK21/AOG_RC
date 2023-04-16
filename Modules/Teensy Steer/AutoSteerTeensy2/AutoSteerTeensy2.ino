@@ -1,5 +1,7 @@
-#define InoDescription "AutoSteerTeensy2   02-Jan-2023"
+#define InoDescription "AutoSteerTeensy2   15-Apr-2023"
 // autosteer for Teensy 4.1
+
+#define InoID 1504	// if not in eeprom, overwrite
 
 #include <Wire.h>
 #include <EEPROM.h> 
@@ -109,14 +111,10 @@ struct Setup
 	uint8_t CurrentSensor = 0;
 	uint8_t PulseCountMax = 5;
 	uint8_t IsDanfoss = 0;
-};  
+	uint8_t IsUseY_Axis = 0;     //Set to 0 to use X Axis, 1 to use Y avis
+};
 
 Setup steerConfig;          //9 bytes
-
-//EEPROM
-int16_t EEread = 0;
-#define EEP_Ident 5600	// if not in eeprom, overwrite
-#define MDL_Ident 5800
 
 // Ethernet steering
 EthernetUDP UDPsteering;	// UDP Steering traffic, to and from AGIO
@@ -160,6 +158,7 @@ int16_t pwmDrive = 0;
 int16_t MaxPWMvalue = 255;
 
 //Heart beat hello AgIO
+uint8_t helloFromIMU[] = { 128, 129, 121, 121, 5, 0, 0, 0, 0, 0, 71 };
 uint8_t helloFromAutoSteer[] = { 128, 129, 126, 126, 5, 0, 0, 0, 0, 0, 71 };
 int16_t helloSteerPosition = 0;
 
@@ -232,8 +231,14 @@ void Blink()
 		digitalWrite(LED_BUILTIN, State);
 		Serial.println(".");	// needed to allow PCBsetup to connect
 
-		Serial.print(" Loop Time: ");
+		Serial.print(" Loop Time (Micros): ");
 		Serial.print(MaxLoopTime);
+
+		Serial.print(", WAS: ");
+		Serial.print(AINs.AIN0);
+
+		Serial.print(", Heading: ");
+		Serial.print(IMU_Heading / 10.0);
 
 		Serial.println("");
 

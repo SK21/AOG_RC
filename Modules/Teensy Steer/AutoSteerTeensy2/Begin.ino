@@ -1,3 +1,4 @@
+int16_t StoredID = 0;
 
 void DoSetup()
 {
@@ -14,30 +15,24 @@ void DoSetup()
 	Serial.println(InoDescription);
 	Serial.println();
 
-	EEPROM.get(0, EEread);              // read identifier
-	if (EEread != EEP_Ident)   // check on first start and write EEPROM
+	// eeprom data
+	EEPROM.get(0, StoredID);              // read identifier
+	if (StoredID == InoID)
 	{
-		EEPROM.put(0, EEP_Ident);
+		// load stored data
+		Serial.println("Loading stored settings.");
+		EEPROM.get(10, steerSettings);
+		EEPROM.get(40, steerConfig);
+		EEPROM.get(110, MDL);
+	}
+	else
+	{
+		// update stored data
+		Serial.println("Updating stored data.");
+		EEPROM.put(0, InoID);
 		EEPROM.put(10, steerSettings);
 		EEPROM.put(40, steerConfig);
-	}
-	else
-	{
-		EEPROM.get(10, steerSettings);     // read the Settings
-		EEPROM.get(40, steerConfig);
-	}
-
-	// module data
-	EEPROM.get(100, EEread);
-
-	if (EEread != MDL_Ident)
-	{
-		EEPROM.put(100, MDL_Ident);
 		EEPROM.put(110, MDL);
-	}
-	else
-	{
-		EEPROM.get(110, MDL);
 	}
 
 	// on-board motor controller

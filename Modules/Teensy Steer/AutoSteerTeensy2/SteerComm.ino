@@ -19,7 +19,6 @@ void ReceiveSteerData()
                 case 200:
                     // hello from AGIO
                     SendHelloReply();
-                    CommTime = millis();
                     break;
 
                 case 201:
@@ -64,8 +63,10 @@ void ReceiveSteerData()
                     if (bitRead(sett, 0)) steerConfig.IsDanfoss = 1; else steerConfig.IsDanfoss = 0;
                     if (bitRead(sett, 1)) steerConfig.PressureSensor = 1; else steerConfig.PressureSensor = 0;
                     if (bitRead(sett, 2)) steerConfig.CurrentSensor = 1; else steerConfig.CurrentSensor = 0;
+                    if (bitRead(sett, 3)) MDL.SwapRollPitch = 1; else MDL.SwapRollPitch = 0;
 
                     EEPROM.put(40, steerConfig);
+                    EEPROM.put(110, MDL);
 
                     //reset the Teensy
                     SCB_AIRCR = 0x05FA0004;
@@ -93,6 +94,7 @@ void ReceiveSteerData()
                     guidanceStatus = DataEthernet[7];
                     steerAngleSetPoint = (float)((int16_t)(DataEthernet[9] << 8 | DataEthernet[8])) * 0.01;
                     SendSteerData();
+                    CommTime = millis();
                     break;
                 }
             }
@@ -186,13 +188,13 @@ void SendHelloReply()
     helloFromAutoSteer[8] = helloSteerPosition >> 8;
     helloFromAutoSteer[9] = switchByte;
 
-    //add the checksum
-    int16_t CK_A = 0;
-    for (uint8_t i = 2; i < sizeof(helloFromAutoSteer) - 1; i++)
-    {
-        CK_A = (CK_A + helloFromAutoSteer[i]);
-    }
-    helloFromAutoSteer[sizeof(helloFromAutoSteer) - 1] = CK_A;
+    ////add the checksum
+    //int16_t CK_A = 0;
+    //for (uint8_t i = 2; i < sizeof(helloFromAutoSteer) - 1; i++)
+    //{
+    //    CK_A = (CK_A + helloFromAutoSteer[i]);
+    //}
+    //helloFromAutoSteer[sizeof(helloFromAutoSteer) - 1] = CK_A;
 
     // to ethernet
     if (Ethernet.linkStatus() == LinkON)
@@ -200,6 +202,13 @@ void SendHelloReply()
         UDPsteering.beginPacket(DestinationIP, DestinationPort);
         UDPsteering.write(helloFromAutoSteer, sizeof(helloFromAutoSteer));
         UDPsteering.endPacket();
+
+        if (MDL.IMU > 0)
+        {
+            UDPsteering.beginPacket(DestinationIP, DestinationPort);
+            UDPsteering.write(helloFromIMU, sizeof(helloFromIMU));
+            UDPsteering.endPacket();
+        }
     }
 }
 
