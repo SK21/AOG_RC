@@ -167,7 +167,7 @@ void DoSetup()
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
 
 	// ADS1115
-	Serial.println("Starting ADS ...");
+	Serial.println("Starting ADS1115 ...");
 	ErrorCount = 0;
 	while (!ADSfound)
 	{
@@ -183,13 +183,13 @@ void DoSetup()
 	Serial.println("");
 	if (ADSfound)
 	{
-		Serial.println("ADS connected.");
+		Serial.println("ADS1115 connected.");
 		Serial.println("");
 		MDL.AnalogMethod = 0;
 	}
 	else
 	{
-		Serial.println("ADS not found.");
+		Serial.println("ADS1115 not found.");
 		Serial.println("");
 
 		switch (MDL.AnalogMethod)
@@ -250,10 +250,11 @@ void StartIMU()
 {
 	uint8_t IMUaddress;
 	// Sparkfun BNO
-	Serial.println("Starting Sparkfun BNO IMU ...");
+	Serial.println("Starting Sparkfun IMU ...");
 	IMUaddress = 0x4B;
 	ErrorCount = 0;
-	IMUstarted = false;
+	MDL.IMU = 0;
+	bool IMUstarted = false;
 	while (!IMUstarted)
 	{
 		IMUstarted = myIMU.begin(IMUaddress, Wire);
@@ -269,7 +270,7 @@ void StartIMU()
 	}
 	else
 	{
-		Serial.println("Sparkfun BNO failed to start.");
+		Serial.println("Sparkfun IMU failed to start.");
 		Serial.println("Starting Adafruit IMU ...");
 		IMUaddress = 0x4A;
 		ErrorCount = 0;
@@ -299,19 +300,8 @@ void StartIMU()
 				delay(500);
 				if (ErrorCount++ > 10) break;
 			}
-			Serial.println("");
 
-			if (IMUstarted)
-			{
-				Serial.println("CMPS14 started.");
-				MDL.IMU = 3;
-			}
-			else
-			{
-				// no imu
-				Serial.println("No IMU found.");
-				MDL.IMU = 0;
-			}
+			if (IMUstarted) MDL.IMU = 3;
 		}
 	}
 
@@ -331,5 +321,22 @@ void StartIMU()
 		{
 			Serial.println(F("BNO08x init fails!!"));
 		}
+	}
+
+	Serial.println("");
+	switch (MDL.IMU)
+	{
+	case 1:
+		Serial.println("Sparkfun IMU started.");
+		break;
+	case 2:
+		Serial.println("Adafruit IMU started.");
+		break;
+	case 3:
+		Serial.println("CMPS14 IMU started.");
+		break;
+	default:
+		Serial.println("No IMU found.");
+		break;
 	}
 }

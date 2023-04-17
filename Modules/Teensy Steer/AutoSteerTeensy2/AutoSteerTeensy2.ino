@@ -1,7 +1,7 @@
-#define InoDescription "AutoSteerTeensy2   15-Apr-2023"
+#define InoDescription "AutoSteerTeensy2   16-Apr-2023"
 // autosteer for Teensy 4.1
 
-#define InoID 1504	// if not in eeprom, overwrite
+#define InoID 1604	// if not in eeprom, overwrite
 
 #include <Wire.h>
 #include <EEPROM.h> 
@@ -177,7 +177,6 @@ NMEAParser<2> parser;
 BNO080 myIMU;
 
 uint32_t CommTime;
-bool IMUstarted = false;
 bool ADSfound = false;
 
 HardwareSerial* SerialNtrip;

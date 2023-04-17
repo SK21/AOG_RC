@@ -79,92 +79,89 @@ float HeadingLast;
 
 void ReadIMU()
 {
-	if (IMUstarted)
+	switch (MDL.IMU)
 	{
-		switch (MDL.IMU)
+	case 1:	// Sparkfun
+	case 2:	// Adafruit
+		if (myIMU.dataAvailable())
 		{
-		case 1:	// Sparkfun
-		case 3:	// Adafruit
-			if (myIMU.dataAvailable())
+			IMU_Heading = (myIMU.getYaw()) * 180.0 / PI; // Convert yaw / heading to degrees
+			IMU_Heading = -IMU_Heading; //BNO085 counter clockwise data to clockwise data
+			if (IMU_Heading < 0 && IMU_Heading >= -180) //Scale BNO085 yaw from [-180?;180?] to [0;360?]
 			{
-				IMU_Heading = (myIMU.getYaw()) * 180.0 / PI; // Convert yaw / heading to degrees
-				IMU_Heading = -IMU_Heading; //BNO085 counter clockwise data to clockwise data
-				if (IMU_Heading < 0 && IMU_Heading >= -180) //Scale BNO085 yaw from [-180?;180?] to [0;360?]
-				{
-					IMU_Heading = IMU_Heading + 360;
-				}
-				IMU_Heading *= 10.0;
-
-				if (MDL.SwapRollPitch)
-				{
-					//Adafruit library: pitch is rotation around Y axis
-					tmpIMU = 10 * (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
-					if (MDL.InvertRoll) tmpIMU *= -1.0;
-					IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
-
-					tmpIMU = 10 * (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
-					IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
-				}
-				else
-				{
-					//Adafruit library: roll is rotation around X axis
-					tmpIMU = 10 * (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
-					if (MDL.InvertRoll) tmpIMU *= -1.0;
-					IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
-
-					tmpIMU = 10 * (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
-					IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
-				}
-
-				if (MDL.GyroOn)
-				{
-					tmpIMU = -10 * (myIMU.getGyroZ()) * 180.0 / PI;
-					IMU_YawRate = IMU_YawRate * 0.8 + tmpIMU * 0.2;
-				}
+				IMU_Heading = IMU_Heading + 360;
 			}
-			break;
+			IMU_Heading *= 10.0;
 
-		case 2:	// CMPS14
-			//the heading x10
-			Wire.beginTransmission(CMPS14_ADDRESS);
-			Wire.write(0x02);
-			Wire.endTransmission();
+			if (MDL.SwapRollPitch)
+			{
+				//Adafruit library: pitch is rotation around Y axis
+				tmpIMU = 10 * (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
+				if (MDL.InvertRoll) tmpIMU *= -1.0;
+				IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
 
-			Wire.requestFrom(CMPS14_ADDRESS, 3);
-			while (Wire.available() < 3);
+				tmpIMU = 10 * (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
+				IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
+			}
+			else
+			{
+				//Adafruit library: roll is rotation around X axis
+				tmpIMU = 10 * (myIMU.getRoll()) * 180.0 / PI; //Convert roll to degrees
+				if (MDL.InvertRoll) tmpIMU *= -1.0;
+				IMU_Roll = IMU_Roll * 0.8 + tmpIMU * 0.2;
 
-			IMU_Heading = Wire.read() << 8 | Wire.read();
+				tmpIMU = 10 * (myIMU.getPitch()) * 180.0 / PI; // Convert pitch to degrees
+				IMU_Pitch = IMU_Pitch * 0.8 + 0.2 * tmpIMU;
+			}
 
-			//3rd byte pitch
-			IMU_Pitch = Wire.read();
-
-			//roll
-			Wire.beginTransmission(CMPS14_ADDRESS);
-			Wire.write(0x1C);
-			Wire.endTransmission();
-
-			Wire.requestFrom(CMPS14_ADDRESS, 2);
-			while (Wire.available() < 2);
-
-			tmpIMU = int16_t(Wire.read() << 8 | Wire.read());
-
-			//Complementary filter
-			IMU_Roll = 0.9 * IMU_Roll + 0.1 * tmpIMU;
-
-			//Get the Z gyro
-			Wire.beginTransmission(CMPS14_ADDRESS);
-			Wire.write(0x16);
-			Wire.endTransmission();
-
-			Wire.requestFrom(CMPS14_ADDRESS, 2);
-			while (Wire.available() < 2);
-
-			tmpIMU = int16_t(Wire.read() << 8 | Wire.read());
-
-			//Complementary filter
-			IMU_YawRate = 0.93 * IMU_YawRate + 0.07 * tmpIMU;
-			break;
+			if (MDL.GyroOn)
+			{
+				tmpIMU = -10 * (myIMU.getGyroZ()) * 180.0 / PI;
+				IMU_YawRate = IMU_YawRate * 0.8 + tmpIMU * 0.2;
+			}
 		}
+		break;
+
+	case 3:	// CMPS14
+		//the heading x10
+		Wire.beginTransmission(CMPS14_ADDRESS);
+		Wire.write(0x02);
+		Wire.endTransmission();
+
+		Wire.requestFrom(CMPS14_ADDRESS, 3);
+		while (Wire.available() < 3);
+
+		IMU_Heading = Wire.read() << 8 | Wire.read();
+
+		//3rd byte pitch
+		IMU_Pitch = Wire.read();
+
+		//roll
+		Wire.beginTransmission(CMPS14_ADDRESS);
+		Wire.write(0x1C);
+		Wire.endTransmission();
+
+		Wire.requestFrom(CMPS14_ADDRESS, 2);
+		while (Wire.available() < 2);
+
+		tmpIMU = int16_t(Wire.read() << 8 | Wire.read());
+
+		//Complementary filter
+		IMU_Roll = 0.9 * IMU_Roll + 0.1 * tmpIMU;
+
+		//Get the Z gyro
+		Wire.beginTransmission(CMPS14_ADDRESS);
+		Wire.write(0x16);
+		Wire.endTransmission();
+
+		Wire.requestFrom(CMPS14_ADDRESS, 2);
+		while (Wire.available() < 2);
+
+		tmpIMU = int16_t(Wire.read() << 8 | Wire.read());
+
+		//Complementary filter
+		IMU_YawRate = 0.93 * IMU_YawRate + 0.07 * tmpIMU;
+		break;
 	}
 }
 
