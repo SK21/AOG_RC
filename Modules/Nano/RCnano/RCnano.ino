@@ -13,8 +13,8 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "RCnano  :  29-Mar-2023"
-const int16_t InoID = 2903;	// change to send defaults to eeprom
+# define InoDescription "SlowPulse : 30-May-2023"
+const int16_t InoID = 3005;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
 #define MaxProductCount 2
@@ -479,6 +479,9 @@ void DebugTheIno()
 
 		Serial.print(", ");
 		Serial.print(debug4);
+
+		Serial.print(", Debounce ");
+		Serial.print(Sensor[0].Debounce);
 
 		Serial.println("");
 
