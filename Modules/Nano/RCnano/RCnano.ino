@@ -13,7 +13,7 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "SlowPulse : 30-May-2023"
+# define InoDescription "SlowPulse : 31-May-2023"
 const int16_t InoID = 3005;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
@@ -28,7 +28,6 @@ struct ModuleConfig
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
 	uint8_t Relays[16];
-	uint8_t Debounce = 3;			// minimum ms pin change, base debounce
 };
 
 ModuleConfig MDL;
@@ -162,6 +161,9 @@ void setup()
 	Sensor[1].MaxPWM = 50;
 	Sensor[1].Deadband = 3;
 	Sensor[1].BrakePoint = 20;
+
+	Sensor[0].Debounce = 3;
+	Sensor[1].Debounce = 3;
 
 	Serial.begin(38400);
 	delay(2000);
@@ -326,7 +328,7 @@ void setup()
 
 void loop()
 {
-	//DebugTheIno();
+	DebugTheIno();
 
 	if (millis() - LoopLast >= LOOP_TIME)
 	{

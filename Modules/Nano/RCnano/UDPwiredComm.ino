@@ -139,14 +139,6 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                                 MasterOn = ((Sensor[SensorID].InCommand & 16) == 16);
 
                                 Sensor[SensorID].UseMultiPulses = ((Sensor[SensorID].InCommand & 32) == 32);
-                                if (Sensor[SensorID].UseMultiPulses)
-                                {
-                                    Sensor[SensorID].Debounce = MDL.Debounce;
-                                }
-                                else
-                                {
-                                    Sensor[SensorID].Debounce = MDL.Debounce * 5;
-                                }
 
                                 AutoOn = ((Sensor[SensorID].InCommand & 64) == 64);
 
@@ -183,9 +175,10 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                 // 14   KD 3
                 // 15   MinPWM
                 // 16   MaxPWM
-                // 17   CRC
+                // 17   Debounce
+                // 18   CRC
 
-                PGNlength = 18;
+                PGNlength = 19;
 
                 if (len > PGNlength - 1)
                 {
@@ -208,6 +201,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
                                 Sensor[SensorID].MinPWM = Data[15];
                                 Sensor[SensorID].MaxPWM = Data[16];
+                                Sensor[SensorID].Debounce = Data[17];
                             }
                         }
                     }
@@ -289,8 +283,6 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                         if ((tmp & 1) == 1) MDL.UseMCP23017 = 1; else MDL.UseMCP23017 = 0;
                         if ((tmp & 2) == 2) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
                         if ((tmp & 4) == 4) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
-
-                        MDL.Debounce = Data[6];
 
                         EEPROM.put(10, MDL);
                     }

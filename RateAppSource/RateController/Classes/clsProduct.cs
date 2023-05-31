@@ -320,6 +320,9 @@ namespace RateController
         public byte PIDmin
         { get { return PIDtoArduino.MinPWM; } set { PIDtoArduino.MinPWM = value; } }
 
+        public byte Debounce
+        { get { return PIDtoArduino.Debounce; } set { PIDtoArduino.Debounce = value; } }
+
         public string ProductName
         {
             get
@@ -634,6 +637,10 @@ namespace RateController
             byte.TryParse(mf.Tls.LoadProperty("MaxPWM" + IDname), out val);
             PIDtoArduino.MaxPWM = val;
 
+            val = 0;
+            byte.TryParse(mf.Tls.LoadProperty("Debounce" + IDname), out val);
+            PIDtoArduino.Debounce = val;
+
             if (ID > mf.MaxProducts - 3)
             {
                 cControlType = ControlTypeEnum.Fan;
@@ -778,6 +785,7 @@ namespace RateController
             mf.Tls.SaveProperty("KD" + IDname, PIDtoArduino.KD.ToString());
             mf.Tls.SaveProperty("MinPWM" + IDname, PIDtoArduino.MinPWM.ToString());
             mf.Tls.SaveProperty("MaxPWM" + IDname, PIDtoArduino.MaxPWM.ToString());
+            mf.Tls.SaveProperty("Debounce" + IDname, PIDtoArduino.Debounce.ToString());
 
             mf.Tls.SaveProperty("OnScreen" + IDname, cOnScreen.ToString());
             mf.Tls.SaveProperty("BumpButtons" + IDname, cBumpButtons.ToString());
