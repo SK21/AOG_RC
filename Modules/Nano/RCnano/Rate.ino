@@ -23,6 +23,16 @@ unsigned long Omin[MaxProductCount];
 byte Ocount[MaxProductCount];
 float Oave[MaxProductCount];
 
+void ISR0Alt()
+{
+	static unsigned long PulseTime;
+	if (millis() - PulseTime > Sensor[0].Debounce)
+	{
+		Duration[0] = (millis() - PulseTime) * 1000;
+		PulseTime = millis();
+		PulseCount[0]++;
+	}
+}
 
 void ISR0()
 {
@@ -39,54 +49,42 @@ void ISR0()
 	{
 		dur = 0xFFFFFFFF + micronow - PulseTime;
 	}
+	PulseTime = micronow;
+	PulseCount[0]++;
 
-	if (dur > 2000000)
+	if (dur > 4000000)
 	{
 		// the component was off so reset the values
 		avDurs[0] = 0;
 		dur = 50000;
-		for (int i = 0; i < (avgPulses - 1); i++)
+		for (int i = 0; i < avgPulses; i++)
 		{
 			Durations[0][i] = 0;
 		}
-		PulseTime = micronow;
-		PulseCount[0]++;
+		DurCount[0] = 0;
 		FullCount[0] = false;
 	}
 	else if (dur > Sensor[0].Debounce * 1000)
 	{
-		PulseCount[0]++;
-		// check to see if the dur value is too long like an interrupt was missed.
-		if ((dur > (1.5 * avDurs[0])) && (avDurs[0] != 0))
-		{
-			Durations[0][DurCount[0]] = avDurs[0];
-			Duration[0] = avDurs[0];
-			dur = avDurs[0];
-		}
-		else
-		{
-			Durations[0][DurCount[0]] = dur;
-			Duration[0] = dur;
-		}
+		if (avDurs[0] == 0) avDurs[0] = dur;
 
-		PulseTime = micronow;
-		if (DurCount[0] == 0)
+		// check to see if the dur value is too long like an interrupt was missed.
+		if (dur > (1.5 * avDurs[0])) dur = avDurs[0];
+
+		Duration[0] = dur;
+		Durations[0][DurCount[0]] = dur;
+
+		if (DurCount[0] > 0) avDurs[0] = ((Durations[0][DurCount[0] - 1]) + dur) / 2;
+
+		if (DurCount[0]++ >= avgPulses)
 		{
-			DurCount[0]++;
-			avDurs[0] = (Durations[0][avgPulses - 1] + dur) / 2;
-		}
-		else if (DurCount[0] < avgPulses)
-		{
-			DurCount[0]++;
-			avDurs[0] = (Durations[0][DurCount[0] - 1] + dur) / 2;
-		}
-		else
-		{
-			avDurs[0] = (Durations[0][DurCount[0] - 1] + dur) / 2;
 			DurCount[0] = 0;
 			FullCount[0] = true;
 		}
 	}
+	debug1 = dur;
+	debug2++;
+	ShowData();
 }
 
 void ISR1()
@@ -225,7 +223,7 @@ void GetUPMflow(int ID)
 	}
 
 	// check for no flow
-	if (millis() - LastPulse[ID] > 2000)
+	if (millis() - LastPulse[ID] > 3000)
 	{
 		PPM[ID] = 0;
 		Osum[ID] = 0;
@@ -254,10 +252,71 @@ void GetUPMflow(int ID)
 	if (Sensor[ID].MeterCal > 0)
 	{
 		Sensor[ID].UPM = (float)Oave[ID] / (float)Sensor[ID].MeterCal;
+		debug4 = Sensor[0].UPM;
 	}
 	else
 	{
 		Sensor[ID].UPM = 0;
 	}
+}
+
+void ShowData()
+{
+	Serial.println("");
+
+	Serial.print(debug1);
+	Serial.print(", ");
+
+	//Serial.print(debug2);
+	//Serial.print(", ");
+
+	//Serial.print(debug3);
+	//Serial.print(", ");
+
+	//Serial.print(debug4);
+	//Serial.print(", ");
+
+	//Serial.print(Sensor[0].TotalPulses);
+	//Serial.print(", ");
+
+	Serial.print(DurCount[0]);
+	Serial.println("");
+
+	Serial.print(Durations[0][0]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][1]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][2]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][3]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][4]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][5]);
+	Serial.println("");
+
+	Serial.print(Durations[0][6]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][7]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][8]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][9]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][10]);
+	Serial.print(", ");
+
+	Serial.print(Durations[0][11]);
+
+	Serial.println("");
 }
 

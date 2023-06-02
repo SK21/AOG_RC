@@ -13,7 +13,7 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "SlowPulse : 31-May-2023"
+# define InoDescription "SlowPulse : 02-Jun-2023"
 const int16_t InoID = 3005;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
@@ -135,9 +135,9 @@ bool IOexpanderFound;
 uint8_t ErrorCount;
 byte PGNlength;
 
-float debug1;
-float debug2;
-float debug3;
+volatile unsigned long debug1;
+volatile int debug2;
+volatile unsigned long debug3;
 float debug4;
 
 void setup()
@@ -282,6 +282,8 @@ void setup()
 	}
 
 	attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0, FALLING);
+	//attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0Alt, FALLING);
+
 	attachInterrupt(digitalPinToInterrupt(Sensor[1].FlowPin), ISR1, FALLING);
 
 	Serial.println("");
@@ -328,7 +330,7 @@ void setup()
 
 void loop()
 {
-	DebugTheIno();
+	//DebugTheIno();
 
 	if (millis() - LoopLast >= LOOP_TIME)
 	{
@@ -359,7 +361,7 @@ void loop()
 	if (millis() - SendLast > SendTime)
 	{
 		SendLast = millis();
-		SendSerial();
+		//SendSerial();
 		SendUDPwired();
 	}
 
@@ -473,14 +475,14 @@ void DebugTheIno()
 		Serial.print(", ");
 		Serial.print(debug1);
 
-		Serial.print(", ");
-		Serial.print(debug2);
+		//Serial.print(", ");
+		//Serial.print(debug2);
 
-		Serial.print(", ");
-		Serial.print(debug3);
+		//Serial.print(", ");
+		//Serial.print(debug3);
 
-		Serial.print(", ");
-		Serial.print(debug4);
+		//Serial.print(", ");
+		//Serial.print(debug4);
 
 		Serial.print(", Debounce ");
 		Serial.print(Sensor[0].Debounce);
