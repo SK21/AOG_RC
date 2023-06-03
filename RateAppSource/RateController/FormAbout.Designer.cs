@@ -29,6 +29,7 @@ namespace RateController
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAbout));
             this.label27 = new System.Windows.Forms.Label();
             this.lbAppVersion = new System.Windows.Forms.Label();
@@ -37,6 +38,22 @@ namespace RateController
             this.lbWifi = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.bntOK = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lbModule = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lbSensor = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lbTwo = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lbOne = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lbFour = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lbThree = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.lbFive = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // label27
@@ -108,7 +125,7 @@ namespace RateController
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = global::RateController.Properties.Resources.OK;
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(83, 126);
+            this.bntOK.Location = new System.Drawing.Point(83, 407);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 0;
@@ -116,11 +133,181 @@ namespace RateController
             this.bntOK.UseVisualStyleBackColor = false;
             this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(107, 157);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(66, 23);
+            this.label1.TabIndex = 185;
+            this.label1.Text = "Debug";
+            // 
+            // lbModule
+            // 
+            this.lbModule.AutoSize = true;
+            this.lbModule.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModule.Location = new System.Drawing.Point(198, 193);
+            this.lbModule.Name = "lbModule";
+            this.lbModule.Size = new System.Drawing.Size(20, 23);
+            this.lbModule.TabIndex = 187;
+            this.lbModule.Text = "0";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(34, 193);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(97, 23);
+            this.label4.TabIndex = 186;
+            this.label4.Text = "Module ID";
+            // 
+            // lbSensor
+            // 
+            this.lbSensor.AutoSize = true;
+            this.lbSensor.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSensor.Location = new System.Drawing.Point(198, 222);
+            this.lbSensor.Name = "lbSensor";
+            this.lbSensor.Size = new System.Drawing.Size(20, 23);
+            this.lbSensor.TabIndex = 189;
+            this.lbSensor.Text = "0";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(34, 222);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(93, 23);
+            this.label5.TabIndex = 188;
+            this.label5.Text = "Sensor ID";
+            // 
+            // lbTwo
+            // 
+            this.lbTwo.AutoSize = true;
+            this.lbTwo.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTwo.Location = new System.Drawing.Point(198, 280);
+            this.lbTwo.Name = "lbTwo";
+            this.lbTwo.Size = new System.Drawing.Size(20, 23);
+            this.lbTwo.TabIndex = 193;
+            this.lbTwo.Text = "0";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(34, 280);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(62, 23);
+            this.label7.TabIndex = 192;
+            this.label7.Text = "Byte 2";
+            // 
+            // lbOne
+            // 
+            this.lbOne.AutoSize = true;
+            this.lbOne.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOne.Location = new System.Drawing.Point(198, 251);
+            this.lbOne.Name = "lbOne";
+            this.lbOne.Size = new System.Drawing.Size(20, 23);
+            this.lbOne.TabIndex = 191;
+            this.lbOne.Text = "0";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(34, 251);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(62, 23);
+            this.label9.TabIndex = 190;
+            this.label9.Text = "Byte 1";
+            // 
+            // lbFour
+            // 
+            this.lbFour.AutoSize = true;
+            this.lbFour.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFour.Location = new System.Drawing.Point(198, 338);
+            this.lbFour.Name = "lbFour";
+            this.lbFour.Size = new System.Drawing.Size(20, 23);
+            this.lbFour.TabIndex = 197;
+            this.lbFour.Text = "0";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(34, 338);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(62, 23);
+            this.label11.TabIndex = 196;
+            this.label11.Text = "Byte 4";
+            // 
+            // lbThree
+            // 
+            this.lbThree.AutoSize = true;
+            this.lbThree.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbThree.Location = new System.Drawing.Point(198, 309);
+            this.lbThree.Name = "lbThree";
+            this.lbThree.Size = new System.Drawing.Size(20, 23);
+            this.lbThree.TabIndex = 195;
+            this.lbThree.Text = "0";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(34, 309);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(62, 23);
+            this.label13.TabIndex = 194;
+            this.label13.Text = "Byte 3";
+            // 
+            // lbFive
+            // 
+            this.lbFive.AutoSize = true;
+            this.lbFive.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFive.Location = new System.Drawing.Point(198, 367);
+            this.lbFive.Name = "lbFive";
+            this.lbFive.Size = new System.Drawing.Size(20, 23);
+            this.lbFive.TabIndex = 199;
+            this.lbFive.Text = "0";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(34, 367);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(62, 23);
+            this.label17.TabIndex = 198;
+            this.label17.Text = "Byte 5";
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // FormAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(283, 206);
+            this.ClientSize = new System.Drawing.Size(283, 491);
+            this.Controls.Add(this.lbFive);
+            this.Controls.Add(this.label17);
+            this.Controls.Add(this.lbFour);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.lbThree);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.lbTwo);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.lbOne);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.lbSensor);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lbModule);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lbWifi);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lbIP);
@@ -151,5 +338,21 @@ namespace RateController
         private System.Windows.Forms.Label lbIP;
         private System.Windows.Forms.Label lbWifi;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbModule;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lbSensor;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lbTwo;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lbOne;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lbFour;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lbThree;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label lbFive;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Timer timer1;
     }
 }

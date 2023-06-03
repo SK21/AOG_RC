@@ -70,6 +70,44 @@ void SendUDPwired()
     }
 }
 
+void SendStatus(byte SensorID)
+{
+    // PGN32504 module status - for debug, etc., from Arduino to RateController
+    // 0	248
+    // 1	126
+    // 2    Controller ID
+    // 3	Data 0 Lo
+    // 4	Data 0 Hi
+    // 5	Data 1 Lo
+    // 6    Data 1 Hi
+    // 7    Data 2 Lo
+    // 8    Data 2 Hi
+    // 9    Data 3
+    // 10   Data 4
+    // 11	CRC
+
+    UDPpacket[0] = 248;
+    UDPpacket[1] = 126;
+    UDPpacket[2] = BuildModSenID(MDL.ID, SensorID);
+
+    UDPpacket[3] = debug1;
+    UDPpacket[4] = debug1 >> 8;
+
+    UDPpacket[5] = debug2;
+    UDPpacket[6] = debug2 >> 8;
+
+    UDPpacket[7] = debug3;
+    UDPpacket[8] = debug3 >> 8;
+
+    UDPpacket[9] = debug4;
+    UDPpacket[10] = Sensor[SensorID].Debounce;
+
+    UDPpacket[11] = CRC(UDPpacket, 11, 0);
+
+    ether.sendUdp(UDPpacket, 12, SourcePort, DestinationIP, DestinationPort);
+}
+
+
 //void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, byte* UDPpacket, uint16_t len)
 void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, byte* Data, uint16_t len)
 {

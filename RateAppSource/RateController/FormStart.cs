@@ -69,6 +69,8 @@ namespace RateController
         private bool LoadError = false;
         private int cDefaultProduct = 0;
 
+        public PGN32504 ModuleStatus;
+
         public FormStart()
         {
             InitializeComponent();
@@ -134,6 +136,7 @@ namespace RateController
             timerMain.Interval = 1000;
 
             WifiStatus = new PGN32503(this);
+            ModuleStatus = new PGN32504(this);
         }
         public bool UseInches
         {
@@ -796,8 +799,17 @@ namespace RateController
 
         private void MnuAbout_Click_1(object sender, EventArgs e)
         {
-            Form frmAbout = new FormAbout(this);
-            frmAbout.ShowDialog();
+            //check if window already exists
+            Form fs = Application.OpenForms["FormAbout"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormAbout(this);
+            frm.Show();
         }
 
         private void MnuComm_Click(object sender, EventArgs e)

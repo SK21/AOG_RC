@@ -29,6 +29,7 @@ void ISR0Alt()
 	if (millis() - PulseTime > Sensor[0].Debounce)
 	{
 		Duration[0] = (millis() - PulseTime) * 1000;
+		debug1 = millis() - PulseTime;
 		PulseTime = millis();
 		PulseCount[0]++;
 	}
@@ -49,10 +50,11 @@ void ISR0()
 	{
 		dur = 0xFFFFFFFF + micronow - PulseTime;
 	}
+	debug1 = (micronow - PulseTime) / 1000;
 	PulseTime = micronow;
 	PulseCount[0]++;
 
-	if (dur > 4000000)
+	if (dur > 5000000)
 	{
 		// the component was off so reset the values
 		avDurs[0] = 0;
@@ -76,15 +78,16 @@ void ISR0()
 
 		if (DurCount[0] > 0) avDurs[0] = ((Durations[0][DurCount[0] - 1]) + dur) / 2;
 
+		debug4 = DurCount[0];
 		if (DurCount[0]++ >= avgPulses)
 		{
 			DurCount[0] = 0;
 			FullCount[0] = true;
 		}
 	}
-	debug1 = dur;
-	debug2++;
-	ShowData();
+	debug2 = dur / 1000;
+	debug3 = avDurs[0] / 1000;
+	//ShowData();
 }
 
 void ISR1()
@@ -223,7 +226,7 @@ void GetUPMflow(int ID)
 	}
 
 	// check for no flow
-	if (millis() - LastPulse[ID] > 3000)
+	if (millis() - LastPulse[ID] > 4000)
 	{
 		PPM[ID] = 0;
 		Osum[ID] = 0;
@@ -252,7 +255,6 @@ void GetUPMflow(int ID)
 	if (Sensor[ID].MeterCal > 0)
 	{
 		Sensor[ID].UPM = (float)Oave[ID] / (float)Sensor[ID].MeterCal;
-		debug4 = Sensor[0].UPM;
 	}
 	else
 	{

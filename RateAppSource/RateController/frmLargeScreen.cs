@@ -367,8 +367,17 @@ namespace RateController
 
         private void MnuAbout_Click(object sender, EventArgs e)
         {
-            Form frmAbout = new FormAbout(mf);
-            frmAbout.ShowDialog();
+            //check if window already exists
+            Form fs = Application.OpenForms["FormAbout"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormAbout(mf);
+            frm.Show();
         }
 
         private void MnuComm_Click(object sender, EventArgs e)

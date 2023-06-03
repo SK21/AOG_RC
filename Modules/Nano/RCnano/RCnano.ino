@@ -13,7 +13,7 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "SlowPulse : 02-Jun-2023"
+# define InoDescription "SlowPulse : 03-Jun-2023"
 const int16_t InoID = 3005;	// change to send defaults to eeprom
 int16_t StoredID;			// Defaults ID stored in eeprom	
 
@@ -138,7 +138,7 @@ byte PGNlength;
 volatile unsigned long debug1;
 volatile int debug2;
 volatile unsigned long debug3;
-float debug4;
+volatile unsigned long debug4;
 
 void setup()
 {
@@ -281,8 +281,8 @@ void setup()
 		pinMode(Sensor[i].PWMPin, OUTPUT);
 	}
 
-	attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0, FALLING);
-	//attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0Alt, FALLING);
+	//attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0, FALLING);
+	attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0Alt, FALLING);
 
 	attachInterrupt(digitalPinToInterrupt(Sensor[1].FlowPin), ISR1, FALLING);
 
@@ -356,6 +356,8 @@ void loop()
 		{
 			ManualControl();
 		}
+
+		SendStatus(0);
 	}
 
 	if (millis() - SendLast > SendTime)
@@ -475,14 +477,14 @@ void DebugTheIno()
 		Serial.print(", ");
 		Serial.print(debug1);
 
-		//Serial.print(", ");
-		//Serial.print(debug2);
+		Serial.print(", ");
+		Serial.print(debug2);
 
-		//Serial.print(", ");
-		//Serial.print(debug3);
+		Serial.print(", ");
+		Serial.print(debug3);
 
-		//Serial.print(", ");
-		//Serial.print(debug4);
+		Serial.print(", ");
+		Serial.print(debug4);
 
 		Serial.print(", Debounce ");
 		Serial.print(Sensor[0].Debounce);

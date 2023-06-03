@@ -249,6 +249,10 @@ namespace RateController
                                 mf.WifiStatus.ParseByteData(Data);
                                 break;
 
+                            case 32504:
+                                mf.ModuleStatus.ParseByteData(Data);
+                                break;
+
                             case 32501:
                             case 32613:
                                 foreach (clsProduct Prod in mf.Products.Items)
