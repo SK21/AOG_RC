@@ -34,6 +34,7 @@ namespace RateController
                 mf.Tls.SaveFormData(this);
             }
             timer1.Enabled = false;
+            mf.SendStatusPGN = false;
         }
 
         private void FormAbout_Load(object sender, EventArgs e)
@@ -45,6 +46,7 @@ namespace RateController
             lbWifi.Text = mf.UDPmodules.WifiIP();
             this.BackColor = Properties.Settings.Default.DayColour;
             timer1.Enabled = true;
+            mf.SendStatusPGN = true;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -56,6 +58,7 @@ namespace RateController
             lbThree.Text = mf.ModuleStatus.StatusData[2].ToString();
             lbFour.Text = mf.ModuleStatus.StatusData[3].ToString();
             lbFive.Text = mf.ModuleStatus.StatusData[4].ToString();
+            lbInoID.Text = mf.ModuleStatus.StatusData[5].ToString();
         }
     }
 }

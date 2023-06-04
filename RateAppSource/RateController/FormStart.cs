@@ -70,7 +70,7 @@ namespace RateController
         private int cDefaultProduct = 0;
 
         public PGN32504 ModuleStatus;
-
+        public bool SendStatusPGN;
         public FormStart()
         {
             InitializeComponent();

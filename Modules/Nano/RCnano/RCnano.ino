@@ -13,9 +13,9 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "SlowPulse : 03-Jun-2023"
-const int16_t InoID = 3005;	// change to send defaults to eeprom
-int16_t StoredID;			// Defaults ID stored in eeprom	
+# define InoDescription "SlowPulse : 04-Jun-2023"
+const uint16_t InoID = 4063;	// change to send defaults to eeprom, ddmmy, no leading 0
+int16_t StoredID;				// Defaults ID stored in eeprom	
 
 #define MaxProductCount 2
 
@@ -69,7 +69,11 @@ SensorConfig Sensor[2];
 
 // local ports on Arduino
 unsigned int ListeningPort = 28888;	// to listen on
-unsigned int SourcePort = 6100;		// to send from
+unsigned int SourcePort = 5123;		// to send from
+
+// AGIO
+uint16_t ListeningPortAGIO = 8888;		// to listen on
+uint16_t DestinationPortAGIO = 9999;	// to send to
 
 // ethernet destination - Rate Controller
 byte DestinationIP[] = { 192, 168, 1, 255 };	// broadcast 255
@@ -139,6 +143,9 @@ volatile unsigned long debug1;
 volatile int debug2;
 volatile unsigned long debug3;
 volatile unsigned long debug4;
+int debug5;
+
+bool SendStatusPGN;
 
 void setup()
 {
@@ -281,8 +288,8 @@ void setup()
 		pinMode(Sensor[i].PWMPin, OUTPUT);
 	}
 
-	//attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0, FALLING);
-	attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0Alt, FALLING);
+	attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0, FALLING);
+	//attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0Alt, FALLING);
 
 	attachInterrupt(digitalPinToInterrupt(Sensor[1].FlowPin), ISR1, FALLING);
 
@@ -317,6 +324,7 @@ void setup()
 
 		//register sub for received data
 		ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
+		ether.udpServerListenOnPort(&ReceiveAGIO, ListeningPortAGIO);
 	}
 	else
 	{
@@ -357,7 +365,7 @@ void loop()
 			ManualControl();
 		}
 
-		SendStatus(0);
+		if(SendStatusPGN) SendStatus(0);
 	}
 
 	if (millis() - SendLast > SendTime)
@@ -484,7 +492,7 @@ void DebugTheIno()
 		Serial.print(debug3);
 
 		Serial.print(", ");
-		Serial.print(debug4);
+		Serial.print(debug5);
 
 		Serial.print(", Debounce ");
 		Serial.print(Sensor[0].Debounce);

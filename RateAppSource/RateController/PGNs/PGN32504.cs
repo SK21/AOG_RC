@@ -20,14 +20,16 @@ namespace RateController
         // 8    Data 2 Hi
         // 9    Data 3
         // 10   Data 4
-        // 11	CRC
+        // 11   InoID Lo
+        // 12   InoID Hi
+        // 13	CRC
 
-        private const byte cByteCount = 12;
+        private const byte cByteCount = 14;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 248;
         private readonly FormStart mf;
 
-        public UInt16[] StatusData = new UInt16[5];
+        public UInt16[] StatusData = new UInt16[6];
         public byte ModuleID;
         public byte SensorID;
 
@@ -50,6 +52,7 @@ namespace RateController
                 StatusData[2] = (ushort)(Data[7] | Data[8] << 8);
                 StatusData[3] = Data[9];
                 StatusData[4] = Data[10];
+                StatusData[5] = (ushort)(Data[11] | Data[12] << 8);
 
                 Result = true;
             }

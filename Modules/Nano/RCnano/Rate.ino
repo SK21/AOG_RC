@@ -50,9 +50,6 @@ void ISR0()
 	{
 		dur = 0xFFFFFFFF + micronow - PulseTime;
 	}
-	debug1 = (micronow - PulseTime) / 1000;
-	PulseTime = micronow;
-	PulseCount[0]++;
 
 	if (dur > 5000000)
 	{
@@ -65,6 +62,10 @@ void ISR0()
 		}
 		DurCount[0] = 0;
 		FullCount[0] = false;
+
+		debug1 = (micronow - PulseTime) / 1000;
+		PulseTime = micronow;
+		PulseCount[0]++;
 	}
 	else if (dur > Sensor[0].Debounce * 1000)
 	{
@@ -72,6 +73,7 @@ void ISR0()
 
 		// check to see if the dur value is too long like an interrupt was missed.
 		if (dur > (1.5 * avDurs[0])) dur = avDurs[0];
+		//if (dur > (1.5 * avDurs[0]) && Sensor[0].UseMultiPulses) dur = avDurs[0];
 
 		Duration[0] = dur;
 		Durations[0][DurCount[0]] = dur;
@@ -84,6 +86,10 @@ void ISR0()
 			DurCount[0] = 0;
 			FullCount[0] = true;
 		}
+
+		debug1 = (micronow - PulseTime) / 1000;
+		PulseTime = micronow;
+		PulseCount[0]++;
 	}
 	debug2 = dur / 1000;
 	debug3 = avDurs[0] / 1000;

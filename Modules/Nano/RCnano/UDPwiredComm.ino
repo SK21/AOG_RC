@@ -84,7 +84,9 @@ void SendStatus(byte SensorID)
     // 8    Data 2 Hi
     // 9    Data 3
     // 10   Data 4
-    // 11	CRC
+    // 11   InoID Lo
+    // 12   InoID Hi
+    // 13	CRC
 
     UDPpacket[0] = 248;
     UDPpacket[1] = 126;
@@ -102,11 +104,13 @@ void SendStatus(byte SensorID)
     UDPpacket[9] = debug4;
     UDPpacket[10] = Sensor[SensorID].Debounce;
 
-    UDPpacket[11] = CRC(UDPpacket, 11, 0);
+    UDPpacket[11] = InoID;
+    UDPpacket[12] = InoID >> 8;
 
-    ether.sendUdp(UDPpacket, 12, SourcePort, DestinationIP, DestinationPort);
+    UDPpacket[13] = CRC(UDPpacket, 13, 0);
+
+    ether.sendUdp(UDPpacket, 14, SourcePort, DestinationIP, DestinationPort);
 }
-
 
 //void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[4], uint16_t src_port, byte* UDPpacket, uint16_t len)
 void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, byte* Data, uint16_t len)
@@ -137,6 +141,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                 //	        - bit 4		    MasterOn, or true if no switchbox
                 //          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
                 //          - bit 6         AutoOn
+                //          - bit 7         Send status pgn
                 //12    power relay Lo      list of power type relays 0-7
                 //13    power relay Hi      list of power type relays 8-15
                 //14	manual pwm Lo
@@ -179,6 +184,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                                 Sensor[SensorID].UseMultiPulses = ((Sensor[SensorID].InCommand & 32) == 32);
 
                                 AutoOn = ((Sensor[SensorID].InCommand & 64) == 64);
+
+                                SendStatusPGN = ((Sensor[SensorID].InCommand & 128) == 128);
 
                                 // power relays
                                 PowerRelayLo = Data[12];
@@ -370,10 +377,33 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                     }
                 }
                 break;
-
             default:
                 break;
             }
         }
     }
 }
+
+void ReceiveAGIO(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, byte* Data, uint16_t len)
+{
+    if (ENCfound)
+    {
+        if (len)
+        {
+            if ((Data[0] == 0x80) && (Data[1] == 0x81 && Data[2] == 0x7F))  // 0x7F is source, AGIO
+            {
+                switch (Data[3])
+                {
+                case 201:
+                    MDL.IPpart3 = Data[9];
+                    EEPROM.put(10, MDL);
+
+                    //reset the arduino
+                    resetFunc();
+                    break;
+                }
+            }
+        }
+    }
+}
+
