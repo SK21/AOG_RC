@@ -72,7 +72,7 @@ void ISR0()
 		if (avDurs[0] == 0) avDurs[0] = dur;
 
 		// check to see if the dur value is too long like an interrupt was missed.
-		if (dur > (1.5 * avDurs[0])) dur = avDurs[0];
+		//if (dur > (1.5 * avDurs[0])) dur = avDurs[0];
 		//if (dur > (1.5 * avDurs[0]) && Sensor[0].UseMultiPulses) dur = avDurs[0];
 
 		Duration[0] = dur;
@@ -207,7 +207,7 @@ void GetUPMflow(int ID)
 			// low ms/pulse, use pulses over time
 			if (FullCount[ID])
 			{
-				PPM[ID] = 60000000 / GetAvgDuration(ID);
+				PPM[ID] = 6000000000 / GetAvgDuration(ID);
 			}
 			else
 			{
@@ -290,40 +290,40 @@ void ShowData()
 	Serial.print(DurCount[0]);
 	Serial.println("");
 
-	Serial.print(Durations[0][0]);
+	Serial.print(Durations[0][0]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][1]);
+	Serial.print(Durations[0][1]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][2]);
+	Serial.print(Durations[0][2]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][3]);
+	Serial.print(Durations[0][3]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][4]);
+	Serial.print(Durations[0][4]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][5]);
+	Serial.print(Durations[0][5]/1000);
 	Serial.println("");
 
-	Serial.print(Durations[0][6]);
+	Serial.print(Durations[0][6]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][7]);
+	Serial.print(Durations[0][7]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][8]);
+	Serial.print(Durations[0][8]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][9]);
+	Serial.print(Durations[0][9]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][10]);
+	Serial.print(Durations[0][10]/1000);
 	Serial.print(", ");
 
-	Serial.print(Durations[0][11]);
+	Serial.print(Durations[0][11]/1000);
 
 	Serial.println("");
 }

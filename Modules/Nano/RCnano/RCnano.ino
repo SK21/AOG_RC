@@ -161,12 +161,12 @@ void setup()
 	// default pid
 	Sensor[0].MinPWM = 5;
 	Sensor[0].MaxPWM = 50;
-	Sensor[0].Deadband = 3;
+	Sensor[0].Deadband = 4;
 	Sensor[0].BrakePoint = 20;
 
 	Sensor[1].MinPWM = 5;
 	Sensor[1].MaxPWM = 50;
-	Sensor[1].Deadband = 3;
+	Sensor[1].Deadband = 4;
 	Sensor[1].BrakePoint = 20;
 
 	Sensor[0].Debounce = 3;
