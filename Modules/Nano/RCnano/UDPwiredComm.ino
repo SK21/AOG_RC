@@ -76,36 +76,36 @@ void SendStatus(byte SensorID)
     // 0	248
     // 1	126
     // 2    Controller ID
-    // 3	Data 0 Lo
-    // 4	Data 0 Hi
-    // 5	Data 1 Lo
-    // 6    Data 1 Hi
-    // 7    Data 2 Lo
-    // 8    Data 2 Hi
-    // 9    Data 3
-    // 10   Data 4
-    // 11   InoID Lo
-    // 12   InoID Hi
+    // 3    InoID Lo
+    // 4    InoID Hi
+    // 5	Data 0 Lo
+    // 6	Data 0 Hi
+    // 7	Data 1 Lo
+    // 8    Data 1 Hi
+    // 9    Data 2 Lo
+    // 10   Data 2 Hi
+    // 11   Data 3
+    // 12   Data 4
     // 13	CRC
 
     UDPpacket[0] = 248;
     UDPpacket[1] = 126;
     UDPpacket[2] = BuildModSenID(MDL.ID, SensorID);
 
-    UDPpacket[3] = debug1;
-    UDPpacket[4] = debug1 >> 8;
+    UDPpacket[3] = InoID;
+    UDPpacket[4] = InoID >> 8;
 
-    UDPpacket[5] = debug2;
-    UDPpacket[6] = debug2 >> 8;
+    UDPpacket[5] = debug1;
+    UDPpacket[6] = debug1 >> 8;
 
-    UDPpacket[7] = debug3;
-    UDPpacket[8] = debug3 >> 8;
+    UDPpacket[7] = debug2;
+    UDPpacket[8] = debug2 >> 8;
 
-    UDPpacket[9] = debug4;
-    UDPpacket[10] = Sensor[SensorID].Debounce;
+    UDPpacket[9] = debug3;
+    UDPpacket[10] = debug3 >> 8;
 
-    UDPpacket[11] = InoID;
-    UDPpacket[12] = InoID >> 8;
+    UDPpacket[11] = debug4;
+    UDPpacket[12] = Sensor[SensorID].Debounce;
 
     UDPpacket[13] = CRC(UDPpacket, 13, 0);
 

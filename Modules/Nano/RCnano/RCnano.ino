@@ -13,8 +13,8 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "SlowPulse : 10-Jun-2023"
-const uint16_t InoID = 10063;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano : 11-Jun-2023"
+const uint16_t InoID = 11063;	// change to send defaults to eeprom, ddmmy, no leading 0
 int16_t StoredID;				// Defaults ID stored in eeprom	
 
 #define MaxProductCount 2

@@ -17,7 +17,8 @@ namespace RateController
         private bool ShowQuantityRemaining = true;
         public clsAlarm RCalarm;
         private bool SwitchingScreens = false;
-        private Color RateColour = Color.DarkOliveGreen;
+        //private Color RateColour = Color.DarkOliveGreen;
+        private Color RateColour = Color.GreenYellow;
         private int TransTopOffset = 30;
         private int TransLeftOffset = 6;
         private int windowTop = 0;

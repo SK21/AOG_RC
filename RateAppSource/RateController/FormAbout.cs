@@ -51,14 +51,8 @@ namespace RateController
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbModule.Text = mf.ModuleStatus.ModuleID.ToString();
-            lbSensor.Text = mf.ModuleStatus.SensorID.ToString();
-            lbOne.Text = mf.ModuleStatus.StatusData[0].ToString();
-            lbTwo.Text = mf.ModuleStatus.StatusData[1].ToString();
-            lbThree.Text = mf.ModuleStatus.StatusData[2].ToString();
-            lbFour.Text = mf.ModuleStatus.StatusData[3].ToString();
-            lbFive.Text = mf.ModuleStatus.StatusData[4].ToString();
-            lbInoID.Text = mf.ModuleStatus.StatusData[5].ToString();
+            lbInoID.Text = mf.ModuleStatus.InoID.ToString();
+            lbModID.Text = mf.ModuleStatus.ModuleID.ToString();
         }
     }
 }
