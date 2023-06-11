@@ -13,8 +13,8 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "SlowPulse : 04-Jun-2023"
-const uint16_t InoID = 4063;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "SlowPulse : 10-Jun-2023"
+const uint16_t InoID = 10063;	// change to send defaults to eeprom, ddmmy, no leading 0
 int16_t StoredID;				// Defaults ID stored in eeprom	
 
 #define MaxProductCount 2
@@ -147,16 +147,18 @@ int debug5;
 
 bool SendStatusPGN;
 
+double DurOff = 1000000;
+
 void setup()
 {
 	// default flow pins
-	Sensor[0].FlowPin = 2;
-	Sensor[0].DirPin = 4;
-	Sensor[0].PWMPin = 5;
+	Sensor[1].FlowPin = 2;
+	Sensor[1].DirPin = 4;
+	Sensor[1].PWMPin = 5;
 
-	Sensor[1].FlowPin = 3;
-	Sensor[1].DirPin = 6;
-	Sensor[1].PWMPin = 9;
+	Sensor[0].FlowPin = 3;
+	Sensor[0].DirPin = 6;
+	Sensor[0].PWMPin = 9;
 
 	// default pid
 	Sensor[0].MinPWM = 5;

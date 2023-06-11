@@ -23,18 +23,6 @@ unsigned long Omin[MaxProductCount];
 byte Ocount[MaxProductCount];
 float Oave[MaxProductCount];
 
-void ISR0Alt()
-{
-	static unsigned long PulseTime;
-	if (millis() - PulseTime > Sensor[0].Debounce)
-	{
-		Duration[0] = (millis() - PulseTime) * 1000;
-		debug1 = millis() - PulseTime;
-		PulseTime = millis();
-		PulseCount[0]++;
-	}
-}
-
 void ISR0()
 {
 	static unsigned long PulseTime;
@@ -51,7 +39,7 @@ void ISR0()
 		dur = 0xFFFFFFFF + micronow - PulseTime;
 	}
 
-	if (dur > 5000000)
+	if (dur > DurOff)
 	{
 		// the component was off so reset the values
 		avDurs[0] = 0;
@@ -63,7 +51,6 @@ void ISR0()
 		DurCount[0] = 0;
 		FullCount[0] = false;
 
-		debug1 = (micronow - PulseTime) / 1000;
 		PulseTime = micronow;
 		PulseCount[0]++;
 	}
@@ -72,28 +59,22 @@ void ISR0()
 		if (avDurs[0] == 0) avDurs[0] = dur;
 
 		// check to see if the dur value is too long like an interrupt was missed.
-		//if (dur > (1.5 * avDurs[0])) dur = avDurs[0];
-		//if (dur > (1.5 * avDurs[0]) && Sensor[0].UseMultiPulses) dur = avDurs[0];
+		if (dur > (2.5 * avDurs[0])) dur = avDurs[0];
 
 		Duration[0] = dur;
 		Durations[0][DurCount[0]] = dur;
 
 		if (DurCount[0] > 0) avDurs[0] = ((Durations[0][DurCount[0] - 1]) + dur) / 2;
 
-		debug4 = DurCount[0];
 		if (DurCount[0]++ >= avgPulses)
 		{
 			DurCount[0] = 0;
 			FullCount[0] = true;
 		}
 
-		debug1 = (micronow - PulseTime) / 1000;
 		PulseTime = micronow;
 		PulseCount[0]++;
 	}
-	debug2 = dur / 1000;
-	debug3 = avDurs[0] / 1000;
-	//ShowData();
 }
 
 void ISR1()
@@ -268,63 +249,4 @@ void GetUPMflow(int ID)
 	}
 }
 
-void ShowData()
-{
-	Serial.println("");
-
-	Serial.print(debug1);
-	Serial.print(", ");
-
-	//Serial.print(debug2);
-	//Serial.print(", ");
-
-	//Serial.print(debug3);
-	//Serial.print(", ");
-
-	//Serial.print(debug4);
-	//Serial.print(", ");
-
-	//Serial.print(Sensor[0].TotalPulses);
-	//Serial.print(", ");
-
-	Serial.print(DurCount[0]);
-	Serial.println("");
-
-	Serial.print(Durations[0][0]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][1]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][2]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][3]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][4]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][5]/1000);
-	Serial.println("");
-
-	Serial.print(Durations[0][6]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][7]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][8]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][9]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][10]/1000);
-	Serial.print(", ");
-
-	Serial.print(Durations[0][11]/1000);
-
-	Serial.println("");
-}
 

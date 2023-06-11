@@ -226,7 +226,7 @@ void ReceiveSerial()
 
 							Sensor[SensorID].MinPWM = SerialPacket[15];
 							Sensor[SensorID].MaxPWM = SerialPacket[16];
-							Sensor[SensorID].Debounce = SerialPacket[17];
+							//Sensor[SensorID].Debounce = SerialPacket[17];
 						}
 					}
 				}
