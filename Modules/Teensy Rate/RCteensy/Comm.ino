@@ -730,8 +730,6 @@ void ReceiveAGIO()
 					break;
 				}
 			}
-
 		}
 	}
-
 }

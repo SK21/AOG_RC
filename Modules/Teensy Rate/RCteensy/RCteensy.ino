@@ -8,8 +8,8 @@
 
 // rate control with Teensy 4.1
 
-# define InoDescription "RCteensy :  11-Jun-2023"
-const uint16_t InoID = 11063;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  13-Jun-2023"
+const uint16_t InoID = 13063;	// change to send defaults to eeprom, ddmmy, no leading 0
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
@@ -48,7 +48,6 @@ struct SensorConfig
 	float RateSetting;
 	float MeterCal;
 	float ManualAdjust;
-	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
 	float KP;
 	float KI;
 	float KD;
@@ -56,6 +55,7 @@ struct SensorConfig
 	byte MaxPWM;
 	byte Deadband;
 	byte BrakePoint;
+	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
 	uint8_t Debounce;
 };
 
@@ -158,7 +158,7 @@ void setup()
 	Sensor[0].MaxPWM = 50;
 	Sensor[0].Deadband = 4;
 	Sensor[0].BrakePoint = 20;
-	Sensor[0].Debounce = 10;
+	Sensor[0].Debounce = 3;
 
 	Sensor[1].KP = 5;
 	Sensor[1].KI = 0;
@@ -228,8 +228,8 @@ void setup()
 		Wire.requestFrom(AdsI2Caddress, 2);
 		ADSfound = Wire.available();
 		Serial.print(".");
-		delay(500);
 		if (ErrorCount++ > 10) break;
+		delay(500);
 	}
 	Serial.println("");
 	if (ADSfound)
@@ -246,7 +246,7 @@ void setup()
 	// ethernet start
 	Serial.println("Starting Ethernet ...");
 	IPAddress LocalIP(192, MDL.IPpart2, MDL.IPpart3, MDL.IPpart4);
-	static uint8_t LocalMac[] = { 0x00,0x00,0x42,0x00,0x00,MDL.IPpart4 };
+	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IPpart4 };
 
 	Ethernet.begin(LocalMac, 0);	//https://forum.pjrc.com/threads/65653-non-blocking-Ethernet-begin()-with-cable-disconnected-amp-static-IP
 	Ethernet.setLocalIP(LocalIP);
@@ -347,8 +347,8 @@ void setup()
 			{
 				ScaleFound[i] = scale[i].wait_ready_timeout(1000);
 				Serial.print(".");
-				delay(500);
 				if (ErrorCount++ > 5) break;
+				delay(500);
 			}
 		}
 
@@ -407,24 +407,27 @@ void loop()
 		SendData();
 	}
 
-	if (millis() - Analogtime > 2)
+	if (ADSfound)
 	{
-		Analogtime = millis();
-		ReadAnalog();
-	}
-
-	if (millis() - SaveTime > 3600000)	// 1 hour
-	{
-		// save sensor data
-		SaveTime = millis();
-		EEPROM.put(100, InoID);
-		//EEPROM.put(110, MDL);
-
-		for (int i = 0; i < MaxProductCount; i++)
+		if (millis() - Analogtime > 2)
 		{
-			EEPROM.put(200 + i * 60, Sensor[i]);
+			Analogtime = millis();
+			ReadAnalog();
 		}
 	}
+
+	//if (millis() - SaveTime > 3600000)	// 1 hour
+	//{
+	//	// save sensor data
+	//	SaveTime = millis();
+	//	EEPROM.put(100, InoID);
+	//	//EEPROM.put(110, MDL);
+
+	//	for (int i = 0; i < MaxProductCount; i++)
+	//	{
+	//		EEPROM.put(200 + i * 60, Sensor[i]);
+	//	}
+	//}
 
 	ReceiveData();
 	ReceiveAGIO();
