@@ -13,8 +13,8 @@
 #include <SPI.h>
 #include <EtherCard.h>
 
-# define InoDescription "RCnano : 11-Jun-2023"
-const uint16_t InoID = 11063;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano : 25-Jun-2023"
+const uint16_t InoID = 25063;	// change to send defaults to eeprom, ddmmy, no leading 0
 int16_t StoredID;				// Defaults ID stored in eeprom	
 
 #define MaxProductCount 2
@@ -140,14 +140,12 @@ uint8_t ErrorCount;
 byte PGNlength;
 
 volatile unsigned long debug1;
-volatile int debug2;
+volatile unsigned long debug2;
 volatile unsigned long debug3;
 volatile unsigned long debug4;
 int debug5;
 
 bool SendStatusPGN;
-
-double DurOff = 1000000;
 
 void setup()
 {
@@ -210,7 +208,9 @@ void setup()
 	Serial.println("");
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
-	Serial.println();
+	Serial.print("Module Version: ");
+	Serial.println(InoID);
+	Serial.println("");
 
 	if (MDL.SensorCount < 1) MDL.SensorCount = 1;
 	if (MDL.SensorCount > 2) MDL.SensorCount = 2;
@@ -285,14 +285,12 @@ void setup()
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
-		//pinMode(Sensor[i].FlowPin, INPUT);	// for direct connection to inductive sensor
+		//pinMode(Sensor[i].FlowPin, INPUT);	// for direct connection to inductive sensor, no opto
 		pinMode(Sensor[i].DirPin, OUTPUT);
 		pinMode(Sensor[i].PWMPin, OUTPUT);
 	}
 
 	attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0, FALLING);
-	//attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0Alt, FALLING);
-
 	attachInterrupt(digitalPinToInterrupt(Sensor[1].FlowPin), ISR1, FALLING);
 
 	Serial.println("");
@@ -373,7 +371,7 @@ void loop()
 	if (millis() - SendLast > SendTime)
 	{
 		SendLast = millis();
-		//SendSerial();
+		SendSerial();
 		SendUDPwired();
 	}
 
@@ -496,8 +494,8 @@ void DebugTheIno()
 		Serial.print(", ");
 		Serial.print(debug5);
 
-		Serial.print(", Debounce ");
-		Serial.print(Sensor[0].Debounce);
+		//Serial.print(", Debounce ");
+		//Serial.print(Sensor[0].Debounce);
 
 		Serial.println("");
 

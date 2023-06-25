@@ -247,29 +247,6 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
                                 Sensor[SensorID].MinPWM = Data[15];
                                 Sensor[SensorID].MaxPWM = Data[16];
                                 //Sensor[SensorID].Debounce = Data[17];
-
-                                switch (Data[17])
-                                {
-                                case 1:
-                                    DurOff = 1000000;
-                                    break;
-                                case 2:
-                                    DurOff = 2000000;
-                                    break;
-                                case 3:
-                                    DurOff = 3000000;
-                                    break;
-                                case 4:
-                                    DurOff = 4000000;
-                                    break;
-                                case 5:
-                                    DurOff = 5000000;
-                                    break;
-                                default:
-                                    DurOff = 1000000;
-                                    break;
-                                }
-                                debug1 = Data[17];
                             }
                         }
                     }
