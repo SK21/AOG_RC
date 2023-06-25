@@ -39,7 +39,7 @@ void ISR0()
 		dur = 0xFFFFFFFF + micronow - PulseTime;
 	}
 
-	if (dur > DurOff)
+	if (dur > 2000000)
 	{
 		// the component was off so reset the values
 		avDurs[0] = 0;
@@ -64,9 +64,17 @@ void ISR0()
 		Duration[0] = dur;
 		Durations[0][DurCount[0]] = dur;
 
-		if (DurCount[0] > 0) avDurs[0] = ((Durations[0][DurCount[0] - 1]) + dur) / 2;
+		if (DurCount[0] > 0)
+		{
+			avDurs[0] = ((Durations[0][DurCount[0] - 1]) + dur) / 2;
+		}
+		else
+		{
+			// use last duration to average
+			avDurs[0] = ((Durations[0][avgPulses - 1]) + dur) / 2;
+		}
 
-		if (DurCount[0]++ >= avgPulses)
+		if (++DurCount[0] >= avgPulses)
 		{
 			DurCount[0] = 0;
 			FullCount[0] = true;
@@ -93,53 +101,49 @@ void ISR1()
 		dur = 0xFFFFFFFF + micronow - PulseTime;
 	}
 
-	if (dur > 1000000)
+	if (dur > 2000000)
 	{
 		// the component was off so reset the values
 		avDurs[1] = 0;
 		dur = 50000;
-		for (int i = 0; i < (avgPulses - 1); i++)
+		for (int i = 0; i < avgPulses; i++)
 		{
 			Durations[1][i] = 0;
 		}
+		DurCount[1] = 0;
+		FullCount[1] = false;
+
 		PulseTime = micronow;
 		PulseCount[1]++;
-		FullCount[1] = false;
 	}
-
 	else if (dur > Sensor[1].Debounce * 1000)
 	{
-		PulseCount[1]++;
+		if (avDurs[1] == 0) avDurs[1] = dur;
+
 		// check to see if the dur value is too long like an interrupt was missed.
-		if ((dur > (1.5 * avDurs[1])) && (avDurs[1] != 0))
+		if (dur > (2.5 * avDurs[1])) dur = avDurs[1];
+
+		Duration[1] = dur;
+		Durations[1][DurCount[1]] = dur;
+
+		if (DurCount[1] > 0)
 		{
-			Durations[1][DurCount[1]] = avDurs[1];
-			Duration[1] = avDurs[1];
-			dur = avDurs[1];
+			avDurs[1] = ((Durations[1][DurCount[1] - 1]) + dur) / 2;
 		}
 		else
 		{
-			Durations[1][DurCount[1]] = dur;
-			Duration[1] = dur;
+			// use last duration to average
+			avDurs[1] = ((Durations[1][avgPulses - 1]) + dur) / 2;
+		}
+
+		if (++DurCount[1] >= avgPulses)
+		{
+			DurCount[1] = 0;
+			FullCount[1] = true;
 		}
 
 		PulseTime = micronow;
-		if (DurCount[1] == 0)
-		{
-			DurCount[1]++;
-			avDurs[1] = (Durations[1][avgPulses - 1] + dur) / 2;
-		}
-		else if (DurCount[1] < (avgPulses - 1))
-		{
-			DurCount[1]++;
-			avDurs[1] = (Durations[1][DurCount[1] - 1] + dur) / 2;
-		}
-		else
-		{
-			DurCount[1] = 0;
-			avDurs[1] = (Durations[1][DurCount[1] - 1] + dur) / 2;
-			FullCount[1] = true;
-		}
+		PulseCount[1]++;
 	}
 }
 

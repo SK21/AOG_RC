@@ -8,8 +8,8 @@
 
 // rate control with Teensy 4.1
 
-# define InoDescription "RCteensy :  13-Jun-2023"
-const uint16_t InoID = 13063;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  25-Jun-2023"
+const uint16_t InoID = 25063;	// change to send defaults to eeprom, ddmmy, no leading 0
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
@@ -132,8 +132,6 @@ int debug5;
 
 bool SendStatusPGN;
 
-double DurOff = 1000000;
-
 void setup()
 {
 	 //watchdog timer
@@ -211,7 +209,9 @@ void setup()
 	Serial.println("");
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
-	Serial.println();
+	Serial.print("Module Version: ");
+	Serial.println(InoID);
+	Serial.println("");
 
 	// I2C
 	Wire.begin();			// I2C on pins SCL 19, SDA 18

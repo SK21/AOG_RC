@@ -653,29 +653,6 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 						Sensor[ID].MinPWM = Data[15];
 						Sensor[ID].MaxPWM = Data[16];
 						//Sensor[ID].Debounce = Data[17];
-
-						switch (Data[17])
-						{
-						case 1:
-							DurOff = 1000000;
-							break;
-						case 2:
-							DurOff = 2000000;
-							break;
-						case 3:
-							DurOff = 3000000;
-							break;
-						case 4:
-							DurOff = 4000000;
-							break;
-						case 5:
-							DurOff = 5000000;
-							break;
-						default:
-							DurOff = 1000000;
-							break;
-						}
-						debug1 = Data[17];
 					}
 				}
 			}
