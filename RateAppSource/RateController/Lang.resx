@@ -517,10 +517,10 @@
     <value>Variable Rate</value>
   </data>
   <data name="lgVersion" xml:space="preserve">
-    <value>Version</value>
+    <value>RC Version</value>
   </data>
   <data name="lgVersionDate" xml:space="preserve">
-    <value>Version Date</value>
+    <value>RC Date</value>
   </data>
   <data name="lgVirtualNano" xml:space="preserve">
     <value>Virtual Module</value>

@@ -74,6 +74,9 @@ namespace RateController
             this.lbBaseRate = new System.Windows.Forms.TextBox();
             this.lbAltRate = new System.Windows.Forms.Label();
             this.tbs4 = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbDebounce = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.btnTuningGraph = new System.Windows.Forms.Button();
             this.btnPIDloadDefaults = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
@@ -196,9 +199,6 @@ namespace RateController
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.tmrRelease = new System.Windows.Forms.Timer(this.components);
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbDebounce = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -778,6 +778,43 @@ namespace RateController
             this.tbs4.Text = "Control";
             this.tbs4.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(333, 7);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 23);
+            this.label3.TabIndex = 158;
+            this.label3.Text = "(0-25)";
+            this.label3.Visible = false;
+            // 
+            // tbDebounce
+            // 
+            this.tbDebounce.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbDebounce.Location = new System.Drawing.Point(218, 3);
+            this.tbDebounce.MaxLength = 8;
+            this.tbDebounce.Name = "tbDebounce";
+            this.tbDebounce.Size = new System.Drawing.Size(109, 30);
+            this.tbDebounce.TabIndex = 156;
+            this.tbDebounce.Tag = "6";
+            this.tbDebounce.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbDebounce.Visible = false;
+            this.tbDebounce.TextChanged += new System.EventHandler(this.tbDebounce_TextChanged);
+            this.tbDebounce.Enter += new System.EventHandler(this.tbDebounce_Enter);
+            this.tbDebounce.Validating += new System.ComponentModel.CancelEventHandler(this.tbDebounce_Validating);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(68, 7);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(95, 23);
+            this.label6.TabIndex = 157;
+            this.label6.Text = "Debounce";
+            this.label6.Visible = false;
+            // 
             // btnTuningGraph
             // 
             this.btnTuningGraph.BackColor = System.Drawing.Color.Transparent;
@@ -787,7 +824,7 @@ namespace RateController
             this.btnTuningGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnTuningGraph.Image = global::RateController.Properties.Resources.Chart;
             this.btnTuningGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTuningGraph.Location = new System.Drawing.Point(241, 322);
+            this.btnTuningGraph.Location = new System.Drawing.Point(245, 290);
             this.btnTuningGraph.Name = "btnTuningGraph";
             this.btnTuningGraph.Size = new System.Drawing.Size(72, 72);
             this.btnTuningGraph.TabIndex = 155;
@@ -804,7 +841,7 @@ namespace RateController
             this.btnPIDloadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnPIDloadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
             this.btnPIDloadDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnPIDloadDefaults.Location = new System.Drawing.Point(135, 322);
+            this.btnPIDloadDefaults.Location = new System.Drawing.Point(139, 290);
             this.btnPIDloadDefaults.Name = "btnPIDloadDefaults";
             this.btnPIDloadDefaults.Size = new System.Drawing.Size(72, 72);
             this.btnPIDloadDefaults.TabIndex = 154;
@@ -2277,40 +2314,6 @@ namespace RateController
             // 
             this.tmrRelease.Interval = 500;
             this.tmrRelease.Tick += new System.EventHandler(this.tmrRelease_Tick);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(333, 266);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(61, 23);
-            this.label3.TabIndex = 158;
-            this.label3.Text = "(0-25)";
-            // 
-            // tbDebounce
-            // 
-            this.tbDebounce.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDebounce.Location = new System.Drawing.Point(218, 262);
-            this.tbDebounce.MaxLength = 8;
-            this.tbDebounce.Name = "tbDebounce";
-            this.tbDebounce.Size = new System.Drawing.Size(109, 30);
-            this.tbDebounce.TabIndex = 156;
-            this.tbDebounce.Tag = "6";
-            this.tbDebounce.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbDebounce.TextChanged += new System.EventHandler(this.tbDebounce_TextChanged);
-            this.tbDebounce.Enter += new System.EventHandler(this.tbDebounce_Enter);
-            this.tbDebounce.Validating += new System.ComponentModel.CancelEventHandler(this.tbDebounce_Validating);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(68, 266);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(95, 23);
-            this.label6.TabIndex = 157;
-            this.label6.Text = "Debounce";
             // 
             // FormSettings
             // 

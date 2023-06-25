@@ -16,6 +16,7 @@ namespace RateController
             label27.Text = Lang.lgLocalIP;
             this.Text = Lang.lgAbout;
             lbVersion.Text = Lang.lgVersion;
+            lbVersionDate.Text= Lang.lgVersionDate;
 
             #endregion // language
 
@@ -41,7 +42,8 @@ namespace RateController
         {
             mf.Tls.LoadFormData(this);
 
-            lbAppVersion.Text = mf.Tls.AppVersion() + "    " + mf.Tls.VersionDate();
+            lbAppVersion.Text = mf.Tls.AppVersion();
+            lbDate.Text = mf.Tls.VersionDate();
             lbIP.Text = mf.UDPmodules.EthernetIP();
             lbWifi.Text = mf.UDPmodules.WifiIP();
             this.BackColor = Properties.Settings.Default.DayColour;
