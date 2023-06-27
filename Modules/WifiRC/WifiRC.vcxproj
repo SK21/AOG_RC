@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <Keyword>Linux</Keyword>
+    <RootNamespace>
+    </RootNamespace>
+    <ProjectName>WifiRC</ProjectName>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <ApplicationType>Linux</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
+    <LinuxProjectType>{D51BCBC9-82E9-4017-911E-C93873C4EA2B}</LinuxProjectType>
+    <ProjectGuid>{08551411-888C-4152-9871-2C677E46401C}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <LinuxIncludePath>c:\visualmicro\ignore</LinuxIncludePath>
+    <wiringPiIncludePath>c:\visualmicro\pi-ignore</wiringPiIncludePath>
+    <TargetOSAndVersion>Arduino</TargetOSAndVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>$(ProjectDir)..\WifiRC;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266WiFi\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266WebServer\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266mDNS\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ArduinoOTA;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\EEPROM;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\Wire;$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\hardware\\esp8266\\3.0.2\tools\sdk\include;$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\hardware\\esp8266\\3.0.2\tools\sdk\lwip2\include;$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\hardware\\esp8266\\3.0.2\\cores\\esp8266;$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\hardware\\esp8266\\3.0.2\\variants\\nodemcu;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\xtensa-lx106-elf\include\c++\10.3.0;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\xtensa-lx106-elf\include\c++\10.3.0\xtensa-lx106-elf;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\xtensa-lx106-elf\include\c++\10.3.0\backward;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\lib\gcc\xtensa-lx106-elf\10.3.0\include;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\lib\gcc\xtensa-lx106-elf\10.3.0\include-fixed;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\xtensa-lx106-elf\include;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266WiFi\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266WebServer\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266mDNS\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ArduinoOTA;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\EEPROM;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\Wire</IncludePath>
+    <RemoteCCompileToolExe>$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\3.0.4-gcc10.3-1757bed\bin\xtensa-lx106-elf-g++</RemoteCCompileToolExe>
+    <RemoteCppCompileToolExe>$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\3.0.4-gcc10.3-1757bed\bin\xtensa-lx106-elf-g++</RemoteCppCompileToolExe>
+    <ValidateArchitecture>false</ValidateArchitecture>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectCapability Include="VisualMicro" />
+    <ProjectCapability Include="VisualMicroLinux" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="WifiRC.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.WifiRC.vsarduino.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Comm.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ControlPage.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GUI.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="NetworkPage.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OTA.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StartPage.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <PropertyGroup>
+    <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\WifiRC;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266WiFi\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266WebServer\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266mDNS\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ArduinoOTA;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\EEPROM;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\Wire;$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\hardware\\esp8266\\3.0.2\tools\sdk\include;$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\hardware\\esp8266\\3.0.2\tools\sdk\lwip2\include;$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\hardware\\esp8266\\3.0.2\\cores\\esp8266;$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\hardware\\esp8266\\3.0.2\\variants\\nodemcu;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\xtensa-lx106-elf\include\c++\10.3.0;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\xtensa-lx106-elf\include\c++\10.3.0\xtensa-lx106-elf;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\xtensa-lx106-elf\include\c++\10.3.0\backward;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\lib\gcc\xtensa-lx106-elf\10.3.0\include;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\lib\gcc\xtensa-lx106-elf\10.3.0\include-fixed;$(ProjectDir)..\..\..\..\..\..\appdata\local\arduino15\packages\esp8266\tools\xtensa-lx106-elf-gcc\3.0.4-gcc10.3-1757bed\xtensa-lx106-elf\include;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266WiFi\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266WebServer\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ESP8266mDNS\src;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\ArduinoOTA;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\EEPROM;$(ProjectDir)..\..\..\..\..\..\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\3.0.2\libraries\Wire;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <GccToolChain>$(ProjectDir)..\..\..\..\..\..\..\..\\Users\\DC\\AppData\\Local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\3.0.4-gcc10.3-1757bed\bin\xtensa-lx106-elf-g++</GccToolChain>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CAdditionalWarning />
+      <CppAdditionalWarning />
+      <ForcedIncludeFiles>$(ProjectDir)..\..\..\..\..\..\..\..\program files\microsoft visual studio\2022\community\common7\ide\extensions\0axxbbxm.vxj\Micro Platforms\default\vm-intelli-pre.h;$(ProjectDir)..\..\..\..\..\..\AppData\Local\Temp\VMBuilds\WifiRC\esp8266_nodemcuv2\Debug\.vmintelli\8a053331def2abc6a83ef5749fe43176\vm-intelli-gcc-defines.h;$(ProjectDir)..\..\..\..\..\..\..\..\program files\microsoft visual studio\2022\community\common7\ide\extensions\0axxbbxm.vxj\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.WifiRC.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <UndefineAllPreprocessorDefinitions>true</UndefineAllPreprocessorDefinitions>
+      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
+      <PreprocessorDefinitions>_VMICRO_INTELLISENSE;__ESP8266_esp8266__;__ESP8266_ESP8266__;__ets__;ICACHE_FLASH;_GNU_SOURCE;MMU_IRAM_SIZE=0x8000;MMU_ICACHE_SIZE=0x8000;NONOSDK22x_190703=1;F_CPU=80000000L;LWIP_OPEN_SRC;TCP_MSS=536;LWIP_FEATURES=1;LWIP_IPV6=0;ARDUINO=108019;ARDUINO_ESP8266_NODEMCU_ESP12E;ARDUINO_ARCH_ESP8266;ARDUINO_BOARD=ESP8266_NODEMCU_ESP12E;LED_BUILTIN=2;FLASHMODE_DIO;ESP8266;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

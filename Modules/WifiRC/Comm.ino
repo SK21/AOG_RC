@@ -5,44 +5,42 @@ byte PGNlength;
 byte MSB;
 byte LSB;
 bool EthernetConnected;
+byte ErrorCount;
 
-void CheckWifi()
+void ConnectWifi()
 {
-	if (millis() - WifiTime > 60000)	// allow time for web server to run, ie: set network
+	Serial.println("");
+	Serial.print("Connecting to ");
+	Serial.println(WC.SSID);
+	WiFi.mode(WIFI_AP_STA);
+	WiFi.begin(WC.SSID, WC.Password);
+	ErrorCount = 0;
+	while (WiFi.status() != WL_CONNECTED)
 	{
-		if (WiFi.status() != WL_CONNECTED)
-		{
-			WiFi.disconnect();
-			delay(500);
-			WiFi.mode(WIFI_AP_STA);
+		delay(1000);
+		Serial.print(".");
+		if (ErrorCount++ > 60) break;
+	}
 
-			WiFi.begin(WC.SSID, WC.Password);
-			Serial.println();
-			Serial.println("Connecting to Wifi");
-			unsigned long WifiConnectStart = millis();
+	if (WiFi.status() == WL_CONNECTED)
+	{
+		Serial.println("");
+		Serial.println("WiFi connected");
+		Serial.println("IP address: ");
+		Serial.println(WiFi.localIP());
+		Serial.println("");
 
-			while ((WiFi.status() != WL_CONNECTED) && ((millis() - WifiConnectStart) < 10000))
-			{
-				delay(500);
-				Serial.print(".");
-			}
-			if (WiFi.status() == WL_CONNECTED)
-			{
-				UDPrate.begin(ListeningPortRate);
-				DestinationIP = WiFi.localIP();
-				DestinationIP[3] = 255;		// change to broadcast
-				Serial.println();
-				Serial.println("Connected.");
-				Serial.print("IP: ");
-				Serial.println(WiFi.localIP());
-			}
-			else
-			{
-				Serial.println();
-				Serial.println("Not connected");
-			}
-		}
-		WifiTime = millis();
+		WiFi.setAutoReconnect(true);
+		WiFi.persistent(true);
+
+		DestinationIP = WiFi.localIP();
+		DestinationIP[3] = 255;		// change to broadcast
+	}
+	else
+	{
+		Serial.println("");
+		Serial.println("WiFi not connected");
+		Serial.println("");
 	}
 }
 

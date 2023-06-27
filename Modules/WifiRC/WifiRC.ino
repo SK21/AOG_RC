@@ -1,8 +1,8 @@
 
 // Wemos D1 mini Pro, ESP 12F    board: LOLIN(Wemos) D1 R2 & mini  or NodeMCU 1.0 (ESP-12E Module)
-# define InoDescription "WifiAOG   13-Feb-2022"
+# define InoDescription "WifiRC   27-Jun-2023"
 
-#define InoID 8230  // change to load default values
+#define InoID 27063  // change to load default values
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
@@ -24,16 +24,6 @@ struct WifiConnection
 
 WifiConnection WC;
 
-struct AnalogData
-{
-    int16_t AIN0;	// WAS
-    int16_t AIN1;	// linear actuator position or pressure sensor
-    int16_t AIN2;	// current
-    int16_t AIN3;
-};
-
-AnalogData AINs;
-
 // Rate
 WiFiUDP UDPrate;
 uint16_t ListeningPortRate = 28888;
@@ -46,12 +36,7 @@ char WifiBuffer[512];
 // web page
 ESP8266WebServer server(80);
 
-uint8_t ErrorCount;
-const int16_t AdsI2Caddress = 0x48;
-bool ADSfound = false;
-
 byte Packet[30];
-unsigned long WifiTime;
 
 // control page
 bool MasterOn = false;
@@ -87,48 +72,24 @@ void setup()
     EEPROM.get(0, StoredID);
     if (StoredID == InoID)
     {
+        Serial.println("Loading stored settings.");
         EEPROM.get(10, WC);
     }
     else
     {
+        Serial.println("Updating stored settings.");
         EEPROM.put(0, InoID);
         EEPROM.put(10, WC);
         EEPROM.commit();
     }
 
+    ConnectWifi();
     StartOTA();
 
-    CheckWifi();
-    String AP = "WifiAOG " + WiFi.macAddress();
+    String AP = "WifiRC " + WiFi.macAddress();
     WiFi.softAP(AP);
 
     UDPrate.begin(ListeningPortRate);
-
-    Wire.begin();			// I2C on pins SCL D1, SDA D2
-    // ADS1115
-    Serial.println("");
-    Serial.println("Starting ADS ...");
-    ErrorCount = 0;
-    while (!ADSfound)
-    {
-        Wire.beginTransmission(AdsI2Caddress);
-        Wire.write(0b00000000);	//Point to Conversion register
-        Wire.endTransmission();
-        Wire.requestFrom(AdsI2Caddress, 2);
-        ADSfound = Wire.available();
-        Serial.print(".");
-        delay(500);
-        if (ErrorCount++ > 10) break;
-    }
-    Serial.println("");
-    if (ADSfound)
-    {
-        Serial.println("ADS connected.");
-    }
-    else
-    {
-        Serial.println("ADS not found.");
-    }
 
     // web server
     Serial.println();
@@ -151,8 +112,6 @@ void loop()
     server.handleClient();
     ReceiveSerial();
     ReceiveWifi();
-    ReadAnalog();
-    CheckWifi();
     Blink();
     CheckReset();
 }
