@@ -10,7 +10,6 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 #include <EEPROM.h>
-#include <Wire.h>
 
 //bool ShowWebPage = true;
 bool ShowWebPage = false;

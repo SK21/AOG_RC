@@ -95,6 +95,28 @@ void ReceiveSerial()
 			}
 			break;
 
+		case 32504:
+			// PGN32504 module status - for debug, etc., from Arduino to RateController
+			PGNlength = 14;
+			if (Serial.available() > PGNlength - 3)
+			{
+				Data[0] = 248;
+				Data[1] = 126;
+				for (int i = 2; i < PGNlength; i++)
+				{
+					Data[i] = Serial.read();
+				}
+
+				// send data over wifi
+				UDPrate.beginPacket(DestinationIP, DestinationPortRate);
+				UDPrate.write(Data, PGNlength);
+				UDPrate.endPacket();
+
+				DataPGN = 0;
+				LSB = 0;
+			}
+			break;
+
 		case 32613:
 			// rate data to RC
 			PGNlength = 13;
