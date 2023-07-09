@@ -7,9 +7,9 @@
 #include <HX711.h>			// https://github.com/bogde/HX711
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy   03-Apr-2023"
 
-#define InoID 0304		// change to load default values
+# define InoDescription "RCteensy :  25-Jun-2023"
+const uint16_t InoID = 25063;	// change to send defaults to eeprom, ddmmy, no leading 0
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
@@ -28,7 +28,6 @@ struct ModuleConfig
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,0,0,0,0,0,0,0,0 };		// pin numbers when GPIOs are used for relay control (5), default RC11
 	uint8_t LOADCELL_DOUT_PIN[2] = { 16,0 };
 	uint8_t LOADCELL_SCK_PIN[2] = { 17,0 };
-	uint8_t Debounce = 3;			// minimum ms pin change
 };
 
 ModuleConfig MDL;
@@ -49,7 +48,6 @@ struct SensorConfig
 	float RateSetting;
 	float MeterCal;
 	float ManualAdjust;
-	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
 	float KP;
 	float KI;
 	float KD;
@@ -57,6 +55,7 @@ struct SensorConfig
 	byte MaxPWM;
 	byte Deadband;
 	byte BrakePoint;
+	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
 	uint8_t Debounce;
 };
 
@@ -77,6 +76,11 @@ EthernetUDP UDPcomm;
 uint16_t ListeningPort = 28888;
 uint16_t DestinationPort = 29999;
 IPAddress DestinationIP(192, MDL.IPpart2, MDL.IPpart3, 255);
+
+// AGIO
+EthernetUDP AGIOcomm;
+uint16_t ListeningPortAGIO = 8888;		// to listen on
+uint16_t DestinationPortAGIO = 9999;	// to send to
 
 // Relays
 byte RelayLo = 0;	// sections 0-7
@@ -120,9 +124,13 @@ bool ScaleFound[2] = { false,false };
 const byte ResetPin = 33;
 bool ResetESP8266 = false;
 
-float debug1;
-float debug2;
-float debug3;
+volatile unsigned long debug1;
+volatile int debug2;
+volatile unsigned long debug3;
+volatile unsigned long debug4;
+int debug5;
+
+bool SendStatusPGN;
 
 void setup()
 {
@@ -146,16 +154,18 @@ void setup()
 	Sensor[0].KD = 0;
 	Sensor[0].MinPWM = 5;
 	Sensor[0].MaxPWM = 50;
-	Sensor[0].Deadband = 3;
+	Sensor[0].Deadband = 4;
 	Sensor[0].BrakePoint = 20;
+	Sensor[0].Debounce = 3;
 
 	Sensor[1].KP = 5;
 	Sensor[1].KI = 0;
 	Sensor[1].KD = 0;
 	Sensor[1].MinPWM = 5;
 	Sensor[1].MaxPWM = 50;
-	Sensor[1].Deadband = 3;
+	Sensor[1].Deadband = 4;
 	Sensor[1].BrakePoint = 20;
+	Sensor[1].Debounce = 3;
 
 	Serial.begin(38400);
 	delay(5000);
@@ -199,7 +209,9 @@ void setup()
 	Serial.println("");
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
-	Serial.println();
+	Serial.print("Module Version: ");
+	Serial.println(InoID);
+	Serial.println("");
 
 	// I2C
 	Wire.begin();			// I2C on pins SCL 19, SDA 18
@@ -216,8 +228,8 @@ void setup()
 		Wire.requestFrom(AdsI2Caddress, 2);
 		ADSfound = Wire.available();
 		Serial.print(".");
-		delay(500);
 		if (ErrorCount++ > 10) break;
+		delay(500);
 	}
 	Serial.println("");
 	if (ADSfound)
@@ -234,7 +246,7 @@ void setup()
 	// ethernet start
 	Serial.println("Starting Ethernet ...");
 	IPAddress LocalIP(192, MDL.IPpart2, MDL.IPpart3, MDL.IPpart4);
-	static uint8_t LocalMac[] = { 0x00,0x00,0x42,0x00,0x00,MDL.IPpart4 };
+	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IPpart4 };
 
 	Ethernet.begin(LocalMac, 0);	//https://forum.pjrc.com/threads/65653-non-blocking-Ethernet-begin()-with-cable-disconnected-amp-static-IP
 	Ethernet.setLocalIP(LocalIP);
@@ -255,6 +267,9 @@ void setup()
 
 	// UDP
 	UDPcomm.begin(ListeningPort);
+
+	// AGIO
+	AGIOcomm.begin(ListeningPortAGIO);
 
 	// sensors
 	for (int i = 0; i < MDL.SensorCount; i++)
@@ -332,8 +347,8 @@ void setup()
 			{
 				ScaleFound[i] = scale[i].wait_ready_timeout(1000);
 				Serial.print(".");
-				delay(500);
 				if (ErrorCount++ > 5) break;
+				delay(500);
 			}
 		}
 
@@ -392,26 +407,30 @@ void loop()
 		SendData();
 	}
 
-	if (millis() - Analogtime > 2)
+	if (ADSfound)
 	{
-		Analogtime = millis();
-		ReadAnalog();
-	}
-
-	if (millis() - SaveTime > 3600000)	// 1 hour
-	{
-		// save sensor data
-		SaveTime = millis();
-		EEPROM.put(100, InoID);
-		//EEPROM.put(110, MDL);
-
-		for (int i = 0; i < MaxProductCount; i++)
+		if (millis() - Analogtime > 2)
 		{
-			EEPROM.put(200 + i * 60, Sensor[i]);
+			Analogtime = millis();
+			ReadAnalog();
 		}
 	}
 
+	//if (millis() - SaveTime > 3600000)	// 1 hour
+	//{
+	//	// save sensor data
+	//	SaveTime = millis();
+	//	EEPROM.put(100, InoID);
+	//	//EEPROM.put(110, MDL);
+
+	//	for (int i = 0; i < MaxProductCount; i++)
+	//	{
+	//		EEPROM.put(200 + i * 60, Sensor[i]);
+	//	}
+	//}
+
 	ReceiveData();
+	ReceiveAGIO();
 	Blink();
 	CheckResetButton();
 	wdt.feed();
@@ -510,10 +529,10 @@ void Blink()
 		Serial.print(Wifi_dBm);
 
 		//Serial.print(", ");
-		//Serial.print(WifiTime);
-		
+		//Serial.print(debug2);
+		//
 		//Serial.print(", ");
-		//Serial.print(AutoOn);
+		//Serial.print(debug1);
 
 		//Serial.print(", ");
 		//Serial.print(MasterOn);

@@ -1258,7 +1258,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version.
+        ///   Looks up a localized string similar to RC Version.
         /// </summary>
         internal static string lgVersion {
             get {
@@ -1267,7 +1267,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version Date.
+        ///   Looks up a localized string similar to RC Date.
         /// </summary>
         internal static string lgVersionDate {
             get {

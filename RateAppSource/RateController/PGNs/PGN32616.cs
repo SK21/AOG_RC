@@ -23,9 +23,10 @@ namespace RateController
         // 14   KD 3
         // 15   MinPWM
         // 16   MaxPWM
-        // 17   CRC
+        // 17   Debounce
+        // 18   CRC
 
-        private const byte cByteCount = 18;
+        private const byte cByteCount = 19;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 104;
         private readonly clsProduct Prod;
@@ -34,6 +35,7 @@ namespace RateController
         private double cKP;
         private byte cMaxPWM;
         private byte cMinPWM;
+        private byte cDebounce;
 
         private UInt32 Temp;
 
@@ -78,6 +80,12 @@ namespace RateController
             set { cMinPWM = value; }
         }
 
+        public byte Debounce
+        {
+            get { return cDebounce; }
+            set { cDebounce = value; }
+        }
+
         public void Send()
         {
             byte[] Data = new byte[cByteCount];
@@ -109,8 +117,10 @@ namespace RateController
             Data[15] = MinPWM;
             Data[16] = MaxPWM;
 
+            Data[17] = cDebounce;
+
             // CRC
-            Data[17] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
+            Data[18] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
             if (Prod.mf.SimMode == SimType.VirtualNano)
             {

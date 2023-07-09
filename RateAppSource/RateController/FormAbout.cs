@@ -16,6 +16,7 @@ namespace RateController
             label27.Text = Lang.lgLocalIP;
             this.Text = Lang.lgAbout;
             lbVersion.Text = Lang.lgVersion;
+            lbVersionDate.Text= Lang.lgVersionDate;
 
             #endregion // language
 
@@ -33,16 +34,27 @@ namespace RateController
             {
                 mf.Tls.SaveFormData(this);
             }
+            timer1.Enabled = false;
+            mf.SendStatusPGN = false;
         }
 
         private void FormAbout_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
 
-            lbAppVersion.Text = mf.Tls.AppVersion() + "    " + mf.Tls.VersionDate();
+            lbAppVersion.Text = mf.Tls.AppVersion();
+            lbDate.Text = mf.Tls.VersionDate();
             lbIP.Text = mf.UDPmodules.EthernetIP();
             lbWifi.Text = mf.UDPmodules.WifiIP();
             this.BackColor = Properties.Settings.Default.DayColour;
+            timer1.Enabled = true;
+            mf.SendStatusPGN = true;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            lbInoID.Text = mf.ModuleStatus.InoID.ToString();
+            lbModID.Text = mf.ModuleStatus.ModuleID.ToString();
         }
     }
 }

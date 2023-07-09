@@ -156,14 +156,6 @@ void ReceiveSerial()
 							MasterOn = ((Sensor[SensorID].InCommand & 16) == 16);
 
 							Sensor[SensorID].UseMultiPulses = ((Sensor[SensorID].InCommand & 32) == 32);
-							if (Sensor[SensorID].UseMultiPulses)
-							{
-								Sensor[SensorID].Debounce = MDL.Debounce;
-							}
-							else
-							{
-								Sensor[SensorID].Debounce = MDL.Debounce * 5;
-							}
 							
 							AutoOn = ((Sensor[SensorID].InCommand & 64) == 64);
 
@@ -200,9 +192,10 @@ void ReceiveSerial()
 			// 14   KD 3
 			// 15   MinPWM
 			// 16   MaxPWM
-			// 17   CRC
+			// 17	Debounce
+			// 18   CRC
 
-			PGNlength = 18;
+			PGNlength = 19;
 
 			if (Serial.available() > PGNlength - 3)
 			{
@@ -233,6 +226,7 @@ void ReceiveSerial()
 
 							Sensor[SensorID].MinPWM = SerialPacket[15];
 							Sensor[SensorID].MaxPWM = SerialPacket[16];
+							//Sensor[SensorID].Debounce = SerialPacket[17];
 						}
 					}
 				}
@@ -337,8 +331,6 @@ void ReceiveSerial()
 					if ((tmp & 1) == 1) MDL.UseMCP23017 = 1; else MDL.UseMCP23017 = 0;
 					if ((tmp & 2) == 2) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
 					if ((tmp & 4) == 4) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
-
-					MDL.Debounce = SerialPacket[6];
 
 					EEPROM.put(10, MDL);
 				}

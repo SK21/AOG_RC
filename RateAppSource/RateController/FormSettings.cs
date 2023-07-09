@@ -627,6 +627,7 @@ namespace RateController
             tbKD.Text = "0";
             tbMaxPWM.Text = "100";
             tbMinPWM.Text = "5";
+            tbDebounce.Text = "3";
         }
 
         private void LoadSettings()
@@ -668,6 +669,7 @@ namespace RateController
             tbKD.Text = CurrentProduct.PIDkd.ToString("N4");
             tbMinPWM.Text = CurrentProduct.PIDmin.ToString("N0");
             tbMaxPWM.Text = CurrentProduct.PIDmax.ToString("N0");
+            tbDebounce.Text = CurrentProduct.Debounce.ToString("N0");
 
             tbSenID.Text = CurrentProduct.SensorID.ToString();
 
@@ -843,6 +845,9 @@ namespace RateController
             double.TryParse(tbMinUPM.Text, out TempDB);
             CurrentProduct.MinUPM = TempDB;
 
+            byte.TryParse(tbDebounce.Text, out tempB);
+            CurrentProduct.Debounce = tempB;
+
             CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
 
             byte.TryParse(tbOffRate.Text, out tempB);
@@ -886,7 +891,7 @@ namespace RateController
                     btnLeft.Enabled = false;
                     btnRight.Enabled = false;
                     btnOK.Image = Properties.Resources.Save;
-                    btnCalStart.Enabled=false;
+                    btnCalStart.Enabled = false;
                 }
                 else
                 {
@@ -1477,7 +1482,7 @@ namespace RateController
             }
 
             // fan button
-            if(CurrentProduct.FanOn)
+            if (CurrentProduct.FanOn)
             {
                 btnFan.Image = Properties.Resources.FanOn;
             }
@@ -2105,6 +2110,36 @@ namespace RateController
             {
                 mf.SwitchBox.ReleaseMomentary();
                 tmrRelease.Enabled = false;
+            }
+        }
+
+        private void tbDebounce_Enter(object sender, EventArgs e)
+        {
+            byte temp;
+            byte.TryParse(tbDebounce.Text, out temp);
+            using (var form = new FormNumeric(0, 25, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbDebounce.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbDebounce_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbDebounce_Validating(object sender, CancelEventArgs e)
+        {
+            byte temp;
+            byte.TryParse(tbDebounce.Text, out temp);
+            if (temp < 0 || temp > 25)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
             }
         }
     }

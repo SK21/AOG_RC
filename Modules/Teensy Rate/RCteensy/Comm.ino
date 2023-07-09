@@ -17,13 +17,16 @@ const byte PGN32500Length = 32;
 const byte PGN32501Length = 8;
 const byte PGN32502Length = 7;
 const byte PGN32503Length = 9;
+const byte PGN32504Length = 14;
+
 const byte PGN32613Length = 13;
 const byte PGN32614Length = 17;
-const byte PGN32616Length = 18;
+const byte PGN32616Length = 19;
 const byte PGN32619Length = 6;
 const byte PGN32621Length = 12;
 
 uint32_t TestWeight = 430000;
+byte AGIOlength;
 
 void SendData()
 {
@@ -203,42 +206,56 @@ void SendData()
 		}
 	}
 
-	////test pgn
-	////    PGN32501
-	////0    245
-	////1    126
-	////2    Mod/Sen ID, 0-15/0-15
-	////3    weight byte 0
-	////4    weight byte 1
-	////5    weight byte 2
-	////6    weight byte 3
-	////7    CRC
+	if (SendStatusPGN)
+	{
+		// PGN32504 module status - for debug, etc., from Arduino to RateController
+		// 0	248
+		// 1	126
+		// 2    Controller ID
+		// 3    InoID Lo
+		// 4    InoID Hi
+		// 5	Data 0 Lo
+		// 6	Data 0 Hi
+		// 7	Data 1 Lo
+		// 8    Data 1 Hi
+		// 9    Data 2 Lo
+		// 10   Data 2 Hi
+		// 11   Data 3
+		// 12   Data 4
+		// 13	CRC
 
-	//DataOut[0] = 245;
-	//DataOut[1] = 126;
-	//DataOut[2] = BuildModSenID(MDL.ID, 0);
+		DataOut[0] = 248;
+		DataOut[1] = 126;
+		DataOut[2] = BuildModSenID(MDL.ID, 0);
 
-	//DataOut[3] = (byte)TestWeight;
-	//DataOut[4] = (byte)(TestWeight >> 8);
-	//DataOut[5] = (byte)(TestWeight >> 16);
-	//DataOut[6] = (byte)(TestWeight >> 24);
+		DataOut[3] = InoID;
+		DataOut[4] = InoID >> 8;
 
-	//DataOut[7] = CRC(DataOut, PGN32501Length - 1, 0);
+		DataOut[5] = debug1;
+		DataOut[6] = debug1 >> 8;
 
-	//// to wifi
-	//SerialESP8266->write(DataOut, PGN32501Length);
-	//Debug2++;
+		DataOut[7] = debug2;
+		DataOut[8] = debug2 >> 8;
 
-	//// to ethernet
-	//if (Ethernet.linkStatus() == LinkON)
-	//{
-	//	UDPcomm.beginPacket(DestinationIP, DestinationPort);
-	//	UDPcomm.write(DataOut, PGN32501Length);
-	//	UDPcomm.endPacket();
-	//}
+		DataOut[9] = debug3;
+		DataOut[10] = debug3 >> 8;
 
-	//TestWeight -= 25;
-	//if (TestWeight < 10)TestWeight = 450000;
+		DataOut[11] = debug4;
+		DataOut[12] = Sensor[0].Debounce;
+
+		DataOut[13] = CRC(DataOut, 13, 0);
+
+		// to wifi
+		SerialESP8266->write(DataOut, PGN32504Length);
+
+		// to ethernet
+		if (Ethernet.linkStatus() == LinkON)
+		{
+			UDPcomm.beginPacket(DestinationIP, DestinationPort);
+			UDPcomm.write(DataOut, PGN32504Length);
+			UDPcomm.endPacket();
+		}
+	}
 }
 
 void ReceiveData()
@@ -288,6 +305,7 @@ void ReceiveData()
 			MSB_ESP8266 = SerialESP8266->read();
 			PGN_ESP8266 = MSB_ESP8266 << 8 | LSB_ESP8266;
 			LSB_ESP8266 = MSB_ESP8266;
+			AGIOlength = 0;
 			break;
 		}
 	}
@@ -405,7 +423,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		// 12       Sensor 1, dir pin
 		// 13       Sensor 1, pwm pin
 		// 14-29    Relay pins 0-15\
-		// 30		debounce minimum ms
+		// 30		-
 		// 31       CRC
 
 		if (len > PGN32500Length - 1)
@@ -442,8 +460,6 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 				{
 					EEPROM.put(200 + i * 80, Sensor[i]);
 				}
-
-				MDL.Debounce = Data[30];
 
 				// restart the Teensy
 				SCB_AIRCR = 0x05FA0004;
@@ -533,6 +549,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		//	        - bit 4		    MasterOn, or true if no switchbox
 		//          - bit 5         0 - average time for multiple pulses, 1 - time for one pulse
 		//          - bit 6         AutoOn
+		//          - bit 7         Send status pgn
 		//12    power relay Lo      list of power type relays 0-7
 		//13    power relay Hi      list of power type relays 8-15
 		//14	manual pwm Lo
@@ -572,16 +589,10 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 
 						MasterOn = ((Sensor[ID].InCommand & 16) == 16);
 						Sensor[ID].UseMultiPulses = ((Sensor[ID].InCommand & 32) == 32);
-						if (Sensor[ID].UseMultiPulses)
-						{
-							Sensor[ID].Debounce = MDL.Debounce;
-						}
-						else
-						{
-							Sensor[ID].Debounce = MDL.Debounce * 5;
-						}
 
 						AutoOn = ((Sensor[ID].InCommand & 64) == 64);
+
+						SendStatusPGN = ((Sensor[ID].InCommand & 128) == 128);
 
 						// power relays
 						PowerRelayLo = Data[12];
@@ -617,7 +628,8 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		// 14   KD 3
 		// 15   MinPWM
 		// 16   MaxPWM
-		// 17   CRC
+		// 17   Debounce
+		// 18   CRC
 
 		if (len > PGN32616Length - 1)
 		{
@@ -640,6 +652,7 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 
 						Sensor[ID].MinPWM = Data[15];
 						Sensor[ID].MaxPWM = Data[16];
+						//Sensor[ID].Debounce = Data[17];
 					}
 				}
 			}
@@ -663,5 +676,37 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 			}
 		}
 		break;
+	}
+}
+
+void ReceiveAGIO()
+{
+	if (Ethernet.linkStatus() == LinkON)
+	{
+		uint16_t len = AGIOcomm.parsePacket();
+		if (len)
+		{
+			AGIOcomm.read(DataEthernet, MaxReadBuffer);
+			if ((DataEthernet[0] == 0x80) && (DataEthernet[1] == 0x81 && DataEthernet[2] == 0x7F))  // 0x7F is source, AGIO
+			{
+				switch (DataEthernet[3])
+				{
+				case 201:
+					MDL.IPpart3 = DataEthernet[9];
+
+					EEPROM.put(100, InoID);
+					EEPROM.put(110, MDL);
+
+					for (int i = 0; i < MaxProductCount; i++)
+					{
+						EEPROM.put(200 + i * 80, Sensor[i]);
+					}
+
+					// restart the Teensy
+					SCB_AIRCR = 0x05FA0004;
+					break;
+				}
+			}
+		}
 	}
 }

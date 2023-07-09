@@ -15,8 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WifiAOG.ino" />
-    <ClCompile Include="Analog.ino" />
+    <ClCompile Include="WifiRC.ino" />
     <ClCompile Include="Comm.ino" />
     <ClCompile Include="ControlPage.ino" />
     <ClCompile Include="GUI.ino" />
@@ -25,7 +24,7 @@
     <ClCompile Include="StartPage.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.WifiAOG.vsarduino.h">
+    <ClInclude Include="__vm\.WifiRC.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

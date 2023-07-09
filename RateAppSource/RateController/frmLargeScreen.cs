@@ -17,7 +17,8 @@ namespace RateController
         private bool ShowQuantityRemaining = true;
         public clsAlarm RCalarm;
         private bool SwitchingScreens = false;
-        private Color RateColour = Color.DarkOliveGreen;
+        //private Color RateColour = Color.DarkOliveGreen;
+        private Color RateColour = Color.GreenYellow;
         private int TransTopOffset = 30;
         private int TransLeftOffset = 6;
         private int windowTop = 0;
@@ -367,8 +368,17 @@ namespace RateController
 
         private void MnuAbout_Click(object sender, EventArgs e)
         {
-            Form frmAbout = new FormAbout(mf);
-            frmAbout.ShowDialog();
+            //check if window already exists
+            Form fs = Application.OpenForms["FormAbout"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormAbout(mf);
+            frm.Show();
         }
 
         private void MnuComm_Click(object sender, EventArgs e)

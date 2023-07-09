@@ -103,7 +103,7 @@ String GetPage0()
 	st += "";
 	st += "    </style>";
 	st += "";
-	st += "    <h1 align=center>WifiAOG";
+	st += "    <h1 align=center>WifiRC";
 	st += "    </h1>";
 	st += "    <form id=FORM1 method=post action='/'>&nbsp;";
 	st += "";

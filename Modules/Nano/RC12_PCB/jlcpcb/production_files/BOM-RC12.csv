@@ -1,0 +1,20 @@
+Comment,Designator,Footprint,LCSC
+PC817,U1,PC817,https://www.lcsc.com/product-detail/_Sharp-Microelectronics-_C390734.html
+,,PC817 socket,https://www.lcsc.com/product-detail/_Nextron-Nextronics-Engineering-_C190818.html
+Conn_01x15_Female,J2,PinSocket_1x15_P2.54mm_Vertical,
+2.2uF,C3,C_Disc_D5.0mm_W2.5mm_P2.50mm,
+Conn_01x15_Female,J1,PinSocket_1x15_P2.54mm_Vertical,
+1000uF,C4,CP_Radial_D10.0mm_P5.00mm,
+Screw_Terminal_01x04,J5,"TerminalBlock_Phoenix_PT-1,5-4-5.0-H_1x04_P5.00mm_Horizontal",
+1000uF,C1,CP_Radial_D10.0mm_P5.00mm,
+10uF,C2,C_Disc_D5.0mm_W2.5mm_P2.50mm,
+Motor1 GRV,J6,Grove,https://jlcpcb.com/partdetail/SeeedStudio-110990030/C403774
+0.1uf,C5,C_Disc_D5.0mm_W2.5mm_P2.50mm,
+Screw_Terminal_01x04,J4,"TerminalBlock_Phoenix_PT-1,5-4-5.0-H_1x04_P5.00mm_Horizontal",
+2.7K,R1,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,
+Conn_01x03_Male,J3,PinHeader_1x03_P2.54mm_Vertical,
+800,R2,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,
+1N5408,D1,1N5408,
+mEZD71202A,RG1,mEZD71201A,
+Motor1,J8,Molex_KK-254_AE-6410-04A_1x04_P2.54mm_Vertical,https://www.lcsc.com/product-detail/_TE-Connectivity-_C86504.html
+Conn_01x06_Female,J7,PinSocket_1x06_P2.54mm_Vertical,
