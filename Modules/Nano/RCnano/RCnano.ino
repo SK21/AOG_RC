@@ -1,18 +1,8 @@
-#include <Adafruit_MCP23008.h>
-#include <Adafruit_MCP23X08.h>
-#include <Adafruit_MCP23X17.h>
-#include <Adafruit_MCP23XXX.h>
 #include <Wire.h>
 #include <EEPROM.h>
 
-#include <Adafruit_BusIO_Register.h>
-#include <Adafruit_I2CDevice.h>
-#include <Adafruit_I2CRegister.h>
-#include <Adafruit_SPIDevice.h>
-
-#include <SPI.h>
-#include <EtherCard.h>
-
+# define SupportEthernet 1 // Requires Ethercard library
+# define SupportMCP23017 1 // Requires Adafruit MCP23008 and MCP23017 libraries
 # define InoDescription "RCnano : 25-Jun-2023"
 const uint16_t InoID = 25063;	// change to send defaults to eeprom, ddmmy, no leading 0
 int16_t StoredID;				// Defaults ID stored in eeprom	
@@ -26,7 +16,7 @@ struct ModuleConfig
 	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
 	uint8_t RelayOnSignal = 0;	    // value that turns on relays
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
-	uint8_t UseMCP23017 = 1;        // 0 use Nano pins for relays, 1 use MCP23017 for relays
+	uint8_t UseMCP23017 = SupportMCP23017 == 1 ? 1 : 0; // 0 use Nano pins for relays, 1 use MCP23017 for relays
 	uint8_t Relays[16];
 };
 
@@ -61,6 +51,9 @@ struct SensorConfig
 
 SensorConfig Sensor[2];
 
+#if SupportEthernet == 1
+#include <SPI.h>
+#include <EtherCard.h>
 // If using the ENC28J60 ethernet shield these pins
 // are used by it and unavailable for relays:
 // 7,8,10,11,12,13. It also pulls pin D2 high.
@@ -82,6 +75,17 @@ unsigned int DestinationPort = 29999; // Rate Controller listening port
 byte Ethernet::buffer[300]; // udp send and receive buffer
 bool ENCfound;
 static byte selectPin = 10;
+#endif
+
+#if SupportMCP23017 == 1
+#include <Adafruit_MCP23008.h>
+#include <Adafruit_MCP23X08.h>
+#include <Adafruit_MCP23X17.h>
+#include <Adafruit_MCP23XXX.h>
+#include <Adafruit_BusIO_Register.h>
+#include <Adafruit_I2CDevice.h>
+#include <Adafruit_I2CRegister.h>
+#include <Adafruit_SPIDevice.h>
 
 Adafruit_MCP23X17 mcp;
 
@@ -107,6 +111,8 @@ Adafruit_MCP23X17 mcp;
 #define Relay14 2
 #define Relay15 1
 #define Relay16 0
+
+#endif
 
 const uint16_t LOOP_TIME = 50;      //in msec = 20hz
 uint32_t LoopLast = LOOP_TIME;
@@ -215,16 +221,15 @@ void setup()
 	if (MDL.SensorCount < 1) MDL.SensorCount = 1;
 	if (MDL.SensorCount > 2) MDL.SensorCount = 2;
 
+#if UseMCP23017 == 1
 	if (MDL.UseMCP23017)
-	{
 		Serial.println("Using MCP23017 for relays.");
-	}
 	else
-	{
+#endif
 		Serial.println("Using Nano pins for relays.");
-	}
 
 	Wire.begin();
+#if SupportMCP23017 == 1
 	if (MDL.UseMCP23017)
 	{
 		// I/O expander on default address 0x20
@@ -273,6 +278,7 @@ void setup()
 		}
 	}
 	else
+#endif
 	{
 		// Nano pins
 		for (int i = 0; i < 16; i++)
@@ -293,6 +299,7 @@ void setup()
 	attachInterrupt(digitalPinToInterrupt(Sensor[0].FlowPin), ISR0, FALLING);
 	attachInterrupt(digitalPinToInterrupt(Sensor[1].FlowPin), ISR1, FALLING);
 
+#if SupportEthernet == 1
 	Serial.println("");
 	Serial.println("Starting Ethernet ...");
 
@@ -331,6 +338,7 @@ void setup()
 		Serial.println("");
 		Serial.println("Ethernet controller not found.");
 	}
+#endif
 
 	Serial.println("");
 	Serial.println("Finished Setup.");
@@ -372,15 +380,18 @@ void loop()
 	{
 		SendLast = millis();
 		SendSerial();
+#if SupportEthernet == 1
 		SendUDPwired();
+#endif
 	}
 
+#if SupportEthernet == 1
 	if (ENCfound)
 	{
 		//this must be called for ethercard functions to work.
 		ether.packetLoop(ether.packetReceive());
 	}
-
+#endif
 	ReceiveSerial();
 }
 
