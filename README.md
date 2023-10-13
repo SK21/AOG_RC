@@ -1,4 +1,4 @@
-RateController is an add-on app that works with AgOpenGPS version 5 (https://github.com/farmerbriantee/AgOpenGPS/) for rate control. There is an example rate control pcb and code in the RateController_Files folder of the latest release. It can control up to 16 sections and 5 products either by flow-meter or motor rpm.
+RateController is an add-on app that works with AgOpenGPS version 5 (https://github.com/farmerbriantee/AgOpenGPS/) for rate control. There is rate module code and pcbs for Nano or Teensy. There is switch module code and pcb for Nano. There is a relay controller pcb to mount on 8 or 16 channel relay boards. There is wifi code for ESP8266 microcontroller mounted on some pcbs. It can control up to 16 sections and 5 products either by flow-meter or motor rpm.
 
 To do a simulation:
 
