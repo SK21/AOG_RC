@@ -105,6 +105,7 @@
             this.btMinimize = new System.Windows.Forms.Button();
             this.lblManAuto = new System.Windows.Forms.Label();
             this.tmrBorder = new System.Windows.Forms.Timer(this.components);
+            this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlQuantity0.SuspendLayout();
             this.pnlQuantity1.SuspendLayout();
             this.pnlQuantity2.SuspendLayout();
@@ -428,7 +429,7 @@
             this.MnuOptions,
             this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(219, 340);
+            this.mnuSettings.Size = new System.Drawing.Size(219, 362);
             // 
             // MnuProducts
             // 
@@ -571,6 +572,7 @@
             this.MnuDeustch,
             this.MnuEnglish,
             this.MnuNederlands,
+            this.polishToolStripMenuItem,
             this.russianToolStripMenuItem});
             this.MnuLanguage.Image = ((System.Drawing.Image)(resources.GetObject("MnuLanguage.Image")));
             this.MnuLanguage.Name = "MnuLanguage";
@@ -580,28 +582,28 @@
             // MnuDeustch
             // 
             this.MnuDeustch.Name = "MnuDeustch";
-            this.MnuDeustch.Size = new System.Drawing.Size(175, 28);
+            this.MnuDeustch.Size = new System.Drawing.Size(180, 28);
             this.MnuDeustch.Text = "Deustch";
             this.MnuDeustch.Click += new System.EventHandler(this.MnuDeustch_Click);
             // 
             // MnuEnglish
             // 
             this.MnuEnglish.Name = "MnuEnglish";
-            this.MnuEnglish.Size = new System.Drawing.Size(175, 28);
+            this.MnuEnglish.Size = new System.Drawing.Size(180, 28);
             this.MnuEnglish.Text = "English";
             this.MnuEnglish.Click += new System.EventHandler(this.MnuEnglish_Click);
             // 
             // MnuNederlands
             // 
             this.MnuNederlands.Name = "MnuNederlands";
-            this.MnuNederlands.Size = new System.Drawing.Size(175, 28);
+            this.MnuNederlands.Size = new System.Drawing.Size(180, 28);
             this.MnuNederlands.Text = "Nederlands";
             this.MnuNederlands.Click += new System.EventHandler(this.MnuNederlands_Click);
             // 
             // russianToolStripMenuItem
             // 
             this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-            this.russianToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
+            this.russianToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
             this.russianToolStripMenuItem.Text = "Russian";
             this.russianToolStripMenuItem.Click += new System.EventHandler(this.russianToolStripMenuItem_Click);
             // 
@@ -901,6 +903,13 @@
             this.tmrBorder.Interval = 500;
             this.tmrBorder.Tick += new System.EventHandler(this.tmrBorder_tick);
             // 
+            // polishToolStripMenuItem
+            // 
+            this.polishToolStripMenuItem.Name = "polishToolStripMenuItem";
+            this.polishToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
+            this.polishToolStripMenuItem.Text = "Polish";
+            this.polishToolStripMenuItem.Click += new System.EventHandler(this.polishToolStripMenuItem_Click);
+            // 
             // frmLargeScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1050,5 +1059,6 @@
         private System.Windows.Forms.Button btMinimize;
         private System.Windows.Forms.Label lblManAuto;
         private System.Windows.Forms.Timer tmrBorder;
+        private System.Windows.Forms.ToolStripMenuItem polishToolStripMenuItem;
     }
 }

@@ -303,6 +303,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.nl.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Lang.pl.resx" />
     <EmbeddedResource Include="Lang.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.Designer.cs</LastGenOutput>

@@ -1064,5 +1064,13 @@ namespace RateController
                 }
             }
         }
+
+        private void polishToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "pl";
+            Properties.Settings.Default.Save();
+            Restart = true;
+            Application.Restart();
+        }
     }
 }

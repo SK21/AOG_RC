@@ -2264,7 +2264,6 @@ F:\Temp\fixcal2\RateAppSource\RateController\obj\Debug\RateController.csproj.Cop
 F:\Temp\fixcal2\RateAppSource\RateController\obj\Debug\RateController.exe
 F:\Temp\fixcal2\RateAppSource\RateController\obj\Debug\RateController.pdb
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
-C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.SuggestedBindingRedirects.cache
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormAbout.resources
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormPIDGraph.resources
@@ -2300,3 +2299,6 @@ C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.CopyComplete
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.exe
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.pdb
+C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateControllerApp\pl\RateController.resources.dll
+C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Lang.pl.resources
+C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\pl\RateController.resources.dll
