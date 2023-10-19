@@ -5,4 +5,4 @@ Contents:
 2. switch module code and pcb for Nano
 3. relay controller pcb to mount on 8 or 16 channel relay boards
 4. wifi code for ESP8266 microcontroller mounted on some pcbs.
-
+5. rate app for windows
