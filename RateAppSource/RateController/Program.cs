@@ -17,6 +17,15 @@ namespace RateController
         [STAThread]
         static void Main()
         {
+            // check AOG language setting
+            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AgOpenGPS");
+            if(regKey != null)
+            {
+                Properties.Settings.Default.setF_culture = regKey.GetValue("Language").ToString();
+                Properties.Settings.Default.Save();
+            }
+            regKey.Close();
+
             if (Properties.Settings.Default.setF_culture == "")
             {
                 Properties.Settings.Default.setF_culture = "en";
