@@ -1,4 +1,4 @@
-
+#if SupportEthernet == 1
 // uses SPI.h 
 // use 'if(ShieldFound())' before 'ether.begin(sizeof Ethernet::buffer, LocalMac, selectPin);' to prevent hang
 
@@ -65,4 +65,4 @@ static byte readOp(byte op, byte address) {
     disableChip();
     return result;
 }
-
+#endif
