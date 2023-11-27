@@ -245,10 +245,6 @@ namespace RateController
                         PGN = Data[1] << 8 | Data[0];   // rc modules little endian
                         switch (PGN)
                         {
-                            case 32503:
-                                mf.WifiStatus.ParseByteData(Data);
-                                break;
-
                             case 32504:
                                 mf.ModuleStatus.ParseByteData(Data);
                                 break;

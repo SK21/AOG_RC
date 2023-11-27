@@ -9,21 +9,14 @@ namespace RateController
 {
     public partial class frmWifi : Form
     {
-        private bool Initializing;
-        private FormStart mf;
+        public FormStart mf;
         private bool FormEdited;
+        private bool Initializing;
 
         public frmWifi(FormStart CalledFrom)
         {
             InitializeComponent();
             mf = CalledFrom;
-
-            #region // language
-
-            grpHotSpot.Text = Lang.lgHotspot;
-            lbPassword.Text = Lang.lgPassword;
-
-            #endregion // language
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -40,13 +33,8 @@ namespace RateController
             }
             else
             {
-                // save settings
-                mf.Tls.SaveProperty("WifiSSID", tbSSID.Text);
-                mf.Tls.SaveProperty("WifiPassword", tbPassword.Text);
-
                 // IP
-                mf.UDPmodules.WifiEP = cbNetworks.Text;
-                mf.UDPmodules.EthernetEP= cbEthernet.Text;
+                mf.UDPmodules.EthernetEP = cbEthernet.Text;
 
                 SetButtons(false);
                 UpdateForm();
@@ -58,35 +46,38 @@ namespace RateController
             UpdateForm();
         }
 
-        private void btnSetIP_Click(object sender, EventArgs e)
+        private void btnRescan_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Rescan";
+
+            mf.Tls.ShowHelp(Message, "Rescan");
+            hlpevent.Handled = true;
+        }
+
+        private void btnSendSubnet_Click(object sender, EventArgs e)
+        {
+            PGN32503 SetSubnet = new PGN32503(this);
+            if (SetSubnet.Send(mf.UDPmodules.EthernetEP))
+            {
+                mf.Tls.ShowHelp("New Subnet address sent.", "Subnet", 10000);
+            }
+            else
+            {
+                mf.Tls.ShowHelp("New Subnet address not sent.", "Subnet", 10000);
+            }
+        }
+
+        private void btnSendSubnet_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Send subnet address to modules.";
+
+            mf.Tls.ShowHelp(Message, "Subnet");
+            hlpevent.Handled = true;
+        }
+
+        private void btnSetEthernet_Click(object sender, EventArgs e)
         {
             SetButtons(true);
-        }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                mf.Tls.StartWifi();
-                UpdateForm();
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.ShowHelp("Error starting wifi connection. " + ex.Message, "Wifi", 15000, true);
-            }
-        }
-
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                mf.Tls.StopWifi();
-                UpdateForm();
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.ShowHelp("Error closing wifi connection. " + ex.Message, "Wifi", 15000, true);
-            }
         }
 
         private void frmWifi_FormClosed(object sender, FormClosedEventArgs e)
@@ -115,22 +106,6 @@ namespace RateController
             // https://stackoverflow.com/questions/6803073/get-local-ip-address
             try
             {
-                cbNetworks.Items.Clear();
-                foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
-                {
-                    if (item.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && item.OperationalStatus == OperationalStatus.Up)
-                    {
-                        foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
-                        {
-                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
-                            {
-                                cbNetworks.Items.Add(ip.Address.ToString());
-                            }
-                        }
-                    }
-                }
-                cbNetworks.SelectedIndex = cbNetworks.FindString(SubAddress(mf.UDPmodules.WifiEP));
-
                 cbEthernet.Items.Clear();
                 foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
                 {
@@ -146,7 +121,6 @@ namespace RateController
                     }
                 }
                 cbEthernet.SelectedIndex = cbEthernet.FindString(SubAddress(mf.UDPmodules.EthernetEP));
-
             }
             catch (Exception ex)
             {
@@ -154,52 +128,27 @@ namespace RateController
             }
         }
 
-        private string SubAddress(string Address)
-        {
-            IPAddress IP;
-            string[] data;
-            string Result = "";
-
-            if (IPAddress.TryParse(Address, out IP))
-            {
-                data = Address.Split('.');
-                Result = data[0] + "." + data[1] + "." + data[2];
-            }
-            return Result;
-        }
-
         private void SetButtons(bool Edited)
         {
             if (!Initializing)
             {
-                if (Edited)
+                if (!Initializing)
                 {
-                    btnCancel.Enabled = true;
-                    btnClose.Image = Properties.Resources.Save;
+                    if (Edited)
+                    {
+                        btnCancel.Enabled = true;
+                        btnClose.Image = Properties.Resources.Save;
+                        btnRescan.Enabled = false;
+                    }
+                    else
+                    {
+                        btnCancel.Enabled = false;
+                        btnClose.Image = Properties.Resources.OK;
+                        btnRescan.Enabled = true;
+                    }
 
-                    btnStop.Enabled = false;
-                    btnStart.Enabled = false;
-                    btnRescan.Enabled = false;
-                    btnSetIP.Enabled = false;
-                    cbNetworks.Enabled = false;
-                    tbSSID.Enabled = false;
-                    tbPassword.Enabled = false;
+                    FormEdited = Edited;
                 }
-                else
-                {
-                    btnCancel.Enabled = false;
-                    btnClose.Image = Properties.Resources.OK;
-
-                    btnStop.Enabled = true;
-                    btnStart.Enabled = true;
-                    btnRescan.Enabled = true;
-                    btnSetIP.Enabled = true;
-                    cbNetworks.Enabled = true;
-                    tbSSID.Enabled = true;
-                    tbPassword.Enabled = true;
-                }
-
-                FormEdited = Edited;
             }
         }
 
@@ -225,39 +174,28 @@ namespace RateController
             }
         }
 
-        private void tbPassword_TextChanged(object sender, EventArgs e)
+        private string SubAddress(string Address)
         {
-            SetButtons(true);
-        }
+            IPAddress IP;
+            string[] data;
+            string Result = "";
 
-        private void tbSSID_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
+            if (IPAddress.TryParse(Address, out IP))
+            {
+                data = Address.Split('.');
+                Result = data[0] + "." + data[1] + "." + data[2];
+            }
+            return Result;
         }
 
         private void UpdateForm()
         {
             Initializing = true;
-            tbSSID.Text = mf.Tls.LoadProperty("WifiSSID");
-            if (tbSSID.Text == "") tbSSID.Text = "tractor";
 
-            tbPassword.Text = mf.Tls.LoadProperty("WifiPassword");
-            if (tbPassword.Text == "") tbPassword.Text = "111222333";
-
-            // save in case credentials were blank
-            mf.Tls.SaveProperty("WifiSSID", tbSSID.Text);
-            mf.Tls.SaveProperty("WifiPassword", tbPassword.Text);
-
-            lbIP.Text = "Selected subnet:  " + mf.UDPmodules.WifiEP;
             lbEthernet.Text = "Selected subnet:  " + mf.UDPmodules.EthernetEP;
-
             LoadCombo();
-            Initializing = false;
-        }
 
-        private void btnSetEthernet_Click(object sender, EventArgs e)
-        {
-            SetButtons(true);
+            Initializing = false;
         }
     }
 }

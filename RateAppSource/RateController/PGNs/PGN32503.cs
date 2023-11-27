@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,59 +12,91 @@ namespace RateController
 {
     public class PGN32503
     {
-        // to Rate Controller from WifiAOG
-        // 0	247
-        // 1	126
-        // 2	Module ID
-        // 3	dBm lo
-        // 4	dBm Hi
-        // 5	Status
-        //		- bit 0 Wifi connected
-        //		- bit 1 Teensy connected
-        // 6	DebugVal1
-        // 7	DebugVal2
-        // 8	CRC
+        //PGN32503, Subnet change
+        //0     HeaderLo    247
+        //1     HeaderHI    126
+        //2     IP 0
+        //3     IP 1
+        //4     IP 2
+        //5     CRC
 
-        private const byte cByteCount = 9;
-        private const byte HeaderHi = 126;
-        private const byte HeaderLo = 247;
-        private FormStart mf;
+        private byte[] cData = new byte[6];
+        private frmWifi cf;
 
-        public struct ModuleData
+        public PGN32503(frmWifi CalledFrom)
         {
-            public Int16 RSSI;
-            public byte Status;
-            public byte DebugVal1;
-            public byte DebugVal2;
-        }
-        ModuleData[] MDL;
-
-        public PGN32503(FormStart CalledFrom)
-        {
-            mf = CalledFrom;
-            MDL = new ModuleData[20];
+            cf = CalledFrom;
+            cData[0] = 247;
+            cData[1] = 126;
         }
 
-        public bool ParseByteData(byte[] Data)
+        public bool Send(string EP)
         {
             bool Result = false;
-            if (Data[1] == HeaderHi && Data[0] == HeaderLo &&
-                Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
+            string[] data = EP.Split('.');
+            cData[2] = byte.Parse(data[0]);
+            cData[3] = byte.Parse(data[1]);
+            cData[4] = byte.Parse(data[2]);
+
+            // CRC
+            cData[5] = cf.mf.Tls.CRC(cData, 5);
+
+            // send serial
+            //cf.mf.SendSerial(cData);
+
+            if (!Result)
             {
-                byte ID = Data[2];
-                if (ID < 20)
+                // send UDP
+                // based on AGIO/FormUDP
+                IPEndPoint epModuleSet = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 28888);
+                IPAddress IP;
+                if (IPAddress.TryParse(EP, out IP))
                 {
-                    MDL[ID].RSSI = (short)(Data[3] | Data[4] << 8);
-                    MDL[ID].Status = Data[5];
-                    MDL[ID].DebugVal1 = Data[6];
-                    MDL[ID].DebugVal2 = Data[7];
+                    //loop thru all interfaces
+                    foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
+                    {
+                        if (nic.Supports(NetworkInterfaceComponent.IPv4) && nic.OperationalStatus == OperationalStatus.Up)
+                        {
+                            foreach (var info in nic.GetIPProperties().UnicastAddresses)
+                            {
+                                // Only InterNetwork and not loopback which have a subnetmask
+                                if (info.Address.AddressFamily == AddressFamily.InterNetwork &&
+                                    !IPAddress.IsLoopback(info.Address) &&
+                                    info.IPv4Mask != null)
+                                {
+                                    Socket scanSocket;
+                                    try
+                                    {
+                                        if (nic.OperationalStatus == OperationalStatus.Up
+                                            && info.IPv4Mask != null)
+                                        {
+                                            scanSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                                            scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+                                            scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                                            scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, true);
+
+                                            try
+                                            {
+                                                scanSocket.Bind(new IPEndPoint(info.Address, 9578));
+                                                scanSocket.SendTo(cData, 0, cData.Length, SocketFlags.None, epModuleSet);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                cf.mf.Tls.WriteErrorLog("frmNework/btnSend_Click/Bind error " + ex.Message);
+                                            }
+
+                                            scanSocket.Dispose();
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        cf.mf.Tls.WriteErrorLog("frmNework/btnSend_Click/nic loop error " + ex.Message);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     Result = true;
-
-
-                    //Debug.Print(ID.ToString() + ", " + MDL[ID].RSSI.ToString()
-                    //    + ", " + Data[5].ToString()
-                    //    + ", " + Data[6].ToString()
-                    //    + ", " + Data[7].ToString());
                 }
             }
             return Result;

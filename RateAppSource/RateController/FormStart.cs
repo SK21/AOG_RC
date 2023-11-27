@@ -64,8 +64,6 @@ namespace RateController
         public bool Restart = false;
         public frmLargeScreen Lscrn;
 
-        public PGN32503 WifiStatus;
-
         private bool LoadError = false;
         private int cDefaultProduct = 0;
 
@@ -135,7 +133,6 @@ namespace RateController
 
             timerMain.Interval = 1000;
 
-            WifiStatus = new PGN32503(this);
             ModuleStatus = new PGN32504(this);
         }
         public bool UseInches
