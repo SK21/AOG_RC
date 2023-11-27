@@ -1114,6 +1114,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Switches.
+        /// </summary>
+        internal static string lgSwitches {
+            get {
+                return ResourceManager.GetString("lgSwitches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tank.
         /// </summary>
         internal static string lgTank {

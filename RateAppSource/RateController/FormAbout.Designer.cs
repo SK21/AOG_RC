@@ -35,8 +35,6 @@ namespace RateController
             this.lbAppVersion = new System.Windows.Forms.Label();
             this.lbVersion = new System.Windows.Forms.Label();
             this.lbIP = new System.Windows.Forms.Label();
-            this.lbWifi = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.bntOK = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.lbInoID = new System.Windows.Forms.Label();
@@ -87,26 +85,6 @@ namespace RateController
             this.lbIP.Text = "-.-.-.-";
             this.lbIP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lbWifi
-            // 
-            this.lbWifi.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWifi.Location = new System.Drawing.Point(127, 167);
-            this.lbWifi.Name = "lbWifi";
-            this.lbWifi.Size = new System.Drawing.Size(144, 23);
-            this.lbWifi.TabIndex = 184;
-            this.lbWifi.Text = "192.168.255.255";
-            this.lbWifi.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(12, 167);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 23);
-            this.label3.TabIndex = 183;
-            this.label3.Text = "Wifi IP";
-            // 
             // bntOK
             // 
             this.bntOK.BackColor = System.Drawing.Color.Transparent;
@@ -116,7 +94,7 @@ namespace RateController
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = global::RateController.Properties.Resources.OK;
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(83, 203);
+            this.bntOK.Location = new System.Drawing.Point(83, 170);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 0;
@@ -193,15 +171,13 @@ namespace RateController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(283, 284);
+            this.ClientSize = new System.Drawing.Size(283, 249);
             this.Controls.Add(this.lbVersionDate);
             this.Controls.Add(this.lbDate);
             this.Controls.Add(this.lbModID);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lbInoID);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.lbWifi);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.lbIP);
             this.Controls.Add(this.lbVersion);
             this.Controls.Add(this.lbAppVersion);
@@ -228,8 +204,6 @@ namespace RateController
         private System.Windows.Forms.Label lbAppVersion;
         private System.Windows.Forms.Label lbVersion;
         private System.Windows.Forms.Label lbIP;
-        private System.Windows.Forms.Label lbWifi;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label lbInoID;
         private System.Windows.Forms.Label label6;

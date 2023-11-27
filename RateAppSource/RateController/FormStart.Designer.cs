@@ -69,12 +69,9 @@ namespace RateController
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
-            this.switchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuPressures = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuNetwork = new System.Windows.Forms.ToolStripMenuItem();
             this.largeScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.MnuNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +82,7 @@ namespace RateController
             this.MnuLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuDeustch = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuEnglish = new System.Windows.Forms.ToolStripMenuItem();
+            this.hungarianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuNederlands = new System.Windows.Forms.ToolStripMenuItem();
             this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -109,7 +107,9 @@ namespace RateController
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
             this.timerPIDs = new System.Windows.Forms.Timer(this.components);
-            this.hungarianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pressuresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -516,13 +516,12 @@ namespace RateController
             this.mnuSettings.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnuProducts,
             this.MnuSections,
-            this.switchesToolStripMenuItem,
-            this.MnuComm,
             this.MnuRelays,
-            this.MnuPressures,
+            this.networkToolStripMenuItem,
+            this.MnuComm,
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(201, 320);
+            this.mnuSettings.Size = new System.Drawing.Size(201, 278);
             // 
             // MnuProducts
             // 
@@ -540,14 +539,6 @@ namespace RateController
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
-            // switchesToolStripMenuItem
-            // 
-            this.switchesToolStripMenuItem.Image = global::RateController.Properties.Resources._switch;
-            this.switchesToolStripMenuItem.Name = "switchesToolStripMenuItem";
-            this.switchesToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
-            this.switchesToolStripMenuItem.Text = "Switches";
-            this.switchesToolStripMenuItem.Click += new System.EventHandler(this.switchesToolStripMenuItem_Click);
-            // 
             // MnuComm
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
@@ -564,19 +555,12 @@ namespace RateController
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
-            // MnuPressures
-            // 
-            this.MnuPressures.Image = global::RateController.Properties.Resources.pressure;
-            this.MnuPressures.Name = "MnuPressures";
-            this.MnuPressures.Size = new System.Drawing.Size(200, 42);
-            this.MnuPressures.Text = "Pressures";
-            this.MnuPressures.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click);
-            // 
             // MnuOptions
             // 
             this.MnuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuNetwork,
             this.largeScreenToolStripMenuItem,
+            this.pressuresToolStripMenuItem,
+            this.switchesToolStripMenuItem1,
             this.toolStripSeparator3,
             this.MnuNew,
             this.MnuOpen,
@@ -590,14 +574,6 @@ namespace RateController
             this.MnuOptions.Name = "MnuOptions";
             this.MnuOptions.Size = new System.Drawing.Size(200, 42);
             this.MnuOptions.Text = "Options";
-            // 
-            // mnuNetwork
-            // 
-            this.mnuNetwork.Image = global::RateController.Properties.Resources.wifi;
-            this.mnuNetwork.Name = "mnuNetwork";
-            this.mnuNetwork.Size = new System.Drawing.Size(215, 42);
-            this.mnuNetwork.Text = "Network";
-            this.mnuNetwork.Click += new System.EventHandler(this.wifiToolStripMenuItem_Click);
             // 
             // largeScreenToolStripMenuItem
             // 
@@ -666,35 +642,42 @@ namespace RateController
             // MnuDeustch
             // 
             this.MnuDeustch.Name = "MnuDeustch";
-            this.MnuDeustch.Size = new System.Drawing.Size(180, 28);
+            this.MnuDeustch.Size = new System.Drawing.Size(175, 28);
             this.MnuDeustch.Text = "Deustch";
             this.MnuDeustch.Click += new System.EventHandler(this.MnuDeustch_Click);
             // 
             // MnuEnglish
             // 
             this.MnuEnglish.Name = "MnuEnglish";
-            this.MnuEnglish.Size = new System.Drawing.Size(180, 28);
+            this.MnuEnglish.Size = new System.Drawing.Size(175, 28);
             this.MnuEnglish.Text = "English";
             this.MnuEnglish.Click += new System.EventHandler(this.MnuEnglish_Click);
+            // 
+            // hungarianToolStripMenuItem
+            // 
+            this.hungarianToolStripMenuItem.Name = "hungarianToolStripMenuItem";
+            this.hungarianToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
+            this.hungarianToolStripMenuItem.Text = "Hungarian";
+            this.hungarianToolStripMenuItem.Click += new System.EventHandler(this.hungarianToolStripMenuItem_Click);
             // 
             // MnuNederlands
             // 
             this.MnuNederlands.Name = "MnuNederlands";
-            this.MnuNederlands.Size = new System.Drawing.Size(180, 28);
+            this.MnuNederlands.Size = new System.Drawing.Size(175, 28);
             this.MnuNederlands.Text = "Nederlands";
             this.MnuNederlands.Click += new System.EventHandler(this.MnuNederlands_Click);
             // 
             // polishToolStripMenuItem
             // 
             this.polishToolStripMenuItem.Name = "polishToolStripMenuItem";
-            this.polishToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
+            this.polishToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
             this.polishToolStripMenuItem.Text = "Polish";
             this.polishToolStripMenuItem.Click += new System.EventHandler(this.polishToolStripMenuItem_Click);
             // 
             // russianToolStripMenuItem
             // 
             this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-            this.russianToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
+            this.russianToolStripMenuItem.Size = new System.Drawing.Size(175, 28);
             this.russianToolStripMenuItem.Text = "Russian";
             this.russianToolStripMenuItem.Click += new System.EventHandler(this.russianToolStripMenuItem_Click);
             // 
@@ -921,12 +904,29 @@ namespace RateController
             this.timerPIDs.Interval = 5000;
             this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
             // 
-            // hungarianToolStripMenuItem
+            // networkToolStripMenuItem
             // 
-            this.hungarianToolStripMenuItem.Name = "hungarianToolStripMenuItem";
-            this.hungarianToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
-            this.hungarianToolStripMenuItem.Text = "Hungarian";
-            this.hungarianToolStripMenuItem.Click += new System.EventHandler(this.hungarianToolStripMenuItem_Click);
+            this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.wifi;
+            this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
+            this.networkToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.networkToolStripMenuItem.Text = "Network";
+            this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
+            // 
+            // pressuresToolStripMenuItem
+            // 
+            this.pressuresToolStripMenuItem.Image = global::RateController.Properties.Resources.pressure;
+            this.pressuresToolStripMenuItem.Name = "pressuresToolStripMenuItem";
+            this.pressuresToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
+            this.pressuresToolStripMenuItem.Text = "Pressures";
+            this.pressuresToolStripMenuItem.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click_1);
+            // 
+            // switchesToolStripMenuItem1
+            // 
+            this.switchesToolStripMenuItem1.Image = global::RateController.Properties.Resources._switch;
+            this.switchesToolStripMenuItem1.Name = "switchesToolStripMenuItem1";
+            this.switchesToolStripMenuItem1.Size = new System.Drawing.Size(215, 42);
+            this.switchesToolStripMenuItem1.Text = "Switches";
+            this.switchesToolStripMenuItem1.Click += new System.EventHandler(this.switchesToolStripMenuItem1_Click);
             // 
             // FormStart
             // 
@@ -1022,8 +1022,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Label lbTarget;
         private System.Windows.Forms.ToolStripMenuItem serialMonitorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mnuNetwork;
-        private System.Windows.Forms.ToolStripMenuItem MnuPressures;
         private System.Windows.Forms.Label lbPressureValue;
         private System.Windows.Forms.Label lbPressure;
         private System.Windows.Forms.ToolStripMenuItem russianToolStripMenuItem;
@@ -1041,9 +1039,11 @@ namespace RateController
         private System.Windows.Forms.Label rt5;
         private System.Windows.Forms.Label prd5;
         private System.Windows.Forms.Timer timerPIDs;
-        private System.Windows.Forms.ToolStripMenuItem switchesToolStripMenuItem;
         private System.Windows.Forms.Button btnFan;
         private System.Windows.Forms.ToolStripMenuItem polishToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hungarianToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem networkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pressuresToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem switchesToolStripMenuItem1;
     }
 }

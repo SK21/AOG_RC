@@ -468,6 +468,9 @@
   <data name="lgSwitch" xml:space="preserve">
     <value>Switch</value>
   </data>
+  <data name="lgSwitches" xml:space="preserve">
+    <value>Switches</value>
+  </data>
   <data name="lgTank" xml:space="preserve">
     <value>Tank</value>
   </data>

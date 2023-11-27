@@ -85,7 +85,7 @@ namespace RateController
             mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
             mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
             mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
-            mnuSettings.Items["MnuPressures"].Text = Lang.lgPressure;
+            mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgNetwork;
 
             MnuOptions.DropDownItems["MnuAbout"].Text = Lang.lgAbout;
             MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
@@ -93,7 +93,7 @@ namespace RateController
             MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
             MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
             MnuOptions.DropDownItems["mnuMetric"].Text = Lang.lgMetric;
-            MnuOptions.DropDownItems["mnuNetwork"].Text = Lang.lgNetwork;
+            MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
 
             #endregion // language
 
@@ -1076,6 +1076,36 @@ namespace RateController
             Properties.Settings.Default.Save();
             Restart = true;
             Application.Restart();
+        }
+
+        private void networkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frmWifi = new frmWifi(this);
+            frmWifi.ShowDialog();
+        }
+
+        private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //check if window already exists
+            Form fs = Application.OpenForms["frmSimulation"];
+
+            if (fs == null)
+            {
+                Form frm = new frmSwitches(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
+        private void pressuresToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            Form frmPressure = new FormPressure(this);
+            frmPressure.ShowDialog();
+            LoadPressureSetting();
+            FormatDisplay();
         }
     }
 }
