@@ -2190,7 +2190,6 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateControllerApp\de\RateController.
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateControllerApp\nl\RateController.resources.dll
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateControllerApp\ru\RateController.resources.dll
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
-C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.SuggestedBindingRedirects.cache
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormAbout.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormPIDGraph.resources
@@ -2302,3 +2301,10 @@ C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateControllerApp\pl\RateController.resources.dll
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Lang.pl.resources
 C:\Users\DC\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\pl\RateController.resources.dll
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateControllerApp\hu\RateController.resources.dll
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateControllerApp\pl\RateController.resources.dll
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.RCRestore.resources
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Lang.hu.resources
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Lang.pl.resources
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\hu\RateController.resources.dll
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\pl\RateController.resources.dll

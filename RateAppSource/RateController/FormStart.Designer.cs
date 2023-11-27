@@ -86,6 +86,7 @@ namespace RateController
             this.MnuDeustch = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuEnglish = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuNederlands = new System.Windows.Forms.ToolStripMenuItem();
+            this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serialMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,7 +109,7 @@ namespace RateController
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
             this.timerPIDs = new System.Windows.Forms.Timer(this.components);
-            this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hungarianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -653,6 +654,7 @@ namespace RateController
             this.MnuLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnuDeustch,
             this.MnuEnglish,
+            this.hungarianToolStripMenuItem,
             this.MnuNederlands,
             this.polishToolStripMenuItem,
             this.russianToolStripMenuItem});
@@ -681,6 +683,13 @@ namespace RateController
             this.MnuNederlands.Size = new System.Drawing.Size(180, 28);
             this.MnuNederlands.Text = "Nederlands";
             this.MnuNederlands.Click += new System.EventHandler(this.MnuNederlands_Click);
+            // 
+            // polishToolStripMenuItem
+            // 
+            this.polishToolStripMenuItem.Name = "polishToolStripMenuItem";
+            this.polishToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
+            this.polishToolStripMenuItem.Text = "Polish";
+            this.polishToolStripMenuItem.Click += new System.EventHandler(this.polishToolStripMenuItem_Click);
             // 
             // russianToolStripMenuItem
             // 
@@ -912,12 +921,12 @@ namespace RateController
             this.timerPIDs.Interval = 5000;
             this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
             // 
-            // polishToolStripMenuItem
+            // hungarianToolStripMenuItem
             // 
-            this.polishToolStripMenuItem.Name = "polishToolStripMenuItem";
-            this.polishToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
-            this.polishToolStripMenuItem.Text = "Polish";
-            this.polishToolStripMenuItem.Click += new System.EventHandler(this.polishToolStripMenuItem_Click);
+            this.hungarianToolStripMenuItem.Name = "hungarianToolStripMenuItem";
+            this.hungarianToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
+            this.hungarianToolStripMenuItem.Text = "Hungarian";
+            this.hungarianToolStripMenuItem.Click += new System.EventHandler(this.hungarianToolStripMenuItem_Click);
             // 
             // FormStart
             // 
@@ -1035,5 +1044,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem switchesToolStripMenuItem;
         private System.Windows.Forms.Button btnFan;
         private System.Windows.Forms.ToolStripMenuItem polishToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hungarianToolStripMenuItem;
     }
 }

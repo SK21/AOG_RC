@@ -299,6 +299,7 @@
       <LastGenOutput>Lang.de.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Lang.hu.resx" />
     <EmbeddedResource Include="Lang.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.nl.Designer.cs</LastGenOutput>

@@ -75,6 +75,7 @@
             this.MnuDeustch = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuEnglish = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuNederlands = new System.Windows.Forms.ToolStripMenuItem();
+            this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serialMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,7 +106,7 @@
             this.btMinimize = new System.Windows.Forms.Button();
             this.lblManAuto = new System.Windows.Forms.Label();
             this.tmrBorder = new System.Windows.Forms.Timer(this.components);
-            this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hungarianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlQuantity0.SuspendLayout();
             this.pnlQuantity1.SuspendLayout();
             this.pnlQuantity2.SuspendLayout();
@@ -571,6 +572,7 @@
             this.MnuLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnuDeustch,
             this.MnuEnglish,
+            this.hungarianToolStripMenuItem,
             this.MnuNederlands,
             this.polishToolStripMenuItem,
             this.russianToolStripMenuItem});
@@ -599,6 +601,13 @@
             this.MnuNederlands.Size = new System.Drawing.Size(180, 28);
             this.MnuNederlands.Text = "Nederlands";
             this.MnuNederlands.Click += new System.EventHandler(this.MnuNederlands_Click);
+            // 
+            // polishToolStripMenuItem
+            // 
+            this.polishToolStripMenuItem.Name = "polishToolStripMenuItem";
+            this.polishToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
+            this.polishToolStripMenuItem.Text = "Polish";
+            this.polishToolStripMenuItem.Click += new System.EventHandler(this.polishToolStripMenuItem_Click);
             // 
             // russianToolStripMenuItem
             // 
@@ -903,12 +912,12 @@
             this.tmrBorder.Interval = 500;
             this.tmrBorder.Tick += new System.EventHandler(this.tmrBorder_tick);
             // 
-            // polishToolStripMenuItem
+            // hungarianToolStripMenuItem
             // 
-            this.polishToolStripMenuItem.Name = "polishToolStripMenuItem";
-            this.polishToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
-            this.polishToolStripMenuItem.Text = "Polish";
-            this.polishToolStripMenuItem.Click += new System.EventHandler(this.polishToolStripMenuItem_Click);
+            this.hungarianToolStripMenuItem.Name = "hungarianToolStripMenuItem";
+            this.hungarianToolStripMenuItem.Size = new System.Drawing.Size(180, 28);
+            this.hungarianToolStripMenuItem.Text = "Hungarian";
+            this.hungarianToolStripMenuItem.Click += new System.EventHandler(this.hungarianToolStripMenuItem_Click);
             // 
             // frmLargeScreen
             // 
@@ -1060,5 +1069,6 @@
         private System.Windows.Forms.Label lblManAuto;
         private System.Windows.Forms.Timer tmrBorder;
         private System.Windows.Forms.ToolStripMenuItem polishToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hungarianToolStripMenuItem;
     }
 }

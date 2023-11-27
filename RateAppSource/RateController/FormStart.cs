@@ -1072,5 +1072,13 @@ namespace RateController
             Restart = true;
             Application.Restart();
         }
+
+        private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "hu";
+            Properties.Settings.Default.Save();
+            Restart = true;
+            Application.Restart();
+        }
     }
 }
