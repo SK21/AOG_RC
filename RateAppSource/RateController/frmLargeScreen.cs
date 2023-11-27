@@ -1142,7 +1142,7 @@ namespace RateController
 
         private void frmLargeScreen_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!SwitchingScreens && !mf.Restart)
+            if (!SwitchingScreens && !mf.Restart && mf.Products.Connected())
             {
                 var Hlp = new frmMsgBox(mf, "Confirm Exit?", "Exit", true);
                 Hlp.TopMost = true;

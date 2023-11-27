@@ -1014,7 +1014,7 @@ namespace RateController
 
         private void FormStart_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!LargeScreenExit && !Restart && !LoadError)
+            if (!LargeScreenExit && !Restart && !LoadError && Products.Connected())
             {
                 var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true);
                 Hlp.TopMost = true;

@@ -45,6 +45,21 @@ namespace RateController
             return cAlarmOn;
         }
 
+        public bool Connected()
+        {
+            // returns true if at least one module is connected
+            bool Result = false;
+            for (int i = 0; i < mf.MaxProducts; i++)
+            {
+                if (cProducts[i].ArduinoModule.Connected())
+                {
+                    Result = true;
+                    break;
+                }
+            }
+            return Result;
+        }
+
         public int Count()
         {
             return cProducts.Count;
