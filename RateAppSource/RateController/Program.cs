@@ -21,7 +21,7 @@ namespace RateController
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AgOpenGPS");
             if(regKey != null)
             {
-                Properties.Settings.Default.setF_culture = regKey.GetValue("Language").ToString();
+                Settings.Default.AOG_language = regKey.GetValue("Language").ToString();
                 Properties.Settings.Default.Save();
             }
             regKey.Close();

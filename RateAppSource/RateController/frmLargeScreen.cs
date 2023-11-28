@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Properties;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -391,6 +392,7 @@ namespace RateController
         private void MnuDeustch_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "de";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
@@ -399,6 +401,7 @@ namespace RateController
         private void MnuEnglish_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "en";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
@@ -413,6 +416,7 @@ namespace RateController
         private void MnuNederlands_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "nl";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
@@ -511,6 +515,7 @@ namespace RateController
         private void russianToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "ru";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
@@ -1393,6 +1398,7 @@ namespace RateController
         private void polishToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "pl";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
@@ -1401,6 +1407,7 @@ namespace RateController
         private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "hu";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             Application.Restart();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Properties;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -609,6 +610,23 @@ namespace RateController
 
             Application.Exit();
         }
+        void SetLanguage()
+        {
+            if (Settings.Default.AOG_language == Settings.Default.setF_culture)
+            {
+                Settings.Default.UserLanguageChange = false;
+                Settings.Default.Save();
+            }
+            else
+            {
+                if (!Settings.Default.UserLanguageChange)
+                {
+                    Settings.Default.setF_culture = Settings.Default.AOG_language;
+                    Settings.Default.Save();
+                    Application.Restart();
+                }
+            }
+        }
 
         private void FormStart_Load(object sender, EventArgs e)
         {
@@ -661,6 +679,7 @@ namespace RateController
                 LoadError = true;
                 Close();
             }
+            SetLanguage();
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -818,6 +837,7 @@ namespace RateController
         public void MnuDeustch_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "de";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             Restart = true;
             Application.Restart();
@@ -826,6 +846,7 @@ namespace RateController
         private void MnuEnglish_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "en";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             Restart = true;
             Application.Restart();
@@ -834,6 +855,7 @@ namespace RateController
         private void MnuNederlands_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "nl";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             Restart = true;
             Application.Restart();
@@ -885,6 +907,7 @@ namespace RateController
         private void russianToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "ru";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             Restart = true;
             Application.Restart();
@@ -1065,6 +1088,7 @@ namespace RateController
         private void polishToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "pl";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             Restart = true;
             Application.Restart();
@@ -1073,6 +1097,7 @@ namespace RateController
         private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "hu";
+            Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             Restart = true;
             Application.Restart();
