@@ -122,6 +122,30 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
             UDPpgn = Data[1] << 8 | Data[0];
             switch (UDPpgn)
             {
+            case 32503:
+                //PGN32503, Subnet change
+                //0     HeaderLo    247
+                //1     HeaderHI    126
+                //2     IP 0
+                //3     IP 1
+                //4     IP 2
+                //5     CRC
+
+                PGNlength = 6;
+
+                if (len > PGNlength - 1)
+                {
+                    if (GoodCRC(Data, PGNlength))
+                    {
+                        MDL.IPpart3 = Data[4];
+                        EEPROM.put(10, MDL);
+
+                        // restart
+                        resetFunc();
+                    }
+                }
+                break;
+
             case 32614:
                 //PGN32614 to Arduino from Rate Controller
                 //0	HeaderLo		102
