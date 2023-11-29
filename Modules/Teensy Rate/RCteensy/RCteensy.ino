@@ -8,8 +8,8 @@
 
 // rate control with Teensy 4.1
 
-# define InoDescription "RCteensy :  25-Jun-2023"
-const uint16_t InoID = 25063;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  29-Nov-2023"
+const uint16_t InoID = 29113;	// change to send defaults to eeprom, ddmmy, no leading 0
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2

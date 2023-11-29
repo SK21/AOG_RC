@@ -16,7 +16,7 @@ byte DataOut[50];
 const byte PGN32500Length = 32;
 const byte PGN32501Length = 8;
 const byte PGN32502Length = 7;
-const byte PGN32503Length = 9;
+const byte PGN32503Length = 6;
 const byte PGN32504Length = 14;
 
 const byte PGN32613Length = 13;
@@ -284,9 +284,9 @@ void ReceiveData()
 			ProcessWifi(PGN32502Length);
 			break;
 
-		case 32503:
-			ProcessWifi(PGN32503Length);
-		break;
+		//case 32503:
+		//	ProcessWifi(PGN32503Length);
+		//break;
 
 		case 32614:
 			ProcessWifi(PGN32614Length);
@@ -500,32 +500,31 @@ void ReadPGN(uint16_t len, byte Data[], uint16_t PGN)
 		break;
 
 	case 32503:
-		// WifiAOG status
-		// 0	247
-		// 1	126
-		// 2	Module ID
-		// 3	dBm lo
-		// 4	dBm Hi
-		// 5	Status
-		//		- bit 0 Wifi connected
-		//		- bit 1 Teensy connected
-		// 6	DebugVal1
-		// 7	DebugVal2
-		// 8	CRC
+		//PGN32503, Subnet change
+		//0     HeaderLo    247
+		//1     HeaderHI    126
+		//2     IP 0
+		//3     IP 1
+		//4     IP 2
+		//5     CRC
 
 		if (len > PGN32503Length - 1)
 		{
 			if (GoodCRC(Data, PGN32503Length))
 			{
-				Wifi_dBm = Data[3] | Data[4] << 8;
+				MDL.IPpart2 = Data[3];
+				MDL.IPpart3 = Data[4];
 
-				// Status
-				ESPconnected = ((Data[5] & 1) == 1);
+				EEPROM.put(100, InoID);
+				EEPROM.put(110, MDL);
 
-				ESPdebug1 = Data[6];
+				for (int i = 0; i < MaxProductCount; i++)
+				{
+					EEPROM.put(200 + i * 80, Sensor[i]);
+				}
 
-				WifiTime = millis() - WifiLastTime;
-				WifiLastTime = millis();
+				// restart the Teensy
+				SCB_AIRCR = 0x05FA0004;
 			}
 		}
 		break;
