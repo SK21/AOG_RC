@@ -1181,5 +1181,7 @@ namespace RateController
                 }
             }
         }
+
+        public DateTime ReceiveTime { get { return ArduinoModule.ReceiveTime; } }
     }
 }

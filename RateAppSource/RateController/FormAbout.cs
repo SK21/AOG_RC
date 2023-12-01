@@ -6,6 +6,7 @@ namespace RateController
     public partial class FormAbout : Form
     {
         private FormStart mf;
+        private DateTime LastTime;
 
         public FormAbout(FormStart CallingForm)
         {
@@ -55,6 +56,7 @@ namespace RateController
         {
             lbInoID.Text = mf.ModuleStatus.InoID.ToString();
             lbModID.Text = mf.ModuleStatus.ModuleID.ToString();
+            lbTime.Text = ((DateTime.Now - mf.Products.Item(mf.CurrentProduct()).ReceiveTime).TotalMilliseconds / 1000).ToString("N3");
         }
     }
 }

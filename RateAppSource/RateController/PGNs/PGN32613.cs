@@ -35,7 +35,7 @@ namespace RateController
         private double cUPM;
         private readonly clsProduct Prod;
 
-        private DateTime ReceiveTime;
+        private DateTime cReceiveTime;
 
         private bool[] SensorReceiving = new bool[2];
 
@@ -43,6 +43,7 @@ namespace RateController
         {
             Prod = CalledFrom;
         }
+        public DateTime ReceiveTime { get { return cReceiveTime; } }
 
         public double AccumulatedQuantity()
         {
@@ -74,7 +75,7 @@ namespace RateController
             }
             else
             {
-                return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
+                return ((DateTime.Now - cReceiveTime).TotalSeconds < 4);
             }
         }
 
@@ -116,7 +117,7 @@ namespace RateController
                         if ((Data[11] & 0b00010000) == 0b00010000) cWifiStrength = 3;
                         Prod.WifiStrength = cWifiStrength;
 
-                        ReceiveTime = DateTime.Now;
+                        cReceiveTime = DateTime.Now;
                         Result = true;
 
                         //CheckRate();
@@ -187,7 +188,7 @@ namespace RateController
                                     cModuleIsReceivingData = ((Status & 0b00000010) == 0b00000010);
                                 }
 
-                                ReceiveTime = DateTime.Now;
+                                cReceiveTime = DateTime.Now;
                                 Result = true;
 
                                 //CheckRate();
