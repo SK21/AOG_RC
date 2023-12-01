@@ -1182,6 +1182,6 @@ namespace RateController
             }
         }
 
-        public DateTime ReceiveTime { get { return ArduinoModule.ReceiveTime; } }
+        public int ElapsedTime { get { return ArduinoModule.ElapsedTime; } }
     }
 }

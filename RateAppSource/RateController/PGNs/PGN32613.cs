@@ -16,7 +16,7 @@ namespace RateController
         //6	acc.Quantity Lo		10 X actual
         //7	acc.Quantity Mid
         //8 acc.Quantity Hi
-        //9 PWM Lo              
+        //9 PWM Lo
         //10 PWM Hi
         //11 Status
         //      bit 0 - sensor 0 connected
@@ -29,21 +29,35 @@ namespace RateController
         private const byte cByteCount = 13;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 101;
+        private readonly clsProduct Prod;
+        private int cElapsedTime;
+        private DateTime cLastTime = DateTime.Now;
         private bool cModuleIsReceivingData;
         private double cPWMsetting;
         private double cQuantity;
-        private double cUPM;
-        private readonly clsProduct Prod;
-
         private DateTime cReceiveTime;
-
+        private double cUPM;
         private bool[] SensorReceiving = new bool[2];
 
         public PGN32613(clsProduct CalledFrom)
         {
             Prod = CalledFrom;
         }
-        public DateTime ReceiveTime { get { return cReceiveTime; } }
+
+        public int ElapsedTime
+        {
+            get
+            {
+                if ((DateTime.Now - cLastTime).TotalMilliseconds > 4000)
+                {
+                    return 4000;
+                }
+                else
+                {
+                    return cElapsedTime;
+                }
+            }
+        }
 
         public double AccumulatedQuantity()
         {
@@ -87,6 +101,9 @@ namespace RateController
             if (Data[1] == HeaderHi && Data[0] == HeaderLo &&
                 Data.Length >= cByteCount && Prod.mf.Tls.GoodCRC(Data))
             {
+                cElapsedTime = (int)(DateTime.Now - cLastTime).TotalMilliseconds;
+                cLastTime = DateTime.Now;
+
                 int tmp = Prod.mf.Tls.ParseModID(Data[2]);
                 if (Prod.ModuleID == tmp)
                 {
