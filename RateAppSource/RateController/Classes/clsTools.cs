@@ -12,8 +12,8 @@ namespace RateController
     {
         private static Hashtable HTfiles;
         private string cAppName = "RateController";
-        private string cAppVersion = "3.5.3";
-        private string cVersionDate = "26-Nov-2023";
+        private string cAppVersion = "3.5.4";
+        private string cVersionDate = "30-Nov-2023";
 
         private string cPropertiesFile;
         private string cSettingsDir;

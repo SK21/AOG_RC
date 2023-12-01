@@ -45,6 +45,7 @@ namespace RateController
             lbAppVersion.Text = mf.Tls.AppVersion();
             lbDate.Text = mf.Tls.VersionDate();
             lbIP.Text = mf.UDPmodules.EthernetIP();
+            lbWifi.Text = mf.UDPmodules.WifiIP();
             this.BackColor = Properties.Settings.Default.DayColour;
             timer1.Enabled = true;
             mf.SendStatusPGN = true;

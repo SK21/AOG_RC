@@ -41,14 +41,21 @@ namespace RateController
         {
             get
             {
-                if (ModuleCount > 1)
+                if ((DateTime.Now - LastRead).TotalSeconds < 5)
                 {
-                    // return last module
-                    return cInoID[ModuleCount - 1];
+                    if (ModuleCount > 1)
+                    {
+                        // return last module
+                        return cInoID[ModuleCount - 1];
+                    }
+                    else
+                    {
+                        return cInoID[0];
+                    }
                 }
                 else
                 {
-                    return cInoID[0];
+                    return 0;
                 }
             }
         }
@@ -57,14 +64,21 @@ namespace RateController
         {
             get
             {
-                if (ModuleCount > 1)
+                if ((DateTime.Now - LastRead).TotalSeconds < 5)
                 {
-                    // return last module
-                    return cModuleID[ModuleCount - 1];
+                    if (ModuleCount > 1)
+                    {
+                        // return last module
+                        return cModuleID[ModuleCount - 1];
+                    }
+                    else
+                    {
+                        return cModuleID[0];
+                    }
                 }
                 else
                 {
-                    return cModuleID[0];
+                    return 0;
                 }
             }
         }

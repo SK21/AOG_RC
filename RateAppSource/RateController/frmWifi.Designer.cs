@@ -37,7 +37,12 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnSendSubnet = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbIP = new System.Windows.Forms.Label();
+            this.btnSetIP = new System.Windows.Forms.Button();
+            this.cbNetworks = new System.Windows.Forms.ComboBox();
             this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox2
@@ -92,7 +97,7 @@
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.Image = global::RateController.Properties.Resources.Update;
             this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRescan.Location = new System.Drawing.Point(109, 126);
+            this.btnRescan.Location = new System.Drawing.Point(110, 243);
             this.btnRescan.Name = "btnRescan";
             this.btnRescan.Size = new System.Drawing.Size(72, 72);
             this.btnRescan.TabIndex = 151;
@@ -111,7 +116,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(206, 126);
+            this.btnCancel.Location = new System.Drawing.Point(207, 243);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
@@ -129,7 +134,7 @@
             this.btnClose.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnClose.Image = global::RateController.Properties.Resources.OK;
             this.btnClose.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnClose.Location = new System.Drawing.Point(303, 126);
+            this.btnClose.Location = new System.Drawing.Point(304, 243);
             this.btnClose.Margin = new System.Windows.Forms.Padding(6);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(72, 72);
@@ -144,7 +149,7 @@
             this.btnSendSubnet.FlatAppearance.BorderSize = 0;
             this.btnSendSubnet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSendSubnet.Image = ((System.Drawing.Image)(resources.GetObject("btnSendSubnet.Image")));
-            this.btnSendSubnet.Location = new System.Drawing.Point(12, 126);
+            this.btnSendSubnet.Location = new System.Drawing.Point(13, 243);
             this.btnSendSubnet.Name = "btnSendSubnet";
             this.btnSendSubnet.Size = new System.Drawing.Size(72, 72);
             this.btnSendSubnet.TabIndex = 210;
@@ -152,11 +157,55 @@
             this.btnSendSubnet.Click += new System.EventHandler(this.btnSendSubnet_Click);
             this.btnSendSubnet.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendSubnet_HelpRequested);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.lbIP);
+            this.groupBox1.Controls.Add(this.btnSetIP);
+            this.groupBox1.Controls.Add(this.cbNetworks);
+            this.groupBox1.Location = new System.Drawing.Point(8, 126);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(375, 108);
+            this.groupBox1.TabIndex = 211;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Wifi";
+            // 
+            // lbIP
+            // 
+            this.lbIP.Location = new System.Drawing.Point(37, 23);
+            this.lbIP.Name = "lbIP";
+            this.lbIP.Size = new System.Drawing.Size(307, 26);
+            this.lbIP.TabIndex = 147;
+            this.lbIP.Text = "192.168.137.1";
+            this.lbIP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnSetIP
+            // 
+            this.btnSetIP.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnSetIP.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnSetIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSetIP.Location = new System.Drawing.Point(217, 52);
+            this.btnSetIP.Name = "btnSetIP";
+            this.btnSetIP.Size = new System.Drawing.Size(127, 37);
+            this.btnSetIP.TabIndex = 149;
+            this.btnSetIP.Text = "Set";
+            this.btnSetIP.UseVisualStyleBackColor = false;
+            this.btnSetIP.Click += new System.EventHandler(this.btnSetIP_Click);
+            // 
+            // cbNetworks
+            // 
+            this.cbNetworks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbNetworks.FormattingEnabled = true;
+            this.cbNetworks.Location = new System.Drawing.Point(37, 56);
+            this.cbNetworks.Name = "cbNetworks";
+            this.cbNetworks.Size = new System.Drawing.Size(157, 31);
+            this.cbNetworks.TabIndex = 146;
+            // 
             // frmWifi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(391, 202);
+            this.ClientSize = new System.Drawing.Size(391, 323);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnSendSubnet);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnRescan);
@@ -175,6 +224,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmWifi_FormClosed);
             this.Load += new System.EventHandler(this.frmWifi_Load);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -188,5 +238,9 @@
         private System.Windows.Forms.Button btnSetEthernet;
         private System.Windows.Forms.ComboBox cbEthernet;
         private System.Windows.Forms.Button btnSendSubnet;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lbIP;
+        private System.Windows.Forms.Button btnSetIP;
+        private System.Windows.Forms.ComboBox cbNetworks;
     }
 }

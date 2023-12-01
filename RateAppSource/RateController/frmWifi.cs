@@ -34,6 +34,7 @@ namespace RateController
             else
             {
                 // IP
+                mf.UDPmodules.WifiEP = cbNetworks.Text;
                 mf.UDPmodules.EthernetEP = cbEthernet.Text;
 
                 SetButtons(false);
@@ -69,13 +70,18 @@ namespace RateController
 
         private void btnSendSubnet_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Send subnet address to modules.";
+            string Message = "Send Ethernet subnet address to modules.";
 
             mf.Tls.ShowHelp(Message, "Subnet");
             hlpevent.Handled = true;
         }
 
         private void btnSetEthernet_Click(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void btnSetIP_Click(object sender, EventArgs e)
         {
             SetButtons(true);
         }
@@ -106,6 +112,22 @@ namespace RateController
             // https://stackoverflow.com/questions/6803073/get-local-ip-address
             try
             {
+                cbNetworks.Items.Clear();
+                foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    if (item.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && item.OperationalStatus == OperationalStatus.Up)
+                    {
+                        foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                        {
+                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                cbNetworks.Items.Add(ip.Address.ToString());
+                            }
+                        }
+                    }
+                }
+                cbNetworks.SelectedIndex = cbNetworks.FindString(SubAddress(mf.UDPmodules.WifiEP));
+
                 cbEthernet.Items.Clear();
                 foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
                 {
@@ -139,12 +161,14 @@ namespace RateController
                         btnCancel.Enabled = true;
                         btnClose.Image = Properties.Resources.Save;
                         btnRescan.Enabled = false;
+                        cbNetworks.Enabled = false;
                     }
                     else
                     {
                         btnCancel.Enabled = false;
                         btnClose.Image = Properties.Resources.OK;
                         btnRescan.Enabled = true;
+                        cbNetworks.Enabled = true;
                     }
 
                     FormEdited = Edited;
@@ -183,7 +207,7 @@ namespace RateController
             if (IPAddress.TryParse(Address, out IP))
             {
                 data = Address.Split('.');
-                Result = data[0] + "." + data[1] + "." + data[2];
+                Result = data[0] + "." + data[1] + "." + data[2] + ".";
             }
             return Result;
         }
@@ -193,6 +217,7 @@ namespace RateController
             Initializing = true;
 
             lbEthernet.Text = "Selected subnet:  " + mf.UDPmodules.EthernetEP;
+            lbIP.Text = "Selected subnet:  " + mf.UDPmodules.WifiEP;
             LoadCombo();
 
             Initializing = false;
