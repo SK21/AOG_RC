@@ -168,6 +168,7 @@
             this.groupBox1.TabIndex = 211;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Wifi";
+            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint_1);
             // 
             // lbIP
             // 

@@ -107,6 +107,12 @@ namespace RateController
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
+        private void groupBox1_Paint_1(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
         private void LoadCombo()
         {
             // https://stackoverflow.com/questions/6803073/get-local-ip-address
