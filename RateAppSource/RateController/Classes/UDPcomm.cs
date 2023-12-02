@@ -231,9 +231,7 @@ namespace RateController
             {
                 if (Data.Length > 1)
                 {
-                    int PGN = Data[1] << 8 | Data[0];   // AGIO big endian
-                    AddToLog("< " + PGN.ToString());
-
+                    int PGN = Data[0] << 8 | Data[1];   // AGIO big endian
                     if (PGN == 32897)
                     {
                         if (Data.Length > 2)
@@ -261,6 +259,8 @@ namespace RateController
                     else
                     {
                         PGN = Data[1] << 8 | Data[0];   // rc modules little endian
+                        AddToLog("< " + PGN.ToString());
+
                         switch (PGN)
                         {
                             case 32504:

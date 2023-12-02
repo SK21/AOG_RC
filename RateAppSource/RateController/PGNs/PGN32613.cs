@@ -101,15 +101,15 @@ namespace RateController
             if (Data[1] == HeaderHi && Data[0] == HeaderLo &&
                 Data.Length >= cByteCount && Prod.mf.Tls.GoodCRC(Data))
             {
-                cElapsedTime = (int)(DateTime.Now - cLastTime).TotalMilliseconds;
-                cLastTime = DateTime.Now;
-
                 int tmp = Prod.mf.Tls.ParseModID(Data[2]);
                 if (Prod.ModuleID == tmp)
                 {
                     tmp = Prod.mf.Tls.ParseSenID(Data[2]);
                     if (Prod.SensorID == tmp)
                     {
+                        cElapsedTime = (int)(DateTime.Now - cLastTime).TotalMilliseconds;
+                        cLastTime = DateTime.Now;
+
                         cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 1000.0;
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
                         cPWMsetting = (Int16)(Data[10] << 8 | Data[9]);  // need to cast to 16 bit integer to preserve the sign bit
