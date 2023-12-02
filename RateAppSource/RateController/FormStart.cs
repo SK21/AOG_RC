@@ -95,6 +95,7 @@ namespace RateController
             MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
             MnuOptions.DropDownItems["mnuMetric"].Text = Lang.lgMetric;
             MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
+            MnuOptions.DropDownItems["commDiagnosticsToolStripMenuItem"].Text = Lang.lgCommDiagnostics;
 
             #endregion // language
 
@@ -933,12 +934,6 @@ namespace RateController
             Sec.ShowDialog();
         }
 
-        private void serialMonitorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form Monitor = new frmMonitor(this);
-            Monitor.Show();
-        }
-
         private void SetDayMode()
         {
             if (Properties.Settings.Default.IsDay)
@@ -1131,6 +1126,21 @@ namespace RateController
             frmPressure.ShowDialog();
             LoadPressureSetting();
             FormatDisplay();
+        }
+
+        private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["frmModule"];
+
+            if (fs == null)
+            {
+                Form frm = new frmModule(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
     }
 }

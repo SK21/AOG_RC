@@ -205,6 +205,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comm Diagnostics.
+        /// </summary>
+        internal static string lgCommDiagnostics {
+            get {
+                return ResourceManager.GetString("lgCommDiagnostics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connect.
         /// </summary>
         internal static string lgConnect {

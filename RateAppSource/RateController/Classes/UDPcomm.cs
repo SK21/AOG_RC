@@ -8,13 +8,13 @@ namespace RateController
 {
     public class UDPComm
     {
-        private bool cIsUDPSendConnected;
+        private readonly string cDestinationIP;
+        private readonly bool cUseLoopback;
         private readonly FormStart mf;
         private byte[] buffer = new byte[1024];
-
-        private readonly string cDestinationIP;
-
         private IPAddress cEthernetEP;
+        private bool cIsUDPSendConnected;
+        private string cLog;
 
         // local ports must be unique for each app on same pc and each class instance
         private int cReceivePort;
@@ -22,7 +22,6 @@ namespace RateController
         private int cSendFromPort;
         private int cSendToPort;
         private bool cUpdateDestinationIP;
-        private readonly bool cUseLoopback;
 
         // wifi endpoint address
         private IPAddress cWiFiEP;
@@ -32,7 +31,6 @@ namespace RateController
         // local wifi ip address
         private HandleDataDelegateObj HandleDataDelegate = null;
 
-        private int PGN;
         private Socket recvSocket;
         private Socket sendSocket;
 
@@ -73,11 +71,7 @@ namespace RateController
             }
         }
 
-        public void Close()
-        {
-            recvSocket.Close();
-            sendSocket.Close();
-        }
+        public bool IsUDPSendConnected { get => cIsUDPSendConnected; set => cIsUDPSendConnected = value; }
 
         public string WifiEP
         {
@@ -97,7 +91,11 @@ namespace RateController
             }
         }
 
-        public bool IsUDPSendConnected { get => cIsUDPSendConnected; set => cIsUDPSendConnected = value; }
+        public void Close()
+        {
+            recvSocket.Close();
+            sendSocket.Close();
+        }
 
         public string EthernetIP()
         {
@@ -117,6 +115,11 @@ namespace RateController
             return Result;
         }
 
+        public string Log()
+        {
+            return cLog;
+        }
+
         //sends byte array
         public void SendUDPMessage(byte[] byteData)
         {
@@ -124,6 +127,9 @@ namespace RateController
             {
                 try
                 {
+                    int PGN = byteData[0] | byteData[1] << 8;
+                    AddToLog("               > " + PGN.ToString());
+
                     if (byteData.Length != 0)
                     {
                         // ethernet
@@ -188,6 +194,16 @@ namespace RateController
             mf.Tls.WriteActivityLog("UDPcomm: Network Address Changed");
         }
 
+        private void AddToLog(string NewData)
+        {
+            cLog += NewData + Environment.NewLine;
+            if (cLog.Length > 100000)
+            {
+                cLog = cLog.Substring(cLog.Length - 98000, 98000);
+            }
+            cLog = cLog.Replace("\0", string.Empty);
+        }
+
         private string GetLocalIPv4(NetworkInterfaceType _type)
         {
             // https://stackoverflow.com/questions/6803073/get-local-ip-address
@@ -215,7 +231,9 @@ namespace RateController
             {
                 if (Data.Length > 1)
                 {
-                    PGN = Data[0] << 8 | Data[1];   // AGIO big endian
+                    int PGN = Data[1] << 8 | Data[0];   // AGIO big endian
+                    AddToLog("< " + PGN.ToString());
+
                     if (PGN == 32897)
                     {
                         if (Data.Length > 2)

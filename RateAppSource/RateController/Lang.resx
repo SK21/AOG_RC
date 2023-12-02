@@ -165,6 +165,9 @@
   <data name="lgComm" xml:space="preserve">
     <value>Comm</value>
   </data>
+  <data name="lgCommDiagnostics" xml:space="preserve">
+    <value>Comm Diagnostics</value>
+  </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Connect</value>
   </data>

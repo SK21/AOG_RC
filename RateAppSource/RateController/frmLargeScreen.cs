@@ -521,12 +521,6 @@ namespace RateController
             this.Close();
         }
 
-        private void serialMonitorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form Monitor = new frmMonitor(mf);
-            Monitor.Show();
-        }
-
         private void timerMain_Tick(object sender, EventArgs e)
         {
             UpdateForm();
@@ -1439,6 +1433,21 @@ namespace RateController
         {
             Form frmPressure = new FormPressure(mf);
             frmPressure.ShowDialog();
+        }
+
+        private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["frmModule"];
+
+            if (fs == null)
+            {
+                Form frm = new frmModule(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
     }
 }

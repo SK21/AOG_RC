@@ -171,11 +171,11 @@
     <Compile Include="frmLargeScreen.Designer.cs">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMonitor.cs">
+    <Compile Include="frmModule.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMonitor.Designer.cs">
-      <DependentUpon>frmMonitor.cs</DependentUpon>
+    <Compile Include="frmModule.Designer.cs">
+      <DependentUpon>frmModule.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMsgBox.cs">
       <SubType>Form</SubType>
@@ -286,8 +286,8 @@
     <EmbeddedResource Include="frmLargeScreen.resx">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMonitor.resx">
-      <DependentUpon>frmMonitor.cs</DependentUpon>
+    <EmbeddedResource Include="frmModule.resx">
+      <DependentUpon>frmModule.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMsgBox.resx">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
@@ -361,6 +361,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Cancel64.png" />
+    <None Include="Resources\Pause.png" />
     <None Include="Resources\Update4.png" />
     <None Include="Resources\GreenGear.png" />
     <None Include="Resources\RedGear.png" />
@@ -434,6 +435,7 @@
     <None Include="Images\icons8-check-circle-48.png" />
     <None Include="Images\icons8-cancel-40.png" />
     <None Include="Images\Copy.png" />
+    <None Include="Images\Diagnostics.png" />
     <Content Include="Images\OK64.png" />
     <None Include="Images\OnSmall.png" />
     <None Include="Images\On.png" />

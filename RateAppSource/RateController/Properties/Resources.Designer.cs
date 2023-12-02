@@ -203,6 +203,16 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Diagnostics {
+            get {
+                object obj = ResourceManager.GetObject("Diagnostics", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DnArrow64 {
             get {
                 object obj = ResourceManager.GetObject("DnArrow64", resourceCulture);
@@ -375,6 +385,16 @@ namespace RateController.Properties {
         internal static System.Drawing.Bitmap OpenFile1 {
             get {
                 object obj = ResourceManager.GetObject("OpenFile1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Pause {
+            get {
+                object obj = ResourceManager.GetObject("Pause", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

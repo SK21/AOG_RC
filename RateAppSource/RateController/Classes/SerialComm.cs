@@ -7,23 +7,18 @@ namespace RateController
 {
     public class SerialComm
     {
+        private readonly String ID;
+        private readonly FormStart mf;
         private SerialPort cArduinoPort = new SerialPort("RCport", 38400, Parity.None, 8, StopBits.One);
+        private string cLog;
+        private int cPortNumber;
         private int cRCportBaud = 38400;
         private string cRCportName;
-        private readonly FormStart mf;
-        private int cPortNumber;
-
         private byte HiByte;
-        private readonly String ID;
         private byte LoByte;
-        private string cLog;
 
         // prevent UI lock-up by only sending serial data after verfying connection
         private bool SerialActive = false;
-
-        public SerialPort ArduinoPort { get => cArduinoPort; set => cArduinoPort = value; }
-        public int RCportBaud { get => cRCportBaud; set => cRCportBaud = value; }
-        public string RCportName { get => cRCportName; set => cRCportName = value; }
 
         public SerialComm(FormStart CallingForm, int PortNumber)
         {
@@ -37,6 +32,10 @@ namespace RateController
 
         // new data event
         public delegate void NewDataDelegate(string Sentence);
+
+        public SerialPort ArduinoPort { get => cArduinoPort; set => cArduinoPort = value; }
+        public int RCportBaud { get => cRCportBaud; set => cRCportBaud = value; }
+        public string RCportName { get => cRCportName; set => cRCportName = value; }
 
         public void CloseRCport()
         {
@@ -63,6 +62,11 @@ namespace RateController
             {
                 mf.Tls.WriteErrorLog("SerialComm/CloseRCport: " + ex.Message);
             }
+        }
+
+        public string Log()
+        {
+            return cLog;
         }
 
         public void OpenRCport(string Name)
@@ -119,21 +123,6 @@ namespace RateController
             }
         }
 
-        public string Log()
-        {
-            return cLog;
-        }
-
-        private void AddToLog(string NewData)
-        {
-            cLog += NewData + "\n";
-            if (cLog.Length > 100000)
-            {
-                cLog = cLog.Substring(cLog.Length - 98000, 98000);
-            }
-            cLog = cLog.Replace("\0", string.Empty);
-        }
-
         public bool PortOpen()
         {
             return ArduinoPort.IsOpen;
@@ -151,6 +140,9 @@ namespace RateController
             // send to arduino rate controller
             if (ArduinoPort.IsOpen && SerialActive)
             {
+                int PGN = Data[0] | Data[1] << 8;
+                AddToLog("> " + PGN.ToString());
+
                 try
                 {
                     ArduinoPort.Write(Data, 0, Data.Length);
@@ -162,6 +154,16 @@ namespace RateController
             }
         }
 
+        private void AddToLog(string NewData)
+        {
+            cLog += NewData + Environment.NewLine;
+            if (cLog.Length > 100000)
+            {
+                cLog = cLog.Substring(cLog.Length - 98000, 98000);
+            }
+            cLog = cLog.Replace("\0", string.Empty);
+        }
+
         private void RCport_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             if (ArduinoPort.IsOpen)
@@ -170,7 +172,7 @@ namespace RateController
                 {
                     string sentence = ArduinoPort.ReadLine();
                     mf.BeginInvoke(new NewDataDelegate(ReceiveData), sentence);
-                    if (ArduinoPort.BytesToRead > 32) ArduinoPort.DiscardInBuffer();
+                    if (ArduinoPort.BytesToRead > 100) ArduinoPort.DiscardInBuffer();
                 }
                 catch (Exception ex)
                 {
@@ -200,13 +202,16 @@ namespace RateController
                             if (byte.TryParse(words[1], out HiByte))
                             {
                                 int PGN = HiByte << 8 | LoByte;
+
                                 switch (PGN)
                                 {
                                     case 32618:
+                                        AddToLog("< " + PGN.ToString());
                                         if (mf.SwitchBox.ParseStringData(words)) SerialActive = true;
                                         break;
 
                                     case 32613:
+                                        AddToLog("< " + PGN.ToString());
                                         foreach (clsProduct Prod in mf.Products.Items)
                                         {
                                             if (Prod.SerialFromAruduino(words)) SerialActive = true;
@@ -214,6 +219,7 @@ namespace RateController
                                         break;
 
                                     case 32621:
+                                        AddToLog("< " + PGN.ToString());
                                         if (mf.PressureData.ParseStringData(words)) SerialActive = true;
                                         break;
 
@@ -225,6 +231,9 @@ namespace RateController
                                             Debug.Print(DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + "  " + i.ToString() + " " + words[i].ToString());
                                         }
                                         Debug.Print("");
+                                        break;
+
+                                    default:
                                         break;
                                 }
                             }

@@ -167,7 +167,7 @@ namespace RateController
         {
             for (int i = 0; i < mf.MaxProducts; i++)
             {
-                cProducts[i].Update();
+               cProducts[i].Update();
             }
 
             if ((DateTime.Now - LastSave).TotalSeconds > 60)
@@ -184,7 +184,7 @@ namespace RateController
         {
             for (int i = 0; i < cProducts.Count; i++)
             {
-                cProducts[i].SendPID();
+                if (cProducts[i].ArduinoModule.Connected()) cProducts[i].SendPID();
             }
         }
 

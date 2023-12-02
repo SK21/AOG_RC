@@ -2199,7 +2199,6 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Deb
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmComm.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmHelp.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmLargeScreen.resources
-C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmMonitor.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmMsgBox.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmRelays.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmSections.resources
@@ -2308,3 +2307,4 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Deb
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Lang.pl.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\hu\RateController.resources.dll
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\pl\RateController.resources.dll
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmModule.resources

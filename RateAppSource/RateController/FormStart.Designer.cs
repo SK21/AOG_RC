@@ -69,10 +69,13 @@ namespace RateController
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
+            this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.largeScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pressuresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.MnuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,7 +89,7 @@ namespace RateController
             this.MnuNederlands = new System.Windows.Forms.ToolStripMenuItem();
             this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.serialMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commDiagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -107,9 +110,6 @@ namespace RateController
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
             this.timerPIDs = new System.Windows.Forms.Timer(this.components);
-            this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pressuresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.switchesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -539,14 +539,6 @@ namespace RateController
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
-            // MnuComm
-            // 
-            this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
-            this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(200, 42);
-            this.MnuComm.Text = "Comm";
-            this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
-            // 
             // MnuRelays
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
@@ -554,6 +546,22 @@ namespace RateController
             this.MnuRelays.Size = new System.Drawing.Size(200, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
+            // 
+            // networkToolStripMenuItem
+            // 
+            this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.wifi;
+            this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
+            this.networkToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.networkToolStripMenuItem.Text = "Network";
+            this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
+            // 
+            // MnuComm
+            // 
+            this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
+            this.MnuComm.Name = "MnuComm";
+            this.MnuComm.Size = new System.Drawing.Size(200, 42);
+            this.MnuComm.Text = "Comm";
+            this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
             // MnuOptions
             // 
@@ -568,7 +576,7 @@ namespace RateController
             this.toolStripSeparator2,
             this.mnuMetric,
             this.MnuLanguage,
-            this.serialMonitorToolStripMenuItem,
+            this.commDiagnosticsToolStripMenuItem,
             this.MnuAbout});
             this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
             this.MnuOptions.Name = "MnuOptions";
@@ -579,20 +587,36 @@ namespace RateController
             // 
             this.largeScreenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("largeScreenToolStripMenuItem.Image")));
             this.largeScreenToolStripMenuItem.Name = "largeScreenToolStripMenuItem";
-            this.largeScreenToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
+            this.largeScreenToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
             this.largeScreenToolStripMenuItem.Text = "Large Screen";
             this.largeScreenToolStripMenuItem.Click += new System.EventHandler(this.largeScreenToolStripMenuItem_Click);
+            // 
+            // pressuresToolStripMenuItem
+            // 
+            this.pressuresToolStripMenuItem.Image = global::RateController.Properties.Resources.pressure;
+            this.pressuresToolStripMenuItem.Name = "pressuresToolStripMenuItem";
+            this.pressuresToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
+            this.pressuresToolStripMenuItem.Text = "Pressures";
+            this.pressuresToolStripMenuItem.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click_1);
+            // 
+            // switchesToolStripMenuItem1
+            // 
+            this.switchesToolStripMenuItem1.Image = global::RateController.Properties.Resources._switch;
+            this.switchesToolStripMenuItem1.Name = "switchesToolStripMenuItem1";
+            this.switchesToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
+            this.switchesToolStripMenuItem1.Text = "Switches";
+            this.switchesToolStripMenuItem1.Click += new System.EventHandler(this.switchesToolStripMenuItem1_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(212, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(250, 6);
             // 
             // MnuNew
             // 
             this.MnuNew.Image = global::RateController.Properties.Resources.FileNew1;
             this.MnuNew.Name = "MnuNew";
-            this.MnuNew.Size = new System.Drawing.Size(215, 42);
+            this.MnuNew.Size = new System.Drawing.Size(253, 42);
             this.MnuNew.Text = "New file";
             this.MnuNew.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -600,7 +624,7 @@ namespace RateController
             // 
             this.MnuOpen.Image = global::RateController.Properties.Resources.OpenFile1;
             this.MnuOpen.Name = "MnuOpen";
-            this.MnuOpen.Size = new System.Drawing.Size(215, 42);
+            this.MnuOpen.Size = new System.Drawing.Size(253, 42);
             this.MnuOpen.Text = "Open";
             this.MnuOpen.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -608,20 +632,20 @@ namespace RateController
             // 
             this.MnuSaveAs.Image = global::RateController.Properties.Resources.close2;
             this.MnuSaveAs.Name = "MnuSaveAs";
-            this.MnuSaveAs.Size = new System.Drawing.Size(215, 42);
+            this.MnuSaveAs.Size = new System.Drawing.Size(253, 42);
             this.MnuSaveAs.Text = "Save As";
             this.MnuSaveAs.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(250, 6);
             // 
             // mnuMetric
             // 
             this.mnuMetric.Image = global::RateController.Properties.Resources.Check;
             this.mnuMetric.Name = "mnuMetric";
-            this.mnuMetric.Size = new System.Drawing.Size(215, 42);
+            this.mnuMetric.Size = new System.Drawing.Size(253, 42);
             this.mnuMetric.Text = "Metric Units";
             this.mnuMetric.Click += new System.EventHandler(this.metricToolStripMenuItem_Click);
             // 
@@ -636,7 +660,7 @@ namespace RateController
             this.russianToolStripMenuItem});
             this.MnuLanguage.Image = ((System.Drawing.Image)(resources.GetObject("MnuLanguage.Image")));
             this.MnuLanguage.Name = "MnuLanguage";
-            this.MnuLanguage.Size = new System.Drawing.Size(215, 42);
+            this.MnuLanguage.Size = new System.Drawing.Size(253, 42);
             this.MnuLanguage.Text = "Language";
             // 
             // MnuDeustch
@@ -681,19 +705,19 @@ namespace RateController
             this.russianToolStripMenuItem.Text = "Russian";
             this.russianToolStripMenuItem.Click += new System.EventHandler(this.russianToolStripMenuItem_Click);
             // 
-            // serialMonitorToolStripMenuItem
+            // commDiagnosticsToolStripMenuItem
             // 
-            this.serialMonitorToolStripMenuItem.Image = global::RateController.Properties.Resources.monitor;
-            this.serialMonitorToolStripMenuItem.Name = "serialMonitorToolStripMenuItem";
-            this.serialMonitorToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
-            this.serialMonitorToolStripMenuItem.Text = "Serial Monitor";
-            this.serialMonitorToolStripMenuItem.Click += new System.EventHandler(this.serialMonitorToolStripMenuItem_Click);
+            this.commDiagnosticsToolStripMenuItem.Image = global::RateController.Properties.Resources.Diagnostics;
+            this.commDiagnosticsToolStripMenuItem.Name = "commDiagnosticsToolStripMenuItem";
+            this.commDiagnosticsToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
+            this.commDiagnosticsToolStripMenuItem.Text = "Comm Diagnostics";
+            this.commDiagnosticsToolStripMenuItem.Click += new System.EventHandler(this.commDiagnosticsToolStripMenuItem_Click);
             // 
             // MnuAbout
             // 
             this.MnuAbout.Image = global::RateController.Properties.Resources.About;
             this.MnuAbout.Name = "MnuAbout";
-            this.MnuAbout.Size = new System.Drawing.Size(215, 42);
+            this.MnuAbout.Size = new System.Drawing.Size(253, 42);
             this.MnuAbout.Text = "About";
             this.MnuAbout.Click += new System.EventHandler(this.MnuAbout_Click_1);
             // 
@@ -904,30 +928,6 @@ namespace RateController
             this.timerPIDs.Interval = 5000;
             this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
             // 
-            // networkToolStripMenuItem
-            // 
-            this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.wifi;
-            this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
-            this.networkToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
-            this.networkToolStripMenuItem.Text = "Network";
-            this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
-            // 
-            // pressuresToolStripMenuItem
-            // 
-            this.pressuresToolStripMenuItem.Image = global::RateController.Properties.Resources.pressure;
-            this.pressuresToolStripMenuItem.Name = "pressuresToolStripMenuItem";
-            this.pressuresToolStripMenuItem.Size = new System.Drawing.Size(215, 42);
-            this.pressuresToolStripMenuItem.Text = "Pressures";
-            this.pressuresToolStripMenuItem.Click += new System.EventHandler(this.pressuresToolStripMenuItem_Click_1);
-            // 
-            // switchesToolStripMenuItem1
-            // 
-            this.switchesToolStripMenuItem1.Image = global::RateController.Properties.Resources._switch;
-            this.switchesToolStripMenuItem1.Name = "switchesToolStripMenuItem1";
-            this.switchesToolStripMenuItem1.Size = new System.Drawing.Size(215, 42);
-            this.switchesToolStripMenuItem1.Text = "Switches";
-            this.switchesToolStripMenuItem1.Click += new System.EventHandler(this.switchesToolStripMenuItem1_Click);
-            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1021,7 +1021,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem mnuMetric;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Label lbTarget;
-        private System.Windows.Forms.ToolStripMenuItem serialMonitorToolStripMenuItem;
         private System.Windows.Forms.Label lbPressureValue;
         private System.Windows.Forms.Label lbPressure;
         private System.Windows.Forms.ToolStripMenuItem russianToolStripMenuItem;
@@ -1045,5 +1044,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem networkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pressuresToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem switchesToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem commDiagnosticsToolStripMenuItem;
     }
 }
