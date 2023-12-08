@@ -70,7 +70,7 @@ namespace RateController
 
         private void btnSendSubnet_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Send Ethernet subnet address to modules.";
+            string Message = "Send Ethernet subnet address to modules. Not required for wifi.";
 
             mf.Tls.ShowHelp(Message, "Subnet");
             hlpevent.Handled = true;
