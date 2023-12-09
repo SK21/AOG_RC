@@ -2,21 +2,24 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RateController
 {
     public class clsTools
     {
+        private static Hashtable HTapp;
         private static Hashtable HTfiles;
         private string cAppName = "RateController";
-        private string cAppVersion = "3.5.5";
-        private string cVersionDate = "01-Dec-2023";
-
+        private string cAppVersion = "3.6.0";
+        private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
+        private string cVersionDate = "09-Dec-2023";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
@@ -66,6 +69,38 @@ namespace RateController
         public byte BuildModSenID(byte ArdID, byte SenID)
         {
             return (byte)((ArdID << 4) | (SenID & 0b00001111));
+        }
+
+        public string ControlTypeDescription(ControlTypeEnum CT)
+        {
+            string Result = "";
+            switch (CT)
+            {
+                case ControlTypeEnum.Valve:
+                    Result = Lang.lgStandard;
+                    break;
+
+                case ControlTypeEnum.ComboClose:
+                    Result = Lang.lgComboClose;
+                    break;
+
+                case ControlTypeEnum.Motor:
+                    Result = Lang.lgMotor;
+                    break;
+
+                case ControlTypeEnum.MotorWeights:
+                    Result = Lang.lgMotorWeight;
+                    break;
+
+                case ControlTypeEnum.Fan:
+                    Result = Lang.lgFan;
+                    break;
+
+                case ControlTypeEnum.ComboCloseTimed:
+                    Result = Lang.lgComboTimed;
+                    break;
+            }
+            return Result;
         }
 
         public byte CRC(byte[] Data, int Length, byte Start = 0)
@@ -145,6 +180,11 @@ namespace RateController
             }
         }
 
+        public string FilesDir()
+        {
+            return Properties.Settings.Default.FilesDir;
+        }
+
         public bool GoodCRC(byte[] Data, byte Start = 0)
         {
             bool Result = false;
@@ -186,14 +226,21 @@ namespace RateController
             return IsOn;
         }
 
+        public string LoadAppProperty(string Key)
+        {
+            string Prop = "";
+            if (HTapp.Contains(Key)) Prop = HTapp[Key].ToString();
+            return Prop;
+        }
+
         public void LoadFormData(Form Frm)
         {
             int Leftloc = 0;
-            int.TryParse(LoadProperty(Frm.Name + ".Left"), out Leftloc);
+            int.TryParse(LoadAppProperty(Frm.Name + ".Left"), out Leftloc);
             Frm.Left = Leftloc;
 
             int Toploc = 0;
-            int.TryParse(LoadProperty(Frm.Name + ".Top"), out Toploc);
+            int.TryParse(LoadAppProperty(Frm.Name + ".Top"), out Toploc);
             Frm.Top = Toploc;
 
             IsOnScreen(Frm, true);
@@ -219,6 +266,31 @@ namespace RateController
             catch (Exception)
             {
                 return CurrentData;
+            }
+        }
+
+        public void OpenFile(string NewFile)
+        {
+            try
+            {
+                string PathName = Path.GetDirectoryName(NewFile); // only works if file name present
+                string FileName = Path.GetFileName(NewFile);
+                if (FileName == "") PathName = NewFile;     // no file name present, fix path name
+                if (Directory.Exists(PathName)) Properties.Settings.Default.FilesDir = PathName; // set the new files dir
+
+                cPropertiesFile = Properties.Settings.Default.FilesDir + "\\" + FileName;
+                if (!File.Exists(cPropertiesFile)) File.Create(cPropertiesFile).Dispose();
+                LoadFilesData(cPropertiesFile);
+                Properties.Settings.Default.FileName = FileName;
+                Properties.Settings.Default.Save();
+
+                cPropertiesApp = Properties.Settings.Default.FilesDir + "\\AppData.txt";
+                if (!File.Exists(cPropertiesApp)) File.Create(cPropertiesApp).Dispose();
+                LoadAppData(cPropertiesApp);
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: OpenFile: " + ex.Message);
             }
         }
 
@@ -248,6 +320,48 @@ namespace RateController
             }
         }
 
+        public string ReadTextFile(string FileName)
+        {
+            string Result = "";
+            string Line;
+            FileName = cSettingsDir + "\\" + FileName;
+            try
+            {
+                StreamReader sr = new StreamReader(FileName);
+                Line = sr.ReadLine();
+                while (Line != null)
+                {
+                    Result += Line + Environment.NewLine;
+                    Line = sr.ReadLine();
+                }
+                sr.Close();
+            }
+            catch (Exception ex)
+            {
+                //WriteErrorLog("ReadTextFile: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public void SaveAppProperty(string Key, string Value)
+        {
+            bool Changed = false;
+            if (HTapp.Contains(Key))
+            {
+                if (!HTapp[Key].ToString().Equals(Value))
+                {
+                    HTapp[Key] = Value;
+                    Changed = true;
+                }
+            }
+            else
+            {
+                HTapp.Add(Key, Value);
+                Changed = true;
+            }
+            if (Changed) SaveAppProperties();
+        }
+
         public void SaveFile(string NewFile)
         {
             try
@@ -272,8 +386,8 @@ namespace RateController
 
         public void SaveFormData(Form Frm)
         {
-            SaveProperty(Frm.Name + ".Left", Frm.Left.ToString());
-            SaveProperty(Frm.Name + ".Top", Frm.Top.ToString());
+            SaveAppProperty(Frm.Name + ".Left", Frm.Left.ToString());
+            SaveAppProperty(Frm.Name + ".Top", Frm.Top.ToString());
         }
 
         public void SaveProperty(string Key, string Value)
@@ -298,11 +412,6 @@ namespace RateController
         public string SettingsDir()
         {
             return cSettingsDir;
-        }
-
-        public string FilesDir()
-        {
-            return Properties.Settings.Default.FilesDir;
         }
 
         public void ShowHelp(string Message, string Title = "Help",
@@ -387,7 +496,7 @@ namespace RateController
 
                 if (Newline) Line = "\r\n";
 
-                File.AppendAllText(FileName, Line + DateTime.Now.ToString("dd-MMM-yy hh:mm:ss.fff tt") + "  -  " + Message + "\r\n");
+                File.AppendAllText(FileName, Line + DateTime.Now.ToString("MMM-dd hh:mm:ss") + "  -  " + Message + "\r\n");
             }
             catch (Exception ex)
             {
@@ -401,7 +510,7 @@ namespace RateController
             {
                 string FileName = cSettingsDir + "\\Error Log.txt";
                 TrimFile(FileName);
-                File.AppendAllText(FileName, DateTime.Now.ToString() + "  -  " + strErrorText + "\r\n\r\n");
+                File.AppendAllText(FileName, DateTime.Now.ToString("MMM-dd hh:mm:ss") + "  -  " + strErrorText + "\r\n\r\n");
             }
             catch (Exception)
             {
@@ -426,7 +535,29 @@ namespace RateController
             }
         }
 
-        private void LoadProperties(string path)
+        private void LoadAppData(string path)
+        {
+            // property:  key=value  ex: "LastFile=Main.mdb"
+            try
+            {
+                HTapp = new Hashtable();
+                string[] lines = System.IO.File.ReadAllLines(path);
+                foreach (string line in lines)
+                {
+                    if (line.Contains("=") && !String.IsNullOrEmpty(line.Split('=')[0]) && !String.IsNullOrEmpty(line.Split('=')[1]))
+                    {
+                        string[] splitText = line.Split('=');
+                        HTapp.Add(splitText[0], splitText[1]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: LoadProperties: " + ex.Message);
+            }
+        }
+
+        private void LoadFilesData(string path)
         {
             // property:  key=value  ex: "LastFile=Main.mdb"
             try
@@ -448,25 +579,21 @@ namespace RateController
             }
         }
 
-        public void OpenFile(string NewFile)
+        private void SaveAppProperties()
         {
             try
             {
-                string PathName=Path.GetDirectoryName(NewFile); // only works if file name present
-                string FileName = Path.GetFileName(NewFile);
-                if (FileName == "") PathName = NewFile;     // no file name present, fix path name
-                if(Directory.Exists(PathName)) Properties.Settings.Default.FilesDir = PathName; // set the new files dir
-
-                cPropertiesFile = Properties.Settings.Default.FilesDir + "\\" + FileName;
-                if (!File.Exists(cPropertiesFile)) File.Create(cPropertiesFile).Dispose();
-
-                LoadProperties(cPropertiesFile);
-                Properties.Settings.Default.FileName = FileName;
-                Properties.Settings.Default.Save();
+                string[] NewLines = new string[HTapp.Count];
+                int i = -1;
+                foreach (DictionaryEntry Pair in HTapp)
+                {
+                    i++;
+                    NewLines[i] = Pair.Key.ToString() + "=" + Pair.Value.ToString();
+                }
+                if (i > -1) File.WriteAllLines(cPropertiesApp, NewLines);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                WriteErrorLog("Tools: OpenFile: " + ex.Message);
             }
         }
 

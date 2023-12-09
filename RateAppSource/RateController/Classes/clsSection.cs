@@ -7,16 +7,13 @@ namespace RateController
         private bool cEdited;
         private bool cEnabled = false;
         private int cID = 0;
-
         private bool cSectionOn = false;
+        private bool cSwitchChanged = false;
         private int cSwitchID = 0;
         private float cWidth = 0;   // cm
 
-        private int MaxSwitches = 16;
         private FormStart mf;
         private string Name;
-
-        public bool SwitchChanged = false;
 
         public clsSection(FormStart CallingFrom, int ID)
         {
@@ -25,7 +22,8 @@ namespace RateController
             Name = "Sec" + ID.ToString();
         }
 
-        public bool Edited { get { return cEdited; } }
+        public bool Edited
+        { get { return cEdited; } }
 
         public bool Enabled
         {
@@ -40,7 +38,8 @@ namespace RateController
             }
         }
 
-        public int ID { get { return cID; } }
+        public int ID
+        { get { return cID; } }
 
         public bool IsON
         {
@@ -60,23 +59,29 @@ namespace RateController
             }
         }
 
+        public bool SwitchChanged
+        {
+            get { return cSwitchChanged; }
+            set { cSwitchChanged = value; }
+        }
+
         public int SwitchID
         {
             get { return cSwitchID; }
             set
             {
-                if (value >= 0 && value < MaxSwitches)
+                if (value >= 0 && value < mf.MaxSwitches)
                 {
                     if (cSwitchID != value)
                     {
                         cSwitchID = value;
                         cEdited = true;
-                        SwitchChanged = true;
+                        cSwitchChanged = true;
                     }
                 }
                 else
                 {
-                    throw new ArgumentException("Must be between 0 and " + (MaxSwitches - 1).ToString());
+                    throw new ArgumentException("Must be between 0 and " + (mf.MaxSwitches - 1).ToString());
                 }
             }
         }

@@ -81,7 +81,32 @@ namespace RateController
                 cProducts.Add(Prod);
                 Prod.Load();
             }
+
+            for (int i = 0; i < mf.MaxProducts; i++)
+            {
+                clsProduct Prod = cProducts[i];
+                if (Prod.IsNew())
+                {
+                    // set initial module ID
+                    for (int j = 0; j < 255; j++)
+                    {
+                        if (UniqueModSen(j, Prod.SensorID, Prod.ID))
+                        {
+                            Prod.ModuleID = j;
+                            break;
+                        }
+                    }
+                    Prod.PIDkp = 1;
+                    Prod.PIDki = 0;
+                    Prod.PIDkd = 0;
+                    Prod.PIDmax = 100;
+                    Prod.PIDmin = 5;
+                    Prod.ProductName = "P" + (i + 1).ToString();
+                    Prod.Save();
+                }
+            }
         }
+
 
         public string ProductComm(int Port)
         {
@@ -96,6 +121,16 @@ namespace RateController
                         break;
                     }
                 }
+            }
+            return Result;
+        }
+
+        public int ProductID(int ModuleID)
+        {
+            int Result = -1;
+            for (int i = 0; i < cProducts.Count; i++)
+            {
+                if (cProducts[i].ModuleID == ModuleID) Result = i;
             }
             return Result;
         }
@@ -167,7 +202,7 @@ namespace RateController
         {
             for (int i = 0; i < mf.MaxProducts; i++)
             {
-               cProducts[i].Update();
+                cProducts[i].Update();
             }
 
             if ((DateTime.Now - LastSave).TotalSeconds > 60)
@@ -198,11 +233,12 @@ namespace RateController
 
         private int ListID(int ProdID)
         {
+            int Result = -1;
             for (int i = 0; i < cProducts.Count; i++)
             {
-                if (cProducts[i].ID == ProdID) return i;
+                if (cProducts[i].ID == ProdID) Result = i;
             }
-            return -1;
+            return Result;
         }
     }
 }

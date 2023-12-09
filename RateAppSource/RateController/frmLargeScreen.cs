@@ -1,5 +1,4 @@
-﻿using RateController.Properties;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -42,14 +41,14 @@ namespace RateController
             lbQuantity.Text = Lang.lgTank_Remaining + " ...";
 
             mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
-            mnuSettings.Items["MnuSections"].Text = Lang.lgSection;
+            mnuSettings.Items["MnuSections"].Text = Lang.lgSections;
             mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
             mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
             mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
             mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgNetwork;
+            mnuSettings.Items["calibrateToolStripMenuItem1"].Text = Lang.lgCalibrate;
 
             MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
-            MnuOptions.DropDownItems["MnuAbout"].Text = Lang.lgAbout;
             MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
             MnuOptions.DropDownItems["MnuOpen"].Text = Lang.lgOpen;
             MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
@@ -368,21 +367,6 @@ namespace RateController
             }
         }
 
-        private void MnuAbout_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = Application.OpenForms["FormAbout"];
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormAbout(mf);
-            frm.Show();
-        }
-
         private void MnuComm_Click(object sender, EventArgs e)
         {
             Form frm = new frmComm(mf);
@@ -392,7 +376,7 @@ namespace RateController
         private void MnuDeustch_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "de";
-            Settings.Default.UserLanguageChange = true;
+            Properties.Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
@@ -401,7 +385,7 @@ namespace RateController
         private void MnuEnglish_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "en";
-            Settings.Default.UserLanguageChange = true;
+            Properties.Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
@@ -416,16 +400,10 @@ namespace RateController
         private void MnuNederlands_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "nl";
-            Settings.Default.UserLanguageChange = true;
+            Properties.Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
-        }
-
-        private void mnuNetwork_Click(object sender, EventArgs e)
-        {
-            Form frmWifi = new frmWifi(mf);
-            frmWifi.ShowDialog();
         }
 
         private void MnuNew_Click(object sender, EventArgs e)
@@ -453,12 +431,6 @@ namespace RateController
                 mf.LoadSettings();
                 UpdateForm();
             }
-        }
-
-        private void MnuPressures_Click(object sender, EventArgs e)
-        {
-            Form frmPressure = new FormPressure(mf);
-            frmPressure.ShowDialog();
         }
 
         private void MnuProducts_Click(object sender, EventArgs e)
@@ -515,7 +487,7 @@ namespace RateController
         private void russianToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "ru";
-            Settings.Default.UserLanguageChange = true;
+            Properties.Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
@@ -686,28 +658,13 @@ namespace RateController
                 double RT = Prd.SmoothRate();
                 if (RT == 0) RT = Prd.TargetRate();
 
-                if (Prd.ControlType == ControlTypeEnum.MotorWeights)
+                if ((RT > 0) & (Prd.TankStart > 0))
                 {
-                    // using weights
-                    if (Prd.Scale.Counts > 0)
-                    {
-                        lbCoverageAmount.Text = (Prd.CurrentWeight() / RT).ToString("N1");
-                    }
-                    else
-                    {
-                        lbCoverageAmount.Text = "0.0";
-                    }
+                    lbCoverageAmount.Text = ((Prd.TankStart - Prd.UnitsApplied()) / RT).ToString("N1");
                 }
                 else
                 {
-                    if ((RT > 0) & (Prd.TankStart > 0))
-                    {
-                        lbCoverageAmount.Text = ((Prd.TankStart - Prd.UnitsApplied()) / RT).ToString("N1");
-                    }
-                    else
-                    {
-                        lbCoverageAmount.Text = "0.0";
-                    }
+                    lbCoverageAmount.Text = "0.0";
                 }
             }
             else
@@ -721,16 +678,8 @@ namespace RateController
             if (ShowQuantityRemaining)
             {
                 lbQuantity.Text = Lang.lgTank_Remaining + " ...";
-                if (Prd.ControlType == ControlTypeEnum.MotorWeights)
-                {
-                    // show weight
-                    lbQuantityAmount.Text = (Prd.CurrentWeight()).ToString("N0");
-                }
-                else
-                {
-                    // calculate remaining
-                    lbQuantityAmount.Text = (Prd.TankStart - Prd.UnitsApplied()).ToString("N1");
-                }
+                // calculate remaining
+                lbQuantityAmount.Text = (Prd.TankStart - Prd.UnitsApplied()).ToString("N1");
             }
             else
             {
@@ -1153,22 +1102,6 @@ namespace RateController
             }
         }
 
-        private void switchesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = Application.OpenForms["frmSimulation"];
-
-            if (fs == null)
-            {
-                Form frm = new frmSwitches(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
         private void btnFan1_Click(object sender, EventArgs e)
         {
             clsProduct fn = mf.Products.Item(mf.MaxProducts - 2);
@@ -1389,28 +1322,55 @@ namespace RateController
             }
         }
 
+        private void mnuSettings_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
         private void polishToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.setF_culture = "pl";
-            Settings.Default.UserLanguageChange = true;
+            Properties.Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
             this.Close();
         }
 
-        private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.setF_culture = "hu";
-            Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            mf.Restart = true;
-            Application.Restart();
+            Form frmPressure = new FormPressure(mf);
+            frmPressure.ShowDialog();
+        }
+
+        private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //check if window already exists
+            Form fs = Application.OpenForms["frmCalibrate"];
+
+            if (fs == null)
+            {
+                Form frm = new frmCalibrate(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frmWifi = new frmWifi(mf);
-            frmWifi.ShowDialog();
+            Form fs = Application.OpenForms["frmWifi"];
+
+            if (fs == null)
+            {
+                Form frm = new frmWifi(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1429,10 +1389,13 @@ namespace RateController
             }
         }
 
-        private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
+        private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frmPressure = new FormPressure(mf);
-            frmPressure.ShowDialog();
+            Properties.Settings.Default.setF_culture = "hu";
+            Properties.Settings.Default.UserLanguageChange = true;
+            Properties.Settings.Default.Save();
+            mf.Restart = true;
+            Application.Restart();
         }
 
         private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1448,6 +1411,15 @@ namespace RateController
             {
                 fs.Focus();
             }
+        }
+
+        private void frenchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "fr";
+            Properties.Settings.Default.UserLanguageChange = true;
+            Properties.Settings.Default.Save();
+            mf.Restart = true;
+            Application.Restart();
         }
     }
 }

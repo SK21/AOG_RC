@@ -9,12 +9,15 @@ namespace RateController
 {
     public partial class frmSections : Form
     {
+        private bool FormEdited;
         private bool Initializing;
         private double LastValue;
         private FormStart mf;
         private byte SecCount;
-        private bool UseInches;
-        private bool FormEdited;
+        private bool SectionCountChanged = false;
+        private int SectionsPerZone = 10;
+        private bool SectionsPerZoneChanged = false;
+        private bool UseZones = false;
 
         public frmSections(FormStart CalledFrom)
         {
@@ -31,11 +34,17 @@ namespace RateController
             lbWidth.Text = Lang.lgWidth;
             btnEqual.Text = Lang.lgEqual;
             this.Text = Lang.lgSection;
+
+            DGV2.Columns[0].HeaderText = Lang.lgZone;
+            DGV2.Columns[1].HeaderText = Lang.lgStart;
+            DGV2.Columns[2].HeaderText = Lang.lgEnd;
+            DGV2.Columns[3].HeaderText = Lang.lgWidth;
+            DGV2.Columns[4].HeaderText = Lang.lgSwitch;
+
             #endregion // language
 
             mf = CalledFrom;
             SetDayMode();
-            UseInches = mf.UseInches;
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -48,14 +57,11 @@ namespace RateController
                 }
                 else
                 {
-                    // save changes
-                    SetSectionCount();
-                    SaveSectionData();
+                    Save();
                     mf.Sections.CheckSwitchDefinitions();
 
                     UpdateForm();
                     SetButtons(false);
-                    UseInches = mf.UseInches;
                 }
             }
             catch (Exception ex)
@@ -66,7 +72,11 @@ namespace RateController
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            mf.UseInches = UseInches;
+            if (UseZones) mf.Zones.Load();
+
+            SectionCountChanged = false;
+            SectionsPerZoneChanged = false;
+
             UpdateForm();
             SetButtons(false);
         }
@@ -83,16 +93,38 @@ namespace RateController
         {
             try
             {
-                string val = DGV.Rows[0].Cells[1].EditedFormattedValue.ToString();
-
-                for (int i = 0; i < DGV.Rows.Count; i++)
+                if (UseZones)
                 {
-                    DGV.Rows[i].Cells[1].Value = Convert.ToDouble(val);
+                    string val = DGV2.Rows[0].Cells[3].EditedFormattedValue.ToString();
+
+                    for (int i = 0; i < DGV2.Rows.Count; i++)
+                    {
+                        if (mf.Zones.Item(i).Start > 0) DGV2.Rows[i].Cells[3].Value = Convert.ToDouble(val);
+                    }
+                }
+                else
+                {
+                    string val = DGV.Rows[0].Cells[1].EditedFormattedValue.ToString();
+
+                    for (int i = 0; i < DGV.Rows.Count; i++)
+                    {
+                        DGV.Rows[i].Cells[1].Value = Convert.ToDouble(val);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
+            }
+        }
+
+        private void ckZones_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                UseZones = ckZones.Checked;
+                mf.Tls.SaveProperty("UseZones", UseZones.ToString());
+                UpdateForm();
             }
         }
 
@@ -151,9 +183,93 @@ namespace RateController
                     e.FormattingApplied = true;
                 }
             }
+            if (e.ColumnIndex == 0 )
+            {
+                e.CellStyle.BackColor = this.BackColor;
+            }
         }
 
         private void DGV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!Initializing) SetButtons(true);
+        }
+
+        private void DGV2_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                double tempD;
+                string val = DGV2.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue.ToString();
+                switch (e.ColumnIndex)
+                {
+                    case 2:
+                        // end section
+                        double.TryParse(val, out tempD);
+                        using (var form = new FormNumeric(1, mf.Sections.Count, tempD))
+                        {
+                            var result = form.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                DGV2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
+                                string zz = DGV2.Rows[e.RowIndex].Cells[0].EditedFormattedValue.ToString();
+                                int.TryParse(zz, out int Zone);
+                                mf.Zones.Update(Zone - 1, (int)form.ReturnValue, SectionsPerZone);
+                                LoadDGV2();
+                            }
+                        }
+                        break;
+
+                    case 3:
+                        // width
+                        double.TryParse(val, out tempD);
+                        if (tempD == 0) tempD = LastValue;
+                        using (var form = new FormNumeric(0, 10000, tempD))
+                        {
+                            var result = form.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                DGV2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
+                                LastValue = form.ReturnValue;
+                            }
+                        }
+                        break;
+
+                    case 4:
+                        // switch
+                        double.TryParse(val, out tempD);
+                        using (var form = new FormNumeric(1, 16, tempD))
+                        {
+                            var result = form.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                DGV2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void DGV2_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.Value.ToString() == "0")
+            {
+                e.Value = "";
+                e.FormattingApplied = true;
+            }
+            if(e.ColumnIndex==0||e.ColumnIndex==1)
+            {
+                e.CellStyle.BackColor = this.BackColor;
+            }
+        }
+
+        private void DGV2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (!Initializing) SetButtons(true);
         }
@@ -172,10 +288,17 @@ namespace RateController
 
             DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
             DGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DGV2.BackgroundColor = DGV.DefaultCellStyle.BackColor;
+            DGV2.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            bool.TryParse(mf.Tls.LoadProperty("UseZones"), out UseZones);
+            int.TryParse(mf.Tls.LoadProperty("SectionsPerZone"), out SectionsPerZone);
+            if (SectionsPerZone < 1) SectionsPerZone = 1;
+
             UpdateForm();
         }
 
-        private void LoadSectionData()
+        private void LoadDGV()
         {
             try
             {
@@ -204,11 +327,72 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("FormSections/LoadSectionData: " + ex.Message);
+                mf.Tls.WriteErrorLog("FormSections/LoadDGV: " + ex.Message);
             }
         }
 
-        private void SaveSectionData()
+        private void LoadDGV2()
+        {
+            try
+            {
+                dataTable2.Clear();
+                foreach (clsZone Zn in mf.Zones.Items)
+                {
+                    DataRow Rw = dataSet2.Tables[0].NewRow();
+                    Rw[0] = Zn.ID + 1;
+                    Rw[1] = Zn.Start;
+                    Rw[2] = Zn.End;
+                    if (Zn.Start > 0)
+                    {
+                        if (mf.UseInches)
+                        {
+                            Rw[3] = Zn.Width_inches;
+                        }
+                        else
+                        {
+                            Rw[3] = Zn.Width_cm;
+                        }
+                        Rw[4] = Zn.SwitchID + 1;
+                    }
+                    else
+                    {
+                        Rw[3] = 0;
+                        Rw[4] = 0;
+                    }
+
+                    dataSet2.Tables[0].Rows.Add(Rw);
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("FormSections/LoadDGV2: " + ex.Message);
+            }
+        }
+
+        private void Save()
+        {
+            // save changes
+            SetSectionCount();
+            if (UseZones)
+            {
+                int.TryParse(tbSectionsPerZone.Text, out SectionsPerZone);
+                mf.Tls.SaveProperty("SectionsPerZone", SectionsPerZone.ToString());
+
+                if (SectionCountChanged || SectionsPerZoneChanged) mf.Zones.Build(SectionsPerZone);
+                SectionCountChanged = false;
+                SectionsPerZoneChanged = false;
+
+                SaveDGV2();
+                mf.Zones.Save();
+            }
+            else
+            {
+                SaveDGV();
+                mf.Sections.Save();
+            }
+        }
+
+        private void SaveDGV()
         {
             try
             {
@@ -243,10 +427,52 @@ namespace RateController
             catch (Exception ex)
             {
                 mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
-                LoadSectionData();
+                LoadDGV();
             }
-            mf.Sections.Save();
-            UpdateTotalWidth();
+        }
+
+        private void SaveDGV2()
+        {
+            try
+            {
+                for (int i = 0; i < DGV2.Rows.Count; i++)
+                {
+                    string St = DGV2.Rows[i].Cells[1].EditedFormattedValue.ToString();
+                    int.TryParse(St, out int Start);
+                    if (Start > 0)
+                    {
+                        for (int j = 1; j < 5; j++)
+                        {
+                            string val = DGV2.Rows[i].Cells[j].EditedFormattedValue.ToString();
+                            if (val == "") val = "0";
+                            switch (j)
+                            {
+                                case 3:
+                                    // width
+                                    if (mf.UseInches)
+                                    {
+                                        mf.Zones.Item(i).Width_inches = (float)Convert.ToDouble(val);
+                                    }
+                                    else
+                                    {
+                                        mf.Zones.Item(i).Width_cm = (float)Convert.ToDouble(val);
+                                    }
+                                    break;
+
+                                case 4:
+                                    // switch
+                                    mf.Zones.Item(i).SwitchID = Convert.ToInt32(val) - 1;    // displayed as 1-16, saved as 0-15
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
+                LoadDGV2();
+            }
         }
 
         private void SetButtons(bool Edited)
@@ -258,12 +484,14 @@ namespace RateController
                     btnCancel.Enabled = true;
                     bntOK.Image = Properties.Resources.Save;
                     btnEqual.Enabled = false;
+                    ckZones.Enabled = false;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
                     bntOK.Image = Properties.Resources.OK;
                     btnEqual.Enabled = true;
+                    ckZones.Enabled = true;
                 }
 
                 FormEdited = Edited;
@@ -306,7 +534,7 @@ namespace RateController
         {
             double tempD;
             double.TryParse(tbSectionCount.Text, out tempD);
-            using (var form = new FormNumeric(1, 16, tempD))
+            using (var form = new FormNumeric(1, mf.MaxSections, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -327,10 +555,55 @@ namespace RateController
             {
                 double tempD;
                 double.TryParse(tbSectionCount.Text, out tempD);
-                if (tempD < 1 || tempD > 16)
+                if (tempD < 1 || tempD > mf.MaxSections)
                 {
                     System.Media.SystemSounds.Exclamation.Play();
                     e.Cancel = true;
+                }
+                else
+                {
+                    SectionCountChanged = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
+            }
+        }
+
+        private void tbSectionsPerZone_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSectionsPerZone.Text, out tempD);
+            using (var form = new FormNumeric(1, mf.MaxSections, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSectionsPerZone.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbSectionsPerZone_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbSectionsPerZone_Validating(object sender, CancelEventArgs e)
+        {
+            try
+            {
+                double tempD;
+                double.TryParse(tbSectionsPerZone.Text, out tempD);
+                if (tempD < 1 || tempD > mf.MaxSections)
+                {
+                    System.Media.SystemSounds.Exclamation.Play();
+                    e.Cancel = true;
+                }
+                else
+                {
+                    SectionsPerZoneChanged = true;
                 }
             }
             catch (Exception ex)
@@ -342,11 +615,27 @@ namespace RateController
         private void UpdateForm()
         {
             Initializing = true;
-            LoadSectionData();
+
+            DGV.Visible = !UseZones;
+            DGV2.Visible = UseZones;
+            if (UseZones)
+            {
+                LoadDGV2();
+                ckZones.Image = Properties.Resources.SectionsWithZones;
+            }
+            else
+            {
+                LoadDGV();
+                ckZones.Image = Properties.Resources.SectionsNoZones2;
+            }
+
             SecCount = (byte)mf.Sections.Count;
             tbSectionCount.Text = SecCount.ToString("N0");
-            Initializing = false;
+            ckZones.Checked = UseZones;
             UpdateTotalWidth();
+            tbSectionsPerZone.Text = SectionsPerZone.ToString("N0");
+
+            Initializing = false;
         }
 
         private void UpdateTotalWidth()

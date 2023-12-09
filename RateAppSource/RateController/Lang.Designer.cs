@@ -196,6 +196,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Combo Timed.
+        /// </summary>
+        internal static string lgComboTimed {
+            get {
+                return ResourceManager.GetString("lgComboTimed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Comm.
         /// </summary>
         internal static string lgComm {
@@ -322,6 +331,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End.
+        /// </summary>
+        internal static string lgEnd {
+            get {
+                return ResourceManager.GetString("lgEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to =1.
         /// </summary>
         internal static string lgEqual {
@@ -345,6 +363,15 @@ namespace RateController {
         internal static string lgFirmware {
             get {
                 return ResourceManager.GetString("lgFirmware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geo Stop.
+        /// </summary>
+        internal static string lgGeoStop {
+            get {
+                return ResourceManager.GetString("lgGeoStop", resourceCulture);
             }
         }
         
@@ -399,6 +426,24 @@ namespace RateController {
         internal static string lgHours {
             get {
                 return ResourceManager.GetString("lgHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hyd Down.
+        /// </summary>
+        internal static string lgHydDown {
+            get {
+                return ResourceManager.GetString("lgHydDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hyd Up.
+        /// </summary>
+        internal static string lgHydUp {
+            get {
+                return ResourceManager.GetString("lgHydUp", resourceCulture);
             }
         }
         
@@ -642,6 +687,15 @@ namespace RateController {
         internal static string lgNew {
             get {
                 return ResourceManager.GetString("lgNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        internal static string lgNone {
+            get {
+                return ResourceManager.GetString("lgNone", resourceCulture);
             }
         }
         
@@ -943,7 +997,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sections.
+        ///   Looks up a localized string similar to Section.
         /// </summary>
         internal static string lgSection {
             get {
@@ -961,7 +1015,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sections for this Product.
+        ///   Looks up a localized string similar to Sections.
         /// </summary>
         internal static string lgSections {
             get {
@@ -1078,7 +1132,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Standard.
+        ///   Looks up a localized string similar to Standard valve.
         /// </summary>
         internal static string lgStandard {
             get {
@@ -1110,6 +1164,15 @@ namespace RateController {
         internal static string lgStop {
             get {
                 return ResourceManager.GetString("lgStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subnet Address.
+        /// </summary>
+        internal static string lgSubnet {
+            get {
+                return ResourceManager.GetString("lgSubnet", resourceCulture);
             }
         }
         
@@ -1200,6 +1263,24 @@ namespace RateController {
         internal static string lgTimeForSingle {
             get {
                 return ResourceManager.GetString("lgTimeForSingle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tram Left.
+        /// </summary>
+        internal static string lgTramLeft {
+            get {
+                return ResourceManager.GetString("lgTramLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tram Right.
+        /// </summary>
+        internal static string lgTramRight {
+            get {
+                return ResourceManager.GetString("lgTramRight", resourceCulture);
             }
         }
         
@@ -1344,6 +1425,15 @@ namespace RateController {
         internal static string lgWorkingWidthM {
             get {
                 return ResourceManager.GetString("lgWorkingWidthM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zone.
+        /// </summary>
+        internal static string lgZone {
+            get {
+                return ResourceManager.GetString("lgZone", resourceCulture);
             }
         }
     }

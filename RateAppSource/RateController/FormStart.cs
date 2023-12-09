@@ -17,14 +17,17 @@ namespace RateController
     public partial class FormStart : Form
     {
         public readonly int MaxRelays = 16;
-        public readonly int MaxSections = 16;
+        public readonly int MaxSections = 128;
         public readonly int MaxProducts = 6;    // last two are fans 
+        public readonly int MaxModules = 8;
+        public readonly int MaxSensors = 8;
+        public readonly int MaxSwitches = 16;
 
         public clsSectionControl SectionControl;
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
-        public PGN32621 PressureData;
+        public PGN32401 AnalogData;
         public clsPressures PressureObjects;
         public byte PressureToShowID;
         public clsProducts Products;
@@ -32,13 +35,19 @@ namespace RateController
         public clsRelays RelayObjects;
         public clsSections Sections;
         public PGN235 SectionsPGN;
+        public PGN238 MachineConfig;
+        public PGN239 MachineData;
         public SerialComm[] SER = new SerialComm[3];
         public bool ShowPressure;
         public Color SimColor = Color.FromArgb(255, 191, 0);
         public PGN32618 SwitchBox;
-        public PGN32620 SwitchIDs;
         public clsTools Tls;
-        public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower, Lang.lgInvertSection };
+        public clsZones Zones;
+
+        public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower, 
+            Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
+            Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgNone};
+        
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
         public bool cUseInches;
@@ -68,8 +77,9 @@ namespace RateController
         private bool LoadError = false;
         private int cDefaultProduct = 0;
 
-        public PGN32504 ModuleStatus;
-        public bool SendStatusPGN;
+        private PGN32501[] RelaySettings;
+        private DateTime[] ModuleTime;
+
         public FormStart()
         {
             InitializeComponent();
@@ -82,37 +92,39 @@ namespace RateController
             lbRemaining.Text = Lang.lgTank_Remaining + " ...";
 
             mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
-            mnuSettings.Items["MnuSections"].Text = Lang.lgSection;
+            mnuSettings.Items["MnuSections"].Text = Lang.lgSections;
             mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
             mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
             mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
+            mnuSettings.Items["calibrateToolStripMenuItem1"].Text = Lang.lgCalibrate;
             mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgNetwork;
 
-            MnuOptions.DropDownItems["MnuAbout"].Text = Lang.lgAbout;
+            MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
             MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
             MnuOptions.DropDownItems["MnuOpen"].Text = Lang.lgOpen;
             MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
             MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
             MnuOptions.DropDownItems["mnuMetric"].Text = Lang.lgMetric;
-            MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
-            MnuOptions.DropDownItems["commDiagnosticsToolStripMenuItem"].Text = Lang.lgCommDiagnostics;
+            MnuOptions.DropDownItems["switchesToolStripMenuItem1"].Text = Lang.lgSwitches;
+            MnuOptions.DropDownItems["commDiagnosticToolStripMenuItem"].Text = Lang.lgCommDiagnostics;
 
             #endregion // language
 
             Tls = new clsTools(this);
 
             //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
-            UDPaog = new UDPComm(this, 17777, 15555, 1460, "127.255.255.255", true, true);  // AOG
 
-            UDPmodules = new UDPComm(this, 29999, 28888, 1480);    // arduino
+            UDPaog = new UDPComm(this, 17777, 15555, 1460, "UDPaog", "127.255.255.255");        // AOG
+            UDPmodules = new UDPComm(this, 29999, 28888, 1480, "UDPmodules");                   // arduino
 
             AutoSteerPGN = new PGN254(this);
             SectionsPGN = new PGN235(this);
+            MachineConfig = new PGN238(this);
+            MachineData = new PGN239(this);
             VRdata = new PGN230(this);
 
             SwitchBox = new PGN32618(this);
-            SwitchIDs = new PGN32620(this);
-            PressureData = new PGN32621(this);
+            AnalogData = new PGN32401(this);
 
             Sections = new clsSections(this);
             Products = new clsProducts(this);
@@ -135,7 +147,14 @@ namespace RateController
 
             timerMain.Interval = 1000;
 
-            ModuleStatus = new PGN32504(this);
+            RelaySettings = new PGN32501[MaxModules];
+            for (int i = 0; i < MaxModules; i++)
+            {
+                RelaySettings[i] = new PGN32501(this, i);
+            }
+
+            ModuleTime = new DateTime[MaxModules];
+            Zones = new clsZones(this);
         }
         public bool UseInches
         {
@@ -195,6 +214,7 @@ namespace RateController
             RelayObjects.Load();
 
             LoadDefaultProduct();
+            Zones.Load();
         }
 
         private void LoadDefaultProduct()
@@ -314,28 +334,13 @@ namespace RateController
                         double RT = Prd.SmoothRate();
                         if (RT == 0) RT = Prd.TargetRate();
 
-                        if (Prd.ControlType == ControlTypeEnum.MotorWeights)
+                        if ((RT > 0) & (Prd.TankStart > 0))
                         {
-                            // using weights
-                            if (Prd.Scale.Counts > 0)
-                            {
-                                AreaDone.Text = (Prd.CurrentWeight() / RT).ToString("N1");
-                            }
-                            else
-                            {
-                                AreaDone.Text = "0.0";
-                            }
+                            AreaDone.Text = ((Prd.TankStart - Prd.UnitsApplied()) / RT).ToString("N1");
                         }
                         else
                         {
-                            if ((RT > 0) & (Prd.TankStart > 0))
-                            {
-                                AreaDone.Text = ((Prd.TankStart - Prd.UnitsApplied()) / RT).ToString("N1");
-                            }
-                            else
-                            {
-                                AreaDone.Text = "0.0";
-                            }
+                            AreaDone.Text = "0.0";
                         }
                     }
                     else
@@ -348,16 +353,8 @@ namespace RateController
                     if (ShowQuantityRemaining)
                     {
                         lbRemaining.Text = Lang.lgTank_Remaining + " ...";
-                        if (Prd.ControlType == ControlTypeEnum.MotorWeights)
-                        {
-                            // show weight
-                            TankRemain.Text = (Prd.CurrentWeight()).ToString("N0");
-                        }
-                        else
-                        {
-                            // calculate remaining
-                            TankRemain.Text = (Prd.TankStart - Prd.UnitsApplied()).ToString("N1");
-                        }
+                        // calculate remaining
+                        TankRemain.Text = (Prd.TankStart - Prd.UnitsApplied()).ToString("N1");
                     }
                     else
                     {
@@ -628,7 +625,6 @@ namespace RateController
                 }
             }
         }
-
         private void FormStart_Load(object sender, EventArgs e)
         {
             try
@@ -662,13 +658,6 @@ namespace RateController
 
                 LoadPressureSetting();
                 Products.UpdatePID();
-
-                // wifi
-                WiFiIP = Tls.LoadProperty("WifiIP");
-                UDPmodules.WifiEP = WiFiIP;
-
-                // ethernet
-                UDPmodules.EthernetEP = Tls.LoadProperty("EthernetEP");
 
                 if (cUseLargeScreen) StartLargeScreen();
 
@@ -812,21 +801,6 @@ namespace RateController
         {
             cUseInches = !cUseInches;
             Tls.SaveProperty("UseInches", cUseInches.ToString());
-        }
-
-        private void MnuAbout_Click_1(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = Application.OpenForms["FormAbout"];
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormAbout(this);
-            frm.Show();
         }
 
         private void MnuComm_Click(object sender, EventArgs e)
@@ -973,6 +947,12 @@ namespace RateController
         private void timerMain_Tick(object sender, EventArgs e)
         {
             UpdateStatus();
+
+            for (int i = 0; i < MaxModules; i++)
+            {
+                if (ModuleConnected(i)) RelaySettings[i].Send();
+            }
+
             Products.Update();
             SectionControl.ReadRateSwitches();
         }
@@ -980,12 +960,6 @@ namespace RateController
         private void timerNano_Tick(object sender, EventArgs e)
         {
             Products.UpdateVirtualNano();
-        }
-
-        private void wifiToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frmWifi = new frmWifi(this);
-            frmWifi.ShowDialog();
         }
 
         public double SimSpeed
@@ -1033,7 +1007,7 @@ namespace RateController
             {
                 var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true);
                 Hlp.TopMost = true;
-                
+
                 Hlp.ShowDialog();
                 bool Result = Hlp.Result;
                 Hlp.Close();
@@ -1044,22 +1018,6 @@ namespace RateController
         private void timerPIDs_Tick(object sender, EventArgs e)
         {
             Products.UpdatePID();
-        }
-
-        private void switchesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = Application.OpenForms["frmSimulation"];
-
-            if (fs == null)
-            {
-                Form frm = new frmSwitches(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
         }
 
         private void btnFan_Click(object sender, EventArgs e)
@@ -1089,25 +1047,41 @@ namespace RateController
             Application.Restart();
         }
 
-        private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
+        private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.setF_culture = "hu";
-            Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            Restart = true;
-            Application.Restart();
+            //check if window already exists
+            Form fs = Application.OpenForms["frmCalibrate"];
+
+            if (fs == null)
+            {
+                Form frm = new frmCalibrate(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frmWifi = new frmWifi(this);
-            frmWifi.ShowDialog();
+            Form fs = Application.OpenForms["frmWifi"];
+
+            if (fs == null)
+            {
+                Form frm = new frmWifi(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["frmSimulation"];
+            Form fs = Application.OpenForms["frmSwitches"];
 
             if (fs == null)
             {
@@ -1120,15 +1094,31 @@ namespace RateController
             }
         }
 
-        private void pressuresToolStripMenuItem_Click_1(object sender, EventArgs e)
+        public void UpdateModuleConnected(int ModuleID)
         {
-            Form frmPressure = new FormPressure(this);
-            frmPressure.ShowDialog();
-            LoadPressureSetting();
-            FormatDisplay();
+            if (ModuleID > -1 && ModuleID < MaxModules) ModuleTime[ModuleID] = DateTime.Now;
         }
 
-        private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
+        public bool ModuleConnected(int ModuleID)
+        {
+            bool Result = false;
+            if (ModuleID > -1 && ModuleID < MaxModules)
+            {
+                Result = (DateTime.Now - ModuleTime[ModuleID]).TotalSeconds < 5;
+            }
+            return Result;
+        }
+
+        private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "hu";
+            Settings.Default.UserLanguageChange = true;
+            Properties.Settings.Default.Save();
+            Restart = true;
+            Application.Restart();
+        }
+
+        private void commDiagnosticToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form fs = Application.OpenForms["frmModule"];
 
@@ -1141,6 +1131,15 @@ namespace RateController
             {
                 fs.Focus();
             }
+        }
+
+        private void frenchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.setF_culture = "fr";
+            Settings.Default.UserLanguageChange = true;
+            Properties.Settings.Default.Save();
+            Restart = true;
+            Application.Restart();
         }
     }
 }

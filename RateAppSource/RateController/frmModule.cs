@@ -16,7 +16,7 @@ namespace RateController
 
             #region // language
 
-            label27.Text = Lang.lgLocalIP;
+            label27.Text = Lang.lgSubnet;
             this.Text = Lang.lgCommDiagnostics;
 
             #endregion // language
@@ -29,31 +29,18 @@ namespace RateController
             this.Close();
         }
 
-        private void btnConnect1_Click(object sender, EventArgs e)
+        private void btnStart_Click(object sender, EventArgs e)
         {
-            if (btnConnect1.Text == Lang.lgConnect)
+            if (FreezeUpdate)
             {
-                mf.SER[CommPort].OpenRCport();
+                FreezeUpdate = false;
+                btnStart.Image = Properties.Resources.Stop;
             }
             else
             {
-                mf.SER[CommPort].CloseRCport();
+                FreezeUpdate = true;
+                btnStart.Image = Properties.Resources.Start;
             }
-            SetPortButton();
-        }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            FreezeUpdate = false;
-            btnStart.Enabled = false;
-            btnStop.Enabled = true;
-        }
-
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            FreezeUpdate = true;
-            btnStart.Enabled = true;
-            btnStop.Enabled = false;
         }
 
         private void cboPort1_SelectedIndexChanged(object sender, EventArgs e)
@@ -69,16 +56,27 @@ namespace RateController
                 mf.Tls.SaveFormData(this);
             }
             timer1.Enabled = false;
-            mf.SendStatusPGN = false;
+        }
+        private void UpdateLogs()
+        {
+            tbActivity.Text = mf.Tls.ReadTextFile("Activity Log.txt");
+            tbActivity.Select(tbActivity.Text.Length, 0);
+            tbActivity.ScrollToCaret();
+
+            tbErrors.Text = mf.Tls.ReadTextFile("Error Log.txt");
+            tbErrors.Select(tbErrors.Text.Length, 0);
+            tbErrors.ScrollToCaret();
+            //tbErrors.SelectionStart= tbErrors.Text.Length;
+            //tbErrors.SelectionLength = 0;
         }
 
         private void frmModule_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
-            lbIP.Text = mf.UDPmodules.EthernetIP();
-            lbWifi.Text = mf.UDPmodules.WifiIP();
+            lbIP.Text = mf.UDPmodules.SubNet;
+            lbAppVersion.Text = mf.Tls.AppVersion();
+            lbDate.Text = mf.Tls.VersionDate();
             timer1.Enabled = true;
-            mf.SendStatusPGN = true;
 
             this.BackColor = Properties.Settings.Default.DayColour;
             foreach (Control c in this.Controls)
@@ -92,27 +90,13 @@ namespace RateController
             tbSerial.BackColor = this.BackColor;
 
             cboPort1.SelectedIndex = 0;
-            SetPortButton();
-        }
-
-        private void SetPortButton()
-        {
-            if (mf.SER[CommPort].ArduinoPort.IsOpen)
-            {
-                cboPort1.Enabled = false;
-                btnConnect1.Text = Lang.lgDisconnect;
-            }
-            else
-            {
-                cboPort1.Enabled = true;
-                btnConnect1.Text = Lang.lgConnect;
-            }
+            UpdateLogs();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbInoID.Text = mf.ModuleStatus.InoID.ToString();
-            lbModID.Text = mf.ModuleStatus.ModuleID.ToString();
+            lbInoID.Text = mf.AnalogData.InoID.ToString();
+            lbModID.Text = mf.AnalogData.ModuleID.ToString();
             int Elapsed = mf.Products.Item(mf.CurrentProduct()).ElapsedTime;
             if (Elapsed < 4000)
             {
@@ -132,7 +116,16 @@ namespace RateController
                 tbEthernet.Text = mf.UDPmodules.Log();
                 tbEthernet.Select(tbEthernet.Text.Length, 0);
                 tbEthernet.ScrollToCaret();
+
+                UpdateLogs();
             }
+
+            if (!mf.SER[CommPort].ArduinoPort.IsOpen) mf.SER[CommPort].OpenRCport(true);
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateLogs();
         }
     }
 }

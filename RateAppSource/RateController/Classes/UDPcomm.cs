@@ -1,118 +1,63 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 namespace RateController
 {
     public class UDPComm
     {
-        private readonly string cDestinationIP;
-        private readonly bool cUseLoopback;
         private readonly FormStart mf;
         private byte[] buffer = new byte[1024];
-        private IPAddress cEthernetEP;
+        private string cConnectionName;
         private bool cIsUDPSendConnected;
         private string cLog;
-
-        // local ports must be unique for each app on same pc and each class instance
-        private int cReceivePort;
-
+        private IPAddress cNetworkEP;
+        private int cReceivePort;   // local ports must be unique for each app on same pc and each class instance
         private int cSendFromPort;
         private int cSendToPort;
-        private bool cUpdateDestinationIP;
-
-        // wifi endpoint address
-        private IPAddress cWiFiEP;
-
-        private string cWiFiIP;
-
-        // local wifi ip address
+        private string cSubNet;
         private HandleDataDelegateObj HandleDataDelegate = null;
-
         private Socket recvSocket;
         private Socket sendSocket;
 
-        public UDPComm(FormStart CallingForm, int ReceivePort, int SendToPort
-            , int SendFromPort, string DestinationIP = "", bool UseLoopBack = false
-            , bool UpdateDestinationIP = false)
+        public UDPComm(FormStart CallingForm, int ReceivePort, int SendToPort, int SendFromPort, string ConnectionName, string DestinationEndPoint = "")
         {
             mf = CallingForm;
             cReceivePort = ReceivePort;
             cSendToPort = SendToPort;
             cSendFromPort = SendFromPort;
-            cUseLoopback = UseLoopBack;
-            cUpdateDestinationIP = UpdateDestinationIP;
-            cDestinationIP = DestinationIP;
-
-            SetEndPoints();
-
-            NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(AddressChanged);
+            cConnectionName = ConnectionName;
+            SetEP(DestinationEndPoint);
         }
 
         // Status delegate
         private delegate void HandleDataDelegateObj(int port, byte[] msg);
 
-        public string EthernetEP
-        {
-            get { return cEthernetEP.ToString(); }
-            set
-            {
-                IPAddress IP;
-                string[] data;
-
-                if (IPAddress.TryParse(value, out IP))
-                {
-                    data = value.Split('.');
-                    cEthernetEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
-                    mf.Tls.SaveProperty("EthernetEP", value);
-                }
-            }
-        }
-
         public bool IsUDPSendConnected { get => cIsUDPSendConnected; set => cIsUDPSendConnected = value; }
 
-        public string WifiEP
+        public string NetworkEP
         {
-            get { return cWiFiEP.ToString(); }
+            get { return cNetworkEP.ToString(); }
             set
             {
-                IPAddress IP;
                 string[] data;
-
-                if (IPAddress.TryParse(value, out IP))
+                if (IPAddress.TryParse(value, out IPAddress IP))
                 {
                     data = value.Split('.');
-                    cWiFiEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
-                    cWiFiIP = value;
-                    mf.Tls.SaveProperty("WifiIP", value);
+                    cNetworkEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
+                    mf.Tls.SaveProperty("EndPoint_" + cConnectionName, value);
+                    cSubNet = data[0].ToString() + "." + data[1].ToString() + "." + data[2].ToString();
                 }
             }
         }
+
+        public string SubNet
+        { get { return cSubNet; } }
 
         public void Close()
         {
             recvSocket.Close();
             sendSocket.Close();
-        }
-
-        public string EthernetIP()
-        {
-            string Adr;
-            IPAddress IP;
-            string Result;
-
-            Adr = GetLocalIPv4(NetworkInterfaceType.Ethernet);
-            if (IPAddress.TryParse(Adr, out IP))
-            {
-                Result = IP.ToString();
-            }
-            else
-            {
-                Result = "127.0.0.1";
-            }
-            return Result;
         }
 
         public string Log()
@@ -132,16 +77,9 @@ namespace RateController
 
                     if (byteData.Length != 0)
                     {
-                        // ethernet
-                        IPEndPoint EndPt = new IPEndPoint(cEthernetEP, cSendToPort);
+                        // network
+                        IPEndPoint EndPt = new IPEndPoint(cNetworkEP, cSendToPort);
                         sendSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, EndPt, new AsyncCallback(SendData), null);
-
-                        if (!cUseLoopback)
-                        {
-                            // wifi
-                            EndPt = new IPEndPoint(cWiFiEP, cSendToPort);
-                            sendSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, EndPt, new AsyncCallback(SendData), null);
-                        }
                     }
                 }
                 catch (Exception ex)
@@ -183,46 +121,14 @@ namespace RateController
             }
         }
 
-        public string WifiIP()
-        {
-            return cWiFiIP;
-        }
-
-        private void AddressChanged(object sender, EventArgs e)
-        {
-            if (cUpdateDestinationIP) SetEndPoints();
-            mf.Tls.WriteActivityLog("UDPcomm: Network Address Changed");
-        }
-
         private void AddToLog(string NewData)
         {
-            cLog += NewData + Environment.NewLine;
+            cLog += DateTime.Now.Second.ToString() + "  " + NewData + Environment.NewLine;
             if (cLog.Length > 100000)
             {
                 cLog = cLog.Substring(cLog.Length - 98000, 98000);
             }
             cLog = cLog.Replace("\0", string.Empty);
-        }
-
-        private string GetLocalIPv4(NetworkInterfaceType _type)
-        {
-            // https://stackoverflow.com/questions/6803073/get-local-ip-address
-
-            string output = "";
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (item.NetworkInterfaceType == _type && item.OperationalStatus == OperationalStatus.Up)
-                {
-                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
-                    {
-                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
-                        {
-                            output = ip.Address.ToString();
-                        }
-                    }
-                }
-            }
-            return output;
         }
 
         private void HandleData(int Port, byte[] Data)
@@ -231,68 +137,50 @@ namespace RateController
             {
                 if (Data.Length > 1)
                 {
-                    int PGN = Data[0] << 8 | Data[1];   // AGIO big endian
-                    if (PGN == 32897)
+                    int PGN = Data[1] << 8 | Data[0];   // rc modules little endian
+                    AddToLog("< " + PGN.ToString());
+
+                    switch (PGN)
                     {
-                        if (Data.Length > 2)
-                        {
-                            // AGIO
+                        case 32400:
+                            foreach (clsProduct Prod in mf.Products.Items)
+                            {
+                                Prod.UDPcommFromArduino(Data, PGN);
+                            }
+                            break;
+
+                        case 32401:
+                            mf.AnalogData.ParseByteData(Data);
+                            break;
+
+                        case 32618:
+                            mf.SwitchBox.ParseByteData(Data);
+                            break;
+
+                        case 33152: // AOG, 0x81, 0x80
                             switch (Data[3])
                             {
-                                case 254:
-                                    // AutoSteer AGIO PGN
-                                    mf.AutoSteerPGN.ParseByteData(Data);
-                                    break;
-
-                                case 230:
-                                    // vr data
-                                    mf.VRdata.ParseByteData(Data);
-                                    break;
-
                                 case 235:
                                     // section widths
                                     mf.SectionsPGN.ParseByteData(Data);
                                     break;
+
+                                case 238:
+                                    // machine config
+                                    mf.MachineConfig.ParseByteData(Data);
+                                    break;
+
+                                case 239:
+                                    // machine data
+                                    mf.MachineData.ParseByteData(Data);
+                                    break;
+
+                                case 254:
+                                    // AutoSteer AGIO PGN
+                                    mf.AutoSteerPGN.ParseByteData(Data);
+                                    break;
                             }
-                        }
-                    }
-                    else
-                    {
-                        PGN = Data[1] << 8 | Data[0];   // rc modules little endian
-                        AddToLog("< " + PGN.ToString());
-
-                        switch (PGN)
-                        {
-                            case 32504:
-                                mf.ModuleStatus.ParseByteData(Data);
-                                break;
-
-                            case 32501:
-                            case 32613:
-                                foreach (clsProduct Prod in mf.Products.Items)
-                                {
-                                    Prod.UDPcommFromArduino(Data, PGN);
-                                }
-                                break;
-
-                            case 32618:
-                                mf.SwitchBox.ParseByteData(Data);
-                                break;
-
-                            case 32621:
-                                mf.PressureData.ParseByteData(Data);
-                                break;
-
-                            case 0xABC:
-                                // debug info from module
-                                Debug.Print("");
-                                for (int i = 0; i < Data.Length; i++)
-                                {
-                                    Debug.Print(DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + "  " + i.ToString() + " " + Data[i].ToString());
-                                }
-                                Debug.Print("");
-                                break;
-                        }
+                            break;
                     }
                 }
             }
@@ -345,36 +233,30 @@ namespace RateController
             }
         }
 
-        private void SetEndPoints()
+        private void SetEP(string DestinationEndPoint)
         {
-            string Adr;
-            IPAddress IP;
-            string[] data;
-
             try
             {
-                // ethernet
-                cEthernetEP = IPAddress.Parse("192.168.1.255");
-                if (IPAddress.TryParse(cDestinationIP, out IP))
+                if (IPAddress.TryParse(DestinationEndPoint, out _))
                 {
-                    // keep pre-defined address
-                    cEthernetEP = IP;
+                    NetworkEP = DestinationEndPoint;
                 }
-
-                // wifi
-                cWiFiIP = "127.0.0.1";
-                cWiFiEP = IPAddress.Parse(cWiFiIP);
-                Adr = GetLocalIPv4(NetworkInterfaceType.Wireless80211);
-                if (IPAddress.TryParse(Adr, out IP))
+                else
                 {
-                    data = Adr.Split('.');
-                    cWiFiEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
-                    cWiFiIP = Adr;
+                    string EP = mf.Tls.LoadProperty("EndPoint_" + cConnectionName);
+                    if (IPAddress.TryParse(EP, out _))
+                    {
+                        NetworkEP = EP;
+                    }
+                    else
+                    {
+                        NetworkEP = "192.168.1.255";
+                    }
                 }
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("UDPcomm/SetEndPoints " + ex.Message);
+                mf.Tls.WriteErrorLog("UDPcomm/SetEP " + ex.Message);
             }
         }
     }

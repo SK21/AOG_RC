@@ -14,7 +14,6 @@ namespace RateController
 
         private double CurrentDuration;
         private bool cUseMultiPulse;
-        private double cScaleCounts;
         private int cErrorRange = 4;        // % random error in flow rate, above and below target
         double ManualAdjust;
 
@@ -87,7 +86,6 @@ namespace RateController
         public clsArduino(clsProduct CalledFrom)
         {
             Prd = CalledFrom;
-            cScaleCounts = 50000;
             LastScaleCountTime = DateTime.Now;
         }
 
@@ -161,8 +159,6 @@ namespace RateController
                     SendLast = DateTime.Now;
                     SendSerial();
                 }
-
-                if (FlowEnabled) SimulateWeightPGN();
             }
         }
 
@@ -596,34 +592,6 @@ namespace RateController
                 // pulse duration is the time for one pulse
                 pulseDuration = PulseTime;
             }
-        }
-
-        private void SimulateWeightPGN()
-        {
-            // PGN 32501
-            double ScaleCountsChange;
-
-            byte[] Data = new byte[8];
-            Data[0] = 245;
-            Data[1] = 126;
-            Data[2] = (byte)SensorID;
-
-            ScaleCountsChange = (DateTime.Now - LastScaleCountTime).TotalMinutes * rateSetPoint * Prd.ScaleCountsPerUnit;
-            LastScaleCountTime = DateTime.Now;
-            ScaleCountsChange = Prd.mf.Tls.NoisyData(ScaleCountsChange, ErrorRange);
-            cScaleCounts -= ScaleCountsChange;
-            if (cScaleCounts < 0) cScaleCounts = 50000;
-
-            int tmp = (int)cScaleCounts;
-            Data[3]=(byte)tmp; 
-            Data[4] = ((byte)(tmp >> 8));
-            Data[5] = ((byte)(tmp >> 16));
-            Data[6] = ((byte)(tmp >> 24));
-
-            // crc
-            Data[7] = Prd.mf.Tls.CRC(Data, 7);
-
-            Prd.Scale.ParseByteData(Data);
         }
     }
 }

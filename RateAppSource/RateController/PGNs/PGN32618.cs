@@ -182,18 +182,16 @@ namespace RateController
         public bool ParseStringData(string[] Data)
         {
             bool Result = false;
-            byte[] Dt = new byte[cByteCount];
-
-            if (Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
+            byte[] BD;
+            if (Data.Length < 100)
             {
-                for (int i = 0; i < cByteCount; i++)
+                BD = new byte[Data.Length];
+                for (int i = 0; i < Data.Length; i++)
                 {
-                    Dt[i] = 0;
-                    Result = byte.TryParse(Data[i], out Dt[i]);
+                    byte.TryParse(Data[i], out BD[i]);
                 }
+                Result = ParseByteData(BD);
             }
-            if (Result) Result = ParseByteData(Dt);
-
             return Result;
         }
 

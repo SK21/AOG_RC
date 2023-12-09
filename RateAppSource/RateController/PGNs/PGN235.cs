@@ -10,7 +10,7 @@ namespace RateController
         // 2    source          126 0x7E
         // 3    AGIO PGN        235 0xEB
         // 4    length          33
-        // 5-36 sections 0-15, width meters X 100
+        // 5-36 sections 0-15, width in cm
         // 37   # of sections
         // 38   CRC
 

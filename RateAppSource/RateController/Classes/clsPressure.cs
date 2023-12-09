@@ -164,7 +164,7 @@ namespace RateController
 
         public float Pressure()
         {
-            float Result = mf.PressureData.Pressure((byte)cModuleID, (byte)ID) - cOffset;
+            float Result = mf.AnalogData.Reading((byte)cModuleID, (byte)ID) - cOffset;
             if (cUnitsVolts > 0)
             {
                 Result = Result / cUnitsVolts;

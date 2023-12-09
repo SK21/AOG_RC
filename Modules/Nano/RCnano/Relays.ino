@@ -1,85 +1,129 @@
-byte Rlys;
-uint8_t NewLo;
-uint8_t NewHi;
+
+bool RelayStatus[16];
+uint8_t Relays8[] = { 7,5,3,1,8,10,12,14 }; // 8 relay module and a PCA9535PW
+uint8_t Relays16[] = { 15,14,13,12,11,10,9,8,0,1,2,3,4,5,6,7 }; // 16 relay module and a PCA9535PW
 
 void CheckRelays()
 {
-    NewLo = 0;
-    NewHi = 0;
+    uint8_t Rlys;
+    bool BitState;
+    uint8_t IOpin;
 
-    if (WifiSwitchesEnabled)
+    uint8_t NewLo = 0;
+    uint8_t NewHi = 0;
+
+    if (Sensor[0].FlowEnabled || Sensor[1].FlowEnabled)
     {
-        // wifi relay control
-        // controls by relay # not section #
-        if (millis() - WifiSwitchesTimer > 30000)   // 30 second timer
-        {
-            // wifi switches have timed out
-            WifiSwitchesEnabled = false;
-        }
-        else
-        {
-            if (WifiSwitches[2])
-            {
-                // wifi master on
-                NewLo = WifiSwitches[3];
-                NewHi = WifiSwitches[4];
-            }
-            else
-            {
-                // wifi master off
-                WifiSwitchesEnabled = false;
-            }
-        }
-    }
-    else if (Sensor[0].FlowEnabled || Sensor[1].FlowEnabled)
-    {
-        {
-            // normal relay control
-            NewLo = RelayLo;
-            NewHi = RelayHi;
-        }
+        NewLo = RelayLo;
+        NewHi = RelayHi;
     }
 
     // power relays, always on
     NewLo |= PowerRelayLo;
     NewHi |= PowerRelayHi;
 
-    if (MDL.UseMCP23017 == 1)
+    switch (MDL.RelayControl)
     {
-        if (IOexpanderFound)
+    case 2:
+        // PCA9555 8 relays
+        if (PCA9555PW_found)
         {
-            if (bitRead(NewLo, 0)) mcp.digitalWrite(Relay1, MDL.RelayOnSignal); else mcp.digitalWrite(Relay1, !MDL.RelayOnSignal);
-            if (bitRead(NewLo, 1)) mcp.digitalWrite(Relay2, MDL.RelayOnSignal); else mcp.digitalWrite(Relay2, !MDL.RelayOnSignal);
-            if (bitRead(NewLo, 2)) mcp.digitalWrite(Relay3, MDL.RelayOnSignal); else mcp.digitalWrite(Relay3, !MDL.RelayOnSignal);
-            if (bitRead(NewLo, 3)) mcp.digitalWrite(Relay4, MDL.RelayOnSignal); else mcp.digitalWrite(Relay4, !MDL.RelayOnSignal);
-            if (bitRead(NewLo, 4)) mcp.digitalWrite(Relay5, MDL.RelayOnSignal); else mcp.digitalWrite(Relay5, !MDL.RelayOnSignal);
-            if (bitRead(NewLo, 5)) mcp.digitalWrite(Relay6, MDL.RelayOnSignal); else mcp.digitalWrite(Relay6, !MDL.RelayOnSignal);
-            if (bitRead(NewLo, 6)) mcp.digitalWrite(Relay7, MDL.RelayOnSignal); else mcp.digitalWrite(Relay7, !MDL.RelayOnSignal);
-            if (bitRead(NewLo, 7)) mcp.digitalWrite(Relay8, MDL.RelayOnSignal); else mcp.digitalWrite(Relay8, !MDL.RelayOnSignal);
+            for (int i = 0; i < 8; i++)
+            {
+                BitState = bitRead(NewLo, i);
 
-            if (bitRead(NewHi, 0)) mcp.digitalWrite(Relay9, MDL.RelayOnSignal); else mcp.digitalWrite(Relay9, !MDL.RelayOnSignal);
-            if (bitRead(NewHi, 1)) mcp.digitalWrite(Relay10, MDL.RelayOnSignal); else mcp.digitalWrite(Relay10, !MDL.RelayOnSignal);
-            if (bitRead(NewHi, 2)) mcp.digitalWrite(Relay11, MDL.RelayOnSignal); else mcp.digitalWrite(Relay11, !MDL.RelayOnSignal);
-            if (bitRead(NewHi, 3)) mcp.digitalWrite(Relay12, MDL.RelayOnSignal); else mcp.digitalWrite(Relay12, !MDL.RelayOnSignal);
-            if (bitRead(NewHi, 4)) mcp.digitalWrite(Relay13, MDL.RelayOnSignal); else mcp.digitalWrite(Relay13, !MDL.RelayOnSignal);
-            if (bitRead(NewHi, 5)) mcp.digitalWrite(Relay14, MDL.RelayOnSignal); else mcp.digitalWrite(Relay14, !MDL.RelayOnSignal);
-            if (bitRead(NewHi, 6)) mcp.digitalWrite(Relay15, MDL.RelayOnSignal); else mcp.digitalWrite(Relay15, !MDL.RelayOnSignal);
-            if (bitRead(NewHi, 7)) mcp.digitalWrite(Relay16, MDL.RelayOnSignal); else mcp.digitalWrite(Relay16, !MDL.RelayOnSignal);
+                if (RelayStatus[i] != BitState)
+                {
+                    IOpin = Relays8[i];
+
+                    if (BitState)
+                    {
+                        // on
+                        PCA.write(IOpin, PCA95x5::Level::L);
+                    }
+                    else
+                    {
+                        // off
+                        PCA.write(IOpin, PCA95x5::Level::H);
+                    }
+                    RelayStatus[i] = BitState;
+                }
+            }
         }
-    }
-    else
-    {
-        // use Nano pins
+        break;
+
+    case 3:
+        // PCA9555 16 relays
+        if (PCA9555PW_found)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                if (i < 8)
+                {
+                    BitState = bitRead(NewLo, i);
+                }
+                else
+                {
+                    BitState = bitRead(NewHi, i - 8);
+                }
+
+                if (RelayStatus[i] != BitState)
+                {
+                    IOpin = Relays16[i];
+
+                    if (BitState)
+                    {
+                        // on
+                        PCA.write(IOpin, PCA95x5::Level::L);
+                    }
+                    else
+                    {
+                        // off
+                        PCA.write(IOpin, PCA95x5::Level::H);
+                    }
+                    RelayStatus[i] = BitState;
+                }
+            }
+        }
+        break;
+
+    case 4:
+        // MCP23017
+        if (MCP23017_found)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                if (j < 1) Rlys = NewLo; else Rlys = NewHi;
+                for (int i = 0; i < 8; i++)
+                {
+                    if (bitRead(Rlys, i))
+                    {
+                        MCP.digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal);
+                    }
+                    else
+                    {
+                        MCP.digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
+                    }
+                }
+            }
+        }
+        break;
+
+    case 5:
+        // GPIOs
         for (int j = 0; j < 2; j++)
         {
             if (j < 1) Rlys = NewLo; else Rlys = NewHi;
             for (int i = 0; i < 8; i++)
             {
-                if (MDL.Relays[i] > 1) // check if relay is enabled
+                if (MDL.RelayPins[i + j * 8] > 1) // check if relay is enabled
                 {
-                    if (bitRead(Rlys, i)) digitalWrite(MDL.Relays[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.Relays[i + j * 8], !MDL.RelayOnSignal);
+                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
                 }
             }
         }
+        break;
     }
 }
+
+

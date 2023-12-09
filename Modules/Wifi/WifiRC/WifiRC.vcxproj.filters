@@ -16,7 +16,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WifiRC.ino" />
-    <ClCompile Include="Comm.ino" />
+    <ClCompile Include="Begin.ino" />
+    <ClCompile Include="SerialComm.ino" />
     <ClCompile Include="ControlPage.ino" />
     <ClCompile Include="GUI.ino" />
     <ClCompile Include="NetworkPage.ino" />

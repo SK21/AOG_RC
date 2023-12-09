@@ -42,9 +42,12 @@ namespace RateController
         private double RateDir;
         private int RateStep;
 
-        private int StepDelay = 1000;   // ms between rate adjustments
-        private double StepMultiplier = 0.05;   // rate change amount for each step
+        private const int StepDelay = 1000;   // ms between rate adjustments
+        private const double AutoMultiplier = 0.05;   // rate change amount for each step
+        private const double ManualMultiplier = 0.25;
         private PGN234 ToAOG;
+        private const byte ManualMin = 10;
+        private const byte MaxSteps = 5;
 
         public clsSectionControl(FormStart CallingForm)
         {
@@ -124,7 +127,7 @@ namespace RateController
                         clsProduct Prd = mf.Products.Item(ID);
 
                         RateStep++;
-                        if (RateStep > 4) RateStep = 4;
+                        if (RateStep > MaxSteps) RateStep = MaxSteps;
 
                         if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
                         {
@@ -134,11 +137,11 @@ namespace RateController
 
                             if (RateDir == 1)
                             {
-                                CurrentRate = CurrentRate * (1 + (StepMultiplier * RateStep));
+                                CurrentRate = CurrentRate * (1 + (AutoMultiplier * RateStep));
                             }
                             else
                             {
-                                CurrentRate = CurrentRate / (1 + (StepMultiplier * RateStep));
+                                CurrentRate = CurrentRate / (1 + (AutoMultiplier * RateStep));
                             }
 
                             Prd.RateSet = CurrentRate;
@@ -149,7 +152,9 @@ namespace RateController
                             if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose)
                             {
                                 // adjust flow valve
-                                Prd.ManualPWM = (int)(Prd.PIDmin * RateStep * RateDir);
+                                byte ADJ = Prd.PIDmin;
+                                if (ADJ < ManualMin) ADJ = ManualMin;
+                                Prd.ManualPWM = (int)((ADJ + ADJ * ManualMultiplier * RateStep) * RateDir);
                             }
                             else
                             {

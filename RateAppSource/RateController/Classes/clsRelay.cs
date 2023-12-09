@@ -3,40 +3,61 @@
 namespace RateController
 {
     public enum RelayTypes
-    { Section, Slave, Master, Power, Invert_Section };
+    { Section, Slave, Master, Power, Invert_Section,HydUp,HydDown,TramRight,TramLeft,GeoStop,None };
 
     public class clsRelay
     {
-        private string cDescription;
         private readonly int cID;
+        private readonly FormStart mf;
+        private byte cModuleID;
+        private string cName;
         private bool cRelayOn = false;
         private int cSectionID;
         private RelayTypes cType = RelayTypes.Section;
-        private readonly FormStart mf;
 
-        public clsRelay(FormStart CallingFrom, int ID)
+        public clsRelay(FormStart main, int RelayID, int ModuleID)
         {
-            mf = CallingFrom;
-            // to do, check for duplicate ID
-            cID = ID;
-            cDescription = "Relay " + ID.ToString();
-            cSectionID = ID;    // default to a matching section ID
+            mf = main;
+            cID = RelayID;
+            cModuleID = (byte)ModuleID;
+            cName = "_R" + cID.ToString() + "_M" + cModuleID.ToString();
+            cSectionID = cModuleID * 16 + cID;
         }
 
-        public string Description
+        public int ID
+        { get { return cID; } }
+
+        public bool IsON
         {
-            get { return cDescription; }
+            get { return cRelayOn; }
+            set { cRelayOn = value; }
+        }
+
+        public int ModuleID
+        {
+            get { return cModuleID; }
+        }
+
+        public int SectionID
+        {
+            get { return cSectionID; }
             set
             {
-                if (value.Length > 25)
+                if (value >= -1 && value < mf.MaxSections)
                 {
-                    cDescription = value.Substring(0, 25);
+                    cSectionID = value;
                 }
                 else
                 {
-                    cDescription = value;
+                    cSectionID = -1;    // no section value
                 }
             }
+        }
+
+        public RelayTypes Type
+        {
+            get { return cType; }
+            set { cType = value; }
         }
 
         public string TypeDescription
@@ -49,49 +70,18 @@ namespace RateController
             }
         }
 
-        public int ID
-        { get { return cID; } }
-
-        public bool IsON
-        {
-            get { return cRelayOn; }
-            set { cRelayOn = value; }
-        }
-
-        public int SectionID
-        {
-            get { return cSectionID; }
-            set
-            {
-                if (value >= 0 && value < mf.MaxSections)
-                {
-                    cSectionID = value;
-                }
-            }
-        }
-
-        public RelayTypes Type
-        {
-            get { return cType; }
-            set { cType = value; }
-        }
-
         public void Load()
         {
-            RelayTypes tmp;
-            int T;
-            if (Enum.TryParse(mf.Tls.LoadProperty("RelayType" + ID.ToString()), true, out tmp)) cType = tmp;
-            if (int.TryParse(mf.Tls.LoadProperty("RelaySection" + ID.ToString()), out T)) cSectionID = T;
-            cDescription = mf.Tls.LoadProperty("RelayDescription" + ID.ToString());
+            if (Enum.TryParse(mf.Tls.LoadProperty("RelayType" + cName), true, out RelayTypes tmp)) cType = tmp;
+            if (int.TryParse(mf.Tls.LoadProperty("RelaySection" + cName), out int T)) cSectionID = T;
         }
 
         public void Save()
         {
             // Should only be called from clsRelays. Need to run sub
             // BuildPowerRelays on change.
-            mf.Tls.SaveProperty("RelayType" + ID.ToString(), cType.ToString());
-            mf.Tls.SaveProperty("RelaySection" + ID.ToString(), cSectionID.ToString());
-            mf.Tls.SaveProperty("RelayDescription" + ID.ToString(), cDescription);
+            mf.Tls.SaveProperty("RelayType" + cName, cType.ToString());
+            mf.Tls.SaveProperty("RelaySection" + cName, cSectionID.ToString());
         }
     }
 }

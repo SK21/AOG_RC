@@ -3,17 +3,10 @@ volatile unsigned long Durations[2][12];
 volatile byte DurCount[2];
 volatile unsigned long avDurs[2];
 volatile int avgPulses = 12;
-
+volatile int FilledCount[2];
 volatile unsigned long PulseCount[MaxProductCount];
-volatile bool FullCount[MaxProductCount];
 
 uint32_t LastPulse[MaxProductCount];
-
-uint32_t RateInterval[MaxProductCount];
-uint32_t RateTimeLast[MaxProductCount];
-uint32_t PWMTimeLast[MaxProductCount];
-
-unsigned long CurrentCount;
 uint32_t CurrentDuration;
 
 unsigned long PPM[MaxProductCount];		// pulse per minute * 100
@@ -30,14 +23,7 @@ void ISR0()
 	unsigned long dur;
 
 	micronow = micros();
-	if (PulseTime > micronow)
-	{
-		dur = micronow - PulseTime;
-	}
-	else
-	{
-		dur = 0xFFFFFFFF + micronow - PulseTime;
-	}
+	dur = micronow - PulseTime;
 
 	if (dur > 2000000)
 	{
@@ -49,7 +35,7 @@ void ISR0()
 			Durations[0][i] = 0;
 		}
 		DurCount[0] = 0;
-		FullCount[0] = false;
+		FilledCount[0] = 0;
 
 		PulseTime = micronow;
 		PulseCount[0]++;
@@ -59,10 +45,14 @@ void ISR0()
 		if (avDurs[0] == 0) avDurs[0] = dur;
 
 		// check to see if the dur value is too long like an interrupt was missed.
-		if (dur > (2.5 * avDurs[0])) dur = avDurs[0];
+		if (dur > (2.5 * avDurs[0]))
+		{
+			dur = avDurs[0] * 0.5 + dur * 0.5;	// prevent occasionally being stuck in error loop
+		}
 
 		Duration[0] = dur;
 		Durations[0][DurCount[0]] = dur;
+		FilledCount[0] += (FilledCount[0] < avgPulses);
 
 		if (DurCount[0] > 0)
 		{
@@ -74,11 +64,7 @@ void ISR0()
 			avDurs[0] = ((Durations[0][avgPulses - 1]) + dur) / 2;
 		}
 
-		if (++DurCount[0] >= avgPulses)
-		{
-			DurCount[0] = 0;
-			FullCount[0] = true;
-		}
+		if (++DurCount[0] >= avgPulses) DurCount[0] = 0;
 
 		PulseTime = micronow;
 		PulseCount[0]++;
@@ -92,14 +78,7 @@ void ISR1()
 	unsigned long dur;
 
 	micronow = micros();
-	if (PulseTime > micronow)
-	{
-		dur = micronow - PulseTime;
-	}
-	else
-	{
-		dur = 0xFFFFFFFF + micronow - PulseTime;
-	}
+	dur = micronow - PulseTime;
 
 	if (dur > 2000000)
 	{
@@ -111,7 +90,7 @@ void ISR1()
 			Durations[1][i] = 0;
 		}
 		DurCount[1] = 0;
-		FullCount[1] = false;
+		FilledCount[1] = 0;
 
 		PulseTime = micronow;
 		PulseCount[1]++;
@@ -121,10 +100,14 @@ void ISR1()
 		if (avDurs[1] == 0) avDurs[1] = dur;
 
 		// check to see if the dur value is too long like an interrupt was missed.
-		if (dur > (2.5 * avDurs[1])) dur = avDurs[1];
+		if (dur > (2.5 * avDurs[1]))
+		{
+			dur = avDurs[1] * 0.5 + dur * 0.5;	// prevent occasionally being stuck in error loop
+		}
 
 		Duration[1] = dur;
 		Durations[1][DurCount[1]] = dur;
+		FilledCount[1] += (FilledCount[1] < avgPulses);
 
 		if (DurCount[1] > 0)
 		{
@@ -136,17 +119,12 @@ void ISR1()
 			avDurs[1] = ((Durations[1][avgPulses - 1]) + dur) / 2;
 		}
 
-		if (++DurCount[1] >= avgPulses)
-		{
-			DurCount[1] = 0;
-			FullCount[1] = true;
-		}
+		if (++DurCount[1] >= avgPulses) DurCount[1] = 0;
 
 		PulseTime = micronow;
 		PulseCount[1]++;
 	}
 }
-
 
 void GetUPM()
 {
@@ -155,7 +133,7 @@ void GetUPM()
 		if (Sensor[i].ControlType == 3)
 		{
 			// use weight
-			Sensor[i].UPM = Sensor[i].MeterCal * (double)Sensor[i].pwmSetting;
+			Sensor[i].UPM = Sensor[i].MeterCal * (double)Sensor[i].PWM;
 		}
 		else
 		{
@@ -167,15 +145,20 @@ void GetUPM()
 
 unsigned long GetAvgDuration(int ID)
 {
+	unsigned long Result = 0;
 	unsigned long dursum = 0;
 
 	noInterrupts();
-	for (int i = 0; i < avgPulses; i++)
+	if (FilledCount[ID] > 0)
 	{
-		dursum += Durations[ID][i];
+		for (int i = 0; i < FilledCount[ID]; i++)
+		{
+			dursum += Durations[ID][i];
+		}
+		Result = dursum / FilledCount[ID];
 	}
 	interrupts();
-	return dursum / avgPulses;
+	return Result;
 }
 
 void GetUPMflow(int ID)
@@ -183,50 +166,27 @@ void GetUPMflow(int ID)
 	if (PulseCount[ID])
 	{
 		noInterrupts();
-		CurrentCount = PulseCount[ID];
+		Sensor[ID].TotalPulses += PulseCount[ID];
 		PulseCount[ID] = 0;
 		CurrentDuration = Duration[ID];
 		interrupts();
 
-		if (Sensor[ID].UseMultiPulses)
+		if (Sensor[ID].UseMultiPulses) CurrentDuration = GetAvgDuration(ID);
+
+		if (CurrentDuration == 0)
 		{
-			// low ms/pulse, use pulses over time
-			if (FullCount[ID])
-			{
-				PPM[ID] = 6000000000 / GetAvgDuration(ID);
-			}
-			else
-			{
-				PPM[ID] = 0;
-			}
+			PPM[ID] = 0;
 		}
 		else
 		{
-			// high ms/pulse, use time for one pulse
-			if (CurrentDuration == 0)
-			{
-				PPM[ID] = 0;
-			}
-			else
-			{
-				// high ms/pulse, use time for one pulse
-				if (CurrentDuration == 0)
-				{
-					PPM[ID] = 0;
-				}
-				else
-				{
-					PPM[ID] = 6000000000 / CurrentDuration;
-				}
-			}
+			PPM[ID] = 6000000000 / CurrentDuration;
 		}
 
 		LastPulse[ID] = millis();
-		Sensor[ID].TotalPulses += CurrentCount;
 	}
 
 	// check for no flow
-	if (millis() - LastPulse[ID] > 2000)
+	if (millis() - LastPulse[ID] > 4000)
 	{
 		PPM[ID] = 0;
 		Osum[ID] = 0;
@@ -261,5 +221,3 @@ void GetUPMflow(int ID)
 		Sensor[ID].UPM = 0;
 	}
 }
-
-

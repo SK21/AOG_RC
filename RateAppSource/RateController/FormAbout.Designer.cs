@@ -66,7 +66,7 @@ namespace RateController
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = global::RateController.Properties.Resources.OK;
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(89, 69);
+            this.bntOK.Location = new System.Drawing.Point(82, 61);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(115, 72);
             this.bntOK.TabIndex = 0;
@@ -98,7 +98,7 @@ namespace RateController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(283, 153);
+            this.ClientSize = new System.Drawing.Size(283, 138);
             this.Controls.Add(this.lbVersionDate);
             this.Controls.Add(this.lbDate);
             this.Controls.Add(this.lbVersion);

@@ -16,12 +16,13 @@
 #include <arduino.h>
 #include <pins_arduino.h> 
 #include "..\RCnano.ino"
+#include "..\Begin.ino"
 #include "..\CheckShield.ino"
 #include "..\Motor.ino"
 #include "..\PID.ino"
 #include "..\Rate.ino"
+#include "..\Receive.ino"
 #include "..\Relays.ino"
-#include "..\SerialComm.ino"
-#include "..\UDPwiredComm.ino"
+#include "..\Send.ino"
 #endif
 #endif

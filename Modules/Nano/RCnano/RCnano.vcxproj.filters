@@ -16,13 +16,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RCnano.ino" />
+    <ClCompile Include="Begin.ino" />
     <ClCompile Include="CheckShield.ino" />
     <ClCompile Include="Motor.ino" />
+    <ClCompile Include="PCA95x5_RC.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
     <ClCompile Include="PID.ino" />
     <ClCompile Include="Rate.ino" />
+    <ClCompile Include="Receive.ino" />
     <ClCompile Include="Relays.ino" />
-    <ClCompile Include="SerialComm.ino" />
-    <ClCompile Include="UDPwiredComm.ino" />
+    <ClCompile Include="Send.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCnano.vsarduino.h">

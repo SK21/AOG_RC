@@ -162,6 +162,9 @@
   <data name="lgComboClose" xml:space="preserve">
     <value>Combo Close</value>
   </data>
+  <data name="lgComboTimed" xml:space="preserve">
+    <value>Combo Timed</value>
+  </data>
   <data name="lgComm" xml:space="preserve">
     <value>Comm</value>
   </data>
@@ -204,6 +207,9 @@
   <data name="lgDisconnect" xml:space="preserve">
     <value>Disconnect</value>
   </data>
+  <data name="lgEnd" xml:space="preserve">
+    <value>End</value>
+  </data>
   <data name="lgEqual" xml:space="preserve">
     <value>=1</value>
   </data>
@@ -212,6 +218,9 @@
   </data>
   <data name="lgFirmware" xml:space="preserve">
     <value>Firmware</value>
+  </data>
+  <data name="lgGeoStop" xml:space="preserve">
+    <value>Geo Stop</value>
   </data>
   <data name="lgHectares" xml:space="preserve">
     <value>Hectares</value>
@@ -230,6 +239,12 @@
   </data>
   <data name="lgHours" xml:space="preserve">
     <value>Hours</value>
+  </data>
+  <data name="lgHydDown" xml:space="preserve">
+    <value>Hyd Down</value>
+  </data>
+  <data name="lgHydUp" xml:space="preserve">
+    <value>Hyd Up</value>
   </data>
   <data name="lgID" xml:space="preserve">
     <value>ID</value>
@@ -311,6 +326,9 @@
   </data>
   <data name="lgNew" xml:space="preserve">
     <value>New</value>
+  </data>
+  <data name="lgNone" xml:space="preserve">
+    <value>None</value>
   </data>
   <data name="lgNumSections" xml:space="preserve">
     <value>Number of Sections</value>
@@ -412,13 +430,13 @@
     <value>Save As</value>
   </data>
   <data name="lgSection" xml:space="preserve">
-    <value>Sections</value>
+    <value>Section</value>
   </data>
   <data name="lgSectionNum" xml:space="preserve">
     <value>Section #</value>
   </data>
   <data name="lgSections" xml:space="preserve">
-    <value>Sections for this Product</value>
+    <value>Sections</value>
   </data>
   <data name="lgSendPort" xml:space="preserve">
     <value>Send Port</value>
@@ -457,7 +475,7 @@
     <value>Speed</value>
   </data>
   <data name="lgStandard" xml:space="preserve">
-    <value>Standard</value>
+    <value>Standard valve</value>
   </data>
   <data name="lgStart" xml:space="preserve">
     <value>Start</value>
@@ -467,6 +485,9 @@
   </data>
   <data name="lgStop" xml:space="preserve">
     <value>Stop</value>
+  </data>
+  <data name="lgSubnet" xml:space="preserve">
+    <value>Subnet Address</value>
   </data>
   <data name="lgSwitch" xml:space="preserve">
     <value>Switch</value>
@@ -497,6 +518,12 @@
   </data>
   <data name="lgTimeForSingle" xml:space="preserve">
     <value>Time for one pulse (&gt;50 ms/pulse)</value>
+  </data>
+  <data name="lgTramLeft" xml:space="preserve">
+    <value>Tram Left</value>
+  </data>
+  <data name="lgTramRight" xml:space="preserve">
+    <value>Tram Right</value>
   </data>
   <data name="lgType" xml:space="preserve">
     <value>Type</value>
@@ -545,5 +572,8 @@
   </data>
   <data name="lgWorkingWidthM" xml:space="preserve">
     <value>Working Width (M)</value>
+  </data>
+  <data name="lgZone" xml:space="preserve">
+    <value>Zone</value>
   </data>
 </root>

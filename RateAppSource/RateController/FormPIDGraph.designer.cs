@@ -98,7 +98,7 @@
             series2.Name = "PWM";
             this.unoChart.Series.Add(series1);
             this.unoChart.Series.Add(series2);
-            this.unoChart.Size = new System.Drawing.Size(481, 296);
+            this.unoChart.Size = new System.Drawing.Size(481, 304);
             this.unoChart.TabIndex = 180;
             this.unoChart.TextAntiAliasingQuality = System.Windows.Forms.DataVisualization.Charting.TextAntiAliasingQuality.SystemDefault;
             // 
@@ -109,7 +109,7 @@
             this.label5.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label5.Location = new System.Drawing.Point(12, 308);
+            this.label5.Location = new System.Drawing.Point(12, 316);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(124, 23);
             this.label5.TabIndex = 196;
@@ -123,7 +123,7 @@
             this.label1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(231, 308);
+            this.label1.Location = new System.Drawing.Point(231, 316);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(125, 23);
             this.label1.TabIndex = 195;
@@ -137,7 +137,7 @@
             this.lblPWM.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPWM.ForeColor = System.Drawing.Color.Lime;
-            this.lblPWM.Location = new System.Drawing.Point(137, 308);
+            this.lblPWM.Location = new System.Drawing.Point(137, 316);
             this.lblPWM.Name = "lblPWM";
             this.lblPWM.Size = new System.Drawing.Size(68, 23);
             this.lblPWM.TabIndex = 194;
@@ -151,7 +151,7 @@
             this.lblSteerAng.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblSteerAng.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSteerAng.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblSteerAng.Location = new System.Drawing.Point(362, 308);
+            this.lblSteerAng.Location = new System.Drawing.Point(362, 316);
             this.lblSteerAng.Name = "lblSteerAng";
             this.lblSteerAng.Size = new System.Drawing.Size(68, 23);
             this.lblSteerAng.TabIndex = 193;
@@ -181,7 +181,7 @@
             this.btnGainDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGainDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGainDown.ForeColor = System.Drawing.Color.White;
-            this.btnGainDown.Location = new System.Drawing.Point(3, 236);
+            this.btnGainDown.Location = new System.Drawing.Point(3, 237);
             this.btnGainDown.Name = "btnGainDown";
             this.btnGainDown.Size = new System.Drawing.Size(48, 55);
             this.btnGainDown.TabIndex = 198;
@@ -197,7 +197,7 @@
             this.btnGainAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGainAuto.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGainAuto.ForeColor = System.Drawing.Color.White;
-            this.btnGainAuto.Location = new System.Drawing.Point(3, 127);
+            this.btnGainAuto.Location = new System.Drawing.Point(3, 130);
             this.btnGainAuto.Name = "btnGainAuto";
             this.btnGainAuto.Size = new System.Drawing.Size(48, 55);
             this.btnGainAuto.TabIndex = 199;
@@ -211,7 +211,7 @@
             this.lblMin.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMin.ForeColor = System.Drawing.Color.White;
-            this.lblMin.Location = new System.Drawing.Point(436, 308);
+            this.lblMin.Location = new System.Drawing.Point(436, 316);
             this.lblMin.Name = "lblMin";
             this.lblMin.Size = new System.Drawing.Size(53, 23);
             this.lblMin.TabIndex = 200;
@@ -238,7 +238,7 @@
             this.label2.BackColor = System.Drawing.SystemColors.ControlText;
             this.label2.Font = new System.Drawing.Font("Tahoma", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Lime;
-            this.label2.Location = new System.Drawing.Point(472, 149);
+            this.label2.Location = new System.Drawing.Point(472, 152);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 33);
             this.label2.TabIndex = 203;
@@ -251,11 +251,11 @@
             this.lbPWMvalue.AutoSize = true;
             this.lbPWMvalue.BackColor = System.Drawing.SystemColors.ControlText;
             this.lbPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPWMvalue.ForeColor = System.Drawing.Color.Lime;
-            this.lbPWMvalue.Location = new System.Drawing.Point(137, 331);
+            this.lbPWMvalue.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.lbPWMvalue.Location = new System.Drawing.Point(137, 339);
             this.lbPWMvalue.Name = "lbPWMvalue";
             this.lbPWMvalue.Size = new System.Drawing.Size(68, 23);
-            this.lbPWMvalue.TabIndex = 205;
+            this.lbPWMvalue.TabIndex = 209;
             this.lbPWMvalue.Text = "label5";
             this.lbPWMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -265,11 +265,11 @@
             this.lbErrorValue.AutoSize = true;
             this.lbErrorValue.BackColor = System.Drawing.SystemColors.ControlText;
             this.lbErrorValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbErrorValue.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lbErrorValue.Location = new System.Drawing.Point(362, 331);
+            this.lbErrorValue.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.lbErrorValue.Location = new System.Drawing.Point(362, 339);
             this.lbErrorValue.Name = "lbErrorValue";
             this.lbErrorValue.Size = new System.Drawing.Size(68, 23);
-            this.lbErrorValue.TabIndex = 204;
+            this.lbErrorValue.TabIndex = 208;
             this.lbErrorValue.Text = "label1";
             this.lbErrorValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -280,10 +280,10 @@
             this.label6.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label6.Location = new System.Drawing.Point(12, 331);
+            this.label6.Location = new System.Drawing.Point(12, 339);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(124, 23);
-            this.label6.TabIndex = 207;
+            this.label6.TabIndex = 211;
             this.label6.Text = "PWM";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -294,10 +294,10 @@
             this.label7.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label7.Location = new System.Drawing.Point(231, 331);
+            this.label7.Location = new System.Drawing.Point(231, 339);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(125, 23);
-            this.label7.TabIndex = 206;
+            this.label7.TabIndex = 210;
             this.label7.Text = "Error %";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -306,7 +306,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(498, 363);
+            this.ClientSize = new System.Drawing.Size(498, 369);
             this.Controls.Add(this.lbPWMvalue);
             this.Controls.Add(this.lbErrorValue);
             this.Controls.Add(this.label6);
@@ -322,13 +322,13 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.unoChart);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Location = new System.Drawing.Point(30, 30);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormPIDGraph";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AutoSteer Graph";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormPIDGraph_FormClosed);
             this.Load += new System.EventHandler(this.FormSteerGraph_Load);

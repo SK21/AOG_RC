@@ -92,11 +92,6 @@ namespace RateController
             lblMin.Text = ((int)(unoChart.ChartAreas[0].AxisY.Minimum * 0.01)).ToString();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void DrawChart()
         {
             {
@@ -163,6 +158,7 @@ namespace RateController
         private void FormSteerGraph_Load(object sender, EventArgs e)
         {
             mf.mf.Tls.LoadFormData(this);
+
             timer1.Interval = (int)((1 / 20.0) * 1000);
 
             unoChart.ChartAreas[0].AxisY.Minimum = -1000;

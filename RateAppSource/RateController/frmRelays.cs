@@ -8,9 +8,9 @@ namespace RateController
 {
     public partial class frmRelays : Form
     {
+        private bool FormEdited;
         private bool Initializing;
         private FormStart mf;
-        private bool FormEdited;
 
         public frmRelays(FormStart CalledFrom)
         {
@@ -24,9 +24,17 @@ namespace RateController
             DGV.Columns[2].HeaderText = Lang.lgSectionNum;
 
             this.Text = Lang.lgRelays;
+
             #endregion // language
 
             mf = CalledFrom;
+        }
+
+        private void bnReset_Click(object sender, EventArgs e)
+        {
+            mf.RelayObjects.Reset();
+            SetButtons(true);
+            UpdateForm();
         }
 
         private void bntOK_Click(object sender, EventArgs e)
@@ -52,17 +60,52 @@ namespace RateController
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            UpdateForm();
+            UpdateForm(true);
             SetButtons(false);
         }
 
-        private void btnLoadDefaults_Click(object sender, EventArgs e)
+        private void btnRenumber_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow Rw in DGV.Rows)
+            try
             {
-                Rw.Cells[1].Value = RelayTypes.Section;
-                Rw.Cells[2].Value = Rw.Cells[0].Value;
+                string val = DGV.Rows[DGV.CurrentRow.Index].Cells[2].EditedFormattedValue.ToString();
+                int.TryParse(val, out int tmp);
+
+                RelayTypes Tp = mf.RelayObjects.Item(DGV.CurrentRow.Index, cbModules.SelectedIndex).Type;
+
+                if (Tp == RelayTypes.Section || Tp == RelayTypes.Invert_Section
+                    || ((Tp == RelayTypes.TramRight || Tp == RelayTypes.TramLeft) && tmp > 0))
+                {
+                    mf.RelayObjects.Renumber(DGV.CurrentRow.Index, cbModules.SelectedIndex, tmp - 1);
+                    SetButtons(true);
+                    UpdateForm();
+                }
             }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmRelays/btnRenumber_Click: " + ex.Message);
+            }
+        }
+
+        private void btnRenumber_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Renumber sections.";
+
+            mf.Tls.ShowHelp(Message, "Renumber");
+            hlpevent.Handled = true;
+        }
+
+        private void btnReset_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Reset relays.";
+
+            mf.Tls.ShowHelp(Message, "Reset");
+            hlpevent.Handled = true;
+        }
+
+        private void cbModules_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -80,7 +123,7 @@ namespace RateController
                     case 2:
                         // section
                         double.TryParse(val, out Temp);
-                        using (var form = new FormNumeric(1, 16, Temp))
+                        using (var form = new FormNumeric(0, 128, Temp))
                         {
                             var result = form.ShowDialog();
                             if (result == DialogResult.OK)
@@ -111,13 +154,20 @@ namespace RateController
         private void DGV_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Relay Type:\n" +
-                "Section - relay controlled by section switch\n" +
-                "Slave - relay is on when any section relay is on\n" +
-                "        and off when all sections relays are off\n" +
-                "Master - relay is on when any section relay is\n" +
-                "          on and turns off before section relays \n" +
-                "           turn off\n Power - on all the time\n" +
-                "Invert_Section - relay is on when section is off\n" +
+                "  Section - relay controlled by section switch\n" +
+                "  Slave - relay is on when any section relay is\n" +
+                "          on and off when all sections relays\n" +
+                "          are off\n" +
+                "  Master - relay is on when any section relay is\n" +
+                "            on and turns off before section relays \n" +
+                "             turn off\n" +
+                "  Power - on all the time\n" +
+                "  Invert_Section - relay is on when section is off\n" +
+                "  Hyd Up\n" +
+                "  Hyd Down \n" +
+                "  Tram Right\n" +
+                "  Tram Left\n" +
+                "  Geo Stop\n" +
                 "\n" +
                 "Section #:\n" +
                 "    - the section that controls the relay";
@@ -137,6 +187,7 @@ namespace RateController
         private void frmRelays_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
+            cbModules.SelectedIndex = 0;
 
             DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
             DGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -148,33 +199,58 @@ namespace RateController
             UpdateForm();
         }
 
-        private void LoadData()
+        private void LoadData(bool UpdateObject = false)
         {
             try
             {
+                if (UpdateObject) mf.RelayObjects.Load();
+
                 dataSet1.Clear();
                 foreach (clsRelay Rly in mf.RelayObjects.Items)
                 {
-                    DataRow Rw = dataSet1.Tables[0].NewRow();
-                    Rw[0] = Rly.ID + 1;
-                    Rw[1] = Rly.TypeDescription;
-
-                    if (Rly.Type == RelayTypes.Section || Rly.Type == RelayTypes.Invert_Section)
+                    if (Rly.ModuleID == cbModules.SelectedIndex)
                     {
-                        Rw[2] = Rly.SectionID + 1;
-                    }
-                    else
-                    {
-                        Rw[2] = "";
-                    }
+                        DataRow Rw = dataSet1.Tables[0].NewRow();
+                        Rw[0] = Rly.ID + 1;
+                        Rw[1] = Rly.TypeDescription;
 
-                    dataSet1.Tables[0].Rows.Add(Rw);
+                        switch (Rly.Type)
+                        {
+                            case RelayTypes.Section:
+                            case RelayTypes.Invert_Section:
+                            case RelayTypes.TramRight:
+                            case RelayTypes.TramLeft:
+                                if (Rly.SectionID < 0)
+                                {
+                                    Rw[2] = "";
+                                }
+                                else
+                                {
+                                    Rw[2] = Rly.SectionID + 1;
+                                }
+                                break;
+
+                            default:
+                                Rw[2] = "";
+                                break;
+                        }
+
+                        dataSet1.Tables[0].Rows.Add(Rw);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("frmRelays/LoadData: " + ex.Message);
             }
+        }
+
+        private void ModuleIndicator_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Shows if module is connected.";
+
+            mf.Tls.ShowHelp(Message, "Connected");
+            hlpevent.Handled = true;
         }
 
         private void SaveData()
@@ -191,12 +267,12 @@ namespace RateController
                         {
                             case 1:
                                 // Type
-                                mf.RelayObjects.Item(i).TypeDescription = val;
+                                mf.RelayObjects.Item(i, cbModules.SelectedIndex).TypeDescription = val;
                                 break;
 
                             case 2:
                                 // section
-                                mf.RelayObjects.Item(i).SectionID = Convert.ToInt32(val) - 1;
+                                mf.RelayObjects.Item(i, cbModules.SelectedIndex).SectionID = Convert.ToInt32(val) - 1;
                                 break;
                         }
                     }
@@ -217,13 +293,17 @@ namespace RateController
                 {
                     btnCancel.Enabled = true;
                     btnOK.Image = Properties.Resources.Save;
-                    btnLoadDefaults.Enabled = false;
+                    cbModules.Enabled = false;
+                    btnRenumber.Enabled = false;
+                    btnReset.Enabled = false;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
                     btnOK.Image = Properties.Resources.OK;
-                    btnLoadDefaults.Enabled = true;
+                    cbModules.Enabled = true;
+                    btnRenumber.Enabled = true;
+                    btnReset.Enabled = true;
                 }
 
                 FormEdited = Edited;
@@ -235,6 +315,7 @@ namespace RateController
             if (Properties.Settings.Default.IsDay)
             {
                 this.BackColor = Properties.Settings.Default.DayColour;
+                ModuleIndicator.BackColor = Properties.Settings.Default.DayColour;
 
                 foreach (Control c in this.Controls)
                 {
@@ -252,11 +333,24 @@ namespace RateController
             }
         }
 
-        private void UpdateForm()
+        private void SetModuleIndicator()
+        {
+            if (mf.ModuleConnected(cbModules.SelectedIndex))
+            {
+                ModuleIndicator.Image = Properties.Resources.On;
+            }
+            else
+            {
+                ModuleIndicator.Image = Properties.Resources.Off;
+            }
+        }
+
+        private void UpdateForm(bool UpdateObject = false)
         {
             Initializing = true;
-            LoadData();
+            LoadData(UpdateObject);
             SetDayMode();
+            SetModuleIndicator();
             Initializing = false;
         }
     }

@@ -15,7 +15,7 @@ namespace RateController
 
             this.Text = Lang.lgAbout;
             lbVersion.Text = Lang.lgVersion;
-            lbVersionDate.Text = Lang.lgVersionDate;
+            lbVersionDate.Text= Lang.lgVersionDate;
 
             #endregion // language
 
@@ -43,5 +43,6 @@ namespace RateController
             lbDate.Text = mf.Tls.VersionDate();
             this.BackColor = Properties.Settings.Default.DayColour;
         }
+
     }
 }

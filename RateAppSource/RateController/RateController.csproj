@@ -102,6 +102,8 @@
   <ItemGroup>
     <Compile Include="Classes\clsAlarm.cs" />
     <Compile Include="Classes\clsArduino.cs" />
+    <Compile Include="Classes\clsCalibrate.cs" />
+    <Compile Include="Classes\clsCalibrates.cs" />
     <Compile Include="Classes\clsPressure.cs" />
     <Compile Include="Classes\clsPressures.cs" />
     <Compile Include="Classes\clsProducts.cs" />
@@ -112,6 +114,8 @@
     <Compile Include="Classes\clsSections.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsProduct.cs" />
+    <Compile Include="Classes\clsZone.cs" />
+    <Compile Include="Classes\clsZones.cs" />
     <Compile Include="Classes\SerialComm.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
     <Compile Include="Classes\VerticalProgressBar.cs">
@@ -152,6 +156,12 @@
     </Compile>
     <Compile Include="FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCalibrate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCalibrate.Designer.cs">
+      <DependentUpon>frmCalibrate.cs</DependentUpon>
     </Compile>
     <Compile Include="frmComm.cs">
       <SubType>Form</SubType>
@@ -217,6 +227,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.resx</DependentUpon>
     </Compile>
+    <Compile Include="Lang.fr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.fr.resx</DependentUpon>
+    </Compile>
     <Compile Include="Lang.hu.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -240,16 +255,16 @@
     <Compile Include="PGNs\PGN230.cs" />
     <Compile Include="PGNs\PGN234.cs" />
     <Compile Include="PGNs\PGN235.cs" />
+    <Compile Include="PGNs\PGN238.cs" />
+    <Compile Include="PGNs\PGN239.cs" />
+    <Compile Include="PGNs\PGN32400.cs" />
+    <Compile Include="PGNs\PGN32401.cs" />
+    <Compile Include="PGNs\PGN32500.cs" />
     <Compile Include="PGNs\PGN32501.cs" />
+    <Compile Include="PGNs\PGN32502.cs" />
     <Compile Include="PGNs\PGN32503.cs" />
-    <Compile Include="PGNs\PGN32504.cs" />
-    <Compile Include="PGNs\PGN32613.cs" />
-    <Compile Include="PGNs\PGN32614.cs" />
-    <Compile Include="PGNs\PGN32616.cs" />
     <Compile Include="PGNs\PGN32618.cs" />
     <Compile Include="PGNs\PGN254.cs" />
-    <Compile Include="PGNs\PGN32620.cs" />
-    <Compile Include="PGNs\PGN32621.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RCRestore.cs">
@@ -276,6 +291,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormStart.resx">
       <DependentUpon>FormStart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCalibrate.resx">
+      <DependentUpon>frmCalibrate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmComm.resx">
       <DependentUpon>frmComm.cs</DependentUpon>
@@ -308,6 +326,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.de.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lang.fr.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.fr.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.hu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -360,9 +383,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\SubnetSend.png" />
+    <None Include="Images\calibration.ico" />
+    <None Include="Images\calibration.jpg" />
+    <None Include="Images\calibration.png" />
+    <None Include="Images\add.png" />
     <Content Include="Images\Cancel64.png" />
-    <None Include="Resources\Pause.png" />
-    <None Include="Resources\Update4.png" />
     <None Include="Resources\GreenGear.png" />
     <None Include="Resources\RedGear.png" />
     <None Include="Resources\GreenGear %282%29.png" />
@@ -435,18 +461,32 @@
     <None Include="Images\icons8-check-circle-48.png" />
     <None Include="Images\icons8-cancel-40.png" />
     <None Include="Images\Copy.png" />
+    <None Include="Images\enter.png" />
+    <None Include="Images\enter%282%29.png" />
+    <None Include="Images\ColorLocked.png" />
+    <None Include="Images\ColorUnlocked.png" />
+    <None Include="Images\ConT_Symmetric.png" />
     <None Include="Images\Diagnostics.png" />
     <Content Include="Images\OK64.png" />
     <None Include="Images\OnSmall.png" />
     <None Include="Images\On.png" />
     <Content Include="Images\OpenFile.png" />
+    <None Include="Images\RateCal.png" />
     <Content Include="Images\RateControlOff.ico" />
     <Content Include="Images\RateControlOff.png" />
+    <None Include="Images\SectionsExample.png" />
+    <None Include="Images\SectionsNoZones.png" />
+    <None Include="Images\SectionsWithZones.png" />
+    <None Include="Images\SectionsNoZones2.png" />
     <Content Include="Images\SettingsGear64.png" />
     <None Include="Images\WindowDayMode.png" />
     <None Include="Images\WindowNightMode.png" />
     <None Include="Images\UpArrow64.png" />
     <None Include="Images\Stop_Normal_Red_Icon_64.png" />
+    <None Include="Images\Update.png" />
+    <None Include="Images\UpdateNet.png" />
+    <None Include="Images\Update5.png" />
+    <None Include="Images\Update4.png" />
     <Content Include="RateControlOff.ico" />
   </ItemGroup>
   <ItemGroup>
