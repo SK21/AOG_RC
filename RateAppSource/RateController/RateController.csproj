@@ -115,6 +115,7 @@
     <Compile Include="Classes\clsSections.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsProduct.cs" />
+    <Compile Include="Classes\clsVirtualSwitchBox.cs" />
     <Compile Include="Classes\clsZone.cs" />
     <Compile Include="Classes\clsZones.cs" />
     <Compile Include="Classes\SerialComm.cs" />

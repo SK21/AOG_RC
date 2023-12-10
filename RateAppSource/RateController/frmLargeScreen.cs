@@ -220,6 +220,7 @@ namespace RateController
 
             if (mf.UseLargeScreen) mf.LargeScreenExit = true;
             mf.WindowState = FormWindowState.Normal;
+            mf.vSwitchBox.LargeScreenOn = false;
         }
         
         private void frmLargeScreen_Load(object sender, EventArgs e)
@@ -230,6 +231,7 @@ namespace RateController
             UpdateForm();
             timerMain.Enabled = true;
             SwitchingScreens = false;
+            mf.vSwitchBox.LargeScreenOn = true;
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
@@ -1225,12 +1227,12 @@ namespace RateController
         {
             if (automode)
             {
-                mf.SwitchBox.PressSwitch(SwIDs.Auto, true);
+                mf.vSwitchBox.PressSwitch(SwIDs.Auto, true);
             }
             else
             {
-                if (masterOn) { mf.SwitchBox.PressSwitch(SwIDs.MasterOff,true); }
-                else { mf.SwitchBox.PressSwitch(SwIDs.MasterOn,true); }
+                if (masterOn) { mf.vSwitchBox.PressSwitch(SwIDs.MasterOff,true); }
+                else { mf.vSwitchBox.PressSwitch(SwIDs.MasterOn,true); }
             }
 
         }

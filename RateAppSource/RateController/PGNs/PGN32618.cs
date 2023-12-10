@@ -24,70 +24,31 @@ namespace RateController
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
         private readonly FormStart mf;
+        private bool cAutoOn = true;
+        private bool cMasterOn = false;
+        private bool cRateDown = false;
+        private bool cRateUp = false;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[21];
-        private bool[] SWlast = new bool[21];
-        private bool cMasterOn = false;
-        private bool cRateUp = false;
-        private bool cRateDown = false;
-        private bool cAutoOn = true;
-        private byte[] DataLast;
-        private byte[] PressedData;
-        private bool LargeScreenSwitches;
 
         public PGN32618(FormStart CalledFrom)
         {
             mf = CalledFrom;
             SW[(int)SwIDs.Auto] = true; // default to auto in case of no switchbox
-            DataLast = new byte[cByteCount];
-            PressedData = new byte[cByteCount];
         }
 
         public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
-        public bool[] Switches { get { return SW; } }
 
-        public class SwitchPGNargs : EventArgs
+        public bool AutoOn
         {
-            public bool[] Switches { get; set; }
+            get { return cAutoOn; }
+            set { cAutoOn = value; }
         }
-
-        public bool Connected()
-        {
-            return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
-        }
-
-        public void VirtualSwitchboxConnected()
-        {
-            ReceiveTime= DateTime.Now;
-        }
-
-        //public bool Connected(bool PhysicalOnly = false)     
-        //{
-        //    bool Result = false;
-
-        //    if (PhysicalOnly)
-        //    {
-        //        Result = (DateTime.Now - ReceiveTime).TotalSeconds < 4;
-        //    }
-        //    else
-        //    {
-        //        // physical or virtual switchbox
-        //        Result = (((DateTime.Now - ReceiveTime).TotalSeconds < 4) || mf.UseLargeScreen);
-        //    }
-
-        //    return Result;
-        //}
 
         public bool MasterOn
         {
             get { return cMasterOn; }
             set { cMasterOn = value; }
-        }
-
-        public bool RateUp
-        {
-            get { return cRateUp; }
-            set { cRateUp = value; }
         }
 
         public bool RateDown
@@ -96,10 +57,18 @@ namespace RateController
             set { cRateDown = value; }
         }
 
-        public bool AutoOn
+        public bool RateUp
         {
-            get { return cAutoOn; }
-            set { cAutoOn = value; }
+            get { return cRateUp; }
+            set { cRateUp = value; }
+        }
+
+        public bool[] Switches
+        { get { return SW; } }
+
+        public bool Connected()
+        {
+            return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
         }
 
         public bool ParseByteData(byte[] Data)
@@ -119,7 +88,7 @@ namespace RateController
                 if (SW[1]) cMasterOn = true;
                 else if (SW[2]) cMasterOn = false;
 
-                // rate 
+                // rate
                 SW[3] = mf.Tls.BitRead(Data[2], 3);     // rate up
                 SW[4] = mf.Tls.BitRead(Data[2], 4);     // rate down
 
@@ -140,38 +109,13 @@ namespace RateController
                 }
 
                 // section switches
-                if (LargeScreenSwitches)
+                for (int i = 0; i < 2; i++)
                 {
-                    // virtual switchbox used
-                    for (int i = 0; i < 2; i++)
+                    for (int j = 0; j < 8; j++)
                     {
-                        for (int j = 0; j < 8; j++)
-                        {
-                            if (i == 0)
-                            {
-                                //SW[5 + j + i * 8] = mf.Tls.BitRead(mf.AutoSteerPGN.RelayLo, j);
-                                SW[5 + j + i * 8] = MasterOn;
-                            }
-                            else
-                            {
-                                //SW[5 + j + i * 8] = mf.Tls.BitRead(mf.AutoSteerPGN.RelayHi, j);
-                                SW[5 + j + i * 8] = MasterOn;
-                            }
-                        }
+                        SW[5 + j + i * 8] = mf.Tls.BitRead(Data[i + 3], j);
                     }
                 }
-                else
-                {
-                    // physical switchbox used
-                    for (int i = 0; i < 2; i++)
-                    {
-                        for (int j = 0; j < 8; j++)
-                        {
-                            SW[5 + j + i * 8] = mf.Tls.BitRead(Data[i + 3], j);
-                        }
-                    }
-                }
-                DataLast = Data;
 
                 SwitchPGNargs args = new SwitchPGNargs();
                 args.Switches = SW;
@@ -180,7 +124,6 @@ namespace RateController
                 ReceiveTime = DateTime.Now;
                 Result = true;
             }
-            LargeScreenSwitches = false;
             return Result;
         }
 
@@ -215,97 +158,9 @@ namespace RateController
             return SW[(int)ID];
         }
 
-        public void PressSwitch(SwIDs ID,bool FromLargeScreen=false)
+        public class SwitchPGNargs : EventArgs
         {
-            PressedData = DataLast;
-            PressedData[0] = HeaderLo;
-            PressedData[1] = HeaderHi;
-            switch (ID)
-            {
-                case SwIDs.Auto:
-                    if (cAutoOn)
-                    {
-                        // turn off
-                        PressedData[2] = mf.Tls.BitClear(PressedData[2], 0);
-                    }
-                    else
-                    {
-                        // turn on
-                        PressedData[2] = mf.Tls.BitSet(PressedData[2], 0);
-                    }
-                    break;
-
-                case SwIDs.MasterOn:
-                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 1);
-                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 2);
-                    break;
-
-                case SwIDs.MasterOff:
-                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 1);
-                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 2);
-                    break;
-
-                case SwIDs.RateUp:
-                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 3);
-                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 4);
-                    break;
-
-                case SwIDs.RateDown:
-                    PressedData[2] = mf.Tls.BitClear(PressedData[2], 3);
-                    PressedData[2] = mf.Tls.BitSet(PressedData[2], 4);
-                    break;
-
-                default:
-                    int Num = (int)ID - 5;
-
-                    if (Num < 8)
-                    {
-                        if (SW[(int)ID])
-                        {
-                            // turn off, lo
-                            PressedData[3] = mf.Tls.BitClear(PressedData[3], Num);
-                        }
-                        else
-                        {
-                            // turn on, lo
-                            PressedData[3] = mf.Tls.BitSet(PressedData[3], Num);
-                        }
-                    }
-                    else
-                    {
-                        if (SW[(int)ID])
-                        {
-                            // turn off, hi
-                            PressedData[4] = mf.Tls.BitClear(PressedData[4], Num - 8);
-                        }
-                        else
-                        {
-                            // turn on, hi
-                            PressedData[4] = mf.Tls.BitSet(PressedData[4], Num - 8);
-                        }
-                    }
-                    break;
-            }
-
-            PressedData[5] = mf.Tls.CRC(PressedData, 4);
-            LargeScreenSwitches = FromLargeScreen;
-            ParseByteData(PressedData);
-        }
-
-        public void ReleaseMomentary()
-        {
-            // release momentary buttons
-            if (cAutoOn)
-            {
-                PressedData[2] = 1;
-            }
-            else
-            {
-                PressedData[2] = 0;
-            }
-
-            PressedData[5] = mf.Tls.CRC(PressedData, 4);
-            ParseByteData(PressedData);
+            public bool[] Switches { get; set; }
         }
     }
 }

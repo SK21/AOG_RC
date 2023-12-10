@@ -10,8 +10,6 @@ namespace RateController
 
         private List<clsSection> cSections = new List<clsSection>();
         private FormStart mf;
-        private byte OnHiLast;
-        private byte OnLoLast;
         private byte Rlys0;
         private byte Rlys1;
         private int Tmp;

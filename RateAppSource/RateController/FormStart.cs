@@ -48,6 +48,7 @@ namespace RateController
         public SimType SimMode = SimType.None;
         public PGN32618 SwitchBox;
         public clsTools Tls;
+        public clsVirtualSwitchBox vSwitchBox;
 
         public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
@@ -150,6 +151,7 @@ namespace RateController
 
             ModuleTime = new DateTime[MaxModules];
             Zones = new clsZones(this);
+            vSwitchBox = new clsVirtualSwitchBox(this);
         }
 
         public event EventHandler ProductChanged;

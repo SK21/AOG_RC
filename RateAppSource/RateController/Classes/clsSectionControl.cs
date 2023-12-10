@@ -223,19 +223,6 @@ namespace RateController
                 {
                     SectionOnSB[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
                 }
-
-                if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && mf.AutoSteerPGN.Connected())
-                {
-                    // match AOG section status, only on sections 0-15
-                    for (int i = 0; i < 16; i++)
-                    {
-                        if (SectionOnSB[i])
-                        {
-                            // check if AOG has switched it off
-                            SectionOnSB[i] = SectionOnAOG[i];
-                        }
-                    }
-                }
             }
 
             foreach (clsSection Sec in mf.Sections.Items)
