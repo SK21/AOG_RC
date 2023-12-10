@@ -5,87 +5,34 @@ namespace RateController
 {
     public class clsSectionControl
     {
-        public struct CTLbytes
-        {
-            public byte AOGRlys0;
-            public byte AOGRlys1;
-            public bool AutoOn;
-            public bool MasterOn;
-            public bool RateDown;
-            public bool RateUp;
-
-            public byte RC0;
-            public byte RC1;
-            public byte Rlys0_Off;
-            public byte Rlys0_On;      // section relays 0-7
-            public byte Rlys1_Off;
-            public byte Rlys1_On;      // section relays 8-15
-            public byte SBRlys0;    // relays 0-7 based on switchbox switch positions
-            public byte SBRlys1;    // relays 8-15 based on switchbox switch positions
-            public byte SwHi;       // switches 0-7
-            public byte SwLo;       // switches 8-15
-        }
-
-        public struct State
-        {
-            public bool Changed;
-            public bool Pressed;
-            public bool Released;
-        }
-
+        private const double AutoMultiplier = 0.05;
+        private const byte ManualMin = 10;
+        private const double ManualMultiplier = 0.25;   // rate change amount for each step
+        private const byte MaxSteps = 5;
+        private const int StepDelay = 1000; // ms between rate adjustments
         private DateTime AdjustTime;
-        private CTLbytes CTL = new CTLbytes();
         private State CurrentState;
+        private bool MasterOnSB;
         private FormStart mf;
-
         private State PreviousState;
         private double RateDir;
         private int RateStep;
-
-        private const int StepDelay = 1000;   // ms between rate adjustments
-        private const double AutoMultiplier = 0.05;   // rate change amount for each step
-        private const double ManualMultiplier = 0.25;
-        private PGN234 ToAOG;
-        private const byte ManualMin = 10;
-        private const byte MaxSteps = 5;
+        private bool[] SectionOnAOG;
+        private bool[] SectionOnSB;
 
         public clsSectionControl(FormStart CallingForm)
         {
             mf = CallingForm;
-
-            CTL.AutoOn = true;
-            CTL.MasterOn = true;
-            CTL.RateUp = false;
-            CTL.RateDown = false;
-            CTL.SwLo = 0;
-            CTL.SwHi = 0;
-            CTL.Rlys0_On = 0;
-            CTL.Rlys1_On = 0;
-
+            SectionOnSB = new bool[mf.MaxSections];
+            SectionOnAOG = new bool[mf.MaxSections];
             mf.AutoSteerPGN.RelaysChanged += AutoSteerPGN_RelaysChanged;
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
-
-            ToAOG = new PGN234(mf);
-        }
-
-        public bool AutoOn()
-        {
-            return CTL.AutoOn;
+            MasterOnSB = true;
         }
 
         public bool MasterOn()
         {
-            return CTL.MasterOn;
-        }
-
-        public byte Rlys0_On()
-        {
-            return CTL.Rlys0_On;
-        }
-
-        public byte Rlys1_On()
-        {
-            return CTL.Rlys1_On;
+            return MasterOnSB;
         }
 
         public void ReadRateSwitches()
@@ -129,7 +76,7 @@ namespace RateController
                         RateStep++;
                         if (RateStep > MaxSteps) RateStep = MaxSteps;
 
-                        if (mf.SwitchBox.SwitchOn(SwIDs.Auto))
+                        if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
                         {
                             // auto rate
                             double CurrentRate = Prd.RateSet;
@@ -172,7 +119,7 @@ namespace RateController
                     if (ID < 0) ID = 0;
                     clsProduct Prd = mf.Products.Item(ID);
 
-                    if (!mf.SwitchBox.SwitchOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
+                    if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
                     {
                         Prd.ManualPWM = 0;
                     }
@@ -184,156 +131,173 @@ namespace RateController
             }
         }
 
-        public void UpdateSectionStatus(bool UpdateAOG = false)
+        public void UpdateSectionStatus()
         {
-            if (UpdateAOG)
+            // match switchbox and AOG
+            Array.Clear(SectionOnSB, 0, SectionOnSB.Length);
+
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff))
             {
-                // update AOG
-                ToAOG.OnLo = CTL.Rlys0_On;
-                ToAOG.OnHi = CTL.Rlys1_On;
-                ToAOG.OffLo = CTL.Rlys0_Off;
-                ToAOG.OffHi = CTL.Rlys1_Off;
-
-                if (CTL.AutoOn)
-                {
-                    ToAOG.Command = 1;
-                }
-                else
-                {
-                    ToAOG.Command = 2;
-                }
-
-                ToAOG.Send();
+                MasterOnSB = false;
             }
-            // update sections
-            mf.Sections.UpdateSectionsOn(CTL.RC0, CTL.RC1, false);
+            else if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn) || MasterOnSB)
+            {
+                MasterOnSB = true;
+
+                // set sections by switchbox switch positions
+                foreach (clsSection Sec in mf.Sections.Items)
+                {
+                    SectionOnSB[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
+                }
+
+                if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && mf.AutoSteerPGN.Connected())
+                {
+                    // match AOG section status, only on sections 0-15
+                    for (int i = 0; i < 16; i++)
+                    {
+                        if (SectionOnSB[i])
+                        {
+                            // check if AOG has switched it off
+                            SectionOnSB[i] = SectionOnAOG[i];
+                        }
+                    }
+                }
+            }
+            foreach (clsSection Sec in mf.Sections.Items)
+            {
+                Sec.IsON = SectionOnSB[Sec.ID];
+            }
+
+            UpdateAOG();
         }
 
         private void AutoSteerPGN_RelaysChanged(object sender, PGN254.RelaysChangedArgs e)
         {
-            CTL.AOGRlys0 = e.RelayLo;
-            CTL.AOGRlys1 = e.RelayHi;
+            Debug.Print("AutoSteerPGN_RelaysChanged");
+            Array.Clear(SectionOnAOG, 0, SectionOnAOG.Length);
 
-            if (mf.SwitchBox.Connected() || mf.SimMode == SimType.Speed)
+            // only sections 0-15 are set in this pgn
+            for (int i = 0; i < 8; i++)
             {
-                if (CTL.AutoOn && mf.SimMode != SimType.Speed)
-                {
-                    // auto on, only send off bytes
-                    CTL.Rlys0_On = 0;
-                    CTL.Rlys1_On = 0;
-                    CTL.Rlys0_Off = (byte)~CTL.SBRlys0;
-                    CTL.Rlys1_Off = (byte)~CTL.SBRlys1;
-                    CTL.RC0 = CTL.AOGRlys0;
-                    CTL.RC1 = CTL.AOGRlys1;
-                }
-                else
-                {
-                    // switchbox auto off, match switchbox
-                    CTL.Rlys0_On = CTL.SBRlys0;
-                    CTL.Rlys1_On = CTL.SBRlys1;
-                    CTL.Rlys0_Off = (byte)~CTL.Rlys0_On;
-                    CTL.Rlys1_Off = (byte)~CTL.Rlys1_On;
-                    CTL.RC0 = CTL.SBRlys0;
-                    CTL.RC1 = CTL.SBRlys1;
-                }
+                SectionOnAOG[i] = mf.Tls.BitRead(e.RelayLo, i);
+                SectionOnAOG[i + 8] = mf.Tls.BitRead(e.RelayHi, i);
+            }
+
+            if (mf.SwitchBox.Connected())
+            {
+                UpdateSectionStatus();
             }
             else
             {
                 // no switchbox, match AOG
-                CTL.Rlys0_On = CTL.AOGRlys0;
-                CTL.Rlys1_On = CTL.AOGRlys1;
-                CTL.Rlys0_Off = (byte)~CTL.Rlys0_On;
-                CTL.Rlys1_Off = (byte)~CTL.Rlys1_On;
-                CTL.RC0 = CTL.AOGRlys0;
-                CTL.RC1 = CTL.AOGRlys1;
+                foreach (clsSection Sec in mf.Sections.Items)
+                {
+                    if (Sec.ID < 16)
+                    {
+                        Sec.IsON = SectionOnAOG[Sec.ID];
+                    }
+                    else
+                    {
+                        Sec.IsON = false;
+                    }
+                }
             }
-
-            UpdateSectionStatus(CTL.Rlys0_On != CTL.AOGRlys0 || CTL.Rlys1_On != CTL.AOGRlys1);
         }
 
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
-            CTL.AutoOn = mf.SwitchBox.SwitchOn(SwIDs.Auto);
+            ReadRateSwitches();
 
-            // set relay bytes based on switchbox
-            if (mf.SwitchBox.SwitchOn(SwIDs.MasterOff))
+            Array.Clear(SectionOnSB, 0, SectionOnSB.Length);
+
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff))
             {
-                CTL.SBRlys0 = 0;
-                CTL.SBRlys1 = 0;
-                CTL.MasterOn = false;
+                MasterOnSB = false;
             }
-            else if (mf.SwitchBox.SwitchOn(SwIDs.MasterOn) || CTL.MasterOn)
+            else if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn) || MasterOnSB)
             {
-                CTL.SBRlys0 = 0;
-                CTL.SBRlys1 = 0;
-                CTL.MasterOn = true;
+                MasterOnSB = true;
 
+                // set sections by switchbox switch positions
                 foreach (clsSection Sec in mf.Sections.Items)
                 {
-                    if (mf.SwitchBox.SwitchOn((SwIDs)(Sec.SwitchID + 5)) && Sec.Enabled)
+                    SectionOnSB[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
+                }
+
+                if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && mf.AutoSteerPGN.Connected())
+                {
+                    // match AOG section status, only on sections 0-15
+                    for (int i = 0; i < 16; i++)
                     {
-                        if (Sec.ID < 8)
+                        if (SectionOnSB[i])
                         {
-                            CTL.SBRlys0 = mf.Tls.BitSet(CTL.SBRlys0, Sec.ID);
-                        }
-                        else
-                        {
-                            CTL.SBRlys1 = mf.Tls.BitSet(CTL.SBRlys1, Sec.ID - 8);
+                            // check if AOG has switched it off
+                            SectionOnSB[i] = SectionOnAOG[i];
                         }
                     }
                 }
             }
 
-            // set section relay bytes
-            if (CTL.MasterOn)
+            foreach (clsSection Sec in mf.Sections.Items)
             {
-                if (CTL.AutoOn)
+                Sec.IsON = SectionOnSB[Sec.ID];
+            }
+            if (mf.AutoSteerPGN.Connected()) UpdateAOG();
+        }
+
+        private void UpdateAOG()
+        {
+            PGN234 ToAOG = new PGN234(mf);
+            int Max = 16;
+
+            if (mf.MaxSections < Max) Max = mf.MaxSections;
+            for (int i = 0; i < Max; i++)
+            {
+                if (!mf.Sections.Items[i].IsON)
                 {
-                    if (mf.AutoSteerPGN.Connected() && mf.SimMode != SimType.Speed)
+                    if (i < 8)
                     {
-                        // aog connected, only send which switches that are off
-                        CTL.Rlys0_On = 0;
-                        CTL.Rlys1_On = 0;
-                        CTL.Rlys0_Off = (byte)~CTL.SBRlys0;
-                        CTL.Rlys1_Off = (byte)~CTL.SBRlys1;
-                        CTL.RC0 = CTL.AOGRlys0;
-                        CTL.RC1 = CTL.AOGRlys1;
+                        ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, i);
                     }
                     else
                     {
-                        // no aog, match switchbox
-                        CTL.Rlys0_On = CTL.SBRlys0;
-                        CTL.Rlys1_On = CTL.SBRlys1;
-                        CTL.Rlys0_Off = (byte)~CTL.Rlys0_On;
-                        CTL.Rlys1_Off = (byte)~CTL.Rlys1_On;
-                        CTL.RC0 = CTL.SBRlys0;
-                        CTL.RC1 = CTL.SBRlys1;
+                        ToAOG.OffHi = mf.Tls.BitSet(ToAOG.OffHi, i);
                     }
                 }
-                else
-                {
-                    // auto off, match switchbox
-                    CTL.Rlys0_On = CTL.SBRlys0;
-                    CTL.Rlys1_On = CTL.SBRlys1;
-                    CTL.Rlys0_Off = (byte)~CTL.Rlys0_On;
-                    CTL.Rlys1_Off = (byte)~CTL.Rlys1_On;
-                    CTL.RC0 = CTL.SBRlys0;
-                    CTL.RC1 = CTL.SBRlys1;
-                }
+            }
+
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
+            {
+                // auto on, only send off bytes
+                ToAOG.Command = 1;
             }
             else
             {
-                // master off, relays off
-                CTL.Rlys0_On = 0;
-                CTL.Rlys1_On = 0;
-                CTL.Rlys0_Off = (byte)~CTL.Rlys0_On;
-                CTL.Rlys1_Off = (byte)~CTL.Rlys1_On;
-                CTL.RC0 = 0;
-                CTL.RC1 = 0;
+                // auto off, send off and on bytes to match switchbox
+                ToAOG.Command = 2;
+                for (int i = 0; i < Max; i++)
+                {
+                    if (mf.Sections.Items[i].IsON)
+                    {
+                        if (i < 8)
+                        {
+                            ToAOG.OnLo = mf.Tls.BitSet(ToAOG.OnLo, i);
+                        }
+                        else
+                        {
+                            ToAOG.OnHi = mf.Tls.BitSet(ToAOG.OnHi, i);
+                        }
+                    }
+                }
             }
+            ToAOG.Send();
+        }
 
-            UpdateSectionStatus(true);
-            ReadRateSwitches();
+        private struct State
+        {
+            public bool Changed;
+            public bool Pressed;
+            public bool Released;
         }
     }
 }

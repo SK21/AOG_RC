@@ -123,7 +123,7 @@ namespace RateController
             if (!Initializing)
             {
                 UseZones = ckZones.Checked;
-                mf.Tls.SaveProperty("UseZones", UseZones.ToString());
+                mf.UseZones= UseZones;
                 UpdateForm();
             }
         }
@@ -291,7 +291,7 @@ namespace RateController
             DGV2.BackgroundColor = DGV.DefaultCellStyle.BackColor;
             DGV2.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            bool.TryParse(mf.Tls.LoadProperty("UseZones"), out UseZones);
+            UseZones = mf.UseZones;
             int.TryParse(mf.Tls.LoadProperty("SectionsPerZone"), out SectionsPerZone);
             if (SectionsPerZone < 1) SectionsPerZone = 1;
 

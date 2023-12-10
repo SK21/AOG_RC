@@ -760,7 +760,7 @@ namespace RateController
                 {
                     double Rt = Ra / TargetRate();
 
-                    if (Rt >= .9 && Rt <= 1.1 && mf.SwitchBox.SwitchOn(SwIDs.Auto))
+                    if (Rt >= .9 && Rt <= 1.1 && mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
                     {
                         Result = TargetRate();
                     }

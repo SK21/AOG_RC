@@ -20,7 +20,6 @@ namespace RateController
         private DateTime LastPulse = DateTime.Now;
         private float LastPWM;
         private DateTime LastTime;
-        private DateTime LastScaleCountTime;
         private int LOOP_TIME = 50;
         private bool MasterOn = false;
         private byte MaxRPM = 255;
@@ -86,7 +85,6 @@ namespace RateController
         public clsArduino(clsProduct CalledFrom)
         {
             Prd = CalledFrom;
-            LastScaleCountTime = DateTime.Now;
         }
 
         public void MainLoop()

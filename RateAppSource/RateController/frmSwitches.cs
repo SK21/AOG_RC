@@ -8,12 +8,12 @@ namespace RateController
     public partial class frmSwitches : Form
     {
         private SimType CurrentSim;
+        private bool DownPressed;
+        private bool MasterPressed;
         private FormStart mf;
         private SimType SimLast;
         private bool[] SwON = new bool[9];
         private bool UpPressed;
-        private bool DownPressed;
-        private bool MasterPressed;
 
         public frmSwitches(FormStart CallingForm)
         {
@@ -66,6 +66,27 @@ namespace RateController
         private void btnDown_MouseUp(object sender, MouseEventArgs e)
         {
             DownPressed = false;
+        }
+
+        private void btnMaster_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (mf.SectionControl.MasterOn())
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
+                MasterPressed = true;
+                tmrRelease.Enabled = true;
+            }
+            else
+            {
+                mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
+                MasterPressed = true;
+                tmrRelease.Enabled = true;
+            }
+        }
+
+        private void btnMaster_MouseUp(object sender, MouseEventArgs e)
+        {
+            MasterPressed = false;
         }
 
         private void btnUp_MouseDown(object sender, MouseEventArgs e)
@@ -130,55 +151,10 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void swAuto_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.Auto);
-        }
-
-        private void swDown_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.RateDown);
-        }
-
-        private void swFour_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw3);
-        }
-
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
             SwON = e.Switches;
             UpdateSwitches();
-        }
-
-        private void swMasterOff_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
-        }
-
-        private void swMasterOn_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
-        }
-
-        private void swOne_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw0);
-        }
-
-        private void swThree_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw2);
-        }
-
-        private void swTwo_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.sw1);
-        }
-
-        private void swUp_Click(object sender, EventArgs e)
-        {
-            mf.SwitchBox.PressSwitch(SwIDs.RateUp);
         }
 
         private void tbPWM_Enter(object sender, EventArgs e)
@@ -233,6 +209,15 @@ namespace RateController
         {
             UpdateSim();
             UpdateSwitches();
+        }
+
+        private void tmrRelease_Tick(object sender, EventArgs e)
+        {
+            if (!UpPressed && !DownPressed && !MasterPressed)
+            {
+                mf.SwitchBox.ReleaseMomentary();
+                tmrRelease.Enabled = false;
+            }
         }
 
         private void UpdateForm()
@@ -380,36 +365,7 @@ namespace RateController
             {
                 btn4.BackColor = Color.Red;
             }
-        }
-
-        private void btnMaster_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (mf.SectionControl.MasterOn())
-            {
-                mf.SwitchBox.PressSwitch(SwIDs.MasterOff);
-                MasterPressed = true;
-                tmrRelease.Enabled = true;
-            }
-            else
-            {
-                mf.SwitchBox.PressSwitch(SwIDs.MasterOn);
-                MasterPressed = true;
-                tmrRelease.Enabled = true;
-            }
-        }
-
-        private void btnMaster_MouseUp(object sender, MouseEventArgs e)
-        {
-            MasterPressed = false;
-        }
-
-        private void tmrRelease_Tick(object sender, EventArgs e)
-        {
-            if (!UpPressed && !DownPressed && !MasterPressed)
-            {
-                mf.SwitchBox.ReleaseMomentary();
-                tmrRelease.Enabled = false;
-            }
+            mf.SwitchBox.VirtualSwitchboxConnected();
         }
     }
 }

@@ -111,6 +111,7 @@
     <Compile Include="Classes\clsRelays.cs" />
     <Compile Include="Classes\clsSection.cs" />
     <Compile Include="Classes\clsSectionControl.cs" />
+    <Compile Include="Classes\clsSectionControlOld.cs" />
     <Compile Include="Classes\clsSections.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsProduct.cs" />

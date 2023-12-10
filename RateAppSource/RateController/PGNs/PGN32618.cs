@@ -56,6 +56,11 @@ namespace RateController
             return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
         }
 
+        public void VirtualSwitchboxConnected()
+        {
+            ReceiveTime= DateTime.Now;
+        }
+
         //public bool Connected(bool PhysicalOnly = false)     
         //{
         //    bool Result = false;
@@ -205,7 +210,7 @@ namespace RateController
             return Result;
         }
 
-        public bool SwitchOn(SwIDs ID)
+        public bool SwitchIsOn(SwIDs ID)
         {
             return SW[(int)ID];
         }

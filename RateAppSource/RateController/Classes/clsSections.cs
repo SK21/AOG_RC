@@ -36,7 +36,7 @@ namespace RateController
             }
             set
             {
-                if (value < 0 | value > mf.MaxSections)
+                if (value < 0 || value > mf.MaxSections)
                 {
                     throw new ArgumentException("Invalid section number. (clsSections)");
                 }
@@ -90,7 +90,6 @@ namespace RateController
                 Sec.Load();
                 cSections.Add(Sec);
             }
-            UpdateSectionsOn();
         }
 
         public void Save()
@@ -131,52 +130,6 @@ namespace RateController
             else
             {
                 Result = (float)(cWorkingWidth_cm / 100.0);    // meters
-            }
-            return Result;
-        }
-
-        public bool UpdateSectionsOn(byte OnLo = 0, byte OnHi = 0, bool UseCurrent = true)
-        {
-            // returns true if section on status has changed for any section
-            bool Result = false;
-            bool tmp = false;
-
-            if (UseCurrent)
-            {
-                OnLo = Rlys0;
-                OnHi = Rlys1;
-            }
-
-            if (OnLoLast != OnLo || OnHiLast != OnHi || !mf.SectionControl.MasterOn())
-            {
-                OnLoLast = OnLo;
-                OnHiLast = OnHi;
-
-                Rlys0 = OnLo;
-                Rlys1 = OnHi;
-
-                try
-                {
-                    for (int i = 0; i < mf.MaxSections; i++)
-                    {
-                        tmp = cSections[i].IsON;
-                        if (i < 8)
-                        {
-                            cSections[i].IsON = mf.Tls.BitRead(Rlys0, i);
-                        }
-                        else
-                        {
-                            cSections[i].IsON = mf.Tls.BitRead(Rlys1, i - 8);
-                        }
-                        if (cSections[i].IsON != tmp) Result = true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    mf.Tls.WriteErrorLog("clsSections/UpdateSectionsOn: " +
-                    ex.Message);
-                    mf.Tls.ShowHelp(ex.Message, "Sections", 3000, true);
-                }
             }
             return Result;
         }

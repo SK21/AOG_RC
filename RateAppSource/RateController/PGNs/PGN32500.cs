@@ -120,7 +120,7 @@ namespace RateController
             }
 
             if (Prod.UseMultiPulse) cData[9] |= 0b00100000;
-            if ((Prod.mf.SwitchBox.SwitchOn(SwIDs.Auto) || Prod.CalSetMeter) && !Prod.CalRun) cData[9] |= 0b01000000;
+            if ((Prod.mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || Prod.CalSetMeter) && !Prod.CalRun) cData[9] |= 0b01000000;
 
             // manual cal
             if (Prod.mf.SectionControl.MasterOn() && Prod.Enabled)

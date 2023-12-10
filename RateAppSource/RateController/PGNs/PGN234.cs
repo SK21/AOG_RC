@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace RateController
 {
     public class PGN234
@@ -30,27 +32,24 @@ namespace RateController
         public PGN234(FormStart CalledFrom)
         {
             mf = CalledFrom;
+
             cData[0] = 128;
             cData[1] = 129;
-            cData[2] = 0;
             cData[3] = 234;
             cData[4] = 8;
-            cData[6] = 0;
-            cData[7] = 0;
-            cData[8] = 0;
         }
 
         public byte Command
         { set { cData[5] = value; } }
 
         public byte OffHi
-        { set { cData[12] = value; } }
+        { get { return cData[12]; } set { cData[12] = value; } }
         public byte OffLo
-        { set { cData[10] = value; } }
+        { get { return cData[10]; } set { cData[10] = value; } }
         public byte OnHi
-        { set { cData[11] = value; } }
+        { get { return cData[11]; } set { cData[11] = value; } }
         public byte OnLo
-        { set { cData[9] = value; } }
+        { get { return cData[9]; } set { cData[9] = value; } }
 
         public void Send()
         {
