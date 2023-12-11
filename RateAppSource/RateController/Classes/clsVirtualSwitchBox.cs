@@ -40,19 +40,40 @@ namespace RateController
             Timer1.Interval = 250;
         }
 
+        private bool phySwitchboxConnected()
+        {
+            bool Result = false;
+            if (mf.UDPmodules.SwitchBoxConnected)
+            {
+                Result = true;
+            }
+            else
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (mf.SER[i].SwitchBoxConnected)
+                    {
+                        Result = true;
+                        break;
+                    }
+                }
+            }
+            return Result;
+        }
+
         public bool Enabled
         {
             get { return cEnabled; }
             set
             {
-                if (value)
+                if (value && !phySwitchboxConnected())
                 {
                     Timer1.Start();
                     cEnabled = true;
                 }
                 else
                 {
-                    if (!cSwitchScreenOn && !cLargeScreenOn)
+                    if ((!cSwitchScreenOn && !cLargeScreenOn) || phySwitchboxConnected())  // disable if physical switchbox connected
                     {
                         Timer1.Stop();
                         cEnabled = false;

@@ -18,6 +18,7 @@ namespace RateController
         private string cSubNet;
         private HandleDataDelegateObj HandleDataDelegate = null;
         private Socket recvSocket;
+        private DateTime SBtime;
         private Socket sendSocket;
 
         public UDPComm(FormStart CallingForm, int ReceivePort, int SendToPort, int SendFromPort, string ConnectionName, string DestinationEndPoint = "")
@@ -53,6 +54,9 @@ namespace RateController
 
         public string SubNet
         { get { return cSubNet; } }
+
+        public bool SwitchBoxConnected
+        { get { return ((DateTime.Now - SBtime).TotalSeconds < 4); } }
 
         public void Close()
         {
@@ -154,7 +158,11 @@ namespace RateController
                             break;
 
                         case 32618:
-                            mf.SwitchBox.ParseByteData(Data);
+                            if (mf.SwitchBox.ParseByteData(Data))
+                            {
+                                SBtime = DateTime.Now;
+                                if(mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
+                            }
                             break;
 
                         case 33152: // AOG, 0x81, 0x80

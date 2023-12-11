@@ -160,7 +160,6 @@
             this.ShowInTaskbar = false;
             this.Text = "Switches";
             this.TopMost = true;
-            this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSimulation_FormClosed);
             this.Load += new System.EventHandler(this.frmSimulation_Load);
             this.ResumeLayout(false);
