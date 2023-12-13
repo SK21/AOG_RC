@@ -386,8 +386,14 @@ namespace RateController
 
         public void SaveFormData(Form Frm)
         {
-            SaveAppProperty(Frm.Name + ".Left", Frm.Left.ToString());
-            SaveAppProperty(Frm.Name + ".Top", Frm.Top.ToString());
+            try
+            {
+                SaveAppProperty(Frm.Name + ".Left", Frm.Left.ToString());
+                SaveAppProperty(Frm.Name + ".Top", Frm.Top.ToString());
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void SaveProperty(string Key, string Value)

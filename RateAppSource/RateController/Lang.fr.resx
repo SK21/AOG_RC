@@ -166,7 +166,7 @@
     <value>Port COM</value>
   </data>
   <data name="lgCommDiagnostics" xml:space="preserve">
-    <value>Comm Diagnostics</value>
+    <value>COM Diagnostics</value>
   </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Connecter</value>
@@ -190,7 +190,7 @@
     <value>Deadband</value>
   </data>
   <data name="lgDerivative" xml:space="preserve">
-    <value>Derivative</value>
+    <value>Dérivée</value>
   </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Description</value>
@@ -238,13 +238,13 @@
     <value>Inches</value>
   </data>
   <data name="lgInstantRate" xml:space="preserve">
-    <value>Dose Instantanée :</value>
+    <value>Dose Actuel :</value>
   </data>
   <data name="lgIntegral" xml:space="preserve">
     <value>Integral</value>
   </data>
   <data name="lgInvertSection" xml:space="preserve">
-    <value>Invert_Section</value>
+    <value>Section Inversée</value>
   </data>
   <data name="lgKPH" xml:space="preserve">
     <value>Km/H</value>
@@ -328,7 +328,7 @@
     <value>Options</value>
   </data>
   <data name="lgOverallRate" xml:space="preserve">
-    <value>Dose Globale :</value>
+    <value>Dose Moyenne :</value>
   </data>
   <data name="lgPassword" xml:space="preserve">
     <value>Mot de passe</value>
@@ -337,7 +337,7 @@
     <value>PCB Config</value>
   </data>
   <data name="lgPIDTune" xml:space="preserve">
-    <value>PID Tuning Chart</value>
+    <value>Tableau de réglage PID</value>
   </data>
   <data name="lgPower" xml:space="preserve">
     <value>Puissance</value>
@@ -367,7 +367,7 @@
     <value>Quantité</value>
   </data>
   <data name="lgQuantityApplied" xml:space="preserve">
-    <value>Quantité Appliqué</value>
+    <value>Quantité Appliqué :</value>
   </data>
   <data name="lgQuantityMeasured" xml:space="preserve">
     <value>Quantité Mesuré</value>
@@ -388,7 +388,7 @@
     <value>Module connecté</value>
   </data>
   <data name="lgReceivePort" xml:space="preserve">
-    <value>ReceivePort</value>
+    <value>Port de réception</value>
   </data>
   <data name="lgRelay" xml:space="preserve">
     <value>Relais</value>
@@ -409,28 +409,28 @@
     <value>Enregistrer</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
-    <value>Enregister Sous</value>
+    <value>Enregistrer Sous</value>
   </data>
   <data name="lgSection" xml:space="preserve">
-    <value>Sections</value>
+    <value>Section</value>
   </data>
   <data name="lgSectionNum" xml:space="preserve">
     <value>Section #</value>
   </data>
   <data name="lgSections" xml:space="preserve">
-    <value>Sections pour ce produit</value>
+    <value>Sections</value>
   </data>
   <data name="lgSendPort" xml:space="preserve">
-    <value>Send Port</value>
+    <value>Port d'envoi</value>
   </data>
   <data name="lgSendTime" xml:space="preserve">
-    <value>Send Time</value>
+    <value>Heure d'envoi</value>
   </data>
   <data name="lgSensor" xml:space="preserve">
     <value>Capteur</value>
   </data>
   <data name="lgSensorCounts" xml:space="preserve">
-    <value>Sensor Counts/Unit</value>
+    <value>Impulsions/unité</value>
   </data>
   <data name="lgSensorID" xml:space="preserve">
     <value>ID Capteur</value>
@@ -439,7 +439,7 @@
     <value>Capteur Location</value>
   </data>
   <data name="lgSensorTotalCounts" xml:space="preserve">
-    <value>Capteur Counts</value>
+    <value>Nombre de capteurs</value>
   </data>
   <data name="lgShowPressure" xml:space="preserve">
     <value>Voir Pression</value>
@@ -451,7 +451,7 @@
     <value>Off</value>
   </data>
   <data name="lgSlave" xml:space="preserve">
-    <value>Slave</value>
+    <value>Esclave</value>
   </data>
   <data name="lgSpeed" xml:space="preserve">
     <value>Avancer</value>
@@ -478,10 +478,10 @@
     <value>Réservoir</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
-    <value>Taille Réservoir</value>
+    <value>Taille du Réservoir</value>
   </data>
   <data name="lgTank_Remaining" xml:space="preserve">
-    <value>Quantité Gauche</value>
+    <value>Quantité Restante :</value>
   </data>
   <data name="lgTargetRate" xml:space="preserve">
     <value>Dose Cible :</value>
@@ -496,7 +496,7 @@
     <value>Temps moyen / impulsion(&lt;50 ms/pulse)</value>
   </data>
   <data name="lgTimeForSingle" xml:space="preserve">
-    <value>Temps pour une impulsion (&gt;50 ms/pulse)</value>
+    <value>Temps par impulsion (&gt;50 ms/pulse)</value>
   </data>
   <data name="lgType" xml:space="preserve">
     <value>Type</value>
@@ -505,7 +505,7 @@
     <value>Units/Volt</value>
   </data>
   <data name="lgUpdate" xml:space="preserve">
-    <value>Update</value>
+    <value>Mise à jour</value>
   </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Applied</value>
@@ -517,7 +517,7 @@
     <value>UPM/PWM</value>
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
-    <value>UPM Target</value>
+    <value>Cible UPM</value>
   </data>
   <data name="lgVariableRate" xml:space="preserve">
     <value>Dose Variable</value>
@@ -529,7 +529,7 @@
     <value>RC Date</value>
   </data>
   <data name="lgVirtualNano" xml:space="preserve">
-    <value>Virtual Module</value>
+    <value>Module Virtuel</value>
   </data>
   <data name="lgWaitTime" xml:space="preserve">
     <value>Temps d'attente</value>

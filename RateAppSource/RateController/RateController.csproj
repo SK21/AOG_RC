@@ -229,11 +229,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.resx</DependentUpon>
     </Compile>
-    <Compile Include="Lang.fr.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Lang.fr.resx</DependentUpon>
-    </Compile>
     <Compile Include="Lang.hu.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -331,8 +326,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.fr.resx">
       <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Lang.fr.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.hu.resx">
       <Generator>ResXFileCodeGenerator</Generator>

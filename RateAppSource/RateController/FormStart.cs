@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using static RateController.PGN32618;
 
 namespace RateController
 {
@@ -255,8 +256,7 @@ namespace RateController
             Properties.Settings.Default.setF_culture = "de";
             Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
-            Restart = true;
-            Application.Restart();
+            ChangeLanguage();
         }
 
         public bool ModuleConnected(int ModuleID)
@@ -354,6 +354,7 @@ namespace RateController
                 }
                 else
                 {
+
                     // product pages
                     clsProduct Prd = Products.Item(CurrentPage - 1);
 
@@ -419,7 +420,7 @@ namespace RateController
                             lbRateAmount.Text = Prd.SmoothRate().ToString("N1");
                             break;
                     }
-
+ 
                     if (SimMode == SimType.None)
                     {
                         if (Prd.ArduinoModule.ModuleSending())
@@ -486,7 +487,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                Tls.WriteErrorLog(ex.Message);
+                Tls.WriteErrorLog("FormStart/UpdateStatus: " + ex.Message);
             }
         }
 
@@ -682,11 +683,17 @@ namespace RateController
             Application.Exit();
         }
 
+        public void ChangeLanguage()
+        {
+            Restart = true;
+            Application.Restart();
+        }
+
         private void FormStart_Activated(object sender, EventArgs e)
         {
             if (Restart)
             {
-                Application.Restart();
+                ChangeLanguage();
             }
             else if (LargeScreenExit)
             {
@@ -737,14 +744,14 @@ namespace RateController
                 }
 
                 LoadSettings();
-                UpdateStatus();
-
                 LoadPressureSetting();
                 Products.UpdatePID();
+                UpdateStatus();
 
                 if (cUseLargeScreen) StartLargeScreen();
 
                 timerMain.Enabled = true;
+                timerNano.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -760,8 +767,7 @@ namespace RateController
             Properties.Settings.Default.setF_culture = "fr";
             Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
-            Restart = true;
-            Application.Restart();
+            ChangeLanguage();
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -775,8 +781,7 @@ namespace RateController
             Properties.Settings.Default.setF_culture = "hu";
             Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
-            Restart = true;
-            Application.Restart();
+            ChangeLanguage();
         }
 
         private void label34_Click(object sender, EventArgs e)
@@ -938,8 +943,7 @@ namespace RateController
             Properties.Settings.Default.setF_culture = "en";
             Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
-            Restart = true;
-            Application.Restart();
+            ChangeLanguage();
         }
 
         private void MnuNederlands_Click(object sender, EventArgs e)
@@ -947,8 +951,7 @@ namespace RateController
             Properties.Settings.Default.setF_culture = "nl";
             Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
-            Restart = true;
-            Application.Restart();
+            ChangeLanguage();
         }
 
         private void MnuRelays_Click_1(object sender, EventArgs e)
@@ -991,8 +994,7 @@ namespace RateController
             Properties.Settings.Default.setF_culture = "pl";
             Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
-            Restart = true;
-            Application.Restart();
+            ChangeLanguage();
         }
 
         private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1023,8 +1025,7 @@ namespace RateController
             Properties.Settings.Default.setF_culture = "ru";
             Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
-            Restart = true;
-            Application.Restart();
+            ChangeLanguage();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1085,19 +1086,26 @@ namespace RateController
 
         private void SetLanguage()
         {
-            if (Settings.Default.AOG_language == Settings.Default.setF_culture)
+            try
             {
-                Settings.Default.UserLanguageChange = false;
-                Settings.Default.Save();
-            }
-            else
-            {
-                if (!Settings.Default.UserLanguageChange)
+                if (Settings.Default.AOG_language == Settings.Default.setF_culture)
                 {
-                    Settings.Default.setF_culture = Settings.Default.AOG_language;
+                    Settings.Default.UserLanguageChange = false;
                     Settings.Default.Save();
-                    Application.Restart();
                 }
+                else
+                {
+                    if (!Settings.Default.UserLanguageChange)
+                    {
+                        Settings.Default.setF_culture = Settings.Default.AOG_language;
+                        Settings.Default.Save();
+                        ChangeLanguage();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Tls.WriteErrorLog("FormStart/SetLanguage: " + ex.Message);
             }
         }
 

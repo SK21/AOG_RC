@@ -72,7 +72,6 @@ C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Rel
 C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.frmComm.resources
 C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.frmHelp.resources
 C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.frmLargeScreen.resources
-C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.frmMonitor.resources
 C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.frmMsgBox.resources
 C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.frmRelays.resources
 C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.frmSections.resources
@@ -94,3 +93,10 @@ C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Rel
 C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.csproj.CopyComplete
 C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.exe
 C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.pdb
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\bin\Release\fr\RateController.resources.dll
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\bin\Release\hu\RateController.resources.dll
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.frmModule.resources
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.Lang.fr.resources
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\RateController.Lang.hu.resources
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\fr\RateController.resources.dll
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Release\hu\RateController.resources.dll

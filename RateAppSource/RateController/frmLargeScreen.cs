@@ -1397,7 +1397,7 @@ namespace RateController
             Properties.Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
-            Application.Restart();
+            this.Close();
         }
 
         private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1421,7 +1421,7 @@ namespace RateController
             Properties.Settings.Default.UserLanguageChange = true;
             Properties.Settings.Default.Save();
             mf.Restart = true;
-            Application.Restart();
+            this.Close();
         }
     }
 }

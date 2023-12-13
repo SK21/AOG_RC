@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -47,15 +48,25 @@ namespace RateController
 
         public bool Connected()
         {
-            // returns true if at least one module is connected
             bool Result = false;
-            for (int i = 0; i < mf.MaxProducts; i++)
+            try
             {
-                if (cProducts[i].ArduinoModule.Connected())
+                if (cProducts.Count > 0)
                 {
-                    Result = true;
-                    break;
+                    // returns true if at least one module is connected
+                    for (int i = 0; i < mf.MaxProducts; i++)
+                    {
+                        if (cProducts[i].ArduinoModule.Connected())
+                        {
+                            Result = true;
+                            break;
+                        }
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("clsProducts/Connected: " + ex.Message);
             }
             return Result;
         }

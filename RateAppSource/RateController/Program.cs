@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using RateController.Properties;
 using System.Threading;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -32,11 +33,12 @@ namespace RateController
                 Settings.Default.Save();
             }
 
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormStart());
         }
     }

@@ -120,8 +120,7 @@ namespace RateController
             }
             catch (Exception e)
             {
-                //mf.Tls.ShowHelp("UDP start error: \n" + e.Message, "Comm", 3000, true);
-                mf.Tls.WriteErrorLog("StartUDPServer: \n" + e.Message);
+                mf.Tls.WriteErrorLog("UDPcomm/StartUDPServer: \n" + e.Message);
             }
         }
 
