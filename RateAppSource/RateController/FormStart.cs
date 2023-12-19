@@ -29,7 +29,7 @@ namespace RateController
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
         public bool cUseInches;
-        public bool cUseTransparent = false;
+        private bool cUseTransparent = false;
         public bool LargeScreenExit = false;
         public frmLargeScreen Lscrn;
         public PGN238 MachineConfig;
@@ -76,6 +76,7 @@ namespace RateController
         private PGN32501[] RelaySettings;
         private bool ShowCoverageRemaining;
         private bool ShowQuantityRemaining;
+        private bool cShowSwitches = false;
 
         public FormStart()
         {
@@ -206,6 +207,17 @@ namespace RateController
             }
         }
 
+        public bool ShowSwitches
+        {
+            get { return cShowSwitches; }
+            set
+            {
+                cShowSwitches = value;
+                Tls.SaveProperty("ShowSwitches",cShowSwitches.ToString());
+                StartSwitches();
+            }
+        }
+
         public bool UseTransparent
         {
             get { return cUseTransparent; }
@@ -239,7 +251,7 @@ namespace RateController
             if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd)) cSimSpeed = Spd;
             if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS)) cUseLargeScreen = LS;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
-
+            if(bool.TryParse(Tls.LoadProperty("ShowSwitches"),out bool SS)) cShowSwitches = SS;
             Sections.Load();
             Sections.CheckSwitchDefinitions();
 
@@ -484,6 +496,16 @@ namespace RateController
                 {
                     btnFan.Image = Properties.Resources.FanOff;
                 }
+
+                if (ShowSwitches)
+                {
+                    switchesToolStripMenuItem1.Image = Properties.Resources.OK;
+                }
+                else
+                {
+                    switchesToolStripMenuItem1.Image = Properties.Resources.Cancel64;
+                }
+
             }
             catch (Exception ex)
             {
@@ -749,6 +771,7 @@ namespace RateController
                 UpdateStatus();
 
                 if (cUseLargeScreen) StartLargeScreen();
+                if (cShowSwitches) StartSwitches();
 
                 timerMain.Enabled = true;
                 timerNano.Enabled = true;
@@ -1121,21 +1144,44 @@ namespace RateController
             Lscrn.SetTransparent(cUseTransparent);
             Lscrn.Show();
         }
-
-        private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
+        public void StartSwitches()
         {
-            //check if window already exists
             Form fs = Application.OpenForms["frmSwitches"];
 
-            if (fs == null)
+            if (cShowSwitches)
             {
-                Form frm = new frmSwitches(this);
-                frm.Show();
+                if (fs == null)
+                {
+                    Form frm = new frmSwitches(this);
+                    frm.Show();
+                }
+                else
+                {
+                    fs.Focus();
+                }
             }
             else
             {
-                fs.Focus();
+                if (fs != null) fs.Close();
             }
+        }
+
+        private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ////check if window already exists
+            //Form fs = Application.OpenForms["frmSwitches"];
+
+            //if (fs == null)
+            //{
+            //    Form frm = new frmSwitches(this);
+            //    frm.Show();
+            //}
+            //else
+            //{
+            //    fs.Focus();
+            //}
+            cShowSwitches = !cShowSwitches;
+            StartSwitches();
         }
 
         private void timerMain_Tick(object sender, EventArgs e)

@@ -47,29 +47,32 @@
             this.btnMaster.BackColor = System.Drawing.Color.LightGreen;
             this.btnMaster.Location = new System.Drawing.Point(12, 12);
             this.btnMaster.Name = "btnMaster";
-            this.btnMaster.Size = new System.Drawing.Size(89, 38);
+            this.btnMaster.Size = new System.Drawing.Size(64, 35);
             this.btnMaster.TabIndex = 167;
-            this.btnMaster.Text = "Master";
+            this.btnMaster.Text = "MST";
             this.btnMaster.UseVisualStyleBackColor = false;
             this.btnMaster.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseDown);
             this.btnMaster.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseUp);
             // 
             // btnDown
             // 
-            this.btnDown.Location = new System.Drawing.Point(297, 12);
+            this.btnDown.BackColor = System.Drawing.Color.DimGray;
+            this.btnDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDown.Location = new System.Drawing.Point(222, 12);
             this.btnDown.Name = "btnDown";
-            this.btnDown.Size = new System.Drawing.Size(89, 38);
+            this.btnDown.Size = new System.Drawing.Size(64, 35);
             this.btnDown.TabIndex = 166;
             this.btnDown.Text = "-";
-            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnDown.UseVisualStyleBackColor = false;
             this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseDown);
             this.btnDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseUp);
             // 
             // btn1
             // 
-            this.btn1.Location = new System.Drawing.Point(12, 69);
+            this.btn1.Location = new System.Drawing.Point(12, 53);
             this.btn1.Name = "btn1";
-            this.btn1.Size = new System.Drawing.Size(89, 38);
+            this.btn1.Size = new System.Drawing.Size(64, 35);
             this.btn1.TabIndex = 160;
             this.btn1.Text = "1";
             this.btn1.UseVisualStyleBackColor = true;
@@ -77,9 +80,9 @@
             // 
             // btn2
             // 
-            this.btn2.Location = new System.Drawing.Point(107, 69);
+            this.btn2.Location = new System.Drawing.Point(82, 53);
             this.btn2.Name = "btn2";
-            this.btn2.Size = new System.Drawing.Size(89, 38);
+            this.btn2.Size = new System.Drawing.Size(64, 35);
             this.btn2.TabIndex = 161;
             this.btn2.Text = "2";
             this.btn2.UseVisualStyleBackColor = true;
@@ -87,20 +90,22 @@
             // 
             // btnUp
             // 
-            this.btnUp.Location = new System.Drawing.Point(202, 12);
+            this.btnUp.BackColor = System.Drawing.Color.DarkGray;
+            this.btnUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUp.Location = new System.Drawing.Point(152, 12);
             this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(89, 38);
+            this.btnUp.Size = new System.Drawing.Size(64, 35);
             this.btnUp.TabIndex = 165;
             this.btnUp.Text = "+";
-            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.UseVisualStyleBackColor = false;
             this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
             this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
             // 
             // btn3
             // 
-            this.btn3.Location = new System.Drawing.Point(202, 69);
+            this.btn3.Location = new System.Drawing.Point(152, 53);
             this.btn3.Name = "btn3";
-            this.btn3.Size = new System.Drawing.Size(89, 38);
+            this.btn3.Size = new System.Drawing.Size(64, 35);
             this.btn3.TabIndex = 162;
             this.btn3.Text = "3";
             this.btn3.UseVisualStyleBackColor = true;
@@ -108,9 +113,9 @@
             // 
             // btn4
             // 
-            this.btn4.Location = new System.Drawing.Point(297, 69);
+            this.btn4.Location = new System.Drawing.Point(222, 53);
             this.btn4.Name = "btn4";
-            this.btn4.Size = new System.Drawing.Size(89, 38);
+            this.btn4.Size = new System.Drawing.Size(64, 35);
             this.btn4.TabIndex = 163;
             this.btn4.Text = "4";
             this.btn4.UseVisualStyleBackColor = true;
@@ -118,9 +123,9 @@
             // 
             // btAuto
             // 
-            this.btAuto.Location = new System.Drawing.Point(107, 12);
+            this.btAuto.Location = new System.Drawing.Point(82, 12);
             this.btAuto.Name = "btAuto";
-            this.btAuto.Size = new System.Drawing.Size(89, 38);
+            this.btAuto.Size = new System.Drawing.Size(64, 35);
             this.btAuto.TabIndex = 164;
             this.btAuto.Text = "Auto";
             this.btAuto.UseVisualStyleBackColor = true;
@@ -140,7 +145,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(402, 119);
+            this.ClientSize = new System.Drawing.Size(298, 96);
             this.Controls.Add(this.btnDown);
             this.Controls.Add(this.btnMaster);
             this.Controls.Add(this.btnUp);
@@ -151,7 +156,6 @@
             this.Controls.Add(this.btn1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
@@ -162,6 +166,8 @@
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSimulation_FormClosed);
             this.Load += new System.EventHandler(this.frmSimulation_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             this.ResumeLayout(false);
 
         }

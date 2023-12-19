@@ -921,6 +921,14 @@ namespace RateController
 
             RCalarm.CheckAlarms();
             ShowProducts();
+            if(mf.ShowSwitches)
+            {
+                switchesToolStripMenuItem1.Image = Properties.Resources.OK;
+            }
+            else
+            {
+                switchesToolStripMenuItem1.Image = Properties.Resources.Cancel64;
+            }
         }
 
         private void ShowProducts()
@@ -1378,17 +1386,18 @@ namespace RateController
         private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["frmSimulation"];
+            //Form fs = Application.OpenForms["frmSwitches"];
 
-            if (fs == null)
-            {
-                Form frm = new frmSwitches(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
+            //if (fs == null)
+            //{
+            //    Form frm = new frmSwitches(mf);
+            //    frm.Show();
+            //}
+            //else
+            //{
+            //    fs.Focus();
+            //}
+            mf.ShowSwitches = !mf.ShowSwitches;
         }
 
         private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
