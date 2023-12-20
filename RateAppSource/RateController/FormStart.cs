@@ -741,10 +741,10 @@ namespace RateController
         {
             try
             {
+                Tls.LoadFormData(this);
+
                 CurrentPage = 5;
                 int.TryParse(Tls.LoadProperty("CurrentPage"), out CurrentPage);
-
-                Tls.LoadFormData(this);
 
                 if (Tls.PrevInstance())
                 {

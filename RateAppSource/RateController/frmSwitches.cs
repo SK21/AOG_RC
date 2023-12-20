@@ -157,7 +157,6 @@ namespace RateController
         {
             if (mf.UseTransparent)
             {
-                this.Text = string.Empty;
                 this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
                 this.ControlBox = false;
                 this.FormBorderStyle = FormBorderStyle.None;
@@ -168,7 +167,7 @@ namespace RateController
             else
             {
                 this.Text = "Switches";
-                this.TransparencyKey = Color.Transparent;
+                this.TransparencyKey = Color.Empty;
                 this.ControlBox = true;
                 this.FormBorderStyle = FormBorderStyle.FixedDialog;
                 this.Top += -TransTopOffset;

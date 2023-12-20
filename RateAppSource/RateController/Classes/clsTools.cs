@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -12,6 +13,25 @@ namespace RateController
 {
     public class clsTools
     {
+        #region Form Dragging API Support
+
+        // https://www.c-sharpcorner.com/article/transparent-borderless-forms-in-C-Sharp/
+        // add to form:
+        // private void Form1_MouseDown(object sender, MouseEventArgs e)
+        // {
+        //    if (e.Button == MouseButtons.Left) Tls.DragForm(this);
+        // }
+
+        //ReleaseCapture releases a mouse capture
+        [DllImportAttribute("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        public static extern bool ReleaseCapture();
+
+        //The SendMessage function sends a message to a window or windows.
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
+
+        #endregion Form Dragging API Support
+
         private static Hashtable HTapp;
         private static Hashtable HTfiles;
         private string cAppName = "RateController";
@@ -137,6 +157,12 @@ namespace RateController
                 Result = (byte)CK;
             }
             return Result;
+        }
+
+        public void DragForm(Form Frm)
+        {
+            ReleaseCapture();
+            SendMessage(Frm.Handle, 0xa1, 0x2, 0);
         }
 
         public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)

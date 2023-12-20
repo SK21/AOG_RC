@@ -77,9 +77,9 @@ namespace RateController
             btnDown.BackColor = Properties.Settings.Default.DayColour;
 
 
-            foreach(Control Ctrl in Controls)
+            foreach (Control Ctrl in Controls)
             {
-                if(Ctrl.Name !="btnSettings" && Ctrl.Name!="btAuto")
+                if (Ctrl.Name != "btnSettings" && Ctrl.Name != "btAuto")
                 {
                     Ctrl.MouseDown += mouseMove_MouseDown;
                     Ctrl.MouseMove += mouseMove_MouseMove;
@@ -98,6 +98,7 @@ namespace RateController
                 string TransparentFont = "MS Gothic";
                 //string TransparentFont = "Courier New";
                 //string TransparentFont = "Candara Light";
+                //string TransparentFont = "Tahoma";
 
                 foreach (Control Ctrl in Controls)
                 {
@@ -109,7 +110,7 @@ namespace RateController
                     else if (Ctrl.Name == "btAuto" || Ctrl.Name == "lblManAuto")
                     {
                         Ctrl.Font = new Font(TransparentFont, 10, FontStyle.Bold);
-                        
+
                     }
                     else
                     {
@@ -140,7 +141,7 @@ namespace RateController
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.Top += TransTopOffset;
                 this.Left += TransLeftOffset;
-                Color txtcolor = SystemColors.ControlLightLight;
+                Color txtcolor = Color.White;
                 lbRate.ForeColor = txtcolor;
                 lbTarget.ForeColor = txtcolor;
                 lbCoverage.ForeColor = txtcolor;
