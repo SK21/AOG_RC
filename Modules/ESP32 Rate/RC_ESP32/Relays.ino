@@ -45,7 +45,66 @@ void CheckRelays()
     switch (MDL.RelayControl)
     {
     case 1:
-        // rs485
+        // PCA9685
+        if (PCA9685_found)
+        {
+            if (MDL.PCA9685paired)
+            {
+                // 2 pins used for each valve, powered on and off, 8 sections
+                for (int i = 0; i < 8; i++)
+                {
+                    BitState = bitRead(NewLo, i);
+
+                    if (RelayStatus[i] != BitState)
+                    {
+                        IOpin = i * 2;
+                        if (BitState)
+                        {
+                            // on  
+                            PWMServoDriver.setPWM(IOpin, 4096, 0);  
+                            PWMServoDriver.setPWM(IOpin + 1, 0, 4096);
+                        }
+                        else
+                        {
+                            // off
+                            PWMServoDriver.setPWM(IOpin, 0, 4096); 
+                            PWMServoDriver.setPWM(IOpin + 1, 4096, 0);
+                        }
+                        RelayStatus[i] = BitState;
+                    }
+                }
+            }
+            else
+            {
+                // 1 pin for each valve, powered on only, 16 sections
+                for (int i = 0; i < 16; i++)
+                {
+                    if (i < 8)
+                    {
+                        BitState = bitRead(NewLo, i);
+                    }
+                    else
+                    {
+                        BitState = bitRead(NewHi, i - 8);
+                    }
+
+                    if (RelayStatus[i] != BitState)
+                    {
+                        if (BitState)
+                        {
+                            // on
+                            PWMServoDriver.setPWM(i, 4096, 0);
+                        }
+                        else
+                        {
+                            // off
+                            PWMServoDriver.setPWM(i, 0, 4096);
+                        }
+                        RelayStatus[i] = BitState;
+                    }
+                }
+            }
+        }
         break;
 
     case 2:

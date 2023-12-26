@@ -18,17 +18,25 @@
 
 #include <ArduinoOTA.h>
 #include <WebServer.h>
-#include <EthernetLarge.h>	// https://github.com/OPEnSLab-OSU/EthernetLarge
 #include <EEPROM.h> 
 
+#include <SPI.h>
+#include <Ethernet.h>
+#include <EthernetUdp.h>
+#include <Adafruit_PWMServoDriver.h>
+
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  07-Dec-2023"
-const uint16_t InoID = 7123;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  22-Dec-2023"
+const uint16_t InoID = 22123;	// change to send defaults to eeprom, ddmmy, no leading 0
 
 #define MaxReadBuffer 100	// bytes
-#define MaxProductCount 1
+#define MaxProductCount 2
 #define EEPROM_SIZE 512
 #define ModStringLengths 20
+
+// servo driver
+#define OutputEnablePin 27
+#define DriverAddress 0x55
 
 struct ModuleConfig
 {
@@ -38,14 +46,15 @@ struct ModuleConfig
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
-	uint8_t IP2 = 1;
+	uint8_t IP2 = 5;
 	uint8_t IP3 = 60;
-	uint8_t RelayControl = 2;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
+	uint8_t RelayControl = 1;		// 0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,0,0,0,0,0,0,0,0 };		// pin numbers when GPIOs are used for relay control (5), default RC11
 	char Name[ModStringLengths] = "RateModule";
 	char SSID[ModStringLengths] = "tractor";
 	char Password[ModStringLengths] = "111222333";
 	uint8_t AdsAddress = 0x48;			// enter 0 to search all
+	uint8_t PCA9685paired = true;		// pins 0 and 1 on/off complementary, 2 and 3, 4 and 5, etc.
 };
 
 ModuleConfig MDL;
@@ -118,6 +127,9 @@ bool AutoOn = true;
 
 PCA9555 PCA;
 bool PCA9555PW_found = false;
+
+Adafruit_PWMServoDriver PWMServoDriver = Adafruit_PWMServoDriver(DriverAddress);
+bool PCA9685_found = false;
 
 Adafruit_MCP23X17 MCP;
 bool MCP23017_found = false;
@@ -232,6 +244,12 @@ void Blink()
 
 		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
+
+		if (ESPconnected)
+		{
+			Serial.print(", Wifi signal:");
+			Serial.print(WiFi.RSSI());
+		}
 
 		Serial.println("");
 

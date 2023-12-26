@@ -24,8 +24,7 @@ void HandlePage2()
 
 void handleCredentials()
 {
-	int NewID;
-	int Interval;
+	int Val;
 
 	String tmp = server.arg("prop1");
 	if (tmp.length() > (ModStringLengths - 1))
@@ -51,15 +50,27 @@ void handleCredentials()
 	tmp.trim();
 	tmp.toCharArray(MDL.Name, tmp.length() + 1);
 
-	tmp = server.arg("prop4");
-	if (tmp.length() > (ModStringLengths - 1))
-	{
-		tmp = tmp.substring(0, (ModStringLengths - 1));
-	}
-	tmp.trim();
-	char tmp2[ModStringLengths];
-	tmp.toCharArray(tmp2, tmp.length() + 1);
-	MDL.AdsAddress = atoi(tmp2);
+
+	Val = WebInputValue(server.arg("prop4"));
+	if (Val >= 0 && Val <= 50) MDL.AdsAddress = Val;
+
+	Val = WebInputValue(server.arg("prop5"));
+	if (Val >= 0 && Val <= 50) Sensor[0].FlowPin = Val;
+
+	Val = WebInputValue(server.arg("prop6"));
+	if (Val >= 0 && Val <= 50) Sensor[0].DirPin = Val;
+
+	Val = WebInputValue(server.arg("prop7"));
+	if (Val >= 0 && Val <= 50) Sensor[0].PWMPin = Val;
+
+	Val = WebInputValue(server.arg("prop8"));
+	if (Val >= 0 && Val <= 50) Sensor[1].FlowPin = Val;
+
+	Val = WebInputValue(server.arg("prop9"));
+	if (Val >= 0 && Val <= 50) Sensor[1].DirPin = Val;
+
+	Val = WebInputValue(server.arg("prop10"));
+	if (Val >= 0 && Val <= 50) Sensor[1].PWMPin = Val;
 
 	server.send(200, "text/html", GetPage0());
 
@@ -85,5 +96,17 @@ void ButtonPressed()
 			HandlePage1();
 		}
 	}
+}
+
+int WebInputValue(String tmp)
+{
+	if (tmp.length() > (ModStringLengths - 1))
+	{
+		tmp = tmp.substring(0, (ModStringLengths - 1));
+	}
+	tmp.trim();
+	char tmp2[ModStringLengths];
+	tmp.toCharArray(tmp2, tmp.length() + 1);
+	return atoi(tmp2);
 }
 

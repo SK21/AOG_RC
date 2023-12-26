@@ -143,6 +143,7 @@ void DoSetup()
 	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
 	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
 
+	Ethernet.init(5);   // SS pin
 	Ethernet.begin(LocalMac, 0);
 	Ethernet.setLocalIP(LocalIP);
 
@@ -200,6 +201,38 @@ void DoSetup()
 	// Relays
 	switch (MDL.RelayControl)
 	{
+	case 1:
+		// PCA9685
+		Serial.println("");
+		Serial.println("Starting PCA9685 I/O Expander ...");
+		ErrorCount = 0;
+		while (!PCA9685_found)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(DriverAddress);
+			PCA9685_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5)break;
+		}
+
+		Serial.println("");
+		if (PCA9685_found)
+		{
+			Serial.println("PCA9685 expander found.");
+			PWMServoDriver.begin();
+			PWMServoDriver.setPWMFreq(200);
+
+			pinMode(OutputEnablePin, OUTPUT);
+			digitalWrite(OutputEnablePin, LOW);	//enable
+		}
+		else
+		{
+			Serial.println("PCA9685 expander not found.");
+		}
+		Serial.println("");
+		break;
+
 	case 2:
 	case 3:
 		// PCA9555 I/O expander on default address 0x20
@@ -330,3 +363,4 @@ void SaveData()
 	}
 	EEPROM.commit();
 }
+

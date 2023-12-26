@@ -85,6 +85,7 @@ String GetPage2()
 	st += "";
 	st += "    <h1 align=center>Settings </h1>";
 	st += "    <form id=FORM1 method=post action='/'>&nbsp;";
+
 	st += "      <table class='center'>";
 	st += "";
 	st += "        <tr>";
@@ -104,8 +105,42 @@ String GetPage2()
 	st += "          <td align='left'>ADS1115 address</td>";
 	st += "          <td><input class='InputCell' size='20' name='prop4' value='" + String(MDL.AdsAddress) + "' ID=Text4></td>";
 	st += "        </tr>";
+	st += "        <tr>";
+	st += "          <td align='left'>Flow Pin 0</td>";
+	st += "          <td><input class='InputCell' size='20' name='prop5' value='" + String(Sensor[0].FlowPin) + "' ID=Text5></td>";
+	st += "        </tr>";
+	st += "        <tr>";
+	st += "          <td align='left'>Dir Pin 0</td>";
+	st += "          <td><input class='InputCell' size='20' name='prop6' value='" + String(Sensor[0].DirPin) + "' ID=Text6></td>";
+	st += "        </tr>";
+	st += "        <tr>";
+	st += "          <td align='left'>PWM Pin 0</td>";
+	st += "          <td><input class='InputCell' size='20' name='prop7' value='" + String(Sensor[0].PWMPin) + "' ID=Text7></td>";
+	st += "        </tr>";
+	st += "        <tr>";
+	st += "          <td align='left'>Flow Pin 1</td>";
+	st += "          <td><input class='InputCell' size='20' name='prop8' value='" + String(Sensor[1].FlowPin) + "' ID=Text8></td>";
+	st += "        </tr>";
+	st += "        <tr>";
+	st += "          <td align='left'>Dir Pin 1</td>";
+	st += "          <td><input class='InputCell' size='20' name='prop9' value='" + String(Sensor[1].DirPin) + "' ID=Text9></td>";
+	st += "        </tr>";
+	st += "        <tr>";
+	st += "          <td align='left'>PWM Pin 1</td>";
+	st += "          <td><input class='InputCell' size='20' name='prop10' value='" + String(Sensor[1].PWMPin) + "' ID=Text10></td>";
+	st += "        </tr>";
 	st += "      </table>";
 	st += "";
+
+	st += "<label for='Rcontrol'>Relay Control: </label>";
+	st += "<select name='Rcontrol' id='Rcontrol'>";
+	st += "<option value='PCA9555_8'>PCA9555 8 relays</option>";
+	st += "<option value='PCA9555_16'>PCA9555 16 relays</option>";
+	st += "<option value='MCP23017'>MCP23017</option>";
+	st += "<option value='GPIOs'>GPIOs</option>";
+	st += "/select>";
+	st += "<br>";
+
 	st += "      <p> <input class='button-72' id=Submit1 type=submit value='Save/Restart'></p>";
 	st += "      <p> <a href='/page0'>Back</a> </p>";
 	st += "    </form>";
