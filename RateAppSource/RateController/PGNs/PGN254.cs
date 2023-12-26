@@ -78,7 +78,6 @@ namespace RateController
 
                         if (cRelayLo != RelayLoLast || cRelayHi != RelayHiLast)
                         {
-                            Debug.Print("254 Parse");
                             // raise event
                             RelaysChangedArgs args = new RelaysChangedArgs();
                             args.RelayHi = cRelayHi;

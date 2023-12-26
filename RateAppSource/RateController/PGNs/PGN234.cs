@@ -40,7 +40,7 @@ namespace RateController
         }
 
         public byte Command
-        { set { cData[5] = value; } }
+        { get { return cData[5]; } set { cData[5] = value; } }
 
         public byte OffHi
         { get { return cData[12]; } set { cData[12] = value; } }

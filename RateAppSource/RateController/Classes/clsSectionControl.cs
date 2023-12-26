@@ -11,7 +11,10 @@ namespace RateController
         private const byte MaxSteps = 5;
         private const int StepDelay = 1000; // ms between rate adjustments
         private DateTime AdjustTime;
+        private bool AutoLast;
         private State CurrentState;
+        private bool MasterChanged;
+        private bool MasterLast;
         private bool MasterOnSB;
         private FormStart mf;
         private State PreviousState;
@@ -163,17 +166,127 @@ namespace RateController
                     }
                 }
             }
+
             foreach (clsSection Sec in mf.Sections.Items)
             {
                 Sec.IsON = SectionOnSB[Sec.ID];
             }
 
-            UpdateAOG();
+            if (MasterLast != MasterOnSB)
+            {
+                MasterLast = MasterOnSB;
+                MasterChanged = true;
+            }
+
+            // update AOG
+            if (mf.AutoSteerPGN.Connected())
+            {
+                PGN234 ToAOG = new PGN234(mf);
+                int Max = 16;
+                if (MasterOnSB)
+                {
+                    // master on
+                    bool SectionsChanged = false;
+                    for (int i = 0; i < 8; i++)
+                    {
+                        if (SectionOnSB[i] != SectionOnAOG[i] || SectionOnSB[i + 8] != SectionOnAOG[i + 8])
+                        {
+                            SectionsChanged = true;
+                            break;
+                        }
+                    }
+
+                    if (SectionsChanged || MasterChanged)
+                    {
+                        MasterChanged = false;
+
+                        // send off bytes to match switchbox
+                        if (mf.MaxSections < Max) Max = mf.MaxSections;
+                        for (int i = 0; i < Max; i++)
+                        {
+                            if (!mf.Sections.Items[i].IsON)
+                            {
+                                if (i < 8)
+                                {
+                                    ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, i);
+                                }
+                                else
+                                {
+                                    ToAOG.OffHi = mf.Tls.BitSet(ToAOG.OffHi, i);
+                                }
+                            }
+                        }
+
+                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
+                        {
+                            // auto off, send on bytes to match switchbox
+                            for (int i = 0; i < Max; i++)
+                            {
+                                if (mf.Sections.Items[i].IsON)
+                                {
+                                    if (i < 8)
+                                    {
+                                        ToAOG.OnLo = mf.Tls.BitSet(ToAOG.OnLo, i);
+                                    }
+                                    else
+                                    {
+                                        ToAOG.OnHi = mf.Tls.BitSet(ToAOG.OnHi, i);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // check for switches off
+                    foreach (clsSection Sec in mf.Sections.Items)
+                    {
+                        if (!mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) || !Sec.Enabled)
+                        {
+                            if (Sec.ID < 8)
+                            {
+                                ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, Sec.ID);
+                            }
+                            else if (Sec.ID < 16)
+                            {
+                                ToAOG.OffHi = mf.Tls.BitSet(ToAOG.OffHi, Sec.ID - 8);
+                            }
+                        }
+                    }
+
+                    if (AutoLast != mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
+                    {
+                        AutoLast = mf.SwitchBox.SwitchIsOn(SwIDs.Auto);
+                        if (AutoLast && MasterOnSB)
+                        {
+                            // auto on
+                            ToAOG.Command = 1;
+                        }
+                        else
+                        {
+                            // auto off
+                            ToAOG.Command = 2;
+                        }
+                    }
+                }
+                else
+                {
+                    // master off
+                    if (MasterChanged)
+                    {
+                        MasterChanged = false;
+                        ToAOG.Command = 2;  // auto off
+                        AutoLast = false;
+                        ToAOG.OffLo = 255;
+                        ToAOG.OffHi = 255;
+                    }
+                }
+
+                ToAOG.Send();
+            }
         }
 
         private void AutoSteerPGN_RelaysChanged(object sender, PGN254.RelaysChangedArgs e)
         {
-            Debug.Print("AutoSteerPGN_RelaysChanged");
             Array.Clear(SectionOnAOG, 0, SectionOnAOG.Length);
 
             // only sections 0-15 are set in this pgn
@@ -207,77 +320,7 @@ namespace RateController
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
             ReadRateSwitches();
-
-            Array.Clear(SectionOnSB, 0, SectionOnSB.Length);
-
-            if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff))
-            {
-                MasterOnSB = false;
-            }
-            else if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn) || MasterOnSB)
-            {
-                MasterOnSB = true;
-
-                // set sections by switchbox switch positions
-                foreach (clsSection Sec in mf.Sections.Items)
-                {
-                    SectionOnSB[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
-                }
-            }
-
-            foreach (clsSection Sec in mf.Sections.Items)
-            {
-                Sec.IsON = SectionOnSB[Sec.ID];
-            }
-            if (mf.AutoSteerPGN.Connected()) UpdateAOG();
-        }
-
-        private void UpdateAOG()
-        {
-            PGN234 ToAOG = new PGN234(mf);
-            int Max = 16;
-
-            if (mf.MaxSections < Max) Max = mf.MaxSections;
-            for (int i = 0; i < Max; i++)
-            {
-                if (!mf.Sections.Items[i].IsON)
-                {
-                    if (i < 8)
-                    {
-                        ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, i);
-                    }
-                    else
-                    {
-                        ToAOG.OffHi = mf.Tls.BitSet(ToAOG.OffHi, i);
-                    }
-                }
-            }
-
-            if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
-            {
-                // auto on, only send off bytes
-                ToAOG.Command = 1;
-            }
-            else
-            {
-                // auto off, send off and on bytes to match switchbox
-                ToAOG.Command = 2;
-                for (int i = 0; i < Max; i++)
-                {
-                    if (mf.Sections.Items[i].IsON)
-                    {
-                        if (i < 8)
-                        {
-                            ToAOG.OnLo = mf.Tls.BitSet(ToAOG.OnLo, i);
-                        }
-                        else
-                        {
-                            ToAOG.OnHi = mf.Tls.BitSet(ToAOG.OnHi, i);
-                        }
-                    }
-                }
-            }
-            ToAOG.Send();
+            UpdateSectionStatus();
         }
 
         private struct State
