@@ -2313,3 +2313,4 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateControllerApp\fr\RateController.
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Lang.fr.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\fr\RateController.resources.dll
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmModuleConfig.resources
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmPins.resources

@@ -200,6 +200,12 @@
     <Compile Include="frmMsgBox.Designer.cs">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmPins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPins.Designer.cs">
+      <DependentUpon>frmPins.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmRelays.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -315,6 +321,9 @@
     <EmbeddedResource Include="frmMsgBox.resx">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmPins.resx">
+      <DependentUpon>frmPins.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>
     </EmbeddedResource>
@@ -385,6 +394,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Pins.PNG" />
     <None Include="Resources\SubnetSend.png" />
     <None Include="Images\calibration.ico" />
     <None Include="Images\calibration.jpg" />

@@ -412,9 +412,6 @@ namespace RateController
         {
             Initializing = true;
 
-            lbEthernet.Text = "Selected subnet:  " + mf.UDPmodules.SubNet;
-            LoadCombo();
-
             byte[] data = mf.ModuleConfig.GetData();
 
             tbModuleID.Text = data[2].ToString();
@@ -450,6 +447,9 @@ namespace RateController
             tbRelay15.Text = data[27].ToString();
             tbRelay16.Text = data[28].ToString();
 
+            LoadCombo();
+            lbModuleIP.Text = mf.UDPmodules.SubNet + "." + (data[2] + 50).ToString();
+
             Initializing = false;
         }
 
@@ -469,8 +469,19 @@ namespace RateController
 
         private void btnLoadDefaults_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Load defaults";
+            Form fs = Application.OpenForms["frmPins"];
 
+            if (fs == null)
+            {
+                Form frm = new frmPins(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+
+            string Message = "Load defaults";
             mf.Tls.ShowHelp(Message, "Defaults");
             hlpevent.Handled = true;
         }
@@ -478,7 +489,6 @@ namespace RateController
         private void btnSendToModule_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Send settings to module. Only have 1 module connected when sending.";
-
             mf.Tls.ShowHelp(Message, "Send Config");
             hlpevent.Handled = true;
         }

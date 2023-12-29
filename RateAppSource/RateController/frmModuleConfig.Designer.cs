@@ -87,7 +87,8 @@
             this.tbFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.lbEthernet = new System.Windows.Forms.Label();
+            this.lbModuleIP = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
             this.btnSetEthernet = new System.Windows.Forms.Button();
             this.cbEthernet = new System.Windows.Forms.ComboBox();
             this.btnSendSubnet = new System.Windows.Forms.Button();
@@ -138,7 +139,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(49, 229);
+            this.label28.Location = new System.Drawing.Point(43, 226);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(122, 24);
             this.label28.TabIndex = 47;
@@ -155,7 +156,7 @@
             "PCA9555  16 relays",
             "MCP23017",
             "GPIOs"});
-            this.cbRelayControl.Location = new System.Drawing.Point(195, 225);
+            this.cbRelayControl.Location = new System.Drawing.Point(192, 222);
             this.cbRelayControl.Name = "cbRelayControl";
             this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
             this.cbRelayControl.TabIndex = 46;
@@ -163,7 +164,7 @@
             // 
             // tbWifiPort
             // 
-            this.tbWifiPort.Location = new System.Drawing.Point(324, 176);
+            this.tbWifiPort.Location = new System.Drawing.Point(321, 176);
             this.tbWifiPort.Name = "tbWifiPort";
             this.tbWifiPort.Size = new System.Drawing.Size(58, 29);
             this.tbWifiPort.TabIndex = 45;
@@ -174,7 +175,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(46, 179);
+            this.label25.Location = new System.Drawing.Point(43, 178);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(135, 24);
             this.label25.TabIndex = 44;
@@ -185,7 +186,7 @@
             this.ckFlowOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFlowOn.Location = new System.Drawing.Point(265, 279);
+            this.ckFlowOn.Location = new System.Drawing.Point(262, 276);
             this.ckFlowOn.Name = "ckFlowOn";
             this.ckFlowOn.Size = new System.Drawing.Size(117, 69);
             this.ckFlowOn.TabIndex = 43;
@@ -199,7 +200,7 @@
             this.ckRelayOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRelayOn.Location = new System.Drawing.Point(53, 279);
+            this.ckRelayOn.Location = new System.Drawing.Point(50, 276);
             this.ckRelayOn.Name = "ckRelayOn";
             this.ckRelayOn.Size = new System.Drawing.Size(117, 69);
             this.ckRelayOn.TabIndex = 42;
@@ -210,7 +211,7 @@
             // 
             // tbSensorCount
             // 
-            this.tbSensorCount.Location = new System.Drawing.Point(324, 126);
+            this.tbSensorCount.Location = new System.Drawing.Point(321, 128);
             this.tbSensorCount.Name = "tbSensorCount";
             this.tbSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbSensorCount.TabIndex = 27;
@@ -221,7 +222,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(46, 129);
+            this.label2.Location = new System.Drawing.Point(43, 130);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(125, 24);
             this.label2.TabIndex = 26;
@@ -229,7 +230,7 @@
             // 
             // tbModuleID
             // 
-            this.tbModuleID.Location = new System.Drawing.Point(324, 76);
+            this.tbModuleID.Location = new System.Drawing.Point(321, 80);
             this.tbModuleID.Name = "tbModuleID";
             this.tbModuleID.Size = new System.Drawing.Size(58, 29);
             this.tbModuleID.TabIndex = 25;
@@ -240,7 +241,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(46, 79);
+            this.label1.Location = new System.Drawing.Point(43, 82);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(96, 24);
             this.label1.TabIndex = 24;
@@ -721,7 +722,8 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.lbEthernet);
+            this.tabPage3.Controls.Add(this.lbModuleIP);
+            this.tabPage3.Controls.Add(this.label26);
             this.tabPage3.Controls.Add(this.btnSetEthernet);
             this.tabPage3.Controls.Add(this.cbEthernet);
             this.tabPage3.Controls.Add(this.btnSendSubnet);
@@ -733,21 +735,30 @@
             this.tabPage3.Text = "Network";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // lbEthernet
+            // lbModuleIP
             // 
-            this.lbEthernet.Location = new System.Drawing.Point(68, 136);
-            this.lbEthernet.Name = "lbEthernet";
-            this.lbEthernet.Size = new System.Drawing.Size(307, 26);
-            this.lbEthernet.TabIndex = 213;
-            this.lbEthernet.Text = "192.168.137.1";
-            this.lbEthernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbModuleIP.Location = new System.Drawing.Point(229, 136);
+            this.lbModuleIP.Name = "lbModuleIP";
+            this.lbModuleIP.Size = new System.Drawing.Size(146, 24);
+            this.lbModuleIP.TabIndex = 216;
+            this.lbModuleIP.Text = "192.168.100.100";
+            this.lbModuleIP.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(64, 136);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(139, 24);
+            this.label26.TabIndex = 215;
+            this.label26.Text = "Module New IP";
             // 
             // btnSetEthernet
             // 
             this.btnSetEthernet.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnSetEthernet.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnSetEthernet.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSetEthernet.Location = new System.Drawing.Point(248, 176);
+            this.btnSetEthernet.Location = new System.Drawing.Point(248, 178);
             this.btnSetEthernet.Name = "btnSetEthernet";
             this.btnSetEthernet.Size = new System.Drawing.Size(127, 37);
             this.btnSetEthernet.TabIndex = 214;
@@ -759,7 +770,7 @@
             // 
             this.cbEthernet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEthernet.FormattingEnabled = true;
-            this.cbEthernet.Location = new System.Drawing.Point(68, 180);
+            this.cbEthernet.Location = new System.Drawing.Point(64, 180);
             this.cbEthernet.Name = "cbEthernet";
             this.cbEthernet.Size = new System.Drawing.Size(157, 32);
             this.cbEthernet.TabIndex = 212;
@@ -888,6 +899,7 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -902,7 +914,6 @@
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnSendSubnet;
         private System.Windows.Forms.Button btnRescan;
-        private System.Windows.Forms.Label lbEthernet;
         private System.Windows.Forms.Button btnSetEthernet;
         private System.Windows.Forms.ComboBox cbEthernet;
         private System.Windows.Forms.Label label28;
@@ -961,5 +972,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnLoadDefaults;
         private System.Windows.Forms.Button btnSendToModule;
+        private System.Windows.Forms.Label lbModuleIP;
+        private System.Windows.Forms.Label label26;
     }
 }
