@@ -77,6 +77,7 @@ namespace RateController
         private bool ShowCoverageRemaining;
         private bool ShowQuantityRemaining;
         private bool cShowSwitches = false;
+        public PGN32700 ModuleConfig;
 
         public FormStart()
         {
@@ -95,7 +96,7 @@ namespace RateController
             mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
             mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
             mnuSettings.Items["calibrateToolStripMenuItem1"].Text = Lang.lgCalibrate;
-            mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgNetwork;
+            mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgModules;
 
             MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
             MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
@@ -154,6 +155,7 @@ namespace RateController
             ModuleTime = new DateTime[MaxModules];
             Zones = new clsZones(this);
             vSwitchBox = new clsVirtualSwitchBox(this);
+            ModuleConfig = new PGN32700(this);
         }
 
         public event EventHandler ProductChanged;
@@ -985,11 +987,11 @@ namespace RateController
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmWifi"];
+            Form fs = Application.OpenForms["frmModuleConfig"];
 
             if (fs == null)
             {
-                Form frm = new frmWifi(this);
+                Form frm = new frmModuleConfig(this);
                 frm.Show();
             }
             else

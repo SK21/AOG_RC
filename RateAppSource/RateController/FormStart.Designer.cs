@@ -517,18 +517,18 @@ namespace RateController
             this.MnuProducts,
             this.MnuSections,
             this.MnuRelays,
-            this.networkToolStripMenuItem,
             this.MnuComm,
             this.calibrateToolStripMenuItem1,
+            this.networkToolStripMenuItem,
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(174, 298);
+            this.mnuSettings.Size = new System.Drawing.Size(201, 320);
             // 
             // MnuProducts
             // 
             this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(173, 42);
+            this.MnuProducts.Size = new System.Drawing.Size(200, 42);
             this.MnuProducts.Text = "Products";
             this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -536,7 +536,7 @@ namespace RateController
             // 
             this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(173, 42);
+            this.MnuSections.Size = new System.Drawing.Size(200, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -544,7 +544,7 @@ namespace RateController
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(173, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(200, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
@@ -552,15 +552,15 @@ namespace RateController
             // 
             this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.SubnetSend;
             this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
-            this.networkToolStripMenuItem.Size = new System.Drawing.Size(173, 42);
-            this.networkToolStripMenuItem.Text = "Network";
+            this.networkToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.networkToolStripMenuItem.Text = "Modules";
             this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
             // 
             // MnuComm
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(173, 42);
+            this.MnuComm.Size = new System.Drawing.Size(200, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -568,7 +568,7 @@ namespace RateController
             // 
             this.calibrateToolStripMenuItem1.Image = global::RateController.Properties.Resources.RateCal;
             this.calibrateToolStripMenuItem1.Name = "calibrateToolStripMenuItem1";
-            this.calibrateToolStripMenuItem1.Size = new System.Drawing.Size(173, 42);
+            this.calibrateToolStripMenuItem1.Size = new System.Drawing.Size(200, 42);
             this.calibrateToolStripMenuItem1.Text = "Calibrate";
             this.calibrateToolStripMenuItem1.Click += new System.EventHandler(this.calibrateToolStripMenuItem1_Click);
             // 
@@ -588,7 +588,7 @@ namespace RateController
             this.commDiagnosticToolStripMenuItem});
             this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
             this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(173, 42);
+            this.MnuOptions.Size = new System.Drawing.Size(200, 42);
             this.MnuOptions.Text = "Options";
             // 
             // largeScreenToolStripMenuItem

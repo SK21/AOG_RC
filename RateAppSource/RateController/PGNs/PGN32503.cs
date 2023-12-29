@@ -16,11 +16,11 @@ namespace RateController
         //5     CRC
 
         private byte[] cData = new byte[6];
-        private frmWifi cf;
+        private FormStart mf;
 
-        public PGN32503(frmWifi CalledFrom)
+        public PGN32503(FormStart Main)
         {
-            cf = CalledFrom;
+            mf = Main;
             cData[0] = 247;
             cData[1] = 126;
         }
@@ -34,7 +34,7 @@ namespace RateController
             cData[4] = byte.Parse(data[2]);
 
             // CRC
-            cData[5] = cf.mf.Tls.CRC(cData, 5);
+            cData[5] = mf.Tls.CRC(cData, 5);
 
             // send serial
             //cf.mf.SendSerial(cData);
@@ -77,7 +77,7 @@ namespace RateController
                                             }
                                             catch (Exception ex)
                                             {
-                                                cf.mf.Tls.WriteErrorLog("frmNework/btnSend_Click/Bind error " + ex.Message);
+                                                mf.Tls.WriteErrorLog("frmNework/btnSend_Click/Bind error " + ex.Message);
                                             }
 
                                             scanSocket.Dispose();
@@ -85,7 +85,7 @@ namespace RateController
                                     }
                                     catch (Exception ex)
                                     {
-                                        cf.mf.Tls.WriteErrorLog("frmNework/btnSend_Click/nic loop error " + ex.Message);
+                                        mf.Tls.WriteErrorLog("frmNework/btnSend_Click/nic loop error " + ex.Message);
                                     }
                                 }
                             }

@@ -309,6 +309,9 @@
   <data name="lgModuleID" xml:space="preserve">
     <value>Module ID</value>
   </data>
+  <data name="lgModules" xml:space="preserve">
+    <value>Modules</value>
+  </data>
   <data name="lgMotor" xml:space="preserve">
     <value>Motor</value>
   </data>

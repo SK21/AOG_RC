@@ -637,6 +637,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modules.
+        /// </summary>
+        internal static string lgModules {
+            get {
+                return ResourceManager.GetString("lgModules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Motor.
         /// </summary>
         internal static string lgMotor {

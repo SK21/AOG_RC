@@ -45,7 +45,7 @@ namespace RateController
             mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
             mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
             mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
-            mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgNetwork;
+            mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgModules;
             mnuSettings.Items["calibrateToolStripMenuItem1"].Text = Lang.lgCalibrate;
 
             MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
@@ -1371,11 +1371,11 @@ namespace RateController
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmWifi"];
+            Form fs = Application.OpenForms["frmModuleConfig"];
 
             if (fs == null)
             {
-                Form frm = new frmWifi(mf);
+                Form frm = new frmModuleConfig(mf);
                 frm.Show();
             }
             else

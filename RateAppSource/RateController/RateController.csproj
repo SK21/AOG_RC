@@ -188,6 +188,12 @@
     <Compile Include="frmModule.Designer.cs">
       <DependentUpon>frmModule.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmModuleConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmModuleConfig.Designer.cs">
+      <DependentUpon>frmModuleConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMsgBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -211,12 +217,6 @@
     </Compile>
     <Compile Include="frmSwitches.Designer.cs">
       <DependentUpon>frmSwitches.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmWifi.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmWifi.Designer.cs">
-      <DependentUpon>frmWifi.cs</DependentUpon>
     </Compile>
     <Compile Include="Lang.de.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -266,6 +266,7 @@
     <Compile Include="PGNs\PGN32503.cs" />
     <Compile Include="PGNs\PGN32618.cs" />
     <Compile Include="PGNs\PGN254.cs" />
+    <Compile Include="PGNs\PGN32700.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RCRestore.cs">
@@ -308,6 +309,9 @@
     <EmbeddedResource Include="frmModule.resx">
       <DependentUpon>frmModule.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmModuleConfig.resx">
+      <DependentUpon>frmModuleConfig.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMsgBox.resx">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -319,9 +323,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmSwitches.resx">
       <DependentUpon>frmSwitches.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmWifi.resx">
-      <DependentUpon>frmWifi.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
