@@ -3,20 +3,24 @@
 #include <SPI.h>
 
 // Nano board for rate control switches
-# define InoDescription "SWarduino  :  20-Mar-2023"
-const int16_t InoID = 2003;	// change to send defaults to eeprom
-int16_t StoredID;			// Defaults ID stored in eeprom	
+# define InoDescription "SWarduino  :  30-Dec-2023"
+const int16_t InoID = 30123;	// change to send defaults to eeprom
+int16_t StoredID;				// Defaults ID stored in eeprom
 
 struct ModuleConfig
 {
 	// SW2 pcb
+	uint8_t ID = 0;
 	uint8_t	Auto = A5;
 	uint8_t MasterOn = 5;
 	uint8_t	MasterOff = 3;
 	uint8_t	RateUp = A3;
 	uint8_t RateDown = A2;
-	uint8_t	IPpart3 = 1;			// IP address, 3rd octet
 	uint8_t PinIDs[16];
+	uint8_t IP0 = 192;
+	uint8_t IP1 = 168;
+	uint8_t IP2 = 1;
+	uint8_t IP3 = 50;
 };
 
 ModuleConfig MDL;
@@ -33,15 +37,7 @@ byte Ethernet::buffer[500]; // udp send and receive buffer
 bool ENCfound;
 static byte selectPin = 10;
 
-//PGN 32618 to send data back
-byte Pins[5];
-byte Packet[30];
-
 unsigned long LastTime;
-byte MSB;
-byte LSB;
-bool PGN32627Found;
-uint16_t PGN;
 
 //reset function
 void(*resetFunc) (void) = 0;
@@ -95,23 +91,20 @@ void setup()
 	}
 
 	Serial.println("");
+
+	// ethernet
 	Serial.println("Starting Ethernet ...");
-	// ethernet interface ip address
-	byte ArduinoIP[] = { 192,168,MDL.IPpart3,188 };
+	MDL.IP3 = MDL.ID + 188;
+	byte ArduinoIP[] = { MDL.IP0, MDL.IP1,MDL.IP2, MDL.IP3 };
+	static uint8_t LocalMac[] = { 0x70,0x62,0x21,0x2D,0x31,MDL.IP3 };
+	static byte gwip[] = { MDL.IP0, MDL.IP1,MDL.IP2, 1 };
+	static byte myDNS[] = { 8, 8, 8, 8 };
+	static byte mask[] = { 255, 255, 255, 0 };
 
-	// ethernet interface Mac address
-	byte LocalMac[] = { 0x70,0x62,0x21,0x2D,0x31,188 };
-
-	// gateway ip address
-	byte gwip[] = { 192,168,MDL.IPpart3,1 };
-
-	//DNS- you just need one anyway
-	static byte myDNS[] = { 8,8,8,8 };
-
-	//mask
-	static byte mask[] = { 255,255,255,0 };
-
-	DestinationIP[2] = MDL.IPpart3;
+	// update from saved data
+	DestinationIP[0] = MDL.IP0;
+	DestinationIP[1] = MDL.IP1;
+	DestinationIP[2] = MDL.IP2;
 
 	ENCfound = ShieldFound();
 	if (ENCfound)
@@ -121,6 +114,8 @@ void setup()
 		Serial.println("Ethernet controller found.");
 		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
 		ether.printIp("IP Address:     ", ether.myip);
+		Serial.println("");
+		Serial.println("Serial data disabled.");
 
 		//register sub for received data
 		//ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
@@ -140,59 +135,7 @@ void loop()
 	if (millis() - LastTime > 250)
 	{
 		LastTime = millis();
-
-		Packet[0] = 106;
-		Packet[1] = 127;
-
-		// read switches
-		Pins[0] = !digitalRead(MDL.Auto);
-		Pins[1] = !digitalRead(MDL.MasterOn);
-		Pins[2] = !digitalRead(MDL.MasterOff);
-		Pins[3] = !digitalRead(MDL.RateUp);
-		Pins[4] = !digitalRead(MDL.RateDown);
-
-		Packet[2] = 0;
-		for (int i = 0; i < 5; i++)
-		{
-			if (Pins[i]) Packet[2] = Packet[2] | (1 << i);
-		}
-
-
-		Packet[3] = 0;
-		Packet[4] = 0;
-		for (int i = 0; i < 16; i++)
-		{
-			if (MDL.PinIDs[i] > 0)
-			{
-				if (i < 8)
-				{
-					if (!digitalRead(MDL.PinIDs[i])) Packet[3] = Packet[3] | (1 << i);
-				}
-				else
-				{
-					if (!digitalRead(MDL.PinIDs[i])) Packet[4] = Packet[4] | (1 << (i - 8));
-				}
-			}
-		}
-
-		Packet[5] = CRC(5, 0);
-
-		// PGN 32618
-		if (ENCfound)
-		{
-			// send UDP
-			ether.sendUdp(Packet, 6, SourcePort, DestinationIP, DestinationPort);
-		}
-
-		// send serial
-		for (int i = 0; i < 6; i++)
-		{
-			Serial.print(Packet[i]);
-			if (i < 5) Serial.print(",");
-		}
-
-		Serial.println();
-		Serial.flush();
+		SendData();
 	}
 
 	ReceiveSerial();
@@ -204,70 +147,21 @@ void loop()
 	}
 }
 
-void ReceiveSerial()
+bool GoodCRC(byte Data[], byte Length)
 {
-	// pins config
-	if (Serial.available())
-	{
-		if (PGN32627Found)
-		{
-			if (Serial.available() > 22)
-			{
-				PGN32627Found = false;
-				Packet[0] = 115;
-				Packet[1] = 127;
-				for (int i = 2; i < 25; i++)
-				{
-					Packet[i] = Serial.read();
-				}
-
-				if (GoodCRC(25))
-				{
-					MDL.Auto = Packet[2];
-					MDL.MasterOn = Packet[3];
-					MDL.MasterOff = Packet[4];
-					MDL.RateUp = Packet[5];
-					MDL.RateDown = Packet[6];
-					MDL.IPpart3 = Packet[7];
-
-					for (int i = 8; i < 24; i++)
-					{
-						MDL.PinIDs[i - 8] = Packet[i];
-					}
-					EEPROM.put(10, MDL);
-					resetFunc();
-				}
-			}
-		}
-		else
-		{
-			MSB = Serial.read();
-			PGN = MSB << 8 | LSB;
-			LSB = MSB;
-
-			PGN32627Found = (PGN == 32627);
-		}
-	}
-}
-
-bool GoodCRC(uint16_t Length)
-{
-	byte ck = CRC(Length - 1, 0);
-	bool Result = (ck == Packet[Length - 1]);
+	byte ck = CRC(Data, Length - 1, 0);
+	bool Result = (ck == Data[Length - 1]);
 	return Result;
 }
 
-byte CRC(uint16_t Length, byte Start)
+byte CRC(byte Chk[], byte Length, byte Start)
 {
 	byte Result = 0;
-	if (Length <= sizeof(Packet))
+	int CK = 0;
+	for (int i = Start; i < Length; i++)
 	{
-		int CK = 0;
-		for (int i = Start; i < Length; i++)
-		{
-			CK += Packet[i];
-		}
-		Result = (byte)CK;
+		CK += Chk[i];
 	}
+	Result = (byte)CK;
 	return Result;
 }

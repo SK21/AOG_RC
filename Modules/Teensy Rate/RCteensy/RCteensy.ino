@@ -212,21 +212,25 @@ void Blink()
 		BlinkTmr = 0;
 		State = !State;
 		digitalWrite(LED_BUILTIN, State);
-		Serial.println(".");	// needed to allow PCBsetup to connect
-
-		Serial.print(" Micros: ");
-		Serial.print(MaxLoopTime);
-
-		Serial.print(", Temp: ");
-		Serial.print(tempmonGetTemp());
-
-		Serial.println("");
+		Serial.print(".");	// needed to allow PCBsetup to connect
 
 		if (ReadReset++ > 10)
 		{
+			Serial.println("");
+			Serial.print(" Micros: ");
+			Serial.print(MaxLoopTime);
+
+			Serial.print(", IP Address: ");
+			Serial.print(Ethernet.localIP());
+
+			//Serial.print(", Temp: ");
+			//Serial.print(tempmonGetTemp());
+
 			ReadReset = 0;
 			MaxLoopTime = 0;
 		}
+
+		Serial.println("");
 	}
 	if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
 	LoopTmr = 0;
