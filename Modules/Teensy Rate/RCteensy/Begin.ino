@@ -124,7 +124,7 @@ void DoSetup()
 
 	// ethernet 
 	Serial.println("Starting Ethernet ...");
-	MDL.IP3 = MDL.ID + 60;
+	MDL.IP3 = MDL.ID + 50;
 	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
 	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
 

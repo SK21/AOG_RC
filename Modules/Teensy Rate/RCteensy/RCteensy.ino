@@ -16,8 +16,8 @@
 #include <Adafruit_SPIDevice.h>
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  01-Dec-2023"
-const uint16_t InoID = 1123;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  30-Dec-2023"
+const uint16_t InoID = 30123;	// change to send defaults to eeprom, ddmmy, no leading 0
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
@@ -152,9 +152,10 @@ void loop()
 	if (millis() - SendLast > SendTime)
 	{
 		SendLast = millis();
-		SendUDPwired();
+		SendData();
 	}
 
+	ReceiveSerial();
 	ReceiveUDPwired();
 	ReceiveAGIO();
 	ReceiveESP();
