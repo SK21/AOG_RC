@@ -18,6 +18,7 @@
 // rate control with Teensy 4.1
 # define InoDescription "RCteensy :  30-Dec-2023"
 const uint16_t InoID = 30123;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
@@ -212,20 +213,19 @@ void Blink()
 		BlinkTmr = 0;
 		State = !State;
 		digitalWrite(LED_BUILTIN, State);
-		Serial.print(".");	// needed to allow PCBsetup to connect
+
+		Serial.println("");
+		Serial.print(" Micros: ");
+		Serial.print(MaxLoopTime);
+
+		Serial.print(", IP Address: ");
+		Serial.print(Ethernet.localIP());
+
+		//Serial.print(", Temp: ");
+		//Serial.print(tempmonGetTemp());
 
 		if (ReadReset++ > 10)
 		{
-			Serial.println("");
-			Serial.print(" Micros: ");
-			Serial.print(MaxLoopTime);
-
-			Serial.print(", IP Address: ");
-			Serial.print(Ethernet.localIP());
-
-			//Serial.print(", Temp: ");
-			//Serial.print(tempmonGetTemp());
-
 			ReadReset = 0;
 			MaxLoopTime = 0;
 		}

@@ -5,7 +5,7 @@
 // Nano board for rate control switches
 # define InoDescription "SWarduino  :  30-Dec-2023"
 const int16_t InoID = 30123;	// change to send defaults to eeprom
-int16_t StoredID;				// Defaults ID stored in eeprom
+const uint8_t InoType = 3;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 struct ModuleConfig
 {
@@ -26,7 +26,7 @@ struct ModuleConfig
 ModuleConfig MDL;
 
 // local ports on Arduino
-unsigned int ListeningPort = 28888;	// to listen on
+unsigned int ListeningPort = 28888;	// to listen from PCBsetup
 unsigned int SourcePort = 6200;		// to send from
 
 // ethernet destination - Rate Controller
@@ -41,6 +41,19 @@ unsigned long LastTime;
 
 //reset function
 void(*resetFunc) (void) = 0;
+
+uint32_t BlinkTime;
+
+bool EthernetConnected()
+{
+	bool Result = false;
+	if (ENCfound)
+	{
+		Result = ether.isLinkUp();
+		
+	}
+	return Result;
+}
 
 void setup()
 {
@@ -63,9 +76,12 @@ void setup()
 	}
 
 	//eeprom
+	int16_t StoredID;
+	int8_t StoredType;
 	EEPROM.get(0, StoredID);
+	EEPROM.get(4, StoredType);
 
-	if (StoredID == InoID)
+	if (StoredID == InoID && StoredType == InoType)
 	{
 		// load stored data
 		Serial.println("Loading stored settings.");
@@ -76,6 +92,7 @@ void setup()
 		// update stored data
 		Serial.println("Updating stored data.");
 		EEPROM.put(0, InoID);
+		EEPROM.put(4, InoType);
 		EEPROM.put(10, MDL);
 	}
 
@@ -113,17 +130,28 @@ void setup()
 		Serial.println("");
 		Serial.println("Ethernet controller found.");
 		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
-		ether.printIp("IP Address:     ", ether.myip);
-		Serial.println("");
-		Serial.println("Serial data disabled.");
 
 		//register sub for received data
-		//ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
+		ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
+
+		delay(500);
+		if (EthernetConnected())
+		{
+			Serial.println("");
+			ether.printIp("IP Address:     ", ether.myip);
+			Serial.println("Serial data disabled.");
+		}
+		else
+		{
+			Serial.println("Ethernet cable not connected.");
+		}
 	}
 	else
 	{
 		Serial.println("");
 		Serial.println("Ethernet controller not found.");
+		Serial.println("");
+		Serial.println("Serial data enabled.");
 	}
 
 	Serial.println("");
@@ -140,11 +168,13 @@ void loop()
 
 	ReceiveSerial();
 
-	if (ENCfound)
+	if (EthernetConnected())
 	{
 		//this must be called for ethercard functions to work.
 		ether.packetLoop(ether.packetReceive());
 	}
+
+	//Blink();
 }
 
 bool GoodCRC(byte Data[], byte Length)
@@ -164,4 +194,16 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	}
 	Result = (byte)CK;
 	return Result;
+}
+
+
+void Blink()
+{
+	if (millis() - BlinkTime > 1000)
+	{
+		BlinkTime = millis();
+		Serial.print(". ");
+
+		Serial.println("");
+	}
 }

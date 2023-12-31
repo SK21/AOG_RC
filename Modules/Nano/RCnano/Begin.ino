@@ -40,8 +40,10 @@ void DoSetup()
 
 	// eeprom
 	int16_t StoredID;
+	int8_t StoredType;
 	EEPROM.get(0, StoredID);
-	if (StoredID == InoID)
+	EEPROM.get(4, StoredType);
+	if (StoredID == InoID && StoredType==InoType)
 	{
 		// load stored data
 		Serial.println("Loading stored settings.");
@@ -57,6 +59,7 @@ void DoSetup()
 		// update stored data
 		Serial.println("Updating stored data.");
 		EEPROM.put(0, InoID);
+		EEPROM.put(4, InoType);
 		EEPROM.put(10, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
@@ -99,13 +102,22 @@ void DoSetup()
 		Serial.println("");
 		Serial.println("Ethernet controller found.");
 		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
-		ether.printIp("IP Address:     ", ether.myip);
-		Serial.println("");
-		Serial.println("Serial data disabled.");
 
 		//register sub for received data
 		ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
 		ether.udpServerListenOnPort(&ReceiveAGIO, ListeningPortAGIO);
+
+		delay(500);
+		if (EthernetConnected())
+		{
+			Serial.println("");
+			ether.printIp("IP Address:     ", ether.myip);
+			Serial.println("Serial data disabled.");
+		}
+		else
+		{
+			Serial.println("Ethernet cable not connected.");
+		}
 	}
 	else
 	{

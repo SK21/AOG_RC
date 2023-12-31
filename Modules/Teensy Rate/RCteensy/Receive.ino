@@ -23,7 +23,7 @@ void ReceiveSerial()
 
 		if (PGNfound)
 		{
-			if (Serial.available() > SerialPGNlength - 1)
+			if (Serial.available() > SerialPGNlength - 3)
 			{
 				for (int i = 2; i < SerialPGNlength; i++)
 				{
@@ -323,7 +323,8 @@ void ReadPGNs(byte Data[], uint16_t len)
 				}
 
 				// update stored data
-				EEPROM.put(100, InoID);
+				EEPROM.put(0, InoID);
+				EEPROM.put(4, InoType);
 				EEPROM.put(110, MDL);
 
 				for (int i = 0; i < MaxProductCount; i++)

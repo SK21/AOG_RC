@@ -61,7 +61,7 @@ void SendData()
         // crc
         Data[12] = CRC(Data, 12, 0);
 
-        if (ENCfound)
+        if (EthernetConnected())
         {
             // send ethernet
             ether.sendUdp(Data, 13, SourcePort, DestinationIP, DestinationPort);
@@ -117,7 +117,7 @@ void SendData()
 
     Data[14] = CRC(Data, 14, 0);
 
-    if (ENCfound)
+    if (EthernetConnected())
     {
         // send ethernet
         ether.sendUdp(Data, 15, SourcePort, DestinationIP, DestinationPort);

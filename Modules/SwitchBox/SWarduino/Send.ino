@@ -50,7 +50,7 @@ void SendData()
 
 	Data[5] = CRC(Data, 12, 0);
 
-	if (ENCfound)
+	if (EthernetConnected())
 	{
 		// send ethernet
 		ether.sendUdp(Data, 6, SourcePort, DestinationIP, DestinationPort);

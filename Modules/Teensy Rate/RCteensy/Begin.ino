@@ -46,8 +46,10 @@ void DoSetup()
 
 	// eeprom
 	int16_t StoredID;
-	EEPROM.get(100, StoredID);
-	if (StoredID == InoID)
+	int8_t StoredType;
+	EEPROM.get(0, StoredID);
+	EEPROM.get(4, StoredType);
+	if (StoredID == InoID && StoredType==InoType)
 	{
 		// load stored data
 		Serial.println("Loading stored settings.");
@@ -62,7 +64,8 @@ void DoSetup()
 	{
 		// update stored data
 		Serial.println("Updating stored data.");
-		EEPROM.put(100, InoID);
+		EEPROM.put(0, InoID);
+		EEPROM.put(4, InoType);
 		EEPROM.put(110, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
@@ -285,3 +288,4 @@ void DoSetup()
 	Serial.println("Finished setup.");
 	Serial.println("");
 }
+

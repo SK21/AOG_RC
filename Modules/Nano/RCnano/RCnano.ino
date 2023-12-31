@@ -15,8 +15,9 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  24-Nov-2023"
-const uint16_t InoID = 24113;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  30-Dec-2023"
+const uint16_t InoID = 30123;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
 
@@ -105,6 +106,17 @@ int TimedCombo(byte, bool);	// function prototype
 //reset function
 void(*resetFunc) (void) = 0;
 
+bool EthernetConnected()
+{
+	bool Result = false;
+	if (ENCfound)
+	{
+		Result = ether.isLinkUp();
+
+	}
+	return Result;
+}
+
 void setup()
 {
 	DoSetup();
@@ -137,7 +149,7 @@ void loop()
 		SendData();
 	}
 
-	if (ENCfound)
+	if (EthernetConnected())
 	{
 		//this must be called for ethercard functions to work.
 		ether.packetLoop(ether.packetReceive());

@@ -23,7 +23,7 @@ void ReceiveSerial()
 
 		if (PGNfound)
 		{
-			if (Serial.available() > SerialPGNlength - 1)
+			if (Serial.available() > SerialPGNlength - 3)
 			{
 				for (int i = 2; i < SerialPGNlength; i++)
 				{
