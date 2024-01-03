@@ -53,7 +53,7 @@ void SendData()
 		}
 	}
 
-	Data[5] = CRC(Data, 12, 0);
+	Data[5] = CRC(Data, 5, 0);
 
 	if (EthernetConnected())
 	{
