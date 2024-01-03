@@ -46,7 +46,7 @@ void ReceiveSerial()
 				break;
 
 			case 32701:
-				SerialPGNlength = 24;
+				SerialPGNlength = 25;
 				PGNfound = true;
 				break;
 
@@ -114,9 +114,10 @@ void ReadPGNs(byte Data[], uint16_t len)
 		//5         Rate Up
 		//6         Rate Down
 		//7-22      switches 1-16
-		//23        crc
+		//23		Work pin
+		//24        crc
 
-		PGNlength = 24;
+		PGNlength = 25;
 
 		if (len > PGNlength - 1)
 		{
@@ -132,6 +133,8 @@ void ReadPGNs(byte Data[], uint16_t len)
 				{
 					MDL.PinIDs[i - 7] = Data[i];
 				}
+
+				MDL.WorkPin = Data[23];
 
 				EEPROM.put(10, MDL);
 

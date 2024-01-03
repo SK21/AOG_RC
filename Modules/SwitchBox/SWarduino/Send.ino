@@ -33,17 +33,22 @@ void SendData()
 
 	Data[3] = 0;
 	Data[4] = 0;
-	for (int i = 0; i < 16; i++)
+
+	if (MDL.WorkPin == 0 || !Pins[0] || digitalRead(MDL.WorkPin))	// no workpin defined or auto off or work switch high
 	{
-		if (MDL.PinIDs[i] > 0)
+		// read section switches
+		for (int i = 0; i < 16; i++)
 		{
-			if (i < 8)
+			if (MDL.PinIDs[i] > 0)
 			{
-				if (!digitalRead(MDL.PinIDs[i])) Data[3] = Data[3] | (1 << i);
-			}
-			else
-			{
-				if (!digitalRead(MDL.PinIDs[i])) Data[4] = Data[4] | (1 << (i - 8));
+				if (i < 8)
+				{
+					if (!digitalRead(MDL.PinIDs[i])) Data[3] = Data[3] | (1 << i);
+				}
+				else
+				{
+					if (!digitalRead(MDL.PinIDs[i])) Data[4] = Data[4] | (1 << (i - 8));
+				}
 			}
 		}
 	}
