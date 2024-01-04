@@ -61,29 +61,12 @@ void SendUDP()
         if (millis() - Sensor[0].CommTime < 4000) Data[11] |= 0b00000001;
         if (millis() - Sensor[1].CommTime < 4000) Data[11] |= 0b00000010;
 
-        // wifi
-        if (ESPconnected)
-        {
-            if (WiFi.RSSI() < -80)
-            {
-                Data[11] |= 0b00000100;
-            }
-            else if (WiFi.RSSI() < -70)
-            {
-                Data[11] |= 0b00001000;
-            }
-            else
-            {
-                Data[11] |= 0b00010000;
-            }
-        }
-
         // crc
         Data[12] = CRC(Data, 12, 0);
-        Ethernet.hardwareStatus();
+        bool Sent = false;
 
         // ethernet
-        if (HardwareFound)
+        if (ChipFound)
         {
             if (Ethernet.linkStatus() == LinkON)
             {
@@ -91,13 +74,14 @@ void SendUDP()
                 UDPcomm.beginPacket(DestinationIP, DestinationPort);
                 UDPcomm.write(Data, 13);
                 UDPcomm.endPacket();
+                Sent = true;
             }
         }
 
         // wifi
-        if (ESPconnected)
+        if (!Sent)
         {
-            WifiComm.beginPacket(WifiDestinationIP, DestinationPort);
+            WifiComm.beginPacket(AP_DestinationIP, DestinationPort);
             WifiComm.write(Data, 13);
             WifiComm.endPacket();
         }
@@ -141,8 +125,9 @@ void SendUDP()
 
     Data[14] = CRC(Data, 14, 0);
 
+    bool Sent = false;
     // ethernet
-    if (HardwareFound)
+    if (ChipFound)
     {
         if (Ethernet.linkStatus() == LinkON)
         {
@@ -150,13 +135,14 @@ void SendUDP()
             UDPcomm.beginPacket(DestinationIP, DestinationPort);
             UDPcomm.write(Data, 15);
             UDPcomm.endPacket();
+            Sent = true;
         }
     }
 
     // wifi
-    if (ESPconnected)
+    if (!Sent)
     {
-        WifiComm.beginPacket(WifiDestinationIP, DestinationPort);
+        WifiComm.beginPacket(AP_DestinationIP, DestinationPort);
         WifiComm.write(Data, 15);
         WifiComm.endPacket();
     }
@@ -164,7 +150,7 @@ void SendUDP()
 
 void ReceiveUDP()
 {
-    if (HardwareFound)
+    if (ChipFound)
     {
         if (Ethernet.linkStatus() == LinkON)
         {
@@ -179,16 +165,12 @@ void ReceiveUDP()
         }
     }
 
-    if (ESPconnected)
+    uint16_t len = WifiComm.parsePacket();
+    if (len)
     {
         byte Data[MaxReadBuffer];
-
-        uint16_t len = WifiComm.parsePacket();
-        if (len)
-        {
-            WifiComm.read(Data, MaxReadBuffer);
-            ParseData(Data, len);
-        }
+        WifiComm.read(Data, MaxReadBuffer);
+        ParseData(Data, len);
     }
 }
 
@@ -426,7 +408,7 @@ void ParseData(byte Data[], uint16_t len)
 
 void ReceiveAGIO()
 {
-    if (HardwareFound)
+    if (ChipFound)
     {
         if (Ethernet.linkStatus() == LinkON)
         {

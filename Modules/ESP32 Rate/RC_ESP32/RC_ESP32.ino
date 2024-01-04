@@ -26,8 +26,8 @@
 #include <Adafruit_PWMServoDriver.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  22-Dec-2023"
-const uint16_t InoID = 22123;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  04-Jan-2024"
+const uint16_t InoID = 4124;	// change to send defaults to eeprom, ddmmy, no leading 0
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
@@ -91,6 +91,7 @@ const uint16_t DestinationPort = 29999;
 // ethernet
 EthernetUDP UDPcomm;
 IPAddress DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
+bool ChipFound;
 
 // AGIO
 EthernetUDP AGIOcomm;
@@ -99,10 +100,9 @@ uint16_t DestinationPortAGIO = 9999;	// to send to
 
 // wifi
 WiFiUDP WifiComm;
-IPAddress WifiDestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
-bool HardwareFound;
-bool ESPconnected;
-int8_t WifiStrength;
+IPAddress AP_LocalIP(192, 168, 30, 1);
+IPAddress AP_Subnet(255, 255, 255, 0);
+IPAddress AP_DestinationIP(192, 168, 30, 255);
 WiFiClient client;
 WebServer server(80);
 
@@ -172,7 +172,6 @@ void loop()
 		GetUPM();
 		AdjustFlow();
 		ReadAnalog();
-		CheckWifi();
 	}
 
 	if (millis() - SendLast > SendTime)
@@ -235,7 +234,7 @@ uint32_t MaxLoopTime;
 
 void Blink()
 {
-	if (millis()-LastBlink > 1000)
+	if (millis() - LastBlink > 1000)
 	{
 		LastBlink = millis();
 		State = !State;
@@ -245,11 +244,10 @@ void Blink()
 		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
 
-		if (ESPconnected)
-		{
-			Serial.print(", Wifi signal:");
-			Serial.print(WiFi.RSSI());
-		}
+		//Serial.print(", ");
+		//Serial.print(debug1);
+		//Serial.print(", ");
+		//Serial.print(debug2);
 
 		Serial.println("");
 

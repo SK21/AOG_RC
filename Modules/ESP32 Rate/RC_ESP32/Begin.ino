@@ -58,9 +58,6 @@ void DoSetup()
 	Serial.println(InoID);
 	Serial.println("");
 
-	ConnectWifi();
-	delay(3000);
-
 	// I2C
 	Wire.begin();			// I2C on pins SCL 22, SDA 21
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
@@ -139,17 +136,21 @@ void DoSetup()
 
 	// ethernet 
 	Serial.println("Starting Ethernet ...");
-	MDL.IP3 = MDL.ID + 60;
+	MDL.IP3 = MDL.ID + 50;
 	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
 	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
 
 	Ethernet.init(5);   // SS pin
 	Ethernet.begin(LocalMac, 0);
 	Ethernet.setLocalIP(LocalIP);
+	IPAddress Mask(255, 255, 255, 0);
+	Ethernet.setSubnetMask(Mask);
+	IPAddress Gateway(MDL.IP0, MDL.IP1, MDL.IP2, 1);
+	Ethernet.setGatewayIP(Gateway);
 
 	delay(1500);
-	HardwareFound = (Ethernet.hardwareStatus() != EthernetNoHardware);
-	if (HardwareFound)
+	ChipFound = (Ethernet.hardwareStatus() != EthernetNoHardware);
+	if (ChipFound)
 	{
 		if (Ethernet.linkStatus() == LinkON)
 		{
@@ -310,18 +311,28 @@ void DoSetup()
 		break;
 	}
 
-	StartOTA();
+	//StartOTA();
 
+	// Access Point
+
+	AP_LocalIP = IPAddress(192, 168, MDL.ID + 100, 1);
+	AP_DestinationIP = IPAddress(192, 168, MDL.ID + 100, 255);
+	
 	String AP = MDL.Name;
 	AP += "  (";
 	AP += WiFi.macAddress();
 	AP += ")";
-	WiFi.softAP(AP);
+	String Password = "12345678";
+
+	WiFi.softAP(AP,Password);
+	WiFi.softAPConfig(AP_LocalIP, AP_LocalIP, AP_Subnet);
+	WifiComm.begin(ListeningPort);
 
 	Serial.println("");
 	Serial.print("Access Point name: ");
 	Serial.println(AP);
-	Serial.println("Access Point IP: 192.168.4.1");
+	Serial.print("Access Point IP: ");
+	Serial.println(AP_LocalIP);
 
 	// web server
 	Serial.println();
