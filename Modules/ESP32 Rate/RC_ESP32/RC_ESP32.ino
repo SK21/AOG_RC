@@ -51,7 +51,6 @@ struct ModuleConfig
 	uint8_t RelayControl = 1;		// 0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,0,0,0,0,0,0,0,0 };		// pin numbers when GPIOs are used for relay control (5), default RC11
 	char Name[ModStringLengths] = "RateModule";
-	char SSID[ModStringLengths] = "tractor";
 	char Password[ModStringLengths] = "111222333";
 	uint8_t AdsAddress = 0x48;			// enter 0 to search all
 	uint8_t PCA9685paired = true;		// pins 0 and 1 on/off complementary, 2 and 3, 4 and 5, etc.

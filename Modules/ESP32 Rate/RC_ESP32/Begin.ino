@@ -322,9 +322,8 @@ void DoSetup()
 	AP += "  (";
 	AP += WiFi.macAddress();
 	AP += ")";
-	String Password = "12345678";
 
-	WiFi.softAP(AP,Password);
+	WiFi.softAP(AP,MDL.Password);
 	WiFi.softAPConfig(AP_LocalIP, AP_LocalIP, AP_Subnet);
 	WifiComm.begin(ListeningPort);
 
@@ -337,11 +336,10 @@ void DoSetup()
 	// web server
 	Serial.println();
 	Serial.println("Starting Web Server");
-	server.on("/", HandleRoot);
-	server.on("/page1", HandlePage1);
-	server.on("/page2", HandlePage2);
+	server.on("/", HandlePage1);
 	server.on("/ButtonPressed", ButtonPressed);
-	server.onNotFound(HandleRoot);
+	server.onNotFound(HandlePage1);
+
 	server.begin();
 
 	Serial.println("");

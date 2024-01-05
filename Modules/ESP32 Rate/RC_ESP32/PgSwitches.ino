@@ -1,4 +1,30 @@
 
+void HandlePage1()
+{
+	// switches
+	server.send(200, "text/html", GetPage1());
+}
+
+void ButtonPressed()
+{
+	if (server.arg("Btn") == "Master")
+	{
+		WifiMasterOn = !WifiMasterOn;
+		WifiSwitchesTimer = millis();
+		HandlePage1();
+	}
+	else
+	{
+		int ID = server.arg("Btn").toInt() - 1;
+		if (ID >= 0 && ID < 16)
+		{
+			Button[ID] = !Button[ID];
+			WifiSwitchesTimer = millis();
+			HandlePage1();
+		}
+	}
+}
+
 String tmp;
 String GetPage1()
 {
@@ -121,7 +147,7 @@ String GetPage1()
 		st += "      <p> <input class='" + tmp + "' name='Btn' type=submit formaction='/ButtonPressed' value='" + String(i + 1) + "'> </p>";
 	}
 
-	st += "      <p> <a href='/page0'>Back</a> </p>";
+	//st += "      <p> <a href='/page0'>Back</a> </p>";
 	st += "    </form>";
 	st += "";
 	st += "</HTML>";
