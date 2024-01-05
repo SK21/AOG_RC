@@ -127,11 +127,6 @@ namespace RateController
             }
         }
 
-        private void btnSetEthernet_Click(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
         private void frmModuleConfig_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (this.WindowState == FormWindowState.Normal)
@@ -448,7 +443,7 @@ namespace RateController
             tbRelay16.Text = data[28].ToString();
 
             LoadCombo();
-            lbModuleIP.Text = mf.UDPmodules.SubNet + "." + (data[2] + 50).ToString();
+            lbModuleIP.Text = mf.UDPmodules.SubNet;
 
             Initializing = false;
         }
@@ -491,6 +486,11 @@ namespace RateController
             string Message = "Send settings to module. Only have 1 module connected when sending.";
             mf.Tls.ShowHelp(Message, "Send Config");
             hlpevent.Handled = true;
+        }
+
+        private void cbEthernet_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

@@ -10,8 +10,6 @@ namespace RateController
 
         private List<clsSection> cSections = new List<clsSection>();
         private FormStart mf;
-        private byte Rlys0;
-        private byte Rlys1;
         private int Tmp;
 
         public clsSections(FormStart CallingForm)
@@ -96,16 +94,6 @@ namespace RateController
             {
                 cSections[i].Save();
             }
-        }
-
-        public byte SectionHi()
-        {
-            return Rlys1;
-        }
-
-        public byte SectionLo()
-        {
-            return Rlys0;
         }
 
         public float TotalWidth(bool UseInches)

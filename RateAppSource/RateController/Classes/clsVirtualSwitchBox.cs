@@ -19,10 +19,6 @@ namespace RateController
         private bool cAuto;
         private bool cEnabled;
         private bool cLargeScreenOn;
-        private bool cMasterOff;
-        private bool cMasterOn;
-        private bool cRateDown;
-        private bool cRateUp;
         private bool[] cSwitch;
         private bool cSwitchScreenOn;
         private FormStart mf;
@@ -125,8 +121,6 @@ namespace RateController
                 case SwIDs.MasterOn:
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 1);
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 2);
-                    cMasterOn = true;
-                    cMasterOff = false;
                     if (FromLargeScreen)
                     {
                         PressedData[3] = 255;
@@ -141,22 +135,16 @@ namespace RateController
                 case SwIDs.MasterOff:
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 1);
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 2);
-                    cMasterOff = true;
-                    cMasterOn = false;
                     break;
 
                 case SwIDs.RateUp:
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 3);
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 4);
-                    cRateUp = true;
-                    cRateDown = false;
                     break;
 
                 case SwIDs.RateDown:
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 3);
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 4);
-                    cRateDown = true;
-                    cRateUp = false;
                     break;
 
                 default:
