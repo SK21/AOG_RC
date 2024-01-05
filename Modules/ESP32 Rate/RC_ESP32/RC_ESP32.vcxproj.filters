@@ -19,7 +19,6 @@
     <ClCompile Include="Analog.ino" />
     <ClCompile Include="Begin.ino" />
     <ClCompile Include="Motor.ino" />
-    <ClCompile Include="OTA.ino" />
     <ClCompile Include="PCA95x5_RC.h">
       <Filter>Header Files</Filter>
     </ClCompile>

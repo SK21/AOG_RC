@@ -311,10 +311,7 @@ void DoSetup()
 		break;
 	}
 
-	//StartOTA();
-
 	// Access Point
-
 	AP_LocalIP = IPAddress(192, 168, MDL.ID + 100, 1);
 	AP_DestinationIP = IPAddress(192, 168, MDL.ID + 100, 255);
 	
@@ -340,7 +337,18 @@ void DoSetup()
 	server.on("/ButtonPressed", ButtonPressed);
 	server.onNotFound(HandlePage1);
 
+	// OTA
+	server.on("/myurl", HTTP_GET, []() {
+		server.sendHeader("Connection", "close");
+		server.send(200, "text/plain", "Hello there!");
+	});
+
+	/* INITIALIZE ESP2SOTA LIBRARY */
+	ESP2SOTA.begin(&server);
+	
 	server.begin();
+
+	Serial.println("OTA started.");
 
 	Serial.println("");
 	Serial.println("Finished setup.");

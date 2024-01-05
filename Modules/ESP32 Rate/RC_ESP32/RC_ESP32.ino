@@ -16,7 +16,6 @@
 #include <WiFiClient.h>
 #include <WiFiAP.h>
 
-#include <ArduinoOTA.h>
 #include <WebServer.h>
 #include <EEPROM.h> 
 
@@ -24,6 +23,8 @@
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 #include <Adafruit_PWMServoDriver.h>
+
+#include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32 :  04-Jan-2024"
@@ -183,7 +184,6 @@ void loop()
 	ReceiveUDP();
 	ReceiveAGIO();
 
-	ArduinoOTA.handle();
 	server.handleClient();
 
 	Blink();
