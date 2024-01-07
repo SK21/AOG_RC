@@ -1,5 +1,4 @@
-﻿using AgOpenGPS;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -119,11 +118,11 @@ namespace RateController
         {
             mf.Tls.LoadFormData(this);
             SwON = mf.SwitchBox.Switches;
-            UpdateSwitches();
+            UpdateForm();
             timer1.Enabled = true;
             mf.vSwitchBox.SwitchScreenOn = true;
-            SetTransparent();
             mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
+            UpdateForm();
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -179,13 +178,12 @@ namespace RateController
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
             SwON = e.Switches;
-            UpdateSwitches();
+            UpdateForm();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            UpdateSwitches();
-            if (mf.UseTransparent != IsTransparent) SetTransparent();
+            UpdateForm();
         }
 
         private void tmrRelease_Tick(object sender, EventArgs e)
@@ -197,8 +195,10 @@ namespace RateController
             }
         }
 
-        private void UpdateSwitches()
+        private void UpdateForm()
         {
+            if (mf.UseTransparent != IsTransparent) SetTransparent();
+
             if (SwON[0])
             {
                 btAuto.BackColor = Color.LightGreen;

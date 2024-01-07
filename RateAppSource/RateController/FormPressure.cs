@@ -46,8 +46,8 @@ namespace RateController
                 {
                     // save changes
                     SaveGrid();
-                    mf.Tls.SaveProperty("ShowPressure", ckShowPressure.Checked.ToString());
-                    mf.Tls.SaveProperty("PressureID", tbPressureID.Text);
+                    if (byte.TryParse(tbPressureID.Text, out byte ID)) mf.PressureToShow = ID;
+                    mf.ShowPressure=ckShowPressure.Checked;
 
                     UpdateForm();
                     SetButtons(false);
@@ -135,10 +135,7 @@ namespace RateController
             DGV.Columns[0].DefaultCellStyle.BackColor = Properties.Settings.Default.DayColour;
             DGV.Columns[6].DefaultCellStyle.BackColor = Properties.Settings.Default.DayColour;
 
-            bool show;
-            bool.TryParse(mf.Tls.LoadProperty("ShowPressure"), out show);
-            mf.ShowPressure = show;
-            ckShowPressure.Checked = show;
+            ckShowPressure.Checked = mf.ShowPressure;
 
             UpdateForm();
         }

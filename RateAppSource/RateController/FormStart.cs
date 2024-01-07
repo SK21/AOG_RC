@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using static RateController.PGN32618;
@@ -29,13 +30,12 @@ namespace RateController
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
         public bool cUseInches;
-        private bool cUseTransparent = false;
         public bool LargeScreenExit = false;
         public frmLargeScreen Lscrn;
         public PGN238 MachineConfig;
         public PGN239 MachineData;
+        public PGN32700 ModuleConfig;
         public clsPressures PressureObjects;
-        public byte PressureToShowID;
         public clsProducts Products;
         public clsAlarm RCalarm;
         public clsRelays RelayObjects;
@@ -44,12 +44,10 @@ namespace RateController
         public clsSections Sections;
         public PGN235 SectionsPGN;
         public SerialComm[] SER = new SerialComm[3];
-        public bool ShowPressure;
         public Color SimColor = Color.FromArgb(255, 191, 0);
         public SimType SimMode = SimType.None;
         public PGN32618 SwitchBox;
         public clsTools Tls;
-        public clsVirtualSwitchBox vSwitchBox;
 
         public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
@@ -58,14 +56,18 @@ namespace RateController
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
         public PGN230 VRdata;
+        public clsVirtualSwitchBox vSwitchBox;
         public string WiFiIP;
         public clsZones Zones;
         private int cDefaultProduct = 0;
+        private byte cPressureToShowID;
+        private bool cShowPressure;
+        private bool cShowSwitches = false;
         private double cSimSpeed = 0;
         private int CurrentPage;
-
         private int CurrentPageLast;
         private bool cUseLargeScreen = false;
+        private bool cUseTransparent = false;
         private Label[] Indicators;
         private bool LoadError = false;
         private DateTime[] ModuleTime;
@@ -76,8 +78,6 @@ namespace RateController
         private PGN32501[] RelaySettings;
         private bool ShowCoverageRemaining;
         private bool ShowQuantityRemaining;
-        private bool cShowSwitches = false;
-        public PGN32700 ModuleConfig;
 
         public FormStart()
         {
@@ -173,15 +173,39 @@ namespace RateController
             }
         }
 
-        public bool UseZones
+        public byte PressureToShow
         {
-            get
+            get { return cPressureToShowID; }
+            set
             {
-                bool tmp = false;
-                if (bool.TryParse(Tls.LoadProperty("UseZones"), out bool tmp2)) tmp = tmp2;
-                return tmp;
+                if (value >= 0 && value < 17)
+                {
+                    cPressureToShowID = value;
+                    Tls.SaveProperty("PressureID", cPressureToShowID.ToString());
+                }
             }
-            set { Tls.SaveProperty("UseZones", value.ToString()); }
+        }
+
+        public bool ShowPressure
+        {
+            get { return cShowPressure; }
+            set
+            {
+                cShowPressure = value;
+                Tls.SaveProperty("ShowPressure", value.ToString());
+                DisplayPressure();
+            }
+        }
+
+        public bool ShowSwitches
+        {
+            get { return cShowSwitches; }
+            set
+            {
+                cShowSwitches = value;
+                Tls.SaveProperty("ShowSwitches", cShowSwitches.ToString());
+                DisplaySwitches();
+            }
         }
 
         public double SimSpeed
@@ -209,17 +233,6 @@ namespace RateController
             }
         }
 
-        public bool ShowSwitches
-        {
-            get { return cShowSwitches; }
-            set
-            {
-                cShowSwitches = value;
-                Tls.SaveProperty("ShowSwitches",cShowSwitches.ToString());
-                StartSwitches();
-            }
-        }
-
         public bool UseTransparent
         {
             get { return cUseTransparent; }
@@ -228,6 +241,23 @@ namespace RateController
                 cUseTransparent = value;
                 Tls.SaveProperty("UseTransparent", cUseTransparent.ToString());
             }
+        }
+
+        public bool UseZones
+        {
+            get
+            {
+                bool tmp = false;
+                if (bool.TryParse(Tls.LoadProperty("UseZones"), out bool tmp2)) tmp = tmp2;
+                return tmp;
+            }
+            set { Tls.SaveProperty("UseZones", value.ToString()); }
+        }
+
+        public void ChangeLanguage()
+        {
+            Restart = true;
+            Application.Restart();
         }
 
         public int CurrentProduct()
@@ -244,6 +274,50 @@ namespace RateController
             return Result;
         }
 
+        public void DisplayPressure()
+        {
+            Form fs = Application.OpenForms["frmPressureDisplay"];
+
+            if (cShowPressure)
+            {
+                if (fs == null)
+                {
+                    Form frm = new frmPressureDisplay(this);
+                    frm.Show();
+                }
+                else
+                {
+                    fs.Focus();
+                }
+            }
+            else
+            {
+                if (fs != null) fs.Close();
+            }
+        }
+
+        public void DisplaySwitches()
+        {
+            Form fs = Application.OpenForms["frmSwitches"];
+
+            if (cShowSwitches)
+            {
+                if (fs == null)
+                {
+                    Form frm = new frmSwitches(this);
+                    frm.Show();
+                }
+                else
+                {
+                    fs.Focus();
+                }
+            }
+            else
+            {
+                if (fs != null) fs.Close();
+            }
+        }
+
         public void LoadSettings()
         {
             StartSerial();
@@ -253,7 +327,9 @@ namespace RateController
             if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd)) cSimSpeed = Spd;
             if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS)) cUseLargeScreen = LS;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
-            if(bool.TryParse(Tls.LoadProperty("ShowSwitches"),out bool SS)) cShowSwitches = SS;
+            if (bool.TryParse(Tls.LoadProperty("ShowSwitches"), out bool SS)) cShowSwitches = SS;
+            if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
+            if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
             Sections.Load();
             Sections.CheckSwitchDefinitions();
 
@@ -368,7 +444,6 @@ namespace RateController
                 }
                 else
                 {
-
                     // product pages
                     clsProduct Prd = Products.Item(CurrentPage - 1);
 
@@ -434,7 +509,7 @@ namespace RateController
                             lbRateAmount.Text = Prd.SmoothRate().ToString("N1");
                             break;
                     }
- 
+
                     if (SimMode == SimType.None)
                     {
                         if (Prd.ArduinoModule.ModuleSending())
@@ -507,7 +582,6 @@ namespace RateController
                 {
                     switchesToolStripMenuItem1.Image = Properties.Resources.Cancel64;
                 }
-
             }
             catch (Exception ex)
             {
@@ -631,8 +705,6 @@ namespace RateController
                         btnRight.Top = 154;
                         lbArduinoConnected.Top = 154;
                         lbAogConnected.Top = 188;
-                        lbPressure.Visible = false;
-                        lbPressureValue.Visible = false;
                     }
                     else
                     {
@@ -641,35 +713,13 @@ namespace RateController
                         panProducts.Top = 0;
                         panProducts.Left = 0;
 
-                        if (ShowPressure)
-                        {
-                            // product panel with pressure
-                            this.Height = 283;
-                            btnSettings.Top = 179;
-                            btnLeft.Top = 179;
-                            btnRight.Top = 179;
-                            lbArduinoConnected.Top = 179;
-                            lbAogConnected.Top = 213;
-
-                            lbPressure.Visible = true;
-                            lbPressureValue.Visible = true;
-                            lbPressure.Text = Lang.lgPressure + " " + PressureToShowID.ToString();
-                            if (PressureToShowID < 1) PressureToShowID = 1;
-                            float Prs = PressureObjects.Item(PressureToShowID - 1).Pressure();
-                            lbPressureValue.Text = Prs.ToString("N1");
-                        }
-                        else
-                        {
-                            // product panel
-                            this.Height = 257;
-                            btnSettings.Top = 154;
-                            btnLeft.Top = 154;
-                            btnRight.Top = 154;
-                            lbArduinoConnected.Top = 154;
-                            lbAogConnected.Top = 188;
-                            lbPressure.Visible = false;
-                            lbPressureValue.Visible = false;
-                        }
+                        // product panel
+                        this.Height = 257;
+                        btnSettings.Top = 154;
+                        btnLeft.Top = 154;
+                        btnRight.Top = 154;
+                        lbArduinoConnected.Top = 154;
+                        lbAogConnected.Top = 188;
                     }
                 }
             }
@@ -705,12 +755,6 @@ namespace RateController
             }
 
             Application.Exit();
-        }
-
-        public void ChangeLanguage()
-        {
-            Restart = true;
-            Application.Restart();
         }
 
         private void FormStart_Activated(object sender, EventArgs e)
@@ -768,12 +812,12 @@ namespace RateController
                 }
 
                 LoadSettings();
-                LoadPressureSetting();
                 Products.UpdatePID();
                 UpdateStatus();
 
                 if (cUseLargeScreen) StartLargeScreen();
-                if (cShowSwitches) StartSwitches();
+                DisplaySwitches();
+                DisplayPressure();
 
                 timerMain.Enabled = true;
                 timerNano.Enabled = true;
@@ -932,14 +976,6 @@ namespace RateController
             CurrentPage = cDefaultProduct + 1;
         }
 
-        private void LoadPressureSetting()
-        {
-            bool show;
-            bool.TryParse(Tls.LoadProperty("ShowPressure"), out show);
-            ShowPressure = show;
-            byte.TryParse(Tls.LoadProperty("PressureID"), out PressureToShowID);
-        }
-
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.InitialDirectory = Tls.FilesDir();
@@ -1026,7 +1062,7 @@ namespace RateController
         {
             Form frmPressure = new FormPressure(this);
             frmPressure.ShowDialog();
-            LoadPressureSetting();
+            //LoadPressureSetting();
             FormatDisplay();
         }
 
@@ -1146,44 +1182,11 @@ namespace RateController
             Lscrn.SetTransparent(cUseTransparent);
             Lscrn.Show();
         }
-        public void StartSwitches()
-        {
-            Form fs = Application.OpenForms["frmSwitches"];
-
-            if (cShowSwitches)
-            {
-                if (fs == null)
-                {
-                    Form frm = new frmSwitches(this);
-                    frm.Show();
-                }
-                else
-                {
-                    fs.Focus();
-                }
-            }
-            else
-            {
-                if (fs != null) fs.Close();
-            }
-        }
 
         private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            ////check if window already exists
-            //Form fs = Application.OpenForms["frmSwitches"];
-
-            //if (fs == null)
-            //{
-            //    Form frm = new frmSwitches(this);
-            //    frm.Show();
-            //}
-            //else
-            //{
-            //    fs.Focus();
-            //}
             cShowSwitches = !cShowSwitches;
-            StartSwitches();
+            DisplaySwitches();
         }
 
         private void timerMain_Tick(object sender, EventArgs e)

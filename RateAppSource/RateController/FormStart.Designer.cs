@@ -70,9 +70,9 @@ namespace RateController
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
-            this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.calibrateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.largeScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pressuresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -94,8 +94,6 @@ namespace RateController
             this.commDiagnosticToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.lbPressureValue = new System.Windows.Forms.Label();
-            this.lbPressure = new System.Windows.Forms.Label();
             this.panFan = new System.Windows.Forms.Panel();
             this.btnFan = new System.Windows.Forms.Button();
             this.lbOn = new System.Windows.Forms.Label();
@@ -307,7 +305,7 @@ namespace RateController
             this.panSummary.Controls.Add(this.idc1);
             this.panSummary.Controls.Add(this.prd0);
             this.panSummary.Controls.Add(this.rt0);
-            this.panSummary.Location = new System.Drawing.Point(637, 26);
+            this.panSummary.Location = new System.Drawing.Point(301, 134);
             this.panSummary.Name = "panSummary";
             this.panSummary.Size = new System.Drawing.Size(270, 200);
             this.panSummary.TabIndex = 100;
@@ -522,13 +520,13 @@ namespace RateController
             this.networkToolStripMenuItem,
             this.MnuOptions});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(201, 320);
+            this.mnuSettings.Size = new System.Drawing.Size(174, 298);
             // 
             // MnuProducts
             // 
             this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(200, 42);
+            this.MnuProducts.Size = new System.Drawing.Size(173, 42);
             this.MnuProducts.Text = "Products";
             this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -536,7 +534,7 @@ namespace RateController
             // 
             this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(200, 42);
+            this.MnuSections.Size = new System.Drawing.Size(173, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -544,23 +542,15 @@ namespace RateController
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(200, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(173, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
-            // 
-            // networkToolStripMenuItem
-            // 
-            this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.SubnetSend;
-            this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
-            this.networkToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
-            this.networkToolStripMenuItem.Text = "Modules";
-            this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
             // 
             // MnuComm
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(200, 42);
+            this.MnuComm.Size = new System.Drawing.Size(173, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -568,9 +558,17 @@ namespace RateController
             // 
             this.calibrateToolStripMenuItem1.Image = global::RateController.Properties.Resources.RateCal;
             this.calibrateToolStripMenuItem1.Name = "calibrateToolStripMenuItem1";
-            this.calibrateToolStripMenuItem1.Size = new System.Drawing.Size(200, 42);
+            this.calibrateToolStripMenuItem1.Size = new System.Drawing.Size(173, 42);
             this.calibrateToolStripMenuItem1.Text = "Calibrate";
             this.calibrateToolStripMenuItem1.Click += new System.EventHandler(this.calibrateToolStripMenuItem1_Click);
+            // 
+            // networkToolStripMenuItem
+            // 
+            this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.SubnetSend;
+            this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
+            this.networkToolStripMenuItem.Size = new System.Drawing.Size(173, 42);
+            this.networkToolStripMenuItem.Text = "Modules";
+            this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
             // 
             // MnuOptions
             // 
@@ -588,7 +586,7 @@ namespace RateController
             this.commDiagnosticToolStripMenuItem});
             this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
             this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(200, 42);
+            this.MnuOptions.Size = new System.Drawing.Size(173, 42);
             this.MnuOptions.Text = "Options";
             // 
             // largeScreenToolStripMenuItem
@@ -739,29 +737,6 @@ namespace RateController
             this.saveFileDialog1.DefaultExt = "rcs";
             this.saveFileDialog1.Filter = "RC Settings|*.rcs";
             // 
-            // lbPressureValue
-            // 
-            this.lbPressureValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPressureValue.Location = new System.Drawing.Point(188, 153);
-            this.lbPressureValue.Name = "lbPressureValue";
-            this.lbPressureValue.Size = new System.Drawing.Size(89, 23);
-            this.lbPressureValue.TabIndex = 147;
-            this.lbPressureValue.Text = "45.2";
-            this.lbPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lbPressureValue.Visible = false;
-            // 
-            // lbPressure
-            // 
-            this.lbPressure.Cursor = System.Windows.Forms.Cursors.Default;
-            this.lbPressure.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPressure.Location = new System.Drawing.Point(2, 153);
-            this.lbPressure.Name = "lbPressure";
-            this.lbPressure.Size = new System.Drawing.Size(175, 23);
-            this.lbPressure.TabIndex = 156;
-            this.lbPressure.Text = "Pressure 1";
-            this.lbPressure.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbPressure.Visible = false;
-            // 
             // panFan
             // 
             this.panFan.Controls.Add(this.btnFan);
@@ -773,7 +748,7 @@ namespace RateController
             this.panFan.Controls.Add(this.lbFanRate);
             this.panFan.Controls.Add(this.lbCurrentRPM);
             this.panFan.Controls.Add(this.lbFan);
-            this.panFan.Location = new System.Drawing.Point(616, 372);
+            this.panFan.Location = new System.Drawing.Point(292, 362);
             this.panFan.Name = "panFan";
             this.panFan.Size = new System.Drawing.Size(270, 161);
             this.panFan.TabIndex = 157;
@@ -927,7 +902,7 @@ namespace RateController
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = global::RateController.Properties.Resources.Alarm1;
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(192, 330);
+            this.btAlarm.Location = new System.Drawing.Point(12, 238);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 146;
@@ -940,9 +915,7 @@ namespace RateController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1014, 552);
-            this.Controls.Add(this.lbPressure);
-            this.Controls.Add(this.lbPressureValue);
+            this.ClientSize = new System.Drawing.Size(592, 552);
             this.Controls.Add(this.lbAogConnected);
             this.Controls.Add(this.lbArduinoConnected);
             this.Controls.Add(this.btnRight);
@@ -1028,8 +1001,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem mnuMetric;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Label lbTarget;
-        private System.Windows.Forms.Label lbPressureValue;
-        private System.Windows.Forms.Label lbPressure;
         private System.Windows.Forms.ToolStripMenuItem russianToolStripMenuItem;
         private System.Windows.Forms.Panel panFan;
         private System.Windows.Forms.Label lbTargetRPM;

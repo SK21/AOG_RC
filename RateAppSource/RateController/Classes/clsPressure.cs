@@ -19,7 +19,8 @@ namespace RateController
         {
             mf = CallingFrom;
             cID = ID;
-            Name = "Pressure" + ID.ToString();
+            Name = "PR" + (ID+1).ToString();
+            Description = Name;
         }
 
         public string Description
@@ -154,7 +155,9 @@ namespace RateController
 
         public void Load()
         {
-            cDescription = mf.Tls.LoadProperty(Name + "_Description");
+            string tmp = mf.Tls.LoadProperty(Name + "_Description");
+            if (tmp != "") cDescription = tmp;
+
             int.TryParse(mf.Tls.LoadProperty(Name + "_ModuleID"), out cModuleID);
             int.TryParse(mf.Tls.LoadProperty(Name + "_SensorID"), out cSensorID);
             int.TryParse(mf.Tls.LoadProperty(Name + "_SectionID"), out cSectionID);

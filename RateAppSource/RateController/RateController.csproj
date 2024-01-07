@@ -206,6 +206,12 @@
     <Compile Include="frmPins.Designer.cs">
       <DependentUpon>frmPins.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmPressureDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPressureDisplay.Designer.cs">
+      <DependentUpon>frmPressureDisplay.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmRelays.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -323,6 +329,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmPins.resx">
       <DependentUpon>frmPins.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPressureDisplay.resx">
+      <DependentUpon>frmPressureDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>
