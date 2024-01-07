@@ -16,7 +16,7 @@ unsigned long Omin[MaxProductCount];
 byte Ocount[MaxProductCount];
 float Oave[MaxProductCount];
 
-void ISR0()
+void IRAM_ATTR ISR0()
 {
 	static unsigned long PulseTime;
 	unsigned long micronow;
@@ -71,7 +71,7 @@ void ISR0()
 	}
 }
 
-void ISR1()
+void IRAM_ATTR ISR1()
 {
 	static unsigned long PulseTime;
 	unsigned long micronow;

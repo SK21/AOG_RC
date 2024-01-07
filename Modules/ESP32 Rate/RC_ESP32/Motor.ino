@@ -7,17 +7,9 @@ void AdjustFlow()
         {
         case 0:
             // standard valve, flow control only
-            if (Sensor[i].PWM >= 0)
+            if (Sensor[i].FlowEnabled)
             {
-                //increase
-                digitalWrite(Sensor[i].DirPin, MDL.FlowOnDirection);
-                ledcWrite(i, Sensor[i].PWM);
-            }
-            else
-            {
-                //decrease
-                digitalWrite(Sensor[i].DirPin, !MDL.FlowOnDirection);
-                ledcWrite(i, -Sensor[i].PWM);   // offsets the negative pwm value
+                SetPWM(i, Sensor[i].PWM);
             }
             break;
 
@@ -26,23 +18,12 @@ void AdjustFlow()
             // fast close valve or combo close timed, used for flow control and on/off
             if (Sensor[i].FlowEnabled)
             {
-                if (Sensor[i].PWM >= 0)
-                {
-                    digitalWrite(Sensor[i].DirPin, MDL.FlowOnDirection);
-                    ledcWrite(i, Sensor[i].PWM);
-                }
-                else
-                {
-                    //decrease
-                    digitalWrite(Sensor[i].DirPin, !MDL.FlowOnDirection);
-                    ledcWrite(i, -Sensor[i].PWM);   // offsets the negative pwm value
-                }
+                SetPWM(i, Sensor[i].PWM);
             }
             else
             {
-                // stop flow
-                digitalWrite(Sensor[i].DirPin, !MDL.FlowOnDirection);
-                ledcWrite(i, 255);
+                // stop flow, close valve
+                SetPWM(i, -255);
             }
             break;
 
@@ -51,26 +32,31 @@ void AdjustFlow()
             // motor control
             if (Sensor[i].FlowEnabled)
             {
-                if (Sensor[i].PWM >= 0)
-                {
-                    //increase
-                    digitalWrite(Sensor[i].DirPin, MDL.FlowOnDirection);
-                    ledcWrite(i, Sensor[i].PWM);
-                }
-                else
-                {
-                    //decrease
-                    digitalWrite(Sensor[i].DirPin, !MDL.FlowOnDirection);
-                    ledcWrite(i, -Sensor[i].PWM);   // offsets the negative pwm value
-                }
+                SetPWM(i, Sensor[i].PWM);
             }
             else
             {
                 // stop motor
-                ledcWrite(i, 0);
+                SetPWM(i, 0);
             }
             break;
         }
+    }
+}
+
+void SetPWM(byte ID, double PWM)
+{
+    if (MDL.FlowOnDirection == 0) PWM *= -1;    // flow on low
+    if (PWM > 0)
+    {
+        ledcWrite(ID * 2, PWM);     // IN1
+        ledcWrite(ID * 2 + 1, 0);   // IN2
+    }
+    else
+    {
+        PWM = abs(PWM);
+        ledcWrite(ID * 2 + 1, PWM); // IN2
+        ledcWrite(ID * 2, 0);       // IN1
     }
 }
 

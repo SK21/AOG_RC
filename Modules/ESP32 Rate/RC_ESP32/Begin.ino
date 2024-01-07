@@ -9,8 +9,8 @@ void DoSetup()
 
 	// default flow pins
 	Sensor[0].FlowPin = 12;
-	Sensor[0].DirPin = 25;
-	Sensor[0].PWMPin = 26;
+	Sensor[0].IN1 = 25;
+	Sensor[0].IN2 = 26;
 
 	// default pid
 	Sensor[0].KP = 5;
@@ -39,8 +39,10 @@ void DoSetup()
 	EEPROM.begin(EEPROM_SIZE);
 
 	int16_t StoredID;
-	EEPROM.get(100, StoredID);
-	if (StoredID == InoID)
+	int8_t StoredType;
+	EEPROM.get(0, StoredID);
+	EEPROM.get(4, StoredType);
+	if (StoredID == InoID && StoredType == InoType)
 	{
 		LoadData();
 	}
@@ -172,31 +174,36 @@ void DoSetup()
 	Serial.println("");
 
 	// UDP
-	UDPcomm.begin(ListeningPort);
+	UDP_Ethernet.begin(ListeningPort);
 
 	// AGIO
-	AGIOcomm.begin(ListeningPortAGIO);
+	UDP_AGIO.begin(ListeningPortAGIO);
 
 	// sensors
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
-		pinMode(Sensor[i].DirPin, OUTPUT);
-		pinMode(Sensor[i].PWMPin, OUTPUT);
+		pinMode(Sensor[i].IN1, OUTPUT);
+		pinMode(Sensor[i].IN2, OUTPUT);
 
 		switch (i)
 		{
 		case 0:
-			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, FALLING);
+			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, RISING);
 			break;
 		case 1:
-			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, FALLING);
+			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, RISING);
 			break;
 		}
 
 		// pwm
-		ledcSetup(i, 500, 8);
-		ledcAttachPin(Sensor[i].PWMPin, i);
+		// DRV8870 IN1
+		ledcSetup(i * 2, 500, 8);
+		ledcAttachPin(Sensor[i].IN1, i * 2);
+		
+		// DRV8870 IN2
+		ledcSetup(i * 2 + 1, 500, 8);
+		ledcAttachPin(Sensor[i].IN2, i * 2 + 1);
 	}
 
 	// Relays
@@ -322,7 +329,7 @@ void DoSetup()
 
 	WiFi.softAP(AP,MDL.Password);
 	WiFi.softAPConfig(AP_LocalIP, AP_LocalIP, AP_Subnet);
-	WifiComm.begin(ListeningPort);
+	UDP_Wifi.begin(ListeningPort);
 
 	Serial.println("");
 	Serial.print("Access Point name: ");
@@ -371,7 +378,8 @@ void SaveData()
 {
 	// update stored data
 	Serial.println("Updating stored data.");
-	EEPROM.put(100, InoID);
+	EEPROM.put(0, InoID);
+	EEPROM.put(4, InoType);
 	EEPROM.put(110, MDL);
 
 	for (int i = 0; i < MaxProductCount; i++)

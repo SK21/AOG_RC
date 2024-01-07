@@ -71,9 +71,9 @@ void SendUDP()
             if (Ethernet.linkStatus() == LinkON)
             {
 
-                UDPcomm.beginPacket(DestinationIP, DestinationPort);
-                UDPcomm.write(Data, 13);
-                UDPcomm.endPacket();
+                UDP_Ethernet.beginPacket(DestinationIP, DestinationPort);
+                UDP_Ethernet.write(Data, 13);
+                UDP_Ethernet.endPacket();
                 Sent = true;
             }
         }
@@ -81,9 +81,9 @@ void SendUDP()
         // wifi
         if (!Sent)
         {
-            WifiComm.beginPacket(AP_DestinationIP, DestinationPort);
-            WifiComm.write(Data, 13);
-            WifiComm.endPacket();
+            UDP_Wifi.beginPacket(AP_DestinationIP, DestinationPort);
+            UDP_Wifi.write(Data, 13);
+            UDP_Wifi.endPacket();
         }
     }
 
@@ -132,9 +132,9 @@ void SendUDP()
         if (Ethernet.linkStatus() == LinkON)
         {
 
-            UDPcomm.beginPacket(DestinationIP, DestinationPort);
-            UDPcomm.write(Data, 15);
-            UDPcomm.endPacket();
+            UDP_Ethernet.beginPacket(DestinationIP, DestinationPort);
+            UDP_Ethernet.write(Data, 15);
+            UDP_Ethernet.endPacket();
             Sent = true;
         }
     }
@@ -142,9 +142,9 @@ void SendUDP()
     // wifi
     if (!Sent)
     {
-        WifiComm.beginPacket(AP_DestinationIP, DestinationPort);
-        WifiComm.write(Data, 15);
-        WifiComm.endPacket();
+        UDP_Wifi.beginPacket(AP_DestinationIP, DestinationPort);
+        UDP_Wifi.write(Data, 15);
+        UDP_Wifi.endPacket();
     }
 }
 
@@ -154,22 +154,21 @@ void ReceiveUDP()
     {
         if (Ethernet.linkStatus() == LinkON)
         {
-            byte Data[MaxReadBuffer];
-
-            uint16_t len = UDPcomm.parsePacket();
+            uint16_t len = UDP_Ethernet.parsePacket();
             if (len)
             {
-                UDPcomm.read(Data, MaxReadBuffer);
+                byte Data[MaxReadBuffer];
+                UDP_Ethernet.read(Data, MaxReadBuffer);
                 ParseData(Data, len);
             }
         }
     }
 
-    uint16_t len = WifiComm.parsePacket();
+    uint16_t len = UDP_Wifi.parsePacket();
     if (len)
     {
         byte Data[MaxReadBuffer];
-        WifiComm.read(Data, MaxReadBuffer);
+        UDP_Wifi.read(Data, MaxReadBuffer);
         ParseData(Data, len);
     }
 }
@@ -385,11 +384,11 @@ void ParseData(byte Data[], uint16_t len)
 
                 MDL.RelayControl = Data[5];
                 Sensor[0].FlowPin = Data[7];
-                Sensor[0].DirPin = Data[8];
-                Sensor[0].PWMPin = Data[9];
+                Sensor[0].IN1 = Data[8];
+                Sensor[0].IN2 = Data[9];
                 Sensor[1].FlowPin = Data[10];
-                Sensor[1].DirPin = Data[11];
-                Sensor[1].PWMPin = Data[12];
+                Sensor[1].IN1 = Data[11];
+                Sensor[1].IN2 = Data[12];
 
                 for (int i = 0; i < 16; i++)
                 {
@@ -412,12 +411,11 @@ void ReceiveAGIO()
     {
         if (Ethernet.linkStatus() == LinkON)
         {
-            byte Data[MaxReadBuffer];
-
-            uint16_t len = AGIOcomm.parsePacket();
+            uint16_t len = UDP_AGIO.parsePacket();
             if (len)
             {
-                AGIOcomm.read(Data, MaxReadBuffer);
+                byte Data[MaxReadBuffer];
+                UDP_AGIO.read(Data, MaxReadBuffer);
                 if ((Data[0] == 128) && (Data[1] == 129) && (Data[2] == 127))  // 127 is source, AGIO
                 {
                     switch (Data[3])

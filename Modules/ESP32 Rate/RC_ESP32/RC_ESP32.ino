@@ -27,8 +27,9 @@
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  04-Jan-2024"
-const uint16_t InoID = 4124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  06-Jan-2024"
+const uint16_t InoID = 6014;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
@@ -62,8 +63,8 @@ ModuleConfig MDL;
 struct SensorConfig
 {
 	uint8_t FlowPin;
-	uint8_t DirPin;
-	uint8_t PWMPin;
+	uint8_t IN1;
+	uint8_t IN2;
 	bool FlowEnabled;
 	double UPM;				// sent as upm X 1000
 	double PWM;
@@ -89,17 +90,17 @@ const uint16_t ListeningPort = 28888;
 const uint16_t DestinationPort = 29999;
 
 // ethernet
-EthernetUDP UDPcomm;
+EthernetUDP UDP_Ethernet;
 IPAddress DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
 bool ChipFound;
 
 // AGIO
-EthernetUDP AGIOcomm;
+EthernetUDP UDP_AGIO;
 uint16_t ListeningPortAGIO = 8888;		// to listen on
 uint16_t DestinationPortAGIO = 9999;	// to send to
 
 // wifi
-WiFiUDP WifiComm;
+WiFiUDP UDP_Wifi;
 IPAddress AP_LocalIP(192, 168, 30, 1);
 IPAddress AP_Subnet(255, 255, 255, 0);
 IPAddress AP_DestinationIP(192, 168, 30, 255);
@@ -230,6 +231,8 @@ uint32_t LastBlink;
 uint32_t LastLoop;
 byte ReadReset;
 uint32_t MaxLoopTime;
+uint16_t debug1;
+uint16_t debug2;
 
 void Blink()
 {
@@ -238,7 +241,6 @@ void Blink()
 		LastBlink = millis();
 		State = !State;
 		//digitalWrite(LED_BUILTIN, State);
-		Serial.println(".");	// needed to allow PCBsetup to connect
 
 		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
