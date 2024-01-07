@@ -109,7 +109,7 @@
             this.label5.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label5.Location = new System.Drawing.Point(12, 316);
+            this.label5.Location = new System.Drawing.Point(12, 339);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(124, 23);
             this.label5.TabIndex = 196;
@@ -123,9 +123,9 @@
             this.label1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(231, 316);
+            this.label1.Location = new System.Drawing.Point(12, 316);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(125, 23);
+            this.label1.Size = new System.Drawing.Size(124, 23);
             this.label1.TabIndex = 195;
             this.label1.Text = "Actual";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -137,7 +137,7 @@
             this.lblPWM.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPWM.ForeColor = System.Drawing.Color.Lime;
-            this.lblPWM.Location = new System.Drawing.Point(137, 316);
+            this.lblPWM.Location = new System.Drawing.Point(137, 339);
             this.lblPWM.Name = "lblPWM";
             this.lblPWM.Size = new System.Drawing.Size(68, 23);
             this.lblPWM.TabIndex = 194;
@@ -151,7 +151,7 @@
             this.lblSteerAng.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblSteerAng.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSteerAng.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblSteerAng.Location = new System.Drawing.Point(362, 316);
+            this.lblSteerAng.Location = new System.Drawing.Point(137, 316);
             this.lblSteerAng.Name = "lblSteerAng";
             this.lblSteerAng.Size = new System.Drawing.Size(68, 23);
             this.lblSteerAng.TabIndex = 193;
@@ -252,7 +252,7 @@
             this.lbPWMvalue.BackColor = System.Drawing.SystemColors.ControlText;
             this.lbPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbPWMvalue.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbPWMvalue.Location = new System.Drawing.Point(137, 339);
+            this.lbPWMvalue.Location = new System.Drawing.Point(362, 339);
             this.lbPWMvalue.Name = "lbPWMvalue";
             this.lbPWMvalue.Size = new System.Drawing.Size(68, 23);
             this.lbPWMvalue.TabIndex = 209;
@@ -266,7 +266,7 @@
             this.lbErrorValue.BackColor = System.Drawing.SystemColors.ControlText;
             this.lbErrorValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbErrorValue.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbErrorValue.Location = new System.Drawing.Point(362, 339);
+            this.lbErrorValue.Location = new System.Drawing.Point(362, 316);
             this.lbErrorValue.Name = "lbErrorValue";
             this.lbErrorValue.Size = new System.Drawing.Size(68, 23);
             this.lbErrorValue.TabIndex = 208;
@@ -280,9 +280,9 @@
             this.label6.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label6.Location = new System.Drawing.Point(12, 339);
+            this.label6.Location = new System.Drawing.Point(230, 339);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(124, 23);
+            this.label6.Size = new System.Drawing.Size(102, 23);
             this.label6.TabIndex = 211;
             this.label6.Text = "PWM";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -294,7 +294,7 @@
             this.label7.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label7.Location = new System.Drawing.Point(231, 339);
+            this.label7.Location = new System.Drawing.Point(231, 316);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(125, 23);
             this.label7.TabIndex = 210;
