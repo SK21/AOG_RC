@@ -477,6 +477,7 @@
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnSave.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSave_HelpRequested);
             // 
             // frmModule
             // 

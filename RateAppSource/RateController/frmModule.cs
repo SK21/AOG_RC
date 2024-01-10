@@ -34,16 +34,22 @@ namespace RateController
         {
             try
             {
-                File.WriteAllText(mf.Tls.FilesDir() + "\\Ethernet.txt", tbEthernet.Text);
-                File.WriteAllText(mf.Tls.FilesDir() + "\\Serial.txt", tbSerial.Text);
-                File.WriteAllText(mf.Tls.FilesDir() + "\\Activity.txt", tbActivity.Text);
-                File.WriteAllText(mf.Tls.FilesDir() + "\\Errors.txt", tbErrors.Text);
+                File.WriteAllText(mf.Tls.FilesDir() + "\\Ethernet Log.txt", tbEthernet.Text);
+                File.WriteAllText(mf.Tls.FilesDir() + "\\Serial Log.txt", tbSerial.Text);
                 mf.Tls.ShowHelp("File saved.", "Save", 10000);
             }
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("frmModules/btnSave_Click: " + ex.Message);
             }
+        }
+
+        private void btnSave_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Save information to file.";
+
+            mf.Tls.ShowHelp(Message, "Save");
+            hlpevent.Handled = true;
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -142,8 +148,6 @@ namespace RateController
             tbErrors.Text = mf.Tls.ReadTextFile("Error Log.txt");
             tbErrors.Select(tbErrors.Text.Length, 0);
             tbErrors.ScrollToCaret();
-            //tbErrors.SelectionStart= tbErrors.Text.Length;
-            //tbErrors.SelectionLength = 0;
         }
     }
 }
