@@ -1,0 +1,4 @@
+The rate app can connect to the ESP32 module over the access point provided by the ESP32. To have windows auto re-connect to the ESP32 access point use method 1 on linked page. 
+
+httpswww.kapilarya.comhow-to-use-wifi-and-ethernet-at-same-time-in-windows-11
+
