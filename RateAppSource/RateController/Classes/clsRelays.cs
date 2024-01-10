@@ -62,37 +62,44 @@ namespace RateController
 
         public void Renumber(int StartRelay, int StartModule, int StartSection)
         {
-            int CurrentSection = StartSection;
-            int FirstRelay;
-            for (int j = StartModule; j < 8; j++)
+            try
             {
-                if (j == StartModule)
+                int CurrentSection = StartSection;
+                int FirstRelay;
+                for (int j = StartModule; j < 8; j++)
                 {
-                    FirstRelay = StartRelay;
-                }
-                else
-                {
-                    FirstRelay = 0;
-                }
-                for (int i = FirstRelay; i < 16; i++)
-                {
-                    clsRelay Rly = Item(i, j);
-                    int tmp = Rly.SectionID;
-                    //if (Rly.Type == RelayTypes.None && CurrentSection < mf.MaxSections) Rly.Type = RelayTypes.Section;
-                    if (Rly.Type == RelayTypes.Section || Rly.Type == RelayTypes.Invert_Section
-                        || ((Rly.Type == RelayTypes.TramRight || Rly.Type == RelayTypes.TramLeft) && tmp > 0))
+                    if (j == StartModule)
                     {
-                        if (CurrentSection < mf.MaxSections)
+                        FirstRelay = StartRelay;
+                    }
+                    else
+                    {
+                        FirstRelay = 0;
+                    }
+                    for (int i = FirstRelay; i < 16; i++)
+                    {
+                        clsRelay Rly = Item(i, j);
+                        int tmp = Rly.SectionID;
+                        //if (Rly.Type == RelayTypes.None && CurrentSection < mf.MaxSections) Rly.Type = RelayTypes.Section;
+                        if (Rly.Type == RelayTypes.Section || Rly.Type == RelayTypes.Invert_Section
+                            || ((Rly.Type == RelayTypes.TramRight || Rly.Type == RelayTypes.TramLeft) && tmp > 0))
                         {
-                            Rly.SectionID = CurrentSection;
-                            CurrentSection++;
-                        }
-                        else
-                        {
-                            Rly.Type = RelayTypes.None;
+                            if (CurrentSection < mf.MaxSections)
+                            {
+                                Rly.SectionID = CurrentSection;
+                                CurrentSection++;
+                            }
+                            else
+                            {
+                                Rly.Type = RelayTypes.None;
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("clsRelays/Renumber: " + ex.Message);
             }
         }
 
@@ -128,107 +135,114 @@ namespace RateController
 
         public int SetRelays(int ModuleID)
         {
-            // based on sections status and relay type set relays
-            // return int value for relayLo, relayHi
-
-            bool SectionsOn = false;    // whether at least on section is on
-            bool MasterOn = false;      // whether at least one master relay is on
-            bool MasterFound = false;
-
-            // check if at least one section on
-            for (int i = 0; i < mf.MaxSections; i++)
-            {
-                if (mf.Sections.Item(i).IsON)
-                {
-                    SectionsOn = true;
-                    break;
-                }
-            }
-
-            // set master relay
-            for (int i = 0; i < cRelays.Count; i++)
-            {
-                clsRelay Rly = cRelays[i];
-
-                if (Rly.Type == RelayTypes.Master)
-                {
-                    Rly.IsON = SectionsOn;
-                    MasterOn = SectionsOn;
-                    MasterFound = true;
-                }
-            }
-
-            // set hydraulic relays
-            HydUPDown(ModuleID);
-
-            // set tram lines, geo stop
-            for (int i = 0; i < cRelays.Count; i++)
-            {
-                clsRelay Rly = cRelays[i];
-                if (Rly.ModuleID == ModuleID)
-                {
-                    if (Rly.Type == RelayTypes.TramLeft) Rly.IsON = mf.MachineData.TramLeft;
-                    if (Rly.Type == RelayTypes.TramRight) Rly.IsON = mf.MachineData.TramRight;
-                    if (Rly.Type == RelayTypes.GeoStop) Rly.IsON = mf.MachineData.GeoStop;
-                }
-            }
-
-            // set section, slave, power relays
             int Result = 0;
-            for (int i = 0; i < cRelays.Count; i++)
+            try
             {
-                clsRelay Rly = cRelays[i];
-                if (Rly.ModuleID == ModuleID)
+                // based on sections status and relay type set relays
+                // return int value for relayLo, relayHi
+
+                bool SectionsOn = false;    // whether at least on section is on
+                bool MasterOn = false;      // whether at least one master relay is on
+                bool MasterFound = false;
+
+                // check if at least one section on
+                for (int i = 0; i < mf.MaxSections; i++)
                 {
-                    switch (Rly.Type)
+                    if (mf.Sections.Item(i).IsON)
                     {
-                        case RelayTypes.Section:
-                            if (MasterFound && !MasterOn)
-                            {
-                                // leave relay to previous value, master relay is off
-                                // do nothing
-                            }
-                            else
-                            {
-                                // set relay by section
-                                Rly.IsON = mf.Sections.Items[Rly.SectionID].IsON;
-                            }
-                            break;
-
-                        case RelayTypes.Slave:
-                            if (MasterFound && !MasterOn)
-                            {
-                                // leave relay to previous value, master relay is off
-                                // do nothing
-                            }
-                            else
-                            {
-                                // set relay if at lease one section on
-                                Rly.IsON = SectionsOn;
-                            }
-                            break;
-
-                        case RelayTypes.Power:
-                            cRelays[i].IsON = true;
-                            break;
-
-                        case RelayTypes.Invert_Section:
-                            if (MasterFound && !MasterOn)
-                            {
-                                // leave relay to previous value, master relay is off
-                                // do nothing
-                            }
-                            else
-                            {
-                                // set relay by section
-                                Rly.IsON = !mf.Sections.Items[Rly.SectionID].IsON;
-                            }
-                            break;
+                        SectionsOn = true;
+                        break;
                     }
-
-                    // build return int
-                    if (Rly.IsON) Result |= (int)Math.Pow(2, i);
                 }
+
+                // set master relay
+                for (int i = 0; i < cRelays.Count; i++)
+                {
+                    clsRelay Rly = cRelays[i];
+
+                    if (Rly.Type == RelayTypes.Master)
+                    {
+                        Rly.IsON = SectionsOn;
+                        MasterOn = SectionsOn;
+                        MasterFound = true;
+                    }
+                }
+
+                // set hydraulic relays
+                HydUPDown(ModuleID);
+
+                // set tram lines, geo stop
+                for (int i = 0; i < cRelays.Count; i++)
+                {
+                    clsRelay Rly = cRelays[i];
+                    if (Rly.ModuleID == ModuleID)
+                    {
+                        if (Rly.Type == RelayTypes.TramLeft) Rly.IsON = mf.MachineData.TramLeft;
+                        if (Rly.Type == RelayTypes.TramRight) Rly.IsON = mf.MachineData.TramRight;
+                        if (Rly.Type == RelayTypes.GeoStop) Rly.IsON = mf.MachineData.GeoStop;
+                    }
+                }
+
+                // set section, slave, power relays
+                for (int i = 0; i < cRelays.Count; i++)
+                {
+                    clsRelay Rly = cRelays[i];
+                    if (Rly.ModuleID == ModuleID)
+                    {
+                        switch (Rly.Type)
+                        {
+                            case RelayTypes.Section:
+                                if (MasterFound && !MasterOn)
+                                {
+                                    // leave relay to previous value, master relay is off
+                                    // do nothing
+                                }
+                                else
+                                {
+                                    // set relay by section
+                                    Rly.IsON = mf.Sections.Items[Rly.SectionID].IsON;
+                                }
+                                break;
+
+                            case RelayTypes.Slave:
+                                if (MasterFound && !MasterOn)
+                                {
+                                    // leave relay to previous value, master relay is off
+                                    // do nothing
+                                }
+                                else
+                                {
+                                    // set relay if at lease one section on
+                                    Rly.IsON = SectionsOn;
+                                }
+                                break;
+
+                            case RelayTypes.Power:
+                                cRelays[i].IsON = true;
+                                break;
+
+                            case RelayTypes.Invert_Section:
+                                if (MasterFound && !MasterOn)
+                                {
+                                    // leave relay to previous value, master relay is off
+                                    // do nothing
+                                }
+                                else
+                                {
+                                    // set relay by section
+                                    Rly.IsON = !mf.Sections.Items[Rly.SectionID].IsON;
+                                }
+                                break;
+                        }
+
+                        // build return int
+                        if (Rly.IsON) Result |= (int)Math.Pow(2, i);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("clsRelays/SetRelays: " + ex.Message);
             }
 
             return Result;
