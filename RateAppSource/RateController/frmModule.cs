@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RateController
@@ -27,6 +28,22 @@ namespace RateController
         private void bntOK_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                File.WriteAllText(mf.Tls.FilesDir() + "\\Ethernet.txt", tbEthernet.Text);
+                File.WriteAllText(mf.Tls.FilesDir() + "\\Serial.txt", tbSerial.Text);
+                File.WriteAllText(mf.Tls.FilesDir() + "\\Activity.txt", tbActivity.Text);
+                File.WriteAllText(mf.Tls.FilesDir() + "\\Errors.txt", tbErrors.Text);
+                mf.Tls.ShowHelp("File saved.", "Save", 10000);
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmModules/btnSave_Click: " + ex.Message);
+            }
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -57,18 +74,6 @@ namespace RateController
             }
             timer1.Enabled = false;
         }
-        private void UpdateLogs()
-        {
-            tbActivity.Text = mf.Tls.ReadTextFile("Activity Log.txt");
-            tbActivity.Select(tbActivity.Text.Length, 0);
-            tbActivity.ScrollToCaret();
-
-            tbErrors.Text = mf.Tls.ReadTextFile("Error Log.txt");
-            tbErrors.Select(tbErrors.Text.Length, 0);
-            tbErrors.ScrollToCaret();
-            //tbErrors.SelectionStart= tbErrors.Text.Length;
-            //tbErrors.SelectionLength = 0;
-        }
 
         private void frmModule_Load(object sender, EventArgs e)
         {
@@ -90,6 +95,11 @@ namespace RateController
             tbSerial.BackColor = this.BackColor;
 
             cboPort1.SelectedIndex = 0;
+            UpdateLogs();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
             UpdateLogs();
         }
 
@@ -123,9 +133,17 @@ namespace RateController
             if (!mf.SER[CommPort].ArduinoPort.IsOpen) mf.SER[CommPort].OpenRCport(true);
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void UpdateLogs()
         {
-            UpdateLogs();
+            tbActivity.Text = mf.Tls.ReadTextFile("Activity Log.txt");
+            tbActivity.Select(tbActivity.Text.Length, 0);
+            tbActivity.ScrollToCaret();
+
+            tbErrors.Text = mf.Tls.ReadTextFile("Error Log.txt");
+            tbErrors.Select(tbErrors.Text.Length, 0);
+            tbErrors.ScrollToCaret();
+            //tbErrors.SelectionStart= tbErrors.Text.Length;
+            //tbErrors.SelectionLength = 0;
         }
     }
 }

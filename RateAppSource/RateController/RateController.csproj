@@ -122,12 +122,6 @@
     <Compile Include="Classes\VerticalProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="FormAbout.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormAbout.Designer.cs">
-      <DependentUpon>FormAbout.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormNumeric.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -287,10 +281,6 @@
     <Compile Include="RCRestore.Designer.cs">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="FormAbout.resx">
-      <DependentUpon>FormAbout.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
     </EmbeddedResource>

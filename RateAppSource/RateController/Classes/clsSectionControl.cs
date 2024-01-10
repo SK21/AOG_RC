@@ -5,19 +5,20 @@ namespace RateController
 {
     public class clsSectionControl
     {
-        private const double AutoMultiplier = 0.05;
-        private const byte ManualMin = 10;
-        private const double ManualMultiplier = 0.25;   // rate change amount for each step
+        private const double StepMultiplier = 0.05;   // rate change amount for each step
         private const byte MaxSteps = 5;
-        private const int StepDelay = 1000; // ms between rate adjustments
+        private const int StepDelay = 2000;     // ms between step adjustments
+        private DateTime StepTime;
+        private const int AdjustDelay = 500;    // ms between rate adjustments
         private DateTime AdjustTime;
         private bool AutoLast;
-        private State CurrentState;
+        private bool Changed;
+        private bool LastState;
         private bool MasterChanged;
         private bool MasterLast;
         private bool MasterOnSB;
         private FormStart mf;
-        private State PreviousState;
+        private bool Pressed;
         private double RateDir;
         private int RateStep;
         private bool[] SectionOnAOG;
@@ -44,40 +45,40 @@ namespace RateController
             {
                 if (mf.SwitchBox.RateUp)
                 {
-                    CurrentState.Pressed = true;
-                    CurrentState.Released = false;
-                    CurrentState.Changed = PreviousState.Released;
+                    Pressed = true;
                     RateDir = 1;
                 }
                 else if (mf.SwitchBox.RateDown)
                 {
-                    CurrentState.Pressed = true;
-                    CurrentState.Released = false;
-                    CurrentState.Changed = PreviousState.Released;
+                    Pressed = true;
                     RateDir = -1;
                 }
                 else
                 {
-                    CurrentState.Released = true;
-                    CurrentState.Pressed = false;
-                    CurrentState.Changed = PreviousState.Pressed;
+                    Pressed = false;
                     RateStep = 0;
                 }
-                PreviousState = CurrentState;
+                Changed = (LastState != Pressed);
+                LastState = Pressed;
 
-                if (CurrentState.Pressed)
+                if (Pressed)
                 {
+                    // set step
+                    if ((DateTime.Now - StepTime).TotalMilliseconds > StepDelay)
+                    {
+                        StepTime = DateTime.Now;
+                        RateStep++;
+                        if (RateStep > MaxSteps) RateStep = MaxSteps;
+                    }
+
                     // adjust rate
-                    if ((DateTime.Now - AdjustTime).TotalMilliseconds > StepDelay)
+                    if ((DateTime.Now - AdjustTime).TotalMilliseconds > AdjustDelay)
                     {
                         AdjustTime = DateTime.Now;
 
                         int ID = mf.CurrentProduct();
                         if (ID < 0) ID = 0;
                         clsProduct Prd = mf.Products.Item(ID);
-
-                        RateStep++;
-                        if (RateStep > MaxSteps) RateStep = MaxSteps;
 
                         if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
                         {
@@ -87,11 +88,11 @@ namespace RateController
 
                             if (RateDir == 1)
                             {
-                                CurrentRate = CurrentRate * (1 + (AutoMultiplier * RateStep));
+                                CurrentRate = CurrentRate * (1 + (StepMultiplier * RateStep));
                             }
                             else
                             {
-                                CurrentRate = CurrentRate / (1 + (AutoMultiplier * RateStep));
+                                CurrentRate = CurrentRate / (1 + (StepMultiplier * RateStep));
                             }
 
                             Prd.RateSet = CurrentRate;
@@ -103,8 +104,7 @@ namespace RateController
                             {
                                 // adjust flow valve
                                 byte ADJ = Prd.PIDmin;
-                                if (ADJ < ManualMin) ADJ = ManualMin;
-                                Prd.ManualPWM = (int)((ADJ + ADJ * ManualMultiplier * RateStep) * RateDir);
+                                Prd.ManualPWM = (int)((ADJ + ADJ * StepMultiplier * RateStep) * RateDir);
                             }
                             else
                             {
@@ -114,17 +114,19 @@ namespace RateController
                         }
                     }
                 }
-
-                if (CurrentState.Released && CurrentState.Changed)
+                else
                 {
-                    // stop manual adjusting flow valve when rate adjust buttons are not pushed
-                    int ID = mf.CurrentProduct();
-                    if (ID < 0) ID = 0;
-                    clsProduct Prd = mf.Products.Item(ID);
-
-                    if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
+                    if (Changed)
                     {
-                        Prd.ManualPWM = 0;
+                        // stop manual adjusting flow valve when rate adjust buttons are not pushed
+                        int ID = mf.CurrentProduct();
+                        if (ID < 0) ID = 0;
+                        clsProduct Prd = mf.Products.Item(ID);
+
+                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
+                        {
+                            Prd.ManualPWM = 0;
+                        }
                     }
                 }
             }
@@ -321,13 +323,6 @@ namespace RateController
         {
             ReadRateSwitches();
             UpdateSectionStatus();
-        }
-
-        private struct State
-        {
-            public bool Changed;
-            public bool Pressed;
-            public bool Released;
         }
     }
 }

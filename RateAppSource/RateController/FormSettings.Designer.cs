@@ -111,6 +111,8 @@ namespace RateController
             this.lbConID = new System.Windows.Forms.Label();
             this.tbConID = new System.Windows.Forms.TextBox();
             this.tbs3 = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.wifiBar = new System.Windows.Forms.ProgressBar();
             this.tbCountsRev = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
@@ -158,8 +160,6 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.wifiBar = new System.Windows.Forms.ProgressBar();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -186,12 +186,12 @@ namespace RateController
             // 
             // tbs0
             // 
-            this.tbs0.Controls.Add(this.pnlFan);
             this.tbs0.Controls.Add(this.lb0);
             this.tbs0.Controls.Add(this.tbProduct);
             this.tbs0.Controls.Add(this.ValveType);
             this.tbs0.Controls.Add(this.lb5);
             this.tbs0.Controls.Add(this.pnlMain);
+            this.tbs0.Controls.Add(this.pnlFan);
             this.tbs0.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbs0.Location = new System.Drawing.Point(4, 33);
             this.tbs0.Name = "tbs0";
@@ -390,9 +390,7 @@ namespace RateController
             this.ValveType.Items.AddRange(new object[] {
             "Standard Valve",
             "Fast Close Valve",
-            "Motor",
-            "Motor/Weights",
-            "Combo Timed"});
+            "Motor"});
             this.ValveType.Location = new System.Drawing.Point(230, 43);
             this.ValveType.Name = "ValveType";
             this.ValveType.Size = new System.Drawing.Size(161, 31);
@@ -1267,6 +1265,25 @@ namespace RateController
             this.tbs3.Text = "Diagnostics";
             this.tbs3.UseVisualStyleBackColor = true;
             // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 320);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(100, 23);
+            this.label2.TabIndex = 208;
+            this.label2.Text = "Wifi Signal";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // wifiBar
+            // 
+            this.wifiBar.Location = new System.Drawing.Point(12, 350);
+            this.wifiBar.Maximum = 3;
+            this.wifiBar.Name = "wifiBar";
+            this.wifiBar.Size = new System.Drawing.Size(100, 23);
+            this.wifiBar.Step = 3;
+            this.wifiBar.TabIndex = 207;
+            // 
             // tbCountsRev
             // 
             this.tbCountsRev.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1777,25 +1794,6 @@ namespace RateController
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 320);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 23);
-            this.label2.TabIndex = 208;
-            this.label2.Text = "Wifi Signal";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // wifiBar
-            // 
-            this.wifiBar.Location = new System.Drawing.Point(12, 350);
-            this.wifiBar.Maximum = 3;
-            this.wifiBar.Name = "wifiBar";
-            this.wifiBar.Size = new System.Drawing.Size(100, 23);
-            this.wifiBar.Step = 3;
-            this.wifiBar.TabIndex = 207;
             // 
             // FormSettings
             // 

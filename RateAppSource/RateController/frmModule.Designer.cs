@@ -64,6 +64,7 @@
             this.lbVersion = new System.Windows.Forms.Label();
             this.lbAppVersion = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.btnSave = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -78,7 +79,7 @@
             this.tbEthernet.Multiline = true;
             this.tbEthernet.Name = "tbEthernet";
             this.tbEthernet.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbEthernet.Size = new System.Drawing.Size(232, 309);
+            this.tbEthernet.Size = new System.Drawing.Size(307, 309);
             this.tbEthernet.TabIndex = 221;
             // 
             // tabControl1
@@ -91,7 +92,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(491, 369);
+            this.tabControl1.Size = new System.Drawing.Size(552, 369);
             this.tabControl1.TabIndex = 222;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -109,16 +110,16 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage1.Size = new System.Drawing.Size(483, 332);
+            this.tabPage1.Size = new System.Drawing.Size(544, 332);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "UDP";
+            this.tabPage1.Text = "Ethernet";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(255, 254);
+            this.label12.Location = new System.Drawing.Point(330, 264);
             this.label12.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(166, 23);
@@ -129,7 +130,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(255, 214);
+            this.label8.Location = new System.Drawing.Point(330, 224);
             this.label8.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(203, 23);
@@ -140,7 +141,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(255, 174);
+            this.label9.Location = new System.Drawing.Point(330, 184);
             this.label9.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(178, 23);
@@ -151,7 +152,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(255, 134);
+            this.label10.Location = new System.Drawing.Point(330, 144);
             this.label10.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(188, 23);
@@ -162,7 +163,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(255, 94);
+            this.label7.Location = new System.Drawing.Point(330, 104);
             this.label7.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(181, 23);
@@ -173,7 +174,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(255, 54);
+            this.label5.Location = new System.Drawing.Point(330, 64);
             this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(177, 23);
@@ -184,7 +185,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(255, 14);
+            this.label1.Location = new System.Drawing.Point(330, 24);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(178, 23);
@@ -201,7 +202,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage2.Size = new System.Drawing.Size(483, 332);
+            this.tabPage2.Size = new System.Drawing.Size(544, 332);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Serial";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -246,7 +247,7 @@
             this.tbSerial.Multiline = true;
             this.tbSerial.Name = "tbSerial";
             this.tbSerial.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbSerial.Size = new System.Drawing.Size(461, 265);
+            this.tbSerial.Size = new System.Drawing.Size(522, 265);
             this.tbSerial.TabIndex = 222;
             // 
             // tabPage3
@@ -255,7 +256,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(483, 332);
+            this.tabPage3.Size = new System.Drawing.Size(544, 332);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Activity Log";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -267,7 +268,7 @@
             this.tbActivity.Multiline = true;
             this.tbActivity.Name = "tbActivity";
             this.tbActivity.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbActivity.Size = new System.Drawing.Size(461, 314);
+            this.tbActivity.Size = new System.Drawing.Size(526, 314);
             this.tbActivity.TabIndex = 223;
             // 
             // tabPage4
@@ -275,7 +276,7 @@
             this.tabPage4.Controls.Add(this.tbErrors);
             this.tabPage4.Location = new System.Drawing.Point(4, 33);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(483, 332);
+            this.tabPage4.Size = new System.Drawing.Size(544, 332);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Error Log";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -287,7 +288,7 @@
             this.tbErrors.Multiline = true;
             this.tbErrors.Name = "tbErrors";
             this.tbErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbErrors.Size = new System.Drawing.Size(461, 314);
+            this.tbErrors.Size = new System.Drawing.Size(527, 314);
             this.tbErrors.TabIndex = 224;
             // 
             // lbTime
@@ -362,7 +363,7 @@
             this.lbIP.Location = new System.Drawing.Point(161, 484);
             this.lbIP.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbIP.Name = "lbIP";
-            this.lbIP.Size = new System.Drawing.Size(159, 23);
+            this.lbIP.Size = new System.Drawing.Size(127, 23);
             this.lbIP.TabIndex = 234;
             this.lbIP.Text = "-.-.-.-";
             this.lbIP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -392,7 +393,7 @@
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = global::RateController.Properties.Resources.OK;
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(425, 451);
+            this.bntOK.Location = new System.Drawing.Point(486, 453);
             this.bntOK.Margin = new System.Windows.Forms.Padding(6);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(81, 72);
@@ -410,7 +411,7 @@
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnStart.Image = global::RateController.Properties.Resources.Stop;
             this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStart.Location = new System.Drawing.Point(332, 451);
+            this.btnStart.Location = new System.Drawing.Point(393, 453);
             this.btnStart.Margin = new System.Windows.Forms.Padding(6);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(81, 72);
@@ -422,7 +423,7 @@
             // lbDate
             // 
             this.lbDate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDate.Location = new System.Drawing.Point(395, 422);
+            this.lbDate.Location = new System.Drawing.Point(447, 422);
             this.lbDate.Name = "lbDate";
             this.lbDate.Size = new System.Drawing.Size(116, 23);
             this.lbDate.TabIndex = 247;
@@ -432,7 +433,7 @@
             // lbVersion
             // 
             this.lbVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVersion.Location = new System.Drawing.Point(293, 391);
+            this.lbVersion.Location = new System.Drawing.Point(345, 391);
             this.lbVersion.Name = "lbVersion";
             this.lbVersion.Size = new System.Drawing.Size(105, 23);
             this.lbVersion.TabIndex = 246;
@@ -442,7 +443,7 @@
             // lbAppVersion
             // 
             this.lbAppVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAppVersion.Location = new System.Drawing.Point(395, 391);
+            this.lbAppVersion.Location = new System.Drawing.Point(447, 391);
             this.lbAppVersion.Name = "lbAppVersion";
             this.lbAppVersion.Size = new System.Drawing.Size(116, 23);
             this.lbAppVersion.TabIndex = 245;
@@ -452,18 +453,37 @@
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(293, 422);
+            this.label11.Location = new System.Drawing.Point(345, 422);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(105, 23);
             this.label11.TabIndex = 248;
             this.label11.Text = "RC Date";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // btnSave
+            // 
+            this.btnSave.BackColor = System.Drawing.Color.Transparent;
+            this.btnSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnSave.FlatAppearance.BorderSize = 0;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnSave.Image = global::RateController.Properties.Resources.Save;
+            this.btnSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnSave.Location = new System.Drawing.Point(300, 453);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(6);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(81, 72);
+            this.btnSave.TabIndex = 249;
+            this.btnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // frmModule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 529);
+            this.ClientSize = new System.Drawing.Size(584, 529);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.lbDate);
             this.Controls.Add(this.lbVersion);
@@ -541,5 +561,6 @@
         private System.Windows.Forms.TextBox tbActivity;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TextBox tbErrors;
+        private System.Windows.Forms.Button btnSave;
     }
 }

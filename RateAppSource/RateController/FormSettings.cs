@@ -64,8 +64,8 @@ namespace RateController
             ValveType.Items[0] = Lang.lgStandard;
             ValveType.Items[1] = Lang.lgComboClose;
             ValveType.Items[2] = Lang.lgMotor;
-            ValveType.Items[3] = Lang.lgMotorWeight;
-            ValveType.Items[4] = Lang.lgComboTimed;
+            //ValveType.Items[3] = Lang.lgMotorWeight;
+            //ValveType.Items[4] = Lang.lgComboTimed;
 
             AreaUnits.Items[0] = Lang.lgAcres;
             AreaUnits.Items[1] = Lang.lgHectares;
@@ -368,8 +368,9 @@ namespace RateController
 
         private void lb4_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "For flow sensors this is the sensor counts for 1 unit of product.\n" +
-                "For weight control this is Units per Minute for each Pulse Width Modulation value.";
+            string Message = "This is the sensor counts for 1 unit of product.";
+            //string Message = "For flow sensors this is the sensor counts for 1 unit of product.\n";
+                //"For weight control this is Units per Minute for each Pulse Width Modulation value.";
 
             mf.Tls.ShowHelp(Message, "Sensor Counts");
             hlpevent.Handled = true;
@@ -379,9 +380,7 @@ namespace RateController
         {
             string Message = "1 - Standard, use a valve to vary rate \n " +
                 "2 - Combo Close, use a valve to vary rate and on/off \n" +
-                "3 - Motor, vary motor speed to control rate \n" +
-                "4 - Motor control using change in tank weight \n"+
-                "5 - Combo Timed, adjusts for 15 ms, pauses for 250 ms, repeats";
+                "3 - Motor, vary motor speed to control rate \n";
 
             mf.Tls.ShowHelp(Message, "Control Type");
             hlpevent.Handled = true;
