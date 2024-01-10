@@ -169,7 +169,7 @@ int PIDvalve(byte ID, bool SkipSampleTime)
 				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
 
 				DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM);
-				Result = Sensor[ID].KP * SF * RateError + IntegralSum[ID] + DifValue;
+				Result = Sensor[ID].MinPWM + Sensor[ID].KP * SF * RateError + IntegralSum[ID] + DifValue;
 
 				bool IsPositive = (Result > 0);
 				Result = abs(Result);

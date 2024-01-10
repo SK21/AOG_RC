@@ -117,6 +117,7 @@ void DoSetup()
 		else
 		{
 			Serial.println("Ethernet cable not connected.");
+			Serial.println("Serial data enabled.");
 		}
 	}
 	else
