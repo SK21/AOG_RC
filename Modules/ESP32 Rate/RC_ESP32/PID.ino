@@ -120,7 +120,7 @@ int PIDmotor(byte ID)
 		IntegralSum[ID] = 0;
 	}
 
-	LastPWM[ID] = Result;
+	if (Result != 0) LastPWM[ID] = Result;
 	return (int)Result;
 }
 
