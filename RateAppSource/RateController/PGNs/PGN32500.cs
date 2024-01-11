@@ -121,7 +121,19 @@ namespace RateController
             }
 
             if (Prod.UseMultiPulse) cData[9] |= 0b00100000;
-            if ((Prod.mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || Prod.CalSetMeter) && !Prod.CalRun) cData[9] |= 0b01000000;
+
+            if ((Prod.mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || Prod.CalSetMeter) && !Prod.CalRun)
+            {
+                // auto on
+                cData[9] |= 0b01000000;
+
+                if (Prod.ControlType != ControlTypeEnum.Valve && Prod.ControlType != ControlTypeEnum.ComboClose)
+                {
+                    // keep manual motor setting the same as auto when not in use
+                    // for smooth transition from auto to manual control
+                    //Prod.ManualPWM = (int)Prod.PWM();
+                }
+            }
 
             // manual cal
             if (Prod.mf.SectionControl.MasterOn() && Prod.Enabled)

@@ -31,6 +31,7 @@ namespace RateController
         private double PulseCountTotal;
         private int SetCount;
         private bool ConstantUPMstart;
+        private int CalPWM;
 
         public clsCalibrate(FormStart CallingFrom, int ID)
         {
@@ -184,6 +185,7 @@ namespace RateController
         {
             double.TryParse(mf.Tls.LoadProperty(Name() + "_Pulses"), out PulseCountTotal);
             double.TryParse(mf.Tls.LoadProperty(Name() + "_Amount"), out MeasuredAmount);
+            int.TryParse(mf.Tls.LoadProperty(Name() + "_CalPWM"), out CalPWM);
         }
 
         public void Reset()
@@ -204,6 +206,7 @@ namespace RateController
             {
                 mf.Tls.SaveProperty(Name() + "_Pulses", PulseCountTotal.ToString());
                 mf.Tls.SaveProperty(Name() + "_Amount", MeasuredAmount.ToString());
+                mf.Tls.SaveProperty(Name() + "_CalPWM", CalPWM.ToString());
 
                 double.TryParse(cCalFactorBox.Text, out cCalFactor);
                 cProduct.MeterCal = cCalFactor;
@@ -252,13 +255,15 @@ namespace RateController
                         case ControlTypeEnum.Motor:
                         case ControlTypeEnum.MotorWeights:
                         case ControlTypeEnum.Fan:
-                            cProduct.ManualPWM = (int)cProduct.PWM();
+                            //cProduct.ManualPWM = (int)cProduct.PWM();
+                            CalPWM = (int)cProduct.PWM();
                             break;
                     }
                 }
 
                 cProduct.CalRun = cIsLocked;
                 cProduct.CalSetMeter = !cIsLocked;
+                cProduct.ManualPWM = CalPWM;
             }
             else
             {
