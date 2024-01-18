@@ -409,7 +409,7 @@
             this.btnStart.FlatAppearance.BorderSize = 0;
             this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnStart.Image = global::RateController.Properties.Resources.Stop;
+            this.btnStart.Image = global::RateController.Properties.Resources.Pause;
             this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.btnStart.Location = new System.Drawing.Point(393, 453);
             this.btnStart.Margin = new System.Windows.Forms.Padding(6);

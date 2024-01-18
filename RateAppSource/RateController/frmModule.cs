@@ -46,7 +46,7 @@ namespace RateController
 
         private void btnSave_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Save information to file.";
+            string Message = "Save information to file. In location 'Documents/RateController'";
 
             mf.Tls.ShowHelp(Message, "Save");
             hlpevent.Handled = true;
@@ -57,7 +57,7 @@ namespace RateController
             if (FreezeUpdate)
             {
                 FreezeUpdate = false;
-                btnStart.Image = Properties.Resources.Stop;
+                btnStart.Image = Properties.Resources.Pause;
             }
             else
             {

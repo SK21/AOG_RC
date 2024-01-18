@@ -109,6 +109,8 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.transparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -518,15 +520,16 @@ namespace RateController
             this.MnuComm,
             this.calibrateToolStripMenuItem1,
             this.networkToolStripMenuItem,
-            this.MnuOptions});
+            this.MnuOptions,
+            this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(174, 298);
+            this.mnuSettings.Size = new System.Drawing.Size(201, 362);
             // 
             // MnuProducts
             // 
             this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(173, 42);
+            this.MnuProducts.Size = new System.Drawing.Size(200, 42);
             this.MnuProducts.Text = "Products";
             this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -534,7 +537,7 @@ namespace RateController
             // 
             this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(173, 42);
+            this.MnuSections.Size = new System.Drawing.Size(200, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -542,7 +545,7 @@ namespace RateController
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(173, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(200, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
@@ -550,7 +553,7 @@ namespace RateController
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(173, 42);
+            this.MnuComm.Size = new System.Drawing.Size(200, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -558,7 +561,7 @@ namespace RateController
             // 
             this.calibrateToolStripMenuItem1.Image = global::RateController.Properties.Resources.RateCal;
             this.calibrateToolStripMenuItem1.Name = "calibrateToolStripMenuItem1";
-            this.calibrateToolStripMenuItem1.Size = new System.Drawing.Size(173, 42);
+            this.calibrateToolStripMenuItem1.Size = new System.Drawing.Size(200, 42);
             this.calibrateToolStripMenuItem1.Text = "Calibrate";
             this.calibrateToolStripMenuItem1.Click += new System.EventHandler(this.calibrateToolStripMenuItem1_Click);
             // 
@@ -566,7 +569,7 @@ namespace RateController
             // 
             this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.SubnetSend;
             this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
-            this.networkToolStripMenuItem.Size = new System.Drawing.Size(173, 42);
+            this.networkToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
             this.networkToolStripMenuItem.Text = "Modules";
             this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
             // 
@@ -574,6 +577,7 @@ namespace RateController
             // 
             this.MnuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.largeScreenToolStripMenuItem,
+            this.transparentToolStripMenuItem,
             this.pressuresToolStripMenuItem,
             this.switchesToolStripMenuItem1,
             this.toolStripSeparator3,
@@ -586,7 +590,7 @@ namespace RateController
             this.commDiagnosticToolStripMenuItem});
             this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
             this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(173, 42);
+            this.MnuOptions.Size = new System.Drawing.Size(200, 42);
             this.MnuOptions.Text = "Options";
             // 
             // largeScreenToolStripMenuItem
@@ -911,6 +915,22 @@ namespace RateController
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
             // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Image = global::RateController.Properties.Resources.SwitchOff;
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // transparentToolStripMenuItem
+            // 
+            this.transparentToolStripMenuItem.Image = global::RateController.Properties.Resources.Check;
+            this.transparentToolStripMenuItem.Name = "transparentToolStripMenuItem";
+            this.transparentToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
+            this.transparentToolStripMenuItem.Text = "Transparent";
+            this.transparentToolStripMenuItem.Click += new System.EventHandler(this.transparentToolStripMenuItem_Click);
+            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1025,5 +1045,7 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem hungarianToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem commDiagnosticToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem frenchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem transparentToolStripMenuItem;
     }
 }

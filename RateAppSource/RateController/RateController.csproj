@@ -393,6 +393,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Pause.png" />
     <None Include="Resources\Pins.PNG" />
     <None Include="Resources\SubnetSend.png" />
     <None Include="Images\calibration.ico" />

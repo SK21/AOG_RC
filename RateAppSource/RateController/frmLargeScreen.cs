@@ -13,8 +13,6 @@ namespace RateController
         private int RateType = 0;   // 0 current rate, 1 instantaneous rate, 2 overall rate
         private int Fan1RateType = 0;
         private int Fan2RateType = 0;
-        private bool ShowCoverageRemaining = false;
-        private bool ShowQuantityRemaining = true;
         public clsAlarm RCalarm;
         private bool SwitchingScreens = false;
         //private Color RateColour = Color.DarkOliveGreen;
@@ -237,7 +235,7 @@ namespace RateController
 
         private void lbCoverage_Click(object sender, EventArgs e)
         {
-            ShowCoverageRemaining = !ShowCoverageRemaining;
+            mf.ShowCoverageRemaining = !mf.ShowCoverageRemaining;
             UpdateForm();
         }
 
@@ -345,7 +343,7 @@ namespace RateController
 
         private void lbQuantity_Click(object sender, EventArgs e)
         {
-            ShowQuantityRemaining = !ShowQuantityRemaining;
+            mf.ShowQuantityRemaining = !mf.ShowQuantityRemaining;
             UpdateForm();
         }
 
@@ -655,7 +653,7 @@ namespace RateController
             lbUnits.Text = Prd.Units();
 
             // coverage
-            if (ShowCoverageRemaining)
+            if (mf.ShowCoverageRemaining)
             {
                 lbCoverage.Text = mf.CoverageDescriptions[Prd.CoverageUnits] + " Left ...";
                 double RT = Prd.SmoothRate();
@@ -678,7 +676,7 @@ namespace RateController
             }
 
             // quantity
-            if (ShowQuantityRemaining)
+            if (mf.ShowQuantityRemaining)
             {
                 lbQuantity.Text = Lang.lgTank_Remaining + " ...";
                 // calculate remaining

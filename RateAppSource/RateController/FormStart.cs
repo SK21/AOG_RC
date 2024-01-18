@@ -76,8 +76,8 @@ namespace RateController
 
         private int[] RateType = new int[6];    // 0 current rate, 1 instantaneous rate, 2 overall rate
         private PGN32501[] RelaySettings;
-        private bool ShowCoverageRemaining;
-        private bool ShowQuantityRemaining;
+        public bool ShowCoverageRemaining;
+        public bool ShowQuantityRemaining;
 
         public FormStart()
         {
@@ -330,6 +330,9 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("ShowSwitches"), out bool SS)) cShowSwitches = SS;
             if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
             if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
+            if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
+            if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
+
             Sections.Load();
             Sections.CheckSwitchDefinitions();
 
@@ -339,6 +342,7 @@ namespace RateController
 
             LoadDefaultProduct();
             Zones.Load();
+            SetTransparent(cUseTransparent);
         }
 
         public void MnuDeustch_Click(object sender, EventArgs e)
@@ -582,6 +586,17 @@ namespace RateController
                 {
                     switchesToolStripMenuItem1.Image = Properties.Resources.Cancel64;
                 }
+
+                // transparent
+                if (UseTransparent)
+                {
+                    MnuOptions.DropDownItems["transparentToolStripMenuItem"].Image = Properties.Resources.Check;
+                }
+                else
+                {
+                    MnuOptions.DropDownItems["transparentToolStripMenuItem"].Image = Properties.Resources.Cancel40;
+                }
+
             }
             catch (Exception ex)
             {
@@ -742,6 +757,8 @@ namespace RateController
                 Sections.Save();
                 Products.Save();
                 Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
+                Tls.SaveProperty("ShowQuantityRemaining", ShowQuantityRemaining.ToString());
+                Tls.SaveProperty("ShowCoverageRemaining", ShowCoverageRemaining.ToString());
 
                 UDPaog.Close();
                 UDPmodules.Close();
@@ -1210,6 +1227,30 @@ namespace RateController
         private void timerPIDs_Tick(object sender, EventArgs e)
         {
             Products.UpdatePID();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void transparentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            transparentToolStripMenuItem.Checked = !transparentToolStripMenuItem.Checked;
+            SetTransparent(transparentToolStripMenuItem.Checked);
+        }
+
+        public void SetTransparent(bool frmtrans)
+        {
+            transparentToolStripMenuItem.Checked = frmtrans;
+            if (transparentToolStripMenuItem.Checked)
+            {
+                UseTransparent = true;
+            }
+            else
+            {
+                UseTransparent = false;
+            }
         }
     }
 }
