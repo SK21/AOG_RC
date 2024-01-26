@@ -27,8 +27,8 @@
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  25-Jan-2024"
-const uint16_t InoID = 25014;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  24-Jan-2024"
+const uint16_t InoID = 24014;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -39,8 +39,6 @@ const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano R
 // servo driver
 #define OutputEnablePin 27
 #define DriverAddress 0x55
-
-#define NC 0xFF // Pin are not connected
 
 struct ModuleConfig
 {
@@ -53,7 +51,7 @@ struct ModuleConfig
 	uint8_t IP2 = 5;
 	uint8_t IP3 = 60;
 	uint8_t RelayControl = 1;		// 0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
-	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (5), default RC11
+	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,0,0,0,0,0,0,0,0 };		// pin numbers when GPIOs are used for relay control (5), default RC11
 	char Name[ModStringLengths] = "RateModule";
 	char Password[ModStringLengths] = "111222333";
 	uint8_t AdsAddress = 0x48;			// enter 0 to search all
@@ -137,6 +135,8 @@ bool PCA9685_found = false;
 Adafruit_MCP23X17 MCP;
 bool MCP23017_found = false;
 
+int TimedCombo(byte, bool);	// function prototype
+
 // analog
 struct AnalogConfig
 {
@@ -150,7 +150,6 @@ AnalogConfig AINs;
 int ADS1115_Address;
 bool ADSfound = false;
 
-int TimedCombo(byte, bool);	// function prototype
 void IRAM_ATTR ISR0();	// function prototype
 void IRAM_ATTR ISR1();
 
