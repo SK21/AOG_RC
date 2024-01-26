@@ -151,7 +151,7 @@
       <CLanguageStandard>gnu11</CLanguageStandard>
       <CAdditionalWarning />
       <CppAdditionalWarning />
-      <ForcedIncludeFiles>$(ProjectDir)..\..\..\..\..\..\..\..\..\program files\microsoft visual studio\2022\community\common7\ide\extensions\k5efmrr3.kil\Micro Platforms\default\vm-intelli-pre.h;$(ProjectDir)..\..\..\..\..\..\..\AppData\Local\Temp\VMBuilds\RCteensy\teensy41\Release\.vmintelli\2be9fd39c8b35a25180fc6dbc3d07884\vm-intelli-gcc-defines.h;$(ProjectDir)..\..\..\..\..\..\..\..\..\program files\microsoft visual studio\2022\community\common7\ide\extensions\k5efmrr3.kil\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.RCteensy.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>$(ProjectDir)..\..\..\..\..\..\..\..\..\program files\microsoft visual studio\2022\community\common7\ide\extensions\osqpjdds.xje\Micro Platforms\default\vm-intelli-pre.h;$(ProjectDir)..\..\..\..\..\..\..\AppData\Local\Temp\VMBuilds\RCteensy\teensy41\Release\.vmintelli\4e03964cb693f7bd0cccd297cb53f368\vm-intelli-gcc-defines.h;$(ProjectDir)..\..\..\..\..\..\..\..\..\program files\microsoft visual studio\2022\community\common7\ide\extensions\osqpjdds.xje\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.RCteensy.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <UndefineAllPreprocessorDefinitions>true</UndefineAllPreprocessorDefinitions>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>_VMICRO_INTELLISENSE;__HARDWARE_imxrt1062__;__HARDWARE_IMXRT1062__;__IMXRT1062__;TEENSYDUINO=156;ARDUINO=108019;ARDUINO_TEENSY41;F_CPU=600000000;USB_SERIAL;LAYOUT_US_ENGLISH;%(PreprocessorDefinitions)</PreprocessorDefinitions>

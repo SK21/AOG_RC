@@ -16,12 +16,13 @@
 #include <Adafruit_SPIDevice.h>
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  09-Jan-2024"
-const uint16_t InoID = 9014;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  25-Jan-2024"
+const uint16_t InoID = 25014;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
+#define NC 0xFF // Pin are not connected
 
 struct ModuleConfig
 {
@@ -35,7 +36,7 @@ struct ModuleConfig
 	uint8_t IP3 = 60;
 	uint8_t RelayControl = 5;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
 	uint8_t ESPserialPort = 1;		// serial port to connect to wifi module
-	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,0,0,0,0,0,0,0,0 };		// pin numbers when GPIOs are used for relay control (5), default RC11
+	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (5), default RC11
 };
 
 ModuleConfig MDL;
