@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -119,6 +120,7 @@ namespace RateController
                     break;
 
                 case SwIDs.MasterOn:
+                    Debug.Print(DateTime.Now.ToString("ss:fff") + ": MasterOn");
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 1);
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 2);
                     if (FromLargeScreen)
@@ -188,6 +190,7 @@ namespace RateController
 
         public void ReleaseSwitch()
         {
+            Debug.Print(DateTime.Now.ToString("ss:fff") + ": ReleaseSwitch");
             PressedData[2] = (byte)(PressedData[2] & 1);
             PressedData[5] = mf.Tls.CRC(PressedData, 5);
         }

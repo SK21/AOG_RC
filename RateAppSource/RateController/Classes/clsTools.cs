@@ -35,11 +35,11 @@ namespace RateController
         private static Hashtable HTapp;
         private static Hashtable HTfiles;
         private string cAppName = "RateController";
-        private string cAppVersion = "3.6.3";
+        private string cAppVersion = "3.6.4";
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "18-Jan-2024";
+        private string cVersionDate = "03-Feb-2024";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)

@@ -58,14 +58,15 @@
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
-            this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.calibrateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuStandard = new System.Windows.Forms.ToolStripMenuItem();
             this.transparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pressuresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.switchesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.primedStartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.MnuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -460,14 +461,6 @@
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click);
             // 
-            // networkToolStripMenuItem
-            // 
-            this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.SubnetSend;
-            this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
-            this.networkToolStripMenuItem.Size = new System.Drawing.Size(218, 42);
-            this.networkToolStripMenuItem.Text = "Network";
-            this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
-            // 
             // MnuComm
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
@@ -484,6 +477,14 @@
             this.calibrateToolStripMenuItem1.Text = "Calibrate";
             this.calibrateToolStripMenuItem1.Click += new System.EventHandler(this.calibrateToolStripMenuItem1_Click);
             // 
+            // networkToolStripMenuItem
+            // 
+            this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.SubnetSend;
+            this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
+            this.networkToolStripMenuItem.Size = new System.Drawing.Size(218, 42);
+            this.networkToolStripMenuItem.Text = "Network";
+            this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
+            // 
             // MnuOptions
             // 
             this.MnuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -491,6 +492,7 @@
             this.transparentToolStripMenuItem,
             this.pressuresToolStripMenuItem,
             this.switchesToolStripMenuItem1,
+            this.primedStartToolStripMenuItem,
             this.toolStripSeparator3,
             this.MnuNew,
             this.MnuOpen,
@@ -536,6 +538,14 @@
             this.switchesToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
             this.switchesToolStripMenuItem1.Text = "Switches";
             this.switchesToolStripMenuItem1.Click += new System.EventHandler(this.switchesToolStripMenuItem1_Click);
+            // 
+            // primedStartToolStripMenuItem
+            // 
+            this.primedStartToolStripMenuItem.Image = global::RateController.Properties.Resources.PrimeTime;
+            this.primedStartToolStripMenuItem.Name = "primedStartToolStripMenuItem";
+            this.primedStartToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
+            this.primedStartToolStripMenuItem.Text = "Primed Start";
+            this.primedStartToolStripMenuItem.Click += new System.EventHandler(this.primedStartToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -1085,5 +1095,6 @@
         private System.Windows.Forms.ToolStripMenuItem hungarianToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem commDiagnosticsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem frenchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem primedStartToolStripMenuItem;
     }
 }

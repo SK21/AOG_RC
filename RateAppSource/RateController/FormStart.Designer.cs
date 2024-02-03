@@ -75,8 +75,10 @@ namespace RateController
             this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.largeScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.transparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pressuresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.switchesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.primedStartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.MnuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,6 +94,7 @@ namespace RateController
             this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.frenchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commDiagnosticToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panFan = new System.Windows.Forms.Panel();
@@ -109,8 +112,6 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.transparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -580,6 +581,7 @@ namespace RateController
             this.transparentToolStripMenuItem,
             this.pressuresToolStripMenuItem,
             this.switchesToolStripMenuItem1,
+            this.primedStartToolStripMenuItem,
             this.toolStripSeparator3,
             this.MnuNew,
             this.MnuOpen,
@@ -601,6 +603,14 @@ namespace RateController
             this.largeScreenToolStripMenuItem.Text = "Large Screen";
             this.largeScreenToolStripMenuItem.Click += new System.EventHandler(this.largeScreenToolStripMenuItem_Click);
             // 
+            // transparentToolStripMenuItem
+            // 
+            this.transparentToolStripMenuItem.Image = global::RateController.Properties.Resources.Check;
+            this.transparentToolStripMenuItem.Name = "transparentToolStripMenuItem";
+            this.transparentToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
+            this.transparentToolStripMenuItem.Text = "Transparent";
+            this.transparentToolStripMenuItem.Click += new System.EventHandler(this.transparentToolStripMenuItem_Click);
+            // 
             // pressuresToolStripMenuItem
             // 
             this.pressuresToolStripMenuItem.Image = global::RateController.Properties.Resources.pressure;
@@ -616,6 +626,14 @@ namespace RateController
             this.switchesToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
             this.switchesToolStripMenuItem1.Text = "Switches";
             this.switchesToolStripMenuItem1.Click += new System.EventHandler(this.switchesToolStripMenuItem1_Click);
+            // 
+            // primedStartToolStripMenuItem
+            // 
+            this.primedStartToolStripMenuItem.Image = global::RateController.Properties.Resources.PrimeTime;
+            this.primedStartToolStripMenuItem.Name = "primedStartToolStripMenuItem";
+            this.primedStartToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
+            this.primedStartToolStripMenuItem.Text = "Primed Start";
+            this.primedStartToolStripMenuItem.Click += new System.EventHandler(this.primedStartToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -730,6 +748,14 @@ namespace RateController
             this.commDiagnosticToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
             this.commDiagnosticToolStripMenuItem.Text = "Comm Diagnostics";
             this.commDiagnosticToolStripMenuItem.Click += new System.EventHandler(this.commDiagnosticToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Image = global::RateController.Properties.Resources.SwitchOff;
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -915,22 +941,6 @@ namespace RateController
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
             // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Image = global::RateController.Properties.Resources.SwitchOff;
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // transparentToolStripMenuItem
-            // 
-            this.transparentToolStripMenuItem.Image = global::RateController.Properties.Resources.Check;
-            this.transparentToolStripMenuItem.Name = "transparentToolStripMenuItem";
-            this.transparentToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
-            this.transparentToolStripMenuItem.Text = "Transparent";
-            this.transparentToolStripMenuItem.Click += new System.EventHandler(this.transparentToolStripMenuItem_Click);
-            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1047,5 +1057,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem frenchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transparentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem primedStartToolStripMenuItem;
     }
 }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Policy;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using static RateController.PGN32618;
@@ -78,6 +79,7 @@ namespace RateController
         private PGN32501[] RelaySettings;
         public bool ShowCoverageRemaining;
         public bool ShowQuantityRemaining;
+        private double cPrimedTime = 0;
 
         public FormStart()
         {
@@ -213,7 +215,16 @@ namespace RateController
             get { return cSimSpeed; }
             set
             {
-                if (value >= 0 && value < 20) { cSimSpeed = value; }
+                if (value >= 0 && value < 40) { cSimSpeed = value; }
+            }
+        }
+
+        public double PrimedTime
+        {
+            get { return cPrimedTime; }
+            set
+            {
+                if(value>=0 && value<30) { cPrimedTime = value; }
             }
         }
 
@@ -324,7 +335,6 @@ namespace RateController
             SetDayMode();
 
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
-            if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd)) cSimSpeed = Spd;
             if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS)) cUseLargeScreen = LS;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
             if (bool.TryParse(Tls.LoadProperty("ShowSwitches"), out bool SS)) cShowSwitches = SS;
@@ -333,6 +343,23 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
             if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
 
+            if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd))
+            {
+                cSimSpeed = Spd;
+            }
+            else
+            {
+                cSimSpeed = 5;
+            }
+    
+            if (double.TryParse(Tls.LoadProperty("PrimedTime"), out double ptime))
+            {
+                cPrimedTime = ptime;
+            }
+            else
+            {
+                cPrimedTime = 5;
+            }
             Sections.Load();
             Sections.CheckSwitchDefinitions();
 
@@ -759,7 +786,7 @@ namespace RateController
                 Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
                 Tls.SaveProperty("ShowQuantityRemaining", ShowQuantityRemaining.ToString());
                 Tls.SaveProperty("ShowCoverageRemaining", ShowCoverageRemaining.ToString());
-
+                Tls.SaveProperty("PrimedTime", cPrimedTime.ToString());
                 UDPaog.Close();
                 UDPmodules.Close();
 
@@ -1251,6 +1278,21 @@ namespace RateController
             {
                 UseTransparent = false;
             }
+        }
+
+        private void primedStartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["frmPrimedStart"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new frmPrimedStart(this);
+            frm.Show();
+
         }
     }
 }

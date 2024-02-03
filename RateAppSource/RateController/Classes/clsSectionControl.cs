@@ -23,6 +23,10 @@ namespace RateController
         private int RateStep;
         private bool[] SectionOnAOG;
         private bool[] SectionOnSB;
+        private bool TimedOn;
+        private int TimerCount = 0;
+        private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
+        private DateTime OnFirstPressed;
 
         public clsSectionControl(FormStart CallingForm)
         {
@@ -32,6 +36,20 @@ namespace RateController
             mf.AutoSteerPGN.RelaysChanged += AutoSteerPGN_RelaysChanged;
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             MasterOnSB = true;
+            Timer1.Tick += new EventHandler(Timer1_Tick);
+            Timer1.Interval = 1000;
+            Timer1.Enabled = false;
+        }
+        private void Timer1_Tick(Object myObject, EventArgs myEventArgs)
+        {
+            TimerCount++;
+            if (TimerCount > mf.PrimedTime)
+            {
+                TimerCount = 0;
+                Timer1.Enabled = false;
+                TimedOn = false;
+                mf.SimMode=SimType.None;
+            }
         }
 
         public bool MasterOn()
@@ -136,6 +154,29 @@ namespace RateController
             }
         }
 
+        void SetPriming()
+        {
+            if (MasterOnSB)
+            {
+                Debug.Print(DateTime.Now.ToString("ss:fff")+": Priming/Check");
+                if (((DateTime.Now - OnFirstPressed).TotalSeconds > 2) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn)) 
+                {
+                    // priming mode
+                    Debug.Print(DateTime.Now.ToString("ss:fff") + ": Priming/On");
+                    TimedOn = true;
+                    Timer1.Enabled = true;
+                    mf.SimMode = SimType.Speed;
+                }
+            }
+            else
+            {
+                Debug.Print(DateTime.Now.ToString("ss:fff") + ": Priming/off");
+                OnFirstPressed = DateTime.Now;
+                TimedOn = false;
+                Timer1.Enabled = false;
+                mf.SimMode = SimType.None;
+            }
+        }
         public void UpdateSectionStatus()
         {
             // match switchbox and AOG
@@ -144,9 +185,14 @@ namespace RateController
             if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff))
             {
                 MasterOnSB = false;
+                TimedOn = false;
+                Timer1.Enabled = false;
+                mf.SimMode = SimType.None;
+
             }
             else if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn) || MasterOnSB)
             {
+                SetPriming();
                 MasterOnSB = true;
 
                 // set sections by switchbox switch positions
@@ -155,7 +201,7 @@ namespace RateController
                     SectionOnSB[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
                 }
 
-                if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && mf.AutoSteerPGN.Connected())
+                if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && mf.AutoSteerPGN.Connected() && !TimedOn)
                 {
                     // match AOG section status, only on sections 0-15
                     for (int i = 0; i < 16; i++)

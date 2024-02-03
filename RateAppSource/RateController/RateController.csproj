@@ -206,6 +206,12 @@
     <Compile Include="frmPressureDisplay.Designer.cs">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmPrimedStart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPrimedStart.Designer.cs">
+      <DependentUpon>frmPrimedStart.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmRelays.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -323,6 +329,9 @@
     <EmbeddedResource Include="frmPressureDisplay.resx">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmPrimedStart.resx">
+      <DependentUpon>frmPrimedStart.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>
     </EmbeddedResource>
@@ -393,6 +402,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\PrimeTime.png" />
     <None Include="Resources\Pause.png" />
     <None Include="Resources\Pins.PNG" />
     <None Include="Resources\SubnetSend.png" />

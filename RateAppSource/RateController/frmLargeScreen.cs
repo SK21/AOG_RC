@@ -1431,5 +1431,19 @@ namespace RateController
             mf.Restart = true;
             this.Close();
         }
+
+        private void primedStartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["frmPrimedStart"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new frmPrimedStart(mf);
+            frm.Show();
+        }
     }
 }
