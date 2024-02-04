@@ -10,7 +10,6 @@ namespace RateController
         private FormStart mf;
         private int mouseX = 0;
         private int mouseY = 0;
-        private byte PressureToShowID;
         private int TransLeftOffset = 6;
         private int TransTopOffset = 30;
         private int windowLeft = 0;
@@ -41,7 +40,6 @@ namespace RateController
         private void frmPressureDisplay_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
-            byte.TryParse(mf.Tls.LoadProperty("PressureID"), out PressureToShowID);
             timer1.Enabled = true;
             UpdateForm();
         }
@@ -131,9 +129,11 @@ namespace RateController
         private void UpdateForm()
         {
             if (mf.UseTransparent != IsTransparent) SetTransparent();
-            if (PressureToShowID < 1) PressureToShowID = 1;
-            float Prs = mf.PressureObjects.Item(PressureToShowID - 1).Pressure();
-            lbPressureValue.Text = Prs.ToString("N1");
+            if (mf.PressureToShow > 0)
+            {
+                float Prs = mf.PressureObjects.Item(mf.PressureToShow - 1).Pressure();
+                lbPressureValue.Text = Prs.ToString("N1");
+            }
         }
     }
 }

@@ -183,7 +183,6 @@ namespace RateController
                 if (value >= 0 && value < 17)
                 {
                     cPressureToShowID = value;
-                    Tls.SaveProperty("PressureID", cPressureToShowID.ToString());
                 }
             }
         }
@@ -1104,10 +1103,17 @@ namespace RateController
 
         private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frmPressure = new FormPressure(this);
-            frmPressure.ShowDialog();
-            //LoadPressureSetting();
-            FormatDisplay();
+            Form fs = Application.OpenForms["FormPressure"];
+
+            if (fs == null)
+            {
+                Form frm = new FormPressure(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void productsToolStripMenuItem_Click(object sender, EventArgs e)

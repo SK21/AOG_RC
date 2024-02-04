@@ -29,6 +29,7 @@ namespace RateController
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -58,9 +59,9 @@ namespace RateController
             this.pressureDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ckShowPressure = new System.Windows.Forms.CheckBox();
             this.tbPressureID = new System.Windows.Forms.TextBox();
-            this.btnUpdate = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
@@ -265,21 +266,6 @@ namespace RateController
             this.tbPressureID.Enter += new System.EventHandler(this.tbPressureID_Enter);
             this.tbPressureID.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureID_Validating);
             // 
-            // btnUpdate
-            // 
-            this.btnUpdate.BackColor = System.Drawing.Color.Transparent;
-            this.btnUpdate.FlatAppearance.BorderSize = 0;
-            this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUpdate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdate.Image = global::RateController.Properties.Resources.Update;
-            this.btnUpdate.Location = new System.Drawing.Point(417, 332);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(72, 72);
-            this.btnUpdate.TabIndex = 299;
-            this.btnUpdate.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnUpdate.UseVisualStyleBackColor = false;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-            // 
             // btnCancel
             // 
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
@@ -316,13 +302,17 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // FormPressure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(663, 416);
             this.Controls.Add(this.tbPressureID);
-            this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.ckShowPressure);
             this.Controls.Add(this.DGV);
             this.Controls.Add(this.btnCancel);
@@ -359,7 +349,6 @@ namespace RateController
         private System.Windows.Forms.DataGridView DGV;
         private System.Data.DataColumn dataColumn4;
         private System.Windows.Forms.CheckBox ckShowPressure;
-        private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.TextBox tbPressureID;
         private System.Data.DataColumn dataColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
@@ -369,5 +358,6 @@ namespace RateController
         private System.Windows.Forms.DataGridViewTextBoxColumn unitsPerVoltDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Offset;
         private System.Windows.Forms.DataGridViewTextBoxColumn pressureDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Timer timer1;
     }
 }

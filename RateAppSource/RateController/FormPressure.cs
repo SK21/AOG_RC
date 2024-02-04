@@ -3,15 +3,15 @@ using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace RateController
 {
     public partial class FormPressure : Form
     {
+        private bool FormEdited = false;
         private bool Initializing;
         private FormStart mf;
-        private bool FormEdited = false;
+        private int ShowID = 1;
 
         public FormPressure(FormStart CalledFrom)
         {
@@ -19,7 +19,8 @@ namespace RateController
             InitializeComponent();
 
             #region // language
-            ckShowPressure.Text=Lang.lgShowPressure;
+
+            ckShowPressure.Text = Lang.lgShowPressure;
 
             DGV.Columns[0].HeaderText = Lang.lgID;
             DGV.Columns[1].HeaderText = Lang.lgDescription;
@@ -28,6 +29,7 @@ namespace RateController
             DGV.Columns[4].HeaderText = Lang.lgUnitsVolt;
             DGV.Columns[5].HeaderText = Lang.lgOffset;
             DGV.Columns[6].HeaderText = Lang.lgPressure;
+
             #endregion // language
 
             mf = CalledFrom;
@@ -46,11 +48,17 @@ namespace RateController
                 {
                     // save changes
                     SaveGrid();
-                    if (byte.TryParse(tbPressureID.Text, out byte ID)) mf.PressureToShow = ID;
-                    mf.ShowPressure=ckShowPressure.Checked;
+                    if (byte.TryParse(tbPressureID.Text, out byte ID))
+                    {
+                        mf.PressureToShow = ID;
+                        ShowID = ID;
+                        mf.Tls.SaveProperty("PressureID", ID.ToString());
+                    }
+                    mf.ShowPressure = ckShowPressure.Checked;
 
                     UpdateForm();
                     SetButtons(false);
+                    timer1.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -65,8 +73,14 @@ namespace RateController
             SetButtons(false);
         }
 
+        private void ckShowPressure_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
         private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            timer1.Enabled = false;
             switch (e.ColumnIndex)
             {
                 case 2:
@@ -124,6 +138,7 @@ namespace RateController
             {
                 mf.Tls.SaveFormData(this);
             }
+            timer1.Enabled = false;
         }
 
         private void FormPressure_Load(object sender, EventArgs e)
@@ -136,8 +151,10 @@ namespace RateController
             DGV.Columns[6].DefaultCellStyle.BackColor = Properties.Settings.Default.DayColour;
 
             ckShowPressure.Checked = mf.ShowPressure;
+            if (int.TryParse(mf.Tls.LoadProperty("PressureID"), out int tmp)) ShowID = tmp;
 
             UpdateForm();
+            timer1.Enabled = true;
         }
 
         private bool IsBlankRow(int row)
@@ -252,26 +269,6 @@ namespace RateController
             }
         }
 
-        private void UpdateForm()
-        {
-            Initializing = true;
-
-            LoadGrid();
-            tbPressureID.Text = mf.Tls.LoadProperty("PressureID");
-
-            Initializing = false;
-        }
-
-        private void ckShowPressure_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            LoadGrid();
-        }
-
         private void tbPressureID_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -300,6 +297,25 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Initializing = true;
+
+            LoadGrid();
+
+            Initializing = false;
+        }
+
+        private void UpdateForm()
+        {
+            Initializing = true;
+
+            LoadGrid();
+            tbPressureID.Text = ShowID.ToString();
+
+            Initializing = false;
         }
     }
 }

@@ -1347,8 +1347,17 @@ namespace RateController
 
         private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frmPressure = new FormPressure(mf);
-            frmPressure.ShowDialog();
+            Form fs = Application.OpenForms["FormPressure"];
+
+            if (fs == null)
+            {
+                Form frm = new FormPressure(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
