@@ -1,4 +1,8 @@
 
+// valid pins for each processor
+uint8_t ValidPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33 };	// SPI pins 5,18,19,23 excluded for ethernet module
+
+
 void DoSetup()
 {
 	uint8_t ErrorCount;
@@ -6,26 +10,6 @@ void DoSetup()
 
 	Sensor[0].FlowEnabled = false;
 	Sensor[1].FlowEnabled = false;
-
-	// default flow pins
-	Sensor[0].FlowPin = 12;
-	Sensor[0].IN1 = 25;
-	Sensor[0].IN2 = 26;
-
-	// default pid
-	Sensor[0].KP = 5;
-	Sensor[0].KI = 0;
-	Sensor[0].KD = 0;
-	Sensor[0].MinPWM = 5;
-	Sensor[0].MaxPWM = 50;
-	Sensor[0].Debounce = 3;
-
-	Sensor[1].KP = 5;
-	Sensor[1].KI = 0;
-	Sensor[1].KD = 0;
-	Sensor[1].MinPWM = 5;
-	Sensor[1].MaxPWM = 50;
-	Sensor[1].Debounce = 3;
 
 	Serial.begin(38400);
 	delay(3000);
@@ -37,19 +21,7 @@ void DoSetup()
 
 	// eeprom
 	EEPROM.begin(EEPROM_SIZE);
-
-	int16_t StoredID;
-	int8_t StoredType;
-	EEPROM.get(0, StoredID);
-	EEPROM.get(4, StoredType);
-	if (StoredID == InoID && StoredType == InoType)
-	{
-		LoadData();
-	}
-	else
-	{
-		SaveData();
-	}
+	LoadData();
 
 	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
 
@@ -310,7 +282,7 @@ void DoSetup()
 		// Relay GPIO Pins
 		for (int i = 0; i < 16; i++)
 		{
-			if (MDL.RelayPins[i] > 0)
+			if (MDL.RelayPins[i] < NC)
 			{
 				pinMode(MDL.RelayPins[i], OUTPUT);
 			}
@@ -364,20 +336,39 @@ void DoSetup()
 
 void LoadData()
 {
-	// load stored data
-	Serial.println("Loading stored settings.");
-	EEPROM.get(110, MDL);
-
-	for (int i = 0; i < MaxProductCount; i++)
+	bool IsValid = false;
+	int16_t StoredID;
+	int8_t StoredType;
+	EEPROM.get(0, StoredID);
+	EEPROM.get(4, StoredType);
+	if (StoredID == InoID && StoredType == InoType)
 	{
-		EEPROM.get(300 + i * 80, Sensor[i]);
+		// load stored data
+		Serial.println("Loading stored settings.");
+		EEPROM.get(110, MDL);
+
+		for (int i = 0; i < MaxProductCount; i++)
+		{
+			EEPROM.get(300 + i * 80, Sensor[i]);
+		}
+		IsValid = ValidData();
+		if (!IsValid)
+		{
+			Serial.println("Stored settings not valid.");
+		}
+	}
+
+	if(!IsValid)
+	{
+		LoadDefaults();
+		SaveData();
 	}
 }
 
 void SaveData()
 {
 	// update stored data
-	Serial.println("Updating stored data.");
+	Serial.println("Updating stored settings.");
 	EEPROM.put(0, InoID);
 	EEPROM.put(4, InoType);
 	EEPROM.put(110, MDL);
@@ -387,5 +378,109 @@ void SaveData()
 		EEPROM.put(300 + i * 80, Sensor[i]);
 	}
 	EEPROM.commit();
+}
+
+void LoadDefaults()
+{
+	Serial.println("Loading default settings.");
+
+	// default flow pins
+	Sensor[0].FlowPin = 17;
+	Sensor[0].IN1 = 32;
+	Sensor[0].IN2 = 33;
+
+	Sensor[1].FlowPin = 16;
+	Sensor[1].IN1 = 25;
+	Sensor[1].IN2 = 26;
+
+	// default pid
+	Sensor[0].KP = 5;
+	Sensor[0].KI = 0;
+	Sensor[0].KD = 0;
+	Sensor[0].MinPWM = 5;
+	Sensor[0].MaxPWM = 50;
+	Sensor[0].Debounce = 3;
+
+	Sensor[1].KP = 5;
+	Sensor[1].KI = 0;
+	Sensor[1].KD = 0;
+	Sensor[1].MinPWM = 5;
+	Sensor[1].MaxPWM = 50;
+	Sensor[1].Debounce = 3;
+
+	// relay pins
+	for (int i = 0; i < 16; i++)
+	{
+		MDL.RelayPins[i] = NC;
+	}
+}
+
+bool ValidData()
+{
+	bool Result = false;
+
+	switch (Processor)
+	{
+	case 0:
+		for (int i = 0; i < 2; i++)
+		{
+			// flow pin
+			Result = false;
+			for (int j = 0; j < sizeof(ValidPins0); j++)
+			{
+				if (Sensor[i].FlowPin == ValidPins0[j])
+				{
+					Result = true;
+					break;
+				}
+			}
+			if (!Result) break;
+
+			// IN1
+			Result = false;
+			for (int j = 0; j < sizeof(ValidPins0); j++)
+			{
+				if (Sensor[i].IN1 == ValidPins0[j])
+				{
+					Result = true;
+					break;
+				}
+			}
+			if (!Result) break;
+
+			// IN2
+			Result = false;
+			for (int j = 0; j < sizeof(ValidPins0); j++)
+			{
+				if (Sensor[i].IN2 == ValidPins0[j])
+				{
+					Result = true;
+					break;
+				}
+			}
+			if (!Result) break;
+		}
+
+		if (Result && MDL.RelayControl == 5)
+		{
+			// check GPIOs for relays
+			for (int k = 0; k < 16; k++)
+			{
+				Result = false;
+				for (int j = 0; j < sizeof(ValidPins0); j++)
+				{
+					if ((MDL.RelayPins[k] == ValidPins0[j]) ||
+						(MDL.RelayPins[k] == NC))
+					{
+						Result = true;
+						break;
+					}
+				}
+				if (!Result) break;
+			}
+		}
+		break;
+	}
+	return Result;
 }
 

@@ -27,9 +27,10 @@
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  25-Jan-2024"
-const uint16_t InoID = 25014;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  03-Feb-2024"
+const uint16_t InoID = 3124;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
@@ -40,7 +41,7 @@ const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano R
 #define OutputEnablePin 27
 #define DriverAddress 0x55
 
-#define NC 0xFF		// Pins are not connected
+#define NC 0xFF		// Pin not connected
 
 struct ModuleConfig
 {
@@ -52,7 +53,7 @@ struct ModuleConfig
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 5;
 	uint8_t IP3 = 60;
-	uint8_t RelayControl = 1;		// 0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
+	uint8_t RelayControl = 1;		// 0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - GPIOs
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (5), default RC11
 	char Name[ModStringLengths] = "RateModule";
 	char Password[ModStringLengths] = "111222333";
