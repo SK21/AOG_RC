@@ -402,6 +402,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\PCB.png" />
     <None Include="Resources\PrimeTime.png" />
     <None Include="Resources\Pause.png" />
     <None Include="Resources\Pins.PNG" />

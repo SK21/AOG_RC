@@ -48,37 +48,37 @@ namespace RateController
         {
             tbModuleID.Text = "0";
             tbSensorCount.Text = "1";
-            ckRelayOn.Checked = false;
-            ckFlowOn.Checked = false;
-            tbWifiPort.Text = "1";
+            ckRelayOn.Checked = true;
+            ckFlowOn.Checked = true;
+            tbWifiPort.Text = "0";
 
-            tbFlow1.Text = "28";
-            tbDir1.Text = "37";
-            tbPWM1.Text = "36";
+            tbFlow1.Text = "17";
+            tbDir1.Text = "32";
+            tbPWM1.Text = "33";
 
-            tbFlow2.Text = "29";
-            tbDir2.Text = "14";
-            tbPWM2.Text = "15";
+            tbFlow2.Text = "16";
+            tbDir2.Text = "25";
+            tbPWM2.Text = "26";
 
-            cbRelayControl.SelectedIndex = 5;
+            cbRelayControl.SelectedIndex = 1;
 
-            tbRelay1.Text = "8";
-            tbRelay2.Text = "9";
-            tbRelay3.Text = "10";
-            tbRelay4.Text = "11";
-            tbRelay5.Text = "12";
-            tbRelay6.Text = "25";
-            tbRelay7.Text = "26";
-            tbRelay8.Text = "27";
+            tbRelay1.Text = "255";
+            tbRelay2.Text = "255";
+            tbRelay3.Text = "255";
+            tbRelay4.Text = "255";
+            tbRelay5.Text = "255";
+            tbRelay6.Text = "255";
+            tbRelay7.Text = "255";
+            tbRelay8.Text = "255";
 
-            tbRelay9.Text = "0";
-            tbRelay10.Text = "0";
-            tbRelay11.Text = "0";
-            tbRelay12.Text = "0";
-            tbRelay13.Text = "0";
-            tbRelay14.Text = "0";
-            tbRelay15.Text = "0";
-            tbRelay16.Text = "0";
+            tbRelay9.Text = "255";
+            tbRelay10.Text = "255";
+            tbRelay11.Text = "255";
+            tbRelay12.Text = "255";
+            tbRelay13.Text = "255";
+            tbRelay14.Text = "255";
+            tbRelay15.Text = "255";
+            tbRelay16.Text = "255";
         }
 
         private void btnRescan_Click(object sender, EventArgs e)
@@ -382,7 +382,7 @@ namespace RateController
                     if (sender.Equals(tabControl1.TabPages[j].Controls[i]))
                     {
                         double.TryParse(tabControl1.TabPages[j].Controls[i].Text, out temp);
-                        using (var form = new FormNumeric(0, 50, temp))
+                        using (var form = new FormNumeric(0, 255, temp))
                         {
                             var result = form.ShowDialog();
                             if (result == DialogResult.OK)
@@ -464,18 +464,6 @@ namespace RateController
 
         private void btnLoadDefaults_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            Form fs = Application.OpenForms["frmPins"];
-
-            if (fs == null)
-            {
-                Form frm = new frmPins(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-
             string Message = "Load defaults";
             mf.Tls.ShowHelp(Message, "Defaults");
             hlpevent.Handled = true;
@@ -491,6 +479,21 @@ namespace RateController
         private void cbEthernet_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void btnPCB_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["frmPins"];
+
+            if (fs == null)
+            {
+                Form frm = new frmPins(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
     }
 }

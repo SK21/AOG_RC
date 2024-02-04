@@ -87,16 +87,17 @@
             this.tbFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label27 = new System.Windows.Forms.Label();
             this.lbModuleIP = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.cbEthernet = new System.Windows.Forms.ComboBox();
-            this.btnSendSubnet = new System.Windows.Forms.Button();
-            this.btnRescan = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
             this.btnLoadDefaults = new System.Windows.Forms.Button();
             this.btnSendToModule = new System.Windows.Forms.Button();
-            this.label27 = new System.Windows.Forms.Label();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.btnSendSubnet = new System.Windows.Forms.Button();
+            this.btnRescan = new System.Windows.Forms.Button();
+            this.btnPCB = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -735,6 +736,15 @@
             this.tabPage3.Text = "Network";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(64, 179);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(76, 24);
+            this.label27.TabIndex = 217;
+            this.label27.Text = "Local IP";
+            // 
             // lbModuleIP
             // 
             this.lbModuleIP.Location = new System.Drawing.Point(229, 136);
@@ -762,6 +772,71 @@
             this.cbEthernet.Size = new System.Drawing.Size(157, 32);
             this.cbEthernet.TabIndex = 212;
             this.cbEthernet.SelectedIndexChanged += new System.EventHandler(this.cbEthernet_SelectedIndexChanged);
+            // 
+            // btnLoadDefaults
+            // 
+            this.btnLoadDefaults.BackColor = System.Drawing.Color.Transparent;
+            this.btnLoadDefaults.FlatAppearance.BorderSize = 0;
+            this.btnLoadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
+            this.btnLoadDefaults.Location = new System.Drawing.Point(109, 538);
+            this.btnLoadDefaults.Name = "btnLoadDefaults";
+            this.btnLoadDefaults.Size = new System.Drawing.Size(72, 72);
+            this.btnLoadDefaults.TabIndex = 151;
+            this.btnLoadDefaults.UseVisualStyleBackColor = false;
+            this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
+            this.btnLoadDefaults.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnLoadDefaults_HelpRequested);
+            // 
+            // btnSendToModule
+            // 
+            this.btnSendToModule.BackColor = System.Drawing.Color.Transparent;
+            this.btnSendToModule.FlatAppearance.BorderSize = 0;
+            this.btnSendToModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSendToModule.Image = global::RateController.Properties.Resources.UpArrow64;
+            this.btnSendToModule.Location = new System.Drawing.Point(203, 538);
+            this.btnSendToModule.Name = "btnSendToModule";
+            this.btnSendToModule.Size = new System.Drawing.Size(72, 72);
+            this.btnSendToModule.TabIndex = 150;
+            this.btnSendToModule.UseVisualStyleBackColor = false;
+            this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
+            this.btnSendToModule.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendToModule_HelpRequested);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
+            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnCancel.Location = new System.Drawing.Point(297, 538);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.TabIndex = 148;
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnClose
+            // 
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnClose.Image = global::RateController.Properties.Resources.OK;
+            this.btnClose.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnClose.Location = new System.Drawing.Point(391, 538);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(6);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(72, 72);
+            this.btnClose.TabIndex = 149;
+            this.btnClose.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnSendSubnet
             // 
@@ -794,85 +869,25 @@
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             this.btnRescan.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnRescan_HelpRequested);
             // 
-            // btnCancel
+            // btnPCB
             // 
-            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
-            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
-            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(267, 538);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
-            this.btnCancel.TabIndex = 148;
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnClose
-            // 
-            this.btnClose.BackColor = System.Drawing.Color.Transparent;
-            this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnClose.Image = global::RateController.Properties.Resources.OK;
-            this.btnClose.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnClose.Location = new System.Drawing.Point(393, 538);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(6);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(72, 72);
-            this.btnClose.TabIndex = 149;
-            this.btnClose.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // btnLoadDefaults
-            // 
-            this.btnLoadDefaults.BackColor = System.Drawing.Color.Transparent;
-            this.btnLoadDefaults.FlatAppearance.BorderSize = 0;
-            this.btnLoadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLoadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnLoadDefaults.Location = new System.Drawing.Point(15, 538);
-            this.btnLoadDefaults.Name = "btnLoadDefaults";
-            this.btnLoadDefaults.Size = new System.Drawing.Size(72, 72);
-            this.btnLoadDefaults.TabIndex = 151;
-            this.btnLoadDefaults.UseVisualStyleBackColor = false;
-            this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
-            this.btnLoadDefaults.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnLoadDefaults_HelpRequested);
-            // 
-            // btnSendToModule
-            // 
-            this.btnSendToModule.BackColor = System.Drawing.Color.Transparent;
-            this.btnSendToModule.FlatAppearance.BorderSize = 0;
-            this.btnSendToModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSendToModule.Image = global::RateController.Properties.Resources.UpArrow64;
-            this.btnSendToModule.Location = new System.Drawing.Point(141, 538);
-            this.btnSendToModule.Name = "btnSendToModule";
-            this.btnSendToModule.Size = new System.Drawing.Size(72, 72);
-            this.btnSendToModule.TabIndex = 150;
-            this.btnSendToModule.UseVisualStyleBackColor = false;
-            this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
-            this.btnSendToModule.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendToModule_HelpRequested);
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(64, 179);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(76, 24);
-            this.label27.TabIndex = 217;
-            this.label27.Text = "Local IP";
+            this.btnPCB.BackColor = System.Drawing.Color.Transparent;
+            this.btnPCB.FlatAppearance.BorderSize = 0;
+            this.btnPCB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPCB.Image = global::RateController.Properties.Resources.PCB;
+            this.btnPCB.Location = new System.Drawing.Point(15, 538);
+            this.btnPCB.Name = "btnPCB";
+            this.btnPCB.Size = new System.Drawing.Size(72, 72);
+            this.btnPCB.TabIndex = 152;
+            this.btnPCB.UseVisualStyleBackColor = false;
+            this.btnPCB.Click += new System.EventHandler(this.btnPCB_Click);
             // 
             // frmModuleConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(486, 617);
+            this.Controls.Add(this.btnPCB);
             this.Controls.Add(this.btnLoadDefaults);
             this.Controls.Add(this.btnSendToModule);
             this.Controls.Add(this.btnCancel);
@@ -971,5 +986,6 @@
         private System.Windows.Forms.Label lbModuleIP;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Button btnPCB;
     }
 }
