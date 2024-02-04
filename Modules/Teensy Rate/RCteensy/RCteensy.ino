@@ -16,13 +16,13 @@
 #include <Adafruit_SPIDevice.h>
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  09-Jan-2024"
-const uint16_t InoID = 9014;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  04-Feb-2024"
+const uint16_t InoID = 4024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
-#define NC 0xFF		// Pins are not connected
+#define NC 0xFF		// Pins not connected
 
 struct ModuleConfig
 {
@@ -82,6 +82,8 @@ byte RelayLo = 0;	// sections 0-7
 byte RelayHi = 0;	// sections 8-15
 byte PowerRelayLo;
 byte PowerRelayHi;
+byte InvertedLo;
+byte InvertedHi;
 
 const uint16_t LoopTime = 50;      //in msec = 20hz
 uint32_t LoopLast = LoopTime;

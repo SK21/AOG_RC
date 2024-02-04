@@ -120,6 +120,8 @@ byte RelayLo = 0;	// sections 0-7
 byte RelayHi = 0;	// sections 8-15
 byte PowerRelayLo;
 byte PowerRelayHi;
+byte InvertedLo;
+byte InvertedHi;
 
 const uint16_t LoopTime = 50;      //in msec = 20hz
 uint32_t LoopLast = LoopTime;

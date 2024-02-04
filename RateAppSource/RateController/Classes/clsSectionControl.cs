@@ -158,11 +158,9 @@ namespace RateController
         {
             if (MasterOnSB)
             {
-                Debug.Print(DateTime.Now.ToString("ss:fff")+": Priming/Check");
                 if (((DateTime.Now - OnFirstPressed).TotalSeconds > 2) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn)) 
                 {
                     // priming mode
-                    Debug.Print(DateTime.Now.ToString("ss:fff") + ": Priming/On");
                     TimedOn = true;
                     Timer1.Enabled = true;
                     mf.SimMode = SimType.Speed;
@@ -170,7 +168,6 @@ namespace RateController
             }
             else
             {
-                Debug.Print(DateTime.Now.ToString("ss:fff") + ": Priming/off");
                 OnFirstPressed = DateTime.Now;
                 TimedOn = false;
                 Timer1.Enabled = false;

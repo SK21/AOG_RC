@@ -14,8 +14,14 @@ void CheckRelays()
 
     if (Sensor[0].FlowEnabled || Sensor[1].FlowEnabled)
     {
-        NewLo = RelayLo;
-        NewHi = RelayHi;
+        NewLo |= RelayLo;
+        NewHi |= RelayHi;
+    }
+    else
+    {
+        // inverted relays, 1 is off
+        NewLo |= InvertedLo;
+        NewHi |= InvertedHi;
     }
 
     // power relays, always on

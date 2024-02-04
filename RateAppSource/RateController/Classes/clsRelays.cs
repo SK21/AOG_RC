@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -9,6 +10,7 @@ namespace RateController
         private readonly FormStart mf;
         private IList<clsRelay> cItems;
         private int[] cPowerRelays;
+        private int[] cInvertedRelays;
         private bool IsLower;
         private bool IsRaise;
         private byte LastTrigger;
@@ -22,6 +24,7 @@ namespace RateController
             mf = CallingForm;
             Items = cRelays.AsReadOnly();
             cPowerRelays = new int[mf.MaxModules];
+            cInvertedRelays=new int[mf.MaxModules];
         }
 
         public IList<clsRelay> Items { get => cItems; set => cItems = value; }
@@ -51,12 +54,19 @@ namespace RateController
                 }
             }
             BuildPowerRelays();
+            BuildInvertedRelays();
         }
 
         public int PowerRelays(int ModuleID)
         {
             int Result = 0;
             if (ModuleID >= 0 && ModuleID < mf.MaxModules) Result = cPowerRelays[ModuleID];
+            return Result;
+        }
+        public int InvertedRelays(int ModuleID)
+        {
+            int Result = 0;
+            if (ModuleID >= 0 && ModuleID < mf.MaxModules) Result = cInvertedRelays[ModuleID];
             return Result;
         }
 
@@ -126,6 +136,7 @@ namespace RateController
                     cRelays[ListID(RelayID, ModuleID)].Save();
                 }
                 BuildPowerRelays();
+                BuildInvertedRelays();
             }
             else
             {
@@ -232,6 +243,8 @@ namespace RateController
                                     // set relay by section
                                     Rly.IsON = !mf.Sections.Items[Rly.SectionID].IsON;
                                 }
+                                Debug.Print(Rly.ID.ToString() + ", " + Rly.IsON.ToString() +
+                                    ", " + Rly.SectionID.ToString()+", " + mf.Sections.Items[Rly.SectionID].IsON.ToString());
                                 break;
                         }
 
@@ -257,7 +270,19 @@ namespace RateController
                 cPowerRelays[i] = 0;
                 for (int j = 0; j < cRelays.Count; j++)
                 {
-                    if (cRelays[j].Type == RelayTypes.Power && cRelays[j].ModuleID == i) cPowerRelays[i] |= (int)Math.Pow(2, i);
+                    if (cRelays[j].Type == RelayTypes.Power && cRelays[j].ModuleID == i) cPowerRelays[i] |= (int)Math.Pow(2, j);
+                }
+            }
+        }
+
+        private void BuildInvertedRelays()
+        {
+            for (int i = 0; i < mf.MaxModules; i++)
+            {
+                cInvertedRelays[i] = 0;
+                for (int j = 0; j < cRelays.Count; j++)
+                {
+                    if (cRelays[j].Type == RelayTypes.Invert_Section && cRelays[j].ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, j);
                 }
             }
         }

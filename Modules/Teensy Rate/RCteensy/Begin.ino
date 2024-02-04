@@ -12,32 +12,8 @@ void DoSetup()
 	Sensor[0].FlowEnabled = false;
 	Sensor[1].FlowEnabled = false;
 
-	// default flow pins
-	Sensor[0].FlowPin = 28;
-	Sensor[0].DirPin = 37;
-	Sensor[0].PWMPin = 36;
-
-	Sensor[1].FlowPin = 29;
-	Sensor[1].DirPin = 14;
-	Sensor[1].PWMPin = 15;
-
-	// default pid
-	Sensor[0].KP = 5;
-	Sensor[0].KI = 0;
-	Sensor[0].KD = 0;
-	Sensor[0].MinPWM = 5;
-	Sensor[0].MaxPWM = 50;
-	Sensor[0].Debounce = 3;
-
-	Sensor[1].KP = 5;
-	Sensor[1].KI = 0;
-	Sensor[1].KD = 0;
-	Sensor[1].MinPWM = 5;
-	Sensor[1].MaxPWM = 50;
-	Sensor[1].Debounce = 3;
-
 	Serial.begin(38400);
-	delay(5000);
+	delay(3000);
 	Serial.println("");
 	Serial.println("");
 	Serial.println("");
@@ -45,34 +21,7 @@ void DoSetup()
 	Serial.println("");
 
 	// eeprom
-	int16_t StoredID;
-	int8_t StoredType;
-	EEPROM.get(0, StoredID);
-	EEPROM.get(4, StoredType);
-	if (StoredID == InoID && StoredType==InoType)
-	{
-		// load stored data
-		Serial.println("Loading stored settings.");
-		EEPROM.get(110, MDL);
-
-		for (int i = 0; i < MaxProductCount; i++)
-		{
-			EEPROM.get(200 + i * 80, Sensor[i]);
-		}
-	}
-	else
-	{
-		// update stored data
-		Serial.println("Updating stored data.");
-		EEPROM.put(0, InoID);
-		EEPROM.put(4, InoType);
-		EEPROM.put(110, MDL);
-
-		for (int i = 0; i < MaxProductCount; i++)
-		{
-			EEPROM.put(200 + i * 80, Sensor[i]);
-		}
-	}
+	LoadData();
 
 	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
 
@@ -274,7 +223,7 @@ void DoSetup()
 		// Relay GPIO Pins
 		for (int i = 0; i < 16; i++)
 		{
-			if (MDL.RelayPins[i] > 0)
+			if (MDL.RelayPins[i] < NC)
 			{
 				pinMode(MDL.RelayPins[i], OUTPUT);
 			}
@@ -287,5 +236,113 @@ void DoSetup()
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
+}
+
+void LoadData()
+{
+	bool IsValid = false;
+	int16_t StoredID;
+	int8_t StoredType;
+	EEPROM.get(0, StoredID);
+	EEPROM.get(4, StoredType);
+	if (StoredID == InoID && StoredType == InoType)
+	{
+		// load stored data
+		Serial.println("Loading stored settings.");
+		EEPROM.get(110, MDL);
+
+		for (int i = 0; i < MaxProductCount; i++)
+		{
+			EEPROM.get(200 + i * 80, Sensor[i]);
+		}
+		IsValid = ValidData();
+		if (!IsValid)
+		{
+			Serial.println("Stored settings not valid.");
+		}
+	}
+
+	if (!IsValid)
+	{
+		LoadDefaults();
+		SaveData();
+	}
+}
+
+void SaveData()
+{
+	Serial.println("Updating stored settings.");
+	EEPROM.put(0, InoID);
+	EEPROM.put(4, InoType);
+	EEPROM.put(110, MDL);
+
+	for (int i = 0; i < MaxProductCount; i++)
+	{
+		EEPROM.put(200 + i * 80, Sensor[i]);
+	}
+}
+
+void LoadDefaults()
+{
+	Serial.println("Loading default settings.");
+
+	// default flow pins
+	Sensor[0].FlowPin = 28;
+	Sensor[0].DirPin = 37;
+	Sensor[0].PWMPin = 36;
+
+	Sensor[1].FlowPin = 29;
+	Sensor[1].DirPin = 14;
+	Sensor[1].PWMPin = 15;
+
+	// default pid
+	Sensor[0].KP = 5;
+	Sensor[0].KI = 0;
+	Sensor[0].KD = 0;
+	Sensor[0].MinPWM = 5;
+	Sensor[0].MaxPWM = 50;
+	Sensor[0].Debounce = 3;
+
+	Sensor[1].KP = 5;
+	Sensor[1].KI = 0;
+	Sensor[1].KD = 0;
+	Sensor[1].MinPWM = 5;
+	Sensor[1].MaxPWM = 50;
+	Sensor[1].Debounce = 3;
+
+	// relay pins
+	for (int i = 0; i < 16; i++)
+	{
+		MDL.RelayPins[i] = NC;
+	}
+}
+
+bool ValidData()
+{
+	bool Result = true;
+
+	for (int i = 0; i < 2; i++)
+	{
+		if ((Sensor[i].FlowPin > 41) || (Sensor[i].DirPin > 41) || (Sensor[i].PWMPin > 41))
+		{
+			Result = false;
+			break;
+		}
+	}
+
+	if (Result && MDL.RelayControl == 5)
+	{
+		// check GPIOs for relays
+		for (int i = 0; i < 16; i++)
+		{
+			if (MDL.RelayPins[i] > 41 && MDL.RelayPins[i] != NC)
+			{
+				Result = false;
+				break;
+			}
+		}
+	}
+
+	return Result;
 }
 

@@ -255,10 +255,11 @@ void ParseData(byte Data[], uint16_t len)
         //4 	relay Hi		    8-15
         //5     power relay Lo      list of power type relays 0-7
         //6     power relay Hi      list of power type relays 8-15
-        //7     -
-        //8     CRC
+        //7     Inverted Lo         
+        //8     Inverted Hi
+        //9     CRC
 
-        PGNlength = 9;
+        PGNlength = 10;
 
         if (len > PGNlength - 1)
         {
@@ -270,6 +271,8 @@ void ParseData(byte Data[], uint16_t len)
                     RelayHi = Data[4];
                     PowerRelayLo = Data[5];
                     PowerRelayHi = Data[6];
+                    InvertedLo = Data[7];
+                    InvertedHi = Data[8];
                 }
             }
         }

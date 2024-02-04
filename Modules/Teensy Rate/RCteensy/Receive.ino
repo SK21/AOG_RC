@@ -46,7 +46,7 @@ void ReceiveSerial()
 				break;
 
 			case 32501:
-				SerialPGNlength = 9;
+				SerialPGNlength = 10;
 				PGNfound = true;
 				break;
 
@@ -178,10 +178,11 @@ void ReadPGNs(byte Data[], uint16_t len)
 		//4 	relay Hi		    8-15
 		//5     power relay Lo      list of power type relays 0-7
 		//6     power relay Hi      list of power type relays 8-15
-		//7     -
-		//8     CRC
+		//7     Inverted Lo         
+		//8     Inverted Hi
+		//9     CRC
 
-		PGNlength = 9;
+		PGNlength = 10;
 
 		if (len > PGNlength - 1)
 		{
@@ -193,6 +194,8 @@ void ReadPGNs(byte Data[], uint16_t len)
 					RelayHi = Data[4];
 					PowerRelayLo = Data[5];
 					PowerRelayHi = Data[6];
+					InvertedLo = Data[7];
+					InvertedHi = Data[8];
 				}
 			}
 		}
@@ -267,7 +270,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 				MDL.IP1 = Data[3];
 				MDL.IP2 = Data[4];
 
-				EEPROM.put(110, MDL);
+				SaveData();
 
 				// restart the Teensy
 				SCB_AIRCR = 0x05FA0004;
@@ -322,15 +325,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 					MDL.RelayPins[i] = Data[13 + i];
 				}
 
-				// update stored data
-				EEPROM.put(0, InoID);
-				EEPROM.put(4, InoType);
-				EEPROM.put(110, MDL);
-
-				for (int i = 0; i < MaxProductCount; i++)
-				{
-					EEPROM.put(200 + i * 80, Sensor[i]);
-				}
+				SaveData();
 
 				// restart the Teensy
 				SCB_AIRCR = 0x05FA0004;
@@ -361,7 +356,7 @@ void ReceiveAGIO()
 						MDL.IP1 = Data[8];
 						MDL.IP2 = Data[9];
 
-						EEPROM.put(110, MDL);
+						SaveData();
 
 						// restart the Teensy
 						SCB_AIRCR = 0x05FA0004;

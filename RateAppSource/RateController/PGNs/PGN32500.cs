@@ -141,7 +141,6 @@ namespace RateController
                 cData[10] = (byte)Prod.ManualPWM;
                 cData[11] = (byte)(Prod.ManualPWM >> 8);
             }
-            Debug.Print(Prod.ManualPWM.ToString());
 
             // CRC
             cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
