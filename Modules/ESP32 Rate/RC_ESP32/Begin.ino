@@ -462,7 +462,7 @@ bool ValidData()
 			if (!Result) break;
 		}
 
-		if (Result && MDL.RelayControl == 5)
+		if (Result && MDL.RelayControl == 1)
 		{
 			// check GPIOs for relays
 			for (int k = 0; k < 16; k++)

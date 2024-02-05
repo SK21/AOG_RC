@@ -330,7 +330,7 @@ bool ValidData()
 		}
 	}
 
-	if (Result && MDL.RelayControl == 5)
+	if (Result && MDL.RelayControl == 1)
 	{
 		// check GPIOs for relays
 		for (int i = 0; i < 16; i++)
