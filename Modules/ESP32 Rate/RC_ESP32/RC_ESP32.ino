@@ -27,8 +27,8 @@
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  03-Feb-2024"
-const uint16_t InoID = 3124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  05-Feb-2024"
+const uint16_t InoID = 5124;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -53,12 +53,11 @@ struct ModuleConfig
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 5;
 	uint8_t IP3 = 60;
-	uint8_t RelayControl = 1;		// 0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - GPIOs
+	uint8_t RelayControl = 6;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired 
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (5), default RC11
 	char Name[ModStringLengths] = "RateModule";
 	char Password[ModStringLengths] = "111222333";
 	uint8_t AdsAddress = 0x48;			// enter 0 to search all
-	uint8_t PCA9685paired = true;		// pins 0 and 1 on/off complementary, 2 and 3, 4 and 5, etc.
 };
 
 ModuleConfig MDL;
@@ -194,7 +193,7 @@ void loop()
 
 	server.handleClient();
 
-	Blink();
+	//Blink();
 }
 
 byte ParseModID(byte ID)
@@ -238,9 +237,9 @@ uint32_t LastBlink;
 uint32_t LastLoop;
 byte ReadReset;
 uint32_t MaxLoopTime;
-//double debug1;
-//double debug2;
-//double debug3;
+double debug1;
+double debug2;
+double debug3;
 
 void Blink()
 {
@@ -252,13 +251,12 @@ void Blink()
 
 		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
-
-		//Serial.print(", ");
-		//Serial.print(debug1);
-		//Serial.print(", ");
-		//Serial.print(debug2);
-		//Serial.print(", ");
-		//Serial.print(debug3);
+		Serial.print(", ");
+		Serial.print(debug1);
+		Serial.print(", ");
+		Serial.print(debug2);
+		Serial.print(", ");
+		Serial.print(debug3);
 
 		Serial.println("");
 

@@ -91,13 +91,13 @@
             this.lbModuleIP = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.cbEthernet = new System.Windows.Forms.ComboBox();
+            this.btnPCB = new System.Windows.Forms.Button();
             this.btnLoadDefaults = new System.Windows.Forms.Button();
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnSendSubnet = new System.Windows.Forms.Button();
             this.btnRescan = new System.Windows.Forms.Button();
-            this.btnPCB = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -152,16 +152,18 @@
             this.cbRelayControl.FormattingEnabled = true;
             this.cbRelayControl.Items.AddRange(new object[] {
             "No Relays",
-            "PCA9685",
+            "GPIOs",
             "PCA9555  8 relays",
             "PCA9555  16 relays",
             "MCP23017",
-            "GPIOs"});
+            "PCA9685 single",
+            "PCA9685 paired"});
             this.cbRelayControl.Location = new System.Drawing.Point(192, 222);
             this.cbRelayControl.Name = "cbRelayControl";
             this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
             this.cbRelayControl.TabIndex = 46;
             this.cbRelayControl.SelectedIndexChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.cbRelayControl.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.cbRelayControl_HelpRequested);
             // 
             // tbWifiPort
             // 
@@ -187,7 +189,7 @@
             this.ckFlowOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFlowOn.Location = new System.Drawing.Point(262, 276);
+            this.ckFlowOn.Location = new System.Drawing.Point(213, 322);
             this.ckFlowOn.Name = "ckFlowOn";
             this.ckFlowOn.Size = new System.Drawing.Size(117, 69);
             this.ckFlowOn.TabIndex = 43;
@@ -201,7 +203,7 @@
             this.ckRelayOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRelayOn.Location = new System.Drawing.Point(50, 276);
+            this.ckRelayOn.Location = new System.Drawing.Point(77, 322);
             this.ckRelayOn.Name = "ckRelayOn";
             this.ckRelayOn.Size = new System.Drawing.Size(117, 69);
             this.ckRelayOn.TabIndex = 42;
@@ -773,6 +775,19 @@
             this.cbEthernet.TabIndex = 212;
             this.cbEthernet.SelectedIndexChanged += new System.EventHandler(this.cbEthernet_SelectedIndexChanged);
             // 
+            // btnPCB
+            // 
+            this.btnPCB.BackColor = System.Drawing.Color.Transparent;
+            this.btnPCB.FlatAppearance.BorderSize = 0;
+            this.btnPCB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPCB.Image = global::RateController.Properties.Resources.PCB;
+            this.btnPCB.Location = new System.Drawing.Point(15, 538);
+            this.btnPCB.Name = "btnPCB";
+            this.btnPCB.Size = new System.Drawing.Size(72, 72);
+            this.btnPCB.TabIndex = 152;
+            this.btnPCB.UseVisualStyleBackColor = false;
+            this.btnPCB.Click += new System.EventHandler(this.btnPCB_Click);
+            // 
             // btnLoadDefaults
             // 
             this.btnLoadDefaults.BackColor = System.Drawing.Color.Transparent;
@@ -868,19 +883,6 @@
             this.btnRescan.UseVisualStyleBackColor = false;
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             this.btnRescan.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnRescan_HelpRequested);
-            // 
-            // btnPCB
-            // 
-            this.btnPCB.BackColor = System.Drawing.Color.Transparent;
-            this.btnPCB.FlatAppearance.BorderSize = 0;
-            this.btnPCB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPCB.Image = global::RateController.Properties.Resources.PCB;
-            this.btnPCB.Location = new System.Drawing.Point(15, 538);
-            this.btnPCB.Name = "btnPCB";
-            this.btnPCB.Size = new System.Drawing.Size(72, 72);
-            this.btnPCB.TabIndex = 152;
-            this.btnPCB.UseVisualStyleBackColor = false;
-            this.btnPCB.Click += new System.EventHandler(this.btnPCB_Click);
             // 
             // frmModuleConfig
             // 

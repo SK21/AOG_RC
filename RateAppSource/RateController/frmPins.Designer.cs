@@ -35,8 +35,8 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.ErrorImage = global::RateController.Properties.Resources.Pins;
-            this.pictureBox1.Image = global::RateController.Properties.Resources.Pins;
+            this.pictureBox1.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.ErrorImage")));
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(11, 9);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(600, 495);
@@ -54,6 +54,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmPins";
+            this.ShowInTaskbar = false;
             this.Text = "Initial Settings";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmPins_FormClosed);
             this.Load += new System.EventHandler(this.frmPins_Load);

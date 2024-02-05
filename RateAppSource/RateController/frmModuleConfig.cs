@@ -81,6 +81,28 @@ namespace RateController
             tbRelay16.Text = "255";
         }
 
+        private void btnLoadDefaults_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Load defaults";
+            mf.Tls.ShowHelp(Message, "Defaults");
+            hlpevent.Handled = true;
+        }
+
+        private void btnPCB_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["frmPins"];
+
+            if (fs == null)
+            {
+                Form frm = new frmPins(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
         private void btnRescan_Click(object sender, EventArgs e)
         {
             UpdateForm();
@@ -120,11 +142,24 @@ namespace RateController
             try
             {
                 mf.ModuleConfig.Send();
+                mf.Tls.ShowHelp("Settings sent to module", "Config", 15000);
             }
             catch (Exception ex)
             {
                 mf.Tls.ShowHelp("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 20000, true, true);
             }
+        }
+
+        private void btnSendToModule_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Send settings to module. Only have 1 module connected when sending.";
+            mf.Tls.ShowHelp(Message, "Send Config");
+            hlpevent.Handled = true;
+        }
+
+        private void cbEthernet_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
 
         private void frmModuleConfig_FormClosed(object sender, FormClosedEventArgs e)
@@ -462,38 +497,17 @@ namespace RateController
             }
         }
 
-        private void btnLoadDefaults_HelpRequested(object sender, HelpEventArgs hlpevent)
+        private void cbRelayControl_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Load defaults";
-            mf.Tls.ShowHelp(Message, "Defaults");
+            string Message = "1 - GPIOs, use the micro-controller pins.\n" +
+                            "2 - PCA9555 8 relays, use 8 relay module.\n" +
+                            "3 - PCA9555 16 relays, use 16 relay module.\n" +
+                            "4 - MCP23017, use a MCP23017 IO expander.\n" +
+                            "5 - PCA9685 single, use each PCA9685 pin to control a single relay.\n" +
+                            "6 - PCA9685 paired, use consecutive pins to control relays in a complementary mode. One is on and the other off.\n";
+
+            mf.Tls.ShowHelp(Message, "Relay Control");
             hlpevent.Handled = true;
-        }
-
-        private void btnSendToModule_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Send settings to module. Only have 1 module connected when sending.";
-            mf.Tls.ShowHelp(Message, "Send Config");
-            hlpevent.Handled = true;
-        }
-
-        private void cbEthernet_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void btnPCB_Click(object sender, EventArgs e)
-        {
-            Form fs = Application.OpenForms["frmPins"];
-
-            if (fs == null)
-            {
-                Form frm = new frmPins(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
         }
     }
 }

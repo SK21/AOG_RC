@@ -51,63 +51,15 @@ void CheckRelays()
     switch (MDL.RelayControl)
     {
     case 1:
-        // PCA9685
-        if (PCA9685_found)
+        // GPIOs
+        for (int j = 0; j < 2; j++)
         {
-            if (MDL.PCA9685paired)
+            if (j < 1) Rlys = NewLo; else Rlys = NewHi;
+            for (int i = 0; i < 8; i++)
             {
-                // 2 pins used for each valve, powered on and off, 8 sections
-                for (int i = 0; i < 8; i++)
+                if (MDL.RelayPins[i + j * 8] < NC) // check if relay is enabled
                 {
-                    BitState = bitRead(NewLo, i);
-
-                    if (RelayStatus[i] != BitState)
-                    {
-                        IOpin = i * 2;
-                        if (BitState)
-                        {
-                            // on  
-                            PWMServoDriver.setPWM(IOpin, 4096, 0);
-                            PWMServoDriver.setPWM(IOpin + 1, 0, 4096);
-                        }
-                        else
-                        {
-                            // off
-                            PWMServoDriver.setPWM(IOpin, 0, 4096);
-                            PWMServoDriver.setPWM(IOpin + 1, 4096, 0);
-                        }
-                        RelayStatus[i] = BitState;
-                    }
-                }
-            }
-            else
-            {
-                // 1 pin for each valve, powered on only, 16 sections
-                for (int i = 0; i < 16; i++)
-                {
-                    if (i < 8)
-                    {
-                        BitState = bitRead(NewLo, i);
-                    }
-                    else
-                    {
-                        BitState = bitRead(NewHi, i - 8);
-                    }
-
-                    if (RelayStatus[i] != BitState)
-                    {
-                        if (BitState)
-                        {
-                            // on
-                            PWMServoDriver.setPWM(i, 4096, 0);
-                        }
-                        else
-                        {
-                            // off
-                            PWMServoDriver.setPWM(i, 0, 4096);
-                        }
-                        RelayStatus[i] = BitState;
-                    }
+                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
                 }
             }
         }
@@ -199,20 +151,67 @@ void CheckRelays()
         break;
 
     case 5:
-        // GPIOs
-        for (int j = 0; j < 2; j++)
+        // PCA9685 single
+        if (PCA9685_found)
         {
-            if (j < 1) Rlys = NewLo; else Rlys = NewHi;
-            for (int i = 0; i < 8; i++)
+            // 1 pin for each valve, powered on only, 16 sections
+            for (int i = 0; i < 16; i++)
             {
-                if (MDL.RelayPins[i + j * 8] < NC) // check if relay is enabled
+                if (i < 8)
                 {
-                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
+                    BitState = bitRead(NewLo, i);
+                }
+                else
+                {
+                    BitState = bitRead(NewHi, i - 8);
+                }
+
+                if (RelayStatus[i] != BitState)
+                {
+                    if (BitState)
+                    {
+                        // on
+                        PWMServoDriver.setPWM(i, 4096, 0);
+                    }
+                    else
+                    {
+                        // off
+                        PWMServoDriver.setPWM(i, 0, 4096);
+                    }
+                    RelayStatus[i] = BitState;
                 }
             }
         }
         break;
+
+    case 6:
+        // PCA9685 paired
+        if (PCA9685_found)
+        {
+            // 2 pins used for each valve, powered on and off, 8 sections
+            for (int i = 0; i < 8; i++)
+            {
+                BitState = bitRead(NewLo, i);
+
+                if (RelayStatus[i] != BitState)
+                {
+                    IOpin = i * 2;
+                    if (BitState)
+                    {
+                        // on  
+                        PWMServoDriver.setPWM(IOpin, 4096, 0);
+                        PWMServoDriver.setPWM(IOpin + 1, 0, 4096);
+                    }
+                    else
+                    {
+                        // off
+                        PWMServoDriver.setPWM(IOpin, 0, 4096);
+                        PWMServoDriver.setPWM(IOpin + 1, 4096, 0);
+                    }
+                    RelayStatus[i] = BitState;
+                }
+            }
+            break;
+        }
     }
 }
-
-

@@ -359,9 +359,9 @@ void ParseData(byte Data[], uint16_t len)
         // 2        ID
         // 3        Sensor count
         // 4        Commands
-        //          - Relay on high
-        //          - Flow on high
-        // 5        Relay control type  0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
+        //          - bit 0, Relay on high
+        //          - bit 1, Flow on high
+        // 5        Relay control type  0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired 
         // 6        wifi module serial port
         // 7        Sensor 0, flow pin
         // 8        Sensor 0, dir pin

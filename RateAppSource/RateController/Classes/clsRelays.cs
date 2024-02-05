@@ -243,8 +243,6 @@ namespace RateController
                                     // set relay by section
                                     Rly.IsON = !mf.Sections.Items[Rly.SectionID].IsON;
                                 }
-                                Debug.Print(Rly.ID.ToString() + ", " + Rly.IsON.ToString() +
-                                    ", " + Rly.SectionID.ToString()+", " + mf.Sections.Items[Rly.SectionID].IsON.ToString());
                                 break;
                         }
 

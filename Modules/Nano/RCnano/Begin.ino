@@ -99,6 +99,17 @@ void DoSetup()
 	// Relays
 	switch (MDL.RelayControl)
 	{
+	case 1:
+		// Relay GPIO Pins
+		for (int i = 0; i < 16; i++)
+		{
+			if (MDL.RelayPins[i] < NC)
+			{
+				pinMode(MDL.RelayPins[i], OUTPUT);
+			}
+		}
+		break;
+
 	case 2:
 	case 3:
 		// PCA9555 I/O expander on default address 0x20
@@ -161,17 +172,6 @@ void DoSetup()
 		else
 		{
 			Serial.println("MCP23017 not found.");
-		}
-		break;
-
-	case 5:
-		// Relay GPIO Pins
-		for (int i = 0; i < 16; i++)
-		{
-			if (MDL.RelayPins[i] < NC)
-			{
-				pinMode(MDL.RelayPins[i], OUTPUT);
-			}
 		}
 		break;
 	}

@@ -56,7 +56,18 @@ void CheckRelays()
     switch (MDL.RelayControl)
     {
     case 1:
-        // rs485
+        // GPIOs
+        for (int j = 0; j < 2; j++)
+        {
+            if (j < 1) Rlys = NewLo; else Rlys = NewHi;
+            for (int i = 0; i < 8; i++)
+            {
+                if (MDL.RelayPins[i + j * 8] < NC) // check if relay is enabled
+                {
+                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
+                }
+            }
+        }
         break;
 
     case 2:
@@ -139,21 +150,6 @@ void CheckRelays()
                     {
                         MCP.digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
                     }
-                }
-            }
-        }
-        break;
-
-    case 5:
-        // GPIOs
-        for (int j = 0; j < 2; j++)
-        {
-            if (j < 1) Rlys = NewLo; else Rlys = NewHi;
-            for (int i = 0; i < 8; i++)
-            {
-                if (MDL.RelayPins[i + j * 8] < NC) // check if relay is enabled
-                {
-                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
                 }
             }
         }

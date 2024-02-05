@@ -182,35 +182,14 @@ void DoSetup()
 	switch (MDL.RelayControl)
 	{
 	case 1:
-		// PCA9685
-		Serial.println("");
-		Serial.println("Starting PCA9685 I/O Expander ...");
-		ErrorCount = 0;
-		while (!PCA9685_found)
+		// Relay GPIO Pins
+		for (int i = 0; i < 16; i++)
 		{
-			Serial.print(".");
-			Wire.beginTransmission(DriverAddress);
-			PCA9685_found = (Wire.endTransmission() == 0);
-			ErrorCount++;
-			delay(500);
-			if (ErrorCount > 5)break;
+			if (MDL.RelayPins[i] < NC)
+			{
+				pinMode(MDL.RelayPins[i], OUTPUT);
+			}
 		}
-
-		Serial.println("");
-		if (PCA9685_found)
-		{
-			Serial.println("PCA9685 expander found.");
-			PWMServoDriver.begin();
-			PWMServoDriver.setPWMFreq(200);
-
-			pinMode(OutputEnablePin, OUTPUT);
-			digitalWrite(OutputEnablePin, LOW);	//enable
-		}
-		else
-		{
-			Serial.println("PCA9685 expander not found.");
-		}
-		Serial.println("");
 		break;
 
 	case 2:
@@ -279,14 +258,36 @@ void DoSetup()
 		break;
 
 	case 5:
-		// Relay GPIO Pins
-		for (int i = 0; i < 16; i++)
+	case 6:
+		// PCA9685
+		Serial.println("");
+		Serial.println("Starting PCA9685 I/O Expander ...");
+		ErrorCount = 0;
+		while (!PCA9685_found)
 		{
-			if (MDL.RelayPins[i] < NC)
-			{
-				pinMode(MDL.RelayPins[i], OUTPUT);
-			}
+			Serial.print(".");
+			Wire.beginTransmission(DriverAddress);
+			PCA9685_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5)break;
 		}
+
+		Serial.println("");
+		if (PCA9685_found)
+		{
+			Serial.println("PCA9685 expander found.");
+			PWMServoDriver.begin();
+			PWMServoDriver.setPWMFreq(200);
+
+			pinMode(OutputEnablePin, OUTPUT);
+			digitalWrite(OutputEnablePin, LOW);	//enable
+		}
+		else
+		{
+			Serial.println("PCA9685 expander not found.");
+		}
+		Serial.println("");
 		break;
 	}
 

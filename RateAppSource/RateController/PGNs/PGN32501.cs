@@ -42,7 +42,6 @@ namespace RateController
             int Relays = mf.RelayObjects.SetRelays(cModuleID);
             cData[3] = (byte)Relays;
             cData[4] = (byte)(Relays >> 8);
-            Debug.Print("RelayLo " + cData[3].ToString());
 
             // power relays
             int Power = mf.RelayObjects.PowerRelays(cModuleID);

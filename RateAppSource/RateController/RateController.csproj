@@ -289,12 +289,15 @@
     </Compile>
     <EmbeddedResource Include="FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPIDGraph.resx">
       <DependentUpon>FormPIDGraph.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPressure.resx">
       <DependentUpon>FormPressure.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
@@ -402,10 +405,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Pins.PNG" />
     <None Include="Resources\PCB.png" />
     <None Include="Resources\PrimeTime.png" />
     <None Include="Resources\Pause.png" />
-    <None Include="Resources\Pins.PNG" />
     <None Include="Resources\SubnetSend.png" />
     <None Include="Images\calibration.ico" />
     <None Include="Images\calibration.jpg" />

@@ -15,8 +15,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  04-Feb-2024"
-const uint16_t InoID = 4024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  05-Feb-2024"
+const uint16_t InoID = 5024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -32,7 +32,7 @@ struct ModuleConfig
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
-	uint8_t RelayControl = 2;		// 0 - no relays, 1 - RS485, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
+	uint8_t RelayControl = 2;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired
 	uint8_t RelayPins[16] = { 8,9,10,11,12,13,14,15,7,6,5,4,3,2,1,0 };		// MCP23017 pins RC5, RC8
 };
 
