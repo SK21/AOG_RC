@@ -158,7 +158,7 @@ namespace RateController
         {
             if (MasterOnSB)
             {
-                if (((DateTime.Now - OnFirstPressed).TotalSeconds > 2) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn)) 
+                if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimedDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn)) 
                 {
                     // priming mode
                     TimedOn = true;

@@ -60,6 +60,9 @@ namespace RateController
         public clsVirtualSwitchBox vSwitchBox;
         public string WiFiIP;
         public clsZones Zones;
+        private int cPrimedDelay = 2;
+
+
         private int cDefaultProduct = 0;
         private byte cPressureToShowID;
         private bool cShowPressure;
@@ -341,6 +344,7 @@ namespace RateController
             if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
             if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
             if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
+            if (int.TryParse(Tls.LoadProperty("PrimedDelay"), out int PD)) cPrimedDelay = PD;
 
             if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd))
             {
@@ -769,6 +773,14 @@ namespace RateController
                 Tls.WriteErrorLog("FormStart/FormatDisplay: " + ex.Message);
             }
         }
+        public int PrimedDelay
+        {
+            get { return cPrimedDelay; }
+            set
+            {
+                if (value >= 0 && value < 9) { cPrimedDelay = value; }
+            }
+        }
 
         private void FormRateControl_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -786,6 +798,7 @@ namespace RateController
                 Tls.SaveProperty("ShowQuantityRemaining", ShowQuantityRemaining.ToString());
                 Tls.SaveProperty("ShowCoverageRemaining", ShowCoverageRemaining.ToString());
                 Tls.SaveProperty("PrimedTime", cPrimedTime.ToString());
+                Tls.SaveProperty("PrimedDelay",cPrimedDelay.ToString());
                 UDPaog.Close();
                 UDPmodules.Close();
 

@@ -39,7 +39,7 @@ namespace RateController
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "05-Feb-2024";
+        private string cVersionDate = "09-Feb-2024";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
