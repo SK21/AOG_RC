@@ -278,6 +278,30 @@ void ReadPGNs(byte Data[], uint16_t len)
 		}
 		break;
 
+	case 32600:
+		//PGN32600, section switches from ESP to module
+		// 0    88
+		// 1    127
+		// 2    MasterOn
+		// 3	switches 0-7
+		// 4	switches 8-15
+		// 5	crc
+
+		PGNlength = 6;
+
+		if (len > PGNlength - 1)
+		{
+			if (GoodCRC(Data, PGNlength))
+			{
+				WifiSwitches[2] = Data[2];
+				WifiSwitches[3] = Data[3];
+				WifiSwitches[4] = Data[4];
+				WifiSwitchesEnabled = true;
+				WifiSwitchesTimer = millis();
+			}
+		}
+		break;
+
 	case 32700:
 		// PGN32700, module config
 		// 0        188

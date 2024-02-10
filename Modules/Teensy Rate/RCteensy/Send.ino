@@ -96,6 +96,9 @@ void SendData()
             }
             Serial.println("");
         }
+
+        // to wifi
+        SerialESP->write(Data, 13);
     }
 
     //PGN32401, module, analog info from module to RC
@@ -154,6 +157,9 @@ void SendData()
         }
         Serial.println("");
     }
+
+    // to wifi
+    SerialESP->write(Data, 15);
 }
 
 

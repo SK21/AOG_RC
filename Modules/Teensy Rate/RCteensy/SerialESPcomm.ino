@@ -4,6 +4,7 @@ byte LSB;
 byte SD[MaxReadBuffer];
 uint16_t ESPpgn;
 byte ESPpgnLength;
+bool ESPpgnFound;
 
 void ReceiveESP()
 {
@@ -17,47 +18,69 @@ void ReceiveESP()
 				SerialESP->read();
 			}
 			ESPpgn = 0;
-			LSB = 0;
+			ESPpgnFound = false;
 		}
 
-		switch (ESPpgn)
+		if (ESPpgnFound)
 		{
-		case 32600:
-			//PGN32600, section switches from ESP to module
-			// 0    88
-			// 1    127
-			// 2    MasterOn
-			// 3	switches 0-7
-			// 4	switches 8-15
-			// 5	crc
-
-			ESPpgnLength = 6;
-
-			if (Serial.available() > ESPpgnLength - 3)
+			if (SerialESP->available() > ESPpgnLength - 3)
 			{
-				ESPpgn = 0;	// reset pgn
-				SD[0] = 88;
-				SD[1] = 127;
 				for (int i = 2; i < ESPpgnLength; i++)
 				{
 					SD[i] = SerialESP->read();
-					WifiSwitches[i] = SD[i];
 				}
+				ReadPGNs(SD, ESPpgnLength);
 
-				if (GoodCRC(SD, ESPpgnLength))
-				{
-					WifiSwitchesEnabled = true;
-					WifiSwitchesTimer = millis();
-				}
+				// reset pgn
+				ESPpgn = 0;
+				ESPpgnFound = false;
 			}
-			break;
+		}
+		else
+		{
+			switch (ESPpgn)
+			{
+			case 32500:
+				ESPpgnLength = 14;
+				ESPpgnFound = true;
+				break;
 
-		default:
-			// find pgn
-			MSB = SerialESP->read();
-			ESPpgn = MSB << 8 | LSB;
-			LSB = MSB;
-			break;
+			case 32501:
+				ESPpgnLength = 10;
+				ESPpgnFound = true;
+				break;
+
+			case 32502:
+				ESPpgnLength = 19;
+				ESPpgnFound = true;
+				break;
+
+			case 32503:
+				ESPpgnLength = 6;
+				ESPpgnFound = true;
+				break;
+
+			case 32600:
+				ESPpgnLength = 6;
+				ESPpgnFound = true;
+				break;
+
+			case 32700:
+				ESPpgnLength = 31;
+				ESPpgnFound = true;
+				break;
+
+			default:
+				// find pgn
+				MSB = SerialESP->read();
+				ESPpgn = MSB << 8 | LSB;
+
+				SD[0] = LSB;
+				SD[1] = MSB;
+
+				LSB = MSB;
+				break;
+			}
 		}
 	}
 }

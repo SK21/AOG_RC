@@ -7,8 +7,8 @@
 #include <EEPROM.h>
 
 // Wemos D1 mini Pro, ESP 12F    board: LOLIN(Wemos) D1 R2 & mini  or NodeMCU 1.0 (ESP-12E Module)
-# define InoDescription "WifiRC   09-Nov-2023"
-# define InoID 9113  // change to load default values
+# define InoDescription "WifiRC   09-Feb-2024"
+# define InoID 9024  // change to load default values
 
 struct WifiConnection
 {
@@ -17,8 +17,6 @@ struct WifiConnection
 };
 
 WifiConnection WC;
-
-char WifiBuffer[512];
 
 // web page
 ESP8266WebServer server(80);
@@ -29,6 +27,13 @@ bool Button[16];
 byte SendByte;
 byte SendBit;
 
+// Rate
+WiFiUDP UDPrate;
+uint16_t ListeningPortRate = 28888;
+uint16_t DestinationPortRate = 29999;
+IPAddress DestinationIP(192, 168, 1, 255);
+char WifiBuffer[512];
+
 void setup()
 {
 	DoSetup();
@@ -38,6 +43,8 @@ void loop()
 {
 	ArduinoOTA.handle();
 	server.handleClient();
+	ReceiveWifi();
+	ReceiveSerial();
 	Blink();
 }
 

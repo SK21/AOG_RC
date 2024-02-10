@@ -31,10 +31,13 @@ void DoSetup()
         EEPROM.commit();
     }
 
+    ConnectWifi();
     StartOTA();
 
     String AP = "WifiRC " + WiFi.macAddress();
     WiFi.softAP(AP);
+
+    UDPrate.begin(ListeningPortRate);
 
     // web server
     Serial.println();

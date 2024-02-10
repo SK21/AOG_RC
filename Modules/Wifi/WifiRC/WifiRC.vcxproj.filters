@@ -17,12 +17,12 @@
   <ItemGroup>
     <ClCompile Include="WifiRC.ino" />
     <ClCompile Include="Begin.ino" />
-    <ClCompile Include="SerialComm.ino" />
     <ClCompile Include="ControlPage.ino" />
     <ClCompile Include="GUI.ino" />
     <ClCompile Include="NetworkPage.ino" />
     <ClCompile Include="OTA.ino" />
     <ClCompile Include="StartPage.ino" />
+    <ClCompile Include="Comm.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.WifiRC.vsarduino.h">
