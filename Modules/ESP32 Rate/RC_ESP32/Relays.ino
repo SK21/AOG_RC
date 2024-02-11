@@ -211,7 +211,17 @@ void CheckRelays()
                     RelayStatus[i] = BitState;
                 }
             }
-            break;
         }
+        break;
+
+    case 7:
+        if (PCF_found)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                if (bitRead(NewLo, i)) PCF.write(i, MDL.RelayOnSignal); else PCF.write(i, !MDL.RelayOnSignal);
+            }
+        }
+        break;
     }
 }

@@ -114,7 +114,7 @@ void DoSetup()
 	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
 	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
 
-	Ethernet.init(5);   // SS pin
+	Ethernet.init(SSpin);   
 	Ethernet.begin(LocalMac, 0);
 	Ethernet.setLocalIP(LocalIP);
 	IPAddress Mask(255, 255, 255, 0);
@@ -266,7 +266,7 @@ void DoSetup()
 		while (!PCA9685_found)
 		{
 			Serial.print(".");
-			Wire.beginTransmission(DriverAddress);
+			Wire.beginTransmission(PCAadress);
 			PCA9685_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
@@ -286,6 +286,34 @@ void DoSetup()
 		else
 		{
 			Serial.println("PCA9685 expander not found.");
+		}
+		Serial.println("");
+		break;
+
+	case 7:
+		// PCF8574
+		Serial.println("");
+		Serial.println("Starting PCF8574 I/O Expander ...");
+		ErrorCount = 0;
+		while (!PCF_found)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(PCFaddress);
+			PCF_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		Serial.println("");
+		if (PCF_found)
+		{
+			Serial.println("PCF8574 expander found.");
+			PCF.begin();
+		}
+		else
+		{
+			Serial.println("PCF8574 expander not found.");
 		}
 		Serial.println("");
 		break;
