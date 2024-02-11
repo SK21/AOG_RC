@@ -29,8 +29,8 @@
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  05-Feb-2024"
-const uint16_t InoID = 5124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  11-Feb-2024"
+const uint16_t InoID = 11024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -42,8 +42,9 @@ const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 // servo driver
 #define OutputEnablePin 27
 #define PCAadress 0x55	
+
 #define PCFaddress 0x20
-#define SSpin 5
+#define W5500_SS 5		// W5500 SPI SS
 #define NC 0xFF		// Pin not connected
 
 struct ModuleConfig

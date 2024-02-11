@@ -114,7 +114,7 @@ void DoSetup()
 	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
 	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
 
-	Ethernet.init(SSpin);   
+	Ethernet.init(W5500_SS);   
 	Ethernet.begin(LocalMac, 0);
 	Ethernet.setLocalIP(LocalIP);
 	IPAddress Mask(255, 255, 255, 0);
