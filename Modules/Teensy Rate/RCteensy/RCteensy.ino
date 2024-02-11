@@ -16,8 +16,8 @@
 #include <Adafruit_SPIDevice.h>
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  09-Feb-2024"
-const uint16_t InoID = 9024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  10-Feb-2024"
+const uint16_t InoID = 10024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -101,7 +101,7 @@ bool MCP23017_found = false;
 
 int TimedCombo(byte, bool);	// function prototype
 
-bool ESPconnected;
+uint32_t ESPtime;
 int8_t WifiStrength;
 
 // analog
@@ -209,6 +209,9 @@ elapsedMicros LoopTmr;
 byte ReadReset;
 uint32_t MaxLoopTime;
 
+//double debug1;
+//double debug2;
+
 void Blink()
 {
 	if (BlinkTmr > 1000)
@@ -217,7 +220,6 @@ void Blink()
 		State = !State;
 		digitalWrite(LED_BUILTIN, State);
 
-		Serial.println("");
 		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
 
@@ -227,13 +229,19 @@ void Blink()
 		//Serial.print(", Temp: ");
 		//Serial.print(tempmonGetTemp());
 
+		//Serial.print(", ");
+		//Serial.print(debug1);
+
+		//Serial.print(", ");
+		//Serial.print(debug2);
+
+		Serial.println("");
+
 		if (ReadReset++ > 10)
 		{
 			ReadReset = 0;
 			MaxLoopTime = 0;
 		}
-
-		Serial.println("");
 	}
 	if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
 	LoopTmr = 0;

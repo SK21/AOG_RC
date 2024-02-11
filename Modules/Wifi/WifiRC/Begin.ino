@@ -49,6 +49,8 @@ void DoSetup()
     server.onNotFound(HandleRoot);
     server.begin();
 
+    pinMode(LED_BUILTIN, OUTPUT);
+
     Serial.println("");
     Serial.println("Finished Setup");
     Serial.println("");

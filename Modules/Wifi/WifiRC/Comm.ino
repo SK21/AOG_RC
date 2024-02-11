@@ -17,7 +17,7 @@ void ConnectWifi()
 	{
 		delay(1000);
 		Serial.print(".");
-		if (ErrorCount++ > 60) break;
+		if (ErrorCount++ > 20) break;
 	}
 
 	if (WiFi.status() == WL_CONNECTED)

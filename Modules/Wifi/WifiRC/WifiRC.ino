@@ -37,6 +37,9 @@ char WifiBuffer[512];
 void setup()
 {
 	DoSetup();
+	//Serial.begin(38400);
+	//pinMode(LED_BUILTIN, OUTPUT);
+	//Serial.println("Done setup");
 }
 
 void loop()
@@ -99,15 +102,17 @@ void Blink()
 		if (State) digitalWrite(LED_BUILTIN, HIGH);
 		else digitalWrite(LED_BUILTIN, LOW);
 
-		//Serial.print(" MaxLoopTime micros: ");
-		//Serial.print(MaxLoopTime);
+		Serial.print("Micros: ");
+		Serial.print(MaxLoopTime);
 
-		//if (ResetRead++ > 10)
-		//{
-		//    MaxLoopTime = 0;
-		//    ResetRead = 0;
-		//}
+		Serial.println("");
+
+		if (ResetRead++ > 10)
+		{
+		    MaxLoopTime = 0;
+		    ResetRead = 0;
+		}
 	}
-	//if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
-	//LoopTmr = micros();
+	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
+	LoopTmr = micros();
 }

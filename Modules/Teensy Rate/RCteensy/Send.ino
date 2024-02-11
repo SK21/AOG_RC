@@ -59,8 +59,9 @@ void SendData()
         if (millis() - Sensor[1].CommTime < 4000) Data[11] |= 0b00000010;
 
         // wifi
-        if (ESPconnected)
+        if (millis() - ESPtime < 4000)
         {
+            // ESP connected
             if (WifiStrength < -80)
             {
                 Data[11] |= 0b00000100;
@@ -85,9 +86,9 @@ void SendData()
             UDPcomm.write(Data, 13);
             UDPcomm.endPacket();
         }
-        else
+        else if (millis() - ESPtime > 4000)
         {
-            // send serial
+            // send serial, ESP not connected
             Serial.print(Data[0]);
             for (int i = 1; i < 13; i++)
             {
@@ -146,9 +147,9 @@ void SendData()
         UDPcomm.write(Data, 15);
         UDPcomm.endPacket();
     }
-    else
+    else if (millis() - ESPtime > 4000)
     {
-        // send serial
+        // send serial, ESP not connected
         Serial.print(Data[0]);
         for (int i = 1; i < 15; i++)
         {

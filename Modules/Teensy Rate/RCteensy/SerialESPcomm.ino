@@ -43,6 +43,7 @@ void ReceiveESP()
 			case 32500:
 				ESPpgnLength = 14;
 				ESPpgnFound = true;
+				ESPtime = millis();
 				break;
 
 			case 32501:
