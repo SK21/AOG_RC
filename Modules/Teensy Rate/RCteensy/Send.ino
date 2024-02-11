@@ -86,20 +86,23 @@ void SendData()
             UDPcomm.write(Data, 13);
             UDPcomm.endPacket();
         }
-        else if (millis() - ESPtime > 4000)
+        else
         {
-            // send serial, ESP not connected
-            Serial.print(Data[0]);
-            for (int i = 1; i < 13; i++)
-            {
-                Serial.print(",");
-                Serial.print(Data[i]);
-            }
-            Serial.println("");
-        }
+            // send wifi
+            SerialESP->write(Data, 13);
 
-        // to wifi
-        SerialESP->write(Data, 13);
+            if (millis() - ESPtime > 4000)
+            {
+                // send serial, wifi not connected
+                Serial.print(Data[0]);
+                for (int i = 1; i < 13; i++)
+                {
+                    Serial.print(",");
+                    Serial.print(Data[i]);
+                }
+                Serial.println("");
+            }
+        }
     }
 
     //PGN32401, module, analog info from module to RC
@@ -147,20 +150,23 @@ void SendData()
         UDPcomm.write(Data, 15);
         UDPcomm.endPacket();
     }
-    else if (millis() - ESPtime > 4000)
+    else
     {
-        // send serial, ESP not connected
-        Serial.print(Data[0]);
-        for (int i = 1; i < 15; i++)
-        {
-            Serial.print(",");
-            Serial.print(Data[i]);
-        }
-        Serial.println("");
-    }
+        // send wifi
+        SerialESP->write(Data, 15);
 
-    // to wifi
-    SerialESP->write(Data, 15);
+        if (millis() - ESPtime > 4000)
+        {
+            // send serial, wifi not connected
+            Serial.print(Data[0]);
+            for (int i = 1; i < 15; i++)
+            {
+                Serial.print(",");
+                Serial.print(Data[i]);
+            }
+            Serial.println("");
+        }
+    }
 }
 
 

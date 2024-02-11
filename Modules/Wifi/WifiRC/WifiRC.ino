@@ -7,8 +7,8 @@
 #include <EEPROM.h>
 
 // Wemos D1 mini Pro, ESP 12F    board: LOLIN(Wemos) D1 R2 & mini  or NodeMCU 1.0 (ESP-12E Module)
-# define InoDescription "WifiRC   09-Feb-2024"
-# define InoID 9024  // change to load default values
+# define InoDescription "WifiRC   10-Feb-2024"
+# define InoID 10024  // change to load default values
 
 struct WifiConnection
 {
@@ -37,9 +37,6 @@ char WifiBuffer[512];
 void setup()
 {
 	DoSetup();
-	//Serial.begin(38400);
-	//pinMode(LED_BUILTIN, OUTPUT);
-	//Serial.println("Done setup");
 }
 
 void loop()
