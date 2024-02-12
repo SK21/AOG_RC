@@ -405,6 +405,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Start_Icon_641.png" />
     <None Include="Resources\Pins.PNG" />
     <None Include="Resources\PCB.png" />
     <None Include="Resources\PrimeTime.png" />
