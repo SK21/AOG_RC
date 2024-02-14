@@ -38,6 +38,12 @@ namespace RateController
         private bool LastModuleSending;
         private bool LastModuleReceiving;
         private DateTime ReceiveTime;
+        private bool cEthernetConnected;
+        private bool cWifiConnected;
+        private bool LastEthernetConnected;
+        private bool LastWifiConnected;
+        private byte cWifiStrength;
+        private byte cLastStrength;
 
         public PGN32400(clsProduct CalledFrom)
         {
@@ -48,19 +54,40 @@ namespace RateController
         {
             return cQuantity;
         }
-
+        public bool EthernetConnected { get { return cEthernetConnected; } }
+        public bool WifiConnected { get { return cWifiConnected; } }
         public void CheckModuleComm()
         {
+            string Mes;
             if (LastModuleSending != ModuleSending())
             {
                 LastModuleSending = ModuleSending();
-                Prod.mf.Tls.WriteActivityLog("Module: " + Prod.ModuleID + "  Sensor: " + Prod.SensorID + "  Sending: " + ModuleSending().ToString(),true);
+                Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Sending: " + ModuleSending().ToString();
+
+                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
             if(LastModuleReceiving != ModuleReceiving())
             {
                 LastModuleReceiving= ModuleReceiving();
-                Prod.mf.Tls.WriteActivityLog("Module: " + Prod.ModuleID + "  Sensor: " + Prod.SensorID + "  Receiving: " + ModuleReceiving().ToString(), true);
+                Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Receiving: " + ModuleReceiving().ToString();
+
+                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+            }
+
+            if(LastEthernetConnected!=cEthernetConnected)
+            {
+                LastEthernetConnected= cEthernetConnected;
+                Mes = "Ethernet connected: " + cEthernetConnected.ToString();
+                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+            }
+
+            if (LastWifiConnected != cWifiConnected || cLastStrength!=cWifiStrength)
+            {
+                LastWifiConnected = cWifiConnected;
+                cLastStrength = cWifiStrength;
+                Mes = "Wifi connected: " + cWifiConnected.ToString() + "   Strength: " + cWifiStrength.ToString();
+                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
         }
 
@@ -105,7 +132,6 @@ namespace RateController
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
-            byte cWifiStrength;
 
             if (Data[1] == HeaderHi && Data[0] == HeaderLo &&
                 Data.Length >= cByteCount && Prod.mf.Tls.GoodCRC(Data))
@@ -141,6 +167,9 @@ namespace RateController
                         if ((Data[11] & 0b00001000) == 0b00001000) cWifiStrength = 2;
                         if ((Data[11] & 0b00010000) == 0b00010000) cWifiStrength = 3;
                         Prod.WifiStrength = cWifiStrength;
+
+                        cWifiConnected = ((Data[11] & 0b00100000) == 0b00100000);
+                        cEthernetConnected = ((Data[11] & 0b01000000) == 0b01000000);
 
                         ReceiveTime = DateTime.Now;
                         Result = true;

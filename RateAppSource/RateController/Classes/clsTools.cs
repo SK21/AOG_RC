@@ -518,9 +518,10 @@ namespace RateController
             return cVersionDate;
         }
 
-        public void WriteActivityLog(string Message, bool Newline = false)
+        public void WriteActivityLog(string Message, bool Newline = false, bool NoDate=false)
         {
             string Line = "";
+            string DF;
             try
             {
                 string FileName = cSettingsDir + "\\Activity Log.txt";
@@ -528,7 +529,16 @@ namespace RateController
 
                 if (Newline) Line = "\r\n";
 
-                File.AppendAllText(FileName, Line + DateTime.Now.ToString("MMM-dd hh:mm:ss") + "  -  " + Message + "\r\n");
+                if(NoDate)
+                {
+                    DF = "hh:mm:ss";
+                }
+                else
+                {
+                    DF = "MMM-dd hh:mm:ss";
+                }
+
+                File.AppendAllText(FileName, Line + DateTime.Now.ToString(DF) + "  -  " + Message + "\r\n");
             }
             catch (Exception ex)
             {

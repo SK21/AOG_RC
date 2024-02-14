@@ -54,6 +54,12 @@ void SendData()
         // status
         // bit 0    - sensor 0 receiving rate controller data
         // bit 1    - sensor 1 receiving rate controller data
+        // bit 2    wifi signal < -80
+        // bit 3    wifi signal < -70
+        // bit 4    wifi signal > -80
+        // bit 5    wifi connected
+        // bit 6    ethernet connected
+
         Data[11] = 0;
         if (millis() - Sensor[0].CommTime < 4000) Data[11] |= 0b00000001;
         if (millis() - Sensor[1].CommTime < 4000) Data[11] |= 0b00000010;
@@ -74,7 +80,10 @@ void SendData()
             {
                 Data[11] |= 0b00010000;
             }
+            Data[11] |= 0b00100000;
         }
+
+        if (Ethernet.linkStatus() == LinkON) Data[11] |= 0b01000000;
 
         // crc
         Data[12] = CRC(Data, 12, 0);
@@ -88,12 +97,10 @@ void SendData()
         }
         else
         {
-            // send wifi
-            SerialESP->write(Data, 13);
 
-            if (millis() - ESPtime > 4000)
-            {
-                // send serial, wifi not connected
+            //if (millis() - ESPtime > 4000)
+            //{
+            //    // send serial, wifi not connected
                 Serial.print(Data[0]);
                 for (int i = 1; i < 13; i++)
                 {
@@ -101,8 +108,10 @@ void SendData()
                     Serial.print(Data[i]);
                 }
                 Serial.println("");
-            }
+            //}
         }
+            // send wifi
+            SerialESP->write(Data, 13);
     }
 
     //PGN32401, module, analog info from module to RC

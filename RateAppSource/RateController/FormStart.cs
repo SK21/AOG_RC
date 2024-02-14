@@ -805,6 +805,7 @@ namespace RateController
                 timerMain.Enabled = false;
                 timerNano.Enabled = false;
                 timerPIDs.Enabled = false;
+                Tls.WriteActivityLog("Stopped", true);
             }
             catch (Exception)
             {
@@ -885,6 +886,7 @@ namespace RateController
                 Close();
             }
             SetLanguage();
+            Tls.WriteActivityLog("Started", true);
         }
 
         private void frenchToolStripMenuItem_Click(object sender, EventArgs e)

@@ -102,6 +102,12 @@ void Blink()
 		Serial.print("Micros: ");
 		Serial.print(MaxLoopTime);
 
+		Serial.print(", ");
+		Serial.print(WiFi.RSSI());
+
+		Serial.print(", ");
+		Serial.print(WiFi.status() == WL_CONNECTED);
+
 		Serial.println("");
 
 		if (ResetRead++ > 10)
