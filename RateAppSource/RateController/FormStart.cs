@@ -46,9 +46,10 @@ namespace RateController
         public PGN235 SectionsPGN;
         public SerialComm[] SER = new SerialComm[3];
         public Color SimColor = Color.FromArgb(255, 191, 0);
-        public SimType SimMode = SimType.None;
+        private SimType cSimMode = SimType.None;
         public PGN32618 SwitchBox;
         public clsTools Tls;
+        public PGN228 VRdata;
 
         public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
@@ -56,18 +57,15 @@ namespace RateController
 
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
-        public PGN230 VRdata;
         public clsVirtualSwitchBox vSwitchBox;
         public string WiFiIP;
         public clsZones Zones;
-        private int cPrimedDelay = 2;
 
 
         private int cDefaultProduct = 0;
         private byte cPressureToShowID;
         private bool cShowPressure;
         private bool cShowSwitches = false;
-        private double cSimSpeed = 0;
         private int CurrentPage;
         private int CurrentPageLast;
         private bool cUseLargeScreen = false;
@@ -77,12 +75,16 @@ namespace RateController
         private DateTime[] ModuleTime;
         private Label[] ProdName;
         private Label[] Rates;
+        private Label[] Targets;
 
         private int[] RateType = new int[6];    // 0 current rate, 1 instantaneous rate, 2 overall rate
         private PGN32501[] RelaySettings;
         public bool ShowCoverageRemaining;
         public bool ShowQuantityRemaining;
-        private double cPrimedTime = 0;
+
+        private double cPrimeTime = 0;
+        private int cPrimeDelay = 0;
+        private double cSimSpeed = 0;
 
         public FormStart()
         {
@@ -125,7 +127,7 @@ namespace RateController
             SectionsPGN = new PGN235(this);
             MachineConfig = new PGN238(this);
             MachineData = new PGN239(this);
-            VRdata = new PGN230(this);
+            VRdata = new PGN228(this);
 
             SwitchBox = new PGN32618(this);
             AnalogData = new PGN32401(this);
@@ -142,6 +144,7 @@ namespace RateController
             ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4, prd5 };
             Rates = new Label[] { rt0, rt1, rt2, rt3, rt4, rt5 };
             Indicators = new Label[] { idc0, idc1, idc2, idc3, idc4, idc5 };
+            Targets = new Label[] { tg0, tg1, tg2, tg3 };
 
             cUseInches = true;
 
@@ -164,7 +167,14 @@ namespace RateController
         }
 
         public event EventHandler ProductChanged;
-
+        public SimType SimMode
+        {
+            get { return cSimMode; }
+            set
+            {
+                cSimMode = value;
+            }
+        }
         public int DefaultProduct
         {
             get { return cDefaultProduct; }
@@ -221,12 +231,12 @@ namespace RateController
             }
         }
 
-        public double PrimedTime
+        public double PrimeTime
         {
-            get { return cPrimedTime; }
+            get { return cPrimeTime; }
             set
             {
-                if(value>=0 && value<30) { cPrimedTime = value; }
+                if(value>=0 && value<30) { cPrimeTime = value; }
             }
         }
 
@@ -330,7 +340,6 @@ namespace RateController
                 if (fs != null) fs.Close();
             }
         }
-
         public void LoadSettings()
         {
             StartSerial();
@@ -344,7 +353,15 @@ namespace RateController
             if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
             if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
             if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
-            if (int.TryParse(Tls.LoadProperty("PrimedDelay"), out int PD)) cPrimedDelay = PD;
+
+            if (int.TryParse(Tls.LoadProperty("PrimeDelay"), out int PD))
+            {
+                cPrimeDelay = PD;
+            }
+            else
+            {
+                cPrimeDelay = 3;
+            }
 
             if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd))
             {
@@ -355,14 +372,15 @@ namespace RateController
                 cSimSpeed = 5;
             }
     
-            if (double.TryParse(Tls.LoadProperty("PrimedTime"), out double ptime))
+            if (double.TryParse(Tls.LoadProperty("PrimeTime"), out double ptime))
             {
-                cPrimedTime = ptime;
+                cPrimeTime = ptime;
             }
             else
             {
-                cPrimedTime = 5;
+                cPrimeTime = 5;
             }
+
             Sections.Load();
             Sections.CheckSwitchDefinitions();
 
@@ -452,7 +470,7 @@ namespace RateController
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
 
-                        if (SimMode == SimType.None)
+                        if (cSimMode == SimType.None)
                         {
                             ProdName[i].ForeColor = SystemColors.ControlText;
                             ProdName[i].BackColor = Properties.Settings.Default.DayColour;
@@ -465,6 +483,11 @@ namespace RateController
                         }
 
                         Rates[i].Text = Products.Item(i).SmoothRate().ToString("N1");
+                        if (i < 4)
+                        {
+                            Targets[i].Text = Products.Item(i).TargetRate().ToString("N1");
+                        }
+
                         if (Products.Item(i).ArduinoModule.Connected())
                         {
                             Indicators[i].Image = Properties.Resources.OnSmall;
@@ -480,6 +503,20 @@ namespace RateController
                 {
                     // product pages
                     clsProduct Prd = Products.Item(CurrentPage - 1);
+
+
+                    if (Prd.UseVR)
+                    {
+                        lbTarget.Text = "VR Target";
+                    }
+                    else if (Prd.UseAltRate)
+                    {
+                        lbTarget.Text = Lang.lgTargetRateAlt;
+                    }
+                    else
+                    {
+                        lbTarget.Text = Lang.lgTargetRate;
+                    }
 
                     lbFan.Text = CurrentPage.ToString() + ". " + Prd.ProductName;
                     lbTargetRPM.Text = Prd.TargetRate().ToString("N0");
@@ -544,7 +581,7 @@ namespace RateController
                             break;
                     }
 
-                    if (SimMode == SimType.None)
+                    if (cSimMode == SimType.None)
                     {
                         if (Prd.ArduinoModule.ModuleSending())
                         {
@@ -773,12 +810,12 @@ namespace RateController
                 Tls.WriteErrorLog("FormStart/FormatDisplay: " + ex.Message);
             }
         }
-        public int PrimedDelay
+        public int PrimeDelay
         {
-            get { return cPrimedDelay; }
+            get { return cPrimeDelay; }
             set
             {
-                if (value >= 0 && value < 9) { cPrimedDelay = value; }
+                if (value >= 0 && value < 9) { cPrimeDelay = value; }
             }
         }
 
@@ -794,11 +831,13 @@ namespace RateController
 
                 Sections.Save();
                 Products.Save();
-                Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
                 Tls.SaveProperty("ShowQuantityRemaining", ShowQuantityRemaining.ToString());
                 Tls.SaveProperty("ShowCoverageRemaining", ShowCoverageRemaining.ToString());
-                Tls.SaveProperty("PrimedTime", cPrimedTime.ToString());
-                Tls.SaveProperty("PrimedDelay",cPrimedDelay.ToString());
+
+                Tls.SaveProperty("PrimeTime", cPrimeTime.ToString());
+                Tls.SaveProperty("PrimeDelay",cPrimeDelay.ToString());
+                Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
+
                 UDPaog.Close();
                 UDPmodules.Close();
 
@@ -996,15 +1035,18 @@ namespace RateController
 
         private void lbTarget_Click(object sender, EventArgs e)
         {
-            if (lbTarget.Text == Lang.lgTargetRate)
+            if (!Products.Item(CurrentPage - 1).UseVR)
             {
-                lbTarget.Text = Lang.lgTargetRateAlt;
-                Products.Item(CurrentPage - 1).UseAltRate = true;
-            }
-            else
-            {
-                lbTarget.Text = Lang.lgTargetRate;
-                Products.Item(CurrentPage - 1).UseAltRate = false;
+                if (Products.Item(CurrentPage - 1).UseAltRate)
+                {
+                    lbTarget.Text = Lang.lgTargetRate;
+                    Products.Item(CurrentPage - 1).UseAltRate = false;
+                }
+                else
+                {
+                    lbTarget.Text = Lang.lgTargetRateAlt;
+                    Products.Item(CurrentPage - 1).UseAltRate = true;
+                }
             }
         }
 
@@ -1250,7 +1292,7 @@ namespace RateController
 
         private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            cShowSwitches = !cShowSwitches;
+            ShowSwitches = !cShowSwitches;
             DisplaySwitches();
         }
 
@@ -1313,7 +1355,6 @@ namespace RateController
 
             Form frm = new frmPrimedStart(this);
             frm.Show();
-
         }
     }
 }

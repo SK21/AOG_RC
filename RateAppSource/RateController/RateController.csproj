@@ -265,7 +265,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.ru.resx</DependentUpon>
     </Compile>
-    <Compile Include="PGNs\PGN230.cs" />
+    <Compile Include="PGNs\PGN228.cs" />
     <Compile Include="PGNs\PGN234.cs" />
     <Compile Include="PGNs\PGN235.cs" />
     <Compile Include="PGNs\PGN238.cs" />
@@ -405,7 +405,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Start_Icon_641.png" />
     <None Include="Resources\Pins.PNG" />
     <None Include="Resources\PCB.png" />
     <None Include="Resources\PrimeTime.png" />

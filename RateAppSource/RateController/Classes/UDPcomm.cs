@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
@@ -167,6 +168,11 @@ namespace RateController
                         case 33152: // AOG, 0x81, 0x80
                             switch (Data[3])
                             {
+                                case 228:
+                                    // vr data
+                                    mf.VRdata.ParseByteData(Data);
+                                    break;
+
                                 case 235:
                                     // section widths
                                     mf.SectionsPGN.ParseByteData(Data);

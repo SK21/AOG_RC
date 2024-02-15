@@ -502,7 +502,20 @@ namespace RateController
         private void UpdateForm()
         {
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
-            
+          
+            if (Prd.UseVR)
+            {
+                lbTarget.Text = "VR Target";
+            }
+            else if (Prd.UseAltRate)
+            {
+                lbTarget.Text = Lang.lgTargetRateAlt;
+            }
+            else
+            {
+                lbTarget.Text = Lang.lgTargetRate;
+            }
+
             // set highlight
             if (mf.SimMode == SimType.VirtualNano)
             {

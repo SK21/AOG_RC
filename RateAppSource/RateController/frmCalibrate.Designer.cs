@@ -430,6 +430,7 @@
             this.btnPwr3.TabIndex = 228;
             this.btnPwr3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnPwr3.UseVisualStyleBackColor = false;
+            this.btnPwr3.Click += new System.EventHandler(this.btnPwr3_Click);
             // 
             // btnPwr2
             // 

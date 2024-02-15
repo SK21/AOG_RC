@@ -60,7 +60,7 @@
             this.tbSpeed.Name = "tbSpeed";
             this.tbSpeed.Size = new System.Drawing.Size(65, 30);
             this.tbSpeed.TabIndex = 316;
-            this.tbSpeed.Text = "5.0";
+            this.tbSpeed.Text = "0";
             this.tbSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbSpeed.TextChanged += new System.EventHandler(this.tbSpeed_TextChanged);
             this.tbSpeed.Enter += new System.EventHandler(this.tbSpeed_Enter);
@@ -94,7 +94,7 @@
             this.tbTime.Name = "tbTime";
             this.tbTime.Size = new System.Drawing.Size(65, 30);
             this.tbTime.TabIndex = 319;
-            this.tbTime.Text = "5.0";
+            this.tbTime.Text = "0";
             this.tbTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbTime.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
             this.tbTime.Enter += new System.EventHandler(this.tbTime_Enter);
@@ -163,7 +163,7 @@
             this.tbDelay.Name = "tbDelay";
             this.tbDelay.Size = new System.Drawing.Size(65, 30);
             this.tbDelay.TabIndex = 324;
-            this.tbDelay.Text = "5.0";
+            this.tbDelay.Text = "0";
             this.tbDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbDelay.TextChanged += new System.EventHandler(this.tbSpeed_TextChanged);
             this.tbDelay.Enter += new System.EventHandler(this.tbDelay_Enter);

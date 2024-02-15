@@ -178,6 +178,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel.
+        /// </summary>
+        internal static string lgChannel {
+            get {
+                return ResourceManager.GetString("lgChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         internal static string lgClose {
@@ -1240,7 +1249,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Target Rate Alt ....
+        ///   Looks up a localized string similar to Target Alt ....
         /// </summary>
         internal static string lgTargetRateAlt {
             get {

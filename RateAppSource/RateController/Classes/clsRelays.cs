@@ -211,7 +211,15 @@ namespace RateController
                                 else
                                 {
                                     // set relay by section
-                                    Rly.IsON = mf.Sections.Items[Rly.SectionID].IsON;
+                                    if (Rly.SectionID == -1)
+                                    {
+                                        // no section
+                                        Rly.IsON = false;
+                                    }
+                                    else
+                                    {
+                                        Rly.IsON = mf.Sections.Items[Rly.SectionID].IsON;
+                                    }
                                 }
                                 break;
 
@@ -241,7 +249,15 @@ namespace RateController
                                 else
                                 {
                                     // set relay by section
-                                    Rly.IsON = !mf.Sections.Items[Rly.SectionID].IsON;
+                                    if (Rly.SectionID == -1)
+                                    {
+                                        // no section
+                                        Rly.IsON = false;
+                                    }
+                                    else
+                                    {
+                                        Rly.IsON = !mf.Sections.Items[Rly.SectionID].IsON;
+                                    }
                                 }
                                 break;
                         }

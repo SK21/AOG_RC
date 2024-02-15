@@ -122,6 +122,7 @@ namespace RateController
             timer1.Enabled = true;
             mf.vSwitchBox.SwitchScreenOn = true;
             mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
+            tmrRelease.Enabled = true;
             UpdateForm();
         }
 

@@ -23,6 +23,8 @@ namespace RateController
         //      bit 2   - wifi rssi < -80
         //      bit 3	- wifi rssi < -70
         //      bit 4	- wifi rssi < -65
+        //      bit 5   wifi connected
+        //      bit 6   ethernet connected
         //12    CRC
 
         private const byte cByteCount = 13;
@@ -30,20 +32,20 @@ namespace RateController
         private const byte HeaderLo = 144;
         private readonly clsProduct Prod;
         private int cElapsedTime;
+        private bool cEthernetConnected;
+        private byte cLastStrength;
         private DateTime cLastTime = DateTime.Now;
         private bool cModuleIsReceivingData;
         private double cPWMsetting;
         private double cQuantity;
         private double cUPM;
-        private bool LastModuleSending;
-        private bool LastModuleReceiving;
-        private DateTime ReceiveTime;
-        private bool cEthernetConnected;
         private bool cWifiConnected;
-        private bool LastEthernetConnected;
-        private bool LastWifiConnected;
         private byte cWifiStrength;
-        private byte cLastStrength;
+        private bool LastEthernetConnected;
+        private bool LastModuleReceiving;
+        private bool LastModuleSending;
+        private bool LastWifiConnected;
+        private DateTime ReceiveTime;
 
         public PGN32400(clsProduct CalledFrom)
         {
@@ -54,8 +56,7 @@ namespace RateController
         {
             return cQuantity;
         }
-        public bool EthernetConnected { get { return cEthernetConnected; } }
-        public bool WifiConnected { get { return cWifiConnected; } }
+
         public void CheckModuleComm()
         {
             string Mes;
@@ -67,22 +68,22 @@ namespace RateController
                 Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
-            if(LastModuleReceiving != ModuleReceiving())
+            if (LastModuleReceiving != ModuleReceiving())
             {
-                LastModuleReceiving= ModuleReceiving();
+                LastModuleReceiving = ModuleReceiving();
                 Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Receiving: " + ModuleReceiving().ToString();
 
                 Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
-            if(LastEthernetConnected!=cEthernetConnected)
+            if (LastEthernetConnected != cEthernetConnected)
             {
-                LastEthernetConnected= cEthernetConnected;
+                LastEthernetConnected = cEthernetConnected;
                 Mes = "Ethernet connected: " + cEthernetConnected.ToString();
                 Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
-            if (LastWifiConnected != cWifiConnected || cLastStrength!=cWifiStrength)
+            if (LastWifiConnected != cWifiConnected || cLastStrength != cWifiStrength)
             {
                 LastWifiConnected = cWifiConnected;
                 cLastStrength = cWifiStrength;

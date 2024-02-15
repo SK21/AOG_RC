@@ -35,11 +35,11 @@ namespace RateController
         private static Hashtable HTapp;
         private static Hashtable HTfiles;
         private string cAppName = "RateController";
-        private string cAppVersion = "3.6.4";
+        private string cAppVersion = "3.7.0";
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "09-Feb-2024";
+        private string cVersionDate = "14-Feb-2024";
         private FormStart mf;
 
         public clsTools(FormStart CallingForm)
@@ -518,7 +518,7 @@ namespace RateController
             return cVersionDate;
         }
 
-        public void WriteActivityLog(string Message, bool Newline = false, bool NoDate=false)
+        public void WriteActivityLog(string Message, bool Newline = false, bool NoDate = false)
         {
             string Line = "";
             string DF;
@@ -529,7 +529,7 @@ namespace RateController
 
                 if (Newline) Line = "\r\n";
 
-                if(NoDate)
+                if (NoDate)
                 {
                     DF = "hh:mm:ss";
                 }

@@ -1,5 +1,6 @@
 ﻿using AgOpenGPS;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace RateController
@@ -74,6 +75,7 @@ namespace RateController
             cProduct.Enabled = true;
             cProduct.ConstantUPM = ConstantUPMstart;
             cProduct.Save();
+            cProduct.CalUseBaseRate = false;
         }
 
         public Label Description
@@ -384,6 +386,7 @@ namespace RateController
         private void CPower_Click(object sender, EventArgs e)
         {
             cEnabled = !cEnabled;
+            cProduct.CalUseBaseRate = cEnabled;
             Update();
         }
 
@@ -433,7 +436,6 @@ namespace RateController
             if (cProduct.RateSet > 0)
             {
                 double Ratio = Math.Abs(cProduct.RateSet - cProduct.RateApplied()) / cProduct.RateSet;
-
                 if (Ratio < 0.1)
                 {
                     SetCount++;

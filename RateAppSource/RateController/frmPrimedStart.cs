@@ -30,21 +30,12 @@ namespace RateController
                 {
                     // save data
 
-                    if (double.TryParse(tbSpeed.Text, out double Speed))
-                    {
-                        mf.Tls.SaveProperty("CalSpeed", Speed.ToString());
-                        mf.SimSpeed = Speed;
-                    }
-
-                    if (double.TryParse(tbTime.Text, out double Time))
-                    {
-                        mf.Tls.SaveProperty("PrimedTime", Time.ToString());
-                        mf.PrimedTime = Time;
-                    }
-
-                    if (int.TryParse(tbDelay.Text, out int Delay)) mf.PrimedDelay = Delay;
+                    if (double.TryParse(tbSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
+                    if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
+                    if (int.TryParse(tbDelay.Text, out int Delay)) mf.PrimeDelay = Delay;
 
                     SetButtons(false);
+                    UpdateForm();
                 }
             }
             catch (Exception ex)
@@ -73,26 +64,8 @@ namespace RateController
             {
                 lbSpeed.Text = "KMH";
             }
-
-            Initializing = true;
-
-            string spd = mf.Tls.LoadProperty("CalSpeed");
-            if (double.TryParse(spd, out double Speed))
-            {
-                tbSpeed.Text = Speed.ToString("N1");
-            }
-
-            string tme = mf.Tls.LoadProperty("PrimedTime");
-            if (double.TryParse(tme, out double Time))
-            {
-                tbTime.Text = Time.ToString("N0");
-            }
-
-            tbDelay.Text = mf.PrimedDelay.ToString("N0");
-
             SetDayMode();
-
-            Initializing = false;
+            UpdateForm();
         }
 
         private void SetButtons(bool Edited = false)
@@ -217,6 +190,17 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
+        }
+
+        private void UpdateForm()
+        {
+            Initializing = true;
+
+            tbSpeed.Text = mf.SimSpeed.ToString("N1");
+            tbTime.Text = mf.PrimeTime.ToString("N0");
+            tbDelay.Text = mf.PrimeDelay.ToString("N0");
+
+            Initializing = false;
         }
     }
 }

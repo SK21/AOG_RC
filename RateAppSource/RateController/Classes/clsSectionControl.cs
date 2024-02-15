@@ -43,7 +43,7 @@ namespace RateController
         private void Timer1_Tick(Object myObject, EventArgs myEventArgs)
         {
             TimerCount++;
-            if (TimerCount > mf.PrimedTime)
+            if (TimerCount > mf.PrimeTime)
             {
                 TimerCount = 0;
                 Timer1.Enabled = false;
@@ -158,7 +158,7 @@ namespace RateController
         {
             if (MasterOnSB)
             {
-                if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimedDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn)) 
+                if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn)) 
                 {
                     // priming mode
                     TimedOn = true;

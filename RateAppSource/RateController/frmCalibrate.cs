@@ -11,7 +11,6 @@ namespace RateController
         private clsCalibrates Cals;
         private bool FormEdited;
         private bool Initializing;
-        private double Speed;
         private bool Running;
 
         public frmCalibrate(FormStart CalledFrom)
@@ -29,25 +28,26 @@ namespace RateController
             Cals = new clsCalibrates(mf);
             Cals.Edited += Cals_Edited;
 
-            mf.SimMode = SimType.Speed;
-            mf.SimSpeed = 0;
+            //mf.SimSpeed = 0;
         }
 
         private void btnCalStart_Click(object sender, EventArgs e)
         {
+            mf.SimMode = SimType.Speed;
             Running = true;
             SetButtons();
             Cals.Running(true);
-            mf.SimSpeed = Speed;
+            //mf.SimSpeed = Speed;
             btnCalStop.Focus();
         }
 
         private void btnCalStop_Click(object sender, EventArgs e)
         {
+            mf.SimMode = SimType.None;
             Running = false;
             SetButtons();
             Cals.Running(false);
-            mf.SimSpeed = 0;
+            //mf.SimSpeed = 0;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -68,9 +68,7 @@ namespace RateController
                 else
                 {
                     // save data
-                    double.TryParse(tbSpeed.Text, out double Tmp);
-                    Speed = Tmp;
-                    mf.Tls.SaveProperty("CalSpeed", Speed.ToString());
+                    if (double.TryParse(tbSpeed.Text, out double Tmp)) mf.SimSpeed = Tmp;
 
                     Cals.Save();
                     SetButtons(false);
@@ -103,7 +101,7 @@ namespace RateController
             mf.Tls.LoadFormData(this);
             LoadCals();
 
-            if(mf.UseInches)
+            if (mf.UseInches)
             {
                 lbSpeed.Text = "MPH";
             }
@@ -112,9 +110,9 @@ namespace RateController
                 lbSpeed.Text = "KMH";
             }
 
-            String Spd = mf.Tls.LoadProperty("CalSpeed");
-            double.TryParse(Spd, out double Tmp);
-            Speed = Tmp;
+            //String Spd = mf.Tls.LoadProperty("CalSpeed");
+            //double.TryParse(Spd, out double Tmp);
+            //Speed = Tmp;
 
             foreach (Control c in this.Controls)
             {
@@ -255,8 +253,14 @@ namespace RateController
         private void UpdateForm()
         {
             Initializing = true;
-            tbSpeed.Text = Speed.ToString("N1");
+            //tbSpeed.Text = Speed.ToString("N1");
+            tbSpeed.Text = mf.SimSpeed.ToString("N1");
             Initializing = false;
+        }
+
+        private void btnPwr3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

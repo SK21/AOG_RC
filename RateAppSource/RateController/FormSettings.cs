@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RateController
 {
@@ -15,9 +16,11 @@ namespace RateController
         public clsProduct CurrentProduct;
         private bool Initializing = false;
         private Label[] Sec;
-        private TabPage[] tbs;
 
+        private TabPage[] Tabs;
         private TabPage Temp1;
+        private TabPage Temp2;
+
         private bool FormEdited = false;
 
         public FormSettings(FormStart CallingForm, int Page)
@@ -29,16 +32,16 @@ namespace RateController
 
             lbProduct.Text = Lang.lgProduct;
             tcProducts.TabPages[0].Text = Lang.lgRate;
-            tcProducts.TabPages[1].Text = Lang.lgControl;
-            tcProducts.TabPages[2].Text = Lang.lgOptions;
-            tcProducts.TabPages[3].Text = Lang.lgDiagnostics;
+            tcProducts.TabPages[2].Text = Lang.lgControl;
+            tcProducts.TabPages[3].Text = Lang.lgOptions;
+            tcProducts.TabPages[4].Text = Lang.lgDiagnostics;
 
             lb0.Text = Lang.lgProductName;
             lb5.Text = Lang.lgControlType;
             lb1.Text = Lang.lgQuantity;
             lb2.Text = Lang.lgCoverage;
             lbSensorCounts.Text = Lang.lgSensorCounts;
-            lb3.Text = Lang.lgBaseRate;
+            lbBaseRateDes.Text = Lang.lgBaseRate;
             lb6.Text = Lang.lgTankSize;
             btnResetCoverage.Text = Lang.lgCoverage;
             btnResetTank.Text = Lang.lgStartQuantity;
@@ -73,7 +76,7 @@ namespace RateController
             AreaUnits.Items[3] = Lang.lgHour;
 
             lbAltRate.Text = Lang.lgAltRate;
-            lbVariableRate.Text = Lang.lgVariableRate;
+            lbVariableRate.Text = Lang.lgChannel;
 
             lbProportional.Text = Lang.lgProportional;
             lbIntegral.Text = Lang.lgIntegral;
@@ -92,7 +95,7 @@ namespace RateController
             #endregion // language
 
             mf = CallingForm;
-            tbs = new TabPage[] { tbs0, tbs4, tbs6, tbs3 };
+            Tabs = new TabPage[] { tbs0, tabPage1, tbs4, tbs6, tbs3 };
 
             if (Page == 0)
             {
@@ -298,7 +301,6 @@ namespace RateController
         {
             mf.Tls.LoadFormData(this);
             timer1.Enabled = true;
-
             UpdateForm();
         }
 
@@ -434,7 +436,10 @@ namespace RateController
             tbAltRate.Text = CurrentProduct.RateAlt.ToString("N0");
             TankSize.Text = CurrentProduct.TankSize.ToString("N0");
             ValveType.SelectedIndex = ConvertControlType(CurrentProduct.ControlType);
-            cbVR.SelectedIndex = CurrentProduct.VariableRate;
+            cbVR.SelectedIndex = CurrentProduct.VRID;
+            ckVR.Checked = CurrentProduct.UseVR;
+            tbMaxRate.Text = CurrentProduct.VRmax.ToString("N1");
+            tbMinRate.Text = CurrentProduct.VRmin.ToString("N1");
 
             TankRemain.Text = CurrentProduct.TankStart.ToString("N0");
 
@@ -625,7 +630,22 @@ namespace RateController
             double.TryParse(TankSize.Text, out TempDB);
             CurrentProduct.TankSize = TempDB;
 
-            CurrentProduct.VariableRate = Convert.ToByte(cbVR.SelectedIndex);
+            if (double.TryParse(tbMaxRate.Text, out double tmp10) &&
+                double.TryParse(tbMinRate.Text, out double tmp11))
+            {
+                if (tmp11 > tmp10)
+                {
+                    mf.Tls.ShowHelp("Minimum VR rate must be less than Maximum.", "VR", 10000);
+                }
+                else
+                {
+                    CurrentProduct.VRmax = tmp10;
+                    CurrentProduct.VRmin = tmp11;
+                }
+            }
+
+                CurrentProduct.VRID = Convert.ToByte(cbVR.SelectedIndex);
+            CurrentProduct.UseVR = (ckVR.Checked);
 
             double.TryParse(TankRemain.Text, out TempDB);
             CurrentProduct.TankStart = TempDB;
@@ -720,7 +740,7 @@ namespace RateController
 
                 for (int i = 0; i < 4; i++)
                 {
-                    tbs[i].BackColor = Properties.Settings.Default.DayColour;
+                    Tabs[i].BackColor = Properties.Settings.Default.DayColour;
                 }
 
                 ModuleIndicator.BackColor = Properties.Settings.Default.DayColour;
@@ -743,7 +763,7 @@ namespace RateController
 
                 for (int i = 0; i < 4; i++)
                 {
-                    tbs[i].BackColor = Properties.Settings.Default.NightColour;
+                    Tabs[i].BackColor = Properties.Settings.Default.NightColour;
                 }
 
                 foreach (Control c in this.Controls)
@@ -1169,6 +1189,7 @@ namespace RateController
             ckBumpButtons.Visible = visible;
             ckBumpButtons.Enabled = visible;
         }
+
         private void UpdateForm()
         {
             Initializing = true;
@@ -1219,19 +1240,33 @@ namespace RateController
                 if (tcProducts.TabCount > 3)
                 {
                     // remove tabs
-                    Temp1 = tcProducts.TabPages[3];
+                    Temp1 = tcProducts.TabPages[1];
+                    Temp2 = tcProducts.TabPages[4];
                     tcProducts.Controls.Remove(Temp1);
+                    tcProducts.Controls.Remove(Temp2);
                 }
             }
             else
             {
                 ckDefault.Visible = true;
-                if (tcProducts.TabCount < 4)
+                if (tcProducts.TabCount < 5)
                 {
                     // add back the removed tabs
-                    tcProducts.TabPages.Add(Temp1);
+                    tcProducts.TabPages.Insert(1, Temp1);
+                    tcProducts.TabPages.Add(Temp2);
                 }
             }
+
+            lbBaseRate.Enabled = !CurrentProduct.UseVR;
+            lbAltRate.Enabled = !CurrentProduct.UseVR;
+            lbBaseRateDes.Enabled = !CurrentProduct.UseVR;
+            tbAltRate.Enabled = !CurrentProduct.UseVR;
+            lbVariableRate.Enabled = CurrentProduct.UseVR;
+            cbVR.Enabled = CurrentProduct.UseVR;
+            lbMaxRate.Enabled = CurrentProduct.UseVR;
+            tbMaxRate.Enabled = CurrentProduct.UseVR;
+            lbMinRate.Enabled = CurrentProduct.UseVR;
+            tbMinRate.Enabled = CurrentProduct.UseVR;
         }
 
         void UpdateOnTypeChange()
@@ -1574,6 +1609,59 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Quantity");
             hlpevent.Handled = true;
+        }
+
+        private void pnlMain_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void ckVR_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbMaxRate_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbMinRate_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbMaxRate_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbMaxRate.Text, out tempD);
+            using (var form = new FormNumeric(0, 100000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMaxRate.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbMinRate_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbMinRate.Text, out tempD);
+            using (var form = new FormNumeric(0, 100000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMinRate.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void cbVR_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

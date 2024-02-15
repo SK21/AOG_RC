@@ -112,6 +112,10 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
+            this.tg0 = new System.Windows.Forms.Label();
+            this.tg1 = new System.Windows.Forms.Label();
+            this.tg2 = new System.Windows.Forms.Label();
+            this.tg3 = new System.Windows.Forms.Label();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -290,6 +294,10 @@ namespace RateController
             // 
             // panSummary
             // 
+            this.panSummary.Controls.Add(this.tg3);
+            this.panSummary.Controls.Add(this.tg2);
+            this.panSummary.Controls.Add(this.tg1);
+            this.panSummary.Controls.Add(this.tg0);
             this.panSummary.Controls.Add(this.idc5);
             this.panSummary.Controls.Add(this.rt5);
             this.panSummary.Controls.Add(this.prd5);
@@ -341,7 +349,7 @@ namespace RateController
             this.prd5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd5.Location = new System.Drawing.Point(3, 145);
             this.prd5.Name = "prd5";
-            this.prd5.Size = new System.Drawing.Size(143, 23);
+            this.prd5.Size = new System.Drawing.Size(74, 23);
             this.prd5.TabIndex = 123;
             this.prd5.Text = "6";
             // 
@@ -363,7 +371,7 @@ namespace RateController
             this.prd4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd4.Location = new System.Drawing.Point(3, 116);
             this.prd4.Name = "prd4";
-            this.prd4.Size = new System.Drawing.Size(143, 23);
+            this.prd4.Size = new System.Drawing.Size(74, 23);
             this.prd4.TabIndex = 121;
             this.prd4.Text = "5";
             // 
@@ -395,7 +403,7 @@ namespace RateController
             this.prd3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd3.Location = new System.Drawing.Point(3, 87);
             this.prd3.Name = "prd3";
-            this.prd3.Size = new System.Drawing.Size(143, 23);
+            this.prd3.Size = new System.Drawing.Size(50, 23);
             this.prd3.TabIndex = 118;
             this.prd3.Text = "4";
             // 
@@ -427,7 +435,7 @@ namespace RateController
             this.prd2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd2.Location = new System.Drawing.Point(3, 58);
             this.prd2.Name = "prd2";
-            this.prd2.Size = new System.Drawing.Size(143, 23);
+            this.prd2.Size = new System.Drawing.Size(50, 23);
             this.prd2.TabIndex = 115;
             this.prd2.Text = "3";
             // 
@@ -459,7 +467,7 @@ namespace RateController
             this.prd1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd1.Location = new System.Drawing.Point(3, 29);
             this.prd1.Name = "prd1";
-            this.prd1.Size = new System.Drawing.Size(143, 23);
+            this.prd1.Size = new System.Drawing.Size(50, 23);
             this.prd1.TabIndex = 112;
             this.prd1.Text = "2";
             // 
@@ -491,14 +499,14 @@ namespace RateController
             this.prd0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd0.Location = new System.Drawing.Point(3, 0);
             this.prd0.Name = "prd0";
-            this.prd0.Size = new System.Drawing.Size(143, 23);
+            this.prd0.Size = new System.Drawing.Size(50, 23);
             this.prd0.TabIndex = 109;
             this.prd0.Text = "1";
             // 
             // rt0
             // 
             this.rt0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rt0.Location = new System.Drawing.Point(148, 0);
+            this.rt0.Location = new System.Drawing.Point(147, 0);
             this.rt0.Name = "rt0";
             this.rt0.Size = new System.Drawing.Size(90, 23);
             this.rt0.TabIndex = 108;
@@ -524,13 +532,13 @@ namespace RateController
             this.MnuOptions,
             this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(201, 362);
+            this.mnuSettings.Size = new System.Drawing.Size(174, 340);
             // 
             // MnuProducts
             // 
             this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
             this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(200, 42);
+            this.MnuProducts.Size = new System.Drawing.Size(173, 42);
             this.MnuProducts.Text = "Products";
             this.MnuProducts.Click += new System.EventHandler(this.productsToolStripMenuItem_Click);
             // 
@@ -538,7 +546,7 @@ namespace RateController
             // 
             this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
             this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(200, 42);
+            this.MnuSections.Size = new System.Drawing.Size(173, 42);
             this.MnuSections.Text = "Sections";
             this.MnuSections.Click += new System.EventHandler(this.sectionsToolStripMenuItem_Click);
             // 
@@ -546,7 +554,7 @@ namespace RateController
             // 
             this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
             this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(200, 42);
+            this.MnuRelays.Size = new System.Drawing.Size(173, 42);
             this.MnuRelays.Text = "Relays";
             this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click_1);
             // 
@@ -554,7 +562,7 @@ namespace RateController
             // 
             this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
             this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(200, 42);
+            this.MnuComm.Size = new System.Drawing.Size(173, 42);
             this.MnuComm.Text = "Comm";
             this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
             // 
@@ -562,7 +570,7 @@ namespace RateController
             // 
             this.calibrateToolStripMenuItem1.Image = global::RateController.Properties.Resources.RateCal;
             this.calibrateToolStripMenuItem1.Name = "calibrateToolStripMenuItem1";
-            this.calibrateToolStripMenuItem1.Size = new System.Drawing.Size(200, 42);
+            this.calibrateToolStripMenuItem1.Size = new System.Drawing.Size(173, 42);
             this.calibrateToolStripMenuItem1.Text = "Calibrate";
             this.calibrateToolStripMenuItem1.Click += new System.EventHandler(this.calibrateToolStripMenuItem1_Click);
             // 
@@ -570,7 +578,7 @@ namespace RateController
             // 
             this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.SubnetSend;
             this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
-            this.networkToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.networkToolStripMenuItem.Size = new System.Drawing.Size(173, 42);
             this.networkToolStripMenuItem.Text = "Modules";
             this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
             // 
@@ -592,7 +600,7 @@ namespace RateController
             this.commDiagnosticToolStripMenuItem});
             this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
             this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(200, 42);
+            this.MnuOptions.Size = new System.Drawing.Size(173, 42);
             this.MnuOptions.Text = "Options";
             // 
             // largeScreenToolStripMenuItem
@@ -753,7 +761,7 @@ namespace RateController
             // 
             this.exitToolStripMenuItem.Image = global::RateController.Properties.Resources.SwitchOff;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(200, 42);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(173, 42);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -941,6 +949,46 @@ namespace RateController
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
             // 
+            // tg0
+            // 
+            this.tg0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tg0.Location = new System.Drawing.Point(55, 0);
+            this.tg0.Name = "tg0";
+            this.tg0.Size = new System.Drawing.Size(90, 23);
+            this.tg0.TabIndex = 126;
+            this.tg0.Text = "0";
+            this.tg0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // tg1
+            // 
+            this.tg1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tg1.Location = new System.Drawing.Point(55, 29);
+            this.tg1.Name = "tg1";
+            this.tg1.Size = new System.Drawing.Size(90, 23);
+            this.tg1.TabIndex = 127;
+            this.tg1.Text = "0";
+            this.tg1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // tg2
+            // 
+            this.tg2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tg2.Location = new System.Drawing.Point(55, 58);
+            this.tg2.Name = "tg2";
+            this.tg2.Size = new System.Drawing.Size(90, 23);
+            this.tg2.TabIndex = 128;
+            this.tg2.Text = "0";
+            this.tg2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // tg3
+            // 
+            this.tg3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tg3.Location = new System.Drawing.Point(55, 87);
+            this.tg3.Name = "tg3";
+            this.tg3.Size = new System.Drawing.Size(90, 23);
+            this.tg3.TabIndex = 129;
+            this.tg3.Text = "0";
+            this.tg3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1058,5 +1106,9 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transparentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem primedStartToolStripMenuItem;
+        private System.Windows.Forms.Label tg3;
+        private System.Windows.Forms.Label tg2;
+        private System.Windows.Forms.Label tg1;
+        private System.Windows.Forms.Label tg0;
     }
 }
