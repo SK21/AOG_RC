@@ -300,7 +300,7 @@ void DoSetup()
 	AP += WiFi.macAddress();
 	AP += ")";
 
-	WiFi.softAP(AP,MDL.Password);
+	WiFi.softAP(AP, MDL.Password, 1, 0, 2);
 	WiFi.softAPConfig(AP_LocalIP, AP_LocalIP, AP_Subnet);
 	UDP_Wifi.begin(ListeningPort);
 

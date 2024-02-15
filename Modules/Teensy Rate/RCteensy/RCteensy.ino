@@ -16,8 +16,8 @@
 #include <Adafruit_SPIDevice.h>
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  10-Feb-2024"
-const uint16_t InoID = 10024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  14-Feb-2024"
+const uint16_t InoID = 14024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -141,7 +141,7 @@ void loop()
 
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000)
+			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 5000)
 				&& ((Sensor[i].TargetUPM > 0 && MasterOn)
 					|| ((Sensor[i].ControlType == 4) && (Sensor[i].TargetUPM > 0))
 					|| (!AutoOn && MasterOn));

@@ -19,6 +19,8 @@ void SendUDP()
     //      bit 2   - wifi rssi < -80
     //      bit 3	- wifi rssi < -70
     //      bit 4	- wifi rssi < -65
+    //      bit 5   wifi connected
+    //      bit 6   ethernet connected
     //12    CRC
 
     byte Data[20];
@@ -60,6 +62,11 @@ void SendUDP()
         Data[11] = 0;
         if (millis() - Sensor[0].CommTime < 4000) Data[11] |= 0b00000001;
         if (millis() - Sensor[1].CommTime < 4000) Data[11] |= 0b00000010;
+
+        if (ChipFound)
+        {
+            if (Ethernet.linkStatus() == LinkON) Data[11] |= 0b01000000;
+        }
 
         // crc
         Data[12] = CRC(Data, 12, 0);

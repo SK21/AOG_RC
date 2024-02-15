@@ -61,11 +61,11 @@ void SendData()
         // bit 6    ethernet connected
 
         Data[11] = 0;
-        if (millis() - Sensor[0].CommTime < 4000) Data[11] |= 0b00000001;
-        if (millis() - Sensor[1].CommTime < 4000) Data[11] |= 0b00000010;
+        if (millis() - Sensor[0].CommTime < 5000) Data[11] |= 0b00000001;
+        if (millis() - Sensor[1].CommTime < 5000) Data[11] |= 0b00000010;
 
         // wifi
-        if (millis() - ESPtime < 4000)
+        if (millis() - ESPtime < 5000)
         {
             // ESP connected
             if (WifiStrength < -80)
@@ -97,21 +97,18 @@ void SendData()
         }
         else
         {
-
-            //if (millis() - ESPtime > 4000)
-            //{
-            //    // send serial, wifi not connected
-                Serial.print(Data[0]);
-                for (int i = 1; i < 13; i++)
-                {
-                    Serial.print(",");
-                    Serial.print(Data[i]);
-                }
-                Serial.println("");
-            //}
+            // send serial
+            Serial.print(Data[0]);
+            for (int i = 1; i < 13; i++)
+            {
+                Serial.print(",");
+                Serial.print(Data[i]);
+            }
+            Serial.println("");
         }
-            // send wifi
-            SerialESP->write(Data, 13);
+
+        // send wifi
+        if (MDL.ESPserialPort != NC) SerialESP->write(Data, 13);
     }
 
     //PGN32401, module, analog info from module to RC
@@ -161,21 +158,18 @@ void SendData()
     }
     else
     {
-        // send wifi
-        SerialESP->write(Data, 15);
-
-        if (millis() - ESPtime > 4000)
+        // send serial
+        Serial.print(Data[0]);
+        for (int i = 1; i < 15; i++)
         {
-            // send serial, wifi not connected
-            Serial.print(Data[0]);
-            for (int i = 1; i < 15; i++)
-            {
-                Serial.print(",");
-                Serial.print(Data[i]);
-            }
-            Serial.println("");
+            Serial.print(",");
+            Serial.print(Data[i]);
         }
+        Serial.println("");
     }
+
+    // send wifi
+    if (MDL.ESPserialPort != NC) SerialESP->write(Data, 15);
 }
 
 
