@@ -504,7 +504,8 @@ namespace RateController
                             "3 - PCA9555 16 relays, use 16 relay module.\n" +
                             "4 - MCP23017, use a MCP23017 IO expander.\n" +
                             "5 - PCA9685 single, use each PCA9685 pin to control a single relay.\n" +
-                            "6 - PCA9685 paired, use consecutive pins to control relays in a complementary mode. One is on and the other off.\n";
+                            "6 - PCA9685 paired, use consecutive pins to control relays in a complementary mode. One is on and the other off.\n"+
+                            "7 - PCF8574";
 
             mf.Tls.ShowHelp(Message, "Relay Control");
             hlpevent.Handled = true;

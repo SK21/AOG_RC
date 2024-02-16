@@ -414,6 +414,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Pins1.PNG" />
     <None Include="Resources\Help.png" />
     <None Include="Resources\RateDown.png" />
     <None Include="Resources\RateUp.png" />
