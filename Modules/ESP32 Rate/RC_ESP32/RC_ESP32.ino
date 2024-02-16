@@ -6,6 +6,8 @@
 #include <Adafruit_MCP23X17.h>
 #include <Adafruit_MCP23XXX.h>
 
+#include <pcf8574.h>
+
 #include <Adafruit_BusIO_Register.h>
 #include <Adafruit_I2CDevice.h>
 #include <Adafruit_I2CRegister.h>
@@ -27,8 +29,8 @@
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  14-Feb-2024"
-const uint16_t InoID = 14024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  16-Feb-2024"
+const uint16_t InoID = 16024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -39,8 +41,10 @@ const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
 // servo driver
 #define OutputEnablePin 27
-#define DriverAddress 0x55
+#define PCAaddress 0x55
 
+#define PCFaddress 0x20
+#define W5500_SS 5	// W5500 SPI SS
 #define NC 0xFF		// Pin not connected
 
 struct ModuleConfig
@@ -53,7 +57,8 @@ struct ModuleConfig
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 5;
 	uint8_t IP3 = 60;
-	uint8_t RelayControl = 6;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired 
+	uint8_t RelayControl = 6;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
+									//, 5 - PCA9685 single , 6 - PCA9685 paired, 7 - PCF8574
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	char Name[ModStringLengths] = "RateModule";
 	char Password[ModStringLengths] = "111222333";
@@ -130,10 +135,13 @@ uint32_t SendLast = SendTime;
 bool MasterOn = false;
 bool AutoOn = true;
 
+PCF8574 PCF;
+bool PCF_found = false;
+
 PCA9555 PCA;
 bool PCA9555PW_found = false;
 
-Adafruit_PWMServoDriver PWMServoDriver = Adafruit_PWMServoDriver(DriverAddress);
+Adafruit_PWMServoDriver PWMServoDriver = Adafruit_PWMServoDriver(PCAaddress);
 bool PCA9685_found = false;
 
 Adafruit_MCP23X17 MCP;

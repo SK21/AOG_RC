@@ -114,7 +114,7 @@ void DoSetup()
 	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
 	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
 
-	Ethernet.init(5);   // SS pin
+	Ethernet.init(W5500_SS);   // SS pin
 	Ethernet.begin(LocalMac, 0);
 	Ethernet.setLocalIP(LocalIP);
 	IPAddress Mask(255, 255, 255, 0);
@@ -266,7 +266,7 @@ void DoSetup()
 		while (!PCA9685_found)
 		{
 			Serial.print(".");
-			Wire.beginTransmission(DriverAddress);
+			Wire.beginTransmission(PCAaddress);
 			PCA9685_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
