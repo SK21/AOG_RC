@@ -18,6 +18,13 @@ namespace RateController
             mf = CalledFrom;
         }
 
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            UpdateForm();
+            btnOK.Focus();
+            SetButtons(false);
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             try
