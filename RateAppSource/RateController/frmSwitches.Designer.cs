@@ -31,15 +31,15 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSwitches));
             this.btnMaster = new System.Windows.Forms.Button();
-            this.btnDown = new System.Windows.Forms.Button();
             this.btn1 = new System.Windows.Forms.Button();
             this.btn2 = new System.Windows.Forms.Button();
-            this.btnUp = new System.Windows.Forms.Button();
             this.btn3 = new System.Windows.Forms.Button();
             this.btn4 = new System.Windows.Forms.Button();
             this.btAuto = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tmrRelease = new System.Windows.Forms.Timer(this.components);
+            this.btnDown = new System.Windows.Forms.Button();
+            this.btnUp = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnMaster
@@ -53,20 +53,6 @@
             this.btnMaster.UseVisualStyleBackColor = false;
             this.btnMaster.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseDown);
             this.btnMaster.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnMaster_MouseUp);
-            // 
-            // btnDown
-            // 
-            this.btnDown.BackColor = System.Drawing.Color.DimGray;
-            this.btnDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDown.Location = new System.Drawing.Point(222, 12);
-            this.btnDown.Name = "btnDown";
-            this.btnDown.Size = new System.Drawing.Size(64, 35);
-            this.btnDown.TabIndex = 166;
-            this.btnDown.Text = "-";
-            this.btnDown.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnDown.UseVisualStyleBackColor = false;
-            this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseDown);
-            this.btnDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseUp);
             // 
             // btn1
             // 
@@ -87,19 +73,6 @@
             this.btn2.Text = "2";
             this.btn2.UseVisualStyleBackColor = true;
             this.btn2.Click += new System.EventHandler(this.btn2_Click);
-            // 
-            // btnUp
-            // 
-            this.btnUp.BackColor = System.Drawing.Color.DarkGray;
-            this.btnUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUp.Location = new System.Drawing.Point(152, 12);
-            this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(64, 35);
-            this.btnUp.TabIndex = 165;
-            this.btnUp.Text = "+";
-            this.btnUp.UseVisualStyleBackColor = false;
-            this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
-            this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
             // 
             // btn3
             // 
@@ -140,6 +113,37 @@
             // 
             this.tmrRelease.Interval = 500;
             this.tmrRelease.Tick += new System.EventHandler(this.tmrRelease_Tick);
+            // 
+            // btnDown
+            // 
+            this.btnDown.BackColor = System.Drawing.Color.Transparent;
+            this.btnDown.FlatAppearance.BorderSize = 0;
+            this.btnDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDown.Image = global::RateController.Properties.Resources.RateDown;
+            this.btnDown.Location = new System.Drawing.Point(222, 12);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(64, 35);
+            this.btnDown.TabIndex = 166;
+            this.btnDown.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnDown.UseVisualStyleBackColor = false;
+            this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseDown);
+            this.btnDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseUp);
+            // 
+            // btnUp
+            // 
+            this.btnUp.BackColor = System.Drawing.Color.Transparent;
+            this.btnUp.FlatAppearance.BorderSize = 0;
+            this.btnUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUp.Image = global::RateController.Properties.Resources.RateUp;
+            this.btnUp.Location = new System.Drawing.Point(152, 12);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(64, 35);
+            this.btnUp.TabIndex = 165;
+            this.btnUp.UseVisualStyleBackColor = false;
+            this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
+            this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
             // 
             // frmSwitches
             // 

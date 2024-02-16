@@ -57,6 +57,21 @@ namespace RateController
             Cals.Reset();
         }
 
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["frmCalHelp"];
+
+            if (fs == null)
+            {
+                Form frm = new frmCalHelp(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             try
@@ -256,11 +271,6 @@ namespace RateController
             //tbSpeed.Text = Speed.ToString("N1");
             tbSpeed.Text = mf.SimSpeed.ToString("N1");
             Initializing = false;
-        }
-
-        private void btnPwr3_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

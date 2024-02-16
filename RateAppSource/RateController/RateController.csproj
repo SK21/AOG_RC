@@ -152,6 +152,12 @@
     <Compile Include="FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmCalHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCalHelp.Designer.cs">
+      <DependentUpon>frmCalHelp.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmCalibrate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -305,6 +311,9 @@
     <EmbeddedResource Include="FormStart.resx">
       <DependentUpon>FormStart.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmCalHelp.resx">
+      <DependentUpon>frmCalHelp.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmCalibrate.resx">
       <DependentUpon>frmCalibrate.cs</DependentUpon>
     </EmbeddedResource>
@@ -405,6 +414,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Help.png" />
+    <None Include="Resources\RateDown.png" />
+    <None Include="Resources\RateUp.png" />
+    <None Include="Resources\Rate Up %282%29.png" />
+    <None Include="Resources\Rate Up.png" />
     <None Include="Resources\Pins.PNG" />
     <None Include="Resources\PCB.png" />
     <None Include="Resources\PrimeTime.png" />

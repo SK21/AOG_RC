@@ -60,6 +60,14 @@
             this.tbSpeed = new System.Windows.Forms.TextBox();
             this.lbSpeed = new System.Windows.Forms.Label();
             this.pb0 = new System.Windows.Forms.ProgressBar();
+            this.pb1 = new System.Windows.Forms.ProgressBar();
+            this.pb2 = new System.Windows.Forms.ProgressBar();
+            this.pb3 = new System.Windows.Forms.ProgressBar();
+            this.tbRate0 = new System.Windows.Forms.TextBox();
+            this.tbRate1 = new System.Windows.Forms.TextBox();
+            this.tbRate2 = new System.Windows.Forms.TextBox();
+            this.tbRate3 = new System.Windows.Forms.TextBox();
+            this.btnHelp = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnPwr3 = new System.Windows.Forms.Button();
             this.btnPwr2 = new System.Windows.Forms.Button();
@@ -72,14 +80,6 @@
             this.btnSet1 = new System.Windows.Forms.Button();
             this.btnSet0 = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.pb1 = new System.Windows.Forms.ProgressBar();
-            this.pb2 = new System.Windows.Forms.ProgressBar();
-            this.pb3 = new System.Windows.Forms.ProgressBar();
-            this.tbRate0 = new System.Windows.Forms.TextBox();
-            this.tbRate1 = new System.Windows.Forms.TextBox();
-            this.tbRate2 = new System.Windows.Forms.TextBox();
-            this.tbRate3 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // lbName0
@@ -384,7 +384,7 @@
             this.lbSpeed.ForeColor = System.Drawing.Color.DarkGreen;
             this.lbSpeed.Location = new System.Drawing.Point(245, 488);
             this.lbSpeed.Name = "lbSpeed";
-            this.lbSpeed.Size = new System.Drawing.Size(86, 24);
+            this.lbSpeed.Size = new System.Drawing.Size(54, 24);
             this.lbSpeed.TabIndex = 314;
             this.lbSpeed.Text = "mph";
             this.lbSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -398,6 +398,89 @@
             this.pb0.Size = new System.Drawing.Size(72, 23);
             this.pb0.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.pb0.TabIndex = 316;
+            // 
+            // pb1
+            // 
+            this.pb1.Location = new System.Drawing.Point(612, 211);
+            this.pb1.Maximum = 20000;
+            this.pb1.Name = "pb1";
+            this.pb1.Size = new System.Drawing.Size(72, 23);
+            this.pb1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.pb1.TabIndex = 318;
+            this.pb1.Visible = false;
+            // 
+            // pb2
+            // 
+            this.pb2.Location = new System.Drawing.Point(612, 311);
+            this.pb2.Maximum = 20000;
+            this.pb2.Name = "pb2";
+            this.pb2.Size = new System.Drawing.Size(72, 23);
+            this.pb2.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.pb2.TabIndex = 319;
+            this.pb2.Visible = false;
+            // 
+            // pb3
+            // 
+            this.pb3.Location = new System.Drawing.Point(612, 411);
+            this.pb3.Maximum = 20000;
+            this.pb3.Name = "pb3";
+            this.pb3.Size = new System.Drawing.Size(72, 23);
+            this.pb3.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.pb3.TabIndex = 320;
+            this.pb3.Visible = false;
+            // 
+            // tbRate0
+            // 
+            this.tbRate0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbRate0.Location = new System.Drawing.Point(174, 106);
+            this.tbRate0.MaxLength = 8;
+            this.tbRate0.Name = "tbRate0";
+            this.tbRate0.Size = new System.Drawing.Size(99, 30);
+            this.tbRate0.TabIndex = 321;
+            this.tbRate0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // tbRate1
+            // 
+            this.tbRate1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbRate1.Location = new System.Drawing.Point(174, 207);
+            this.tbRate1.MaxLength = 8;
+            this.tbRate1.Name = "tbRate1";
+            this.tbRate1.Size = new System.Drawing.Size(99, 30);
+            this.tbRate1.TabIndex = 322;
+            this.tbRate1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // tbRate2
+            // 
+            this.tbRate2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbRate2.Location = new System.Drawing.Point(174, 307);
+            this.tbRate2.MaxLength = 8;
+            this.tbRate2.Name = "tbRate2";
+            this.tbRate2.Size = new System.Drawing.Size(99, 30);
+            this.tbRate2.TabIndex = 323;
+            this.tbRate2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // tbRate3
+            // 
+            this.tbRate3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbRate3.Location = new System.Drawing.Point(174, 407);
+            this.tbRate3.MaxLength = 8;
+            this.tbRate3.Name = "tbRate3";
+            this.tbRate3.Size = new System.Drawing.Size(99, 30);
+            this.tbRate3.TabIndex = 324;
+            this.tbRate3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
+            this.btnHelp.FlatAppearance.BorderSize = 0;
+            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
+            this.btnHelp.Location = new System.Drawing.Point(296, 465);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(72, 72);
+            this.btnHelp.TabIndex = 325;
+            this.btnHelp.UseVisualStyleBackColor = false;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // btnCancel
             // 
@@ -430,7 +513,6 @@
             this.btnPwr3.TabIndex = 228;
             this.btnPwr3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnPwr3.UseVisualStyleBackColor = false;
-            this.btnPwr3.Click += new System.EventHandler(this.btnPwr3_Click);
             // 
             // btnPwr2
             // 
@@ -563,92 +645,12 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(690, 7);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(314, 519);
-            this.textBox2.TabIndex = 317;
-            this.textBox2.Text = resources.GetString("textBox2.Text");
-            // 
-            // pb1
-            // 
-            this.pb1.Location = new System.Drawing.Point(612, 211);
-            this.pb1.Maximum = 20000;
-            this.pb1.Name = "pb1";
-            this.pb1.Size = new System.Drawing.Size(72, 23);
-            this.pb1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.pb1.TabIndex = 318;
-            this.pb1.Visible = false;
-            // 
-            // pb2
-            // 
-            this.pb2.Location = new System.Drawing.Point(612, 311);
-            this.pb2.Maximum = 20000;
-            this.pb2.Name = "pb2";
-            this.pb2.Size = new System.Drawing.Size(72, 23);
-            this.pb2.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.pb2.TabIndex = 319;
-            this.pb2.Visible = false;
-            // 
-            // pb3
-            // 
-            this.pb3.Location = new System.Drawing.Point(612, 411);
-            this.pb3.Maximum = 20000;
-            this.pb3.Name = "pb3";
-            this.pb3.Size = new System.Drawing.Size(72, 23);
-            this.pb3.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.pb3.TabIndex = 320;
-            this.pb3.Visible = false;
-            // 
-            // tbRate0
-            // 
-            this.tbRate0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRate0.Location = new System.Drawing.Point(174, 106);
-            this.tbRate0.MaxLength = 8;
-            this.tbRate0.Name = "tbRate0";
-            this.tbRate0.Size = new System.Drawing.Size(99, 30);
-            this.tbRate0.TabIndex = 321;
-            this.tbRate0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // tbRate1
-            // 
-            this.tbRate1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRate1.Location = new System.Drawing.Point(174, 207);
-            this.tbRate1.MaxLength = 8;
-            this.tbRate1.Name = "tbRate1";
-            this.tbRate1.Size = new System.Drawing.Size(99, 30);
-            this.tbRate1.TabIndex = 322;
-            this.tbRate1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // tbRate2
-            // 
-            this.tbRate2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRate2.Location = new System.Drawing.Point(174, 307);
-            this.tbRate2.MaxLength = 8;
-            this.tbRate2.Name = "tbRate2";
-            this.tbRate2.Size = new System.Drawing.Size(99, 30);
-            this.tbRate2.TabIndex = 323;
-            this.tbRate2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // tbRate3
-            // 
-            this.tbRate3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRate3.Location = new System.Drawing.Point(174, 407);
-            this.tbRate3.MaxLength = 8;
-            this.tbRate3.Name = "tbRate3";
-            this.tbRate3.Size = new System.Drawing.Size(99, 30);
-            this.tbRate3.TabIndex = 324;
-            this.tbRate3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
             // frmCalibrate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1016, 538);
+            this.ClientSize = new System.Drawing.Size(697, 538);
+            this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.tbRate3);
             this.Controls.Add(this.tbRate2);
             this.Controls.Add(this.tbRate1);
@@ -656,7 +658,6 @@
             this.Controls.Add(this.pb3);
             this.Controls.Add(this.pb2);
             this.Controls.Add(this.pb1);
-            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.pb0);
             this.Controls.Add(this.lbSpeed);
             this.Controls.Add(this.tbSpeed);
@@ -762,7 +763,6 @@
         private System.Windows.Forms.Label lbSpeed;
         private System.Windows.Forms.ProgressBar pb0;
         private System.Windows.Forms.Button btnSet0;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.ProgressBar pb1;
         private System.Windows.Forms.ProgressBar pb2;
         private System.Windows.Forms.ProgressBar pb3;
@@ -770,5 +770,6 @@
         private System.Windows.Forms.TextBox tbRate1;
         private System.Windows.Forms.TextBox tbRate2;
         private System.Windows.Forms.TextBox tbRate3;
+        private System.Windows.Forms.Button btnHelp;
     }
 }

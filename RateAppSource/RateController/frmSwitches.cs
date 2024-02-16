@@ -225,7 +225,7 @@ namespace RateController
             }
             else
             {
-                btnUp.BackColor = Color.DarkGray;
+                btnUp.BackColor = this.TransparencyKey;
             }
 
             if (SwON[4])
@@ -234,7 +234,7 @@ namespace RateController
             }
             else
             {
-                btnDown.BackColor = Color.DarkGray;
+                btnDown.BackColor = this.TransparencyKey;
             }
 
             if (SwON[5])

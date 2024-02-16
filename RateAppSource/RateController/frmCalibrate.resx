@@ -117,30 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="textBox2.Text" xml:space="preserve">
-    <value>Steps to Calibrate:
-A.  enter calibration speed
-
-B.  set calibration flow rate
-    1.  start with Master switch off
-    2.  switch product on
-    3.  enter initial base rate
-    4.  enter initial Cal Factor
-    5.  press start, RC attempts to adjust flow to target rate
-    6.  if successful, meter setting is locked
-    7.  press stop
-    8.  if not locked adjust initial cal factor, speed, PWM minium, PWM maximum, or machine metering drive range
-    9.  start step (B) again.
-
-C.  set Cal Factor (pulses/unit)
-    1.  start with Master switch off
-    2.  press start, turn Master switch on and let run to get an adequate sample amount
-    3.  press stop and enter amount. Cal Factor is calculated.
-    4.  press save to record new values. 
-
-D.  1. to redo step (B) if locked press the locked icon to unlock
-      2. to start from a saved setting press the unlocked icon to lock.</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
