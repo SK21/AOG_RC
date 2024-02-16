@@ -289,7 +289,35 @@ void DoSetup()
 		}
 		Serial.println("");
 		break;
-	}
+
+	case 7:
+		// PCF8574
+		Serial.println("");
+		Serial.println("Starting PCF8574 I/O Expander ...");
+		ErrorCount = 0;
+		while (!PCF_found)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(PCFaddress);
+			PCF_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		Serial.println("");
+		if (PCF_found)
+		{
+			Serial.println("PCF8574 expander found.");
+			PCF.begin();
+		}
+		else
+		{
+			Serial.println("PCF8574 expander not found.");
+		}
+		Serial.println("");
+		break;
+}
 
 	// Access Point
 	AP_LocalIP = IPAddress(192, 168, MDL.ID + 100, 1);

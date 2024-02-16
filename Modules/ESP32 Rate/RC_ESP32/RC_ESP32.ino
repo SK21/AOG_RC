@@ -1,12 +1,12 @@
-#include <Wire.h>
+
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
+#include <pcf8574.h>		// https://github.com/RobTillaart/PCF8574
+#include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 #include <Adafruit_MCP23008.h>
 #include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
 #include <Adafruit_MCP23XXX.h>
-
-#include <pcf8574.h>
 
 #include <Adafruit_BusIO_Register.h>
 #include <Adafruit_I2CDevice.h>
@@ -20,13 +20,12 @@
 
 #include <WebServer.h>
 #include <EEPROM.h> 
+#include <Wire.h>
 
 #include <SPI.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 #include <Adafruit_PWMServoDriver.h>
-
-#include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32 :  16-Feb-2024"
