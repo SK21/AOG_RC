@@ -12,7 +12,8 @@ namespace RateController
         //4     commands
         //      bit 0 - Relay on high
         //      bit 1 - Flow on high
-        //5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired 
+        //5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
+        //                           , 5 - PCA9685 single , 6 - PCA9685 paired, 7 - PCF8574 
         //6	    wifi module serial port
         //7	    Sensor 0, Flow pin
         //8     Sensor 0, Dir pin
