@@ -101,7 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\clsAlarm.cs" />
-    <Compile Include="Classes\clsArduino.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />
     <Compile Include="Classes\clsPressure.cs" />
@@ -414,9 +413,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\RateDown.png" />
     <None Include="Resources\Pins1.PNG" />
     <None Include="Resources\Help.png" />
-    <None Include="Resources\RateDown.png" />
     <None Include="Resources\RateUp.png" />
     <None Include="Resources\Rate Up %282%29.png" />
     <None Include="Resources\Rate Up.png" />

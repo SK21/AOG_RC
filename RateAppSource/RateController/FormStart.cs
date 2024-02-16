@@ -842,7 +842,6 @@ namespace RateController
                 UDPmodules.Close();
 
                 timerMain.Enabled = false;
-                timerNano.Enabled = false;
                 timerPIDs.Enabled = false;
                 Tls.WriteActivityLog("Stopped", true);
             }
@@ -916,7 +915,6 @@ namespace RateController
                 DisplayPressure();
 
                 timerMain.Enabled = true;
-                timerNano.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -1307,11 +1305,6 @@ namespace RateController
 
             Products.Update();
             SectionControl.ReadRateSwitches();
-        }
-
-        private void timerNano_Tick(object sender, EventArgs e)
-        {
-            Products.UpdateVirtualNano();
         }
 
         private void timerPIDs_Tick(object sender, EventArgs e)

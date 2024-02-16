@@ -234,14 +234,6 @@ namespace RateController
             }
         }
 
-        public void UpdateVirtualNano()
-        {
-            for (int i = 0; i < mf.MaxProducts; i++)
-            {
-                if (mf.SimMode == SimType.VirtualNano) cProducts[i].VirtualNano.MainLoop();
-            }
-        }
-
         private int ListID(int ProdID)
         {
             int Result = -1;

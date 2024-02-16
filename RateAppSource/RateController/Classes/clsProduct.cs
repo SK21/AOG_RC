@@ -14,7 +14,6 @@ namespace RateController
         public byte CoverageUnits = 0;
         public PGN32500 ModuleRateSettings;
         public double TankSize = 0;
-        public clsArduino VirtualNano;
         private bool cBumpButtons;
         private bool cCalRun;
         private bool cCalSetMeter;
@@ -22,7 +21,6 @@ namespace RateController
         private bool cConstantUPM;
         private ControlTypeEnum cControlType = 0;
         private int cCountsRev;
-        private bool cDebugArduino = false;
         private bool cEnabled = true;
         private bool cEnableProdDensity = false;
         private bool cEraseAccumulatedUnits = false;
@@ -72,7 +70,6 @@ namespace RateController
             ArduinoModule = new PGN32400(this);
             ModuleRateSettings = new PGN32500(this);
             ModulePIDdata = new PGN32502(this);
-            VirtualNano = new clsArduino(this);
             cLogRate = false;
 
             if (cProductID > mf.MaxProducts - 3)

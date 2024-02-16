@@ -146,17 +146,10 @@ namespace RateController
             cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
 
             // send
-            if (Prod.mf.SimMode == SimType.VirtualNano)
-            {
-                Prod.VirtualNano.ReceiveSerial(cData);
-            }
-            else
-            {
-                Prod.mf.SendSerial(cData);
-                Prod.mf.UDPmodules.SendUDPMessage(cData);
+            Prod.mf.SendSerial(cData);
+            Prod.mf.UDPmodules.SendUDPMessage(cData);
 
-                cSendTime = DateTime.Now;
-            }
+            cSendTime = DateTime.Now;
         }
     }
 }

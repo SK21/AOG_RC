@@ -47,6 +47,10 @@ namespace RateController
             this.lbCoverage = new System.Windows.Forms.Label();
             this.lbRemaining = new System.Windows.Forms.Label();
             this.panSummary = new System.Windows.Forms.Panel();
+            this.tg3 = new System.Windows.Forms.Label();
+            this.tg2 = new System.Windows.Forms.Label();
+            this.tg1 = new System.Windows.Forms.Label();
+            this.tg0 = new System.Windows.Forms.Label();
             this.idc5 = new System.Windows.Forms.Label();
             this.rt5 = new System.Windows.Forms.Label();
             this.prd5 = new System.Windows.Forms.Label();
@@ -65,7 +69,6 @@ namespace RateController
             this.idc1 = new System.Windows.Forms.Label();
             this.prd0 = new System.Windows.Forms.Label();
             this.rt0 = new System.Windows.Forms.Label();
-            this.timerNano = new System.Windows.Forms.Timer(this.components);
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
@@ -112,10 +115,6 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btAlarm = new System.Windows.Forms.Button();
-            this.tg0 = new System.Windows.Forms.Label();
-            this.tg1 = new System.Windows.Forms.Label();
-            this.tg2 = new System.Windows.Forms.Label();
-            this.tg3 = new System.Windows.Forms.Label();
             this.panProducts.SuspendLayout();
             this.panSummary.SuspendLayout();
             this.mnuSettings.SuspendLayout();
@@ -321,6 +320,46 @@ namespace RateController
             this.panSummary.Size = new System.Drawing.Size(270, 200);
             this.panSummary.TabIndex = 100;
             // 
+            // tg3
+            // 
+            this.tg3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tg3.Location = new System.Drawing.Point(55, 87);
+            this.tg3.Name = "tg3";
+            this.tg3.Size = new System.Drawing.Size(90, 23);
+            this.tg3.TabIndex = 129;
+            this.tg3.Text = "0";
+            this.tg3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // tg2
+            // 
+            this.tg2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tg2.Location = new System.Drawing.Point(55, 58);
+            this.tg2.Name = "tg2";
+            this.tg2.Size = new System.Drawing.Size(90, 23);
+            this.tg2.TabIndex = 128;
+            this.tg2.Text = "0";
+            this.tg2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // tg1
+            // 
+            this.tg1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tg1.Location = new System.Drawing.Point(55, 29);
+            this.tg1.Name = "tg1";
+            this.tg1.Size = new System.Drawing.Size(90, 23);
+            this.tg1.TabIndex = 127;
+            this.tg1.Text = "0";
+            this.tg1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // tg0
+            // 
+            this.tg0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tg0.Location = new System.Drawing.Point(55, 0);
+            this.tg0.Name = "tg0";
+            this.tg0.Size = new System.Drawing.Size(90, 23);
+            this.tg0.TabIndex = 126;
+            this.tg0.Text = "0";
+            this.tg0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // idc5
             // 
             this.idc5.BackColor = System.Drawing.SystemColors.Control;
@@ -512,11 +551,6 @@ namespace RateController
             this.rt0.TabIndex = 108;
             this.rt0.Text = "0";
             this.rt0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // timerNano
-            // 
-            this.timerNano.Interval = 50;
-            this.timerNano.Tick += new System.EventHandler(this.timerNano_Tick);
             // 
             // mnuSettings
             // 
@@ -949,46 +983,6 @@ namespace RateController
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
             // 
-            // tg0
-            // 
-            this.tg0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tg0.Location = new System.Drawing.Point(55, 0);
-            this.tg0.Name = "tg0";
-            this.tg0.Size = new System.Drawing.Size(90, 23);
-            this.tg0.TabIndex = 126;
-            this.tg0.Text = "0";
-            this.tg0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tg1
-            // 
-            this.tg1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tg1.Location = new System.Drawing.Point(55, 29);
-            this.tg1.Name = "tg1";
-            this.tg1.Size = new System.Drawing.Size(90, 23);
-            this.tg1.TabIndex = 127;
-            this.tg1.Text = "0";
-            this.tg1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tg2
-            // 
-            this.tg2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tg2.Location = new System.Drawing.Point(55, 58);
-            this.tg2.Name = "tg2";
-            this.tg2.Size = new System.Drawing.Size(90, 23);
-            this.tg2.TabIndex = 128;
-            this.tg2.Text = "0";
-            this.tg2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tg3
-            // 
-            this.tg3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tg3.Location = new System.Drawing.Point(55, 87);
-            this.tg3.Name = "tg3";
-            this.tg3.Size = new System.Drawing.Size(90, 23);
-            this.tg3.TabIndex = 129;
-            this.tg3.Text = "0";
-            this.tg3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1058,7 +1052,6 @@ namespace RateController
         private System.Windows.Forms.Label prd0;
         private System.Windows.Forms.Label rt0;
         private System.Windows.Forms.Button btnLeft;
-        private System.Windows.Forms.Timer timerNano;
         private System.Windows.Forms.ContextMenuStrip mnuSettings;
         private System.Windows.Forms.ToolStripMenuItem MnuProducts;
         private System.Windows.Forms.ToolStripMenuItem MnuSections;
