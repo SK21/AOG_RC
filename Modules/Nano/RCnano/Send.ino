@@ -16,6 +16,12 @@ void SendData()
     //11    Status
     //      bit 0 - sensor 0 connected
     //      bit 1 - sensor 1 connected
+    //      bit 2   - wifi rssi < -80
+    //      bit 3	- wifi rssi < -70
+    //      bit 4	- wifi rssi < -65
+    //      bit 5   wifi connected
+    //      bit 6   ethernet connected
+    //      bit 7   good pin configuration
     //12    CRC
 
     byte Data[20];
@@ -52,11 +58,12 @@ void SendData()
         Data[10] = (int)Sensor[i].PWM >> 8;
 
         // status
-        // bit 0    - sensor 0 receiving rate controller data
-        // bit 1    - sensor 1 receiving rate controller data
         Data[11] = 0;
         if (millis() - Sensor[0].CommTime < 4000) Data[11] |= 0b00000001;
         if (millis() - Sensor[1].CommTime < 4000) Data[11] |= 0b00000010;
+
+        if (EthernetConnected()) Data[11] |= 0b01000000;
+        if (GoodPins) Data[11] |= 0b10000000;
 
         // crc
         Data[12] = CRC(Data, 12, 0);

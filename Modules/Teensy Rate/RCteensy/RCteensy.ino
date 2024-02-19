@@ -16,8 +16,8 @@
 #include <Adafruit_SPIDevice.h>
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  14-Feb-2024"
-const uint16_t InoID = 14024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  18-Feb-2024"
+const uint16_t InoID = 18024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -125,6 +125,7 @@ HardwareSerial* SerialESP;
 
 WDT_T4<WDT1> wdt;
 extern float tempmonGetTemp(void);
+bool GoodPins;	// configuration pins correct
 
 void setup()
 {

@@ -85,6 +85,7 @@ namespace RateController
         private double cPrimeTime = 0;
         private int cPrimeDelay = 0;
         private double cSimSpeed = 0;
+        private DateTime StartTime;
 
         public FormStart()
         {
@@ -844,6 +845,8 @@ namespace RateController
                 timerMain.Enabled = false;
                 timerPIDs.Enabled = false;
                 Tls.WriteActivityLog("Stopped", true);
+                string mes = "Run time (hours): " + ((DateTime.Now - StartTime).TotalSeconds / 3600.0).ToString("N1");
+                Tls.WriteActivityLog(mes);
             }
             catch (Exception)
             {
@@ -924,6 +927,7 @@ namespace RateController
             }
             SetLanguage();
             Tls.WriteActivityLog("Started", true);
+            StartTime = DateTime.Now;
         }
 
         private void frenchToolStripMenuItem_Click(object sender, EventArgs e)

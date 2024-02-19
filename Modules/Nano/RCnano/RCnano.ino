@@ -15,8 +15,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  05-Feb-2024"
-const uint16_t InoID = 5024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  18-Feb-2024"
+const uint16_t InoID = 18024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -70,7 +70,7 @@ SensorConfig Sensor[2];
 // and then mount the shield on top of the Nano.
 
 // ethernet
-byte Ethernet::buffer[150];			// udp send and receive buffer
+byte Ethernet::buffer[100];			// udp send and receive buffer
 static byte selectPin = 10;
 uint16_t ListeningPort = 28888;
 uint16_t DestinationPort = 29999;
@@ -108,6 +108,8 @@ int TimedCombo(byte, bool);	// function prototype
 
 //reset function
 void(*resetFunc) (void) = 0;
+
+bool GoodPins;	// pin configuration correct
 
 bool EthernetConnected()
 {
@@ -216,11 +218,11 @@ void DebugTheIno()
 		DebugTime = millis();
 		Serial.println("");
 
-		//Serial.print(F(" Micros: "));
-		//Serial.print(MaxLoopTime);
+		Serial.print(F(" Micros: "));
+		Serial.print(MaxLoopTime);
 
-		//Serial.print(F(",  SRAM left: "));
-		//Serial.print(MinMem);
+		Serial.print(F(",  SRAM left: "));
+		Serial.print(MinMem);
 
 		Serial.print(", ");
 		Serial.print(debug1);

@@ -137,13 +137,17 @@ void CheckRelays()
                 if (j < 1) Rlys = NewLo; else Rlys = NewHi;
                 for (int i = 0; i < 8; i++)
                 {
-                    if (bitRead(Rlys, i))
+                    IOpin = MDL.RelayPins[i + j * 8];
+                    if (IOpin < 16)
                     {
-                        MCP.digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal);
-                    }
-                    else
-                    {
-                        MCP.digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
+                        if (bitRead(Rlys, i))
+                        {
+                            MCP.digitalWrite(IOpin, MDL.RelayOnSignal);
+                        }
+                        else
+                        {
+                            MCP.digitalWrite(IOpin, !MDL.RelayOnSignal);
+                        }
                     }
                 }
             }

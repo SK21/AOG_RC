@@ -30,6 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmModuleConfig));
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label27 = new System.Windows.Forms.Label();
+            this.lbModuleIP = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.cbEthernet = new System.Windows.Forms.ComboBox();
+            this.btnSendSubnet = new System.Windows.Forms.Button();
+            this.btnRescan = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label28 = new System.Windows.Forms.Label();
             this.cbRelayControl = new System.Windows.Forms.ComboBox();
@@ -86,22 +93,16 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label27 = new System.Windows.Forms.Label();
-            this.lbModuleIP = new System.Windows.Forms.Label();
-            this.label26 = new System.Windows.Forms.Label();
-            this.cbEthernet = new System.Windows.Forms.ComboBox();
-            this.btnSendSubnet = new System.Windows.Forms.Button();
-            this.btnRescan = new System.Windows.Forms.Button();
             this.btnPCB = new System.Windows.Forms.Button();
-            this.btnLoadDefaults = new System.Windows.Forms.Button();
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.cboBoard = new System.Windows.Forms.ComboBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -115,6 +116,89 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(456, 514);
             this.tabControl1.TabIndex = 147;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.label27);
+            this.tabPage3.Controls.Add(this.lbModuleIP);
+            this.tabPage3.Controls.Add(this.label26);
+            this.tabPage3.Controls.Add(this.cbEthernet);
+            this.tabPage3.Controls.Add(this.btnSendSubnet);
+            this.tabPage3.Controls.Add(this.btnRescan);
+            this.tabPage3.Location = new System.Drawing.Point(4, 33);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(448, 477);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Network";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(64, 179);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(76, 24);
+            this.label27.TabIndex = 217;
+            this.label27.Text = "Local IP";
+            // 
+            // lbModuleIP
+            // 
+            this.lbModuleIP.Location = new System.Drawing.Point(229, 136);
+            this.lbModuleIP.Name = "lbModuleIP";
+            this.lbModuleIP.Size = new System.Drawing.Size(161, 24);
+            this.lbModuleIP.TabIndex = 216;
+            this.lbModuleIP.Text = "192.168.100.100";
+            this.lbModuleIP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(64, 136);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(149, 24);
+            this.label26.TabIndex = 215;
+            this.label26.Text = "Selected Subnet";
+            // 
+            // cbEthernet
+            // 
+            this.cbEthernet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbEthernet.FormattingEnabled = true;
+            this.cbEthernet.Location = new System.Drawing.Point(233, 176);
+            this.cbEthernet.Name = "cbEthernet";
+            this.cbEthernet.Size = new System.Drawing.Size(157, 32);
+            this.cbEthernet.TabIndex = 212;
+            this.cbEthernet.SelectedIndexChanged += new System.EventHandler(this.cbEthernet_SelectedIndexChanged);
+            // 
+            // btnSendSubnet
+            // 
+            this.btnSendSubnet.BackColor = System.Drawing.Color.Transparent;
+            this.btnSendSubnet.FlatAppearance.BorderSize = 0;
+            this.btnSendSubnet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSendSubnet.Image = global::RateController.Properties.Resources.Update4;
+            this.btnSendSubnet.Location = new System.Drawing.Point(138, 239);
+            this.btnSendSubnet.Name = "btnSendSubnet";
+            this.btnSendSubnet.Size = new System.Drawing.Size(72, 72);
+            this.btnSendSubnet.TabIndex = 211;
+            this.btnSendSubnet.UseVisualStyleBackColor = false;
+            this.btnSendSubnet.Click += new System.EventHandler(this.btnSendSubnet_Click);
+            this.btnSendSubnet.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendSubnet_HelpRequested);
+            // 
+            // btnRescan
+            // 
+            this.btnRescan.BackColor = System.Drawing.Color.Transparent;
+            this.btnRescan.FlatAppearance.BorderSize = 0;
+            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRescan.Image = global::RateController.Properties.Resources.Update;
+            this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnRescan.Location = new System.Drawing.Point(237, 239);
+            this.btnRescan.Name = "btnRescan";
+            this.btnRescan.Size = new System.Drawing.Size(72, 72);
+            this.btnRescan.TabIndex = 210;
+            this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnRescan.UseVisualStyleBackColor = false;
+            this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
+            this.btnRescan.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnRescan_HelpRequested);
             // 
             // tabPage1
             // 
@@ -724,115 +808,18 @@
             this.label4.TabIndex = 68;
             this.label4.Text = "Flow 1";
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.label27);
-            this.tabPage3.Controls.Add(this.lbModuleIP);
-            this.tabPage3.Controls.Add(this.label26);
-            this.tabPage3.Controls.Add(this.cbEthernet);
-            this.tabPage3.Controls.Add(this.btnSendSubnet);
-            this.tabPage3.Controls.Add(this.btnRescan);
-            this.tabPage3.Location = new System.Drawing.Point(4, 33);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(448, 477);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Network";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(64, 179);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(76, 24);
-            this.label27.TabIndex = 217;
-            this.label27.Text = "Local IP";
-            // 
-            // lbModuleIP
-            // 
-            this.lbModuleIP.Location = new System.Drawing.Point(229, 136);
-            this.lbModuleIP.Name = "lbModuleIP";
-            this.lbModuleIP.Size = new System.Drawing.Size(161, 24);
-            this.lbModuleIP.TabIndex = 216;
-            this.lbModuleIP.Text = "192.168.100.100";
-            this.lbModuleIP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(64, 136);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(149, 24);
-            this.label26.TabIndex = 215;
-            this.label26.Text = "Selected Subnet";
-            // 
-            // cbEthernet
-            // 
-            this.cbEthernet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbEthernet.FormattingEnabled = true;
-            this.cbEthernet.Location = new System.Drawing.Point(233, 176);
-            this.cbEthernet.Name = "cbEthernet";
-            this.cbEthernet.Size = new System.Drawing.Size(157, 32);
-            this.cbEthernet.TabIndex = 212;
-            this.cbEthernet.SelectedIndexChanged += new System.EventHandler(this.cbEthernet_SelectedIndexChanged);
-            // 
-            // btnSendSubnet
-            // 
-            this.btnSendSubnet.BackColor = System.Drawing.Color.Transparent;
-            this.btnSendSubnet.FlatAppearance.BorderSize = 0;
-            this.btnSendSubnet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSendSubnet.Image = global::RateController.Properties.Resources.Update4;
-            this.btnSendSubnet.Location = new System.Drawing.Point(138, 239);
-            this.btnSendSubnet.Name = "btnSendSubnet";
-            this.btnSendSubnet.Size = new System.Drawing.Size(72, 72);
-            this.btnSendSubnet.TabIndex = 211;
-            this.btnSendSubnet.UseVisualStyleBackColor = false;
-            this.btnSendSubnet.Click += new System.EventHandler(this.btnSendSubnet_Click);
-            this.btnSendSubnet.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendSubnet_HelpRequested);
-            // 
-            // btnRescan
-            // 
-            this.btnRescan.BackColor = System.Drawing.Color.Transparent;
-            this.btnRescan.FlatAppearance.BorderSize = 0;
-            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRescan.Image = global::RateController.Properties.Resources.Update;
-            this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRescan.Location = new System.Drawing.Point(237, 239);
-            this.btnRescan.Name = "btnRescan";
-            this.btnRescan.Size = new System.Drawing.Size(72, 72);
-            this.btnRescan.TabIndex = 210;
-            this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnRescan.UseVisualStyleBackColor = false;
-            this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
-            this.btnRescan.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnRescan_HelpRequested);
-            // 
             // btnPCB
             // 
             this.btnPCB.BackColor = System.Drawing.Color.Transparent;
             this.btnPCB.FlatAppearance.BorderSize = 0;
             this.btnPCB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPCB.Image = global::RateController.Properties.Resources.PCB;
-            this.btnPCB.Location = new System.Drawing.Point(15, 538);
+            this.btnPCB.Location = new System.Drawing.Point(19, 531);
             this.btnPCB.Name = "btnPCB";
             this.btnPCB.Size = new System.Drawing.Size(72, 72);
             this.btnPCB.TabIndex = 152;
             this.btnPCB.UseVisualStyleBackColor = false;
             this.btnPCB.Click += new System.EventHandler(this.btnPCB_Click);
-            // 
-            // btnLoadDefaults
-            // 
-            this.btnLoadDefaults.BackColor = System.Drawing.Color.Transparent;
-            this.btnLoadDefaults.FlatAppearance.BorderSize = 0;
-            this.btnLoadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLoadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnLoadDefaults.Location = new System.Drawing.Point(109, 538);
-            this.btnLoadDefaults.Name = "btnLoadDefaults";
-            this.btnLoadDefaults.Size = new System.Drawing.Size(72, 72);
-            this.btnLoadDefaults.TabIndex = 151;
-            this.btnLoadDefaults.UseVisualStyleBackColor = false;
-            this.btnLoadDefaults.Click += new System.EventHandler(this.btnLoadDefaults_Click);
-            this.btnLoadDefaults.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnLoadDefaults_HelpRequested);
             // 
             // btnSendToModule
             // 
@@ -840,7 +827,7 @@
             this.btnSendToModule.FlatAppearance.BorderSize = 0;
             this.btnSendToModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSendToModule.Image = global::RateController.Properties.Resources.UpArrow64;
-            this.btnSendToModule.Location = new System.Drawing.Point(203, 538);
+            this.btnSendToModule.Location = new System.Drawing.Point(207, 534);
             this.btnSendToModule.Name = "btnSendToModule";
             this.btnSendToModule.Size = new System.Drawing.Size(72, 72);
             this.btnSendToModule.TabIndex = 150;
@@ -858,7 +845,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(297, 538);
+            this.btnCancel.Location = new System.Drawing.Point(301, 534);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
@@ -876,7 +863,7 @@
             this.btnClose.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnClose.Image = global::RateController.Properties.Resources.OK;
             this.btnClose.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnClose.Location = new System.Drawing.Point(391, 538);
+            this.btnClose.Location = new System.Drawing.Point(395, 534);
             this.btnClose.Margin = new System.Windows.Forms.Padding(6);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(72, 72);
@@ -885,13 +872,39 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // cboBoard
+            // 
+            this.cboBoard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboBoard.FormattingEnabled = true;
+            this.cboBoard.Items.AddRange(new object[] {
+            "RC5",
+            "RC8",
+            "RC11",
+            "RC12",
+            "RC15"});
+            this.cboBoard.Location = new System.Drawing.Point(113, 562);
+            this.cboBoard.Name = "cboBoard";
+            this.cboBoard.Size = new System.Drawing.Size(72, 32);
+            this.cboBoard.TabIndex = 213;
+            this.cboBoard.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(113, 535);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(69, 24);
+            this.label29.TabIndex = 218;
+            this.label29.Text = "Boards";
+            // 
             // frmModuleConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(486, 617);
+            this.ClientSize = new System.Drawing.Size(478, 610);
             this.Controls.Add(this.btnPCB);
-            this.Controls.Add(this.btnLoadDefaults);
+            this.Controls.Add(this.label29);
+            this.Controls.Add(this.cboBoard);
             this.Controls.Add(this.btnSendToModule);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnClose);
@@ -909,13 +922,14 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmModuleConfig_FormClosed);
             this.Load += new System.EventHandler(this.frmModuleConfig_Load);
             this.tabControl1.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -984,11 +998,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbFlow1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnLoadDefaults;
         private System.Windows.Forms.Button btnSendToModule;
         private System.Windows.Forms.Label lbModuleIP;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Button btnPCB;
+        private System.Windows.Forms.ComboBox cboBoard;
+        private System.Windows.Forms.Label label29;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AgOpenGPS;
 using System;
+using System.Drawing;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -17,6 +18,24 @@ namespace RateController
         {
             InitializeComponent();
             mf = Main;
+            for (int i = 0; i < mf.MaxProducts; i++)
+            {
+                mf.Products.Item(i).ArduinoModule.PinStatusChanged += ArduinoModule_PinStatusChanged;
+            }
+        }
+
+        private void ArduinoModule_PinStatusChanged(object sender, PGN32400.PinStatusArgs e)
+        {
+            string Mes = "";
+            if (e.GoodPins)
+            {
+                Mes = "Pin configuration correct.";
+            }
+            else
+            {
+                Mes = "Pin configuration not correct.";
+            }
+            mf.Tls.ShowHelp(Mes);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -42,43 +61,6 @@ namespace RateController
                 SetButtons(false);
                 UpdateForm();
             }
-        }
-
-        private void btnLoadDefaults_Click(object sender, EventArgs e)
-        {
-            tbModuleID.Text = "0";
-            tbSensorCount.Text = "1";
-            ckRelayOn.Checked = true;
-            ckFlowOn.Checked = true;
-            tbWifiPort.Text = "0";
-
-            tbFlow1.Text = "17";
-            tbDir1.Text = "32";
-            tbPWM1.Text = "33";
-
-            tbFlow2.Text = "16";
-            tbDir2.Text = "25";
-            tbPWM2.Text = "26";
-
-            cbRelayControl.SelectedIndex = 1;
-
-            tbRelay1.Text = "255";
-            tbRelay2.Text = "255";
-            tbRelay3.Text = "255";
-            tbRelay4.Text = "255";
-            tbRelay5.Text = "255";
-            tbRelay6.Text = "255";
-            tbRelay7.Text = "255";
-            tbRelay8.Text = "255";
-
-            tbRelay9.Text = "255";
-            tbRelay10.Text = "255";
-            tbRelay11.Text = "255";
-            tbRelay12.Text = "255";
-            tbRelay13.Text = "255";
-            tbRelay14.Text = "255";
-            tbRelay15.Text = "255";
-            tbRelay16.Text = "255";
         }
 
         private void btnLoadDefaults_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -162,6 +144,29 @@ namespace RateController
             SetButtons(true);
         }
 
+        private void cbRelayControl_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "1 - GPIOs, use the micro-controller pins.\n" +
+                            "2 - PCA9555 8 relays, use 8 relay module.\n" +
+                            "3 - PCA9555 16 relays, use 16 relay module.\n" +
+                            "4 - MCP23017, use a MCP23017 IO expander.\n" +
+                            "5 - PCA9685 single, use each PCA9685 pin to control a single relay.\n" +
+                            "6 - PCA9685 paired, use consecutive pins to control relays in a complementary mode. One is on and the other off.\n" +
+                            "7 - PCF8574";
+
+            mf.Tls.ShowHelp(Message, "Relay Control");
+            hlpevent.Handled = true;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                SwitchBoards(cboBoard.SelectedIndex);
+                SetButtons(true);
+            }
+        }
+
         private void frmModuleConfig_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (this.WindowState == FormWindowState.Normal)
@@ -175,6 +180,12 @@ namespace RateController
             mf.Tls.LoadFormData(this);
             SetDayMode();
             UpdateForm();
+        }
+
+        private void groupBox1_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void LoadCombo()
@@ -239,29 +250,62 @@ namespace RateController
             mf.ModuleConfig.RelayOnHigh = ckRelayOn.Checked;
             mf.ModuleConfig.FlowOnHigh = ckFlowOn.Checked;
 
+            // flow
             if (byte.TryParse(tbFlow1.Text, out val))
             {
                 mf.ModuleConfig.Sensor0Flow = val;
+            }
+            else
+            {
+                mf.ModuleConfig.Sensor0Flow = 255;
             }
             if (byte.TryParse(tbFlow2.Text, out val))
             {
                 mf.ModuleConfig.Sensor1Flow = val;
             }
+            else
+            {
+                mf.ModuleConfig.Sensor1Flow = 255;
+            }
+
+            // motor
             if (byte.TryParse(tbDir1.Text, out val))
             {
                 mf.ModuleConfig.Sensor0Dir = val;
+            }
+            else
+            {
+                mf.ModuleConfig.Sensor0Dir = 255;
             }
             if (byte.TryParse(tbDir2.Text, out val))
             {
                 mf.ModuleConfig.Sensor1Dir = val;
             }
+            else
+            {
+                mf.ModuleConfig.Sensor1Dir = 255;
+            }
             if (byte.TryParse(tbPWM1.Text, out val))
             {
                 mf.ModuleConfig.Sensor0PWM = val;
             }
+            else
+            {
+                mf.ModuleConfig.Sensor0PWM = 255;
+            }
             if (byte.TryParse(tbPWM2.Text, out val))
             {
                 mf.ModuleConfig.Sensor1PWM = val;
+            }
+            else
+            {
+                mf.ModuleConfig.Sensor1PWM = 255;
+            }
+
+            // Pins
+            for (int i = 0; i < 16; i++)
+            {
+                Pins[i] = 255;
             }
 
             if (byte.TryParse(tbRelay1.Text, out val))
@@ -406,6 +450,157 @@ namespace RateController
             return Result;
         }
 
+        private void SwitchBoards(int Brd)
+        {
+            switch (Brd)
+            {
+                case 0:
+                case 1:
+                    // RC5, RC8
+                    tbModuleID.Text = "0";
+                    tbSensorCount.Text = "2";
+                    tbWifiPort.Text = "0";
+                    cbRelayControl.SelectedIndex = 4;
+
+                    ckRelayOn.Checked = true;
+                    ckFlowOn.Checked = true;
+
+                    tbFlow1.Text = "2";
+                    tbFlow2.Text = "3";
+                    tbDir1.Text = "4";
+                    tbDir2.Text = "6";
+                    tbPWM1.Text = "5";
+                    tbPWM2.Text = "9";
+
+                    tbRelay1.Text = "8";
+                    tbRelay2.Text = "9";
+                    tbRelay3.Text = "10";
+                    tbRelay4.Text = "11";
+                    tbRelay5.Text = "12";
+                    tbRelay6.Text = "13";
+                    tbRelay7.Text = "14";
+                    tbRelay8.Text = "15";
+
+                    tbRelay9.Text = "7";
+                    tbRelay10.Text = "6";
+                    tbRelay11.Text = "5";
+                    tbRelay12.Text = "4";
+                    tbRelay13.Text = "3";
+                    tbRelay14.Text = "2";
+                    tbRelay15.Text = "1";
+                    tbRelay16.Text = "0";
+                    break;
+
+                case 2:
+                    // RC11
+                    tbModuleID.Text = "0";
+                    tbSensorCount.Text = "2";
+                    tbWifiPort.Text = "1";
+                    cbRelayControl.SelectedIndex = 1;
+
+                    ckRelayOn.Checked = true;
+                    ckFlowOn.Checked = true;
+
+                    tbFlow1.Text = "28";
+                    tbFlow2.Text = "29";
+                    tbDir1.Text = "37";
+                    tbDir2.Text = "14";
+                    tbPWM1.Text = "36";
+                    tbPWM2.Text = "15";
+
+                    tbRelay1.Text = "8";
+                    tbRelay2.Text = "9";
+                    tbRelay3.Text = "10";
+                    tbRelay4.Text = "11";
+                    tbRelay5.Text = "12";
+                    tbRelay6.Text = "25";
+                    tbRelay7.Text = "26";
+                    tbRelay8.Text = "27";
+
+                    tbRelay9.Text = "-";
+                    tbRelay10.Text = "-";
+                    tbRelay11.Text = "-";
+                    tbRelay12.Text = "-";
+                    tbRelay13.Text = "-";
+                    tbRelay14.Text = "-";
+                    tbRelay15.Text = "-";
+                    tbRelay16.Text = "-";
+                    break;
+
+                case 3:
+                    // RC12
+                    tbModuleID.Text = "0";
+                    tbSensorCount.Text = "1";
+                    tbWifiPort.Text = "0";
+                    cbRelayControl.SelectedIndex = 2;
+
+                    ckRelayOn.Checked = true;
+                    ckFlowOn.Checked = true;
+
+                    tbFlow1.Text = "3";
+                    tbFlow2.Text = "-";
+                    tbDir1.Text = "6";
+                    tbDir2.Text = "-";
+                    tbPWM1.Text = "9";
+                    tbPWM2.Text = "-";
+
+                    tbRelay1.Text = "-";
+                    tbRelay2.Text = "-";
+                    tbRelay3.Text = "-";
+                    tbRelay4.Text = "-";
+                    tbRelay5.Text = "-";
+                    tbRelay6.Text = "-";
+                    tbRelay7.Text = "-";
+                    tbRelay8.Text = "-";
+
+                    tbRelay9.Text = "-";
+                    tbRelay10.Text = "-";
+                    tbRelay11.Text = "-";
+                    tbRelay12.Text = "-";
+                    tbRelay13.Text = "-";
+                    tbRelay14.Text = "-";
+                    tbRelay15.Text = "-";
+                    tbRelay16.Text = "-";
+                    break;
+
+                default:
+                    // RC15
+                    tbModuleID.Text = "0";
+                    tbSensorCount.Text = "2";
+                    tbWifiPort.Text = "0";
+                    cbRelayControl.SelectedIndex = 6;
+
+                    ckRelayOn.Checked = true;
+                    ckFlowOn.Checked = true;
+
+                    tbFlow1.Text = "17";
+                    tbFlow2.Text = "16";
+                    tbDir1.Text = "32";
+                    tbDir2.Text = "25";
+                    tbPWM1.Text = "33";
+                    tbPWM2.Text = "26";
+
+                    tbRelay1.Text = "-";
+                    tbRelay2.Text = "-";
+                    tbRelay3.Text = "-";
+                    tbRelay4.Text = "-";
+                    tbRelay5.Text = "-";
+                    tbRelay6.Text = "-";
+                    tbRelay7.Text = "-";
+                    tbRelay8.Text = "-";
+
+                    tbRelay9.Text = "-";
+                    tbRelay10.Text = "-";
+                    tbRelay11.Text = "-";
+                    tbRelay12.Text = "-";
+                    tbRelay13.Text = "-";
+                    tbRelay14.Text = "-";
+                    tbRelay15.Text = "-";
+                    tbRelay16.Text = "-";
+                    break;
+            }
+        }
+
         private void textBox_Enter(object sender, EventArgs e)
         {
             double temp;
@@ -443,6 +638,7 @@ namespace RateController
             Initializing = true;
 
             byte[] data = mf.ModuleConfig.GetData();
+            string[] display = new string[data.Length];
 
             tbModuleID.Text = data[2].ToString();
             tbSensorCount.Text = data[3].ToString();
@@ -450,35 +646,61 @@ namespace RateController
             ckFlowOn.Checked = ((data[4] & 2) == 2);
             cbRelayControl.SelectedIndex = data[5];
             tbWifiPort.Text = data[6].ToString();
-            tbFlow1.Text = data[7].ToString();
-            tbDir1.Text = data[8].ToString();
-            tbPWM1.Text = data[9].ToString();
-            tbFlow2.Text = data[10].ToString();
-            tbDir2.Text = data[11].ToString();
-            tbPWM2.Text = data[12].ToString();
 
-            tbRelay1.Text = data[13].ToString();
-            tbRelay2.Text = data[14].ToString();
-            tbRelay3.Text = data[15].ToString();
-            tbRelay4.Text = data[16].ToString();
+            // flow, motor
+            for (int i = 7; i < 13; i++)
+            {
+                if (data[i] > 60)
+                {
+                    display[i] = "-";
+                }
+                else
+                {
+                    display[i] = data[i].ToString();
+                }
+            }
+            tbFlow1.Text = display[7].ToString();
+            tbDir1.Text = display[8].ToString();
+            tbPWM1.Text = display[9].ToString();
+            tbFlow2.Text = display[10].ToString();
+            tbDir2.Text = display[11].ToString();
+            tbPWM2.Text = display[12].ToString();
 
-            tbRelay5.Text = data[17].ToString();
-            tbRelay6.Text = data[18].ToString();
-            tbRelay7.Text = data[19].ToString();
-            tbRelay8.Text = data[20].ToString();
+            // relays
+            for (int i = 13; i < 29; i++)
+            {
+                if (data[i] > 60)
+                {
+                    display[i] = "-";
+                }
+                else
+                {
+                    display[i] = data[i].ToString();
+                }
+            }
+            tbRelay1.Text = display[13].ToString();
+            tbRelay2.Text = display[14].ToString();
+            tbRelay3.Text = display[15].ToString();
+            tbRelay4.Text = display[16].ToString();
 
-            tbRelay9.Text = data[21].ToString();
-            tbRelay10.Text = data[22].ToString();
-            tbRelay11.Text = data[23].ToString();
-            tbRelay12.Text = data[24].ToString();
+            tbRelay5.Text = display[17].ToString();
+            tbRelay6.Text = display[18].ToString();
+            tbRelay7.Text = display[19].ToString();
+            tbRelay8.Text = display[20].ToString();
 
-            tbRelay13.Text = data[25].ToString();
-            tbRelay14.Text = data[26].ToString();
-            tbRelay15.Text = data[27].ToString();
-            tbRelay16.Text = data[28].ToString();
+            tbRelay9.Text = display[21].ToString();
+            tbRelay10.Text = display[22].ToString();
+            tbRelay11.Text = display[23].ToString();
+            tbRelay12.Text = display[24].ToString();
+
+            tbRelay13.Text = display[25].ToString();
+            tbRelay14.Text = display[26].ToString();
+            tbRelay15.Text = display[27].ToString();
+            tbRelay16.Text = display[28].ToString();
 
             LoadCombo();
             lbModuleIP.Text = mf.UDPmodules.SubNet;
+            cboBoard.SelectedIndex = -1;
 
             Initializing = false;
         }
@@ -495,20 +717,6 @@ namespace RateController
                     tbWifiPort.Text = form.ReturnValue.ToString("N0");
                 }
             }
-        }
-
-        private void cbRelayControl_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "1 - GPIOs, use the micro-controller pins.\n" +
-                            "2 - PCA9555 8 relays, use 8 relay module.\n" +
-                            "3 - PCA9555 16 relays, use 16 relay module.\n" +
-                            "4 - MCP23017, use a MCP23017 IO expander.\n" +
-                            "5 - PCA9685 single, use each PCA9685 pin to control a single relay.\n" +
-                            "6 - PCA9685 paired, use consecutive pins to control relays in a complementary mode. One is on and the other off.\n"+
-                            "7 - PCF8574";
-
-            mf.Tls.ShowHelp(Message, "Relay Control");
-            hlpevent.Handled = true;
         }
     }
 }

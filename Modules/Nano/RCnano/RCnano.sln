@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.8.34309.116
+VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RCnano", "RCnano.vcxproj", "{6FE31C17-C6A7-457B-AD27-4711AE0631C4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RCnano", "RCnano.vcxproj", "{73605835-1E73-4669-A472-6452E8A127B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,23 +13,23 @@ Global
 		Release|ARM64 = Release|ARM64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Debug|ARM.ActiveCfg = Debug|ARM
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Debug|ARM.Build.0 = Debug|ARM
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Debug|ARM.Deploy.0 = Debug|ARM
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Debug|ARM64.Build.0 = Debug|ARM64
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Debug|ARM64.Deploy.0 = Debug|ARM64
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Release|ARM.ActiveCfg = Release|ARM
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Release|ARM.Build.0 = Release|ARM
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Release|ARM.Deploy.0 = Release|ARM
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Release|ARM64.ActiveCfg = Release|ARM64
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Release|ARM64.Build.0 = Release|ARM64
-		{6FE31C17-C6A7-457B-AD27-4711AE0631C4}.Release|ARM64.Deploy.0 = Release|ARM64
+		{73605835-1E73-4669-A472-6452E8A127B3}.Debug|ARM.ActiveCfg = Debug|ARM
+		{73605835-1E73-4669-A472-6452E8A127B3}.Debug|ARM.Build.0 = Debug|ARM
+		{73605835-1E73-4669-A472-6452E8A127B3}.Debug|ARM.Deploy.0 = Debug|ARM
+		{73605835-1E73-4669-A472-6452E8A127B3}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{73605835-1E73-4669-A472-6452E8A127B3}.Debug|ARM64.Build.0 = Debug|ARM64
+		{73605835-1E73-4669-A472-6452E8A127B3}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{73605835-1E73-4669-A472-6452E8A127B3}.Release|ARM.ActiveCfg = Release|ARM
+		{73605835-1E73-4669-A472-6452E8A127B3}.Release|ARM.Build.0 = Release|ARM
+		{73605835-1E73-4669-A472-6452E8A127B3}.Release|ARM.Deploy.0 = Release|ARM
+		{73605835-1E73-4669-A472-6452E8A127B3}.Release|ARM64.ActiveCfg = Release|ARM64
+		{73605835-1E73-4669-A472-6452E8A127B3}.Release|ARM64.Build.0 = Release|ARM64
+		{73605835-1E73-4669-A472-6452E8A127B3}.Release|ARM64.Deploy.0 = Release|ARM64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {916599CE-5A02-4528-AABD-E18C0418CDD8}
+		SolutionGuid = {D4D4137F-455A-4A83-BD36-1DB233D460B9}
 	EndGlobalSection
 EndGlobal

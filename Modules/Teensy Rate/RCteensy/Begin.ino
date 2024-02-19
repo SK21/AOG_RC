@@ -321,7 +321,7 @@ bool ValidData()
 {
 	bool Result = true;
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		if ((Sensor[i].FlowPin > 41) || (Sensor[i].DirPin > 41) || (Sensor[i].PWMPin > 41))
 		{
@@ -342,7 +342,7 @@ bool ValidData()
 			}
 		}
 	}
-
+	GoodPins = Result;
 	return Result;
 }
 

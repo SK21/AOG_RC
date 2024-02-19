@@ -451,7 +451,7 @@ bool ValidData()
 	switch (Processor)
 	{
 	case 0:
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			// flow pin
 			Result = false;
@@ -510,6 +510,7 @@ bool ValidData()
 		}
 		break;
 	}
+	GoodPins = Result;
 	return Result;
 }
 

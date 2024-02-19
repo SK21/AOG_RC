@@ -25,6 +25,7 @@ namespace RateController
         //      bit 4	- wifi rssi < -65
         //      bit 5   wifi connected
         //      bit 6   ethernet connected
+        //      bit 7   good pin configuration
         //12    CRC
 
         private const byte cByteCount = 13;
@@ -33,6 +34,8 @@ namespace RateController
         private readonly clsProduct Prod;
         private int cElapsedTime;
         private bool cEthernetConnected;
+        private bool cGoodPins;
+        private bool LastGoodPins;
         private byte cLastStrength;
         private DateTime cLastTime = DateTime.Now;
         private bool cModuleIsReceivingData;
@@ -51,6 +54,15 @@ namespace RateController
         {
             Prod = CalledFrom;
         }
+        public event EventHandler<PinStatusArgs> PinStatusChanged;
+
+        public class PinStatusArgs : EventArgs
+        {
+            public bool GoodPins { get; set; }
+        }
+
+        public bool GoodPins
+        { get { return cGoodPins; } }
 
         public double AccumulatedQuantity()
         {
@@ -89,6 +101,24 @@ namespace RateController
                 cLastStrength = cWifiStrength;
                 Mes = "Wifi connected: " + cWifiConnected.ToString() + "   Strength: " + cWifiStrength.ToString();
                 Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+            }
+
+            if (LastGoodPins != cGoodPins)
+            {
+                LastGoodPins = cGoodPins;
+                if (cGoodPins)
+                {
+                    Mes = "Pin Configuration correct.";
+                }
+                else
+                {
+                    Mes = "Pin Configuration not correct.";
+                }
+                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+
+                PinStatusArgs args = new PinStatusArgs();
+                args.GoodPins = cGoodPins;
+                PinStatusChanged?.Invoke(this, args);
             }
         }
 
@@ -171,6 +201,7 @@ namespace RateController
 
                         cWifiConnected = ((Data[11] & 0b00100000) == 0b00100000);
                         cEthernetConnected = ((Data[11] & 0b01000000) == 0b01000000);
+                        cGoodPins = ((Data[11] & 0b10000000) == 0b10000000);
 
                         ReceiveTime = DateTime.Now;
                         Result = true;
