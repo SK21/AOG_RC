@@ -35,7 +35,7 @@ namespace RateController
         private static Hashtable HTapp;
         private static Hashtable HTfiles;
         private string cAppName = "RateController";
-        private string cAppVersion = "3.7.2";
+        private string cAppVersion = "3.7.3";
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
