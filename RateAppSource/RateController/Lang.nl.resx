@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lgAbout" xml:space="preserve">
-    <value>over</value>
-  </data>
   <data name="lgAcres" xml:space="preserve">
     <value>acres</value>
   </data>
@@ -129,26 +126,8 @@
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>draait al</value>
   </data>
-  <data name="lgBrakePoint" xml:space="preserve">
-    <value>rempunt</value>
-  </data>
-  <data name="lgCalCopy" xml:space="preserve">
-    <value>calibratie kopiëren</value>
-  </data>
-  <data name="lgCalculate" xml:space="preserve">
-    <value>berekenen</value>
-  </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>calibreren</value>
-  </data>
-  <data name="lgCalValues" xml:space="preserve">
-    <value>calibratie waarden</value>
-  </data>
-  <data name="lgCancel" xml:space="preserve">
-    <value>annuleren</value>
-  </data>
-  <data name="lgClose" xml:space="preserve">
-    <value>sluiten</value>
   </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>combiventiel</value>
@@ -167,12 +146,6 @@
   </data>
   <data name="lgCurrentRate" xml:space="preserve">
     <value>toepassing</value>
-  </data>
-  <data name="lgDeadband" xml:space="preserve">
-    <value>doodbereik</value>
-  </data>
-  <data name="lgDestinationIP" xml:space="preserve">
-    <value>bestemming-IP</value>
   </data>
   <data name="lgDiagnostics" xml:space="preserve">
     <value>diagnose</value>
@@ -198,23 +171,11 @@
   <data name="lgHours" xml:space="preserve">
     <value>Hours</value>
   </data>
-  <data name="lgInches" xml:space="preserve">
-    <value>inch</value>
-  </data>
   <data name="lgInstantRate" xml:space="preserve">
     <value>momentane toepassing</value>
   </data>
   <data name="lgKPH" xml:space="preserve">
     <value>km/h</value>
-  </data>
-  <data name="lgLoad" xml:space="preserve">
-    <value>laden</value>
-  </data>
-  <data name="lgLoad_Defaults" xml:space="preserve">
-    <value>werkinstellingen</value>
-  </data>
-  <data name="lgLowMax" xml:space="preserve">
-    <value>LaagMax</value>
   </data>
   <data name="lgMinPWM" xml:space="preserve">
     <value>MinPWM</value>
@@ -233,9 +194,6 @@
   </data>
   <data name="lgMPH" xml:space="preserve">
     <value>mijl/u</value>
-  </data>
-  <data name="lgNetworkConnections" xml:space="preserve">
-    <value>netwerkverbinding</value>
   </data>
   <data name="lgNumSections" xml:space="preserve">
     <value>nummer secties</value>
@@ -261,29 +219,11 @@
   <data name="lgQuantityApplied" xml:space="preserve">
     <value>toegepaste hoeveelheid</value>
   </data>
-  <data name="lgQuantityMeasured" xml:space="preserve">
-    <value>gemeten hoeveelheid</value>
-  </data>
   <data name="lgRate" xml:space="preserve">
     <value>toepassing</value>
   </data>
-  <data name="lgRealNano" xml:space="preserve">
-    <value>RealNano</value>
-  </data>
-  <data name="lgReceivePort" xml:space="preserve">
-    <value>ontvangpoort</value>
-  </data>
-  <data name="lgRescan" xml:space="preserve">
-    <value>herscannen</value>
-  </data>
-  <data name="lgResetStart" xml:space="preserve">
-    <value>Reset-start</value>
-  </data>
   <data name="lgRPM" xml:space="preserve">
     <value>omw./min</value>
-  </data>
-  <data name="lgSave" xml:space="preserve">
-    <value>opslaan</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
     <value>opslaan als</value>
@@ -294,12 +234,6 @@
   <data name="lgSections" xml:space="preserve">
     <value>secties</value>
   </data>
-  <data name="lgSendPort" xml:space="preserve">
-    <value>zendpoort</value>
-  </data>
-  <data name="lgSendTime" xml:space="preserve">
-    <value>zendtijd</value>
-  </data>
   <data name="lgSensorCounts" xml:space="preserve">
     <value>sensortellen</value>
   </data>
@@ -309,29 +243,14 @@
   <data name="lgSensorLocation" xml:space="preserve">
     <value>sensorlocatie</value>
   </data>
-  <data name="lgSensorTotalCounts" xml:space="preserve">
-    <value>tellentotaal sensor</value>
-  </data>
-  <data name="lgSimulate" xml:space="preserve">
-    <value>simulatie aan</value>
-  </data>
-  <data name="lgSimulationOff" xml:space="preserve">
-    <value>simulatie uit</value>
-  </data>
   <data name="lgSpeed" xml:space="preserve">
     <value>snelheid</value>
   </data>
   <data name="lgStandard" xml:space="preserve">
     <value>standaard</value>
   </data>
-  <data name="lgStop" xml:space="preserve">
-    <value>stop</value>
-  </data>
   <data name="lgSwitch" xml:space="preserve">
     <value>schakelaar</value>
-  </data>
-  <data name="lgTank" xml:space="preserve">
-    <value>tank</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
     <value>tankinhoud</value>
@@ -350,15 +269,6 @@
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>doelwaarde eenheden/min</value>
-  </data>
-  <data name="lgVersionDate" xml:space="preserve">
-    <value>versiedatum</value>
-  </data>
-  <data name="lgVirtualNano" xml:space="preserve">
-    <value>VirtualNano</value>
-  </data>
-  <data name="lgWaitTime" xml:space="preserve">
-    <value>wachttijd</value>
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>breedte</value>

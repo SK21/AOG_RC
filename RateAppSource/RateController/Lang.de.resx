@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lgAbout" xml:space="preserve">
-    <value>Über diese Software</value>
-  </data>
   <data name="lgAcres" xml:space="preserve">
     <value>Acres</value>
   </data>
@@ -129,26 +126,8 @@
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>läuft bereits</value>
   </data>
-  <data name="lgBrakePoint" xml:space="preserve">
-    <value>Umschaltpunkt</value>
-  </data>
-  <data name="lgCalCopy" xml:space="preserve">
-    <value>als Rate kopieren</value>
-  </data>
-  <data name="lgCalculate" xml:space="preserve">
-    <value>Berechnen</value>
-  </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Kalibrieren</value>
-  </data>
-  <data name="lgCalValues" xml:space="preserve">
-    <value>Kalibrierwerte</value>
-  </data>
-  <data name="lgCancel" xml:space="preserve">
-    <value>Abbruch</value>
-  </data>
-  <data name="lgClose" xml:space="preserve">
-    <value>Schliessen</value>
   </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>Kombiventil</value>
@@ -167,12 +146,6 @@
   </data>
   <data name="lgCurrentRate" xml:space="preserve">
     <value>Ausbringrate</value>
-  </data>
-  <data name="lgDeadband" xml:space="preserve">
-    <value>Totbereich</value>
-  </data>
-  <data name="lgDestinationIP" xml:space="preserve">
-    <value>DestinationIP</value>
   </data>
   <data name="lgDiagnostics" xml:space="preserve">
     <value>Diagnose</value>
@@ -198,23 +171,11 @@
   <data name="lgHours" xml:space="preserve">
     <value>Stunden</value>
   </data>
-  <data name="lgInches" xml:space="preserve">
-    <value>Zoll</value>
-  </data>
   <data name="lgInstantRate" xml:space="preserve">
     <value>momentane Rate</value>
   </data>
   <data name="lgKPH" xml:space="preserve">
     <value>km/h</value>
-  </data>
-  <data name="lgLoad" xml:space="preserve">
-    <value>Laden</value>
-  </data>
-  <data name="lgLoad_Defaults" xml:space="preserve">
-    <value>Standardwerte laden</value>
-  </data>
-  <data name="lgLowMax" xml:space="preserve">
-    <value>LowMax</value>
   </data>
   <data name="lgMinPWM" xml:space="preserve">
     <value>minimale PWM</value>
@@ -233,9 +194,6 @@
   </data>
   <data name="lgMPH" xml:space="preserve">
     <value>MPH</value>
-  </data>
-  <data name="lgNetworkConnections" xml:space="preserve">
-    <value>Netzwerkverbindungen</value>
   </data>
   <data name="lgNumSections" xml:space="preserve">
     <value>Anzahl Teilbreiten</value>
@@ -261,29 +219,11 @@
   <data name="lgQuantityApplied" xml:space="preserve">
     <value>Gesamtmenge </value>
   </data>
-  <data name="lgQuantityMeasured" xml:space="preserve">
-    <value>gemessene Menge</value>
-  </data>
   <data name="lgRate" xml:space="preserve">
     <value>Ausbringrate</value>
   </data>
-  <data name="lgRealNano" xml:space="preserve">
-    <value>Realer Nano</value>
-  </data>
-  <data name="lgReceivePort" xml:space="preserve">
-    <value>Eingangsport</value>
-  </data>
-  <data name="lgRescan" xml:space="preserve">
-    <value>Rescan</value>
-  </data>
-  <data name="lgResetStart" xml:space="preserve">
-    <value>Nullung/Start</value>
-  </data>
   <data name="lgRPM" xml:space="preserve">
     <value>U/min</value>
-  </data>
-  <data name="lgSave" xml:space="preserve">
-    <value>Speichern</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
     <value>Speichern unter</value>
@@ -294,12 +234,6 @@
   <data name="lgSections" xml:space="preserve">
     <value>Teilbreiten für dieses Produkt</value>
   </data>
-  <data name="lgSendPort" xml:space="preserve">
-    <value>Sendeport</value>
-  </data>
-  <data name="lgSendTime" xml:space="preserve">
-    <value>Sendezeit</value>
-  </data>
   <data name="lgSensorCounts" xml:space="preserve">
     <value>Pulse/Einheit Durchflussgeber</value>
   </data>
@@ -309,29 +243,14 @@
   <data name="lgSensorLocation" xml:space="preserve">
     <value>Anschluss Durchflussgeber</value>
   </data>
-  <data name="lgSensorTotalCounts" xml:space="preserve">
-    <value>Gesamtzähler Sensor</value>
-  </data>
-  <data name="lgSimulate" xml:space="preserve">
-    <value>Simulation an</value>
-  </data>
-  <data name="lgSimulationOff" xml:space="preserve">
-    <value>Simulation aus</value>
-  </data>
   <data name="lgSpeed" xml:space="preserve">
     <value>Geschwindigkeit</value>
   </data>
   <data name="lgStandard" xml:space="preserve">
     <value>Standard</value>
   </data>
-  <data name="lgStop" xml:space="preserve">
-    <value>Stopp</value>
-  </data>
   <data name="lgSwitch" xml:space="preserve">
     <value>Schalter</value>
-  </data>
-  <data name="lgTank" xml:space="preserve">
-    <value>Restm. Tank</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
     <value>Tanknenninhalt </value>
@@ -350,15 +269,6 @@
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>Zielwert Einheiten/min</value>
-  </data>
-  <data name="lgVersionDate" xml:space="preserve">
-    <value>Datum der Version</value>
-  </data>
-  <data name="lgVirtualNano" xml:space="preserve">
-    <value>Virtueller Nano</value>
-  </data>
-  <data name="lgWaitTime" xml:space="preserve">
-    <value>Wartezeit</value>
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Breite</value>

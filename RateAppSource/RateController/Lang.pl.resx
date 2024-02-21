@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lgAbout" xml:space="preserve">
-    <value>Wokół</value>
-  </data>
   <data name="lgAcres" xml:space="preserve">
     <value>Akry</value>
   </data>
@@ -131,9 +128,6 @@
   </data>
   <data name="lgAltRate" xml:space="preserve">
     <value>Alter..Dawki (%)</value>
-  </data>
-  <data name="lgAuto" xml:space="preserve">
-    <value>Auto</value>
   </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Dawka Bazowa</value>
@@ -192,9 +186,6 @@
   <data name="lgHighMax" xml:space="preserve">
     <value>PWM Maximum</value>
   </data>
-  <data name="lgHotspot" xml:space="preserve">
-    <value>Windows Hotspot</value>
-  </data>
   <data name="lgHour" xml:space="preserve">
     <value>Godzina</value>
   </data>
@@ -218,9 +209,6 @@
   </data>
   <data name="lgLanguage" xml:space="preserve">
     <value>Język</value>
-  </data>
-  <data name="lgLocalIP" xml:space="preserve">
-    <value>Adres IP</value>
   </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Master</value>
@@ -279,9 +267,6 @@
   <data name="lgOverallRate" xml:space="preserve">
     <value>Ocena Ogólna</value>
   </data>
-  <data name="lgPassword" xml:space="preserve">
-    <value>Hasło</value>
-  </data>
   <data name="lgPIDTune" xml:space="preserve">
     <value>Wykres Strojenia PID</value>
   </data>
@@ -314,9 +299,6 @@
   </data>
   <data name="lgQuantityApplied" xml:space="preserve">
     <value>Zastosowana Ilość</value>
-  </data>
-  <data name="lgQuantityMeasured" xml:space="preserve">
-    <value>Zmierzona Ilość</value>
   </data>
   <data name="lgRate" xml:space="preserve">
     <value>Wskaźnik</value>
@@ -353,9 +335,6 @@
   </data>
   <data name="lgSensorLocation" xml:space="preserve">
     <value>Lokalizacja Czujnika</value>
-  </data>
-  <data name="lgSensorTotalCounts" xml:space="preserve">
-    <value>Liczba Czujników</value>
   </data>
   <data name="lgShowPressure" xml:space="preserve">
     <value>Pokaż Ciśnienie</value>
@@ -410,15 +389,6 @@
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Target</value>
-  </data>
-  <data name="lgVariableRate" xml:space="preserve">
-    <value>Wskażnik Zmienny</value>
-  </data>
-  <data name="lgVersion" xml:space="preserve">
-    <value>RC Version</value>
-  </data>
-  <data name="lgVersionDate" xml:space="preserve">
-    <value>RC Data</value>
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Szerokość</value>

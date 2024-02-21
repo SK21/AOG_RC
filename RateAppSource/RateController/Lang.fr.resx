@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lgAbout" xml:space="preserve">
-    <value>A Propos</value>
-  </data>
   <data name="lgAcres" xml:space="preserve">
     <value>Acres</value>
   </data>
@@ -132,32 +129,11 @@
   <data name="lgAltRate" xml:space="preserve">
     <value>Alt. Dose (%)</value>
   </data>
-  <data name="lgAuto" xml:space="preserve">
-    <value>Auto</value>
-  </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Dose</value>
   </data>
-  <data name="lgBrakePoint" xml:space="preserve">
-    <value>Point de freinage</value>
-  </data>
-  <data name="lgCalCopy" xml:space="preserve">
-    <value>Copier vers les paramètres de Dose</value>
-  </data>
-  <data name="lgCalculate" xml:space="preserve">
-    <value>Calculer</value>
-  </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Calibration</value>
-  </data>
-  <data name="lgCalValues" xml:space="preserve">
-    <value>Cal Values</value>
-  </data>
-  <data name="lgCancel" xml:space="preserve">
-    <value>Annuler</value>
-  </data>
-  <data name="lgClose" xml:space="preserve">
-    <value>Fermer</value>
   </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>Combo Close</value>
@@ -186,17 +162,11 @@
   <data name="lgCurrentRate" xml:space="preserve">
     <value>Dose Actuel :</value>
   </data>
-  <data name="lgDeadband" xml:space="preserve">
-    <value>Deadband</value>
-  </data>
   <data name="lgDerivative" xml:space="preserve">
     <value>Dérivée</value>
   </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Description</value>
-  </data>
-  <data name="lgDestinationIP" xml:space="preserve">
-    <value>Destination IP</value>
   </data>
   <data name="lgDiagnostics" xml:space="preserve">
     <value>Diagnostiques</value>
@@ -210,9 +180,6 @@
   <data name="lgFan" xml:space="preserve">
     <value>Fan</value>
   </data>
-  <data name="lgFirmware" xml:space="preserve">
-    <value>Firmware</value>
-  </data>
   <data name="lgHectares" xml:space="preserve">
     <value>Hectares</value>
   </data>
@@ -222,9 +189,6 @@
   <data name="lgHighMax" xml:space="preserve">
     <value>PWM Maximum</value>
   </data>
-  <data name="lgHotspot" xml:space="preserve">
-    <value>Windows Hotspot</value>
-  </data>
   <data name="lgHour" xml:space="preserve">
     <value>Heure</value>
   </data>
@@ -233,9 +197,6 @@
   </data>
   <data name="lgID" xml:space="preserve">
     <value>ID</value>
-  </data>
-  <data name="lgInches" xml:space="preserve">
-    <value>Inches</value>
   </data>
   <data name="lgInstantRate" xml:space="preserve">
     <value>Dose Actuel :</value>
@@ -252,26 +213,8 @@
   <data name="lgLanguage" xml:space="preserve">
     <value>Language</value>
   </data>
-  <data name="lgLoad" xml:space="preserve">
-    <value>Charger</value>
-  </data>
-  <data name="lgLoad_Defaults" xml:space="preserve">
-    <value>Paramètres par défaut</value>
-  </data>
-  <data name="lgLocalIP" xml:space="preserve">
-    <value>Ethernet IP</value>
-  </data>
-  <data name="lgLowMax" xml:space="preserve">
-    <value>PWM Low Max</value>
-  </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Maître</value>
-  </data>
-  <data name="lgMasterOff" xml:space="preserve">
-    <value>Maître Off</value>
-  </data>
-  <data name="lgMasterOn" xml:space="preserve">
-    <value>Maître On</value>
   </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Unité Metrique</value>
@@ -306,9 +249,6 @@
   <data name="lgNetwork" xml:space="preserve">
     <value>Ethernet</value>
   </data>
-  <data name="lgNetworkConnections" xml:space="preserve">
-    <value>Ethernet Connections</value>
-  </data>
   <data name="lgNew" xml:space="preserve">
     <value>Nouveau</value>
   </data>
@@ -329,12 +269,6 @@
   </data>
   <data name="lgOverallRate" xml:space="preserve">
     <value>Dose Moyenne :</value>
-  </data>
-  <data name="lgPassword" xml:space="preserve">
-    <value>Mot de passe</value>
-  </data>
-  <data name="lgPCBconfig" xml:space="preserve">
-    <value>PCB Config</value>
   </data>
   <data name="lgPIDTune" xml:space="preserve">
     <value>Tableau de réglage PID</value>
@@ -369,26 +303,11 @@
   <data name="lgQuantityApplied" xml:space="preserve">
     <value>Quantité Appliqué :</value>
   </data>
-  <data name="lgQuantityMeasured" xml:space="preserve">
-    <value>Quantité Mesuré</value>
-  </data>
   <data name="lgRate" xml:space="preserve">
     <value>Dose</value>
   </data>
-  <data name="lgRateDown" xml:space="preserve">
-    <value>Dose -</value>
-  </data>
   <data name="lgRateMethod" xml:space="preserve">
     <value>Méthode de dosage</value>
-  </data>
-  <data name="lgRateUp" xml:space="preserve">
-    <value>Dose +</value>
-  </data>
-  <data name="lgRealNano" xml:space="preserve">
-    <value>Module connecté</value>
-  </data>
-  <data name="lgReceivePort" xml:space="preserve">
-    <value>Port de réception</value>
   </data>
   <data name="lgRelay" xml:space="preserve">
     <value>Relais</value>
@@ -396,17 +315,8 @@
   <data name="lgRelays" xml:space="preserve">
     <value>Relais</value>
   </data>
-  <data name="lgRescan" xml:space="preserve">
-    <value>Rescan</value>
-  </data>
-  <data name="lgResetStart" xml:space="preserve">
-    <value>Start</value>
-  </data>
   <data name="lgRPM" xml:space="preserve">
     <value>RPM</value>
-  </data>
-  <data name="lgSave" xml:space="preserve">
-    <value>Enregistrer</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
     <value>Enregistrer Sous</value>
@@ -420,12 +330,6 @@
   <data name="lgSections" xml:space="preserve">
     <value>Sections</value>
   </data>
-  <data name="lgSendPort" xml:space="preserve">
-    <value>Port d'envoi</value>
-  </data>
-  <data name="lgSendTime" xml:space="preserve">
-    <value>Heure d'envoi</value>
-  </data>
   <data name="lgSensor" xml:space="preserve">
     <value>Capteur</value>
   </data>
@@ -438,17 +342,8 @@
   <data name="lgSensorLocation" xml:space="preserve">
     <value>Capteur Location</value>
   </data>
-  <data name="lgSensorTotalCounts" xml:space="preserve">
-    <value>Nombre de capteurs</value>
-  </data>
   <data name="lgShowPressure" xml:space="preserve">
     <value>Voir Pression</value>
-  </data>
-  <data name="lgSimulate" xml:space="preserve">
-    <value>Dose Simulation</value>
-  </data>
-  <data name="lgSimulationOff" xml:space="preserve">
-    <value>Off</value>
   </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Esclave</value>
@@ -465,17 +360,11 @@
   <data name="lgStartQuantity" xml:space="preserve">
     <value>Quantité de départ du réservoir</value>
   </data>
-  <data name="lgStop" xml:space="preserve">
-    <value>Stop</value>
-  </data>
   <data name="lgSwitch" xml:space="preserve">
     <value>Switch</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Switches</value>
-  </data>
-  <data name="lgTank" xml:space="preserve">
-    <value>Réservoir</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
     <value>Taille du Réservoir</value>
@@ -489,9 +378,6 @@
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Dose Cible Alt :</value>
   </data>
-  <data name="lgTimedAjustment" xml:space="preserve">
-    <value>Ajustement chronométré</value>
-  </data>
   <data name="lgTimeForMulti" xml:space="preserve">
     <value>Temps moyen / impulsion(&lt;50 ms/pulse)</value>
   </data>
@@ -503,9 +389,6 @@
   </data>
   <data name="lgUnitsVolt" xml:space="preserve">
     <value>Units/Volt</value>
-  </data>
-  <data name="lgUpdate" xml:space="preserve">
-    <value>Mise à jour</value>
   </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Applied</value>
@@ -519,26 +402,8 @@
   <data name="lgUPMTarget" xml:space="preserve">
     <value>Cible UPM</value>
   </data>
-  <data name="lgVariableRate" xml:space="preserve">
-    <value>Dose Variable</value>
-  </data>
-  <data name="lgVersion" xml:space="preserve">
-    <value>RC Version</value>
-  </data>
-  <data name="lgVersionDate" xml:space="preserve">
-    <value>RC Date</value>
-  </data>
-  <data name="lgVirtualNano" xml:space="preserve">
-    <value>Module Virtuel</value>
-  </data>
-  <data name="lgWaitTime" xml:space="preserve">
-    <value>Temps d'attente</value>
-  </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Largeur</value>
-  </data>
-  <data name="lgWirelessNetwork" xml:space="preserve">
-    <value>Réseau sans fil</value>
   </data>
   <data name="lgWorkingWidthFT" xml:space="preserve">
     <value>Largeur de travail (FT)</value>
