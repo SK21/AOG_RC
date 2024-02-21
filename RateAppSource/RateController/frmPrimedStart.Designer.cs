@@ -31,15 +31,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPrimedStart));
             this.lbSpeed = new System.Windows.Forms.Label();
             this.tbSpeed = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbPrimedSpeed = new System.Windows.Forms.Label();
+            this.lbOnTime = new System.Windows.Forms.Label();
             this.tbTime = new System.Windows.Forms.TextBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lbOnSeconds = new System.Windows.Forms.Label();
+            this.lbDelaySeconds = new System.Windows.Forms.Label();
             this.tbDelay = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lbDelay = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lbSpeed
@@ -66,25 +66,25 @@
             this.tbSpeed.Enter += new System.EventHandler(this.tbSpeed_Enter);
             this.tbSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSpeed_Validating);
             // 
-            // label27
+            // lbPrimedSpeed
             // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(10, 42);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(63, 23);
-            this.label27.TabIndex = 315;
-            this.label27.Text = "Speed";
+            this.lbPrimedSpeed.AutoSize = true;
+            this.lbPrimedSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPrimedSpeed.Location = new System.Drawing.Point(10, 42);
+            this.lbPrimedSpeed.Name = "lbPrimedSpeed";
+            this.lbPrimedSpeed.Size = new System.Drawing.Size(63, 23);
+            this.lbPrimedSpeed.TabIndex = 315;
+            this.lbPrimedSpeed.Text = "Speed";
             // 
-            // label1
+            // lbOnTime
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 23);
-            this.label1.TabIndex = 318;
-            this.label1.Text = "On Time";
+            this.lbOnTime.AutoSize = true;
+            this.lbOnTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOnTime.Location = new System.Drawing.Point(12, 9);
+            this.lbOnTime.Name = "lbOnTime";
+            this.lbOnTime.Size = new System.Drawing.Size(81, 23);
+            this.lbOnTime.TabIndex = 318;
+            this.lbOnTime.Text = "On Time";
             // 
             // tbTime
             // 
@@ -136,25 +136,25 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // label2
+            // lbOnSeconds
             // 
-            this.label2.ForeColor = System.Drawing.Color.DarkGreen;
-            this.label2.Location = new System.Drawing.Point(204, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(89, 24);
-            this.label2.TabIndex = 322;
-            this.label2.Text = "seconds";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbOnSeconds.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lbOnSeconds.Location = new System.Drawing.Point(204, 9);
+            this.lbOnSeconds.Name = "lbOnSeconds";
+            this.lbOnSeconds.Size = new System.Drawing.Size(89, 24);
+            this.lbOnSeconds.TabIndex = 322;
+            this.lbOnSeconds.Text = "seconds";
+            this.lbOnSeconds.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label3
+            // lbDelaySeconds
             // 
-            this.label3.ForeColor = System.Drawing.Color.DarkGreen;
-            this.label3.Location = new System.Drawing.Point(204, 78);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 24);
-            this.label3.TabIndex = 325;
-            this.label3.Text = "seconds";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbDelaySeconds.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lbDelaySeconds.Location = new System.Drawing.Point(204, 78);
+            this.lbDelaySeconds.Name = "lbDelaySeconds";
+            this.lbDelaySeconds.Size = new System.Drawing.Size(89, 24);
+            this.lbDelaySeconds.TabIndex = 325;
+            this.lbDelaySeconds.Text = "seconds";
+            this.lbDelaySeconds.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tbDelay
             // 
@@ -170,32 +170,32 @@
             this.tbDelay.Enter += new System.EventHandler(this.tbDelay_Enter);
             this.tbDelay.Validating += new System.ComponentModel.CancelEventHandler(this.tbDelay_Validating);
             // 
-            // label4
+            // lbDelay
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(10, 78);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(117, 23);
-            this.label4.TabIndex = 323;
-            this.label4.Text = "Switch Delay";
+            this.lbDelay.AutoSize = true;
+            this.lbDelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbDelay.Location = new System.Drawing.Point(10, 78);
+            this.lbDelay.Name = "lbDelay";
+            this.lbDelay.Size = new System.Drawing.Size(117, 23);
+            this.lbDelay.TabIndex = 323;
+            this.lbDelay.Text = "Switch Delay";
             // 
             // frmPrimedStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(288, 189);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lbDelaySeconds);
             this.Controls.Add(this.tbDelay);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lbDelay);
+            this.Controls.Add(this.lbOnSeconds);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.tbTime);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbOnTime);
             this.Controls.Add(this.lbSpeed);
             this.Controls.Add(this.tbSpeed);
-            this.Controls.Add(this.label27);
+            this.Controls.Add(this.lbPrimedSpeed);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(6);
@@ -214,14 +214,14 @@
 
         private System.Windows.Forms.Label lbSpeed;
         private System.Windows.Forms.TextBox tbSpeed;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbPrimedSpeed;
+        private System.Windows.Forms.Label lbOnTime;
         private System.Windows.Forms.TextBox tbTime;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbOnSeconds;
+        private System.Windows.Forms.Label lbDelaySeconds;
         private System.Windows.Forms.TextBox tbDelay;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lbDelay;
     }
 }

@@ -21,6 +21,14 @@ namespace RateController
             #region // language
 
             this.Text = Lang.lgCalibrate;
+            lbDescription.Text = Lang.lgCalProduct;
+            lbPulses.Text = Lang.lgPulses;
+            lbBaseRate.Text = Lang.lgBaseRate;
+            lbCalFactor.Text = Lang.lgCalFactor;
+            lbExpected.Text = Lang.lgExpectedAmount;
+            lbMeasured.Text = Lang.lgMeasuredAmount;
+            lbMeterSet.Text = Lang.lgMeterSet;
+            lbCalSpeed.Text = Lang.lgCalSpeed;
 
             #endregion // language
 

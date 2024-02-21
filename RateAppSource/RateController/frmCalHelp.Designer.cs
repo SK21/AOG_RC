@@ -42,7 +42,7 @@
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox2.Size = new System.Drawing.Size(581, 419);
             this.textBox2.TabIndex = 318;
-            this.textBox2.Text = resources.GetString("textBox2.Text");
+            this.textBox2.Text = " ";
             // 
             // frmCalHelp
             // 

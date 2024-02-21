@@ -365,14 +365,17 @@
     <EmbeddedResource Include="Lang.hu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.hu.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.nl.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.pl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.pl.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Lang.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -382,6 +385,7 @@
     <EmbeddedResource Include="Lang.ru.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.ru.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

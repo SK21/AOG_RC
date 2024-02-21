@@ -20,11 +20,12 @@ namespace RateController
         {
             mf = callingForm as FormSettings;
             InitializeComponent();
-
+            #region // language
             this.label5.Text = Lang.lgUPMTarget;
             this.label1.Text = Lang.lgUPMApplied;
-
             this.Text = Lang.lgPIDTune;
+            label7.Text = Lang.lgError;
+            #endregion
         }
 
         private void btnGainAuto_Click(object sender, EventArgs e)

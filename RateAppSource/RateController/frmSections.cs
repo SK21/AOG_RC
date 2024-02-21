@@ -29,7 +29,7 @@ namespace RateController
             DGV.Columns[0].HeaderText = Lang.lgSection;
             DGV.Columns[1].HeaderText = Lang.lgWidth;
             DGV.Columns[2].HeaderText = Lang.lgSwitch;
-            label25.Text = Lang.lgNumSections;
+            lbNumZones.Text = Lang.lgNumSections;
 
             lbWidth.Text = Lang.lgWidth;
             btnEqual.Text = Lang.lgEqual;
@@ -40,6 +40,7 @@ namespace RateController
             DGV2.Columns[2].HeaderText = Lang.lgEnd;
             DGV2.Columns[3].HeaderText = Lang.lgWidth;
             DGV2.Columns[4].HeaderText = Lang.lgSwitch;
+            lbPerZone.Text = Lang.lgPerZone;
 
             #endregion // language
 
@@ -614,6 +615,7 @@ namespace RateController
 
         private void UpdateForm()
         {
+            int offset = 135;
             Initializing = true;
 
             DGV.Visible = !UseZones;
@@ -622,12 +624,23 @@ namespace RateController
             {
                 LoadDGV2();
                 ckZones.Image = Properties.Resources.SectionsWithZones;
+                lbNumZones.Left = 15;
+                tbSectionCount.Left = 212;
+                lbWidth.Left = 15;
+                lbFeet.Left = 212;
             }
             else
             {
                 LoadDGV();
                 ckZones.Image = Properties.Resources.SectionsNoZones2;
+                lbNumZones.Left = 15 + offset;
+                tbSectionCount.Left = 212 + offset;
+                lbWidth.Left = 15 + offset;
+                lbFeet.Left = 212 + offset;
             }
+
+            lbPerZone.Visible = UseZones;
+            tbSectionsPerZone.Visible = UseZones;
 
             SecCount = (byte)mf.Sections.Count;
             tbSectionCount.Text = SecCount.ToString("N0");

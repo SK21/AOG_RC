@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lgAbout" xml:space="preserve">
-    <value>About</value>
-  </data>
   <data name="lgAcres" xml:space="preserve">
     <value>Acres</value>
   </data>
@@ -132,11 +129,11 @@
   <data name="lgAltRate" xml:space="preserve">
     <value>Alt. Rate (%)</value>
   </data>
-  <data name="lgAuto" xml:space="preserve">
-    <value>Auto</value>
-  </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Base Rate</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>Boards</value>
   </data>
   <data name="lgBrakePoint" xml:space="preserve">
     <value>Brake Point</value>
@@ -147,8 +144,40 @@
   <data name="lgCalculate" xml:space="preserve">
     <value>Calculate</value>
   </data>
+  <data name="lgCalFactor" xml:space="preserve">
+    <value>Cal. Factor (Pulses/Unit)</value>
+  </data>
+  <data name="lgCalHelp" xml:space="preserve">
+    <value>Calibration steps:
+1. enter ground speed
+2. set calibration meter speed (rpm)
+ * start with Master switch off
+ * switch product on with the power button
+ * enter initial base rate
+ * enter initial Cal Factor
+ * press start, RC attempts to adjust flow/rate to target
+ * if successful meter speed is locked
+ * press stop
+3. set Cal Factor (pulses/unit)
+ * start with Master switch off
+ * press start, turn Master switch on and let run to get an adequate sample amount
+ * press stop and enter measured amount. Cal Factor is calculated.
+ * press save to record new values
+4. options to start over
+ * if RC is not successful in locking the meter speed adjust initial Cal Factor, ground speed, PWM minimum, PWM maximum or machine metering drive range. Start step 2 again.
+
+ * to redo the meter speed the lock button can be pressed to unlock. RC will then attempt to find a new meter speed when step 2 is redone.
+
+ * to start from a previously saved setting the lock button can be pressed to lock. Then continue with step 3.</value>
+  </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Calibrate</value>
+  </data>
+  <data name="lgCalProduct" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="lgCalSpeed" xml:space="preserve">
+    <value>Calibration Speed</value>
   </data>
   <data name="lgCalValues" xml:space="preserve">
     <value>Cal Values</value>
@@ -174,6 +203,12 @@
   <data name="lgCommDiagnostics" xml:space="preserve">
     <value>Comm Diagnostics</value>
   </data>
+  <data name="lgConfig" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="lgConfigIP" xml:space="preserve">
+    <value>Local IP</value>
+  </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Connect</value>
   </data>
@@ -194,6 +229,12 @@
   </data>
   <data name="lgDeadband" xml:space="preserve">
     <value>Deadband</value>
+  </data>
+  <data name="lgDefaultProduct" xml:space="preserve">
+    <value>Default Product</value>
+  </data>
+  <data name="lgDensity" xml:space="preserve">
+    <value>Density</value>
   </data>
   <data name="lgDerivative" xml:space="preserve">
     <value>Derivative</value>
@@ -216,11 +257,23 @@
   <data name="lgEqual" xml:space="preserve">
     <value>=1</value>
   </data>
+  <data name="lgError" xml:space="preserve">
+    <value>Error %</value>
+  </data>
+  <data name="lgExit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="lgExpectedAmount" xml:space="preserve">
+    <value>Expected Amount</value>
+  </data>
   <data name="lgFan" xml:space="preserve">
     <value>Fan</value>
   </data>
   <data name="lgFirmware" xml:space="preserve">
     <value>Firmware</value>
+  </data>
+  <data name="lgFlowOnHigh" xml:space="preserve">
+    <value>Flow On High</value>
   </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
@@ -270,6 +323,9 @@
   <data name="lgLanguage" xml:space="preserve">
     <value>Language</value>
   </data>
+  <data name="lgLargeScreen" xml:space="preserve">
+    <value>Large Screen</value>
+  </data>
   <data name="lgLoad" xml:space="preserve">
     <value>Load</value>
   </data>
@@ -291,11 +347,23 @@
   <data name="lgMasterOn" xml:space="preserve">
     <value>Master On</value>
   </data>
+  <data name="lgMaxRate" xml:space="preserve">
+    <value>Maximum Rate</value>
+  </data>
+  <data name="lgMeasuredAmount" xml:space="preserve">
+    <value>Measured Amount</value>
+  </data>
+  <data name="lgMeterSet" xml:space="preserve">
+    <value>Meter Set</value>
+  </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Metric Units</value>
   </data>
   <data name="lgMinPWM" xml:space="preserve">
     <value>PWM Minimum</value>
+  </data>
+  <data name="lgMinRate" xml:space="preserve">
+    <value>Minimum Rate</value>
   </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Minimum UPM</value>
@@ -345,6 +413,12 @@
   <data name="lgOffset" xml:space="preserve">
     <value>Offset</value>
   </data>
+  <data name="lgOnScreen" xml:space="preserve">
+    <value>On Screen</value>
+  </data>
+  <data name="lgOnTime" xml:space="preserve">
+    <value>On Time</value>
+  </data>
   <data name="lgOpen" xml:space="preserve">
     <value>Open</value>
   </data>
@@ -360,14 +434,23 @@
   <data name="lgPCBconfig" xml:space="preserve">
     <value>PCB Config</value>
   </data>
+  <data name="lgPerZone" xml:space="preserve">
+    <value>Sections Per Zone</value>
+  </data>
   <data name="lgPIDTune" xml:space="preserve">
     <value>PID Tuning Chart</value>
+  </data>
+  <data name="lgPins" xml:space="preserve">
+    <value>Pins</value>
   </data>
   <data name="lgPower" xml:space="preserve">
     <value>Power</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
     <value>Pressure</value>
+  </data>
+  <data name="lgPrimedStart" xml:space="preserve">
+    <value>Primed Start</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Product</value>
@@ -380,6 +463,9 @@
   </data>
   <data name="lgProportional" xml:space="preserve">
     <value>Proportional</value>
+  </data>
+  <data name="lgPulses" xml:space="preserve">
+    <value>Pulses</value>
   </data>
   <data name="lgPWMmax" xml:space="preserve">
     <value>PWM Maximum</value>
@@ -417,6 +503,12 @@
   <data name="lgRelay" xml:space="preserve">
     <value>Relay</value>
   </data>
+  <data name="lgRelayControl" xml:space="preserve">
+    <value>Relay Control</value>
+  </data>
+  <data name="lgRelayOnHigh" xml:space="preserve">
+    <value>Relay On High</value>
+  </data>
   <data name="lgRelays" xml:space="preserve">
     <value>Relays</value>
   </data>
@@ -435,6 +527,9 @@
   <data name="lgSaveAs" xml:space="preserve">
     <value>Save As</value>
   </data>
+  <data name="lgSeconds" xml:space="preserve">
+    <value>Seconds</value>
+  </data>
   <data name="lgSection" xml:space="preserve">
     <value>Section</value>
   </data>
@@ -444,6 +539,9 @@
   <data name="lgSections" xml:space="preserve">
     <value>Sections</value>
   </data>
+  <data name="lgSelectedSubnet" xml:space="preserve">
+    <value>Selected Subnet</value>
+  </data>
   <data name="lgSendPort" xml:space="preserve">
     <value>Send Port</value>
   </data>
@@ -452,6 +550,9 @@
   </data>
   <data name="lgSensor" xml:space="preserve">
     <value>Sensor</value>
+  </data>
+  <data name="lgSensorCount" xml:space="preserve">
+    <value>Sensor Count</value>
   </data>
   <data name="lgSensorCounts" xml:space="preserve">
     <value>Sensor Counts/Unit</value>
@@ -483,6 +584,9 @@
   <data name="lgStandard" xml:space="preserve">
     <value>Standard valve</value>
   </data>
+  <data name="lgStandardScreen" xml:space="preserve">
+    <value>Standard Screen</value>
+  </data>
   <data name="lgStart" xml:space="preserve">
     <value>Start</value>
   </data>
@@ -497,6 +601,9 @@
   </data>
   <data name="lgSwitch" xml:space="preserve">
     <value>Switch</value>
+  </data>
+  <data name="lgSwitchDelay" xml:space="preserve">
+    <value>Switch Delay</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Switches</value>
@@ -531,6 +638,9 @@
   <data name="lgTramRight" xml:space="preserve">
     <value>Tram Right</value>
   </data>
+  <data name="lgTransparent" xml:space="preserve">
+    <value>Transparent</value>
+  </data>
   <data name="lgType" xml:space="preserve">
     <value>Type</value>
   </data>
@@ -552,6 +662,9 @@
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Target</value>
   </data>
+  <data name="lgUseVR" xml:space="preserve">
+    <value>Use Variable Rate</value>
+  </data>
   <data name="lgVariableRate" xml:space="preserve">
     <value>Variable Rate</value>
   </data>
@@ -569,6 +682,12 @@
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Width</value>
+  </data>
+  <data name="lgWifiPort" xml:space="preserve">
+    <value>Wifi Port</value>
+  </data>
+  <data name="lgWifiSignal" xml:space="preserve">
+    <value>Wifi Strength</value>
   </data>
   <data name="lgWirelessNetwork" xml:space="preserve">
     <value>Wireless Network</value>

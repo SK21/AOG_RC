@@ -17,6 +17,23 @@ namespace RateController
         public frmModuleConfig(FormStart Main)
         {
             InitializeComponent();
+            #region // language
+            lbBoards.Text = Lang.lgBoards;
+            lbSubnet.Text = Lang.lgSelectedSubnet;
+            lbIP.Text = Lang.lgConfigIP;
+            lbModuleID.Text = Lang.lgModuleID;
+            lbSensorCount.Text = Lang.lgSensorCount;
+            lbWifiPort.Text = Lang.lgWifiPort;
+            lbRelay.Text = Lang.lgRelayControl;
+            ckRelayOn.Text = Lang.lgRelayOnHigh;
+            ckFlowOn.Text = Lang.lgFlowOnHigh;
+
+            tabControl1.TabPages[0].Text = Lang.lgNetwork;
+            tabControl1.TabPages[1].Text = Lang.lgConfig;
+            tabControl1.TabPages[2].Text = Lang.lgPins;
+
+            #endregion
+
             mf = Main;
             for (int i = 0; i < mf.MaxProducts; i++)
             {

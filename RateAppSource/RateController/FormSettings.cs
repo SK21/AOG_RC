@@ -77,6 +77,9 @@ namespace RateController
 
             lbAltRate.Text = Lang.lgAltRate;
             lbVariableRate.Text = Lang.lgChannel;
+            lbMaxRate.Text = Lang.lgMaxRate;
+            lbMinRate.Text = Lang.lgMinRate;
+            ckVR.Text = Lang.lgUseVR;
 
             lbProportional.Text = Lang.lgProportional;
             lbIntegral.Text = Lang.lgIntegral;
@@ -91,6 +94,11 @@ namespace RateController
 
             lbMinimumUPM.Text = Lang.lgMinUPM;
             ckOffRate.Text = Lang.lgOffRate;
+            ckDefault.Text = Lang.lgDefaultProduct;
+            ckOnScreen.Text = Lang.lgOnScreen;
+
+            label2.Text = Lang.lgWifiSignal;
+            LabProdDensity.Text = Lang.lgDensity;
 
             #endregion // language
 

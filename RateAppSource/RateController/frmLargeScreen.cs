@@ -15,7 +15,6 @@ namespace RateController
         private int Fan2RateType = 0;
         public clsAlarm RCalarm;
         private bool SwitchingScreens = false;
-        //private Color RateColour = Color.DarkOliveGreen;
         private Color RateColour = Color.GreenYellow;
         private int TransTopOffset = 30;
         private int TransLeftOffset = 6;
@@ -40,19 +39,25 @@ namespace RateController
 
             mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
             mnuSettings.Items["MnuSections"].Text = Lang.lgSections;
-            mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
-            mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
             mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
-            mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgModules;
+            mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
             mnuSettings.Items["calibrateToolStripMenuItem1"].Text = Lang.lgCalibrate;
+            mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgModules;
+            mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
+            mnuSettings.Items["exitToolStripMenuItem"].Text = Lang.lgExit;
 
+            MnuOptions.DropDownItems["mnuStandard"].Text = Lang.lgStandardScreen;
+            MnuOptions.DropDownItems["transparentToolStripMenuItem"].Text = Lang.lgTransparent;
             MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
+            MnuOptions.DropDownItems["switchesToolStripMenuItem1"].Text = Lang.lgSwitches;
+            MnuOptions.DropDownItems["primedStartToolStripMenuItem"].Text = Lang.lgPrimedStart;
+
             MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
             MnuOptions.DropDownItems["MnuOpen"].Text = Lang.lgOpen;
             MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
-            MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
             MnuOptions.DropDownItems["mnuMetric"].Text = Lang.lgMetric;
-            MnuOptions.DropDownItems["switchesToolStripMenuItem1"].Text = Lang.lgSwitches;
+            MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
+            MnuOptions.DropDownItems["commDiagnosticsToolStripMenuItem"].Text = Lang.lgCommDiagnostics;
 
             #endregion // language
 
@@ -472,8 +477,16 @@ namespace RateController
 
         private void MnuSections_Click(object sender, EventArgs e)
         {
-            Form Sec = new frmSections(mf);
-            Sec.ShowDialog();
+            Form fs = Application.OpenForms["frmSections"];
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new frmSections(mf);
+            frm.Show();
         }
 
         private void mnuStandard_Click(object sender, EventArgs e)

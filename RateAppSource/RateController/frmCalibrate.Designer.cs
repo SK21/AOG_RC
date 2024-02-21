@@ -30,11 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCalibrate));
             this.lbName0 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lbDescription = new System.Windows.Forms.Label();
+            this.lbPulses = new System.Windows.Forms.Label();
+            this.lbCalFactor = new System.Windows.Forms.Label();
+            this.lbExpected = new System.Windows.Forms.Label();
+            this.lbMeasured = new System.Windows.Forms.Label();
             this.lbPulses0 = new System.Windows.Forms.Label();
             this.lbExpected0 = new System.Windows.Forms.Label();
             this.lbExpected1 = new System.Windows.Forms.Label();
@@ -46,7 +46,7 @@
             this.lbExpected3 = new System.Windows.Forms.Label();
             this.lbPulses3 = new System.Windows.Forms.Label();
             this.lbName3 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
+            this.lbMeterSet = new System.Windows.Forms.Label();
             this.tbFactor3 = new System.Windows.Forms.TextBox();
             this.tbFactor2 = new System.Windows.Forms.TextBox();
             this.tbFactor1 = new System.Windows.Forms.TextBox();
@@ -55,8 +55,8 @@
             this.tbMeasured1 = new System.Windows.Forms.TextBox();
             this.tbMeasured2 = new System.Windows.Forms.TextBox();
             this.tbMeasured3 = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
+            this.lbBaseRate = new System.Windows.Forms.Label();
+            this.lbCalSpeed = new System.Windows.Forms.Label();
             this.tbSpeed = new System.Windows.Forms.TextBox();
             this.lbSpeed = new System.Windows.Forms.Label();
             this.pb0 = new System.Windows.Forms.ProgressBar();
@@ -92,60 +92,60 @@
             this.lbName0.TabIndex = 114;
             this.lbName0.Text = "1. Wheat - Standard Valve\r\n";
             // 
-            // label1
+            // lbDescription
             // 
-            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label1.Location = new System.Drawing.Point(11, 7);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 46);
-            this.label1.TabIndex = 116;
-            this.label1.Text = "Product";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.lbDescription.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbDescription.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbDescription.Location = new System.Drawing.Point(11, 7);
+            this.lbDescription.Name = "lbDescription";
+            this.lbDescription.Size = new System.Drawing.Size(85, 46);
+            this.lbDescription.TabIndex = 116;
+            this.lbDescription.Text = "Product";
+            this.lbDescription.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // label2
+            // lbPulses
             // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label2.Location = new System.Drawing.Point(101, 7);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 46);
-            this.label2.TabIndex = 117;
-            this.label2.Text = "Pulses";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.lbPulses.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPulses.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbPulses.Location = new System.Drawing.Point(101, 7);
+            this.lbPulses.Name = "lbPulses";
+            this.lbPulses.Size = new System.Drawing.Size(70, 46);
+            this.lbPulses.TabIndex = 117;
+            this.lbPulses.Text = "Pulses";
+            this.lbPulses.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // label3
+            // lbCalFactor
             // 
-            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label3.Location = new System.Drawing.Point(274, 7);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(135, 46);
-            this.label3.TabIndex = 118;
-            this.label3.Text = "Cal. Factor (Pulses/Unit)";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.lbCalFactor.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCalFactor.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbCalFactor.Location = new System.Drawing.Point(274, 7);
+            this.lbCalFactor.Name = "lbCalFactor";
+            this.lbCalFactor.Size = new System.Drawing.Size(135, 46);
+            this.lbCalFactor.TabIndex = 118;
+            this.lbCalFactor.Text = "Cal. Factor (Pulses/Unit)";
+            this.lbCalFactor.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // label4
+            // lbExpected
             // 
-            this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label4.Location = new System.Drawing.Point(414, 7);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(93, 46);
-            this.label4.TabIndex = 119;
-            this.label4.Text = "Expected Amount";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.lbExpected.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbExpected.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbExpected.Location = new System.Drawing.Point(414, 7);
+            this.lbExpected.Name = "lbExpected";
+            this.lbExpected.Size = new System.Drawing.Size(93, 46);
+            this.lbExpected.TabIndex = 119;
+            this.lbExpected.Text = "Expected Amount";
+            this.lbExpected.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // label5
+            // lbMeasured
             // 
-            this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label5.Location = new System.Drawing.Point(512, 7);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(94, 46);
-            this.label5.TabIndex = 120;
-            this.label5.Text = "Measured Amount";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.lbMeasured.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbMeasured.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbMeasured.Location = new System.Drawing.Point(512, 7);
+            this.lbMeasured.Name = "lbMeasured";
+            this.lbMeasured.Size = new System.Drawing.Size(94, 46);
+            this.lbMeasured.TabIndex = 120;
+            this.lbMeasured.Text = "Measured Amount";
+            this.lbMeasured.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // lbPulses0
             // 
@@ -249,16 +249,16 @@
             this.lbName3.TabIndex = 146;
             this.lbName3.Text = "Wheat - Standard Valve\r\n";
             // 
-            // label23
+            // lbMeterSet
             // 
-            this.label23.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label23.Location = new System.Drawing.Point(611, 7);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(72, 46);
-            this.label23.TabIndex = 159;
-            this.label23.Text = "Meter Set";
-            this.label23.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.lbMeterSet.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbMeterSet.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbMeterSet.Location = new System.Drawing.Point(611, 7);
+            this.lbMeterSet.Name = "lbMeterSet";
+            this.lbMeterSet.Size = new System.Drawing.Size(72, 46);
+            this.lbMeterSet.TabIndex = 159;
+            this.lbMeterSet.Text = "Meter Set";
+            this.lbMeterSet.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // tbFactor3
             // 
@@ -344,26 +344,26 @@
             this.tbMeasured3.Text = "100.5";
             this.tbMeasured3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label26
+            // lbBaseRate
             // 
-            this.label26.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label26.Location = new System.Drawing.Point(176, 7);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(93, 46);
-            this.label26.TabIndex = 307;
-            this.label26.Text = "Base \r\nRate";
-            this.label26.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.lbBaseRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbBaseRate.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbBaseRate.Location = new System.Drawing.Point(176, 7);
+            this.lbBaseRate.Name = "lbBaseRate";
+            this.lbBaseRate.Size = new System.Drawing.Size(93, 46);
+            this.lbBaseRate.TabIndex = 307;
+            this.lbBaseRate.Text = "Base \r\nRate";
+            this.lbBaseRate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // label27
+            // lbCalSpeed
             // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(11, 489);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(157, 23);
-            this.label27.TabIndex = 4;
-            this.label27.Text = "Calibration Speed";
+            this.lbCalSpeed.AutoSize = true;
+            this.lbCalSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCalSpeed.Location = new System.Drawing.Point(11, 489);
+            this.lbCalSpeed.Name = "lbCalSpeed";
+            this.lbCalSpeed.Size = new System.Drawing.Size(157, 23);
+            this.lbCalSpeed.TabIndex = 4;
+            this.lbCalSpeed.Text = "Calibration Speed";
             // 
             // tbSpeed
             // 
@@ -661,8 +661,8 @@
             this.Controls.Add(this.pb0);
             this.Controls.Add(this.lbSpeed);
             this.Controls.Add(this.tbSpeed);
-            this.Controls.Add(this.label27);
-            this.Controls.Add(this.label26);
+            this.Controls.Add(this.lbCalSpeed);
+            this.Controls.Add(this.lbBaseRate);
             this.Controls.Add(this.tbMeasured3);
             this.Controls.Add(this.tbMeasured2);
             this.Controls.Add(this.tbMeasured1);
@@ -682,7 +682,7 @@
             this.Controls.Add(this.btnSet2);
             this.Controls.Add(this.btnSet1);
             this.Controls.Add(this.btnSet0);
-            this.Controls.Add(this.label23);
+            this.Controls.Add(this.lbMeterSet);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lbExpected3);
             this.Controls.Add(this.lbPulses3);
@@ -695,11 +695,11 @@
             this.Controls.Add(this.lbName1);
             this.Controls.Add(this.lbExpected0);
             this.Controls.Add(this.lbPulses0);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbMeasured);
+            this.Controls.Add(this.lbExpected);
+            this.Controls.Add(this.lbCalFactor);
+            this.Controls.Add(this.lbPulses);
+            this.Controls.Add(this.lbDescription);
             this.Controls.Add(this.lbName0);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -721,11 +721,11 @@
         #endregion
 
         private System.Windows.Forms.Label lbName0;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lbDescription;
+        private System.Windows.Forms.Label lbPulses;
+        private System.Windows.Forms.Label lbCalFactor;
+        private System.Windows.Forms.Label lbExpected;
+        private System.Windows.Forms.Label lbMeasured;
         private System.Windows.Forms.Label lbPulses0;
         private System.Windows.Forms.Label lbExpected0;
         private System.Windows.Forms.Label lbExpected1;
@@ -738,7 +738,7 @@
         private System.Windows.Forms.Label lbPulses3;
         private System.Windows.Forms.Label lbName3;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label lbMeterSet;
         private System.Windows.Forms.Button btnSet1;
         private System.Windows.Forms.Button btnSet2;
         private System.Windows.Forms.Button btnSet3;
@@ -757,8 +757,8 @@
         private System.Windows.Forms.TextBox tbMeasured1;
         private System.Windows.Forms.TextBox tbMeasured2;
         private System.Windows.Forms.TextBox tbMeasured3;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label lbBaseRate;
+        private System.Windows.Forms.Label lbCalSpeed;
         private System.Windows.Forms.TextBox tbSpeed;
         private System.Windows.Forms.Label lbSpeed;
         private System.Windows.Forms.ProgressBar pb0;

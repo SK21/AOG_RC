@@ -15,6 +15,15 @@ namespace RateController
         public frmPrimedStart(FormStart CalledFrom)
         {
             InitializeComponent();
+            #region // language
+            lbOnTime.Text = Lang.lgOnTime;
+            lbPrimedSpeed.Text = Lang.lgSpeed;
+            lbDelay.Text = Lang.lgSwitchDelay;
+            lbOnSeconds.Text = Lang.lgSeconds;
+            lbDelaySeconds.Text = Lang.lgSeconds;
+
+            #endregion
+
             mf = CalledFrom;
         }
 

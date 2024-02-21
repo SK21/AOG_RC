@@ -17,6 +17,7 @@ namespace RateController
         {
             InitializeComponent();
             mf = Main;
+            textBox2.Text = Lang.lgCalHelp;
         }
 
         private void frmCalHelp_FormClosed(object sender, FormClosedEventArgs e)

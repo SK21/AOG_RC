@@ -31,23 +31,23 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmModuleConfig));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label27 = new System.Windows.Forms.Label();
+            this.lbIP = new System.Windows.Forms.Label();
             this.lbModuleIP = new System.Windows.Forms.Label();
-            this.label26 = new System.Windows.Forms.Label();
+            this.lbSubnet = new System.Windows.Forms.Label();
             this.cbEthernet = new System.Windows.Forms.ComboBox();
             this.btnSendSubnet = new System.Windows.Forms.Button();
             this.btnRescan = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label28 = new System.Windows.Forms.Label();
+            this.lbRelay = new System.Windows.Forms.Label();
             this.cbRelayControl = new System.Windows.Forms.ComboBox();
             this.tbWifiPort = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
+            this.lbWifiPort = new System.Windows.Forms.Label();
             this.ckFlowOn = new System.Windows.Forms.CheckBox();
             this.ckRelayOn = new System.Windows.Forms.CheckBox();
             this.tbSensorCount = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lbSensorCount = new System.Windows.Forms.Label();
             this.tbModuleID = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbModuleID = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tbRelay16 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -98,7 +98,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.cboBoard = new System.Windows.Forms.ComboBox();
-            this.label29 = new System.Windows.Forms.Label();
+            this.lbBoards = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -119,9 +119,9 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.label27);
+            this.tabPage3.Controls.Add(this.lbIP);
             this.tabPage3.Controls.Add(this.lbModuleIP);
-            this.tabPage3.Controls.Add(this.label26);
+            this.tabPage3.Controls.Add(this.lbSubnet);
             this.tabPage3.Controls.Add(this.cbEthernet);
             this.tabPage3.Controls.Add(this.btnSendSubnet);
             this.tabPage3.Controls.Add(this.btnRescan);
@@ -132,14 +132,14 @@
             this.tabPage3.Text = "Network";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // label27
+            // lbIP
             // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(64, 179);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(76, 24);
-            this.label27.TabIndex = 217;
-            this.label27.Text = "Local IP";
+            this.lbIP.AutoSize = true;
+            this.lbIP.Location = new System.Drawing.Point(64, 179);
+            this.lbIP.Name = "lbIP";
+            this.lbIP.Size = new System.Drawing.Size(76, 24);
+            this.lbIP.TabIndex = 217;
+            this.lbIP.Text = "Local IP";
             // 
             // lbModuleIP
             // 
@@ -150,14 +150,14 @@
             this.lbModuleIP.Text = "192.168.100.100";
             this.lbModuleIP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label26
+            // lbSubnet
             // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(64, 136);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(149, 24);
-            this.label26.TabIndex = 215;
-            this.label26.Text = "Selected Subnet";
+            this.lbSubnet.AutoSize = true;
+            this.lbSubnet.Location = new System.Drawing.Point(64, 136);
+            this.lbSubnet.Name = "lbSubnet";
+            this.lbSubnet.Size = new System.Drawing.Size(149, 24);
+            this.lbSubnet.TabIndex = 215;
+            this.lbSubnet.Text = "Selected Subnet";
             // 
             // cbEthernet
             // 
@@ -202,16 +202,16 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label28);
+            this.tabPage1.Controls.Add(this.lbRelay);
             this.tabPage1.Controls.Add(this.cbRelayControl);
             this.tabPage1.Controls.Add(this.tbWifiPort);
-            this.tabPage1.Controls.Add(this.label25);
+            this.tabPage1.Controls.Add(this.lbWifiPort);
             this.tabPage1.Controls.Add(this.ckFlowOn);
             this.tabPage1.Controls.Add(this.ckRelayOn);
             this.tabPage1.Controls.Add(this.tbSensorCount);
-            this.tabPage1.Controls.Add(this.label2);
+            this.tabPage1.Controls.Add(this.lbSensorCount);
             this.tabPage1.Controls.Add(this.tbModuleID);
-            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.lbModuleID);
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage1.Name = "tabPage1";
@@ -221,14 +221,14 @@
             this.tabPage1.Text = "Config 1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // label28
+            // lbRelay
             // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(43, 226);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(122, 24);
-            this.label28.TabIndex = 47;
-            this.label28.Text = "Relay Control";
+            this.lbRelay.AutoSize = true;
+            this.lbRelay.Location = new System.Drawing.Point(43, 226);
+            this.lbRelay.Name = "lbRelay";
+            this.lbRelay.Size = new System.Drawing.Size(122, 24);
+            this.lbRelay.TabIndex = 47;
+            this.lbRelay.Text = "Relay Control";
             // 
             // cbRelayControl
             // 
@@ -260,14 +260,14 @@
             this.tbWifiPort.TextChanged += new System.EventHandler(this.textbox_TextChanged);
             this.tbWifiPort.Enter += new System.EventHandler(this.WifiPort_Enter);
             // 
-            // label25
+            // lbWifiPort
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(43, 178);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(135, 24);
-            this.label25.TabIndex = 44;
-            this.label25.Text = "Wifi  Serial Port";
+            this.lbWifiPort.AutoSize = true;
+            this.lbWifiPort.Location = new System.Drawing.Point(43, 178);
+            this.lbWifiPort.Name = "lbWifiPort";
+            this.lbWifiPort.Size = new System.Drawing.Size(135, 24);
+            this.lbWifiPort.TabIndex = 44;
+            this.lbWifiPort.Text = "Wifi  Serial Port";
             // 
             // ckFlowOn
             // 
@@ -307,14 +307,14 @@
             this.tbSensorCount.TextChanged += new System.EventHandler(this.textbox_TextChanged);
             this.tbSensorCount.Enter += new System.EventHandler(this.SensorCount_Enter);
             // 
-            // label2
+            // lbSensorCount
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(43, 130);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(125, 24);
-            this.label2.TabIndex = 26;
-            this.label2.Text = "Sensor Count";
+            this.lbSensorCount.AutoSize = true;
+            this.lbSensorCount.Location = new System.Drawing.Point(43, 130);
+            this.lbSensorCount.Name = "lbSensorCount";
+            this.lbSensorCount.Size = new System.Drawing.Size(125, 24);
+            this.lbSensorCount.TabIndex = 26;
+            this.lbSensorCount.Text = "Sensor Count";
             // 
             // tbModuleID
             // 
@@ -326,14 +326,14 @@
             this.tbModuleID.TextChanged += new System.EventHandler(this.textbox_TextChanged);
             this.tbModuleID.Enter += new System.EventHandler(this.ModuleID_Enter);
             // 
-            // label1
+            // lbModuleID
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(43, 82);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 24);
-            this.label1.TabIndex = 24;
-            this.label1.Text = "Module ID";
+            this.lbModuleID.AutoSize = true;
+            this.lbModuleID.Location = new System.Drawing.Point(43, 82);
+            this.lbModuleID.Name = "lbModuleID";
+            this.lbModuleID.Size = new System.Drawing.Size(96, 24);
+            this.lbModuleID.TabIndex = 24;
+            this.lbModuleID.Text = "Module ID";
             // 
             // tabPage2
             // 
@@ -888,14 +888,14 @@
             this.cboBoard.TabIndex = 213;
             this.cboBoard.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // label29
+            // lbBoards
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(113, 535);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(69, 24);
-            this.label29.TabIndex = 218;
-            this.label29.Text = "Boards";
+            this.lbBoards.AutoSize = true;
+            this.lbBoards.Location = new System.Drawing.Point(113, 535);
+            this.lbBoards.Name = "lbBoards";
+            this.lbBoards.Size = new System.Drawing.Size(69, 24);
+            this.lbBoards.TabIndex = 218;
+            this.lbBoards.Text = "Boards";
             // 
             // frmModuleConfig
             // 
@@ -903,7 +903,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(478, 610);
             this.Controls.Add(this.btnPCB);
-            this.Controls.Add(this.label29);
+            this.Controls.Add(this.lbBoards);
             this.Controls.Add(this.cboBoard);
             this.Controls.Add(this.btnSendToModule);
             this.Controls.Add(this.btnCancel);
@@ -944,16 +944,16 @@
         private System.Windows.Forms.Button btnSendSubnet;
         private System.Windows.Forms.Button btnRescan;
         private System.Windows.Forms.ComboBox cbEthernet;
-        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label lbRelay;
         private System.Windows.Forms.ComboBox cbRelayControl;
         private System.Windows.Forms.TextBox tbWifiPort;
-        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label lbWifiPort;
         private System.Windows.Forms.CheckBox ckFlowOn;
         private System.Windows.Forms.CheckBox ckRelayOn;
         private System.Windows.Forms.TextBox tbSensorCount;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbSensorCount;
         private System.Windows.Forms.TextBox tbModuleID;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbModuleID;
         private System.Windows.Forms.TextBox tbRelay16;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox tbRelay15;
@@ -1000,10 +1000,10 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnSendToModule;
         private System.Windows.Forms.Label lbModuleIP;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label lbSubnet;
+        private System.Windows.Forms.Label lbIP;
         private System.Windows.Forms.Button btnPCB;
         private System.Windows.Forms.ComboBox cboBoard;
-        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label lbBoards;
     }
 }
