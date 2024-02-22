@@ -21,10 +21,10 @@ namespace RateController
     public partial class FormStart : Form
     {
         public readonly int MaxModules = 8;
-        public readonly int MaxProducts = 6;
+        public readonly int MaxProducts = 6;// last two are fans
         public readonly int MaxRelays = 16;
         public readonly int MaxSections = 128;
-        public readonly int MaxSensors = 8; // last two are fans
+        public readonly int MaxSensors = 8; 
         public readonly int MaxSwitches = 16;
         public PGN32401 AnalogData;
         public PGN254 AutoSteerPGN;

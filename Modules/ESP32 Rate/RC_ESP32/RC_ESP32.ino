@@ -64,8 +64,8 @@ struct ModuleConfig
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
 	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
-	char NetName[ModStringLengths] = "Net2";		// name of network ESP32 connects to
-	char NetPassword[ModStringLengths] = "Clarkston55";
+	char NetName[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
+	char NetPassword[ModStringLengths] = "111222333";
 };
 
 ModuleConfig MDL;

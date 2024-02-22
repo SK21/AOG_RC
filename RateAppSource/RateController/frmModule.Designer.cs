@@ -323,7 +323,6 @@
             this.lbModID.TabIndex = 238;
             this.lbModID.Text = "0";
             this.lbModID.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbModID.Click += new System.EventHandler(this.lbModID_Click);
             // 
             // label2
             // 
@@ -382,7 +381,7 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 500;
+            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // bntOK

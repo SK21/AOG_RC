@@ -112,20 +112,19 @@ namespace RateController
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            int SelectedModule = mf.Products.Item(mf.CurrentProduct()).ModuleID;
-            if (mf.AnalogData.ModuleID == SelectedModule)
+            clsProduct Prod = mf.Products.Item(mf.CurrentProduct());
+
+            if (Prod.ElapsedTime > 4000)
             {
-                lbInoID.Text = mf.AnalogData.InoID.ToString();
-                lbModID.Text = mf.AnalogData.ModuleID.ToString();
-                int Elapsed = mf.Products.Item(mf.CurrentProduct()).ElapsedTime;
-                if (Elapsed < 4000)
-                {
-                    lbTime.Text = (Elapsed / 1000.0).ToString("N3");
-                }
-                else
-                {
-                    lbTime.Text = "--";
-                }
+                lbInoID.Text = "--";
+                lbModID.Text = "--";
+                lbTime.Text = "--";
+            }
+            else
+            {
+                lbInoID.Text = mf.AnalogData.InoID(Prod.ModuleID).ToString();
+                lbModID.Text = Prod.ModuleID.ToString();
+                lbTime.Text = (Prod.ElapsedTime / 1000.0).ToString("N3");
 
                 if (!FreezeUpdate)
                 {
@@ -140,14 +139,6 @@ namespace RateController
                     UpdateLogs();
                 }
             }
-            else if (mf.Products.Item(mf.CurrentProduct()).ElapsedTime > 4000)
-            {
-                lbInoID.Text = "--";
-                lbModID.Text = "--";
-                lbTime.Text = "--";
-            }
-
-            if (!mf.SER[CommPort].ArduinoPort.IsOpen) mf.SER[CommPort].OpenRCport(true);
         }
 
         private void UpdateLogs()
@@ -159,11 +150,6 @@ namespace RateController
             tbErrors.Text = mf.Tls.ReadTextFile("Error Log.txt");
             tbErrors.Select(tbErrors.Text.Length, 0);
             tbErrors.ScrollToCaret();
-        }
-
-        private void lbModID_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

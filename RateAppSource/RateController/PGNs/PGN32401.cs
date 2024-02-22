@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace RateController
 {
     public class PGN32401
-    { 
+    {
         //PGN32401, module, analog info from module to RC
         //0     145
         //1     126
@@ -26,20 +26,20 @@ namespace RateController
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 145;
         private readonly FormStart mf;
-        private UInt16 cInoID;
+        private UInt16[] cInoID;
         private byte cModuleID;
         private UInt16[,] cReading = new UInt16[255, 4];
 
         public PGN32401(FormStart CalledFrom)
         {
             mf = CalledFrom;
+            cInoID = new ushort[mf.MaxModules];
         }
 
-        public UInt16 InoID
-        { get { return cInoID; } }
-
-        public UInt16 ModuleID
-        { get { return cModuleID; } }
+        public UInt16 InoID(int Module)
+        {
+            return cInoID[Module];
+        }
 
         public bool ParseByteData(byte[] Data)
         {
@@ -51,7 +51,7 @@ namespace RateController
                 {
                     cReading[cModuleID, i] = (UInt16)(Data[i * 2 + 4] << 8 | Data[i * 2 + 3]);
                 }
-                cInoID = (ushort)(Data[11] | Data[12] << 8);
+                cInoID[cModuleID] = (ushort)(Data[11] | Data[12] << 8);
 
                 mf.UpdateModuleConnected(cModuleID);
 
