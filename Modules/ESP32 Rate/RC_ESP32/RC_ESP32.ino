@@ -3,6 +3,8 @@
 #include <pcf8574.h>		// https://github.com/RobTillaart/PCF8574
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
+#include <Adafruit_PWMServoDriver.h>
+
 #include <Adafruit_MCP23008.h>
 #include <Adafruit_MCP23X08.h>
 #include <Adafruit_MCP23X17.h>
@@ -25,11 +27,10 @@
 #include <SPI.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
-#include <Adafruit_PWMServoDriver.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  18-Feb-2024"
-const uint16_t InoID = 18024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  22-Feb-2024"
+const uint16_t InoID = 22024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -56,12 +57,15 @@ struct ModuleConfig
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 5;
 	uint8_t IP3 = 60;
+	uint8_t AdsAddress = 0x48;			// enter 0 to search all
+	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t RelayControl = 6;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
 									//, 5 - PCA9685 single , 6 - PCA9685 paired, 7 - PCF8574
-	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
-	char Name[ModStringLengths] = "RateModule";
-	char Password[ModStringLengths] = "111222333";
-	uint8_t AdsAddress = 0x48;			// enter 0 to search all
+	char APname[ModStringLengths] = "RateModule";
+	char APpassword[ModStringLengths] = "111222333";
+	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
+	char NetName[ModStringLengths] = "Net2";		// name of network ESP32 connects to
+	char NetPassword[ModStringLengths] = "Clarkston55";
 };
 
 ModuleConfig MDL;
@@ -97,7 +101,7 @@ const uint16_t DestinationPort = 29999;
 
 // ethernet
 EthernetUDP UDP_Ethernet;
-IPAddress DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
+IPAddress Ethernet_DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
 bool ChipFound;
 
 // AGIO
@@ -107,9 +111,8 @@ uint16_t DestinationPortAGIO = 9999;	// to send to
 
 // wifi
 WiFiUDP UDP_Wifi;
-IPAddress AP_LocalIP(192, 168, 30, 1);
+IPAddress Wifi_DestinationIP(192, 168, 100, 255);
 IPAddress AP_Subnet(255, 255, 255, 0);
-IPAddress AP_DestinationIP(192, 168, 30, 255);
 WiFiClient client;
 WebServer server(80);
 
@@ -164,6 +167,30 @@ void IRAM_ATTR ISR0();		// function prototype
 void IRAM_ATTR ISR1();
 
 bool GoodPins;	// pin configuration correct
+
+void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
+{
+	Serial.print("Connected to '");
+	Serial.print(MDL.NetName);
+	Serial.println("'");
+}
+
+void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info)
+{
+	Serial.print("Network IP: ");
+	Serial.println(WiFi.localIP());
+	IPAddress Wifi_LocalIP = WiFi.localIP();
+	Wifi_DestinationIP = IPAddress(Wifi_LocalIP[0], Wifi_LocalIP[1], Wifi_LocalIP[2], 255);
+}
+
+void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
+{
+	Serial.println("Disconnected from WiFi access point");
+	Serial.print("WiFi lost connection. Reason: ");
+	Serial.println(info.wifi_sta_disconnected.reason);
+	Serial.println("Trying to Reconnect");
+	WiFi.begin(MDL.NetName, MDL.NetPassword);
+}
 
 void setup()
 {

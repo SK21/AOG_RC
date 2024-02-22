@@ -129,7 +129,7 @@ namespace RateController
 
         public int ElapsedTime()
         {
-            int Result = 4000;
+            int Result = 10000;
             if ((DateTime.Now - cLastTime).TotalMilliseconds < 4000) Result = cElapsedTime;
 
             CheckModuleComm();

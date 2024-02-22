@@ -142,8 +142,7 @@ void DoSetup()
 		Serial.println("No ethernet hardware found.");
 	}
 
-	DestinationIP = IPAddress(MDL.IP0, MDL.IP1, MDL.IP2, 255);	// update from saved data
-	Serial.println("");
+	Ethernet_DestinationIP = IPAddress(MDL.IP0, MDL.IP1, MDL.IP2, 255);	// update from saved data
 
 	// UDP
 	UDP_Ethernet.begin(ListeningPort);
@@ -183,6 +182,8 @@ void DoSetup()
 	{
 	case 1:
 		// Relay GPIO Pins
+		Serial.println("");
+		Serial.println("Using GPIO pins for relays.");
 		for (int i = 0; i < 16; i++)
 		{
 			if (MDL.RelayPins[i] < NC)
@@ -222,7 +223,6 @@ void DoSetup()
 		{
 			Serial.println("PCA9555 expander not found.");
 		}
-		Serial.println("");
 		break;
 
 	case 4:
@@ -287,7 +287,6 @@ void DoSetup()
 		{
 			Serial.println("PCA9685 expander not found.");
 		}
-		Serial.println("");
 		break;
 
 	case 7:
@@ -315,20 +314,24 @@ void DoSetup()
 		{
 			Serial.println("PCF8574 expander not found.");
 		}
-		Serial.println("");
 		break;
-}
+	}
+	
+	// Wifi
+	WiFi.mode(WIFI_MODE_APSTA);
+	WiFi.disconnect(true);
 
 	// Access Point
-	AP_LocalIP = IPAddress(192, 168, MDL.ID + 100, 1);
-	AP_DestinationIP = IPAddress(192, 168, MDL.ID + 100, 255);
+	IPAddress AP_LocalIP = IPAddress(192, 168, MDL.ID + 200, 1);
+	Wifi_DestinationIP = IPAddress(192, 168, MDL.ID + 200, 255);
 	
-	String AP = MDL.Name;
+	String AP = MDL.APname;
 	AP += "  (";
 	AP += WiFi.macAddress();
 	AP += ")";
 
-	WiFi.softAP(AP, MDL.Password, 1, 0, 2);
+	WiFi.softAP(AP, MDL.APpassword, 1, 0, 2);
+	delay(500);
 	WiFi.softAPConfig(AP_LocalIP, AP_LocalIP, AP_Subnet);
 	UDP_Wifi.begin(ListeningPort);
 
@@ -358,6 +361,20 @@ void DoSetup()
 
 	Serial.println("OTA started.");
 
+	// wifi client mode
+	if (MDL.WifiMode == 1)
+	{
+		// connect to network
+		delay(1000);
+		WiFi.onEvent(WiFiStationConnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
+		WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
+		WiFi.onEvent(WiFiStationDisconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+		WiFi.begin(MDL.NetName, MDL.NetPassword);
+		Serial.println();
+		Serial.println("Connecting to wifi network ...");
+	}
+
+	delay(1000);
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
@@ -387,7 +404,7 @@ void LoadData()
 		}
 	}
 
-	if(!IsValid)
+	if (!IsValid)
 	{
 		LoadDefaults();
 		SaveData();

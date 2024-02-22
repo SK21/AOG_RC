@@ -141,7 +141,11 @@ namespace RateController
             int Result = -1;
             for (int i = 0; i < cProducts.Count; i++)
             {
-                if (cProducts[i].ModuleID == ModuleID) Result = i;
+                if (cProducts[i].ModuleID == ModuleID)
+                {
+                    Result = i;
+                    break;
+                }
             }
             return Result;
         }
@@ -239,7 +243,11 @@ namespace RateController
             int Result = -1;
             for (int i = 0; i < cProducts.Count; i++)
             {
-                if (cProducts[i].ID == ProdID) Result = i;
+                if (cProducts[i].ID == ProdID)
+                {
+                    Result = i;
+                    break;
+                }
             }
             return Result;
         }

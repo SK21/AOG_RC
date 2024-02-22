@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace RateController
 {
@@ -12,8 +13,9 @@ namespace RateController
         //4     commands
         //      bit 0 - Relay on high
         //      bit 1 - Flow on high
+        //      bit 2 - client mode
         //5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
-        //                           , 5 - PCA9685 single , 6 - PCA9685 paired, 7 - PCF8574 
+        //                           , 5 - PCA9685 single , 6 - PCA9685 paired, 7 - PCF8574
         //6	    wifi module serial port
         //7	    Sensor 0, Flow pin
         //8     Sensor 0, Dir pin
@@ -22,19 +24,37 @@ namespace RateController
         //11    Sensor 1, Dir pin
         //12    Sensor 1, PWM pin
         //13    Relay pins 0-15, bytes 13-28
-        //29    -
-        //30    CRC
+        //29-48 Network Name
+        //49-68 Network Password
+        //69    CRC
 
-        private const byte cByteCount = 31;
+        private const byte cByteCount = 70;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 188;
         private byte[] cData = new byte[cByteCount];
+        private string cNetworkName;
+        private string cNetworkPassword;
         private FormStart mf;
 
         public PGN32700(FormStart Main)
         {
             mf = Main;
             Load();
+        }
+
+        public bool ClientMode
+        {
+            set
+            {
+                if (value)
+                {
+                    cData[4] = (byte)(cData[4] | 4);
+                }
+                else
+                {
+                    cData[4] = (byte)(cData[4] & 0b1111_1011);
+                }
+            }
         }
 
         public bool FlowOnHigh
@@ -54,6 +74,46 @@ namespace RateController
 
         public byte ModuleID
         { set { cData[2] = value; } }
+
+        public string NetworkName
+        {
+            set
+            {
+                for (int i = 0; i < 19; i++)
+                {
+                    cData[i + 29] = 0;
+                }
+                int Len = value.Length;
+                if (Len > 19) Len = 19;
+                byte[] Nm = Encoding.ASCII.GetBytes(value);
+                for (int i = 0; i < Len; i++)
+                {
+                    cData[i + 29] = Nm[i];
+                }
+                cNetworkName = value;
+            }
+            get { return cNetworkName; }
+        }
+
+        public string NetworkPassword
+        {
+            set
+            {
+                for (int i = 0; i < 19; i++)
+                {
+                    cData[i + 49] = 0;
+                }
+                int Len = value.Length;
+                if (Len > 19) Len = 19;
+                byte[] Nm = Encoding.ASCII.GetBytes(value);
+                for (int i = 0; i < Len; i++)
+                {
+                    cData[i + 49] = Nm[i];
+                }
+                cNetworkPassword = value;
+            }
+            get { return cNetworkPassword; }
+        }
 
         public bool RelayOnHigh
         {
@@ -117,6 +177,8 @@ namespace RateController
                     cData[i] = Val;
                 }
             }
+            cNetworkName = mf.Tls.LoadProperty("ModuleConfig_NetworkName");
+            cNetworkPassword = mf.Tls.LoadProperty("ModuleConfig_NetworkPassword");
         }
 
         public void RelayPins(byte[] RelayPin)
@@ -135,6 +197,8 @@ namespace RateController
                 Name = "ModuleConfig_" + i.ToString();
                 mf.Tls.SaveProperty(Name, cData[i].ToString());
             }
+            mf.Tls.SaveProperty("ModuleConfig_NetworkName", cNetworkName);
+            mf.Tls.SaveProperty("ModuleConfig_NetworkPassword", cNetworkPassword);
         }
 
         public void Send()

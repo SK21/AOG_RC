@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -111,29 +112,39 @@ namespace RateController
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbInoID.Text = mf.AnalogData.InoID.ToString();
-            lbModID.Text = mf.AnalogData.ModuleID.ToString();
-            int Elapsed = mf.Products.Item(mf.CurrentProduct()).ElapsedTime;
-            if (Elapsed < 4000)
+            int SelectedModule = mf.Products.Item(mf.CurrentProduct()).ModuleID;
+            if (mf.AnalogData.ModuleID == SelectedModule)
             {
-                lbTime.Text = (Elapsed / 1000.0).ToString("N3");
+                lbInoID.Text = mf.AnalogData.InoID.ToString();
+                lbModID.Text = mf.AnalogData.ModuleID.ToString();
+                int Elapsed = mf.Products.Item(mf.CurrentProduct()).ElapsedTime;
+                if (Elapsed < 4000)
+                {
+                    lbTime.Text = (Elapsed / 1000.0).ToString("N3");
+                }
+                else
+                {
+                    lbTime.Text = "--";
+                }
+
+                if (!FreezeUpdate)
+                {
+                    tbSerial.Text = mf.SER[CommPort].Log();
+                    tbSerial.Select(tbSerial.Text.Length, 0);
+                    tbSerial.ScrollToCaret();
+
+                    tbEthernet.Text = mf.UDPmodules.Log();
+                    tbEthernet.Select(tbEthernet.Text.Length, 0);
+                    tbEthernet.ScrollToCaret();
+
+                    UpdateLogs();
+                }
             }
-            else
+            else if (mf.Products.Item(mf.CurrentProduct()).ElapsedTime > 4000)
             {
+                lbInoID.Text = "--";
+                lbModID.Text = "--";
                 lbTime.Text = "--";
-            }
-
-            if (!FreezeUpdate)
-            {
-                tbSerial.Text = mf.SER[CommPort].Log();
-                tbSerial.Select(tbSerial.Text.Length, 0);
-                tbSerial.ScrollToCaret();
-
-                tbEthernet.Text = mf.UDPmodules.Log();
-                tbEthernet.Select(tbEthernet.Text.Length, 0);
-                tbEthernet.ScrollToCaret();
-
-                UpdateLogs();
             }
 
             if (!mf.SER[CommPort].ArduinoPort.IsOpen) mf.SER[CommPort].OpenRCport(true);
@@ -148,6 +159,11 @@ namespace RateController
             tbErrors.Text = mf.Tls.ReadTextFile("Error Log.txt");
             tbErrors.Select(tbErrors.Text.Length, 0);
             tbErrors.ScrollToCaret();
+        }
+
+        private void lbModID_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

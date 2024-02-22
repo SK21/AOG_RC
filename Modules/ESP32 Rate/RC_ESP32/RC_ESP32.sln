@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RC_ESP32", "RC_ESP32.vcxproj", "{6878AD5A-06FB-4563-A124-2C4D56A771A8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WiFiUDPClient", "..\..\..\..\..\..\Arduino\My Examples\WiFiUDPClient\WiFiUDPClient.vcxproj", "{6F38D05D-AD10-478C-A8B2-1C52E8938531}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -25,6 +27,18 @@ Global
 		{6878AD5A-06FB-4563-A124-2C4D56A771A8}.Release|ARM64.ActiveCfg = Release|ARM64
 		{6878AD5A-06FB-4563-A124-2C4D56A771A8}.Release|ARM64.Build.0 = Release|ARM64
 		{6878AD5A-06FB-4563-A124-2C4D56A771A8}.Release|ARM64.Deploy.0 = Release|ARM64
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Debug|ARM.ActiveCfg = Debug|ARM
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Debug|ARM.Build.0 = Debug|ARM
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Debug|ARM.Deploy.0 = Debug|ARM
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Debug|ARM64.Build.0 = Debug|ARM64
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Release|ARM.ActiveCfg = Release|ARM
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Release|ARM.Build.0 = Release|ARM
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Release|ARM.Deploy.0 = Release|ARM
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Release|ARM64.ActiveCfg = Release|ARM64
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Release|ARM64.Build.0 = Release|ARM64
+		{6F38D05D-AD10-478C-A8B2-1C52E8938531}.Release|ARM64.Deploy.0 = Release|ARM64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

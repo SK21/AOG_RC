@@ -57,8 +57,28 @@ void SendUDP()
         Data[9] = Sensor[i].PWM;
         Data[10] = (int)Sensor[i].PWM >> 8;
 
+
         // status
         Data[11] = 0;
+
+        if (WiFi.isConnected())
+        {
+            int8_t WifiStrength = WiFi.RSSI();
+            if (WifiStrength < -80)
+            {
+                Data[11] |= 0b00000100;
+            }
+            else if (WifiStrength < -70)
+            {
+                Data[11] |= 0b00001000;
+            }
+            else
+            {
+                Data[11] |= 0b00010000;
+            }
+            Data[11] |= 0b00100000;
+        }
+
         if (millis() - Sensor[0].CommTime < 4000) Data[11] |= 0b00000001;
         if (millis() - Sensor[1].CommTime < 4000) Data[11] |= 0b00000010;
 
@@ -79,7 +99,7 @@ void SendUDP()
             if (Ethernet.linkStatus() == LinkON)
             {
 
-                UDP_Ethernet.beginPacket(DestinationIP, DestinationPort);
+                UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
                 UDP_Ethernet.write(Data, 13);
                 UDP_Ethernet.endPacket();
                 Sent = true;
@@ -89,7 +109,7 @@ void SendUDP()
         // wifi
         if (!Sent)
         {
-            UDP_Wifi.beginPacket(AP_DestinationIP, DestinationPort);
+            UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
             UDP_Wifi.write(Data, 13);
             UDP_Wifi.endPacket();
         }
@@ -140,7 +160,7 @@ void SendUDP()
         if (Ethernet.linkStatus() == LinkON)
         {
 
-            UDP_Ethernet.beginPacket(DestinationIP, DestinationPort);
+            UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
             UDP_Ethernet.write(Data, 15);
             UDP_Ethernet.endPacket();
             Sent = true;
@@ -150,7 +170,7 @@ void SendUDP()
     // wifi
     if (!Sent)
     {
-        UDP_Wifi.beginPacket(AP_DestinationIP, DestinationPort);
+        UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
         UDP_Wifi.write(Data, 15);
         UDP_Wifi.endPacket();
     }
@@ -369,6 +389,7 @@ void ParseData(byte Data[], uint16_t len)
         // 4        Commands
         //          - bit 0, Relay on high
         //          - bit 1, Flow on high
+        //          - bit 2, client mode
         // 5        Relay control type  0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired 
         // 6        wifi module serial port
         // 7        Sensor 0, flow pin
@@ -378,10 +399,11 @@ void ParseData(byte Data[], uint16_t len)
         // 11       Sensor 1, dir pin
         // 12       Sensor 1, pwm pin
         // 13-28    Relay pins 0-15\
-        // 29		-
-        // 30       CRC
+        // 29-48    Network Name
+        // 49-68    Newtwork password
+        // 69       CRC
 
-        PGNlength = 31;
+        PGNlength = 70;
         if (len > PGNlength - 1)
         {
             if (GoodCRC(Data, PGNlength))
@@ -392,6 +414,7 @@ void ParseData(byte Data[], uint16_t len)
                 byte tmp = Data[4];
                 if ((tmp & 1) == 1) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
                 if ((tmp & 2) == 2) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
+                if ((tmp & 4) == 4) MDL.WifiMode = 1; else MDL.WifiMode = 0;
 
                 MDL.RelayControl = Data[5];
                 Sensor[0].FlowPin = Data[7];
@@ -405,6 +428,14 @@ void ParseData(byte Data[], uint16_t len)
                 {
                     MDL.RelayPins[i] = Data[13 + i];
                 }
+
+                // network name
+                memset(MDL.NetName, '\0', sizeof(MDL.NetName)); // erase old name
+                memcpy(MDL.NetName, &Data[29], 19);
+
+                // network password
+                memset(MDL.NetPassword, '\0', sizeof(MDL.NetPassword)); // erase old name
+                memcpy(MDL.NetPassword, &Data[49], 19);
 
                 SaveData();
                 esp_restart();

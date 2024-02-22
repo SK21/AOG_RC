@@ -17,7 +17,9 @@ namespace RateController
         public frmModuleConfig(FormStart Main)
         {
             InitializeComponent();
+
             #region // language
+
             lbBoards.Text = Lang.lgBoards;
             lbSubnet.Text = Lang.lgSelectedSubnet;
             lbIP.Text = Lang.lgConfigIP;
@@ -32,7 +34,7 @@ namespace RateController
             tabControl1.TabPages[1].Text = Lang.lgConfig;
             tabControl1.TabPages[2].Text = Lang.lgPins;
 
-            #endregion
+            #endregion // language
 
             mf = Main;
             for (int i = 0; i < mf.MaxProducts; i++)
@@ -172,6 +174,19 @@ namespace RateController
                             "7 - PCF8574";
 
             mf.Tls.ShowHelp(Message, "Relay Control");
+            hlpevent.Handled = true;
+        }
+
+        private void ckClient_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckClient_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Module connects as a client of an external wifi network instead of connecting over its own access point network.";
+
+            mf.Tls.ShowHelp(Message);
             hlpevent.Handled = true;
         }
 
@@ -393,6 +408,11 @@ namespace RateController
                 Pins[15] = val;
             }
 
+            // network client
+            mf.ModuleConfig.NetworkName = tbSSID.Text;
+            mf.ModuleConfig.NetworkPassword = tbPassword.Text;
+            mf.ModuleConfig.ClientMode = ckClient.Checked;
+
             mf.ModuleConfig.RelayPins(Pins);
             mf.ModuleConfig.Save();
         }
@@ -506,6 +526,10 @@ namespace RateController
                     tbRelay14.Text = "2";
                     tbRelay15.Text = "1";
                     tbRelay16.Text = "0";
+
+                    tbSSID.Text = "Tractor";
+                    tbPassword.Text = "111222333";
+                    ckClient.Checked = false;
                     break;
 
                 case 2:
@@ -542,6 +566,10 @@ namespace RateController
                     tbRelay14.Text = "-";
                     tbRelay15.Text = "-";
                     tbRelay16.Text = "-";
+
+                    tbSSID.Text = "Tractor";
+                    tbPassword.Text = "111222333";
+                    ckClient.Checked = false;
                     break;
 
                 case 3:
@@ -578,6 +606,10 @@ namespace RateController
                     tbRelay14.Text = "-";
                     tbRelay15.Text = "-";
                     tbRelay16.Text = "-";
+
+                    tbSSID.Text = "Tractor";
+                    tbPassword.Text = "111222333";
+                    ckClient.Checked = false;
                     break;
 
                 default:
@@ -614,8 +646,38 @@ namespace RateController
                     tbRelay14.Text = "-";
                     tbRelay15.Text = "-";
                     tbRelay16.Text = "-";
+
+                    tbSSID.Text = "Tractor";
+                    tbPassword.Text = "111222333";
+                    ckClient.Checked = false;
                     break;
             }
+        }
+
+        private void tbPassword_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Password for the network the module connects to in Client Mode.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void tbPassword_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbSSID_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Name of the network the module connects to in Client Mode.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void tbSSID_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
 
         private void textBox_Enter(object sender, EventArgs e)
@@ -718,6 +780,10 @@ namespace RateController
             LoadCombo();
             lbModuleIP.Text = mf.UDPmodules.SubNet;
             cboBoard.SelectedIndex = -1;
+
+            tbSSID.Text = mf.ModuleConfig.NetworkName;
+            tbPassword.Text = mf.ModuleConfig.NetworkPassword;
+            ckClient.Checked = ((data[4] & 4) == 4);
 
             Initializing = false;
         }
