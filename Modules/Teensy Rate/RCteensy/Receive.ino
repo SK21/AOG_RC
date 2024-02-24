@@ -361,7 +361,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 				{
 					MDL.RelayPins[i] = Data[13 + i];
 				}
-				SaveData();
+				//SaveData();
 			}
 		}
 		break;
@@ -391,8 +391,8 @@ void ReadPGNs(byte Data[], uint16_t len)
 				SaveData();
 				SendNetworkConfig();
 
-				// restart the Teensy
-				//SCB_AIRCR = 0x05FA0004;
+				 //restart the Teensy
+				SCB_AIRCR = 0x05FA0004;
 			}
 		}
 		break;
