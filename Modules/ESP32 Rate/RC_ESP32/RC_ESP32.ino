@@ -29,8 +29,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  22-Feb-2024"
-const uint16_t InoID = 22024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  24-Feb-2024"
+const uint16_t InoID = 24024;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -167,6 +167,7 @@ void IRAM_ATTR ISR0();		// function prototype
 void IRAM_ATTR ISR1();
 
 bool GoodPins;	// pin configuration correct
+uint8_t DisconnectCount;
 
 void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
@@ -188,8 +189,18 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	Serial.println("Disconnected from WiFi access point");
 	Serial.print("WiFi lost connection. Reason: ");
 	Serial.println(info.wifi_sta_disconnected.reason);
-	Serial.println("Trying to Reconnect");
+	Serial.print("Trying to Reconnect: ");
+	DisconnectCount++;
+	Serial.println(DisconnectCount);
 	WiFi.begin(MDL.NetName, MDL.NetPassword);
+
+	if (DisconnectCount > 15)
+	{
+		// use AP mode only
+		MDL.WifiMode = 0;
+		SaveData();
+		ESP.restart();
+	}
 }
 
 void setup()

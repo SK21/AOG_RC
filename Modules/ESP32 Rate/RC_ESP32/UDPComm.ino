@@ -399,11 +399,10 @@ void ParseData(byte Data[], uint16_t len)
         // 11       Sensor 1, dir pin
         // 12       Sensor 1, pwm pin
         // 13-28    Relay pins 0-15\
-        // 29-48    Network Name
-        // 49-68    Newtwork password
-        // 69       CRC
+        // 29		-
+        // 30       CRC
 
-        PGNlength = 70;
+        PGNlength = 31;
         if (len > PGNlength - 1)
         {
             if (GoodCRC(Data, PGNlength))
@@ -429,21 +428,40 @@ void ParseData(byte Data[], uint16_t len)
                     MDL.RelayPins[i] = Data[13 + i];
                 }
 
+                //SaveData();
+            }
+        }
+        break;
+
+    case 32702:
+        // PGN32702, network config
+        // 0        190
+        // 1        127
+        // 2-16     Network Name
+        // 17-31    Newtwork password
+        // 32       CRC
+
+        PGNlength = 33;
+
+        if (len > PGNlength - 1)
+        {
+            if (GoodCRC(Data, PGNlength))
+            {
                 // network name
                 memset(MDL.NetName, '\0', sizeof(MDL.NetName)); // erase old name
-                memcpy(MDL.NetName, &Data[29], 19);
+                memcpy(MDL.NetName, &Data[2], 14);
 
                 // network password
                 memset(MDL.NetPassword, '\0', sizeof(MDL.NetPassword)); // erase old name
-                memcpy(MDL.NetPassword, &Data[49], 19);
+                memcpy(MDL.NetPassword, &Data[17], 14);
 
                 SaveData();
-                esp_restart();
+
+                ESP.restart();
             }
         }
         break;
     }
-
 }
 
 
@@ -470,7 +488,7 @@ void ReceiveAGIO()
                             MDL.IP2 = Data[9];
 
                             SaveData();
-                            esp_restart();
+                            ESP.restart();
                         }
                         break;
                     }
