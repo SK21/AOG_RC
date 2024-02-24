@@ -93,18 +93,18 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tbSSID = new System.Windows.Forms.TextBox();
+            this.tbPassword = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.ckClient = new System.Windows.Forms.CheckBox();
             this.btnPCB = new System.Windows.Forms.Button();
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.cboBoard = new System.Windows.Forms.ComboBox();
             this.lbBoards = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.ckClient = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tbPassword = new System.Windows.Forms.TextBox();
-            this.tbSSID = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -816,6 +816,76 @@
             this.label4.TabIndex = 68;
             this.label4.Text = "Flow 1";
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.tbSSID);
+            this.tabPage4.Controls.Add(this.tbPassword);
+            this.tabPage4.Controls.Add(this.label2);
+            this.tabPage4.Controls.Add(this.label1);
+            this.tabPage4.Controls.Add(this.ckClient);
+            this.tabPage4.Location = new System.Drawing.Point(4, 33);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(448, 477);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Wifi Client";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tbSSID
+            // 
+            this.tbSSID.Location = new System.Drawing.Point(188, 225);
+            this.tbSSID.MaxLength = 19;
+            this.tbSSID.Name = "tbSSID";
+            this.tbSSID.Size = new System.Drawing.Size(213, 29);
+            this.tbSSID.TabIndex = 0;
+            this.tbSSID.Text = " ";
+            this.tbSSID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSSID.TextChanged += new System.EventHandler(this.tbSSID_TextChanged);
+            this.tbSSID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbSSID_HelpRequested);
+            // 
+            // tbPassword
+            // 
+            this.tbPassword.Location = new System.Drawing.Point(188, 265);
+            this.tbPassword.MaxLength = 19;
+            this.tbPassword.Name = "tbPassword";
+            this.tbPassword.Size = new System.Drawing.Size(213, 29);
+            this.tbPassword.TabIndex = 1;
+            this.tbPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPassword.TextChanged += new System.EventHandler(this.tbPassword_TextChanged);
+            this.tbPassword.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPassword_HelpRequested);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(16, 265);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(166, 24);
+            this.label2.TabIndex = 219;
+            this.label2.Text = "Network Password";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 225);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(135, 24);
+            this.label1.TabIndex = 218;
+            this.label1.Text = "Network Name";
+            // 
+            // ckClient
+            // 
+            this.ckClient.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckClient.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckClient.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckClient.Location = new System.Drawing.Point(136, 138);
+            this.ckClient.Name = "ckClient";
+            this.ckClient.Size = new System.Drawing.Size(192, 32);
+            this.ckClient.TabIndex = 2;
+            this.ckClient.Text = "Use Wifi Client Mode";
+            this.ckClient.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckClient.UseVisualStyleBackColor = true;
+            this.ckClient.CheckedChanged += new System.EventHandler(this.ckClient_CheckedChanged);
+            this.ckClient.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckClient_HelpRequested);
+            // 
             // btnPCB
             // 
             this.btnPCB.BackColor = System.Drawing.Color.Transparent;
@@ -904,76 +974,6 @@
             this.lbBoards.Size = new System.Drawing.Size(69, 24);
             this.lbBoards.TabIndex = 218;
             this.lbBoards.Text = "Boards";
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.tbSSID);
-            this.tabPage4.Controls.Add(this.tbPassword);
-            this.tabPage4.Controls.Add(this.label2);
-            this.tabPage4.Controls.Add(this.label1);
-            this.tabPage4.Controls.Add(this.ckClient);
-            this.tabPage4.Location = new System.Drawing.Point(4, 33);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(448, 477);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Wifi Client";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // ckClient
-            // 
-            this.ckClient.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckClient.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckClient.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckClient.Location = new System.Drawing.Point(157, 256);
-            this.ckClient.Name = "ckClient";
-            this.ckClient.Size = new System.Drawing.Size(128, 69);
-            this.ckClient.TabIndex = 2;
-            this.ckClient.Text = "Use Wifi Client Mode";
-            this.ckClient.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckClient.UseVisualStyleBackColor = true;
-            this.ckClient.CheckedChanged += new System.EventHandler(this.ckClient_CheckedChanged);
-            this.ckClient.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckClient_HelpRequested);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(26, 131);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(135, 24);
-            this.label1.TabIndex = 218;
-            this.label1.Text = "Network Name";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(26, 171);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(166, 24);
-            this.label2.TabIndex = 219;
-            this.label2.Text = "Network Password";
-            // 
-            // tbPassword
-            // 
-            this.tbPassword.Location = new System.Drawing.Point(198, 171);
-            this.tbPassword.MaxLength = 19;
-            this.tbPassword.Name = "tbPassword";
-            this.tbPassword.Size = new System.Drawing.Size(213, 29);
-            this.tbPassword.TabIndex = 1;
-            this.tbPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbPassword.TextChanged += new System.EventHandler(this.tbPassword_TextChanged);
-            this.tbPassword.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPassword_HelpRequested);
-            // 
-            // tbSSID
-            // 
-            this.tbSSID.Location = new System.Drawing.Point(198, 131);
-            this.tbSSID.MaxLength = 19;
-            this.tbSSID.Name = "tbSSID";
-            this.tbSSID.Size = new System.Drawing.Size(213, 29);
-            this.tbSSID.TabIndex = 0;
-            this.tbSSID.Text = " ";
-            this.tbSSID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbSSID.TextChanged += new System.EventHandler(this.tbSSID_TextChanged);
-            this.tbSSID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbSSID_HelpRequested);
             // 
             // frmModuleConfig
             // 
