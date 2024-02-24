@@ -194,7 +194,7 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	Serial.println(DisconnectCount);
 	WiFi.begin(MDL.SSID, MDL.Password);
 
-	if (DisconnectCount > 15)
+	if (DisconnectCount > 10)
 	{
 		// use AP mode only
 		MDL.WifiMode = 0;

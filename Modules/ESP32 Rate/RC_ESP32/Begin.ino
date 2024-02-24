@@ -349,13 +349,14 @@ void DoSetup()
 	server.on("/page2", HandlePage2);
 	server.on("/ButtonPressed", ButtonPressed);
 	server.onNotFound(HandleRoot);
-	server.begin();
 
 	// OTA
 	server.on("/myurl", HTTP_GET, []() {
 		server.sendHeader("Connection", "close");
 		server.send(200, "text/plain", "Hello there!");
 	});
+
+	server.begin();
 
 	/* INITIALIZE ESP2SOTA LIBRARY */
 	ESP2SOTA.begin(&server);

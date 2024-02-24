@@ -110,6 +110,7 @@ String GetPage0()
 	st += "";
 	st += "      <p> <a class='button-72' href='/page1' >Switches</a> </p>";
 	st += "      <p> <a class='button-72' href='/page2' >Network</a> </p>";
+	st += "      <p> <a class='button-72' href='/update' >Update Firmware</a> </p>";
 	st += "";
 	st += "    </form>";
 	st += "";
