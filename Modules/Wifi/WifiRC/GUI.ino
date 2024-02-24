@@ -27,15 +27,12 @@ void handleCredentials()
 	int NewID;
 	int Interval;
 
-	server.arg("prop1").toCharArray(WC.SSID, sizeof(WC.SSID) - 1);
-	server.arg("prop2").toCharArray(WC.Password, sizeof(WC.Password) - 1);
+	server.arg("prop1").toCharArray(MDL.SSID, sizeof(MDL.SSID) - 1);
+	server.arg("prop2").toCharArray(MDL.Password, sizeof(MDL.Password) - 1);
 
 	server.send(200, "text/html", GetPage0());
 
-	EEPROM.begin(512);
-	EEPROM.put(0, InoID);
-	EEPROM.put(10, WC);
-	EEPROM.commit();
+	SaveData();
 
 	delay(3000);
 
@@ -47,7 +44,8 @@ void ButtonPressed()
 	if (server.arg("Btn") == "Master")
 	{
 		MasterOn = !MasterOn;
-		SendSwitches();
+		SwitchesChanged = true;
+		SendStatus();
 		HandlePage1();
 	}
 	else
@@ -56,7 +54,8 @@ void ButtonPressed()
 		if (ID >= 0 && ID < 16)
 		{
 			Button[ID] = !Button[ID];
-			SendSwitches();
+			SwitchesChanged = true;
+			SendStatus();
 			HandlePage1();
 		}
 	}

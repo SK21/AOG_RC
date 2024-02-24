@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 
 namespace RateController
@@ -24,16 +25,13 @@ namespace RateController
         //11    Sensor 1, Dir pin
         //12    Sensor 1, PWM pin
         //13    Relay pins 0-15, bytes 13-28
-        //29-48 Network Name
-        //49-68 Network Password
-        //69    CRC
+        //29    -
+        //30    CRC
 
-        private const byte cByteCount = 70;
+        private const byte cByteCount = 31;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 188;
         private byte[] cData = new byte[cByteCount];
-        private string cNetworkName;
-        private string cNetworkPassword;
         private FormStart mf;
 
         public PGN32700(FormStart Main)
@@ -74,46 +72,6 @@ namespace RateController
 
         public byte ModuleID
         { set { cData[2] = value; } }
-
-        public string NetworkName
-        {
-            set
-            {
-                for (int i = 0; i < 19; i++)
-                {
-                    cData[i + 29] = 0;
-                }
-                int Len = value.Length;
-                if (Len > 19) Len = 19;
-                byte[] Nm = Encoding.ASCII.GetBytes(value);
-                for (int i = 0; i < Len; i++)
-                {
-                    cData[i + 29] = Nm[i];
-                }
-                cNetworkName = value;
-            }
-            get { return cNetworkName; }
-        }
-
-        public string NetworkPassword
-        {
-            set
-            {
-                for (int i = 0; i < 19; i++)
-                {
-                    cData[i + 49] = 0;
-                }
-                int Len = value.Length;
-                if (Len > 19) Len = 19;
-                byte[] Nm = Encoding.ASCII.GetBytes(value);
-                for (int i = 0; i < Len; i++)
-                {
-                    cData[i + 49] = Nm[i];
-                }
-                cNetworkPassword = value;
-            }
-            get { return cNetworkPassword; }
-        }
 
         public bool RelayOnHigh
         {
@@ -177,8 +135,6 @@ namespace RateController
                     cData[i] = Val;
                 }
             }
-            cNetworkName = mf.Tls.LoadProperty("ModuleConfig_NetworkName");
-            cNetworkPassword = mf.Tls.LoadProperty("ModuleConfig_NetworkPassword");
         }
 
         public void RelayPins(byte[] RelayPin)
@@ -197,8 +153,6 @@ namespace RateController
                 Name = "ModuleConfig_" + i.ToString();
                 mf.Tls.SaveProperty(Name, cData[i].ToString());
             }
-            mf.Tls.SaveProperty("ModuleConfig_NetworkName", cNetworkName);
-            mf.Tls.SaveProperty("ModuleConfig_NetworkPassword", cNetworkPassword);
         }
 
         public void Send()

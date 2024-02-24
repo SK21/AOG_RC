@@ -94,7 +94,7 @@ void SendData()
             UDPcomm.write(Data, 13);
             UDPcomm.endPacket();
         }
-        else
+        else if (millis() - ESPtime > 5000)
         {
             // send serial
             Serial.print(Data[0]);
@@ -155,7 +155,7 @@ void SendData()
         UDPcomm.write(Data, 15);
         UDPcomm.endPacket();
     }
-    else
+    else if (millis() - ESPtime > 5000)
     {
         // send serial
         Serial.print(Data[0]);
@@ -169,6 +169,32 @@ void SendData()
 
     // send wifi
     if (MDL.ESPserialPort != NC) SerialESP->write(Data, 15);
+}
+
+void SendNetworkConfig()
+{
+    // PGN32702, network config to esp
+    // 0        190
+    // 1        127
+    // 2-16     Network Name
+    // 17-31    Newtwork password
+    // 32       CRC
+
+    int PGNlength = 33;
+    byte Data[PGNlength];
+    Data[0] = 190;
+    Data[1] = 127;
+
+    for (int i = 0; i < 15; i++)
+    {
+        Data[i + 2] = MDL.NetName[i];
+        Data[i + 17] = MDL.NetPassword[i];
+    }
+
+    Data[32] = CRC(Data, PGNlength - 1, 0);
+    Serial.println(Data[32]);
+    Serial.println(GoodCRC(Data, PGNlength));
+    if (MDL.ESPserialPort != NC) SerialESP->write(Data, PGNlength);
 }
 
 

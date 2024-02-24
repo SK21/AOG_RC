@@ -36,6 +36,7 @@ namespace RateController
         public PGN238 MachineConfig;
         public PGN239 MachineData;
         public PGN32700 ModuleConfig;
+        public PGN32702 NetworkConfig;
         public clsPressures PressureObjects;
         public clsProducts Products;
         public clsAlarm RCalarm;
@@ -170,6 +171,7 @@ namespace RateController
             Zones = new clsZones(this);
             vSwitchBox = new clsVirtualSwitchBox(this);
             ModuleConfig = new PGN32700(this);
+            NetworkConfig = new PGN32702(this);
         }
 
         public event EventHandler ProductChanged;

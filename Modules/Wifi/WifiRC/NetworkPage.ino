@@ -87,18 +87,31 @@ String GetPage2()
 	st += "";
 	st += "        <tr>";
 	st += "          <td align='left'>Network</td>";
-	st += "          <td><input class='InputCell' size='20' name='prop1' value='" + String(WC.SSID) + "' ID=Text1></td>";
+	st += "          <td><input class='InputCell' size='20' name='prop1' value='" + String(MDL.SSID) + "' ID=Text1></td>";
 	st += "        </tr>";
 	st += "";
 	st += "        <tr>";
 	st += "          <td align='left'>Password</td>";
-	st += "          <td><input class='InputCell' size='20' name='prop2' value='" + String(WC.Password) + "' ID=Text2></td>";
+	st += "          <td><input class='InputCell' size='20' name='prop2' value='" + String(MDL.Password) + "' ID=Text2></td>";
 	st += "        </tr>";
 	st += "      </table>";
 	st += "";
 	st += "      <p> <input class='button-72' id=Submit1 type=submit value='Save/Restart'></p>";
 	st += "      <p> <a href='/page0'>Back</a> </p>";
 	st += "    </form>";
+	if (WiFi.isConnected())
+	{
+		st += "<p>Wifi Connected to " + String(MDL.SSID) + "</p>";
+	}
+	else
+	{
+		st += "<p>Wifi Not Connected</p>";
+	}
+	//st += "<P>Debug</p>";
+	//st += "<p>" + String(debug1) + "</p>";
+	//st += "<p>" + String(debug2) + "</p>";
+	//st += "<p>" + String(debug3) + "</p>";
+	st += "</body>";
 	st += "";
 	st += "</HTML>";
 

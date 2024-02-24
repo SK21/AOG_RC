@@ -3,14 +3,14 @@ byte SerialMSB;
 byte SerialLSB;
 unsigned int SerialPGN;
 byte SerialPGNlength;
-byte SerialReceive[35];
+byte SerialReceive[40];
 bool PGNfound;
 
 void ReceiveSerial()
 {
 	if (Serial.available())
 	{
-		if (Serial.available() > 50)
+		if (Serial.available() > 40)
 		{
 			// clear buffer and reset pgn
 			while (Serial.available())
@@ -65,6 +65,11 @@ void ReceiveSerial()
 				PGNfound = true;
 				break;
 
+			case 32702:
+				SerialPGNlength = 33;
+				PGNfound = true;
+				break;
+
 			default:
 				// find pgn
 				SerialMSB = Serial.read();
@@ -82,13 +87,13 @@ void ReceiveSerial()
 
 void ReceiveUDPwired()
 {
-	byte Data[35];
+	byte Data[40];
 	if (Ethernet.linkStatus() == LinkON)
 	{
 		uint16_t len = UDPcomm.parsePacket();
 		if (len)
 		{
-			if (len > 35) len = 35;
+			if (len > 40) len = 40;
 			UDPcomm.read(Data, len);
 			ReadPGNs(Data, len);
 		}
@@ -279,15 +284,17 @@ void ReadPGNs(byte Data[], uint16_t len)
 		break;
 
 	case 32600:
-		//PGN32600, section switches from ESP to module
+		//PGN32600, ESP status
 		// 0    88
 		// 1    127
 		// 2    MasterOn
 		// 3	switches 0-7
 		// 4	switches 8-15
-		// 5	crc
+		// 5	switches changed
+		// 6	signal strength
+		// 7	crc
 
-		PGNlength = 6;
+		PGNlength = 8;
 
 		if (len > PGNlength - 1)
 		{
@@ -296,8 +303,12 @@ void ReadPGNs(byte Data[], uint16_t len)
 				WifiSwitches[2] = Data[2];
 				WifiSwitches[3] = Data[3];
 				WifiSwitches[4] = Data[4];
-				WifiSwitchesEnabled = true;
-				WifiSwitchesTimer = millis();
+				if (Data[5])
+				{
+					WifiSwitchesEnabled = true;
+					WifiSwitchesTimer = millis();
+				}
+				WifiStrength = Data[6];
 			}
 		}
 		break;
@@ -311,6 +322,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		// 4        Commands
 		//          - Relay on high
 		//          - Flow on high
+		//          - bit 2, client mode
 		// 5        Relay control type  0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
 		// 6        wifi module serial port
 		// 7        Sensor 0, flow pin
@@ -335,6 +347,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 				byte tmp = Data[4];
 				if ((tmp & 1) == 1) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
 				if ((tmp & 2) == 2) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
+				if ((tmp & 4) == 4) MDL.WifiMode = 1; else MDL.WifiMode = 0;
 
 				MDL.RelayControl = Data[5];
 				Sensor[0].FlowPin = Data[7];
@@ -348,11 +361,38 @@ void ReadPGNs(byte Data[], uint16_t len)
 				{
 					MDL.RelayPins[i] = Data[13 + i];
 				}
+				SaveData();
+			}
+		}
+		break;
+
+	case 32702:
+		// PGN32702, network config
+		// 0        190
+		// 1        127
+        // 2-16     Network Name
+		// 17-31    Newtwork password
+		// 32       CRC
+
+		PGNlength = 33;
+
+		if (len > PGNlength - 1)
+		{
+			if (GoodCRC(Data, PGNlength))
+			{
+				// network name
+				memset(MDL.NetName, '\0', sizeof(MDL.NetName)); // erase old name
+				memcpy(MDL.NetName, &Data[2], 14);
+
+				// network password
+				memset(MDL.NetPassword, '\0', sizeof(MDL.NetPassword)); // erase old name
+				memcpy(MDL.NetPassword, &Data[17], 14);
 
 				SaveData();
+				SendNetworkConfig();
 
 				// restart the Teensy
-				SCB_AIRCR = 0x05FA0004;
+				//SCB_AIRCR = 0x05FA0004;
 			}
 		}
 		break;

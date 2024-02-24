@@ -62,12 +62,17 @@ void ReceiveESP()
 				break;
 
 			case 32600:
-				ESPpgnLength = 6;
+				ESPpgnLength = 8;
 				ESPpgnFound = true;
 				break;
 
 			case 32700:
 				ESPpgnLength = 31;
+				ESPpgnFound = true;
+				break;
+
+			case 32702:
+				ESPpgnLength = 33;
 				ESPpgnFound = true;
 				break;
 

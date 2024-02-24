@@ -143,6 +143,7 @@ namespace RateController
             try
             {
                 mf.ModuleConfig.Send();
+                mf.NetworkConfig.Send();
                 mf.Tls.ShowHelp("Settings sent to module", "Config", 15000);
             }
             catch (Exception ex)
@@ -408,13 +409,13 @@ namespace RateController
                 Pins[15] = val;
             }
 
-            // network client
-            mf.ModuleConfig.NetworkName = tbSSID.Text;
-            mf.ModuleConfig.NetworkPassword = tbPassword.Text;
             mf.ModuleConfig.ClientMode = ckClient.Checked;
-
             mf.ModuleConfig.RelayPins(Pins);
             mf.ModuleConfig.Save();
+
+            mf.NetworkConfig.NetworkName = tbSSID.Text;
+            mf.NetworkConfig.NetworkPassword = tbPassword.Text;
+            mf.NetworkConfig.Save();
         }
 
         private void SensorCount_Enter(object sender, EventArgs e)
@@ -781,8 +782,8 @@ namespace RateController
             lbModuleIP.Text = mf.UDPmodules.SubNet;
             cboBoard.SelectedIndex = -1;
 
-            tbSSID.Text = mf.ModuleConfig.NetworkName;
-            tbPassword.Text = mf.ModuleConfig.NetworkPassword;
+            tbSSID.Text = mf.NetworkConfig.NetworkName;
+            tbPassword.Text = mf.NetworkConfig.NetworkPassword;
             ckClient.Checked = ((data[4] & 4) == 4);
 
             Initializing = false;

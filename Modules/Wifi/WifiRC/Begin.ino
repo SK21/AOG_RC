@@ -11,9 +11,9 @@ void DoSetup()
 
 	// defaults
 	String str = "tractor";
-	str.toCharArray(WC.SSID, str.length() + 1);
+	str.toCharArray(MDL.SSID, str.length() + 1);
 	str = "111222333";
-	str.toCharArray(WC.Password, str.length() + 1);
+	str.toCharArray(MDL.Password, str.length() + 1);
 
     EEPROM.begin(512);
     int16_t StoredID;
@@ -21,17 +21,38 @@ void DoSetup()
     if (StoredID == InoID)
     {
         Serial.println("Loading stored settings.");
-        EEPROM.get(10, WC);
+        EEPROM.get(10, MDL);
     }
     else
     {
-        Serial.println("Updating stored settings.");
-        EEPROM.put(0, InoID);
-        EEPROM.put(10, WC);
-        EEPROM.commit();
+        SaveData();
     }
 
-    ConnectWifi();
+    // Wifi
+    gotIpEventHandler = WiFi.onStationModeGotIP([](const WiFiEventStationModeGotIP& event)
+    {
+        Serial.println("Wifi client connected");
+        Serial.print("IP address: ");
+        Serial.println(WiFi.localIP());
+
+        DestinationIP = WiFi.localIP();
+        DestinationIP[3] = 255;		// change to broadcast
+    });
+
+    disconnectedEventHandler = WiFi.onStationModeDisconnected([](const WiFiEventStationModeDisconnected& event)
+    {
+        Serial.println("Wifi client disconnected");
+    });
+
+    Serial.println();
+    Serial.printf("Connecting to %s ...\n", MDL.SSID);
+    WiFi.disconnect(true);
+    delay(500);
+    WiFi.mode(WIFI_AP_STA);
+    delay(500);
+    WiFi.begin(MDL.SSID, MDL.Password);
+    delay(500);
+
     StartOTA();
 
     String AP = "WifiRC " + WiFi.macAddress();
@@ -55,3 +76,16 @@ void DoSetup()
     Serial.println("Finished Setup");
     Serial.println("");
 }
+
+void SaveData()
+{
+    Serial.println("Updating stored settings.");
+    MDL.SSID[14] = '\0';
+    MDL.Password[14] = '\0';
+
+    EEPROM.begin(512);
+    EEPROM.put(0, InoID);
+    EEPROM.put(10, MDL);
+    EEPROM.commit();
+}
+

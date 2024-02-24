@@ -7,16 +7,16 @@
 #include <EEPROM.h>
 
 // Wemos D1 mini Pro, ESP 12F    board: LOLIN(Wemos) D1 R2 & mini  or NodeMCU 1.0 (ESP-12E Module)
-# define InoDescription "WifiRC   10-Feb-2024"
-# define InoID 10024  // change to load default values
+# define InoDescription "WifiRC   24-Feb-2024"
+# define InoID 24024  // change to load default values
 
-struct WifiConnection
+struct ModuleConfig
 {
-    char SSID[32];
-    char Password[32];
+    char SSID[15];
+    char Password[15];
 };
 
-WifiConnection WC;
+ModuleConfig MDL;
 
 // web page
 ESP8266WebServer server(80);
@@ -34,6 +34,11 @@ uint16_t DestinationPortRate = 29999;
 IPAddress DestinationIP(192, 168, 1, 255);
 char WifiBuffer[512];
 
+uint32_t SendTime;
+bool SwitchesChanged = false;
+
+WiFiEventHandler gotIpEventHandler, disconnectedEventHandler;
+
 void setup()
 {
 	DoSetup();
@@ -45,6 +50,10 @@ void loop()
 	server.handleClient();
 	ReceiveWifi();
 	ReceiveSerial();
+	if (millis() - SendTime > 1000)
+	{
+		SendStatus();
+	}
 	Blink();
 }
 
@@ -89,6 +98,9 @@ uint32_t BlinkTime;
 uint32_t LoopTmr;
 uint32_t MaxLoopTime;
 byte ResetRead;
+//uint32_t debug1;
+//uint32_t debug2;
+//uint32_t debug3;
 
 void Blink()
 {
@@ -99,23 +111,29 @@ void Blink()
 		if (State) digitalWrite(LED_BUILTIN, HIGH);
 		else digitalWrite(LED_BUILTIN, LOW);
 
-		Serial.print("Micros: ");
-		Serial.print(MaxLoopTime);
+		//Serial.print("Micros: ");
+		//Serial.print(MaxLoopTime);
 
-		Serial.print(", ");
-		Serial.print(WiFi.RSSI());
+		//Serial.print(", ");
+		//Serial.print(WiFi.RSSI());
 
-		Serial.print(", ");
-		Serial.print(WiFi.status() == WL_CONNECTED);
+		//Serial.print(", ");
+		//Serial.print(WiFi.status() == WL_CONNECTED);
 
-		Serial.println("");
+		//Serial.print(", ");
+		//Serial.print(MDL.SSID);
 
-		if (ResetRead++ > 10)
-		{
-		    MaxLoopTime = 0;
-		    ResetRead = 0;
-		}
+		//Serial.print(", ");
+		//Serial.print(MDL.Password);
+
+		//Serial.println("");
+
+		//if (ResetRead++ > 10)
+		//{
+		//    MaxLoopTime = 0;
+		//    ResetRead = 0;
+		//}
 	}
-	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
-	LoopTmr = micros();
+	//if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
+	//LoopTmr = micros();
 }

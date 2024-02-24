@@ -5,43 +5,6 @@ byte PGNlength;
 byte MSB;
 byte LSB;
 
-void ConnectWifi()
-{
-	Serial.println("");
-	Serial.print("Connecting to ");
-	Serial.println(WC.SSID);
-	WiFi.mode(WIFI_AP_STA);
-	WiFi.begin(WC.SSID, WC.Password);
-	ErrorCount = 0;
-	while (WiFi.status() != WL_CONNECTED)
-	{
-		delay(1000);
-		Serial.print(".");
-		if (ErrorCount++ > 20) break;
-	}
-
-	if (WiFi.status() == WL_CONNECTED)
-	{
-		Serial.println("");
-		Serial.println("WiFi connected");
-		Serial.println("IP address: ");
-		Serial.println(WiFi.localIP());
-		Serial.println("");
-
-		WiFi.setAutoReconnect(true);
-		WiFi.persistent(true);
-
-		DestinationIP = WiFi.localIP();
-		DestinationIP[3] = 255;		// change to broadcast
-	}
-	else
-	{
-		Serial.println("");
-		Serial.println("WiFi not connected");
-		Serial.println("");
-	}
-}
-
 void ReceiveWifi()
 {
 	uint16_t PacketSize = UDPrate.parsePacket();
@@ -76,6 +39,9 @@ void ReceiveSerial()
 			PGNlength = 13;
 			if (Serial.available() > PGNlength - 3)
 			{
+				DataPGN = 0;
+				LSB = 0;
+
 				Data[0] = 144;
 				Data[1] = 126;
 				for (int i = 2; i < PGNlength; i++)
@@ -87,9 +53,6 @@ void ReceiveSerial()
 				UDPrate.beginPacket(DestinationIP, DestinationPortRate);
 				UDPrate.write(Data, PGNlength);
 				UDPrate.endPacket();
-
-				DataPGN = 0;
-				LSB = 0;
 			}
 			break;
 
@@ -98,6 +61,9 @@ void ReceiveSerial()
 			PGNlength = 15;
 			if (Serial.available() > PGNlength - 3)
 			{
+				DataPGN = 0;
+				LSB = 0;
+
 				Data[0] = 145;
 				Data[1] = 126;
 				for (int i = 2; i < PGNlength; i++)
@@ -109,9 +75,44 @@ void ReceiveSerial()
 				UDPrate.beginPacket(DestinationIP, DestinationPortRate);
 				UDPrate.write(Data, PGNlength);
 				UDPrate.endPacket();
+			}
+			break;
 
+		case 32702:
+			// PGN32702, network config
+			// 0        190
+			// 1        127
+			// 2-16     Network Name
+			// 17-31    Newtwork password
+			// 32       CRC
+
+			PGNlength = 33;
+			if (Serial.available() > PGNlength - 3)
+			{
 				DataPGN = 0;
 				LSB = 0;
+
+				Data[0] = 190;
+				Data[1] = 127;
+				for (int i = 2; i < PGNlength; i++)
+				{
+					Data[i] = Serial.read();
+				}
+
+				if (GoodCRC(Data, PGNlength))
+				{
+					// network name
+					memset(MDL.SSID, '\0', sizeof(MDL.SSID)); // erase old name
+					memcpy(MDL.SSID, &Data[2], 14);
+
+					// network password
+					memset(MDL.Password, '\0', sizeof(MDL.Password)); // erase old name
+					memcpy(MDL.Password, &Data[17], 14);
+
+					SaveData();
+
+					ESP.restart();
+				}
 			}
 			break;
 
@@ -125,22 +126,28 @@ void ReceiveSerial()
 	}
 }
 
-void SendSwitches()
+void SendStatus()
 {
-	//PGN32600, section switches from ESP to module
+	//PGN32600, ESP status to rate module
 	// 0    88
 	// 1    127
 	// 2    MasterOn
 	// 3	switches 0-7
 	// 4	switches 8-15
-	// 5	crc
+	// 5	switches changed
+	// 6	signal strength
+	// 7	crc
 
-	byte Data[6];
+	PGNlength = 8;
+
+	byte Data[PGNlength];
 	Data[0] = 88;
 	Data[1] = 127;
 	Data[2] = MasterOn;
 	Data[3] = 0;
 	Data[4] = 0;
+	Data[5] = SwitchesChanged;
+	Data[6] = WiFi.RSSI();
 
 	// convert section switches to bits
 	for (int i = 0; i < 16; i++)
@@ -151,14 +158,15 @@ void SendSwitches()
 	}
 
 	// crc
-	Data[5] = CRC(Data, 5, 0);
+	Data[PGNlength - 1] = CRC(Data, PGNlength - 1, 0);
 
 	// send
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < PGNlength; i++)
 	{
 		Serial.write(Data[i]);
 	}
 	Serial.println("");
+	SwitchesChanged = false;
 }
 
 
