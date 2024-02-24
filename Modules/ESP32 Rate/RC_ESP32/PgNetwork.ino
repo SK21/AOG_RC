@@ -1,6 +1,5 @@
 
-String tmp;
-String GetPage1()
+String GetPage2()
 {
 	String st = "<HTML>";
 	st += "";
@@ -18,10 +17,6 @@ String GetPage1()
 	st += "";
 	st += "      }";
 	st += "";
-	st += "      a:link {";
-	st += "        font-size: 150%;";
-	st += "      }";
-	st += "";
 	st += "      h1 {";
 	st += "        color: #444444;";
 	st += "        margin: 50px auto 30px;";
@@ -32,10 +27,10 @@ String GetPage1()
 	st += "        margin-right: auto;";
 	st += "      }";
 	st += "";
-	st += "      .button-on {";
+	st += "      .button-72 {";
 	st += "        align-items: center;";
 	st += "        background-color: initial;";
-	st += "        background-image: linear-gradient(rgba(50, 255, 50, .84), rgba(30, 150, 30, .84) 50%);";
+	st += "        background-image: linear-gradient(rgba(179, 132, 201, .84), rgba(57, 31, 91, .84) 50%);";
 	st += "        border-radius: 42px;";
 	st += "        border-width: 0;";
 	st += "        box-shadow: rgba(57, 31, 91, 0.24) 0 2px 2px, rgba(179, 132, 201, 0.4) 0 8px 12px;";
@@ -60,32 +55,14 @@ String GetPage1()
 	st += "        width: 40%";
 	st += "      }";
 	st += "";
-	st += "      .button-off {";
-	st += "        align-items: center;";
-	st += "        background-color: initial;";
-	st += "        background-image: linear-gradient(rgba(255, 50, 50, .84), rgba(150, 30, 30, .84) 50%);";
-	st += "        border-radius: 42px;";
-	st += "        border-width: 0;";
-	st += "        box-shadow: rgba(57, 31, 91, 0.24) 0 2px 2px, rgba(179, 132, 201, 0.4) 0 8px 12px;";
-	st += "        color: #FFFFFF;";
-	st += "        cursor: pointer;";
-	st += "        display: flex;";
-	st += "        font-family: Quicksand, sans-serif;";
+	st += "      .InputCell {";
+	st += "        text-align: center;";
 	st += "        font-size: 18px;";
 	st += "        font-weight: 700;";
-	st += "        justify-content: center;";
-	st += "        letter-spacing: .04em;";
-	st += "        line-height: 16px;";
-	st += "        margin: auto;";
-	st += "        padding: 18px 18px;";
-	st += "        text-align: center;";
-	st += "        text-decoration: none;";
-	st += "        text-shadow: rgba(255, 255, 255, 0.4) 0 0 4px, rgba(255, 255, 255, 0.2) 0 0 12px, rgba(57, 31, 91, 0.6) 1px 1px 4px, rgba(57, 31, 91, 0.32) 4px 4px 16px;";
-	st += "        user-select: none;";
-	st += "        -webkit-user-select: none;";
-	st += "        touch-action: manipulation;";
-	st += "        vertical-align: baseline;";
-	st += "        width: 40%";
+	st += "      }";
+	st += "";
+	st += "      a:link {";
+	st += "        font-size: 150%;";
 	st += "      }";
 	st += "";
 	st += "    </style>";
@@ -104,27 +81,44 @@ String GetPage1()
 	st += "";
 	st += "    </style>";
 	st += "";
-	st += "    <h1 align=center>Switches</h1>";
+	st += "    <h1 align=center>Wifi Network </h1>";
 	st += "    <form id=FORM1 method=post action='/'>&nbsp;";
+	st += "      <table class='center'>";
 	st += "";
+	st += "        <tr>";
+	st += "          <td align='left'>Network</td>";
+	st += "          <td><input class='InputCell' size='20' name='prop1' value='" + String(MDL.SSID) + "' ID=Text1></td>";
+	st += "        </tr>";
 	st += "";
-
-	if (WifiMasterOn) tmp = "button-on"; else tmp = "button-off";
-	st += "      <p> <input class='" + tmp + "' name='Btn' type=submit formaction='/ButtonPressed' value='Master'> </p>";
-
-	for (int i = 0; i < 16; i++)
-	{
-		if (Button[i]) tmp = "button-on"; else tmp = "button-off";
-		st += "      <p> <input class='" + tmp + "' name='Btn' type=submit formaction='/ButtonPressed' value='" + String(i + 1) + "'> </p>";
-	}
-
+	st += "        <tr>";
+	st += "          <td align='left'>Password</td>";
+	st += "          <td><input class='InputCell' size='20' name='prop2' value='" + String(MDL.Password) + "' ID=Text2></td>";
+	st += "        </tr>";
+	st += "      </table>";
+	st += "";
+	st += "      <p> <input class='button-72' id=Submit1 type=submit value='Save/Restart'></p>";
 	st += "      <p> <a href='/page0'>Back</a> </p>";
 	st += "    </form>";
+	if (WiFi.isConnected())
+	{
+		st += "<p>Wifi Connected to " + String(MDL.SSID) + "</p>";
+	}
+	else
+	{
+		st += "<p>Wifi Not Connected</p>";
+	}
+	//st += "<P>Debug</p>";
+	//st += "<p>" + String(debug1) + "</p>";
+	//st += "<p>" + String(debug2) + "</p>";
+	//st += "<p>" + String(debug3) + "</p>";
+	st += "</body>";
 	st += "";
 	st += "</HTML>";
 
 	return st;
 }
+
+
 
 
 

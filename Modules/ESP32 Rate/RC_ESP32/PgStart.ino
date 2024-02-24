@@ -1,6 +1,5 @@
 
-String tmp;
-String GetPage1()
+String GetPage0()
 {
 	String st = "<HTML>";
 	st += "";
@@ -18,10 +17,6 @@ String GetPage1()
 	st += "";
 	st += "      }";
 	st += "";
-	st += "      a:link {";
-	st += "        font-size: 150%;";
-	st += "      }";
-	st += "";
 	st += "      h1 {";
 	st += "        color: #444444;";
 	st += "        margin: 50px auto 30px;";
@@ -32,38 +27,38 @@ String GetPage1()
 	st += "        margin-right: auto;";
 	st += "      }";
 	st += "";
-	st += "      .button-on {";
-	st += "        align-items: center;";
-	st += "        background-color: initial;";
-	st += "        background-image: linear-gradient(rgba(50, 255, 50, .84), rgba(30, 150, 30, .84) 50%);";
-	st += "        border-radius: 42px;";
-	st += "        border-width: 0;";
-	st += "        box-shadow: rgba(57, 31, 91, 0.24) 0 2px 2px, rgba(179, 132, 201, 0.4) 0 8px 12px;";
-	st += "        color: #FFFFFF;";
-	st += "        cursor: pointer;";
-	st += "        display: flex;";
-	st += "        font-family: Quicksand, sans-serif;";
-	st += "        font-size: 18px;";
-	st += "        font-weight: 700;";
-	st += "        justify-content: center;";
-	st += "        letter-spacing: .04em;";
-	st += "        line-height: 16px;";
-	st += "        margin: auto;";
-	st += "        padding: 18px 18px;";
+	st += "      .buttonOn {";
+	st += "        background-color: #00ff00;";
+	st += "        border: none;";
+	st += "        color: white;";
+	st += "        padding: 15px 32px;";
 	st += "        text-align: center;";
 	st += "        text-decoration: none;";
-	st += "        text-shadow: rgba(255, 255, 255, 0.4) 0 0 4px, rgba(255, 255, 255, 0.2) 0 0 12px, rgba(57, 31, 91, 0.6) 1px 1px 4px, rgba(57, 31, 91, 0.32) 4px 4px 16px;";
-	st += "        user-select: none;";
-	st += "        -webkit-user-select: none;";
-	st += "        touch-action: manipulation;";
-	st += "        vertical-align: baseline;";
-	st += "        width: 40%";
+	st += "        display: inline-block;";
+	st += "        margin: 4px 2px;";
+	st += "        cursor: pointer;";
+	st += "        font-size: 15px;";
+	st += "        width: 30%;";
 	st += "      }";
 	st += "";
-	st += "      .button-off {";
+	st += "      .buttonOff {";
+	st += "        background-color: #ff0000;";
+	st += "        border: none;";
+	st += "        color: white;";
+	st += "        padding: 15px 32px;";
+	st += "        text-align: center;";
+	st += "        text-decoration: none;";
+	st += "        display: inline-block;";
+	st += "        margin: 4px 2px;";
+	st += "        cursor: pointer;";
+	st += "        font-size: 15px;";
+	st += "        width: 30%;";
+	st += "      }";
+	st += "";
+	st += "      .button-72 {";
 	st += "        align-items: center;";
 	st += "        background-color: initial;";
-	st += "        background-image: linear-gradient(rgba(255, 50, 50, .84), rgba(150, 30, 30, .84) 50%);";
+	st += "        background-image: linear-gradient(rgba(179, 132, 201, .84), rgba(57, 31, 91, .84) 50%);";
 	st += "        border-radius: 42px;";
 	st += "        border-width: 0;";
 	st += "        box-shadow: rgba(57, 31, 91, 0.24) 0 2px 2px, rgba(179, 132, 201, 0.4) 0 8px 12px;";
@@ -85,7 +80,11 @@ String GetPage1()
 	st += "        -webkit-user-select: none;";
 	st += "        touch-action: manipulation;";
 	st += "        vertical-align: baseline;";
-	st += "        width: 40%";
+	st += "        width:30%";
+	st += "      }";
+	st += "";
+	st += "      .InputCell {";
+	st += "        text-align: center;";
 	st += "      }";
 	st += "";
 	st += "    </style>";
@@ -104,28 +103,18 @@ String GetPage1()
 	st += "";
 	st += "    </style>";
 	st += "";
-	st += "    <h1 align=center>Switches</h1>";
+	st += "    <h1 align=center>RC_ESP32";
+	st += "    </h1>";
 	st += "    <form id=FORM1 method=post action='/'>&nbsp;";
 	st += "";
 	st += "";
-
-	if (WifiMasterOn) tmp = "button-on"; else tmp = "button-off";
-	st += "      <p> <input class='" + tmp + "' name='Btn' type=submit formaction='/ButtonPressed' value='Master'> </p>";
-
-	for (int i = 0; i < 16; i++)
-	{
-		if (Button[i]) tmp = "button-on"; else tmp = "button-off";
-		st += "      <p> <input class='" + tmp + "' name='Btn' type=submit formaction='/ButtonPressed' value='" + String(i + 1) + "'> </p>";
-	}
-
-	st += "      <p> <a href='/page0'>Back</a> </p>";
+	st += "      <p> <a class='button-72' href='/page1' >Switches</a> </p>";
+	st += "      <p> <a class='button-72' href='/page2' >Network</a> </p>";
+	st += "";
 	st += "    </form>";
 	st += "";
 	st += "</HTML>";
 
 	return st;
 }
-
-
-
 

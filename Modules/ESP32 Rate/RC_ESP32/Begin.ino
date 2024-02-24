@@ -344,9 +344,12 @@ void DoSetup()
 	// web server
 	Serial.println();
 	Serial.println("Starting Web Server");
-	server.on("/", HandlePage1);
+	server.on("/", HandleRoot);
+	server.on("/page1", HandlePage1);
+	server.on("/page2", HandlePage2);
 	server.on("/ButtonPressed", ButtonPressed);
-	server.onNotFound(HandlePage1);
+	server.onNotFound(HandleRoot);
+	server.begin();
 
 	// OTA
 	server.on("/myurl", HTTP_GET, []() {
@@ -357,8 +360,6 @@ void DoSetup()
 	/* INITIALIZE ESP2SOTA LIBRARY */
 	ESP2SOTA.begin(&server);
 	
-	server.begin();
-
 	Serial.println("OTA started.");
 
 	// wifi client mode
@@ -369,12 +370,12 @@ void DoSetup()
 		WiFi.onEvent(WiFiStationConnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 		WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 		WiFi.onEvent(WiFiStationDisconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
-		WiFi.begin(MDL.NetName, MDL.NetPassword);
+		WiFi.begin(MDL.SSID, MDL.Password);
 		Serial.println();
 		Serial.println("Connecting to wifi network ...");
 	}
 
-	delay(1000);
+	delay(1500);
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");

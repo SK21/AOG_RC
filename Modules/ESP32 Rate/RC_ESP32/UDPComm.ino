@@ -448,12 +448,12 @@ void ParseData(byte Data[], uint16_t len)
             if (GoodCRC(Data, PGNlength))
             {
                 // network name
-                memset(MDL.NetName, '\0', sizeof(MDL.NetName)); // erase old name
-                memcpy(MDL.NetName, &Data[2], 14);
+                memset(MDL.SSID, '\0', sizeof(MDL.SSID)); // erase old name
+                memcpy(MDL.SSID, &Data[2], 14);
 
                 // network password
-                memset(MDL.NetPassword, '\0', sizeof(MDL.NetPassword)); // erase old name
-                memcpy(MDL.NetPassword, &Data[17], 14);
+                memset(MDL.Password, '\0', sizeof(MDL.Password)); // erase old name
+                memcpy(MDL.Password, &Data[17], 14);
 
                 SaveData();
 

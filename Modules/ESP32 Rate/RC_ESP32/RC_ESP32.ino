@@ -64,8 +64,8 @@ struct ModuleConfig
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
 	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
-	char NetName[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
-	char NetPassword[ModStringLengths] = "111222333";
+	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
+	char Password[ModStringLengths] = "111222333";
 };
 
 ModuleConfig MDL;
@@ -172,7 +172,7 @@ uint8_t DisconnectCount;
 void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
 	Serial.print("Connected to '");
-	Serial.print(MDL.NetName);
+	Serial.print(MDL.SSID);
 	Serial.println("'");
 }
 
@@ -192,7 +192,7 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	Serial.print("Trying to Reconnect: ");
 	DisconnectCount++;
 	Serial.println(DisconnectCount);
-	WiFi.begin(MDL.NetName, MDL.NetPassword);
+	WiFi.begin(MDL.SSID, MDL.Password);
 
 	if (DisconnectCount > 15)
 	{
