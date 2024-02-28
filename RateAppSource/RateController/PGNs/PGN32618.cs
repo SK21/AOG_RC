@@ -4,18 +4,24 @@ using System.Diagnostics;
 namespace RateController
 {
     public enum SwIDs
-    { Auto, MasterOn, MasterOff, RateUp, RateDown, sw0, sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15 };
+    {
+        Auto, MasterOn, MasterOff, RateUp, RateDown, sw0, sw1, sw2, sw3, sw4, sw5,
+        sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, AutoSection, AutoRate, WorkSwitch
+    };
 
     public class PGN32618
     {
         // to Rate Controller from arduino switch box
         // 0   106
         // 1   127
-        // 2    - bit 0 Auto
+        // 2    - bit 0 Auto both section and rate
         //      - bit 1 MasterOn
         //      - bit 2 MasterOff
         //      - bit 3 RateUp
         //      - bit 4 RateDown
+        //      - bit 5 AutoSection
+        //      - bit 6 AutoRate
+        //		- bit 7 Work switch
         // 3    sw0 to sw7
         // 4    sw8 to sw15
         // 5    crc
@@ -28,8 +34,9 @@ namespace RateController
         private bool cMasterOn = false;
         private bool cRateDown = false;
         private bool cRateUp = false;
+        private bool cWorkOn = true;
         private DateTime ReceiveTime;
-        private bool[] SW = new bool[21];
+        private bool[] SW = new bool[24];
 
         public PGN32618(FormStart CalledFrom)
         {
@@ -42,7 +49,11 @@ namespace RateController
         public bool AutoOn
         {
             get { return cAutoOn; }
-            set { cAutoOn = value; }
+            set
+            {
+                cAutoOn = value;
+                SW[0] = value;
+            }
         }
 
         public bool MasterOn
@@ -66,6 +77,16 @@ namespace RateController
         public bool[] Switches
         { get { return SW; } }
 
+        public bool WorkOn
+        {
+            get { return cWorkOn; }
+            set
+            {
+                cWorkOn = value;
+                SW[23] = value;
+            }
+        }
+
         public bool Connected()
         {
             return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
@@ -77,7 +98,7 @@ namespace RateController
 
             if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
-                // auto
+                // auto both section and rate
                 SW[0] = mf.Tls.BitRead(Data[2], 0);
                 cAutoOn = SW[0];
 
@@ -91,6 +112,13 @@ namespace RateController
                 // rate
                 SW[3] = mf.Tls.BitRead(Data[2], 3);     // rate up
                 SW[4] = mf.Tls.BitRead(Data[2], 4);     // rate down
+
+                // separate autos
+                SW[21] = mf.Tls.BitRead(Data[2], 5);    // auto section
+                SW[22] = mf.Tls.BitRead(Data[2], 6);    // auto rate
+
+                SW[23] = mf.Tls.BitRead(Data[2], 7);    // work switch
+                cWorkOn = SW[23];
 
                 if (SW[3])
                 {

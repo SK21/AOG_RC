@@ -40,6 +40,8 @@
             this.tmrRelease = new System.Windows.Forms.Timer(this.components);
             this.btnDown = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
+            this.btnAutoRate = new System.Windows.Forms.Button();
+            this.btnAutoSection = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnMaster
@@ -98,9 +100,9 @@
             // 
             this.btAuto.Location = new System.Drawing.Point(82, 12);
             this.btAuto.Name = "btAuto";
-            this.btAuto.Size = new System.Drawing.Size(64, 35);
+            this.btAuto.Size = new System.Drawing.Size(88, 35);
             this.btAuto.TabIndex = 164;
-            this.btAuto.Text = "Auto";
+            this.btAuto.Text = "Auto All";
             this.btAuto.UseVisualStyleBackColor = true;
             this.btAuto.Click += new System.EventHandler(this.btAuto_Click);
             // 
@@ -121,7 +123,7 @@
             this.btnDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDown.Image = global::RateController.Properties.Resources.RateDown;
-            this.btnDown.Location = new System.Drawing.Point(222, 12);
+            this.btnDown.Location = new System.Drawing.Point(362, 53);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(64, 35);
             this.btnDown.TabIndex = 166;
@@ -137,7 +139,7 @@
             this.btnUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUp.Image = global::RateController.Properties.Resources.RateUp;
-            this.btnUp.Location = new System.Drawing.Point(152, 12);
+            this.btnUp.Location = new System.Drawing.Point(292, 53);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(64, 35);
             this.btnUp.TabIndex = 165;
@@ -145,11 +147,33 @@
             this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
             this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
             // 
+            // btnAutoRate
+            // 
+            this.btnAutoRate.Location = new System.Drawing.Point(176, 12);
+            this.btnAutoRate.Name = "btnAutoRate";
+            this.btnAutoRate.Size = new System.Drawing.Size(108, 35);
+            this.btnAutoRate.TabIndex = 168;
+            this.btnAutoRate.Text = "Auto Rate";
+            this.btnAutoRate.UseVisualStyleBackColor = true;
+            this.btnAutoRate.Click += new System.EventHandler(this.btnAutoRate_Click);
+            // 
+            // btnAutoSection
+            // 
+            this.btnAutoSection.Location = new System.Drawing.Point(290, 12);
+            this.btnAutoSection.Name = "btnAutoSection";
+            this.btnAutoSection.Size = new System.Drawing.Size(132, 35);
+            this.btnAutoSection.TabIndex = 169;
+            this.btnAutoSection.Text = "Auto Section";
+            this.btnAutoSection.UseVisualStyleBackColor = true;
+            this.btnAutoSection.Click += new System.EventHandler(this.btnAutoSection_Click);
+            // 
             // frmSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(298, 96);
+            this.ClientSize = new System.Drawing.Size(432, 96);
+            this.Controls.Add(this.btnAutoSection);
+            this.Controls.Add(this.btnAutoRate);
             this.Controls.Add(this.btnDown);
             this.Controls.Add(this.btnMaster);
             this.Controls.Add(this.btnUp);
@@ -187,5 +211,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnMaster;
         private System.Windows.Forms.Timer tmrRelease;
+        private System.Windows.Forms.Button btnAutoRate;
+        private System.Windows.Forms.Button btnAutoSection;
     }
 }

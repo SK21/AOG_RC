@@ -12,6 +12,7 @@ namespace RateController
         private const int AdjustDelay = 500;    // ms between rate adjustments
         private DateTime AdjustTime;
         private bool AutoLast;
+        private bool AutoSectionLast;
         private bool Changed;
         private bool LastState;
         private bool MasterChanged;
@@ -98,7 +99,7 @@ namespace RateController
                         if (ID < 0) ID = 0;
                         clsProduct Prd = mf.Products.Item(ID);
 
-                        if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
+                        if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto) | mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate))
                         {
                             // auto rate
                             double CurrentRate = Prd.RateSet;
@@ -141,7 +142,7 @@ namespace RateController
                         if (ID < 0) ID = 0;
                         clsProduct Prd = mf.Products.Item(ID);
 
-                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
+                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
                         {
                             Prd.ManualPWM = 0;
                         }
@@ -187,7 +188,7 @@ namespace RateController
                 mf.SimMode = SimType.None;
 
             }
-            else if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn) || MasterOnSB)
+            else if ((mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn) || MasterOnSB) && mf.SwitchBox.SwitchIsOn(SwIDs.WorkSwitch)) 
             {
                 SetPriming();
                 MasterOnSB = true;
@@ -198,7 +199,7 @@ namespace RateController
                     SectionOnSB[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
                 }
 
-                if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && mf.AutoSteerPGN.Connected() && !TimedOn)
+                if ((mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection)) && mf.AutoSteerPGN.Connected() && !TimedOn)
                 {
                     // match AOG section status, only on sections 0-15
                     for (int i = 0; i < 16; i++)
@@ -262,7 +263,7 @@ namespace RateController
                             }
                         }
 
-                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
+                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                         {
                             // auto off, send on bytes to match switchbox
                             for (int i = 0; i < Max; i++)
@@ -298,10 +299,12 @@ namespace RateController
                         }
                     }
 
-                    if (AutoLast != mf.SwitchBox.SwitchIsOn(SwIDs.Auto))
+                    if (AutoLast != mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                     {
                         AutoLast = mf.SwitchBox.SwitchIsOn(SwIDs.Auto);
-                        if (AutoLast && MasterOnSB)
+                        AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
+
+                        if (AutoLast && MasterOnSB || AutoSectionLast & MasterOnSB)
                         {
                             // auto on
                             ToAOG.Command = 1;
@@ -321,6 +324,7 @@ namespace RateController
                         MasterChanged = false;
                         ToAOG.Command = 2;  // auto off
                         AutoLast = false;
+                        AutoSectionLast = false;
                         ToAOG.OffLo = 255;
                         ToAOG.OffHi = 255;
                     }

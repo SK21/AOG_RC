@@ -131,7 +131,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 
 				for (int i = 7; i < 23; i++)
 				{
-					MDL.PinIDs[i - 7] = Data[i];
+					MDL.SectionPins[i - 7] = Data[i];
 				}
 
 				MDL.WorkPin = Data[23];

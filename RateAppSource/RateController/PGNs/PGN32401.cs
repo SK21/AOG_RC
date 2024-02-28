@@ -20,6 +20,7 @@ namespace RateController
         //11    InoID lo
         //12    InoID hi
         //13    status
+        //      - bit 0 work switch
         //14    CRC
 
         private const byte cByteCount = 15;
@@ -52,6 +53,7 @@ namespace RateController
                     cReading[cModuleID, i] = (UInt16)(Data[i * 2 + 4] << 8 | Data[i * 2 + 3]);
                 }
                 cInoID[cModuleID] = (ushort)(Data[11] | Data[12] << 8);
+                //mf.SwitchBox.WorkOn = mf.Tls.BitRead(Data[13], 0);
 
                 mf.UpdateModuleConnected(cModuleID);
 

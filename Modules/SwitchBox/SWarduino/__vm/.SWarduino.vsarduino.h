@@ -16,6 +16,7 @@
 #include <arduino.h>
 #include <pins_arduino.h> 
 #include "..\SWarduino.ino"
+#include "..\Begin.ino"
 #include "..\CheckShield.ino"
 #include "..\Receive.ino"
 #include "..\Send.ino"
