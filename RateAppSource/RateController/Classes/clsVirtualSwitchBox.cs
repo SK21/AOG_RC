@@ -221,14 +221,12 @@ namespace RateController
                     break;
             }
             PressedData[5] = mf.Tls.CRC(PressedData, 5);
-            Debug.Print("Pressed: " + Convert.ToString(PressedData[2], 2).PadLeft(8, '0'));
         }
 
         public void ReleaseSwitch()
         {
             PressedData[2] = (byte)(PressedData[2] & 0b11100001);
             PressedData[5] = mf.Tls.CRC(PressedData, 5);
-            Debug.Print("Release: " + Convert.ToString(PressedData[2], 2).PadLeft(8, '0'));
         }
 
         private void TimerEventProcessor(Object myObject, EventArgs myEventArgs)

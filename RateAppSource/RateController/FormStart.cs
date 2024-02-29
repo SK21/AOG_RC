@@ -87,6 +87,7 @@ namespace RateController
         private int cPrimeDelay = 0;
         private double cSimSpeed = 0;
         private DateTime StartTime;
+        private bool cUseWorkSwitch = false;
 
         public FormStart()
         {
@@ -399,6 +400,9 @@ namespace RateController
             LoadDefaultProduct();
             Zones.Load();
             SetTransparent(cUseTransparent);
+
+            if (bool.TryParse(Tls.LoadProperty("UseWorkSwitch"), out bool uw)) cUseWorkSwitch = uw;
+            //cUseWorkSwitch = true;
         }
 
         public void MnuDeustch_Click(object sender, EventArgs e)
@@ -854,6 +858,8 @@ namespace RateController
                 Tls.WriteActivityLog("Stopped", true);
                 string mes = "Run time (hours): " + ((DateTime.Now - StartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
+
+                Tls.SaveProperty("UseWorkSwitch", cUseWorkSwitch.ToString());
             }
             catch (Exception)
             {
@@ -861,6 +867,8 @@ namespace RateController
 
             Application.Exit();
         }
+
+        public bool UseWorkSwitch { get { return cUseWorkSwitch; } set { cUseWorkSwitch = value; } }
 
         private void FormStart_Activated(object sender, EventArgs e)
         {

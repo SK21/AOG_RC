@@ -1,6 +1,6 @@
  
-uint8_t ValidPins0[] = { 3,4,5,6,9,14,15,16,19,20,21,22,23,24,25,26 };	// using ethernet shield
-//uint8_t ValidPins0[] = { 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,19,20,21,22,23,24,25,26 };	// no ethernet shield
+uint8_t ValidPins0[] = { 3,4,5,6,9,14,15,16,17,18,19,20,21 };	// using ethernet shield, 20 and 21 are analog only
+//uint8_t ValidPins0[] = { 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21 };	// no ethernet shield
 
 
 void DoSetup()
@@ -18,13 +18,13 @@ void DoSetup()
 
 	// pins
 	if (MDL.Auto < NC) pinMode(MDL.Auto, INPUT_PULLUP);
-	if (MDL.MasterOn < NC) pinMode(MDL.Auto, INPUT_PULLUP);
-	if (MDL.MasterOff < NC) pinMode(MDL.Auto, INPUT_PULLUP);
-	if (MDL.RateUp < NC) pinMode(MDL.Auto, INPUT_PULLUP);
-	if (MDL.RateDown < NC) pinMode(MDL.Auto, INPUT_PULLUP);
-	if (MDL.AutoSection < NC) pinMode(MDL.Auto, INPUT_PULLUP);
-	if (MDL.AutoRate < NC) pinMode(MDL.Auto, INPUT_PULLUP);
-	if (MDL.WorkPin < NC) pinMode(MDL.Auto, INPUT_PULLUP);
+	if (MDL.MasterOn < NC) pinMode(MDL.MasterOn, INPUT_PULLUP);
+	if (MDL.MasterOff < NC) pinMode(MDL.MasterOff, INPUT_PULLUP);
+	if (MDL.RateUp < NC) pinMode(MDL.RateUp, INPUT_PULLUP);
+	if (MDL.RateDown < NC) pinMode(MDL.RateDown, INPUT_PULLUP);
+	if (MDL.AutoSection < NC) pinMode(MDL.AutoSection, INPUT_PULLUP);
+	if (MDL.AutoRate < NC) pinMode(MDL.AutoRate, INPUT_PULLUP);
+	if (MDL.WorkPin < NC) pinMode(MDL.WorkPin, INPUT_PULLUP);
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -122,13 +122,13 @@ void LoadDefaults()
 
 	// SW2 pcb
 	MDL.Auto = A5;
-	MDL.MasterOn = 5;
-	MDL.MasterOff = 3;
+	MDL.MasterOn = 3;
+	MDL.MasterOff = 5;
 	MDL.RateUp = A3;
 	MDL.RateDown = A2;
 	MDL.AutoSection = NC;
 	MDL.AutoRate = NC;
-	MDL.WorkPin = A0;
+	MDL.WorkPin = 4;
 	MDL.IP0 = 192;
 	MDL.IP1 = 168;
 	MDL.IP2 = 1;
@@ -138,7 +138,7 @@ void LoadDefaults()
 	MDL.SectionPins[0] = A4;
 	MDL.SectionPins[1] = 9;
 	MDL.SectionPins[2] = 6;
-	MDL.SectionPins[3] = 4;
+	MDL.SectionPins[3] = NC;
 
 	for (int i = 4; i < 16; i++)
 	{
@@ -224,12 +224,11 @@ bool ValidData()
 		{
 			for (int j = 0; j < sizeof(ValidPins0); j++)
 			{
-				Found = ((MDL.SectionPins[i] == ValidPins0[i]) || (MDL.SectionPins[i] == NC));
+				Found = ((MDL.SectionPins[i] == ValidPins0[j]) || (MDL.SectionPins[i] == NC));
 				if (Found) break;
 			}
 			if (!Found) break;
 		}
 	}
-
 	return Found;
 }

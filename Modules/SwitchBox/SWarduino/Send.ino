@@ -21,6 +21,8 @@ void SendData()
 	Data[1] = 127;
 
 	// read switches
+	Data[2] = 0;
+
 	if (MDL.Auto < NC) Pins[0] = !digitalRead(MDL.Auto);
 	if (MDL.MasterOn < NC) Pins[1] = !digitalRead(MDL.MasterOn);
 	if (MDL.MasterOff < NC) Pins[2] = !digitalRead(MDL.MasterOff);
@@ -28,17 +30,8 @@ void SendData()
 	if (MDL.RateDown < NC) Pins[4] = !digitalRead(MDL.RateDown);
 	if (MDL.AutoSection < NC) Pins[5] = !digitalRead(MDL.AutoSection);
 	if (MDL.AutoRate < NC) Pins[6] = !digitalRead(MDL.AutoRate);
+	if (MDL.WorkPin < NC) Pins[7] = !digitalRead(MDL.WorkPin);
 
-	if (MDL.WorkPin < NC)
-	{
-		Pins[7] = !digitalRead(MDL.WorkPin);
-	}
-	else
-	{
-		Pins[7] = 1;	// work switch defaults to on if not defined
-	}
-
-	Data[2] = 0;
 	for (int i = 0; i < 8; i++)
 	{
 		if (Pins[i]) Data[2] = Data[2] | (1 << i);

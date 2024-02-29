@@ -17,7 +17,7 @@ namespace RateController
         private bool LastState;
         private bool MasterChanged;
         private bool MasterLast;
-        private bool MasterOnSB;
+        private bool MasterIsOn;
         private FormStart mf;
         private bool Pressed;
         private double RateDir;
@@ -28,6 +28,9 @@ namespace RateController
         private int TimerCount = 0;
         private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
         private DateTime OnFirstPressed;
+        private bool WorkSWOnLast;
+        private bool MasterSWOnPending; // the MasterOn state set after work switch changes
+        private bool FirstRun;
 
         public clsSectionControl(FormStart CallingForm)
         {
@@ -36,7 +39,9 @@ namespace RateController
             SectionOnAOG = new bool[mf.MaxSections];
             mf.AutoSteerPGN.RelaysChanged += AutoSteerPGN_RelaysChanged;
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
-            MasterOnSB = true;
+            MasterIsOn = false;
+            FirstRun = true;
+            MasterLast = true;  // to cause a change flag to be set
             Timer1.Tick += new EventHandler(Timer1_Tick);
             Timer1.Interval = 1000;
             Timer1.Enabled = false;
@@ -55,7 +60,7 @@ namespace RateController
 
         public bool MasterOn()
         {
-            return MasterOnSB;
+            return MasterIsOn;
         }
 
         public void ReadRateSwitches()
@@ -157,7 +162,7 @@ namespace RateController
 
         void SetPriming()
         {
-            if (MasterOnSB)
+            if (MasterIsOn)
             {
                 if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn)) 
                 {
@@ -177,21 +182,41 @@ namespace RateController
         }
         public void UpdateSectionStatus()
         {
+            bool WorkSWOn;
+            bool MasterSWOn;
+            bool MasterSWOff;
+
             // match switchbox and AOG
             Array.Clear(SectionOnSB, 0, SectionOnSB.Length);
 
-            if (mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff))
+            WorkSWOn = mf.SwitchBox.WorkOn;
+            MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
+            MasterSWOn = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn);
+
+            if (MasterSWOff) MasterSWOnPending = false;
+            if (MasterSWOn) MasterSWOnPending = true;
+
+            MasterSWOff = MasterSWOff || !WorkSWOn || FirstRun;
+            MasterSWOn = (MasterSWOn || MasterIsOn) && WorkSWOn;
+
+            if (WorkSWOnLast != WorkSWOn)
             {
-                MasterOnSB = false;
+                WorkSWOnLast = WorkSWOn;
+                if (WorkSWOn && MasterSWOnPending) MasterSWOn = true;
+            }
+
+            if (MasterSWOff)
+            {
+                MasterIsOn = false;
                 TimedOn = false;
                 Timer1.Enabled = false;
                 mf.SimMode = SimType.None;
-
+                FirstRun = false;
             }
-            else if ((mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn) || MasterOnSB) && mf.SwitchBox.SwitchIsOn(SwIDs.WorkSwitch)) 
+            else if (MasterSWOn)
             {
                 SetPriming();
-                MasterOnSB = true;
+                MasterIsOn = true;
 
                 // set sections by switchbox switch positions
                 foreach (clsSection Sec in mf.Sections.Items)
@@ -218,9 +243,9 @@ namespace RateController
                 Sec.IsON = SectionOnSB[Sec.ID];
             }
 
-            if (MasterLast != MasterOnSB)
+            if (MasterLast != MasterIsOn)
             {
-                MasterLast = MasterOnSB;
+                MasterLast = MasterIsOn;
                 MasterChanged = true;
             }
 
@@ -229,7 +254,7 @@ namespace RateController
             {
                 PGN234 ToAOG = new PGN234(mf);
                 int Max = 16;
-                if (MasterOnSB)
+                if (MasterIsOn)
                 {
                     // master on
                     bool SectionsChanged = false;
@@ -304,7 +329,7 @@ namespace RateController
                         AutoLast = mf.SwitchBox.SwitchIsOn(SwIDs.Auto);
                         AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
 
-                        if (AutoLast && MasterOnSB || AutoSectionLast & MasterOnSB)
+                        if (AutoLast && MasterIsOn || AutoSectionLast & MasterIsOn)
                         {
                             // auto on
                             ToAOG.Command = 1;

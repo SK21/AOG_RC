@@ -430,7 +430,7 @@
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(237, 32);
             this.checkBox3.TabIndex = 125;
-            this.checkBox3.Text = "Work Switch";
+            this.checkBox3.Text = "Implement Work Switch";
             this.checkBox3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox3.UseVisualStyleBackColor = true;
             // 

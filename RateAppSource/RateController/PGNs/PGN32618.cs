@@ -30,11 +30,9 @@ namespace RateController
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
         private readonly FormStart mf;
-        private bool cAutoOn = true;
         private bool cMasterOn = false;
         private bool cRateDown = false;
         private bool cRateUp = false;
-        private bool cWorkOn = true;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[24];
 
@@ -48,10 +46,9 @@ namespace RateController
 
         public bool AutoOn
         {
-            get { return cAutoOn; }
+            get { return SW[0]; }
             set
             {
-                cAutoOn = value;
                 SW[0] = value;
             }
         }
@@ -79,10 +76,19 @@ namespace RateController
 
         public bool WorkOn
         {
-            get { return cWorkOn; }
+            get
+            {
+                if (mf.UseWorkSwitch)
+                {
+                    return SW[23];
+                }
+                else
+                {
+                    return true;
+                }
+            }
             set
             {
-                cWorkOn = value;
                 SW[23] = value;
             }
         }
@@ -100,7 +106,6 @@ namespace RateController
             {
                 // auto both section and rate
                 SW[0] = mf.Tls.BitRead(Data[2], 0);
-                cAutoOn = SW[0];
 
                 // master
                 SW[1] = mf.Tls.BitRead(Data[2], 1);     // master on
@@ -118,7 +123,6 @@ namespace RateController
                 SW[22] = mf.Tls.BitRead(Data[2], 6);    // auto rate
 
                 SW[23] = mf.Tls.BitRead(Data[2], 7);    // work switch
-                cWorkOn = SW[23];
 
                 if (SW[3])
                 {
