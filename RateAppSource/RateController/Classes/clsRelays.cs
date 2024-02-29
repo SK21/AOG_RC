@@ -263,7 +263,7 @@ namespace RateController
                         }
 
                         // build return int
-                        if (Rly.IsON) Result |= (int)Math.Pow(2, i);
+                        if (Rly.IsON) Result |= (int)Math.Pow(2, Rly.ID);
                     }
                 }
             }
@@ -284,7 +284,8 @@ namespace RateController
                 cPowerRelays[i] = 0;
                 for (int j = 0; j < cRelays.Count; j++)
                 {
-                    if (cRelays[j].Type == RelayTypes.Power && cRelays[j].ModuleID == i) cPowerRelays[i] |= (int)Math.Pow(2, j);
+                    clsRelay Rly = cRelays[j];
+                    if (Rly.Type == RelayTypes.Power && Rly.ModuleID == i) cPowerRelays[i] |= (int)Math.Pow(2, Rly.ID);
                 }
             }
         }
@@ -296,7 +297,8 @@ namespace RateController
                 cInvertedRelays[i] = 0;
                 for (int j = 0; j < cRelays.Count; j++)
                 {
-                    if (cRelays[j].Type == RelayTypes.Invert_Section && cRelays[j].ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, j);
+                    clsRelay Rly = cRelays[j];
+                    if (Rly.Type == RelayTypes.Invert_Section && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
                 }
             }
         }
