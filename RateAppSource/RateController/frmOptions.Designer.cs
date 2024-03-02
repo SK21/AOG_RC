@@ -29,12 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmOptions));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rbMultiPulse = new System.Windows.Forms.RadioButton();
-            this.rbSinglePulse = new System.Windows.Forms.RadioButton();
-            this.ckOnScreen = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rbLarge = new System.Windows.Forms.RadioButton();
+            this.rbStandard = new System.Windows.Forms.RadioButton();
+            this.ckMetric = new System.Windows.Forms.CheckBox();
             this.lbDelaySeconds = new System.Windows.Forms.Label();
             this.tbDelay = new System.Windows.Forms.TextBox();
             this.lbDelay = new System.Windows.Forms.Label();
@@ -44,120 +41,83 @@
             this.lbSpeed = new System.Windows.Forms.Label();
             this.tbSpeed = new System.Windows.Forms.TextBox();
             this.lbPrimedSpeed = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.radioButton5 = new System.Windows.Forms.RadioButton();
-            this.radioButton6 = new System.Windows.Forms.RadioButton();
-            this.radioButton7 = new System.Windows.Forms.RadioButton();
+            this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
+            this.rbFrench = new System.Windows.Forms.RadioButton();
+            this.rbRussian = new System.Windows.Forms.RadioButton();
+            this.rbPolish = new System.Windows.Forms.RadioButton();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
+            this.tcOptions = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ckTransparent = new System.Windows.Forms.CheckBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.rbNederlands = new System.Windows.Forms.RadioButton();
+            this.rbHungarian = new System.Windows.Forms.RadioButton();
+            this.rbEnglish = new System.Windows.Forms.RadioButton();
+            this.rbDeustch = new System.Windows.Forms.RadioButton();
+            this.tcOptions.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // rbLarge
             // 
-            this.groupBox1.Controls.Add(this.rbMultiPulse);
-            this.groupBox1.Controls.Add(this.rbSinglePulse);
-            this.groupBox1.Location = new System.Drawing.Point(12, 167);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox1.Size = new System.Drawing.Size(237, 117);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Screen";
+            this.rbLarge.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbLarge.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbLarge.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbLarge.Location = new System.Drawing.Point(60, 72);
+            this.rbLarge.Margin = new System.Windows.Forms.Padding(2);
+            this.rbLarge.Name = "rbLarge";
+            this.rbLarge.Size = new System.Drawing.Size(218, 34);
+            this.rbLarge.TabIndex = 2;
+            this.rbLarge.Tag = "0";
+            this.rbLarge.Text = "Large Screen";
+            this.rbLarge.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbLarge.UseVisualStyleBackColor = true;
+            this.rbLarge.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
             // 
-            // rbMultiPulse
+            // rbStandard
             // 
-            this.rbMultiPulse.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbMultiPulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.rbMultiPulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbMultiPulse.Location = new System.Drawing.Point(8, 71);
-            this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
-            this.rbMultiPulse.Name = "rbMultiPulse";
-            this.rbMultiPulse.Size = new System.Drawing.Size(220, 37);
-            this.rbMultiPulse.TabIndex = 2;
-            this.rbMultiPulse.Tag = "0";
-            this.rbMultiPulse.Text = "Large Screen";
-            this.rbMultiPulse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbMultiPulse.UseVisualStyleBackColor = true;
+            this.rbStandard.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbStandard.Checked = true;
+            this.rbStandard.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbStandard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbStandard.Location = new System.Drawing.Point(60, 23);
+            this.rbStandard.Margin = new System.Windows.Forms.Padding(2);
+            this.rbStandard.Name = "rbStandard";
+            this.rbStandard.Size = new System.Drawing.Size(218, 34);
+            this.rbStandard.TabIndex = 1;
+            this.rbStandard.TabStop = true;
+            this.rbStandard.Tag = "0";
+            this.rbStandard.Text = "Standard Screen";
+            this.rbStandard.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbStandard.UseVisualStyleBackColor = true;
+            this.rbStandard.CheckedChanged += new System.EventHandler(this.rbStandard_CheckedChanged);
             // 
-            // rbSinglePulse
+            // ckMetric
             // 
-            this.rbSinglePulse.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbSinglePulse.Checked = true;
-            this.rbSinglePulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.rbSinglePulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbSinglePulse.Location = new System.Drawing.Point(8, 30);
-            this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
-            this.rbSinglePulse.Name = "rbSinglePulse";
-            this.rbSinglePulse.Size = new System.Drawing.Size(220, 37);
-            this.rbSinglePulse.TabIndex = 1;
-            this.rbSinglePulse.TabStop = true;
-            this.rbSinglePulse.Tag = "0";
-            this.rbSinglePulse.Text = "Standard Screen";
-            this.rbSinglePulse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbSinglePulse.UseVisualStyleBackColor = true;
-            // 
-            // ckOnScreen
-            // 
-            this.ckOnScreen.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOnScreen.Location = new System.Drawing.Point(12, 50);
-            this.ckOnScreen.Name = "ckOnScreen";
-            this.ckOnScreen.Size = new System.Drawing.Size(237, 32);
-            this.ckOnScreen.TabIndex = 118;
-            this.ckOnScreen.Text = "Transparent";
-            this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOnScreen.UseVisualStyleBackColor = true;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox1.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox1.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.checkBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.checkBox1.Location = new System.Drawing.Point(12, 12);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(237, 32);
-            this.checkBox1.TabIndex = 119;
-            this.checkBox1.Text = "Metric Units";
-            this.checkBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.lbDelaySeconds);
-            this.groupBox2.Controls.Add(this.tbDelay);
-            this.groupBox2.Controls.Add(this.lbDelay);
-            this.groupBox2.Controls.Add(this.lbOnSeconds);
-            this.groupBox2.Controls.Add(this.tbTime);
-            this.groupBox2.Controls.Add(this.lbOnTime);
-            this.groupBox2.Controls.Add(this.lbSpeed);
-            this.groupBox2.Controls.Add(this.tbSpeed);
-            this.groupBox2.Controls.Add(this.lbPrimedSpeed);
-            this.groupBox2.Location = new System.Drawing.Point(12, 296);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox2.Size = new System.Drawing.Size(307, 134);
-            this.groupBox2.TabIndex = 120;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Primed Start";
+            this.ckMetric.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckMetric.Location = new System.Drawing.Point(60, 23);
+            this.ckMetric.Name = "ckMetric";
+            this.ckMetric.Size = new System.Drawing.Size(218, 34);
+            this.ckMetric.TabIndex = 119;
+            this.ckMetric.Text = "Metric Units";
+            this.ckMetric.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMetric.UseVisualStyleBackColor = true;
+            this.ckMetric.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
             // 
             // lbDelaySeconds
             // 
             this.lbDelaySeconds.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbDelaySeconds.Location = new System.Drawing.Point(201, 97);
+            this.lbDelaySeconds.Location = new System.Drawing.Point(218, 124);
             this.lbDelaySeconds.Name = "lbDelaySeconds";
             this.lbDelaySeconds.Size = new System.Drawing.Size(89, 24);
             this.lbDelaySeconds.TabIndex = 334;
@@ -167,19 +127,22 @@
             // tbDelay
             // 
             this.tbDelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDelay.Location = new System.Drawing.Point(130, 94);
+            this.tbDelay.Location = new System.Drawing.Point(147, 121);
             this.tbDelay.MaxLength = 8;
             this.tbDelay.Name = "tbDelay";
             this.tbDelay.Size = new System.Drawing.Size(65, 30);
             this.tbDelay.TabIndex = 333;
             this.tbDelay.Text = "0";
             this.tbDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbDelay.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
+            this.tbDelay.Enter += new System.EventHandler(this.tbDelay_Enter);
+            this.tbDelay.Validating += new System.ComponentModel.CancelEventHandler(this.tbDelay_Validating);
             // 
             // lbDelay
             // 
             this.lbDelay.AutoSize = true;
             this.lbDelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDelay.Location = new System.Drawing.Point(7, 97);
+            this.lbDelay.Location = new System.Drawing.Point(24, 124);
             this.lbDelay.Name = "lbDelay";
             this.lbDelay.Size = new System.Drawing.Size(117, 23);
             this.lbDelay.TabIndex = 332;
@@ -188,7 +151,7 @@
             // lbOnSeconds
             // 
             this.lbOnSeconds.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbOnSeconds.Location = new System.Drawing.Point(201, 28);
+            this.lbOnSeconds.Location = new System.Drawing.Point(218, 26);
             this.lbOnSeconds.Name = "lbOnSeconds";
             this.lbOnSeconds.Size = new System.Drawing.Size(89, 24);
             this.lbOnSeconds.TabIndex = 331;
@@ -198,19 +161,22 @@
             // tbTime
             // 
             this.tbTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTime.Location = new System.Drawing.Point(130, 22);
+            this.tbTime.Location = new System.Drawing.Point(147, 23);
             this.tbTime.MaxLength = 8;
             this.tbTime.Name = "tbTime";
             this.tbTime.Size = new System.Drawing.Size(65, 30);
             this.tbTime.TabIndex = 330;
             this.tbTime.Text = "0";
             this.tbTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbTime.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
+            this.tbTime.Enter += new System.EventHandler(this.tbTime_Enter);
+            this.tbTime.Validating += new System.ComponentModel.CancelEventHandler(this.tbTime_Validating);
             // 
             // lbOnTime
             // 
             this.lbOnTime.AutoSize = true;
             this.lbOnTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOnTime.Location = new System.Drawing.Point(9, 28);
+            this.lbOnTime.Location = new System.Drawing.Point(24, 26);
             this.lbOnTime.Name = "lbOnTime";
             this.lbOnTime.Size = new System.Drawing.Size(81, 23);
             this.lbOnTime.TabIndex = 329;
@@ -219,7 +185,7 @@
             // lbSpeed
             // 
             this.lbSpeed.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSpeed.Location = new System.Drawing.Point(201, 61);
+            this.lbSpeed.Location = new System.Drawing.Point(218, 75);
             this.lbSpeed.Name = "lbSpeed";
             this.lbSpeed.Size = new System.Drawing.Size(57, 24);
             this.lbSpeed.TabIndex = 328;
@@ -229,162 +195,86 @@
             // tbSpeed
             // 
             this.tbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSpeed.Location = new System.Drawing.Point(130, 58);
+            this.tbSpeed.Location = new System.Drawing.Point(147, 72);
             this.tbSpeed.MaxLength = 8;
             this.tbSpeed.Name = "tbSpeed";
             this.tbSpeed.Size = new System.Drawing.Size(65, 30);
             this.tbSpeed.TabIndex = 327;
             this.tbSpeed.Text = "0";
             this.tbSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSpeed.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
+            this.tbSpeed.Enter += new System.EventHandler(this.tbSpeed_Enter);
+            this.tbSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSpeed_Validating);
             // 
             // lbPrimedSpeed
             // 
             this.lbPrimedSpeed.AutoSize = true;
             this.lbPrimedSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPrimedSpeed.Location = new System.Drawing.Point(7, 61);
+            this.lbPrimedSpeed.Location = new System.Drawing.Point(24, 75);
             this.lbPrimedSpeed.Name = "lbPrimedSpeed";
             this.lbPrimedSpeed.Size = new System.Drawing.Size(63, 23);
             this.lbPrimedSpeed.TabIndex = 326;
             this.lbPrimedSpeed.Text = "Speed";
             // 
-            // checkBox2
+            // ckScreenSwitches
             // 
-            this.checkBox2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox2.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox2.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.checkBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.checkBox2.Location = new System.Drawing.Point(12, 88);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(237, 32);
-            this.checkBox2.TabIndex = 121;
-            this.checkBox2.Text = "On-screen Switches";
-            this.checkBox2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.ckScreenSwitches.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckScreenSwitches.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckScreenSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckScreenSwitches.Location = new System.Drawing.Point(60, 72);
+            this.ckScreenSwitches.Name = "ckScreenSwitches";
+            this.ckScreenSwitches.Size = new System.Drawing.Size(218, 34);
+            this.ckScreenSwitches.TabIndex = 121;
+            this.ckScreenSwitches.Text = "On-screen Switches";
+            this.ckScreenSwitches.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScreenSwitches.UseVisualStyleBackColor = true;
+            this.ckScreenSwitches.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
             // 
-            // groupBox3
+            // rbFrench
             // 
-            this.groupBox3.Controls.Add(this.radioButton6);
-            this.groupBox3.Controls.Add(this.radioButton7);
-            this.groupBox3.Controls.Add(this.radioButton4);
-            this.groupBox3.Controls.Add(this.radioButton5);
-            this.groupBox3.Controls.Add(this.radioButton3);
-            this.groupBox3.Controls.Add(this.radioButton2);
-            this.groupBox3.Controls.Add(this.radioButton1);
-            this.groupBox3.Location = new System.Drawing.Point(368, 12);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(6);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox3.Size = new System.Drawing.Size(237, 328);
-            this.groupBox3.TabIndex = 122;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Language";
+            this.rbFrench.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbFrench.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbFrench.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbFrench.Location = new System.Drawing.Point(190, 95);
+            this.rbFrench.Margin = new System.Windows.Forms.Padding(2);
+            this.rbFrench.Name = "rbFrench";
+            this.rbFrench.Size = new System.Drawing.Size(140, 34);
+            this.rbFrench.TabIndex = 8;
+            this.rbFrench.Tag = "6";
+            this.rbFrench.Text = "French";
+            this.rbFrench.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbFrench.UseVisualStyleBackColor = true;
             // 
-            // radioButton1
+            // rbRussian
             // 
-            this.radioButton1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton1.Checked = true;
-            this.radioButton1.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.radioButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.radioButton1.Location = new System.Drawing.Point(8, 30);
-            this.radioButton1.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(220, 37);
-            this.radioButton1.TabIndex = 2;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Tag = "0";
-            this.radioButton1.Text = "Deustch";
-            this.radioButton1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.rbRussian.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbRussian.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbRussian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbRussian.Location = new System.Drawing.Point(190, 54);
+            this.rbRussian.Margin = new System.Windows.Forms.Padding(2);
+            this.rbRussian.Name = "rbRussian";
+            this.rbRussian.Size = new System.Drawing.Size(140, 34);
+            this.rbRussian.TabIndex = 7;
+            this.rbRussian.Tag = "5";
+            this.rbRussian.Text = "Russian";
+            this.rbRussian.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbRussian.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // rbPolish
             // 
-            this.radioButton2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton2.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.radioButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.radioButton2.Location = new System.Drawing.Point(8, 73);
-            this.radioButton2.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(220, 37);
-            this.radioButton2.TabIndex = 3;
-            this.radioButton2.Tag = "0";
-            this.radioButton2.Text = "English";
-            this.radioButton2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton3
-            // 
-            this.radioButton3.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton3.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.radioButton3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.radioButton3.Location = new System.Drawing.Point(8, 114);
-            this.radioButton3.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(220, 37);
-            this.radioButton3.TabIndex = 4;
-            this.radioButton3.Tag = "0";
-            this.radioButton3.Text = "Hungarian";
-            this.radioButton3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // radioButton4
-            // 
-            this.radioButton4.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton4.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.radioButton4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.radioButton4.Location = new System.Drawing.Point(8, 196);
-            this.radioButton4.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(220, 37);
-            this.radioButton4.TabIndex = 6;
-            this.radioButton4.Tag = "0";
-            this.radioButton4.Text = "Polish";
-            this.radioButton4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButton4.UseVisualStyleBackColor = true;
-            // 
-            // radioButton5
-            // 
-            this.radioButton5.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton5.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.radioButton5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.radioButton5.Location = new System.Drawing.Point(8, 155);
-            this.radioButton5.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton5.Name = "radioButton5";
-            this.radioButton5.Size = new System.Drawing.Size(220, 37);
-            this.radioButton5.TabIndex = 5;
-            this.radioButton5.Tag = "0";
-            this.radioButton5.Text = "Nederlands";
-            this.radioButton5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButton5.UseVisualStyleBackColor = true;
-            // 
-            // radioButton6
-            // 
-            this.radioButton6.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton6.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.radioButton6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.radioButton6.Location = new System.Drawing.Point(8, 278);
-            this.radioButton6.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton6.Name = "radioButton6";
-            this.radioButton6.Size = new System.Drawing.Size(220, 37);
-            this.radioButton6.TabIndex = 8;
-            this.radioButton6.Tag = "0";
-            this.radioButton6.Text = "French";
-            this.radioButton6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButton6.UseVisualStyleBackColor = true;
-            // 
-            // radioButton7
-            // 
-            this.radioButton7.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton7.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.radioButton7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.radioButton7.Location = new System.Drawing.Point(8, 237);
-            this.radioButton7.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton7.Name = "radioButton7";
-            this.radioButton7.Size = new System.Drawing.Size(220, 37);
-            this.radioButton7.TabIndex = 7;
-            this.radioButton7.Tag = "0";
-            this.radioButton7.Text = "Russian";
-            this.radioButton7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButton7.UseVisualStyleBackColor = true;
+            this.rbPolish.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbPolish.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbPolish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbPolish.Location = new System.Drawing.Point(190, 11);
+            this.rbPolish.Margin = new System.Windows.Forms.Padding(2);
+            this.rbPolish.Name = "rbPolish";
+            this.rbPolish.Size = new System.Drawing.Size(140, 34);
+            this.rbPolish.TabIndex = 6;
+            this.rbPolish.Tag = "4";
+            this.rbPolish.Text = "Polish";
+            this.rbPolish.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbPolish.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
@@ -396,13 +286,14 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(454, 358);
+            this.btnCancel.Location = new System.Drawing.Point(222, 230);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
             this.btnCancel.TabIndex = 124;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOK
             // 
@@ -413,41 +304,182 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.OK;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(533, 358);
+            this.btnOK.Location = new System.Drawing.Point(301, 230);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(72, 72);
             this.btnOK.TabIndex = 123;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // checkBox3
+            // ckWorkSwitch
             // 
-            this.checkBox3.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox3.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox3.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.checkBox3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.checkBox3.Location = new System.Drawing.Point(12, 126);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(237, 32);
-            this.checkBox3.TabIndex = 125;
-            this.checkBox3.Text = "Implement Work Switch";
-            this.checkBox3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.ckWorkSwitch.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckWorkSwitch.Location = new System.Drawing.Point(60, 121);
+            this.ckWorkSwitch.Name = "ckWorkSwitch";
+            this.ckWorkSwitch.Size = new System.Drawing.Size(218, 34);
+            this.ckWorkSwitch.TabIndex = 125;
+            this.ckWorkSwitch.Text = "Implement Work Switch";
+            this.ckWorkSwitch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckWorkSwitch.UseVisualStyleBackColor = true;
+            this.ckWorkSwitch.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
+            // 
+            // tcOptions
+            // 
+            this.tcOptions.Controls.Add(this.tabPage1);
+            this.tcOptions.Controls.Add(this.tabPage2);
+            this.tcOptions.Controls.Add(this.tabPage3);
+            this.tcOptions.Controls.Add(this.tabPage4);
+            this.tcOptions.Location = new System.Drawing.Point(12, 12);
+            this.tcOptions.Name = "tcOptions";
+            this.tcOptions.SelectedIndex = 0;
+            this.tcOptions.Size = new System.Drawing.Size(361, 216);
+            this.tcOptions.TabIndex = 126;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.ckMetric);
+            this.tabPage1.Controls.Add(this.ckWorkSwitch);
+            this.tabPage1.Controls.Add(this.ckScreenSwitches);
+            this.tabPage1.Location = new System.Drawing.Point(4, 33);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(353, 179);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Config";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.ckTransparent);
+            this.tabPage2.Controls.Add(this.rbLarge);
+            this.tabPage2.Controls.Add(this.rbStandard);
+            this.tabPage2.Location = new System.Drawing.Point(4, 33);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(353, 179);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Display";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // ckTransparent
+            // 
+            this.ckTransparent.Location = new System.Drawing.Point(99, 121);
+            this.ckTransparent.Name = "ckTransparent";
+            this.ckTransparent.Size = new System.Drawing.Size(132, 32);
+            this.ckTransparent.TabIndex = 119;
+            this.ckTransparent.Text = "Transparent";
+            this.ckTransparent.UseVisualStyleBackColor = true;
+            this.ckTransparent.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.lbDelaySeconds);
+            this.tabPage3.Controls.Add(this.tbTime);
+            this.tabPage3.Controls.Add(this.tbSpeed);
+            this.tabPage3.Controls.Add(this.tbDelay);
+            this.tabPage3.Controls.Add(this.lbPrimedSpeed);
+            this.tabPage3.Controls.Add(this.lbSpeed);
+            this.tabPage3.Controls.Add(this.lbDelay);
+            this.tabPage3.Controls.Add(this.lbOnTime);
+            this.tabPage3.Controls.Add(this.lbOnSeconds);
+            this.tabPage3.Location = new System.Drawing.Point(4, 33);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(353, 179);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Primed Start";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.rbFrench);
+            this.tabPage4.Controls.Add(this.rbNederlands);
+            this.tabPage4.Controls.Add(this.rbRussian);
+            this.tabPage4.Controls.Add(this.rbHungarian);
+            this.tabPage4.Controls.Add(this.rbPolish);
+            this.tabPage4.Controls.Add(this.rbEnglish);
+            this.tabPage4.Controls.Add(this.rbDeustch);
+            this.tabPage4.Location = new System.Drawing.Point(4, 33);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(353, 179);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Language";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // rbNederlands
+            // 
+            this.rbNederlands.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbNederlands.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbNederlands.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbNederlands.Location = new System.Drawing.Point(15, 136);
+            this.rbNederlands.Margin = new System.Windows.Forms.Padding(2);
+            this.rbNederlands.Name = "rbNederlands";
+            this.rbNederlands.Size = new System.Drawing.Size(140, 34);
+            this.rbNederlands.TabIndex = 9;
+            this.rbNederlands.Tag = "3";
+            this.rbNederlands.Text = "Nederlands";
+            this.rbNederlands.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbNederlands.UseVisualStyleBackColor = true;
+            // 
+            // rbHungarian
+            // 
+            this.rbHungarian.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbHungarian.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbHungarian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbHungarian.Location = new System.Drawing.Point(15, 95);
+            this.rbHungarian.Margin = new System.Windows.Forms.Padding(2);
+            this.rbHungarian.Name = "rbHungarian";
+            this.rbHungarian.Size = new System.Drawing.Size(140, 34);
+            this.rbHungarian.TabIndex = 8;
+            this.rbHungarian.Tag = "2";
+            this.rbHungarian.Text = "Hungarian";
+            this.rbHungarian.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbHungarian.UseVisualStyleBackColor = true;
+            // 
+            // rbEnglish
+            // 
+            this.rbEnglish.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbEnglish.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbEnglish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbEnglish.Location = new System.Drawing.Point(15, 54);
+            this.rbEnglish.Margin = new System.Windows.Forms.Padding(2);
+            this.rbEnglish.Name = "rbEnglish";
+            this.rbEnglish.Size = new System.Drawing.Size(140, 34);
+            this.rbEnglish.TabIndex = 7;
+            this.rbEnglish.Tag = "1";
+            this.rbEnglish.Text = "English";
+            this.rbEnglish.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbEnglish.UseVisualStyleBackColor = true;
+            // 
+            // rbDeustch
+            // 
+            this.rbDeustch.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbDeustch.Checked = true;
+            this.rbDeustch.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbDeustch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbDeustch.Location = new System.Drawing.Point(15, 11);
+            this.rbDeustch.Margin = new System.Windows.Forms.Padding(2);
+            this.rbDeustch.Name = "rbDeustch";
+            this.rbDeustch.Size = new System.Drawing.Size(140, 34);
+            this.rbDeustch.TabIndex = 6;
+            this.rbDeustch.TabStop = true;
+            this.rbDeustch.Tag = "0";
+            this.rbDeustch.Text = "Deustch";
+            this.rbDeustch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbDeustch.UseVisualStyleBackColor = true;
+            this.rbDeustch.CheckedChanged += new System.EventHandler(this.Language_CheckedChanged);
             // 
             // frmOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(617, 441);
-            this.Controls.Add(this.checkBox3);
+            this.ClientSize = new System.Drawing.Size(382, 303);
+            this.Controls.Add(this.tcOptions);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.ckOnScreen);
-            this.Controls.Add(this.groupBox1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
@@ -458,22 +490,22 @@
             this.Name = "frmOptions";
             this.ShowInTaskbar = false;
             this.Text = "Options";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmOptions_FormClosed);
+            this.Load += new System.EventHandler(this.frmOptions_Load);
+            this.tcOptions.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton rbSinglePulse;
-        private System.Windows.Forms.RadioButton rbMultiPulse;
-        private System.Windows.Forms.CheckBox ckOnScreen;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton rbStandard;
+        private System.Windows.Forms.RadioButton rbLarge;
+        private System.Windows.Forms.CheckBox ckMetric;
         private System.Windows.Forms.Label lbDelaySeconds;
         private System.Windows.Forms.TextBox tbDelay;
         private System.Windows.Forms.Label lbDelay;
@@ -483,17 +515,22 @@
         private System.Windows.Forms.Label lbSpeed;
         private System.Windows.Forms.TextBox tbSpeed;
         private System.Windows.Forms.Label lbPrimedSpeed;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RadioButton radioButton6;
-        private System.Windows.Forms.RadioButton radioButton7;
-        private System.Windows.Forms.RadioButton radioButton4;
-        private System.Windows.Forms.RadioButton radioButton5;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.CheckBox ckScreenSwitches;
+        private System.Windows.Forms.RadioButton rbFrench;
+        private System.Windows.Forms.RadioButton rbRussian;
+        private System.Windows.Forms.RadioButton rbPolish;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox ckWorkSwitch;
+        private System.Windows.Forms.TabControl tcOptions;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.RadioButton rbNederlands;
+        private System.Windows.Forms.RadioButton rbHungarian;
+        private System.Windows.Forms.RadioButton rbEnglish;
+        private System.Windows.Forms.RadioButton rbDeustch;
+        private System.Windows.Forms.CheckBox ckTransparent;
     }
 }

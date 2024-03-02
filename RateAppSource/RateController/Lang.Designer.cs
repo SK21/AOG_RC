@@ -344,6 +344,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display.
+        /// </summary>
+        internal static string lgDisplay {
+            get {
+                return ResourceManager.GetString("lgDisplay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to End.
         /// </summary>
         internal static string lgEnd {
@@ -1366,6 +1375,15 @@ namespace RateController {
         internal static string lgWorkingWidthM {
             get {
                 return ResourceManager.GetString("lgWorkingWidthM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work Switch.
+        /// </summary>
+        internal static string lgWorkSwitch {
+            get {
+                return ResourceManager.GetString("lgWorkSwitch", resourceCulture);
             }
         }
         

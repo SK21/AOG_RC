@@ -33,6 +33,7 @@ namespace RateController
         private bool cMasterOn = false;
         private bool cRateDown = false;
         private bool cRateUp = false;
+        private bool cUseWorkSwitch = false;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[24];
 
@@ -40,6 +41,7 @@ namespace RateController
         {
             mf = CalledFrom;
             SW[(int)SwIDs.Auto] = true; // default to auto in case of no switchbox
+            if (bool.TryParse(mf.Tls.LoadProperty("UseWorkSwitch"), out bool uw)) cUseWorkSwitch = uw;
         }
 
         public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
@@ -74,11 +76,21 @@ namespace RateController
         public bool[] Switches
         { get { return SW; } }
 
+        public bool UseWorkSwitch
+        {
+            get { return cUseWorkSwitch; }
+            set
+            {
+                cUseWorkSwitch = value;
+                mf.Tls.SaveProperty("UseWorkSwitch", cUseWorkSwitch.ToString());
+            }
+        }
+
         public bool WorkOn
         {
             get
             {
-                if (mf.UseWorkSwitch)
+                if (cUseWorkSwitch)
                 {
                     return SW[23];
                 }
@@ -86,10 +98,6 @@ namespace RateController
                 {
                     return true;
                 }
-            }
-            set
-            {
-                SW[23] = value;
             }
         }
 

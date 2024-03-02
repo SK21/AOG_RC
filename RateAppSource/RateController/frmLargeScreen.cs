@@ -489,13 +489,18 @@ namespace RateController
             frm.Show();
         }
 
-        private void mnuStandard_Click(object sender, EventArgs e)
+        public void SwitchToStandard()
         {
             this.ShowInTaskbar = false;
             mf.ShowInTaskbar = true;
             mf.UseLargeScreen = false;
             SwitchingScreens = true;
             this.Close();
+        }
+
+        private void mnuStandard_Click(object sender, EventArgs e)
+        {
+            SwitchToStandard();
         }
 
         private void russianToolStripMenuItem_Click(object sender, EventArgs e)

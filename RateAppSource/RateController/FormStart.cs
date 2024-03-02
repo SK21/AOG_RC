@@ -87,7 +87,6 @@ namespace RateController
         private int cPrimeDelay = 0;
         private double cSimSpeed = 0;
         private DateTime StartTime;
-        private bool cUseWorkSwitch = false;
 
         public FormStart()
         {
@@ -109,18 +108,11 @@ namespace RateController
             mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgModules;
             mnuSettings.Items["exitToolStripMenuItem"].Text = Lang.lgExit;
 
-            MnuOptions.DropDownItems["largeScreenToolStripMenuItem"].Text = Lang.lgLargeScreen;
-            MnuOptions.DropDownItems["transparentToolStripMenuItem"].Text = Lang.lgTransparent;
-            MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
-            MnuOptions.DropDownItems["switchesToolStripMenuItem1"].Text = Lang.lgSwitches;
-            MnuOptions.DropDownItems["primedStartToolStripMenuItem"].Text = Lang.lgPrimedStart;
-
-            MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
-            MnuOptions.DropDownItems["MnuOpen"].Text = Lang.lgOpen;
-            MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
-            MnuOptions.DropDownItems["mnuMetric"].Text = Lang.lgMetric;
-            MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
-            MnuOptions.DropDownItems["commDiagnosticToolStripMenuItem"].Text = Lang.lgCommDiagnostics;
+            mnuSettings.Items["pressuresToolStripMenuItem1"].Text = Lang.lgPressure;
+            mnuSettings.Items["commDiagnosticsToolStripMenuItem"].Text = Lang.lgCommDiagnostics;
+            mnuSettings.Items["newToolStripMenuItem"].Text = Lang.lgNew; ;
+            mnuSettings.Items["openToolStripMenuItem"].Text = Lang.lgOpen;
+            mnuSettings.Items["saveAsToolStripMenuItem"].Text = Lang.lgSaveAs;
 
             #endregion // language
 
@@ -399,10 +391,7 @@ namespace RateController
 
             LoadDefaultProduct();
             Zones.Load();
-            SetTransparent(cUseTransparent);
-
-            if (bool.TryParse(Tls.LoadProperty("UseWorkSwitch"), out bool uw)) cUseWorkSwitch = uw;
-            //cUseWorkSwitch = true;
+            //SetTransparent(cUseTransparent);
         }
 
         public void MnuDeustch_Click(object sender, EventArgs e)
@@ -657,14 +646,6 @@ namespace RateController
                     btnFan.Image = Properties.Resources.FanOff;
                 }
 
-                if (ShowSwitches)
-                {
-                    switchesToolStripMenuItem1.Image = Properties.Resources.OK;
-                }
-                else
-                {
-                    switchesToolStripMenuItem1.Image = Properties.Resources.Cancel64;
-                }
 
                 // transparent
                 if (UseTransparent)
@@ -858,8 +839,6 @@ namespace RateController
                 Tls.WriteActivityLog("Stopped", true);
                 string mes = "Run time (hours): " + ((DateTime.Now - StartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
-
-                Tls.SaveProperty("UseWorkSwitch", cUseWorkSwitch.ToString());
             }
             catch (Exception)
             {
@@ -867,8 +846,6 @@ namespace RateController
 
             Application.Exit();
         }
-
-        public bool UseWorkSwitch { get { return cUseWorkSwitch; } set { cUseWorkSwitch = value; } }
 
         private void FormStart_Activated(object sender, EventArgs e)
         {
@@ -1302,7 +1279,7 @@ namespace RateController
             }
         }
 
-        private void StartLargeScreen()
+        public void StartLargeScreen()
         {
             UseLargeScreen = true;
             LargeScreenExit = false;
@@ -1344,24 +1321,7 @@ namespace RateController
             this.Close();
         }
 
-        private void transparentToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            transparentToolStripMenuItem.Checked = !transparentToolStripMenuItem.Checked;
-            SetTransparent(transparentToolStripMenuItem.Checked);
-        }
 
-        public void SetTransparent(bool frmtrans)
-        {
-            transparentToolStripMenuItem.Checked = frmtrans;
-            if (transparentToolStripMenuItem.Checked)
-            {
-                UseTransparent = true;
-            }
-            else
-            {
-                UseTransparent = false;
-            }
-        }
 
         private void primedStartToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1375,6 +1335,95 @@ namespace RateController
 
             Form frm = new frmPrimedStart(this);
             frm.Show();
+        }
+
+        private void pressuresToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["FormPressure"];
+
+            if (fs == null)
+            {
+                Form frm = new FormPressure(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
+        private void newToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            saveFileDialog1.InitialDirectory = Tls.FilesDir();
+            saveFileDialog1.Title = "New File";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    Tls.OpenFile(saveFileDialog1.FileName);
+                    LoadSettings();
+                }
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.InitialDirectory = Tls.FilesDir();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Tls.PropertiesFile = openFileDialog1.FileName;
+                Products.Load();
+                LoadSettings();
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.InitialDirectory = Tls.FilesDir();
+            saveFileDialog1.Title = "Save As";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    Tls.SaveFile(saveFileDialog1.FileName);
+                    LoadSettings();
+                }
+            }
+        }
+
+        private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["frmModule"];
+
+            if (fs == null)
+            {
+                Form frm = new frmModule(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
+        private void MnuOptions_Click(object sender, EventArgs e)
+        {
+            Form fs = Application.OpenForms["frmOptions"];
+
+            if (fs == null)
+            {
+                Form frm = new frmOptions(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
+        private void mnuSettings_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
     }
 }
