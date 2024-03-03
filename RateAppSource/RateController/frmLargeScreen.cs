@@ -25,6 +25,7 @@ namespace RateController
         private bool[] SwON = new bool[9];
         private bool masterOn;
         private bool automode = true;
+        private bool IsTransparent = false;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -130,12 +131,12 @@ namespace RateController
             }
         }
 
-        public void SetTransparent(bool frmtrans)
+        public void SetTransparent()
         {
-            transparentToolStripMenuItem.Checked = frmtrans;
-            if (transparentToolStripMenuItem.Checked)
+            IsTransparent = mf.UseTransparent;
+            transparentToolStripMenuItem.Checked = mf.UseTransparent;
+            if (mf.UseTransparent)
             {
-                mf.UseTransparent = true;
                 this.Text = string.Empty;
                 this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
                 //this.Opacity = 0;
@@ -157,14 +158,9 @@ namespace RateController
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
                 lblManAuto.ForeColor = txtcolor;
-
-                //btnMenu.BackColor = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.NightColour : Properties.Settings.Default.DayColour;
-
-
             }
             else
             {
-                mf.UseTransparent = false;
                 this.Text = "RateController";
                 this.TransparencyKey = Color.Transparent;
                 //this.Opacity = 100;
@@ -187,9 +183,6 @@ namespace RateController
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
                 lblManAuto.ForeColor = txtcolor;
-
-                //btnMenu.BackColor = Color.Transparent;
-
             }
             SetFont();
         }
@@ -209,10 +202,7 @@ namespace RateController
 
         private void frmLargeScreen_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
 
             timerMain.Enabled = false;
             if (mf.UseTransparent)
@@ -247,7 +237,7 @@ namespace RateController
         private void lbFan1_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.FormShow("FormSettings");
 
             if (fs != null)
             {
@@ -262,7 +252,7 @@ namespace RateController
         private void lbFan2_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.FormShow("FormSettings");
 
             if (fs != null)
             {
@@ -280,7 +270,7 @@ namespace RateController
             UpdateForm();
 
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.FormShow("FormSettings");
 
             if (fs != null)
             {
@@ -298,7 +288,7 @@ namespace RateController
             UpdateForm();
 
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.FormShow("FormSettings");
 
             if (fs != null)
             {
@@ -316,7 +306,7 @@ namespace RateController
             UpdateForm();
 
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.FormShow("FormSettings");
 
             if (fs != null)
             {
@@ -334,7 +324,7 @@ namespace RateController
             UpdateForm();
 
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.FormShow("FormSettings");
 
             if (fs != null)
             {
@@ -442,7 +432,7 @@ namespace RateController
         private void MnuProducts_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.FormShow("FormSettings");
 
             if (fs != null)
             {
@@ -477,7 +467,7 @@ namespace RateController
 
         private void MnuSections_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmSections"];
+            Form fs = mf.Tls.FormShow("frmSections");
 
             if (fs != null)
             {
@@ -519,6 +509,8 @@ namespace RateController
 
         private void UpdateForm()
         {
+            if (mf.UseTransparent != IsTransparent) SetTransparent();
+
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
           
             if (Prd.UseVR)
@@ -1169,7 +1161,7 @@ namespace RateController
         private void transparentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             transparentToolStripMenuItem.Checked = !transparentToolStripMenuItem.Checked;
-            SetTransparent(transparentToolStripMenuItem.Checked);
+            //SetTransparent(transparentToolStripMenuItem.Checked);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1378,7 +1370,7 @@ namespace RateController
 
         private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["FormPressure"];
+            Form fs = mf.Tls.FormShow("FormPressure");
 
             if (fs == null)
             {
@@ -1394,7 +1386,7 @@ namespace RateController
         private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["frmCalibrate"];
+            Form fs = mf.Tls.FormShow("frmCalibrate");
 
             if (fs == null)
             {
@@ -1409,7 +1401,7 @@ namespace RateController
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmModuleConfig"];
+            Form fs = mf.Tls.FormShow("frmModuleConfig");
 
             if (fs == null)
             {
@@ -1424,18 +1416,6 @@ namespace RateController
 
         private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            //check if window already exists
-            //Form fs = Application.OpenForms["frmSwitches"];
-
-            //if (fs == null)
-            //{
-            //    Form frm = new frmSwitches(mf);
-            //    frm.Show();
-            //}
-            //else
-            //{
-            //    fs.Focus();
-            //}
             mf.ShowSwitches = !mf.ShowSwitches;
         }
 
@@ -1450,7 +1430,7 @@ namespace RateController
 
         private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmModule"];
+            Form fs = mf.Tls.FormShow("frmModule");
 
             if (fs == null)
             {
@@ -1474,7 +1454,7 @@ namespace RateController
 
         private void primedStartToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmPrimedStart"];
+            Form fs = mf.Tls.FormShow("frmPrimedStart");
 
             if (fs != null)
             {

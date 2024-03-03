@@ -2,6 +2,7 @@
 using RateController.Properties;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -14,6 +15,7 @@ namespace RateController
         private bool Initializing;
         private string[] LanguageIDs;
         private RadioButton[] LanguageRBs;
+        private bool SimSpeedChanged = false;
         private TabPage[] Tabs;
 
         public frmOptions(FormStart CalledFrom)
@@ -89,24 +91,13 @@ namespace RateController
 
         private void frmOptions_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
-                mf.Tls.SaveFormData(this);
-            }
+            mf.Tls.SaveFormData(this);
         }
 
         private void frmOptions_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
 
-            if (mf.UseInches)
-            {
-                lbSpeed.Text = "MPH";
-            }
-            else
-            {
-                lbSpeed.Text = "KMH";
-            }
             SetDayMode();
             UpdateForm();
         }
@@ -128,7 +119,16 @@ namespace RateController
 
         private void Save()
         {
-            if (double.TryParse(tbSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
+            if (SimSpeedChanged)
+            {
+                if (double.TryParse(tbSimSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
+                SimSpeedChanged = false;
+            }
+            else
+            {
+                if (double.TryParse(tbSpeed.Text, out double Spd)) mf.SimSpeed = Spd;
+            }
+
             if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
             if (int.TryParse(tbDelay.Text, out int Delay)) mf.PrimeDelay = Delay;
 
@@ -168,10 +168,28 @@ namespace RateController
                 mf.SwitchBox.UseWorkSwitch = false;
             }
 
+            if (ckPressure.Checked)
+            {
+                mf.ShowPressure = true;
+            }
+            else
+            {
+                mf.ShowPressure = false;
+            }
+
+            if (ckSimSpeed.Checked)
+            {
+                mf.SimMode = SimType.Speed;
+            }
+            else
+            {
+                mf.SimMode = SimType.None;
+            }
+
             if (rbLarge.Checked)
             {
-                // use large screen, restarts app
-                Form fs = Application.OpenForms["frmLargeScreen"];
+                // use large screen
+                Form fs = mf.Tls.FormShow("frmLargeScreen");
                 if (fs == null)
                 {
                     if (!mf.UseLargeScreen) mf.StartLargeScreen();
@@ -180,7 +198,7 @@ namespace RateController
             else
             {
                 // use standard screen
-                Form fs = Application.OpenForms["frmLargeScreen"];
+                Form fs = mf.Tls.FormShow("frmLargeScreen");
                 if (fs != null)
                 {
                     mf.Lscrn.SwitchToStandard();
@@ -285,6 +303,37 @@ namespace RateController
             }
         }
 
+        private void tbSimSpeed_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSimSpeed.Text, out tempD);
+            using (var form = new FormNumeric(0, 40, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSimSpeed.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbSimSpeed_TextChanged(object sender, EventArgs e)
+        {
+            SimSpeedChanged = true;
+            SetButtons(true);
+        }
+
+        private void tbSimSpeed_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSimSpeed.Text, out tempD);
+            if (tempD < 0 || tempD > 40)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
         private void tbSpeed_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -345,6 +394,8 @@ namespace RateController
             Initializing = true;
 
             tbSpeed.Text = mf.SimSpeed.ToString("N1");
+            tbSimSpeed.Text = mf.SimSpeed.ToString("N1");
+
             tbTime.Text = mf.PrimeTime.ToString("N0");
             tbDelay.Text = mf.PrimeDelay.ToString("N0");
 
@@ -353,6 +404,7 @@ namespace RateController
             ckMetric.Checked = !mf.UseInches;
             ckScreenSwitches.Checked = mf.ShowSwitches;
             ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
+            ckPressure.Checked = mf.ShowPressure;
 
             // language
             for (int i = 0; i < LanguageRBs.Length; i++)
@@ -362,6 +414,17 @@ namespace RateController
                     LanguageRBs[i].Checked = true;
                     break;
                 }
+            }
+
+            if (mf.UseInches)
+            {
+                lbSpeed.Text = "MPH";
+                lbSimUnits.Text = "MPH";
+            }
+            else
+            {
+                lbSpeed.Text = "KMH";
+                lbSimUnits.Text = "KMH";
             }
 
             Initializing = false;

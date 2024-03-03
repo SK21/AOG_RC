@@ -62,10 +62,7 @@ namespace RateController
 
         private void frmPrimedStart_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
         }
 
         private void frmPrimedStart_Load(object sender, EventArgs e)

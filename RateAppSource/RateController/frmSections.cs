@@ -277,10 +277,7 @@ namespace RateController
 
         private void frmSections_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
         }
 
         private void frmSections_Load(object sender, EventArgs e)

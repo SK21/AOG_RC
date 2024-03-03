@@ -75,10 +75,7 @@ namespace RateController
 
         private void frmModule_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
             timer1.Enabled = false;
         }
 

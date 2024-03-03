@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -41,6 +42,7 @@ namespace RateController
         private string cSettingsDir;
         private string cVersionDate = "22-Feb-2024";
         private FormStart mf;
+        private Form[] OpenForms = new Form[30];    // make sure to allocate enough
 
         public clsTools(FormStart CallingForm)
         {
@@ -211,6 +213,20 @@ namespace RateController
             return Properties.Settings.Default.FilesDir;
         }
 
+        public Form FormShow(string Name)
+        {
+            Form Result = null;
+            for (int i = 0; i < OpenForms.Length; i++)
+            {
+                if (OpenForms[i] != null && OpenForms[i].Name == Name)
+                {
+                    Result = OpenForms[i];
+                    break;
+                }
+            }
+            return Result;
+        }
+
         public bool GoodCRC(byte[] Data, byte Start = 0)
         {
             bool Result = false;
@@ -270,6 +286,8 @@ namespace RateController
             Frm.Top = Toploc;
 
             IsOnScreen(Frm, true);
+
+            FormAdd(Frm);
         }
 
         public string LoadProperty(string Key)
@@ -414,8 +432,12 @@ namespace RateController
         {
             try
             {
-                SaveAppProperty(Frm.Name + ".Left", Frm.Left.ToString());
-                SaveAppProperty(Frm.Name + ".Top", Frm.Top.ToString());
+                if (Frm.WindowState == FormWindowState.Normal)
+                {
+                    SaveAppProperty(Frm.Name + ".Left", Frm.Left.ToString());
+                    SaveAppProperty(Frm.Name + ".Top", Frm.Top.ToString());
+                }
+                FormRemove(Frm);
             }
             catch (Exception)
             {
@@ -574,6 +596,49 @@ namespace RateController
             }
             catch (Exception)
             {
+            }
+        }
+
+        private void FormAdd(Form frm)
+        {
+            bool Found = false;
+            for (int i = 0; i < OpenForms.Length; i++)
+            {
+                if (OpenForms[i] != null && OpenForms[i].Name == frm.Name)
+                {
+                    Found = true;
+                    break;
+                }
+            }
+            if (!Found)
+            {
+                for (int i = 0; i < OpenForms.Length; i++)
+                {
+                    if (OpenForms[i] == null)
+                    {
+                        OpenForms[i] = frm;
+                        Debug.Print("Add form: " + frm.Name);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void FormRemove(Form frm)
+        {
+            int ID = -1;
+            for (int i = 0; i < OpenForms.Length; i++)
+            {
+                if (OpenForms[i] != null && OpenForms[i].Name == frm.Name)
+                {
+                    ID = i;
+                    break;
+                }
+            }
+            if (ID != -1)
+            {
+                OpenForms[ID] = null;
+                Debug.Print("Remove form: " + frm.Name);
             }
         }
 

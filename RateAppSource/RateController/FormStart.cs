@@ -300,7 +300,7 @@ namespace RateController
 
         public void DisplayPressure()
         {
-            Form fs = Application.OpenForms["frmPressureDisplay"];
+            Form fs = Tls.FormShow("frmPressureDisplay");
 
             if (cShowPressure)
             {
@@ -322,7 +322,7 @@ namespace RateController
 
         public void DisplaySwitches()
         {
-            Form fs = Application.OpenForms["frmSwitches"];
+            Form fs = Tls.FormShow("frmSwitches");
 
             if (cShowSwitches)
             {
@@ -620,16 +620,6 @@ namespace RateController
                 // alarm
                 if (!cUseLargeScreen) RCalarm.CheckAlarms();
 
-                // metric
-                if (cUseInches)
-                {
-                    MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Cancel40;
-                }
-                else
-                {
-                    MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Check;
-                }
-
                 if (CurrentPage != CurrentPageLast)
                 {
                     CurrentPageLast = CurrentPage;
@@ -645,18 +635,6 @@ namespace RateController
                 {
                     btnFan.Image = Properties.Resources.FanOff;
                 }
-
-
-                // transparent
-                if (UseTransparent)
-                {
-                    MnuOptions.DropDownItems["transparentToolStripMenuItem"].Image = Properties.Resources.Check;
-                }
-                else
-                {
-                    MnuOptions.DropDownItems["transparentToolStripMenuItem"].Image = Properties.Resources.Cancel40;
-                }
-
             }
             catch (Exception ex)
             {
@@ -705,7 +683,7 @@ namespace RateController
         private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["frmCalibrate"];
+            Form fs = Tls.FormShow("frmCalibrate");
 
             if (fs == null)
             {
@@ -720,7 +698,7 @@ namespace RateController
 
         private void commDiagnosticToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmModule"];
+            Form fs = Tls.FormShow("frmModule");
 
             if (fs == null)
             {
@@ -816,9 +794,9 @@ namespace RateController
         {
             try
             {
+                    Tls.SaveFormData(this);
                 if (this.WindowState == FormWindowState.Normal)
                 {
-                    Tls.SaveFormData(this);
                     Tls.SaveProperty("CurrentPage", CurrentPage.ToString());
                 }
 
@@ -1117,7 +1095,7 @@ namespace RateController
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmModuleConfig"];
+            Form fs = Tls.FormShow("frmModuleConfig");
 
             if (fs == null)
             {
@@ -1154,7 +1132,7 @@ namespace RateController
 
         private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["FormPressure"];
+            Form fs = Tls.FormShow("FormPressure");
 
             if (fs == null)
             {
@@ -1170,7 +1148,7 @@ namespace RateController
         private void productsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = Tls.FormShow("FormSettings");
 
             if (fs != null)
             {
@@ -1206,7 +1184,7 @@ namespace RateController
 
         private void sectionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmSections"];
+            Form fs = Tls.FormShow("frmSections");
 
             if (fs != null)
             {
@@ -1288,7 +1266,7 @@ namespace RateController
             this.ShowInTaskbar = false;
             Lscrn = new frmLargeScreen(this);
             Lscrn.ShowInTaskbar = true;
-            Lscrn.SetTransparent(cUseTransparent);
+            Lscrn.SetTransparent();
             Lscrn.Show();
         }
 
@@ -1325,7 +1303,7 @@ namespace RateController
 
         private void primedStartToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmPrimedStart"];
+            Form fs = Tls.FormShow("frmPrimedStart");
 
             if (fs != null)
             {
@@ -1339,7 +1317,7 @@ namespace RateController
 
         private void pressuresToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["FormPressure"];
+            Form fs = Tls.FormShow("FormPressure");
 
             if (fs == null)
             {
@@ -1393,7 +1371,7 @@ namespace RateController
 
         private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmModule"];
+            Form fs = Tls.FormShow("frmModule");
 
             if (fs == null)
             {
@@ -1408,7 +1386,7 @@ namespace RateController
 
         private void MnuOptions_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmOptions"];
+            Form fs = Tls.FormShow("frmOptions");
 
             if (fs == null)
             {

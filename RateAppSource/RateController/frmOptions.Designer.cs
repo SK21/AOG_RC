@@ -41,7 +41,6 @@
             this.lbSpeed = new System.Windows.Forms.Label();
             this.tbSpeed = new System.Windows.Forms.TextBox();
             this.lbPrimedSpeed = new System.Windows.Forms.Label();
-            this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
             this.rbFrench = new System.Windows.Forms.RadioButton();
             this.rbRussian = new System.Windows.Forms.RadioButton();
             this.rbPolish = new System.Windows.Forms.RadioButton();
@@ -58,6 +57,11 @@
             this.rbHungarian = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
+            this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
+            this.ckPressure = new System.Windows.Forms.CheckBox();
+            this.ckSimSpeed = new System.Windows.Forms.CheckBox();
+            this.tbSimSpeed = new System.Windows.Forms.TextBox();
+            this.lbSimUnits = new System.Windows.Forms.Label();
             this.tcOptions.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -70,10 +74,10 @@
             this.rbLarge.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbLarge.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.rbLarge.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbLarge.Location = new System.Drawing.Point(60, 72);
+            this.rbLarge.Location = new System.Drawing.Point(5, 71);
             this.rbLarge.Margin = new System.Windows.Forms.Padding(2);
             this.rbLarge.Name = "rbLarge";
-            this.rbLarge.Size = new System.Drawing.Size(218, 34);
+            this.rbLarge.Size = new System.Drawing.Size(164, 34);
             this.rbLarge.TabIndex = 2;
             this.rbLarge.Tag = "0";
             this.rbLarge.Text = "Large Screen";
@@ -87,10 +91,10 @@
             this.rbStandard.Checked = true;
             this.rbStandard.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.rbStandard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbStandard.Location = new System.Drawing.Point(60, 23);
+            this.rbStandard.Location = new System.Drawing.Point(5, 20);
             this.rbStandard.Margin = new System.Windows.Forms.Padding(2);
             this.rbStandard.Name = "rbStandard";
-            this.rbStandard.Size = new System.Drawing.Size(218, 34);
+            this.rbStandard.Size = new System.Drawing.Size(164, 34);
             this.rbStandard.TabIndex = 1;
             this.rbStandard.TabStop = true;
             this.rbStandard.Tag = "0";
@@ -105,9 +109,9 @@
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMetric.Location = new System.Drawing.Point(60, 23);
+            this.ckMetric.Location = new System.Drawing.Point(46, 21);
             this.ckMetric.Name = "ckMetric";
-            this.ckMetric.Size = new System.Drawing.Size(218, 34);
+            this.ckMetric.Size = new System.Drawing.Size(250, 34);
             this.ckMetric.TabIndex = 119;
             this.ckMetric.Text = "Metric Units";
             this.ckMetric.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -216,21 +220,6 @@
             this.lbPrimedSpeed.TabIndex = 326;
             this.lbPrimedSpeed.Text = "Speed";
             // 
-            // ckScreenSwitches
-            // 
-            this.ckScreenSwitches.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckScreenSwitches.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckScreenSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckScreenSwitches.Location = new System.Drawing.Point(60, 72);
-            this.ckScreenSwitches.Name = "ckScreenSwitches";
-            this.ckScreenSwitches.Size = new System.Drawing.Size(218, 34);
-            this.ckScreenSwitches.TabIndex = 121;
-            this.ckScreenSwitches.Text = "On-screen Switches";
-            this.ckScreenSwitches.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckScreenSwitches.UseVisualStyleBackColor = true;
-            this.ckScreenSwitches.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
-            // 
             // rbFrench
             // 
             this.rbFrench.Appearance = System.Windows.Forms.Appearance.Button;
@@ -318,9 +307,9 @@
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWorkSwitch.Location = new System.Drawing.Point(60, 121);
+            this.ckWorkSwitch.Location = new System.Drawing.Point(46, 75);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
-            this.ckWorkSwitch.Size = new System.Drawing.Size(218, 34);
+            this.ckWorkSwitch.Size = new System.Drawing.Size(250, 34);
             this.ckWorkSwitch.TabIndex = 125;
             this.ckWorkSwitch.Text = "Implement Work Switch";
             this.ckWorkSwitch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -341,9 +330,11 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.tbSimSpeed);
+            this.tabPage1.Controls.Add(this.lbSimUnits);
+            this.tabPage1.Controls.Add(this.ckSimSpeed);
             this.tabPage1.Controls.Add(this.ckMetric);
             this.tabPage1.Controls.Add(this.ckWorkSwitch);
-            this.tabPage1.Controls.Add(this.ckScreenSwitches);
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -354,6 +345,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.ckPressure);
+            this.tabPage2.Controls.Add(this.ckScreenSwitches);
             this.tabPage2.Controls.Add(this.ckTransparent);
             this.tabPage2.Controls.Add(this.rbLarge);
             this.tabPage2.Controls.Add(this.rbStandard);
@@ -367,7 +360,7 @@
             // 
             // ckTransparent
             // 
-            this.ckTransparent.Location = new System.Drawing.Point(99, 121);
+            this.ckTransparent.Location = new System.Drawing.Point(206, 72);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(132, 32);
             this.ckTransparent.TabIndex = 119;
@@ -472,6 +465,75 @@
             this.rbDeustch.UseVisualStyleBackColor = true;
             this.rbDeustch.CheckedChanged += new System.EventHandler(this.Language_CheckedChanged);
             // 
+            // ckScreenSwitches
+            // 
+            this.ckScreenSwitches.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckScreenSwitches.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckScreenSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckScreenSwitches.Location = new System.Drawing.Point(6, 122);
+            this.ckScreenSwitches.Name = "ckScreenSwitches";
+            this.ckScreenSwitches.Size = new System.Drawing.Size(164, 34);
+            this.ckScreenSwitches.TabIndex = 122;
+            this.ckScreenSwitches.Text = "Switches";
+            this.ckScreenSwitches.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScreenSwitches.UseVisualStyleBackColor = true;
+            this.ckScreenSwitches.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
+            // 
+            // ckPressure
+            // 
+            this.ckPressure.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckPressure.Location = new System.Drawing.Point(183, 20);
+            this.ckPressure.Name = "ckPressure";
+            this.ckPressure.Size = new System.Drawing.Size(164, 34);
+            this.ckPressure.TabIndex = 123;
+            this.ckPressure.Text = "Pressure";
+            this.ckPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckPressure.UseVisualStyleBackColor = true;
+            this.ckPressure.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
+            // 
+            // ckSimSpeed
+            // 
+            this.ckSimSpeed.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckSimSpeed.Location = new System.Drawing.Point(28, 126);
+            this.ckSimSpeed.Name = "ckSimSpeed";
+            this.ckSimSpeed.Size = new System.Drawing.Size(179, 34);
+            this.ckSimSpeed.TabIndex = 126;
+            this.ckSimSpeed.Text = "Simulate Speed";
+            this.ckSimSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSimSpeed.UseVisualStyleBackColor = true;
+            this.ckSimSpeed.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
+            // 
+            // tbSimSpeed
+            // 
+            this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSimSpeed.Location = new System.Drawing.Point(213, 128);
+            this.tbSimSpeed.MaxLength = 8;
+            this.tbSimSpeed.Name = "tbSimSpeed";
+            this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
+            this.tbSimSpeed.TabIndex = 329;
+            this.tbSimSpeed.Text = "0";
+            this.tbSimSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSimSpeed.TextChanged += new System.EventHandler(this.tbSimSpeed_TextChanged);
+            this.tbSimSpeed.Enter += new System.EventHandler(this.tbSimSpeed_Enter);
+            this.tbSimSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSimSpeed_Validating);
+            // 
+            // lbSimUnits
+            // 
+            this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lbSimUnits.Location = new System.Drawing.Point(284, 131);
+            this.lbSimUnits.Name = "lbSimUnits";
+            this.lbSimUnits.Size = new System.Drawing.Size(57, 24);
+            this.lbSimUnits.TabIndex = 330;
+            this.lbSimUnits.Text = "mph";
+            this.lbSimUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // frmOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -494,6 +556,7 @@
             this.Load += new System.EventHandler(this.frmOptions_Load);
             this.tcOptions.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -515,7 +578,6 @@
         private System.Windows.Forms.Label lbSpeed;
         private System.Windows.Forms.TextBox tbSpeed;
         private System.Windows.Forms.Label lbPrimedSpeed;
-        private System.Windows.Forms.CheckBox ckScreenSwitches;
         private System.Windows.Forms.RadioButton rbFrench;
         private System.Windows.Forms.RadioButton rbRussian;
         private System.Windows.Forms.RadioButton rbPolish;
@@ -532,5 +594,10 @@
         private System.Windows.Forms.RadioButton rbEnglish;
         private System.Windows.Forms.RadioButton rbDeustch;
         private System.Windows.Forms.CheckBox ckTransparent;
+        private System.Windows.Forms.CheckBox ckPressure;
+        private System.Windows.Forms.CheckBox ckScreenSwitches;
+        private System.Windows.Forms.CheckBox ckSimSpeed;
+        private System.Windows.Forms.TextBox tbSimSpeed;
+        private System.Windows.Forms.Label lbSimUnits;
     }
 }

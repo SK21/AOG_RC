@@ -91,7 +91,7 @@ namespace RateController
 
         private void btnPCB_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmPins"];
+            Form fs = mf.Tls.FormShow("frmPins");
 
             if (fs == null)
             {
@@ -202,10 +202,7 @@ namespace RateController
 
         private void frmModuleConfig_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
         }
 
         private void frmModuleConfig_Load(object sender, EventArgs e)

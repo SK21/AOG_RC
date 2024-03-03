@@ -150,10 +150,7 @@ namespace RateController
 
         private void FormPIDGraph_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.mf.Tls.SaveFormData(this);
-            }
         }
 
         private void FormSteerGraph_Load(object sender, EventArgs e)

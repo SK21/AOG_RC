@@ -49,10 +49,7 @@ namespace RateController
             timer1.Dispose();
             Dispose();
 
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
             Close();
         }
 
@@ -72,10 +69,7 @@ namespace RateController
 
         private void frmHelp_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
         }
 
         private void panel1_Click(object sender, EventArgs e)

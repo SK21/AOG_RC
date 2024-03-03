@@ -106,10 +106,7 @@ namespace RateController
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
             }
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
             timer1.Enabled = false;
             mf.vSwitchBox.SwitchScreenOn = false;
         }
