@@ -133,7 +133,7 @@
     <value>Dawka Bazowa</value>
   </data>
   <data name="lgBoards" xml:space="preserve">
-    <value>Boards</value>
+    <value>Wersja PCB</value>
   </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Współczynnik (impulsy/jednostka)</value>
@@ -249,7 +249,7 @@
     <value>Wentylator</value>
   </data>
   <data name="lgFlowOnHigh" xml:space="preserve">
-    <value>Przepływ na wysokim poziomie</value>
+    <value>Przepływ wysoki</value>
   </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
@@ -303,7 +303,7 @@
     <value>Dawka Max</value>
   </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
-    <value>Zmierzona ilość</value>
+    <value>Ilość zmierzona</value>
   </data>
   <data name="lgMeterSet" xml:space="preserve">
     <value>Zestaw mierników</value>
@@ -330,7 +330,7 @@
     <value>Moduł</value>
   </data>
   <data name="lgModuleID" xml:space="preserve">
-    <value>Modół ID</value>
+    <value>Moduł ID</value>
   </data>
   <data name="lgModules" xml:space="preserve">
     <value>Moduły</value>
@@ -360,13 +360,13 @@
     <value>Alarm wyłączenia</value>
   </data>
   <data name="lgOffset" xml:space="preserve">
-    <value>Offset</value>
+    <value>Wyrównaj</value>
   </data>
   <data name="lgOnScreen" xml:space="preserve">
     <value>Ekran głowny</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
-    <value>On Time</value>
+    <value>Czas</value>
   </data>
   <data name="lgOpen" xml:space="preserve">
     <value>Otwórz</value>
@@ -408,7 +408,7 @@
     <value>Proportional</value>
   </data>
   <data name="lgPulses" xml:space="preserve">
-    <value>Impulsy</value>
+    <value>Impuls</value>
   </data>
   <data name="lgPWMmax" xml:space="preserve">
     <value>PWM Max</value>
@@ -420,7 +420,7 @@
     <value>Ilość</value>
   </data>
   <data name="lgQuantityApplied" xml:space="preserve">
-    <value>Zastosowana ilość</value>
+    <value>Aktualne Stosowanie</value>
   </data>
   <data name="lgRate" xml:space="preserve">
     <value>Wskaźnik</value>
@@ -432,10 +432,10 @@
     <value>Przekaźnik</value>
   </data>
   <data name="lgRelayControl" xml:space="preserve">
-    <value>Sterowanie przekaźnikiem</value>
+    <value>Sterowanie</value>
   </data>
   <data name="lgRelayOnHigh" xml:space="preserve">
-    <value>Przekaźnik na wysokim poziomie</value>
+    <value>Poziom wysoki</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
     <value>Przekaźniki</value>
@@ -552,7 +552,7 @@
     <value>UPM/PWM</value>
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
-    <value>Dążenie UPM</value>
+    <value>Docelowa dawka</value>
   </data>
   <data name="lgUseVR" xml:space="preserve">
     <value>Użyj zmiennej dawki</value>

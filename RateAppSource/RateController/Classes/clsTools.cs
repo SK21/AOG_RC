@@ -36,11 +36,11 @@ namespace RateController
         private static Hashtable HTapp;
         private static Hashtable HTfiles;
         private string cAppName = "RateController";
-        private string cAppVersion = "3.7.4";
+        private string cAppVersion = "3.7.5";
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "22-Feb-2024";
+        private string cVersionDate = "02-Mar-2024";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
 
