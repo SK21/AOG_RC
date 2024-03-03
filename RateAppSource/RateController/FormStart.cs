@@ -24,7 +24,7 @@ namespace RateController
         public readonly int MaxProducts = 6;// last two are fans
         public readonly int MaxRelays = 16;
         public readonly int MaxSections = 128;
-        public readonly int MaxSensors = 8; 
+        public readonly int MaxSensors = 8;
         public readonly int MaxSwitches = 16;
         public PGN32401 AnalogData;
         public PGN254 AutoSteerPGN;
@@ -46,11 +46,11 @@ namespace RateController
         public clsSections Sections;
         public PGN235 SectionsPGN;
         public SerialComm[] SER = new SerialComm[3];
+        public bool ShowCoverageRemaining;
+        public bool ShowQuantityRemaining;
         public Color SimColor = Color.FromArgb(255, 191, 0);
-        private SimType cSimMode = SimType.None;
         public PGN32618 SwitchBox;
         public clsTools Tls;
-        public PGN228 VRdata;
 
         public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
@@ -58,15 +58,18 @@ namespace RateController
 
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
+        public PGN228 VRdata;
         public clsVirtualSwitchBox vSwitchBox;
         public string WiFiIP;
         public clsZones Zones;
-
-
         private int cDefaultProduct = 0;
         private byte cPressureToShowID;
+        private int cPrimeDelay = 0;
+        private double cPrimeTime = 0;
         private bool cShowPressure;
         private bool cShowSwitches = false;
+        private SimType cSimMode = SimType.None;
+        private double cSimSpeed = 0;
         private int CurrentPage;
         private int CurrentPageLast;
         private bool cUseLargeScreen = false;
@@ -76,17 +79,13 @@ namespace RateController
         private DateTime[] ModuleTime;
         private Label[] ProdName;
         private Label[] Rates;
-        private Label[] Targets;
+        private int[] RateType = new int[6];
 
-        private int[] RateType = new int[6];    // 0 current rate, 1 instantaneous rate, 2 overall rate
+        // 0 current rate, 1 instantaneous rate, 2 overall rate
         private PGN32501[] RelaySettings;
-        public bool ShowCoverageRemaining;
-        public bool ShowQuantityRemaining;
 
-        private double cPrimeTime = 0;
-        private int cPrimeDelay = 0;
-        private double cSimSpeed = 0;
         private DateTime StartTime;
+        private Label[] Targets;
 
         public FormStart()
         {
@@ -168,14 +167,7 @@ namespace RateController
         }
 
         public event EventHandler ProductChanged;
-        public SimType SimMode
-        {
-            get { return cSimMode; }
-            set
-            {
-                cSimMode = value;
-            }
-        }
+
         public int DefaultProduct
         {
             get { return cDefaultProduct; }
@@ -201,6 +193,24 @@ namespace RateController
             }
         }
 
+        public int PrimeDelay
+        {
+            get { return cPrimeDelay; }
+            set
+            {
+                if (value >= 0 && value < 9) { cPrimeDelay = value; }
+            }
+        }
+
+        public double PrimeTime
+        {
+            get { return cPrimeTime; }
+            set
+            {
+                if (value >= 0 && value < 30) { cPrimeTime = value; }
+            }
+        }
+
         public bool ShowPressure
         {
             get { return cShowPressure; }
@@ -223,21 +233,21 @@ namespace RateController
             }
         }
 
+        public SimType SimMode
+        {
+            get { return cSimMode; }
+            set
+            {
+                cSimMode = value;
+            }
+        }
+
         public double SimSpeed
         {
             get { return cSimSpeed; }
             set
             {
                 if (value >= 0 && value < 40) { cSimSpeed = value; }
-            }
-        }
-
-        public double PrimeTime
-        {
-            get { return cPrimeTime; }
-            set
-            {
-                if(value>=0 && value<30) { cPrimeTime = value; }
             }
         }
 
@@ -341,6 +351,7 @@ namespace RateController
                 if (fs != null) fs.Close();
             }
         }
+
         public void LoadSettings()
         {
             StartSerial();
@@ -372,7 +383,7 @@ namespace RateController
             {
                 cSimSpeed = 5;
             }
-    
+
             if (double.TryParse(Tls.LoadProperty("PrimeTime"), out double ptime))
             {
                 cPrimeTime = ptime;
@@ -391,15 +402,6 @@ namespace RateController
 
             LoadDefaultProduct();
             Zones.Load();
-            //SetTransparent(cUseTransparent);
-        }
-
-        public void MnuDeustch_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "de";
-            Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            ChangeLanguage();
         }
 
         public bool ModuleConnected(int ModuleID)
@@ -418,6 +420,19 @@ namespace RateController
             {
                 SER[i].SendData(Data);
             }
+        }
+
+        public void StartLargeScreen()
+        {
+            UseLargeScreen = true;
+            LargeScreenExit = false;
+            Restart = false;
+            this.WindowState = FormWindowState.Minimized;
+            this.ShowInTaskbar = false;
+            Lscrn = new frmLargeScreen(this);
+            Lscrn.ShowInTaskbar = true;
+            Lscrn.SetTransparent();
+            Lscrn.Show();
         }
 
         public void StartSerial()
@@ -505,7 +520,6 @@ namespace RateController
                     // product pages
                     clsProduct Prd = Products.Item(CurrentPage - 1);
 
-
                     if (Prd.UseVR)
                     {
                         lbTarget.Text = "VR Target";
@@ -582,27 +596,20 @@ namespace RateController
                             break;
                     }
 
-                    if (cSimMode == SimType.None)
+                    if (Prd.ArduinoModule.ModuleSending())
                     {
-                        if (Prd.ArduinoModule.ModuleSending())
+                        if (Prd.ArduinoModule.ModuleReceiving())
                         {
-                            if (Prd.ArduinoModule.ModuleReceiving())
-                            {
-                                lbArduinoConnected.BackColor = Color.LightGreen;
-                            }
-                            else
-                            {
-                                lbArduinoConnected.BackColor = Color.LightBlue;
-                            }
+                            lbArduinoConnected.BackColor = Color.LightGreen;
                         }
                         else
                         {
-                            lbArduinoConnected.BackColor = Color.Red;
+                            lbArduinoConnected.BackColor = Color.LightBlue;
                         }
                     }
                     else
                     {
-                        lbArduinoConnected.BackColor = SimColor;
+                        lbArduinoConnected.BackColor = Color.Red;
                     }
 
                     lbArduinoConnected.Visible = true;
@@ -696,7 +703,7 @@ namespace RateController
             }
         }
 
-        private void commDiagnosticToolStripMenuItem_Click(object sender, EventArgs e)
+        private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form fs = Tls.FormShow("frmModule");
 
@@ -709,6 +716,11 @@ namespace RateController
             {
                 fs.Focus();
             }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private void FormatDisplay()
@@ -781,20 +793,12 @@ namespace RateController
                 Tls.WriteErrorLog("FormStart/FormatDisplay: " + ex.Message);
             }
         }
-        public int PrimeDelay
-        {
-            get { return cPrimeDelay; }
-            set
-            {
-                if (value >= 0 && value < 9) { cPrimeDelay = value; }
-            }
-        }
 
         private void FormRateControl_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
             {
-                    Tls.SaveFormData(this);
+                Tls.SaveFormData(this);
                 if (this.WindowState == FormWindowState.Normal)
                 {
                     Tls.SaveProperty("CurrentPage", CurrentPage.ToString());
@@ -806,7 +810,7 @@ namespace RateController
                 Tls.SaveProperty("ShowCoverageRemaining", ShowCoverageRemaining.ToString());
 
                 Tls.SaveProperty("PrimeTime", cPrimeTime.ToString());
-                Tls.SaveProperty("PrimeDelay",cPrimeDelay.ToString());
+                Tls.SaveProperty("PrimeDelay", cPrimeDelay.ToString());
                 Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
 
                 UDPaog.Close();
@@ -900,37 +904,16 @@ namespace RateController
             StartTime = DateTime.Now;
         }
 
-        private void frenchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "fr";
-            Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            ChangeLanguage();
-        }
-
         private void groupBox3_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
             Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Black);
         }
 
-        private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "hu";
-            Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            ChangeLanguage();
-        }
-
         private void label34_Click(object sender, EventArgs e)
         {
             ShowQuantityRemaining = !ShowQuantityRemaining;
             UpdateStatus();
-        }
-
-        private void largeScreenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            StartLargeScreen();
         }
 
         private void lbAogConnected_Click(object sender, EventArgs e)
@@ -1048,49 +1031,35 @@ namespace RateController
             CurrentPage = cDefaultProduct + 1;
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.InitialDirectory = Tls.FilesDir();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                Tls.PropertiesFile = openFileDialog1.FileName;
-                Products.Load();
-                LoadSettings();
-            }
-        }
-
-        private void metricToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cUseInches = !cUseInches;
-            Tls.SaveProperty("UseInches", cUseInches.ToString());
-        }
-
         private void MnuComm_Click(object sender, EventArgs e)
         {
             Form frm = new frmComm(this);
             frm.ShowDialog();
         }
 
-        private void MnuEnglish_Click(object sender, EventArgs e)
+        private void MnuOptions_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.setF_culture = "en";
-            Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            ChangeLanguage();
-        }
+            Form fs = Tls.FormShow("frmOptions");
 
-        private void MnuNederlands_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "nl";
-            Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            ChangeLanguage();
+            if (fs == null)
+            {
+                Form frm = new frmOptions(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void MnuRelays_Click_1(object sender, EventArgs e)
         {
             Form tmp = new frmRelays(this);
             tmp.ShowDialog();
+        }
+
+        private void mnuSettings_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
         }
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1108,7 +1077,7 @@ namespace RateController
             }
         }
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        private void newToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             saveFileDialog1.InitialDirectory = Tls.FilesDir();
             saveFileDialog1.Title = "New File";
@@ -1122,15 +1091,18 @@ namespace RateController
             }
         }
 
-        private void polishToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.setF_culture = "pl";
-            Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            ChangeLanguage();
+            openFileDialog1.InitialDirectory = Tls.FilesDir();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Tls.PropertiesFile = openFileDialog1.FileName;
+                Products.Load();
+                LoadSettings();
+            }
         }
 
-        private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pressuresToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             Form fs = Tls.FormShow("FormPressure");
 
@@ -1160,15 +1132,7 @@ namespace RateController
             frm.Show();
         }
 
-        private void russianToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "ru";
-            Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            ChangeLanguage();
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.InitialDirectory = Tls.FilesDir();
             saveFileDialog1.Title = "Save As";
@@ -1257,25 +1221,6 @@ namespace RateController
             }
         }
 
-        public void StartLargeScreen()
-        {
-            UseLargeScreen = true;
-            LargeScreenExit = false;
-            Restart = false;
-            this.WindowState = FormWindowState.Minimized;
-            this.ShowInTaskbar = false;
-            Lscrn = new frmLargeScreen(this);
-            Lscrn.ShowInTaskbar = true;
-            Lscrn.SetTransparent();
-            Lscrn.Show();
-        }
-
-        private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ShowSwitches = !cShowSwitches;
-            DisplaySwitches();
-        }
-
         private void timerMain_Tick(object sender, EventArgs e)
         {
             UpdateStatus();
@@ -1292,116 +1237,6 @@ namespace RateController
         private void timerPIDs_Tick(object sender, EventArgs e)
         {
             Products.UpdatePID();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-
-
-        private void primedStartToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = Tls.FormShow("frmPrimedStart");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new frmPrimedStart(this);
-            frm.Show();
-        }
-
-        private void pressuresToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Form fs = Tls.FormShow("FormPressure");
-
-            if (fs == null)
-            {
-                Form frm = new FormPressure(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void newToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
-            saveFileDialog1.InitialDirectory = Tls.FilesDir();
-            saveFileDialog1.Title = "New File";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Tls.OpenFile(saveFileDialog1.FileName);
-                    LoadSettings();
-                }
-            }
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.InitialDirectory = Tls.FilesDir();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                Tls.PropertiesFile = openFileDialog1.FileName;
-                Products.Load();
-                LoadSettings();
-            }
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.InitialDirectory = Tls.FilesDir();
-            saveFileDialog1.Title = "Save As";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Tls.SaveFile(saveFileDialog1.FileName);
-                    LoadSettings();
-                }
-            }
-        }
-
-        private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = Tls.FormShow("frmModule");
-
-            if (fs == null)
-            {
-                Form frm = new frmModule(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void MnuOptions_Click(object sender, EventArgs e)
-        {
-            Form fs = Tls.FormShow("frmOptions");
-
-            if (fs == null)
-            {
-                Form frm = new frmOptions(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void mnuSettings_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-
         }
     }
 }

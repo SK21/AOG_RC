@@ -360,11 +360,15 @@
             // 
             // ckTransparent
             // 
-            this.ckTransparent.Location = new System.Drawing.Point(206, 72);
+            this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckTransparent.Location = new System.Drawing.Point(183, 72);
             this.ckTransparent.Name = "ckTransparent";
-            this.ckTransparent.Size = new System.Drawing.Size(132, 32);
+            this.ckTransparent.Size = new System.Drawing.Size(164, 34);
             this.ckTransparent.TabIndex = 119;
             this.ckTransparent.Text = "Transparent";
+            this.ckTransparent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckTransparent.UseVisualStyleBackColor = true;
             this.ckTransparent.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
             // 
