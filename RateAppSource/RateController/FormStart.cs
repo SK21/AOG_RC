@@ -48,7 +48,7 @@ namespace RateController
         public SerialComm[] SER = new SerialComm[3];
         public bool ShowCoverageRemaining;
         public bool ShowQuantityRemaining;
-        public Color SimColor = Color.FromArgb(255, 191, 0);
+        public Color SimColor = Color.FromArgb(255, 182, 0);
         public PGN32618 SwitchBox;
         public clsTools Tls;
 
@@ -384,6 +384,15 @@ namespace RateController
                 cSimSpeed = 5;
             }
 
+            if (Enum.TryParse(Tls.LoadProperty("SimMode"), out SimType SM))
+            {
+                cSimMode = SM;
+            }
+            else
+            {
+                cSimMode = SimType.None;
+            }
+
             if (double.TryParse(Tls.LoadProperty("PrimeTime"), out double ptime))
             {
                 cPrimeTime = ptime;
@@ -477,6 +486,22 @@ namespace RateController
             {
                 this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
+                if (cSimMode == SimType.Speed)
+                {
+                    btnSettings.Image = Properties.Resources.SimGear;
+                }
+                else
+                {
+                    if (AutoSteerPGN.Connected())
+                    {
+                        btnSettings.Image = Properties.Resources.GreenGear;
+                    }
+                    else
+                    {
+                        btnSettings.Image = Properties.Resources.RedGear;
+                    }
+                }
+
                 FormatDisplay();
 
                 if (CurrentPage == 0)
@@ -486,17 +511,8 @@ namespace RateController
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
 
-                        if (cSimMode == SimType.None)
-                        {
-                            ProdName[i].ForeColor = SystemColors.ControlText;
-                            ProdName[i].BackColor = Properties.Settings.Default.DayColour;
-                            ProdName[i].BorderStyle = BorderStyle.None;
-                        }
-                        else
-                        {
                             ProdName[i].BackColor = SimColor;
                             ProdName[i].BorderStyle = BorderStyle.FixedSingle;
-                        }
 
                         Rates[i].Text = Products.Item(i).SmoothRate().ToString("N1");
                         if (i < 4)
@@ -812,6 +828,7 @@ namespace RateController
                 Tls.SaveProperty("PrimeTime", cPrimeTime.ToString());
                 Tls.SaveProperty("PrimeDelay", cPrimeDelay.ToString());
                 Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
+                Tls.SaveProperty("SimMode",cSimMode.ToString());
 
                 UDPaog.Close();
                 UDPmodules.Close();

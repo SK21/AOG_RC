@@ -40,7 +40,7 @@ namespace RateController
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "02-Mar-2024";
+        private string cVersionDate = "03-Mar-2024";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
 
@@ -617,7 +617,6 @@ namespace RateController
                     if (OpenForms[i] == null)
                     {
                         OpenForms[i] = frm;
-                        Debug.Print("Add form: " + frm.Name);
                         break;
                     }
                 }
@@ -638,7 +637,6 @@ namespace RateController
             if (ID != -1)
             {
                 OpenForms[ID] = null;
-                Debug.Print("Remove form: " + frm.Name);
             }
         }
 

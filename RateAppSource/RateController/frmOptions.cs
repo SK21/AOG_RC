@@ -418,6 +418,7 @@ namespace RateController
             ckScreenSwitches.Checked = mf.ShowSwitches;
             ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
             ckPressure.Checked = mf.ShowPressure;
+            ckSimSpeed.Checked = (mf.SimMode == SimType.Speed);
 
             // language
             for (int i = 0; i < LanguageRBs.Length; i++)

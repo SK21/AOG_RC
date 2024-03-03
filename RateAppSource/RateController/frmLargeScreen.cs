@@ -1020,13 +1020,20 @@ namespace RateController
             }
 
             // aog
-            if (mf.AutoSteerPGN.Connected())
+            if (mf.SimMode == SimType.Speed)
             {
-                btnMenu.Image = Properties.Resources.GreenGear;
+                btnMenu.Image = Properties.Resources.SimGear;
             }
             else
             {
-                btnMenu.Image = Properties.Resources.RedGear;
+                if (mf.AutoSteerPGN.Connected())
+                {
+                    btnMenu.Image = Properties.Resources.GreenGear;
+                }
+                else
+                {
+                    btnMenu.Image = Properties.Resources.RedGear;
+                }
             }
 
             // graphs

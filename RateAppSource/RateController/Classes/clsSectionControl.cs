@@ -24,7 +24,7 @@ namespace RateController
         private int RateStep;
         private bool[] SectionOnAOG;
         private bool[] SectionOnSB;
-        private bool PrimeOn;
+        private bool cPrimeOn;
         private int TimerCount = 0;
         private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
         private DateTime OnFirstPressed;
@@ -32,6 +32,7 @@ namespace RateController
         private bool MasterSWOnPending; // the MasterOn state set after work switch changes
         private bool FirstRun;
         private bool PrimeInitialized;
+        //private SimType PreviousSim;
 
         public clsSectionControl(FormStart CallingForm)
         {
@@ -54,8 +55,7 @@ namespace RateController
             {
                 TimerCount = 0;
                 Timer1.Enabled = false;
-                PrimeOn = false;
-                mf.SimMode=SimType.None;
+                cPrimeOn = false;
                 PrimeInitialized = false;
             }
         }
@@ -64,6 +64,7 @@ namespace RateController
         {
             return MasterIsOn;
         }
+        public bool PrimeOn { get { return cPrimeOn; } }
 
         public void ReadRateSwitches()
         {
@@ -169,18 +170,16 @@ namespace RateController
                 if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
                 {
                     // priming mode
-                    PrimeOn = true;
+                    cPrimeOn = true;
                     Timer1.Enabled = true;
-                    mf.SimMode = SimType.Speed;
                 }
             }
             else
             {
                 PrimeInitialized = true;
                 OnFirstPressed = DateTime.Now;
-                PrimeOn = false;
+                cPrimeOn = false;
                 Timer1.Enabled = false;
-                mf.SimMode = SimType.None;
             }
         }
 
@@ -206,7 +205,7 @@ namespace RateController
                 PrimeInitialized = false;
             }
 
-            if (!PrimeOn)
+            if (!cPrimeOn)
             {
                 if (MasterSWOff) MasterSWOnPending = false;
                 if (MasterSWOn) MasterSWOnPending = true;
@@ -224,9 +223,8 @@ namespace RateController
             if (MasterSWOff)
             {
                 MasterIsOn = false;
-                PrimeOn = false;
+                cPrimeOn = false;
                 Timer1.Enabled = false;
-                mf.SimMode = SimType.None;
                 FirstRun = false;
             }
             else if (MasterSWOn)
@@ -239,7 +237,7 @@ namespace RateController
                     SectionOnSB[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
                 }
 
-                if ((mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection)) && mf.AutoSteerPGN.Connected() && !PrimeOn)
+                if ((mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection)) && mf.AutoSteerPGN.Connected() && !cPrimeOn)
                 {
                     // match AOG section status, only on sections 0-15
                     for (int i = 0; i < 16; i++)

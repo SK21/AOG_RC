@@ -826,21 +826,23 @@ namespace RateController
 
         public double Speed()
         {
-            if (mf.SimMode == SimType.Speed)
+            double Result = 0;
+            if (mf.SimMode == SimType.Speed || mf.SectionControl.PrimeOn)
             {
-                return mf.SimSpeed;
+                Result = mf.SimSpeed;
             }
             else
             {
                 if (mf.UseInches)
                 {
-                    return mf.AutoSteerPGN.Speed_KMH() * 0.621371;
+                    Result = mf.AutoSteerPGN.Speed_KMH() * 0.621371;
                 }
                 else
                 {
-                    return mf.AutoSteerPGN.Speed_KMH();
+                    Result = mf.AutoSteerPGN.Speed_KMH();
                 }
             }
+            return Result;
         }
 
         public double TargetRate()
@@ -1027,21 +1029,23 @@ namespace RateController
 
         private double KMH()
         {
-            if (mf.SimMode == SimType.Speed)
+            double Result = 0;
+            if (mf.SimMode == SimType.Speed || mf.SectionControl.PrimeOn)
             {
                 if (mf.UseInches)
                 {
-                    return mf.SimSpeed / 0.621371;  // convert mph back to kmh
+                    Result = mf.SimSpeed / 0.621371;  // convert mph back to kmh
                 }
                 else
                 {
-                    return mf.SimSpeed;
+                    Result = mf.SimSpeed;
                 }
             }
             else
             {
-                return mf.AutoSteerPGN.Speed_KMH();
+                Result = mf.AutoSteerPGN.Speed_KMH();
             }
+            return Result;
         }
 
         private void LogTheRate()
