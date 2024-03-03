@@ -1537,7 +1537,7 @@ namespace RateController
         private void btnTuningGraph_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fcg = mf.Tls.FormShow("FormPIDGraph");
+            Form fcg = mf.Tls.IsFormOpen("FormPIDGraph");
 
             if (fcg != null)
             {

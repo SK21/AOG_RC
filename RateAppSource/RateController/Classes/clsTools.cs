@@ -213,7 +213,7 @@ namespace RateController
             return Properties.Settings.Default.FilesDir;
         }
 
-        public Form FormShow(string Name)
+        public Form IsFormOpen(string Name)
         {
             Form Result = null;
             for (int i = 0; i < OpenForms.Length; i++)

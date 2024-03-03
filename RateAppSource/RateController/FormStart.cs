@@ -310,7 +310,7 @@ namespace RateController
 
         public void DisplayPressure()
         {
-            Form fs = Tls.FormShow("frmPressureDisplay");
+            Form fs = Tls.IsFormOpen("frmPressureDisplay");
 
             if (cShowPressure)
             {
@@ -332,7 +332,7 @@ namespace RateController
 
         public void DisplaySwitches()
         {
-            Form fs = Tls.FormShow("frmSwitches");
+            Form fs = Tls.IsFormOpen("frmSwitches");
 
             if (cShowSwitches)
             {
@@ -690,7 +690,7 @@ namespace RateController
         private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Tls.FormShow("frmCalibrate");
+            Form fs = Tls.IsFormOpen("frmCalibrate");
 
             if (fs == null)
             {
@@ -705,7 +705,7 @@ namespace RateController
 
         private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Tls.FormShow("frmModule");
+            Form fs = Tls.IsFormOpen("frmModule");
 
             if (fs == null)
             {
@@ -1039,7 +1039,7 @@ namespace RateController
 
         private void MnuOptions_Click(object sender, EventArgs e)
         {
-            Form fs = Tls.FormShow("frmOptions");
+            Form fs = Tls.IsFormOpen("frmOptions");
 
             if (fs == null)
             {
@@ -1064,7 +1064,7 @@ namespace RateController
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Tls.FormShow("frmModuleConfig");
+            Form fs = Tls.IsFormOpen("frmModuleConfig");
 
             if (fs == null)
             {
@@ -1104,7 +1104,7 @@ namespace RateController
 
         private void pressuresToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Form fs = Tls.FormShow("FormPressure");
+            Form fs = Tls.IsFormOpen("FormPressure");
 
             if (fs == null)
             {
@@ -1120,7 +1120,7 @@ namespace RateController
         private void productsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Tls.FormShow("FormSettings");
+            Form fs = Tls.IsFormOpen("FormSettings");
 
             if (fs != null)
             {
@@ -1148,7 +1148,7 @@ namespace RateController
 
         private void sectionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form fs = Tls.FormShow("frmSections");
+            Form fs = Tls.IsFormOpen("frmSections");
 
             if (fs != null)
             {

@@ -91,7 +91,7 @@ namespace RateController
 
         private void btnPCB_Click(object sender, EventArgs e)
         {
-            Form fs = mf.Tls.FormShow("frmPins");
+            Form fs = mf.Tls.IsFormOpen("frmPins");
 
             if (fs == null)
             {

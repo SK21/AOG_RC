@@ -67,7 +67,7 @@ namespace RateController
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            Form fs = mf.Tls.FormShow("frmCalHelp");
+            Form fs = mf.Tls.IsFormOpen("frmCalHelp");
 
             if (fs == null)
             {

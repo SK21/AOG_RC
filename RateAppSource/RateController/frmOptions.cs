@@ -189,7 +189,7 @@ namespace RateController
             if (rbLarge.Checked)
             {
                 // use large screen
-                Form fs = mf.Tls.FormShow("frmLargeScreen");
+                Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
                 if (fs == null)
                 {
                     if (!mf.UseLargeScreen) mf.StartLargeScreen();
@@ -198,7 +198,7 @@ namespace RateController
             else
             {
                 // use standard screen
-                Form fs = mf.Tls.FormShow("frmLargeScreen");
+                Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
                 if (fs != null)
                 {
                     mf.Lscrn.SwitchToStandard();
@@ -225,7 +225,18 @@ namespace RateController
                 Properties.Settings.Default.setF_culture = LanguageIDs[Lan];
                 Settings.Default.UserLanguageChange = true;
                 Properties.Settings.Default.Save();
+
+                Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
+                if (fs != null)
+                {
+                    mf.Restart = true;
+                    mf.Lscrn.Close();
+                }
+                else
+                {
                 mf.ChangeLanguage();
+
+                }
             }
         }
 
@@ -400,6 +411,8 @@ namespace RateController
             tbDelay.Text = mf.PrimeDelay.ToString("N0");
 
             rbStandard.Checked = !mf.UseLargeScreen;
+            rbLarge.Checked = mf.UseLargeScreen;
+
             ckTransparent.Checked = mf.UseTransparent;
             ckMetric.Checked = !mf.UseInches;
             ckScreenSwitches.Checked = mf.ShowSwitches;
