@@ -418,6 +418,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Pins.PNG" />
     <None Include="Resources\SimGear.png" />
     <None Include="Resources\RateDown.png" />
     <None Include="Resources\Pins1.PNG" />
@@ -425,7 +426,6 @@
     <None Include="Resources\RateUp.png" />
     <None Include="Resources\Rate Up %282%29.png" />
     <None Include="Resources\Rate Up.png" />
-    <None Include="Resources\Pins.PNG" />
     <None Include="Resources\PCB.png" />
     <None Include="Resources\PrimeTime.png" />
     <None Include="Resources\Pause.png" />
