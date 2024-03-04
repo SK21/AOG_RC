@@ -128,7 +128,7 @@ void LoadDefaults()
 	MDL.RateDown = A2;
 	MDL.AutoSection = NC;
 	MDL.AutoRate = NC;
-	MDL.WorkPin = 4;
+	MDL.WorkPin = NC;
 	MDL.IP0 = 192;
 	MDL.IP1 = 168;
 	MDL.IP2 = 1;
@@ -138,7 +138,7 @@ void LoadDefaults()
 	MDL.SectionPins[0] = A4;
 	MDL.SectionPins[1] = 9;
 	MDL.SectionPins[2] = 6;
-	MDL.SectionPins[3] = NC;
+	MDL.SectionPins[3] = 4;
 
 	for (int i = 4; i < 16; i++)
 	{
