@@ -33,6 +33,10 @@ namespace RateController
             tabControl1.TabPages[0].Text = Lang.lgNetwork;
             tabControl1.TabPages[1].Text = Lang.lgConfig;
             tabControl1.TabPages[2].Text = Lang.lgPins;
+            tabControl1.TabPages[3].Text = Lang.lgRelays;
+            tabControl1.TabPages[4].Text = Lang.lgWifiClient;
+
+            lbWorkPin.Text = Lang.lgWorkPin;
 
             #endregion // language
 
@@ -331,6 +335,14 @@ namespace RateController
             {
                 mf.ModuleConfig.Sensor1PWM = 255;
             }
+            if(byte.TryParse(tbWrk.Text,out val))
+            {
+                mf.ModuleConfig.WorkPin = val;
+            }
+            else
+            {
+                mf.ModuleConfig.WorkPin = 255;
+            }
 
             // Pins
             for (int i = 0; i < 16; i++)
@@ -506,6 +518,7 @@ namespace RateController
                     tbDir2.Text = "6";
                     tbPWM1.Text = "5";
                     tbPWM2.Text = "9";
+                    tbWrk.Text = "-";
 
                     tbRelay1.Text = "8";
                     tbRelay2.Text = "9";
@@ -546,6 +559,7 @@ namespace RateController
                     tbDir2.Text = "14";
                     tbPWM1.Text = "36";
                     tbPWM2.Text = "15";
+                    tbWrk.Text = "-";
 
                     tbRelay1.Text = "8";
                     tbRelay2.Text = "9";
@@ -586,6 +600,7 @@ namespace RateController
                     tbDir2.Text = "-";
                     tbPWM1.Text = "9";
                     tbPWM2.Text = "-";
+                    tbWrk.Text = "-";
 
                     tbRelay1.Text = "-";
                     tbRelay2.Text = "-";
@@ -626,6 +641,7 @@ namespace RateController
                     tbDir2.Text = "25";
                     tbPWM1.Text = "33";
                     tbPWM2.Text = "26";
+                    tbWrk.Text = "-";
 
                     tbRelay1.Text = "-";
                     tbRelay2.Text = "-";
@@ -742,6 +758,16 @@ namespace RateController
             tbFlow2.Text = display[10].ToString();
             tbDir2.Text = display[11].ToString();
             tbPWM2.Text = display[12].ToString();
+
+            // work pin
+            if (data[29]>60)
+            {
+                tbWrk.Text = "-";
+            }
+            else
+            {
+                tbWrk.Text = data[29].ToString();
+            }
 
             // relays
             for (int i = 13; i < 29; i++)

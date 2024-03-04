@@ -1343,6 +1343,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wifi Client.
+        /// </summary>
+        internal static string lgWifiClient {
+            get {
+                return ResourceManager.GetString("lgWifiClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wifi Port.
         /// </summary>
         internal static string lgWifiPort {
@@ -1375,6 +1384,15 @@ namespace RateController {
         internal static string lgWorkingWidthM {
             get {
                 return ResourceManager.GetString("lgWorkingWidthM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work Pin.
+        /// </summary>
+        internal static string lgWorkPin {
+            get {
+                return ResourceManager.GetString("lgWorkPin", resourceCulture);
             }
         }
         

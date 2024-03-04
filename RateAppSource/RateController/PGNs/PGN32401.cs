@@ -48,15 +48,13 @@ namespace RateController
             if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 cModuleID = Data[2];
+                mf.UpdateModuleConnected(cModuleID);
                 for (int i = 0; i < 4; i++)
                 {
                     cReading[cModuleID, i] = (UInt16)(Data[i * 2 + 4] << 8 | Data[i * 2 + 3]);
                 }
                 cInoID[cModuleID] = (ushort)(Data[11] | Data[12] << 8);
-                //mf.SwitchBox.WorkOn = mf.Tls.BitRead(Data[13], 0);
-
-                mf.UpdateModuleConnected(cModuleID);
-
+                mf.SwitchBox.SetRateModuleWorkOn(mf.Tls.BitRead(Data[13], 0), cModuleID);
                 Result = true;
             }
             return Result;

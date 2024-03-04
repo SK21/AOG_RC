@@ -49,6 +49,21 @@
             this.tbModuleID = new System.Windows.Forms.TextBox();
             this.lbModuleID = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tbWrk = new System.Windows.Forms.TextBox();
+            this.lbWorkPin = new System.Windows.Forms.Label();
+            this.tbPWM2 = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.tbPWM1 = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbDir2 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbDir1 = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tbFlow2 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbFlow1 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tbRelay16 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.tbRelay15 = new System.Windows.Forms.TextBox();
@@ -81,18 +96,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.tbRelay1 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.tbPWM2 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.tbPWM1 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.tbDir2 = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tbDir1 = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tbFlow2 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbFlow1 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbSSID = new System.Windows.Forms.TextBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
@@ -109,6 +112,7 @@
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -117,6 +121,7 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(15, 15);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(6);
@@ -226,7 +231,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(6);
             this.tabPage1.Size = new System.Drawing.Size(448, 477);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Config 1";
+            this.tabPage1.Text = "Config";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // lbRelay
@@ -345,38 +350,8 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.tbRelay16);
-            this.tabPage2.Controls.Add(this.label13);
-            this.tabPage2.Controls.Add(this.tbRelay15);
-            this.tabPage2.Controls.Add(this.label15);
-            this.tabPage2.Controls.Add(this.tbRelay14);
-            this.tabPage2.Controls.Add(this.label16);
-            this.tabPage2.Controls.Add(this.tbRelay13);
-            this.tabPage2.Controls.Add(this.label17);
-            this.tabPage2.Controls.Add(this.tbRelay12);
-            this.tabPage2.Controls.Add(this.label18);
-            this.tabPage2.Controls.Add(this.tbRelay11);
-            this.tabPage2.Controls.Add(this.label19);
-            this.tabPage2.Controls.Add(this.tbRelay10);
-            this.tabPage2.Controls.Add(this.label20);
-            this.tabPage2.Controls.Add(this.tbRelay9);
-            this.tabPage2.Controls.Add(this.label21);
-            this.tabPage2.Controls.Add(this.tbRelay8);
-            this.tabPage2.Controls.Add(this.label22);
-            this.tabPage2.Controls.Add(this.tbRelay7);
-            this.tabPage2.Controls.Add(this.label23);
-            this.tabPage2.Controls.Add(this.tbRelay6);
-            this.tabPage2.Controls.Add(this.label24);
-            this.tabPage2.Controls.Add(this.tbRelay5);
-            this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Controls.Add(this.tbRelay4);
-            this.tabPage2.Controls.Add(this.label11);
-            this.tabPage2.Controls.Add(this.tbRelay3);
-            this.tabPage2.Controls.Add(this.label12);
-            this.tabPage2.Controls.Add(this.tbRelay2);
-            this.tabPage2.Controls.Add(this.label9);
-            this.tabPage2.Controls.Add(this.tbRelay1);
-            this.tabPage2.Controls.Add(this.label10);
+            this.tabPage2.Controls.Add(this.tbWrk);
+            this.tabPage2.Controls.Add(this.lbWorkPin);
             this.tabPage2.Controls.Add(this.tbPWM2);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.tbPWM1);
@@ -398,313 +373,28 @@
             this.tabPage2.Text = "Pins";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // tbRelay16
+            // tbWrk
             // 
-            this.tbRelay16.Location = new System.Drawing.Point(375, 434);
-            this.tbRelay16.Name = "tbRelay16";
-            this.tbRelay16.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay16.TabIndex = 111;
-            this.tbRelay16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay16.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay16.Enter += new System.EventHandler(this.textBox_Enter);
+            this.tbWrk.Location = new System.Drawing.Point(236, 332);
+            this.tbWrk.Name = "tbWrk";
+            this.tbWrk.Size = new System.Drawing.Size(58, 29);
+            this.tbWrk.TabIndex = 81;
+            this.tbWrk.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWrk.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbWrk.Enter += new System.EventHandler(this.textBox_Enter);
             // 
-            // label13
+            // lbWorkPin
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(254, 436);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(82, 24);
-            this.label13.TabIndex = 110;
-            this.label13.Text = "Relay 16";
-            // 
-            // tbRelay15
-            // 
-            this.tbRelay15.Location = new System.Drawing.Point(375, 392);
-            this.tbRelay15.Name = "tbRelay15";
-            this.tbRelay15.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay15.TabIndex = 109;
-            this.tbRelay15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay15.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay15.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(254, 394);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(82, 24);
-            this.label15.TabIndex = 108;
-            this.label15.Text = "Relay 15";
-            // 
-            // tbRelay14
-            // 
-            this.tbRelay14.Location = new System.Drawing.Point(375, 350);
-            this.tbRelay14.Name = "tbRelay14";
-            this.tbRelay14.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay14.TabIndex = 107;
-            this.tbRelay14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay14.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay14.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(254, 352);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(82, 24);
-            this.label16.TabIndex = 106;
-            this.label16.Text = "Relay 14";
-            // 
-            // tbRelay13
-            // 
-            this.tbRelay13.Location = new System.Drawing.Point(375, 308);
-            this.tbRelay13.Name = "tbRelay13";
-            this.tbRelay13.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay13.TabIndex = 105;
-            this.tbRelay13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay13.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay13.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(254, 310);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(82, 24);
-            this.label17.TabIndex = 104;
-            this.label17.Text = "Relay 13";
-            // 
-            // tbRelay12
-            // 
-            this.tbRelay12.Location = new System.Drawing.Point(375, 266);
-            this.tbRelay12.Name = "tbRelay12";
-            this.tbRelay12.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay12.TabIndex = 103;
-            this.tbRelay12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay12.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay12.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(254, 268);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(82, 24);
-            this.label18.TabIndex = 102;
-            this.label18.Text = "Relay 12";
-            // 
-            // tbRelay11
-            // 
-            this.tbRelay11.Location = new System.Drawing.Point(375, 224);
-            this.tbRelay11.Name = "tbRelay11";
-            this.tbRelay11.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay11.TabIndex = 101;
-            this.tbRelay11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay11.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay11.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(254, 226);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(82, 24);
-            this.label19.TabIndex = 100;
-            this.label19.Text = "Relay 11";
-            // 
-            // tbRelay10
-            // 
-            this.tbRelay10.Location = new System.Drawing.Point(375, 182);
-            this.tbRelay10.Name = "tbRelay10";
-            this.tbRelay10.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay10.TabIndex = 99;
-            this.tbRelay10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay10.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay10.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(254, 184);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(82, 24);
-            this.label20.TabIndex = 98;
-            this.label20.Text = "Relay 10";
-            // 
-            // tbRelay9
-            // 
-            this.tbRelay9.Location = new System.Drawing.Point(375, 140);
-            this.tbRelay9.Name = "tbRelay9";
-            this.tbRelay9.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay9.TabIndex = 97;
-            this.tbRelay9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay9.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay9.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(254, 142);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(72, 24);
-            this.label21.TabIndex = 96;
-            this.label21.Text = "Relay 9";
-            // 
-            // tbRelay8
-            // 
-            this.tbRelay8.Location = new System.Drawing.Point(375, 98);
-            this.tbRelay8.Name = "tbRelay8";
-            this.tbRelay8.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay8.TabIndex = 95;
-            this.tbRelay8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay8.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay8.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(254, 100);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(72, 24);
-            this.label22.TabIndex = 94;
-            this.label22.Text = "Relay 8";
-            // 
-            // tbRelay7
-            // 
-            this.tbRelay7.Location = new System.Drawing.Point(375, 56);
-            this.tbRelay7.Name = "tbRelay7";
-            this.tbRelay7.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay7.TabIndex = 93;
-            this.tbRelay7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay7.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay7.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(254, 58);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(72, 24);
-            this.label23.TabIndex = 92;
-            this.label23.Text = "Relay 7";
-            // 
-            // tbRelay6
-            // 
-            this.tbRelay6.Location = new System.Drawing.Point(375, 14);
-            this.tbRelay6.Name = "tbRelay6";
-            this.tbRelay6.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay6.TabIndex = 91;
-            this.tbRelay6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay6.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay6.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(254, 16);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(72, 24);
-            this.label24.TabIndex = 90;
-            this.label24.Text = "Relay 6";
-            // 
-            // tbRelay5
-            // 
-            this.tbRelay5.Location = new System.Drawing.Point(130, 434);
-            this.tbRelay5.Name = "tbRelay5";
-            this.tbRelay5.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay5.TabIndex = 89;
-            this.tbRelay5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay5.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay5.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(9, 436);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(72, 24);
-            this.label14.TabIndex = 88;
-            this.label14.Text = "Relay 5";
-            // 
-            // tbRelay4
-            // 
-            this.tbRelay4.Location = new System.Drawing.Point(130, 392);
-            this.tbRelay4.Name = "tbRelay4";
-            this.tbRelay4.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay4.TabIndex = 87;
-            this.tbRelay4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay4.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay4.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(9, 394);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(72, 24);
-            this.label11.TabIndex = 86;
-            this.label11.Text = "Relay 4";
-            // 
-            // tbRelay3
-            // 
-            this.tbRelay3.Location = new System.Drawing.Point(130, 350);
-            this.tbRelay3.Name = "tbRelay3";
-            this.tbRelay3.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay3.TabIndex = 85;
-            this.tbRelay3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay3.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay3.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(9, 352);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(72, 24);
-            this.label12.TabIndex = 84;
-            this.label12.Text = "Relay 3";
-            // 
-            // tbRelay2
-            // 
-            this.tbRelay2.Location = new System.Drawing.Point(130, 308);
-            this.tbRelay2.Name = "tbRelay2";
-            this.tbRelay2.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay2.TabIndex = 83;
-            this.tbRelay2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay2.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay2.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(9, 310);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(72, 24);
-            this.label9.TabIndex = 82;
-            this.label9.Text = "Relay 2";
-            // 
-            // tbRelay1
-            // 
-            this.tbRelay1.Location = new System.Drawing.Point(130, 266);
-            this.tbRelay1.Name = "tbRelay1";
-            this.tbRelay1.Size = new System.Drawing.Size(58, 29);
-            this.tbRelay1.TabIndex = 81;
-            this.tbRelay1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbRelay1.TextChanged += new System.EventHandler(this.textbox_TextChanged);
-            this.tbRelay1.Enter += new System.EventHandler(this.textBox_Enter);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 268);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(72, 24);
-            this.label10.TabIndex = 80;
-            this.label10.Text = "Relay 1";
+            this.lbWorkPin.AutoSize = true;
+            this.lbWorkPin.Location = new System.Drawing.Point(115, 335);
+            this.lbWorkPin.Name = "lbWorkPin";
+            this.lbWorkPin.Size = new System.Drawing.Size(86, 24);
+            this.lbWorkPin.TabIndex = 80;
+            this.lbWorkPin.Text = "Work Pin";
             // 
             // tbPWM2
             // 
-            this.tbPWM2.Location = new System.Drawing.Point(130, 224);
+            this.tbPWM2.Location = new System.Drawing.Point(236, 288);
             this.tbPWM2.Name = "tbPWM2";
             this.tbPWM2.Size = new System.Drawing.Size(58, 29);
             this.tbPWM2.TabIndex = 79;
@@ -715,7 +405,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 226);
+            this.label7.Location = new System.Drawing.Point(115, 290);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 24);
             this.label7.TabIndex = 78;
@@ -723,7 +413,7 @@
             // 
             // tbPWM1
             // 
-            this.tbPWM1.Location = new System.Drawing.Point(130, 182);
+            this.tbPWM1.Location = new System.Drawing.Point(236, 246);
             this.tbPWM1.Name = "tbPWM1";
             this.tbPWM1.Size = new System.Drawing.Size(58, 29);
             this.tbPWM1.TabIndex = 77;
@@ -734,7 +424,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(9, 184);
+            this.label8.Location = new System.Drawing.Point(115, 248);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(71, 24);
             this.label8.TabIndex = 76;
@@ -742,7 +432,7 @@
             // 
             // tbDir2
             // 
-            this.tbDir2.Location = new System.Drawing.Point(130, 140);
+            this.tbDir2.Location = new System.Drawing.Point(236, 204);
             this.tbDir2.Name = "tbDir2";
             this.tbDir2.Size = new System.Drawing.Size(58, 29);
             this.tbDir2.TabIndex = 75;
@@ -753,7 +443,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 142);
+            this.label5.Location = new System.Drawing.Point(115, 206);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(48, 24);
             this.label5.TabIndex = 74;
@@ -761,7 +451,7 @@
             // 
             // tbDir1
             // 
-            this.tbDir1.Location = new System.Drawing.Point(130, 98);
+            this.tbDir1.Location = new System.Drawing.Point(236, 162);
             this.tbDir1.Name = "tbDir1";
             this.tbDir1.Size = new System.Drawing.Size(58, 29);
             this.tbDir1.TabIndex = 73;
@@ -772,7 +462,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(9, 100);
+            this.label6.Location = new System.Drawing.Point(115, 164);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(48, 24);
             this.label6.TabIndex = 72;
@@ -780,7 +470,7 @@
             // 
             // tbFlow2
             // 
-            this.tbFlow2.Location = new System.Drawing.Point(130, 56);
+            this.tbFlow2.Location = new System.Drawing.Point(236, 120);
             this.tbFlow2.Name = "tbFlow2";
             this.tbFlow2.Size = new System.Drawing.Size(58, 29);
             this.tbFlow2.TabIndex = 71;
@@ -791,7 +481,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 58);
+            this.label3.Location = new System.Drawing.Point(115, 122);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(66, 24);
             this.label3.TabIndex = 70;
@@ -799,7 +489,7 @@
             // 
             // tbFlow1
             // 
-            this.tbFlow1.Location = new System.Drawing.Point(130, 14);
+            this.tbFlow1.Location = new System.Drawing.Point(236, 78);
             this.tbFlow1.Name = "tbFlow1";
             this.tbFlow1.Size = new System.Drawing.Size(58, 29);
             this.tbFlow1.TabIndex = 69;
@@ -810,11 +500,324 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 16);
+            this.label4.Location = new System.Drawing.Point(115, 80);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 24);
             this.label4.TabIndex = 68;
             this.label4.Text = "Flow 1";
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.tbRelay16);
+            this.tabPage5.Controls.Add(this.label13);
+            this.tabPage5.Controls.Add(this.tbRelay15);
+            this.tabPage5.Controls.Add(this.label15);
+            this.tabPage5.Controls.Add(this.tbRelay14);
+            this.tabPage5.Controls.Add(this.label16);
+            this.tabPage5.Controls.Add(this.tbRelay13);
+            this.tabPage5.Controls.Add(this.label17);
+            this.tabPage5.Controls.Add(this.tbRelay12);
+            this.tabPage5.Controls.Add(this.label18);
+            this.tabPage5.Controls.Add(this.tbRelay11);
+            this.tabPage5.Controls.Add(this.label19);
+            this.tabPage5.Controls.Add(this.tbRelay10);
+            this.tabPage5.Controls.Add(this.label20);
+            this.tabPage5.Controls.Add(this.tbRelay9);
+            this.tabPage5.Controls.Add(this.label21);
+            this.tabPage5.Controls.Add(this.tbRelay8);
+            this.tabPage5.Controls.Add(this.label22);
+            this.tabPage5.Controls.Add(this.tbRelay7);
+            this.tabPage5.Controls.Add(this.label23);
+            this.tabPage5.Controls.Add(this.tbRelay6);
+            this.tabPage5.Controls.Add(this.label24);
+            this.tabPage5.Controls.Add(this.tbRelay5);
+            this.tabPage5.Controls.Add(this.label14);
+            this.tabPage5.Controls.Add(this.tbRelay4);
+            this.tabPage5.Controls.Add(this.label11);
+            this.tabPage5.Controls.Add(this.tbRelay3);
+            this.tabPage5.Controls.Add(this.label12);
+            this.tabPage5.Controls.Add(this.tbRelay2);
+            this.tabPage5.Controls.Add(this.label9);
+            this.tabPage5.Controls.Add(this.tbRelay1);
+            this.tabPage5.Controls.Add(this.label10);
+            this.tabPage5.Location = new System.Drawing.Point(4, 33);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(448, 477);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Relays";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // tbRelay16
+            // 
+            this.tbRelay16.Location = new System.Drawing.Point(362, 362);
+            this.tbRelay16.Name = "tbRelay16";
+            this.tbRelay16.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay16.TabIndex = 133;
+            this.tbRelay16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(241, 364);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(82, 24);
+            this.label13.TabIndex = 132;
+            this.label13.Text = "Relay 16";
+            // 
+            // tbRelay15
+            // 
+            this.tbRelay15.Location = new System.Drawing.Point(362, 320);
+            this.tbRelay15.Name = "tbRelay15";
+            this.tbRelay15.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay15.TabIndex = 131;
+            this.tbRelay15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(241, 322);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(82, 24);
+            this.label15.TabIndex = 130;
+            this.label15.Text = "Relay 15";
+            // 
+            // tbRelay14
+            // 
+            this.tbRelay14.Location = new System.Drawing.Point(362, 278);
+            this.tbRelay14.Name = "tbRelay14";
+            this.tbRelay14.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay14.TabIndex = 129;
+            this.tbRelay14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(241, 280);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(82, 24);
+            this.label16.TabIndex = 128;
+            this.label16.Text = "Relay 14";
+            // 
+            // tbRelay13
+            // 
+            this.tbRelay13.Location = new System.Drawing.Point(362, 236);
+            this.tbRelay13.Name = "tbRelay13";
+            this.tbRelay13.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay13.TabIndex = 127;
+            this.tbRelay13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(241, 238);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(82, 24);
+            this.label17.TabIndex = 126;
+            this.label17.Text = "Relay 13";
+            // 
+            // tbRelay12
+            // 
+            this.tbRelay12.Location = new System.Drawing.Point(362, 194);
+            this.tbRelay12.Name = "tbRelay12";
+            this.tbRelay12.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay12.TabIndex = 125;
+            this.tbRelay12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(241, 196);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(82, 24);
+            this.label18.TabIndex = 124;
+            this.label18.Text = "Relay 12";
+            // 
+            // tbRelay11
+            // 
+            this.tbRelay11.Location = new System.Drawing.Point(362, 152);
+            this.tbRelay11.Name = "tbRelay11";
+            this.tbRelay11.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay11.TabIndex = 123;
+            this.tbRelay11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(241, 154);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(82, 24);
+            this.label19.TabIndex = 122;
+            this.label19.Text = "Relay 11";
+            // 
+            // tbRelay10
+            // 
+            this.tbRelay10.Location = new System.Drawing.Point(362, 110);
+            this.tbRelay10.Name = "tbRelay10";
+            this.tbRelay10.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay10.TabIndex = 121;
+            this.tbRelay10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(241, 112);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(82, 24);
+            this.label20.TabIndex = 120;
+            this.label20.Text = "Relay 10";
+            // 
+            // tbRelay9
+            // 
+            this.tbRelay9.Location = new System.Drawing.Point(362, 68);
+            this.tbRelay9.Name = "tbRelay9";
+            this.tbRelay9.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay9.TabIndex = 119;
+            this.tbRelay9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(241, 70);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(72, 24);
+            this.label21.TabIndex = 118;
+            this.label21.Text = "Relay 9";
+            // 
+            // tbRelay8
+            // 
+            this.tbRelay8.Location = new System.Drawing.Point(143, 363);
+            this.tbRelay8.Name = "tbRelay8";
+            this.tbRelay8.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay8.TabIndex = 117;
+            this.tbRelay8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(22, 365);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(72, 24);
+            this.label22.TabIndex = 116;
+            this.label22.Text = "Relay 8";
+            // 
+            // tbRelay7
+            // 
+            this.tbRelay7.Location = new System.Drawing.Point(143, 321);
+            this.tbRelay7.Name = "tbRelay7";
+            this.tbRelay7.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay7.TabIndex = 115;
+            this.tbRelay7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(22, 323);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(72, 24);
+            this.label23.TabIndex = 114;
+            this.label23.Text = "Relay 7";
+            // 
+            // tbRelay6
+            // 
+            this.tbRelay6.Location = new System.Drawing.Point(143, 279);
+            this.tbRelay6.Name = "tbRelay6";
+            this.tbRelay6.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay6.TabIndex = 113;
+            this.tbRelay6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(22, 281);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(72, 24);
+            this.label24.TabIndex = 112;
+            this.label24.Text = "Relay 6";
+            // 
+            // tbRelay5
+            // 
+            this.tbRelay5.Location = new System.Drawing.Point(143, 236);
+            this.tbRelay5.Name = "tbRelay5";
+            this.tbRelay5.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay5.TabIndex = 99;
+            this.tbRelay5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(22, 238);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(72, 24);
+            this.label14.TabIndex = 98;
+            this.label14.Text = "Relay 5";
+            // 
+            // tbRelay4
+            // 
+            this.tbRelay4.Location = new System.Drawing.Point(143, 194);
+            this.tbRelay4.Name = "tbRelay4";
+            this.tbRelay4.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay4.TabIndex = 97;
+            this.tbRelay4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(22, 196);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(72, 24);
+            this.label11.TabIndex = 96;
+            this.label11.Text = "Relay 4";
+            // 
+            // tbRelay3
+            // 
+            this.tbRelay3.Location = new System.Drawing.Point(143, 152);
+            this.tbRelay3.Name = "tbRelay3";
+            this.tbRelay3.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay3.TabIndex = 95;
+            this.tbRelay3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(22, 154);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(72, 24);
+            this.label12.TabIndex = 94;
+            this.label12.Text = "Relay 3";
+            // 
+            // tbRelay2
+            // 
+            this.tbRelay2.Location = new System.Drawing.Point(143, 110);
+            this.tbRelay2.Name = "tbRelay2";
+            this.tbRelay2.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay2.TabIndex = 93;
+            this.tbRelay2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(22, 112);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(72, 24);
+            this.label9.TabIndex = 92;
+            this.label9.Text = "Relay 2";
+            // 
+            // tbRelay1
+            // 
+            this.tbRelay1.Location = new System.Drawing.Point(143, 68);
+            this.tbRelay1.Name = "tbRelay1";
+            this.tbRelay1.Size = new System.Drawing.Size(58, 29);
+            this.tbRelay1.TabIndex = 91;
+            this.tbRelay1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(22, 70);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(72, 24);
+            this.label10.TabIndex = 90;
+            this.label10.Text = "Relay 1";
             // 
             // tabPage4
             // 
@@ -1006,6 +1009,8 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
@@ -1034,6 +1039,34 @@
         private System.Windows.Forms.Label lbSensorCount;
         private System.Windows.Forms.TextBox tbModuleID;
         private System.Windows.Forms.Label lbModuleID;
+        private System.Windows.Forms.TextBox tbPWM2;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox tbPWM1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox tbDir2;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox tbDir1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox tbFlow2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tbFlow1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnSendToModule;
+        private System.Windows.Forms.Label lbModuleIP;
+        private System.Windows.Forms.Label lbSubnet;
+        private System.Windows.Forms.Label lbIP;
+        private System.Windows.Forms.Button btnPCB;
+        private System.Windows.Forms.ComboBox cboBoard;
+        private System.Windows.Forms.Label lbBoards;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.CheckBox ckClient;
+        private System.Windows.Forms.TextBox tbSSID;
+        private System.Windows.Forms.TextBox tbPassword;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbWrk;
+        private System.Windows.Forms.Label lbWorkPin;
+        private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TextBox tbRelay16;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox tbRelay15;
@@ -1066,30 +1099,5 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox tbRelay1;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox tbPWM2;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox tbPWM1;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox tbDir2;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox tbDir1;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox tbFlow2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox tbFlow1;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnSendToModule;
-        private System.Windows.Forms.Label lbModuleIP;
-        private System.Windows.Forms.Label lbSubnet;
-        private System.Windows.Forms.Label lbIP;
-        private System.Windows.Forms.Button btnPCB;
-        private System.Windows.Forms.ComboBox cboBoard;
-        private System.Windows.Forms.Label lbBoards;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.CheckBox ckClient;
-        private System.Windows.Forms.TextBox tbSSID;
-        private System.Windows.Forms.TextBox tbPassword;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
     }
 }
