@@ -23,6 +23,8 @@ void DoSetup()
 	EEPROM.begin(EEPROM_SIZE);
 	LoadData();
 
+	if (MDL.WorkPin < NC) pinMode(MDL.WorkPin, INPUT_PULLUP);
+
 	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
 
 	Serial.println("");
@@ -153,17 +155,17 @@ void DoSetup()
 	// sensors
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
-		pinMode(Sensor[i].IN1, OUTPUT);
-		pinMode(Sensor[i].IN2, OUTPUT);
+		if (Sensor[i].FlowPin < NC) pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
+		if (Sensor[i].IN1 < NC) pinMode(Sensor[i].IN1, OUTPUT);
+		if (Sensor[i].IN2 < NC) pinMode(Sensor[i].IN2, OUTPUT);
 
 		switch (i)
 		{
 		case 0:
-			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, RISING);
+			if (Sensor[i].FlowPin < NC) attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, RISING);
 			break;
 		case 1:
-			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, RISING);
+			if (Sensor[i].FlowPin < NC) attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, RISING);
 			break;
 		}
 
@@ -432,6 +434,8 @@ void LoadDefaults()
 {
 	Serial.println("Loading default settings.");
 
+	MDL.WorkPin = NC;
+
 	// default flow pins
 	Sensor[0].FlowPin = 17;
 	Sensor[0].IN1 = 32;
@@ -470,8 +474,24 @@ bool ValidData()
 	switch (Processor)
 	{
 	case 0:
+		// work switch
+		Result = (MDL.WorkPin == NC);
+		if (!Result)
+		{
+			for (int j = 0; j < sizeof(ValidPins0); j++)
+			{
+				if (MDL.WorkPin == ValidPins0[j])
+				{
+					Result = true;
+					break;
+				}
+			}
+			if (!Result) break;
+		}
+
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
+
 			// flow pin
 			Result = false;
 			for (int j = 0; j < sizeof(ValidPins0); j++)
@@ -517,8 +537,8 @@ bool ValidData()
 				Result = false;
 				for (int j = 0; j < sizeof(ValidPins0); j++)
 				{
-					if ((MDL.RelayPins[k] == ValidPins0[j]) ||
-						(MDL.RelayPins[k] == NC))
+					if ((MDL.RelayPins[k] == ValidPins0[j])
+						|| (MDL.RelayPins[k] == NC))
 					{
 						Result = true;
 						break;

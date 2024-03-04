@@ -61,8 +61,6 @@ void SetPWM()
 
 			default:
 				Sensor[i].PWM = Sensor[i].ManualAdjust;
-				debug1 = Sensor[i].PWM;
-				debug2++;
 				double Direction = 1.0;
 				if (Sensor[i].PWM < 0) Direction = -1.0;
 				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
@@ -288,8 +286,6 @@ int TimedComboOld(byte ID, bool ManualAdjust = false)
 			if (Result > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * SF;
 			if (Result < Sensor[ID].MinPWM) Result = Sensor[ID].MinPWM;
 			Result *= Direction;
-			debug1 = Result;
-			debug2 = SF;
 		}
 	}
 	return Result;

@@ -29,8 +29,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  24-Feb-2024"
-const uint16_t InoID = 24024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  04-Mar-2024"
+const uint16_t InoID = 4034;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -66,6 +66,7 @@ struct ModuleConfig
 	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
+	uint8_t WorkPin;
 };
 
 ModuleConfig MDL;
