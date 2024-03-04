@@ -67,7 +67,7 @@ namespace RateController
 
         private void btnMaster_MouseDown(object sender, MouseEventArgs e)
         {
-            if (mf.SectionControl.MasterOn())
+            if (mf.SectionControl.MasterOn)
             {
                 mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
                 MasterPressed = true;

@@ -962,6 +962,7 @@ namespace RateController
                 cHectaresPerMinute = mf.Sections.WorkingWidth(false) * KMH() / 600.0;
                 CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
 
+
                 //coverage
                 if (cHectaresPerMinute > 0)    // Is application on?
                 {

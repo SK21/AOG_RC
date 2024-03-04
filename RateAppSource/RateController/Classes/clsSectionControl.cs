@@ -1,38 +1,36 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
     public class clsSectionControl
     {
-        private const double StepMultiplier = 0.05;   // rate change amount for each step
+        private const int AdjustDelay = 500;
         private const byte MaxSteps = 5;
-        private const int StepDelay = 2000;     // ms between step adjustments
-        private DateTime StepTime;
-        private const int AdjustDelay = 500;    // ms between rate adjustments
+        private const int StepDelay = 2000;
+        private const double StepMultiplier = 0.05;   // rate change amount for each step
         private DateTime AdjustTime;
         private bool AutoLast;
         private bool AutoSectionLast;
         private bool Changed;
+        private bool cPrimeOn;
+        private bool ForceOff;
         private bool LastState;
         private bool MasterChanged;
-        private bool MasterLast;
         private bool MasterIsOn;
+        private bool MasterLast;
+        private bool MasterSWOnPending;
         private FormStart mf;
+        private DateTime OnFirstPressed;
         private bool Pressed;
+        private bool PrimeInitialized;
         private double RateDir;
         private int RateStep;
         private bool[] SectionOnAOG;
         private bool[] SectionOnSB;
-        private bool cPrimeOn;
-        private int TimerCount = 0;
+        private DateTime StepTime;
         private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
-        private DateTime OnFirstPressed;
+        private int TimerCount = 0;
         private bool WorkSWOnLast;
-        private bool MasterSWOnPending; // the MasterOn state set after work switch changes
-        private bool FirstRun;
-        private bool PrimeInitialized;
-        //private SimType PreviousSim;
 
         public clsSectionControl(FormStart CallingForm)
         {
@@ -42,29 +40,18 @@ namespace RateController
             mf.AutoSteerPGN.RelaysChanged += AutoSteerPGN_RelaysChanged;
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             MasterIsOn = false;
-            FirstRun = true;
+            ForceOff = true;
             MasterLast = true;  // to cause a change flag to be set
             Timer1.Tick += new EventHandler(Timer1_Tick);
             Timer1.Interval = 1000;
             Timer1.Enabled = false;
         }
-        private void Timer1_Tick(Object myObject, EventArgs myEventArgs)
-        {
-            TimerCount++;
-            if (TimerCount > mf.PrimeTime)
-            {
-                TimerCount = 0;
-                Timer1.Enabled = false;
-                cPrimeOn = false;
-                PrimeInitialized = false;
-            }
-        }
 
-        public bool MasterOn()
-        {
-            return MasterIsOn;
-        }
-        public bool PrimeOn { get { return cPrimeOn; } }
+        public bool MasterOn
+        { get { return MasterIsOn; } }
+
+        public bool PrimeOn
+        { get { return cPrimeOn; } }
 
         public void ReadRateSwitches()
         {
@@ -163,26 +150,6 @@ namespace RateController
             }
         }
 
-        void SetPriming()
-        {
-            if (PrimeInitialized)
-            {
-                if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
-                {
-                    // priming mode
-                    cPrimeOn = true;
-                    Timer1.Enabled = true;
-                }
-            }
-            else
-            {
-                PrimeInitialized = true;
-                OnFirstPressed = DateTime.Now;
-                cPrimeOn = false;
-                Timer1.Enabled = false;
-            }
-        }
-
         public void UpdateSectionStatus()
         {
             bool WorkSWOn;
@@ -205,12 +172,16 @@ namespace RateController
                 PrimeInitialized = false;
             }
 
-            if (!cPrimeOn)
+            if (cPrimeOn)
             {
-                if (MasterSWOff) MasterSWOnPending = false;
+                MasterSWOn = true;
+            }
+            else
+            {
+                if (MasterSWOff || ForceOff) MasterSWOnPending = false;
                 if (MasterSWOn) MasterSWOnPending = true;
 
-                MasterSWOff = MasterSWOff || !WorkSWOn || FirstRun;
+                MasterSWOff = MasterSWOff || !WorkSWOn || ForceOff;
                 MasterSWOn = (MasterSWOn || MasterIsOn) && WorkSWOn;
 
                 if (WorkSWOnLast != WorkSWOn)
@@ -225,7 +196,7 @@ namespace RateController
                 MasterIsOn = false;
                 cPrimeOn = false;
                 Timer1.Enabled = false;
-                FirstRun = false;
+                ForceOff = false;
             }
             else if (MasterSWOn)
             {
@@ -404,10 +375,46 @@ namespace RateController
             }
         }
 
+        private void SetPriming()
+        {
+            if (PrimeInitialized)
+            {
+                if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
+                {
+                    // priming mode
+                    cPrimeOn = true;
+                    Timer1.Enabled = true;
+                }
+            }
+            else
+            {
+                if (mf.Products.Item(mf.CurrentProduct()).Speed() < 0.1)
+                {
+                    PrimeInitialized = true;
+                    OnFirstPressed = DateTime.Now;
+                    cPrimeOn = false;
+                    Timer1.Enabled = false;
+                }
+            }
+        }
+
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
             ReadRateSwitches();
             UpdateSectionStatus();
+        }
+
+        private void Timer1_Tick(Object myObject, EventArgs myEventArgs)
+        {
+            TimerCount++;
+            if (TimerCount > mf.PrimeTime)
+            {
+                TimerCount = 0;
+                Timer1.Enabled = false;
+                cPrimeOn = false;
+                PrimeInitialized = false;
+                ForceOff = true;
+            }
         }
     }
 }

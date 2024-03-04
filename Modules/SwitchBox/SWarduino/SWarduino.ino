@@ -3,8 +3,8 @@
 #include <SPI.h>
 
 // Nano board for rate control switches
-# define InoDescription "SWarduino  :  29-Feb-2024"
-const int16_t InoID = 27024;	// change to send defaults to eeprom
+# define InoDescription "SWarduino  :  03-Mar-2024"
+const int16_t InoID = 3034;	// change to send defaults to eeprom
 const uint8_t InoType = 3;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define NC 255		// not connected
@@ -103,13 +103,20 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-
+double debug1;
+double debug2;
 void Blink()
 {
 	if (millis() - BlinkTime > 1000)
 	{
 		BlinkTime = millis();
 		Serial.print(". ");
+
+		Serial.println("");
+		Serial.print(debug1);
+
+		Serial.print(", ");
+		Serial.print(debug2);
 
 		Serial.println("");
 	}

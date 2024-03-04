@@ -346,7 +346,7 @@
             // tbSimSpeed
             // 
             this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSimSpeed.Location = new System.Drawing.Point(244, 130);
+            this.tbSimSpeed.Location = new System.Drawing.Point(276, 130);
             this.tbSimSpeed.MaxLength = 8;
             this.tbSimSpeed.Name = "tbSimSpeed";
             this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
@@ -360,7 +360,7 @@
             // lbSimUnits
             // 
             this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSimUnits.Location = new System.Drawing.Point(315, 133);
+            this.lbSimUnits.Location = new System.Drawing.Point(347, 133);
             this.lbSimUnits.Name = "lbSimUnits";
             this.lbSimUnits.Size = new System.Drawing.Size(57, 24);
             this.lbSimUnits.TabIndex = 330;
@@ -373,11 +373,11 @@
             this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSimSpeed.Location = new System.Drawing.Point(59, 128);
+            this.ckSimSpeed.Location = new System.Drawing.Point(28, 128);
             this.ckSimSpeed.Name = "ckSimSpeed";
-            this.ckSimSpeed.Size = new System.Drawing.Size(179, 34);
+            this.ckSimSpeed.Size = new System.Drawing.Size(242, 34);
             this.ckSimSpeed.TabIndex = 126;
-            this.ckSimSpeed.Text = "Simulate Speed";
+            this.ckSimSpeed.Text = "Simulate Speed (No AOG)";
             this.ckSimSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSimSpeed.UseVisualStyleBackColor = true;
             this.ckSimSpeed.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);

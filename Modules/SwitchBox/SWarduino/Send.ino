@@ -15,7 +15,7 @@ void SendData()
 	//4     sw8 to sw15
 	//5	    CRC
 
-	byte Pins[8];
+	byte Pins[] = { 0,0,0,0,0,0,0,0 };
 	byte Data[6];
 	Data[0] = 106;
 	Data[1] = 127;
