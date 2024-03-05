@@ -227,6 +227,9 @@
   <data name="lgDisconnect" xml:space="preserve">
     <value>Disconnect</value>
   </data>
+  <data name="lgDisplay" xml:space="preserve">
+    <value>Display</value>
+  </data>
   <data name="lgEnd" xml:space="preserve">
     <value>End</value>
   </data>
@@ -557,6 +560,9 @@
   <data name="lgWidth" xml:space="preserve">
     <value>Width</value>
   </data>
+  <data name="lgWifiClient" xml:space="preserve">
+    <value>Wifi Client</value>
+  </data>
   <data name="lgWifiPort" xml:space="preserve">
     <value>Wifi Port</value>
   </data>
@@ -568,6 +574,12 @@
   </data>
   <data name="lgWorkingWidthM" xml:space="preserve">
     <value>Working Width (M)</value>
+  </data>
+  <data name="lgWorkPin" xml:space="preserve">
+    <value>Work Pin</value>
+  </data>
+  <data name="lgWorkSwitch" xml:space="preserve">
+    <value>Work Switch</value>
   </data>
   <data name="lgZone" xml:space="preserve">
     <value>Zone</value>

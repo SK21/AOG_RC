@@ -19,6 +19,7 @@
     <ClCompile Include="CheckShield.ino" />
     <ClCompile Include="Receive.ino" />
     <ClCompile Include="Send.ino" />
+    <ClCompile Include="Begin.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.SWarduino.vsarduino.h">

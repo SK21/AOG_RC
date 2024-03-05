@@ -20,6 +20,7 @@ namespace RateController
         //11    InoID lo
         //12    InoID hi
         //13    status
+        //      - bit 0 work switch
         //14    CRC
 
         private const byte cByteCount = 15;
@@ -47,14 +48,13 @@ namespace RateController
             if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 cModuleID = Data[2];
+                mf.UpdateModuleConnected(cModuleID);
                 for (int i = 0; i < 4; i++)
                 {
                     cReading[cModuleID, i] = (UInt16)(Data[i * 2 + 4] << 8 | Data[i * 2 + 3]);
                 }
                 cInoID[cModuleID] = (ushort)(Data[11] | Data[12] << 8);
-
-                mf.UpdateModuleConnected(cModuleID);
-
+                mf.SwitchBox.SetRateModuleWorkOn(mf.Tls.BitRead(Data[13], 0), cModuleID);
                 Result = true;
             }
             return Result;

@@ -13,11 +13,16 @@ namespace RateController
         //      - bit 2 MasterOff
         //      - bit 3 RateUp
         //      - bit 4 RateDown
+        //      - bit 5 AutoSection
+        //      - bit 6 AutoRate
+        //		- bit 7 Work switch
         // 3    sw0 to sw7
         // 4    sw8 to sw15
         // 5    crc
 
         private bool cAuto;
+        private bool cAutoRate;
+        private bool cAutoSection;
         private bool cEnabled;
         private bool cLargeScreenOn;
         private bool[] cSwitch;
@@ -33,6 +38,7 @@ namespace RateController
             PressedData = new byte[6];
             PressedData[0] = 106;
             PressedData[1] = 127;
+            PressedData[2] = 128; // work switch on
             Timer1.Tick += new EventHandler(TimerEventProcessor);
             Timer1.Interval = 250;
         }
@@ -119,6 +125,36 @@ namespace RateController
                     }
                     break;
 
+                case SwIDs.AutoRate:
+                    if(cAutoRate)
+                    {
+                        // turn off
+                        PressedData[2] = mf.Tls.BitClear(PressedData[2], 6);
+                        cAutoRate = false;
+                    }
+                    else
+                    {
+                        // turn on
+                        PressedData[2] = mf.Tls.BitSet(PressedData[2], 6);
+                        cAutoRate= true;
+                    }
+                    break;
+
+                case SwIDs.AutoSection:
+                    if (cAutoSection)
+                    {
+                        // turn off
+                        PressedData[2] = mf.Tls.BitClear(PressedData[2], 5);
+                        cAutoSection = false;
+                    }
+                    else
+                    {
+                        // turn on
+                        PressedData[2] = mf.Tls.BitSet(PressedData[2], 5);
+                        cAutoSection= true;
+                    }
+                    break;
+
                 case SwIDs.MasterOn:
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 1);
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 2);
@@ -189,7 +225,7 @@ namespace RateController
 
         public void ReleaseSwitch()
         {
-            PressedData[2] = (byte)(PressedData[2] & 1);
+            PressedData[2] = (byte)(PressedData[2] & 0b11100001);
             PressedData[5] = mf.Tls.CRC(PressedData, 5);
         }
 

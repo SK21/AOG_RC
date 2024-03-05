@@ -25,7 +25,7 @@ namespace RateController
         //11    Sensor 1, Dir pin
         //12    Sensor 1, PWM pin
         //13    Relay pins 0-15, bytes 13-28
-        //29    -
+        //29    work pin
         //30    CRC
 
         private const byte cByteCount = 31;
@@ -114,6 +114,9 @@ namespace RateController
 
         public byte WifiPort
         { set { cData[6] = value; } }
+
+        public byte WorkPin
+        { set { cData[29] = value; } }
 
         public byte[] GetData()
         {

@@ -17,6 +17,8 @@ void DoSetup()
 	// eeprom
 	LoadData();
 
+	if (MDL.WorkPin < NC) pinMode(MDL.WorkPin, INPUT_PULLUP);
+
 	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
 
 	Serial.println("");
@@ -229,6 +231,8 @@ void LoadDefaults()
 {
 	Serial.println("Loading default settings.");
 
+	MDL.WorkPin = NC;
+
 	// default flow pins
 	Sensor[0].FlowPin = 3;
 	Sensor[0].DirPin = 6;
@@ -265,12 +269,17 @@ bool ValidData()
 {
 	bool Result = true;
 
-	for (int i = 0; i < MDL.SensorCount; i++)
+	if (MDL.WorkPin > 21 && MDL.WorkPin != NC) Result = false;
+
+	if (Result)
 	{
-		if ((Sensor[i].FlowPin > 21) || (Sensor[i].DirPin > 21) || (Sensor[i].PWMPin > 21))
+		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			Result = false;
-			break;
+			if ((Sensor[i].FlowPin > 21) || (Sensor[i].DirPin > 21) || (Sensor[i].PWMPin > 21))
+			{
+				Result = false;
+				break;
+			}
 		}
 	}
 

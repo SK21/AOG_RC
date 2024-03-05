@@ -29,8 +29,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  24-Feb-2024"
-const uint16_t InoID = 24024;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  04-Mar-2024"
+const uint16_t InoID = 4034;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -55,8 +55,8 @@ struct ModuleConfig
 	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
-	uint8_t IP2 = 5;
-	uint8_t IP3 = 60;
+	uint8_t IP2 = 1;
+	uint8_t IP3 = 50;
 	uint8_t AdsAddress = 0x48;			// enter 0 to search all
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t RelayControl = 6;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
@@ -66,6 +66,7 @@ struct ModuleConfig
 	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
+	uint8_t WorkPin;
 };
 
 ModuleConfig MDL;
@@ -284,9 +285,9 @@ uint32_t LastBlink;
 uint32_t LastLoop;
 byte ReadReset;
 uint32_t MaxLoopTime;
-double debug1;
-double debug2;
-double debug3;
+//double debug1;
+//double debug2;
+//double debug3;
 
 void Blink()
 {
@@ -296,14 +297,17 @@ void Blink()
 		State = !State;
 		//digitalWrite(LED_BUILTIN, State);
 
-		Serial.print(" Micros: ");
-		Serial.print(MaxLoopTime);
-		Serial.print(", ");
-		Serial.print(debug1);
-		Serial.print(", ");
-		Serial.print(debug2);
-		Serial.print(", ");
-		Serial.print(debug3);
+		//Serial.print(" Micros: ");
+		//Serial.print(MaxLoopTime);
+
+		//Serial.print(", ");
+		//Serial.print(debug1);
+		
+		//Serial.print(", ");
+		//Serial.print(debug2);
+		
+		//Serial.print(", ");
+		//Serial.print(debug3);
 
 		Serial.println("");
 

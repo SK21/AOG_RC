@@ -33,6 +33,10 @@ namespace RateController
             tabControl1.TabPages[0].Text = Lang.lgNetwork;
             tabControl1.TabPages[1].Text = Lang.lgConfig;
             tabControl1.TabPages[2].Text = Lang.lgPins;
+            tabControl1.TabPages[3].Text = Lang.lgRelays;
+            tabControl1.TabPages[4].Text = Lang.lgWifiClient;
+
+            lbWorkPin.Text = Lang.lgWorkPin;
 
             #endregion // language
 
@@ -45,16 +49,7 @@ namespace RateController
 
         private void ArduinoModule_PinStatusChanged(object sender, PGN32400.PinStatusArgs e)
         {
-            string Mes = "";
-            if (e.GoodPins)
-            {
-                Mes = "Pin configuration correct.";
-            }
-            else
-            {
-                Mes = "Pin configuration not correct.";
-            }
-            mf.Tls.ShowHelp(Mes);
+            if (!e.GoodPins) mf.Tls.ShowHelp("Pin configuration not correct. Using default values.");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -91,7 +86,7 @@ namespace RateController
 
         private void btnPCB_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmPins"];
+            Form fs = mf.Tls.IsFormOpen("frmPins");
 
             if (fs == null)
             {
@@ -202,10 +197,7 @@ namespace RateController
 
         private void frmModuleConfig_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
         }
 
         private void frmModuleConfig_Load(object sender, EventArgs e)
@@ -333,6 +325,14 @@ namespace RateController
             else
             {
                 mf.ModuleConfig.Sensor1PWM = 255;
+            }
+            if(byte.TryParse(tbWrk.Text,out val))
+            {
+                mf.ModuleConfig.WorkPin = val;
+            }
+            else
+            {
+                mf.ModuleConfig.WorkPin = 255;
             }
 
             // Pins
@@ -509,6 +509,7 @@ namespace RateController
                     tbDir2.Text = "6";
                     tbPWM1.Text = "5";
                     tbPWM2.Text = "9";
+                    tbWrk.Text = "-";
 
                     tbRelay1.Text = "8";
                     tbRelay2.Text = "9";
@@ -549,6 +550,7 @@ namespace RateController
                     tbDir2.Text = "14";
                     tbPWM1.Text = "36";
                     tbPWM2.Text = "15";
+                    tbWrk.Text = "-";
 
                     tbRelay1.Text = "8";
                     tbRelay2.Text = "9";
@@ -589,6 +591,7 @@ namespace RateController
                     tbDir2.Text = "-";
                     tbPWM1.Text = "9";
                     tbPWM2.Text = "-";
+                    tbWrk.Text = "-";
 
                     tbRelay1.Text = "-";
                     tbRelay2.Text = "-";
@@ -629,6 +632,7 @@ namespace RateController
                     tbDir2.Text = "25";
                     tbPWM1.Text = "33";
                     tbPWM2.Text = "26";
+                    tbWrk.Text = "-";
 
                     tbRelay1.Text = "-";
                     tbRelay2.Text = "-";
@@ -745,6 +749,16 @@ namespace RateController
             tbFlow2.Text = display[10].ToString();
             tbDir2.Text = display[11].ToString();
             tbPWM2.Text = display[12].ToString();
+
+            // work pin
+            if (data[29]>60)
+            {
+                tbWrk.Text = "-";
+            }
+            else
+            {
+                tbWrk.Text = data[29].ToString();
+            }
 
             // relays
             for (int i = 13; i < 29; i++)

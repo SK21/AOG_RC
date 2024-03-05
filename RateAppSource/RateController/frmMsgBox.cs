@@ -48,10 +48,7 @@ namespace RateController
 
         private void frmMsgBox_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
         }
 
         private void bntOK_Click(object sender, EventArgs e)

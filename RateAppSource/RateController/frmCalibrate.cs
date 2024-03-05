@@ -67,7 +67,7 @@ namespace RateController
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            Form fs = Application.OpenForms["frmCalHelp"];
+            Form fs = mf.Tls.IsFormOpen("frmCalHelp");
 
             if (fs == null)
             {
@@ -110,10 +110,7 @@ namespace RateController
 
         private void frmCalibrate_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
             mf.SimMode = SimType.None;
 
             Cals.Close();

@@ -130,6 +130,7 @@ void SendUDP()
     //11    InoID lo
     //12    InoID hi
     //13    status
+    //      - bit 0, work switch
     //14    CRC
 
     Data[0] = 145;
@@ -150,6 +151,7 @@ void SendUDP()
 
     // status
     Data[13] = 0;
+    if (MDL.WorkPin < NC && digitalRead(MDL.WorkPin)) Data[13] |= 0b00000001;
 
     Data[14] = CRC(Data, 14, 0);
 
@@ -399,7 +401,7 @@ void ParseData(byte Data[], uint16_t len)
         // 11       Sensor 1, dir pin
         // 12       Sensor 1, pwm pin
         // 13-28    Relay pins 0-15\
-        // 29		-
+        // 29		work pin
         // 30       CRC
 
         PGNlength = 31;
@@ -428,7 +430,9 @@ void ParseData(byte Data[], uint16_t len)
                     MDL.RelayPins[i] = Data[13 + i];
                 }
 
-                //SaveData();
+                MDL.WorkPin = Data[29];
+
+                //SaveData();	saved in pgn 3702
             }
         }
         break;

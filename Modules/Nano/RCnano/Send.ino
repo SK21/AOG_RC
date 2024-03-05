@@ -101,6 +101,7 @@ void SendData()
     //11    InoID lo
     //12    InoID hi
     //13    status
+    //      - bit 0, work switch
     //14    CRC
 
     Data[0] = 145;
@@ -121,6 +122,7 @@ void SendData()
 
     // status
     Data[13] = 0;
+    if (MDL.WorkPin < NC && digitalRead(MDL.WorkPin)) Data[13] |= 0b00000001;
 
     Data[14] = CRC(Data, 14, 0);
 

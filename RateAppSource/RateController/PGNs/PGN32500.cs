@@ -113,7 +113,7 @@ namespace RateController
 
             if (Prod.mf.SwitchBox.Connected())
             {
-                if (Prod.mf.SectionControl.MasterOn() || Prod.CalRun || Prod.CalSetMeter) cData[9] |= 0b00010000;
+                if (Prod.mf.SectionControl.MasterOn || Prod.CalRun || Prod.CalSetMeter) cData[9] |= 0b00010000;
             }
             else
             {
@@ -122,7 +122,7 @@ namespace RateController
 
             if (Prod.UseMultiPulse) cData[9] |= 0b00100000;
 
-            if ((Prod.mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || Prod.CalSetMeter) && !Prod.CalRun)
+            if ((Prod.mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || Prod.mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate) || Prod.CalSetMeter) && !Prod.CalRun)
             {
                 // auto on
                 cData[9] |= 0b01000000;
@@ -136,7 +136,7 @@ namespace RateController
             }
 
             // manual cal
-            if (Prod.mf.SectionControl.MasterOn() && Prod.Enabled)
+            if (Prod.mf.SectionControl.MasterOn && Prod.Enabled)
             {
                 cData[10] = (byte)Prod.ManualPWM;
                 cData[11] = (byte)(Prod.ManualPWM >> 8);

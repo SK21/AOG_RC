@@ -23,6 +23,8 @@ void DoSetup()
 	EEPROM.begin(EEPROM_SIZE);
 	LoadData();
 
+	if (MDL.WorkPin < NC) pinMode(MDL.WorkPin, INPUT_PULLUP);
+
 	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
 
 	Serial.println("");
@@ -432,6 +434,8 @@ void LoadDefaults()
 {
 	Serial.println("Loading default settings.");
 
+	MDL.WorkPin = NC;
+
 	// default flow pins
 	Sensor[0].FlowPin = 17;
 	Sensor[0].IN1 = 32;
@@ -470,43 +474,62 @@ bool ValidData()
 	switch (Processor)
 	{
 	case 0:
-		for (int i = 0; i < MDL.SensorCount; i++)
+		// work switch
+		Result = (MDL.WorkPin == NC);
+		if (!Result)
 		{
-			// flow pin
-			Result = false;
 			for (int j = 0; j < sizeof(ValidPins0); j++)
 			{
-				if (Sensor[i].FlowPin == ValidPins0[j])
+				if (MDL.WorkPin == ValidPins0[j])
 				{
 					Result = true;
 					break;
 				}
 			}
 			if (!Result) break;
+		}
 
-			// IN1
-			Result = false;
-			for (int j = 0; j < sizeof(ValidPins0); j++)
+		if (Result)
+		{
+			for (int i = 0; i < MDL.SensorCount; i++)
 			{
-				if (Sensor[i].IN1 == ValidPins0[j])
-				{
-					Result = true;
-					break;
-				}
-			}
-			if (!Result) break;
 
-			// IN2
-			Result = false;
-			for (int j = 0; j < sizeof(ValidPins0); j++)
-			{
-				if (Sensor[i].IN2 == ValidPins0[j])
+				// flow pin
+				Result = false;
+				for (int j = 0; j < sizeof(ValidPins0); j++)
 				{
-					Result = true;
-					break;
+					if (Sensor[i].FlowPin == ValidPins0[j])
+					{
+						Result = true;
+						break;
+					}
 				}
+				if (!Result) break;
+
+				// IN1
+				Result = false;
+				for (int j = 0; j < sizeof(ValidPins0); j++)
+				{
+					if (Sensor[i].IN1 == ValidPins0[j])
+					{
+						Result = true;
+						break;
+					}
+				}
+				if (!Result) break;
+
+				// IN2
+				Result = false;
+				for (int j = 0; j < sizeof(ValidPins0); j++)
+				{
+					if (Sensor[i].IN2 == ValidPins0[j])
+					{
+						Result = true;
+						break;
+					}
+				}
+				if (!Result) break;
 			}
-			if (!Result) break;
 		}
 
 		if (Result && MDL.RelayControl == 1)
@@ -517,8 +540,8 @@ bool ValidData()
 				Result = false;
 				for (int j = 0; j < sizeof(ValidPins0); j++)
 				{
-					if ((MDL.RelayPins[k] == ValidPins0[j]) ||
-						(MDL.RelayPins[k] == NC))
+					if ((MDL.RelayPins[k] == ValidPins0[j])
+						|| (MDL.RelayPins[k] == NC))
 					{
 						Result = true;
 						break;

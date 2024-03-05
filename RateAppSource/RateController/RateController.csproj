@@ -199,6 +199,12 @@
     <Compile Include="frmMsgBox.Designer.cs">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmOptions.Designer.cs">
+      <DependentUpon>frmOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmPins.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,12 +216,6 @@
     </Compile>
     <Compile Include="frmPressureDisplay.Designer.cs">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmPrimedStart.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPrimedStart.Designer.cs">
-      <DependentUpon>frmPrimedStart.cs</DependentUpon>
     </Compile>
     <Compile Include="frmRelays.cs">
       <SubType>Form</SubType>
@@ -335,14 +335,14 @@
     <EmbeddedResource Include="frmMsgBox.resx">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmOptions.resx">
+      <DependentUpon>frmOptions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmPins.resx">
       <DependentUpon>frmPins.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPressureDisplay.resx">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPrimedStart.resx">
-      <DependentUpon>frmPrimedStart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>
@@ -418,13 +418,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Pins.PNG" />
+    <None Include="Resources\SimGear.png" />
     <None Include="Resources\RateDown.png" />
     <None Include="Resources\Pins1.PNG" />
     <None Include="Resources\Help.png" />
     <None Include="Resources\RateUp.png" />
     <None Include="Resources\Rate Up %282%29.png" />
     <None Include="Resources\Rate Up.png" />
-    <None Include="Resources\Pins.PNG" />
     <None Include="Resources\PCB.png" />
     <None Include="Resources\PrimeTime.png" />
     <None Include="Resources\Pause.png" />

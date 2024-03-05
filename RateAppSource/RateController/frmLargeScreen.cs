@@ -8,23 +8,24 @@ namespace RateController
 {
     public partial class frmLargeScreen : Form
     {
-        private FormStart mf;
-        private clsProduct Prd;
-        private int RateType = 0;   // 0 current rate, 1 instantaneous rate, 2 overall rate
+        public clsAlarm RCalarm;
+        private bool automode = true;
         private int Fan1RateType = 0;
         private int Fan2RateType = 0;
-        public clsAlarm RCalarm;
-        private bool SwitchingScreens = false;
-        private Color RateColour = Color.GreenYellow;
-        private int TransTopOffset = 30;
-        private int TransLeftOffset = 6;
-        private int windowTop = 0;
-        private int windowLeft = 0;
+        private bool IsTransparent = false;
+        private bool masterOn;
+        private FormStart mf;
         private int mouseX = 0;
         private int mouseY = 0;
+        private clsProduct Prd;
+        private Color RateColour = Color.GreenYellow;
+        private int RateType = 0;   // 0 current rate, 1 instantaneous rate, 2 overall rate
+        private bool SwitchingScreens = false;
         private bool[] SwON = new bool[9];
-        private bool masterOn;
-        private bool automode = true;
+        private int TransLeftOffset = 6;
+        private int TransTopOffset = 30;
+        private int windowLeft = 0;
+        private int windowTop = 0;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -46,18 +47,11 @@ namespace RateController
             mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
             mnuSettings.Items["exitToolStripMenuItem"].Text = Lang.lgExit;
 
-            MnuOptions.DropDownItems["mnuStandard"].Text = Lang.lgStandardScreen;
-            MnuOptions.DropDownItems["transparentToolStripMenuItem"].Text = Lang.lgTransparent;
-            MnuOptions.DropDownItems["pressuresToolStripMenuItem"].Text = Lang.lgPressure;
-            MnuOptions.DropDownItems["switchesToolStripMenuItem1"].Text = Lang.lgSwitches;
-            MnuOptions.DropDownItems["primedStartToolStripMenuItem"].Text = Lang.lgPrimedStart;
-
-            MnuOptions.DropDownItems["MnuNew"].Text = Lang.lgNew;
-            MnuOptions.DropDownItems["MnuOpen"].Text = Lang.lgOpen;
-            MnuOptions.DropDownItems["MnuSaveAs"].Text = Lang.lgSaveAs;
-            MnuOptions.DropDownItems["mnuMetric"].Text = Lang.lgMetric;
-            MnuOptions.DropDownItems["MnuLanguage"].Text = Lang.lgLanguage;
-            MnuOptions.DropDownItems["commDiagnosticsToolStripMenuItem"].Text = Lang.lgCommDiagnostics;
+            mnuSettings.Items["pressuresToolStripMenuItem1"].Text = Lang.lgPressure;
+            mnuSettings.Items["commDiagnosticsToolStripMenuItem1"].Text = Lang.lgCommDiagnostics;
+            mnuSettings.Items["newToolStripMenuItem"].Text = Lang.lgNew;
+            mnuSettings.Items["openToolStripMenuItem"].Text = Lang.lgOpen;
+            mnuSettings.Items["saveAsToolStripMenuItem"].Text = Lang.lgSaveAs;
 
             #endregion // language
 
@@ -79,7 +73,6 @@ namespace RateController
             btnUp.BackColor = Properties.Settings.Default.DayColour;
             btnDown.BackColor = Properties.Settings.Default.DayColour;
 
-
             foreach (Control Ctrl in Controls)
             {
                 if (Ctrl.Name != "btnSettings" && Ctrl.Name != "btAuto")
@@ -94,48 +87,16 @@ namespace RateController
             }
         }
 
-        private void SetFont()
+        public int CurrentProduct()
         {
-            if (transparentToolStripMenuItem.Checked)
-            {
-                string TransparentFont = "MS Gothic";
-                //string TransparentFont = "Courier New";
-                //string TransparentFont = "Candara Light";
-                //string TransparentFont = "Tahoma";
-
-                foreach (Control Ctrl in Controls)
-                {
-                    if (Ctrl.Name != "lbName0" && Ctrl.Name != "lbName1" && Ctrl.Name != "lbName2" && Ctrl.Name != "lbName3"
-                         && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2" && Ctrl.Name != "btAuto" && Ctrl.Name != "lblManAuto")
-                    {
-                        Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
-                    }
-                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "lblManAuto")
-                    {
-                        Ctrl.Font = new Font(TransparentFont, 10, FontStyle.Bold);
-
-                    }
-                    else
-                    {
-                        Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
-                    }
-                }
-            }
-            else
-            {
-                foreach (Control Ctrl in Controls)
-                {
-                    Ctrl.Font = new Font("Tahoma", 14);
-                }
-            }
+            return Prd.ID;
         }
 
-        public void SetTransparent(bool frmtrans)
+        public void SetTransparent()
         {
-            transparentToolStripMenuItem.Checked = frmtrans;
-            if (transparentToolStripMenuItem.Checked)
+            IsTransparent = mf.UseTransparent;
+            if (mf.UseTransparent)
             {
-                mf.UseTransparent = true;
                 this.Text = string.Empty;
                 this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
                 //this.Opacity = 0;
@@ -157,14 +118,9 @@ namespace RateController
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
                 lblManAuto.ForeColor = txtcolor;
-
-                //btnMenu.BackColor = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.NightColour : Properties.Settings.Default.DayColour;
-
-
             }
             else
             {
-                mf.UseTransparent = false;
                 this.Text = "RateController";
                 this.TransparencyKey = Color.Transparent;
                 //this.Opacity = 100;
@@ -187,16 +143,83 @@ namespace RateController
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
                 lblManAuto.ForeColor = txtcolor;
-
-                //btnMenu.BackColor = Color.Transparent;
-
             }
             SetFont();
         }
 
-        public int CurrentProduct()
+        public void SwitchToStandard()
         {
-            return Prd.ID;
+            this.ShowInTaskbar = false;
+            mf.ShowInTaskbar = true;
+            mf.UseLargeScreen = false;
+            SwitchingScreens = true;
+            this.Close();
+        }
+
+        private void btAlarm_Click(object sender, EventArgs e)
+        {
+            RCalarm.Silence();
+        }
+
+        private void btAuto_Click(object sender, EventArgs e)
+        {
+            if (automode)
+            {
+                mf.vSwitchBox.PressSwitch(SwIDs.Auto, true);
+            }
+            else
+            {
+                if (masterOn) { mf.vSwitchBox.PressSwitch(SwIDs.MasterOff, true); }
+                else { mf.vSwitchBox.PressSwitch(SwIDs.MasterOn, true); }
+            }
+        }
+
+        private void btAuto_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                automode = !automode;
+                if (automode)
+                {
+                    lblManAuto.Text = "AUTO";
+                }
+                else
+                {
+                    lblManAuto.Text = "MASTER";
+                }
+
+                UpdateSwitches();
+            }
+        }
+
+        private void btMinimize_Click(object sender, EventArgs e)
+        {
+            Form restoreform = new RCRestore(this);
+            restoreform.Show();
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            if (SwON[0])
+            {
+                Prd.RateSet = Prd.RateSet / 1.05;
+            }
+            else
+            {
+                Prd.ManualPWM -= 5;
+            }
+        }
+
+        private void btnFan1_Click(object sender, EventArgs e)
+        {
+            clsProduct fn = mf.Products.Item(mf.MaxProducts - 2);
+            fn.FanOn = !fn.FanOn;
+        }
+
+        private void btnFan2_Click(object sender, EventArgs e)
+        {
+            clsProduct fn = mf.Products.Item(mf.MaxProducts - 1);
+            fn.FanOn = !fn.FanOn;
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -207,12 +230,62 @@ namespace RateController
             mnuSettings.Show(ptLowerLeft);
         }
 
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            if (SwON[0])
+            {
+                Prd.RateSet = Prd.RateSet * 1.05;
+            }
+            else
+            {
+                Prd.ManualPWM += 5;
+            }
+        }
+
+        private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //check if window already exists
+            Form fs = mf.Tls.IsFormOpen("frmCalibrate");
+
+            if (fs == null)
+            {
+                Form frm = new frmCalibrate(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
+        private void commDiagnosticsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Form fs = mf.Tls.IsFormOpen("frmModule");
+
+            if (fs == null)
+            {
+                Form frm = new frmModule(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void frmLargeScreen_Activated(object sender, EventArgs e)
+        {
+            lbName0.Focus();
+        }
+
         private void frmLargeScreen_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
-                mf.Tls.SaveFormData(this);
-            }
+            mf.Tls.SaveFormData(this);
 
             timerMain.Enabled = false;
             if (mf.UseTransparent)
@@ -226,7 +299,20 @@ namespace RateController
             mf.WindowState = FormWindowState.Normal;
             mf.vSwitchBox.LargeScreenOn = false;
         }
-        
+
+        private void frmLargeScreen_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!SwitchingScreens && !mf.Restart && mf.Products.Connected())
+            {
+                var Hlp = new frmMsgBox(mf, "Confirm Exit?", "Exit", true);
+                Hlp.TopMost = true;
+                Hlp.ShowDialog();
+                bool Result = Hlp.Result;
+                Hlp.Close();
+                if (!Result) e.Cancel = true;
+            }
+        }
+
         private void frmLargeScreen_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
@@ -244,10 +330,19 @@ namespace RateController
             UpdateForm();
         }
 
+        private void lbCoverage_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Shows either coverage done or area that can be done with the remaining quantity." +
+                "\n Press to change.";
+
+            mf.Tls.ShowHelp(Message, "Coverage");
+            hlpevent.Handled = true;
+        }
+
         private void lbFan1_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.IsFormOpen("FormSettings");
 
             if (fs != null)
             {
@@ -262,7 +357,7 @@ namespace RateController
         private void lbFan2_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.IsFormOpen("FormSettings");
 
             if (fs != null)
             {
@@ -280,7 +375,7 @@ namespace RateController
             UpdateForm();
 
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.IsFormOpen("FormSettings");
 
             if (fs != null)
             {
@@ -292,13 +387,21 @@ namespace RateController
             frm.Show();
         }
 
+        private void lbName0_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Indicates if the sensor is connected. Click to access settings.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
         private void lbName1_Click(object sender, EventArgs e)
         {
             Prd = mf.Products.Item(1);
             UpdateForm();
 
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.IsFormOpen("FormSettings");
 
             if (fs != null)
             {
@@ -316,7 +419,7 @@ namespace RateController
             UpdateForm();
 
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.IsFormOpen("FormSettings");
 
             if (fs != null)
             {
@@ -334,7 +437,7 @@ namespace RateController
             UpdateForm();
 
             //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            Form fs = mf.Tls.IsFormOpen("FormSettings");
 
             if (fs != null)
             {
@@ -352,10 +455,45 @@ namespace RateController
             UpdateForm();
         }
 
+        private void lbQuantity_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Shows either quantity applied or quantity remaining." +
+                "\n Press to change.";
+
+            mf.Tls.ShowHelp(Message, "Remaining");
+            hlpevent.Handled = true;
+        }
+
         private void lbRate_Click(object sender, EventArgs e)
         {
             RateType++;
             if (RateType > 2) RateType = 0;
+            UpdateForm();
+        }
+
+        private void lbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "1 - Current Rate, shows" +
+                " the target rate when it is within 10% of target. Outside this range it" +
+                " shows the exact rate being applied. \n 2 - Instant Rate, shows the exact rate." +
+                "\n 3 - Overall, averages total quantity applied over area done." +
+                "\n Press to change.";
+
+            mf.Tls.ShowHelp(Message, "Rate");
+            hlpevent.Handled = true;
+        }
+
+        private void lbRPM1_Click(object sender, EventArgs e)
+        {
+            Fan1RateType++;
+            if (Fan1RateType > 1) Fan1RateType = 0;
+            UpdateForm();
+        }
+
+        private void lbRPM2_Click(object sender, EventArgs e)
+        {
+            Fan2RateType++;
+            if (Fan2RateType > 1) Fan2RateType = 0;
             UpdateForm();
         }
 
@@ -373,46 +511,139 @@ namespace RateController
             }
         }
 
+        private void lbTarget_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Press to switch between base rate and alternate rate.";
+
+            mf.Tls.ShowHelp(Message, "Target Rate");
+            hlpevent.Handled = true;
+        }
+
+        private void mainform_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && mf.UseTransparent)
+            {
+                this.FormBorderStyle = FormBorderStyle.FixedSingle;
+                tmrBorder.Start();
+            }
+        }
+
         private void MnuComm_Click(object sender, EventArgs e)
         {
-            Form frm = new frmComm(mf);
-            frm.ShowDialog();
+            Form fs = mf.Tls.IsFormOpen("frmComm");
+
+            if (fs == null)
+            {
+                Form frm = new frmComm(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
-        private void MnuDeustch_Click(object sender, EventArgs e)
+        private void MnuOptions_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.setF_culture = "de";
-            Properties.Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            mf.Restart = true;
-            this.Close();
+            Form fs = mf.Tls.IsFormOpen("frmOptions");
+
+            if (fs == null)
+            {
+                Form frm = new frmOptions(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
-        private void MnuEnglish_Click(object sender, EventArgs e)
+        private void MnuProducts_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.setF_culture = "en";
-            Properties.Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            mf.Restart = true;
-            this.Close();
+            //check if window already exists
+            Form fs = mf.Tls.IsFormOpen("FormSettings");
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormSettings(mf, Prd.ID + 1);
+            frm.Show();
         }
 
-        private void mnuMetric_Click(object sender, EventArgs e)
+        private void MnuRelays_Click(object sender, EventArgs e)
         {
-            mf.UseInches = !mf.UseInches;
-            mf.Tls.SaveProperty("UseInches", mf.UseInches.ToString());
+            Form fs = mf.Tls.IsFormOpen("frmRelays");
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new frmRelays(mf);
+            frm.Show();
         }
 
-        private void MnuNederlands_Click(object sender, EventArgs e)
+        private void MnuSections_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.setF_culture = "nl";
-            Properties.Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            mf.Restart = true;
-            this.Close();
+            Form fs = mf.Tls.IsFormOpen("frmSections");
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new frmSections(mf);
+            frm.Show();
         }
 
-        private void MnuNew_Click(object sender, EventArgs e)
+        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Log the current window location and the mouse location.
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+                mouseX = e.X;
+                mouseY = e.Y;
+            }
+        }
+
+        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+
+                Point pos = new Point(0, 0);
+
+                pos.X = windowLeft + e.X - mouseX;
+                pos.Y = windowTop + e.Y - mouseY;
+                this.Location = pos;
+            }
+        }
+
+        private void networkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form fs = mf.Tls.IsFormOpen("frmModuleConfig");
+
+            if (fs == null)
+            {
+                Form frm = new frmModuleConfig(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.InitialDirectory = mf.Tls.FilesDir();
             saveFileDialog1.Title = "New File";
@@ -427,7 +658,7 @@ namespace RateController
             }
         }
 
-        private void MnuOpen_Click(object sender, EventArgs e)
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.InitialDirectory = mf.Tls.FilesDir();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -439,28 +670,34 @@ namespace RateController
             }
         }
 
-        private void MnuProducts_Click(object sender, EventArgs e)
+        private void pbRate0_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            //check if window already exists
-            Form fs = Application.OpenForms["FormSettings"];
+            string Message = "Indicates Current rate compared to Target rate." +
+                " Target rate is the centre of the graph. " +
+                "Within 10 % of target, the graph is dark green, otherwise red." +
+                " Click to select product and view" +
+                " the product's information.";
 
-            if (fs != null)
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void pressuresToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Form fs = mf.Tls.IsFormOpen("FormPressure");
+
+            if (fs == null)
+            {
+                Form frm = new FormPressure(mf);
+                frm.Show();
+            }
+            else
             {
                 fs.Focus();
-                return;
             }
-
-            Form frm = new FormSettings(mf, Prd.ID + 1);
-            frm.Show();
         }
 
-        private void MnuRelays_Click(object sender, EventArgs e)
-        {
-            Form tmp = new frmRelays(mf);
-            tmp.ShowDialog();
-        }
-
-        private void MnuSaveAs_Click(object sender, EventArgs e)
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.InitialDirectory = mf.Tls.FilesDir();
             saveFileDialog1.Title = "Save As";
@@ -475,36 +712,119 @@ namespace RateController
             }
         }
 
-        private void MnuSections_Click(object sender, EventArgs e)
+        private void SetFont()
         {
-            Form fs = Application.OpenForms["frmSections"];
-
-            if (fs != null)
+            if (mf.UseTransparent)
             {
-                fs.Focus();
-                return;
+                string TransparentFont = "MS Gothic";
+                //string TransparentFont = "Courier New";
+                //string TransparentFont = "Candara Light";
+                //string TransparentFont = "Tahoma";
+
+                foreach (Control Ctrl in Controls)
+                {
+                    if (Ctrl.Name != "lbName0" && Ctrl.Name != "lbName1" && Ctrl.Name != "lbName2" && Ctrl.Name != "lbName3"
+                         && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2" && Ctrl.Name != "btAuto" && Ctrl.Name != "lblManAuto")
+                    {
+                        Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
+                    }
+                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "lblManAuto")
+                    {
+                        Ctrl.Font = new Font(TransparentFont, 10, FontStyle.Bold);
+                    }
+                    else
+                    {
+                        Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
+                    }
+                }
             }
-
-            Form frm = new frmSections(mf);
-            frm.Show();
+            else
+            {
+                foreach (Control Ctrl in Controls)
+                {
+                    Ctrl.Font = new Font("Tahoma", 14);
+                }
+            }
         }
 
-        private void mnuStandard_Click(object sender, EventArgs e)
+        private void ShowProducts()
         {
-            this.ShowInTaskbar = false;
-            mf.ShowInTaskbar = true;
-            mf.UseLargeScreen = false;
-            SwitchingScreens = true;
-            this.Close();
+            clsProduct Prd = mf.Products.Item(0);
+            lbName0.Visible = Prd.OnScreen;
+            pnlRate0.Visible = Prd.OnScreen;
+            pnlQuantity0.Visible = Prd.OnScreen;
+            pnlSelect0.Visible = Prd.OnScreen;
+
+            Prd = mf.Products.Item(1);
+            lbName1.Visible = Prd.OnScreen;
+            pnlRate1.Visible = Prd.OnScreen;
+            pnlQuantity1.Visible = Prd.OnScreen;
+            pnlSelect1.Visible = Prd.OnScreen;
+
+            Prd = mf.Products.Item(2);
+            lbName2.Visible = Prd.OnScreen;
+            pnlRate2.Visible = Prd.OnScreen;
+            pnlQuantity2.Visible = Prd.OnScreen;
+            pnlSelect2.Visible = Prd.OnScreen;
+
+            Prd = mf.Products.Item(3);
+            lbName3.Visible = Prd.OnScreen;
+            pnlRate3.Visible = Prd.OnScreen;
+            pnlQuantity3.Visible = Prd.OnScreen;
+            pnlSelect3.Visible = Prd.OnScreen;
+
+            Prd = mf.Products.Item(4);
+            lbFan1.Visible = Prd.OnScreen;
+            lbRPM1.Visible = Prd.OnScreen;
+            btnFan1.Visible = Prd.OnScreen;
+
+            Prd = mf.Products.Item(5);
+            lbFan2.Visible = Prd.OnScreen;
+            lbRPM2.Visible = Prd.OnScreen;
+            btnFan2.Visible = Prd.OnScreen;
+
+            for (int i = 0; i < 5; i++)
+            {
+                Prd = mf.Products.Item(i);
+                if (i == 4)
+                {
+                    btnDown.Visible = false;
+                    btnDown.Enabled = false;
+                    btnUp.Visible = false;
+                    btnUp.Enabled = false;
+                }
+                else if (Prd.BumpButtons)
+                {
+                    btnUp.Visible = true;
+                    btnDown.Visible = true;
+                    btnUp.Enabled = true;
+                    btnDown.Enabled = true;
+
+                    Label posLbl = (Label)(this.Controls.Find("lbName" + i, true)[0]);
+                    ProgressBar posPb = (ProgressBar)(this.Controls.Find("pbRate" + i, true)[0]);
+
+                    int posX = posLbl.Left;
+                    int posY = posLbl.Top;
+                    int Width = posLbl.Width;
+                    int Height = posPb.Height + posLbl.Height;
+
+                    btnUp.Left = posX;
+                    btnDown.Left = posX;
+                    btnUp.Width = Width;
+                    btnDown.Width = Width;
+                    btnUp.Top = posY;
+                    btnUp.Height = (Height + 10) / 2;
+                    btnDown.Top = posY + btnUp.Height + 10;
+                    btnDown.Height = btnUp.Height;
+                    break;
+                }
+            }
         }
 
-        private void russianToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
         {
-            Properties.Settings.Default.setF_culture = "ru";
-            Properties.Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            mf.Restart = true;
-            this.Close();
+            SwON = e.Switches;
+            UpdateSwitches();
         }
 
         private void timerMain_Tick(object sender, EventArgs e)
@@ -512,10 +832,18 @@ namespace RateController
             UpdateForm();
         }
 
+        private void tmrBorder_tick(object sender, EventArgs e)
+        {
+            this.FormBorderStyle = FormBorderStyle.None;
+            tmrBorder.Stop();
+        }
+
         private void UpdateForm()
         {
+            if (mf.UseTransparent != IsTransparent) SetTransparent();
+
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
-          
+
             if (Prd.UseVR)
             {
                 lbTarget.Text = "VR Target";
@@ -574,86 +902,75 @@ namespace RateController
             if (lbName2.Text == "") lbName2.Text = "3";
             if (lbName3.Text == "") lbName3.Text = "4";
 
-            if (mf.SimMode == SimType.None)
+            clsProduct Product = mf.Products.Item(0);
+            if (Product.ArduinoModule.ModuleSending())
             {
-                // 0
-                clsProduct Product = mf.Products.Item(0);
-                if (Product.ArduinoModule.ModuleSending())
+                if (Product.ArduinoModule.ModuleReceiving())
                 {
-                    if (Product.ArduinoModule.ModuleReceiving())
-                    {
-                        lbName0.BackColor = Color.LightGreen;
-                    }
-                    else
-                    {
-                        lbName0.BackColor = Color.LightBlue;
-                    }
+                    lbName0.BackColor = Color.LightGreen;
                 }
                 else
                 {
-                    lbName0.BackColor = Color.Red;
-                }
-
-                // 1
-                Product = mf.Products.Item(1);
-                if (Product.ArduinoModule.ModuleSending())
-                {
-                    if (Product.ArduinoModule.ModuleReceiving())
-                    {
-                        lbName1.BackColor = Color.LightGreen;
-                    }
-                    else
-                    {
-                        lbName1.BackColor = Color.LightBlue;
-                    }
-                }
-                else
-                {
-                    lbName1.BackColor = Color.Red;
-                }
-
-                // 2
-                Product = mf.Products.Item(2);
-                if (Product.ArduinoModule.ModuleSending())
-                {
-                    if (Product.ArduinoModule.ModuleReceiving())
-                    {
-                        lbName2.BackColor = Color.LightGreen;
-                    }
-                    else
-                    {
-                        lbName2.BackColor = Color.LightBlue;
-                    }
-                }
-                else
-                {
-                    lbName2.BackColor = Color.Red;
-                }
-
-                // 3
-                Product = mf.Products.Item(3);
-                if (Product.ArduinoModule.ModuleSending())
-                {
-                    if (Product.ArduinoModule.ModuleReceiving())
-                    {
-                        lbName3.BackColor = Color.LightGreen;
-                    }
-                    else
-                    {
-                        lbName3.BackColor = Color.LightBlue;
-                    }
-                }
-                else
-                {
-                    lbName3.BackColor = Color.Red;
+                    lbName0.BackColor = Color.LightBlue;
                 }
             }
             else
             {
-                lbName0.BackColor = mf.SimColor;
-                lbName1.BackColor = mf.SimColor;
-                lbName2.BackColor = mf.SimColor;
-                lbName3.BackColor = mf.SimColor;
+                lbName0.BackColor = Color.Red;
+            }
+
+            // 1
+            Product = mf.Products.Item(1);
+            if (Product.ArduinoModule.ModuleSending())
+            {
+                if (Product.ArduinoModule.ModuleReceiving())
+                {
+                    lbName1.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    lbName1.BackColor = Color.LightBlue;
+                }
+            }
+            else
+            {
+                lbName1.BackColor = Color.Red;
+            }
+
+            // 2
+            Product = mf.Products.Item(2);
+            if (Product.ArduinoModule.ModuleSending())
+            {
+                if (Product.ArduinoModule.ModuleReceiving())
+                {
+                    lbName2.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    lbName2.BackColor = Color.LightBlue;
+                }
+            }
+            else
+            {
+                lbName2.BackColor = Color.Red;
+            }
+
+            // 3
+            Product = mf.Products.Item(3);
+            if (Product.ArduinoModule.ModuleSending())
+            {
+                if (Product.ArduinoModule.ModuleReceiving())
+                {
+                    lbName3.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    lbName3.BackColor = Color.LightBlue;
+                }
+            }
+            else
+            {
+                lbName3.BackColor = Color.Red;
             }
 
             // rate
@@ -715,34 +1032,21 @@ namespace RateController
                 lbQuantityAmount.Text = Prd.UnitsApplied().ToString("N1");
             }
 
-            // metric
-            if (mf.UseInches)
-            {
-                MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Cancel40;
-            }
-            else
-            {
-                MnuOptions.DropDownItems["mnuMetric"].Image = Properties.Resources.Check;
-            }
-
-            // transparent
-            if(mf.UseTransparent)
-            {
-                MnuOptions.DropDownItems["transparentToolStripMenuItem"].Image = Properties.Resources.Check;
-            }
-            else
-            {
-                MnuOptions.DropDownItems["transparentToolStripMenuItem"].Image = Properties.Resources.Cancel40;
-            }
-
             // aog
-            if (mf.AutoSteerPGN.Connected())
+            if (mf.SimMode == SimType.Speed)
             {
-                btnMenu.Image = Properties.Resources.GreenGear;
+                btnMenu.Image = Properties.Resources.SimGear;
             }
             else
             {
-                btnMenu.Image = Properties.Resources.RedGear;
+                if (mf.AutoSteerPGN.Connected())
+                {
+                    btnMenu.Image = Properties.Resources.GreenGear;
+                }
+                else
+                {
+                    btnMenu.Image = Properties.Resources.RedGear;
+                }
             }
 
             // graphs
@@ -762,7 +1066,7 @@ namespace RateController
             int RtLevel = 0;
             if (Tg > 0) RtLevel = (int)((Rt / Tg) * 50) - 30;
             if (RtLevel > 40) RtLevel = 40;
-            if(RtLevel< 0) RtLevel = 0;
+            if (RtLevel < 0) RtLevel = 0;
             if (Tg > 0 && RtLevel < 1) RtLevel = 1;
             if (RtLevel > 25 || RtLevel < 15)
             {
@@ -858,68 +1162,58 @@ namespace RateController
             }
             pbRate3.Value = RtLevel;
 
-            // fans
-            if (mf.SimMode == SimType.None)
+            clsProduct prd = mf.Products.Item(mf.MaxProducts - 2);
+
+            if (Fan1RateType == 1)
             {
-                // fan 1
-                clsProduct prd = mf.Products.Item(mf.MaxProducts - 2);
+                lbRPM1.Text = prd.CurrentRate().ToString("N0") + " RPM-I";
+            }
+            else
+            {
+                lbRPM1.Text = prd.SmoothRate().ToString("N0") + " RPM";
+            }
 
-                if (Fan1RateType == 1)
+            if (prd.ArduinoModule.ModuleSending())
+            {
+                if (prd.ArduinoModule.ModuleReceiving())
                 {
-                    lbRPM1.Text = prd.CurrentRate().ToString("N0") + " RPM-I";
+                    lbFan1.BackColor = Color.LightGreen;
                 }
                 else
                 {
-                    lbRPM1.Text = prd.SmoothRate().ToString("N0") + " RPM";
-                }
-
-                if (prd.ArduinoModule.ModuleSending())
-                {
-                    if (prd.ArduinoModule.ModuleReceiving())
-                    {
-                        lbFan1.BackColor = Color.LightGreen;
-                    }
-                    else
-                    {
-                        lbFan1.BackColor = Color.LightBlue;
-                    }
-                }
-                else
-                {
-                    lbFan1.BackColor = Color.Red;
-                }
-
-                // fan 2
-                prd = mf.Products.Item(mf.MaxProducts - 1);
-                if (Fan2RateType == 1)
-                {
-                    lbRPM2.Text = prd.CurrentRate().ToString("N0") + " RPM-I";
-                }
-                else
-                {
-                    lbRPM2.Text = prd.SmoothRate().ToString("N0") + " RPM";
-                }
-
-                if (prd.ArduinoModule.ModuleSending())
-                {
-                    if (prd.ArduinoModule.ModuleReceiving())
-                    {
-                        lbFan2.BackColor = Color.LightGreen;
-                    }
-                    else
-                    {
-                        lbFan2.BackColor = Color.LightBlue;
-                    }
-                }
-                else
-                {
-                    lbFan2.BackColor = Color.Red;
+                    lbFan1.BackColor = Color.LightBlue;
                 }
             }
             else
             {
-                lbFan1.BackColor = mf.SimColor;
-                lbFan2.BackColor = mf.SimColor;
+                lbFan1.BackColor = Color.Red;
+            }
+
+            // fan 2
+            prd = mf.Products.Item(mf.MaxProducts - 1);
+            if (Fan2RateType == 1)
+            {
+                lbRPM2.Text = prd.CurrentRate().ToString("N0") + " RPM-I";
+            }
+            else
+            {
+                lbRPM2.Text = prd.SmoothRate().ToString("N0") + " RPM";
+            }
+
+            if (prd.ArduinoModule.ModuleSending())
+            {
+                if (prd.ArduinoModule.ModuleReceiving())
+                {
+                    lbFan2.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    lbFan2.BackColor = Color.LightBlue;
+                }
+            }
+            else
+            {
+                lbFan2.BackColor = Color.Red;
             }
 
             // fan 1 button
@@ -946,328 +1240,6 @@ namespace RateController
 
             RCalarm.CheckAlarms();
             ShowProducts();
-            if(mf.ShowSwitches)
-            {
-                switchesToolStripMenuItem1.Image = Properties.Resources.OK;
-            }
-            else
-            {
-                switchesToolStripMenuItem1.Image = Properties.Resources.Cancel64;
-            }
-        }
-
-        private void ShowProducts()
-        {
-            clsProduct Prd = mf.Products.Item(0);
-            lbName0.Visible = Prd.OnScreen;
-            pnlRate0.Visible = Prd.OnScreen;
-            pnlQuantity0.Visible = Prd.OnScreen;
-            pnlSelect0.Visible = Prd.OnScreen;
-
-            Prd = mf.Products.Item(1);
-            lbName1.Visible = Prd.OnScreen;
-            pnlRate1.Visible = Prd.OnScreen;
-            pnlQuantity1.Visible = Prd.OnScreen;
-            pnlSelect1.Visible = Prd.OnScreen;
-
-            Prd = mf.Products.Item(2);
-            lbName2.Visible = Prd.OnScreen;
-            pnlRate2.Visible = Prd.OnScreen;
-            pnlQuantity2.Visible = Prd.OnScreen;
-            pnlSelect2.Visible = Prd.OnScreen;
-
-            Prd = mf.Products.Item(3);
-            lbName3.Visible = Prd.OnScreen;
-            pnlRate3.Visible = Prd.OnScreen;
-            pnlQuantity3.Visible = Prd.OnScreen;
-            pnlSelect3.Visible = Prd.OnScreen;
-
-            Prd = mf.Products.Item(4);
-            lbFan1.Visible = Prd.OnScreen;
-            lbRPM1.Visible = Prd.OnScreen;
-            btnFan1.Visible = Prd.OnScreen;
-
-            Prd = mf.Products.Item(5);
-            lbFan2.Visible = Prd.OnScreen;
-            lbRPM2.Visible = Prd.OnScreen;
-            btnFan2.Visible = Prd.OnScreen;
-
-            for (int i = 0; i < 5; i++)
-            {
-                Prd = mf.Products.Item(i);
-                if (i == 4)
-                {
-                    btnDown.Visible = false;
-                    btnDown.Enabled = false;
-                    btnUp.Visible = false;
-                    btnUp.Enabled = false;
-                }
-                else if (Prd.BumpButtons)
-                {
-                    btnUp.Visible = true;
-                    btnDown.Visible = true;
-                    btnUp.Enabled = true;
-                    btnDown.Enabled = true;
-
-                    Label posLbl = (Label) (this.Controls.Find("lbName" + i, true)[0]);
-                    ProgressBar posPb = (ProgressBar)(this.Controls.Find("pbRate" + i, true)[0]);
-
-                    int posX = posLbl.Left;
-                    int posY = posLbl.Top;
-                    int Width = posLbl.Width;
-                    int Height = posPb.Height + posLbl.Height;
-
-                    btnUp.Left = posX;
-                    btnDown.Left = posX;
-                    btnUp.Width = Width;
-                    btnDown.Width = Width;
-                    btnUp.Top = posY;
-                    btnUp.Height = (Height +10) / 2;
-                    btnDown.Top = posY + btnUp.Height + 10;
-                    btnDown.Height = btnUp.Height;
-                    break;
-                }
-            }
-        }
-
-        private void verticalProgressBar1_Click(object sender, EventArgs e)
-        {
-            Prd = mf.Products.Item(0);
-            UpdateForm();
-        }
-
-        private void verticalProgressBar2_Click(object sender, EventArgs e)
-        {
-            Prd = mf.Products.Item(1);
-            UpdateForm();
-        }
-
-        private void verticalProgressBar3_Click(object sender, EventArgs e)
-        {
-            Prd = mf.Products.Item(2);
-            UpdateForm();
-        }
-
-        private void verticalProgressBar4_Click(object sender, EventArgs e)
-        {
-            Prd = mf.Products.Item(3);
-            UpdateForm();
-        }
-
-        private void lbName0_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Indicates if the sensor is connected. Click to access settings.";
-
-            mf.Tls.ShowHelp(Message);
-            hlpevent.Handled = true;
-        }
-
-        private void verticalProgressBar0_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Indicates quantity remaining. Click to select product and view" +
-                " the product's information.";
-
-            mf.Tls.ShowHelp(Message);
-            hlpevent.Handled = true;
-        }
-
-        private void lbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "1 - Current Rate, shows" +
-                " the target rate when it is within 10% of target. Outside this range it" +
-                " shows the exact rate being applied. \n 2 - Instant Rate, shows the exact rate." +
-                "\n 3 - Overall, averages total quantity applied over area done." +
-                "\n Press to change.";
-
-            mf.Tls.ShowHelp(Message, "Rate");
-            hlpevent.Handled = true;
-        }
-
-        private void lbTarget_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Press to switch between base rate and alternate rate.";
-
-            mf.Tls.ShowHelp(Message, "Target Rate");
-            hlpevent.Handled = true;
-        }
-
-        private void lbCoverage_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Shows either coverage done or area that can be done with the remaining quantity." +
-                "\n Press to change.";
-
-            mf.Tls.ShowHelp(Message, "Coverage");
-            hlpevent.Handled = true;
-        }
-
-        private void lbQuantity_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Shows either quantity applied or quantity remaining." +
-                "\n Press to change.";
-
-            mf.Tls.ShowHelp(Message, "Remaining");
-            hlpevent.Handled = true;
-        }
-
-        private void btAlarm_Click(object sender, EventArgs e)
-        {
-            RCalarm.Silence();
-        }
-
-        private void frmLargeScreen_Activated(object sender, EventArgs e)
-        {
-            lbName0.Focus();
-        }
-
-        private void MnuOptions_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void frmLargeScreen_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (!SwitchingScreens && !mf.Restart && mf.Products.Connected())
-            {
-                var Hlp = new frmMsgBox(mf, "Confirm Exit?", "Exit", true);
-                Hlp.TopMost = true;
-                Hlp.ShowDialog();
-                bool Result = Hlp.Result;
-                Hlp.Close();
-                if (!Result) e.Cancel = true;
-            }
-        }
-
-        private void btnFan1_Click(object sender, EventArgs e)
-        {
-            clsProduct fn = mf.Products.Item(mf.MaxProducts - 2);
-            fn.FanOn = !fn.FanOn;
-        }
-
-        private void btnFan2_Click(object sender, EventArgs e)
-        {
-            clsProduct fn = mf.Products.Item(mf.MaxProducts - 1);
-            fn.FanOn = !fn.FanOn;
-        }
-
-        private void pbRate0_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Indicates Current rate compared to Target rate." +
-                " Target rate is the centre of the graph. " +
-                "Within 10 % of target, the graph is dark green, otherwise red." +
-                " Click to select product and view" +
-                " the product's information.";
-
-            mf.Tls.ShowHelp(Message);
-            hlpevent.Handled = true;
-        }
-
-        private void transparentToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            transparentToolStripMenuItem.Checked = !transparentToolStripMenuItem.Checked;
-            SetTransparent(transparentToolStripMenuItem.Checked);
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-            this.Close();
-
-        }
-
-        private void btAuto_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                automode = !automode;
-                if (automode)
-                {
-                    lblManAuto.Text = "AUTO";
-                }
-                else
-                {
-                    lblManAuto.Text = "MASTER";
-                }
-
-                UpdateSwitches();
-            }
-        }
-
-        private void mainform_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left && transparentToolStripMenuItem.Checked)
-            {
-                this.FormBorderStyle = FormBorderStyle.FixedSingle;
-                tmrBorder.Start();
-            }
-        }
-
-        private void tmrBorder_tick(object sender, EventArgs e)
-        {
-            this.FormBorderStyle = FormBorderStyle.None;
-            tmrBorder.Stop();
-        }
-
-        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
-        {
-
-            // Log the current window location and the mouse location.
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-                mouseX = e.X;
-                mouseY = e.Y;
-            }
-        }
-
-        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-                
-                Point pos = new Point(0,0);
-
-                pos.X = windowLeft + e.X - mouseX;
-                pos.Y = windowTop + e.Y - mouseY;
-                this.Location = pos;
-
-            }
-        }
-
-        private void lbRPM1_Click(object sender, EventArgs e)
-        {
-            Fan1RateType++;
-            if (Fan1RateType > 1) Fan1RateType = 0;
-            UpdateForm();
-        }
-
-        private void lbRPM2_Click(object sender, EventArgs e)
-        {
-            Fan2RateType++;
-            if (Fan2RateType > 1) Fan2RateType = 0;
-            UpdateForm();
-        }
-
-        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
-        {
-            SwON = e.Switches;
-            UpdateSwitches();
-        }
-
-        private void btAuto_Click(object sender, EventArgs e)
-        {
-            if (automode)
-            {
-                mf.vSwitchBox.PressSwitch(SwIDs.Auto, true);
-            }
-            else
-            {
-                if (masterOn) { mf.vSwitchBox.PressSwitch(SwIDs.MasterOff,true); }
-                else { mf.vSwitchBox.PressSwitch(SwIDs.MasterOn,true); }
-            }
-
         }
 
         private void UpdateSwitches()
@@ -1291,7 +1263,7 @@ namespace RateController
             else
             {
                 // show master button
-                if(mf.SwitchBox.MasterOn)
+                if (mf.SwitchBox.MasterOn)
                 {
                     btAuto.BackColor = Color.Yellow;
                     btAuto.Text = "ON";
@@ -1327,158 +1299,37 @@ namespace RateController
             }
         }
 
-        private void btMinimize_Click(object sender, EventArgs e)
+        private void verticalProgressBar0_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            Form restoreform = new RCRestore(this);
-            restoreform.Show();
+            string Message = "Indicates quantity remaining. Click to select product and view" +
+                " the product's information.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
         }
 
-        private void btnUp_Click(object sender, EventArgs e)
+        private void verticalProgressBar1_Click(object sender, EventArgs e)
         {
-            if (SwON[0])
-            {
-                Prd.RateSet = Prd.RateSet * 1.05;
-            }
-            else
-            {
-                Prd.ManualPWM += 5;
-            }
+            Prd = mf.Products.Item(0);
+            UpdateForm();
         }
 
-        private void btnDown_Click(object sender, EventArgs e)
+        private void verticalProgressBar2_Click(object sender, EventArgs e)
         {
-            if (SwON[0])
-            {
-                Prd.RateSet = Prd.RateSet / 1.05;
-            }
-            else
-            {
-                Prd.ManualPWM -= 5;
-            }
+            Prd = mf.Products.Item(1);
+            UpdateForm();
         }
 
-        private void mnuSettings_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void verticalProgressBar3_Click(object sender, EventArgs e)
         {
-
+            Prd = mf.Products.Item(2);
+            UpdateForm();
         }
 
-        private void polishToolStripMenuItem_Click(object sender, EventArgs e)
+        private void verticalProgressBar4_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.setF_culture = "pl";
-            Properties.Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            mf.Restart = true;
-            this.Close();
-        }
-
-        private void pressuresToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = Application.OpenForms["FormPressure"];
-
-            if (fs == null)
-            {
-                Form frm = new FormPressure(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = Application.OpenForms["frmCalibrate"];
-
-            if (fs == null)
-            {
-                Form frm = new frmCalibrate(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void networkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = Application.OpenForms["frmModuleConfig"];
-
-            if (fs == null)
-            {
-                Form frm = new frmModuleConfig(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void switchesToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            //Form fs = Application.OpenForms["frmSwitches"];
-
-            //if (fs == null)
-            //{
-            //    Form frm = new frmSwitches(mf);
-            //    frm.Show();
-            //}
-            //else
-            //{
-            //    fs.Focus();
-            //}
-            mf.ShowSwitches = !mf.ShowSwitches;
-        }
-
-        private void hungarianToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "hu";
-            Properties.Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            mf.Restart = true;
-            this.Close();
-        }
-
-        private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = Application.OpenForms["frmModule"];
-
-            if (fs == null)
-            {
-                Form frm = new frmModule(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void frenchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.setF_culture = "fr";
-            Properties.Settings.Default.UserLanguageChange = true;
-            Properties.Settings.Default.Save();
-            mf.Restart = true;
-            this.Close();
-        }
-
-        private void primedStartToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = Application.OpenForms["frmPrimedStart"];
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new frmPrimedStart(mf);
-            frm.Show();
+            Prd = mf.Products.Item(3);
+            UpdateForm();
         }
     }
 }

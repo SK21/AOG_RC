@@ -78,7 +78,7 @@ namespace RateController
 
         public void ParseByteData(byte[] Data)
         {
-            if (Data.Length > totalHeaderByteCount)
+            if ((mf.SimMode == SimType.None) && (Data.Length > totalHeaderByteCount))
             {
                 if (Data.Length == Data[4] + totalHeaderByteCount + 1)
                 {

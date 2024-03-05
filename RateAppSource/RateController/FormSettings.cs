@@ -298,10 +298,7 @@ namespace RateController
 
         private void FormSettings_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
             timer1.Enabled = false;
         }
 
@@ -1540,7 +1537,7 @@ namespace RateController
         private void btnTuningGraph_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fcg = Application.OpenForms["FormPIDGraph"];
+            Form fcg = mf.Tls.IsFormOpen("FormPIDGraph");
 
             if (fcg != null)
             {

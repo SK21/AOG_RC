@@ -286,7 +286,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		// 11       Sensor 1, dir pin
 		// 12       Sensor 1, pwm pin
 		// 13-28    Relay pins 0-15\
-        // 29		-
+        // 29		work pin
 		// 30       CRC
 
 		PGNlength = 31;
@@ -314,6 +314,8 @@ void ReadPGNs(byte Data[], uint16_t len)
 				{
 					MDL.RelayPins[i] = Data[13 + i];
 				}
+
+				MDL.WorkPin = Data[29];
 
 				SaveData();
 

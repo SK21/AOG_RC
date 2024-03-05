@@ -34,7 +34,7 @@
 
         public void ParseByteData(byte[] Data)
         {
-            if (Data.Length > HeaderCount)
+            if ((mf.SimMode == SimType.None) && (Data.Length > HeaderCount))
             {
                 if (Data.Length == Data[4] + HeaderCount + 1)
                 {

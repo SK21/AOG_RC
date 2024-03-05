@@ -106,10 +106,7 @@ namespace RateController
 
         private void frmComm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
         }
 
         private void frmComm_Load(object sender, EventArgs e)

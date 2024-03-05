@@ -12,7 +12,7 @@ namespace RateController
         private FormStart mf;
         private int mouseX = 0;
         private int mouseY = 0;
-        private bool[] SwON = new bool[9];
+        private bool[] SwON = new bool[23];
         private int TransLeftOffset = 6;
         private int TransTopOffset = 30;
         private bool UpPressed;
@@ -67,7 +67,7 @@ namespace RateController
 
         private void btnMaster_MouseDown(object sender, MouseEventArgs e)
         {
-            if (mf.SectionControl.MasterOn())
+            if (mf.SectionControl.MasterOn)
             {
                 mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
                 MasterPressed = true;
@@ -106,10 +106,7 @@ namespace RateController
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
             }
-            if (this.WindowState == FormWindowState.Normal)
-            {
                 mf.Tls.SaveFormData(this);
-            }
             timer1.Enabled = false;
             mf.vSwitchBox.SwitchScreenOn = false;
         }
@@ -272,6 +269,34 @@ namespace RateController
             {
                 btn4.BackColor = Color.Red;
             }
+
+            if (SwON[21])
+            {
+                btnAutoSection.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                btnAutoSection.BackColor= Color.Red;
+            }
+
+            if (SwON[22])
+            {
+                btnAutoRate.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                btnAutoRate.BackColor= Color.Red;
+            }
+        }
+
+        private void btnAutoSection_Click(object sender, EventArgs e)
+        {
+            mf.vSwitchBox.PressSwitch(SwIDs.AutoSection);
+        }
+
+        private void btnAutoRate_Click(object sender, EventArgs e)
+        {
+            mf.vSwitchBox.PressSwitch(SwIDs.AutoRate);
         }
     }
 }
