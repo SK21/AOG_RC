@@ -23,8 +23,8 @@ namespace RateController
 
             #region // language
 
-            tcOptions.TabPages[0].Text = Lang.lgConfig;
-            tcOptions.TabPages[1].Text = Lang.lgDisplay;
+            tcOptions.TabPages[0].Text = Lang.lgDisplay;
+            tcOptions.TabPages[1].Text = Lang.lgConfig;
             tcOptions.TabPages[2].Text = Lang.lgPrimedStart;
             tcOptions.TabPages[3].Text = Lang.lgLanguage;
 

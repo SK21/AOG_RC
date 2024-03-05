@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLargeScreen));
             this.pnlQuantity0 = new System.Windows.Forms.Panel();
+            this.pbQuantity0 = new RateController.VerticalProgressBar();
             this.lbName0 = new System.Windows.Forms.Label();
             this.lbName1 = new System.Windows.Forms.Label();
             this.lbName2 = new System.Windows.Forms.Label();
@@ -47,8 +48,11 @@
             this.lbRPM1 = new System.Windows.Forms.Label();
             this.lbRPM2 = new System.Windows.Forms.Label();
             this.pnlQuantity1 = new System.Windows.Forms.Panel();
+            this.pbQuantity1 = new RateController.VerticalProgressBar();
             this.pnlQuantity2 = new System.Windows.Forms.Panel();
+            this.pbQuantity2 = new RateController.VerticalProgressBar();
             this.pnlQuantity3 = new System.Windows.Forms.Panel();
+            this.pbQuantity3 = new RateController.VerticalProgressBar();
             this.btAlarm = new System.Windows.Forms.Button();
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +61,14 @@
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.calibrateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pressuresToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.commDiagnosticsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -69,9 +80,13 @@
             this.pnlSelect1 = new System.Windows.Forms.Panel();
             this.pnlSelect0 = new System.Windows.Forms.Panel();
             this.pnlRate3 = new System.Windows.Forms.Panel();
+            this.pbRate3 = new RateController.VerticalProgressBar();
             this.pnlRate2 = new System.Windows.Forms.Panel();
+            this.pbRate2 = new RateController.VerticalProgressBar();
             this.pnlRate1 = new System.Windows.Forms.Panel();
+            this.pbRate1 = new RateController.VerticalProgressBar();
             this.pnlRate0 = new System.Windows.Forms.Panel();
+            this.pbRate0 = new RateController.VerticalProgressBar();
             this.btnFan1 = new System.Windows.Forms.Button();
             this.btnFan2 = new System.Windows.Forms.Button();
             this.btnMenu = new System.Windows.Forms.Button();
@@ -81,21 +96,6 @@
             this.btMinimize = new System.Windows.Forms.Button();
             this.lblManAuto = new System.Windows.Forms.Label();
             this.tmrBorder = new System.Windows.Forms.Timer(this.components);
-            this.pressuresToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.commDiagnosticsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.pbRate0 = new RateController.VerticalProgressBar();
-            this.pbRate1 = new RateController.VerticalProgressBar();
-            this.pbRate2 = new RateController.VerticalProgressBar();
-            this.pbRate3 = new RateController.VerticalProgressBar();
-            this.pbQuantity3 = new RateController.VerticalProgressBar();
-            this.pbQuantity2 = new RateController.VerticalProgressBar();
-            this.pbQuantity1 = new RateController.VerticalProgressBar();
-            this.pbQuantity0 = new RateController.VerticalProgressBar();
             this.pnlQuantity0.SuspendLayout();
             this.pnlQuantity1.SuspendLayout();
             this.pnlQuantity2.SuspendLayout();
@@ -116,6 +116,19 @@
             this.pnlQuantity0.Name = "pnlQuantity0";
             this.pnlQuantity0.Size = new System.Drawing.Size(44, 128);
             this.pnlQuantity0.TabIndex = 1;
+            // 
+            // pbQuantity0
+            // 
+            this.pbQuantity0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbQuantity0.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbQuantity0.Location = new System.Drawing.Point(3, 3);
+            this.pbQuantity0.Name = "pbQuantity0";
+            this.pbQuantity0.Size = new System.Drawing.Size(36, 120);
+            this.pbQuantity0.TabIndex = 0;
+            this.pbQuantity0.Tag = "0";
+            this.pbQuantity0.Value = 95;
+            this.pbQuantity0.Click += new System.EventHandler(this.verticalProgressBar1_Click);
+            this.pbQuantity0.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // lbName0
             // 
@@ -319,6 +332,19 @@
             this.pnlQuantity1.Size = new System.Drawing.Size(44, 128);
             this.pnlQuantity1.TabIndex = 176;
             // 
+            // pbQuantity1
+            // 
+            this.pbQuantity1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbQuantity1.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbQuantity1.Location = new System.Drawing.Point(3, 3);
+            this.pbQuantity1.Name = "pbQuantity1";
+            this.pbQuantity1.Size = new System.Drawing.Size(36, 120);
+            this.pbQuantity1.TabIndex = 0;
+            this.pbQuantity1.Tag = "1";
+            this.pbQuantity1.Value = 30;
+            this.pbQuantity1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
+            this.pbQuantity1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
+            // 
             // pnlQuantity2
             // 
             this.pnlQuantity2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
@@ -328,6 +354,19 @@
             this.pnlQuantity2.Name = "pnlQuantity2";
             this.pnlQuantity2.Size = new System.Drawing.Size(44, 128);
             this.pnlQuantity2.TabIndex = 4;
+            // 
+            // pbQuantity2
+            // 
+            this.pbQuantity2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbQuantity2.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbQuantity2.Location = new System.Drawing.Point(3, 3);
+            this.pbQuantity2.Name = "pbQuantity2";
+            this.pbQuantity2.Size = new System.Drawing.Size(36, 120);
+            this.pbQuantity2.TabIndex = 0;
+            this.pbQuantity2.Tag = "2";
+            this.pbQuantity2.Value = 5;
+            this.pbQuantity2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
+            this.pbQuantity2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // pnlQuantity3
             // 
@@ -339,6 +378,19 @@
             this.pnlQuantity3.Name = "pnlQuantity3";
             this.pnlQuantity3.Size = new System.Drawing.Size(44, 128);
             this.pnlQuantity3.TabIndex = 178;
+            // 
+            // pbQuantity3
+            // 
+            this.pbQuantity3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbQuantity3.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbQuantity3.Location = new System.Drawing.Point(3, 3);
+            this.pbQuantity3.Name = "pbQuantity3";
+            this.pbQuantity3.Size = new System.Drawing.Size(36, 120);
+            this.pbQuantity3.TabIndex = 0;
+            this.pbQuantity3.Tag = "3";
+            this.pbQuantity3.Value = 40;
+            this.pbQuantity3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
+            this.pbQuantity3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // btAlarm
             // 
@@ -376,8 +428,7 @@
             this.toolStripSeparator4,
             this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(254, 584);
-            this.mnuSettings.Opening += new System.ComponentModel.CancelEventHandler(this.mnuSettings_Opening);
+            this.mnuSettings.Size = new System.Drawing.Size(254, 562);
             // 
             // MnuProducts
             // 
@@ -427,6 +478,22 @@
             this.networkToolStripMenuItem.Text = "Network";
             this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
             // 
+            // pressuresToolStripMenuItem1
+            // 
+            this.pressuresToolStripMenuItem1.Image = global::RateController.Properties.Resources.pressure;
+            this.pressuresToolStripMenuItem1.Name = "pressuresToolStripMenuItem1";
+            this.pressuresToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
+            this.pressuresToolStripMenuItem1.Text = "Pressures";
+            this.pressuresToolStripMenuItem1.Click += new System.EventHandler(this.pressuresToolStripMenuItem1_Click);
+            // 
+            // commDiagnosticsToolStripMenuItem1
+            // 
+            this.commDiagnosticsToolStripMenuItem1.Image = global::RateController.Properties.Resources.Diagnostics;
+            this.commDiagnosticsToolStripMenuItem1.Name = "commDiagnosticsToolStripMenuItem1";
+            this.commDiagnosticsToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
+            this.commDiagnosticsToolStripMenuItem1.Text = "Comm Diagnostics";
+            this.commDiagnosticsToolStripMenuItem1.Click += new System.EventHandler(this.commDiagnosticsToolStripMenuItem1_Click);
+            // 
             // MnuOptions
             // 
             this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
@@ -434,6 +501,40 @@
             this.MnuOptions.Size = new System.Drawing.Size(253, 42);
             this.MnuOptions.Text = "Options";
             this.MnuOptions.Click += new System.EventHandler(this.MnuOptions_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(250, 6);
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Image = global::RateController.Properties.Resources.FileNew1;
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Image = global::RateController.Properties.Resources.OpenFile1;
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Image = global::RateController.Properties.Resources.close2;
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
+            this.saveAsToolStripMenuItem.Text = "Save As";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(250, 6);
             // 
             // exitToolStripMenuItem
             // 
@@ -529,6 +630,19 @@
             this.pnlRate3.Size = new System.Drawing.Size(44, 128);
             this.pnlRate3.TabIndex = 190;
             // 
+            // pbRate3
+            // 
+            this.pbRate3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbRate3.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbRate3.Location = new System.Drawing.Point(3, 3);
+            this.pbRate3.Maximum = 40;
+            this.pbRate3.Name = "pbRate3";
+            this.pbRate3.Size = new System.Drawing.Size(36, 120);
+            this.pbRate3.TabIndex = 3;
+            this.pbRate3.Tag = "1";
+            this.pbRate3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
+            this.pbRate3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
+            // 
             // pnlRate2
             // 
             this.pnlRate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
@@ -538,6 +652,19 @@
             this.pnlRate2.Name = "pnlRate2";
             this.pnlRate2.Size = new System.Drawing.Size(44, 128);
             this.pnlRate2.TabIndex = 191;
+            // 
+            // pbRate2
+            // 
+            this.pbRate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbRate2.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbRate2.Location = new System.Drawing.Point(3, 3);
+            this.pbRate2.Maximum = 40;
+            this.pbRate2.Name = "pbRate2";
+            this.pbRate2.Size = new System.Drawing.Size(36, 120);
+            this.pbRate2.TabIndex = 2;
+            this.pbRate2.Tag = "1";
+            this.pbRate2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
+            this.pbRate2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
             // 
             // pnlRate1
             // 
@@ -549,6 +676,19 @@
             this.pnlRate1.Size = new System.Drawing.Size(44, 128);
             this.pnlRate1.TabIndex = 192;
             // 
+            // pbRate1
+            // 
+            this.pbRate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbRate1.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbRate1.Location = new System.Drawing.Point(3, 3);
+            this.pbRate1.Maximum = 40;
+            this.pbRate1.Name = "pbRate1";
+            this.pbRate1.Size = new System.Drawing.Size(36, 120);
+            this.pbRate1.TabIndex = 2;
+            this.pbRate1.Tag = "1";
+            this.pbRate1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
+            this.pbRate1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
+            // 
             // pnlRate0
             // 
             this.pnlRate0.BackColor = System.Drawing.Color.Transparent;
@@ -558,6 +698,19 @@
             this.pnlRate0.Name = "pnlRate0";
             this.pnlRate0.Size = new System.Drawing.Size(44, 128);
             this.pnlRate0.TabIndex = 193;
+            // 
+            // pbRate0
+            // 
+            this.pbRate0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.pbRate0.ForeColor = System.Drawing.Color.LimeGreen;
+            this.pbRate0.Location = new System.Drawing.Point(3, 3);
+            this.pbRate0.Maximum = 40;
+            this.pbRate0.Name = "pbRate0";
+            this.pbRate0.Size = new System.Drawing.Size(36, 120);
+            this.pbRate0.TabIndex = 1;
+            this.pbRate0.Tag = "0";
+            this.pbRate0.Click += new System.EventHandler(this.verticalProgressBar1_Click);
+            this.pbRate0.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
             // 
             // btnFan1
             // 
@@ -663,160 +816,6 @@
             // 
             this.tmrBorder.Interval = 500;
             this.tmrBorder.Tick += new System.EventHandler(this.tmrBorder_tick);
-            // 
-            // pressuresToolStripMenuItem1
-            // 
-            this.pressuresToolStripMenuItem1.Image = global::RateController.Properties.Resources.pressure;
-            this.pressuresToolStripMenuItem1.Name = "pressuresToolStripMenuItem1";
-            this.pressuresToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
-            this.pressuresToolStripMenuItem1.Text = "Pressures";
-            this.pressuresToolStripMenuItem1.Click += new System.EventHandler(this.pressuresToolStripMenuItem1_Click);
-            // 
-            // commDiagnosticsToolStripMenuItem1
-            // 
-            this.commDiagnosticsToolStripMenuItem1.Image = global::RateController.Properties.Resources.Diagnostics;
-            this.commDiagnosticsToolStripMenuItem1.Name = "commDiagnosticsToolStripMenuItem1";
-            this.commDiagnosticsToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
-            this.commDiagnosticsToolStripMenuItem1.Text = "Comm Diagnostics";
-            this.commDiagnosticsToolStripMenuItem1.Click += new System.EventHandler(this.commDiagnosticsToolStripMenuItem1_Click);
-            // 
-            // newToolStripMenuItem
-            // 
-            this.newToolStripMenuItem.Image = global::RateController.Properties.Resources.FileNew1;
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
-            this.newToolStripMenuItem.Text = "New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.Image = global::RateController.Properties.Resources.OpenFile1;
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
-            this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
-            // 
-            // saveAsToolStripMenuItem
-            // 
-            this.saveAsToolStripMenuItem.Image = global::RateController.Properties.Resources.close2;
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
-            this.saveAsToolStripMenuItem.Text = "Save As";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(250, 6);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(250, 6);
-            // 
-            // pbRate0
-            // 
-            this.pbRate0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbRate0.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbRate0.Location = new System.Drawing.Point(3, 3);
-            this.pbRate0.Maximum = 40;
-            this.pbRate0.Name = "pbRate0";
-            this.pbRate0.Size = new System.Drawing.Size(36, 120);
-            this.pbRate0.TabIndex = 1;
-            this.pbRate0.Tag = "0";
-            this.pbRate0.Click += new System.EventHandler(this.verticalProgressBar1_Click);
-            this.pbRate0.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
-            // 
-            // pbRate1
-            // 
-            this.pbRate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbRate1.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbRate1.Location = new System.Drawing.Point(3, 3);
-            this.pbRate1.Maximum = 40;
-            this.pbRate1.Name = "pbRate1";
-            this.pbRate1.Size = new System.Drawing.Size(36, 120);
-            this.pbRate1.TabIndex = 2;
-            this.pbRate1.Tag = "1";
-            this.pbRate1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
-            this.pbRate1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
-            // 
-            // pbRate2
-            // 
-            this.pbRate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbRate2.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbRate2.Location = new System.Drawing.Point(3, 3);
-            this.pbRate2.Maximum = 40;
-            this.pbRate2.Name = "pbRate2";
-            this.pbRate2.Size = new System.Drawing.Size(36, 120);
-            this.pbRate2.TabIndex = 2;
-            this.pbRate2.Tag = "1";
-            this.pbRate2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
-            this.pbRate2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
-            // 
-            // pbRate3
-            // 
-            this.pbRate3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbRate3.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbRate3.Location = new System.Drawing.Point(3, 3);
-            this.pbRate3.Maximum = 40;
-            this.pbRate3.Name = "pbRate3";
-            this.pbRate3.Size = new System.Drawing.Size(36, 120);
-            this.pbRate3.TabIndex = 3;
-            this.pbRate3.Tag = "1";
-            this.pbRate3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
-            this.pbRate3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbRate0_HelpRequested);
-            // 
-            // pbQuantity3
-            // 
-            this.pbQuantity3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbQuantity3.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity3.Location = new System.Drawing.Point(3, 3);
-            this.pbQuantity3.Name = "pbQuantity3";
-            this.pbQuantity3.Size = new System.Drawing.Size(36, 120);
-            this.pbQuantity3.TabIndex = 0;
-            this.pbQuantity3.Tag = "3";
-            this.pbQuantity3.Value = 40;
-            this.pbQuantity3.Click += new System.EventHandler(this.verticalProgressBar4_Click);
-            this.pbQuantity3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
-            // 
-            // pbQuantity2
-            // 
-            this.pbQuantity2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbQuantity2.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity2.Location = new System.Drawing.Point(3, 3);
-            this.pbQuantity2.Name = "pbQuantity2";
-            this.pbQuantity2.Size = new System.Drawing.Size(36, 120);
-            this.pbQuantity2.TabIndex = 0;
-            this.pbQuantity2.Tag = "2";
-            this.pbQuantity2.Value = 5;
-            this.pbQuantity2.Click += new System.EventHandler(this.verticalProgressBar3_Click);
-            this.pbQuantity2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
-            // 
-            // pbQuantity1
-            // 
-            this.pbQuantity1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbQuantity1.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity1.Location = new System.Drawing.Point(3, 3);
-            this.pbQuantity1.Name = "pbQuantity1";
-            this.pbQuantity1.Size = new System.Drawing.Size(36, 120);
-            this.pbQuantity1.TabIndex = 0;
-            this.pbQuantity1.Tag = "1";
-            this.pbQuantity1.Value = 30;
-            this.pbQuantity1.Click += new System.EventHandler(this.verticalProgressBar2_Click);
-            this.pbQuantity1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
-            // 
-            // pbQuantity0
-            // 
-            this.pbQuantity0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbQuantity0.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity0.Location = new System.Drawing.Point(3, 3);
-            this.pbQuantity0.Name = "pbQuantity0";
-            this.pbQuantity0.Size = new System.Drawing.Size(36, 120);
-            this.pbQuantity0.TabIndex = 0;
-            this.pbQuantity0.Tag = "0";
-            this.pbQuantity0.Value = 95;
-            this.pbQuantity0.Click += new System.EventHandler(this.verticalProgressBar1_Click);
-            this.pbQuantity0.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.verticalProgressBar0_HelpRequested);
             // 
             // frmLargeScreen
             // 

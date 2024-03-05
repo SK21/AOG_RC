@@ -318,8 +318,8 @@
             // 
             // tcOptions
             // 
-            this.tcOptions.Controls.Add(this.tabPage1);
             this.tcOptions.Controls.Add(this.tabPage2);
+            this.tcOptions.Controls.Add(this.tabPage1);
             this.tcOptions.Controls.Add(this.tabPage3);
             this.tcOptions.Controls.Add(this.tabPage4);
             this.tcOptions.Location = new System.Drawing.Point(12, 12);

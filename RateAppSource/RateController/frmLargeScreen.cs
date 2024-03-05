@@ -530,8 +530,17 @@ namespace RateController
 
         private void MnuComm_Click(object sender, EventArgs e)
         {
-            Form frm = new frmComm(mf);
-            frm.ShowDialog();
+            Form fs = mf.Tls.IsFormOpen("frmComm");
+
+            if (fs == null)
+            {
+                Form frm = new frmComm(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void MnuOptions_Click(object sender, EventArgs e)
@@ -566,8 +575,16 @@ namespace RateController
 
         private void MnuRelays_Click(object sender, EventArgs e)
         {
-            Form tmp = new frmRelays(mf);
-            tmp.ShowDialog();
+            Form fs = mf.Tls.IsFormOpen("frmRelays");
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new frmRelays(mf);
+            frm.Show();
         }
 
         private void MnuSections_Click(object sender, EventArgs e)
@@ -582,10 +599,6 @@ namespace RateController
 
             Form frm = new frmSections(mf);
             frm.Show();
-        }
-
-        private void mnuSettings_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)

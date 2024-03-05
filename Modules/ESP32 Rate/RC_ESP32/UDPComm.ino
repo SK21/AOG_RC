@@ -431,6 +431,8 @@ void ParseData(byte Data[], uint16_t len)
                 }
 
                 MDL.WorkPin = Data[29];
+
+                //SaveData();	saved in pgn 3702
             }
         }
         break;

@@ -1050,8 +1050,17 @@ namespace RateController
 
         private void MnuComm_Click(object sender, EventArgs e)
         {
-            Form frm = new frmComm(this);
-            frm.ShowDialog();
+            Form fs = Tls.IsFormOpen("frmComm");
+
+            if (fs == null)
+            {
+                Form frm = new frmComm(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void MnuOptions_Click(object sender, EventArgs e)
@@ -1071,8 +1080,17 @@ namespace RateController
 
         private void MnuRelays_Click_1(object sender, EventArgs e)
         {
-            Form tmp = new frmRelays(this);
-            tmp.ShowDialog();
+            Form fs = Tls.IsFormOpen("frmRelays");
+
+            if (fs == null)
+            {
+                Form frm = new frmRelays(this);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void mnuSettings_Opening(object sender, System.ComponentModel.CancelEventArgs e)

@@ -155,17 +155,17 @@ void DoSetup()
 	// sensors
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		if (Sensor[i].FlowPin < NC) pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
-		if (Sensor[i].IN1 < NC) pinMode(Sensor[i].IN1, OUTPUT);
-		if (Sensor[i].IN2 < NC) pinMode(Sensor[i].IN2, OUTPUT);
+		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
+		pinMode(Sensor[i].IN1, OUTPUT);
+		pinMode(Sensor[i].IN2, OUTPUT);
 
 		switch (i)
 		{
 		case 0:
-			if (Sensor[i].FlowPin < NC) attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, RISING);
+			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, RISING);
 			break;
 		case 1:
-			if (Sensor[i].FlowPin < NC) attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, RISING);
+			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, RISING);
 			break;
 		}
 
@@ -489,44 +489,47 @@ bool ValidData()
 			if (!Result) break;
 		}
 
-		for (int i = 0; i < MDL.SensorCount; i++)
+		if (Result)
 		{
-
-			// flow pin
-			Result = false;
-			for (int j = 0; j < sizeof(ValidPins0); j++)
+			for (int i = 0; i < MDL.SensorCount; i++)
 			{
-				if (Sensor[i].FlowPin == ValidPins0[j])
-				{
-					Result = true;
-					break;
-				}
-			}
-			if (!Result) break;
 
-			// IN1
-			Result = false;
-			for (int j = 0; j < sizeof(ValidPins0); j++)
-			{
-				if (Sensor[i].IN1 == ValidPins0[j])
+				// flow pin
+				Result = false;
+				for (int j = 0; j < sizeof(ValidPins0); j++)
 				{
-					Result = true;
-					break;
+					if (Sensor[i].FlowPin == ValidPins0[j])
+					{
+						Result = true;
+						break;
+					}
 				}
-			}
-			if (!Result) break;
+				if (!Result) break;
 
-			// IN2
-			Result = false;
-			for (int j = 0; j < sizeof(ValidPins0); j++)
-			{
-				if (Sensor[i].IN2 == ValidPins0[j])
+				// IN1
+				Result = false;
+				for (int j = 0; j < sizeof(ValidPins0); j++)
 				{
-					Result = true;
-					break;
+					if (Sensor[i].IN1 == ValidPins0[j])
+					{
+						Result = true;
+						break;
+					}
 				}
+				if (!Result) break;
+
+				// IN2
+				Result = false;
+				for (int j = 0; j < sizeof(ValidPins0); j++)
+				{
+					if (Sensor[i].IN2 == ValidPins0[j])
+					{
+						Result = true;
+						break;
+					}
+				}
+				if (!Result) break;
 			}
-			if (!Result) break;
 		}
 
 		if (Result && MDL.RelayControl == 1)

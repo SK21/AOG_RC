@@ -30,7 +30,7 @@ void SendData()
 	if (MDL.RateDown < NC) Pins[4] = !digitalRead(MDL.RateDown);
 	if (MDL.AutoSection < NC) Pins[5] = !digitalRead(MDL.AutoSection);
 	if (MDL.AutoRate < NC) Pins[6] = !digitalRead(MDL.AutoRate);
-	if (MDL.WorkPin < NC) Pins[7] = !digitalRead(MDL.WorkPin);
+	if (MDL.WorkPin < NC) Pins[7] = digitalRead(MDL.WorkPin);	// high is off, low is on - pin connected to ground
 
 	for (int i = 0; i < 8; i++)
 	{

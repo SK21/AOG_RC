@@ -49,16 +49,7 @@ namespace RateController
 
         private void ArduinoModule_PinStatusChanged(object sender, PGN32400.PinStatusArgs e)
         {
-            string Mes = "";
-            if (e.GoodPins)
-            {
-                Mes = "Pin configuration correct.";
-            }
-            else
-            {
-                Mes = "Pin configuration not correct.";
-            }
-            mf.Tls.ShowHelp(Mes);
+            if (!e.GoodPins) mf.Tls.ShowHelp("Pin configuration not correct. Using default values.");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
