@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Security.Policy;
 
 namespace RateController
 {
@@ -31,6 +33,7 @@ namespace RateController
         private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
         private int TimerCount = 0;
         private bool WorkSWOnLast;
+        private bool[] RCzoneOn = new bool[8];
 
         public clsSectionControl(FormStart CallingForm)
         {
@@ -39,6 +42,7 @@ namespace RateController
             SectionOnAOG = new bool[mf.MaxSections];
             mf.AutoSteerPGN.RelaysChanged += AutoSteerPGN_RelaysChanged;
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
+            mf.AOGsections.SectionsChanged += AOGsections_SectionsChanged;
             MasterIsOn = false;
             ForceOff = true;
             MasterLast = true;  // to cause a change flag to be set
@@ -151,6 +155,198 @@ namespace RateController
         }
 
         public void UpdateSectionStatus()
+        {
+            if(mf.UseZones)
+            {
+                UpdateSectionStatusWithZones();
+            }
+            else
+            {
+                UpdateSectionStatusNoZones();
+            }
+        }
+
+        private void UpdateSectionStatusWithZones()
+        {
+            bool WorkSWOn;
+            bool MasterSWOn;
+            bool MasterSWOff;
+
+            // match switchbox and AOG
+            Array.Clear(RCzoneOn, 0, RCzoneOn.Length);
+
+            WorkSWOn = mf.SwitchBox.WorkOn;
+            MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
+            MasterSWOn = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn);
+
+            if (MasterSWOn)
+            {
+                SetPriming();
+            }
+            else
+            {
+                PrimeInitialized = false;
+            }
+
+            if (cPrimeOn)
+            {
+                MasterSWOn = true;
+            }
+            else
+            {
+                if (MasterSWOff || ForceOff) MasterSWOnPending = false;
+                if (MasterSWOn) MasterSWOnPending = true;
+
+                MasterSWOff = MasterSWOff || !WorkSWOn || ForceOff;
+                MasterSWOn = (MasterSWOn || MasterIsOn) && WorkSWOn;
+
+                if (WorkSWOnLast != WorkSWOn)
+                {
+                    WorkSWOnLast = WorkSWOn;
+                    if (WorkSWOn && MasterSWOnPending) MasterSWOn = true;
+                }
+            }
+
+            if (MasterSWOff)
+            {
+                MasterIsOn = false;
+                cPrimeOn = false;
+                Timer1.Enabled = false;
+                ForceOff = false;
+            }
+            else if (MasterSWOn)
+            {
+                MasterIsOn = true;
+
+                // set zones by switchbox switch positions
+                foreach (clsZone Zone in mf.Zones.Items)
+                {
+                    RCzoneOn[Zone.ID] = mf.SwitchBox.SectionSwitchOn(Zone.SwitchID);
+                }
+
+                if ((mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection)) && mf.AutoSteerPGN.Connected() && !cPrimeOn)
+                {
+                    // match AOG zone status only on RC zones that are on
+                    // any AOG section on in a zone makes whole RC zone on
+                    foreach (clsZone Zn in mf.Zones.Items)
+                    {
+                        if (RCzoneOn[Zn.ID])
+                        {
+                            for (int i = Zn.Start; i < Zn.End + 1; i++)
+                            {
+                                if(mf.AOGsections.SectionIsOn(i))
+                                {
+                                    RCzoneOn[Zn.ID] = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // set sections on
+            foreach (clsZone Zn in mf.Zones.Items)
+            {
+                for (int i = Zn.Start; i < Zn.End + 1; i++)
+                {
+                    mf.Sections.Item(i).IsON = RCzoneOn[Zn.ID];
+                }
+            }
+
+            if (MasterLast != MasterIsOn)
+            {
+                MasterLast = MasterIsOn;
+                MasterChanged = true;
+            }
+
+            // update AOG
+            if (mf.AutoSteerPGN.Connected())
+            {
+                PGN234 ToAOG = new PGN234(mf);
+                if (MasterIsOn)
+                {
+                    // master on
+                    bool SectionsChanged = false;
+                    for (int i = 0; i < mf.AOGsections.SectionCount; i++)
+                    {
+                        if (mf.Sections.Item(i).IsON != mf.AOGsections.SectionIsOn(i))
+                        {
+                            SectionsChanged = true;
+                            break;
+                        }
+                    }
+                    Debug.Print("SectionsChanged: " + SectionsChanged.ToString());
+
+                    if (SectionsChanged || MasterChanged)
+                    {
+                        MasterChanged = false;
+
+                        // send off bytes to match RC zones
+                        ToAOG.OffLo = 0;
+                        ToAOG.OffHi = 0;
+                        foreach (clsZone Zn in mf.Zones.Items)
+                        {
+                            if (!RCzoneOn[Zn.ID] && Zn.ID < 8) ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, Zn.ID);
+                        }
+
+                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                        {
+                            // auto off, send on bytes to match RC zones
+                            ToAOG.OnLo = 0;
+                            ToAOG.OnHi = 0;
+                            foreach (clsZone Zn in mf.Zones.Items)
+                            {
+                                if (RCzoneOn[Zn.ID] && Zn.ID < 8) ToAOG.OnLo = mf.Tls.BitSet(ToAOG.OnLo, Zn.ID);
+                            }
+                        }
+                    }
+
+                    //// check for switches off
+                    //ToAOG.OffLo = 0;
+                    //ToAOG.OffHi = 0;
+                    //foreach (clsZone Zn in mf.Zones.Items)
+                    //{
+                    //    if (!RCzoneOn[Zn.ID] && Zn.ID < 8) ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, Zn.ID);
+                    //}
+
+                    if (AutoLast != mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                    {
+                        AutoLast = mf.SwitchBox.SwitchIsOn(SwIDs.Auto);
+                        AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
+
+                        if (AutoLast && MasterIsOn || AutoSectionLast & MasterIsOn)
+                        {
+                            // auto on
+                            ToAOG.Command = 1;
+                        }
+                        else
+                        {
+                            // auto off
+                            ToAOG.Command = 2;
+                        }
+                    }
+                }
+                else
+                {
+                    // master off
+                    if (MasterChanged)
+                    {
+                        MasterChanged = false;
+                        ToAOG.Command = 2;  // auto off
+                        AutoLast = false;
+                        AutoSectionLast = false;
+                        ToAOG.OffLo = 255;
+                        ToAOG.OffHi = 255;
+                    }
+                }
+
+                Debug.Print(ToAOG.OffLo.ToString() + ", " + ToAOG.OnLo.ToString());
+                ToAOG.Send();
+            }
+        }
+
+        private void UpdateSectionStatusNoZones()
         {
             bool WorkSWOn;
             bool MasterSWOn;
@@ -342,6 +538,30 @@ namespace RateController
                 ToAOG.Send();
             }
         }
+        private void AOGsections_SectionsChanged(object sender, EventArgs e)
+        {
+            Debug.Print("AOGsections_SectionsChanged");
+            if(mf.SwitchBox.Connected())
+            {
+                UpdateSectionStatus();
+            }
+            else
+            {
+                // no switchbox, match AOG zones
+                foreach(clsSection Sec in mf.Sections.Items)
+                {
+                    if (Sec.ID < mf.AOGsections.SectionCount   )
+                    {
+                        Sec.IsON=mf.AOGsections.SectionIsOn(Sec.ID);
+                    }
+                    else
+                    {
+                        Sec.IsON = false;
+                    }
+                }
+            }
+        }
+
 
         private void AutoSteerPGN_RelaysChanged(object sender, PGN254.RelaysChangedArgs e)
         {

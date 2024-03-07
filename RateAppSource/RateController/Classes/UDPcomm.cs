@@ -173,6 +173,11 @@ namespace RateController
                                     mf.VRdata.ParseByteData(Data);
                                     break;
 
+                                case 229:
+                                    // aog sections
+                                    mf.AOGsections.ParseByteData(Data);
+                                    break;
+
                                 case 235:
                                     // section widths
                                     mf.SectionsPGN.ParseByteData(Data);

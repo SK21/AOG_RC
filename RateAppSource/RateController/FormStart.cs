@@ -80,12 +80,10 @@ namespace RateController
         private Label[] ProdName;
         private Label[] Rates;
         private int[] RateType = new int[6];
-
-        // 0 current rate, 1 instantaneous rate, 2 overall rate
         private PGN32501[] RelaySettings;
-
         private DateTime StartTime;
         private Label[] Targets;
+        public PGN229 AOGsections;
 
         public FormStart()
         {
@@ -149,7 +147,6 @@ namespace RateController
 
             PressureObjects = new clsPressures(this);
             RelayObjects = new clsRelays(this);
-            SectionControl = new clsSectionControl(this);
 
             timerMain.Interval = 1000;
 
@@ -164,6 +161,8 @@ namespace RateController
             vSwitchBox = new clsVirtualSwitchBox(this);
             ModuleConfig = new PGN32700(this);
             NetworkConfig = new PGN32702(this);
+            AOGsections = new PGN229(this);
+            SectionControl = new clsSectionControl(this);
         }
 
         public event EventHandler ProductChanged;

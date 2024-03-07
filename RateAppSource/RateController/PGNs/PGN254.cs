@@ -8,8 +8,8 @@ namespace RateController
         // AutoSteer Data
         // 0    header Hi       128 0x80
         // 1    header Lo       129 0x81
-        // 2    source          126 0x7E
-        // 3    AGIO PGN         254 0xFE
+        // 2    source          127 0x7F
+        // 3    AGIO PGN        254 0xFE
         // 4    length          8
         // 5    speed Lo - kmh X 10
         // 6    speed Hi
