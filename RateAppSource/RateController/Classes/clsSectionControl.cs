@@ -30,10 +30,12 @@ namespace RateController
         private bool[] SectionOnAOG;
         private bool[] SectionOnSB;
         private DateTime StepTime;
-        private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
+        private System.Windows.Forms.Timer PrimeTimer = new System.Windows.Forms.Timer();
         private int TimerCount = 0;
         private bool WorkSWOnLast;
         private bool[] RCzoneOn = new bool[8];
+        private bool RCzoneOnLast;
+        private bool AOGsectionsMatched;
 
         public clsSectionControl(FormStart CallingForm)
         {
@@ -46,9 +48,9 @@ namespace RateController
             MasterIsOn = false;
             ForceOff = true;
             MasterLast = true;  // to cause a change flag to be set
-            Timer1.Tick += new EventHandler(Timer1_Tick);
-            Timer1.Interval = 1000;
-            Timer1.Enabled = false;
+            PrimeTimer.Tick += new EventHandler(Timer1_Tick);
+            PrimeTimer.Interval = 1000;
+            PrimeTimer.Enabled = false;
         }
 
         public bool MasterOn
@@ -168,16 +170,9 @@ namespace RateController
 
         private void UpdateSectionStatusWithZones()
         {
-            bool WorkSWOn;
-            bool MasterSWOn;
-            bool MasterSWOff;
-
-            // match switchbox and AOG
-            Array.Clear(RCzoneOn, 0, RCzoneOn.Length);
-
-            WorkSWOn = mf.SwitchBox.WorkOn;
-            MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
-            MasterSWOn = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn);
+            bool WorkSWOn = mf.SwitchBox.WorkOn;
+            bool MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
+            bool MasterSWOn = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn);
 
             if (MasterSWOn)
             {
@@ -194,6 +189,7 @@ namespace RateController
             }
             else
             {
+                // handle work switch logic
                 if (MasterSWOff || ForceOff) MasterSWOnPending = false;
                 if (MasterSWOn) MasterSWOnPending = true;
 
@@ -207,11 +203,14 @@ namespace RateController
                 }
             }
 
+            // match switchbox and AOG
+            Array.Clear(RCzoneOn, 0, RCzoneOn.Length);
+
             if (MasterSWOff)
             {
                 MasterIsOn = false;
                 cPrimeOn = false;
-                Timer1.Enabled = false;
+                PrimeTimer.Enabled = false;
                 ForceOff = false;
             }
             else if (MasterSWOn)
@@ -221,7 +220,7 @@ namespace RateController
                 // set zones by switchbox switch positions
                 foreach (clsZone Zone in mf.Zones.Items)
                 {
-                    RCzoneOn[Zone.ID] = mf.SwitchBox.SectionSwitchOn(Zone.SwitchID);
+                    if (Zone.Enabled) RCzoneOn[Zone.ID] = mf.SwitchBox.SectionSwitchOn(Zone.SwitchID);
                 }
 
                 if ((mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection)) && mf.AutoSteerPGN.Connected() && !cPrimeOn)
@@ -230,16 +229,14 @@ namespace RateController
                     // any AOG section on in a zone makes whole RC zone on
                     foreach (clsZone Zn in mf.Zones.Items)
                     {
-                        if (RCzoneOn[Zn.ID])
+                        if (Zn.Enabled && RCzoneOn[Zn.ID])
                         {
-                            for (int i = Zn.Start; i < Zn.End + 1; i++)
+                            bool Result = true;
+                            for (int i = Zn.Start - 1; i < Zn.End; i++)
                             {
-                                if(mf.AOGsections.SectionIsOn(i))
-                                {
-                                    RCzoneOn[Zn.ID] = true;
-                                    break;
-                                }
+                                Result &= mf.AOGsections.SectionIsOn(i);
                             }
+                            RCzoneOn[Zn.ID] = Result;
                         }
                     }
                 }
@@ -248,9 +245,12 @@ namespace RateController
             // set sections on
             foreach (clsZone Zn in mf.Zones.Items)
             {
-                for (int i = Zn.Start; i < Zn.End + 1; i++)
+                if (Zn.Enabled)
                 {
-                    mf.Sections.Item(i).IsON = RCzoneOn[Zn.ID];
+                    for (int i = Zn.Start - 1; i < Zn.End; i++)
+                    {
+                        mf.Sections.Item(i).IsON = RCzoneOn[Zn.ID];
+                    }
                 }
             }
 
@@ -258,6 +258,8 @@ namespace RateController
             {
                 MasterLast = MasterIsOn;
                 MasterChanged = true;
+                Debug.Print("");
+                Debug.Print("Master Changed");
             }
 
             // update AOG
@@ -267,24 +269,39 @@ namespace RateController
                 if (MasterIsOn)
                 {
                     // master on
+                    // check zones
+                    ToAOG.OffLo = 0;
+                    ToAOG.OffHi = 0;
+                    ToAOG.OnLo = 0;
+                    ToAOG.OnHi = 0;
                     bool SectionsChanged = false;
-                    for (int i = 0; i < mf.AOGsections.SectionCount; i++)
+
+                    if (AOGsectionsMatched)
                     {
-                        if (mf.Sections.Item(i).IsON != mf.AOGsections.SectionIsOn(i))
+                        for (int i = 0; i < mf.AOGsections.SectionCount; i++)
                         {
-                            SectionsChanged = true;
-                            break;
+                            if (mf.Sections.Item(i).IsON != mf.AOGsections.SectionIsOn(i))
+                            {
+                                SectionsChanged = true;
+
+                                Debug.Print("");
+                                Debug.Print("Sections changed, " + DateTime.Now.ToString("ss.fff"));
+                                for (int j = 0; j < i + 1; j++)
+                                {
+                                    Debug.Print(j.ToString() + ", " + mf.Sections.Item(j).IsON.ToString() + ", "
+                                        + mf.AOGsections.SectionIsOn(j));
+                                }
+                                break;
+                            }
                         }
                     }
-                    Debug.Print("SectionsChanged: " + SectionsChanged.ToString());
 
                     if (SectionsChanged || MasterChanged)
                     {
                         MasterChanged = false;
+                        AOGsectionsMatched = false;
 
                         // send off bytes to match RC zones
-                        ToAOG.OffLo = 0;
-                        ToAOG.OffHi = 0;
                         foreach (clsZone Zn in mf.Zones.Items)
                         {
                             if (!RCzoneOn[Zn.ID] && Zn.ID < 8) ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, Zn.ID);
@@ -293,22 +310,12 @@ namespace RateController
                         if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                         {
                             // auto off, send on bytes to match RC zones
-                            ToAOG.OnLo = 0;
-                            ToAOG.OnHi = 0;
                             foreach (clsZone Zn in mf.Zones.Items)
                             {
                                 if (RCzoneOn[Zn.ID] && Zn.ID < 8) ToAOG.OnLo = mf.Tls.BitSet(ToAOG.OnLo, Zn.ID);
                             }
                         }
                     }
-
-                    //// check for switches off
-                    //ToAOG.OffLo = 0;
-                    //ToAOG.OffHi = 0;
-                    //foreach (clsZone Zn in mf.Zones.Items)
-                    //{
-                    //    if (!RCzoneOn[Zn.ID] && Zn.ID < 8) ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, Zn.ID);
-                    //}
 
                     if (AutoLast != mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                     {
@@ -340,8 +347,12 @@ namespace RateController
                         ToAOG.OffHi = 255;
                     }
                 }
+                if (RCzoneOn[0] != RCzoneOnLast)
+                {
+                    RCzoneOnLast = RCzoneOn[0];
+                    Debug.Print("RCzoneOn[0]:  " + RCzoneOn[0].ToString());
+                }
 
-                Debug.Print(ToAOG.OffLo.ToString() + ", " + ToAOG.OnLo.ToString());
                 ToAOG.Send();
             }
         }
@@ -391,7 +402,7 @@ namespace RateController
             {
                 MasterIsOn = false;
                 cPrimeOn = false;
-                Timer1.Enabled = false;
+                PrimeTimer.Enabled = false;
                 ForceOff = false;
             }
             else if (MasterSWOn)
@@ -540,7 +551,8 @@ namespace RateController
         }
         private void AOGsections_SectionsChanged(object sender, EventArgs e)
         {
-            Debug.Print("AOGsections_SectionsChanged");
+            AOGsectionsMatched = true;
+            Debug.Print("AOGsections_SectionsChanged, " + DateTime.Now.ToString("ss.fff"));
             if(mf.SwitchBox.Connected())
             {
                 UpdateSectionStatus();
@@ -597,13 +609,14 @@ namespace RateController
 
         private void SetPriming()
         {
+            // turn sections on if master held in on position for a defined time
             if (PrimeInitialized)
             {
                 if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
                 {
                     // priming mode
                     cPrimeOn = true;
-                    Timer1.Enabled = true;
+                    PrimeTimer.Enabled = true;
                 }
             }
             else
@@ -613,7 +626,7 @@ namespace RateController
                     PrimeInitialized = true;
                     OnFirstPressed = DateTime.Now;
                     cPrimeOn = false;
-                    Timer1.Enabled = false;
+                    PrimeTimer.Enabled = false;
                 }
             }
         }
@@ -630,7 +643,7 @@ namespace RateController
             if (TimerCount > mf.PrimeTime)
             {
                 TimerCount = 0;
-                Timer1.Enabled = false;
+                PrimeTimer.Enabled = false;
                 cPrimeOn = false;
                 PrimeInitialized = false;
                 ForceOff = true;

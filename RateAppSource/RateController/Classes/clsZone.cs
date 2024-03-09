@@ -48,6 +48,10 @@ namespace RateController
                 }
             }
         }
+        public bool Enabled
+        {
+            get { return (SecEnd > 0 && SecStart > 0 && cWidth > 0); }
+        }
 
         public int SwitchID
         {
