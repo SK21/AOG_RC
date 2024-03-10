@@ -68,7 +68,7 @@
             // 
             // btn2
             // 
-            this.btn2.Location = new System.Drawing.Point(88, 68);
+            this.btn2.Location = new System.Drawing.Point(90, 68);
             this.btn2.Name = "btn2";
             this.btn2.Size = new System.Drawing.Size(64, 46);
             this.btn2.TabIndex = 161;
@@ -78,7 +78,7 @@
             // 
             // btn3
             // 
-            this.btn3.Location = new System.Drawing.Point(164, 68);
+            this.btn3.Location = new System.Drawing.Point(168, 68);
             this.btn3.Name = "btn3";
             this.btn3.Size = new System.Drawing.Size(64, 46);
             this.btn3.TabIndex = 162;
@@ -88,7 +88,7 @@
             // 
             // btn4
             // 
-            this.btn4.Location = new System.Drawing.Point(240, 68);
+            this.btn4.Location = new System.Drawing.Point(246, 68);
             this.btn4.Name = "btn4";
             this.btn4.Size = new System.Drawing.Size(64, 46);
             this.btn4.TabIndex = 163;
@@ -149,9 +149,9 @@
             // 
             // btnAutoRate
             // 
-            this.btnAutoRate.Location = new System.Drawing.Point(316, 16);
+            this.btnAutoRate.Location = new System.Drawing.Point(12, 120);
             this.btnAutoRate.Name = "btnAutoRate";
-            this.btnAutoRate.Size = new System.Drawing.Size(132, 46);
+            this.btnAutoRate.Size = new System.Drawing.Size(142, 46);
             this.btnAutoRate.TabIndex = 168;
             this.btnAutoRate.Text = "Auto Rate";
             this.btnAutoRate.UseVisualStyleBackColor = true;
@@ -159,9 +159,9 @@
             // 
             // btnAutoSection
             // 
-            this.btnAutoSection.Location = new System.Drawing.Point(316, 68);
+            this.btnAutoSection.Location = new System.Drawing.Point(168, 120);
             this.btnAutoSection.Name = "btnAutoSection";
-            this.btnAutoSection.Size = new System.Drawing.Size(132, 46);
+            this.btnAutoSection.Size = new System.Drawing.Size(142, 46);
             this.btnAutoSection.TabIndex = 169;
             this.btnAutoSection.Text = "Auto Section";
             this.btnAutoSection.UseVisualStyleBackColor = true;
@@ -171,7 +171,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(458, 123);
+            this.ClientSize = new System.Drawing.Size(323, 174);
             this.Controls.Add(this.btnAutoSection);
             this.Controls.Add(this.btnAutoRate);
             this.Controls.Add(this.btnDown);

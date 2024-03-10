@@ -66,7 +66,14 @@ namespace RateController
             }
             if (Changed)
             {
-                mf.SectionControl.UpdateSectionStatus();
+                if (mf.UseZones)
+                {
+                    mf.SectionControl.UpdateSectionStatusWithZones();
+                }
+                else
+                {
+                    mf.SectionControl.UpdateSectionStatusNoZones();
+                }
             }
         }
 

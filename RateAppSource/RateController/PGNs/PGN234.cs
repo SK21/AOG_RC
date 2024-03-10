@@ -63,7 +63,6 @@ namespace RateController
             {
                 OffLoLast = OffLo;
                 OnLoLast= OnLo;
-                Debug.Print("Command: " + Command.ToString() + ", OffLo: " + OffLo.ToString() + ", OnLo:  " + OnLo.ToString());
             }
         }
     }

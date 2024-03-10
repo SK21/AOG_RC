@@ -29,9 +29,8 @@ namespace RateController
         private System.Windows.Forms.Timer PrimeTimer = new System.Windows.Forms.Timer();
         private double RateDir;
         private int RateStep;
+        private bool[] RCsectionOn;
         private bool[] RCzoneOn = new bool[8];
-        private bool[] SectionOnAOG;
-        private bool[] SectionOnSB;
         private DateTime StepTime;
         private int TimerCount = 0;
         private bool WorkSWOnLast;
@@ -39,9 +38,7 @@ namespace RateController
         public clsSectionControl(FormStart CallingForm)
         {
             mf = CallingForm;
-            SectionOnSB = new bool[mf.MaxSections];
-            SectionOnAOG = new bool[mf.MaxSections];
-            mf.AutoSteerPGN.RelaysChanged += AutoSteerPGN_RelaysChanged;
+            RCsectionOn = new bool[mf.MaxSections];
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             mf.AOGsections.SectionsChanged += AOGsections_SectionsChanged;
             MasterIsOn = false;
@@ -155,124 +152,14 @@ namespace RateController
             }
         }
 
-        public void UpdateSectionStatus()
-        {
-            if (mf.UseZones)
-            {
-                UpdateSectionStatusWithZones();
-            }
-            else
-            {
-                UpdateSectionStatusNoZones();
-            }
-        }
-
-        private void AOGsections_SectionsChanged(object sender, EventArgs e)
-        {
-            if (mf.SwitchBox.Connected())
-            {
-                UpdateSectionStatus();
-            }
-            else
-            {
-                // no switchbox, match AOG zones
-                foreach (clsSection Sec in mf.Sections.Items)
-                {
-                    if (Sec.ID < mf.AOGsections.SectionCount)
-                    {
-                        Sec.IsON = mf.AOGsections.SectionIsOn(Sec.ID);
-                    }
-                    else
-                    {
-                        Sec.IsON = false;
-                    }
-                }
-            }
-        }
-
-        private void AutoSteerPGN_RelaysChanged(object sender, PGN254.RelaysChangedArgs e)
-        {
-            Array.Clear(SectionOnAOG, 0, SectionOnAOG.Length);
-
-            // only sections 0-15 are set in this pgn
-            for (int i = 0; i < 8; i++)
-            {
-                SectionOnAOG[i] = mf.Tls.BitRead(e.RelayLo, i);
-                SectionOnAOG[i + 8] = mf.Tls.BitRead(e.RelayHi, i);
-            }
-
-            if (mf.SwitchBox.Connected())
-            {
-                UpdateSectionStatus();
-            }
-            else
-            {
-                // no switchbox, match AOG
-                foreach (clsSection Sec in mf.Sections.Items)
-                {
-                    if (Sec.ID < 16)
-                    {
-                        Sec.IsON = SectionOnAOG[Sec.ID];
-                    }
-                    else
-                    {
-                        Sec.IsON = false;
-                    }
-                }
-            }
-        }
-
-        private void SetPriming()
-        {
-            // turn sections on if master held in on position for a defined time
-            if (PrimeInitialized)
-            {
-                if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
-                {
-                    // priming mode
-                    cPrimeOn = true;
-                    PrimeTimer.Enabled = true;
-                }
-            }
-            else
-            {
-                if (mf.Products.Item(mf.CurrentProduct()).Speed() < 0.1)
-                {
-                    PrimeInitialized = true;
-                    OnFirstPressed = DateTime.Now;
-                    cPrimeOn = false;
-                    PrimeTimer.Enabled = false;
-                }
-            }
-        }
-
-        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
-        {
-            ReadRateSwitches();
-            UpdateSectionStatus();
-        }
-
-        private void Timer1_Tick(Object myObject, EventArgs myEventArgs)
-        {
-            TimerCount++;
-            if (TimerCount > mf.PrimeTime)
-            {
-                TimerCount = 0;
-                PrimeTimer.Enabled = false;
-                cPrimeOn = false;
-                PrimeInitialized = false;
-                ForceOff = true;
-            }
-        }
-
-        private void UpdateSectionStatusNoZones()
+        public void UpdateSectionStatusNoZones()
         {
             bool WorkSWOn;
             bool MasterSWOn;
             bool MasterSWOff;
 
             // match switchbox and AOG
-            Array.Clear(SectionOnSB, 0, SectionOnSB.Length);
+            Array.Clear(RCsectionOn, 0, RCsectionOn.Length);
 
             WorkSWOn = mf.SwitchBox.WorkOn;
             MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
@@ -320,7 +207,7 @@ namespace RateController
                 // set sections by switchbox switch positions
                 foreach (clsSection Sec in mf.Sections.Items)
                 {
-                    SectionOnSB[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
+                    RCsectionOn[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
                 }
 
                 if ((mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection)) && mf.AutoSteerPGN.Connected() && !cPrimeOn)
@@ -328,10 +215,10 @@ namespace RateController
                     // match AOG section status, only on sections 0-15
                     for (int i = 0; i < 16; i++)
                     {
-                        if (SectionOnSB[i])
+                        if (RCsectionOn[i])
                         {
                             // check if AOG has switched it off
-                            SectionOnSB[i] = SectionOnAOG[i];
+                            RCsectionOn[i] = mf.AOGsections.SectionIsOn(i);
                         }
                     }
                 }
@@ -339,7 +226,7 @@ namespace RateController
 
             foreach (clsSection Sec in mf.Sections.Items)
             {
-                Sec.IsON = SectionOnSB[Sec.ID];
+                Sec.IsON = RCsectionOn[Sec.ID];
             }
 
             if (MasterIsOnLast != MasterIsOn)
@@ -357,9 +244,9 @@ namespace RateController
                 {
                     // master on
                     bool SectionsChanged = false;
-                    for (int i = 0; i < 8; i++)
+                    for (int i = 0; i < Max; i++)
                     {
-                        if (SectionOnSB[i] != SectionOnAOG[i] || SectionOnSB[i + 8] != SectionOnAOG[i + 8])
+                        if (RCsectionOn[i] != mf.AOGsections.SectionIsOn(i))
                         {
                             SectionsChanged = true;
                             break;
@@ -458,7 +345,7 @@ namespace RateController
             }
         }
 
-        private void UpdateSectionStatusWithZones()
+        public void UpdateSectionStatusWithZones()
         {
             bool WorkSWOn = mf.SwitchBox.WorkOn;
             bool MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
@@ -612,6 +499,86 @@ namespace RateController
                 }
 
                 ToAOG.Send();
+            }
+        }
+
+        private void AOGsections_SectionsChanged(object sender, EventArgs e)
+        {
+            if (mf.SwitchBox.Connected())
+            {
+                if (mf.UseZones)
+                {
+                    UpdateSectionStatusWithZones();
+                }
+                else
+                {
+                    UpdateSectionStatusNoZones();
+                }
+            }
+            else
+            {
+                // no switchbox, match AOG sections
+                foreach (clsSection Sec in mf.Sections.Items)
+                {
+                    if (Sec.ID < mf.AOGsections.SectionCount)
+                    {
+                        Sec.IsON = mf.AOGsections.SectionIsOn(Sec.ID);
+                    }
+                    else
+                    {
+                        Sec.IsON = false;
+                    }
+                }
+            }
+        }
+
+        private void SetPriming()
+        {
+            // turn sections on if master held in on position for a defined time
+            if (PrimeInitialized)
+            {
+                if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
+                {
+                    // priming mode
+                    cPrimeOn = true;
+                    PrimeTimer.Enabled = true;
+                }
+            }
+            else
+            {
+                if (mf.Products.Item(mf.CurrentProduct()).Speed() < 0.1)
+                {
+                    PrimeInitialized = true;
+                    OnFirstPressed = DateTime.Now;
+                    cPrimeOn = false;
+                    PrimeTimer.Enabled = false;
+                }
+            }
+        }
+
+        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
+        {
+            ReadRateSwitches();
+            if (mf.UseZones)
+            {
+                UpdateSectionStatusWithZones();
+            }
+            else
+            {
+                UpdateSectionStatusNoZones();
+            }
+        }
+
+        private void Timer1_Tick(Object myObject, EventArgs myEventArgs)
+        {
+            TimerCount++;
+            if (TimerCount > mf.PrimeTime)
+            {
+                TimerCount = 0;
+                PrimeTimer.Enabled = false;
+                cPrimeOn = false;
+                PrimeInitialized = false;
+                ForceOff = true;
             }
         }
     }

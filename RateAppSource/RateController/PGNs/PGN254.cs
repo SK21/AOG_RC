@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -21,35 +20,21 @@ namespace RateController
         // 12   Relay Hi
         // 13   CRC
 
-        private byte cRelayHi;
-        private byte cRelayLo;
+        private readonly float KalProcess = 0.005F;
+        private readonly float KalVariance = 0.01F;
+        private readonly FormStart mf;
         private float cSpeed;
         private float KalG = 0.0F;
         private float KalP = 1.0F;
         private float KalPc = 0.0F;
         private float KalResult = 0.0F;
-        private readonly FormStart mf;
-
-        private readonly float KalVariance = 0.01F;   // larger is more filtering
-        private readonly float KalProcess = 0.005F;  // smaller is more filtering
         private DateTime ReceiveTime;
-
-        private byte RelayHiLast;
-        private byte RelayLoLast;
         private int totalHeaderByteCount = 5;
 
         public PGN254(FormStart CalledFrom)
         {
             mf = CalledFrom;
         }
-
-        public event EventHandler<RelaysChangedArgs> RelaysChanged;
-
-        public byte RelayHi
-        { get { return cRelayHi; } }
-
-        public byte RelayLo
-        { get { return cRelayLo; } }
 
         public bool Connected()
         {
@@ -73,21 +58,6 @@ namespace RateController
                         KalResult = KalG * (cSpeed - KalResult) + KalResult;
                         cSpeed = KalResult;
 
-                        cRelayLo = Data[11];
-                        cRelayHi = Data[12];
-
-                        if (cRelayLo != RelayLoLast || cRelayHi != RelayHiLast)
-                        {
-                            // raise event
-                            RelaysChangedArgs args = new RelaysChangedArgs();
-                            args.RelayHi = cRelayHi;
-                            args.RelayLo = cRelayLo;
-                            RelaysChanged?.Invoke(this, args);
-
-                            RelayHiLast = cRelayHi;
-                            RelayLoLast = cRelayLo;
-                        }
-
                         ReceiveTime = DateTime.Now;
                     }
                 }
@@ -104,12 +74,6 @@ namespace RateController
             {
                 return 0;
             }
-        }
-
-        public class RelaysChangedArgs : EventArgs
-        {
-            public byte RelayHi { get; set; }
-            public byte RelayLo { get; set; }
         }
     }
 }

@@ -43,6 +43,7 @@ namespace RateController
         }
 
         public event EventHandler SectionsChanged;
+
         public double Lspeed
         { get { return cLspeed; } }
 
@@ -65,25 +66,15 @@ namespace RateController
                     cLspeed = Data[13] / 10.0;
                     cRspeed = Data[14] / 10.0;
                     if (Changed()) SectionsChanged?.Invoke(this, EventArgs.Empty);
-                    //Check();
                 }
             }
         }
 
         public bool SectionIsOn(int ID)
         {
-            return cSection[ID];
-        }
-
-        public void Check()
-        {
-            Debug.Print("");
-            for (int i = 0; i < 16; i++)
-            {
-                Debug.Print("Section " + i.ToString() + "  " + SectionIsOn(i).ToString()
-                    + "  Section " + (i + 16).ToString() + "  " + SectionIsOn(i + 16).ToString());
-            }
-            Debug.Print(mf.AutoSteerPGN.RelayLo.ToString() + ", " + mf.AutoSteerPGN.RelayHi.ToString());
+            bool Result = false;
+            if (ID < SectionCount) Result = cSection[ID];
+            return Result;
         }
 
         private bool Changed()
