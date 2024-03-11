@@ -154,16 +154,9 @@ namespace RateController
 
         public void UpdateSectionStatusNoZones()
         {
-            bool WorkSWOn;
-            bool MasterSWOn;
-            bool MasterSWOff;
-
-            // match switchbox and AOG
-            Array.Clear(RCsectionOn, 0, RCsectionOn.Length);
-
-            WorkSWOn = mf.SwitchBox.WorkOn;
-            MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
-            MasterSWOn = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn);
+            bool WorkSWOn = mf.SwitchBox.WorkOn;
+            bool MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
+            bool MasterSWOn = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn);
 
             if (MasterSWOn)
             {
@@ -180,6 +173,7 @@ namespace RateController
             }
             else
             {
+                // handle work logic
                 if (MasterSWOff || ForceOff) MasterSWOnPending = false;
                 if (MasterSWOn) MasterSWOnPending = true;
 
@@ -193,6 +187,9 @@ namespace RateController
                 }
             }
 
+            // match switchbox and AOG
+            Array.Clear(RCsectionOn, 0, RCsectionOn.Length);
+
             if (MasterSWOff)
             {
                 MasterIsOn = false;
@@ -204,35 +201,27 @@ namespace RateController
             {
                 MasterIsOn = true;
 
-                // set sections by switchbox switch positions
+                // set RC sections by switchbox switch positions
                 foreach (clsSection Sec in mf.Sections.Items)
                 {
                     RCsectionOn[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
                 }
+            }
 
-                if ((mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection)) && mf.AutoSteerPGN.Connected() && !cPrimeOn)
+            // set sections on
+            if (mf.AutoSteerPGN.Connected() && !cPrimeOn)
+            {
+                foreach (clsSection Sec in mf.Sections.Items)
                 {
-                    // match AOG section status, only on sections 0-15
-                    for (int i = 0; i < 16; i++)
-                    {
-                        if (RCsectionOn[i])
-                        {
-                            // check if AOG has switched it off
-                            RCsectionOn[i] = mf.AOGsections.SectionIsOn(i);
-                        }
-                    }
+                    if (Sec.Enabled) Sec.IsON = mf.AOGsections.SectionIsOn(Sec.ID);
                 }
             }
-
-            foreach (clsSection Sec in mf.Sections.Items)
+            else
             {
-                Sec.IsON = RCsectionOn[Sec.ID];
-            }
-
-            if (MasterIsOnLast != MasterIsOn)
-            {
-                MasterIsOnLast = MasterIsOn;
-                MasterIsOnChanged = true;
+                foreach (clsSection Sec in mf.Sections.Items)
+                {
+                    if (Sec.Enabled) Sec.IsON = RCsectionOn[Sec.ID];
+                }
             }
 
             // update AOG
@@ -240,6 +229,13 @@ namespace RateController
             {
                 PGN234 ToAOG = new PGN234(mf);
                 int Max = 16;
+
+                if (MasterIsOnLast != MasterIsOn)
+                {
+                    MasterIsOnLast = MasterIsOn;
+                    MasterIsOnChanged = true;
+                }
+
                 if (MasterIsOn)
                 {
                     // master on
@@ -253,33 +249,35 @@ namespace RateController
                         }
                     }
 
-                    if (SectionsChanged || MasterIsOnChanged)
+                    if (AutoLast != mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                    {
+                        AutoSectionsChanged = true;
+                        AutoLast = mf.SwitchBox.SwitchIsOn(SwIDs.Auto);
+                        AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
+
+                        if (AutoLast && MasterIsOn || AutoSectionLast & MasterIsOn)
+                        {
+                            // auto on
+                            ToAOG.Command = 1;
+                        }
+                        else
+                        {
+                            // auto off
+                            ToAOG.Command = 2;
+                        }
+                    }
+
+                    if (SectionsChanged || MasterIsOnChanged || AutoSectionsChanged)
                     {
                         MasterIsOnChanged = false;
-
-                        // send off bytes to match switchbox
-                        if (mf.MaxSections < Max) Max = mf.MaxSections;
-                        for (int i = 0; i < Max; i++)
-                        {
-                            if (!mf.Sections.Items[i].IsON)
-                            {
-                                if (i < 8)
-                                {
-                                    ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, i);
-                                }
-                                else
-                                {
-                                    ToAOG.OffHi = mf.Tls.BitSet(ToAOG.OffHi, i);
-                                }
-                            }
-                        }
+                        AutoSectionsChanged = false;
 
                         if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                         {
                             // auto off, send on bytes to match switchbox
                             for (int i = 0; i < Max; i++)
                             {
-                                if (mf.Sections.Items[i].IsON)
+                                if (RCsectionOn[i])
                                 {
                                     if (i < 8)
                                     {
@@ -294,36 +292,20 @@ namespace RateController
                         }
                     }
 
-                    // check for switches off
-                    foreach (clsSection Sec in mf.Sections.Items)
+                    // send off bytes to match switchbox
+                    if (mf.MaxSections < Max) Max = mf.MaxSections;
+                    for (int i = 0; i < Max; i++)
                     {
-                        if (!mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) || !Sec.Enabled)
+                        if (!RCsectionOn[i])
                         {
-                            if (Sec.ID < 8)
+                            if (i < 8)
                             {
-                                ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, Sec.ID);
+                                ToAOG.OffLo = mf.Tls.BitSet(ToAOG.OffLo, i);
                             }
-                            else if (Sec.ID < 16)
+                            else
                             {
-                                ToAOG.OffHi = mf.Tls.BitSet(ToAOG.OffHi, Sec.ID - 8);
+                                ToAOG.OffHi = mf.Tls.BitSet(ToAOG.OffHi, i);
                             }
-                        }
-                    }
-
-                    if (AutoLast != mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
-                    {
-                        AutoLast = mf.SwitchBox.SwitchIsOn(SwIDs.Auto);
-                        AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
-
-                        if (AutoLast && MasterIsOn || AutoSectionLast & MasterIsOn)
-                        {
-                            // auto on
-                            ToAOG.Command = 1;
-                        }
-                        else
-                        {
-                            // auto off
-                            ToAOG.Command = 2;
                         }
                     }
                 }
@@ -394,7 +376,7 @@ namespace RateController
             {
                 MasterIsOn = true;
 
-                // set zones by switchbox switch positions
+                // set RC zones by switchbox switch positions
                 foreach (clsZone Zone in mf.Zones.Items)
                 {
                     if (Zone.Enabled) RCzoneOn[Zone.ID] = mf.SwitchBox.SectionSwitchOn(Zone.SwitchID);
@@ -423,16 +405,17 @@ namespace RateController
                 }
             }
 
-            if (MasterIsOnLast != MasterIsOn)
-            {
-                MasterIsOnLast = MasterIsOn;
-                MasterIsOnChanged = true;
-            }
-
             // update AOG
             if (mf.AutoSteerPGN.Connected())
             {
                 PGN234 ToAOG = new PGN234(mf);
+
+                if (MasterIsOnLast != MasterIsOn)
+                {
+                    MasterIsOnLast = MasterIsOn;
+                    MasterIsOnChanged = true;
+                }
+
                 if (MasterIsOn)
                 {
                     bool SectionsChanged = false;
