@@ -226,10 +226,10 @@ void DebugTheIno()
 		//Serial.print(MinMem);
 
 		//Serial.print(", ");
-		//Serial.print(debug1);
+		//Serial.print(debug1,7);
 
 		//Serial.print(", ");
-		//Serial.print(debug2);
+		//Serial.print(debug2,7);
 
 		Serial.println("");
 

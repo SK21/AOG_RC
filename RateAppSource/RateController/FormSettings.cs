@@ -411,11 +411,12 @@ namespace RateController
 
         private void LoadDefaults()
         {
-            tbKP.Text = "1.0000";
-            tbKI.Text = "0.0000";
-            tbKD.Text = "0.0000";
+            tbKP.Text = "1";
+            tbKI.Text = "0";
+            tbKD.Text = "0";
             tbMaxPWM.Text = "100";
             tbMinPWM.Text = "5";
+            cbShift.SelectedIndex = 0;
         }
 
         private void LoadSettings()
@@ -455,9 +456,9 @@ namespace RateController
             tbConID.Text = tmp;
 
             // PID
-            tbKP.Text = CurrentProduct.PIDkp.ToString("N4");
-            tbKI.Text = CurrentProduct.PIDki.ToString("N4");
-            tbKD.Text = CurrentProduct.PIDkd.ToString("N4");
+            tbKP.Text = CurrentProduct.PIDkp.ToString("N0");
+            tbKI.Text = CurrentProduct.PIDki.ToString("N0");
+            tbKD.Text = CurrentProduct.PIDkd.ToString("N0");
             tbMinPWM.Text = CurrentProduct.PIDmin.ToString("N0");
             tbMaxPWM.Text = CurrentProduct.PIDmax.ToString("N0");
 
@@ -474,6 +475,8 @@ namespace RateController
             ckBumpButtons.Checked = CurrentProduct.BumpButtons;
 
             ckConstantUPM.Checked = CurrentProduct.ConstantUPM;
+            cbShift.SelectedIndex = CurrentProduct.ShiftRange;
+            tbPexample.Text = (CurrentProduct.PIDkp * Math.Pow(10,  - cbShift.SelectedIndex)).ToString("N7");
         }
 
         private void RateSet_Enter(object sender, EventArgs e)
@@ -700,6 +703,7 @@ namespace RateController
             CurrentProduct.Save();
 
             if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
+            CurrentProduct.ShiftRange = cbShift.SelectedIndex;
         }
 
         private void SetButtons(bool Edited)
@@ -1390,12 +1394,12 @@ namespace RateController
         {
             double temp;
             double.TryParse(tbKP.Text, out temp);
-            using (var form = new FormNumeric(0, 10000, temp))
+            using (var form = new FormNumeric(0, 100, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbKP.Text = form.ReturnValue.ToString("N4");
+                    tbKP.Text = form.ReturnValue.ToString("N0");
                 }
             }
         }
@@ -1404,12 +1408,12 @@ namespace RateController
         {
             double temp;
             double.TryParse(tbKI.Text, out temp);
-            using (var form = new FormNumeric(0, 10000, temp))
+            using (var form = new FormNumeric(0, 100, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbKI.Text = form.ReturnValue.ToString("N4");
+                    tbKI.Text = form.ReturnValue.ToString("N0");
                 }
             }
         }
@@ -1418,12 +1422,12 @@ namespace RateController
         {
             double temp;
             double.TryParse(tbKD.Text, out temp);
-            using (var form = new FormNumeric(0, 10000, temp))
+            using (var form = new FormNumeric(0, 100, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbKD.Text = form.ReturnValue.ToString("N4");
+                    tbKD.Text = form.ReturnValue.ToString("N0");
                 }
             }
         }
@@ -1665,6 +1669,11 @@ namespace RateController
         }
 
         private void cbVR_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void cbShift_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }

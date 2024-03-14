@@ -22,7 +22,7 @@ namespace RateController
         // 14   KD 3
         // 15   MinPWM
         // 16   MaxPWM
-        // 17   -
+        // 17   PID shift range
         // 18   CRC
 
         private const byte cByteCount = 19;
@@ -86,14 +86,14 @@ namespace RateController
             Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
             // KP
-            Temp = (uint)(cKP * 10000);
+            Temp = (uint)(cKP * 10000 );
             Data[3] = (byte)Temp;
             Data[4] = (byte)((UInt32)Temp >> 8);
             Data[5] = (byte)((UInt32)Temp >> 16);
             Data[6] = (byte)((UInt32)Temp >> 24);
 
             // KI
-            Temp = (uint)(cKI * 10000);
+            Temp = (uint)(cKI * 10000 );
             Data[7] = (byte)Temp;
             Data[8] = (byte)((UInt32)Temp >> 8);
             Data[9] = (byte)((UInt32)Temp >> 16);
@@ -109,7 +109,7 @@ namespace RateController
             Data[15] = MinPWM;
             Data[16] = MaxPWM;
 
-            Data[17] = 0;
+            Data[17] = (byte)Prod.ShiftRange;
 
             // CRC
             Data[18] = Prod.mf.Tls.CRC(Data, cByteCount - 1);

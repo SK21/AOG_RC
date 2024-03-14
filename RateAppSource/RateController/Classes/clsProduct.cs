@@ -59,6 +59,7 @@ namespace RateController
         private PGN32502 ModulePIDdata;
         private bool PauseWork = false;
         private double UnitsOffset = 0;
+        private int cShiftRange = 4;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -97,7 +98,7 @@ namespace RateController
                 if (cCalRun) cCalSetMeter = false;
             }
         }
-
+        public int ShiftRange { get { return cShiftRange; }set { cShiftRange = value; } }
         public bool CalSetMeter
         {
             // notifies module Master switch on for calibrate and use auto mode to find meter cal
@@ -639,6 +640,11 @@ namespace RateController
             }
 
             bool.TryParse(mf.Tls.LoadProperty("ConstantUPM" + IDname), out cConstantUPM);
+
+            if(int.TryParse(mf.Tls.LoadProperty("ShiftRange"+IDname),out int sr))
+            {
+                cShiftRange= sr;
+            }
         }
 
         public double Pulses()
@@ -763,6 +769,8 @@ namespace RateController
             mf.Tls.SaveProperty("OnScreen" + IDname, cOnScreen.ToString());
             mf.Tls.SaveProperty("BumpButtons" + IDname, cBumpButtons.ToString());
             mf.Tls.SaveProperty("ConstantUPM" + IDname, cConstantUPM.ToString());
+
+            mf.Tls.SaveProperty("ShiftRange" + IDname, cShiftRange.ToString());
         }
 
         public void SendPID()
