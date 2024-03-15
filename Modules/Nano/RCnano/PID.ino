@@ -64,6 +64,7 @@ void SetPWM()
 				double Direction = 1.0;
 				if (Sensor[i].PWM < 0) Direction = -1.0;
 				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
+				LastPWM[i] = Sensor[i].PWM;
 				break;
 			}
 		}
@@ -117,13 +118,13 @@ int PIDmotor(byte ID)
 			}
 			LastUPM[ID] = Sensor[ID].UPM;
 		}
+		LastPWM[ID] = Result;
 	}
 	else
 	{
 		IntegralSum[ID] = 0;
 	}
 
-	LastPWM[ID] = Result;
 	return (int)Result;
 }
 

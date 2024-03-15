@@ -132,7 +132,7 @@ namespace RateController
                 {
                     // keep manual motor setting the same as auto when not in use
                     // for smooth transition from auto to manual control
-                    //Prod.ManualPWM = (int)Prod.PWM();
+                    Prod.ManualPWM = (int)Prod.PWM();
                 }
             }
 

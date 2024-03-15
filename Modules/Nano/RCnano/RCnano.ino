@@ -211,6 +211,7 @@ byte ReadReset;
 int MinMem = 2000;
 //double debug1;
 //double debug2;
+//double debug3;
 
 void DebugTheIno()
 {
@@ -229,7 +230,13 @@ void DebugTheIno()
 		//Serial.print(debug1);
 
 		//Serial.print(", ");
-		//Serial.print(debug2,7);
+		//Serial.print(debug2);
+
+		//Serial.print(", ");
+		//Serial.print(debug3);
+
+		//Serial.print(", ");
+		//Serial.print(MasterOn);
 
 		Serial.println("");
 
