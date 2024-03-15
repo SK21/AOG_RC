@@ -536,7 +536,6 @@ namespace RateController
         {
             // convert valve type index to ControlTypeEnum
             // valve types: Standard Valve, Fast Close Valve, Motor, Motor / Weights, Combo Timed
-
             ControlTypeEnum Result;
             switch (ValveType)
             {
@@ -548,19 +547,10 @@ namespace RateController
                     Result = ControlTypeEnum.Motor;
                     break;
 
-                case 3:
-                    Result = ControlTypeEnum.MotorWeights;
-                    break;
-
-                case 4:
-                    Result = ControlTypeEnum.ComboCloseTimed;
-                    break;
-
                 default:
                     Result = ControlTypeEnum.Valve;
                     break;
             }
-
             return Result;
         }
 
@@ -571,23 +561,15 @@ namespace RateController
             switch (Type)
             {
                 case ControlTypeEnum.ComboClose:
-                    Result = 1;
+                    Result = (int)ControlTypeEnum.ComboClose;
                     break;
 
                 case ControlTypeEnum.Motor:
-                    Result = 2;
-                    break;
-
-                case ControlTypeEnum.MotorWeights:
-                    Result = 3;
-                    break;
-
-                case ControlTypeEnum.ComboCloseTimed:
-                    Result = 4;
+                    Result = (int)ControlTypeEnum.Motor;
                     break;
 
                 default:
-                    Result = 0;
+                    Result = (int)ControlTypeEnum.Valve;
                     break;
             }
             return Result;

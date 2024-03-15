@@ -80,6 +80,11 @@ namespace RateController
             this.lbVariableRate = new System.Windows.Forms.Label();
             this.cbVR = new System.Windows.Forms.ComboBox();
             this.tbs4 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbShift = new System.Windows.Forms.ComboBox();
+            this.tbPexample = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.btnTuningGraph = new System.Windows.Forms.Button();
             this.btnPIDloadDefaults = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
@@ -166,22 +171,17 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.cbShift = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbPexample = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.pnlFan.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tbs4.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tbs6.SuspendLayout();
             this.grpRateMethod.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.tbs3.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcProducts
@@ -822,6 +822,72 @@ namespace RateController
             this.tbs4.TabIndex = 4;
             this.tbs4.Text = "Control";
             this.tbs4.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.cbShift);
+            this.groupBox1.Controls.Add(this.tbPexample);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Location = new System.Drawing.Point(65, 231);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(341, 112);
+            this.groupBox1.TabIndex = 160;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "PID Scale";
+            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
+            // 
+            // cbShift
+            // 
+            this.cbShift.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbShift.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbShift.FormattingEnabled = true;
+            this.cbShift.Items.AddRange(new object[] {
+            "1",
+            "10",
+            "100",
+            "1,000",
+            "10,000",
+            "100,000",
+            "1,000,000",
+            "10,000,000"});
+            this.cbShift.Location = new System.Drawing.Point(176, 28);
+            this.cbShift.Name = "cbShift";
+            this.cbShift.Size = new System.Drawing.Size(120, 31);
+            this.cbShift.TabIndex = 156;
+            this.cbShift.SelectedIndexChanged += new System.EventHandler(this.cbShift_SelectedIndexChanged);
+            // 
+            // tbPexample
+            // 
+            this.tbPexample.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPexample.Location = new System.Drawing.Point(176, 68);
+            this.tbPexample.MaxLength = 8;
+            this.tbPexample.Name = "tbPexample";
+            this.tbPexample.ReadOnly = true;
+            this.tbPexample.Size = new System.Drawing.Size(120, 30);
+            this.tbPexample.TabIndex = 159;
+            this.tbPexample.Tag = "6";
+            this.tbPexample.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(27, 31);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(64, 23);
+            this.label1.TabIndex = 157;
+            this.label1.Text = "Range";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(27, 71);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(96, 23);
+            this.label3.TabIndex = 158;
+            this.label3.Text = "P example";
             // 
             // btnTuningGraph
             // 
@@ -1887,72 +1953,6 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
-            // cbShift
-            // 
-            this.cbShift.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbShift.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbShift.FormattingEnabled = true;
-            this.cbShift.Items.AddRange(new object[] {
-            "1",
-            "10",
-            "100",
-            "1,000",
-            "10,000",
-            "100,000",
-            "1,000,000",
-            "10,000,000"});
-            this.cbShift.Location = new System.Drawing.Point(176, 28);
-            this.cbShift.Name = "cbShift";
-            this.cbShift.Size = new System.Drawing.Size(120, 31);
-            this.cbShift.TabIndex = 156;
-            this.cbShift.SelectedIndexChanged += new System.EventHandler(this.cbShift_SelectedIndexChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(27, 31);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 23);
-            this.label1.TabIndex = 157;
-            this.label1.Text = "Range";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(27, 71);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(96, 23);
-            this.label3.TabIndex = 158;
-            this.label3.Text = "P example";
-            // 
-            // tbPexample
-            // 
-            this.tbPexample.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPexample.Location = new System.Drawing.Point(176, 68);
-            this.tbPexample.MaxLength = 8;
-            this.tbPexample.Name = "tbPexample";
-            this.tbPexample.ReadOnly = true;
-            this.tbPexample.Size = new System.Drawing.Size(120, 30);
-            this.tbPexample.TabIndex = 159;
-            this.tbPexample.Tag = "6";
-            this.tbPexample.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.cbShift);
-            this.groupBox1.Controls.Add(this.tbPexample);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(65, 231);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(341, 112);
-            this.groupBox1.TabIndex = 160;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "PID Scale";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1986,6 +1986,8 @@ namespace RateController
             this.tabPage1.PerformLayout();
             this.tbs4.ResumeLayout(false);
             this.tbs4.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tbs6.ResumeLayout(false);
             this.tbs6.PerformLayout();
             this.grpRateMethod.ResumeLayout(false);
@@ -1993,8 +1995,6 @@ namespace RateController
             this.grpSensor.PerformLayout();
             this.tbs3.ResumeLayout(false);
             this.tbs3.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
