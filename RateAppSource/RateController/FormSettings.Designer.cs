@@ -834,7 +834,7 @@ namespace RateController
             this.groupBox1.Size = new System.Drawing.Size(341, 112);
             this.groupBox1.TabIndex = 160;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "PID Scale";
+            this.groupBox1.Text = "PID Scaling";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
             // 
             // cbShift
@@ -875,9 +875,9 @@ namespace RateController
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(27, 31);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 23);
+            this.label1.Size = new System.Drawing.Size(65, 23);
             this.label1.TabIndex = 157;
-            this.label1.Text = "Range";
+            this.label1.Text = "Divisor";
             // 
             // label3
             // 
@@ -931,7 +931,7 @@ namespace RateController
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(71, 23);
             this.label12.TabIndex = 151;
-            this.label12.Text = "(0-100)";
+            this.label12.Text = "(0-255)";
             // 
             // label11
             // 
@@ -941,7 +941,7 @@ namespace RateController
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(71, 23);
             this.label11.TabIndex = 150;
-            this.label11.Text = "(0-100)";
+            this.label11.Text = "(0-255)";
             // 
             // label10
             // 
@@ -951,7 +951,7 @@ namespace RateController
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(71, 23);
             this.label10.TabIndex = 149;
-            this.label10.Text = "(0-100)";
+            this.label10.Text = "(0-255)";
             // 
             // label9
             // 

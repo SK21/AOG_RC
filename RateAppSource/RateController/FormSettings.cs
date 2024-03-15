@@ -1376,7 +1376,7 @@ namespace RateController
         {
             double temp;
             double.TryParse(tbKP.Text, out temp);
-            using (var form = new FormNumeric(0, 100, temp))
+            using (var form = new FormNumeric(0, 255, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -1390,7 +1390,7 @@ namespace RateController
         {
             double temp;
             double.TryParse(tbKI.Text, out temp);
-            using (var form = new FormNumeric(0, 100, temp))
+            using (var form = new FormNumeric(0, 255, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -1404,7 +1404,7 @@ namespace RateController
         {
             double temp;
             double.TryParse(tbKD.Text, out temp);
-            using (var form = new FormNumeric(0, 100, temp))
+            using (var form = new FormNumeric(0, 255, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -1451,7 +1451,7 @@ namespace RateController
         {
             double tempD;
             double.TryParse(tbKP.Text, out tempD);
-            if (tempD < 0 || tempD > 10000)
+            if (tempD < 0 || tempD > 255)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -1462,7 +1462,7 @@ namespace RateController
         {
             double tempD;
             double.TryParse(tbKI.Text, out tempD);
-            if (tempD < 0 || tempD > 10000)
+            if (tempD < 0 || tempD > 255)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -1473,7 +1473,7 @@ namespace RateController
         {
             double tempD;
             double.TryParse(tbKD.Text, out tempD);
-            if (tempD < 0 || tempD > 10000)
+            if (tempD < 0 || tempD > 255)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
