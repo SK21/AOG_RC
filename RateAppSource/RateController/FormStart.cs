@@ -84,6 +84,7 @@ namespace RateController
         private DateTime StartTime;
         private Label[] Targets;
         public PGN229 AOGsections;
+        private bool cUseDualAuto;
 
         public FormStart()
         {
@@ -179,7 +180,7 @@ namespace RateController
                 }
             }
         }
-
+        public bool UseDualAuto { get { return cUseDualAuto; } set { cUseDualAuto = value; } }
         public byte PressureToShow
         {
             get { return cPressureToShowID; }
@@ -364,6 +365,7 @@ namespace RateController
             if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
             if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
             if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
+            if (bool.TryParse(Tls.LoadProperty("UseDualAuto"), out bool ud)) cUseDualAuto = ud;
 
             if (int.TryParse(Tls.LoadProperty("PrimeDelay"), out int PD))
             {
@@ -828,6 +830,7 @@ namespace RateController
                 Tls.SaveProperty("PrimeDelay", cPrimeDelay.ToString());
                 Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
                 Tls.SaveProperty("SimMode",cSimMode.ToString());
+                Tls.SaveProperty("UseDualAuto", cUseDualAuto.ToString());
 
                 UDPaog.Close();
                 UDPmodules.Close();

@@ -276,7 +276,7 @@ namespace RateController
             }
             else
             {
-                btnAutoSection.BackColor= Color.Red;
+                btnAutoSection.BackColor = Color.Red;
             }
 
             if (SwON[22])
@@ -285,7 +285,29 @@ namespace RateController
             }
             else
             {
-                btnAutoRate.BackColor= Color.Red;
+                btnAutoRate.BackColor = Color.Red;
+            }
+
+            if (mf.UseDualAuto)
+            {
+                btAuto.Visible = false;
+                btnMaster.Width = 142;
+                btnAutoRate.Visible = true;
+                btnAutoSection.Visible = true;
+                this.Height = 212;
+                // turn off auto button
+                if (SwON[0]) mf.vSwitchBox.PressSwitch(SwIDs.Auto);
+            }
+            else
+            {
+                btAuto.Visible = true;
+                btnMaster.Width = 64;
+                btnAutoRate.Visible = false;
+                btnAutoSection.Visible = false;
+                this.Height = 161;
+                // turn off auto rate, auto section
+                if (SwON[21]) mf.vSwitchBox.PressSwitch(SwIDs.AutoSection);
+                if (SwON[22]) mf.vSwitchBox.PressSwitch(SwIDs.AutoRate);
             }
         }
 

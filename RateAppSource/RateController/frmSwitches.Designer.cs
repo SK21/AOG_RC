@@ -98,11 +98,11 @@
             // 
             // btAuto
             // 
-            this.btAuto.Location = new System.Drawing.Point(82, 12);
+            this.btAuto.Location = new System.Drawing.Point(90, 12);
             this.btAuto.Name = "btAuto";
-            this.btAuto.Size = new System.Drawing.Size(88, 46);
+            this.btAuto.Size = new System.Drawing.Size(64, 46);
             this.btAuto.TabIndex = 164;
-            this.btAuto.Text = "Auto All";
+            this.btAuto.Text = "Auto";
             this.btAuto.UseVisualStyleBackColor = true;
             this.btAuto.Click += new System.EventHandler(this.btAuto_Click);
             // 
@@ -139,7 +139,7 @@
             this.btnUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUp.Image = global::RateController.Properties.Resources.RateUp;
-            this.btnUp.Location = new System.Drawing.Point(176, 12);
+            this.btnUp.Location = new System.Drawing.Point(168, 12);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(64, 46);
             this.btnUp.TabIndex = 165;
@@ -171,7 +171,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(323, 174);
+            this.ClientSize = new System.Drawing.Size(323, 173);
             this.Controls.Add(this.btnAutoSection);
             this.Controls.Add(this.btnAutoRate);
             this.Controls.Add(this.btnDown);

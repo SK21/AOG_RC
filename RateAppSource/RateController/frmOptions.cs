@@ -204,6 +204,8 @@ namespace RateController
                 }
             }
 
+            mf.UseDualAuto = ckDualAuto.Checked;
+
             SaveLanguage();
         }
 
@@ -417,6 +419,7 @@ namespace RateController
             ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
             ckPressure.Checked = mf.ShowPressure;
             ckSimSpeed.Checked = (mf.SimMode == SimType.Speed);
+            ckDualAuto.Checked = mf.UseDualAuto;
 
             // language
             for (int i = 0; i < LanguageRBs.Length; i++)
@@ -440,6 +443,11 @@ namespace RateController
             }
 
             Initializing = false;
+        }
+
+        private void ckDualAuto_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

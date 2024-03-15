@@ -75,6 +75,7 @@ namespace RateController
             cData[8] = (byte)((int)Tmp >> 16);
 
             // command byte
+            cData[9] = 0;
             if (Prod.EraseAccumulatedUnits) cData[9] |= 0b00000001;
             Prod.EraseAccumulatedUnits = false;
 

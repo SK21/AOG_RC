@@ -48,23 +48,24 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
             this.tcOptions = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tbSimSpeed = new System.Windows.Forms.TextBox();
-            this.lbSimUnits = new System.Windows.Forms.Label();
-            this.ckSimSpeed = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.ckPressure = new System.Windows.Forms.CheckBox();
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
             this.ckTransparent = new System.Windows.Forms.CheckBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tbSimSpeed = new System.Windows.Forms.TextBox();
+            this.lbSimUnits = new System.Windows.Forms.Label();
+            this.ckSimSpeed = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.rbNederlands = new System.Windows.Forms.RadioButton();
             this.rbHungarian = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
+            this.ckDualAuto = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
@@ -328,62 +329,9 @@
             this.tcOptions.Size = new System.Drawing.Size(438, 216);
             this.tcOptions.TabIndex = 126;
             // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.tbSimSpeed);
-            this.tabPage1.Controls.Add(this.lbSimUnits);
-            this.tabPage1.Controls.Add(this.ckSimSpeed);
-            this.tabPage1.Controls.Add(this.ckMetric);
-            this.tabPage1.Controls.Add(this.ckWorkSwitch);
-            this.tabPage1.Location = new System.Drawing.Point(4, 33);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(430, 179);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Config";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tbSimSpeed
-            // 
-            this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSimSpeed.Location = new System.Drawing.Point(276, 130);
-            this.tbSimSpeed.MaxLength = 8;
-            this.tbSimSpeed.Name = "tbSimSpeed";
-            this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
-            this.tbSimSpeed.TabIndex = 329;
-            this.tbSimSpeed.Text = "0";
-            this.tbSimSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbSimSpeed.TextChanged += new System.EventHandler(this.tbSimSpeed_TextChanged);
-            this.tbSimSpeed.Enter += new System.EventHandler(this.tbSimSpeed_Enter);
-            this.tbSimSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSimSpeed_Validating);
-            // 
-            // lbSimUnits
-            // 
-            this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSimUnits.Location = new System.Drawing.Point(347, 133);
-            this.lbSimUnits.Name = "lbSimUnits";
-            this.lbSimUnits.Size = new System.Drawing.Size(57, 24);
-            this.lbSimUnits.TabIndex = 330;
-            this.lbSimUnits.Text = "mph";
-            this.lbSimUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // ckSimSpeed
-            // 
-            this.ckSimSpeed.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSimSpeed.Location = new System.Drawing.Point(28, 128);
-            this.ckSimSpeed.Name = "ckSimSpeed";
-            this.ckSimSpeed.Size = new System.Drawing.Size(242, 34);
-            this.ckSimSpeed.TabIndex = 126;
-            this.ckSimSpeed.Text = "Simulate Speed (No AOG)";
-            this.ckSimSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckSimSpeed.UseVisualStyleBackColor = true;
-            this.ckSimSpeed.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
-            // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.ckDualAuto);
             this.tabPage2.Controls.Add(this.ckPressure);
             this.tabPage2.Controls.Add(this.ckScreenSwitches);
             this.tabPage2.Controls.Add(this.ckTransparent);
@@ -440,6 +388,60 @@
             this.ckTransparent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckTransparent.UseVisualStyleBackColor = true;
             this.ckTransparent.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.tbSimSpeed);
+            this.tabPage1.Controls.Add(this.lbSimUnits);
+            this.tabPage1.Controls.Add(this.ckSimSpeed);
+            this.tabPage1.Controls.Add(this.ckMetric);
+            this.tabPage1.Controls.Add(this.ckWorkSwitch);
+            this.tabPage1.Location = new System.Drawing.Point(4, 33);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(430, 179);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Config";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tbSimSpeed
+            // 
+            this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSimSpeed.Location = new System.Drawing.Point(276, 130);
+            this.tbSimSpeed.MaxLength = 8;
+            this.tbSimSpeed.Name = "tbSimSpeed";
+            this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
+            this.tbSimSpeed.TabIndex = 329;
+            this.tbSimSpeed.Text = "0";
+            this.tbSimSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSimSpeed.TextChanged += new System.EventHandler(this.tbSimSpeed_TextChanged);
+            this.tbSimSpeed.Enter += new System.EventHandler(this.tbSimSpeed_Enter);
+            this.tbSimSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSimSpeed_Validating);
+            // 
+            // lbSimUnits
+            // 
+            this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lbSimUnits.Location = new System.Drawing.Point(347, 133);
+            this.lbSimUnits.Name = "lbSimUnits";
+            this.lbSimUnits.Size = new System.Drawing.Size(57, 24);
+            this.lbSimUnits.TabIndex = 330;
+            this.lbSimUnits.Text = "mph";
+            this.lbSimUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ckSimSpeed
+            // 
+            this.ckSimSpeed.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckSimSpeed.Location = new System.Drawing.Point(28, 128);
+            this.ckSimSpeed.Name = "ckSimSpeed";
+            this.ckSimSpeed.Size = new System.Drawing.Size(242, 34);
+            this.ckSimSpeed.TabIndex = 126;
+            this.ckSimSpeed.Text = "Simulate Speed (No AOG)";
+            this.ckSimSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSimSpeed.UseVisualStyleBackColor = true;
+            this.ckSimSpeed.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
             // 
             // tabPage3
             // 
@@ -538,6 +540,21 @@
             this.rbDeustch.UseVisualStyleBackColor = true;
             this.rbDeustch.CheckedChanged += new System.EventHandler(this.Language_CheckedChanged);
             // 
+            // ckDualAuto
+            // 
+            this.ckDualAuto.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDualAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckDualAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDualAuto.Location = new System.Drawing.Point(218, 124);
+            this.ckDualAuto.Name = "ckDualAuto";
+            this.ckDualAuto.Size = new System.Drawing.Size(164, 34);
+            this.ckDualAuto.TabIndex = 124;
+            this.ckDualAuto.Text = "Dual Auto";
+            this.ckDualAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDualAuto.UseVisualStyleBackColor = true;
+            this.ckDualAuto.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            // 
             // frmOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -559,9 +576,9 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmOptions_FormClosed);
             this.Load += new System.EventHandler(this.frmOptions_Load);
             this.tcOptions.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
@@ -603,5 +620,6 @@
         private System.Windows.Forms.CheckBox ckSimSpeed;
         private System.Windows.Forms.TextBox tbSimSpeed;
         private System.Windows.Forms.Label lbSimUnits;
+        private System.Windows.Forms.CheckBox ckDualAuto;
     }
 }
