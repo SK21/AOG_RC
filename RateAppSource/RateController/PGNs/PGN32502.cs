@@ -8,24 +8,15 @@ namespace RateController
         // 0    246
         // 1    126
         // 2    Mod/Sen ID     0-15/0-15
-        // 3    KP 0    X 10000
-        // 4    KP 1
-        // 5    KP 2
-        // 6    KP 3
-        // 7    KI 0
-        // 8    KI 1
-        // 9    KI 2
-        // 10   KI 3
-        // 11   KD 0
-        // 12   KD 1
-        // 13   KD 2
-        // 14   KD 3
-        // 15   MinPWM
-        // 16   MaxPWM
-        // 17   PID scale
-        // 18   CRC
+        // 3    KP 
+        // 4    KI
+        // 5    KD
+        // 6   MinPWM
+        // 7   MaxPWM
+        // 8   PID scale
+        // 9   CRC
 
-        private const byte cByteCount = 19;
+        private const byte cByteCount = 10;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 246;
         private readonly clsProduct Prod;
@@ -85,34 +76,15 @@ namespace RateController
             Data[1] = HeaderHi;
             Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
-            // KP
-            Temp = (uint)(cKP * 10000 );
-            Data[3] = (byte)Temp;
-            Data[4] = (byte)((UInt32)Temp >> 8);
-            Data[5] = (byte)((UInt32)Temp >> 16);
-            Data[6] = (byte)((UInt32)Temp >> 24);
+            Data[3] = (byte)cKP;
+            Data[4] = (byte)cKI;
+            Data[5] = (byte)cKD;
 
-            // KI
-            Temp = (uint)(cKI * 10000 );
-            Data[7] = (byte)Temp;
-            Data[8] = (byte)((UInt32)Temp >> 8);
-            Data[9] = (byte)((UInt32)Temp >> 16);
-            Data[10] = (byte)((UInt32)Temp >> 24);
+            Data[6] = MinPWM;
+            Data[7] = MaxPWM;
+            Data[8] = (byte)Prod.PIDscale;
 
-            // KD
-            Temp = (uint)(cKD * 10000);
-            Data[11] = (byte)Temp;
-            Data[12] = (byte)((UInt32)Temp >> 8);
-            Data[13] = (byte)((UInt32)Temp >> 16);
-            Data[14] = (byte)((UInt32)Temp >> 24);
-
-            Data[15] = MinPWM;
-            Data[16] = MaxPWM;
-
-            Data[17] = (byte)Prod.PIDscale;
-
-            // CRC
-            Data[18] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
+            Data[9] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
             Prod.mf.SendSerial(Data);
             Prod.mf.UDPmodules.SendUDPMessage(Data);

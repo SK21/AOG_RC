@@ -212,7 +212,7 @@ byte CRC(byte Chk[], byte Length, byte Start)
 //double debug1;
 //double debug2;
 //double debug3;
-
+//
 //void DebugTheIno()
 //{
 //	if (millis() - DebugTime > 1000)
@@ -226,14 +226,14 @@ byte CRC(byte Chk[], byte Length, byte Start)
 //		//Serial.print(F(",  SRAM left: "));
 //		//Serial.print(MinMem);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug1,7);
+//		Serial.print(", ");
+//		Serial.print(debug1, 7);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug2,7);
+//		Serial.print(", ");
+//		Serial.print(debug2, 7);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug3);
+//		Serial.print(", ");
+//		Serial.print(debug3);
 //
 //		//Serial.print(", ");
 //		//Serial.print(MasterOn);
@@ -251,7 +251,7 @@ byte CRC(byte Chk[], byte Length, byte Start)
 //	LoopTmr = micros();
 //	if (freeRam() < MinMem) MinMem = freeRam();
 //}
-
+//
 //int freeRam() {
 //	extern int __heap_start, * __brkval;
 //	int v;

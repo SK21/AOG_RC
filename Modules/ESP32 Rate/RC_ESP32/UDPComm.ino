@@ -313,24 +313,15 @@ void ParseData(byte Data[], uint16_t len)
         // 0    246
         // 1    126
         // 2    Mod/Sen ID     0-15/0-15
-        // 3    KP 0    X 10000
-        // 4    KP 1
-        // 5    KP 2
-        // 6    KP 3
-        // 7    KI 0
-        // 8    KI 1
-        // 9    KI 2
-        // 10   KI 3
-        // 11   KD 0
-        // 12   KD 1
-        // 13   KD 2
-        // 14   KD 3
-        // 15   MinPWM
-        // 16   MaxPWM
-        // 17   PID scaling
-        // 18   CRC
+        // 3    KP
+        // 4    KI
+        // 5    KD
+        // 6    MinPWM
+        // 7    MaxPWM
+        // 8    PID scaling
+        // 9    CRC
 
-        PGNlength = 19;
+        PGNlength = 10;
 
         if (len > PGNlength - 1)
         {
@@ -341,19 +332,14 @@ void ParseData(byte Data[], uint16_t len)
                     byte SensorID = ParseSenID(Data[2]);
                     if (SensorID < MDL.SensorCount)
                     {
-                        float PIDscale = pow(10, -4 - Data[17]);	// PID sent as value X 10000
-                        
-                        uint32_t tmp = Data[3] | (uint32_t)Data[4] << 8 | (uint32_t)Data[5] << 16 | (uint32_t)Data[6] << 24;
-                        Sensor[SensorID].KP = (float)(tmp * PIDscale);
+                        float PIDscale = pow(10, Data[8] * -1);
 
-                        tmp = Data[7] | (uint32_t)Data[8] << 8 | (uint32_t)Data[9] << 16 | (uint32_t)Data[10] << 24;
-                        Sensor[SensorID].KI = (float)(tmp * PIDscale);
+                        Sensor[SensorID].KP = (float)(Data[3] * PIDscale);
+                        Sensor[SensorID].KI = (float)(Data[4] * PIDscale);
+                        Sensor[SensorID].KD = (float)(Data[5] * PIDscale);
 
-                        tmp = Data[11] | (uint32_t)Data[12] << 8 | (uint32_t)Data[13] << 16 | (uint32_t)Data[14] << 24;
-                        Sensor[SensorID].KD = (float)(tmp * PIDscale);
-
-                        Sensor[SensorID].MinPWM = Data[15];
-                        Sensor[SensorID].MaxPWM = Data[16];
+                        Sensor[SensorID].MinPWM = Data[6];
+                        Sensor[SensorID].MaxPWM = Data[7];
                     }
                 }
             }
