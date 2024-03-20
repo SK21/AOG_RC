@@ -85,6 +85,7 @@ namespace RateController
         private Label[] Targets;
         public PGN229 AOGsections;
         private bool cUseDualAuto;
+        private bool cResumeAfterPrime;
 
         public FormStart()
         {
@@ -178,6 +179,15 @@ namespace RateController
                     cDefaultProduct = value;
                     Tls.SaveProperty("DefaultProduct", cDefaultProduct.ToString());
                 }
+            }
+        }
+        public bool ResumeAfterPrime
+        {
+            get { return cResumeAfterPrime; }
+            set
+            {
+                cResumeAfterPrime=value;
+                Tls.SaveProperty("ResumeAfterPrime", cResumeAfterPrime.ToString());
             }
         }
         public bool UseDualAuto { get { return cUseDualAuto; } set { cUseDualAuto = value; } }
@@ -366,6 +376,7 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
             if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
             if (bool.TryParse(Tls.LoadProperty("UseDualAuto"), out bool ud)) cUseDualAuto = ud;
+            if (bool.TryParse(Tls.LoadProperty("ResumeAfterPrime"), out bool re)) cResumeAfterPrime = re;
 
             if (int.TryParse(Tls.LoadProperty("PrimeDelay"), out int PD))
             {
@@ -487,7 +498,7 @@ namespace RateController
             {
                 this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
-                if (cSimMode == SimType.Speed)
+                if (cSimMode == SimType.Speed|| SectionControl.PrimeOn)
                 {
                     btnSettings.Image = Properties.Resources.SimGear;
                 }

@@ -40,6 +40,7 @@ namespace RateController
             cData[2] = mf.Tls.BuildModSenID((byte)cModuleID, 0);
 
             int Relays = mf.RelayObjects.SetRelays(cModuleID);
+
             cData[3] = (byte)Relays;
             cData[4] = (byte)(Relays >> 8);
 

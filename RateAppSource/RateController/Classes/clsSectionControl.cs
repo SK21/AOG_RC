@@ -561,7 +561,9 @@ namespace RateController
                 PrimeTimer.Enabled = false;
                 cPrimeOn = false;
                 PrimeInitialized = false;
-                ForceOff = true;
+
+                ForceOff = !mf.ResumeAfterPrime;
+                if (!mf.ResumeAfterPrime) mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
             }
         }
     }

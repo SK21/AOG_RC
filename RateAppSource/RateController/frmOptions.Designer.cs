@@ -47,6 +47,7 @@
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
             this.tcOptions = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ckLargeScreen = new System.Windows.Forms.CheckBox();
             this.ckDualAuto = new System.Windows.Forms.CheckBox();
             this.ckPressure = new System.Windows.Forms.CheckBox();
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
@@ -56,12 +57,12 @@
             this.lbSimUnits = new System.Windows.Forms.Label();
             this.ckSimSpeed = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.ckResume = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.rbNederlands = new System.Windows.Forms.RadioButton();
             this.rbHungarian = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
-            this.ckLargeScreen = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -87,7 +88,7 @@
             // lbDelaySeconds
             // 
             this.lbDelaySeconds.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbDelaySeconds.Location = new System.Drawing.Point(293, 131);
+            this.lbDelaySeconds.Location = new System.Drawing.Point(293, 95);
             this.lbDelaySeconds.Name = "lbDelaySeconds";
             this.lbDelaySeconds.Size = new System.Drawing.Size(89, 24);
             this.lbDelaySeconds.TabIndex = 334;
@@ -97,7 +98,7 @@
             // tbDelay
             // 
             this.tbDelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDelay.Location = new System.Drawing.Point(222, 128);
+            this.tbDelay.Location = new System.Drawing.Point(222, 92);
             this.tbDelay.MaxLength = 8;
             this.tbDelay.Name = "tbDelay";
             this.tbDelay.Size = new System.Drawing.Size(65, 30);
@@ -112,7 +113,7 @@
             // 
             this.lbDelay.AutoSize = true;
             this.lbDelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDelay.Location = new System.Drawing.Point(57, 131);
+            this.lbDelay.Location = new System.Drawing.Point(57, 96);
             this.lbDelay.Name = "lbDelay";
             this.lbDelay.Size = new System.Drawing.Size(117, 23);
             this.lbDelay.TabIndex = 332;
@@ -121,7 +122,7 @@
             // lbOnSeconds
             // 
             this.lbOnSeconds.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbOnSeconds.Location = new System.Drawing.Point(293, 33);
+            this.lbOnSeconds.Location = new System.Drawing.Point(293, 17);
             this.lbOnSeconds.Name = "lbOnSeconds";
             this.lbOnSeconds.Size = new System.Drawing.Size(89, 24);
             this.lbOnSeconds.TabIndex = 331;
@@ -131,7 +132,7 @@
             // tbTime
             // 
             this.tbTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTime.Location = new System.Drawing.Point(222, 30);
+            this.tbTime.Location = new System.Drawing.Point(222, 14);
             this.tbTime.MaxLength = 8;
             this.tbTime.Name = "tbTime";
             this.tbTime.Size = new System.Drawing.Size(65, 30);
@@ -146,7 +147,7 @@
             // 
             this.lbOnTime.AutoSize = true;
             this.lbOnTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOnTime.Location = new System.Drawing.Point(57, 33);
+            this.lbOnTime.Location = new System.Drawing.Point(57, 18);
             this.lbOnTime.Name = "lbOnTime";
             this.lbOnTime.Size = new System.Drawing.Size(81, 23);
             this.lbOnTime.TabIndex = 329;
@@ -155,7 +156,7 @@
             // lbSpeed
             // 
             this.lbSpeed.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSpeed.Location = new System.Drawing.Point(293, 82);
+            this.lbSpeed.Location = new System.Drawing.Point(293, 56);
             this.lbSpeed.Name = "lbSpeed";
             this.lbSpeed.Size = new System.Drawing.Size(57, 24);
             this.lbSpeed.TabIndex = 328;
@@ -165,7 +166,7 @@
             // tbSpeed
             // 
             this.tbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSpeed.Location = new System.Drawing.Point(222, 79);
+            this.tbSpeed.Location = new System.Drawing.Point(222, 53);
             this.tbSpeed.MaxLength = 8;
             this.tbSpeed.Name = "tbSpeed";
             this.tbSpeed.Size = new System.Drawing.Size(65, 30);
@@ -180,7 +181,7 @@
             // 
             this.lbPrimedSpeed.AutoSize = true;
             this.lbPrimedSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPrimedSpeed.Location = new System.Drawing.Point(57, 82);
+            this.lbPrimedSpeed.Location = new System.Drawing.Point(57, 57);
             this.lbPrimedSpeed.Name = "lbPrimedSpeed";
             this.lbPrimedSpeed.Size = new System.Drawing.Size(63, 23);
             this.lbPrimedSpeed.TabIndex = 326;
@@ -309,6 +310,21 @@
             this.tabPage2.Text = "Display";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // ckLargeScreen
+            // 
+            this.ckLargeScreen.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckLargeScreen.Location = new System.Drawing.Point(41, 22);
+            this.ckLargeScreen.Name = "ckLargeScreen";
+            this.ckLargeScreen.Size = new System.Drawing.Size(164, 34);
+            this.ckLargeScreen.TabIndex = 127;
+            this.ckLargeScreen.Text = "Large Screen";
+            this.ckLargeScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckLargeScreen.UseVisualStyleBackColor = true;
+            this.ckLargeScreen.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
+            // 
             // ckDualAuto
             // 
             this.ckDualAuto.Appearance = System.Windows.Forms.Appearance.Button;
@@ -424,6 +440,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.ckResume);
             this.tabPage3.Controls.Add(this.lbDelaySeconds);
             this.tabPage3.Controls.Add(this.tbTime);
             this.tabPage3.Controls.Add(this.tbSpeed);
@@ -439,6 +456,21 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Primed Start";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // ckResume
+            // 
+            this.ckResume.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckResume.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckResume.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckResume.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckResume.Location = new System.Drawing.Point(137, 131);
+            this.ckResume.Name = "ckResume";
+            this.ckResume.Size = new System.Drawing.Size(164, 34);
+            this.ckResume.TabIndex = 335;
+            this.ckResume.Text = "Resume";
+            this.ckResume.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckResume.UseVisualStyleBackColor = true;
+            this.ckResume.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
             // 
             // tabPage4
             // 
@@ -519,21 +551,6 @@
             this.rbDeustch.UseVisualStyleBackColor = true;
             this.rbDeustch.CheckedChanged += new System.EventHandler(this.Language_CheckedChanged);
             // 
-            // ckLargeScreen
-            // 
-            this.ckLargeScreen.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckLargeScreen.Location = new System.Drawing.Point(41, 22);
-            this.ckLargeScreen.Name = "ckLargeScreen";
-            this.ckLargeScreen.Size = new System.Drawing.Size(164, 34);
-            this.ckLargeScreen.TabIndex = 127;
-            this.ckLargeScreen.Text = "Large Screen";
-            this.ckLargeScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckLargeScreen.UseVisualStyleBackColor = true;
-            this.ckLargeScreen.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
-            // 
             // frmOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -599,5 +616,6 @@
         private System.Windows.Forms.Label lbSimUnits;
         private System.Windows.Forms.CheckBox ckDualAuto;
         private System.Windows.Forms.CheckBox ckLargeScreen;
+        private System.Windows.Forms.CheckBox ckResume;
     }
 }

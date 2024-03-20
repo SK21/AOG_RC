@@ -204,6 +204,7 @@ namespace RateController
             }
 
             mf.UseDualAuto = ckDualAuto.Checked;
+            mf.ResumeAfterPrime = ckResume.Checked;
 
             SaveLanguage();
         }
@@ -417,6 +418,7 @@ namespace RateController
             ckSimSpeed.Checked = (mf.SimMode == SimType.Speed);
             ckDualAuto.Checked = mf.UseDualAuto;
             ckLargeScreen.Checked = mf.UseLargeScreen;
+            ckResume.Checked = mf.ResumeAfterPrime;
 
             // language
             for (int i = 0; i < LanguageRBs.Length; i++)
