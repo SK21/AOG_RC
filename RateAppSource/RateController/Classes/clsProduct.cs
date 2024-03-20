@@ -98,7 +98,7 @@ namespace RateController
                 if (cCalRun) cCalSetMeter = false;
             }
         }
-        public int ShiftRange { get { return cShiftRange; }set { cShiftRange = value; } }
+        public int PIDscale { get { return cShiftRange; }set { cShiftRange = value; } }
         public bool CalSetMeter
         {
             // notifies module Master switch on for calibrate and use auto mode to find meter cal

@@ -15,8 +15,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  04-Mar-2024"
-const uint16_t InoID = 4034;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  20-Mar-2024"
+const uint16_t InoID = 20034;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -204,57 +204,57 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-uint32_t DebugTime;
-uint32_t MaxLoopTime;
-uint32_t LoopTmr;
-byte ReadReset;
-int MinMem = 2000;
+//uint32_t DebugTime;
+//uint32_t MaxLoopTime;
+//uint32_t LoopTmr;
+//byte ReadReset;
+//int MinMem = 2000;
 //double debug1;
 //double debug2;
 //double debug3;
 
-void DebugTheIno()
-{
-	if (millis() - DebugTime > 1000)
-	{
-		DebugTime = millis();
-		Serial.println("");
+//void DebugTheIno()
+//{
+//	if (millis() - DebugTime > 1000)
+//	{
+//		DebugTime = millis();
+//		Serial.println("");
+//
+//		//Serial.print(F(" Micros: "));
+//		//Serial.print(MaxLoopTime);
+//
+//		//Serial.print(F(",  SRAM left: "));
+//		//Serial.print(MinMem);
+//
+//		//Serial.print(", ");
+//		//Serial.print(debug1,7);
+//
+//		//Serial.print(", ");
+//		//Serial.print(debug2,7);
+//
+//		//Serial.print(", ");
+//		//Serial.print(debug3);
+//
+//		//Serial.print(", ");
+//		//Serial.print(MasterOn);
+//
+//		Serial.println("");
+//
+//		if (ReadReset++ > 10)
+//		{
+//			ReadReset = 0;
+//			MaxLoopTime = 0;
+//			MinMem = 2000;
+//		}
+//	}
+//	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
+//	LoopTmr = micros();
+//	if (freeRam() < MinMem) MinMem = freeRam();
+//}
 
-		//Serial.print(F(" Micros: "));
-		//Serial.print(MaxLoopTime);
-
-		//Serial.print(F(",  SRAM left: "));
-		//Serial.print(MinMem);
-
-		//Serial.print(", ");
-		//Serial.print(debug1);
-
-		//Serial.print(", ");
-		//Serial.print(debug2);
-
-		//Serial.print(", ");
-		//Serial.print(debug3);
-
-		//Serial.print(", ");
-		//Serial.print(MasterOn);
-
-		Serial.println("");
-
-		if (ReadReset++ > 10)
-		{
-			ReadReset = 0;
-			MaxLoopTime = 0;
-			MinMem = 2000;
-		}
-	}
-	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
-	LoopTmr = micros();
-	if (freeRam() < MinMem) MinMem = freeRam();
-}
-
-int freeRam() {
-	extern int __heap_start, * __brkval;
-	int v;
-	return (int)&v - (__brkval == 0
-		? (int)&__heap_start : (int)__brkval);
-}
+//int freeRam() {
+//	extern int __heap_start, * __brkval;
+//	int v;
+//	return (int)&v - (__brkval == 0
+//		? (int)&__heap_start : (int)__brkval);
+//}

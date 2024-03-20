@@ -475,7 +475,7 @@ namespace RateController
             ckBumpButtons.Checked = CurrentProduct.BumpButtons;
 
             ckConstantUPM.Checked = CurrentProduct.ConstantUPM;
-            cbShift.SelectedIndex = CurrentProduct.ShiftRange;
+            cbShift.SelectedIndex = CurrentProduct.PIDscale;
             tbPexample.Text = (CurrentProduct.PIDkp * Math.Pow(10,  - cbShift.SelectedIndex)).ToString("N7");
         }
 
@@ -685,7 +685,7 @@ namespace RateController
             CurrentProduct.Save();
 
             if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
-            CurrentProduct.ShiftRange = cbShift.SelectedIndex;
+            CurrentProduct.PIDscale = cbShift.SelectedIndex;
         }
 
         private void SetButtons(bool Edited)

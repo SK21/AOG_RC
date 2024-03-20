@@ -22,7 +22,7 @@ namespace RateController
         // 14   KD 3
         // 15   MinPWM
         // 16   MaxPWM
-        // 17   PID shift range
+        // 17   PID scale
         // 18   CRC
 
         private const byte cByteCount = 19;
@@ -109,7 +109,7 @@ namespace RateController
             Data[15] = MinPWM;
             Data[16] = MaxPWM;
 
-            Data[17] = (byte)Prod.ShiftRange;
+            Data[17] = (byte)Prod.PIDscale;
 
             // CRC
             Data[18] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
