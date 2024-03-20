@@ -31,8 +31,7 @@ namespace RateController
             ckMetric.Text = Lang.lgMetric;
             ckScreenSwitches.Text = Lang.lgSwitches;
             ckWorkSwitch.Text = Lang.lgWorkSwitch;
-            rbLarge.Text = Lang.lgLargeScreen;
-            rbStandard.Text = Lang.lgStandardScreen;
+            ckLargeScreen.Text = Lang.lgLargeScreen;
             ckTransparent.Text = Lang.lgTransparent;
 
             lbOnTime.Text = Lang.lgOnTime;
@@ -185,7 +184,7 @@ namespace RateController
                 mf.SimMode = SimType.None;
             }
 
-            if (rbLarge.Checked)
+            if(ckLargeScreen.Checked)
             {
                 // use large screen
                 Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
@@ -410,9 +409,6 @@ namespace RateController
             tbTime.Text = mf.PrimeTime.ToString("N0");
             tbDelay.Text = mf.PrimeDelay.ToString("N0");
 
-            rbStandard.Checked = !mf.UseLargeScreen;
-            rbLarge.Checked = mf.UseLargeScreen;
-
             ckTransparent.Checked = mf.UseTransparent;
             ckMetric.Checked = !mf.UseInches;
             ckScreenSwitches.Checked = mf.ShowSwitches;
@@ -420,6 +416,7 @@ namespace RateController
             ckPressure.Checked = mf.ShowPressure;
             ckSimSpeed.Checked = (mf.SimMode == SimType.Speed);
             ckDualAuto.Checked = mf.UseDualAuto;
+            ckLargeScreen.Checked = mf.UseLargeScreen;
 
             // language
             for (int i = 0; i < LanguageRBs.Length; i++)

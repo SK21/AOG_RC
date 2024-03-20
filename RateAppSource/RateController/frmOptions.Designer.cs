@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmOptions));
-            this.rbLarge = new System.Windows.Forms.RadioButton();
-            this.rbStandard = new System.Windows.Forms.RadioButton();
             this.ckMetric = new System.Windows.Forms.CheckBox();
             this.lbDelaySeconds = new System.Windows.Forms.Label();
             this.tbDelay = new System.Windows.Forms.TextBox();
@@ -49,6 +47,7 @@
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
             this.tcOptions = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ckDualAuto = new System.Windows.Forms.CheckBox();
             this.ckPressure = new System.Windows.Forms.CheckBox();
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
             this.ckTransparent = new System.Windows.Forms.CheckBox();
@@ -62,47 +61,13 @@
             this.rbHungarian = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
-            this.ckDualAuto = new System.Windows.Forms.CheckBox();
+            this.ckLargeScreen = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // rbLarge
-            // 
-            this.rbLarge.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbLarge.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.rbLarge.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbLarge.Location = new System.Drawing.Point(40, 73);
-            this.rbLarge.Margin = new System.Windows.Forms.Padding(2);
-            this.rbLarge.Name = "rbLarge";
-            this.rbLarge.Size = new System.Drawing.Size(164, 34);
-            this.rbLarge.TabIndex = 2;
-            this.rbLarge.Tag = "0";
-            this.rbLarge.Text = "Large Screen";
-            this.rbLarge.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbLarge.UseVisualStyleBackColor = true;
-            this.rbLarge.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
-            // 
-            // rbStandard
-            // 
-            this.rbStandard.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbStandard.Checked = true;
-            this.rbStandard.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.rbStandard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbStandard.Location = new System.Drawing.Point(40, 22);
-            this.rbStandard.Margin = new System.Windows.Forms.Padding(2);
-            this.rbStandard.Name = "rbStandard";
-            this.rbStandard.Size = new System.Drawing.Size(164, 34);
-            this.rbStandard.TabIndex = 1;
-            this.rbStandard.TabStop = true;
-            this.rbStandard.Tag = "0";
-            this.rbStandard.Text = "Standard Screen";
-            this.rbStandard.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbStandard.UseVisualStyleBackColor = true;
-            this.rbStandard.CheckedChanged += new System.EventHandler(this.rbStandard_CheckedChanged);
             // 
             // ckMetric
             // 
@@ -331,12 +296,11 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.ckLargeScreen);
             this.tabPage2.Controls.Add(this.ckDualAuto);
             this.tabPage2.Controls.Add(this.ckPressure);
             this.tabPage2.Controls.Add(this.ckScreenSwitches);
             this.tabPage2.Controls.Add(this.ckTransparent);
-            this.tabPage2.Controls.Add(this.rbLarge);
-            this.tabPage2.Controls.Add(this.rbStandard);
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -344,6 +308,21 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Display";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // ckDualAuto
+            // 
+            this.ckDualAuto.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDualAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckDualAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDualAuto.Location = new System.Drawing.Point(41, 124);
+            this.ckDualAuto.Name = "ckDualAuto";
+            this.ckDualAuto.Size = new System.Drawing.Size(164, 34);
+            this.ckDualAuto.TabIndex = 124;
+            this.ckDualAuto.Text = "Dual Auto";
+            this.ckDualAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDualAuto.UseVisualStyleBackColor = true;
+            this.ckDualAuto.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
             // ckPressure
             // 
@@ -366,7 +345,7 @@
             this.ckScreenSwitches.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckScreenSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckScreenSwitches.Location = new System.Drawing.Point(41, 124);
+            this.ckScreenSwitches.Location = new System.Drawing.Point(41, 74);
             this.ckScreenSwitches.Name = "ckScreenSwitches";
             this.ckScreenSwitches.Size = new System.Drawing.Size(164, 34);
             this.ckScreenSwitches.TabIndex = 122;
@@ -540,20 +519,20 @@
             this.rbDeustch.UseVisualStyleBackColor = true;
             this.rbDeustch.CheckedChanged += new System.EventHandler(this.Language_CheckedChanged);
             // 
-            // ckDualAuto
+            // ckLargeScreen
             // 
-            this.ckDualAuto.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckDualAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckDualAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDualAuto.Location = new System.Drawing.Point(218, 124);
-            this.ckDualAuto.Name = "ckDualAuto";
-            this.ckDualAuto.Size = new System.Drawing.Size(164, 34);
-            this.ckDualAuto.TabIndex = 124;
-            this.ckDualAuto.Text = "Dual Auto";
-            this.ckDualAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDualAuto.UseVisualStyleBackColor = true;
-            this.ckDualAuto.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            this.ckLargeScreen.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckLargeScreen.Location = new System.Drawing.Point(41, 22);
+            this.ckLargeScreen.Name = "ckLargeScreen";
+            this.ckLargeScreen.Size = new System.Drawing.Size(164, 34);
+            this.ckLargeScreen.TabIndex = 127;
+            this.ckLargeScreen.Text = "Large Screen";
+            this.ckLargeScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckLargeScreen.UseVisualStyleBackColor = true;
+            this.ckLargeScreen.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
             // 
             // frmOptions
             // 
@@ -587,8 +566,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.RadioButton rbStandard;
-        private System.Windows.Forms.RadioButton rbLarge;
         private System.Windows.Forms.CheckBox ckMetric;
         private System.Windows.Forms.Label lbDelaySeconds;
         private System.Windows.Forms.TextBox tbDelay;
@@ -621,5 +598,6 @@
         private System.Windows.Forms.TextBox tbSimSpeed;
         private System.Windows.Forms.Label lbSimUnits;
         private System.Windows.Forms.CheckBox ckDualAuto;
+        private System.Windows.Forms.CheckBox ckLargeScreen;
     }
 }
