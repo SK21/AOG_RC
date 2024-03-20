@@ -96,6 +96,7 @@
             this.btMinimize = new System.Windows.Forms.Button();
             this.lblManAuto = new System.Windows.Forms.Label();
             this.tmrBorder = new System.Windows.Forms.Timer(this.components);
+            this.tmrRelease = new System.Windows.Forms.Timer(this.components);
             this.pnlQuantity0.SuspendLayout();
             this.pnlQuantity1.SuspendLayout();
             this.pnlQuantity2.SuspendLayout();
@@ -787,6 +788,7 @@
             this.btAuto.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btAuto.UseVisualStyleBackColor = false;
             this.btAuto.Click += new System.EventHandler(this.btAuto_Click);
+            this.btAuto.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btAuto_MouseUp);
             // 
             // btMinimize
             // 
@@ -816,6 +818,11 @@
             // 
             this.tmrBorder.Interval = 500;
             this.tmrBorder.Tick += new System.EventHandler(this.tmrBorder_tick);
+            // 
+            // tmrRelease
+            // 
+            this.tmrRelease.Interval = 500;
+            this.tmrRelease.Tick += new System.EventHandler(this.tmrRelease_Tick);
             // 
             // frmLargeScreen
             // 
@@ -958,5 +965,6 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.Timer tmrRelease;
     }
 }

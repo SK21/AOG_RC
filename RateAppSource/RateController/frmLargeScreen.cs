@@ -14,6 +14,7 @@ namespace RateController
         private int Fan2RateType = 0;
         private bool IsTransparent = false;
         private bool masterOn;
+        private bool MasterPressed;
         private FormStart mf;
         private int mouseX = 0;
         private int mouseY = 0;
@@ -169,8 +170,18 @@ namespace RateController
             }
             else
             {
-                if (masterOn) { mf.vSwitchBox.PressSwitch(SwIDs.MasterOff, true); }
-                else { mf.vSwitchBox.PressSwitch(SwIDs.MasterOn, true); }
+                if (masterOn)
+                {
+                    mf.vSwitchBox.PressSwitch(SwIDs.MasterOff, true);
+                    MasterPressed = true;
+                    tmrRelease.Enabled = true;
+                }
+                else
+                {
+                    mf.vSwitchBox.PressSwitch(SwIDs.MasterOn, true);
+                    MasterPressed = true;
+                    tmrRelease.Enabled = true;
+                }
             }
         }
 
@@ -190,6 +201,11 @@ namespace RateController
 
                 UpdateSwitches();
             }
+        }
+
+        private void btAuto_MouseUp(object sender, MouseEventArgs e)
+        {
+            MasterPressed = false;
         }
 
         private void btMinimize_Click(object sender, EventArgs e)
@@ -322,6 +338,9 @@ namespace RateController
             timerMain.Enabled = true;
             SwitchingScreens = false;
             mf.vSwitchBox.LargeScreenOn = true;
+            mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
+            tmrRelease.Enabled = true;
+            UpdateForm();
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
@@ -836,6 +855,15 @@ namespace RateController
         {
             this.FormBorderStyle = FormBorderStyle.None;
             tmrBorder.Stop();
+        }
+
+        private void tmrRelease_Tick(object sender, EventArgs e)
+        {
+            if (!MasterPressed)
+            {
+                mf.vSwitchBox.ReleaseSwitch();
+                tmrRelease.Enabled = false;
+            }
         }
 
         private void UpdateForm()

@@ -20,7 +20,7 @@ namespace RateController
 
         public void Build(int SectionsPerZone)
         {
-            int ZoneCount = 0;
+            int SectionCount = 0;
             int CurrentZone = 0;
             for (int i = 0; i < 8; i++)
             {
@@ -33,10 +33,10 @@ namespace RateController
                 if (Sec.Enabled)
                 {
                     if (cZones[CurrentZone].Start == 0) cZones[CurrentZone].Start = Sec.ID + 1;
-                    ZoneCount++;
-                    if (ZoneCount >= SectionsPerZone)
+                    SectionCount++;
+                    if (SectionCount >= SectionsPerZone)
                     {
-                        ZoneCount = 0;
+                        SectionCount = 0;
                         CurrentZone++;
                     }
                     if (CurrentZone > 7) CurrentZone = 7;
