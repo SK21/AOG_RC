@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -42,6 +41,7 @@ namespace RateController
         private double cRateSet = 0;
         private int cSenID;
         private int cSerialPort;
+        private int cShiftRange = 4;
         private double cTankStart = 0;
         private double cUnitsApplied = 0;
         private double CurrentMinutes;
@@ -59,7 +59,6 @@ namespace RateController
         private PGN32502 ModulePIDdata;
         private bool PauseWork = false;
         private double UnitsOffset = 0;
-        private int cShiftRange = 4;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -98,7 +97,7 @@ namespace RateController
                 if (cCalRun) cCalSetMeter = false;
             }
         }
-        public int PIDscale { get { return cShiftRange; }set { cShiftRange = value; } }
+
         public bool CalSetMeter
         {
             // notifies module Master switch on for calibrate and use auto mode to find meter cal
@@ -116,7 +115,7 @@ namespace RateController
         {
             // use base rate for cal and not vr rate
             get { return cCalUseBaseRate; }
-            set { cCalUseBaseRate = value;}
+            set { cCalUseBaseRate = value; }
         }
 
         public bool ConstantUPM
@@ -298,6 +297,9 @@ namespace RateController
 
         public byte PIDmin
         { get { return ModulePIDdata.MinPWM; } set { ModulePIDdata.MinPWM = value; } }
+
+        public int PIDscale
+        { get { return cShiftRange; } set { cShiftRange = value; } }
 
         public double ProdDensity
         { get { return cProdDensity; } set { cProdDensity = value; } }
@@ -641,9 +643,9 @@ namespace RateController
 
             bool.TryParse(mf.Tls.LoadProperty("ConstantUPM" + IDname), out cConstantUPM);
 
-            if(int.TryParse(mf.Tls.LoadProperty("ShiftRange"+IDname),out int sr))
+            if (int.TryParse(mf.Tls.LoadProperty("ShiftRange" + IDname), out int sr))
             {
-                cShiftRange= sr;
+                cShiftRange = sr;
             }
         }
 
@@ -970,7 +972,6 @@ namespace RateController
                 cHectaresPerMinute = mf.Sections.WorkingWidth(false) * KMH() / 600.0;
                 CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
 
-
                 //coverage
                 if (cHectaresPerMinute > 0)    // Is application on?
                 {
@@ -1085,7 +1086,8 @@ namespace RateController
             }
             else
             {
-                Result = (ArduinoModule.Connected() && mf.AutoSteerPGN.Connected() && cHectaresPerMinute > 0);
+                Result = (ArduinoModule.Connected() && cHectaresPerMinute > 0);
+                //Result = (ArduinoModule.Connected() && mf.AutoSteerPGN.Connected() && cHectaresPerMinute > 0);
             }
             return Result;
         }

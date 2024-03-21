@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -118,38 +117,6 @@ namespace RateController
             }
         }
 
-
-        public string ProductComm(int Port)
-        {
-            string Result = "";
-            if (Port >= 0 && Port < 3)
-            {
-                for (int i = 0; i < cProducts.Count; i++)
-                {
-                    if (cProducts[i].SerialPort == Port)
-                    {
-                        Result = cProducts[i].ProductName;
-                        break;
-                    }
-                }
-            }
-            return Result;
-        }
-
-        public int ProductID(int ModuleID)
-        {
-            int Result = -1;
-            for (int i = 0; i < cProducts.Count; i++)
-            {
-                if (cProducts[i].ModuleID == ModuleID)
-                {
-                    Result = i;
-                    break;
-                }
-            }
-            return Result;
-        }
-
         public void Save(int ProdID = 0)
         {
             if (ProdID == 0)
@@ -164,37 +131,6 @@ namespace RateController
             {
                 // save selected
                 cProducts[ListID(ProdID)].Save();
-            }
-        }
-
-        public void SaveComm(string ProdName, int Port)
-        {
-            if (Port >= 0 && Port < 3)
-            {
-                if (ProdName == "-")
-                {
-                    // remove 'Port' from all product serial ports
-                    for (int i = 0; i < cProducts.Count; i++)
-                    {
-                        if (cProducts[i].SerialPort == Port)
-                        {
-                            cProducts[i].SerialPort = -1;
-                            cProducts[i].Save();
-                        }
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < cProducts.Count; i++)
-                    {
-                        if (cProducts[i].ProductName == ProdName)
-                        {
-                            cProducts[i].SerialPort = Port;
-                            cProducts[i].Save();
-                            break;
-                        }
-                    }
-                }
             }
         }
 

@@ -848,7 +848,7 @@ namespace RateController
 
                 timerMain.Enabled = false;
                 timerPIDs.Enabled = false;
-                Tls.WriteActivityLog("Stopped", true);
+                Tls.WriteActivityLog("Stopped");
                 string mes = "Run time (hours): " + ((DateTime.Now - StartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
             }

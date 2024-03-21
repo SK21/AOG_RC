@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
@@ -35,7 +34,8 @@ namespace RateController
         // Status delegate
         private delegate void HandleDataDelegateObj(int port, byte[] msg);
 
-        public bool IsUDPSendConnected { get => cIsUDPSendConnected; set => cIsUDPSendConnected = value; }
+        public bool IsUDPSendConnected
+        { get { return cIsUDPSendConnected; } }
 
         public string NetworkEP
         {
@@ -70,10 +70,9 @@ namespace RateController
             return cLog;
         }
 
-        //sends byte array
         public void SendUDPMessage(byte[] byteData)
         {
-            if (IsUDPSendConnected)
+            if (cIsUDPSendConnected)
             {
                 try
                 {
@@ -117,7 +116,7 @@ namespace RateController
 
                 // Start listening for incoming data
                 recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref client, new AsyncCallback(ReceiveData), recvSocket);
-                IsUDPSendConnected = true;
+                cIsUDPSendConnected = true;
             }
             catch (Exception e)
             {
@@ -161,7 +160,7 @@ namespace RateController
                             if (mf.SwitchBox.ParseByteData(Data))
                             {
                                 SBtime = DateTime.Now;
-                                if(mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
+                                if (mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
                             }
                             break;
 
@@ -234,7 +233,6 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                //mf.Tls.ShowHelp("ReceiveData Error \n" + e.Message, "Comm", 3000, true);
                 mf.Tls.WriteErrorLog("UDPcomm/ReceiveData " + ex.Message);
             }
         }

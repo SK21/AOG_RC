@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -22,9 +21,6 @@ namespace RateController
             cID = ID;
             Name = "Sec" + ID.ToString();
         }
-
-        public bool Edited
-        { get { return cEdited; } }
 
         public bool Enabled
         {

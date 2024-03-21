@@ -8,7 +8,6 @@ namespace RateController
         public IList<clsCalibrate> Items;
         private const int MaxCalibrates = 4;
 
-        // access records by index
         private List<clsCalibrate> cCalibrates = new List<clsCalibrate>();
 
         private FormStart mf;

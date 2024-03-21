@@ -7,32 +7,31 @@ namespace RateController
 {
     public class clsCalibrate
     {
+        private int CalPWM;
+        private double cCalFactor;
         private TextBox cCalFactorBox;
         private Label cDescriptionLabel;
+        private bool cEdited;
+        private bool cEnabled;
         private Label cExpected;
+        private int cID = 0;
+        private bool cIsLocked;
         private Button cLocked;
         private TextBox cMeasured;
+        private bool ConstantUPMstart;
         private Button cPower;
         private clsProduct cProduct;
         private ProgressBar cProgress;
         private Label cPulses;
         private TextBox cRateBox;
-        private Timer cTimer = new Timer();
-        private FormStart mf;
-
-        private double cCalFactor;
-        private bool cEdited;
-        private bool cEnabled;
-        private int cID = 0;
-        private bool cIsLocked;
         private bool cRunning;
+        private Timer cTimer = new Timer();
         private bool Initializing;
         private double MeasuredAmount;
+        private FormStart mf;
         private double PulseCountStart;
         private double PulseCountTotal;
         private int SetCount;
-        private bool ConstantUPMstart;
-        private int CalPWM;
 
         public clsCalibrate(FormStart CallingFrom, int ID)
         {
@@ -67,15 +66,6 @@ namespace RateController
                 cCalFactorBox.Text = cProduct.MeterCal.ToString("N1");
                 Initializing = false;
             }
-        }
-
-        public void Close()
-        {
-            // restore initial settings
-            cProduct.Enabled = true;
-            cProduct.ConstantUPM = ConstantUPMstart;
-            cProduct.Save();
-            cProduct.CalUseBaseRate = false;
         }
 
         public Label Description
@@ -181,6 +171,15 @@ namespace RateController
                 cPower.Enabled = !value;
                 Update();
             }
+        }
+
+        public void Close()
+        {
+            // restore initial settings
+            cProduct.Enabled = true;
+            cProduct.ConstantUPM = ConstantUPMstart;
+            cProduct.Save();
+            cProduct.CalUseBaseRate = false;
         }
 
         public void Load()

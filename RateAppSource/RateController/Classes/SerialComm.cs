@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO.Ports;
-using System.Windows.Forms;
 
 namespace RateController
 {
@@ -17,8 +15,6 @@ namespace RateController
         private byte HiByte;
         private byte LoByte;
         private DateTime SBtime;
-
-        // prevent UI lock-up by only sending serial data after verfying connection
         private bool SerialActive = false;
 
         public SerialComm(FormStart CallingForm, int PortNumber)
@@ -73,11 +69,6 @@ namespace RateController
             return cLog;
         }
 
-        public void OpenRCport(string Name)
-        {
-            if (ArduinoPort.PortName == Name) OpenRCport();
-        }
-
         public void OpenRCport(bool SuppressErrors = false)
         {
             try
@@ -125,18 +116,6 @@ namespace RateController
             {
                 mf.Tls.WriteErrorLog("SerialComm/OpenRCport: " + ex.Message);
             }
-        }
-
-        public bool PortOpen()
-        {
-            return ArduinoPort.IsOpen;
-        }
-
-        public bool PortOpen(string Name)
-        {
-            bool Result = false;
-            if (ArduinoPort.PortName == Name && ArduinoPort.IsOpen) Result = true;
-            return Result;
         }
 
         public void SendData(byte[] Data)

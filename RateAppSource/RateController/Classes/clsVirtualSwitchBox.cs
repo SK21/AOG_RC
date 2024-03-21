@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -41,27 +40,6 @@ namespace RateController
             PressedData[2] = 128; // work switch on
             Timer1.Tick += new EventHandler(TimerEventProcessor);
             Timer1.Interval = 250;
-        }
-
-        private bool phySwitchboxConnected()
-        {
-            bool Result = false;
-            if (mf.UDPmodules.SwitchBoxConnected)
-            {
-                Result = true;
-            }
-            else
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    if (mf.SER[i].SwitchBoxConnected)
-                    {
-                        Result = true;
-                        break;
-                    }
-                }
-            }
-            return Result;
         }
 
         public bool Enabled
@@ -126,7 +104,7 @@ namespace RateController
                     break;
 
                 case SwIDs.AutoRate:
-                    if(cAutoRate)
+                    if (cAutoRate)
                     {
                         // turn off
                         PressedData[2] = mf.Tls.BitClear(PressedData[2], 6);
@@ -136,7 +114,7 @@ namespace RateController
                     {
                         // turn on
                         PressedData[2] = mf.Tls.BitSet(PressedData[2], 6);
-                        cAutoRate= true;
+                        cAutoRate = true;
                     }
                     break;
 
@@ -151,7 +129,7 @@ namespace RateController
                     {
                         // turn on
                         PressedData[2] = mf.Tls.BitSet(PressedData[2], 5);
-                        cAutoSection= true;
+                        cAutoSection = true;
                     }
                     break;
 
@@ -227,6 +205,27 @@ namespace RateController
         {
             PressedData[2] = (byte)(PressedData[2] & 0b11100001);
             PressedData[5] = mf.Tls.CRC(PressedData, 5);
+        }
+
+        private bool phySwitchboxConnected()
+        {
+            bool Result = false;
+            if (mf.UDPmodules.SwitchBoxConnected)
+            {
+                Result = true;
+            }
+            else
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (mf.SER[i].SwitchBoxConnected)
+                    {
+                        Result = true;
+                        break;
+                    }
+                }
+            }
+            return Result;
         }
 
         private void TimerEventProcessor(Object myObject, EventArgs myEventArgs)

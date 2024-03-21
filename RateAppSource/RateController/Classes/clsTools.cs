@@ -33,8 +33,6 @@ namespace RateController
 
         #endregion Form Dragging API Support
 
-        private static Hashtable HTapp;
-        private static Hashtable HTfiles;
         private string cAppName = "RateController";
         private string cAppVersion = "3.7.6";
         private string cPropertiesApp;
@@ -43,6 +41,8 @@ namespace RateController
         private string cVersionDate = "20-Mar-2024";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
+        private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
+        private SortedDictionary<string, string> PropsApp = new SortedDictionary<string, string>();
 
         public clsTools(FormStart CallingForm)
         {
@@ -213,20 +213,6 @@ namespace RateController
             return Properties.Settings.Default.FilesDir;
         }
 
-        public Form IsFormOpen(string Name)
-        {
-            Form Result = null;
-            for (int i = 0; i < OpenForms.Length; i++)
-            {
-                if (OpenForms[i] != null && OpenForms[i].Name == Name)
-                {
-                    Result = OpenForms[i];
-                    break;
-                }
-            }
-            return Result;
-        }
-
         public bool GoodCRC(byte[] Data, byte Start = 0)
         {
             bool Result = false;
@@ -251,6 +237,20 @@ namespace RateController
             return Result;
         }
 
+        public Form IsFormOpen(string Name)
+        {
+            Form Result = null;
+            for (int i = 0; i < OpenForms.Length; i++)
+            {
+                if (OpenForms[i] != null && OpenForms[i].Name == Name)
+                {
+                    Result = OpenForms[i];
+                    break;
+                }
+            }
+            return Result;
+        }
+
         public bool IsOnScreen(Form form, bool PutOnScreen = false)
         {
             // Create rectangle
@@ -271,7 +271,7 @@ namespace RateController
         public string LoadAppProperty(string Key)
         {
             string Prop = "";
-            if (HTapp.Contains(Key)) Prop = HTapp[Key].ToString();
+            if (PropsApp.ContainsKey(Key)) Prop = PropsApp[Key].ToString();
             return Prop;
         }
 
@@ -293,7 +293,7 @@ namespace RateController
         public string LoadProperty(string Key)
         {
             string Prop = "";
-            if (HTfiles.Contains(Key)) Prop = HTfiles[Key].ToString();
+            if (Props.ContainsKey(Key)) Prop = Props[Key].ToString();
             return Prop;
         }
 
@@ -390,17 +390,17 @@ namespace RateController
         public void SaveAppProperty(string Key, string Value)
         {
             bool Changed = false;
-            if (HTapp.Contains(Key))
+            if (PropsApp.ContainsKey(Key))
             {
-                if (!HTapp[Key].ToString().Equals(Value))
+                if (!PropsApp[Key].ToString().Equals(Value))
                 {
-                    HTapp[Key] = Value;
+                    PropsApp[Key] = Value;
                     Changed = true;
                 }
             }
             else
             {
-                HTapp.Add(Key, Value);
+                PropsApp.Add(Key, Value);
                 Changed = true;
             }
             if (Changed) SaveAppProperties();
@@ -447,17 +447,17 @@ namespace RateController
         public void SaveProperty(string Key, string Value)
         {
             bool Changed = false;
-            if (HTfiles.Contains(Key))
+            if (Props.ContainsKey(Key))
             {
-                if (!HTfiles[Key].ToString().Equals(Value))
+                if (!Props[Key].ToString().Equals(Value))
                 {
-                    HTfiles[Key] = Value;
+                    Props[Key] = Value;
                     Changed = true;
                 }
             }
             else
             {
-                HTfiles.Add(Key, Value);
+                Props.Add(Key, Value);
                 Changed = true;
             }
             if (Changed) SaveProperties();
@@ -640,14 +640,14 @@ namespace RateController
             // property:  key=value  ex: "LastFile=Main.mdb"
             try
             {
-                HTapp = new Hashtable();
+                PropsApp.Clear();
                 string[] lines = System.IO.File.ReadAllLines(path);
                 foreach (string line in lines)
                 {
                     if (line.Contains("=") && !String.IsNullOrEmpty(line.Split('=')[0]) && !String.IsNullOrEmpty(line.Split('=')[1]))
                     {
                         string[] splitText = line.Split('=');
-                        HTapp.Add(splitText[0], splitText[1]);
+                        PropsApp.Add(splitText[0], splitText[1]);
                     }
                 }
             }
@@ -662,14 +662,14 @@ namespace RateController
             // property:  key=value  ex: "LastFile=Main.mdb"
             try
             {
-                HTfiles = new Hashtable();
+                Props.Clear();
                 string[] lines = System.IO.File.ReadAllLines(path);
                 foreach (string line in lines)
                 {
                     if (line.Contains("=") && !String.IsNullOrEmpty(line.Split('=')[0]) && !String.IsNullOrEmpty(line.Split('=')[1]))
                     {
                         string[] splitText = line.Split('=');
-                        HTfiles.Add(splitText[0], splitText[1]);
+                        Props.Add(splitText[0], splitText[1]);
                     }
                 }
             }
@@ -683,9 +683,9 @@ namespace RateController
         {
             try
             {
-                string[] NewLines = new string[HTapp.Count];
+                string[] NewLines = new string[PropsApp.Count];
                 int i = -1;
-                foreach (DictionaryEntry Pair in HTapp)
+                foreach (var Pair in PropsApp)
                 {
                     i++;
                     NewLines[i] = Pair.Key.ToString() + "=" + Pair.Value.ToString();
@@ -701,9 +701,9 @@ namespace RateController
         {
             try
             {
-                string[] NewLines = new string[HTfiles.Count];
+                string[] NewLines = new string[Props.Count];
                 int i = -1;
-                foreach (DictionaryEntry Pair in HTfiles)
+                foreach (var Pair in Props)
                 {
                     i++;
                     NewLines[i] = Pair.Key.ToString() + "=" + Pair.Value.ToString();

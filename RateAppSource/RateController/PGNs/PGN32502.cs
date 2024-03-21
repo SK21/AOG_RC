@@ -26,8 +26,6 @@ namespace RateController
         private byte cMaxPWM;
         private byte cMinPWM;
 
-        private UInt32 Temp;
-
         public PGN32502(clsProduct CalledFrom)
         {
             Prod = CalledFrom;

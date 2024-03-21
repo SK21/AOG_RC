@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Security.Policy;
 
 namespace RateController
 {
