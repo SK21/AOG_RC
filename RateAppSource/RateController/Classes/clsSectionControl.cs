@@ -419,7 +419,7 @@ namespace RateController
                     bool SectionsChanged = false;
                     for (int i = 0; i < mf.AOGsections.SectionCount; i++)
                     {
-                        if (mf.Sections.Item(i).IsON != mf.AOGsections.SectionIsOn(i))
+                        if (mf.SwitchBox.SectionSwitchOn(mf.Sections.Item(i).SwitchID) != mf.AOGsections.SectionIsOn(i))
                         {
                             SectionsChanged = true;
                             break;

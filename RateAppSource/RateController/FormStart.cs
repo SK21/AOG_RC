@@ -264,7 +264,11 @@ namespace RateController
         public bool UseInches
         {
             get { return cUseInches; }
-            set { cUseInches = value; }
+            set 
+            {
+                cUseInches = value;
+                Tls.SaveProperty("UseInches", cUseInches.ToString());
+            }
         }
 
         public bool UseLargeScreen
