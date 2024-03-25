@@ -105,8 +105,6 @@ bool PCA9555PW_found = false;
 Adafruit_MCP23X17 MCP;
 bool MCP23017_found = false;
 
-int TimedCombo(byte, bool);	// function prototype
-
 //reset function
 void(*resetFunc) (void) = 0;
 
