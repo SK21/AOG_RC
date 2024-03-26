@@ -23,10 +23,10 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="PID.ino" />
-    <ClCompile Include="Rate.ino" />
     <ClCompile Include="Receive.ino" />
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
+    <ClCompile Include="Rate.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCnano.vsarduino.h">

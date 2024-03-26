@@ -15,8 +15,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  20-Mar-2024"
-const uint16_t InoID = 20034;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  26-Mar-2024"
+const uint16_t InoID = 26034;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -59,7 +59,6 @@ struct SensorConfig
 	byte MinPWM;
 	byte MaxPWM;
 	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
-	uint8_t Debounce;
 };
 
 SensorConfig Sensor[2];
@@ -225,13 +224,13 @@ byte CRC(byte Chk[], byte Length, byte Start)
 //		//Serial.print(MinMem);
 //
 //		Serial.print(", ");
-//		Serial.print(debug1, 7);
+//		Serial.print(debug1);
 //
 //		Serial.print(", ");
-//		Serial.print(debug2, 7);
+//		Serial.print(debug2);
 //
 //		Serial.print(", ");
-//		Serial.print(debug3);
+//		Serial.print(debug3,7);
 //
 //		//Serial.print(", ");
 //		//Serial.print(MasterOn);
