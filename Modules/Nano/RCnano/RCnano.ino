@@ -104,6 +104,8 @@ bool PCA9555PW_found = false;
 Adafruit_MCP23X17 MCP;
 bool MCP23017_found = false;
 
+int TimedCombo(byte, bool);	// function prototype
+
 //reset function
 void(*resetFunc) (void) = 0;
 
@@ -206,9 +208,9 @@ byte CRC(byte Chk[], byte Length, byte Start)
 //uint32_t LoopTmr;
 //byte ReadReset;
 //int MinMem = 2000;
-//double debug1;
-//double debug2;
-//double debug3;
+////double debug1;
+////double debug2;
+////double debug3;
 //
 //void DebugTheIno()
 //{
@@ -217,20 +219,20 @@ byte CRC(byte Chk[], byte Length, byte Start)
 //		DebugTime = millis();
 //		Serial.println("");
 //
-//		//Serial.print(F(" Micros: "));
-//		//Serial.print(MaxLoopTime);
+//		Serial.print(F(" Micros: "));
+//		Serial.print(MaxLoopTime);
 //
-//		//Serial.print(F(",  SRAM left: "));
-//		//Serial.print(MinMem);
+//		Serial.print(F(",  SRAM left: "));
+//		Serial.print(MinMem);
 //
-//		Serial.print(", ");
-//		Serial.print(debug1);
+//		//Serial.print(", ");
+//		//Serial.print(debug1, 7);
 //
-//		Serial.print(", ");
-//		Serial.print(debug2);
+//		//Serial.print(", ");
+//		//Serial.print(debug2, 7);
 //
-//		Serial.print(", ");
-//		Serial.print(debug3,7);
+//		//Serial.print(", ");
+//		//Serial.print(debug3);
 //
 //		//Serial.print(", ");
 //		//Serial.print(MasterOn);

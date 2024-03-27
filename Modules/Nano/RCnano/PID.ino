@@ -4,8 +4,8 @@
 uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
 const double Deadband = 0.04;		// % error below which no adjustment is made
-const double BrakePoint = 0.25;		// % error below which reduced adjustment is used
-const double BrakeSet = 0.7;		// low adjustment rate factor
+const double BrakePoint = 0.20;		// % error below which reduced adjustment is used
+const double BrakeSet = 0.75;		// low adjustment rate factor
 double SF;							// Settings Factor used to reduce adjustment when close to target rate
 double DifValue;					// differential value on UPM
 
@@ -13,6 +13,11 @@ double RateError;
 double LastPWM[MaxProductCount];
 double IntegralSum[MaxProductCount];
 double LastUPM[MaxProductCount];
+
+const byte AdjustTime = 15;
+const byte PauseTime = 300;
+bool PauseAdjust[MaxProductCount];
+uint32_t ComboTime[MaxProductCount];
 
 void SetPWM()
 {
@@ -30,9 +35,14 @@ void SetPWM()
 				Sensor[i].PWM = PIDmotor(i);
 				break;
 
+			case 5:
+				// combo close timed adjustment
+				Sensor[i].PWM = TimedCombo(i, false);
+				break;
+
 			default:
 				// valve control
-				Sensor[i].PWM = PIDvalve(i);
+				Sensor[i].PWM = PIDvalve(i, false);
 				break;
 			}
 		}
@@ -42,12 +52,21 @@ void SetPWM()
 		// manual control
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			Sensor[i].PWM = Sensor[i].ManualAdjust;
-			double Direction = 1.0;
-			if (Sensor[i].PWM < 0) Direction = -1.0;
-			if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
-			LastPWM[i] = Sensor[i].PWM;
-			break;
+			switch (Sensor[i].ControlType)
+			{
+			case 5:
+				// combo close timed adjustment
+				Sensor[i].PWM = TimedCombo(i, true);
+				break;
+
+			default:
+				Sensor[i].PWM = Sensor[i].ManualAdjust;
+				double Direction = 1.0;
+				if (Sensor[i].PWM < 0) Direction = -1.0;
+				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
+				LastPWM[i] = Sensor[i].PWM;
+				break;
+			}
 		}
 	}
 }
@@ -109,13 +128,13 @@ int PIDmotor(byte ID)
 	return (int)Result;
 }
 
-int PIDvalve(byte ID)
+int PIDvalve(byte ID, bool SkipSampleTime)
 {
 	double Result = 0;
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
 	{
 		Result = LastPWM[ID];
-		if ((millis() - LastCheck[ID] >= SampleTime))
+		if ((millis() - LastCheck[ID] >= SampleTime)||SkipSampleTime)
 		{
 			LastCheck[ID] = millis();
 
@@ -173,5 +192,103 @@ int PIDvalve(byte ID)
 
 	LastPWM[ID] = Result;
 	return (int)Result;
+}
+
+int TimedCombo(byte ID, bool ManualAdjust)
+{
+	int Result = 0;
+	if (PauseAdjust[ID])
+	{
+		// pausing state
+		if (millis() - ComboTime[ID] > PauseTime)
+		{
+			// switch state
+			ComboTime[ID] = millis();
+			PauseAdjust[ID] = !PauseAdjust[ID];
+		}
+	}
+	else
+	{
+		// adjusting state
+		if (millis() - ComboTime[ID] > AdjustTime)
+		{
+			// switch state
+			ComboTime[ID] = millis();
+			PauseAdjust[ID] = !PauseAdjust[ID];
+		}
+		else
+		{
+			// set pwm
+			if (ManualAdjust)
+			{
+				Result = 255;
+				if (Result > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM;
+				if (Sensor[ID].ManualAdjust < 0) Result *= -1.0;
+			}
+			else
+			{
+				Result = PIDvalve(ID, true);
+			}
+		}
+	}
+	return Result;
+}
+
+int TimedComboOld(byte ID, bool ManualAdjust = false)
+{
+	int Result = 0;
+	if (PauseAdjust[ID])
+	{
+		// pausing state
+		if (millis() - ComboTime[ID] > PauseTime)
+		{
+			// switch state
+			ComboTime[ID] = millis();
+			PauseAdjust[ID] = !PauseAdjust[ID];
+		}
+	}
+	else
+	{
+		// adjusting state
+		if (millis() - ComboTime[ID] > AdjustTime)
+		{
+			// switch state
+			ComboTime[ID] = millis();
+			PauseAdjust[ID] = !PauseAdjust[ID];
+		}
+		else
+		{
+			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			double Direction = 1.0;
+			if (RateError < 0) Direction = -1.0;
+
+			if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
+			{
+				SF = 1;
+			}
+			else
+			{
+				SF = BrakeSet;
+			}
+
+			if (ManualAdjust)
+			{
+				Result = 255;
+			}
+			else
+			{
+				// auto adjust, check deadband
+				if (Sensor[ID].TargetUPM > 0)
+				{
+					if (abs(RateError / Sensor[ID].TargetUPM) > Deadband)  Result = 255;
+				}
+			}
+			Result *= SF;
+			if (Result > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * SF;
+			if (Result < Sensor[ID].MinPWM) Result = Sensor[ID].MinPWM;
+			Result *= Direction;
+		}
+	}
+	return Result;
 }
 
