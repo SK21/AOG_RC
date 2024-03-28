@@ -122,7 +122,7 @@ void SendData()
 
     // status
     Data[13] = 0;
-    if (MDL.WorkPin < NC && digitalRead(MDL.WorkPin)) Data[13] |= 0b00000001;
+    if (WrkOn) Data[13] |= 0b00000001;
 
     Data[14] = CRC(Data, 14, 0);
 

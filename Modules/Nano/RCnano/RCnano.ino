@@ -15,8 +15,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  27-Mar-2024"
-const uint16_t InoID = 27034;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  28-Mar-2024"
+const uint16_t InoID = 28034;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -35,6 +35,7 @@ struct ModuleConfig
 	uint8_t RelayControl = 2;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired
 	uint8_t RelayPins[16] = { 8,9,10,11,12,13,14,15,7,6,5,4,3,2,1,0 };		// MCP23017 pins RC5, RC8
 	uint8_t WorkPin;
+	bool WorkPinIsMomentary;
 };
 
 ModuleConfig MDL;
@@ -108,6 +109,9 @@ bool MCP23017_found = false;
 void(*resetFunc) (void) = 0;
 
 bool GoodPins;	// pin configuration correct
+bool WrkOn;
+bool WrkLast;
+bool WrkCurrent;
 
 bool EthernetConnected()
 {
@@ -148,6 +152,20 @@ void loop()
 
 	if (millis() - SendLast > SendTime)
 	{
+		if (MDL.WorkPinIsMomentary && MDL.WorkPin < NC)
+		{
+			WrkCurrent = digitalRead(MDL.WorkPin);
+			if (WrkCurrent != WrkLast)
+			{
+				if (WrkCurrent) WrkOn = !WrkOn;	// only cycle when going from low to high
+				WrkLast = WrkCurrent;
+			}
+		}
+		else
+		{
+			WrkOn = (MDL.WorkPin < NC && digitalRead(MDL.WorkPin));
+		}
+
 		SendLast = millis();
 		SendData();
 	}
