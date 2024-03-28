@@ -15,8 +15,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  26-Mar-2024"
-const uint16_t InoID = 26034;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  27-Mar-2024"
+const uint16_t InoID = 27034;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -103,8 +103,6 @@ bool PCA9555PW_found = false;
 
 Adafruit_MCP23X17 MCP;
 bool MCP23017_found = false;
-
-int TimedCombo(byte, bool);	// function prototype
 
 //reset function
 void(*resetFunc) (void) = 0;
