@@ -108,6 +108,7 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.cboBoard = new System.Windows.Forms.ComboBox();
             this.lbBoards = new System.Windows.Forms.Label();
+            this.ckMomentary = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -350,6 +351,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.ckMomentary);
             this.tabPage2.Controls.Add(this.tbWrk);
             this.tabPage2.Controls.Add(this.lbWorkPin);
             this.tabPage2.Controls.Add(this.tbPWM2);
@@ -978,6 +980,20 @@
             this.lbBoards.TabIndex = 218;
             this.lbBoards.Text = "Boards";
             // 
+            // ckMomentary
+            // 
+            this.ckMomentary.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMomentary.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckMomentary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckMomentary.Location = new System.Drawing.Point(309, 327);
+            this.ckMomentary.Name = "ckMomentary";
+            this.ckMomentary.Size = new System.Drawing.Size(119, 40);
+            this.ckMomentary.TabIndex = 82;
+            this.ckMomentary.Text = "Momentary";
+            this.ckMomentary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMomentary.UseVisualStyleBackColor = true;
+            this.ckMomentary.CheckedChanged += new System.EventHandler(this.ckClient_CheckedChanged);
+            // 
             // frmModuleConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -1099,5 +1115,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox tbRelay1;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox ckMomentary;
     }
 }

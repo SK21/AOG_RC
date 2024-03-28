@@ -152,20 +152,7 @@ void loop()
 
 	if (millis() - SendLast > SendTime)
 	{
-		if (MDL.WorkPinIsMomentary && MDL.WorkPin < NC)
-		{
-			WrkCurrent = digitalRead(MDL.WorkPin);
-			if (WrkCurrent != WrkLast)
-			{
-				if (WrkCurrent) WrkOn = !WrkOn;	// only cycle when going from low to high
-				WrkLast = WrkCurrent;
-			}
-		}
-		else
-		{
-			WrkOn = (MDL.WorkPin < NC && digitalRead(MDL.WorkPin));
-		}
-
+		CheckWorkPin();
 		SendLast = millis();
 		SendData();
 	}
@@ -217,6 +204,30 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	}
 	Result = (byte)CK;
 	return Result;
+}
+
+void CheckWorkPin()
+{
+	if (MDL.WorkPin < NC)
+	{
+		WrkCurrent = digitalRead(MDL.WorkPin);
+		if (MDL.WorkPinIsMomentary)
+		{
+			if (WrkCurrent != WrkLast)
+			{
+				if (WrkCurrent) WrkOn = !WrkOn;	// only cycle when going from low to high
+				WrkLast = WrkCurrent;
+			}
+		}
+		else
+		{
+			WrkOn = WrkCurrent;
+		}
+	}
+	else
+	{
+		WrkOn = false;
+	}
 }
 
 //uint32_t DebugTime;

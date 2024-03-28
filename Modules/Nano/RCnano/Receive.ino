@@ -263,9 +263,10 @@ void ReadPGNs(byte Data[], uint16_t len)
 		// 2        ID
 		// 3        Sensor count
 		// 4        Commands
-		//          - Relay on high
-		//          - Flow on high
-		//			- work pin is momentary
+		//          - bit 0, Relay on high
+		//          - bit 1, Flow on high
+		//			- bit 2, client mode
+		//			- bit 3, work pin is momentary
 		// 5        Relay control type  0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
 		// 6        wifi module serial port
 		// 7        Sensor 0, flow pin
@@ -290,7 +291,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 				byte tmp = Data[4];
 				if ((tmp & 1) == 1) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
 				if ((tmp & 2) == 2) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
-				if ((tmp & 4) == 4) MDL.WorkPinIsMomentary = 1; else MDL.WorkPinIsMomentary = 0;
+				if ((tmp & 8) == 8) MDL.WorkPinIsMomentary = 1; else MDL.WorkPinIsMomentary = 0;
 
 				MDL.RelayControl = Data[5];
 				Sensor[0].FlowPin = Data[7];

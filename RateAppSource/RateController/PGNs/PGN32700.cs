@@ -15,6 +15,7 @@ namespace RateController
         //      bit 0 - Relay on high
         //      bit 1 - Flow on high
         //      bit 2 - client mode
+        //      bit 3 - work pin is momentary
         //5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
         //                           , 5 - PCA9685 single , 6 - PCA9685 paired, 7 - PCF8574
         //6	    wifi module serial port
@@ -72,6 +73,21 @@ namespace RateController
 
         public byte ModuleID
         { set { cData[2] = value; } }
+
+        public bool Momentary
+        {
+            set
+            {
+                if (value)
+                {
+                    cData[4] = (byte)(cData[4] | 8);
+                }
+                else
+                {
+                    cData[4] = (byte)(cData[4] & 0b1111_0111);
+                }
+            }
+        }
 
         public bool RelayOnHigh
         {
