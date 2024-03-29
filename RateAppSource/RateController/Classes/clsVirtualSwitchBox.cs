@@ -37,7 +37,7 @@ namespace RateController
             PressedData = new byte[6];
             PressedData[0] = 106;
             PressedData[1] = 127;
-            PressedData[2] = 128; // work switch on
+            //PressedData[2] = 128; // work switch on
             Timer1.Tick += new EventHandler(TimerEventProcessor);
             Timer1.Interval = 250;
         }

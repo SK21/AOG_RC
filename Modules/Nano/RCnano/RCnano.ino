@@ -235,9 +235,9 @@ void CheckWorkPin()
 //uint32_t LoopTmr;
 //byte ReadReset;
 //int MinMem = 2000;
-////double debug1;
-////double debug2;
-////double debug3;
+//double debug1;
+//double debug2;
+//double debug3;
 //
 //void DebugTheIno()
 //{
@@ -246,20 +246,20 @@ void CheckWorkPin()
 //		DebugTime = millis();
 //		Serial.println("");
 //
-//		Serial.print(F(" Micros: "));
-//		Serial.print(MaxLoopTime);
+//		//Serial.print(F(" Micros: "));
+//		//Serial.print(MaxLoopTime);
 //
-//		Serial.print(F(",  SRAM left: "));
-//		Serial.print(MinMem);
+//		//Serial.print(F(",  SRAM left: "));
+//		//Serial.print(MinMem);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug1, 7);
+//		Serial.print(", ");
+//		Serial.print(debug1, 7);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug2, 7);
+//		Serial.print(", ");
+//		Serial.print(debug2, 7);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug3);
+//		Serial.print(", ");
+//		Serial.print(debug3);
 //
 //		//Serial.print(", ");
 //		//Serial.print(MasterOn);
