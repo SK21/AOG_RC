@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
@@ -163,7 +164,7 @@ namespace RateController
                                 if (mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
                             }
                             break;
-
+                            
                         case 33152: // AOG, 0x81, 0x80
                             switch (Data[3])
                             {
