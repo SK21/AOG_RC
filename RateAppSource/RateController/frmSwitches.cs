@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -67,7 +68,7 @@ namespace RateController
 
         private void btnMaster_MouseDown(object sender, MouseEventArgs e)
         {
-            if (mf.SectionControl.MasterOn)
+            if (btnMaster.BackColor == Color.LightGreen)
             {
                 mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
                 MasterPressed = true;

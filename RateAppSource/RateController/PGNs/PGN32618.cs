@@ -110,6 +110,8 @@ namespace RateController
 
         public bool WorkOn
         {
+            // returns true if switchbox work switch is on or any 
+            // module shows workswitch on
             get
             {
                 bool Result = true;
