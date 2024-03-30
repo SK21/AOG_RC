@@ -82,7 +82,6 @@ namespace RateController
             this.tbs4 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cbShift = new System.Windows.Forms.ComboBox();
-            this.tbPexample = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btnTuningGraph = new System.Windows.Forms.Button();
@@ -171,6 +170,7 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.lbExample = new System.Windows.Forms.Label();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -825,8 +825,8 @@ namespace RateController
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lbExample);
             this.groupBox1.Controls.Add(this.cbShift);
-            this.groupBox1.Controls.Add(this.tbPexample);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(65, 231);
@@ -856,18 +856,6 @@ namespace RateController
             this.cbShift.Size = new System.Drawing.Size(120, 31);
             this.cbShift.TabIndex = 156;
             this.cbShift.SelectedIndexChanged += new System.EventHandler(this.cbShift_SelectedIndexChanged);
-            // 
-            // tbPexample
-            // 
-            this.tbPexample.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPexample.Location = new System.Drawing.Point(176, 68);
-            this.tbPexample.MaxLength = 8;
-            this.tbPexample.Name = "tbPexample";
-            this.tbPexample.ReadOnly = true;
-            this.tbPexample.Size = new System.Drawing.Size(120, 30);
-            this.tbPexample.TabIndex = 159;
-            this.tbPexample.Tag = "6";
-            this.tbPexample.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label1
             // 
@@ -1559,6 +1547,7 @@ namespace RateController
             // 
             // lbRateAppliedData
             // 
+            this.lbRateAppliedData.BackColor = System.Drawing.Color.Transparent;
             this.lbRateAppliedData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbRateAppliedData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbRateAppliedData.Location = new System.Drawing.Point(286, 22);
@@ -1953,6 +1942,17 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
+            // lbExample
+            // 
+            this.lbExample.BackColor = System.Drawing.Color.Transparent;
+            this.lbExample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbExample.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbExample.Location = new System.Drawing.Point(176, 70);
+            this.lbExample.Name = "lbExample";
+            this.lbExample.Size = new System.Drawing.Size(120, 25);
+            this.lbExample.TabIndex = 166;
+            this.lbExample.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2138,8 +2138,8 @@ namespace RateController
         private System.Windows.Forms.ComboBox cbVR;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cbShift;
-        private System.Windows.Forms.TextBox tbPexample;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lbExample;
     }
 }

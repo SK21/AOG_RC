@@ -476,7 +476,7 @@ namespace RateController
 
             ckConstantUPM.Checked = CurrentProduct.ConstantUPM;
             cbShift.SelectedIndex = CurrentProduct.PIDscale;
-            tbPexample.Text = (CurrentProduct.PIDkp * Math.Pow(10,  - cbShift.SelectedIndex)).ToString("N7");
+            UpdateExample();
         }
 
         private void RateSet_Enter(object sender, EventArgs e)
@@ -1445,6 +1445,13 @@ namespace RateController
         private void tbKP_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+            UpdateExample();
+        }
+        private void UpdateExample()
+        {
+            int val = (int)CurrentProduct.PIDkp;
+            if (int.TryParse(tbKP.Text, out int ex)) val = ex;
+            lbExample.Text = (val * Math.Pow(10, -cbShift.SelectedIndex)).ToString("N7");
         }
 
         private void tbKP_Validating(object sender, CancelEventArgs e)
@@ -1658,6 +1665,7 @@ namespace RateController
         private void cbShift_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+            UpdateExample();
         }
     }
 }
