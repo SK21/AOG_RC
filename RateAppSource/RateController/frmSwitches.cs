@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -54,6 +53,16 @@ namespace RateController
             mf.vSwitchBox.PressSwitch(SwIDs.sw3);
         }
 
+        private void btnAutoRate_Click(object sender, EventArgs e)
+        {
+            mf.vSwitchBox.PressSwitch(SwIDs.AutoRate);
+        }
+
+        private void btnAutoSection_Click(object sender, EventArgs e)
+        {
+            mf.vSwitchBox.PressSwitch(SwIDs.AutoSection);
+        }
+
         private void btnDown_MouseDown(object sender, MouseEventArgs e)
         {
             mf.vSwitchBox.PressSwitch(SwIDs.RateDown);
@@ -68,7 +77,7 @@ namespace RateController
 
         private void btnMaster_MouseDown(object sender, MouseEventArgs e)
         {
-            if (btnMaster.BackColor == Color.LightGreen)
+            if (mf.SwitchBox.MasterOn)
             {
                 mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
                 MasterPressed = true;
@@ -107,7 +116,7 @@ namespace RateController
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
             }
-                mf.Tls.SaveFormData(this);
+            mf.Tls.SaveFormData(this);
             timer1.Enabled = false;
             mf.vSwitchBox.SwitchScreenOn = false;
         }
@@ -207,12 +216,11 @@ namespace RateController
                 btAuto.BackColor = Color.Red;
             }
 
-            if (SwON[1])
+            if (mf.SwitchBox.MasterOn)
             {
                 btnMaster.BackColor = Color.LightGreen;
             }
-
-            if (SwON[2])
+            else
             {
                 btnMaster.BackColor = Color.Red;
             }
@@ -310,16 +318,6 @@ namespace RateController
                 if (SwON[21]) mf.vSwitchBox.PressSwitch(SwIDs.AutoSection);
                 if (SwON[22]) mf.vSwitchBox.PressSwitch(SwIDs.AutoRate);
             }
-        }
-
-        private void btnAutoSection_Click(object sender, EventArgs e)
-        {
-            mf.vSwitchBox.PressSwitch(SwIDs.AutoSection);
-        }
-
-        private void btnAutoRate_Click(object sender, EventArgs e)
-        {
-            mf.vSwitchBox.PressSwitch(SwIDs.AutoRate);
         }
     }
 }
