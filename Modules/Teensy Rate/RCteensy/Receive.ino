@@ -230,11 +230,11 @@ void ReadPGNs(byte Data[], uint16_t len)
 					byte SensorID = ParseSenID(Data[2]);
 					if (SensorID < MDL.SensorCount)
 					{
-						float PIDscale = pow(10, Data[8] * -1);
+						double PIDscale = pow(10, Data[8] * -1);
 
-						Sensor[SensorID].KP = (float)(Data[3] * PIDscale);
-						Sensor[SensorID].KI = (float)(Data[4] * PIDscale);
-						Sensor[SensorID].KD = (float)(Data[5] * PIDscale);
+						Sensor[SensorID].KP = (double)(Data[3] * PIDscale);
+						Sensor[SensorID].KI = (double)(Data[4] * PIDscale);
+						Sensor[SensorID].KD = (double)(Data[5] * PIDscale);
 
 						Sensor[SensorID].MinPWM = Data[6];
 						Sensor[SensorID].MaxPWM = Data[7];
@@ -311,6 +311,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		//          - Relay on high
 		//          - Flow on high
 		//          - bit 2, client mode
+		//			- bit 3, work pin is momentary
 		// 5        Relay control type  0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
 		// 6        wifi module serial port
 		// 7        Sensor 0, flow pin
@@ -336,6 +337,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 				if ((tmp & 1) == 1) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
 				if ((tmp & 2) == 2) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
 				if ((tmp & 4) == 4) MDL.WifiMode = 1; else MDL.WifiMode = 0;
+				if ((tmp & 8) == 8) MDL.WorkPinIsMomentary = 1; else MDL.WorkPinIsMomentary = 0;
 
 				MDL.RelayControl = Data[5];
 				Sensor[0].FlowPin = Data[7];

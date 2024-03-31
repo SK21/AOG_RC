@@ -16,8 +16,8 @@
 #include <Adafruit_SPIDevice.h>
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  20-Mar-2024"
-const uint16_t InoID = 20034;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  30-Mar-2024"
+const uint16_t InoID = 30034;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -42,6 +42,7 @@ struct ModuleConfig
 	char NetName[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char NetPassword[ModStringLengths] = "111222333";
 	uint8_t WorkPin;
+	bool WorkPinIsMomentary = false;
 };
 
 ModuleConfig MDL;
@@ -66,7 +67,6 @@ struct SensorConfig
 	byte MinPWM;
 	byte MaxPWM;
 	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
-	uint8_t Debounce;
 };
 
 SensorConfig Sensor[2];
@@ -104,8 +104,6 @@ bool PCA9555PW_found = false;
 Adafruit_MCP23X17 MCP;
 bool MCP23017_found = false;
 
-int TimedCombo(byte, bool);	// function prototype
-
 uint32_t ESPtime;
 int8_t WifiStrength;
 
@@ -131,6 +129,9 @@ HardwareSerial* SerialESP;
 WDT_T4<WDT1> wdt;
 extern float tempmonGetTemp(void);
 bool GoodPins;	// configuration pins correct
+bool WrkOn;
+bool WrkLast;
+bool WrkCurrent;
 
 void setup()
 {
@@ -161,6 +162,7 @@ void loop()
 
 	if (millis() - SendLast > SendTime)
 	{
+		CheckWorkPin();
 		SendLast = millis();
 		SendData();
 	}
@@ -207,6 +209,30 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	}
 	Result = (byte)CK;
 	return Result;
+}
+
+void CheckWorkPin()
+{
+	if (MDL.WorkPin < NC)
+	{
+		WrkCurrent = digitalRead(MDL.WorkPin);
+		if (MDL.WorkPinIsMomentary)
+		{
+			if (WrkCurrent != WrkLast)
+			{
+				if (WrkCurrent) WrkOn = !WrkOn;	// only cycle when going from low to high
+				WrkLast = WrkCurrent;
+			}
+		}
+		else
+		{
+			WrkOn = WrkCurrent;
+		}
+	}
+	else
+	{
+		WrkOn = false;
+	}
 }
 
 bool State = false;

@@ -451,14 +451,12 @@ void LoadDefaults()
 	Sensor[0].KD = 0;
 	Sensor[0].MinPWM = 5;
 	Sensor[0].MaxPWM = 50;
-	Sensor[0].Debounce = 3;
 
 	Sensor[1].KP = 5;
 	Sensor[1].KI = 0;
 	Sensor[1].KD = 0;
 	Sensor[1].MinPWM = 5;
 	Sensor[1].MaxPWM = 50;
-	Sensor[1].Debounce = 3;
 
 	// relay pins
 	for (int i = 0; i < 16; i++)

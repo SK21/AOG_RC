@@ -14,11 +14,6 @@ double LastPWM[MaxProductCount];
 double IntegralSum[MaxProductCount];
 double LastUPM[MaxProductCount];
 
-const byte AdjustTime = 15;
-const byte PauseTime = 250;
-bool PauseAdjust[MaxProductCount];
-uint32_t ComboTime[MaxProductCount];
-
 void SetPWM()
 {
 	if (AutoOn)
@@ -35,11 +30,6 @@ void SetPWM()
 				Sensor[i].PWM = PIDmotor(i);
 				break;
 
-			case 5:
-				// combo close timed adjustment
-				Sensor[i].PWM = TimedCombo(i, false);
-				break;
-
 			default:
 				// valve control
 				Sensor[i].PWM = PIDvalve(i);
@@ -52,17 +42,11 @@ void SetPWM()
 		// manual control
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			switch (Sensor[i].ControlType)
-			{
-			case 5:
-				// combo close timed adjustment
-				Sensor[i].PWM = TimedCombo(i, true);
-				break;
-
-			default:
-				Sensor[i].PWM = Sensor[i].ManualAdjust;
-				break;
-			}
+			Sensor[i].PWM = Sensor[i].ManualAdjust;
+			double Direction = 1.0;
+			if (Sensor[i].PWM < 0) Direction = -1.0;
+			if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
+			LastPWM[i] = Sensor[i].PWM;
 		}
 	}
 }
@@ -114,13 +98,13 @@ int PIDmotor(byte ID)
 			}
 			LastUPM[ID] = Sensor[ID].UPM;
 		}
+		LastPWM[ID] = Result;
 	}
 	else
 	{
 		IntegralSum[ID] = 0;
 	}
 
-	LastPWM[ID] = Result;
 	return (int)Result;
 }
 
@@ -190,45 +174,4 @@ int PIDvalve(byte ID)
 	return (int)Result;
 }
 
-int TimedCombo(byte ID, bool ManualAdjust = false)
-{
-	int Result = 0;
-	if (PauseAdjust[ID])
-	{
-		// pausing state
-		if (millis() - ComboTime[ID] > PauseTime)
-		{
-			// switch state
-			ComboTime[ID] = millis();
-			PauseAdjust[ID] = !PauseAdjust[ID];
-		}
-	}
-	else
-	{
-		// adjusting state
-		if (millis() - ComboTime[ID] > AdjustTime)
-		{
-			// switch state
-			ComboTime[ID] = millis();
-			PauseAdjust[ID] = !PauseAdjust[ID];
-		}
-		else
-		{
-			if (ManualAdjust)
-			{
-				Result = 255;
-			}
-			else
-			{
-				// auto adjust, check deadband
-				if (Sensor[ID].TargetUPM > 0)
-				{
-					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
-					if (abs(RateError / Sensor[ID].TargetUPM) > Deadband)  Result = 255;
-				}
-			}
-		}
-	}
-	return Result;
-}
 

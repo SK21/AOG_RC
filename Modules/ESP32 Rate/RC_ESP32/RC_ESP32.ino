@@ -29,8 +29,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  20-Mar-2024"
-const uint16_t InoID = 20034;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  30-Mar-2024"
+const uint16_t InoID = 30034;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -67,6 +67,7 @@ struct ModuleConfig
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
 	uint8_t WorkPin;
+	bool WorkPinIsMomentary = false;
 };
 
 ModuleConfig MDL;
@@ -91,7 +92,6 @@ struct SensorConfig
 	byte MinPWM;
 	byte MaxPWM;
 	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
-	uint8_t Debounce;
 };
 
 SensorConfig Sensor[2];
@@ -163,11 +163,13 @@ AnalogConfig AINs;
 int ADS1115_Address;
 bool ADSfound = false;
 
-int TimedCombo(byte, bool);	// function prototype
 void IRAM_ATTR ISR0();		// function prototype
 void IRAM_ATTR ISR1();
 
 bool GoodPins;	// pin configuration correct
+bool WrkOn;
+bool WrkLast;
+bool WrkCurrent;
 uint8_t DisconnectCount;
 
 void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
@@ -231,6 +233,7 @@ void loop()
 
 	if (millis() - SendLast > SendTime)
 	{
+		CheckWorkPin();
 		SendLast = millis();
 		SendUDP();
 	}
@@ -280,43 +283,67 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-bool State = false;
-uint32_t LastBlink;
-uint32_t LastLoop;
-byte ReadReset;
-uint32_t MaxLoopTime;
-//double debug1;
-//double debug2;
-//double debug3;
-
-void Blink()
+void CheckWorkPin()
 {
-	if (millis() - LastBlink > 1000)
+	if (MDL.WorkPin < NC)
 	{
-		LastBlink = millis();
-		State = !State;
-		//digitalWrite(LED_BUILTIN, State);
-
-		//Serial.print(" Micros: ");
-		//Serial.print(MaxLoopTime);
-
-		//Serial.print(", ");
-		//Serial.print(debug1);
-		
-		//Serial.print(", ");
-		//Serial.print(debug2);
-		
-		//Serial.print(", ");
-		//Serial.print(debug3);
-
-		Serial.println("");
-
-		if (ReadReset++ > 5)
+		WrkCurrent = digitalRead(MDL.WorkPin);
+		if (MDL.WorkPinIsMomentary)
 		{
-			ReadReset = 0;
-			MaxLoopTime = 0;
+			if (WrkCurrent != WrkLast)
+			{
+				if (WrkCurrent) WrkOn = !WrkOn;	// only cycle when going from low to high
+				WrkLast = WrkCurrent;
+			}
+		}
+		else
+		{
+			WrkOn = WrkCurrent;
 		}
 	}
-	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
-	LastLoop = micros();
+	else
+	{
+		WrkOn = false;
+	}
 }
+
+//bool State = false;
+//uint32_t LastBlink;
+//uint32_t LastLoop;
+//byte ReadReset;
+//uint32_t MaxLoopTime;
+////double debug1;
+////double debug2;
+////double debug3;
+//
+//void Blink()
+//{
+//	if (millis() - LastBlink > 1000)
+//	{
+//		LastBlink = millis();
+//		State = !State;
+//		//digitalWrite(LED_BUILTIN, State);
+//
+//		//Serial.print(" Micros: ");
+//		//Serial.print(MaxLoopTime);
+//
+//		//Serial.print(", ");
+//		//Serial.print(debug1);
+//		
+//		//Serial.print(", ");
+//		//Serial.print(debug2);
+//		
+//		//Serial.print(", ");
+//		//Serial.print(debug3);
+//
+//		Serial.println("");
+//
+//		if (ReadReset++ > 5)
+//		{
+//			ReadReset = 0;
+//			MaxLoopTime = 0;
+//		}
+//	}
+//	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
+//	LastLoop = micros();
+//}
