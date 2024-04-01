@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -283,7 +284,7 @@ namespace RateController
                                     }
                                     else
                                     {
-                                        ToAOG.OnHi = mf.Tls.BitSet(ToAOG.OnHi, i);
+                                        ToAOG.OnHi = mf.Tls.BitSet(ToAOG.OnHi, i - 8);
                                     }
                                 }
                             }
@@ -302,7 +303,7 @@ namespace RateController
                             }
                             else
                             {
-                                ToAOG.OffHi = mf.Tls.BitSet(ToAOG.OffHi, i);
+                                ToAOG.OffHi = mf.Tls.BitSet(ToAOG.OffHi, i - 8);
                             }
                         }
                     }

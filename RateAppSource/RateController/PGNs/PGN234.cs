@@ -29,8 +29,6 @@ namespace RateController
 
         private byte[] cData = new byte[14];
         private FormStart mf;
-        private static byte OffLoLast;
-        private static byte OnLoLast;
 
         public PGN234(FormStart CalledFrom)
         {
@@ -58,12 +56,6 @@ namespace RateController
         {
             cData[13] = mf.Tls.CRC(cData, cData.Length - 1, 2);
             mf.UDPaog.SendUDPMessage(cData);
-
-            if (OffLo != OffLoLast || OnLo != OnLoLast)
-            {
-                OffLoLast = OffLo;
-                OnLoLast= OnLo;
-            }
         }
     }
 }

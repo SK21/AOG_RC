@@ -84,7 +84,7 @@ namespace RateController
             }
             else
             {
-                // return section status from PGN254
+                 //return section status from PGN254
                 if (ID < 8)
                 {
                     Bit = (byte)Math.Pow(2, ID);
@@ -93,7 +93,7 @@ namespace RateController
                 else if (ID < 16)
                 {
                     Bit = (byte)Math.Pow(2, ID - 8);
-                    Result = ((mf.AutoSteerPGN.RelayLo & Bit) == Bit);
+                    Result = ((mf.AutoSteerPGN.RelayHi & Bit) == Bit);
                 }
             }
             return Result;
