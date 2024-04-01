@@ -3,7 +3,7 @@
 
 uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
-const double Deadband = 0.04;		// % error below which no adjustment is made
+const double Deadband = 0.02;		// % error below which no adjustment is made
 const double BrakePoint = 0.20;		// % error below which reduced adjustment is used
 const double BrakeSet = 0.75;		// low adjustment rate
 double SF;							// Settings Factor used to reduce adjustment when close to set rate
@@ -87,10 +87,10 @@ int PIDmotor(byte ID)
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 			{
-				IntegralSum[ID] += Sensor[ID].KI * RateError;
+				IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
 				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
 
-				DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM);
+				DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM) * 10.0;
 				Result += Sensor[ID].KP * SF * RateError + IntegralSum[ID] + DifValue;
 
 				if (Result > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM;
@@ -144,10 +144,10 @@ int PIDvalve(byte ID)
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 			{
-				IntegralSum[ID] += Sensor[ID].KI * RateError;
+				IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
 				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
 
-				DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM);
+				DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM) * 10.0;
 				Result = Sensor[ID].MinPWM + Sensor[ID].KP * SF * RateError + IntegralSum[ID] + DifValue;
 
 				bool IsPositive = (Result > 0);
