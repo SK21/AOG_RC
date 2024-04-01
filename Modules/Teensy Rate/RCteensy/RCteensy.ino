@@ -16,8 +16,8 @@
 #include <Adafruit_SPIDevice.h>
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  30-Mar-2024"
-const uint16_t InoID = 30034;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  31-Mar-2024"
+const uint16_t InoID = 31034;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -241,8 +241,10 @@ elapsedMicros LoopTmr;
 byte ReadReset;
 uint32_t MaxLoopTime;
 
-//double debug1;
-//double debug2;
+double debug1;
+double debug2;
+double debug3;
+double debug4;
 
 void Blink()
 {
@@ -265,7 +267,13 @@ void Blink()
 		//Serial.print(debug1);
 
 		//Serial.print(", ");
-		//Serial.print(MDL.WorkPin);
+		//Serial.print(debug2);
+
+		//Serial.print(", ");
+		//Serial.print(debug3);
+
+		//Serial.print(", ");
+		//Serial.print(debug4);
 
 		Serial.println("");
 
