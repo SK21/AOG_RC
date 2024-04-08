@@ -8,9 +8,9 @@ namespace RateController
     {
         private readonly List<clsRelay> cRelays = new List<clsRelay>();
         private readonly FormStart mf;
+        private int[] cInvertedRelays;
         private IList<clsRelay> cItems;
         private int[] cPowerRelays;
-        private int[] cInvertedRelays;
         private bool IsLower;
         private bool IsRaise;
         private byte LastTrigger;
@@ -24,7 +24,7 @@ namespace RateController
             mf = CallingForm;
             Items = cRelays.AsReadOnly();
             cPowerRelays = new int[mf.MaxModules];
-            cInvertedRelays=new int[mf.MaxModules];
+            cInvertedRelays = new int[mf.MaxModules];
         }
 
         public IList<clsRelay> Items { get => cItems; set => cItems = value; }
@@ -32,6 +32,13 @@ namespace RateController
         public int Count()
         {
             return cRelays.Count;
+        }
+
+        public int InvertedRelays(int ModuleID)
+        {
+            int Result = 0;
+            if (ModuleID >= 0 && ModuleID < mf.MaxModules) Result = cInvertedRelays[ModuleID];
+            return Result;
         }
 
         public clsRelay Item(int RelayID, int ModuleID)
@@ -61,12 +68,6 @@ namespace RateController
         {
             int Result = 0;
             if (ModuleID >= 0 && ModuleID < mf.MaxModules) Result = cPowerRelays[ModuleID];
-            return Result;
-        }
-        public int InvertedRelays(int ModuleID)
-        {
-            int Result = 0;
-            if (ModuleID >= 0 && ModuleID < mf.MaxModules) Result = cInvertedRelays[ModuleID];
             return Result;
         }
 
@@ -152,9 +153,39 @@ namespace RateController
                 // based on sections status and relay type set relays
                 // return int value for relayLo, relayHi
 
-                bool SectionsOn = false;    // whether at least on section is on
-                bool MasterOn = false;      // whether at least one master relay is on
+                bool SectionsOn = false;        // whether at least on section is on
+                bool MasterRelayOn = true;     // true if no Master switch
                 bool MasterFound = false;
+                bool FlowEnabled = (mf.Products.Item(mf.CurrentProduct()).Speed() > 0.1);
+
+                if (mf.SwitchBox.Connected())
+                {
+                    if (mf.SwitchBox.AutoOn)
+                    {
+                        MasterRelayOn = mf.SwitchBox.MasterOn && FlowEnabled;
+                    }
+                    else
+                    {
+                        MasterRelayOn = mf.SwitchBox.MasterOn;
+                    }
+                }
+                else
+                {
+                    // no switchbox, set from aog
+                    MasterRelayOn = MasterRelayOn && FlowEnabled;
+                }
+
+                // set master relays
+                for (int i = 0; i < cRelays.Count; i++)
+                {
+                    clsRelay Rly = cRelays[i];
+
+                    if (Rly.Type == RelayTypes.Master)
+                    {
+                        Rly.IsON = MasterRelayOn;
+                        MasterFound = true;
+                    }
+                }
 
                 // check if at least one section on
                 for (int i = 0; i < mf.MaxSections; i++)
@@ -163,19 +194,6 @@ namespace RateController
                     {
                         SectionsOn = true;
                         break;
-                    }
-                }
-
-                // set master relay
-                for (int i = 0; i < cRelays.Count; i++)
-                {
-                    clsRelay Rly = cRelays[i];
-
-                    if (Rly.Type == RelayTypes.Master)
-                    {
-                        Rly.IsON = SectionsOn;
-                        MasterOn = SectionsOn;
-                        MasterFound = true;
                     }
                 }
 
@@ -203,10 +221,9 @@ namespace RateController
                         switch (Rly.Type)
                         {
                             case RelayTypes.Section:
-                                if (MasterFound && !MasterOn)
+                                if (MasterFound && !MasterRelayOn)
                                 {
-                                    // leave relay to previous value, master relay is off
-                                    // do nothing
+                                    // master is switched, don't adjust section relays
                                 }
                                 else
                                 {
@@ -224,10 +241,9 @@ namespace RateController
                                 break;
 
                             case RelayTypes.Slave:
-                                if (MasterFound && !MasterOn)
+                                if (MasterFound && !MasterRelayOn)
                                 {
-                                    // leave relay to previous value, master relay is off
-                                    // do nothing
+                                    // master is switched, don't adjust slave relays
                                 }
                                 else
                                 {
@@ -241,10 +257,9 @@ namespace RateController
                                 break;
 
                             case RelayTypes.Invert_Section:
-                                if (MasterFound && !MasterOn)
+                                if (MasterFound && !MasterRelayOn)
                                 {
-                                    // leave relay to previous value, master relay is off
-                                    // do nothing
+                                    // master is switched, don't adjust invert relays
                                 }
                                 else
                                 {
@@ -275,6 +290,19 @@ namespace RateController
             return Result;
         }
 
+        private void BuildInvertedRelays()
+        {
+            for (int i = 0; i < mf.MaxModules; i++)
+            {
+                cInvertedRelays[i] = 0;
+                for (int j = 0; j < cRelays.Count; j++)
+                {
+                    clsRelay Rly = cRelays[j];
+                    if (Rly.Type == RelayTypes.Invert_Section && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
+                }
+            }
+        }
+
         private void BuildPowerRelays()
         {
             // 16 bit list indicating which relays are power type
@@ -286,19 +314,6 @@ namespace RateController
                 {
                     clsRelay Rly = cRelays[j];
                     if (Rly.Type == RelayTypes.Power && Rly.ModuleID == i) cPowerRelays[i] |= (int)Math.Pow(2, Rly.ID);
-                }
-            }
-        }
-
-        private void BuildInvertedRelays()
-        {
-            for (int i = 0; i < mf.MaxModules; i++)
-            {
-                cInvertedRelays[i] = 0;
-                for (int j = 0; j < cRelays.Count; j++)
-                {
-                    clsRelay Rly = cRelays[j];
-                    if (Rly.Type == RelayTypes.Invert_Section && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
                 }
             }
         }

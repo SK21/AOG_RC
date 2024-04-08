@@ -12,21 +12,12 @@ void CheckRelays()
     uint8_t NewLo = 0;
     uint8_t NewHi = 0;
 
-    if (Sensor[0].FlowEnabled || Sensor[1].FlowEnabled)
+    if ((millis() - Sensor[0].CommTime < 4000) || (millis() - Sensor[1].CommTime < 4000))
     {
-        NewLo |= RelayLo;
-        NewHi |= RelayHi;
-    }
-    else
-    {
-        // inverted relays, 1 is off
-        NewLo |= InvertedLo;
-        NewHi |= InvertedHi;
+        NewLo = RelayLo;
+        NewHi = RelayHi;
     }
 
-    // power relays, always on
-    NewLo |= PowerRelayLo;
-    NewHi |= PowerRelayHi;
 
     switch (MDL.RelayControl)
     {
@@ -135,5 +126,4 @@ void CheckRelays()
         break;
     }
 }
-
 

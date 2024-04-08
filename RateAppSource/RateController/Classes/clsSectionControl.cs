@@ -208,7 +208,7 @@ namespace RateController
             }
 
             // set sections on
-            if (mf.AutoSteerPGN.Connected() && !cPrimeOn)
+            if (mf.AutoSteerPGN.Connected() && !cPrimeOn && mf.SwitchBox.AutoOn)
             {
                 foreach (clsSection Sec in mf.Sections.Items)
                 {
@@ -387,7 +387,7 @@ namespace RateController
             {
                 if (Zn.Enabled)
                 {
-                    if (mf.AutoSteerPGN.Connected() && !cPrimeOn)
+                    if (mf.AutoSteerPGN.Connected() && !cPrimeOn && mf.SwitchBox.AutoOn)
                     {
                         for (int i = Zn.Start - 1; i < Zn.End; i++)
                         {

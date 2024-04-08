@@ -96,8 +96,9 @@ uint32_t LoopLast = LoopTime;
 const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
 
-bool MasterOn = false;
+bool MasterSwitchOn = false;
 bool AutoOn = true;
+bool UseMasterRelay = false;
 
 PCA9555 PCA;
 bool PCA9555PW_found = false;
@@ -140,9 +141,9 @@ void loop()
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000)
-				&& ((Sensor[i].TargetUPM > 0 && MasterOn)
+				&& ((Sensor[i].TargetUPM > 0 && MasterSwitchOn)
 					|| ((Sensor[i].ControlType == 4) && (Sensor[i].TargetUPM > 0))
-					|| (!AutoOn && MasterOn));
+					|| (!AutoOn && MasterSwitchOn));
 		}
 
 		CheckRelays();
@@ -262,7 +263,7 @@ void CheckWorkPin()
 //		Serial.print(debug3);
 //
 //		//Serial.print(", ");
-//		//Serial.print(MasterOn);
+//		//Serial.print(MasterSwitchOn);
 //
 //		Serial.println("");
 //

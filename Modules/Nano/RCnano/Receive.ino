@@ -106,7 +106,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		//9	    Command
 		//	        - bit 0		    reset acc.Quantity
 		//	        - bit 1,2,3		control type 0-4
-		//	        - bit 4		    MasterOn
+		//	        - bit 4		    MasterSwitchOn
 		//          - bit 5         0 - time for one pulse, 1 - average time for multiple pulses
 		//          - bit 6         AutoOn
 		//          - bit 7         -
@@ -143,7 +143,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 						if ((InCommand & 4) == 4) Sensor[SensorID].ControlType += 2;
 						if ((InCommand & 8) == 8) Sensor[SensorID].ControlType += 4;
 
-						MasterOn = ((InCommand & 16) == 16);
+						MasterSwitchOn = ((InCommand & 16) == 16);
 
 						Sensor[SensorID].UseMultiPulses = ((InCommand & 32) == 32);
 
