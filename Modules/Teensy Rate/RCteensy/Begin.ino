@@ -121,6 +121,9 @@ void DoSetup()
 			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, FALLING);
 			break;
 		}
+
+		// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work
+		analogWriteFrequency(Sensor[i].PWMPin, 490);
 	}
 
 	//ESP8266 serial port
