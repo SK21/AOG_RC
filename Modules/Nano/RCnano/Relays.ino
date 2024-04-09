@@ -17,7 +17,13 @@ void CheckRelays()
         NewLo = RelayLo;
         NewHi = RelayHi;
     }
-
+    else
+    {
+        // connection lost, enable power and inverted relays
+        // for valves that require power to close
+        NewLo = PowerRelayLo | InvertedLo;
+        NewHi = PowerRelayHi | InvertedHi;
+    }
 
     switch (MDL.RelayControl)
     {

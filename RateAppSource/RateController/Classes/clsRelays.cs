@@ -154,7 +154,7 @@ namespace RateController
                 // return int value for relayLo, relayHi
 
                 bool SectionsOn = false;        // whether at least on section is on
-                bool MasterRelayOn = true;     // true if no Master switch
+                bool MasterRelayOn;
                 bool MasterFound = false;
                 bool FlowEnabled = (mf.Products.Item(mf.CurrentProduct()).Speed() > 0.1);
 
@@ -162,17 +162,19 @@ namespace RateController
                 {
                     if (mf.SwitchBox.AutoOn)
                     {
+                        // auto on when master switch is on and flow enabled
                         MasterRelayOn = mf.SwitchBox.MasterOn && FlowEnabled;
                     }
                     else
                     {
+                        // manual on when master switch is on
                         MasterRelayOn = mf.SwitchBox.MasterOn;
                     }
                 }
                 else
                 {
                     // no switchbox, set from aog
-                    MasterRelayOn = MasterRelayOn && FlowEnabled;
+                    MasterRelayOn = FlowEnabled;
                 }
 
                 // set master relays
