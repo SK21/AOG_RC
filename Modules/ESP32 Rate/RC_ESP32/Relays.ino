@@ -30,23 +30,19 @@ void CheckRelays()
                 if (Button[i + 8]) bitSet(NewHi, i);
             }
         }
-    }
-    else if (Sensor[0].FlowEnabled || Sensor[1].FlowEnabled)
+    }    
+    else if ((millis() - Sensor[0].CommTime < 4000) || (millis() - Sensor[1].CommTime < 4000))
     {
-        // normal relay control
-        NewLo |= RelayLo;
-        NewHi |= RelayHi;
+        NewLo = RelayLo;
+        NewHi = RelayHi;
     }
     else
     {
-        // inverted relays, 1 is off
-        NewLo |= InvertedLo;
-        NewHi |= InvertedHi;
+        // connection lost, enable power and inverted relays
+        // for valves that require power to close
+        NewLo = PowerRelayLo | InvertedLo;
+        NewHi = PowerRelayHi | InvertedHi;
     }
-
-    // power relays, always on
-    NewLo |= PowerRelayLo;
-    NewHi |= PowerRelayHi;
 
     switch (MDL.RelayControl)
     {
