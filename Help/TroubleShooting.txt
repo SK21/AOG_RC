@@ -1,0 +1,19 @@
+No Relays:
+1. module config for board and relay type
+2. subnet set in app, upload to module
+3. section count and width set
+4. auto off
+5. section assigned to relay
+6. switch assigned to section
+7. if auto on, sensor counts/unit and base rate are needed
+
+No UPM:
+1. speed
+2. working width
+3. sensor control settings
+4. aog connected
+5. module connected
+6. sensor counts/unit
+7. base rate
+8. did the pid values get sent to the module
+9. control type, is it a valve or motor
