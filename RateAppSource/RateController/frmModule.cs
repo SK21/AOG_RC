@@ -136,6 +136,8 @@ namespace RateController
                     UpdateLogs();
                 }
             }
+
+            lbIP.Text = mf.UDPmodules.SubNet;
         }
 
         private void UpdateLogs()

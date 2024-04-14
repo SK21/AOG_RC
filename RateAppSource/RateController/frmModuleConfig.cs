@@ -114,14 +114,26 @@ namespace RateController
 
         private void btnSendSubnet_Click(object sender, EventArgs e)
         {
-            PGN32503 SetSubnet = new PGN32503(mf);
-            if (SetSubnet.Send(mf.UDPmodules.NetworkEP))
+            try
             {
-                mf.Tls.ShowHelp("New Subnet address sent.", "Subnet", 10000);
+                PGN32503 SetSubnet = new PGN32503(mf);
+                if (SetSubnet.Send(mf.UDPmodules.NetworkEP))
+                {
+                    mf.Tls.ShowHelp("New Subnet address sent.", "Subnet", 10000);
+
+                    // set app subnet
+                    mf.UDPmodules.NetworkEP = cbEthernet.Text;
+                }
+                else
+                {
+                    mf.Tls.ShowHelp("New Subnet address not sent.", "Subnet", 10000);
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                mf.Tls.ShowHelp("New Subnet address not sent.", "Subnet", 10000);
+
+                mf.Tls.ShowHelp(ex.Message, "frmModuleConfig/btnSendSubnet", 15000, true);
             }
         }
 
