@@ -123,18 +123,19 @@ namespace RateController
                 lbModID.Text = Prod.ModuleID.ToString();
                 lbTime.Text = (Prod.ElapsedTime / 1000.0).ToString("N3");
 
-                if (!FreezeUpdate)
-                {
-                    tbSerial.Text = mf.SER[CommPort].Log();
-                    tbSerial.Select(tbSerial.Text.Length, 0);
-                    tbSerial.ScrollToCaret();
+            }
 
-                    tbEthernet.Text = mf.UDPmodules.Log();
-                    tbEthernet.Select(tbEthernet.Text.Length, 0);
-                    tbEthernet.ScrollToCaret();
+            if (!FreezeUpdate)
+            {
+                tbSerial.Text = mf.SER[CommPort].Log();
+                tbSerial.Select(tbSerial.Text.Length, 0);
+                tbSerial.ScrollToCaret();
 
-                    UpdateLogs();
-                }
+                tbEthernet.Text = mf.UDPmodules.Log();
+                tbEthernet.Select(tbEthernet.Text.Length, 0);
+                tbEthernet.ScrollToCaret();
+
+                UpdateLogs();
             }
 
             lbIP.Text = mf.UDPmodules.SubNet;
