@@ -96,7 +96,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 				MDL.IP1 = Data[3];
 				MDL.IP2 = Data[4];
 
-				EEPROM.put(10, MDL);
+				SaveData();
 
 				// restart
 				resetFunc();
@@ -136,7 +136,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 
 				MDL.WorkPin = Data[23];
 
-				EEPROM.put(10, MDL);
+				SaveData();
 
 				// restart
 				resetFunc();
