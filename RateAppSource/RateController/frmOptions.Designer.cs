@@ -567,6 +567,7 @@
             this.ckNoMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckNoMaster.UseVisualStyleBackColor = true;
             this.ckNoMaster.CheckedChanged += new System.EventHandler(this.ckNoMaster_CheckedChanged);
+            this.ckNoMaster.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckNoMaster_HelpRequested);
             // 
             // frmOptions
             // 

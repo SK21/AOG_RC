@@ -92,6 +92,14 @@ namespace RateController
             SetButtons(true);
         }
 
+        private void ckNoMaster_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Send master switch always on to modules.";
+
+            mf.Tls.ShowHelp(Message, "Master Switch");
+            hlpevent.Handled = true;
+        }
+
         private void ckTransparent_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
