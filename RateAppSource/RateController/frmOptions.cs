@@ -82,6 +82,16 @@ namespace RateController
             }
         }
 
+        private void ckDualAuto_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckNoMaster_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
         private void ckTransparent_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -130,50 +140,12 @@ namespace RateController
             if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
             if (int.TryParse(tbDelay.Text, out int Delay)) mf.PrimeDelay = Delay;
 
-            if (ckTransparent.Checked)
-            {
-                mf.UseTransparent = true;
-            }
-            else
-            {
-                mf.UseTransparent = false;
-            }
-
-            if (ckMetric.Checked)
-            {
-                mf.UseInches = false;
-            }
-            else
-            {
-                mf.UseInches = true;
-            }
-
-            if (ckScreenSwitches.Checked)
-            {
-                mf.ShowSwitches = true;
-            }
-            else
-            {
-                mf.ShowSwitches = false;
-            }
-
-            if (ckWorkSwitch.Checked)
-            {
-                mf.SwitchBox.UseWorkSwitch = true;
-            }
-            else
-            {
-                mf.SwitchBox.UseWorkSwitch = false;
-            }
-
-            if (ckPressure.Checked)
-            {
-                mf.ShowPressure = true;
-            }
-            else
-            {
-                mf.ShowPressure = false;
-            }
+            mf.MasterOverride = ckNoMaster.Checked;
+            mf.UseTransparent = ckTransparent.Checked;
+            mf.UseInches = !ckMetric.Checked;
+            mf.ShowSwitches = ckScreenSwitches.Checked;
+            mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
+            mf.ShowPressure = ckPressure.Checked;
 
             if (ckSimSpeed.Checked)
             {
@@ -184,7 +156,7 @@ namespace RateController
                 mf.SimMode = SimType.None;
             }
 
-            if(ckLargeScreen.Checked)
+            if (ckLargeScreen.Checked)
             {
                 // use large screen
                 Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
@@ -419,6 +391,7 @@ namespace RateController
             ckDualAuto.Checked = mf.UseDualAuto;
             ckLargeScreen.Checked = mf.UseLargeScreen;
             ckResume.Checked = mf.ResumeAfterPrime;
+            ckNoMaster.Checked = mf.MasterOverride;
 
             // language
             for (int i = 0; i < LanguageRBs.Length; i++)
@@ -442,11 +415,6 @@ namespace RateController
             }
 
             Initializing = false;
-        }
-
-        private void ckDualAuto_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
         }
     }
 }

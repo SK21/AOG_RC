@@ -1226,7 +1226,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Average Time / pulse (&lt;50 ms/pulse).
+        ///   Looks up a localized string similar to Multi-Pulse.
         /// </summary>
         internal static string lgTimeForMulti {
             get {
@@ -1235,7 +1235,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time for one pulse (&gt;50 ms/pulse).
+        ///   Looks up a localized string similar to Single Pulse.
         /// </summary>
         internal static string lgTimeForSingle {
             get {

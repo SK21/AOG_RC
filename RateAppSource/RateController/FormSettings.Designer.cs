@@ -81,6 +81,7 @@ namespace RateController
             this.cbVR = new System.Windows.Forms.ComboBox();
             this.tbs4 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbExample = new System.Windows.Forms.Label();
             this.cbShift = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -170,7 +171,6 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.lbExample = new System.Windows.Forms.Label();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -837,6 +837,17 @@ namespace RateController
             this.groupBox1.Text = "PID Scaling";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
             // 
+            // lbExample
+            // 
+            this.lbExample.BackColor = System.Drawing.Color.Transparent;
+            this.lbExample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbExample.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbExample.Location = new System.Drawing.Point(176, 70);
+            this.lbExample.Name = "lbExample";
+            this.lbExample.Size = new System.Drawing.Size(120, 25);
+            this.lbExample.TabIndex = 166;
+            this.lbExample.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // cbShift
             // 
             this.cbShift.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1116,9 +1127,9 @@ namespace RateController
             this.ckBumpButtons.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckBumpButtons.Location = new System.Drawing.Point(221, 277);
+            this.ckBumpButtons.Location = new System.Drawing.Point(221, 310);
             this.ckBumpButtons.Name = "ckBumpButtons";
-            this.ckBumpButtons.Size = new System.Drawing.Size(150, 32);
+            this.ckBumpButtons.Size = new System.Drawing.Size(162, 32);
             this.ckBumpButtons.TabIndex = 120;
             this.ckBumpButtons.Text = "Bump Buttons";
             this.ckBumpButtons.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1131,9 +1142,9 @@ namespace RateController
             this.ckDefault.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDefault.Location = new System.Drawing.Point(44, 373);
+            this.ckDefault.Location = new System.Drawing.Point(38, 310);
             this.ckDefault.Name = "ckDefault";
-            this.ckDefault.Size = new System.Drawing.Size(150, 32);
+            this.ckDefault.Size = new System.Drawing.Size(162, 32);
             this.ckDefault.TabIndex = 119;
             this.ckDefault.Text = "Default Product";
             this.ckDefault.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1147,9 +1158,9 @@ namespace RateController
             this.ckConstantUPM.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckConstantUPM.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckConstantUPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckConstantUPM.Location = new System.Drawing.Point(44, 325);
+            this.ckConstantUPM.Location = new System.Drawing.Point(38, 254);
             this.ckConstantUPM.Name = "ckConstantUPM";
-            this.ckConstantUPM.Size = new System.Drawing.Size(150, 32);
+            this.ckConstantUPM.Size = new System.Drawing.Size(162, 32);
             this.ckConstantUPM.TabIndex = 118;
             this.ckConstantUPM.Text = "Constant UPM";
             this.ckConstantUPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1163,9 +1174,9 @@ namespace RateController
             this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOnScreen.Location = new System.Drawing.Point(44, 277);
+            this.ckOnScreen.Location = new System.Drawing.Point(38, 198);
             this.ckOnScreen.Name = "ckOnScreen";
-            this.ckOnScreen.Size = new System.Drawing.Size(150, 32);
+            this.ckOnScreen.Size = new System.Drawing.Size(162, 32);
             this.ckOnScreen.TabIndex = 117;
             this.ckOnScreen.Text = "On Screen";
             this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1177,7 +1188,7 @@ namespace RateController
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(401, 380);
+            this.label28.Location = new System.Drawing.Point(432, 203);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(29, 23);
             this.label28.TabIndex = 116;
@@ -1187,7 +1198,7 @@ namespace RateController
             // 
             this.tbOffRate.Enabled = false;
             this.tbOffRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(362, 376);
+            this.tbOffRate.Location = new System.Drawing.Point(393, 199);
             this.tbOffRate.MaxLength = 8;
             this.tbOffRate.Name = "tbOffRate";
             this.tbOffRate.Size = new System.Drawing.Size(33, 30);
@@ -1202,7 +1213,7 @@ namespace RateController
             // lbMinimumUPM
             // 
             this.lbMinimumUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinimumUPM.Location = new System.Drawing.Point(227, 329);
+            this.lbMinimumUPM.Location = new System.Drawing.Point(221, 259);
             this.lbMinimumUPM.Name = "lbMinimumUPM";
             this.lbMinimumUPM.Size = new System.Drawing.Size(130, 23);
             this.lbMinimumUPM.TabIndex = 114;
@@ -1212,7 +1223,7 @@ namespace RateController
             // tbMinUPM
             // 
             this.tbMinUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinUPM.Location = new System.Drawing.Point(363, 326);
+            this.tbMinUPM.Location = new System.Drawing.Point(355, 255);
             this.tbMinUPM.MaxLength = 8;
             this.tbMinUPM.Name = "tbMinUPM";
             this.tbMinUPM.Size = new System.Drawing.Size(67, 30);
@@ -1228,9 +1239,9 @@ namespace RateController
             this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOffRate.Location = new System.Drawing.Point(221, 373);
+            this.ckOffRate.Location = new System.Drawing.Point(221, 198);
             this.ckOffRate.Name = "ckOffRate";
-            this.ckOffRate.Size = new System.Drawing.Size(135, 32);
+            this.ckOffRate.Size = new System.Drawing.Size(162, 32);
             this.ckOffRate.TabIndex = 1;
             this.ckOffRate.Text = "Off-rate Alarm   ";
             this.ckOffRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1242,9 +1253,9 @@ namespace RateController
             // 
             this.grpRateMethod.Controls.Add(this.rbMultiPulse);
             this.grpRateMethod.Controls.Add(this.rbSinglePulse);
-            this.grpRateMethod.Location = new System.Drawing.Point(45, 154);
+            this.grpRateMethod.Location = new System.Drawing.Point(297, 58);
             this.grpRateMethod.Name = "grpRateMethod";
-            this.grpRateMethod.Size = new System.Drawing.Size(385, 117);
+            this.grpRateMethod.Size = new System.Drawing.Size(169, 117);
             this.grpRateMethod.TabIndex = 20;
             this.grpRateMethod.TabStop = false;
             this.grpRateMethod.Text = "Rate Method";
@@ -1258,10 +1269,10 @@ namespace RateController
             this.rbMultiPulse.Location = new System.Drawing.Point(13, 73);
             this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbMultiPulse.Name = "rbMultiPulse";
-            this.rbMultiPulse.Size = new System.Drawing.Size(362, 37);
+            this.rbMultiPulse.Size = new System.Drawing.Size(142, 37);
             this.rbMultiPulse.TabIndex = 1;
             this.rbMultiPulse.Tag = "0";
-            this.rbMultiPulse.Text = "Average Time  / pulses (< 50 ms/pulse)";
+            this.rbMultiPulse.Text = "Multi-pulse";
             this.rbMultiPulse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbMultiPulse.UseVisualStyleBackColor = true;
             this.rbMultiPulse.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbMultiPulse_HelpRequested);
@@ -1275,11 +1286,11 @@ namespace RateController
             this.rbSinglePulse.Location = new System.Drawing.Point(13, 25);
             this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
             this.rbSinglePulse.Name = "rbSinglePulse";
-            this.rbSinglePulse.Size = new System.Drawing.Size(362, 37);
+            this.rbSinglePulse.Size = new System.Drawing.Size(142, 37);
             this.rbSinglePulse.TabIndex = 0;
             this.rbSinglePulse.TabStop = true;
             this.rbSinglePulse.Tag = "0";
-            this.rbSinglePulse.Text = "Time for one pulse (> 50 ms/pulse)";
+            this.rbSinglePulse.Text = "Single pulse";
             this.rbSinglePulse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbSinglePulse.UseVisualStyleBackColor = true;
             this.rbSinglePulse.CheckedChanged += new System.EventHandler(this.rbSinglePulse_CheckedChanged);
@@ -1292,9 +1303,9 @@ namespace RateController
             this.grpSensor.Controls.Add(this.ModuleIndicator);
             this.grpSensor.Controls.Add(this.lbConID);
             this.grpSensor.Controls.Add(this.tbConID);
-            this.grpSensor.Location = new System.Drawing.Point(45, 12);
+            this.grpSensor.Location = new System.Drawing.Point(18, 58);
             this.grpSensor.Name = "grpSensor";
-            this.grpSensor.Size = new System.Drawing.Size(385, 117);
+            this.grpSensor.Size = new System.Drawing.Size(259, 117);
             this.grpSensor.TabIndex = 0;
             this.grpSensor.TabStop = false;
             this.grpSensor.Text = "Rate Sensor Location";
@@ -1303,7 +1314,7 @@ namespace RateController
             // lbSensorID
             // 
             this.lbSensorID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSensorID.Location = new System.Drawing.Point(57, 77);
+            this.lbSensorID.Location = new System.Drawing.Point(11, 79);
             this.lbSensorID.Name = "lbSensorID";
             this.lbSensorID.Size = new System.Drawing.Size(93, 23);
             this.lbSensorID.TabIndex = 151;
@@ -1313,7 +1324,7 @@ namespace RateController
             // tbSenID
             // 
             this.tbSenID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSenID.Location = new System.Drawing.Point(183, 73);
+            this.tbSenID.Location = new System.Drawing.Point(137, 75);
             this.tbSenID.MaxLength = 8;
             this.tbSenID.Name = "tbSenID";
             this.tbSenID.Size = new System.Drawing.Size(67, 30);
@@ -1330,7 +1341,7 @@ namespace RateController
             this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
             this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(256, 45);
+            this.ModuleIndicator.Location = new System.Drawing.Point(210, 47);
             this.ModuleIndicator.Name = "ModuleIndicator";
             this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
             this.ModuleIndicator.TabIndex = 149;
@@ -1339,7 +1350,7 @@ namespace RateController
             // lbConID
             // 
             this.lbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbConID.Location = new System.Drawing.Point(57, 29);
+            this.lbConID.Location = new System.Drawing.Point(11, 31);
             this.lbConID.Name = "lbConID";
             this.lbConID.Size = new System.Drawing.Size(97, 23);
             this.lbConID.TabIndex = 148;
@@ -1349,7 +1360,7 @@ namespace RateController
             // tbConID
             // 
             this.tbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbConID.Location = new System.Drawing.Point(183, 25);
+            this.tbConID.Location = new System.Drawing.Point(137, 27);
             this.tbConID.MaxLength = 8;
             this.tbConID.Name = "tbConID";
             this.tbConID.Size = new System.Drawing.Size(67, 30);
@@ -1941,17 +1952,6 @@ namespace RateController
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
-            // lbExample
-            // 
-            this.lbExample.BackColor = System.Drawing.Color.Transparent;
-            this.lbExample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbExample.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbExample.Location = new System.Drawing.Point(176, 70);
-            this.lbExample.Name = "lbExample";
-            this.lbExample.Size = new System.Drawing.Size(120, 25);
-            this.lbExample.TabIndex = 166;
-            this.lbExample.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormSettings
             // 

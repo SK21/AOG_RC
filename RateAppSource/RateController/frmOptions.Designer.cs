@@ -63,6 +63,7 @@
             this.rbHungarian = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
+            this.ckNoMaster = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -76,9 +77,9 @@
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMetric.Location = new System.Drawing.Point(77, 23);
+            this.ckMetric.Location = new System.Drawing.Point(28, 22);
             this.ckMetric.Name = "ckMetric";
-            this.ckMetric.Size = new System.Drawing.Size(250, 34);
+            this.ckMetric.Size = new System.Drawing.Size(164, 34);
             this.ckMetric.TabIndex = 119;
             this.ckMetric.Text = "Metric Units";
             this.ckMetric.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -274,11 +275,11 @@
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWorkSwitch.Location = new System.Drawing.Point(77, 77);
+            this.ckWorkSwitch.Location = new System.Drawing.Point(28, 75);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
-            this.ckWorkSwitch.Size = new System.Drawing.Size(250, 34);
+            this.ckWorkSwitch.Size = new System.Drawing.Size(164, 34);
             this.ckWorkSwitch.TabIndex = 125;
-            this.ckWorkSwitch.Text = "Implement Work Switch";
+            this.ckWorkSwitch.Text = "Work Switch";
             this.ckWorkSwitch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.UseVisualStyleBackColor = true;
             this.ckWorkSwitch.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
@@ -386,6 +387,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.ckNoMaster);
             this.tabPage1.Controls.Add(this.tbSimSpeed);
             this.tabPage1.Controls.Add(this.lbSimUnits);
             this.tabPage1.Controls.Add(this.ckSimSpeed);
@@ -551,6 +553,21 @@
             this.rbDeustch.UseVisualStyleBackColor = true;
             this.rbDeustch.CheckedChanged += new System.EventHandler(this.Language_CheckedChanged);
             // 
+            // ckNoMaster
+            // 
+            this.ckNoMaster.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckNoMaster.Location = new System.Drawing.Point(219, 22);
+            this.ckNoMaster.Name = "ckNoMaster";
+            this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
+            this.ckNoMaster.TabIndex = 331;
+            this.ckNoMaster.Text = "Master Override";
+            this.ckNoMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckNoMaster.UseVisualStyleBackColor = true;
+            this.ckNoMaster.CheckedChanged += new System.EventHandler(this.ckNoMaster_CheckedChanged);
+            // 
             // frmOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -617,5 +634,6 @@
         private System.Windows.Forms.CheckBox ckDualAuto;
         private System.Windows.Forms.CheckBox ckLargeScreen;
         private System.Windows.Forms.CheckBox ckResume;
+        private System.Windows.Forms.CheckBox ckNoMaster;
     }
 }

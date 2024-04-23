@@ -511,8 +511,7 @@ namespace RateController
 
         private void rbMultiPulse_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Use the average time of multiple pulses to measure flow rate " +
-                "when each flow sensor pulse takes less than 50 milliseconds.";
+            string Message = "Use the average time of multiple pulses to measure flow rate.";
 
             mf.Tls.ShowHelp(Message, "Rate Method");
             hlpevent.Handled = true;
@@ -525,8 +524,7 @@ namespace RateController
 
         private void rbSinglePulse_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Use the time for one pulse to measure flow rate when" +
-                " each flow sensor pulse takes more than 50 milliseconds.";
+            string Message = "Use the time for one pulse to measure flow rate.";
 
             mf.Tls.ShowHelp(Message, "Rate Method");
             hlpevent.Handled = true;

@@ -522,10 +522,10 @@
     <value>Target Alt ...</value>
   </data>
   <data name="lgTimeForMulti" xml:space="preserve">
-    <value>Average Time / pulse (&lt;50 ms/pulse)</value>
+    <value>Multi-Pulse</value>
   </data>
   <data name="lgTimeForSingle" xml:space="preserve">
-    <value>Time for one pulse (&gt;50 ms/pulse)</value>
+    <value>Single Pulse</value>
   </data>
   <data name="lgTramLeft" xml:space="preserve">
     <value>Tram Left</value>

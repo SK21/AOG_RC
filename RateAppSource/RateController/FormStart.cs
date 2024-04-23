@@ -86,6 +86,7 @@ namespace RateController
         public PGN229 AOGsections;
         private bool cUseDualAuto;
         private bool cResumeAfterPrime;
+        private bool cMasterOverride;
 
         public FormStart()
         {
@@ -281,6 +282,16 @@ namespace RateController
             }
         }
 
+        public bool MasterOverride
+        {
+            get { return cMasterOverride; }
+            set
+            {
+                cMasterOverride = value;
+                Tls.SaveProperty("MasterOverride",cMasterOverride.ToString());  
+            }
+        }
+
         public bool UseTransparent
         {
             get { return cUseTransparent; }
@@ -381,7 +392,7 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
             if (bool.TryParse(Tls.LoadProperty("UseDualAuto"), out bool ud)) cUseDualAuto = ud;
             if (bool.TryParse(Tls.LoadProperty("ResumeAfterPrime"), out bool re)) cResumeAfterPrime = re;
-
+            if (bool.TryParse(Tls.LoadProperty("MasterOverride"), out bool mo)) cMasterOverride = mo;
             if (int.TryParse(Tls.LoadProperty("PrimeDelay"), out int PD))
             {
                 cPrimeDelay = PD;
