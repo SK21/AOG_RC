@@ -163,7 +163,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 						Sensor[SensorID].UseMultiPulses = ((InCommand & 32) == 32);
 
 						AutoOn = ((InCommand & 64) == 64);
-
+						
 						int16_t tmp = Data[10] | Data[11] << 8;
 						Sensor[SensorID].ManualAdjust = tmp;
 

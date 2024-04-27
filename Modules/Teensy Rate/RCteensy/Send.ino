@@ -54,7 +54,7 @@ void SendData()
         }
 
         //PWM
-        Data[9] = Sensor[i].PWM;
+        Data[9] = (int)Sensor[i].PWM;
         Data[10] = (int)Sensor[i].PWM >> 8;
 
         // status
