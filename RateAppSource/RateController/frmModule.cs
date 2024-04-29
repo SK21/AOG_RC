@@ -75,7 +75,7 @@ namespace RateController
 
         private void frmModule_FormClosed(object sender, FormClosedEventArgs e)
         {
-                mf.Tls.SaveFormData(this);
+            mf.Tls.SaveFormData(this);
             timer1.Enabled = false;
         }
 
@@ -93,13 +93,57 @@ namespace RateController
                 c.ForeColor = Color.Black;
             }
 
-            tabControl1.TabPages[0].BackColor = this.BackColor;
-            tabControl1.TabPages[1].BackColor = this.BackColor;
+            foreach(TabPage p in tabControl1.Controls)
+            {
+                p.BackColor = this.BackColor;
+            }
+
             tbEthernet.BackColor = this.BackColor;
             tbSerial.BackColor = this.BackColor;
+            tbActivity.BackColor = this.BackColor;
+            tbErrors.BackColor = this.BackColor;
 
             cboPort1.SelectedIndex = 0;
             UpdateLogs();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                VisitLink("https://github.com/SK21/AOG_RC/tree/master/Help");
+                linkLabel1.LinkVisited = true;
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, "Help", 15000, true);
+            }
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                VisitLink("https://github.com/SK21/AOG_RC/wiki");
+                linkLabel2.LinkVisited = true;
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, "Help", 15000, true);
+            }
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                VisitLink("https://github.com/AgHardware/Rate_Control");
+                linkLabel3.LinkVisited = true;
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, "Help", 15000, true);
+            }
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -122,7 +166,6 @@ namespace RateController
                 lbInoID.Text = mf.AnalogData.InoID(Prod.ModuleID).ToString();
                 lbModID.Text = Prod.ModuleID.ToString();
                 lbTime.Text = (Prod.ElapsedTime / 1000.0).ToString("N3");
-
             }
 
             if (!FreezeUpdate)
@@ -150,6 +193,11 @@ namespace RateController
             tbErrors.Text = mf.Tls.ReadTextFile("Error Log.txt");
             tbErrors.Select(tbErrors.Text.Length, 0);
             tbErrors.ScrollToCaret();
+        }
+
+        private void VisitLink(string Link)
+        {
+            System.Diagnostics.Process.Start(Link);
         }
     }
 }

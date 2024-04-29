@@ -53,6 +53,7 @@
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
             this.ckTransparent = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.ckNoMaster = new System.Windows.Forms.CheckBox();
             this.tbSimSpeed = new System.Windows.Forms.TextBox();
             this.lbSimUnits = new System.Windows.Forms.Label();
             this.ckSimSpeed = new System.Windows.Forms.CheckBox();
@@ -63,7 +64,6 @@
             this.rbHungarian = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
-            this.ckNoMaster = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -401,6 +401,22 @@
             this.tabPage1.Text = "Config";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // ckNoMaster
+            // 
+            this.ckNoMaster.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckNoMaster.Location = new System.Drawing.Point(219, 22);
+            this.ckNoMaster.Name = "ckNoMaster";
+            this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
+            this.ckNoMaster.TabIndex = 331;
+            this.ckNoMaster.Text = "Master Override";
+            this.ckNoMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckNoMaster.UseVisualStyleBackColor = true;
+            this.ckNoMaster.CheckedChanged += new System.EventHandler(this.ckNoMaster_CheckedChanged);
+            this.ckNoMaster.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckNoMaster_HelpRequested);
+            // 
             // tbSimSpeed
             // 
             this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -552,22 +568,6 @@
             this.rbDeustch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbDeustch.UseVisualStyleBackColor = true;
             this.rbDeustch.CheckedChanged += new System.EventHandler(this.Language_CheckedChanged);
-            // 
-            // ckNoMaster
-            // 
-            this.ckNoMaster.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNoMaster.Location = new System.Drawing.Point(219, 22);
-            this.ckNoMaster.Name = "ckNoMaster";
-            this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
-            this.ckNoMaster.TabIndex = 331;
-            this.ckNoMaster.Text = "Master Override";
-            this.ckNoMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckNoMaster.UseVisualStyleBackColor = true;
-            this.ckNoMaster.CheckedChanged += new System.EventHandler(this.ckNoMaster_CheckedChanged);
-            this.ckNoMaster.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckNoMaster_HelpRequested);
             // 
             // frmOptions
             // 
