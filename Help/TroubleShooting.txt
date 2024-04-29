@@ -19,5 +19,5 @@ No UPM:
 9. control type, is it a valve or motor
 
 No rate adjust:
-1. in manual the master switch must be on
+1. in manual mode the master switch must be on
 2. minimum pwm too low
