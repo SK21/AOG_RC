@@ -17,3 +17,7 @@ No UPM:
 7. base rate
 8. did the pid values get sent to the module
 9. control type, is it a valve or motor
+
+No rate adjust:
+1. in manual the master switch must be on
+2. minimum pwm too low
