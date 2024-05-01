@@ -1,0 +1,6 @@
+Diode D2, LCSC# C116712
+
+SS36 schottky diode in the power circuit has the anode end (+) to ground. 
+
+cathode -     anode +
+-----------|<-------
