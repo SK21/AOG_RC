@@ -249,7 +249,7 @@
     <value>Fan</value>
   </data>
   <data name="lgFlowOnHigh" xml:space="preserve">
-    <value>Flow On High</value>
+    <value>Invert Flow Control</value>
   </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
@@ -435,7 +435,7 @@
     <value>Relay Control</value>
   </data>
   <data name="lgRelayOnHigh" xml:space="preserve">
-    <value>Relay On High</value>
+    <value>Invert Relay Control</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
     <value>Relays</value>

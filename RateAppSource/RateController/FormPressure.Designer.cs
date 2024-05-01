@@ -241,7 +241,7 @@ namespace RateController
             // 
             this.ckShowPressure.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckShowPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckShowPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckShowPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckShowPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckShowPressure.Location = new System.Drawing.Point(42, 351);
             this.ckShowPressure.Name = "ckShowPressure";

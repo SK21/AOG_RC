@@ -26,9 +26,9 @@ namespace RateController
             this.Width = 450;
 
             int ht = 20 + (len / 34) * 40;
-            if (ht < 150)
+            if (ht < 160)
             {
-                ht = 150;
+                ht = 160;
             }
             else if (ht > 500)
             {

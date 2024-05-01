@@ -75,7 +75,7 @@
             // 
             this.ckMetric.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckMetric.Location = new System.Drawing.Point(28, 22);
             this.ckMetric.Name = "ckMetric";
@@ -191,7 +191,7 @@
             // rbFrench
             // 
             this.rbFrench.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbFrench.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbFrench.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbFrench.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbFrench.Location = new System.Drawing.Point(225, 95);
             this.rbFrench.Margin = new System.Windows.Forms.Padding(2);
@@ -206,7 +206,7 @@
             // rbRussian
             // 
             this.rbRussian.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbRussian.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbRussian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbRussian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbRussian.Location = new System.Drawing.Point(225, 54);
             this.rbRussian.Margin = new System.Windows.Forms.Padding(2);
@@ -221,7 +221,7 @@
             // rbPolish
             // 
             this.rbPolish.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbPolish.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbPolish.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbPolish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbPolish.Location = new System.Drawing.Point(225, 11);
             this.rbPolish.Margin = new System.Windows.Forms.Padding(2);
@@ -273,7 +273,7 @@
             // 
             this.ckWorkSwitch.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckWorkSwitch.Location = new System.Drawing.Point(28, 75);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
@@ -315,7 +315,7 @@
             // 
             this.ckLargeScreen.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckLargeScreen.Location = new System.Drawing.Point(41, 22);
             this.ckLargeScreen.Name = "ckLargeScreen";
@@ -330,7 +330,7 @@
             // 
             this.ckDualAuto.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckDualAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDualAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckDualAuto.Location = new System.Drawing.Point(41, 124);
             this.ckDualAuto.Name = "ckDualAuto";
@@ -345,7 +345,7 @@
             // 
             this.ckPressure.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckPressure.Location = new System.Drawing.Point(218, 22);
             this.ckPressure.Name = "ckPressure";
@@ -360,7 +360,7 @@
             // 
             this.ckScreenSwitches.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckScreenSwitches.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckScreenSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckScreenSwitches.Location = new System.Drawing.Point(41, 74);
             this.ckScreenSwitches.Name = "ckScreenSwitches";
@@ -374,7 +374,7 @@
             // ckTransparent
             // 
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckTransparent.Location = new System.Drawing.Point(218, 74);
             this.ckTransparent.Name = "ckTransparent";
@@ -405,7 +405,7 @@
             // 
             this.ckNoMaster.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckNoMaster.Location = new System.Drawing.Point(219, 22);
             this.ckNoMaster.Name = "ckNoMaster";
@@ -445,7 +445,7 @@
             // 
             this.ckSimSpeed.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckSimSpeed.Location = new System.Drawing.Point(28, 128);
             this.ckSimSpeed.Name = "ckSimSpeed";
@@ -479,7 +479,7 @@
             // 
             this.ckResume.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckResume.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckResume.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckResume.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckResume.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckResume.Location = new System.Drawing.Point(137, 131);
             this.ckResume.Name = "ckResume";
@@ -509,7 +509,7 @@
             // rbNederlands
             // 
             this.rbNederlands.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbNederlands.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbNederlands.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbNederlands.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbNederlands.Location = new System.Drawing.Point(50, 136);
             this.rbNederlands.Margin = new System.Windows.Forms.Padding(2);
@@ -524,7 +524,7 @@
             // rbHungarian
             // 
             this.rbHungarian.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbHungarian.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbHungarian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbHungarian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbHungarian.Location = new System.Drawing.Point(50, 95);
             this.rbHungarian.Margin = new System.Windows.Forms.Padding(2);
@@ -539,7 +539,7 @@
             // rbEnglish
             // 
             this.rbEnglish.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbEnglish.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbEnglish.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbEnglish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbEnglish.Location = new System.Drawing.Point(50, 54);
             this.rbEnglish.Margin = new System.Windows.Forms.Padding(2);
@@ -555,7 +555,7 @@
             // 
             this.rbDeustch.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbDeustch.Checked = true;
-            this.rbDeustch.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbDeustch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbDeustch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbDeustch.Location = new System.Drawing.Point(50, 11);
             this.rbDeustch.Margin = new System.Windows.Forms.Padding(2);

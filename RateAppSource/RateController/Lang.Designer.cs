@@ -407,7 +407,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Flow On High.
+        ///   Looks up a localized string similar to Invert Flow Control.
         /// </summary>
         internal static string lgFlowOnHigh {
             get {
@@ -965,7 +965,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Relay On High.
+        ///   Looks up a localized string similar to Invert Relay Control.
         /// </summary>
         internal static string lgRelayOnHigh {
             get {

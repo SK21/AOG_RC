@@ -49,6 +49,7 @@
             this.tbModuleID = new System.Windows.Forms.TextBox();
             this.lbModuleID = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ckMomentary = new System.Windows.Forms.CheckBox();
             this.tbWrk = new System.Windows.Forms.TextBox();
             this.lbWorkPin = new System.Windows.Forms.Label();
             this.tbPWM2 = new System.Windows.Forms.TextBox();
@@ -108,7 +109,6 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.cboBoard = new System.Windows.Forms.ComboBox();
             this.lbBoards = new System.Windows.Forms.Label();
-            this.ckMomentary = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -286,13 +286,13 @@
             // ckFlowOn
             // 
             this.ckFlowOn.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckFlowOn.Location = new System.Drawing.Point(226, 321);
             this.ckFlowOn.Name = "ckFlowOn";
             this.ckFlowOn.Size = new System.Drawing.Size(117, 69);
             this.ckFlowOn.TabIndex = 43;
-            this.ckFlowOn.Text = "Flow on High";
+            this.ckFlowOn.Text = "Invert Flow Control";
             this.ckFlowOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckFlowOn.UseVisualStyleBackColor = true;
             this.ckFlowOn.CheckedChanged += new System.EventHandler(this.textbox_TextChanged);
@@ -300,13 +300,13 @@
             // ckRelayOn
             // 
             this.ckRelayOn.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckRelayOn.Location = new System.Drawing.Point(90, 321);
             this.ckRelayOn.Name = "ckRelayOn";
             this.ckRelayOn.Size = new System.Drawing.Size(117, 69);
             this.ckRelayOn.TabIndex = 42;
-            this.ckRelayOn.Text = "Relay on High";
+            this.ckRelayOn.Text = "Invert Relays";
             this.ckRelayOn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckRelayOn.UseVisualStyleBackColor = true;
             this.ckRelayOn.CheckedChanged += new System.EventHandler(this.textbox_TextChanged);
@@ -374,6 +374,20 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Pins";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // ckMomentary
+            // 
+            this.ckMomentary.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMomentary.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckMomentary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckMomentary.Location = new System.Drawing.Point(309, 327);
+            this.ckMomentary.Name = "ckMomentary";
+            this.ckMomentary.Size = new System.Drawing.Size(119, 40);
+            this.ckMomentary.TabIndex = 82;
+            this.ckMomentary.Text = "Momentary";
+            this.ckMomentary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMomentary.UseVisualStyleBackColor = true;
+            this.ckMomentary.CheckedChanged += new System.EventHandler(this.ckClient_CheckedChanged);
             // 
             // tbWrk
             // 
@@ -879,7 +893,7 @@
             // ckClient
             // 
             this.ckClient.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckClient.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckClient.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckClient.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckClient.Location = new System.Drawing.Point(136, 138);
             this.ckClient.Name = "ckClient";
@@ -907,13 +921,16 @@
             // btnSendToModule
             // 
             this.btnSendToModule.BackColor = System.Drawing.Color.Transparent;
+            this.btnSendToModule.FlatAppearance.BorderColor = System.Drawing.SystemColors.Highlight;
             this.btnSendToModule.FlatAppearance.BorderSize = 0;
             this.btnSendToModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSendToModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSendToModule.Image = global::RateController.Properties.Resources.UpArrow64;
             this.btnSendToModule.Location = new System.Drawing.Point(207, 534);
             this.btnSendToModule.Name = "btnSendToModule";
             this.btnSendToModule.Size = new System.Drawing.Size(72, 72);
             this.btnSendToModule.TabIndex = 150;
+            this.btnSendToModule.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             this.btnSendToModule.UseVisualStyleBackColor = false;
             this.btnSendToModule.Click += new System.EventHandler(this.btnSendToModule_Click);
             this.btnSendToModule.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendToModule_HelpRequested);
@@ -979,20 +996,6 @@
             this.lbBoards.Size = new System.Drawing.Size(69, 24);
             this.lbBoards.TabIndex = 218;
             this.lbBoards.Text = "Boards";
-            // 
-            // ckMomentary
-            // 
-            this.ckMomentary.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckMomentary.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ckMomentary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMomentary.Location = new System.Drawing.Point(309, 327);
-            this.ckMomentary.Name = "ckMomentary";
-            this.ckMomentary.Size = new System.Drawing.Size(119, 40);
-            this.ckMomentary.TabIndex = 82;
-            this.ckMomentary.Text = "Momentary";
-            this.ckMomentary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckMomentary.UseVisualStyleBackColor = true;
-            this.ckMomentary.CheckedChanged += new System.EventHandler(this.ckClient_CheckedChanged);
             // 
             // frmModuleConfig
             // 

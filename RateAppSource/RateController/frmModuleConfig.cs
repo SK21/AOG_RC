@@ -74,6 +74,10 @@ namespace RateController
                 Save();
                 SetButtons(false);
                 UpdateForm();
+
+                btnSendToModule.Text = "C";
+                btnSendToModule.FlatAppearance.BorderSize = 3;
+                btnSendToModule.FlatAppearance.BorderColor = Color.DarkBlue;
             }
         }
 
@@ -151,17 +155,20 @@ namespace RateController
             {
                 mf.ModuleConfig.Send();
                 mf.NetworkConfig.Send();
-                mf.Tls.ShowHelp("Settings sent to module", "Config", 15000);
+                mf.Tls.ShowHelp("Settings sent to module", "Config", 10000);
+
+                btnSendToModule.Text = "";
+                btnSendToModule.FlatAppearance.BorderSize = 0;
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowHelp("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 20000, true, true);
+                mf.Tls.ShowHelp("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 10000, true, true);
             }
         }
 
         private void btnSendToModule_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Send settings to module. Only have 1 module connected when sending.";
+            string Message = "Send settings to module. Only have 1 module connected when sending. The button is highlighted when there are changes to be sent.";
             mf.Tls.ShowHelp(Message, "Send Config");
             hlpevent.Handled = true;
         }

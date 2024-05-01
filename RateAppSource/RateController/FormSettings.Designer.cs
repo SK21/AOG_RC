@@ -754,7 +754,7 @@ namespace RateController
             // 
             this.ckVR.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckVR.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckVR.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckVR.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckVR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckVR.Location = new System.Drawing.Point(136, 106);
             this.ckVR.Name = "ckVR";
@@ -1125,7 +1125,7 @@ namespace RateController
             // 
             this.ckBumpButtons.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckBumpButtons.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckBumpButtons.Location = new System.Drawing.Point(221, 310);
             this.ckBumpButtons.Name = "ckBumpButtons";
@@ -1140,7 +1140,7 @@ namespace RateController
             // 
             this.ckDefault.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckDefault.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckDefault.Location = new System.Drawing.Point(38, 310);
             this.ckDefault.Name = "ckDefault";
@@ -1156,7 +1156,7 @@ namespace RateController
             // 
             this.ckConstantUPM.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckConstantUPM.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckConstantUPM.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckConstantUPM.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckConstantUPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckConstantUPM.Location = new System.Drawing.Point(38, 254);
             this.ckConstantUPM.Name = "ckConstantUPM";
@@ -1172,7 +1172,7 @@ namespace RateController
             // 
             this.ckOnScreen.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckOnScreen.Location = new System.Drawing.Point(38, 198);
             this.ckOnScreen.Name = "ckOnScreen";
@@ -1237,7 +1237,7 @@ namespace RateController
             // 
             this.ckOffRate.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckOffRate.Location = new System.Drawing.Point(221, 198);
             this.ckOffRate.Name = "ckOffRate";
@@ -1264,7 +1264,7 @@ namespace RateController
             // rbMultiPulse
             // 
             this.rbMultiPulse.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbMultiPulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbMultiPulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbMultiPulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbMultiPulse.Location = new System.Drawing.Point(13, 73);
             this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
@@ -1281,7 +1281,7 @@ namespace RateController
             // 
             this.rbSinglePulse.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbSinglePulse.Checked = true;
-            this.rbSinglePulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbSinglePulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbSinglePulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbSinglePulse.Location = new System.Drawing.Point(13, 25);
             this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);

@@ -93,7 +93,7 @@ namespace RateController
                 c.ForeColor = Color.Black;
             }
 
-            foreach(TabPage p in tabControl1.Controls)
+            foreach (TabPage p in tabControl1.Controls)
             {
                 p.BackColor = this.BackColor;
             }
@@ -139,6 +139,19 @@ namespace RateController
             {
                 VisitLink("https://github.com/AgHardware/Rate_Control");
                 linkLabel3.LinkVisited = true;
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, "Help", 15000, true);
+            }
+        }
+
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                VisitLink("https://github.com/SK21/PCBsetup");
+                linkLabel4.LinkVisited = true;
             }
             catch (Exception ex)
             {
