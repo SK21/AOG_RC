@@ -236,6 +236,24 @@ void ReadPGNs(byte Data[], uint16_t len)
 						Sensor[SensorID].KI = (double)(Data[4] * PIDscale);
 						Sensor[SensorID].KD = (double)(Data[5] * PIDscale);
 
+						if (Sensor[0].KI > 0)
+						{
+							AdjustTime = Sensor[0].KI;
+						}
+						else
+						{
+							AdjustTime = 15;
+						}
+
+						if (Sensor[0].KD > 0)
+						{
+							PauseTime = Sensor[0].KD;
+						}
+						else
+						{
+							PauseTime = 250;
+						}
+
 						Sensor[SensorID].MinPWM = Data[6];
 						Sensor[SensorID].MaxPWM = Data[7];
 					}

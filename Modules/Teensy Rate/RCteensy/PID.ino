@@ -3,7 +3,7 @@
 
 uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
-const double Deadband = 0.02;		// % error below which no adjustment is made
+const double Deadband = 0.04;		// % error below which no adjustment is made
 const double BrakePoint = 0.20;		// % error below which reduced adjustment is used
 const double BrakeSet = 0.75;		// low adjustment rate
 double SF;							// Settings Factor used to reduce adjustment when close to set rate
@@ -14,6 +14,9 @@ double LastPWM[MaxProductCount];
 double IntegralSum[MaxProductCount];
 double LastUPM[MaxProductCount];
 
+bool PauseAdjust[MaxProductCount];
+uint32_t ComboTime[MaxProductCount];
+
 void SetPWM()
 {
 	if (AutoOn)
@@ -23,6 +26,11 @@ void SetPWM()
 		{
 			switch (Sensor[i].ControlType)
 			{
+			case 1:
+				// combo close timed adjustment
+				Sensor[i].PWM = TimedCombo(i, false);
+				break;
+
 			case 2:
 			case 3:
 			case 4:
@@ -42,10 +50,20 @@ void SetPWM()
 		// manual control
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			Sensor[i].PWM = Sensor[i].ManualAdjust;
-			double Direction = 1.0;
-			if (Sensor[i].PWM < 0) Direction = -1.0;
-			if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
+			switch (Sensor[i].ControlType)
+			{
+			case 1:
+				// combo close timed adjustment
+				Sensor[i].PWM = TimedCombo(i, true);
+				break;
+
+			default:
+				Sensor[i].PWM = Sensor[i].ManualAdjust;
+				double Direction = 1.0;
+				if (Sensor[i].PWM < 0) Direction = -1.0;
+				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
+				break;
+			}
 			LastPWM[i] = Sensor[i].PWM;
 		}
 	}
@@ -172,5 +190,49 @@ int PIDvalve(byte ID)
 	LastPWM[ID] = Result;
 	return (int)Result;
 }
+
+int TimedCombo(byte ID, bool ManualAdjust = false)
+{
+	int Result = 0;
+	if (PauseAdjust[ID])
+	{
+		// pausing state
+		if (millis() - ComboTime[ID] > PauseTime)
+		{
+			// switch state
+			ComboTime[ID] = millis();
+			PauseAdjust[ID] = !PauseAdjust[ID];
+		}
+	}
+	else
+	{
+		// adjusting state
+		if (millis() - ComboTime[ID] > AdjustTime)
+		{
+			// switch state
+			ComboTime[ID] = millis();
+			PauseAdjust[ID] = !PauseAdjust[ID];
+		}
+		else
+		{
+			if (ManualAdjust)
+			{
+				Result = Sensor[ID].MinPWM;
+			}
+			else
+			{
+				// auto adjust, check deadband
+				if (Sensor[ID].TargetUPM > 0)
+				{
+					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+					if (abs(RateError / Sensor[ID].TargetUPM) > Deadband)  Result = Sensor[ID].MinPWM;
+				}
+			}
+			if (Sensor[ID].UPM > Sensor[ID].TargetUPM) Result *= -1;
+		}
+	}
+	return Result;
+}
+
 
 
