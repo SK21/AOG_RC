@@ -772,6 +772,8 @@ namespace RateController
             mf.Tls.SaveProperty("KD" + IDname, ModulePIDdata.KD.ToString());
             mf.Tls.SaveProperty("MinPWM" + IDname, ModulePIDdata.MinPWM.ToString());
             mf.Tls.SaveProperty("MaxPWM" + IDname, ModulePIDdata.MaxPWM.ToString());
+            mf.Tls.SaveProperty("Adjust" + IDname, ModulePIDdata.Adjust.ToString());
+            mf.Tls.SaveProperty("Pause" + IDname, ModulePIDdata.Pause.ToString());
 
             mf.Tls.SaveProperty("OnScreen" + IDname, cOnScreen.ToString());
             mf.Tls.SaveProperty("BumpButtons" + IDname, cBumpButtons.ToString());
