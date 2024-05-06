@@ -193,46 +193,84 @@ int PIDvalve(byte ID)
 
 int TimedCombo(byte ID, bool ManualAdjust = false)
 {
-	int Result = 0;
-	if (PauseAdjust[ID])
+	double Result = 0;
+	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
 	{
-		// pausing state
-		if (millis() - ComboTime[ID] > PauseTime)
+		if (PauseAdjust[ID])
 		{
-			// switch state
-			ComboTime[ID] = millis();
-			PauseAdjust[ID] = !PauseAdjust[ID];
-		}
-	}
-	else
-	{
-		// adjusting state
-		if (millis() - ComboTime[ID] > AdjustTime)
-		{
-			// switch state
-			ComboTime[ID] = millis();
-			PauseAdjust[ID] = !PauseAdjust[ID];
+			// pausing state
+			if (millis() - ComboTime[ID] > PauseTime)
+			{
+				// switch state
+				ComboTime[ID] = millis();
+				PauseAdjust[ID] = !PauseAdjust[ID];
+			}
 		}
 		else
 		{
-			if (ManualAdjust)
+			// adjusting state
+			if (millis() - ComboTime[ID] > AdjustTime)
 			{
-				Result = Sensor[ID].MinPWM;
+				// switch state
+				ComboTime[ID] = millis();
+				PauseAdjust[ID] = !PauseAdjust[ID];
 			}
 			else
 			{
-				// auto adjust, check deadband
-				if (Sensor[ID].TargetUPM > 0)
+				if (ManualAdjust)
 				{
+					Result = Sensor[ID].MaxPWM;
+				}
+				else
+				{
+					// auto adjust
 					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
-					if (abs(RateError / Sensor[ID].TargetUPM) > Deadband)  Result = Sensor[ID].MinPWM;
+					if (abs(RateError) > Sensor[ID].TargetUPM)
+					{
+						if (RateError > 0)
+						{
+							RateError = Sensor[ID].TargetUPM;
+						}
+						else
+						{
+							RateError = Sensor[ID].TargetUPM * -1;
+						}
+					}
+
+					// check brakepoint
+					if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
+					{
+						SF = 1;
+					}
+					else
+					{
+						SF = BrakeSet;
+					}
+
+					// check deadband
+					if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
+					{
+						Result = Sensor[ID].KP * SF * RateError;
+
+						bool IsPositive = (Result > 0);
+						Result = abs(Result);
+
+						if (Result > Sensor[ID].MaxPWM * SF) Result = Sensor[ID].MaxPWM * SF;
+						if (Result < Sensor[ID].MinPWM) Result = Sensor[ID].MinPWM;
+
+						if (!IsPositive) Result *= -1;
+					}
+					else
+					{
+						Result = 0;
+					}
 				}
 			}
-			if (Sensor[ID].UPM > Sensor[ID].TargetUPM) Result *= -1;
 		}
 	}
-	return Result;
+	return (int)Result;
 }
+
 
 
 
