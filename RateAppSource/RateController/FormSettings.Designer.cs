@@ -171,6 +171,12 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.tbAdjust = new System.Windows.Forms.TextBox();
+            this.tbPause = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lbAdjust = new System.Windows.Forms.Label();
+            this.lbPause = new System.Windows.Forms.Label();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -797,6 +803,12 @@ namespace RateController
             // 
             // tbs4
             // 
+            this.tbs4.Controls.Add(this.lbPause);
+            this.tbs4.Controls.Add(this.lbAdjust);
+            this.tbs4.Controls.Add(this.label6);
+            this.tbs4.Controls.Add(this.label4);
+            this.tbs4.Controls.Add(this.tbPause);
+            this.tbs4.Controls.Add(this.tbAdjust);
             this.tbs4.Controls.Add(this.groupBox1);
             this.tbs4.Controls.Add(this.btnTuningGraph);
             this.tbs4.Controls.Add(this.btnPIDloadDefaults);
@@ -829,7 +841,7 @@ namespace RateController
             this.groupBox1.Controls.Add(this.cbShift);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(65, 231);
+            this.groupBox1.Location = new System.Drawing.Point(34, 299);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(341, 112);
             this.groupBox1.TabIndex = 160;
@@ -897,7 +909,7 @@ namespace RateController
             this.btnTuningGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnTuningGraph.Image = global::RateController.Properties.Resources.Chart;
             this.btnTuningGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTuningGraph.Location = new System.Drawing.Point(242, 349);
+            this.btnTuningGraph.Location = new System.Drawing.Point(406, 271);
             this.btnTuningGraph.Name = "btnTuningGraph";
             this.btnTuningGraph.Size = new System.Drawing.Size(72, 72);
             this.btnTuningGraph.TabIndex = 155;
@@ -914,7 +926,7 @@ namespace RateController
             this.btnPIDloadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnPIDloadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
             this.btnPIDloadDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnPIDloadDefaults.Location = new System.Drawing.Point(136, 349);
+            this.btnPIDloadDefaults.Location = new System.Drawing.Point(406, 349);
             this.btnPIDloadDefaults.Name = "btnPIDloadDefaults";
             this.btnPIDloadDefaults.Size = new System.Drawing.Size(72, 72);
             this.btnPIDloadDefaults.TabIndex = 154;
@@ -926,7 +938,7 @@ namespace RateController
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(289, 113);
+            this.label12.Location = new System.Drawing.Point(289, 99);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(71, 23);
             this.label12.TabIndex = 151;
@@ -936,7 +948,7 @@ namespace RateController
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(289, 71);
+            this.label11.Location = new System.Drawing.Point(289, 58);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(71, 23);
             this.label11.TabIndex = 150;
@@ -946,7 +958,7 @@ namespace RateController
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(289, 29);
+            this.label10.Location = new System.Drawing.Point(289, 17);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(71, 23);
             this.label10.TabIndex = 149;
@@ -956,7 +968,7 @@ namespace RateController
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(289, 197);
+            this.label9.Location = new System.Drawing.Point(289, 181);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(71, 23);
             this.label9.TabIndex = 148;
@@ -966,7 +978,7 @@ namespace RateController
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(289, 155);
+            this.label5.Location = new System.Drawing.Point(289, 140);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(71, 23);
             this.label5.TabIndex = 147;
@@ -975,7 +987,7 @@ namespace RateController
             // tbKD
             // 
             this.tbKD.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbKD.Location = new System.Drawing.Point(242, 109);
+            this.tbKD.Location = new System.Drawing.Point(242, 95);
             this.tbKD.MaxLength = 8;
             this.tbKD.Name = "tbKD";
             this.tbKD.Size = new System.Drawing.Size(41, 30);
@@ -991,7 +1003,7 @@ namespace RateController
             // 
             this.lbDerivative.AutoSize = true;
             this.lbDerivative.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDerivative.Location = new System.Drawing.Point(91, 112);
+            this.lbDerivative.Location = new System.Drawing.Point(91, 99);
             this.lbDerivative.Name = "lbDerivative";
             this.lbDerivative.Size = new System.Drawing.Size(92, 23);
             this.lbDerivative.TabIndex = 146;
@@ -1000,7 +1012,7 @@ namespace RateController
             // tbKI
             // 
             this.tbKI.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbKI.Location = new System.Drawing.Point(242, 67);
+            this.tbKI.Location = new System.Drawing.Point(242, 54);
             this.tbKI.MaxLength = 8;
             this.tbKI.Name = "tbKI";
             this.tbKI.Size = new System.Drawing.Size(41, 30);
@@ -1016,7 +1028,7 @@ namespace RateController
             // 
             this.lbIntegral.AutoSize = true;
             this.lbIntegral.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIntegral.Location = new System.Drawing.Point(91, 70);
+            this.lbIntegral.Location = new System.Drawing.Point(91, 58);
             this.lbIntegral.Name = "lbIntegral";
             this.lbIntegral.Size = new System.Drawing.Size(82, 23);
             this.lbIntegral.TabIndex = 143;
@@ -1026,7 +1038,7 @@ namespace RateController
             // tbMaxPWM
             // 
             this.tbMaxPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxPWM.Location = new System.Drawing.Point(242, 151);
+            this.tbMaxPWM.Location = new System.Drawing.Point(242, 136);
             this.tbMaxPWM.MaxLength = 8;
             this.tbMaxPWM.Name = "tbMaxPWM";
             this.tbMaxPWM.Size = new System.Drawing.Size(41, 30);
@@ -1042,7 +1054,7 @@ namespace RateController
             // 
             this.lbMax.AutoSize = true;
             this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMax.Location = new System.Drawing.Point(91, 154);
+            this.lbMax.Location = new System.Drawing.Point(91, 140);
             this.lbMax.Name = "lbMax";
             this.lbMax.Size = new System.Drawing.Size(139, 23);
             this.lbMax.TabIndex = 126;
@@ -1052,7 +1064,7 @@ namespace RateController
             // tbMinPWM
             // 
             this.tbMinPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinPWM.Location = new System.Drawing.Point(242, 193);
+            this.tbMinPWM.Location = new System.Drawing.Point(241, 177);
             this.tbMinPWM.MaxLength = 8;
             this.tbMinPWM.Name = "tbMinPWM";
             this.tbMinPWM.Size = new System.Drawing.Size(41, 30);
@@ -1068,7 +1080,7 @@ namespace RateController
             // 
             this.lbMin.AutoSize = true;
             this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMin.Location = new System.Drawing.Point(91, 196);
+            this.lbMin.Location = new System.Drawing.Point(91, 181);
             this.lbMin.Name = "lbMin";
             this.lbMin.Size = new System.Drawing.Size(135, 23);
             this.lbMin.TabIndex = 122;
@@ -1078,7 +1090,7 @@ namespace RateController
             // tbKP
             // 
             this.tbKP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbKP.Location = new System.Drawing.Point(242, 25);
+            this.tbKP.Location = new System.Drawing.Point(242, 13);
             this.tbKP.MaxLength = 8;
             this.tbKP.Name = "tbKP";
             this.tbKP.Size = new System.Drawing.Size(41, 30);
@@ -1095,7 +1107,7 @@ namespace RateController
             // 
             this.lbProportional.AutoSize = true;
             this.lbProportional.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbProportional.Location = new System.Drawing.Point(91, 28);
+            this.lbProportional.Location = new System.Drawing.Point(91, 17);
             this.lbProportional.Name = "lbProportional";
             this.lbProportional.Size = new System.Drawing.Size(110, 23);
             this.lbProportional.TabIndex = 120;
@@ -1953,6 +1965,74 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
+            // tbAdjust
+            // 
+            this.tbAdjust.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbAdjust.Location = new System.Drawing.Point(242, 218);
+            this.tbAdjust.MaxLength = 8;
+            this.tbAdjust.Name = "tbAdjust";
+            this.tbAdjust.Size = new System.Drawing.Size(41, 30);
+            this.tbAdjust.TabIndex = 161;
+            this.tbAdjust.Tag = "6";
+            this.tbAdjust.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbAdjust.TextChanged += new System.EventHandler(this.tbAdjust_TextChanged);
+            this.tbAdjust.Enter += new System.EventHandler(this.tbAdjust_Enter);
+            this.tbAdjust.Validating += new System.ComponentModel.CancelEventHandler(this.tbAdjust_Validating);
+            // 
+            // tbPause
+            // 
+            this.tbPause.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPause.Location = new System.Drawing.Point(241, 259);
+            this.tbPause.MaxLength = 8;
+            this.tbPause.Name = "tbPause";
+            this.tbPause.Size = new System.Drawing.Size(41, 30);
+            this.tbPause.TabIndex = 162;
+            this.tbPause.Tag = "6";
+            this.tbPause.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbPause.TextChanged += new System.EventHandler(this.tbPause_TextChanged);
+            this.tbPause.Enter += new System.EventHandler(this.tbPause_Enter);
+            this.tbPause.Validating += new System.ComponentModel.CancelEventHandler(this.tbPause_Validating);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(289, 222);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(71, 23);
+            this.label4.TabIndex = 163;
+            this.label4.Text = "(0-255)";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(289, 263);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(71, 23);
+            this.label6.TabIndex = 164;
+            this.label6.Text = "(0-255)";
+            // 
+            // lbAdjust
+            // 
+            this.lbAdjust.AutoSize = true;
+            this.lbAdjust.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbAdjust.Location = new System.Drawing.Point(91, 222);
+            this.lbAdjust.Name = "lbAdjust";
+            this.lbAdjust.Size = new System.Drawing.Size(109, 23);
+            this.lbAdjust.TabIndex = 165;
+            this.lbAdjust.Text = "Adjust Time";
+            // 
+            // lbPause
+            // 
+            this.lbPause.AutoSize = true;
+            this.lbPause.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPause.Location = new System.Drawing.Point(91, 263);
+            this.lbPause.Name = "lbPause";
+            this.lbPause.Size = new System.Drawing.Size(106, 23);
+            this.lbPause.TabIndex = 166;
+            this.lbPause.Text = "Pause Time";
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2141,5 +2221,11 @@ namespace RateController
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbExample;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox tbPause;
+        private System.Windows.Forms.TextBox tbAdjust;
+        private System.Windows.Forms.Label lbPause;
+        private System.Windows.Forms.Label lbAdjust;
+        private System.Windows.Forms.Label label6;
     }
 }

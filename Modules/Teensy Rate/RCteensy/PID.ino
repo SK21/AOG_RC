@@ -199,7 +199,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 		if (PauseAdjust[ID])
 		{
 			// pausing state
-			if (millis() - ComboTime[ID] > PauseTime)
+			if (millis() - ComboTime[ID] > Sensor[ID].PauseTime)
 			{
 				// switch state
 				ComboTime[ID] = millis();
@@ -209,7 +209,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 		else
 		{
 			// adjusting state
-			if (millis() - ComboTime[ID] > AdjustTime)
+			if (millis() - ComboTime[ID] > Sensor[ID].AdjustTime)
 			{
 				// switch state
 				ComboTime[ID] = millis();
@@ -250,7 +250,11 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 					// check deadband
 					if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 					{
-						Result = Sensor[ID].KP * SF * RateError;
+						IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
+						IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
+
+						DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM) * 10.0;
+						Result = Sensor[ID].KP * SF * RateError + IntegralSum[ID] + DifValue;
 
 						bool IsPositive = (Result > 0);
 						Result = abs(Result);
@@ -267,6 +271,10 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 				}
 			}
 		}
+	}
+	else
+	{
+		IntegralSum[ID] = 0;
 	}
 	return (int)Result;
 }

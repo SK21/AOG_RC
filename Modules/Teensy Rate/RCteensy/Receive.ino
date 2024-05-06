@@ -51,7 +51,7 @@ void ReceiveSerial()
 				break;
 
 			case 32502:
-				SerialPGNlength = 10;
+				SerialPGNlength = 12;
 				PGNfound = true;
 				break;
 
@@ -217,9 +217,11 @@ void ReadPGNs(byte Data[], uint16_t len)
 		// 6    MinPWM
 		// 7    MaxPWM
 		// 8    PID scaling
-		// 9    CRC
+		// 9	Adjust Time
+		// 10	Pause Time
+		// 11   CRC
 
-		PGNlength = 10;
+		PGNlength = 12;
 
 		if (len > PGNlength - 1)
 		{
@@ -236,26 +238,11 @@ void ReadPGNs(byte Data[], uint16_t len)
 						Sensor[SensorID].KI = (double)(Data[4] * PIDscale);
 						Sensor[SensorID].KD = (double)(Data[5] * PIDscale);
 
-						if (Sensor[0].KI > 0)
-						{
-							AdjustTime = Sensor[0].KI;
-						}
-						else
-						{
-							AdjustTime = 15;
-						}
-
-						if (Sensor[0].KD > 0)
-						{
-							PauseTime = Sensor[0].KD;
-						}
-						else
-						{
-							PauseTime = 250;
-						}
-
 						Sensor[SensorID].MinPWM = Data[6];
 						Sensor[SensorID].MaxPWM = Data[7];
+
+						Sensor[SensorID].AdjustTime = Data[9];
+						Sensor[SensorID].PauseTime = Data[10];
 					}
 				}
 			}

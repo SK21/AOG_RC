@@ -417,6 +417,8 @@ namespace RateController
             tbMaxPWM.Text = "100";
             tbMinPWM.Text = "5";
             cbShift.SelectedIndex = 0;
+            tbPause.Text = "200";
+            tbAdjust.Text = "30";
         }
 
         private void LoadSettings()
@@ -461,6 +463,8 @@ namespace RateController
             tbKD.Text = CurrentProduct.PIDkd.ToString("N0");
             tbMinPWM.Text = CurrentProduct.PIDmin.ToString("N0");
             tbMaxPWM.Text = CurrentProduct.PIDmax.ToString("N0");
+            tbAdjust.Text = CurrentProduct.PIDadjust.ToString("N0");
+            tbPause.Text = CurrentProduct.PIDpause.ToString("N0");
 
             tbSenID.Text = CurrentProduct.SensorID.ToString();
 
@@ -647,6 +651,9 @@ namespace RateController
             // PID
             double.TryParse(tbKP.Text, out TempDB);
             CurrentProduct.PIDkp = TempDB;
+
+            if (byte.TryParse(tbAdjust.Text, out byte ad)) CurrentProduct.PIDadjust = ad;
+            if (byte.TryParse(tbPause.Text, out byte pa)) CurrentProduct.PIDpause = pa;
 
             double.TryParse(tbKI.Text, out TempDB);
             CurrentProduct.PIDki = TempDB;
@@ -1664,6 +1671,66 @@ namespace RateController
         {
             SetButtons(true);
             UpdateExample();
+        }
+
+        private void tbAdjust_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbAdjust.Text, out temp);
+            using (var form = new FormNumeric(0, 255, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbAdjust.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbAdjust_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbAdjust_Validating(object sender, CancelEventArgs e)
+        {
+            byte temp;
+            byte.TryParse(tbAdjust.Text, out temp);
+            if (temp < 0 || temp > 255)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbPause_Validating(object sender, CancelEventArgs e)
+        {
+            byte temp;
+            byte.TryParse(tbPause.Text, out temp);
+            if (temp < 0 || temp > 255)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbPause_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbPause_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbPause.Text, out temp);
+            using (var form = new FormNumeric(0, 255, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPause.Text = form.ReturnValue.ToString("N0");
+                }
+            }
         }
     }
 }

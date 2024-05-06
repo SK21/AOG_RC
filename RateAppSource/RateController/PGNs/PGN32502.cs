@@ -14,9 +14,11 @@ namespace RateController
         // 6   MinPWM
         // 7   MaxPWM
         // 8   PID scale
-        // 9   CRC
+        // 9   Adjust Time (ms)
+        // 10  Pause Time
+        // 11   CRC
 
-        private const byte cByteCount = 10;
+        private const byte cByteCount = 12;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 246;
         private readonly clsProduct Prod;
@@ -25,6 +27,8 @@ namespace RateController
         private double cKP;
         private byte cMaxPWM;
         private byte cMinPWM;
+        private byte cAdjust;
+        private byte cPause;
 
         public PGN32502(clsProduct CalledFrom)
         {
@@ -35,6 +39,8 @@ namespace RateController
             cKP = 1;
             cKI = 0;
             cKD = 0;
+            cAdjust = 30;
+            cPause = 200;
         }
 
         public double KD
@@ -66,6 +72,17 @@ namespace RateController
             get { return cMinPWM; }
             set { cMinPWM = value; }
         }
+        public byte Adjust
+        {
+            get { return cAdjust; }
+            set { cAdjust = value; }
+        }
+
+        public byte Pause
+        {
+            get { return cPause; }
+            set { cPause = value; }
+        }
 
         public void Send()
         {
@@ -82,7 +99,10 @@ namespace RateController
             Data[7] = MaxPWM;
             Data[8] = (byte)Prod.PIDscale;
 
-            Data[9] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
+            Data[9] = cAdjust;
+            Data[10] = cPause;
+
+            Data[11] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
             Prod.mf.SendSerial(Data);
             Prod.mf.UDPmodules.SendUDPMessage(Data);

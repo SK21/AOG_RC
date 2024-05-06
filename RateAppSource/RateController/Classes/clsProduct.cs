@@ -285,6 +285,8 @@ namespace RateController
 
         public double PIDkd
         { get { return ModulePIDdata.KD; } set { ModulePIDdata.KD = value; } }
+        public byte PIDadjust { get { return ModulePIDdata.Adjust; } set { ModulePIDdata.Adjust= value; } } 
+        public byte PIDpause { get { return ModulePIDdata.Pause; } set { ModulePIDdata.Pause = value; } }
 
         public double PIDki
         { get { return ModulePIDdata.KI; } set { ModulePIDdata.KI = value; } }
@@ -605,6 +607,9 @@ namespace RateController
             TempDB = 0;
             double.TryParse(mf.Tls.LoadProperty("KD" + IDname), out TempDB);
             ModulePIDdata.KD = TempDB;
+
+            if (byte.TryParse(mf.Tls.LoadProperty("Adjust" + IDname), out byte ad)) ModulePIDdata.Adjust = ad;
+            if (byte.TryParse(mf.Tls.LoadProperty("Pause" + IDname), out byte pa)) ModulePIDdata.Pause = pa;
 
             val = 0;
             byte.TryParse(mf.Tls.LoadProperty("MinPWM" + IDname), out val);
