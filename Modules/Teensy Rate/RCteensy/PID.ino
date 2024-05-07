@@ -196,6 +196,13 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 	double Result = 0;
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
 	{
+		if (Sensor[ID].UPM < (0.05 * Sensor[ID].TargetUPM))
+		{
+			// no pause when valve turning on
+			ComboTime[ID] = millis();
+			PauseAdjust[ID] = false;
+		}
+
 		if (PauseAdjust[ID])
 		{
 			// pausing state
