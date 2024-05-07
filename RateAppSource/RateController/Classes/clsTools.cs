@@ -110,10 +110,6 @@ namespace RateController
                     Result = Lang.lgMotor;
                     break;
 
-                case ControlTypeEnum.MotorWeights:
-                    Result = Lang.lgMotorWeight;
-                    break;
-
                 case ControlTypeEnum.Fan:
                     Result = Lang.lgFan;
                     break;

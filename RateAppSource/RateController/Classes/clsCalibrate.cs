@@ -254,7 +254,6 @@ namespace RateController
                             break;
 
                         case ControlTypeEnum.Motor:
-                        case ControlTypeEnum.MotorWeights:
                         case ControlTypeEnum.Fan:
                             //cProduct.ManualPWM = (int)cProduct.PWM();
                             CalPWM = (int)cProduct.PWM();

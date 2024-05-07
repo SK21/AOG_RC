@@ -3,7 +3,7 @@
 namespace RateController
 {
     public enum ControlTypeEnum
-    { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
+    { Valve, ComboClose, ComboCloseTimed, Motor, Fan }
 
     public class clsProduct
     {
@@ -191,9 +191,6 @@ namespace RateController
         public int ID
         { get { return cProductID; } }
 
-        public bool LogRate
-        { get { return cLogRate; } set { cLogRate = value; } }
-
         public int ManualPWM
         {
             get { return cManualPWM; }
@@ -283,10 +280,11 @@ namespace RateController
             set { cOnScreen = value; }
         }
 
+        public byte PIDadjust
+        { get { return ModulePIDdata.Adjust; } set { ModulePIDdata.Adjust = value; } }
+
         public double PIDkd
         { get { return ModulePIDdata.KD; } set { ModulePIDdata.KD = value; } }
-        public byte PIDadjust { get { return ModulePIDdata.Adjust; } set { ModulePIDdata.Adjust= value; } } 
-        public byte PIDpause { get { return ModulePIDdata.Pause; } set { ModulePIDdata.Pause = value; } }
 
         public double PIDki
         { get { return ModulePIDdata.KI; } set { ModulePIDdata.KI = value; } }
@@ -299,6 +297,9 @@ namespace RateController
 
         public byte PIDmin
         { get { return ModulePIDdata.MinPWM; } set { ModulePIDdata.MinPWM = value; } }
+
+        public byte PIDpause
+        { get { return ModulePIDdata.Pause; } set { ModulePIDdata.Pause = value; } }
 
         public int PIDscale
         { get { return cShiftRange; } set { cShiftRange = value; } }
@@ -392,18 +393,6 @@ namespace RateController
                 else
                 {
                     throw new ArgumentException("Invalid SensorID.");
-                }
-            }
-        }
-
-        public int SerialPort
-        {
-            get { return cSerialPort; }
-            set
-            {
-                if (value > -2 && value < 3)
-                {
-                    cSerialPort = value;
                 }
             }
         }
@@ -1014,11 +1003,6 @@ namespace RateController
             {
                 // connection lost
                 PauseWork = true;
-            }
-
-            if (cControlType == ControlTypeEnum.MotorWeights)
-            {
-                UpdateUnitsApplied();
             }
         }
 

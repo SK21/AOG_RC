@@ -85,24 +85,19 @@ namespace RateController
                     cData[9] |= 0b00000010; // set bit 1
                     break;
 
-                case ControlTypeEnum.Motor:
+                case ControlTypeEnum.ComboCloseTimed:
                     cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                    cData[9] |= 0b00000100; // set bit 2
+                    cData[9] |= 0b00000100; // set bit 1, 2
                     break;
 
-                case ControlTypeEnum.MotorWeights:
+                case ControlTypeEnum.Motor:
                     cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                    cData[9] |= 0b00000110; // set bit 1, 2
+                    cData[9] |= 0b00000110; // set bit 2
                     break;
 
                 case ControlTypeEnum.Fan:
                     cData[9] &= 0b11110001; // clear bit 1, 2, 3
                     cData[9] |= 0b00001000; // set bit 3
-                    break;
-
-                case ControlTypeEnum.ComboCloseTimed:
-                    cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                    cData[9] |= 0b00001010; // set bit 1, 3
                     break;
 
                 default:

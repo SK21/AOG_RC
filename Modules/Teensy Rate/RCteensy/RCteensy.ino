@@ -56,7 +56,7 @@ struct SensorConfig
 	double UPM;				// sent as upm X 1000
 	double PWM;
 	uint32_t CommTime;
-	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan, 5 timed combo
+	byte ControlType;		// 0 standard, 1 combo close, 2 timed combo, 3 motor,  4 fan
 	uint32_t TotalPulses;
 	double TargetUPM;
 	double MeterCal;

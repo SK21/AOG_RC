@@ -22,8 +22,8 @@ void AdjustFlow()
             break;
 
         case 1:
-        case 5:
-            // fast close valve or combo close timed, used for flow control and on/off
+        case 2:
+            // combo close valve or combo close timed, used for flow control and on/off
             if (Sensor[i].FlowEnabled)
             {
                 if (Sensor[i].PWM >= 0)
@@ -46,9 +46,9 @@ void AdjustFlow()
             }
             break;
 
-        case 2:
+        case 3:
         case 4:
-            // motor control
+            // motor control, fan
             if (Sensor[i].FlowEnabled)
             {
                 if (Sensor[i].PWM >= 0)

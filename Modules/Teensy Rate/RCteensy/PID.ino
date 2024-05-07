@@ -26,12 +26,11 @@ void SetPWM()
 		{
 			switch (Sensor[i].ControlType)
 			{
-			case 1:
+			case 2:
 				// combo close timed adjustment
 				Sensor[i].PWM = TimedCombo(i, false);
 				break;
 
-			case 2:
 			case 3:
 			case 4:
 				// motor control
@@ -39,7 +38,7 @@ void SetPWM()
 				break;
 
 			default:
-				// valve control
+				// valve control, combo close
 				Sensor[i].PWM = PIDvalve(i);
 				break;
 			}
@@ -52,7 +51,7 @@ void SetPWM()
 		{
 			switch (Sensor[i].ControlType)
 			{
-			case 1:
+			case 2:
 				// combo close timed adjustment
 				Sensor[i].PWM = TimedCombo(i, true);
 				break;

@@ -191,7 +191,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Combo Timed.
+        ///   Looks up a localized string similar to Combo Close Timed.
         /// </summary>
         internal static string lgComboTimed {
             get {
