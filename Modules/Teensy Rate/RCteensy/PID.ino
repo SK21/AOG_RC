@@ -196,7 +196,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 	double Result = 0;
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
 	{
-		if (Sensor[ID].UPM < (0.05 * Sensor[ID].TargetUPM))
+		if (Sensor[ID].UPM < (0.03 * Sensor[ID].TargetUPM))
 		{
 			// no pause when rate near 0
 			ComboTime[ID] = millis();
@@ -226,7 +226,10 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 			{
 				if (ManualAdjust)
 				{
-					Result = Sensor[ID].MaxPWM;
+					Result = Sensor[ID].ManualAdjust;
+					double Direction = 1.0;
+					if (Result < 0) Direction = -1.0;
+					if (abs(Result) > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * Direction;
 				}
 				else
 				{
