@@ -386,7 +386,8 @@ namespace RateController
         {
             string Message = "1 - Standard, use a valve to vary rate \n " +
                 "2 - Combo Close, use a valve to vary rate and on/off \n" +
-                "3 - Motor, vary motor speed to control rate \n";
+                "3 - Motor, vary motor speed to control rate \n" +
+                "4 - Combo Timed, use adjust/pause time for control";
 
             mf.Tls.ShowHelp(Message, "Control Type");
             hlpevent.Handled = true;
