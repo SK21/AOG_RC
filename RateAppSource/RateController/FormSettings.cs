@@ -67,8 +67,7 @@ namespace RateController
             ValveType.Items[0] = Lang.lgStandard;
             ValveType.Items[1] = Lang.lgComboClose;
             ValveType.Items[2] = Lang.lgMotor;
-            //ValveType.Items[3] = Lang.lgMotorWeight;
-            //ValveType.Items[4] = Lang.lgComboTimed;
+            ValveType.Items[3] = Lang.lgComboTimed;
 
             AreaUnits.Items[0] = Lang.lgAcres;
             AreaUnits.Items[1] = Lang.lgHectares;
@@ -530,12 +529,12 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private ControlTypeEnum ConvertValveIndex(int ValveType)
+        private ControlTypeEnum ConvertValveIndex(int ID)
         {
             // convert valve type index to ControlTypeEnum
-            // valve types: Standard Valve, Fast Close Valve, Motor, Motor / Weights, Combo Timed
+            // valve types: Standard Valve, Fast Close Valve, Motor, Combo Timed
             ControlTypeEnum Result;
-            switch (ValveType)
+            switch (ID)
             {
                 case 1:
                     Result = ControlTypeEnum.ComboClose;
@@ -543,6 +542,10 @@ namespace RateController
 
                 case 2:
                     Result = ControlTypeEnum.Motor;
+                    break;
+
+                case 3:
+                    Result = ControlTypeEnum.ComboCloseTimed;
                     break;
 
                 default:
@@ -559,15 +562,19 @@ namespace RateController
             switch (Type)
             {
                 case ControlTypeEnum.ComboClose:
-                    Result = (int)ControlTypeEnum.ComboClose;
+                    Result = 1;
                     break;
 
                 case ControlTypeEnum.Motor:
-                    Result = (int)ControlTypeEnum.Motor;
+                    Result = 2;
+                    break;
+
+                case ControlTypeEnum.ComboCloseTimed:
+                    Result = 3;
                     break;
 
                 default:
-                    Result = (int)ControlTypeEnum.Valve;
+                    Result = 0;
                     break;
             }
             return Result;
@@ -711,7 +718,7 @@ namespace RateController
 
         private void SetCalDescription()
         {
-            if (ValveType.SelectedIndex == 3)
+            if (ConvertValveIndex(ValveType.SelectedIndex) == ControlTypeEnum.MotorWeights)
             {
                 lbSensorCounts.Text = Lang.lgUPMPWM;
             }

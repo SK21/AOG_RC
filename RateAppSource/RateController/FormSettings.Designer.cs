@@ -200,12 +200,12 @@ namespace RateController
             // 
             // tbs0
             // 
-            this.tbs0.Controls.Add(this.pnlFan);
             this.tbs0.Controls.Add(this.lb0);
             this.tbs0.Controls.Add(this.tbProduct);
             this.tbs0.Controls.Add(this.ValveType);
             this.tbs0.Controls.Add(this.lb5);
             this.tbs0.Controls.Add(this.pnlMain);
+            this.tbs0.Controls.Add(this.pnlFan);
             this.tbs0.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbs0.Location = new System.Drawing.Point(4, 33);
             this.tbs0.Name = "tbs0";
@@ -244,7 +244,8 @@ namespace RateController
             this.ValveType.Items.AddRange(new object[] {
             "Standard Valve",
             "Fast Close Valve",
-            "Motor"});
+            "Motor",
+            "Timed Valve"});
             this.ValveType.Location = new System.Drawing.Point(230, 43);
             this.ValveType.Name = "ValveType";
             this.ValveType.Size = new System.Drawing.Size(176, 31);
