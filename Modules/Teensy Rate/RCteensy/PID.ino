@@ -16,6 +16,9 @@ double LastUPM[MaxProductCount];
 
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
+const byte AdjustTime = 20;
+const byte PauseTime = 200;
+const double MinStart = 0.03;	// minimum start ratio. Used to quickly increase rate from off.
 
 void SetPWM()
 {
@@ -196,7 +199,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 	double Result = 0;
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
 	{
-		if (Sensor[ID].UPM < (0.03 * Sensor[ID].TargetUPM))
+		if (Sensor[ID].UPM < (MinStart * Sensor[ID].TargetUPM))
 		{
 			// no pause when rate near 0
 			ComboTime[ID] = millis();
@@ -226,7 +229,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 			{
 				if (ManualAdjust)
 				{
-					Result = Sensor[ID].MinPWM;
+					Result = Sensor[ID].ManualAdjust;
 					double Direction = 1.0;
 					if (Result < 0) Direction = -1.0;
 					if (abs(Result) > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * Direction;
@@ -260,7 +263,11 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 					// check deadband
 					if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 					{
-						Result = Sensor[ID].KP * SF * RateError;
+						IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
+						IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
+
+						DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM) * 10.0;
+						Result = Sensor[ID].KP * SF * RateError + IntegralSum[ID] + DifValue;
 
 						bool IsPositive = (Result > 0);
 						Result = abs(Result);
@@ -277,6 +284,10 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 				}
 			}
 		}
+	}
+	else
+	{
+		IntegralSum[ID] = 0;
 	}
 	return (int)Result;
 }

@@ -16,8 +16,8 @@
 #include <Adafruit_SPIDevice.h>
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  07-May-2024"
-const uint16_t InoID = 7054;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  17-May-2024"
+const uint16_t InoID = 17054;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -134,8 +134,6 @@ bool WrkLast;
 bool WrkCurrent;
 
 int TimedCombo(byte, bool);	// function prototype
-byte AdjustTime = 20;
-byte PauseTime = 200;
 
 void setup()
 {

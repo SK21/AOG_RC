@@ -115,7 +115,8 @@ namespace RateController
                         else
                         {
                             // manual rate
-                            if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose)
+                            if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose
+                                || Prd.ControlType==ControlTypeEnum.ComboCloseTimed)
                             {
                                 // adjust flow valve
                                 byte ADJ = Prd.PIDmin;
