@@ -43,9 +43,9 @@ namespace RateController
             lbSensorCounts.Text = Lang.lgSensorCounts;
             lbBaseRateDes.Text = Lang.lgBaseRate;
             lb6.Text = Lang.lgTankSize;
-            btnResetCoverage.Text = Lang.lgCoverage;
+            //btnResetCoverage.Text = Lang.lgCoverage;
             btnResetTank.Text = Lang.lgStartQuantity;
-            btnResetQuantity.Text = Lang.lgQuantity;
+            //btnResetQuantity.Text = Lang.lgQuantity;
 
             lbMax.Text = Lang.lgHighMax;
             lbMin.Text = Lang.lgMinPWM;
@@ -98,6 +98,11 @@ namespace RateController
 
             label2.Text = Lang.lgWifiSignal;
             LabProdDensity.Text = Lang.lgDensity;
+
+            lbAcres1.Text = Lang.lgCoverage + " 1";
+            lbAcres2.Text = Lang.lgCoverage + " 2";
+            lbGallons1.Text = Lang.lgQuantity + " 1";
+            lbGallons2.Text = Lang.lgQuantity + " 2";
 
             #endregion // language
 
@@ -171,32 +176,6 @@ namespace RateController
         private void btnPIDloadDefaults_Click(object sender, EventArgs e)
         {
             LoadDefaults();
-        }
-
-        private void btnResetCoverage_Click(object sender, EventArgs e)
-        {
-            CurrentProduct.ResetCoverage();
-        }
-
-        private void btnResetCoverage_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Reset coverage to 0.";
-
-            mf.Tls.ShowHelp(Message, "Coverage", 10000);
-            hlpevent.Handled = true;
-        }
-
-        private void btnResetQuantity_Click(object sender, EventArgs e)
-        {
-            CurrentProduct.ResetApplied();
-        }
-
-        private void btnResetQuantity_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Reset quantity applied to 0.";
-
-            mf.Tls.ShowHelp(Message, "Quantity", 10000);
-            hlpevent.Handled = true;
         }
 
         private void btnResetTank_Click(object sender, EventArgs e)
@@ -692,6 +671,35 @@ namespace RateController
 
             if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
             CurrentProduct.PIDscale = cbShift.SelectedIndex;
+
+            SetData();
+        }
+
+        private void SetData()
+        {
+            if(ckArea1.Checked)
+            {
+                CurrentProduct.ResetCoverage();
+                ckArea1.Checked = false;
+            }
+
+            if (ckArea2.Checked)
+            {
+                CurrentProduct.ResetCoverage2();
+                ckArea2.Checked = false;
+            }
+
+            if(ckQuantity1.Checked)
+            {
+                CurrentProduct.ResetApplied();
+                ckQuantity1.Checked = false;
+            }
+
+            if (ckQuantity2.Checked)
+            {
+                CurrentProduct.ResetApplied2();
+                ckQuantity2.Checked = false;
+            }
         }
 
         private void SetButtons(bool Edited)
@@ -1264,6 +1272,15 @@ namespace RateController
             tbMaxRate.Enabled = CurrentProduct.UseVR;
             lbMinRate.Enabled = CurrentProduct.UseVR;
             tbMinRate.Enabled = CurrentProduct.UseVR;
+            lbArea1.Text = CurrentProduct.CurrentCoverage().ToString("N1");
+            lbArea2.Text = CurrentProduct.CurrentCoverage2().ToString("N1");
+            lbQuantity1.Text = CurrentProduct.UnitsApplied().ToString("N1");
+            lbQuantity2.Text = CurrentProduct.UnitsApplied2().ToString("N1");
+
+            ckArea1.Checked = false;
+            ckArea2.Checked = false;
+            ckQuantity1.Checked = false;
+            ckQuantity2.Checked = false;
         }
 
         void UpdateOnTypeChange()
@@ -1672,6 +1689,11 @@ namespace RateController
         {
             SetButtons(true);
             UpdateExample();
+        }
+
+        private void ckQuanitiy2_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

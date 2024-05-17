@@ -33,6 +33,7 @@ namespace RateController
         private byte cOffRateSetting;
         private bool cOnScreen;
         private double Coverage = 0;
+        private double Coverage2 = 0;
         private double cProdDensity = 0;
         private int cProductID;
         private string cProductName = "";
@@ -44,6 +45,7 @@ namespace RateController
         private int cShiftRange = 4;
         private double cTankStart = 0;
         private double cUnitsApplied = 0;
+        private double cUnitsApplied2 = 0;
         private double CurrentMinutes;
         private double CurrentWorkedArea_Hc = 0;
         private bool cUseAltRate = false;
@@ -518,6 +520,11 @@ namespace RateController
         {
             return Coverage;
         }
+        
+        public double CurrentCoverage2()
+        {
+            return Coverage2;
+        }
 
         public double CurrentRate()
         {
@@ -546,6 +553,7 @@ namespace RateController
             double TempDB;
 
             double.TryParse(mf.Tls.LoadProperty("Coverage" + IDname), out Coverage);
+            double.TryParse(mf.Tls.LoadProperty("Coverage2" + IDname), out Coverage2);
             byte.TryParse(mf.Tls.LoadProperty("CoverageUnits" + IDname), out CoverageUnits);
 
             double.TryParse(mf.Tls.LoadProperty("TankStart" + IDname), out cTankStart);
@@ -712,10 +720,19 @@ namespace RateController
             EraseAccumulatedUnits = true;
         }
 
+        public void ResetApplied2()
+        {
+            cUnitsApplied2 = 0;
+        }
+
         public void ResetCoverage()
         {
             Coverage = 0;
             LastUpdateTime = DateTime.Now;
+        }
+        public void ResetCoverage2()
+        {
+            Coverage2 = 0;
         }
 
         public void ResetTank()
@@ -726,6 +743,7 @@ namespace RateController
         public void Save()
         {
             mf.Tls.SaveProperty("Coverage" + IDname, Coverage.ToString());
+            mf.Tls.SaveProperty("Coverage2" + IDname, Coverage2.ToString());
             mf.Tls.SaveProperty("CoverageUnits" + IDname, CoverageUnits.ToString());
 
             mf.Tls.SaveProperty("TankStart" + IDname, cTankStart.ToString());
@@ -953,6 +971,13 @@ namespace RateController
             return Result;
         }
 
+        public double UnitsApplied2()
+        {
+            double Result = cUnitsApplied2;
+            if (cEnableProdDensity && cProdDensity > 0) Result *= cProdDensity;
+            return Result;
+        }
+
         public void Update()
         {
             DateTime UpdateStartTime;
@@ -980,21 +1005,25 @@ namespace RateController
                         case 0:
                             // acres
                             Coverage += CurrentWorkedArea_Hc * 2.47105;
+                            Coverage2 += CurrentWorkedArea_Hc * 2.47105;
                             break;
 
                         case 1:
                             // hectares
                             Coverage += CurrentWorkedArea_Hc;
+                            Coverage2 += CurrentWorkedArea_Hc;
                             break;
 
                         case 2:
                             // minutes
                             Coverage += CurrentMinutes;
+                            Coverage2 += CurrentMinutes;
                             break;
 
                         default:
                             // hours
                             Coverage += CurrentMinutes / 60;
+                            Coverage2 += CurrentMinutes / 60;
                             break;
                     }
                 }
@@ -1094,17 +1123,20 @@ namespace RateController
 
         private void UpdateUnitsApplied()
         {
-            double AccumulatedUnits;
+            double AccumulatedUnits = ArduinoModule.AccumulatedQuantity();
 
             if (!EraseAccumulatedUnits)
             {
-                AccumulatedUnits = ArduinoModule.AccumulatedQuantity();
                 if ((AccumulatedUnits + UnitsOffset) < cUnitsApplied)
                 {
                     // account for arduino losing accumulated quantity, ex: power loss
                     UnitsOffset = cUnitsApplied - AccumulatedUnits;
                 }
                 cUnitsApplied = AccumulatedUnits + UnitsOffset;
+
+                if (cUnitsApplied < LastAccQuantity) LastAccQuantity = cUnitsApplied;
+                cUnitsApplied2 += cUnitsApplied - LastAccQuantity;
+                LastAccQuantity = cUnitsApplied;
             }
         }
     }

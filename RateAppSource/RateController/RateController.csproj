@@ -525,6 +525,7 @@
     <None Include="Images\SectionsNoZones.png" />
     <None Include="Images\SectionsWithZones.png" />
     <None Include="Images\SectionsNoZones2.png" />
+    <None Include="Images\refresh.png" />
     <Content Include="Images\SettingsGear64.png" />
     <None Include="Images\WindowDayMode.png" />
     <None Include="Images\WindowNightMode.png" />
