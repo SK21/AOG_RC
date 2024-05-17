@@ -26,7 +26,7 @@ void SetPWM()
 		{
 			switch (Sensor[i].ControlType)
 			{
-			case 1:
+			case 5:
 				// combo close timed adjustment
 				Sensor[i].PWM = TimedCombo(i, false);
 				break;
@@ -226,7 +226,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 			{
 				if (ManualAdjust)
 				{
-					Result = Sensor[ID].ManualAdjust;
+					Result = Sensor[ID].MinPWM;
 					double Direction = 1.0;
 					if (Result < 0) Direction = -1.0;
 					if (abs(Result) > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * Direction;

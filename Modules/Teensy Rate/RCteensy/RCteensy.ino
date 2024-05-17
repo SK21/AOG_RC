@@ -134,8 +134,8 @@ bool WrkLast;
 bool WrkCurrent;
 
 int TimedCombo(byte, bool);	// function prototype
-byte AdjustTime = 15;
-byte PauseTime = 250;
+byte AdjustTime = 20;
+byte PauseTime = 200;
 
 void setup()
 {
