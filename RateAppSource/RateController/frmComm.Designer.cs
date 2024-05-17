@@ -29,6 +29,7 @@ namespace RateController
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmComm));
             this.bntOK = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -53,6 +54,7 @@ namespace RateController
             this.lbPort = new System.Windows.Forms.Label();
             this.PortIndicator1 = new System.Windows.Forms.Label();
             this.btnRescan = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -366,6 +368,12 @@ namespace RateController
             this.btnRescan.UseVisualStyleBackColor = false;
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 5000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // frmComm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -417,5 +425,6 @@ namespace RateController
         private System.Windows.Forms.Label lbPort;
         private System.Windows.Forms.Label PortIndicator1;
         private System.Windows.Forms.Button btnRescan;
+        private System.Windows.Forms.Timer timer1;
     }
 }

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -34,11 +35,11 @@ namespace RateController
         #endregion Form Dragging API Support
 
         private string cAppName = "RateController";
-        private string cAppVersion = "3.7.11";
+        private string cAppVersion = "3.7.12";
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "01-May-2024";
+        private string cVersionDate = "16-May-2024";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
@@ -469,7 +470,8 @@ namespace RateController
         }
 
         public void ShowHelp(string Message, string Title = "Help",
-            int timeInMsec = 30000, bool LogError = false, bool Modal = false)
+            int timeInMsec = 30000, bool LogError = false, bool Modal = false
+            ,bool PlayErrorSound=false)
         {
             var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
             if (Modal)
@@ -482,6 +484,7 @@ namespace RateController
             }
 
             if (LogError) WriteErrorLog(Message);
+            if(PlayErrorSound) SystemSounds.Exclamation.Play();
         }
 
         public void StartWifi()

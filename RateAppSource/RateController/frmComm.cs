@@ -106,7 +106,8 @@ namespace RateController
 
         private void frmComm_FormClosed(object sender, FormClosedEventArgs e)
         {
-                mf.Tls.SaveFormData(this);
+            mf.Tls.SaveFormData(this);
+            timer1.Enabled = false;
         }
 
         private void frmComm_Load(object sender, EventArgs e)
@@ -114,6 +115,12 @@ namespace RateController
             mf.Tls.LoadFormData(this);
             UpdateForm();
             LoadRCbox();
+        }
+
+        private void groupBox3_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void LoadRCbox()
@@ -193,6 +200,13 @@ namespace RateController
             }
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            SetPortButtons1();
+            SetPortButtons2();
+            SetPortButtons3();
+        }
+
         private void UpdateForm()
         {
             PortIndicator1.BackColor = Properties.Settings.Default.DayColour;
@@ -205,12 +219,6 @@ namespace RateController
             {
                 c.ForeColor = Color.Black;
             }
-        }
-
-        private void groupBox3_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
     }
 }

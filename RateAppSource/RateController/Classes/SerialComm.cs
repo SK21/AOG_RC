@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO.Ports;
 
 namespace RateController
@@ -12,10 +13,14 @@ namespace RateController
         private int cPortNumber;
         private int cRCportBaud = 38400;
         private string cRCportName;
+        private bool cReadTimeOut = false;
+        private bool cWriteTimeOut = false;
         private byte HiByte;
         private byte LoByte;
+        private int ReadErrorCount;
         private DateTime SBtime;
-        private bool SerialActive = false;
+        private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
+        private int WriteErrorCount;
 
         public SerialComm(FormStart CallingForm, int PortNumber)
         {
@@ -25,13 +30,20 @@ namespace RateController
             ID = "_" + PortNumber.ToString() + "_";
             ArduinoPort.ReadTimeout = 1500;
             ArduinoPort.WriteTimeout = 500;
+            Timer1.Interval = 1000;
+            Timer1.Tick += new EventHandler(CheckConnection);
         }
 
         // new data event
         public delegate void NewDataDelegate(string Sentence);
 
         public SerialPort ArduinoPort { get => cArduinoPort; set => cArduinoPort = value; }
+
+        public bool IsOpen
+        { get { return ArduinoPort.IsOpen; } }
+
         public int RCportBaud { get => cRCportBaud; set => cRCportBaud = value; }
+
         public string RCportName { get => cRCportName; set => cRCportName = value; }
 
         public bool SwitchBoxConnected
@@ -56,6 +68,7 @@ namespace RateController
                     mf.Tls.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "false");
 
                     ArduinoPort.Dispose();
+                    Timer1.Stop();
                 }
             }
             catch (Exception ex)
@@ -99,6 +112,9 @@ namespace RateController
                     {
                         ArduinoPort.DiscardOutBuffer();
                         ArduinoPort.DiscardInBuffer();
+                        ReadErrorCount = 0;
+                        WriteErrorCount = 0;
+                        Timer1.Start();
 
                         mf.Tls.SaveProperty("RCportName" + ID + cPortNumber.ToString(), RCportName);
                         mf.Tls.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "true");
@@ -121,15 +137,17 @@ namespace RateController
         public void SendData(byte[] Data)
         {
             // send to arduino rate controller
-            if (ArduinoPort.IsOpen && SerialActive)
+            if (ArduinoPort.IsOpen)
             {
                 try
                 {
                     ArduinoPort.Write(Data, 0, Data.Length);
+                    cWriteTimeOut = false;
                 }
                 catch (Exception ex)
                 {
-                    mf.Tls.WriteErrorLog("SerialComm/SendData: " + ex.Message);
+                    if (ex is TimeoutException) cWriteTimeOut = true;
+                    mf.Tls.WriteErrorLog("SerialComm/SendData (" + RCportName + "): " + ex.Message);
                 }
             }
         }
@@ -144,6 +162,35 @@ namespace RateController
             cLog = cLog.Replace("\0", string.Empty);
         }
 
+        private void CheckConnection(object myObject, EventArgs myEventArgs)
+        {
+            if (cReadTimeOut)
+            {
+                if (++ReadErrorCount > 10)
+                {
+                    mf.Tls.ShowHelp("Serial Port " + RCportName + " not receiving correctly. It will be closed.", "Serial Port", 5000, true,false,true);
+                    CloseRCport();
+                }
+            }
+            else
+            {
+                ReadErrorCount = 0;
+            }
+
+            if (cWriteTimeOut)
+            {
+                if (++WriteErrorCount > 2)
+                {
+                    mf.Tls.ShowHelp("Serial Port " + RCportName + " not sending correctly. It will be closed.", "Serial Port", 5000, true,false, true);
+                    CloseRCport();
+                }
+            }
+            else
+            {
+                WriteErrorCount = 0;
+            }
+        }
+
         private void RCport_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             if (ArduinoPort.IsOpen)
@@ -153,10 +200,12 @@ namespace RateController
                     string sentence = ArduinoPort.ReadLine();
                     mf.BeginInvoke(new NewDataDelegate(ReceiveData), sentence);
                     if (ArduinoPort.BytesToRead > 150) ArduinoPort.DiscardInBuffer();
+                    cReadTimeOut = false;
                 }
                 catch (Exception ex)
                 {
-                    mf.Tls.WriteErrorLog("SerialComm/RCport_DataReceived: " + ex.Message);
+                    if (ex is TimeoutException) cReadTimeOut = true;
+                    mf.Tls.WriteErrorLog("SerialComm/RCport_DataReceived (" + RCportName + "): " + ex.Message);
                 }
             }
         }
@@ -187,18 +236,17 @@ namespace RateController
                                     case 32400:
                                         foreach (clsProduct Prod in mf.Products.Items)
                                         {
-                                            if (Prod.SerialFromAruduino(words)) SerialActive = true;
+                                            Prod.SerialFromAruduino(words);
                                         }
                                         break;
 
                                     case 32401:
-                                        if (mf.AnalogData.ParseStringData(words)) SerialActive = true;
+                                        mf.AnalogData.ParseStringData(words);
                                         break;
 
                                     case 32618:
                                         if (mf.SwitchBox.ParseStringData(words))
                                         {
-                                            SerialActive = true;
                                             SBtime = DateTime.Now;
                                             if (mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
                                         }

@@ -27,6 +27,7 @@ namespace RateController
         public readonly int MaxSensors = 8;
         public readonly int MaxSwitches = 16;
         public PGN32401 AnalogData;
+        public PGN229 AOGsections;
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
@@ -63,15 +64,18 @@ namespace RateController
         public string WiFiIP;
         public clsZones Zones;
         private int cDefaultProduct = 0;
+        private bool cMasterOverride;
         private byte cPressureToShowID;
         private int cPrimeDelay = 0;
         private double cPrimeTime = 0;
+        private bool cResumeAfterPrime;
         private bool cShowPressure;
         private bool cShowSwitches = false;
         private SimType cSimMode = SimType.None;
         private double cSimSpeed = 0;
         private int CurrentPage;
         private int CurrentPageLast;
+        private bool cUseDualAuto;
         private bool cUseLargeScreen = false;
         private bool cUseTransparent = false;
         private Label[] Indicators;
@@ -83,10 +87,6 @@ namespace RateController
         private PGN32501[] RelaySettings;
         private DateTime StartTime;
         private Label[] Targets;
-        public PGN229 AOGsections;
-        private bool cUseDualAuto;
-        private bool cResumeAfterPrime;
-        private bool cMasterOverride;
 
         public FormStart()
         {
@@ -182,16 +182,17 @@ namespace RateController
                 }
             }
         }
-        public bool ResumeAfterPrime
+
+        public bool MasterOverride
         {
-            get { return cResumeAfterPrime; }
+            get { return cMasterOverride; }
             set
             {
-                cResumeAfterPrime=value;
-                Tls.SaveProperty("ResumeAfterPrime", cResumeAfterPrime.ToString());
+                cMasterOverride = value;
+                Tls.SaveProperty("MasterOverride", cMasterOverride.ToString());
             }
         }
-        public bool UseDualAuto { get { return cUseDualAuto; } set { cUseDualAuto = value; } }
+
         public byte PressureToShow
         {
             get { return cPressureToShowID; }
@@ -219,6 +220,16 @@ namespace RateController
             set
             {
                 if (value >= 0 && value < 30) { cPrimeTime = value; }
+            }
+        }
+
+        public bool ResumeAfterPrime
+        {
+            get { return cResumeAfterPrime; }
+            set
+            {
+                cResumeAfterPrime = value;
+                Tls.SaveProperty("ResumeAfterPrime", cResumeAfterPrime.ToString());
             }
         }
 
@@ -262,10 +273,13 @@ namespace RateController
             }
         }
 
+        public bool UseDualAuto
+        { get { return cUseDualAuto; } set { cUseDualAuto = value; } }
+
         public bool UseInches
         {
             get { return cUseInches; }
-            set 
+            set
             {
                 cUseInches = value;
                 Tls.SaveProperty("UseInches", cUseInches.ToString());
@@ -279,16 +293,6 @@ namespace RateController
             {
                 cUseLargeScreen = value;
                 Tls.SaveProperty("UseLargeScreen", cUseLargeScreen.ToString());
-            }
-        }
-
-        public bool MasterOverride
-        {
-            get { return cMasterOverride; }
-            set
-            {
-                cMasterOverride = value;
-                Tls.SaveProperty("MasterOverride",cMasterOverride.ToString());  
             }
         }
 
@@ -513,7 +517,7 @@ namespace RateController
             {
                 this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
-                if (cSimMode == SimType.Speed|| SectionControl.PrimeOn)
+                if (cSimMode == SimType.Speed || SectionControl.PrimeOn)
                 {
                     btnSettings.Image = Properties.Resources.SimGear;
                 }
@@ -538,8 +542,8 @@ namespace RateController
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
 
-                            ProdName[i].BackColor = SimColor;
-                            ProdName[i].BorderStyle = BorderStyle.FixedSingle;
+                        ProdName[i].BackColor = SimColor;
+                        ProdName[i].BorderStyle = BorderStyle.FixedSingle;
 
                         Rates[i].Text = Products.Item(i).SmoothRate().ToString("N1");
                         if (i < 4)
@@ -855,7 +859,7 @@ namespace RateController
                 Tls.SaveProperty("PrimeTime", cPrimeTime.ToString());
                 Tls.SaveProperty("PrimeDelay", cPrimeDelay.ToString());
                 Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
-                Tls.SaveProperty("SimMode",cSimMode.ToString());
+                Tls.SaveProperty("SimMode", cSimMode.ToString());
                 Tls.SaveProperty("UseDualAuto", cUseDualAuto.ToString());
 
                 UDPaog.Close();
@@ -866,6 +870,11 @@ namespace RateController
                 Tls.WriteActivityLog("Stopped");
                 string mes = "Run time (hours): " + ((DateTime.Now - StartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
+
+                for(int i=0;i<3;i++)
+                {
+                    SER[i].CloseRCport();
+                }
             }
             catch (Exception)
             {
