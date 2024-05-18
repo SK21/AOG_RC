@@ -672,10 +672,10 @@ namespace RateController
             if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
             CurrentProduct.PIDscale = cbShift.SelectedIndex;
 
-            SetData();
+            SaveData();
         }
 
-        private void SetData()
+        private void SaveData()
         {
             if(ckArea1.Checked)
             {
@@ -699,6 +699,18 @@ namespace RateController
             {
                 CurrentProduct.ResetApplied2();
                 ckQuantity2.Checked = false;
+            }
+
+            if(ckHours1.Checked)
+            {
+                CurrentProduct.ResetHours1();
+                ckHours1.Checked = false;
+            }
+
+            if(ckHours2.Checked)
+            {
+                CurrentProduct.ResetHours2();
+                ckHours2.Checked = false;
             }
         }
 
@@ -1077,6 +1089,18 @@ namespace RateController
             UpdateDiags();
             SetModuleIndicator();
             SetFanStarted();
+            UpdateData();
+        }
+
+        private void UpdateData()
+        {
+            lbArea1.Text = CurrentProduct.CurrentCoverage().ToString("N1");
+            lbArea2.Text = CurrentProduct.CurrentCoverage2().ToString("N1");
+            lbQuantity1.Text = CurrentProduct.UnitsApplied().ToString("N1");
+            lbQuantity2.Text = CurrentProduct.UnitsApplied2().ToString("N1");
+
+            lbHours1value.Text = CurrentProduct.Hours1.ToString("N1");
+            lbHours2value.Text = CurrentProduct.Hours2.ToString("N1");
         }
 
         private void UpdateDiags()
@@ -1272,15 +1296,18 @@ namespace RateController
             tbMaxRate.Enabled = CurrentProduct.UseVR;
             lbMinRate.Enabled = CurrentProduct.UseVR;
             tbMinRate.Enabled = CurrentProduct.UseVR;
-            lbArea1.Text = CurrentProduct.CurrentCoverage().ToString("N1");
-            lbArea2.Text = CurrentProduct.CurrentCoverage2().ToString("N1");
-            lbQuantity1.Text = CurrentProduct.UnitsApplied().ToString("N1");
-            lbQuantity2.Text = CurrentProduct.UnitsApplied2().ToString("N1");
 
             ckArea1.Checked = false;
             ckArea2.Checked = false;
             ckQuantity1.Checked = false;
             ckQuantity2.Checked = false;
+            ckHours1.Checked = false;
+            ckHours2.Checked = false;
+
+            lbAcres1.Text = "*"+CurrentProduct.CoverageDescription() + " 1";
+            lbAcres2.Text = CurrentProduct.CoverageDescription() + " 2";
+            lbGallons1.Text = "*"+CurrentProduct.QuantityDescription + " 1";
+            lbGallons2.Text = CurrentProduct.QuantityDescription + " 2";
         }
 
         void UpdateOnTypeChange()

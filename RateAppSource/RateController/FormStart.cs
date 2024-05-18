@@ -85,7 +85,7 @@ namespace RateController
         private Label[] Rates;
         private int[] RateType = new int[6];
         private PGN32501[] RelaySettings;
-        private DateTime StartTime;
+        private DateTime cStartTime;
         private Label[] Targets;
 
         public FormStart()
@@ -167,6 +167,7 @@ namespace RateController
             AOGsections = new PGN229(this);
             SectionControl = new clsSectionControl(this);
         }
+        public DateTime StartTime { get { return cStartTime; } }
 
         public event EventHandler ProductChanged;
 
@@ -868,7 +869,7 @@ namespace RateController
                 timerMain.Enabled = false;
                 timerPIDs.Enabled = false;
                 Tls.WriteActivityLog("Stopped");
-                string mes = "Run time (hours): " + ((DateTime.Now - StartTime).TotalSeconds / 3600.0).ToString("N1");
+                string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
 
                 for(int i=0;i<3;i++)
@@ -955,7 +956,7 @@ namespace RateController
             }
             SetLanguage();
             Tls.WriteActivityLog("Started", true);
-            StartTime = DateTime.Now;
+            cStartTime = DateTime.Now;
         }
 
         private void groupBox3_Paint(object sender, PaintEventArgs e)
@@ -1310,5 +1311,6 @@ namespace RateController
         {
             Products.UpdatePID();
         }
+
     }
 }

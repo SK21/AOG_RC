@@ -25,6 +25,8 @@ namespace RateController
         private bool cEraseAccumulatedUnits = false;
         private bool cFanOn;
         private double cHectaresPerMinute;
+        private double cHours1;
+        private double cHours2;
         private bool cLogRate;
         private int cManualPWM;
         private double cMeterCal = 0;
@@ -189,6 +191,12 @@ namespace RateController
                 cFanOn = value;
             }
         }
+
+        public double Hours1
+        { get { return cHours1; } }
+
+        public double Hours2
+        { get { return cHours2; } }
 
         public int ID
         { get { return cProductID; } }
@@ -520,7 +528,7 @@ namespace RateController
         {
             return Coverage;
         }
-        
+
         public double CurrentCoverage2()
         {
             return Coverage2;
@@ -655,6 +663,9 @@ namespace RateController
             {
                 cShiftRange = sr;
             }
+
+            if (double.TryParse(mf.Tls.LoadProperty("Hours1" + IDname), out double h1)) cHours1 = h1;
+            if (double.TryParse(mf.Tls.LoadProperty("Hours2" + IDname), out double h2)) cHours2 = h2;
         }
 
         public double Pulses()
@@ -713,6 +724,15 @@ namespace RateController
             return Result;
         }
 
+        public void RecordHours()
+        {
+            if (ProductOn() && TargetRate() > 0)
+            {
+                cHours1 += (DateTime.Now - mf.StartTime).TotalHours;
+                cHours2 += (DateTime.Now - mf.StartTime).TotalHours;
+            }
+        }
+
         public void ResetApplied()
         {
             cUnitsApplied = 0;
@@ -730,9 +750,20 @@ namespace RateController
             Coverage = 0;
             LastUpdateTime = DateTime.Now;
         }
+
         public void ResetCoverage2()
         {
             Coverage2 = 0;
+        }
+
+        public void ResetHours1()
+        {
+            cHours1 = 0;
+        }
+
+        public void ResetHours2()
+        {
+            cHours2 = 0;
         }
 
         public void ResetTank()
@@ -791,6 +822,8 @@ namespace RateController
             mf.Tls.SaveProperty("ConstantUPM" + IDname, cConstantUPM.ToString());
 
             mf.Tls.SaveProperty("ShiftRange" + IDname, cShiftRange.ToString());
+            mf.Tls.SaveProperty("Hours1" + IDname, cHours1.ToString());
+            mf.Tls.SaveProperty("Hours2" + IDname, cHours2.ToString());
         }
 
         public void SendPID()

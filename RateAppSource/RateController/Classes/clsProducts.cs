@@ -160,6 +160,7 @@ namespace RateController
             {
                 for (int i = 0; i < mf.MaxProducts; i++)
                 {
+                    cProducts[i].RecordHours();
                     cProducts[i].Save();
                 }
                 LastSave = DateTime.Now;
