@@ -63,6 +63,8 @@ namespace RateController
         private PGN32502 ModulePIDdata;
         private bool PauseWork = false;
         private double UnitsOffset = 0;
+        private DateTime LastHours1;
+        private DateTime LastHours2;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -81,6 +83,9 @@ namespace RateController
                 cControlType = ControlTypeEnum.Fan;
                 ProductName = "fan";
             }
+
+            LastHours1 = DateTime.Now;
+            LastHours2 = DateTime.Now;
         }
 
         public bool BumpButtons
@@ -728,11 +733,12 @@ namespace RateController
         {
             if (ProductOn() && TargetRate() > 0)
             {
-                cHours1 += (DateTime.Now - mf.StartTime).TotalHours;
-                cHours2 += (DateTime.Now - mf.StartTime).TotalHours;
+                cHours1 += (DateTime.Now - LastHours1).TotalHours;
+                cHours2 += (DateTime.Now - LastHours2).TotalHours;
             }
+            LastHours1 = DateTime.Now;
+            LastHours2 = DateTime.Now;
         }
-
         public void ResetApplied()
         {
             cUnitsApplied = 0;

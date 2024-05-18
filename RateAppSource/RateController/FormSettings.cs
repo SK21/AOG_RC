@@ -1099,8 +1099,8 @@ namespace RateController
             lbQuantity1.Text = CurrentProduct.UnitsApplied().ToString("N1");
             lbQuantity2.Text = CurrentProduct.UnitsApplied2().ToString("N1");
 
-            lbHours1value.Text = CurrentProduct.Hours1.ToString("N1");
-            lbHours2value.Text = CurrentProduct.Hours2.ToString("N1");
+            lbHours1value.Text = CurrentProduct.Hours1.ToString("N2");
+            lbHours2value.Text = CurrentProduct.Hours2.ToString("N2");
         }
 
         private void UpdateDiags()
