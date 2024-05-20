@@ -111,6 +111,8 @@
     <Compile Include="Classes\clsSection.cs" />
     <Compile Include="Classes\clsSectionControl.cs" />
     <Compile Include="Classes\clsSections.cs" />
+    <Compile Include="Classes\clsSwitch.cs" />
+    <Compile Include="Classes\clsSwitches.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsProduct.cs" />
     <Compile Include="Classes\clsVirtualSwitchBox.cs" />

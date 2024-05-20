@@ -87,6 +87,7 @@ namespace RateController
         private PGN32501[] RelaySettings;
         private DateTime cStartTime;
         private Label[] Targets;
+        public clsSwitches OSswitches; 
 
         public FormStart()
         {
@@ -166,6 +167,7 @@ namespace RateController
             NetworkConfig = new PGN32702(this);
             AOGsections = new PGN229(this);
             SectionControl = new clsSectionControl(this);
+            OSswitches = new clsSwitches(this);
         }
         public DateTime StartTime { get { return cStartTime; } }
 
@@ -443,6 +445,7 @@ namespace RateController
 
             LoadDefaultProduct();
             Zones.Load();
+            OSswitches.Load();
         }
 
         public bool ModuleConnected(int ModuleID)

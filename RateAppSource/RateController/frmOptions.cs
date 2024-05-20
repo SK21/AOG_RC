@@ -2,6 +2,7 @@
 using RateController.Properties;
 using System;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -51,7 +52,7 @@ namespace RateController
                 LanguageRBs[i].CheckedChanged += Language_CheckedChanged;
             }
 
-            Tabs = new TabPage[] { tabPage1, tabPage2, tabPage3, tabPage4 };
+            Tabs = new TabPage[] { tabPage1, tabPage2, tabPage3, tabPage4 ,tabPage5};
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -113,6 +114,9 @@ namespace RateController
         private void frmOptions_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
+
+            DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
+            DGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             SetDayMode();
             UpdateForm();
@@ -423,6 +427,28 @@ namespace RateController
             }
 
             Initializing = false;
+        }
+
+        private void LoadData(bool UpdateObject=false)
+        {
+            try
+            {
+                if (UpdateObject) mf.OSswitches.Load();
+                dataSet1.Clear();
+                foreach(clsSwitch SW in mf.OSswitches.Items)
+                {
+                    DataRow Rw = dataSet1.Tables[0].NewRow();
+                    Rw[0] = SW.ID + 1;
+                    Rw[1] = SW.Description;
+                    Rw[2] = SW.ModuleID;
+                    Rw[3] = SW.RelayID + 1;
+                    dataSet1.Tables[0].Rows.Add(Rw);
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmOptions/LoadData: " + ex.Message);
+            }
         }
     }
 }

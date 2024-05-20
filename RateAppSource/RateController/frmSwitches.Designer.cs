@@ -42,6 +42,10 @@
             this.btnUp = new System.Windows.Forms.Button();
             this.btnAutoRate = new System.Windows.Forms.Button();
             this.btnAutoSection = new System.Windows.Forms.Button();
+            this.btn6 = new System.Windows.Forms.Button();
+            this.btn8 = new System.Windows.Forms.Button();
+            this.btn7 = new System.Windows.Forms.Button();
+            this.btn5 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnMaster
@@ -149,7 +153,7 @@
             // 
             // btnAutoRate
             // 
-            this.btnAutoRate.Location = new System.Drawing.Point(12, 120);
+            this.btnAutoRate.Location = new System.Drawing.Point(12, 184);
             this.btnAutoRate.Name = "btnAutoRate";
             this.btnAutoRate.Size = new System.Drawing.Size(142, 46);
             this.btnAutoRate.TabIndex = 168;
@@ -159,7 +163,7 @@
             // 
             // btnAutoSection
             // 
-            this.btnAutoSection.Location = new System.Drawing.Point(168, 120);
+            this.btnAutoSection.Location = new System.Drawing.Point(168, 184);
             this.btnAutoSection.Name = "btnAutoSection";
             this.btnAutoSection.Size = new System.Drawing.Size(142, 46);
             this.btnAutoSection.TabIndex = 169;
@@ -167,11 +171,51 @@
             this.btnAutoSection.UseVisualStyleBackColor = true;
             this.btnAutoSection.Click += new System.EventHandler(this.btnAutoSection_Click);
             // 
+            // btn6
+            // 
+            this.btn6.Location = new System.Drawing.Point(90, 125);
+            this.btn6.Name = "btn6";
+            this.btn6.Size = new System.Drawing.Size(64, 46);
+            this.btn6.TabIndex = 171;
+            this.btn6.Text = "6";
+            this.btn6.UseVisualStyleBackColor = true;
+            // 
+            // btn8
+            // 
+            this.btn8.Location = new System.Drawing.Point(246, 125);
+            this.btn8.Name = "btn8";
+            this.btn8.Size = new System.Drawing.Size(64, 46);
+            this.btn8.TabIndex = 173;
+            this.btn8.Text = "8";
+            this.btn8.UseVisualStyleBackColor = true;
+            // 
+            // btn7
+            // 
+            this.btn7.Location = new System.Drawing.Point(168, 125);
+            this.btn7.Name = "btn7";
+            this.btn7.Size = new System.Drawing.Size(64, 46);
+            this.btn7.TabIndex = 172;
+            this.btn7.Text = "7";
+            this.btn7.UseVisualStyleBackColor = true;
+            // 
+            // btn5
+            // 
+            this.btn5.Location = new System.Drawing.Point(12, 125);
+            this.btn5.Name = "btn5";
+            this.btn5.Size = new System.Drawing.Size(64, 46);
+            this.btn5.TabIndex = 170;
+            this.btn5.Text = "5";
+            this.btn5.UseVisualStyleBackColor = true;
+            // 
             // frmSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(323, 173);
+            this.ClientSize = new System.Drawing.Size(323, 239);
+            this.Controls.Add(this.btn6);
+            this.Controls.Add(this.btn8);
+            this.Controls.Add(this.btn7);
+            this.Controls.Add(this.btn5);
             this.Controls.Add(this.btnAutoSection);
             this.Controls.Add(this.btnAutoRate);
             this.Controls.Add(this.btnDown);
@@ -213,5 +257,9 @@
         private System.Windows.Forms.Timer tmrRelease;
         private System.Windows.Forms.Button btnAutoRate;
         private System.Windows.Forms.Button btnAutoSection;
+        private System.Windows.Forms.Button btn6;
+        private System.Windows.Forms.Button btn8;
+        private System.Windows.Forms.Button btn7;
+        private System.Windows.Forms.Button btn5;
     }
 }
