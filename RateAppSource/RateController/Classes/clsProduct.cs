@@ -214,7 +214,8 @@ namespace RateController
             get { return cManualPWM; }
             set
             {
-                if (cControlType == ControlTypeEnum.Valve || cControlType == ControlTypeEnum.ComboClose)
+                if (cControlType == ControlTypeEnum.Valve || cControlType == ControlTypeEnum.ComboClose
+                    ||ControlType==ControlTypeEnum.ComboCloseTimed)
                 {
                     if (value < -255) cManualPWM = -255;
                     else if (value > 255) cManualPWM = 255;

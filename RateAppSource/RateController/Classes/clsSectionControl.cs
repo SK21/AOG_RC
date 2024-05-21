@@ -139,7 +139,8 @@ namespace RateController
                         if (ID < 0) ID = 0;
                         clsProduct Prd = mf.Products.Item(ID);
 
-                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate) && (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose))
+                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate) &&
+                            (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose||Prd.ControlType==ControlTypeEnum.ComboCloseTimed))
                         {
                             Prd.ManualPWM = 0;
                         }
