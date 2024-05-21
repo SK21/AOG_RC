@@ -28,7 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmOptions));
             this.ckMetric = new System.Windows.Forms.CheckBox();
             this.lbDelaySeconds = new System.Windows.Forms.Label();
@@ -65,27 +69,28 @@
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
+            this.DGV = new System.Windows.Forms.DataGridView();
+            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.moduleDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Relay = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataSet1 = new System.Data.DataSet();
             this.dataTable1 = new System.Data.DataTable();
             this.dataRelay = new System.Data.DataColumn();
             this.dataType = new System.Data.DataColumn();
             this.dataSection = new System.Data.DataColumn();
-            this.DGV = new System.Windows.Forms.DataGridView();
             this.dataColumn1 = new System.Data.DataColumn();
-            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.moduleDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Relay = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
+            this.btnReset = new System.Windows.Forms.Button();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             this.SuspendLayout();
             // 
             // ckMetric
@@ -94,7 +99,7 @@
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMetric.Location = new System.Drawing.Point(29, 27);
+            this.ckMetric.Location = new System.Drawing.Point(32, 47);
             this.ckMetric.Name = "ckMetric";
             this.ckMetric.Size = new System.Drawing.Size(164, 34);
             this.ckMetric.TabIndex = 119;
@@ -106,7 +111,7 @@
             // lbDelaySeconds
             // 
             this.lbDelaySeconds.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbDelaySeconds.Location = new System.Drawing.Point(293, 95);
+            this.lbDelaySeconds.Location = new System.Drawing.Point(295, 130);
             this.lbDelaySeconds.Name = "lbDelaySeconds";
             this.lbDelaySeconds.Size = new System.Drawing.Size(89, 24);
             this.lbDelaySeconds.TabIndex = 334;
@@ -116,7 +121,7 @@
             // tbDelay
             // 
             this.tbDelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDelay.Location = new System.Drawing.Point(222, 92);
+            this.tbDelay.Location = new System.Drawing.Point(224, 127);
             this.tbDelay.MaxLength = 8;
             this.tbDelay.Name = "tbDelay";
             this.tbDelay.Size = new System.Drawing.Size(65, 30);
@@ -131,7 +136,7 @@
             // 
             this.lbDelay.AutoSize = true;
             this.lbDelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDelay.Location = new System.Drawing.Point(57, 96);
+            this.lbDelay.Location = new System.Drawing.Point(59, 131);
             this.lbDelay.Name = "lbDelay";
             this.lbDelay.Size = new System.Drawing.Size(117, 23);
             this.lbDelay.TabIndex = 332;
@@ -140,7 +145,7 @@
             // lbOnSeconds
             // 
             this.lbOnSeconds.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbOnSeconds.Location = new System.Drawing.Point(293, 17);
+            this.lbOnSeconds.Location = new System.Drawing.Point(295, 52);
             this.lbOnSeconds.Name = "lbOnSeconds";
             this.lbOnSeconds.Size = new System.Drawing.Size(89, 24);
             this.lbOnSeconds.TabIndex = 331;
@@ -150,7 +155,7 @@
             // tbTime
             // 
             this.tbTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTime.Location = new System.Drawing.Point(222, 14);
+            this.tbTime.Location = new System.Drawing.Point(224, 49);
             this.tbTime.MaxLength = 8;
             this.tbTime.Name = "tbTime";
             this.tbTime.Size = new System.Drawing.Size(65, 30);
@@ -165,7 +170,7 @@
             // 
             this.lbOnTime.AutoSize = true;
             this.lbOnTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOnTime.Location = new System.Drawing.Point(57, 18);
+            this.lbOnTime.Location = new System.Drawing.Point(59, 53);
             this.lbOnTime.Name = "lbOnTime";
             this.lbOnTime.Size = new System.Drawing.Size(81, 23);
             this.lbOnTime.TabIndex = 329;
@@ -174,7 +179,7 @@
             // lbSpeed
             // 
             this.lbSpeed.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSpeed.Location = new System.Drawing.Point(293, 56);
+            this.lbSpeed.Location = new System.Drawing.Point(295, 91);
             this.lbSpeed.Name = "lbSpeed";
             this.lbSpeed.Size = new System.Drawing.Size(57, 24);
             this.lbSpeed.TabIndex = 328;
@@ -184,7 +189,7 @@
             // tbSpeed
             // 
             this.tbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSpeed.Location = new System.Drawing.Point(222, 53);
+            this.tbSpeed.Location = new System.Drawing.Point(224, 88);
             this.tbSpeed.MaxLength = 8;
             this.tbSpeed.Name = "tbSpeed";
             this.tbSpeed.Size = new System.Drawing.Size(65, 30);
@@ -199,7 +204,7 @@
             // 
             this.lbPrimedSpeed.AutoSize = true;
             this.lbPrimedSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPrimedSpeed.Location = new System.Drawing.Point(57, 57);
+            this.lbPrimedSpeed.Location = new System.Drawing.Point(59, 92);
             this.lbPrimedSpeed.Name = "lbPrimedSpeed";
             this.lbPrimedSpeed.Size = new System.Drawing.Size(63, 23);
             this.lbPrimedSpeed.TabIndex = 326;
@@ -210,7 +215,7 @@
             this.rbFrench.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbFrench.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbFrench.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbFrench.Location = new System.Drawing.Point(225, 103);
+            this.rbFrench.Location = new System.Drawing.Point(229, 132);
             this.rbFrench.Margin = new System.Windows.Forms.Padding(2);
             this.rbFrench.Name = "rbFrench";
             this.rbFrench.Size = new System.Drawing.Size(140, 34);
@@ -225,7 +230,7 @@
             this.rbRussian.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbRussian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbRussian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbRussian.Location = new System.Drawing.Point(225, 62);
+            this.rbRussian.Location = new System.Drawing.Point(229, 91);
             this.rbRussian.Margin = new System.Windows.Forms.Padding(2);
             this.rbRussian.Name = "rbRussian";
             this.rbRussian.Size = new System.Drawing.Size(140, 34);
@@ -240,7 +245,7 @@
             this.rbPolish.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbPolish.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbPolish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbPolish.Location = new System.Drawing.Point(225, 19);
+            this.rbPolish.Location = new System.Drawing.Point(229, 48);
             this.rbPolish.Margin = new System.Windows.Forms.Padding(2);
             this.rbPolish.Name = "rbPolish";
             this.rbPolish.Size = new System.Drawing.Size(140, 34);
@@ -260,7 +265,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(299, 251);
+            this.btnCancel.Location = new System.Drawing.Point(299, 321);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
@@ -278,7 +283,7 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.OK;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(378, 251);
+            this.btnOK.Location = new System.Drawing.Point(378, 321);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(72, 72);
             this.btnOK.TabIndex = 123;
@@ -292,7 +297,7 @@
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWorkSwitch.Location = new System.Drawing.Point(29, 80);
+            this.ckWorkSwitch.Location = new System.Drawing.Point(32, 100);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
             this.ckWorkSwitch.Size = new System.Drawing.Size(164, 34);
             this.ckWorkSwitch.TabIndex = 125;
@@ -311,8 +316,9 @@
             this.tcOptions.Location = new System.Drawing.Point(12, 12);
             this.tcOptions.Name = "tcOptions";
             this.tcOptions.SelectedIndex = 0;
-            this.tcOptions.Size = new System.Drawing.Size(438, 233);
+            this.tcOptions.Size = new System.Drawing.Size(438, 303);
             this.tcOptions.TabIndex = 126;
+            this.tcOptions.SelectedIndexChanged += new System.EventHandler(this.tcOptions_SelectedIndexChanged);
             // 
             // tabPage2
             // 
@@ -323,7 +329,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(430, 196);
+            this.tabPage2.Size = new System.Drawing.Size(430, 266);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Display";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -334,7 +340,7 @@
             this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckLargeScreen.Location = new System.Drawing.Point(39, 52);
+            this.ckLargeScreen.Location = new System.Drawing.Point(40, 76);
             this.ckLargeScreen.Name = "ckLargeScreen";
             this.ckLargeScreen.Size = new System.Drawing.Size(164, 34);
             this.ckLargeScreen.TabIndex = 127;
@@ -349,7 +355,7 @@
             this.ckDualAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDualAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDualAuto.Location = new System.Drawing.Point(39, 104);
+            this.ckDualAuto.Location = new System.Drawing.Point(40, 128);
             this.ckDualAuto.Name = "ckDualAuto";
             this.ckDualAuto.Size = new System.Drawing.Size(164, 34);
             this.ckDualAuto.TabIndex = 124;
@@ -364,7 +370,7 @@
             this.ckPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckPressure.Location = new System.Drawing.Point(216, 52);
+            this.ckPressure.Location = new System.Drawing.Point(217, 76);
             this.ckPressure.Name = "ckPressure";
             this.ckPressure.Size = new System.Drawing.Size(164, 34);
             this.ckPressure.TabIndex = 123;
@@ -378,7 +384,7 @@
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTransparent.Location = new System.Drawing.Point(216, 104);
+            this.ckTransparent.Location = new System.Drawing.Point(217, 128);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(164, 34);
             this.ckTransparent.TabIndex = 119;
@@ -398,7 +404,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(430, 196);
+            this.tabPage1.Size = new System.Drawing.Size(430, 266);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Config";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -409,7 +415,7 @@
             this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNoMaster.Location = new System.Drawing.Point(220, 27);
+            this.ckNoMaster.Location = new System.Drawing.Point(223, 47);
             this.ckNoMaster.Name = "ckNoMaster";
             this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
             this.ckNoMaster.TabIndex = 331;
@@ -422,7 +428,7 @@
             // tbSimSpeed
             // 
             this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSimSpeed.Location = new System.Drawing.Point(277, 135);
+            this.tbSimSpeed.Location = new System.Drawing.Point(280, 155);
             this.tbSimSpeed.MaxLength = 8;
             this.tbSimSpeed.Name = "tbSimSpeed";
             this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
@@ -436,7 +442,7 @@
             // lbSimUnits
             // 
             this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSimUnits.Location = new System.Drawing.Point(348, 138);
+            this.lbSimUnits.Location = new System.Drawing.Point(351, 158);
             this.lbSimUnits.Name = "lbSimUnits";
             this.lbSimUnits.Size = new System.Drawing.Size(57, 24);
             this.lbSimUnits.TabIndex = 330;
@@ -449,7 +455,7 @@
             this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSimSpeed.Location = new System.Drawing.Point(29, 133);
+            this.ckSimSpeed.Location = new System.Drawing.Point(32, 153);
             this.ckSimSpeed.Name = "ckSimSpeed";
             this.ckSimSpeed.Size = new System.Drawing.Size(242, 34);
             this.ckSimSpeed.TabIndex = 126;
@@ -472,7 +478,7 @@
             this.tabPage3.Controls.Add(this.lbOnSeconds);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(430, 196);
+            this.tabPage3.Size = new System.Drawing.Size(430, 266);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Primed Start";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -483,7 +489,7 @@
             this.ckResume.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckResume.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckResume.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckResume.Location = new System.Drawing.Point(136, 144);
+            this.ckResume.Location = new System.Drawing.Point(138, 179);
             this.ckResume.Name = "ckResume";
             this.ckResume.Size = new System.Drawing.Size(164, 34);
             this.ckResume.TabIndex = 335;
@@ -503,7 +509,7 @@
             this.tabPage4.Controls.Add(this.rbDeustch);
             this.tabPage4.Location = new System.Drawing.Point(4, 33);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(430, 196);
+            this.tabPage4.Size = new System.Drawing.Size(430, 266);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Language";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -513,7 +519,7 @@
             this.rbNederlands.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbNederlands.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbNederlands.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbNederlands.Location = new System.Drawing.Point(50, 144);
+            this.rbNederlands.Location = new System.Drawing.Point(54, 173);
             this.rbNederlands.Margin = new System.Windows.Forms.Padding(2);
             this.rbNederlands.Name = "rbNederlands";
             this.rbNederlands.Size = new System.Drawing.Size(140, 34);
@@ -528,7 +534,7 @@
             this.rbHungarian.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbHungarian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbHungarian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbHungarian.Location = new System.Drawing.Point(50, 103);
+            this.rbHungarian.Location = new System.Drawing.Point(54, 132);
             this.rbHungarian.Margin = new System.Windows.Forms.Padding(2);
             this.rbHungarian.Name = "rbHungarian";
             this.rbHungarian.Size = new System.Drawing.Size(140, 34);
@@ -543,7 +549,7 @@
             this.rbEnglish.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbEnglish.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbEnglish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbEnglish.Location = new System.Drawing.Point(50, 62);
+            this.rbEnglish.Location = new System.Drawing.Point(54, 91);
             this.rbEnglish.Margin = new System.Windows.Forms.Padding(2);
             this.rbEnglish.Name = "rbEnglish";
             this.rbEnglish.Size = new System.Drawing.Size(140, 34);
@@ -559,7 +565,7 @@
             this.rbDeustch.Checked = true;
             this.rbDeustch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbDeustch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbDeustch.Location = new System.Drawing.Point(50, 19);
+            this.rbDeustch.Location = new System.Drawing.Point(54, 48);
             this.rbDeustch.Margin = new System.Windows.Forms.Padding(2);
             this.rbDeustch.Name = "rbDeustch";
             this.rbDeustch.Size = new System.Drawing.Size(140, 34);
@@ -578,25 +584,82 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 33);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(430, 196);
+            this.tabPage5.Size = new System.Drawing.Size(430, 266);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Switches";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // ckScreenSwitches
+            // DGV
             // 
-            this.ckScreenSwitches.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckScreenSwitches.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckScreenSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckScreenSwitches.Location = new System.Drawing.Point(139, 6);
-            this.ckScreenSwitches.Name = "ckScreenSwitches";
-            this.ckScreenSwitches.Size = new System.Drawing.Size(164, 34);
-            this.ckScreenSwitches.TabIndex = 123;
-            this.ckScreenSwitches.Text = "Use Switches";
-            this.ckScreenSwitches.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckScreenSwitches.UseVisualStyleBackColor = true;
-            this.ckScreenSwitches.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            this.DGV.AllowUserToAddRows = false;
+            this.DGV.AllowUserToDeleteRows = false;
+            this.DGV.AllowUserToResizeColumns = false;
+            this.DGV.AllowUserToResizeRows = false;
+            this.DGV.AutoGenerateColumns = false;
+            this.DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.iDDataGridViewTextBoxColumn,
+            this.descriptionDataGridViewTextBoxColumn,
+            this.moduleDataGridViewTextBoxColumn,
+            this.Relay});
+            this.DGV.DataMember = "Table1";
+            this.DGV.DataSource = this.dataSet1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.NullValue = "<dbnull>";
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle5;
+            this.DGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
+            this.DGV.Location = new System.Drawing.Point(11, 48);
+            this.DGV.Margin = new System.Windows.Forms.Padding(11);
+            this.DGV.Name = "DGV";
+            this.DGV.RowHeadersVisible = false;
+            this.DGV.RowTemplate.Height = 40;
+            this.DGV.Size = new System.Drawing.Size(405, 204);
+            this.DGV.TabIndex = 124;
+            this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
+            this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
+            this.DGV.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.DGV_DataError);
+            // 
+            // iDDataGridViewTextBoxColumn
+            // 
+            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.iDDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
+            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.iDDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // descriptionDataGridViewTextBoxColumn
+            // 
+            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
+            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
+            this.descriptionDataGridViewTextBoxColumn.Width = 120;
+            // 
+            // moduleDataGridViewTextBoxColumn
+            // 
+            this.moduleDataGridViewTextBoxColumn.DataPropertyName = "Module";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.moduleDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            this.moduleDataGridViewTextBoxColumn.HeaderText = "Module";
+            this.moduleDataGridViewTextBoxColumn.Name = "moduleDataGridViewTextBoxColumn";
+            // 
+            // Relay
+            // 
+            this.Relay.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Relay.DataPropertyName = "Relay";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Relay.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Relay.HeaderText = "Relay";
+            this.Relay.Name = "Relay";
             // 
             // dataSet1
             // 
@@ -629,75 +692,48 @@
             this.dataSection.Caption = "Section";
             this.dataSection.ColumnName = "Module";
             // 
-            // DGV
-            // 
-            this.DGV.AllowUserToAddRows = false;
-            this.DGV.AllowUserToDeleteRows = false;
-            this.DGV.AllowUserToResizeColumns = false;
-            this.DGV.AllowUserToResizeRows = false;
-            this.DGV.AutoGenerateColumns = false;
-            this.DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.iDDataGridViewTextBoxColumn,
-            this.descriptionDataGridViewTextBoxColumn,
-            this.moduleDataGridViewTextBoxColumn,
-            this.Relay});
-            this.DGV.DataMember = "Table1";
-            this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.NullValue = "<dbnull>";
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle1;
-            this.DGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
-            this.DGV.Location = new System.Drawing.Point(11, 48);
-            this.DGV.Margin = new System.Windows.Forms.Padding(11);
-            this.DGV.Name = "DGV";
-            this.DGV.RowHeadersVisible = false;
-            this.DGV.RowTemplate.Height = 40;
-            this.DGV.Size = new System.Drawing.Size(405, 137);
-            this.DGV.TabIndex = 124;
-            // 
             // dataColumn1
             // 
             this.dataColumn1.ColumnName = "Relay";
             // 
-            // iDDataGridViewTextBoxColumn
+            // ckScreenSwitches
             // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.iDDataGridViewTextBoxColumn.Width = 50;
+            this.ckScreenSwitches.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckScreenSwitches.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckScreenSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckScreenSwitches.Location = new System.Drawing.Point(139, 6);
+            this.ckScreenSwitches.Name = "ckScreenSwitches";
+            this.ckScreenSwitches.Size = new System.Drawing.Size(164, 34);
+            this.ckScreenSwitches.TabIndex = 123;
+            this.ckScreenSwitches.Text = "Use Switches";
+            this.ckScreenSwitches.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScreenSwitches.UseVisualStyleBackColor = true;
+            this.ckScreenSwitches.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
-            // descriptionDataGridViewTextBoxColumn
+            // btnReset
             // 
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
-            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            this.descriptionDataGridViewTextBoxColumn.Width = 120;
-            // 
-            // moduleDataGridViewTextBoxColumn
-            // 
-            this.moduleDataGridViewTextBoxColumn.DataPropertyName = "Module";
-            this.moduleDataGridViewTextBoxColumn.HeaderText = "Module";
-            this.moduleDataGridViewTextBoxColumn.Name = "moduleDataGridViewTextBoxColumn";
-            // 
-            // Relay
-            // 
-            this.Relay.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Relay.HeaderText = "Relay";
-            this.Relay.Name = "Relay";
+            this.btnReset.BackColor = System.Drawing.Color.Transparent;
+            this.btnReset.FlatAppearance.BorderSize = 0;
+            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReset.Image = global::RateController.Properties.Resources.Update;
+            this.btnReset.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnReset.Location = new System.Drawing.Point(218, 321);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(72, 72);
+            this.btnReset.TabIndex = 154;
+            this.btnReset.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Visible = false;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // frmOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(462, 329);
+            this.ClientSize = new System.Drawing.Size(462, 397);
+            this.Controls.Add(this.btnReset);
             this.Controls.Add(this.tcOptions);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -721,9 +757,9 @@
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -772,6 +808,7 @@
         private System.Data.DataColumn dataSection;
         private System.Windows.Forms.DataGridView DGV;
         private System.Data.DataColumn dataColumn1;
+        private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn moduleDataGridViewTextBoxColumn;

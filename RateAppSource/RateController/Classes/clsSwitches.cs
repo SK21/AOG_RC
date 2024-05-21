@@ -18,6 +18,7 @@ namespace RateController
             Items = cSwitches.AsReadOnly();
         }
 
+
         public IList<clsSwitch> Items { get => cItems; set => cItems = value; }
 
         public clsSwitch Item(int SwitchID)
@@ -30,7 +31,7 @@ namespace RateController
         public void Load(bool LoadFromFile = true)
         {
             cSwitches.Clear();
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 16; i++)
             {
                 clsSwitch SW = new clsSwitch(mf, i);
                 cSwitches.Add(SW);
@@ -45,7 +46,7 @@ namespace RateController
 
         public void Save()
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 16; i++)
             {
                 cSwitches[i].Save();
             }

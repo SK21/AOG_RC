@@ -12,7 +12,7 @@ namespace RateController
     {
         public FormStart mf;
         private bool FormEdited;
-        private bool Initializing;
+        private bool Initializing = true;
         private string[] LanguageIDs;
         private RadioButton[] LanguageRBs;
         private bool SimSpeedChanged = false;
@@ -52,7 +52,7 @@ namespace RateController
                 LanguageRBs[i].CheckedChanged += Language_CheckedChanged;
             }
 
-            Tabs = new TabPage[] { tabPage1, tabPage2, tabPage3, tabPage4 ,tabPage5};
+            Tabs = new TabPage[] { tabPage1, tabPage2, tabPage3, tabPage4, tabPage5 };
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -83,6 +83,13 @@ namespace RateController
             }
         }
 
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            mf.OSswitches.Reset();
+            SetButtons(true);
+            UpdateForm();
+        }
+
         private void ckDualAuto_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -106,6 +113,58 @@ namespace RateController
             SetButtons(true);
         }
 
+        private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                double Temp;
+                string val = DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue.ToString();
+                switch (e.ColumnIndex)
+                {
+                    case 2:
+                        // module
+                        double.TryParse(val, out Temp);
+                        using (var form = new FormNumeric(0, 7, Temp))
+                        {
+                            var result = form.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
+                            }
+                        }
+                        break;
+
+                    case 3:
+                        // relay
+                        double.TryParse(val, out Temp);
+                        using (var form = new FormNumeric(1, 16, Temp))
+                        {
+                            var result = form.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
+                            }
+                        }
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmOptions/CellClick " + ex.Message);
+            }
+        }
+
+        private void DGV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!Initializing) SetButtons(true);
+        }
+
+        private void DGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            mf.Tls.WriteErrorLog("frmOptions/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
+                + " Exception: " + e.Exception.ToString());
+        }
+
         private void frmOptions_FormClosed(object sender, FormClosedEventArgs e)
         {
             mf.Tls.SaveFormData(this);
@@ -127,70 +186,138 @@ namespace RateController
             SetButtons(true);
         }
 
-        private void rbLarge_CheckedChanged(object sender, EventArgs e)
+        private void LoadData(bool UpdateObject = false)
         {
-            SetButtons(true);
+            try
+            {
+                if (UpdateObject) mf.OSswitches.Load();
+                dataSet1.Clear();
+                foreach (clsSwitch SW in mf.OSswitches.Items)
+                {
+                    DataRow Rw = dataSet1.Tables[0].NewRow();
+                    Rw[0] = SW.ID + 1;
+                    Rw[1] = SW.Description;
+                    Rw[2] = SW.ModuleID;
+
+                    if (SW.RelayID == 0)
+                    {
+                        Rw[3] = "";
+                    }
+                    else
+                    {
+                        Rw[3] = SW.RelayID;
+                    }
+
+                    dataSet1.Tables[0].Rows.Add(Rw);
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmOptions/LoadData: " + ex.Message);
+            }
         }
 
-        private void rbStandard_CheckedChanged(object sender, EventArgs e)
+        private void rbLarge_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
         private void Save()
         {
-            if (SimSpeedChanged)
+            try
             {
-                if (double.TryParse(tbSimSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
-                SimSpeedChanged = false;
-            }
-            else
-            {
-                if (double.TryParse(tbSpeed.Text, out double Spd)) mf.SimSpeed = Spd;
-            }
-
-            if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
-            if (int.TryParse(tbDelay.Text, out int Delay)) mf.PrimeDelay = Delay;
-
-            mf.MasterOverride = ckNoMaster.Checked;
-            mf.UseTransparent = ckTransparent.Checked;
-            mf.UseInches = !ckMetric.Checked;
-            mf.ShowSwitches = ckScreenSwitches.Checked;
-            mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
-            mf.ShowPressure = ckPressure.Checked;
-
-            if (ckSimSpeed.Checked)
-            {
-                mf.SimMode = SimType.Speed;
-            }
-            else
-            {
-                mf.SimMode = SimType.None;
-            }
-
-            if (ckLargeScreen.Checked)
-            {
-                // use large screen
-                Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
-                if (fs == null)
+                if (SimSpeedChanged)
                 {
-                    if (!mf.UseLargeScreen) mf.StartLargeScreen();
+                    if (double.TryParse(tbSimSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
+                    SimSpeedChanged = false;
                 }
-            }
-            else
-            {
-                // use standard screen
-                Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
-                if (fs != null)
+                else
                 {
-                    mf.Lscrn.SwitchToStandard();
+                    if (double.TryParse(tbSpeed.Text, out double Spd)) mf.SimSpeed = Spd;
                 }
+
+                if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
+                if (int.TryParse(tbDelay.Text, out int Delay)) mf.PrimeDelay = Delay;
+
+                mf.MasterOverride = ckNoMaster.Checked;
+                mf.UseTransparent = ckTransparent.Checked;
+                mf.UseInches = !ckMetric.Checked;
+                mf.ShowSwitches = ckScreenSwitches.Checked;
+                mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
+                mf.ShowPressure = ckPressure.Checked;
+
+                if (ckSimSpeed.Checked)
+                {
+                    mf.SimMode = SimType.Speed;
+                }
+                else
+                {
+                    mf.SimMode = SimType.None;
+                }
+
+                if (ckLargeScreen.Checked)
+                {
+                    // use large screen
+                    Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
+                    if (fs == null)
+                    {
+                        if (!mf.UseLargeScreen) mf.StartLargeScreen();
+                    }
+                }
+                else
+                {
+                    // use standard screen
+                    Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
+                    if (fs != null)
+                    {
+                        mf.Lscrn.SwitchToStandard();
+                    }
+                }
+
+                mf.UseDualAuto = ckDualAuto.Checked;
+                mf.ResumeAfterPrime = ckResume.Checked;
+
+                SaveLanguage();
+
+                // data grid
+                for (int i = 0; i < DGV.Rows.Count; i++)
+                {
+                    for (int j = 1; j < 4; j++)
+                    {
+                        string val = DGV.Rows[i].Cells[j].EditedFormattedValue.ToString();
+                        if (val == "") val = "0";
+                        switch (j)
+                        {
+                            case 1:
+                                // description
+                                mf.OSswitches.Item(i).Description = val;
+                                break;
+
+                            case 2:
+                                // module
+                                if (byte.TryParse(val, out byte md))
+                                {
+                                    mf.OSswitches.Item(i).ModuleID = md;
+                                }
+                                break;
+
+                            case 3:
+                                // relay
+                                if (byte.TryParse(val, out byte rly))
+                                {
+                                    mf.OSswitches.Item(i).RelayID = rly;
+                                }
+                                break;
+                        }
+                    }
+                }
+                mf.OSswitches.Save();
+                if (mf.SwitchesForm != null) mf.SwitchesForm.SetDescriptions();
             }
-
-            mf.UseDualAuto = ckDualAuto.Checked;
-            mf.ResumeAfterPrime = ckResume.Checked;
-
-            SaveLanguage();
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmOptions/SaveData: " + ex.Message);
+            }
         }
 
         private void SaveLanguage()
@@ -384,7 +511,7 @@ namespace RateController
             }
         }
 
-        private void UpdateForm()
+        private void UpdateForm(bool UpdateObject = false)
         {
             Initializing = true;
 
@@ -425,30 +552,13 @@ namespace RateController
                 lbSpeed.Text = "KMH";
                 lbSimUnits.Text = "KMH";
             }
-
+            LoadData(UpdateObject);
             Initializing = false;
         }
 
-        private void LoadData(bool UpdateObject=false)
+        private void tcOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
-            {
-                if (UpdateObject) mf.OSswitches.Load();
-                dataSet1.Clear();
-                foreach(clsSwitch SW in mf.OSswitches.Items)
-                {
-                    DataRow Rw = dataSet1.Tables[0].NewRow();
-                    Rw[0] = SW.ID + 1;
-                    Rw[1] = SW.Description;
-                    Rw[2] = SW.ModuleID;
-                    Rw[3] = SW.RelayID + 1;
-                    dataSet1.Tables[0].Rows.Add(Rw);
-                }
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog("frmOptions/LoadData: " + ex.Message);
-            }
+            btnReset.Visible = (tcOptions.SelectedIndex == 4);
         }
     }
 }

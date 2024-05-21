@@ -87,7 +87,8 @@ namespace RateController
         private PGN32501[] RelaySettings;
         private DateTime cStartTime;
         private Label[] Targets;
-        public clsSwitches OSswitches; 
+        public clsSwitches OSswitches;
+        public frmSwitches SwitchesForm;
 
         public FormStart()
         {
@@ -370,8 +371,8 @@ namespace RateController
             {
                 if (fs == null)
                 {
-                    Form frm = new frmSwitches(this);
-                    frm.Show();
+                    SwitchesForm = new frmSwitches(this);
+                    SwitchesForm.Show();
                 }
                 else
                 {
@@ -1110,7 +1111,7 @@ namespace RateController
 
             if (fs == null)
             {
-                Form frm = new frmOptions(this);
+                 Form frm = new frmOptions(this);
                 frm.Show();
             }
             else
