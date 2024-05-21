@@ -3,13 +3,13 @@
 namespace RateController
 {
     public enum RelayTypes
-    { Section, Slave, Master, Power, Invert_Section,HydUp,HydDown,TramRight,TramLeft,GeoStop,None };
+    { Section, Slave, Master, Power, Invert_Section,HydUp,HydDown,TramRight,TramLeft,GeoStop,Switch,None };
 
     public class clsRelay
     {
-        private readonly int cID;
+        private readonly int cID;       // 0-15
         private readonly FormStart mf;
-        private byte cModuleID;
+        private byte cModuleID;         // 0-7
         private string cName;
         private bool cRelayOn = false;
         private int cSectionID;

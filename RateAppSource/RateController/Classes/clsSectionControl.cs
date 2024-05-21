@@ -550,6 +550,7 @@ namespace RateController
             {
                 UpdateSectionStatusNoZones();
             }
+            mf.SendRelays();    // for quicker response than waiting for TimerMain
         }
 
         private void Timer1_Tick(Object myObject, EventArgs myEventArgs)

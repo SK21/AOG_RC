@@ -28,6 +28,17 @@ namespace RateController
             this.BackColor = Properties.Settings.Default.DayColour;
         }
 
+        public void SetDescriptions()
+        {
+            btn1.Text = mf.SwitchObjects.Item(0).Description;
+            btn2.Text = mf.SwitchObjects.Item(1).Description;
+            btn3.Text = mf.SwitchObjects.Item(2).Description;
+            btn4.Text = mf.SwitchObjects.Item(3).Description;
+            btn5.Text = mf.SwitchObjects.Item(4).Description;
+            btn6.Text = mf.SwitchObjects.Item(5).Description;
+            btn7.Text = mf.SwitchObjects.Item(6).Description;
+            btn8.Text = mf.SwitchObjects.Item(7).Description;
+        }
 
         private void btAuto_Click(object sender, EventArgs e)
         {
@@ -52,6 +63,26 @@ namespace RateController
         private void btn4_Click(object sender, EventArgs e)
         {
             mf.vSwitchBox.PressSwitch(SwIDs.sw3);
+        }
+
+        private void btn5_Click(object sender, EventArgs e)
+        {
+            mf.vSwitchBox.PressSwitch(SwIDs.sw4);
+        }
+
+        private void btn6_Click(object sender, EventArgs e)
+        {
+            mf.vSwitchBox.PressSwitch(SwIDs.sw5);
+        }
+
+        private void btn7_Click(object sender, EventArgs e)
+        {
+            mf.vSwitchBox.PressSwitch(SwIDs.sw6);
+        }
+
+        private void btn8_Click(object sender, EventArgs e)
+        {
+            mf.vSwitchBox.PressSwitch(SwIDs.sw7);
         }
 
         private void btnAutoRate_Click(object sender, EventArgs e)
@@ -134,18 +165,6 @@ namespace RateController
             SetDescriptions();
 
             UpdateForm();
-        }
-
-        public void SetDescriptions()
-        {
-            btn1.Text = mf.OSswitches.Item(0).Description;
-            btn2.Text = mf.OSswitches.Item(1).Description;
-            btn3.Text = mf.OSswitches.Item(2).Description;
-            btn4.Text = mf.OSswitches.Item(3).Description;
-            btn5.Text = mf.OSswitches.Item(4).Description;
-            btn6.Text = mf.OSswitches.Item(5).Description;
-            btn7.Text = mf.OSswitches.Item(6).Description;
-            btn8.Text = mf.OSswitches.Item(7).Description;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)

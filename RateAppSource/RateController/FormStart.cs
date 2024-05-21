@@ -55,7 +55,7 @@ namespace RateController
 
         public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
-            Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgNone};
+            Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone};
 
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
@@ -87,7 +87,7 @@ namespace RateController
         private PGN32501[] RelaySettings;
         private DateTime cStartTime;
         private Label[] Targets;
-        public clsSwitches OSswitches;
+        public clsSwitches SwitchObjects;
         public frmSwitches SwitchesForm;
 
         public FormStart()
@@ -168,7 +168,7 @@ namespace RateController
             NetworkConfig = new PGN32702(this);
             AOGsections = new PGN229(this);
             SectionControl = new clsSectionControl(this);
-            OSswitches = new clsSwitches(this);
+            SwitchObjects = new clsSwitches(this);
         }
         public DateTime StartTime { get { return cStartTime; } }
 
@@ -446,7 +446,7 @@ namespace RateController
 
             LoadDefaultProduct();
             Zones.Load();
-            OSswitches.Load();
+            SwitchObjects.Load();
         }
 
         public bool ModuleConnected(int ModuleID)
@@ -1301,14 +1301,17 @@ namespace RateController
         private void timerMain_Tick(object sender, EventArgs e)
         {
             UpdateStatus();
+            SendRelays();
+            Products.Update();
+            SectionControl.ReadRateSwitches();
+        }
 
+        public void SendRelays()
+        {
             for (int i = 0; i < MaxModules; i++)
             {
                 if (ModuleConnected(i)) RelaySettings[i].Send();
             }
-
-            Products.Update();
-            SectionControl.ReadRateSwitches();
         }
 
         private void timerPIDs_Tick(object sender, EventArgs e)

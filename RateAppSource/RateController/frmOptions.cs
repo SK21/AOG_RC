@@ -85,9 +85,31 @@ namespace RateController
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            mf.OSswitches.Reset();
+            mf.SwitchObjects.Reset();
             SetButtons(true);
             UpdateForm();
+        }
+
+        private void CheckRelayDefs(byte RelayID, byte ModuleID)
+        {
+            // check if relay is defined as 'Switch' type
+            if (RelayID > 0)
+            {
+                clsRelay Rly = mf.RelayObjects.Item(RelayID - 1, ModuleID);
+                if (Rly.Type != RelayTypes.Switch)
+                {
+                    var Hlp = new frmMsgBox(mf, "Change relay type from '" + Rly.TypeDescription + "' to 'Switch'?", "Switches", true);
+                    Hlp.TopMost = true;
+                    Hlp.ShowDialog();
+                    if (Hlp.Result)
+                    {
+                        // change relay type
+                        Rly.Type = RelayTypes.Switch;
+                        Rly.Save();
+                    }
+                    Hlp.Close();
+                }
+            }
         }
 
         private void ckDualAuto_CheckedChanged(object sender, EventArgs e)
@@ -137,7 +159,7 @@ namespace RateController
                     case 3:
                         // relay
                         double.TryParse(val, out Temp);
-                        using (var form = new FormNumeric(1, 16, Temp))
+                        using (var form = new FormNumeric(0, 16, Temp))
                         {
                             var result = form.ShowDialog();
                             if (result == DialogResult.OK)
@@ -190,9 +212,9 @@ namespace RateController
         {
             try
             {
-                if (UpdateObject) mf.OSswitches.Load();
+                if (UpdateObject) mf.SwitchObjects.Load();
                 dataSet1.Clear();
-                foreach (clsSwitch SW in mf.OSswitches.Items)
+                foreach (clsSwitch SW in mf.SwitchObjects.Items)
                 {
                     DataRow Rw = dataSet1.Tables[0].NewRow();
                     Rw[0] = SW.ID + 1;
@@ -282,6 +304,7 @@ namespace RateController
                 // data grid
                 for (int i = 0; i < DGV.Rows.Count; i++)
                 {
+                    clsSwitch SW = mf.SwitchObjects.Item(i);
                     for (int j = 1; j < 4; j++)
                     {
                         string val = DGV.Rows[i].Cells[j].EditedFormattedValue.ToString();
@@ -290,14 +313,14 @@ namespace RateController
                         {
                             case 1:
                                 // description
-                                mf.OSswitches.Item(i).Description = val;
+                                SW.Description = val;
                                 break;
 
                             case 2:
                                 // module
                                 if (byte.TryParse(val, out byte md))
                                 {
-                                    mf.OSswitches.Item(i).ModuleID = md;
+                                    SW.ModuleID = md;
                                 }
                                 break;
 
@@ -305,13 +328,14 @@ namespace RateController
                                 // relay
                                 if (byte.TryParse(val, out byte rly))
                                 {
-                                    mf.OSswitches.Item(i).RelayID = rly;
+                                    SW.RelayID = rly;
                                 }
                                 break;
                         }
                     }
+                    CheckRelayDefs(SW.RelayID, SW.ModuleID);
                 }
-                mf.OSswitches.Save();
+                mf.SwitchObjects.Save();
                 if (mf.SwitchesForm != null) mf.SwitchesForm.SetDescriptions();
             }
             catch (Exception ex)
@@ -511,6 +535,11 @@ namespace RateController
             }
         }
 
+        private void tcOptions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            btnReset.Visible = (tcOptions.SelectedIndex == 4);
+        }
+
         private void UpdateForm(bool UpdateObject = false)
         {
             Initializing = true;
@@ -554,11 +583,6 @@ namespace RateController
             }
             LoadData(UpdateObject);
             Initializing = false;
-        }
-
-        private void tcOptions_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            btnReset.Visible = (tcOptions.SelectedIndex == 4);
         }
     }
 }

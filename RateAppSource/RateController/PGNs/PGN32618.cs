@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing.Text;
 
 namespace RateController
 {
@@ -37,6 +38,7 @@ namespace RateController
         private DateTime ReceiveTime;
         private bool[] SW = new bool[24];
         private bool[] cRateModuleWorkOn;
+        private bool[] SWlast = new bool[24];
 
         public PGN32618(FormStart CalledFrom)
         {
@@ -176,14 +178,33 @@ namespace RateController
                     }
                 }
 
-                SwitchPGNargs args = new SwitchPGNargs();
-                args.Switches = SW;
-                SwitchPGNreceived?.Invoke(this, args);
-
+                CheckChanged();
                 ReceiveTime = DateTime.Now;
                 Result = true;
             }
             return Result;
+        }
+        private void CheckChanged()
+        {
+            bool Changed = false;
+            for (int i = 0; i < 24; i++)
+            {
+                if (SW[i] != SWlast[i])
+                {
+                    Changed = true;
+                    break;
+                }
+            }
+            if (Changed)
+            {
+                for (int i = 0; i < 24; i++)
+                {
+                    SWlast[i] = SW[i];
+                }
+                SwitchPGNargs args = new SwitchPGNargs();
+                args.Switches = SW;
+                SwitchPGNreceived?.Invoke(this, args);
+            }
         }
 
         public bool ParseStringData(string[] Data)
