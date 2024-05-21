@@ -16,8 +16,8 @@ double LastUPM[MaxProductCount];
 
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
-const byte AdjustTime = 20;
-const byte PauseTime = 200;
+byte AdjustTime;
+byte PauseTime;
 const double MinStart = 0.03;	// minimum start ratio. Used to quickly increase rate from off.
 
 void SetPWM()
@@ -31,6 +31,8 @@ void SetPWM()
 			{
 			case 5:
 				// combo close timed adjustment
+				AdjustTime = 20;
+				PauseTime = 200;
 				Sensor[i].PWM = TimedCombo(i, false);
 				break;
 
@@ -53,11 +55,22 @@ void SetPWM()
 		// manual control
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			Sensor[i].PWM = Sensor[i].ManualAdjust;
-			double Direction = 1.0;
-			if (Sensor[i].PWM < 0) Direction = -1.0;
-			if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
-			LastPWM[i] = Sensor[i].PWM;
+			switch (Sensor[i].ControlType)
+			{
+			case 5:
+				// combo close timed adjustment
+				AdjustTime = 100;
+				PauseTime = 50;
+				Sensor[i].PWM = TimedCombo(i, true);
+				break;
+
+			default:
+				Sensor[i].PWM = Sensor[i].ManualAdjust;
+				double Direction = 1.0;
+				if (Sensor[i].PWM < 0) Direction = -1.0;
+				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
+				break;
+			}
 		}
 	}
 }
@@ -188,7 +201,7 @@ int PIDvalve(byte ID)
 int TimedCombo(byte ID, bool ManualAdjust = false)
 {
 	double Result = 0;
-	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
+	if ((Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0) || ManualAdjust)
 	{
 		if (Sensor[ID].UPM < (MinStart * Sensor[ID].TargetUPM))
 		{
