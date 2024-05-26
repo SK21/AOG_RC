@@ -28,9 +28,22 @@
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
     <ClCompile Include="SerialESPcomm.ino" />
+    <ClCompile Include="EU.ino" />
+    <ClCompile Include="FlashTxx.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FXUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCteensy.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FlashTxx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FXUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

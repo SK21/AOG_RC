@@ -74,6 +74,8 @@
     <ProjectCapability Include="VisualMicroLinux" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FlashTxx.c" />
+    <ClCompile Include="FXUtil.cpp" />
     <ClCompile Include="RCteensy.ino">
       <FileType>CppCode</FileType>
       <DeploymentContent>true</DeploymentContent>
@@ -84,6 +86,8 @@
       <FileType>CppCode</FileType>
       <DeploymentContent>true</DeploymentContent>
     </ClCompile>
+    <ClInclude Include="FlashTxx.h" />
+    <ClInclude Include="FXUtil.h" />
     <ClInclude Include="__vm\.RCteensy.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +140,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SerialESPcomm.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EU.ino">
       <FileType>CppCode</FileType>
       <DeploymentContent>true</DeploymentContent>
     </ClCompile>

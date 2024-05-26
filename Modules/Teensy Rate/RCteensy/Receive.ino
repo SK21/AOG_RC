@@ -6,6 +6,9 @@ byte SerialPGNlength;
 byte SerialReceive[40];
 bool PGNfound;
 
+uint16_t PacketLength;
+uint8_t ReceivedData[500];
+
 void ReceiveSerial()
 {
 	if (Serial.available())
@@ -87,15 +90,32 @@ void ReceiveSerial()
 
 void ReceiveUDPwired()
 {
-	byte Data[40];
 	if (Ethernet.linkStatus() == LinkON)
 	{
-		uint16_t len = UDPcomm.parsePacket();
-		if (len)
+		PacketLength = UDPcomm.parsePacket();
+		if (PacketLength > 0)
 		{
-			if (len > 40) len = 40;
-			UDPcomm.read(Data, len);
-			ReadPGNs(Data, len);
+			if (PacketLength > 500) PacketLength = 500;
+			UDPcomm.read(ReceivedData, PacketLength);
+			if (UpdateMode)
+			{
+
+				if (process_hex_record(ReceivedData, PacketLength))
+				{
+					// return error or user abort, so clean up and
+					// reboot to ensure that static vars get boot-up initialized before retry
+					Serial.println();
+					Serial.println("Update error.");
+					Serial.printf("erase FLASH buffer / free RAM buffer...\n");
+					delay(5000);
+					firmware_buffer_free(buffer_addr, buffer_size);
+					REBOOT;
+				}
+			}
+			else
+			{
+				ReadPGNs(ReceivedData, PacketLength);
+			}
 		}
 	}
 }
@@ -163,7 +183,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 						Sensor[SensorID].UseMultiPulses = ((InCommand & 32) == 32);
 
 						AutoOn = ((InCommand & 64) == 64);
-						
+
 						int16_t tmp = Data[10] | Data[11] << 8;
 						Sensor[SensorID].ManualAdjust = tmp;
 
@@ -363,7 +383,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		// PGN32702, network config
 		// 0        190
 		// 1        127
-        // 2-16     Network Name
+		// 2-16     Network Name
 		// 17-31    Newtwork password
 		// 32       CRC
 
@@ -384,8 +404,43 @@ void ReadPGNs(byte Data[], uint16_t len)
 				SaveData();
 				SendNetworkConfig();
 
-				 //restart the Teensy
+				//restart the Teensy
 				SCB_AIRCR = 0x05FA0004;
+			}
+		}
+		break;
+
+	case 32703:
+		// PGN32703, firmware update mode for Teensy 4.1
+		//0		headerLo		191
+		//1		headerHi		127
+		//2		Module ID		
+		//3		Module Type		0-4
+		//4		Command
+		//			- overwrite module type
+		//5		CRC
+		PGNlength = 6;
+		if (len > PGNlength - 1)
+		{
+			if (GoodCRC(Data, PGNlength))
+			{
+				if (ParseModID(Data[2]) == MDL.ID)
+				{
+					if ((Data[4] == 1) || (Data[3] == InoType))
+					{
+						if (firmware_buffer_init(&buffer_addr, &buffer_size))
+						{
+							Serial.printf("target = %s (%dK flash in %dK sectors)\n", FLASH_ID, FLASH_SIZE / 1024, FLASH_SECTOR_SIZE / 1024);
+							Serial.printf("buffer = %1luK %s (%08lX - %08lX)\n", buffer_size / 1024, IN_FLASH(buffer_addr) ? "FLASH" : "RAM", buffer_addr, buffer_addr + buffer_size);
+							Serial.println("waiting for hex lines...\n");
+							UpdateMode = true;
+						}
+						else
+						{
+							Serial.println("Unable to create update buffer.");
+						}
+					}
+				}
 			}
 		}
 		break;
