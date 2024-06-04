@@ -1266,7 +1266,7 @@ namespace RateController
             if (CurrentProduct.ControlType == ControlTypeEnum.Fan)
             {
                 ckDefault.Visible = false;
-                if (tcProducts.TabCount > 3)
+                if (tcProducts.TabCount > 4)
                 {
                     // remove tabs
                     Temp1 = tcProducts.TabPages[1];
@@ -1278,7 +1278,7 @@ namespace RateController
             else
             {
                 ckDefault.Visible = true;
-                if (tcProducts.TabCount < 5)
+                if (tcProducts.TabCount < 6)
                 {
                     // add back the removed tabs
                     tcProducts.TabPages.Insert(1, Temp1);

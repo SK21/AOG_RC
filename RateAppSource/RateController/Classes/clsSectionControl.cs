@@ -161,11 +161,20 @@ namespace RateController
 
             if (MasterSWOn)
             {
+                Debug.Print("");
+                Debug.Print("MasterSWOn");
                 SetPriming();
             }
             else
             {
+                //PrimeInitialized = false;
+                Debug.Print("Master On not pressed");
+            }
+
+            if(MasterSWOff)
+            {
                 PrimeInitialized = false;
+                Debug.Print("prime off 3");
             }
 
             if (cPrimeOn)
@@ -518,14 +527,17 @@ namespace RateController
 
         private void SetPriming()
         {
+            Debug.Print("SP");
             // turn sections on if master held in on position for a defined time
             if (PrimeInitialized)
             {
+                Debug.Print(((DateTime.Now - OnFirstPressed).TotalSeconds).ToString() + ", " + mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn).ToString());
                 if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
                 {
                     // priming mode
                     cPrimeOn = true;
                     PrimeTimer.Enabled = true;
+                    Debug.Print("ON");
                 }
             }
             else
@@ -536,6 +548,7 @@ namespace RateController
                     OnFirstPressed = DateTime.Now;
                     cPrimeOn = false;
                     PrimeTimer.Enabled = false;
+                    Debug.Print("Initialize");
                 }
             }
         }
@@ -563,6 +576,7 @@ namespace RateController
                 PrimeTimer.Enabled = false;
                 cPrimeOn = false;
                 PrimeInitialized = false;
+                Debug.Print("Prime off 1");
 
                 ForceOff = !mf.ResumeAfterPrime;
                 if (!mf.ResumeAfterPrime) mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
