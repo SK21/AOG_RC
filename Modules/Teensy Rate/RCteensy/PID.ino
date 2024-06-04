@@ -87,31 +87,32 @@ int PIDmotor(byte ID)
 			LastCheck[ID] = millis();
 
 			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
-			if (abs(RateError) > Sensor[ID].TargetUPM)
-			{
-				if (RateError > 0)
-				{
-					RateError = Sensor[ID].TargetUPM;
-				}
-				else
-				{
-					RateError = Sensor[ID].TargetUPM * -1;
-				}
-			}
-
-			// check brakepoint
-			if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
-			{
-				SF = 1.0;
-			}
-			else
-			{
-				SF = BrakeSet;
-			}
 
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 			{
+				if (abs(RateError) > Sensor[ID].TargetUPM)
+				{
+					if (RateError > 0)
+					{
+						RateError = Sensor[ID].TargetUPM;
+					}
+					else
+					{
+						RateError = Sensor[ID].TargetUPM * -1;
+					}
+				}
+
+				// check brakepoint
+				if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
+				{
+					SF = 1.0;
+				}
+				else
+				{
+					SF = BrakeSet;
+				}
+
 				IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
 				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
 
@@ -144,31 +145,32 @@ int PIDvalve(byte ID)
 			LastCheck[ID] = millis();
 
 			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
-			if (abs(RateError) > Sensor[ID].TargetUPM)
-			{
-				if (RateError > 0)
-				{
-					RateError = Sensor[ID].TargetUPM;
-				}
-				else
-				{
-					RateError = Sensor[ID].TargetUPM * -1;
-				}
-			}
-
-			// check brakepoint
-			if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
-			{
-				SF = 1;
-			}
-			else
-			{
-				SF = BrakeSet;
-			}
 
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 			{
+				if (abs(RateError) > Sensor[ID].TargetUPM)
+				{
+					if (RateError > 0)
+					{
+						RateError = Sensor[ID].TargetUPM;
+					}
+					else
+					{
+						RateError = Sensor[ID].TargetUPM * -1;
+					}
+				}
+
+				// check brakepoint
+				if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
+				{
+					SF = 1;
+				}
+				else
+				{
+					SF = BrakeSet;
+				}
+
 				IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
 				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
 
@@ -241,32 +243,34 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 				else
 				{
 					// auto adjust
-					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
-					if (abs(RateError) > Sensor[ID].TargetUPM)
-					{
-						if (RateError > 0)
-						{
-							RateError = Sensor[ID].TargetUPM;
-						}
-						else
-						{
-							RateError = Sensor[ID].TargetUPM * -1;
-						}
-					}
 
-					// check brakepoint
-					if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
-					{
-						SF = 1;
-					}
-					else
-					{
-						SF = BrakeSet;
-					}
+					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 					// check deadband
 					if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 					{
+						if (abs(RateError) > Sensor[ID].TargetUPM)
+						{
+							if (RateError > 0)
+							{
+								RateError = Sensor[ID].TargetUPM;
+							}
+							else
+							{
+								RateError = Sensor[ID].TargetUPM * -1;
+							}
+						}
+
+						// check brakepoint
+						if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
+						{
+							SF = 1;
+						}
+						else
+						{
+							SF = BrakeSet;
+						}
+
 						IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
 						IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
 

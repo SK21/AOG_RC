@@ -1,4 +1,131 @@
 
+uint16_t PacketLength;
+uint8_t ReceivedData[500];
+int DisplayCount = 0;
+
+void ReceiveUpdate()
+{
+	// receive firmware update
+	if (Ethernet.linkStatus() == LinkON)
+	{
+		PacketLength = UpdateComm.parsePacket();
+		if (PacketLength > 0)
+		{
+			if (PacketLength > 500) PacketLength = 500;
+			UpdateComm.read(ReceivedData, PacketLength);
+			if (UpdateMode)
+			{
+				if (process_hex_record(ReceivedData, PacketLength))
+				{
+					// return error or user abort, so clean up and
+					// reboot to ensure that static vars get boot-up initialized before retry
+					Serial.println();
+					Serial.println("Update error.");
+					Serial.printf("erase FLASH buffer / free RAM buffer...\n");
+					delay(5000);
+					firmware_buffer_free(buffer_addr, buffer_size);
+					REBOOT;
+				}
+			}
+			else
+			{
+				byte PGNlength;
+				uint16_t PGN = ReceivedData[1] << 8 | ReceivedData[0];
+				switch (PGN)
+				{
+				case 32800:
+					// PGN32800, firmware update mode for Teensy 4.1
+					//0		headerLo		32
+					//1		headerHi		128
+					//2		Module ID		
+					//3		Module Type		0-4
+					//4		Command
+					//			- overwrite module type
+					//5		CRC
+					PGNlength = 6;
+					if (PacketLength > PGNlength - 1)
+					{
+						if (GoodCRC(ReceivedData, PGNlength))
+						{
+							if (ParseModID(ReceivedData[2]) == MDL.ID)
+							{
+								if ((ReceivedData[4] == 1) || (ReceivedData[3] == InoType))
+								{
+									if (firmware_buffer_init(&buffer_addr, &buffer_size))
+									{
+										Serial.printf("target = %s (%dK flash in %dK sectors)\n", FLASH_ID, FLASH_SIZE / 1024, FLASH_SECTOR_SIZE / 1024);
+										Serial.printf("buffer = %1luK %s (%08lX - %08lX)\n", buffer_size / 1024, IN_FLASH(buffer_addr) ? "FLASH" : "RAM", buffer_addr, buffer_addr + buffer_size);
+										Serial.println("waiting for hex lines...\n");
+										UpdateMode = true;
+										SendReceiveReady();
+									}
+									else
+									{
+										Serial.println("Unable to create update buffer.");
+									}
+								}
+							}
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
+}
+
+void SendLineCheck()
+{
+	// PGN32801
+	//0		headerLo	33
+	//1		headerHi	128
+	//2		hex lines byte 0
+	//3		hex lines byte 1
+	//4		hex lines byte 2
+	//5		hex lines byte 3
+	//6		CRC
+
+	if (Ethernet.linkStatus() == LinkON)
+	{
+		byte data[7];
+		data[0] = 33;
+		data[1] = 128;
+		data[2] = hex.lines & 255;
+		data[3] = hex.lines >> 8 & 255;
+		data[4] = hex.lines >> 16 & 255;
+		data[5] = hex.lines >> 24 & 255;
+		data[6] = CRC(data, 6, 0);
+
+		UpdateComm.beginPacket(DestinationIP, UpdateSendPort);
+		UpdateComm.write(data, sizeof(data));
+		UpdateComm.endPacket();
+	}
+}
+
+void SendReceiveReady()
+{
+	// PGN32802
+	//0		headerlo	34
+	//1		headerHi	128
+	//2		Module ID
+	//3		Status
+	//4		CRC
+
+	if (Ethernet.linkStatus() == LinkON)
+	{
+		byte data[5];
+		data[0] = 34;
+		data[1] = 128;
+		data[2] = MDL.ID;
+		data[3] = 100;
+		data[4] = CRC(data, 4, 0);
+
+		UpdateComm.beginPacket(DestinationIP, UpdateSendPort);
+		UpdateComm.write(data, sizeof(data));
+		UpdateComm.endPacket();
+	}
+}
+
 //******************************************************************************
 // process_hex_record()    process record and return okay (0) or error (1)
 //******************************************************************************
@@ -11,7 +138,7 @@ int process_hex_record(char* packetBuffer, int packetSize)
 	else if (packetBuffer[0] != 0x3a)
 	{
 		Serial.printf("abort - invalid hex code %d\n", hex.code);
-		return 1;
+		return 0;
 	}
 	else
 	{
@@ -74,6 +201,7 @@ int process_hex_record(char* packetBuffer, int packetSize)
 					else if (hex.code == 1)
 					{
 						// EOF (:flash command not received yet)
+						Serial.println("");
 						Serial.println("EOF");
 						hex.eof = 1;
 					}
@@ -115,13 +243,17 @@ int process_hex_record(char* packetBuffer, int packetSize)
 					}
 
 					hex.lines++;
-					Serial.println(hex.lines);
+					if (DisplayCount++ > 100)
+					{
+						DisplayCount = 0;
+						Serial.print(".");
+					}
 
 					if (hex.eof)
 					{
 						Serial.println();
 						Serial.printf("\nhex file: %1d lines %1lu bytes (%08lX - %08lX)\n", hex.lines, hex.max - hex.min, hex.min, hex.max);
-						SENDCheckUdp();
+						SendLineCheck();
 
 						// check for non Teensy4.1
 //                        // check FSEC value in new code -- abort if incorrect
@@ -167,19 +299,4 @@ int process_hex_record(char* packetBuffer, int packetSize)
 	}
 	return 0;
 }
-
-void SENDCheckUdp()
-{
-	byte checkOTA[9] = { 0x4f, 0x54, 0x41, 0x55, 0x70, hex.lines & 255, hex.lines >> 8 & 255, hex.lines >> 16 & 255, hex.lines >> 24 & 255 };
-
-	if (Ethernet.linkStatus() == LinkON)
-	{
-		// send ethernet
-		UDPcomm.beginPacket(DestinationIP, DestinationPort);
-		UDPcomm.write(checkOTA, sizeof(checkOTA));
-		UDPcomm.endPacket();
-	}
-}
-
-
 

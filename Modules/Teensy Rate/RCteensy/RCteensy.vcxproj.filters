@@ -28,7 +28,7 @@
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
     <ClCompile Include="SerialESPcomm.ino" />
-    <ClCompile Include="EU.ino" />
+    <ClCompile Include="EthernetUpdate.ino" />
     <ClCompile Include="FlashTxx.c">
       <Filter>Source Files</Filter>
     </ClCompile>

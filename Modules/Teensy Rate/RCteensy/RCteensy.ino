@@ -21,8 +21,8 @@ extern "C" {
 }
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  26-May-2024"
-const uint16_t InoID = 26054;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  30-May-2024"
+const uint16_t InoID = 30054;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -140,7 +140,11 @@ bool WrkCurrent;
 
 int TimedCombo(byte, bool);	// function prototype
 
-// ethernet update
+
+// firmware update
+EthernetUDP UpdateComm;
+uint16_t UpdateReceivePort = 29100;
+uint16_t UpdateSendPort = 29000;
 uint32_t buffer_addr, buffer_size;
 bool UpdateMode = false;
 
@@ -165,9 +169,9 @@ static char data[16];// buffer for hex data
 
 hex_info_t hex =
 { // intel hex info struct
-  data, 0, 0, 0,          //   data,addr,num,code
-  0, 0xFFFFFFFF, 0,           //   base,min,max,
-  0, 0            //   eof,lines
+  data, 0, 0, 0,        //   data,addr,num,code
+  0, 0xFFFFFFFF, 0,     //   base,min,max,
+  0, 0					//   eof,lines
 };
 
 
@@ -209,6 +213,7 @@ void loop()
 	ReceiveUDPwired();
 	ReceiveAGIO();
 	ReceiveESP();
+	ReceiveUpdate();
 	Blink();
 	wdt.feed();
 }

@@ -105,6 +105,9 @@ void DoSetup()
 	// AGIO
 	AGIOcomm.begin(ListeningPortAGIO);
 
+	// update
+	UpdateComm.begin(UpdateReceivePort);
+
 	// sensors
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
@@ -237,7 +240,6 @@ void DoSetup()
 	}
 
 	pinMode(LED_BUILTIN, OUTPUT);
-
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
