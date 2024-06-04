@@ -15,7 +15,8 @@ namespace RateController
         private bool Initializing = true;
         private string[] LanguageIDs;
         private RadioButton[] LanguageRBs;
-        private bool SimSpeedChanged = false;
+        private bool tbSimSpeedChanged = false;
+        private bool tbSpeedChanged = false;
         private TabPage[] Tabs;
 
         public frmOptions(FormStart CalledFrom)
@@ -248,17 +249,18 @@ namespace RateController
         {
             try
             {
-                if (SimSpeedChanged)
+                if (tbSimSpeedChanged)
                 {
                     if (double.TryParse(tbSimSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
-                    SimSpeedChanged = false;
+                    tbSimSpeedChanged = false;
                 }
-                else
+                else if(tbSpeedChanged)
                 {
                     if (double.TryParse(tbSpeed.Text, out double Spd)) mf.SimSpeed = Spd;
+                    tbSpeedChanged = false;
                 }
 
-                if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
+                    if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
                 if (int.TryParse(tbDelay.Text, out int Delay)) mf.PrimeDelay = Delay;
 
                 mf.MasterOverride = ckNoMaster.Checked;
@@ -465,7 +467,7 @@ namespace RateController
 
         private void tbSimSpeed_TextChanged(object sender, EventArgs e)
         {
-            SimSpeedChanged = true;
+            if(!Initializing) tbSimSpeedChanged = true;
             SetButtons(true);
         }
 
@@ -521,6 +523,7 @@ namespace RateController
 
         private void tbTime_TextChanged(object sender, EventArgs e)
         {
+            if (!Initializing) tbSpeedChanged = true;
             SetButtons(true);
         }
 

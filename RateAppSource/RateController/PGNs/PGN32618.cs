@@ -178,33 +178,14 @@ namespace RateController
                     }
                 }
 
-                CheckChanged();
+                SwitchPGNargs args = new SwitchPGNargs();   // need to continuously send for primed start to work
+                args.Switches = SW;
+                SwitchPGNreceived?.Invoke(this, args);
+
                 ReceiveTime = DateTime.Now;
                 Result = true;
             }
             return Result;
-        }
-        private void CheckChanged()
-        {
-            bool Changed = false;
-            for (int i = 0; i < 24; i++)
-            {
-                if (SW[i] != SWlast[i])
-                {
-                    Changed = true;
-                    break;
-                }
-            }
-            if (Changed)
-            {
-                for (int i = 0; i < 24; i++)
-                {
-                    SWlast[i] = SW[i];
-                }
-                SwitchPGNargs args = new SwitchPGNargs();
-                args.Switches = SW;
-                SwitchPGNreceived?.Invoke(this, args);
-            }
         }
 
         public bool ParseStringData(string[] Data)
