@@ -136,15 +136,7 @@ namespace RateController
                 case SwIDs.MasterOn:
                     PressedData[2] = mf.Tls.BitSet(PressedData[2], 1);
                     PressedData[2] = mf.Tls.BitClear(PressedData[2], 2);
-                    if (FromLargeScreen)
-                    {
-                        PressedData[3] = 255;
-                        PressedData[4] = 255;
-                        for (int i = 0; i < mf.MaxSwitches; i++)
-                        {
-                            cSwitch[i] = true;
-                        }
-                    }
+                    if (FromLargeScreen) SetSwitchesLS();
                     break;
 
                 case SwIDs.MasterOff:
@@ -226,6 +218,27 @@ namespace RateController
                 }
             }
             return Result;
+        }
+
+        private void SetSwitchesLS()
+        {
+            // set only section switches on when master pressed from large screen
+            foreach (clsSection Sec in mf.Sections.Items)
+            {
+                if (Sec.Enabled)
+                {
+                    int ID = Sec.SwitchID;
+                    cSwitch[ID] = true;
+                    if (ID < 8)
+                    {
+                        PressedData[3] = (byte)(PressedData[3] | (byte)(Math.Pow(2, ID)));
+                    }
+                    else
+                    {
+                        PressedData[4] = (byte)(PressedData[4] | (byte)(Math.Pow(2, ID - 8)));
+                    }
+                }
+            }
         }
 
         private void TimerEventProcessor(Object myObject, EventArgs myEventArgs)
