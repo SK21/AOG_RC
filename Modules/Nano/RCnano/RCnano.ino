@@ -15,8 +15,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  20-May-2024"
-const uint16_t InoID = 20054;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  04-Jun-2024"
+const uint16_t InoID = 4064;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
