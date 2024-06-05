@@ -22,6 +22,7 @@ namespace RateController
         private TabPage Temp2;
 
         private bool FormEdited = false;
+        private int SelectedTab = 0;
 
         public FormSettings(FormStart CallingForm, int Page)
         {
@@ -276,13 +277,16 @@ namespace RateController
 
         private void FormSettings_FormClosed(object sender, FormClosedEventArgs e)
         {
-                mf.Tls.SaveFormData(this);
+            mf.Tls.SaveFormData(this);
+            mf.Tls.SaveProperty("SettingsSelectedTab", tcProducts.SelectedIndex.ToString());
             timer1.Enabled = false;
         }
 
         private void FormSettings_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
+            if (int.TryParse(mf.Tls.LoadProperty("SettingsSelectedTab"), out int TB)) SelectedTab = TB;
+            tcProducts.SelectedIndex = SelectedTab;
             timer1.Enabled = true;
             UpdateForm();
         }
@@ -619,7 +623,7 @@ namespace RateController
                 }
             }
 
-                CurrentProduct.VRID = Convert.ToByte(cbVR.SelectedIndex);
+            CurrentProduct.VRID = Convert.ToByte(cbVR.SelectedIndex);
             CurrentProduct.UseVR = (ckVR.Checked);
 
             double.TryParse(TankRemain.Text, out TempDB);
@@ -928,7 +932,7 @@ namespace RateController
         {
             int tempInt;
             int.TryParse(tbConID.Text, out tempInt);
-            using (var form = new FormNumeric(0, 15, tempInt))
+            using (var form = new FormNumeric(0, 7, tempInt))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)

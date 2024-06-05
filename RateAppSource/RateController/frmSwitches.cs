@@ -30,6 +30,8 @@ namespace RateController
 
         public void SetDescriptions()
         {
+            mf.SwitchObjects.CheckDescriptions();
+
             btn1.Text = mf.SwitchObjects.Item(0).Description;
             btn2.Text = mf.SwitchObjects.Item(1).Description;
             btn3.Text = mf.SwitchObjects.Item(2).Description;

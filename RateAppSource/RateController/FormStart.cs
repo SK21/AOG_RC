@@ -66,7 +66,7 @@ namespace RateController
         private int cDefaultProduct = 0;
         private bool cMasterOverride;
         private byte cPressureToShowID;
-        private int cPrimeDelay = 0;
+        private int cPrimeDelay = 3;
         private double cPrimeTime = 0;
         private bool cResumeAfterPrime;
         private bool cShowPressure;
@@ -89,6 +89,7 @@ namespace RateController
         private Label[] Targets;
         public clsSwitches SwitchObjects;
         public frmSwitches SwitchesForm;
+        private bool LargeScreenFirstRun = true;
 
         public FormStart()
         {
@@ -214,7 +215,7 @@ namespace RateController
             get { return cPrimeDelay; }
             set
             {
-                if (value >= 0 && value < 9) { cPrimeDelay = value; }
+                if (value >= 3 && value < 9) { cPrimeDelay = value; }
             }
         }
 
@@ -295,8 +296,28 @@ namespace RateController
             get { return cUseLargeScreen; }
             set
             {
-                cUseLargeScreen = value;
-                Tls.SaveProperty("UseLargeScreen", cUseLargeScreen.ToString());
+                if (cUseLargeScreen != value)
+                {
+                    cUseLargeScreen = value;
+                    Tls.SaveProperty("UseLargeScreen", cUseLargeScreen.ToString());
+                    SwitchScreens();
+                }
+            }
+        }
+
+        private void SwitchScreens()
+        {
+            Debug.Print("FormStart/SwitchScreens");
+            Form fs = Tls.IsFormOpen("frmLargeScreen");
+            if (cUseLargeScreen)
+            {
+                // use large screen
+                if (fs == null) StartLargeScreen();
+            }
+            else
+            {
+                // use standard screen
+                if (fs != null) Lscrn.SwitchToStandard();
             }
         }
 
@@ -387,13 +408,21 @@ namespace RateController
 
         public void LoadSettings()
         {
+            Debug.Print("FormStart/LoadSettings");
             StartSerial();
             SetDayMode();
 
+            if (bool.TryParse(Tls.LoadProperty("LSfirstRun"), out bool FR))
+            {
+                LargeScreenFirstRun = FR;
+            }
+            else
+            {
+                LargeScreenFirstRun = true;
+            }
+
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
-            if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS)) cUseLargeScreen = LS;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
-            if (bool.TryParse(Tls.LoadProperty("ShowSwitches"), out bool SS)) cShowSwitches = SS;
             if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
             if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
             if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
@@ -405,10 +434,7 @@ namespace RateController
             {
                 cPrimeDelay = PD;
             }
-            else
-            {
-                cPrimeDelay = 3;
-            }
+            if (cPrimeDelay < 3) cPrimeDelay = 3;
 
             if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd))
             {
@@ -447,6 +473,42 @@ namespace RateController
             LoadDefaultProduct();
             Zones.Load();
             SwitchObjects.Load();
+
+            if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS))
+            {
+                UseLargeScreen = LS;
+            }
+            else
+            {
+                UseLargeScreen = false;
+            }
+
+            if (bool.TryParse(Tls.LoadProperty("ShowSwitches"), out bool SS))
+            {
+                ShowSwitches = SS;
+            }
+            else
+            {
+                ShowSwitches = false;
+            }
+
+            // check loaded forms, reload to update
+            Form Opts = Tls.IsFormOpen("frmOptions");
+            if (Opts != null)
+            {
+                Opts.Close();
+                Opts = new frmOptions(this);
+                Opts.Show();
+            }
+
+            Form Swt = Tls.IsFormOpen("frmSwitches");
+            if (Swt != null)
+            {
+                Swt.Close();
+                Swt = new frmSwitches(this);
+                Swt.Show();
+            }
+
         }
 
         public bool ModuleConnected(int ModuleID)
@@ -469,7 +531,32 @@ namespace RateController
 
         public void StartLargeScreen()
         {
-            UseLargeScreen = true;
+            if(LargeScreenFirstRun)
+            {
+                if (Products.Item(0).MeterCal == 0) // don't change if already in use
+                {
+                    LargeScreenFirstRun = false;
+                    var Hlp = new frmMsgBox(this, "Set to single product?", "Large Screen", true);
+                    Hlp.TopMost = true;
+                    Hlp.ShowDialog();
+                    if (Hlp.Result)
+                    {
+                        // hide unused items, set product 4 as default, set product 4 id to 0
+                        foreach (clsProduct Prd in Products.Items)
+                        {
+                            Prd.OnScreen = false;
+                        }
+                        Products.Item(3).OnScreen = true;
+                        DefaultProduct = 3;
+                        Products.Item(2).BumpButtons = true;
+                        Products.Item(0).ModuleID = 6;
+                        Products.Item(3).ModuleID = 0;
+                        UseTransparent = true;
+                    }
+                    Hlp.Close();
+                }
+            }
+
             LargeScreenExit = false;
             Restart = false;
             this.WindowState = FormWindowState.Minimized;
@@ -867,6 +954,8 @@ namespace RateController
                 Tls.SaveProperty("SimMode", cSimMode.ToString());
                 Tls.SaveProperty("UseDualAuto", cUseDualAuto.ToString());
 
+                Tls.SaveProperty("LSfirstRun", LargeScreenFirstRun.ToString());
+
                 UDPaog.Close();
                 UDPmodules.Close();
 
@@ -916,6 +1005,7 @@ namespace RateController
 
         private void FormStart_Load(object sender, EventArgs e)
         {
+            Debug.Print("FormStart/Load");
             try
             {
                 Tls.LoadFormData(this);
@@ -946,7 +1036,8 @@ namespace RateController
                 Products.UpdatePID();
                 UpdateStatus();
 
-                if (cUseLargeScreen) StartLargeScreen();
+                Debug.Print("Use large screen: " + cUseLargeScreen.ToString());
+                SwitchScreens();
                 DisplaySwitches();
                 DisplayPressure();
 
@@ -1156,6 +1247,10 @@ namespace RateController
 
         private void newToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
+            NewFile();
+        }
+        public void NewFile()
+        {
             saveFileDialog1.InitialDirectory = Tls.FilesDir();
             saveFileDialog1.Title = "New File";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -1170,12 +1265,23 @@ namespace RateController
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog1.InitialDirectory = Tls.FilesDir();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            OpenFile();
+        }
+        public void OpenFile()
+        {
+            try
             {
-                Tls.PropertiesFile = openFileDialog1.FileName;
-                Products.Load();
-                LoadSettings();
+                openFileDialog1.InitialDirectory = Tls.FilesDir();
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Tls.PropertiesFile = openFileDialog1.FileName;
+                    Products.Load();
+                    LoadSettings();
+                }
+            }
+            catch (Exception ex)
+            {
+                Tls.WriteErrorLog("FormStart/OpenFile: " + ex.Message);
             }
         }
 
@@ -1196,20 +1302,14 @@ namespace RateController
 
         private void productsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //check if window already exists
-            Form fs = Tls.IsFormOpen("FormSettings");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormSettings(this, CurrentPage);
-            frm.Show();
+            ShowSettings();
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileAs();
+        }
+        public void SaveFileAs()
         {
             saveFileDialog1.InitialDirectory = Tls.FilesDir();
             saveFileDialog1.Title = "Save As";
@@ -1319,5 +1419,33 @@ namespace RateController
             Products.UpdatePID();
         }
 
+        private void lbProduct_Click(object sender, EventArgs e)
+        {
+            ShowSettings();
+        }
+        private void ShowSettings()
+        {
+            //check if window already exists
+            Form fs = Tls.IsFormOpen("FormSettings");
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormSettings(this, CurrentPage);
+            frm.Show();
+        }
+
+        private void lblUnits_Click(object sender, EventArgs e)
+        {
+            ShowSettings();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ShowSettings();
+        }
     }
 }

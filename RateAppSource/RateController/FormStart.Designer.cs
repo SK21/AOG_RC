@@ -186,9 +186,10 @@ namespace RateController
             this.lbProduct.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbProduct.Location = new System.Drawing.Point(3, 0);
             this.lbProduct.Name = "lbProduct";
-            this.lbProduct.Size = new System.Drawing.Size(128, 23);
+            this.lbProduct.Size = new System.Drawing.Size(136, 23);
             this.lbProduct.TabIndex = 157;
             this.lbProduct.Text = "Herbicide";
+            this.lbProduct.Click += new System.EventHandler(this.lbProduct_Click);
             // 
             // SetRate
             // 
@@ -233,6 +234,7 @@ namespace RateController
             this.lblUnits.TabIndex = 152;
             this.lblUnits.Text = "Imp Gal/Min";
             this.lblUnits.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblUnits.Click += new System.EventHandler(this.lblUnits_Click);
             // 
             // AreaDone
             // 
@@ -560,7 +562,7 @@ namespace RateController
             this.toolStripSeparator4,
             this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(254, 584);
+            this.mnuSettings.Size = new System.Drawing.Size(254, 562);
             this.mnuSettings.Opening += new System.ComponentModel.CancelEventHandler(this.mnuSettings_Opening);
             // 
             // MnuProducts

@@ -100,13 +100,13 @@ namespace RateController
             {
                 this.Text = string.Empty;
                 this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
-                //this.Opacity = 0;
+                //this.Opacity = .5;
                 this.HelpButton = false;
                 this.ControlBox = false;
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.Top += TransTopOffset;
                 this.Left += TransLeftOffset;
-                Color txtcolor = Color.White;
+                Color txtcolor = Color.Yellow;
                 lbRate.ForeColor = txtcolor;
                 lbTarget.ForeColor = txtcolor;
                 lbCoverage.ForeColor = txtcolor;
@@ -152,7 +152,6 @@ namespace RateController
         {
             this.ShowInTaskbar = false;
             mf.ShowInTaskbar = true;
-            mf.UseLargeScreen = false;
             SwitchingScreens = true;
             this.Close();
         }
@@ -390,20 +389,7 @@ namespace RateController
 
         private void lbName0_Click(object sender, EventArgs e)
         {
-            Prd = mf.Products.Item(0);
-            UpdateForm();
-
-            //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("FormSettings");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormSettings(mf, Prd.ID + 1);
-            frm.Show();
+            ShowSettings(0);
         }
 
         private void lbName0_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -416,43 +402,22 @@ namespace RateController
 
         private void lbName1_Click(object sender, EventArgs e)
         {
-            Prd = mf.Products.Item(1);
-            UpdateForm();
-
-            //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("FormSettings");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormSettings(mf, Prd.ID + 1);
-            frm.Show();
+            ShowSettings(1);
         }
 
         private void lbName2_Click(object sender, EventArgs e)
         {
-            Prd = mf.Products.Item(2);
-            UpdateForm();
-
-            //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("FormSettings");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormSettings(mf, Prd.ID + 1);
-            frm.Show();
+            ShowSettings(2);
         }
 
         private void lbName3_Click(object sender, EventArgs e)
         {
-            Prd = mf.Products.Item(3);
+            ShowSettings(3);
+        }
+
+        private void ShowSettings(int ProductID)
+        {
+            Prd = mf.Products.Item(ProductID);
             UpdateForm();
 
             //check if window already exists
@@ -466,6 +431,7 @@ namespace RateController
 
             Form frm = new FormSettings(mf, Prd.ID + 1);
             frm.Show();
+
         }
 
         private void lbQuantity_Click(object sender, EventArgs e)
@@ -664,29 +630,12 @@ namespace RateController
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.InitialDirectory = mf.Tls.FilesDir();
-            saveFileDialog1.Title = "New File";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    mf.Tls.OpenFile(saveFileDialog1.FileName);
-                    mf.LoadSettings();
-                    UpdateForm();
-                }
-            }
+            mf.NewFile();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog1.InitialDirectory = mf.Tls.FilesDir();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                mf.Tls.PropertiesFile = openFileDialog1.FileName;
-                mf.Products.Load();
-                mf.LoadSettings();
-                UpdateForm();
-            }
+            mf.OpenFile();
         }
 
         private void pbRate0_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -718,17 +667,7 @@ namespace RateController
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.InitialDirectory = mf.Tls.FilesDir();
-            saveFileDialog1.Title = "Save As";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    mf.Tls.SaveFile(saveFileDialog1.FileName);
-                    mf.LoadSettings();
-                    UpdateForm();
-                }
-            }
+            mf.SaveFileAs();
         }
 
         private void SetFont()
@@ -1359,5 +1298,6 @@ namespace RateController
             Prd = mf.Products.Item(3);
             UpdateForm();
         }
+
     }
 }

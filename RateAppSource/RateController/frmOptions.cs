@@ -279,25 +279,7 @@ namespace RateController
                     mf.SimMode = SimType.None;
                 }
 
-                if (ckLargeScreen.Checked)
-                {
-                    // use large screen
-                    Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
-                    if (fs == null)
-                    {
-                        if (!mf.UseLargeScreen) mf.StartLargeScreen();
-                    }
-                }
-                else
-                {
-                    // use standard screen
-                    Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
-                    if (fs != null)
-                    {
-                        mf.Lscrn.SwitchToStandard();
-                    }
-                }
-
+                mf.UseLargeScreen = ckLargeScreen.Checked;
                 mf.UseDualAuto = ckDualAuto.Checked;
                 mf.ResumeAfterPrime = ckResume.Checked;
 
@@ -560,9 +542,9 @@ namespace RateController
             ckPressure.Checked = mf.ShowPressure;
             ckSimSpeed.Checked = (mf.SimMode == SimType.Speed);
             ckDualAuto.Checked = mf.UseDualAuto;
-            ckLargeScreen.Checked = mf.UseLargeScreen;
             ckResume.Checked = mf.ResumeAfterPrime;
             ckNoMaster.Checked = mf.MasterOverride;
+            ckLargeScreen.Checked = mf.UseLargeScreen;
 
             // language
             for (int i = 0; i < LanguageRBs.Length; i++)
@@ -585,6 +567,7 @@ namespace RateController
                 lbSimUnits.Text = "KMH";
             }
             LoadData(UpdateObject);
+
             Initializing = false;
         }
     }
