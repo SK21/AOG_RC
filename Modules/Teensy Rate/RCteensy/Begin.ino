@@ -252,6 +252,7 @@ void LoadData()
 	int8_t StoredType;
 	EEPROM.get(0, StoredID);
 	EEPROM.get(4, StoredType);
+
 	if (StoredID == InoID && StoredType == InoType)
 	{
 		// load stored data
@@ -320,8 +321,31 @@ void LoadDefaults()
 	// relay pins
 	for (int i = 0; i < 16; i++)
 	{
-		MDL.RelayPins[i] = NC;
+		MDL.RelayPins[i] = DefaultRelayPins[i];
 	}
+
+	// module settings
+	MDL.ID = 0;
+	MDL.SensorCount = 2;
+	MDL.RelayOnSignal = 1;
+	MDL.FlowOnDirection = 1;
+	MDL.IP0 = 192;
+	MDL.IP1 = 168;
+	MDL.IP2 = 1;
+	MDL.IP3 = 50;
+	MDL.RelayControl = 1;
+	MDL.ESPserialPort = 1;
+	MDL.WifiMode = 1;
+	MDL.WorkPin = NC;
+	MDL.WorkPinIsMomentary = false;
+
+	// network name
+	memset(MDL.NetName, '\0', sizeof(MDL.NetName)); // erase old name
+	memcpy(MDL.NetName, &DefaultNetName, 14);
+
+	// network password
+	memset(MDL.NetPassword, '\0', sizeof(MDL.NetPassword)); // erase old name
+	memcpy(MDL.NetPassword, &DefaultNetPassword, 14);
 }
 
 bool ValidData()
@@ -354,6 +378,7 @@ bool ValidData()
 			}
 		}
 	}
+
 	GoodPins = Result;
 	return Result;
 }

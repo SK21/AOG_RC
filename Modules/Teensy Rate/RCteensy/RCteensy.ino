@@ -20,33 +20,41 @@ extern "C" {
 #include "FlashTxx.h"		// TLC/T3x/T4x/TMM flash primitives
 }
 
+
+
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  04-Jun-2024"
-const uint16_t InoID = 4064;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  06-Jun-2024"
+const uint16_t InoID = 6064;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+
+
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
 #define NC 0xFF		// Pins not connected
 #define ModStringLengths 15
 
+uint8_t DefaultRelayPins[] = {8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC};		// pin numbers when GPIOs are used for relay control (1), default RC11
+char DefaultNetName[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
+char DefaultNetPassword[ModStringLengths] = "111222333";
+
 struct ModuleConfig
 {
 	uint8_t ID = 0;
 	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
-	uint8_t RelayOnSignal = 0;	    // value that turns on relays
-	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
+	uint8_t RelayOnSignal = 1;	    // value that turns on relays
+	uint8_t FlowOnDirection = 1;	// sets on value for flow valve or sets motor direction
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
-	uint8_t IP3 = 60;
+	uint8_t IP3 = 50;
 	uint8_t RelayControl = 1;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired
 	uint8_t ESPserialPort = 1;		// serial port to connect to wifi module
-	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
+	uint8_t RelayPins[16];
 	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
-	char NetName[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
-	char NetPassword[ModStringLengths] = "111222333";
-	uint8_t WorkPin;
+	char NetName[ModStringLengths];
+	char NetPassword[ModStringLengths];
+	uint8_t WorkPin = NC;
 	bool WorkPinIsMomentary = false;
 };
 
@@ -133,7 +141,7 @@ HardwareSerial* SerialESP;
 
 WDT_T4<WDT1> wdt;
 extern float tempmonGetTemp(void);
-bool GoodPins;	// configuration pins correct
+bool GoodPins = false;	// configuration pins correct
 bool WrkOn;
 bool WrkLast;
 bool WrkCurrent;
