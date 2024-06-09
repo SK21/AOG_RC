@@ -132,9 +132,12 @@ void ReadPGNs(byte Data[], uint16_t len)
 				for (int i = 7; i < 23; i++)
 				{
 					MDL.SectionPins[i - 7] = Data[i];
+					if (MDL.SectionPins[i - 7] < 3) MDL.SectionPins[i - 7] = NC;
 				}
-
+				MDL.AutoSection = NC;
+				MDL.AutoRate = NC;
 				MDL.WorkPin = Data[23];
+				if (MDL.WorkPin < 3) MDL.WorkPin = NC;
 
 				SaveData();
 
