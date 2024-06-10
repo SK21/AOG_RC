@@ -21,6 +21,7 @@
 #include "..\Motor.ino"
 #include "..\PID.ino"
 #include "..\Rate.ino"
+#include "..\RateOld.ino"
 #include "..\Receive.ino"
 #include "..\Relays.ino"
 #include "..\Send.ino"
