@@ -314,7 +314,7 @@ namespace RateController
             }
         }
 
-        public void OpenFile(string NewFile)
+        public void OpenFile(string NewFile, bool IsNew=false)
         {
             try
             {
@@ -324,7 +324,20 @@ namespace RateController
                 if (Directory.Exists(PathName)) Properties.Settings.Default.FilesDir = PathName; // set the new files dir
 
                 cPropertiesFile = Properties.Settings.Default.FilesDir + "\\" + FileName;
-                if (!File.Exists(cPropertiesFile)) File.Create(cPropertiesFile).Dispose();
+                if (!File.Exists(cPropertiesFile))
+                {
+                    if (IsNew)
+                    {
+                        // create new file
+                        File.Create(cPropertiesFile).Dispose();
+                    }
+                    else
+                    {
+                        // file not found, use example file
+                        cPropertiesFile = Properties.Settings.Default.FilesDir + "\\example.rcs";
+                        FileName = "Example.RCS";
+                    }
+                }
                 LoadFilesData(cPropertiesFile);
                 Properties.Settings.Default.FileName = FileName;
                 Properties.Settings.Default.Save();
@@ -599,6 +612,18 @@ namespace RateController
             }
             catch (Exception)
             {
+            }
+        }
+        
+        public void ResetExample()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("ResetExample: " + ex.Message);
             }
         }
 

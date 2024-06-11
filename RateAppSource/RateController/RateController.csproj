@@ -421,6 +421,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Example.rcs" />
     <None Include="Resources\Pins.PNG" />
     <None Include="Resources\SimGear.png" />
     <None Include="Resources\RateDown.png" />
@@ -497,7 +498,6 @@
     <None Include="Resources\3556117_arrow_ui_up_icon.png" />
     <None Include="Resources\wrench.png" />
     <None Include="Resources\Upload.bmp" />
-    <None Include="Resources\Example.rcs" />
     <None Include="Resources\Loud_Alarm_Clock_Buzzer-Muk1984-493547174.wav" />
     <None Include="Resources\Alarm.bmp" />
     <None Include="Resources\OffSmall1.bmp" />

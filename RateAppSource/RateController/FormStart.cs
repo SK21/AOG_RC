@@ -1257,7 +1257,7 @@ namespace RateController
             {
                 if (saveFileDialog1.FileName != "")
                 {
-                    Tls.OpenFile(saveFileDialog1.FileName);
+                    Tls.OpenFile(saveFileDialog1.FileName,true);
                     LoadSettings();
                 }
             }

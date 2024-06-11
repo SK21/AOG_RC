@@ -25,8 +25,8 @@ namespace RateController
 
             #region // language
 
-            tcOptions.TabPages[0].Text = Lang.lgDisplay;
-            tcOptions.TabPages[1].Text = Lang.lgConfig;
+            tcOptions.TabPages[0].Text = Lang.lgConfig;
+            tcOptions.TabPages[1].Text = Lang.lgDisplay;
             tcOptions.TabPages[2].Text = Lang.lgPrimedStart;
             tcOptions.TabPages[3].Text = Lang.lgLanguage;
 
@@ -321,6 +321,11 @@ namespace RateController
                 }
                 mf.SwitchObjects.Save();
                 if (mf.SwitchesForm != null) mf.SwitchesForm.SetDescriptions();
+
+                if(ckExample.Checked)
+                {
+                    mf.Tls.ResetExample();
+                }
             }
             catch (Exception ex)
             {
@@ -568,7 +573,20 @@ namespace RateController
             }
             LoadData(UpdateObject);
 
+            ckDefaultProduct.Checked = false;
+            ckExample.Checked = false;
+
             Initializing = false;
+        }
+
+        private void ckExample_CheckedChanged(object sender, EventArgs e)
+        {
+            if(ckExample.Checked) SetButtons(true);
+        }
+
+        private void ckDefaultProduct_CheckedChanged(object sender, EventArgs e)
+        {
+            if(ckDefaultProduct.Checked) SetButtons(true);
         }
     }
 }

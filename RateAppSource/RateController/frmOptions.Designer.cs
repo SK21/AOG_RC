@@ -82,6 +82,8 @@
             this.dataColumn1 = new System.Data.DataColumn();
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
             this.btnReset = new System.Windows.Forms.Button();
+            this.ckDefaultProduct = new System.Windows.Forms.CheckBox();
+            this.ckExample = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -99,7 +101,7 @@
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMetric.Location = new System.Drawing.Point(32, 47);
+            this.ckMetric.Location = new System.Drawing.Point(32, 19);
             this.ckMetric.Name = "ckMetric";
             this.ckMetric.Size = new System.Drawing.Size(164, 34);
             this.ckMetric.TabIndex = 119;
@@ -297,7 +299,7 @@
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWorkSwitch.Location = new System.Drawing.Point(32, 100);
+            this.ckWorkSwitch.Location = new System.Drawing.Point(32, 72);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
             this.ckWorkSwitch.Size = new System.Drawing.Size(164, 34);
             this.ckWorkSwitch.TabIndex = 125;
@@ -308,8 +310,8 @@
             // 
             // tcOptions
             // 
-            this.tcOptions.Controls.Add(this.tabPage2);
             this.tcOptions.Controls.Add(this.tabPage1);
+            this.tcOptions.Controls.Add(this.tabPage2);
             this.tcOptions.Controls.Add(this.tabPage3);
             this.tcOptions.Controls.Add(this.tabPage4);
             this.tcOptions.Controls.Add(this.tabPage5);
@@ -395,6 +397,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.ckExample);
+            this.tabPage1.Controls.Add(this.ckDefaultProduct);
             this.tabPage1.Controls.Add(this.ckNoMaster);
             this.tabPage1.Controls.Add(this.tbSimSpeed);
             this.tabPage1.Controls.Add(this.lbSimUnits);
@@ -415,7 +419,7 @@
             this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNoMaster.Location = new System.Drawing.Point(223, 47);
+            this.ckNoMaster.Location = new System.Drawing.Point(223, 19);
             this.ckNoMaster.Name = "ckNoMaster";
             this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
             this.ckNoMaster.TabIndex = 331;
@@ -428,7 +432,7 @@
             // tbSimSpeed
             // 
             this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSimSpeed.Location = new System.Drawing.Point(280, 155);
+            this.tbSimSpeed.Location = new System.Drawing.Point(280, 127);
             this.tbSimSpeed.MaxLength = 8;
             this.tbSimSpeed.Name = "tbSimSpeed";
             this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
@@ -442,7 +446,7 @@
             // lbSimUnits
             // 
             this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSimUnits.Location = new System.Drawing.Point(351, 158);
+            this.lbSimUnits.Location = new System.Drawing.Point(351, 130);
             this.lbSimUnits.Name = "lbSimUnits";
             this.lbSimUnits.Size = new System.Drawing.Size(57, 24);
             this.lbSimUnits.TabIndex = 330;
@@ -455,7 +459,7 @@
             this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSimSpeed.Location = new System.Drawing.Point(32, 153);
+            this.ckSimSpeed.Location = new System.Drawing.Point(32, 125);
             this.ckSimSpeed.Name = "ckSimSpeed";
             this.ckSimSpeed.Size = new System.Drawing.Size(242, 34);
             this.ckSimSpeed.TabIndex = 126;
@@ -728,6 +732,34 @@
             this.btnReset.Visible = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // ckDefaultProduct
+            // 
+            this.ckDefaultProduct.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDefaultProduct.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckDefaultProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDefaultProduct.Location = new System.Drawing.Point(32, 178);
+            this.ckDefaultProduct.Name = "ckDefaultProduct";
+            this.ckDefaultProduct.Size = new System.Drawing.Size(170, 69);
+            this.ckDefaultProduct.TabIndex = 332;
+            this.ckDefaultProduct.Text = "Set Products to default values";
+            this.ckDefaultProduct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDefaultProduct.UseVisualStyleBackColor = true;
+            this.ckDefaultProduct.CheckedChanged += new System.EventHandler(this.ckDefaultProduct_CheckedChanged);
+            // 
+            // ckExample
+            // 
+            this.ckExample.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckExample.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckExample.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckExample.Location = new System.Drawing.Point(238, 178);
+            this.ckExample.Name = "ckExample";
+            this.ckExample.Size = new System.Drawing.Size(170, 69);
+            this.ckExample.TabIndex = 333;
+            this.ckExample.Text = "Reset Example file";
+            this.ckExample.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckExample.UseVisualStyleBackColor = true;
+            this.ckExample.CheckedChanged += new System.EventHandler(this.ckExample_CheckedChanged);
+            // 
             // frmOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -813,5 +845,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn moduleDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Relay;
+        private System.Windows.Forms.CheckBox ckExample;
+        private System.Windows.Forms.CheckBox ckDefaultProduct;
     }
 }
