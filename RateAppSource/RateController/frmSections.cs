@@ -58,11 +58,18 @@ namespace RateController
                 }
                 else
                 {
-                    Save();
-                    mf.Sections.CheckSwitchDefinitions();
+                    if (mf.Tls.ReadOnly)
+                    {
+                        mf.Tls.ShowHelp("File is read only.", "Help", 5000, false, false, true);
+                    }
+                    else
+                    {
+                        Save();
+                        mf.Sections.CheckSwitchDefinitions();
 
-                    UpdateForm();
-                    SetButtons(false);
+                        UpdateForm();
+                        SetButtons(false);
+                    }
                 }
             }
             catch (Exception ex)

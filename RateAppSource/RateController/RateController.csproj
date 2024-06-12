@@ -421,6 +421,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Default.rcs" />
     <None Include="Resources\Example.rcs" />
     <None Include="Resources\Pins.PNG" />
     <None Include="Resources\SimGear.png" />

@@ -46,19 +46,26 @@ namespace RateController
                 }
                 else
                 {
-                    // save changes
-                    SaveGrid();
-                    if (byte.TryParse(tbPressureID.Text, out byte ID))
+                    if (mf.Tls.ReadOnly)
                     {
-                        mf.PressureToShow = ID;
-                        ShowID = ID;
-                        mf.Tls.SaveProperty("PressureID", ID.ToString());
+                        mf.Tls.ShowHelp("File is read only.", "Help", 5000, false, false, true);
                     }
-                    mf.ShowPressure = ckShowPressure.Checked;
+                    else
+                    {
+                        // save changes
+                        SaveGrid();
+                        if (byte.TryParse(tbPressureID.Text, out byte ID))
+                        {
+                            mf.PressureToShow = ID;
+                            ShowID = ID;
+                            mf.Tls.SaveProperty("PressureID", ID.ToString());
+                        }
+                        mf.ShowPressure = ckShowPressure.Checked;
 
-                    UpdateForm();
-                    SetButtons(false);
-                    timer1.Enabled = true;
+                        UpdateForm();
+                        SetButtons(false);
+                        timer1.Enabled = true;
+                    }
                 }
             }
             catch (Exception ex)

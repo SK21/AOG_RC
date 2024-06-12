@@ -205,19 +205,26 @@ namespace RateController
         {
             if (cEdited && cEnabled)
             {
-                mf.Tls.SaveProperty(Name() + "_Pulses", PulseCountTotal.ToString());
-                mf.Tls.SaveProperty(Name() + "_Amount", MeasuredAmount.ToString());
-                mf.Tls.SaveProperty(Name() + "_CalPWM", CalPWM.ToString());
+                if (mf.Tls.ReadOnly)
+                {
+                    mf.Tls.ShowHelp("File is read only.", "Help", 5000, false, false, true);
+                }
+                else
+                {
+                    mf.Tls.SaveProperty(Name() + "_Pulses", PulseCountTotal.ToString());
+                    mf.Tls.SaveProperty(Name() + "_Amount", MeasuredAmount.ToString());
+                    mf.Tls.SaveProperty(Name() + "_CalPWM", CalPWM.ToString());
 
-                double.TryParse(cCalFactorBox.Text, out cCalFactor);
-                cProduct.MeterCal = cCalFactor;
-                double.TryParse(cRateBox.Text, out double tmp);
-                cProduct.RateSet = tmp;
-                cProduct.Save();
+                    double.TryParse(cCalFactorBox.Text, out cCalFactor);
+                    cProduct.MeterCal = cCalFactor;
+                    double.TryParse(cRateBox.Text, out double tmp);
+                    cProduct.RateSet = tmp;
+                    cProduct.Save();
 
-                cEdited = false;
-                PulseCountStart = cProduct.Pulses();
-                Update();
+                    cEdited = false;
+                    PulseCountStart = cProduct.Pulses();
+                    Update();
+                }
             }
         }
 

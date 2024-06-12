@@ -138,23 +138,30 @@ namespace RateController
             }
             else
             {
-                if (CheckModSen())
+                if (mf.Tls.ReadOnly)
                 {
-                    // save changes
-                    SaveSettings();
-                    mf.Sections.CheckSwitchDefinitions();
-
-                    string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
-
-                    SetButtons(false);
-                    UpdateForm();
-
-                    // send to modules
-                    mf.Products.UpdatePID();
+                    mf.Tls.ShowHelp("File is read only.", "Help", 5000, false, false, true);
                 }
                 else
                 {
-                    mf.Tls.ShowHelp("Module ID / Sensor ID pair must be unique.", "Help", 3000);
+                    if (CheckModSen())
+                    {
+                        // save changes
+                        SaveSettings();
+                        mf.Sections.CheckSwitchDefinitions();
+
+                        string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+
+                        SetButtons(false);
+                        UpdateForm();
+
+                        // send to modules
+                        mf.Products.UpdatePID();
+                    }
+                    else
+                    {
+                        mf.Tls.ShowHelp("Module ID / Sensor ID pair must be unique.", "Help", 3000);
+                    }
                 }
             }
         }

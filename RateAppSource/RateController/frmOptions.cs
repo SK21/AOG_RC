@@ -25,10 +25,11 @@ namespace RateController
 
             #region // language
 
-            tcOptions.TabPages[0].Text = Lang.lgConfig;
-            tcOptions.TabPages[1].Text = Lang.lgDisplay;
-            tcOptions.TabPages[2].Text = Lang.lgPrimedStart;
-            tcOptions.TabPages[3].Text = Lang.lgLanguage;
+            tcOptions.TabPages[0].Text = Lang.lgDisplay;
+            tcOptions.TabPages[1].Text = Lang.lgPrimedStart;
+            tcOptions.TabPages[2].Text = Lang.lgSwitches;
+            tcOptions.TabPages[3].Text = Lang.lgConfig;
+            tcOptions.TabPages[4].Text = Lang.lgLanguage;
 
             ckMetric.Text = Lang.lgMetric;
             ckScreenSwitches.Text = Lang.lgSwitches;
@@ -73,9 +74,17 @@ namespace RateController
                 }
                 else
                 {
-                    Save();
-                    SetButtons(false);
-                    UpdateForm();
+                    if (mf.Tls.ReadOnly)
+                    {
+                        mf.Tls.ShowHelp("File is read only.", "Help", 5000, false, false, true);
+                    }
+                    else
+                    {
+                        Save();
+                        SetButtons(false);
+                        if(ckDefaultProduct.Checked) mf.Products.Load(true);
+                        UpdateForm();
+                    }
                 }
             }
             catch (Exception ex)
@@ -321,11 +330,6 @@ namespace RateController
                 }
                 mf.SwitchObjects.Save();
                 if (mf.SwitchesForm != null) mf.SwitchesForm.SetDescriptions();
-
-                if(ckExample.Checked)
-                {
-                    mf.Tls.ResetExample();
-                }
             }
             catch (Exception ex)
             {
@@ -574,19 +578,21 @@ namespace RateController
             LoadData(UpdateObject);
 
             ckDefaultProduct.Checked = false;
-            ckExample.Checked = false;
 
             Initializing = false;
-        }
-
-        private void ckExample_CheckedChanged(object sender, EventArgs e)
-        {
-            if(ckExample.Checked) SetButtons(true);
         }
 
         private void ckDefaultProduct_CheckedChanged(object sender, EventArgs e)
         {
             if(ckDefaultProduct.Checked) SetButtons(true);
+        }
+
+        private void ckDefaultProduct_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Set product values to default.";
+
+            mf.Tls.ShowHelp(Message, "Sensors");
+            hlpevent.Handled = true;
         }
     }
 }

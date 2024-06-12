@@ -357,6 +357,7 @@ namespace RateController
             // 
             this.btnRescan.BackColor = System.Drawing.Color.Transparent;
             this.btnRescan.FlatAppearance.BorderSize = 0;
+            this.btnRescan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGreen;
             this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.Image = global::RateController.Properties.Resources.Update;

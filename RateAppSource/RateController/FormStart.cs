@@ -307,7 +307,6 @@ namespace RateController
 
         private void SwitchScreens()
         {
-            Debug.Print("FormStart/SwitchScreens");
             Form fs = Tls.IsFormOpen("frmLargeScreen");
             if (cUseLargeScreen)
             {
@@ -408,7 +407,6 @@ namespace RateController
 
         public void LoadSettings()
         {
-            Debug.Print("FormStart/LoadSettings");
             StartSerial();
             SetDayMode();
 
@@ -1259,6 +1257,7 @@ namespace RateController
                 {
                     Tls.OpenFile(saveFileDialog1.FileName,true);
                     LoadSettings();
+                    LargeScreenFirstRun = true;
                 }
             }
         }
@@ -1318,6 +1317,8 @@ namespace RateController
                 if (saveFileDialog1.FileName != "")
                 {
                     Tls.SaveFile(saveFileDialog1.FileName);
+                    Tls.ReadOnly = false;
+                    LargeScreenFirstRun = true;
                     LoadSettings();
                 }
             }

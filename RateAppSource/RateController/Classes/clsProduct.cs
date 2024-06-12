@@ -70,7 +70,8 @@ namespace RateController
         {
             mf = CallingForm;
             cProductID = ProdID;
-            cModID = -1;  // default other than 0
+            cModID = ProdID / 2;
+            cSenID = (byte)(ProdID % 2);
             PauseWork = true;
 
             ArduinoModule = new PGN32400(this);
@@ -509,11 +510,16 @@ namespace RateController
             }
         }
 
-        public bool ChangeID(int ModID, int SenID)
+        public bool ChangeID(int ModID, int SenID, bool Override = false)
         {
             bool Result = false;
-
-            if (ModID > -1 && ModID < mf.MaxModules && SenID > -1 && SenID < mf.MaxSensors)
+            if (Override)
+            {
+                cModID = ModID;
+                cSenID = SenID;
+                Result = true;
+            }
+            else if (ModID > -1 && ModID < mf.MaxModules && SenID > -1 && SenID < mf.MaxSensors)
             {
                 if (mf.Products.UniqueModSen(ModID, SenID, cProductID))
                 {

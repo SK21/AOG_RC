@@ -90,11 +90,18 @@ namespace RateController
                 }
                 else
                 {
-                    // save data
-                    if (double.TryParse(tbSpeed.Text, out double Tmp)) mf.SimSpeed = Tmp;
+                    if (mf.Tls.ReadOnly)
+                    {
+                        mf.Tls.ShowHelp("File is read only.", "Help", 5000, false, false, true);
+                    }
+                    else
+                    {
+                        // save data
+                        if (double.TryParse(tbSpeed.Text, out double Tmp)) mf.SimSpeed = Tmp;
 
-                    Cals.Save();
-                    SetButtons(false);
+                        Cals.Save();
+                        SetButtons(false);
+                    }
                 }
             }
             catch (Exception ex)

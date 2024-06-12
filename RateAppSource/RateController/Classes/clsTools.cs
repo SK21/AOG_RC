@@ -36,10 +36,11 @@ namespace RateController
 
         private string cAppName = "RateController";
         private string cAppVersion = "3.7.12";
+        private bool cIsReadOnly = false;
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "04-Jun-2024";
+        private string cVersionDate = "11-Jun-2024";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
@@ -64,6 +65,16 @@ namespace RateController
                 {
                     OpenFile(value);
                 }
+            }
+        }
+
+        public bool ReadOnly
+        {
+            get { return cIsReadOnly; }
+            set
+            {
+                cIsReadOnly = value;
+                SaveProperty("ReadOnly", cIsReadOnly.ToString(), true);
             }
         }
 
@@ -298,23 +309,7 @@ namespace RateController
             return Prop;
         }
 
-        public double NoisyData(double CurrentData, double ErrorPercent = 5.0)
-        {
-            try
-            {
-                // error percent is above and below current data
-                var Rand = new Random();
-                int Max = (int)(CurrentData * ErrorPercent * 2.0);
-                double Spd = (CurrentData * (1.0 - ErrorPercent / 100.0)) + ((double)Rand.Next(Max) / 100.0);
-                return Spd;
-            }
-            catch (Exception)
-            {
-                return CurrentData;
-            }
-        }
-
-        public void OpenFile(string NewFile, bool IsNew=false)
+        public void OpenFile(string NewFile, bool IsNew = false)
         {
             try
             {
@@ -333,14 +328,22 @@ namespace RateController
                     }
                     else
                     {
-                        // file not found, use example file
-                        cPropertiesFile = Properties.Settings.Default.FilesDir + "\\example.rcs";
-                        FileName = "Example.RCS";
+                        // file not found, use default file
+                        cPropertiesFile = Properties.Settings.Default.FilesDir + "\\Default.rcs";
+                        FileName = "Default.RCS";
                     }
                 }
                 LoadFilesData(cPropertiesFile);
                 Properties.Settings.Default.FileName = FileName;
                 Properties.Settings.Default.Save();
+                if (bool.TryParse(LoadProperty("ReadOnly"), out bool RO))
+                {
+                    cIsReadOnly = RO;
+                }
+                else
+                {
+                    cIsReadOnly = false;
+                }
 
                 cPropertiesApp = Properties.Settings.Default.FilesDir + "\\AppData.txt";
                 if (!File.Exists(cPropertiesApp)) File.Create(cPropertiesApp).Dispose();
@@ -458,23 +461,26 @@ namespace RateController
             }
         }
 
-        public void SaveProperty(string Key, string Value)
+        public void SaveProperty(string Key, string Value, bool IgnoreReadOnly = false)
         {
-            bool Changed = false;
-            if (Props.ContainsKey(Key))
+            if (!ReadOnly || IgnoreReadOnly)
             {
-                if (!Props[Key].ToString().Equals(Value))
+                bool Changed = false;
+                if (Props.ContainsKey(Key))
                 {
-                    Props[Key] = Value;
+                    if (!Props[Key].ToString().Equals(Value))
+                    {
+                        Props[Key] = Value;
+                        Changed = true;
+                    }
+                }
+                else
+                {
+                    Props.Add(Key, Value);
                     Changed = true;
                 }
+                if (Changed) SaveProperties();
             }
-            else
-            {
-                Props.Add(Key, Value);
-                Changed = true;
-            }
-            if (Changed) SaveProperties();
         }
 
         public string SettingsDir()
@@ -484,7 +490,7 @@ namespace RateController
 
         public void ShowHelp(string Message, string Title = "Help",
             int timeInMsec = 30000, bool LogError = false, bool Modal = false
-            ,bool PlayErrorSound=false)
+            , bool PlayErrorSound = false)
         {
             var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
             if (Modal)
@@ -497,7 +503,7 @@ namespace RateController
             }
 
             if (LogError) WriteErrorLog(Message);
-            if(PlayErrorSound) SystemSounds.Exclamation.Play();
+            if (PlayErrorSound) SystemSounds.Exclamation.Play();
         }
 
         public void StartWifi()
@@ -604,26 +610,20 @@ namespace RateController
                 // SettingsDir
                 cSettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
 
-                if (!Directory.Exists(cSettingsDir)) Directory.CreateDirectory(cSettingsDir);
+                if (!Directory.Exists(cSettingsDir))
+                {
+                    Directory.CreateDirectory(cSettingsDir);
+                    Properties.Settings.Default.FileName = "Default";
+                }
+
                 if (!File.Exists(cSettingsDir + "\\Example.rcs")) File.WriteAllBytes(cSettingsDir + "\\Example.rcs", Properties.Resources.Example);
+                if (!File.Exists(cSettingsDir + "\\Default.rcs")) File.WriteAllBytes(cSettingsDir + "\\Default.rcs", Properties.Resources.Default);
 
                 string FilesDir = Properties.Settings.Default.FilesDir;
                 if (!Directory.Exists(FilesDir)) Properties.Settings.Default.FilesDir = cSettingsDir;
             }
             catch (Exception)
             {
-            }
-        }
-        
-        public void ResetExample()
-        {
-            try
-            {
-
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("ResetExample: " + ex.Message);
             }
         }
 

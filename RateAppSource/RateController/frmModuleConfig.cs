@@ -69,17 +69,24 @@ namespace RateController
             }
             else
             {
-                // save
-                // IP
-                mf.UDPmodules.NetworkEP = cbEthernet.Text;
+                if (mf.Tls.ReadOnly)
+                {
+                    mf.Tls.ShowHelp("File is read only.", "Help", 5000, false, false, true);
+                }
+                else
+                {
+                    // save
+                    // IP
+                    mf.UDPmodules.NetworkEP = cbEthernet.Text;
 
-                Save();
-                SetButtons(false);
-                UpdateForm();
+                    Save();
+                    SetButtons(false);
+                    UpdateForm();
 
-                btnSendToModule.Text = "C";
-                btnSendToModule.FlatAppearance.BorderSize = 3;
-                btnSendToModule.FlatAppearance.BorderColor = Color.DarkBlue;
+                    btnSendToModule.Text = "C";
+                    btnSendToModule.FlatAppearance.BorderSize = 3;
+                    btnSendToModule.FlatAppearance.BorderColor = Color.DarkBlue;
+                }
             }
         }
 
@@ -842,6 +849,15 @@ namespace RateController
                     tbWifiPort.Text = form.ReturnValue.ToString("N0");
                 }
             }
+        }
+
+        private void tbSensorCount_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The number of sensors connected.";
+
+            mf.Tls.ShowHelp(Message, "Sensors");
+            hlpevent.Handled = true;
+
         }
     }
 }

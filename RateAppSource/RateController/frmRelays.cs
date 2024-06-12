@@ -47,9 +47,16 @@ namespace RateController
                 }
                 else
                 {
-                    SaveData();
-                    UpdateForm();
-                    SetButtons(false);
+                    if (mf.Tls.ReadOnly)
+                    {
+                        mf.Tls.ShowHelp("File is read only.", "Help", 5000, false, false, true);
+                    }
+                    else
+                    {
+                        SaveData();
+                        UpdateForm();
+                        SetButtons(false);
+                    }
                 }
             }
             catch (Exception ex)

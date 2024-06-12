@@ -290,6 +290,7 @@
             // 
             this.btnRescan.BackColor = System.Drawing.Color.Transparent;
             this.btnRescan.FlatAppearance.BorderSize = 0;
+            this.btnRescan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGreen;
             this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.Image = global::RateController.Properties.Resources.Update;
@@ -408,6 +409,7 @@
             this.tbSensorCount.TabIndex = 27;
             this.tbSensorCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbSensorCount.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbSensorCount.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbSensorCount_HelpRequested);
             this.tbSensorCount.Enter += new System.EventHandler(this.SensorCount_Enter);
             // 
             // lbSensorCount

@@ -82,7 +82,7 @@ namespace RateController
             return cProducts[IDX];
         }
 
-        public void Load()
+        public void Load(bool Reset=false)
         {
             cProducts.Clear();
             for (int i = 0; i < mf.MaxProducts; i++)
@@ -94,25 +94,41 @@ namespace RateController
 
             for (int i = 0; i < mf.MaxProducts; i++)
             {
-                clsProduct Prod = cProducts[i];
-                if (Prod.IsNew())
+                clsProduct Prd = cProducts[i];
+                if (Prd.IsNew()||Reset)
                 {
-                    // set initial module ID
-                    for (int j = 0; j < 255; j++)
-                    {
-                        if (UniqueModSen(j, Prod.SensorID, Prod.ID))
-                        {
-                            Prod.ModuleID = j;
-                            break;
-                        }
-                    }
-                    Prod.PIDkp = 1;
-                    Prod.PIDki = 0;
-                    Prod.PIDkd = 0;
-                    Prod.PIDmax = 100;
-                    Prod.PIDmin = 5;
-                    Prod.ProductName = "P" + (i + 1).ToString();
-                    Prod.Save();
+                    Prd.ProductName = "P" + (i + 1).ToString();
+                    Prd.ControlType = ControlTypeEnum.Valve;
+                    Prd.QuantityDescription = "Gallons";
+                    Prd.CoverageUnits = 0;
+                    Prd.MeterCal = 1;
+                    Prd.EnableProdDensity = false;
+                    Prd.ProdDensity = 0;
+                    Prd.RateSet = 1;
+                    Prd.RateAlt = 100;
+                    Prd.TankSize = 1000;
+                    Prd.TankStart = 1000;
+                    Prd.UseVR = false;
+                    Prd.VRID = 0;
+                    Prd.VRmax = 100;
+                    Prd.VRmin = 0;
+                    Prd.PIDkp = 1;
+                    Prd.PIDki = 0;
+                    Prd.PIDkd = 0;
+                    Prd.PIDmax = 100;
+                    Prd.PIDmin = 0;
+                    Prd.PIDscale = 0;
+                    Prd.ChangeID(i / 2, (byte)(i % 2), true);
+                    Prd.UseMultiPulse = true;
+                    Prd.OnScreen = true;
+                    Prd.ConstantUPM = false;
+                    Prd.OffRateSetting = 0;
+                    Prd.MinUPM = 0;
+                    Prd.BumpButtons = false;
+                    Prd.CountsRev = 1;
+                    Prd.Save();
+
+                    mf.DefaultProduct = 0;
                 }
             }
         }
