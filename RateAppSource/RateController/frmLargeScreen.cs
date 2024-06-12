@@ -34,7 +34,6 @@ namespace RateController
 
             #region // language
 
-            lbRate.Text = Lang.lgCurrentRate;
             lbTarget.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
             lbQuantity.Text = Lang.lgTank_Remaining + " ...";
@@ -107,7 +106,6 @@ namespace RateController
                 this.Top += TransTopOffset;
                 this.Left += TransLeftOffset;
                 Color txtcolor = Color.Yellow;
-                lbRate.ForeColor = txtcolor;
                 lbTarget.ForeColor = txtcolor;
                 lbCoverage.ForeColor = txtcolor;
                 lbQuantity.ForeColor = txtcolor;
@@ -119,6 +117,10 @@ namespace RateController
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
                 lblManAuto.ForeColor = txtcolor;
+                lbRateType.ForeColor = txtcolor;
+                lbTargetType.ForeColor = txtcolor;
+                lbCoverageType.ForeColor= txtcolor;
+                lbQuantityType.ForeColor = txtcolor;
             }
             else
             {
@@ -132,7 +134,6 @@ namespace RateController
                 this.Left += -TransLeftOffset;
 
                 Color txtcolor = SystemColors.ControlText;
-                lbRate.ForeColor = txtcolor;
                 lbTarget.ForeColor = txtcolor;
                 lbCoverage.ForeColor = txtcolor;
                 lbQuantity.ForeColor = txtcolor;
@@ -144,6 +145,10 @@ namespace RateController
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
                 lblManAuto.ForeColor = txtcolor;
+                lbRateType.ForeColor = txtcolor;
+                lbTargetType.ForeColor = txtcolor;
+                lbCoverageType.ForeColor = txtcolor;
+                lbQuantityType.ForeColor = txtcolor;
             }
             SetFont();
         }
@@ -484,15 +489,15 @@ namespace RateController
 
         private void lbTarget_Click(object sender, EventArgs e)
         {
-            if (lbTarget.Text == Lang.lgTargetRate)
+            if(Prd.UseAltRate)
             {
-                lbTarget.Text = Lang.lgTargetRateAlt;
-                Prd.UseAltRate = true;
+                Prd.UseAltRate = false;
+                lbTargetType.Text = "T";
             }
             else
             {
-                lbTarget.Text = Lang.lgTargetRate;
-                Prd.UseAltRate = false;
+                Prd.UseAltRate = true;
+                lbTargetType.Text = "A";
             }
         }
 
@@ -681,10 +686,10 @@ namespace RateController
 
                 foreach (Control Ctrl in Controls)
                 {
-                    if (Ctrl.Name != "lbName0" && Ctrl.Name != "lbName1" && Ctrl.Name != "lbName2" && Ctrl.Name != "lbName3"
-                         && Ctrl.Name != "lbFan1" && Ctrl.Name != "lbFan2" && Ctrl.Name != "btAuto" && Ctrl.Name != "lblManAuto")
+                    if (Ctrl.Name == "lbRateAmount" || Ctrl.Name == "lbTargetAmount"
+                       || Ctrl.Name == "lbCoverageAmount" || Ctrl.Name == "lbQuantityAmount")
                     {
-                        Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
+                        Ctrl.Font = new Font(TransparentFont, 16, FontStyle.Bold);
                     }
                     else if (Ctrl.Name == "btAuto" || Ctrl.Name == "lblManAuto")
                     {
@@ -772,7 +777,7 @@ namespace RateController
                     btnDown.Width = Width;
                     btnUp.Top = posY;
                     btnUp.Height = (Height + 10) / 2;
-                    btnDown.Top = posY + btnUp.Height + 10;
+                    btnDown.Top = posY + btnUp.Height + 6;
                     btnDown.Height = btnUp.Height;
                     break;
                 }
@@ -813,15 +818,15 @@ namespace RateController
 
             if (Prd.UseVR)
             {
-                lbTarget.Text = "VR Target";
+                lbTargetType.Text = "V";
             }
             else if (Prd.UseAltRate)
             {
-                lbTarget.Text = Lang.lgTargetRateAlt;
+                lbTargetType.Text = "A";
             }
             else
             {
-                lbTarget.Text = Lang.lgTargetRate;
+                lbTargetType.Text = "T";
             }
 
             // set highlight
@@ -944,17 +949,17 @@ namespace RateController
             switch (RateType)
             {
                 case 1:
-                    lbRate.Text = Lang.lgInstantRate;
+                    lbRateType.Text = "I";
                     lbRateAmount.Text = Prd.CurrentRate().ToString("N1");
                     break;
 
                 case 2:
-                    lbRate.Text = Lang.lgOverallRate;
+                    lbRateType.Text = "O";
                     lbRateAmount.Text = Prd.AverageRate().ToString("N1");
                     break;
 
                 default:
-                    lbRate.Text = Lang.lgCurrentRate;
+                    lbRateType.Text = "C";
                     lbRateAmount.Text = Prd.SmoothRate().ToString("N1");
                     break;
             }
@@ -965,7 +970,7 @@ namespace RateController
             // coverage
             if (mf.ShowCoverageRemaining)
             {
-                lbCoverage.Text = mf.CoverageDescriptions[Prd.CoverageUnits] + " Left ...";
+                lbCoverageType.Text = "R";
                 double RT = Prd.SmoothRate();
                 if (RT == 0) RT = Prd.TargetRate();
 
@@ -982,20 +987,20 @@ namespace RateController
             {
                 // show amount done
                 lbCoverageAmount.Text = Prd.CurrentCoverage().ToString("N1");
-                lbCoverage.Text = Prd.CoverageDescription() + " ...";
+                lbCoverageType.Text = "A";
             }
 
             // quantity
             if (mf.ShowQuantityRemaining)
             {
-                lbQuantity.Text = Lang.lgTank_Remaining + " ...";
+                lbQuantityType.Text = "R";
                 // calculate remaining
                 lbQuantityAmount.Text = (Prd.TankStart - Prd.UnitsApplied()).ToString("N1");
             }
             else
             {
                 // show amount done
-                lbQuantity.Text = Lang.lgQuantityApplied + " ...";
+                lbQuantityType.Text = "A";
                 lbQuantityAmount.Text = Prd.UnitsApplied().ToString("N1");
             }
 
