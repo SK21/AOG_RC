@@ -15,9 +15,9 @@ namespace RateController
         private bool Initializing = true;
         private string[] LanguageIDs;
         private RadioButton[] LanguageRBs;
+        private TabPage[] Tabs;
         private bool tbSimSpeedChanged = false;
         private bool tbSpeedChanged = false;
-        private TabPage[] Tabs;
 
         public frmOptions(FormStart CalledFrom)
         {
@@ -82,7 +82,7 @@ namespace RateController
                     {
                         Save();
                         SetButtons(false);
-                        if(ckDefaultProduct.Checked) mf.Products.Load(true);
+                        if (ckDefaultProduct.Checked) mf.Products.Load(true);
                         UpdateForm();
                     }
                 }
@@ -122,6 +122,19 @@ namespace RateController
             }
         }
 
+        private void ckDefaultProduct_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckDefaultProduct.Checked) SetButtons(true);
+        }
+
+        private void ckDefaultProduct_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Set product values to default.";
+
+            mf.Tls.ShowHelp(Message, "Sensors");
+            hlpevent.Handled = true;
+        }
+
         private void ckDualAuto_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -138,6 +151,11 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Master Switch");
             hlpevent.Handled = true;
+        }
+
+        private void ckSingle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckSingle.Checked) SetButtons(true);
         }
 
         private void ckTransparent_CheckedChanged(object sender, EventArgs e)
@@ -263,13 +281,13 @@ namespace RateController
                     if (double.TryParse(tbSimSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
                     tbSimSpeedChanged = false;
                 }
-                else if(tbSpeedChanged)
+                else if (tbSpeedChanged)
                 {
                     if (double.TryParse(tbSpeed.Text, out double Spd)) mf.SimSpeed = Spd;
                     tbSpeedChanged = false;
                 }
 
-                    if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
+                if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
                 if (int.TryParse(tbDelay.Text, out int Delay)) mf.PrimeDelay = Delay;
 
                 mf.MasterOverride = ckNoMaster.Checked;
@@ -289,6 +307,8 @@ namespace RateController
                 }
 
                 mf.UseLargeScreen = ckLargeScreen.Checked;
+                if (ckSingle.Checked) mf.SwitchScreens(true);
+
                 mf.UseDualAuto = ckDualAuto.Checked;
                 mf.ResumeAfterPrime = ckResume.Checked;
 
@@ -458,7 +478,7 @@ namespace RateController
 
         private void tbSimSpeed_TextChanged(object sender, EventArgs e)
         {
-            if(!Initializing) tbSimSpeedChanged = true;
+            if (!Initializing) tbSimSpeedChanged = true;
             SetButtons(true);
         }
 
@@ -578,21 +598,9 @@ namespace RateController
             LoadData(UpdateObject);
 
             ckDefaultProduct.Checked = false;
+            ckSingle.Checked = false;
 
             Initializing = false;
-        }
-
-        private void ckDefaultProduct_CheckedChanged(object sender, EventArgs e)
-        {
-            if(ckDefaultProduct.Checked) SetButtons(true);
-        }
-
-        private void ckDefaultProduct_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Set product values to default.";
-
-            mf.Tls.ShowHelp(Message, "Sensors");
-            hlpevent.Handled = true;
         }
     }
 }

@@ -20,6 +20,8 @@ namespace RateController
             mf = CallingForm;
             InitializeComponent();
             this.BackColor = Properties.Settings.Default.DayColour;
+            pictureBox1.BackColor = Properties.Settings.Default.DayColour;
+            lbPressureValue.BackColor = Properties.Settings.Default.DayColour;
         }
 
         private void frmPressureDisplay_FormClosed(object sender, FormClosedEventArgs e)
@@ -76,7 +78,7 @@ namespace RateController
 
                 foreach (Control Ctrl in Controls)
                 {
-                    Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
+                    Ctrl.Font = new Font(TransparentFont, 18);
                 }
             }
             else
@@ -99,7 +101,7 @@ namespace RateController
                 this.Left += TransLeftOffset;
                 IsTransparent = true;
 
-                Color txtcolor = Color.White;
+                Color txtcolor = Color.Yellow;
                 lbPressureValue.ForeColor = txtcolor;
             }
             else
@@ -131,6 +133,11 @@ namespace RateController
                 float Prs = mf.PressureObjects.Item(mf.PressureToShow - 1).Pressure();
                 lbPressureValue.Text = Prs.ToString("N1");
             }
+        }
+
+        private void lbPressureValue_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

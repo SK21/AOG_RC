@@ -374,7 +374,6 @@
             this.pnlQuantity3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.pnlQuantity3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlQuantity3.Controls.Add(this.pbQuantity3);
-            this.pnlQuantity3.Controls.Add(this.btAlarm);
             this.pnlQuantity3.Location = new System.Drawing.Point(340, 38);
             this.pnlQuantity3.Name = "pnlQuantity3";
             this.pnlQuantity3.Size = new System.Drawing.Size(44, 128);
@@ -399,7 +398,7 @@
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = global::RateController.Properties.Resources.Alarm1;
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(-129, 3);
+            this.btAlarm.Location = new System.Drawing.Point(104, 195);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 183;
@@ -829,6 +828,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.ClientSize = new System.Drawing.Size(390, 340);
+            this.Controls.Add(this.btAlarm);
             this.Controls.Add(this.lblManAuto);
             this.Controls.Add(this.btMinimize);
             this.Controls.Add(this.btAuto);

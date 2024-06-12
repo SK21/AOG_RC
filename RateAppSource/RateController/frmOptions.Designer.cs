@@ -58,6 +58,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.ckResume = new System.Windows.Forms.CheckBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.ckDualAuto = new System.Windows.Forms.CheckBox();
             this.DGV = new System.Windows.Forms.DataGridView();
             this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -82,7 +83,7 @@
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
             this.btnReset = new System.Windows.Forms.Button();
-            this.ckDualAuto = new System.Windows.Forms.CheckBox();
+            this.ckSingle = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -323,6 +324,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.ckSingle);
             this.tabPage2.Controls.Add(this.ckLargeScreen);
             this.tabPage2.Controls.Add(this.ckPressure);
             this.tabPage2.Controls.Add(this.ckTransparent);
@@ -340,7 +342,7 @@
             this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckLargeScreen.Location = new System.Drawing.Point(130, 41);
+            this.ckLargeScreen.Location = new System.Drawing.Point(36, 72);
             this.ckLargeScreen.Name = "ckLargeScreen";
             this.ckLargeScreen.Size = new System.Drawing.Size(164, 34);
             this.ckLargeScreen.TabIndex = 127;
@@ -355,7 +357,7 @@
             this.ckPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckPressure.Location = new System.Drawing.Point(130, 173);
+            this.ckPressure.Location = new System.Drawing.Point(219, 145);
             this.ckPressure.Name = "ckPressure";
             this.ckPressure.Size = new System.Drawing.Size(164, 34);
             this.ckPressure.TabIndex = 123;
@@ -369,7 +371,7 @@
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTransparent.Location = new System.Drawing.Point(130, 107);
+            this.ckTransparent.Location = new System.Drawing.Point(36, 145);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(164, 34);
             this.ckTransparent.TabIndex = 119;
@@ -424,6 +426,21 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Switches";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // ckDualAuto
+            // 
+            this.ckDualAuto.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDualAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckDualAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDualAuto.Location = new System.Drawing.Point(252, 6);
+            this.ckDualAuto.Name = "ckDualAuto";
+            this.ckDualAuto.Size = new System.Drawing.Size(164, 34);
+            this.ckDualAuto.TabIndex = 125;
+            this.ckDualAuto.Text = "Dual Auto";
+            this.ckDualAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDualAuto.UseVisualStyleBackColor = true;
+            this.ckDualAuto.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
             // DGV
             // 
@@ -730,20 +747,16 @@
             this.btnReset.Visible = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
-            // ckDualAuto
+            // ckSingle
             // 
-            this.ckDualAuto.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckDualAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckDualAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDualAuto.Location = new System.Drawing.Point(252, 6);
-            this.ckDualAuto.Name = "ckDualAuto";
-            this.ckDualAuto.Size = new System.Drawing.Size(164, 34);
-            this.ckDualAuto.TabIndex = 125;
-            this.ckDualAuto.Text = "Dual Auto";
-            this.ckDualAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDualAuto.UseVisualStyleBackColor = true;
-            this.ckDualAuto.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            this.ckSingle.AutoSize = true;
+            this.ckSingle.Location = new System.Drawing.Point(219, 76);
+            this.ckSingle.Name = "ckSingle";
+            this.ckSingle.Size = new System.Drawing.Size(152, 28);
+            this.ckSingle.TabIndex = 128;
+            this.ckSingle.Text = "Single Product";
+            this.ckSingle.UseVisualStyleBackColor = true;
+            this.ckSingle.CheckedChanged += new System.EventHandler(this.ckSingle_CheckedChanged);
             // 
             // frmOptions
             // 
@@ -768,6 +781,7 @@
             this.Load += new System.EventHandler(this.frmOptions_Load);
             this.tcOptions.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage5.ResumeLayout(false);
@@ -831,5 +845,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Relay;
         private System.Windows.Forms.CheckBox ckDefaultProduct;
         private System.Windows.Forms.CheckBox ckDualAuto;
+        private System.Windows.Forms.CheckBox ckSingle;
     }
 }

@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPressureDisplay));
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.lbPressureValue = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -42,21 +44,32 @@
             // lbPressureValue
             // 
             this.lbPressureValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPressureValue.Location = new System.Drawing.Point(15, 9);
+            this.lbPressureValue.Location = new System.Drawing.Point(85, 12);
             this.lbPressureValue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbPressureValue.Name = "lbPressureValue";
-            this.lbPressureValue.Size = new System.Drawing.Size(74, 25);
+            this.lbPressureValue.Size = new System.Drawing.Size(64, 62);
             this.lbPressureValue.TabIndex = 1;
             this.lbPressureValue.Text = "42";
-            this.lbPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbPressureValue.Click += new System.EventHandler(this.lbPressureValue_Click);
             this.lbPressureValue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbPressureValue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::RateController.Properties.Resources.pressure;
+            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(64, 62);
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
             // 
             // frmPressureDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(120, 43);
+            this.ClientSize = new System.Drawing.Size(160, 86);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbPressureValue);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -72,6 +85,7 @@
             this.Load += new System.EventHandler(this.frmPressureDisplay_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -79,5 +93,6 @@
         #endregion
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label lbPressureValue;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

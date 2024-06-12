@@ -89,7 +89,6 @@ namespace RateController
         private Label[] Targets;
         public clsSwitches SwitchObjects;
         public frmSwitches SwitchesForm;
-        private bool LargeScreenFirstRun = true;
 
         public FormStart()
         {
@@ -305,18 +304,49 @@ namespace RateController
             }
         }
 
-        private void SwitchScreens()
+        public void SwitchScreens(bool SingleProduct = false)
         {
-            Form fs = Tls.IsFormOpen("frmLargeScreen");
-            if (cUseLargeScreen)
+            try
             {
-                // use large screen
-                if (fs == null) StartLargeScreen();
+                Form fs = Tls.IsFormOpen("frmLargeScreen");
+                if (cUseLargeScreen)
+                {
+                    if (SingleProduct)
+                    {
+                        // hide unused items, set product 4 as default, set product 4 id to 0
+                        foreach (clsProduct Prd in Products.Items)
+                        {
+                            Prd.OnScreen = false;
+                        }
+                        Products.Item(3).OnScreen = true;
+                        DefaultProduct = 3;
+                        Products.Item(2).BumpButtons = true;
+                        Products.Item(0).ModuleID = 6;
+                        Products.Item(3).ChangeID(0, 0);
+                        UseTransparent = true;
+                    }
+
+                    if (fs == null)
+                    {
+                        LargeScreenExit = false;
+                        Restart = false;
+                        this.WindowState = FormWindowState.Minimized;
+                        this.ShowInTaskbar = false;
+                        Lscrn = new frmLargeScreen(this);
+                        Lscrn.ShowInTaskbar = true;
+                        Lscrn.SetTransparent();
+                        Lscrn.Show();
+                    }
+                }
+                else
+                {
+                    // use standard screen
+                    if (fs != null) Lscrn.SwitchToStandard();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // use standard screen
-                if (fs != null) Lscrn.SwitchToStandard();
+                Tls.WriteErrorLog("SwitchScreens: " + ex.Message);
             }
         }
 
@@ -409,15 +439,6 @@ namespace RateController
         {
             StartSerial();
             SetDayMode();
-
-            if (bool.TryParse(Tls.LoadProperty("LSfirstRun"), out bool FR))
-            {
-                LargeScreenFirstRun = FR;
-            }
-            else
-            {
-                LargeScreenFirstRun = true;
-            }
 
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
@@ -527,43 +548,6 @@ namespace RateController
             }
         }
 
-        public void StartLargeScreen()
-        {
-            if(LargeScreenFirstRun)
-            {
-                if (Products.Item(0).MeterCal == 0) // don't change if already in use
-                {
-                    LargeScreenFirstRun = false;
-                    var Hlp = new frmMsgBox(this, "Set to single product?", "Large Screen", true);
-                    Hlp.TopMost = true;
-                    Hlp.ShowDialog();
-                    if (Hlp.Result)
-                    {
-                        // hide unused items, set product 4 as default, set product 4 id to 0
-                        foreach (clsProduct Prd in Products.Items)
-                        {
-                            Prd.OnScreen = false;
-                        }
-                        Products.Item(3).OnScreen = true;
-                        DefaultProduct = 3;
-                        Products.Item(2).BumpButtons = true;
-                        Products.Item(0).ModuleID = 6;
-                        Products.Item(3).ModuleID = 0;
-                        UseTransparent = true;
-                    }
-                    Hlp.Close();
-                }
-            }
-
-            LargeScreenExit = false;
-            Restart = false;
-            this.WindowState = FormWindowState.Minimized;
-            this.ShowInTaskbar = false;
-            Lscrn = new frmLargeScreen(this);
-            Lscrn.ShowInTaskbar = true;
-            Lscrn.SetTransparent();
-            Lscrn.Show();
-        }
 
         public void StartSerial()
         {
@@ -952,8 +936,6 @@ namespace RateController
                 Tls.SaveProperty("SimMode", cSimMode.ToString());
                 Tls.SaveProperty("UseDualAuto", cUseDualAuto.ToString());
 
-                Tls.SaveProperty("LSfirstRun", LargeScreenFirstRun.ToString());
-
                 UDPaog.Close();
                 UDPmodules.Close();
 
@@ -1003,7 +985,6 @@ namespace RateController
 
         private void FormStart_Load(object sender, EventArgs e)
         {
-            Debug.Print("FormStart/Load");
             try
             {
                 Tls.LoadFormData(this);
@@ -1034,8 +1015,7 @@ namespace RateController
                 Products.UpdatePID();
                 UpdateStatus();
 
-                Debug.Print("Use large screen: " + cUseLargeScreen.ToString());
-                SwitchScreens();
+                //SwitchScreens();
                 DisplaySwitches();
                 DisplayPressure();
 
@@ -1257,7 +1237,6 @@ namespace RateController
                 {
                     Tls.OpenFile(saveFileDialog1.FileName,true);
                     LoadSettings();
-                    LargeScreenFirstRun = true;
                 }
             }
         }
@@ -1318,7 +1297,6 @@ namespace RateController
                 {
                     Tls.SaveFile(saveFileDialog1.FileName);
                     Tls.ReadOnly = false;
-                    LargeScreenFirstRun = true;
                     LoadSettings();
                 }
             }
