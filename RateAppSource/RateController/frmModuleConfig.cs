@@ -356,6 +356,13 @@ namespace RateController
             SetDayMode();
             if (int.TryParse(mf.Tls.LoadProperty("BoardType"), out int bt)) BoardType = bt;
             UpdateForm();
+
+            // check for no settings
+            if ((tbFlow1.Text == "0") && (tbFlow2.Text == "0") && (tbDir1.Text == "0")
+                && (tbDir2.Text == "0") && (tbPWM1.Text == "0") && (tbPWM2.Text == "0"))
+            {
+                ckDefaultModule.Checked = true;
+            }
         }
 
         private void groupBox1_Paint_1(object sender, PaintEventArgs e)
