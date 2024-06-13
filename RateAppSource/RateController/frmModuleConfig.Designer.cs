@@ -113,6 +113,7 @@
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tabControl1.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -140,6 +141,7 @@
             // 
             // tabPage6
             // 
+            this.tabPage6.Controls.Add(this.toolStrip1);
             this.tabPage6.Controls.Add(this.groupBox1);
             this.tabPage6.Controls.Add(this.ckDefaultModule);
             this.tabPage6.Location = new System.Drawing.Point(4, 33);
@@ -1063,6 +1065,14 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(483, 25);
+            this.toolStrip1.TabIndex = 48;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
             // frmModuleConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -1087,6 +1097,7 @@
             this.Load += new System.EventHandler(this.frmModuleConfig_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -1188,5 +1199,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rbESP32;
         private System.Windows.Forms.RadioButton rbTeensy;
+        private System.Windows.Forms.ToolStrip toolStrip1;
     }
 }

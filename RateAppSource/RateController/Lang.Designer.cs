@@ -97,6 +97,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Applied.
+        /// </summary>
+        internal static string lgApplied {
+            get {
+                return ResourceManager.GetString("lgApplied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Base Rate.
         /// </summary>
         internal static string lgBaseRate {

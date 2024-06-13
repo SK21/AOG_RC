@@ -52,6 +52,7 @@
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
             this.tcOptions = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ckSingle = new System.Windows.Forms.CheckBox();
             this.ckLargeScreen = new System.Windows.Forms.CheckBox();
             this.ckPressure = new System.Windows.Forms.CheckBox();
             this.ckTransparent = new System.Windows.Forms.CheckBox();
@@ -83,7 +84,6 @@
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
             this.btnReset = new System.Windows.Forms.Button();
-            this.ckSingle = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -335,6 +335,17 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Display";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // ckSingle
+            // 
+            this.ckSingle.AutoSize = true;
+            this.ckSingle.Location = new System.Drawing.Point(219, 76);
+            this.ckSingle.Name = "ckSingle";
+            this.ckSingle.Size = new System.Drawing.Size(152, 28);
+            this.ckSingle.TabIndex = 128;
+            this.ckSingle.Text = "Single Product";
+            this.ckSingle.UseVisualStyleBackColor = true;
+            this.ckSingle.CheckedChanged += new System.EventHandler(this.ckSingle_CheckedChanged);
             // 
             // ckLargeScreen
             // 
@@ -590,7 +601,7 @@
             this.ckDefaultProduct.Name = "ckDefaultProduct";
             this.ckDefaultProduct.Size = new System.Drawing.Size(164, 34);
             this.ckDefaultProduct.TabIndex = 332;
-            this.ckDefaultProduct.Text = "Products Reset";
+            this.ckDefaultProduct.Text = "Reset Products";
             this.ckDefaultProduct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDefaultProduct.UseVisualStyleBackColor = true;
             this.ckDefaultProduct.CheckedChanged += new System.EventHandler(this.ckDefaultProduct_CheckedChanged);
@@ -746,17 +757,6 @@
             this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Visible = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
-            // ckSingle
-            // 
-            this.ckSingle.AutoSize = true;
-            this.ckSingle.Location = new System.Drawing.Point(219, 76);
-            this.ckSingle.Name = "ckSingle";
-            this.ckSingle.Size = new System.Drawing.Size(152, 28);
-            this.ckSingle.TabIndex = 128;
-            this.ckSingle.Text = "Single Product";
-            this.ckSingle.UseVisualStyleBackColor = true;
-            this.ckSingle.CheckedChanged += new System.EventHandler(this.ckSingle_CheckedChanged);
             // 
             // frmOptions
             // 

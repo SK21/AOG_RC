@@ -37,6 +37,7 @@ namespace RateController
             lbTarget.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
             lbQuantity.Text = Lang.lgTank_Remaining + " ...";
+            lbUnits.Text = Lang.lgApplied;
 
             mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
             mnuSettings.Items["MnuSections"].Text = Lang.lgSections;
@@ -355,7 +356,7 @@ namespace RateController
 
         private void lbCoverage_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Shows either coverage done or area that can be done with the remaining quantity." +
+            string Message = "Shows either coverage applied (A) or area that can be done with the remaining quantity (R)." +
                 "\n Press to change.";
 
             mf.Tls.ShowHelp(Message, "Coverage");
@@ -447,7 +448,7 @@ namespace RateController
 
         private void lbQuantity_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Shows either quantity applied or quantity remaining." +
+            string Message = "Shows either quantity applied (A) or quantity remaining (R)." +
                 "\n Press to change.";
 
             mf.Tls.ShowHelp(Message, "Remaining");
@@ -463,10 +464,10 @@ namespace RateController
 
         private void lbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "1 - Current Rate, shows" +
+            string Message = "C - Current Rate, shows" +
                 " the target rate when it is within 10% of target. Outside this range it" +
-                " shows the exact rate being applied. \n 2 - Instant Rate, shows the exact rate." +
-                "\n 3 - Overall, averages total quantity applied over area done." +
+                " shows the exact rate being applied. \n I - Instant Rate, shows the exact rate." +
+                "\n O - Overall, averages total quantity applied over area done." +
                 "\n Press to change.";
 
             mf.Tls.ShowHelp(Message, "Rate");
@@ -503,7 +504,7 @@ namespace RateController
 
         private void lbTarget_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            string Message = "Press to switch between base rate and alternate rate.";
+            string Message = "Press to switch between base rate (R) and alternate rate (A).";
 
             mf.Tls.ShowHelp(Message, "Target Rate");
             hlpevent.Handled = true;
@@ -965,7 +966,7 @@ namespace RateController
             }
 
             lbTargetAmount.Text = Prd.TargetRate().ToString("N1");
-            lbUnits.Text = Prd.Units();
+            //lbUnits.Text = Prd.Units();
 
             // coverage
             if (mf.ShowCoverageRemaining)
@@ -989,20 +990,22 @@ namespace RateController
                 lbCoverageAmount.Text = Prd.CurrentCoverage().ToString("N1");
                 lbCoverageType.Text = "A";
             }
+            lbCoverage.Text=Prd.CoverageDescription();
 
             // quantity
             if (mf.ShowQuantityRemaining)
             {
                 lbQuantityType.Text = "R";
                 // calculate remaining
-                lbQuantityAmount.Text = (Prd.TankStart - Prd.UnitsApplied()).ToString("N1");
+                lbQuantityAmount.Text = (Prd.TankStart - Prd.UnitsApplied()).ToString("N0");
             }
             else
             {
                 // show amount done
                 lbQuantityType.Text = "A";
-                lbQuantityAmount.Text = Prd.UnitsApplied().ToString("N1");
+                lbQuantityAmount.Text = Prd.UnitsApplied().ToString("N0");
             }
+            lbQuantity.Text = Prd.QuantityDescription;
 
             // aog
             if (mf.SimMode == SimType.Speed)
@@ -1303,6 +1306,7 @@ namespace RateController
             Prd = mf.Products.Item(3);
             UpdateForm();
         }
+
 
     }
 }

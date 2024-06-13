@@ -129,6 +129,9 @@
   <data name="lgAltRate" xml:space="preserve">
     <value>Alt. Rate (%)</value>
   </data>
+  <data name="lgApplied" xml:space="preserve">
+    <value>Applied</value>
+  </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Base Rate</value>
   </data>
