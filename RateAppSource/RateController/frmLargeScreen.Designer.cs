@@ -93,13 +93,13 @@
             this.btnUp = new System.Windows.Forms.Button();
             this.btAuto = new System.Windows.Forms.Button();
             this.btMinimize = new System.Windows.Forms.Button();
-            this.lblManAuto = new System.Windows.Forms.Label();
             this.tmrBorder = new System.Windows.Forms.Timer(this.components);
             this.tmrRelease = new System.Windows.Forms.Timer(this.components);
             this.lbRateType = new System.Windows.Forms.Label();
             this.lbTargetType = new System.Windows.Forms.Label();
             this.lbCoverageType = new System.Windows.Forms.Label();
             this.lbQuantityType = new System.Windows.Forms.Label();
+            this.btMaster = new System.Windows.Forms.Button();
             this.pnlQuantity0.SuspendLayout();
             this.pnlQuantity1.SuspendLayout();
             this.pnlQuantity2.SuspendLayout();
@@ -396,7 +396,7 @@
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.Image = global::RateController.Properties.Resources.Alarm1;
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btAlarm.Location = new System.Drawing.Point(10, 239);
+            this.btAlarm.Location = new System.Drawing.Point(20, 181);
             this.btAlarm.Name = "btAlarm";
             this.btAlarm.Size = new System.Drawing.Size(168, 120);
             this.btAlarm.TabIndex = 183;
@@ -742,9 +742,9 @@
             this.btnMenu.FlatAppearance.BorderSize = 0;
             this.btnMenu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMenu.Image = global::RateController.Properties.Resources.GreenGear;
-            this.btnMenu.Location = new System.Drawing.Point(265, 312);
+            this.btnMenu.Location = new System.Drawing.Point(195, 312);
             this.btnMenu.Name = "btnMenu";
-            this.btnMenu.Size = new System.Drawing.Size(50, 50);
+            this.btnMenu.Size = new System.Drawing.Size(60, 60);
             this.btnMenu.TabIndex = 194;
             this.btnMenu.UseVisualStyleBackColor = false;
             this.btnMenu.Click += new System.EventHandler(this.btnSettings_Click);
@@ -776,40 +776,29 @@
             this.btAuto.BackColor = System.Drawing.Color.Red;
             this.btAuto.BackgroundImage = global::RateController.Properties.Resources.spray2;
             this.btAuto.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btAuto.Location = new System.Drawing.Point(333, 312);
+            this.btAuto.Location = new System.Drawing.Point(260, 312);
             this.btAuto.Margin = new System.Windows.Forms.Padding(2);
             this.btAuto.Name = "btAuto";
-            this.btAuto.Size = new System.Drawing.Size(50, 50);
+            this.btAuto.Size = new System.Drawing.Size(60, 60);
             this.btAuto.TabIndex = 197;
             this.btAuto.Text = "OFF";
             this.btAuto.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btAuto.UseVisualStyleBackColor = false;
             this.btAuto.Click += new System.EventHandler(this.btAuto_Click);
-            this.btAuto.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btAuto_MouseUp);
             // 
             // btMinimize
             // 
             this.btMinimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(231)))));
             this.btMinimize.BackgroundImage = global::RateController.Properties.Resources.monitor;
             this.btMinimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btMinimize.Location = new System.Drawing.Point(197, 312);
+            this.btMinimize.Location = new System.Drawing.Point(130, 312);
             this.btMinimize.Margin = new System.Windows.Forms.Padding(2);
             this.btMinimize.Name = "btMinimize";
-            this.btMinimize.Size = new System.Drawing.Size(50, 50);
+            this.btMinimize.Size = new System.Drawing.Size(60, 60);
             this.btMinimize.TabIndex = 198;
             this.btMinimize.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btMinimize.UseVisualStyleBackColor = false;
             this.btMinimize.Click += new System.EventHandler(this.btMinimize_Click);
-            // 
-            // lblManAuto
-            // 
-            this.lblManAuto.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblManAuto.Location = new System.Drawing.Point(327, 361);
-            this.lblManAuto.Name = "lblManAuto";
-            this.lblManAuto.Size = new System.Drawing.Size(64, 23);
-            this.lblManAuto.TabIndex = 199;
-            this.lblManAuto.Text = "AUTO";
-            this.lblManAuto.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // tmrBorder
             // 
@@ -869,17 +858,33 @@
             this.lbQuantityType.Click += new System.EventHandler(this.lbQuantity_Click);
             this.lbQuantityType.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbQuantity_HelpRequested);
             // 
+            // btMaster
+            // 
+            this.btMaster.BackColor = System.Drawing.Color.Red;
+            this.btMaster.BackgroundImage = global::RateController.Properties.Resources.spray2;
+            this.btMaster.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btMaster.Location = new System.Drawing.Point(324, 312);
+            this.btMaster.Margin = new System.Windows.Forms.Padding(2);
+            this.btMaster.Name = "btMaster";
+            this.btMaster.Size = new System.Drawing.Size(60, 60);
+            this.btMaster.TabIndex = 204;
+            this.btMaster.Text = "OFF";
+            this.btMaster.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btMaster.UseVisualStyleBackColor = false;
+            this.btMaster.Click += new System.EventHandler(this.btMaster_Click);
+            this.btMaster.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btMaster_MouseUp);
+            // 
             // frmLargeScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.ClientSize = new System.Drawing.Size(392, 388);
+            this.ClientSize = new System.Drawing.Size(392, 376);
+            this.Controls.Add(this.btMaster);
             this.Controls.Add(this.lbQuantityType);
             this.Controls.Add(this.lbCoverageType);
             this.Controls.Add(this.lbTargetType);
             this.Controls.Add(this.lbRateType);
             this.Controls.Add(this.btAlarm);
-            this.Controls.Add(this.lblManAuto);
             this.Controls.Add(this.btMinimize);
             this.Controls.Add(this.btAuto);
             this.Controls.Add(this.btnDown);
@@ -1001,7 +1006,6 @@
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btAuto;
         private System.Windows.Forms.Button btMinimize;
-        private System.Windows.Forms.Label lblManAuto;
         private System.Windows.Forms.Timer tmrBorder;
         private System.Windows.Forms.ToolStripMenuItem networkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem calibrateToolStripMenuItem1;
@@ -1017,5 +1021,6 @@
         private System.Windows.Forms.Label lbTargetType;
         private System.Windows.Forms.Label lbCoverageType;
         private System.Windows.Forms.Label lbQuantityType;
+        private System.Windows.Forms.Button btMaster;
     }
 }

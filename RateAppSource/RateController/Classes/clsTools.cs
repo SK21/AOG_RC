@@ -40,7 +40,7 @@ namespace RateController
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "12-Jun-2024";
+        private string cVersionDate = "15-Jun-2024";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();

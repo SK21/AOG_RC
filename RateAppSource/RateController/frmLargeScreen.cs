@@ -9,7 +9,6 @@ namespace RateController
     public partial class frmLargeScreen : Form
     {
         public clsAlarm RCalarm;
-        private bool automode = true;
         private int Fan1RateType = 0;
         private int Fan2RateType = 0;
         private bool IsTransparent = false;
@@ -76,14 +75,10 @@ namespace RateController
 
             foreach (Control Ctrl in Controls)
             {
-                if (Ctrl.Name != "btnSettings" && Ctrl.Name != "btAuto")
+                if (Ctrl.Name != "btnSettings" && Ctrl.Name != "btAuto" && Ctrl.Name != "btMaster")
                 {
                     Ctrl.MouseDown += mouseMove_MouseDown;
                     Ctrl.MouseMove += mouseMove_MouseMove;
-                }
-                else if (Ctrl.Name == "btAuto")
-                {
-                    Ctrl.MouseDown += btAuto_MouseDown;
                 }
             }
         }
@@ -117,10 +112,9 @@ namespace RateController
                 lbRPM1.ForeColor = txtcolor;
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
-                lblManAuto.ForeColor = txtcolor;
                 lbRateType.ForeColor = txtcolor;
                 lbTargetType.ForeColor = txtcolor;
-                lbCoverageType.ForeColor= txtcolor;
+                lbCoverageType.ForeColor = txtcolor;
                 lbQuantityType.ForeColor = txtcolor;
             }
             else
@@ -145,7 +139,6 @@ namespace RateController
                 lbRPM1.ForeColor = txtcolor;
                 lbRPM2.ForeColor = txtcolor;
                 lbUnits.ForeColor = txtcolor;
-                lblManAuto.ForeColor = txtcolor;
                 lbRateType.ForeColor = txtcolor;
                 lbTargetType.ForeColor = txtcolor;
                 lbCoverageType.ForeColor = txtcolor;
@@ -169,46 +162,26 @@ namespace RateController
 
         private void btAuto_Click(object sender, EventArgs e)
         {
-            if (automode)
+            mf.vSwitchBox.PressSwitch(SwIDs.Auto, true);
+        }
+
+        private void btMaster_Click(object sender, EventArgs e)
+        {
+            if (masterOn)
             {
-                mf.vSwitchBox.PressSwitch(SwIDs.Auto, true);
+                mf.vSwitchBox.PressSwitch(SwIDs.MasterOff, true);
+                MasterPressed = true;
+                tmrRelease.Enabled = true;
             }
             else
             {
-                if (masterOn)
-                {
-                    mf.vSwitchBox.PressSwitch(SwIDs.MasterOff, true);
-                    MasterPressed = true;
-                    tmrRelease.Enabled = true;
-                }
-                else
-                {
-                    mf.vSwitchBox.PressSwitch(SwIDs.MasterOn, true);
-                    MasterPressed = true;
-                    tmrRelease.Enabled = true;
-                }
+                mf.vSwitchBox.PressSwitch(SwIDs.MasterOn, true);
+                MasterPressed = true;
+                tmrRelease.Enabled = true;
             }
         }
 
-        private void btAuto_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                automode = !automode;
-                if (automode)
-                {
-                    lblManAuto.Text = "AUTO";
-                }
-                else
-                {
-                    lblManAuto.Text = "MASTER";
-                }
-
-                UpdateSwitches();
-            }
-        }
-
-        private void btAuto_MouseUp(object sender, MouseEventArgs e)
+        private void btMaster_MouseUp(object sender, MouseEventArgs e)
         {
             MasterPressed = false;
         }
@@ -345,6 +318,7 @@ namespace RateController
             mf.vSwitchBox.LargeScreenOn = true;
             mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
             tmrRelease.Enabled = true;
+            UpdateSwitches();
             UpdateForm();
         }
 
@@ -421,25 +395,6 @@ namespace RateController
             ShowSettings(3);
         }
 
-        private void ShowSettings(int ProductID)
-        {
-            Prd = mf.Products.Item(ProductID);
-            UpdateForm();
-
-            //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("FormSettings");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormSettings(mf, Prd.ID + 1);
-            frm.Show();
-
-        }
-
         private void lbQuantity_Click(object sender, EventArgs e)
         {
             mf.ShowQuantityRemaining = !mf.ShowQuantityRemaining;
@@ -490,7 +445,7 @@ namespace RateController
 
         private void lbTarget_Click(object sender, EventArgs e)
         {
-            if(Prd.UseAltRate)
+            if (Prd.UseAltRate)
             {
                 Prd.UseAltRate = false;
                 lbTargetType.Text = "T";
@@ -692,7 +647,7 @@ namespace RateController
                     {
                         Ctrl.Font = new Font(TransparentFont, 16, FontStyle.Bold);
                     }
-                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "lblManAuto")
+                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "lblManAuto" || Ctrl.Name == "btMaster")
                     {
                         Ctrl.Font = new Font(TransparentFont, 10, FontStyle.Bold);
                     }
@@ -783,6 +738,24 @@ namespace RateController
                     break;
                 }
             }
+        }
+
+        private void ShowSettings(int ProductID)
+        {
+            Prd = mf.Products.Item(ProductID);
+            UpdateForm();
+
+            //check if window already exists
+            Form fs = mf.Tls.IsFormOpen("FormSettings");
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new FormSettings(mf, Prd.ID + 1);
+            frm.Show();
         }
 
         private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
@@ -990,7 +963,7 @@ namespace RateController
                 lbCoverageAmount.Text = Prd.CurrentCoverage().ToString("N1");
                 lbCoverageType.Text = "A";
             }
-            lbCoverage.Text=Prd.CoverageDescription();
+            lbCoverage.Text = Prd.CoverageDescription();
 
             // quantity
             if (mf.ShowQuantityRemaining)
@@ -1219,40 +1192,34 @@ namespace RateController
 
         private void UpdateSwitches()
         {
-            if (automode)
+            // auto button
+            if (SwON[0])
             {
-                // show auto button
-                if (SwON[0])
-                {
-                    btAuto.BackColor = Color.LightGreen;
-                    btAuto.Text = "AUTO";
-                    btAuto.ForeColor = Color.Black;
-                }
-                else
-                {
-                    btAuto.BackColor = Color.Red;
-                    btAuto.Text = "OFF";
-                    btAuto.ForeColor = Color.White;
-                }
+                btAuto.BackColor = Color.LightGreen;
+                btAuto.Text = "AUTO";
+                btAuto.ForeColor = Color.Black;
             }
             else
             {
-                // show master button
-                if (mf.SwitchBox.MasterOn)
-                {
-                    btAuto.BackColor = Color.Yellow;
-                    btAuto.Text = "ON";
-                    btAuto.ForeColor = Color.Black;
-                    automode = false;
-                    masterOn = true;
-                }
-                else
-                {
-                    btAuto.BackColor = Color.Red;
-                    btAuto.Text = "OFF";
-                    btAuto.ForeColor = Color.White;
-                    masterOn = false;
-                }
+                btAuto.BackColor = Color.Red;
+                btAuto.Text = "AUTO";
+                btAuto.ForeColor = Color.White;
+            }
+
+            // master button
+            if (mf.SwitchBox.MasterOn)
+            {
+                btMaster.BackColor = Color.Yellow;
+                btMaster.Text = "MSTR";
+                btMaster.ForeColor = Color.Black;
+                masterOn = true;
+            }
+            else
+            {
+                btMaster.BackColor = Color.Red;
+                btMaster.Text = "MSTR";
+                btMaster.ForeColor = Color.White;
+                masterOn = false;
             }
 
             if (SwON[3])
@@ -1306,7 +1273,5 @@ namespace RateController
             Prd = mf.Products.Item(3);
             UpdateForm();
         }
-
-
     }
 }
