@@ -27,7 +27,6 @@ namespace RateController
         private double cHectaresPerMinute;
         private double cHours1;
         private double cHours2;
-        private bool cLogRate;
         private int cManualPWM;
         private double cMeterCal = 0;
         private double cMinUPM;
@@ -77,7 +76,6 @@ namespace RateController
             ArduinoModule = new PGN32400(this);
             ModuleRateSettings = new PGN32500(this);
             ModulePIDdata = new PGN32502(this);
-            cLogRate = false;
 
             if (cProductID > mf.MaxProducts - 3)
             {
@@ -206,9 +204,6 @@ namespace RateController
 
         public int ID
         { get { return cProductID; } }
-
-        public bool LogRate
-        { get { return cLogRate; } set { cLogRate = value; } }
 
         public int ManualPWM
         {
@@ -1076,7 +1071,6 @@ namespace RateController
 
                 // send to arduino
                 ModuleRateSettings.Send();
-                if (cLogRate) LogTheRate();
             }
             else
             {
@@ -1131,25 +1125,6 @@ namespace RateController
                 Result = mf.AutoSteerPGN.Speed_KMH();
             }
             return Result;
-        }
-
-        private void LogTheRate()
-        {
-            double Target = TargetRate();
-            double Applied = RateApplied();
-            if (Target > 0 && Applied > 0)
-            {
-                double Ratio = Applied / Target;
-                if (Ratio < 0.80 || Ratio > 1.20)
-                {
-                    string Mes = "Product: " + cProductID;
-                    Mes += "\t Coverage: " + Coverage.ToString("N1");
-                    Mes += "\t Target: " + Target.ToString("N1");
-                    Mes += "\t Applied: " + Applied.ToString("N1");
-                    Mes += "\t Ratio: " + Ratio.ToString("N2");
-                    mf.Tls.WriteActivityLog(Mes);
-                }
-            }
         }
 
         private bool ProductOn()

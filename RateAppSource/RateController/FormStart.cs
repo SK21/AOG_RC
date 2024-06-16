@@ -318,11 +318,46 @@ namespace RateController
                         {
                             Prd.OnScreen = false;
                         }
-                        Products.Item(3).OnScreen = true;
-                        DefaultProduct = 3;
+                        clsProduct P0 = Products.Items[0];
+                        clsProduct P3 = Products.Items[3];
+
+                        P3.ProductName = P0.ProductName;
+                        P3.ControlType = P0.ControlType;
+                        P3.QuantityDescription = P0.QuantityDescription;
+                        P3.CoverageUnits = P0.CoverageUnits;
+                        P3.MeterCal = P0.MeterCal;
+                        P3.ProdDensity = P0.ProdDensity;
+                        P3.EnableProdDensity = P0.EnableProdDensity;
+                        P3.RateSet = P0.RateSet;
+                        P3.RateAlt = P0.RateAlt;
+                        P3.TankSize = P0.TankSize;
+                        P3.TankStart = P0.TankStart;
+
+                        P3.UseVR = P0.UseVR;
+                        P3.VRID = P0.VRID;
+                        P3.VRmax = P0.VRmax;
+                        P3.VRmin = P0.VRmin;
+
+                        P3.PIDkp = P0.PIDkp;
+                        P3.PIDki = P0.PIDki;
+                        P3.PIDkd = P0.PIDkd;
+                        P3.PIDmax = P0.PIDmax;
+                        P3.PIDmin = P0.PIDmin;
+                        P3.PIDscale = P0.PIDscale;
+
                         Products.Item(2).BumpButtons = true;
-                        Products.Item(0).ModuleID = 6;
-                        Products.Item(3).ChangeID(0, 0);
+                        P0.ModuleID = 6;
+                        P3.ChangeID(0, 0);
+                        P3.OnScreen = true;
+                        P3.ConstantUPM = P0.ConstantUPM;
+                        P3.UseOffRateAlarm = P0.UseOffRateAlarm;
+                        P3.OffRateSetting = P0.OffRateSetting;
+                        P3.MinUPM = P0.MinUPM;
+                        P3.BumpButtons = false;
+                        P3.UseMultiPulse = P0.UseMultiPulse;
+
+                        P3.CountsRev = P0.CountsRev;
+                        DefaultProduct = 3;
                         UseTransparent = true;
                     }
 
@@ -547,7 +582,6 @@ namespace RateController
                 SER[i].SendData(Data);
             }
         }
-
 
         public void StartSerial()
         {

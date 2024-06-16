@@ -788,7 +788,7 @@
             // 
             // btMinimize
             // 
-            this.btMinimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(231)))));
+            this.btMinimize.BackColor = System.Drawing.Color.Transparent;
             this.btMinimize.BackgroundImage = global::RateController.Properties.Resources.monitor;
             this.btMinimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btMinimize.Location = new System.Drawing.Point(130, 312);

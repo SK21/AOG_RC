@@ -647,7 +647,7 @@ namespace RateController
                     {
                         Ctrl.Font = new Font(TransparentFont, 16, FontStyle.Bold);
                     }
-                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "lblManAuto" || Ctrl.Name == "btMaster")
+                    else if (Ctrl.Name == "btAuto" ||  Ctrl.Name == "btMaster")
                     {
                         Ctrl.Font = new Font(TransparentFont, 10, FontStyle.Bold);
                     }
@@ -661,7 +661,14 @@ namespace RateController
             {
                 foreach (Control Ctrl in Controls)
                 {
-                    Ctrl.Font = new Font("Tahoma", 14);
+                    if (Ctrl.Name == "btAuto" || Ctrl.Name == "btMaster")
+                    {
+                        Ctrl.Font = new Font("MS Gothic", 10,FontStyle.Bold);
+                    }
+                    else
+                    {
+                        Ctrl.Font = new Font("Tahoma", 14);
+                    }
                 }
             }
         }
@@ -1203,7 +1210,7 @@ namespace RateController
             {
                 btAuto.BackColor = Color.Red;
                 btAuto.Text = "AUTO";
-                btAuto.ForeColor = Color.White;
+                btAuto.ForeColor = Color.Black;
             }
 
             // master button
@@ -1218,7 +1225,7 @@ namespace RateController
             {
                 btMaster.BackColor = Color.Red;
                 btMaster.Text = "MSTR";
-                btMaster.ForeColor = Color.White;
+                btMaster.ForeColor = Color.Black;
                 masterOn = false;
             }
 
