@@ -1,4 +1,6 @@
 
+// based on https://github.com/joepasquariello/FlasherX
+
 uint16_t PacketLength;
 uint8_t ReceivedData[500];
 int DisplayCount = 0;
@@ -40,16 +42,16 @@ void ReceiveUpdate()
 					//2		Module ID		
 					//3		Module Type		0-4
 					//4		Command
-					//			- overwrite module type
+					//			- overwrite module ID/Type
 					//5		CRC
 					PGNlength = 6;
 					if (PacketLength > PGNlength - 1)
 					{
 						if (GoodCRC(ReceivedData, PGNlength))
 						{
-							if (ParseModID(ReceivedData[2]) == MDL.ID)
+							if (ParseModID(ReceivedData[2]) == MDL.ID || ReceivedData[4] == 1)
 							{
-								if ((ReceivedData[4] == 1) || (ReceivedData[3] == InoType))
+								if ((ReceivedData[3] == InoType) || (ReceivedData[4] == 1))
 								{
 									if (firmware_buffer_init(&buffer_addr, &buffer_size))
 									{

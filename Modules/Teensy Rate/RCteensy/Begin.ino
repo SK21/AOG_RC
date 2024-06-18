@@ -118,11 +118,27 @@ void DoSetup()
 		switch (i)
 		{
 		case 0:
-			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, FALLING);
-			break;
+			if (MDL.UseAltISR)
+			{
+				attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0_Alt, FALLING);
+				break;
+			}
+			else
+			{
+				attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, FALLING);
+				break;
+			}
 		case 1:
+			if (MDL.UseAltISR)
+			{
+				attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1_Alt, FALLING);
+				break;
+			}
+			else
+			{
 			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, FALLING);
 			break;
+			}
 		}
 
 		// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work

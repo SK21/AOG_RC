@@ -35,6 +35,7 @@
     <ClCompile Include="FXUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RateAlt.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCteensy.vsarduino.h">
