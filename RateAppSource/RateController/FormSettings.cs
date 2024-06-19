@@ -92,7 +92,7 @@ namespace RateController
             rbSinglePulse.Text = Lang.lgTimeForSingle;
             rbMultiPulse.Text = Lang.lgTimeForMulti;
 
-            lbMinimumUPM.Text = Lang.lgMinUPM;
+            grpMinUPM.Text = Lang.lgMinUPM;
             ckOffRate.Text = Lang.lgOffRate;
             ckDefault.Text = Lang.lgDefaultProduct;
             ckOnScreen.Text = Lang.lgOnScreen;
@@ -366,7 +366,7 @@ namespace RateController
         {
             string Message = "This is the sensor counts for 1 unit of product.";
             //string Message = "For flow sensors this is the sensor counts for 1 unit of product.\n";
-                //"For weight control this is Units per Minute for each Pulse Width Modulation value.";
+            //"For weight control this is Units per Minute for each Pulse Width Modulation value.";
 
             mf.Tls.ShowHelp(Message, "Sensor Counts");
             hlpevent.Handled = true;
@@ -458,6 +458,8 @@ namespace RateController
             rbMultiPulse.Checked = (CurrentProduct.UseMultiPulse);
 
             tbMinUPM.Text = CurrentProduct.MinUPM.ToString("N1");
+            rbUPMSpeed.Checked = CurrentProduct.MinUPMbySpeed;
+
             ckOffRate.Checked = CurrentProduct.UseOffRateAlarm;
             tbOffRate.Text = CurrentProduct.OffRateSetting.ToString("N0");
 
@@ -666,6 +668,8 @@ namespace RateController
             double.TryParse(tbMinUPM.Text, out TempDB);
             CurrentProduct.MinUPM = TempDB;
 
+            CurrentProduct.MinUPMbySpeed = rbUPMSpeed.Checked;
+
             CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
 
             byte.TryParse(tbOffRate.Text, out tempB);
@@ -688,7 +692,7 @@ namespace RateController
 
         private void SaveData()
         {
-            if(ckArea1.Checked)
+            if (ckArea1.Checked)
             {
                 CurrentProduct.ResetCoverage();
                 ckArea1.Checked = false;
@@ -700,7 +704,7 @@ namespace RateController
                 ckArea2.Checked = false;
             }
 
-            if(ckQuantity1.Checked)
+            if (ckQuantity1.Checked)
             {
                 CurrentProduct.ResetApplied();
                 ckQuantity1.Checked = false;
@@ -712,13 +716,13 @@ namespace RateController
                 ckQuantity2.Checked = false;
             }
 
-            if(ckHours1.Checked)
+            if (ckHours1.Checked)
             {
                 CurrentProduct.ResetHours1();
                 ckHours1.Checked = false;
             }
 
-            if(ckHours2.Checked)
+            if (ckHours2.Checked)
             {
                 CurrentProduct.ResetHours2();
                 ckHours2.Checked = false;
@@ -999,7 +1003,9 @@ namespace RateController
         {
             double tempD;
             double.TryParse(tbMinUPM.Text, out tempD);
-            using (var form = new FormNumeric(0, 500, tempD))
+            double Max = 30;
+            if (rbUPMFixed.Checked) Max = 500;
+            using (var form = new FormNumeric(0, Max, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -1224,10 +1230,11 @@ namespace RateController
             }
         }
 
-        private void setBumpButtonVisibility(bool visible)
+        private void SetFanDisplay(bool IsFan)
         {
-            ckBumpButtons.Visible = visible;
-            ckBumpButtons.Enabled = visible;
+            ckBumpButtons.Visible = !IsFan;
+            ckBumpButtons.Enabled = !IsFan;
+            grpMinUPM.Visible = !IsFan;
         }
 
         private void UpdateForm()
@@ -1244,17 +1251,17 @@ namespace RateController
             if (CurrentProduct.ID == mf.MaxProducts - 1)
             {
                 lbProduct.Text = "Fan 2";
-                setBumpButtonVisibility(false);
+                SetFanDisplay(true);
             }
             else if (CurrentProduct.ID == mf.MaxProducts - 2)
             {
                 lbProduct.Text = "Fan 1";
-                setBumpButtonVisibility(false);
+                SetFanDisplay(true);
             }
             else
             {
                 lbProduct.Text = (CurrentProduct.ID + 1).ToString() + ". " + CurrentProduct.ProductName;
-                setBumpButtonVisibility(true);
+                SetFanDisplay(false);
             }
 
             if (mf.SimMode != SimType.None)
@@ -1315,10 +1322,28 @@ namespace RateController
             ckHours1.Checked = false;
             ckHours2.Checked = false;
 
-            lbAcres1.Text = "*"+CurrentProduct.CoverageDescription() + " 1";
+            lbAcres1.Text = "*" + CurrentProduct.CoverageDescription() + " 1";
             lbAcres2.Text = CurrentProduct.CoverageDescription() + " 2";
-            lbGallons1.Text = "*"+CurrentProduct.QuantityDescription + " 1";
+            lbGallons1.Text = "*" + CurrentProduct.QuantityDescription + " 1";
             lbGallons2.Text = CurrentProduct.QuantityDescription + " 2";
+
+            rbUPMSpeed.Checked = CurrentProduct.MinUPMbySpeed;
+            rbUPMFixed.Checked = !CurrentProduct.MinUPMbySpeed;
+            if (rbUPMFixed.Checked)
+            {
+                lbMinUPM.Text = CurrentProduct.QuantityDescription;
+            }
+            else
+            {
+                if (mf.UseInches)
+                {
+                    lbMinUPM.Text = "MPH";
+                }
+                else
+                {
+                    lbMinUPM.Text = "KMH";
+                }
+            }
         }
 
         void UpdateOnTypeChange()
@@ -1731,6 +1756,35 @@ namespace RateController
 
         private void ckQuanitiy2_CheckedChanged(object sender, EventArgs e)
         {
+            SetButtons(true);
+        }
+
+        private void rbUPMSpeed_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Speed used to calculate minimum UPM based on application rate.";
+
+            mf.Tls.ShowHelp(Message, "Minimum UPM using speed");
+            hlpevent.Handled = true;
+        }
+
+        private void rbUPMFixed_Click(object sender, EventArgs e)
+        {
+            if (rbUPMFixed.Checked)
+            {
+                lbMinUPM.Text = CurrentProduct.QuantityDescription;
+            }
+            else
+            {
+                if (mf.UseInches)
+                {
+                    lbMinUPM.Text = "MPH";
+                }
+                else
+                {
+                    lbMinUPM.Text = "KMH";
+                }
+            }
+            tbMinUPM.Text = "0.0";
             SetButtons(true);
         }
     }

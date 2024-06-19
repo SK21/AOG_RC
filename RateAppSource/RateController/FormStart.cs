@@ -26,6 +26,7 @@ namespace RateController
         public readonly int MaxSections = 128;
         public readonly int MaxSensors = 8;
         public readonly int MaxSwitches = 16;
+        public readonly double MPHtoKPH = 1.6092;
         public PGN32401 AnalogData;
         public PGN229 AOGsections;
         public PGN254 AutoSteerPGN;

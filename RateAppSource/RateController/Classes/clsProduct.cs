@@ -30,6 +30,7 @@ namespace RateController
         private int cManualPWM;
         private double cMeterCal = 0;
         private double cMinUPM;
+        private bool cMinUPMbySpeed = false;
         private int cModID;
         private byte cOffRateSetting;
         private bool cOnScreen;
@@ -211,7 +212,7 @@ namespace RateController
             set
             {
                 if (cControlType == ControlTypeEnum.Valve || cControlType == ControlTypeEnum.ComboClose
-                    ||ControlType==ControlTypeEnum.ComboCloseTimed)
+                    || ControlType == ControlTypeEnum.ComboCloseTimed)
                 {
                     if (value < -255) cManualPWM = -255;
                     else if (value > 255) cManualPWM = 255;
@@ -252,6 +253,12 @@ namespace RateController
                     throw new ArgumentException("Invalid value.");
                 }
             }
+        }
+
+        public bool MinUPMbySpeed
+        {
+            get { return cMinUPMbySpeed; }
+            set { cMinUPMbySpeed = value; }
         }
 
         public int ModuleID
@@ -603,6 +610,8 @@ namespace RateController
             byte.TryParse(mf.Tls.LoadProperty("OffRateSetting" + IDname), out cOffRateSetting);
 
             double.TryParse(mf.Tls.LoadProperty("MinUPM" + IDname), out cMinUPM);
+            if (bool.TryParse(mf.Tls.LoadProperty("MinUPMbySpeed" + IDname), out bool ms)) cMinUPMbySpeed = ms;
+
             byte.TryParse(mf.Tls.LoadProperty("VRID" + IDname), out cVRID);
 
             if (bool.TryParse(mf.Tls.LoadProperty("UseVR" + IDname), out bool tmp3)) cUseVR = tmp3;
@@ -811,6 +820,8 @@ namespace RateController
             mf.Tls.SaveProperty("OffRateSetting" + IDname, cOffRateSetting.ToString());
 
             mf.Tls.SaveProperty("MinUPM" + IDname, cMinUPM.ToString());
+            mf.Tls.SaveProperty("MinUPMbySpeed" + IDname, cMinUPMbySpeed.ToString());
+
             mf.Tls.SaveProperty("VRID" + IDname, cVRID.ToString());
             mf.Tls.SaveProperty("UseVR" + IDname, cUseVR.ToString());
             mf.Tls.SaveProperty("VRmax" + IDname, cVRmax.ToString());
@@ -1118,6 +1129,18 @@ namespace RateController
                 else
                 {
                     Result = mf.SimSpeed;
+                }
+            }
+            else if (cMinUPMbySpeed)
+            {
+                // use speed to calculate minimum upm
+                if (cMinUPM > mf.AutoSteerPGN.Speed_KMH())
+                {
+                    Result = cMinUPM;
+                }
+                else
+                {
+                    Result = mf.AutoSteerPGN.Speed_KMH();
                 }
             }
             else

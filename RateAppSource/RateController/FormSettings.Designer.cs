@@ -107,7 +107,6 @@ namespace RateController
             this.ckOnScreen = new System.Windows.Forms.CheckBox();
             this.label28 = new System.Windows.Forms.Label();
             this.tbOffRate = new System.Windows.Forms.TextBox();
-            this.lbMinimumUPM = new System.Windows.Forms.Label();
             this.tbMinUPM = new System.Windows.Forms.TextBox();
             this.ckOffRate = new System.Windows.Forms.CheckBox();
             this.grpRateMethod = new System.Windows.Forms.GroupBox();
@@ -188,6 +187,10 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.grpMinUPM = new System.Windows.Forms.GroupBox();
+            this.rbUPMFixed = new System.Windows.Forms.RadioButton();
+            this.rbUPMSpeed = new System.Windows.Forms.RadioButton();
+            this.lbMinUPM = new System.Windows.Forms.Label();
             this.tcProducts.SuspendLayout();
             this.tbs0.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -200,6 +203,7 @@ namespace RateController
             this.grpSensor.SuspendLayout();
             this.tbs3.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.grpMinUPM.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcProducts
@@ -1091,14 +1095,13 @@ namespace RateController
             // 
             // tbs6
             // 
+            this.tbs6.Controls.Add(this.grpMinUPM);
             this.tbs6.Controls.Add(this.ckBumpButtons);
             this.tbs6.Controls.Add(this.ckDefault);
             this.tbs6.Controls.Add(this.ckConstantUPM);
             this.tbs6.Controls.Add(this.ckOnScreen);
             this.tbs6.Controls.Add(this.label28);
             this.tbs6.Controls.Add(this.tbOffRate);
-            this.tbs6.Controls.Add(this.lbMinimumUPM);
-            this.tbs6.Controls.Add(this.tbMinUPM);
             this.tbs6.Controls.Add(this.ckOffRate);
             this.tbs6.Controls.Add(this.grpRateMethod);
             this.tbs6.Controls.Add(this.grpSensor);
@@ -1115,7 +1118,7 @@ namespace RateController
             this.ckBumpButtons.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckBumpButtons.Location = new System.Drawing.Point(221, 310);
+            this.ckBumpButtons.Location = new System.Drawing.Point(37, 373);
             this.ckBumpButtons.Name = "ckBumpButtons";
             this.ckBumpButtons.Size = new System.Drawing.Size(162, 32);
             this.ckBumpButtons.TabIndex = 0;
@@ -1130,7 +1133,7 @@ namespace RateController
             this.ckDefault.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDefault.Location = new System.Drawing.Point(38, 310);
+            this.ckDefault.Location = new System.Drawing.Point(37, 306);
             this.ckDefault.Name = "ckDefault";
             this.ckDefault.Size = new System.Drawing.Size(162, 32);
             this.ckDefault.TabIndex = 119;
@@ -1146,7 +1149,7 @@ namespace RateController
             this.ckConstantUPM.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckConstantUPM.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckConstantUPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckConstantUPM.Location = new System.Drawing.Point(38, 254);
+            this.ckConstantUPM.Location = new System.Drawing.Point(231, 239);
             this.ckConstantUPM.Name = "ckConstantUPM";
             this.ckConstantUPM.Size = new System.Drawing.Size(162, 32);
             this.ckConstantUPM.TabIndex = 118;
@@ -1162,7 +1165,7 @@ namespace RateController
             this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOnScreen.Location = new System.Drawing.Point(38, 198);
+            this.ckOnScreen.Location = new System.Drawing.Point(37, 239);
             this.ckOnScreen.Name = "ckOnScreen";
             this.ckOnScreen.Size = new System.Drawing.Size(162, 32);
             this.ckOnScreen.TabIndex = 117;
@@ -1176,7 +1179,7 @@ namespace RateController
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(432, 203);
+            this.label28.Location = new System.Drawing.Point(243, 177);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(29, 23);
             this.label28.TabIndex = 116;
@@ -1186,7 +1189,7 @@ namespace RateController
             // 
             this.tbOffRate.Enabled = false;
             this.tbOffRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(393, 199);
+            this.tbOffRate.Location = new System.Drawing.Point(204, 173);
             this.tbOffRate.MaxLength = 8;
             this.tbOffRate.Name = "tbOffRate";
             this.tbOffRate.Size = new System.Drawing.Size(33, 30);
@@ -1198,23 +1201,13 @@ namespace RateController
             this.tbOffRate.Enter += new System.EventHandler(this.tbOffRate_Enter);
             this.tbOffRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbOffRate_Validating);
             // 
-            // lbMinimumUPM
-            // 
-            this.lbMinimumUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinimumUPM.Location = new System.Drawing.Point(221, 259);
-            this.lbMinimumUPM.Name = "lbMinimumUPM";
-            this.lbMinimumUPM.Size = new System.Drawing.Size(130, 23);
-            this.lbMinimumUPM.TabIndex = 114;
-            this.lbMinimumUPM.Text = "Minimum UPM";
-            this.lbMinimumUPM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label25_HelpRequested);
-            // 
             // tbMinUPM
             // 
             this.tbMinUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinUPM.Location = new System.Drawing.Point(355, 255);
+            this.tbMinUPM.Location = new System.Drawing.Point(145, 41);
             this.tbMinUPM.MaxLength = 8;
             this.tbMinUPM.Name = "tbMinUPM";
-            this.tbMinUPM.Size = new System.Drawing.Size(67, 30);
+            this.tbMinUPM.Size = new System.Drawing.Size(75, 30);
             this.tbMinUPM.TabIndex = 1;
             this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbMinUPM.TextChanged += new System.EventHandler(this.tbMinUPM_TextChanged);
@@ -1227,7 +1220,7 @@ namespace RateController
             this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOffRate.Location = new System.Drawing.Point(221, 198);
+            this.ckOffRate.Location = new System.Drawing.Point(32, 172);
             this.ckOffRate.Name = "ckOffRate";
             this.ckOffRate.Size = new System.Drawing.Size(162, 32);
             this.ckOffRate.TabIndex = 1;
@@ -1241,7 +1234,7 @@ namespace RateController
             // 
             this.grpRateMethod.Controls.Add(this.rbMultiPulse);
             this.grpRateMethod.Controls.Add(this.rbSinglePulse);
-            this.grpRateMethod.Location = new System.Drawing.Point(297, 58);
+            this.grpRateMethod.Location = new System.Drawing.Point(296, 38);
             this.grpRateMethod.Name = "grpRateMethod";
             this.grpRateMethod.Size = new System.Drawing.Size(169, 117);
             this.grpRateMethod.TabIndex = 0;
@@ -1291,7 +1284,7 @@ namespace RateController
             this.grpSensor.Controls.Add(this.ModuleIndicator);
             this.grpSensor.Controls.Add(this.lbConID);
             this.grpSensor.Controls.Add(this.tbConID);
-            this.grpSensor.Location = new System.Drawing.Point(18, 58);
+            this.grpSensor.Location = new System.Drawing.Point(17, 38);
             this.grpSensor.Name = "grpSensor";
             this.grpSensor.Size = new System.Drawing.Size(259, 117);
             this.grpSensor.TabIndex = 0;
@@ -2170,6 +2163,65 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
+            // grpMinUPM
+            // 
+            this.grpMinUPM.Controls.Add(this.lbMinUPM);
+            this.grpMinUPM.Controls.Add(this.rbUPMSpeed);
+            this.grpMinUPM.Controls.Add(this.rbUPMFixed);
+            this.grpMinUPM.Controls.Add(this.tbMinUPM);
+            this.grpMinUPM.Location = new System.Drawing.Point(231, 289);
+            this.grpMinUPM.Name = "grpMinUPM";
+            this.grpMinUPM.Size = new System.Drawing.Size(234, 117);
+            this.grpMinUPM.TabIndex = 122;
+            this.grpMinUPM.TabStop = false;
+            this.grpMinUPM.Text = "Minimum UPM";
+            this.grpMinUPM.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
+            // 
+            // rbUPMFixed
+            // 
+            this.rbUPMFixed.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbUPMFixed.Checked = true;
+            this.rbUPMFixed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbUPMFixed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbUPMFixed.Location = new System.Drawing.Point(5, 25);
+            this.rbUPMFixed.Margin = new System.Windows.Forms.Padding(2);
+            this.rbUPMFixed.Name = "rbUPMFixed";
+            this.rbUPMFixed.Size = new System.Drawing.Size(128, 37);
+            this.rbUPMFixed.TabIndex = 122;
+            this.rbUPMFixed.Tag = "0";
+            this.rbUPMFixed.Text = "Fixed Value";
+            this.rbUPMFixed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbUPMFixed.UseVisualStyleBackColor = true;
+            this.rbUPMFixed.Click += new System.EventHandler(this.rbUPMFixed_Click);
+            this.rbUPMFixed.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label25_HelpRequested);
+            // 
+            // rbUPMSpeed
+            // 
+            this.rbUPMSpeed.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbUPMSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbUPMSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbUPMSpeed.Location = new System.Drawing.Point(5, 68);
+            this.rbUPMSpeed.Margin = new System.Windows.Forms.Padding(2);
+            this.rbUPMSpeed.Name = "rbUPMSpeed";
+            this.rbUPMSpeed.Size = new System.Drawing.Size(128, 37);
+            this.rbUPMSpeed.TabIndex = 123;
+            this.rbUPMSpeed.Tag = "0";
+            this.rbUPMSpeed.Text = "By Speed";
+            this.rbUPMSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbUPMSpeed.UseVisualStyleBackColor = true;
+            this.rbUPMSpeed.Click += new System.EventHandler(this.rbUPMFixed_Click);
+            this.rbUPMSpeed.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbUPMSpeed_HelpRequested);
+            // 
+            // lbMinUPM
+            // 
+            this.lbMinUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbMinUPM.Location = new System.Drawing.Point(145, 76);
+            this.lbMinUPM.Name = "lbMinUPM";
+            this.lbMinUPM.Size = new System.Drawing.Size(75, 23);
+            this.lbMinUPM.TabIndex = 152;
+            this.lbMinUPM.Text = "Gallons";
+            this.lbMinUPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2214,6 +2266,8 @@ namespace RateController
             this.tbs3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.grpMinUPM.ResumeLayout(false);
+            this.grpMinUPM.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2302,7 +2356,6 @@ namespace RateController
         private System.Windows.Forms.GroupBox grpRateMethod;
         private System.Windows.Forms.RadioButton rbMultiPulse;
         private System.Windows.Forms.RadioButton rbSinglePulse;
-        private System.Windows.Forms.Label lbMinimumUPM;
         private System.Windows.Forms.TextBox tbMinUPM;
         private System.Windows.Forms.CheckBox ckOffRate;
         private System.Windows.Forms.Label label28;
@@ -2377,5 +2430,9 @@ namespace RateController
         private System.Windows.Forms.Label lbHours1;
         private System.Windows.Forms.Label lbHours2value;
         private System.Windows.Forms.Label lbHours2;
+        private System.Windows.Forms.GroupBox grpMinUPM;
+        private System.Windows.Forms.RadioButton rbUPMSpeed;
+        private System.Windows.Forms.RadioButton rbUPMFixed;
+        private System.Windows.Forms.Label lbMinUPM;
     }
 }
