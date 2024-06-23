@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -30,7 +31,8 @@ namespace RateController
         private int cManualPWM;
         private double cMeterCal = 0;
         private double cMinUPM;
-        private bool cMinUPMbySpeed = false;
+        private double cMinUPMbySpeed;
+        private bool cUseMinUPMbySpeed = false;
         private int cModID;
         private byte cOffRateSetting;
         private bool cOnScreen;
@@ -48,6 +50,7 @@ namespace RateController
         private double cTankStart = 0;
         private double cUnitsApplied = 0;
         private double cUnitsApplied2 = 0;
+        private bool cUseQuantityAdjustment = false;
         private double CurrentMinutes;
         private double CurrentWorkedArea_Hc = 0;
         private bool cUseAltRate = false;
@@ -58,13 +61,12 @@ namespace RateController
         private double cVRmax;
         private double cVRmin;
         private byte cWifiStrength;
-        private double LastAccQuantity = 0;
         private DateTime LastUpdateTime;
         private PGN32502 ModulePIDdata;
         private bool PauseWork = false;
-        private double UnitsOffset = 0;
         private DateTime LastHours1;
         private DateTime LastHours2;
+        private double AccumulatedLast = 0;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -239,6 +241,22 @@ namespace RateController
             }
         }
 
+        public double MinUPMbySpeed
+        {
+            get { return cMinUPMbySpeed; }
+            set
+            {
+                if (value >= 0 && value < 50)
+                {
+                    cMinUPMbySpeed = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid value.");
+                }
+            }
+        }
+
         public double MinUPM
         {
             get { return cMinUPM; }
@@ -255,10 +273,24 @@ namespace RateController
             }
         }
 
-        public bool MinUPMbySpeed
+        public double MinUPMinUse()
         {
-            get { return cMinUPMbySpeed; }
-            set { cMinUPMbySpeed = value; }
+            double Result = cMinUPM;
+            if (cUseMinUPMbySpeed)
+            {
+                double KPH = cMinUPMbySpeed;
+                if (mf.UseInches) KPH *= mf.MPHtoKPH;
+                double HPM = mf.Sections.TotalWidth(false) * KPH / 600.0;
+                Result = TargetRate() * HPM;
+                if (CoverageUnits == 0) Result *= 2.47;
+            }
+            return Result;
+        }
+
+        public bool UseMinUPMbySpeed
+        {
+            get { return cUseMinUPMbySpeed; }
+            set { cUseMinUPMbySpeed = value; }
         }
 
         public int ModuleID
@@ -580,7 +612,11 @@ namespace RateController
 
             double.TryParse(mf.Tls.LoadProperty("TankStart" + IDname), out cTankStart);
             double.TryParse(mf.Tls.LoadProperty("QuantityApplied" + IDname), out cUnitsApplied);
-            double.TryParse(mf.Tls.LoadProperty("LastAccQuantity" + IDname), out LastAccQuantity);
+            double.TryParse(mf.Tls.LoadProperty("QuantityApplied2" + IDname), out cUnitsApplied2);
+
+            if (double.TryParse(mf.Tls.LoadProperty("AccumulatedLast" + IDname), out double oa)) AccumulatedLast = oa;
+            bool.TryParse(mf.Tls.LoadProperty("ConstantUPM" + IDname), out cConstantUPM);
+            if (bool.TryParse(mf.Tls.LoadProperty("UseQuantityAdjustment" + IDname), out bool qa)) cUseQuantityAdjustment = qa;
 
             cQuantityDescription = mf.Tls.LoadProperty("QuantityDescription" + IDname);
             if (cQuantityDescription == "") cQuantityDescription = "Lbs";
@@ -610,7 +646,8 @@ namespace RateController
             byte.TryParse(mf.Tls.LoadProperty("OffRateSetting" + IDname), out cOffRateSetting);
 
             double.TryParse(mf.Tls.LoadProperty("MinUPM" + IDname), out cMinUPM);
-            if (bool.TryParse(mf.Tls.LoadProperty("MinUPMbySpeed" + IDname), out bool ms)) cMinUPMbySpeed = ms;
+            double.TryParse(mf.Tls.LoadProperty("MinUPMbySpeed" + IDname), out cMinUPMbySpeed);
+            if (bool.TryParse(mf.Tls.LoadProperty("UseMinUPMbySpeed" + IDname), out bool ms)) cUseMinUPMbySpeed = ms;
 
             byte.TryParse(mf.Tls.LoadProperty("VRID" + IDname), out cVRID);
 
@@ -673,13 +710,7 @@ namespace RateController
                 cBumpButtons = false;
             }
 
-            bool.TryParse(mf.Tls.LoadProperty("ConstantUPM" + IDname), out cConstantUPM);
-
-            if (int.TryParse(mf.Tls.LoadProperty("ShiftRange" + IDname), out int sr))
-            {
-                cShiftRange = sr;
-            }
-
+            if (int.TryParse(mf.Tls.LoadProperty("ShiftRange" + IDname), out int sr)) cShiftRange = sr;
             if (double.TryParse(mf.Tls.LoadProperty("Hours1" + IDname), out double h1)) cHours1 = h1;
             if (double.TryParse(mf.Tls.LoadProperty("Hours2" + IDname), out double h2)) cHours2 = h2;
         }
@@ -752,8 +783,8 @@ namespace RateController
         }
         public void ResetApplied()
         {
+            cUnitsApplied2 += cUnitsApplied;
             cUnitsApplied = 0;
-            UnitsOffset = 0;
             EraseAccumulatedUnits = true;
         }
 
@@ -795,9 +826,14 @@ namespace RateController
             mf.Tls.SaveProperty("CoverageUnits" + IDname, CoverageUnits.ToString());
 
             mf.Tls.SaveProperty("TankStart" + IDname, cTankStart.ToString());
-            mf.Tls.SaveProperty("QuantityApplied" + IDname, cUnitsApplied.ToString());
-            mf.Tls.SaveProperty("LastAccQuantity" + IDname, LastAccQuantity.ToString());
             mf.Tls.SaveProperty("QuantityDescription" + IDname, cQuantityDescription);
+
+            mf.Tls.SaveProperty("QuantityApplied" + IDname, cUnitsApplied.ToString());
+            mf.Tls.SaveProperty("QuantityApplied2" + IDname, cUnitsApplied2.ToString());
+            mf.Tls.SaveProperty("AccumulatedLast" + IDname, AccumulatedLast.ToString());
+
+            mf.Tls.SaveProperty("ConstantUPM" + IDname, cConstantUPM.ToString());
+            mf.Tls.SaveProperty("UseQuantityAdjustment" + IDname, cUseQuantityAdjustment.ToString());
 
             mf.Tls.SaveProperty("cProdDensity" + IDname, cProdDensity.ToString());
             mf.Tls.SaveProperty("cEnableProdDensity" + IDname, cEnableProdDensity.ToString());
@@ -821,6 +857,7 @@ namespace RateController
 
             mf.Tls.SaveProperty("MinUPM" + IDname, cMinUPM.ToString());
             mf.Tls.SaveProperty("MinUPMbySpeed" + IDname, cMinUPMbySpeed.ToString());
+            mf.Tls.SaveProperty("UseMinUPMbySpeed" + IDname, cUseMinUPMbySpeed.ToString());
 
             mf.Tls.SaveProperty("VRID" + IDname, cVRID.ToString());
             mf.Tls.SaveProperty("UseVR" + IDname, cUseVR.ToString());
@@ -838,7 +875,6 @@ namespace RateController
 
             mf.Tls.SaveProperty("OnScreen" + IDname, cOnScreen.ToString());
             mf.Tls.SaveProperty("BumpButtons" + IDname, cBumpButtons.ToString());
-            mf.Tls.SaveProperty("ConstantUPM" + IDname, cConstantUPM.ToString());
 
             mf.Tls.SaveProperty("ShiftRange" + IDname, cShiftRange.ToString());
             mf.Tls.SaveProperty("Hours1" + IDname, cHours1.ToString());
@@ -1025,7 +1061,7 @@ namespace RateController
 
         public double UnitsApplied2()
         {
-            double Result = cUnitsApplied2;
+            double Result = cUnitsApplied2 + cUnitsApplied;
             if (cEnableProdDensity && cProdDensity > 0) Result *= cProdDensity;
             return Result;
         }
@@ -1131,18 +1167,6 @@ namespace RateController
                     Result = mf.SimSpeed;
                 }
             }
-            else if (cMinUPMbySpeed)
-            {
-                // use speed to calculate minimum upm
-                if (cMinUPM > mf.AutoSteerPGN.Speed_KMH())
-                {
-                    Result = cMinUPM;
-                }
-                else
-                {
-                    Result = mf.AutoSteerPGN.Speed_KMH();
-                }
-            }
             else
             {
                 Result = mf.AutoSteerPGN.Speed_KMH();
@@ -1168,20 +1192,22 @@ namespace RateController
         private void UpdateUnitsApplied()
         {
             double AccumulatedUnits = ArduinoModule.AccumulatedQuantity();
+            if (AccumulatedLast > AccumulatedUnits) AccumulatedLast = 0;
+            double Diff = AccumulatedUnits - AccumulatedLast;
+            AccumulatedLast = AccumulatedUnits;
+            cUnitsApplied += Diff;
 
-            if (!EraseAccumulatedUnits)
+            if (cConstantUPM && cUseQuantityAdjustment && mf.Sections.TotalWidth() > 0)
             {
-                if ((AccumulatedUnits + UnitsOffset) < cUnitsApplied)
-                {
-                    // account for arduino losing accumulated quantity, ex: power loss
-                    UnitsOffset = cUnitsApplied - AccumulatedUnits;
-                }
-                cUnitsApplied = AccumulatedUnits + UnitsOffset;
-
-                if (cUnitsApplied < LastAccQuantity) LastAccQuantity = cUnitsApplied;
-                cUnitsApplied2 += cUnitsApplied - LastAccQuantity;
-                LastAccQuantity = cUnitsApplied;
+                // subtract amount for sections that are off
+                cUnitsApplied -= (1.0 - (mf.Sections.WorkingWidth() / mf.Sections.TotalWidth())) * Diff;
             }
+        }
+
+        public bool UseQuantityAdjustment
+        {
+            get { return cUseQuantityAdjustment; }
+            set { cUseQuantityAdjustment = value; }
         }
     }
 }

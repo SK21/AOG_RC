@@ -458,7 +458,8 @@ namespace RateController
             rbMultiPulse.Checked = (CurrentProduct.UseMultiPulse);
 
             tbMinUPM.Text = CurrentProduct.MinUPM.ToString("N1");
-            rbUPMSpeed.Checked = CurrentProduct.MinUPMbySpeed;
+            tbUPMspeed.Text = CurrentProduct.MinUPMbySpeed.ToString("N1");
+            rbUPMSpeed.Checked = CurrentProduct.UseMinUPMbySpeed;
 
             ckOffRate.Checked = CurrentProduct.UseOffRateAlarm;
             tbOffRate.Text = CurrentProduct.OffRateSetting.ToString("N0");
@@ -467,6 +468,8 @@ namespace RateController
             ckBumpButtons.Checked = CurrentProduct.BumpButtons;
 
             ckConstantUPM.Checked = CurrentProduct.ConstantUPM;
+            ckQuantityAdjustment.Checked = CurrentProduct.UseQuantityAdjustment;
+
             cbShift.SelectedIndex = CurrentProduct.PIDscale;
             UpdateExample();
         }
@@ -665,10 +668,10 @@ namespace RateController
 
             CurrentProduct.UseMultiPulse = (rbMultiPulse.Checked);
 
-            double.TryParse(tbMinUPM.Text, out TempDB);
-            CurrentProduct.MinUPM = TempDB;
+            CurrentProduct.UseMinUPMbySpeed = rbUPMSpeed.Checked;
 
-            CurrentProduct.MinUPMbySpeed = rbUPMSpeed.Checked;
+            if (double.TryParse(tbMinUPM.Text, out double mu)) CurrentProduct.MinUPM = mu;
+            if (double.TryParse(tbUPMspeed.Text, out double sp)) CurrentProduct.MinUPMbySpeed = sp;
 
             CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
 
@@ -678,6 +681,7 @@ namespace RateController
             CurrentProduct.ManualPWM = tempB;
 
             CurrentProduct.ConstantUPM = ckConstantUPM.Checked;
+            CurrentProduct.UseQuantityAdjustment= ckQuantityAdjustment.Checked;
 
             CurrentProduct.OnScreen = ckOnScreen.Checked;
             CurrentProduct.BumpButtons = ckBumpButtons.Checked;
@@ -1003,9 +1007,7 @@ namespace RateController
         {
             double tempD;
             double.TryParse(tbMinUPM.Text, out tempD);
-            double Max = 30;
-            if (rbUPMFixed.Checked) Max = 500;
-            using (var form = new FormNumeric(0, Max, tempD))
+            using (var form = new FormNumeric(0, 500, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -1327,23 +1329,8 @@ namespace RateController
             lbGallons1.Text = "*" + CurrentProduct.QuantityDescription + " 1";
             lbGallons2.Text = CurrentProduct.QuantityDescription + " 2";
 
-            rbUPMSpeed.Checked = CurrentProduct.MinUPMbySpeed;
-            rbUPMFixed.Checked = !CurrentProduct.MinUPMbySpeed;
-            if (rbUPMFixed.Checked)
-            {
-                lbMinUPM.Text = CurrentProduct.QuantityDescription;
-            }
-            else
-            {
-                if (mf.UseInches)
-                {
-                    lbMinUPM.Text = "MPH";
-                }
-                else
-                {
-                    lbMinUPM.Text = "KMH";
-                }
-            }
+            rbUPMSpeed.Checked = CurrentProduct.UseMinUPMbySpeed;
+            rbUPMFixed.Checked = !CurrentProduct.UseMinUPMbySpeed;
         }
 
         void UpdateOnTypeChange()
@@ -1769,23 +1756,49 @@ namespace RateController
 
         private void rbUPMFixed_Click(object sender, EventArgs e)
         {
-            if (rbUPMFixed.Checked)
+            tbUPMspeed.Text = "0.0";
+            SetButtons(true);
+        }
+
+        private void ckQuantityAdjustment_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Subtract quantity for off sections from total applied.";
+
+            mf.Tls.ShowHelp(Message, "Quantity Adjustment");
+            hlpevent.Handled = true;
+        }
+
+        private void ckQuantityAdjustment_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbUPMspeed_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbUPMspeed.Text, out tempD);
+            using (var form = new FormNumeric(0, 30, tempD))
             {
-                lbMinUPM.Text = CurrentProduct.QuantityDescription;
-            }
-            else
-            {
-                if (mf.UseInches)
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
                 {
-                    lbMinUPM.Text = "MPH";
-                }
-                else
-                {
-                    lbMinUPM.Text = "KMH";
+                    tbUPMspeed.Text = form.ReturnValue.ToString();
                 }
             }
+        }
+
+        private void rbUPMSpeed_Click(object sender, EventArgs e)
+        {
             tbMinUPM.Text = "0.0";
             SetButtons(true);
+        }
+
+        private void tbUPMspeed_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Speed to set minimum flow rate for acceptable application.";
+
+            mf.Tls.ShowHelp(Message, "Minimum UPM Speed");
+            hlpevent.Handled = true;
         }
     }
 }

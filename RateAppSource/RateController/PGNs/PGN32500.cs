@@ -58,7 +58,7 @@ namespace RateController
             else
             {
                 RateSet = Prod.TargetUPM() * 1000.0;
-                if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPM * 1000.0;
+                if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPMinUse() * 1000.0;
             }
 
             if (Prod.Enabled)
@@ -112,6 +112,7 @@ namespace RateController
                     break;
             }
 
+            // master on
             if (Prod.mf.SwitchBox.Connected())
             {
                 if (Prod.mf.SectionControl.MasterOn || Prod.CalRun || Prod.CalSetMeter || Prod.mf.MasterOverride) cData[9] |= 0b00010000;

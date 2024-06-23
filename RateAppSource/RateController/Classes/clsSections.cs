@@ -103,7 +103,7 @@ namespace RateController
             }
         }
 
-        public float TotalWidth(bool UseInches)
+        public float TotalWidth(bool UseInches=false)
         {
             float Result = 0;
             float cWorkingWidth_cm = 0;
@@ -127,7 +127,7 @@ namespace RateController
             return Result;
         }
 
-        public float WorkingWidth(bool UseInches)
+        public float WorkingWidth(bool UseInches=false)
         {
             float Result = 0;
             float cWorkingWidth_cm = 0;
