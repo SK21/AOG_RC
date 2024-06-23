@@ -92,6 +92,7 @@
             this.lbCoverageType = new System.Windows.Forms.Label();
             this.lbQuantityType = new System.Windows.Forms.Label();
             this.btMaster = new System.Windows.Forms.Button();
+            this.btnAltISR = new System.Windows.Forms.Button();
             this.pbRate0 = new RateController.VerticalProgressBar();
             this.pbRate1 = new RateController.VerticalProgressBar();
             this.pbRate2 = new RateController.VerticalProgressBar();
@@ -766,6 +767,20 @@
             this.btMaster.Click += new System.EventHandler(this.btMaster_Click);
             this.btMaster.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btMaster_MouseUp);
             // 
+            // btnAltISR
+            // 
+            this.btnAltISR.BackColor = System.Drawing.Color.Transparent;
+            this.btnAltISR.FlatAppearance.BorderSize = 0;
+            this.btnAltISR.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.btnAltISR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAltISR.Location = new System.Drawing.Point(60, 312);
+            this.btnAltISR.Name = "btnAltISR";
+            this.btnAltISR.Size = new System.Drawing.Size(60, 60);
+            this.btnAltISR.TabIndex = 205;
+            this.btnAltISR.Text = "Alt ISR";
+            this.btnAltISR.UseVisualStyleBackColor = false;
+            this.btnAltISR.Click += new System.EventHandler(this.btnAltISR_Click);
+            // 
             // pbRate0
             // 
             this.pbRate0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
@@ -875,6 +890,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.ClientSize = new System.Drawing.Size(392, 376);
+            this.Controls.Add(this.btnAltISR);
             this.Controls.Add(this.btMaster);
             this.Controls.Add(this.lbQuantityType);
             this.Controls.Add(this.lbCoverageType);
@@ -1018,5 +1034,6 @@
         private System.Windows.Forms.Label lbCoverageType;
         private System.Windows.Forms.Label lbQuantityType;
         private System.Windows.Forms.Button btMaster;
+        private System.Windows.Forms.Button btnAltISR;
     }
 }

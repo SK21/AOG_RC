@@ -115,6 +115,7 @@ namespace RateController
                 lbTargetType.ForeColor = txtcolor;
                 lbCoverageType.ForeColor = txtcolor;
                 lbQuantityType.ForeColor = txtcolor;
+                btnAltISR.ForeColor = txtcolor;
             }
             else
             {
@@ -142,6 +143,7 @@ namespace RateController
                 lbTargetType.ForeColor = txtcolor;
                 lbCoverageType.ForeColor = txtcolor;
                 lbQuantityType.ForeColor = txtcolor;
+                btnAltISR.ForeColor= txtcolor;
             }
             SetFont();
         }
@@ -1199,6 +1201,14 @@ namespace RateController
 
             RCalarm.CheckAlarms();
             ShowProducts();
+            if(mf.UseAltISR)
+            {
+                btnAltISR.Text = "Alt ISR";
+            }
+            else
+            {
+                btnAltISR.Text = "";
+            }
         }
 
         private void UpdateSwitches()
@@ -1311,6 +1321,12 @@ namespace RateController
             {
                 mf.Products.Item(CurrentProduct()).ResetCoverage();
             }
+        }
+
+        private void btnAltISR_Click(object sender, EventArgs e)
+        {
+            mf.UseAltISR = !mf.UseAltISR;
+            UpdateForm();
         }
     }
 }

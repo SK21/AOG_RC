@@ -138,6 +138,8 @@ namespace RateController
                 }
             }
 
+            if (Prod.mf.UseAltISR) cData[9] |= 0b10000000;
+
             // manual cal
             if ((Prod.mf.SectionControl.MasterOn || Prod.mf.MasterOverride) && Prod.Enabled)
             {
