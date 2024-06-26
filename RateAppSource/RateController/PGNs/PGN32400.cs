@@ -32,42 +32,47 @@ namespace RateController
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 144;
         private readonly clsProduct Prod;
+        private double cAccumulated;
         private int cElapsedTime;
         private bool cEthernetConnected;
         private bool cGoodPins;
-        private bool LastGoodPins;
         private byte cLastStrength;
         private DateTime cLastTime = DateTime.Now;
         private bool cModuleIsReceivingData;
         private double cPWMsetting;
         private double cQuantity;
         private double cUPM;
-        private bool cWifiConnected;
         private byte cWifiStrength;
+        private bool HzOnly;
         private bool LastEthernetConnected;
+        private bool LastGoodPins;
         private bool LastModuleReceiving;
         private bool LastModuleSending;
-        private bool LastWifiConnected;
         private DateTime ReceiveTime;
 
         public PGN32400(clsProduct CalledFrom)
         {
             Prod = CalledFrom;
         }
+
         public event EventHandler<PinStatusArgs> PinStatusChanged;
 
-        public class PinStatusArgs : EventArgs
+        public double AccumulatedQuantity
         {
-            public bool GoodPins { get; set; }
+            get
+            {
+                double Result = cQuantity;
+                if (HzOnly)
+                {
+                    Result = cAccumulated;
+                }
+                return Result;
+            }
+            set { cAccumulated = value; }
         }
 
         public bool GoodPins
         { get { return cGoodPins; } }
-
-        public double AccumulatedQuantity()
-        {
-            return cQuantity;
-        }
 
         public void CheckModuleComm()
         {
@@ -95,11 +100,10 @@ namespace RateController
                 Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
-            if (LastWifiConnected != cWifiConnected || cLastStrength != cWifiStrength)
+            if (cLastStrength != cWifiStrength)
             {
-                LastWifiConnected = cWifiConnected;
                 cLastStrength = cWifiStrength;
-                Mes = "Wifi connected: " + cWifiConnected.ToString() + "   Strength: " + cWifiStrength.ToString();
+                Mes = "Wifi Strength: " + cWifiStrength.ToString();
                 Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
@@ -199,11 +203,12 @@ namespace RateController
                         if ((Data[11] & 0b00010000) == 0b00010000) cWifiStrength = 3;
                         Prod.WifiStrength = cWifiStrength;
 
-                        cWifiConnected = ((Data[11] & 0b00100000) == 0b00100000);
+                        HzOnly = ((Data[11] & 0b00100000) == 0b00100000);
                         cEthernetConnected = ((Data[11] & 0b01000000) == 0b01000000);
                         cGoodPins = ((Data[11] & 0b10000000) == 0b10000000);
 
                         ReceiveTime = DateTime.Now;
+                        cAccumulated += UPM() * (cElapsedTime / 60000.0);
                         Result = true;
                     }
                 }
@@ -236,6 +241,11 @@ namespace RateController
         public double UPM()
         {
             double Result = cUPM;
+            if (HzOnly)
+            {
+                // convert from Hz to UPM
+                Result = (cUPM * 60.0) / Prod.MeterCal;
+            }
             return Result;
         }
 
@@ -255,6 +265,11 @@ namespace RateController
                        + ", Quantity: " + cQuantity.ToString("N2") + ", PWM:" + cPWMsetting.ToString("N2"));
                 }
             }
+        }
+
+        public class PinStatusArgs : EventArgs
+        {
+            public bool GoodPins { get; set; }
         }
     }
 }

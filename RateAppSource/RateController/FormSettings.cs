@@ -11,18 +11,15 @@ namespace RateController
 {
     public partial class FormSettings : Form
     {
-        public FormStart mf;
-
         public clsProduct CurrentProduct;
+        public FormStart mf;
+        private bool FormEdited = false;
         private bool Initializing = false;
         private Label[] Sec;
 
-        private TabPage[] Tabs;
-        private TabPage Temp1;
-        private TabPage Temp2;
-
-        private bool FormEdited = false;
         private int SelectedTab = 0;
+        private TabPage tbTemp1;
+        private TabPage tbTemp2;
 
         public FormSettings(FormStart CallingForm, int Page)
         {
@@ -35,7 +32,7 @@ namespace RateController
             tcProducts.TabPages[0].Text = Lang.lgRate;
             tcProducts.TabPages[2].Text = Lang.lgControl;
             tcProducts.TabPages[3].Text = Lang.lgOptions;
-            tcProducts.TabPages[4].Text = Lang.lgDiagnostics;
+            tcProducts.TabPages[5].Text = Lang.lgDiagnostics;
 
             lb0.Text = Lang.lgProductName;
             lb5.Text = Lang.lgControlType;
@@ -108,7 +105,6 @@ namespace RateController
             #endregion // language
 
             mf = CallingForm;
-            Tabs = new TabPage[] { tbs0, tabPage1, tbs4, tbs6, tbs3 };
 
             if (Page == 0)
             {
@@ -172,6 +168,11 @@ namespace RateController
             SetButtons(false);
         }
 
+        private void btnFan_Click(object sender, EventArgs e)
+        {
+            CurrentProduct.FanOn = !CurrentProduct.FanOn;
+        }
+
         private void btnLeft_Click(object sender, EventArgs e)
         {
             if (CurrentProduct.ID > 0)
@@ -209,7 +210,45 @@ namespace RateController
             }
         }
 
-        private void cbVR_SelectedIndexChanged(object sender, EventArgs e)
+        private void btnTuningGraph_Click(object sender, EventArgs e)
+        {
+            //check if window already exists
+            Form fcg = mf.Tls.IsFormOpen("FormPIDGraph");
+
+            if (fcg != null)
+            {
+                fcg.Focus();
+                return;
+            }
+
+            //
+            Form formG = new FormPIDGraph(this);
+            formG.Show(this);
+        }
+
+        private void cbShift_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+            UpdateExample();
+        }
+
+        private void CbUseProdDensity_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (CbUseProdDensity.Checked)
+            {
+                ProdDensity.Enabled = true;
+                LabProdDensity.Enabled = true;
+            }
+            else
+            {
+                ProdDensity.Enabled = false;
+                LabProdDensity.Enabled = false;
+            }
+
+            SetButtons(true);
+        }
+
+        private void cbVR_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             SetButtons(true);
         }
@@ -227,6 +266,37 @@ namespace RateController
                 Unique = true;
             }
             return Unique;
+        }
+
+        private void ckBumpButtons_CheckChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckConstantUPM_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckConstantUPM_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "UPM does not vary with the number of sections on or off.";
+
+            mf.Tls.ShowHelp(Message, "Constant UPM");
+            hlpevent.Handled = true;
+        }
+
+        private void ckDefault_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Product that is loaded at startup.";
+
+            mf.Tls.ShowHelp(Message, "Default Product");
+            hlpevent.Handled = true;
         }
 
         private void ckOffRate_CheckedChanged(object sender, EventArgs e)
@@ -250,6 +320,102 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Off-rate Alarm");
             hlpevent.Handled = true;
+        }
+
+        private void ckOnScreen_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckOnScreen.Checked)
+            {
+                ckBumpButtons.Checked = false;
+                ckBumpButtons.Enabled = false;
+            }
+            else
+            {
+                ckBumpButtons.Enabled = true;
+            }
+            SetButtons(true);
+        }
+
+        private void ckOnScreen_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Show on Large Screen.";
+
+            mf.Tls.ShowHelp(Message, "On Screen");
+            hlpevent.Handled = true;
+        }
+
+        private void ckQuanitiy2_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckQuantityAdjustment_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckQuantityAdjustment_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Subtract quantity for off sections from total applied.";
+
+            mf.Tls.ShowHelp(Message, "Quantity Adjustment");
+            hlpevent.Handled = true;
+        }
+
+        private void ckVR_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private int ConvertControlType(ControlTypeEnum Type)
+        {
+            // convert control type to valve type index
+            int Result;
+            switch (Type)
+            {
+                case ControlTypeEnum.ComboClose:
+                    Result = 1;
+                    break;
+
+                case ControlTypeEnum.Motor:
+                    Result = 2;
+                    break;
+
+                case ControlTypeEnum.ComboCloseTimed:
+                    Result = 3;
+                    break;
+
+                default:
+                    Result = 0;
+                    break;
+            }
+            return Result;
+        }
+
+        private ControlTypeEnum ConvertValveIndex(int ID)
+        {
+            // convert valve type index to ControlTypeEnum
+            // valve types: Standard Valve, Fast Close Valve, Motor, Combo Timed
+            ControlTypeEnum Result;
+            switch (ID)
+            {
+                case 1:
+                    Result = ControlTypeEnum.ComboClose;
+                    break;
+
+                case 2:
+                    Result = ControlTypeEnum.Motor;
+                    break;
+
+                case 3:
+                    Result = ControlTypeEnum.ComboCloseTimed;
+                    break;
+
+                default:
+                    Result = ControlTypeEnum.Valve;
+                    break;
+            }
+            return Result;
         }
 
         private void FlowCal_Enter(object sender, EventArgs e)
@@ -328,14 +494,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void label27_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Not implemented.";
-
-            mf.Tls.ShowHelp(Message, "Variable Rate");
-            hlpevent.Handled = true;
-        }
-
         private void label3_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "The minimum power sent to the valve/motor. The power needed to start to make the" +
@@ -350,6 +508,14 @@ namespace RateController
             string Message = "The maximum power sent to the valve/motor when far from the target rate.";
 
             mf.Tls.ShowHelp(Message, "PWM High Max");
+            hlpevent.Handled = true;
+        }
+
+        private void lb1_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Quantity units for product. ex: lbs, kgs";
+
+            mf.Tls.ShowHelp(Message, "Quantity");
             hlpevent.Handled = true;
         }
 
@@ -474,6 +640,29 @@ namespace RateController
             UpdateExample();
         }
 
+        private void pnlMain_Paint(object sender, PaintEventArgs e)
+        {
+        }
+
+        private void ProdDensity_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(ProdDensity.Text, out tempD);
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    ProdDensity.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void ProdDensity_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
         private void RateSet_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -525,55 +714,63 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private ControlTypeEnum ConvertValveIndex(int ID)
+        private void rbUPMFixed_Click(object sender, EventArgs e)
         {
-            // convert valve type index to ControlTypeEnum
-            // valve types: Standard Valve, Fast Close Valve, Motor, Combo Timed
-            ControlTypeEnum Result;
-            switch (ID)
-            {
-                case 1:
-                    Result = ControlTypeEnum.ComboClose;
-                    break;
-
-                case 2:
-                    Result = ControlTypeEnum.Motor;
-                    break;
-
-                case 3:
-                    Result = ControlTypeEnum.ComboCloseTimed;
-                    break;
-
-                default:
-                    Result = ControlTypeEnum.Valve;
-                    break;
-            }
-            return Result;
+            tbUPMspeed.Text = "0.0";
+            SetButtons(true);
         }
 
-        private int ConvertControlType(ControlTypeEnum Type)
+        private void rbUPMSpeed_Click(object sender, EventArgs e)
         {
-            // convert control type to valve type index
-            int Result;
-            switch (Type)
+            tbMinUPM.Text = "0.0";
+            SetButtons(true);
+        }
+
+        private void rbUPMSpeed_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Speed used to calculate minimum UPM based on application rate.";
+
+            mf.Tls.ShowHelp(Message, "Minimum UPM using speed");
+            hlpevent.Handled = true;
+        }
+
+        private void SaveData()
+        {
+            if (ckArea1.Checked)
             {
-                case ControlTypeEnum.ComboClose:
-                    Result = 1;
-                    break;
-
-                case ControlTypeEnum.Motor:
-                    Result = 2;
-                    break;
-
-                case ControlTypeEnum.ComboCloseTimed:
-                    Result = 3;
-                    break;
-
-                default:
-                    Result = 0;
-                    break;
+                CurrentProduct.ResetCoverage();
+                ckArea1.Checked = false;
             }
-            return Result;
+
+            if (ckArea2.Checked)
+            {
+                CurrentProduct.ResetCoverage2();
+                ckArea2.Checked = false;
+            }
+
+            if (ckQuantity1.Checked)
+            {
+                CurrentProduct.ResetApplied();
+                ckQuantity1.Checked = false;
+            }
+
+            if (ckQuantity2.Checked)
+            {
+                CurrentProduct.ResetApplied2();
+                ckQuantity2.Checked = false;
+            }
+
+            if (ckHours1.Checked)
+            {
+                CurrentProduct.ResetHours1();
+                ckHours1.Checked = false;
+            }
+
+            if (ckHours2.Checked)
+            {
+                CurrentProduct.ResetHours2();
+                ckHours2.Checked = false;
+            }
         }
 
         private void SaveSettings()
@@ -616,7 +813,6 @@ namespace RateController
 
             double.TryParse(tbAltRate.Text, out TempDB);
             CurrentProduct.RateAlt = TempDB;
-
 
             double.TryParse(TankSize.Text, out TempDB);
             CurrentProduct.TankSize = TempDB;
@@ -681,7 +877,7 @@ namespace RateController
             CurrentProduct.ManualPWM = tempB;
 
             CurrentProduct.ConstantUPM = ckConstantUPM.Checked;
-            CurrentProduct.UseQuantityAdjustment= ckQuantityAdjustment.Checked;
+            CurrentProduct.UseQuantityAdjustment = ckQuantityAdjustment.Checked;
 
             CurrentProduct.OnScreen = ckOnScreen.Checked;
             CurrentProduct.BumpButtons = ckBumpButtons.Checked;
@@ -691,46 +887,11 @@ namespace RateController
             if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
             CurrentProduct.PIDscale = cbShift.SelectedIndex;
 
+            CurrentProduct.VirModule = ckVirtualModule.Checked;
+            if (double.TryParse(tbVirRate.Text, out double vr)) CurrentProduct.VirRate = vr;
+            if (double.TryParse(tbVirSpeed.Text, out double vs)) CurrentProduct.VirSpeed = vs;
+
             SaveData();
-        }
-
-        private void SaveData()
-        {
-            if (ckArea1.Checked)
-            {
-                CurrentProduct.ResetCoverage();
-                ckArea1.Checked = false;
-            }
-
-            if (ckArea2.Checked)
-            {
-                CurrentProduct.ResetCoverage2();
-                ckArea2.Checked = false;
-            }
-
-            if (ckQuantity1.Checked)
-            {
-                CurrentProduct.ResetApplied();
-                ckQuantity1.Checked = false;
-            }
-
-            if (ckQuantity2.Checked)
-            {
-                CurrentProduct.ResetApplied2();
-                ckQuantity2.Checked = false;
-            }
-
-            if (ckHours1.Checked)
-            {
-                CurrentProduct.ResetHours1();
-                ckHours1.Checked = false;
-            }
-
-            if (ckHours2.Checked)
-            {
-                CurrentProduct.ResetHours2();
-                ckHours2.Checked = false;
-            }
         }
 
         private void SetButtons(bool Edited)
@@ -774,9 +935,9 @@ namespace RateController
             {
                 this.BackColor = Properties.Settings.Default.DayColour;
 
-                for (int i = 0; i < 4; i++)
+                foreach(TabPage tb in tcProducts.TabPages)
                 {
-                    Tabs[i].BackColor = Properties.Settings.Default.DayColour;
+                    tb.BackColor = Properties.Settings.Default.DayColour;
                 }
 
                 ModuleIndicator.BackColor = Properties.Settings.Default.DayColour;
@@ -797,9 +958,9 @@ namespace RateController
             {
                 this.BackColor = Properties.Settings.Default.NightColour;
 
-                for (int i = 0; i < 4; i++)
+                foreach (TabPage tb in tcProducts.TabPages)
                 {
-                    Tabs[i].BackColor = Properties.Settings.Default.NightColour;
+                    tb.BackColor = Properties.Settings.Default.NightColour;
                 }
 
                 foreach (Control c in this.Controls)
@@ -821,15 +982,41 @@ namespace RateController
             }
         }
 
-        private void SetModuleIndicator()
+        private void SetFanDisplay(bool IsFan)
         {
-            if (mf.Products.Item(CurrentProduct.ID).ArduinoModule.Connected())
+            ckBumpButtons.Visible = !IsFan;
+            ckBumpButtons.Enabled = !IsFan;
+            grpMinUPM.Visible = !IsFan;
+
+            if (IsFan)
             {
-                ModuleIndicator.Image = Properties.Resources.On;
+                ckDefault.Visible = false;
+                if (tcProducts.TabCount > 5)
+                {
+                    // remove tabs
+                    tbTemp1 = tcProducts.TabPages["tbVR"];
+                    tbTemp2 = tcProducts.TabPages["tbDiagnostics"];
+                    tcProducts.Controls.Remove(tbTemp1);
+                    tcProducts.Controls.Remove(tbTemp2);
+
+                    ckOffRate.Location = new Point(29, 195);
+                    tbOffRate.Location = new Point(169, 196);
+                    label28.Location = new Point(208, 200);
+                }
             }
             else
             {
-                ModuleIndicator.Image = Properties.Resources.Off;
+                ckDefault.Visible = true;
+                if (tcProducts.TabCount < 7)
+                {
+                    // add back the removed tabs
+                    tcProducts.TabPages.Insert(1, tbTemp1);
+                    tcProducts.TabPages.Insert(5,tbTemp2);
+
+                    ckOffRate.Location = new Point(29,323);
+                    tbOffRate.Location = new Point(169,324);
+                    label28.Location = new Point(208,328);
+                }
             }
         }
 
@@ -842,6 +1029,18 @@ namespace RateController
             else
             {
                 lbFanStarted.Image = Properties.Resources.Off;
+            }
+        }
+
+        private void SetModuleIndicator()
+        {
+            if (mf.Products.Item(CurrentProduct.ID).ArduinoModule.Connected())
+            {
+                ModuleIndicator.Image = Properties.Resources.On;
+            }
+            else
+            {
+                ModuleIndicator.Image = Properties.Resources.Off;
             }
         }
 
@@ -1003,6 +1202,223 @@ namespace RateController
             }
         }
 
+        private void tbCountsRPM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbCountsRPM.Text, out tempD);
+            using (var form = new FormNumeric(0, 50000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbCountsRPM.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbCountsRPM_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbCountsRPM_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbCountsRPM.Text, out tempD);
+            if (tempD < 0 || tempD > 50000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbKD_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbKD.Text, out temp);
+            using (var form = new FormNumeric(0, 255, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbKD.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbKD_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Derivative looks at past errors in the system and" +
+                " calculates the slope of those errors to predict future error values.";
+
+            mf.Tls.ShowHelp(Message, "Derivative");
+            hlpevent.Handled = true;
+        }
+
+        private void tbKD_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbKD.Text, out tempD);
+            if (tempD < 0 || tempD > 255)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbKI_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbKI.Text, out temp);
+            using (var form = new FormNumeric(0, 255, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbKI.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbKI_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbKI.Text, out tempD);
+            if (tempD < 0 || tempD > 255)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbKP_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbKP.Text, out temp);
+            using (var form = new FormNumeric(0, 255, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbKP.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbKP_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Proportional control output has a direct ratio to the error." +
+                " Higher Proportional has a greater response to error.";
+
+            mf.Tls.ShowHelp(Message, "Proportional");
+            hlpevent.Handled = true;
+        }
+
+        private void tbKP_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+            UpdateExample();
+        }
+
+        private void tbKP_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbKP.Text, out tempD);
+            if (tempD < 0 || tempD > 255)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbMaxPWM_Enter(object sender, EventArgs e)
+        {
+            byte temp;
+            byte.TryParse(tbMaxPWM.Text, out temp);
+            using (var form = new FormNumeric(0, 255, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMaxPWM.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbMaxPWM_Validating(object sender, CancelEventArgs e)
+        {
+            byte temp;
+            byte.TryParse(tbMaxPWM.Text, out temp);
+            if (temp < 0 || temp > 255)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbMaxRate_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbMaxRate.Text, out tempD);
+            using (var form = new FormNumeric(0, 100000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMaxRate.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbMaxRate_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbMinPWM_Enter(object sender, EventArgs e)
+        {
+            byte temp;
+            byte.TryParse(tbMinPWM.Text, out temp);
+            using (var form = new FormNumeric(0, 255, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMinPWM.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbMinPWM_Validating(object sender, CancelEventArgs e)
+        {
+            byte temp;
+            byte.TryParse(tbMinPWM.Text, out temp);
+            if (temp < 0 || temp > 255)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbMinRate_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbMinRate.Text, out tempD);
+            using (var form = new FormNumeric(0, 100000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMinRate.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbMinRate_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
         private void tbMinUPM_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -1097,11 +1513,62 @@ namespace RateController
             }
         }
 
-        private void tbVolumeUnits_TextChanged(object sender, EventArgs e)
+        private void tbTargetRPM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbTargetRPM.Text, out tempD);
+            using (var form = new FormNumeric(0, 50000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbTargetRPM.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbTargetRPM_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
+        private void tbTargetRPM_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbTargetRPM.Text, out tempD);
+            if (tempD < 0 || tempD > 50000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbUPMspeed_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbUPMspeed.Text, out tempD);
+            using (var form = new FormNumeric(0, 30, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbUPMspeed.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbUPMspeed_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Speed to set minimum flow rate for acceptable application.";
+
+            mf.Tls.ShowHelp(Message, "Minimum UPM Speed");
+            hlpevent.Handled = true;
+        }
+
+        private void tbVolumeUnits_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -1232,11 +1699,11 @@ namespace RateController
             }
         }
 
-        private void SetFanDisplay(bool IsFan)
+        private void UpdateExample()
         {
-            ckBumpButtons.Visible = !IsFan;
-            ckBumpButtons.Enabled = !IsFan;
-            grpMinUPM.Visible = !IsFan;
+            int val = (int)CurrentProduct.PIDkp;
+            if (int.TryParse(tbKP.Text, out int ex)) val = ex;
+            lbExample.Text = (val * Math.Pow(10, -cbShift.SelectedIndex)).ToString("N7");
         }
 
         private void UpdateForm()
@@ -1280,31 +1747,7 @@ namespace RateController
 
             ckDefault.Checked = (mf.DefaultProduct == CurrentProduct.ID);
 
-            Initializing = false;
             UpdateOnTypeChange();
-
-            if (CurrentProduct.ControlType == ControlTypeEnum.Fan)
-            {
-                ckDefault.Visible = false;
-                if (tcProducts.TabCount > 4)
-                {
-                    // remove tabs
-                    Temp1 = tcProducts.TabPages[1];
-                    Temp2 = tcProducts.TabPages[4];
-                    tcProducts.Controls.Remove(Temp1);
-                    tcProducts.Controls.Remove(Temp2);
-                }
-            }
-            else
-            {
-                ckDefault.Visible = true;
-                if (tcProducts.TabCount < 6)
-                {
-                    // add back the removed tabs
-                    tcProducts.TabPages.Insert(1, Temp1);
-                    tcProducts.TabPages.Add(Temp2);
-                }
-            }
 
             lbBaseRate.Enabled = !CurrentProduct.UseVR;
             lbAltRate.Enabled = !CurrentProduct.UseVR;
@@ -1331,9 +1774,15 @@ namespace RateController
 
             rbUPMSpeed.Checked = CurrentProduct.UseMinUPMbySpeed;
             rbUPMFixed.Checked = !CurrentProduct.UseMinUPMbySpeed;
+
+            ckVirtualModule.Checked = CurrentProduct.VirModule;
+            tbVirRate.Text = CurrentProduct.VirRate.ToString("N0");
+            tbVirSpeed.Text = CurrentProduct.VirSpeed.ToString("N1");
+
+            Initializing = false;
         }
 
-        void UpdateOnTypeChange()
+        private void UpdateOnTypeChange()
         {
             TankSize.Enabled = CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             TankRemain.Enabled = CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
@@ -1350,455 +1799,48 @@ namespace RateController
             UpdateOnTypeChange();
         }
 
-        private void tbTargetRPM_Enter(object sender, EventArgs e)
+        private void ckBumpButtons_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            double tempD;
-            double.TryParse(tbTargetRPM.Text, out tempD);
-            using (var form = new FormNumeric(0, 50000, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbTargetRPM.Text = form.ReturnValue.ToString();
-                }
-            }
+            string Message = "Display rate UP/Down arrows.";
+
+            mf.Tls.ShowHelp(Message, "Bump Buttons");
+            hlpevent.Handled = true;
         }
 
-        private void tbTargetRPM_TextChanged(object sender, EventArgs e)
+        private void ckVirtualModule_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            SetButtons(true);
+            string Message = "Virtual module used to estimate application rate using ground speed.";
+
+            mf.Tls.ShowHelp(Message, "Virtual Module");
+            hlpevent.Handled = true;
         }
 
-        private void tbTargetRPM_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbTargetRPM.Text, out tempD);
-            if (tempD < 0 || tempD > 50000)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbCountsRPM_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbCountsRPM.Text, out tempD);
-            using (var form = new FormNumeric(0, 50000, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbCountsRPM.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbCountsRPM_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbCountsRPM_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbCountsRPM.Text, out tempD);
-            if (tempD < 0 || tempD > 50000)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void ProdDensity_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(ProdDensity.Text, out tempD);
-            using (var form = new FormNumeric(0, 10000, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    ProdDensity.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void ProdDensity_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void CbUseProdDensity_CheckedChanged_1(object sender, EventArgs e)
-        {
-            if (CbUseProdDensity.Checked)
-            {
-                ProdDensity.Enabled = true;
-                LabProdDensity.Enabled = true;
-            }
-            else
-            {
-                ProdDensity.Enabled = false;
-                LabProdDensity.Enabled = false;
-            }
-
-            SetButtons(true);
-        }
-
-        private void tbKP_Enter(object sender, EventArgs e)
+        private void textBox2_Enter(object sender, EventArgs e)
         {
             double temp;
-            double.TryParse(tbKP.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
+            double.TryParse(tbVirRate.Text, out temp);
+            using (var form = new FormNumeric(0, 50000, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbKP.Text = form.ReturnValue.ToString("N0");
+                    tbVirRate.Text = form.ReturnValue.ToString("N0");
                 }
             }
         }
 
-        private void tbKI_Enter(object sender, EventArgs e)
+        private void tbVirSpeed_Enter(object sender, EventArgs e)
         {
             double temp;
-            double.TryParse(tbKI.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
+            double.TryParse(tbVirSpeed.Text, out temp);
+            using (var form = new FormNumeric(0, 40, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbKI.Text = form.ReturnValue.ToString("N0");
+                    tbVirSpeed.Text = form.ReturnValue.ToString("N1");
                 }
             }
-        }
-
-        private void tbKD_Enter(object sender, EventArgs e)
-        {
-            double temp;
-            double.TryParse(tbKD.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbKD.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbMaxPWM_Enter(object sender, EventArgs e)
-        {
-            byte temp;
-            byte.TryParse(tbMaxPWM.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbMaxPWM.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbMinPWM_Enter(object sender, EventArgs e)
-        {
-            byte temp;
-            byte.TryParse(tbMinPWM.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbMinPWM.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbKP_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-            UpdateExample();
-        }
-        private void UpdateExample()
-        {
-            int val = (int)CurrentProduct.PIDkp;
-            if (int.TryParse(tbKP.Text, out int ex)) val = ex;
-            lbExample.Text = (val * Math.Pow(10, -cbShift.SelectedIndex)).ToString("N7");
-        }
-
-        private void tbKP_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbKP.Text, out tempD);
-            if (tempD < 0 || tempD > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbKI_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbKI.Text, out tempD);
-            if (tempD < 0 || tempD > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbKD_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbKD.Text, out tempD);
-            if (tempD < 0 || tempD > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbMaxPWM_Validating(object sender, CancelEventArgs e)
-        {
-            byte temp;
-            byte.TryParse(tbMaxPWM.Text, out temp);
-            if (temp < 0 || temp > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbMinPWM_Validating(object sender, CancelEventArgs e)
-        {
-            byte temp;
-            byte.TryParse(tbMinPWM.Text, out temp);
-            if (temp < 0 || temp > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbKD_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Derivative looks at past errors in the system and" +
-                " calculates the slope of those errors to predict future error values.";
-
-            mf.Tls.ShowHelp(Message, "Derivative");
-            hlpevent.Handled = true;
-        }
-
-        private void tbKP_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Proportional control output has a direct ratio to the error." +
-                " Higher Proportional has a greater response to error.";
-
-            mf.Tls.ShowHelp(Message, "Proportional");
-            hlpevent.Handled = true;
-        }
-
-        private void btnTuningGraph_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fcg = mf.Tls.IsFormOpen("FormPIDGraph");
-
-            if (fcg != null)
-            {
-                fcg.Focus();
-                return;
-            }
-
-            //
-            Form formG = new FormPIDGraph(this);
-            formG.Show(this);
-        }
-
-        private void btnFan_Click(object sender, EventArgs e)
-        {
-            CurrentProduct.FanOn = !CurrentProduct.FanOn;
-        }
-
-        private void ckOnScreen_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ckOnScreen.Checked)
-            {
-                ckBumpButtons.Checked = false;
-                ckBumpButtons.Enabled = false;
-            }
-            else
-            {
-                ckBumpButtons.Enabled = true;
-            }
-            SetButtons(true);
-        }
-
-        private void ckBumpButtons_CheckChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void ckConstantUPM_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void ckOnScreen_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Show on Large Screen.";
-
-            mf.Tls.ShowHelp(Message, "On Screen");
-            hlpevent.Handled = true;
-        }
-
-        private void ckConstantUPM_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "UPM does not vary with the number of sections on or off.";
-
-            mf.Tls.ShowHelp(Message, "Constant UPM");
-            hlpevent.Handled = true;
-        }
-
-        private void ckDefault_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void ckDefault_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Product that is loaded at startup.";
-
-            mf.Tls.ShowHelp(Message, "Default Product");
-            hlpevent.Handled = true;
-        }
-
-        private void lb1_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Quantity units for product. ex: lbs, kgs";
-
-            mf.Tls.ShowHelp(Message, "Quantity");
-            hlpevent.Handled = true;
-        }
-
-        private void pnlMain_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void ckVR_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbMaxRate_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbMinRate_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbMaxRate_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbMaxRate.Text, out tempD);
-            using (var form = new FormNumeric(0, 100000, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbMaxRate.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void tbMinRate_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbMinRate.Text, out tempD);
-            using (var form = new FormNumeric(0, 100000, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbMinRate.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void cbVR_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void cbShift_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-            UpdateExample();
-        }
-
-        private void ckQuanitiy2_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void rbUPMSpeed_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Speed used to calculate minimum UPM based on application rate.";
-
-            mf.Tls.ShowHelp(Message, "Minimum UPM using speed");
-            hlpevent.Handled = true;
-        }
-
-        private void rbUPMFixed_Click(object sender, EventArgs e)
-        {
-            tbUPMspeed.Text = "0.0";
-            SetButtons(true);
-        }
-
-        private void ckQuantityAdjustment_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Subtract quantity for off sections from total applied.";
-
-            mf.Tls.ShowHelp(Message, "Quantity Adjustment");
-            hlpevent.Handled = true;
-        }
-
-        private void ckQuantityAdjustment_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbUPMspeed_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbUPMspeed.Text, out tempD);
-            using (var form = new FormNumeric(0, 30, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbUPMspeed.Text = form.ReturnValue.ToString();
-                }
-            }
-        }
-
-        private void rbUPMSpeed_Click(object sender, EventArgs e)
-        {
-            tbMinUPM.Text = "0.0";
-            SetButtons(true);
-        }
-
-        private void tbUPMspeed_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Speed to set minimum flow rate for acceptable application.";
-
-            mf.Tls.ShowHelp(Message, "Minimum UPM Speed");
-            hlpevent.Handled = true;
         }
     }
 }

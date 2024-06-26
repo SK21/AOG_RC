@@ -67,6 +67,9 @@ namespace RateController
         private DateTime LastHours1;
         private DateTime LastHours2;
         private double AccumulatedLast = 0;
+        private bool cVirModule = false;
+        private double cVirRate = 0;
+        private double cVirSpeed = 0;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -88,6 +91,30 @@ namespace RateController
 
             LastHours1 = DateTime.Now;
             LastHours2 = DateTime.Now;
+        }
+
+        public bool VirModule
+        {
+            get { return cVirModule; }
+            set { cVirModule = value; }
+        }
+
+        public double VirRate
+        {
+            get { return cVirRate; }
+            set
+            {
+                if (value >= 0 && value < 50001) cVirRate = value;
+            }
+        }
+
+        public double VirSpeed
+        {
+            get { return cVirSpeed; }
+            set
+            {
+                if (value >= 0 && value < 40) { cVirSpeed = value; }
+            }
         }
 
         public bool BumpButtons
@@ -188,7 +215,15 @@ namespace RateController
         public bool EnableProdDensity
         { get { return cEnableProdDensity; } set { cEnableProdDensity = value; } }
 
-        public bool EraseAccumulatedUnits { get => cEraseAccumulatedUnits; set => cEraseAccumulatedUnits = value; }
+        public bool EraseAccumulatedUnits
+        {
+            get { return cEraseAccumulatedUnits; }
+            set
+            {
+                cEraseAccumulatedUnits = value;
+                if (value) ArduinoModule.AccumulatedQuantity = 0;
+            }
+        }
 
         public bool FanOn
         {
@@ -713,6 +748,10 @@ namespace RateController
             if (int.TryParse(mf.Tls.LoadProperty("ShiftRange" + IDname), out int sr)) cShiftRange = sr;
             if (double.TryParse(mf.Tls.LoadProperty("Hours1" + IDname), out double h1)) cHours1 = h1;
             if (double.TryParse(mf.Tls.LoadProperty("Hours2" + IDname), out double h2)) cHours2 = h2;
+
+            if(bool.TryParse(mf.Tls.LoadProperty("VirModule"+IDname),out bool vm)) cVirModule= vm;
+            if(double.TryParse(mf.Tls.LoadProperty("VirRate"+IDname),out double vr))cVirRate= vr;
+            if (double.TryParse(mf.Tls.LoadProperty("VirSpeed" + IDname), out double vs)) cVirSpeed = vs;
         }
 
         public double Pulses()
@@ -879,6 +918,10 @@ namespace RateController
             mf.Tls.SaveProperty("ShiftRange" + IDname, cShiftRange.ToString());
             mf.Tls.SaveProperty("Hours1" + IDname, cHours1.ToString());
             mf.Tls.SaveProperty("Hours2" + IDname, cHours2.ToString());
+
+            mf.Tls.SaveProperty("VirModule" + IDname, cVirModule.ToString());
+            mf.Tls.SaveProperty("VirRate" + IDname, cVirRate.ToString());
+            mf.Tls.SaveProperty("VirSpeed" + IDname, cVirSpeed.ToString());
         }
 
         public void SendPID()
@@ -1191,7 +1234,7 @@ namespace RateController
 
         private void UpdateUnitsApplied()
         {
-            double AccumulatedUnits = ArduinoModule.AccumulatedQuantity();
+            double AccumulatedUnits = ArduinoModule.AccumulatedQuantity;
             if (AccumulatedLast > AccumulatedUnits) AccumulatedLast = 0;
             double Diff = AccumulatedUnits - AccumulatedLast;
             AccumulatedLast = AccumulatedUnits;

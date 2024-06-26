@@ -19,7 +19,7 @@ void SendData()
     //      bit 2   - wifi rssi < -80
     //      bit 3	- wifi rssi < -70
     //      bit 4	- wifi rssi < -65
-    //      bit 5   wifi connected
+    //      bit 5   send flow Hz only
     //      bit 6   ethernet connected
     //      bit 7   good pin configuration
     //12    CRC
