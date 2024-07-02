@@ -90,7 +90,6 @@ namespace RateController
         public clsSwitches SwitchObjects;
         public frmSwitches SwitchesForm;
         private int cRateType;
-        public bool UseAltISR = false;
 
         public FormStart()
         {
@@ -575,7 +574,6 @@ namespace RateController
             }
 
             if (int.TryParse(Tls.LoadProperty("RateType"), out int rt)) cRateType = rt;
-            if(bool.TryParse(Tls.LoadProperty("UseAltISR"),out bool ai))UseAltISR= ai;
         }
 
         public bool ModuleConnected(int ModuleID)
@@ -998,7 +996,6 @@ namespace RateController
                 }
 
                 Tls.SaveProperty("RateType",cRateType.ToString());
-                Tls.SaveProperty("UseAltISR", UseAltISR.ToString());
             }
             catch (Exception)
             {

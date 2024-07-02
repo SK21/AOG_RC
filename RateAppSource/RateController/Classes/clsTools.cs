@@ -35,7 +35,7 @@ namespace RateController
         #endregion Form Dragging API Support
 
         private string cAppName = "RateController";
-        private string cAppVersion = "3.7.13";
+        private string cAppVersion = "3.7.14";
         private bool cIsReadOnly = false;
         private string cPropertiesApp;
         private string cPropertiesFile;
