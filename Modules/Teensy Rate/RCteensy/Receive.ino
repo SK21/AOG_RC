@@ -126,7 +126,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		//	        - bit 4		    MasterOn
 		//          - bit 5         0 - time for one pulse, 1 - average time for multiple pulses
 		//          - bit 6         AutoOn
-		//          - bit 7         UseAltISR
+		//          - bit 7         -
 		//10    manual pwm Lo
 		//11    manual pwm Hi
 		//12    -
@@ -165,16 +165,6 @@ void ReadPGNs(byte Data[], uint16_t len)
 						Sensor[SensorID].UseMultiPulses = ((InCommand & 32) == 32);
 
 						AutoOn = ((InCommand & 64) == 64);
-
-						bool UA = ((InCommand & 128) == 128);
-						if (UA != MDL.UseAltISR)
-						{
-							MDL.UseAltISR = UA;
-							SaveData();
-
-							// restart the Teensy
-							SCB_AIRCR = 0x05FA0004;
-						}
 
 						int16_t tmp = Data[10] | Data[11] << 8;
 						Sensor[SensorID].ManualAdjust = tmp;

@@ -23,8 +23,8 @@ extern "C" {
 
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  18-Jun-2024"
-const uint16_t InoID = 18064;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  01-Jul-2024"
+const uint16_t InoID = 1074;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 
@@ -56,7 +56,6 @@ struct ModuleConfig
 	char NetPassword[ModStringLengths];
 	uint8_t WorkPin = NC;
 	bool WorkPinIsMomentary = false;
-	bool UseAltISR = false;
 };
 
 ModuleConfig MDL;
@@ -183,6 +182,7 @@ hex_info_t hex =
   0, 0					//   eof,lines
 };
 
+
 void setup()
 {
 	DoSetup();
@@ -205,14 +205,7 @@ void loop()
 		}
 
 		CheckRelays();
-		if (MDL.UseAltISR)
-		{
-			GetUPM_Alt();
-		}
-		else
-		{
-			GetUPM();
-		}
+		GetUPM();
 		AdjustFlow();
 		ReadAnalog();
 	}

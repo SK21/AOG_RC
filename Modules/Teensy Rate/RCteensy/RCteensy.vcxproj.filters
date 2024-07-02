@@ -18,6 +18,19 @@
     <ClCompile Include="RCteensy.ino" />
     <ClCompile Include="Analog.ino" />
     <ClCompile Include="Begin.ino" />
+    <ClCompile Include="EthernetUpdate.ino" />
+    <ClCompile Include="FlashTxx.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FlashTxx.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FXUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FXUtil.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
     <ClCompile Include="Motor.ino" />
     <ClCompile Include="PCA95x5_RC.h">
       <Filter>Header Files</Filter>
@@ -28,23 +41,9 @@
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
     <ClCompile Include="SerialESPcomm.ino" />
-    <ClCompile Include="EthernetUpdate.ino" />
-    <ClCompile Include="FlashTxx.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FXUtil.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RateAlt.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCteensy.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FlashTxx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FXUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

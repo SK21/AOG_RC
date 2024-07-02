@@ -18,18 +18,18 @@
     <ClCompile Include="RC_ESP32.ino" />
     <ClCompile Include="Analog.ino" />
     <ClCompile Include="Begin.ino" />
+    <ClCompile Include="GUI.ino" />
     <ClCompile Include="Motor.ino" />
     <ClCompile Include="PCA95x5_RC.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="PgNetwork.ino" />
+    <ClCompile Include="PgStart.ino" />
     <ClCompile Include="PgSwitches.ino" />
     <ClCompile Include="PID.ino" />
     <ClCompile Include="Rate.ino" />
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="UDPComm.ino" />
-    <ClCompile Include="PgStart.ino" />
-    <ClCompile Include="PgNetwork.ino" />
-    <ClCompile Include="GUI.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RC_ESP32.vsarduino.h">
