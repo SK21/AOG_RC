@@ -18,7 +18,6 @@ namespace RateController
         private bool cIsLocked;
         private Button cLocked;
         private TextBox cMeasured;
-        private bool ConstantUPMstart;
         private Button cPower;
         private clsProduct cProduct;
         private ProgressBar cProgress;
@@ -32,6 +31,8 @@ namespace RateController
         private double PulseCountStart;
         private double PulseCountTotal;
         private int SetCount;
+        private ApplicationMode ApplicationModeStart;
+
 
         public clsCalibrate(FormStart CallingFrom, int ID)
         {
@@ -41,8 +42,8 @@ namespace RateController
             cCalFactor = cProduct.MeterCal;
             PulseCountStart = cProduct.Pulses();
             cProduct.Enabled = false;
-            ConstantUPMstart = cProduct.ConstantUPM;
-            cProduct.ConstantUPM = true;
+            ApplicationModeStart = cProduct.AppMode;
+            cProduct.AppMode = ApplicationMode.ConstantUPM;
 
             cTimer.Interval = 1000;
             cTimer.Enabled = false;
@@ -177,7 +178,7 @@ namespace RateController
         {
             // restore initial settings
             cProduct.Enabled = true;
-            cProduct.ConstantUPM = ConstantUPMstart;
+            cProduct.AppMode = ApplicationModeStart;
             cProduct.Save();
             cProduct.CalUseBaseRate = false;
         }

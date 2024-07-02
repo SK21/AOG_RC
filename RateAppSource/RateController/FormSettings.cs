@@ -633,11 +633,30 @@ namespace RateController
             ckOnScreen.Checked = CurrentProduct.OnScreen;
             ckBumpButtons.Checked = CurrentProduct.BumpButtons;
 
-            ckConstantUPM.Checked = CurrentProduct.ConstantUPM;
-            ckQuantityAdjustment.Checked = CurrentProduct.UseQuantityAdjustment;
-
+            SetAppMode(CurrentProduct);
             cbShift.SelectedIndex = CurrentProduct.PIDscale;
             UpdateExample();
+        }
+
+        private void SetAppMode(clsProduct Prd)
+        {
+            switch (Prd.AppMode)
+            {
+                case ApplicationMode.ControlledUPM:
+                    rbModeControlledUPM.Checked = true;
+                    break;
+                case ApplicationMode.ConstantUPM:
+                    rbModeConstant.Checked = true;
+                    break;
+                case ApplicationMode.DocumentApplied:
+                    rbModeApplied.Checked = true;
+                    break;
+                case ApplicationMode.DocumentTarget:
+                    rbModeTarget.Checked = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void pnlMain_Paint(object sender, PaintEventArgs e)
@@ -875,9 +894,7 @@ namespace RateController
             CurrentProduct.OffRateSetting = tempB;
 
             CurrentProduct.ManualPWM = tempB;
-
-            CurrentProduct.ConstantUPM = ckConstantUPM.Checked;
-            CurrentProduct.UseQuantityAdjustment = ckQuantityAdjustment.Checked;
+            SaveAppMode(CurrentProduct);
 
             CurrentProduct.OnScreen = ckOnScreen.Checked;
             CurrentProduct.BumpButtons = ckBumpButtons.Checked;
@@ -887,11 +904,27 @@ namespace RateController
             if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
             CurrentProduct.PIDscale = cbShift.SelectedIndex;
 
-            CurrentProduct.VirModule = ckVirtualModule.Checked;
-            if (double.TryParse(tbVirRate.Text, out double vr)) CurrentProduct.VirRate = vr;
-            if (double.TryParse(tbVirSpeed.Text, out double vs)) CurrentProduct.VirSpeed = vs;
-
             SaveData();
+        }
+
+        private void SaveAppMode(clsProduct Prd)
+        {
+            if (rbModeControlledUPM.Checked)
+            {
+                Prd.AppMode = ApplicationMode.ControlledUPM;
+            }
+            else if (rbModeConstant.Checked)
+            {
+                Prd.AppMode = ApplicationMode.ConstantUPM;
+            }
+            else if (rbModeApplied.Checked)
+            {
+                Prd.AppMode = ApplicationMode.DocumentApplied;
+            }
+            else
+            {
+                Prd.AppMode = ApplicationMode.DocumentTarget;
+            }
         }
 
         private void SetButtons(bool Edited)
@@ -935,7 +968,7 @@ namespace RateController
             {
                 this.BackColor = Properties.Settings.Default.DayColour;
 
-                foreach(TabPage tb in tcProducts.TabPages)
+                foreach (TabPage tb in tcProducts.TabPages)
                 {
                     tb.BackColor = Properties.Settings.Default.DayColour;
                 }
@@ -1011,11 +1044,11 @@ namespace RateController
                 {
                     // add back the removed tabs
                     tcProducts.TabPages.Insert(1, tbTemp1);
-                    tcProducts.TabPages.Insert(5,tbTemp2);
+                    tcProducts.TabPages.Insert(5, tbTemp2);
 
-                    ckOffRate.Location = new Point(29,323);
-                    tbOffRate.Location = new Point(169,324);
-                    label28.Location = new Point(208,328);
+                    ckOffRate.Location = new Point(29, 323);
+                    tbOffRate.Location = new Point(169, 324);
+                    label28.Location = new Point(208, 328);
                 }
             }
         }
@@ -1775,10 +1808,6 @@ namespace RateController
             rbUPMSpeed.Checked = CurrentProduct.UseMinUPMbySpeed;
             rbUPMFixed.Checked = !CurrentProduct.UseMinUPMbySpeed;
 
-            ckVirtualModule.Checked = CurrentProduct.VirModule;
-            tbVirRate.Text = CurrentProduct.VirRate.ToString("N0");
-            tbVirSpeed.Text = CurrentProduct.VirSpeed.ToString("N1");
-
             Initializing = false;
         }
 
@@ -1805,42 +1834,6 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Bump Buttons");
             hlpevent.Handled = true;
-        }
-
-        private void ckVirtualModule_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Virtual module used to estimate application rate using ground speed.";
-
-            mf.Tls.ShowHelp(Message, "Virtual Module");
-            hlpevent.Handled = true;
-        }
-
-        private void textBox2_Enter(object sender, EventArgs e)
-        {
-            double temp;
-            double.TryParse(tbVirRate.Text, out temp);
-            using (var form = new FormNumeric(0, 50000, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbVirRate.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbVirSpeed_Enter(object sender, EventArgs e)
-        {
-            double temp;
-            double.TryParse(tbVirSpeed.Text, out temp);
-            using (var form = new FormNumeric(0, 40, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbVirSpeed.Text = form.ReturnValue.ToString("N1");
-                }
-            }
         }
     }
 }

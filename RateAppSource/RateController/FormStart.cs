@@ -360,7 +360,7 @@ namespace RateController
                         P0.ModuleID = 6;
                         P3.ChangeID(0, 0);
                         P3.OnScreen = true;
-                        P3.ConstantUPM = P0.ConstantUPM;
+                        P3.AppMode = P0.AppMode;
                         P3.UseOffRateAlarm = P0.UseOffRateAlarm;
                         P3.OffRateSetting = P0.OffRateSetting;
                         P3.MinUPM = P0.MinUPM;

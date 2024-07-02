@@ -101,6 +101,7 @@ namespace RateController
             this.btnTuningGraph = new System.Windows.Forms.Button();
             this.btnPIDloadDefaults = new System.Windows.Forms.Button();
             this.tbOptions = new System.Windows.Forms.TabPage();
+            this.ckBumpButtons = new System.Windows.Forms.CheckBox();
             this.ckDefault = new System.Windows.Forms.CheckBox();
             this.label28 = new System.Windows.Forms.Label();
             this.tbOffRate = new System.Windows.Forms.TextBox();
@@ -120,16 +121,6 @@ namespace RateController
             this.ModuleIndicator = new System.Windows.Forms.Label();
             this.lbConID = new System.Windows.Forms.Label();
             this.tbConID = new System.Windows.Forms.TextBox();
-            this.tbOptions2 = new System.Windows.Forms.TabPage();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tbVirSpeed = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tbVirRate = new System.Windows.Forms.TextBox();
-            this.ckVirtualModule = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.ckQuantityAdjustment = new System.Windows.Forms.CheckBox();
-            this.ckConstantUPM = new System.Windows.Forms.CheckBox();
             this.tbDiagnostics = new System.Windows.Forms.TabPage();
             this.label2 = new System.Windows.Forms.Label();
             this.wifiBar = new System.Windows.Forms.ProgressBar();
@@ -199,7 +190,12 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.ckBumpButtons = new System.Windows.Forms.CheckBox();
+            this.Mode = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.rbModeControlledUPM = new System.Windows.Forms.RadioButton();
+            this.rbModeConstant = new System.Windows.Forms.RadioButton();
+            this.rbModeTarget = new System.Windows.Forms.RadioButton();
+            this.rbModeApplied = new System.Windows.Forms.RadioButton();
             this.tcProducts.SuspendLayout();
             this.tbRate.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -211,11 +207,9 @@ namespace RateController
             this.grpMinUPM.SuspendLayout();
             this.grpRateMethod.SuspendLayout();
             this.grpSensor.SuspendLayout();
-            this.tbOptions2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.tbDiagnostics.SuspendLayout();
             this.tbData.SuspendLayout();
+            this.Mode.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcProducts
@@ -225,7 +219,7 @@ namespace RateController
             this.tcProducts.Controls.Add(this.tbVR);
             this.tcProducts.Controls.Add(this.tbControl);
             this.tcProducts.Controls.Add(this.tbOptions);
-            this.tcProducts.Controls.Add(this.tbOptions2);
+            this.tcProducts.Controls.Add(this.Mode);
             this.tcProducts.Controls.Add(this.tbDiagnostics);
             this.tcProducts.Controls.Add(this.tbData);
             this.tcProducts.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1128,6 +1122,22 @@ namespace RateController
             this.tbOptions.Text = "Options";
             this.tbOptions.UseVisualStyleBackColor = true;
             // 
+            // ckBumpButtons
+            // 
+            this.ckBumpButtons.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckBumpButtons.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckBumpButtons.Location = new System.Drawing.Point(293, 323);
+            this.ckBumpButtons.Name = "ckBumpButtons";
+            this.ckBumpButtons.Size = new System.Drawing.Size(162, 32);
+            this.ckBumpButtons.TabIndex = 139;
+            this.ckBumpButtons.Text = "Bump Buttons";
+            this.ckBumpButtons.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckBumpButtons.UseVisualStyleBackColor = true;
+            this.ckBumpButtons.CheckedChanged += new System.EventHandler(this.ckBumpButtons_CheckChanged);
+            this.ckBumpButtons.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckBumpButtons_HelpRequested);
+            // 
             // ckDefault
             // 
             this.ckDefault.Appearance = System.Windows.Forms.Appearance.Button;
@@ -1396,137 +1406,6 @@ namespace RateController
             this.tbConID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbConID_HelpRequested);
             this.tbConID.Enter += new System.EventHandler(this.tbConID_Enter);
             this.tbConID.Validating += new System.ComponentModel.CancelEventHandler(this.tbConID_Validating);
-            // 
-            // tbOptions2
-            // 
-            this.tbOptions2.Controls.Add(this.groupBox3);
-            this.tbOptions2.Controls.Add(this.groupBox2);
-            this.tbOptions2.Location = new System.Drawing.Point(4, 83);
-            this.tbOptions2.Name = "tbOptions2";
-            this.tbOptions2.Padding = new System.Windows.Forms.Padding(3);
-            this.tbOptions2.Size = new System.Drawing.Size(472, 407);
-            this.tbOptions2.TabIndex = 9;
-            this.tbOptions2.Text = "Options 2";
-            this.tbOptions2.UseVisualStyleBackColor = true;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.label4);
-            this.groupBox3.Controls.Add(this.tbVirSpeed);
-            this.groupBox3.Controls.Add(this.label6);
-            this.groupBox3.Controls.Add(this.tbVirRate);
-            this.groupBox3.Controls.Add(this.ckVirtualModule);
-            this.groupBox3.Location = new System.Drawing.Point(105, 198);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(259, 171);
-            this.groupBox3.TabIndex = 134;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Virtual Module";
-            this.groupBox3.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // label4
-            // 
-            this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(29, 127);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(93, 23);
-            this.label4.TabIndex = 155;
-            this.label4.Text = "Speed";
-            // 
-            // tbVirSpeed
-            // 
-            this.tbVirSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbVirSpeed.Location = new System.Drawing.Point(167, 123);
-            this.tbVirSpeed.MaxLength = 8;
-            this.tbVirSpeed.Name = "tbVirSpeed";
-            this.tbVirSpeed.Size = new System.Drawing.Size(67, 30);
-            this.tbVirSpeed.TabIndex = 153;
-            this.tbVirSpeed.Text = "0";
-            this.tbVirSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbVirSpeed.TextChanged += new System.EventHandler(this.ProdDensity_TextChanged);
-            this.tbVirSpeed.Enter += new System.EventHandler(this.tbVirSpeed_Enter);
-            // 
-            // label6
-            // 
-            this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(29, 79);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(97, 23);
-            this.label6.TabIndex = 154;
-            this.label6.Text = "Rate";
-            // 
-            // tbVirRate
-            // 
-            this.tbVirRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbVirRate.Location = new System.Drawing.Point(167, 75);
-            this.tbVirRate.MaxLength = 8;
-            this.tbVirRate.Name = "tbVirRate";
-            this.tbVirRate.Size = new System.Drawing.Size(67, 30);
-            this.tbVirRate.TabIndex = 152;
-            this.tbVirRate.Text = "0";
-            this.tbVirRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbVirRate.TextChanged += new System.EventHandler(this.TankRemain_TextChanged);
-            this.tbVirRate.Enter += new System.EventHandler(this.textBox2_Enter);
-            // 
-            // ckVirtualModule
-            // 
-            this.ckVirtualModule.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckVirtualModule.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckVirtualModule.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckVirtualModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckVirtualModule.Location = new System.Drawing.Point(29, 28);
-            this.ckVirtualModule.Name = "ckVirtualModule";
-            this.ckVirtualModule.Size = new System.Drawing.Size(205, 32);
-            this.ckVirtualModule.TabIndex = 118;
-            this.ckVirtualModule.Text = "Enabled";
-            this.ckVirtualModule.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckVirtualModule.UseVisualStyleBackColor = true;
-            this.ckVirtualModule.CheckedChanged += new System.EventHandler(this.ckQuantityAdjustment_CheckedChanged);
-            this.ckVirtualModule.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckVirtualModule_HelpRequested);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.ckQuantityAdjustment);
-            this.groupBox2.Controls.Add(this.ckConstantUPM);
-            this.groupBox2.Location = new System.Drawing.Point(105, 49);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(259, 117);
-            this.groupBox2.TabIndex = 124;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Constant UPM";
-            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // ckQuantityAdjustment
-            // 
-            this.ckQuantityAdjustment.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckQuantityAdjustment.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckQuantityAdjustment.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckQuantityAdjustment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckQuantityAdjustment.Location = new System.Drawing.Point(27, 73);
-            this.ckQuantityAdjustment.Name = "ckQuantityAdjustment";
-            this.ckQuantityAdjustment.Size = new System.Drawing.Size(205, 32);
-            this.ckQuantityAdjustment.TabIndex = 119;
-            this.ckQuantityAdjustment.Text = "Quantity Adjustment";
-            this.ckQuantityAdjustment.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckQuantityAdjustment.UseVisualStyleBackColor = true;
-            this.ckQuantityAdjustment.CheckedChanged += new System.EventHandler(this.ckQuantityAdjustment_CheckedChanged);
-            this.ckQuantityAdjustment.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckQuantityAdjustment_HelpRequested);
-            // 
-            // ckConstantUPM
-            // 
-            this.ckConstantUPM.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckConstantUPM.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckConstantUPM.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckConstantUPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckConstantUPM.Location = new System.Drawing.Point(27, 28);
-            this.ckConstantUPM.Name = "ckConstantUPM";
-            this.ckConstantUPM.Size = new System.Drawing.Size(205, 32);
-            this.ckConstantUPM.TabIndex = 118;
-            this.ckConstantUPM.Text = "Enabled";
-            this.ckConstantUPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckConstantUPM.UseVisualStyleBackColor = true;
-            this.ckConstantUPM.CheckedChanged += new System.EventHandler(this.ckConstantUPM_CheckedChanged);
-            this.ckConstantUPM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckConstantUPM_HelpRequested);
             // 
             // tbDiagnostics
             // 
@@ -2338,21 +2217,94 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
-            // ckBumpButtons
+            // Mode
             // 
-            this.ckBumpButtons.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckBumpButtons.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckBumpButtons.Location = new System.Drawing.Point(293, 323);
-            this.ckBumpButtons.Name = "ckBumpButtons";
-            this.ckBumpButtons.Size = new System.Drawing.Size(162, 32);
-            this.ckBumpButtons.TabIndex = 139;
-            this.ckBumpButtons.Text = "Bump Buttons";
-            this.ckBumpButtons.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckBumpButtons.UseVisualStyleBackColor = true;
-            this.ckBumpButtons.CheckedChanged += new System.EventHandler(this.ckBumpButtons_CheckChanged);
-            this.ckBumpButtons.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckBumpButtons_HelpRequested);
+            this.Mode.Controls.Add(this.rbModeApplied);
+            this.Mode.Controls.Add(this.rbModeTarget);
+            this.Mode.Controls.Add(this.rbModeConstant);
+            this.Mode.Controls.Add(this.rbModeControlledUPM);
+            this.Mode.Controls.Add(this.label8);
+            this.Mode.Location = new System.Drawing.Point(4, 83);
+            this.Mode.Name = "Mode";
+            this.Mode.Size = new System.Drawing.Size(472, 407);
+            this.Mode.TabIndex = 10;
+            this.Mode.Text = "Mode";
+            this.Mode.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(153, 11);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(153, 23);
+            this.label8.TabIndex = 121;
+            this.label8.Text = "Application Mode";
+            // 
+            // rbModeControlledUPM
+            // 
+            this.rbModeControlledUPM.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbModeControlledUPM.Checked = true;
+            this.rbModeControlledUPM.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbModeControlledUPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbModeControlledUPM.Location = new System.Drawing.Point(20, 48);
+            this.rbModeControlledUPM.Margin = new System.Windows.Forms.Padding(2);
+            this.rbModeControlledUPM.Name = "rbModeControlledUPM";
+            this.rbModeControlledUPM.Size = new System.Drawing.Size(434, 74);
+            this.rbModeControlledUPM.TabIndex = 122;
+            this.rbModeControlledUPM.Tag = "0";
+            this.rbModeControlledUPM.Text = "1. Section controlled UPM, varies with width";
+            this.rbModeControlledUPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbModeControlledUPM.UseVisualStyleBackColor = true;
+            this.rbModeControlledUPM.CheckedChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
+            // 
+            // rbModeConstant
+            // 
+            this.rbModeConstant.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbModeConstant.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbModeConstant.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbModeConstant.Location = new System.Drawing.Point(20, 138);
+            this.rbModeConstant.Margin = new System.Windows.Forms.Padding(2);
+            this.rbModeConstant.Name = "rbModeConstant";
+            this.rbModeConstant.Size = new System.Drawing.Size(434, 74);
+            this.rbModeConstant.TabIndex = 123;
+            this.rbModeConstant.Tag = "0";
+            this.rbModeConstant.Text = "2. Constant UPM, compensate total applied";
+            this.rbModeConstant.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbModeConstant.UseVisualStyleBackColor = true;
+            this.rbModeConstant.CheckedChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
+            // 
+            // rbModeTarget
+            // 
+            this.rbModeTarget.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbModeTarget.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbModeTarget.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbModeTarget.Location = new System.Drawing.Point(20, 318);
+            this.rbModeTarget.Margin = new System.Windows.Forms.Padding(2);
+            this.rbModeTarget.Name = "rbModeTarget";
+            this.rbModeTarget.Size = new System.Drawing.Size(434, 74);
+            this.rbModeTarget.TabIndex = 124;
+            this.rbModeTarget.Tag = "0";
+            this.rbModeTarget.Text = "4. Document target rate, no rate control,\r\nno module";
+            this.rbModeTarget.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbModeTarget.UseVisualStyleBackColor = true;
+            this.rbModeTarget.CheckedChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
+            // 
+            // rbModeApplied
+            // 
+            this.rbModeApplied.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbModeApplied.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbModeApplied.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbModeApplied.Location = new System.Drawing.Point(20, 228);
+            this.rbModeApplied.Margin = new System.Windows.Forms.Padding(2);
+            this.rbModeApplied.Name = "rbModeApplied";
+            this.rbModeApplied.Size = new System.Drawing.Size(434, 74);
+            this.rbModeApplied.TabIndex = 125;
+            this.rbModeApplied.Tag = "0";
+            this.rbModeApplied.Text = "3. Document applied rate, no rate control";
+            this.rbModeApplied.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbModeApplied.UseVisualStyleBackColor = true;
+            this.rbModeApplied.CheckedChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
             // 
             // FormSettings
             // 
@@ -2396,14 +2348,12 @@ namespace RateController
             this.grpRateMethod.ResumeLayout(false);
             this.grpSensor.ResumeLayout(false);
             this.grpSensor.PerformLayout();
-            this.tbOptions2.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
             this.tbDiagnostics.ResumeLayout(false);
             this.tbDiagnostics.PerformLayout();
             this.tbData.ResumeLayout(false);
             this.tbData.PerformLayout();
+            this.Mode.ResumeLayout(false);
+            this.Mode.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2558,10 +2508,6 @@ namespace RateController
         private System.Windows.Forms.Label lbHours1;
         private System.Windows.Forms.Label lbHours2value;
         private System.Windows.Forms.Label lbHours2;
-        private System.Windows.Forms.TabPage tbOptions2;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox ckQuantityAdjustment;
-        private System.Windows.Forms.CheckBox ckConstantUPM;
         private System.Windows.Forms.GroupBox grpMinUPM;
         private System.Windows.Forms.TextBox tbUPMspeed;
         private System.Windows.Forms.RadioButton rbUPMSpeed;
@@ -2572,12 +2518,12 @@ namespace RateController
         private System.Windows.Forms.TextBox tbOffRate;
         private System.Windows.Forms.CheckBox ckOffRate;
         private System.Windows.Forms.CheckBox ckOnScreen;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox tbVirSpeed;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox tbVirRate;
-        private System.Windows.Forms.CheckBox ckVirtualModule;
         private System.Windows.Forms.CheckBox ckBumpButtons;
+        private System.Windows.Forms.TabPage Mode;
+        private System.Windows.Forms.RadioButton rbModeConstant;
+        private System.Windows.Forms.RadioButton rbModeControlledUPM;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.RadioButton rbModeTarget;
+        private System.Windows.Forms.RadioButton rbModeApplied;
     }
 }

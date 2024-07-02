@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace RateController
 {
+    public enum ApplicationMode
+    { ControlledUPM, ConstantUPM, DocumentApplied, DocumentTarget }
+
     public enum ControlTypeEnum
     { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
 
@@ -14,11 +17,12 @@ namespace RateController
         public byte CoverageUnits = 0;
         public PGN32500 ModuleRateSettings;
         public double TankSize = 0;
+        private double AccumulatedLast = 0;
+        private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
         private bool cBumpButtons;
         private bool cCalRun;
         private bool cCalSetMeter;
         private bool cCalUseBaseRate;
-        private bool cConstantUPM;
         private ControlTypeEnum cControlType = 0;
         private int cCountsRev;
         private bool cEnabled = true;
@@ -32,7 +36,6 @@ namespace RateController
         private double cMeterCal = 0;
         private double cMinUPM;
         private double cMinUPMbySpeed;
-        private bool cUseMinUPMbySpeed = false;
         private int cModID;
         private byte cOffRateSetting;
         private bool cOnScreen;
@@ -50,10 +53,10 @@ namespace RateController
         private double cTankStart = 0;
         private double cUnitsApplied = 0;
         private double cUnitsApplied2 = 0;
-        private bool cUseQuantityAdjustment = false;
         private double CurrentMinutes;
         private double CurrentWorkedArea_Hc = 0;
         private bool cUseAltRate = false;
+        private bool cUseMinUPMbySpeed = false;
         private bool cUseMultiPulse;
         private bool cUseOffRateAlarm;
         private bool cUseVR;
@@ -61,15 +64,11 @@ namespace RateController
         private double cVRmax;
         private double cVRmin;
         private byte cWifiStrength;
+        private DateTime LastHours1;
+        private DateTime LastHours2;
         private DateTime LastUpdateTime;
         private PGN32502 ModulePIDdata;
         private bool PauseWork = false;
-        private DateTime LastHours1;
-        private DateTime LastHours2;
-        private double AccumulatedLast = 0;
-        private bool cVirModule = false;
-        private double cVirRate = 0;
-        private double cVirSpeed = 0;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -93,28 +92,11 @@ namespace RateController
             LastHours2 = DateTime.Now;
         }
 
-        public bool VirModule
+        public ApplicationMode AppMode
         {
-            get { return cVirModule; }
-            set { cVirModule = value; }
-        }
-
-        public double VirRate
-        {
-            get { return cVirRate; }
+            get { return cAppMode; }
             set
-            {
-                if (value >= 0 && value < 50001) cVirRate = value;
-            }
-        }
-
-        public double VirSpeed
-        {
-            get { return cVirSpeed; }
-            set
-            {
-                if (value >= 0 && value < 40) { cVirSpeed = value; }
-            }
+            { cAppMode = value; }
         }
 
         public bool BumpButtons
@@ -156,12 +138,6 @@ namespace RateController
             set { cCalUseBaseRate = value; }
         }
 
-        public bool ConstantUPM
-        {
-            get { return cConstantUPM; }
-            set { cConstantUPM = value; }
-        }
-
         public ControlTypeEnum ControlType
         {
             get
@@ -200,7 +176,7 @@ namespace RateController
             }
         }
 
-        public int ElapsedTime
+        public double ElapsedTime
         { get { return ArduinoModule.ElapsedTime(); } }
 
         public bool Enabled
@@ -276,22 +252,6 @@ namespace RateController
             }
         }
 
-        public double MinUPMbySpeed
-        {
-            get { return cMinUPMbySpeed; }
-            set
-            {
-                if (value >= 0 && value < 50)
-                {
-                    cMinUPMbySpeed = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid value.");
-                }
-            }
-        }
-
         public double MinUPM
         {
             get { return cMinUPM; }
@@ -308,24 +268,20 @@ namespace RateController
             }
         }
 
-        public double MinUPMinUse()
+        public double MinUPMbySpeed
         {
-            double Result = cMinUPM;
-            if (cUseMinUPMbySpeed)
+            get { return cMinUPMbySpeed; }
+            set
             {
-                double KPH = cMinUPMbySpeed;
-                if (mf.UseInches) KPH *= mf.MPHtoKPH;
-                double HPM = mf.Sections.TotalWidth(false) * KPH / 600.0;
-                Result = TargetRate() * HPM;
-                if (CoverageUnits == 0) Result *= 2.47;
+                if (value >= 0 && value < 50)
+                {
+                    cMinUPMbySpeed = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid value.");
+                }
             }
-            return Result;
-        }
-
-        public bool UseMinUPMbySpeed
-        {
-            get { return cUseMinUPMbySpeed; }
-            set { cUseMinUPMbySpeed = value; }
         }
 
         public int ModuleID
@@ -507,6 +463,12 @@ namespace RateController
         public bool UseAltRate
         { get { return cUseAltRate; } set { cUseAltRate = value; } }
 
+        public bool UseMinUPMbySpeed
+        {
+            get { return cUseMinUPMbySpeed; }
+            set { cUseMinUPMbySpeed = value; }
+        }
+
         public bool UseMultiPulse
         { get { return cUseMultiPulse; } set { cUseMultiPulse = value; } }
 
@@ -650,8 +612,6 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("QuantityApplied2" + IDname), out cUnitsApplied2);
 
             if (double.TryParse(mf.Tls.LoadProperty("AccumulatedLast" + IDname), out double oa)) AccumulatedLast = oa;
-            bool.TryParse(mf.Tls.LoadProperty("ConstantUPM" + IDname), out cConstantUPM);
-            if (bool.TryParse(mf.Tls.LoadProperty("UseQuantityAdjustment" + IDname), out bool qa)) cUseQuantityAdjustment = qa;
 
             cQuantityDescription = mf.Tls.LoadProperty("QuantityDescription" + IDname);
             if (cQuantityDescription == "") cQuantityDescription = "Lbs";
@@ -749,9 +709,21 @@ namespace RateController
             if (double.TryParse(mf.Tls.LoadProperty("Hours1" + IDname), out double h1)) cHours1 = h1;
             if (double.TryParse(mf.Tls.LoadProperty("Hours2" + IDname), out double h2)) cHours2 = h2;
 
-            if(bool.TryParse(mf.Tls.LoadProperty("VirModule"+IDname),out bool vm)) cVirModule= vm;
-            if(double.TryParse(mf.Tls.LoadProperty("VirRate"+IDname),out double vr))cVirRate= vr;
-            if (double.TryParse(mf.Tls.LoadProperty("VirSpeed" + IDname), out double vs)) cVirSpeed = vs;
+            if (Enum.TryParse(mf.Tls.LoadProperty("AppMode" + IDname), true, out ApplicationMode am)) cAppMode = am;
+        }
+
+        public double MinUPMinUse()
+        {
+            double Result = cMinUPM;
+            if (cUseMinUPMbySpeed)
+            {
+                double KPH = cMinUPMbySpeed;
+                if (mf.UseInches) KPH *= mf.MPHtoKPH;
+                double HPM = mf.Sections.TotalWidth(false) * KPH / 600.0;
+                Result = TargetRate() * HPM;
+                if (CoverageUnits == 0) Result *= 2.47;
+            }
+            return Result;
         }
 
         public double Pulses()
@@ -771,39 +743,70 @@ namespace RateController
             {
                 case 0:
                     // acres
-                    if (cConstantUPM)
+                    if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
+                        // section controlled UPM or Document applied
+                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / (cHectaresPerMinute * 2.47);
+                    }
+                    else if (cAppMode == ApplicationMode.ConstantUPM)
+                    {
+                        // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
                         if (HPM > 0) Result = ArduinoModule.UPM() / (HPM * 2.47);
                     }
                     else
                     {
-                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / (cHectaresPerMinute * 2.47);
+                        // Document target rate
+                        Result = TargetRate();
                     }
                     break;
 
                 case 1:
                     // hectares
-                    if (cConstantUPM)
+                    if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
+                        // section controlled UPM or Document applied
+                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / cHectaresPerMinute;
+                    }
+                    else if (cAppMode == ApplicationMode.ConstantUPM)
+                    {
+                        // Constant UPM
+                        // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
                         if (HPM > 0) Result = ArduinoModule.UPM() / HPM;
                     }
                     else
                     {
-                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / cHectaresPerMinute;
+                        // Document target rate
+                        Result = TargetRate();
                     }
                     break;
 
                 case 2:
                     // minutes
-                    Result = ArduinoModule.UPM();
+                    if (cAppMode == ApplicationMode.DocumentTarget)
+                    {
+                        // document target rate
+                        Result = TargetRate();
+                    }
+                    else
+                    {
+                        Result = ArduinoModule.UPM();
+                    }
                     break;
 
                 default:
                     // hours
-                    Result = ArduinoModule.UPM() * 60;
+                    if (cAppMode == ApplicationMode.DocumentTarget)
+                    {
+                        // document target rate
+                        Result = TargetRate();
+                    }
+                    else
+                    {
+                        Result = ArduinoModule.UPM() * 60;
+                    }
                     break;
             }
 
@@ -820,9 +823,9 @@ namespace RateController
             LastHours1 = DateTime.Now;
             LastHours2 = DateTime.Now;
         }
+
         public void ResetApplied()
         {
-            cUnitsApplied2 += cUnitsApplied;
             cUnitsApplied = 0;
             EraseAccumulatedUnits = true;
         }
@@ -871,9 +874,6 @@ namespace RateController
             mf.Tls.SaveProperty("QuantityApplied2" + IDname, cUnitsApplied2.ToString());
             mf.Tls.SaveProperty("AccumulatedLast" + IDname, AccumulatedLast.ToString());
 
-            mf.Tls.SaveProperty("ConstantUPM" + IDname, cConstantUPM.ToString());
-            mf.Tls.SaveProperty("UseQuantityAdjustment" + IDname, cUseQuantityAdjustment.ToString());
-
             mf.Tls.SaveProperty("cProdDensity" + IDname, cProdDensity.ToString());
             mf.Tls.SaveProperty("cEnableProdDensity" + IDname, cEnableProdDensity.ToString());
 
@@ -919,9 +919,7 @@ namespace RateController
             mf.Tls.SaveProperty("Hours1" + IDname, cHours1.ToString());
             mf.Tls.SaveProperty("Hours2" + IDname, cHours2.ToString());
 
-            mf.Tls.SaveProperty("VirModule" + IDname, cVirModule.ToString());
-            mf.Tls.SaveProperty("VirRate" + IDname, cVirRate.ToString());
-            mf.Tls.SaveProperty("VirSpeed" + IDname, cVirSpeed.ToString());
+            mf.Tls.SaveProperty("AppMode" + IDname, cAppMode.ToString());
         }
 
         public void SendPID()
@@ -1021,71 +1019,75 @@ namespace RateController
 
         public double TargetUPM() // returns units per minute set rate
         {
-            double V = 0;
+            double Result = 0;
             switch (CoverageUnits)
             {
                 case 0:
                     // acres
-                    if (cConstantUPM)
+                    if (cAppMode == ApplicationMode.ConstantUPM)
                     {
+                        // Constant UPM
+                        // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        V = TargetRate() * HPM * 2.47;
+                        Result = TargetRate() * HPM * 2.47;
                     }
                     else
                     {
-                        V = TargetRate() * cHectaresPerMinute * 2.47;
+                        // section controlled UPM, Document applied or Document target
+                        Result = TargetRate() * cHectaresPerMinute * 2.47;
                     }
                     break;
 
                 case 1:
                     // hectares
-                    if (cConstantUPM)
+                    if (cAppMode == ApplicationMode.ConstantUPM)
                     {
+                        // Constant UPM
+                        // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        V = TargetRate() * HPM;
+                        Result = TargetRate() * HPM;
                     }
                     else
                     {
-                        V = TargetRate() * cHectaresPerMinute;
+                        // section controlled UPM, Document applied or Document target
+                        Result = TargetRate() * cHectaresPerMinute;
                     }
                     break;
 
                 case 2:
                     // minutes
-                    V = TargetRate();
+                    Result = TargetRate();
                     break;
 
                 default:
                     // hours
-                    V = TargetRate() / 60;
+                    Result = TargetRate() / 60;
                     break;
             }
 
             // added this back in to change from lb/min to ft^3/min, Moved from PGN32614.
-            if (cEnableProdDensity && cProdDensity > 0) { V /= cProdDensity; }
+            if (cEnableProdDensity && cProdDensity > 0) { Result /= cProdDensity; }
 
-            return V;
+            return Result;
         }
 
         public void UDPcommFromArduino(byte[] data, int PGN)
         {
             try
             {
-                if (mf.SimMode != SimType.VirtualNano)  // block pgns from real nano when simulation is with virtual nano
+                if (cAppMode != ApplicationMode.DocumentTarget)    // block real module
                 {
                     switch (PGN)
                     {
                         case 32400:
-                            if (ArduinoModule.ParseByteData(data))
-                            {
-                                UpdateUnitsApplied();
-                            }
+                            if (ArduinoModule.ParseByteData(data)) UpdateUnitsApplied();
                             break;
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                mf.Tls.WriteErrorLog("clsProduct/UDPcomFromArduino: " + ex.Message);
             }
         }
 
@@ -1104,7 +1106,7 @@ namespace RateController
 
         public double UnitsApplied2()
         {
-            double Result = cUnitsApplied2 + cUnitsApplied;
+            double Result = cUnitsApplied2; 
             if (cEnableProdDensity && cProdDensity > 0) Result *= cProdDensity;
             return Result;
         }
@@ -1112,7 +1114,7 @@ namespace RateController
         public void Update()
         {
             DateTime UpdateStartTime;
-            if (ArduinoModule.ModuleSending())
+            if (ArduinoModule.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)
             {
                 UpdateStartTime = DateTime.Now;
                 CurrentMinutes = (UpdateStartTime - LastUpdateTime).TotalMinutes;
@@ -1161,6 +1163,22 @@ namespace RateController
 
                 // send to arduino
                 ModuleRateSettings.Send();
+
+                if (cAppMode == ApplicationMode.DocumentTarget)
+                {
+                    // send pgn from virtual module
+                    byte[] Data = new byte[13];
+                    Data[0] = 144;
+                    Data[1] = 126;
+                    Data[2] = (byte)(cModID * 16 + cSenID);
+                    double Hz = (TargetUPM() * MeterCal / 60.0) * 1000;
+                    Data[3] = (byte)Hz;
+                    Data[4] = (byte)((int)Hz >> 8);
+                    Data[5] = (byte)((int)Hz >> 16);
+                    Data[11] = 0b11100011;	// sensor 0 receiving, sensor 1 receiving, Hz only mode, ethernet connected, good pins
+                    Data[12] = mf.Tls.CRC(Data, 12);
+                    if (ArduinoModule.ParseByteData(Data)) UpdateUnitsApplied();
+                }
             }
             else
             {
@@ -1227,7 +1245,6 @@ namespace RateController
             else
             {
                 Result = (ArduinoModule.Connected() && cHectaresPerMinute > 0);
-                //Result = (ArduinoModule.Connected() && mf.AutoSteerPGN.Connected() && cHectaresPerMinute > 0);
             }
             return Result;
         }
@@ -1239,18 +1256,15 @@ namespace RateController
             double Diff = AccumulatedUnits - AccumulatedLast;
             AccumulatedLast = AccumulatedUnits;
             cUnitsApplied += Diff;
+            cUnitsApplied2 += Diff;
 
-            if (cConstantUPM && cUseQuantityAdjustment && mf.Sections.TotalWidth() > 0)
+            if (cAppMode == ApplicationMode.ConstantUPM && mf.Sections.TotalWidth() > 0)
             {
-                // subtract amount for sections that are off
-                cUnitsApplied -= (1.0 - (mf.Sections.WorkingWidth() / mf.Sections.TotalWidth())) * Diff;
+                // constant upm, subtract amount for sections that are off
+                double Offset = (1.0 - (mf.Sections.WorkingWidth() / mf.Sections.TotalWidth())) * Diff;
+                cUnitsApplied -= Offset;
+                cUnitsApplied2 -= Offset;
             }
-        }
-
-        public bool UseQuantityAdjustment
-        {
-            get { return cUseQuantityAdjustment; }
-            set { cUseQuantityAdjustment = value; }
         }
     }
 }

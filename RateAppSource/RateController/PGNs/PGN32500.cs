@@ -51,7 +51,7 @@ namespace RateController
             cData[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
             // rate set
-            if (Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn)
+            if ((Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn) || Prod.AppMode == ApplicationMode.DocumentTarget)
             {
                 RateSet = 0;
             }
