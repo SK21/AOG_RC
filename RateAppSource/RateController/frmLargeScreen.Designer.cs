@@ -241,7 +241,7 @@
             this.lbCoverageAmount.TabIndex = 167;
             this.lbCoverageAmount.Text = "142.8";
             this.lbCoverageAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lbCoverageAmount.Click += new System.EventHandler(this.lbCoverage_Click);
+            this.lbCoverageAmount.Click += new System.EventHandler(this.lbCoverageAmount_Click);
             // 
             // lbCoverage
             // 
@@ -295,7 +295,7 @@
             this.lbQuantityAmount.TabIndex = 162;
             this.lbQuantityAmount.Text = "500,000.0";
             this.lbQuantityAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lbQuantityAmount.Click += new System.EventHandler(this.lbQuantity_Click);
+            this.lbQuantityAmount.Click += new System.EventHandler(this.lbQuantityAmount_Click);
             // 
             // lbRPM1
             // 
@@ -819,7 +819,6 @@
             this.lbRateType.TabIndex = 200;
             this.lbRateType.Text = "R";
             this.lbRateType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbRateType.Click += new System.EventHandler(this.lbRate_Click);
             this.lbRateType.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRate_HelpRequested);
             // 
             // lbTargetType
@@ -831,7 +830,6 @@
             this.lbTargetType.TabIndex = 201;
             this.lbTargetType.Text = "R";
             this.lbTargetType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbTargetType.Click += new System.EventHandler(this.lbTarget_Click);
             this.lbTargetType.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbTarget_HelpRequested);
             // 
             // lbCoverageType
@@ -843,7 +841,6 @@
             this.lbCoverageType.TabIndex = 202;
             this.lbCoverageType.Text = "R";
             this.lbCoverageType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbCoverageType.Click += new System.EventHandler(this.lbCoverage_Click);
             this.lbCoverageType.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbCoverage_HelpRequested);
             // 
             // lbQuantityType
@@ -855,7 +852,6 @@
             this.lbQuantityType.TabIndex = 203;
             this.lbQuantityType.Text = "R";
             this.lbQuantityType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbQuantityType.Click += new System.EventHandler(this.lbQuantity_Click);
             this.lbQuantityType.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbQuantity_HelpRequested);
             // 
             // btMaster

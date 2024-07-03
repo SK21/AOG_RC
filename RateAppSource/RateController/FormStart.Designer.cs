@@ -152,8 +152,8 @@ namespace RateController
             this.panProducts.Controls.Add(this.lblUnits);
             this.panProducts.Controls.Add(this.AreaDone);
             this.panProducts.Controls.Add(this.lbRateAmount);
-            this.panProducts.Controls.Add(this.lbCoverage);
             this.panProducts.Controls.Add(this.lbRemaining);
+            this.panProducts.Controls.Add(this.lbCoverage);
             this.panProducts.Location = new System.Drawing.Point(0, 0);
             this.panProducts.Name = "panProducts";
             this.panProducts.Size = new System.Drawing.Size(271, 150);
@@ -217,12 +217,13 @@ namespace RateController
             // TankRemain
             // 
             this.TankRemain.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankRemain.Location = new System.Drawing.Point(188, 120);
+            this.TankRemain.Location = new System.Drawing.Point(188, 90);
             this.TankRemain.Name = "TankRemain";
             this.TankRemain.Size = new System.Drawing.Size(89, 23);
             this.TankRemain.TabIndex = 153;
             this.TankRemain.Text = "50000.1";
             this.TankRemain.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TankRemain.Click += new System.EventHandler(this.TankRemain_Click);
             this.TankRemain.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
             // 
             // lblUnits
@@ -239,18 +240,19 @@ namespace RateController
             // AreaDone
             // 
             this.AreaDone.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AreaDone.Location = new System.Drawing.Point(188, 90);
+            this.AreaDone.Location = new System.Drawing.Point(188, 120);
             this.AreaDone.Name = "AreaDone";
             this.AreaDone.Size = new System.Drawing.Size(89, 23);
             this.AreaDone.TabIndex = 147;
             this.AreaDone.Text = "0";
             this.AreaDone.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.AreaDone.Click += new System.EventHandler(this.AreaDone_Click);
             this.AreaDone.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbCoverage_HelpRequested);
             // 
             // lbRateAmount
             // 
             this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAmount.Location = new System.Drawing.Point(188, 32);
+            this.lbRateAmount.Location = new System.Drawing.Point(188, 30);
             this.lbRateAmount.Name = "lbRateAmount";
             this.lbRateAmount.Size = new System.Drawing.Size(89, 23);
             this.lbRateAmount.TabIndex = 146;
@@ -261,7 +263,7 @@ namespace RateController
             // lbCoverage
             // 
             this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCoverage.Location = new System.Drawing.Point(0, 90);
+            this.lbCoverage.Location = new System.Drawing.Point(0, 120);
             this.lbCoverage.Name = "lbCoverage";
             this.lbCoverage.Size = new System.Drawing.Size(175, 23);
             this.lbCoverage.TabIndex = 150;
@@ -272,7 +274,7 @@ namespace RateController
             // lbRemaining
             // 
             this.lbRemaining.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRemaining.Location = new System.Drawing.Point(0, 120);
+            this.lbRemaining.Location = new System.Drawing.Point(0, 90);
             this.lbRemaining.Name = "lbRemaining";
             this.lbRemaining.Size = new System.Drawing.Size(201, 23);
             this.lbRemaining.TabIndex = 149;

@@ -19,7 +19,7 @@ void SendUDP()
     //      bit 2   - wifi rssi < -80
     //      bit 3	- wifi rssi < -70
     //      bit 4	- wifi rssi < -65
-    //      bit 5   wifi connected
+    //      bit 5   flow sensor Hz only
     //      bit 6   ethernet connected
     //      bit 7   good pin configuration
     //12    CRC
@@ -76,7 +76,6 @@ void SendUDP()
             {
                 Data[11] |= 0b00010000;
             }
-            Data[11] |= 0b00100000;
         }
 
         if (millis() - Sensor[0].CommTime < 4000) Data[11] |= 0b00000001;

@@ -133,20 +133,9 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Calibration steps:
-        ///1. enter ground speed
-        ///2. set calibration meter speed (rpm)
-        /// * start with Master switch off
-        /// * switch product on with the power button
-        /// * enter initial base rate
-        /// * enter initial Cal Factor
-        /// * press start, RC attempts to adjust flow/rate to target
-        /// * if successful meter speed is locked
-        /// * press stop
-        ///3. set Cal Factor (pulses/unit)
-        /// * start with Master switch off
-        /// * press start, turn Master switch on and let run to get an adequate sample amount
-        /// * press stop and enter measured  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to This screen is used to set the Cal Factor (pulses/unit) for a product. The goal is to have a consistent rpm each time the calibration is done and have the meter roller at a rpm that is normally being used in the field.
+        ///
+        ///  First the rpm must be set. This is done by entering the usual operating speed and expected product application rate. After entering an estimated Cal Factor RC will try to set the rpm of the meter roller to produce the expected rate. If RC is not successful in reaching this rate be sure g [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lgCalHelp {
             get {

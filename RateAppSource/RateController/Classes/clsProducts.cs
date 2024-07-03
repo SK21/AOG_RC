@@ -121,7 +121,7 @@ namespace RateController
                     Prd.ChangeID(i / 2, (byte)(i % 2), true);
                     Prd.UseMultiPulse = true;
                     Prd.OnScreen = true;
-                    Prd.ConstantUPM = false;
+                    Prd.AppMode = ApplicationMode.ControlledUPM;
                     Prd.OffRateSetting = 0;
                     Prd.MinUPM = 0;
                     Prd.BumpButtons = false;

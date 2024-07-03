@@ -18,12 +18,12 @@ namespace RateController
         //9     PWM Lo
         //10    PWM Hi
         //11    Status
-        //      bit 0 - sensor 0 connected
-        //      bit 1 - sensor 1 connected
+        //      bit 0   sensor 0 connected
+        //      bit 1   sensor 1 connected
         //      bit 2   - wifi rssi < -80
         //      bit 3	- wifi rssi < -70
         //      bit 4	- wifi rssi < -65
-        //      bit 5   wifi connected
+        //      bit 5   Hz only, module only provides Hz of flow sensor, UPM and accumulated quantity are calculated in the app
         //      bit 6   ethernet connected
         //      bit 7   good pin configuration
         //12    CRC
@@ -32,42 +32,48 @@ namespace RateController
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 144;
         private readonly clsProduct Prod;
-        private int cElapsedTime;
+        private double cAccumulated;
+        private double cElapsedTime;
         private bool cEthernetConnected;
         private bool cGoodPins;
-        private bool LastGoodPins;
         private byte cLastStrength;
-        private DateTime cLastTime = DateTime.Now;
         private bool cModuleIsReceivingData;
         private double cPWMsetting;
         private double cQuantity;
         private double cUPM;
-        private bool cWifiConnected;
         private byte cWifiStrength;
+        private bool HzOnly;
         private bool LastEthernetConnected;
+        private bool LastGoodPins;
         private bool LastModuleReceiving;
         private bool LastModuleSending;
-        private bool LastWifiConnected;
+        private Stopwatch PGNstopWatch;
         private DateTime ReceiveTime;
 
         public PGN32400(clsProduct CalledFrom)
         {
             Prod = CalledFrom;
+            PGNstopWatch = new Stopwatch();
         }
+
         public event EventHandler<PinStatusArgs> PinStatusChanged;
 
-        public class PinStatusArgs : EventArgs
+        public double AccumulatedQuantity
         {
-            public bool GoodPins { get; set; }
+            get
+            {
+                double Result = cQuantity;
+                if (HzOnly)
+                {
+                    Result = cAccumulated;
+                }
+                return Result;
+            }
+            set { cAccumulated = value; }
         }
 
         public bool GoodPins
         { get { return cGoodPins; } }
-
-        public double AccumulatedQuantity()
-        {
-            return cQuantity;
-        }
 
         public void CheckModuleComm()
         {
@@ -95,11 +101,10 @@ namespace RateController
                 Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
-            if (LastWifiConnected != cWifiConnected || cLastStrength != cWifiStrength)
+            if (cLastStrength != cWifiStrength)
             {
-                LastWifiConnected = cWifiConnected;
                 cLastStrength = cWifiStrength;
-                Mes = "Wifi connected: " + cWifiConnected.ToString() + "   Strength: " + cWifiStrength.ToString();
+                Mes = "Wifi Strength: " + cWifiStrength.ToString();
                 Prod.mf.Tls.WriteActivityLog(Mes, false, true);
             }
 
@@ -127,11 +132,10 @@ namespace RateController
             return ModuleReceiving() && ModuleSending();
         }
 
-        public int ElapsedTime()
+        public double ElapsedTime()
         {
-            int Result = 10000;
-            if ((DateTime.Now - cLastTime).TotalMilliseconds < 4000) Result = cElapsedTime;
-
+            double Result = 0;
+            if (ModuleSending()) Result = cElapsedTime;
             CheckModuleComm();
             return Result;
         }
@@ -173,8 +177,9 @@ namespace RateController
                     tmp = Prod.mf.Tls.ParseSenID(Data[2]);
                     if (Prod.SensorID == tmp)
                     {
-                        cElapsedTime = (int)(DateTime.Now - cLastTime).TotalMilliseconds;
-                        cLastTime = DateTime.Now;
+                        PGNstopWatch.Stop();
+                        cElapsedTime = PGNstopWatch.Elapsed.TotalMilliseconds;
+                        PGNstopWatch.Restart();
 
                         cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 1000.0;
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
@@ -199,11 +204,12 @@ namespace RateController
                         if ((Data[11] & 0b00010000) == 0b00010000) cWifiStrength = 3;
                         Prod.WifiStrength = cWifiStrength;
 
-                        cWifiConnected = ((Data[11] & 0b00100000) == 0b00100000);
+                        HzOnly = ((Data[11] & 0b00100000) == 0b00100000);
                         cEthernetConnected = ((Data[11] & 0b01000000) == 0b01000000);
                         cGoodPins = ((Data[11] & 0b10000000) == 0b10000000);
 
                         ReceiveTime = DateTime.Now;
+                        cAccumulated += UPM() * (cElapsedTime / 60000.0);
                         Result = true;
                     }
                 }
@@ -236,6 +242,18 @@ namespace RateController
         public double UPM()
         {
             double Result = cUPM;
+            if (HzOnly)
+            {
+                if (Prod.MeterCal > 0)
+                {
+                    // convert from Hz to UPM
+                    Result = (cUPM * 60.0) / Prod.MeterCal;
+                }
+                else
+                {
+                    Result = 0;
+                }
+            }
             return Result;
         }
 
@@ -255,6 +273,11 @@ namespace RateController
                        + ", Quantity: " + cQuantity.ToString("N2") + ", PWM:" + cPWMsetting.ToString("N2"));
                 }
             }
+        }
+
+        public class PinStatusArgs : EventArgs
+        {
+            public bool GoodPins { get; set; }
         }
     }
 }

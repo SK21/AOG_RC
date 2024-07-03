@@ -19,7 +19,6 @@ namespace RateController
         private int mouseY = 0;
         private clsProduct Prd;
         private Color RateColour = Color.GreenYellow;
-        private int RateType = 0;   // 0 current rate, 1 instantaneous rate, 2 overall rate
         private bool SwitchingScreens = false;
         private bool[] SwON = new bool[9];
         private int TransLeftOffset = 6;
@@ -412,8 +411,14 @@ namespace RateController
 
         private void lbRate_Click(object sender, EventArgs e)
         {
-            RateType++;
-            if (RateType > 2) RateType = 0;
+            if (mf.RateType > 1)
+            {
+                mf.RateType = 0;
+            }
+            else
+            {
+                mf.RateType++;
+            }
             UpdateForm();
         }
 
@@ -927,7 +932,7 @@ namespace RateController
             }
 
             // rate
-            switch (RateType)
+            switch (mf.RateType)
             {
                 case 1:
                     lbRateType.Text = "I";
@@ -946,7 +951,6 @@ namespace RateController
             }
 
             lbTargetAmount.Text = Prd.TargetRate().ToString("N1");
-            //lbUnits.Text = Prd.Units();
 
             // coverage
             if (mf.ShowCoverageRemaining)
@@ -1279,6 +1283,34 @@ namespace RateController
         {
             Prd = mf.Products.Item(3);
             UpdateForm();
+        }
+
+        private void lbQuantityAmount_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(mf, "Reset?", "Reset", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+               mf.Products.Item(CurrentProduct()).ResetApplied();
+            }
+        }
+
+        private void lbCoverageAmount_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(mf, "Reset?", "Reset", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                mf.Products.Item(CurrentProduct()).ResetCoverage();
+            }
         }
     }
 }

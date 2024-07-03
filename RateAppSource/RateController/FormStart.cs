@@ -26,6 +26,7 @@ namespace RateController
         public readonly int MaxSections = 128;
         public readonly int MaxSensors = 8;
         public readonly int MaxSwitches = 16;
+        public readonly double MPHtoKPH = 1.6092;
         public PGN32401 AnalogData;
         public PGN229 AOGsections;
         public PGN254 AutoSteerPGN;
@@ -83,12 +84,12 @@ namespace RateController
         private DateTime[] ModuleTime;
         private Label[] ProdName;
         private Label[] Rates;
-        private int[] RateType = new int[6];
         private PGN32501[] RelaySettings;
         private DateTime cStartTime;
         private Label[] Targets;
         public clsSwitches SwitchObjects;
         public frmSwitches SwitchesForm;
+        private int cRateType;
 
         public FormStart()
         {
@@ -197,6 +198,15 @@ namespace RateController
             }
         }
 
+        public int RateType
+        {
+            // 0 current rate, 1 instantaneous rate, 2 overall rate
+            get { return cRateType; }
+            set
+            {
+                if (value >= 0 && value < 3) cRateType = value;
+            }
+        }
         public byte PressureToShow
         {
             get { return cPressureToShowID; }
@@ -349,7 +359,7 @@ namespace RateController
                         P0.ModuleID = 6;
                         P3.ChangeID(0, 0);
                         P3.OnScreen = true;
-                        P3.ConstantUPM = P0.ConstantUPM;
+                        P3.AppMode = P0.AppMode;
                         P3.UseOffRateAlarm = P0.UseOffRateAlarm;
                         P3.OffRateSetting = P0.OffRateSetting;
                         P3.MinUPM = P0.MinUPM;
@@ -563,6 +573,7 @@ namespace RateController
                 Swt.Show();
             }
 
+            if (int.TryParse(Tls.LoadProperty("RateType"), out int rt)) cRateType = rt;
         }
 
         public bool ModuleConnected(int ModuleID)
@@ -733,7 +744,7 @@ namespace RateController
                         TankRemain.Text = Prd.UnitsApplied().ToString("N1");
                     }
 
-                    switch (RateType[CurrentPage - 1])
+                    switch (cRateType)
                     {
                         case 1:
                             lbRate.Text = Lang.lgInstantRate;
@@ -983,6 +994,8 @@ namespace RateController
                 {
                     SER[i].CloseRCport();
                 }
+
+                Tls.SaveProperty("RateType",cRateType.ToString());
             }
             catch (Exception)
             {
@@ -1124,8 +1137,8 @@ namespace RateController
 
         private void lbRate_Click(object sender, EventArgs e)
         {
-            RateType[CurrentPage - 1]++;
-            if (RateType[CurrentPage - 1] > 2) RateType[CurrentPage - 1] = 0;
+            cRateType++;
+            if (cRateType > 2) cRateType = 0;
             UpdateStatus();
         }
 
@@ -1459,6 +1472,34 @@ namespace RateController
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ShowSettings();
+        }
+
+        private void AreaDone_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(this, "Reset?", "Reset", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if(Result)
+            {
+                Products.Item(CurrentProduct()).ResetCoverage();
+            }
+        }
+
+        private void TankRemain_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(this, "Reset?", "Reset", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                Products.Item(CurrentProduct()).ResetApplied();
+            }
         }
     }
 }

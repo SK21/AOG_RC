@@ -142,27 +142,30 @@
     <value>Cal. Factor (Pulses/Unit)</value>
   </data>
   <data name="lgCalHelp" xml:space="preserve">
-    <value>Calibration steps:
-1. enter ground speed
+    <value>This screen is used to set the Cal Factor (pulses/unit) for a product. The goal is to have a consistent rpm each time the calibration is done and have the meter roller at a rpm that is normally being used in the field.
+
+  First the rpm must be set. This is done by entering the usual operating speed and expected product application rate. After entering an estimated Cal Factor RC will try to set the rpm of the meter roller to produce the expected rate. If RC is not successful in reaching this rate be sure ground speed matches what you normally operate at. Estimated Cal Factor, PWM minimum, PWM maximum or machine metering drive range may need to be adjusted. When RC does set the rpm and displays an engaged lock, then the next step is to set the actual Cal Factor. If the rpm is not set the next step can not continue.
+
+  Next the Cal Factor is set. Run the meter roller to get an adequate sample to measure. RC takes the measured amount and divides it by the meter roller pulses to get the new Cal Factor. This value is saved and calibration is complete.
+
+Calibration steps:
+1. enter ground speed you normally operate at
 2. set calibration meter speed (rpm)
- * start with Master switch off
- * switch product on with the power button
- * enter initial base rate
- * enter initial Cal Factor
- * press start, RC attempts to adjust flow/rate to target
- * if successful meter speed is locked
- * press stop
+    - start with SwitchBox Master switch off
+    - switch product on with the power button
+    - enter initial base rate
+    - enter estimated Cal Factor
+    - press start, RC attempts to adjust flow/rate to target
+    - if successful meter speed is locked
+    - press stop
 3. set Cal Factor (pulses/unit)
- * start with Master switch off
- * press start, turn Master switch on and let run to get an adequate sample amount
- * press stop and enter measured amount. Cal Factor is calculated.
- * press save to record new values
+    - start with Master switch off
+    - press start, turn Master switch on and let run to get an adequate sample amount
+    - press stop and enter measured amount. Cal Factor is calculated.
+    - press save to record new values
 4. options to start over
- * if RC is not successful in locking the meter speed adjust initial Cal Factor, ground speed, PWM minimum, PWM maximum or machine metering drive range. Start step 2 again.
-
- * to redo the meter speed the lock button can be pressed to unlock. RC will then attempt to find a new meter speed when step 2 is redone.
-
- * to start from a previously saved setting the lock button can be pressed to lock. Then continue with step 3.</value>
+    - to redo the meter speed the lock button can be pressed to unlock. RC will then attempt to find a new meter speed when step 2 is redone.
+    - to start from a previously saved setting the lock button can be pressed to lock. Then continue with step 3.</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Calibrate</value>

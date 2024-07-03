@@ -14,8 +14,8 @@ namespace RateController
         private int BoardType = 0;  // 0 nano, 1 Teensy, 2 ESP32
         private bool FormEdited;
         private bool Initializing;
-
         TextBox[] RelayTB;
+
         public frmModuleConfig(FormStart Main)
         {
             InitializeComponent();
@@ -56,7 +56,6 @@ namespace RateController
                 RelayTB[i].Enter += tbRelays_enter;
                 RelayTB[i].TextChanged += textbox_TextChanged;
             }
-
         }
         private void tbRelays_enter(object sender, EventArgs e)
         {
@@ -72,7 +71,6 @@ namespace RateController
                 }
             }
         }
-
         private void ArduinoModule_PinStatusChanged(object sender, PGN32400.PinStatusArgs e)
         {
             if (!e.GoodPins) mf.Tls.ShowHelp("Pin configuration not correct. Using default values.");
