@@ -23,8 +23,8 @@ extern "C" {
 
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  01-Jul-2024"
-const uint16_t InoID = 1074;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  10-Aug-2024"
+const uint16_t InoID = 10084;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 
