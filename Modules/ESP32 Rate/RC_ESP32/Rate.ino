@@ -1,5 +1,9 @@
+
+const uint16_t Debounce = 500;	// micros
+const uint16_t avgPulses = 24;
+
 volatile unsigned long Duration[MaxProductCount];
-volatile unsigned long Durations[2][12];
+volatile unsigned long Durations[2][avgPulses];
 volatile int FilledCount[2];
 volatile unsigned long PulseCount[MaxProductCount];
 
@@ -14,9 +18,6 @@ double Omax[MaxProductCount];
 double Omin[MaxProductCount];
 double Oave[MaxProductCount];
 byte Ocount[MaxProductCount];
-
-const uint16_t Debounce = 500;	// micros
-const uint16_t avgPulses = 12;
 
 void IRAM_ATTR ISR0()
 {
