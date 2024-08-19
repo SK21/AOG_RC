@@ -13,8 +13,6 @@ namespace RateController
         private int cPortNumber;
         private int cRCportBaud = 38400;
         private string cRCportName;
-        private bool cReadTimeOut = false;
-        private bool cWriteTimeOut = false;
         private byte HiByte;
         private byte LoByte;
         private int ReadErrorCount;
@@ -28,10 +26,11 @@ namespace RateController
             cPortNumber = PortNumber;
             RCportName = "RCport" + cPortNumber.ToString();
             ID = "_" + PortNumber.ToString() + "_";
-            ArduinoPort.ReadTimeout = 1500;
+            ArduinoPort.ReadTimeout = 500;
             ArduinoPort.WriteTimeout = 500;
-            Timer1.Interval = 1000;
-            Timer1.Tick += new EventHandler(CheckConnection);
+            Timer1.Interval = 45000;    // 45 seconds
+            Timer1.Tick += new EventHandler(ResetErrors);
+            Timer1.Enabled = true;
         }
 
         // new data event
@@ -68,7 +67,6 @@ namespace RateController
                     mf.Tls.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "false");
 
                     ArduinoPort.Dispose();
-                    Timer1.Stop();
                 }
             }
             catch (Exception ex)
@@ -142,12 +140,19 @@ namespace RateController
                 try
                 {
                     ArduinoPort.Write(Data, 0, Data.Length);
-                    cWriteTimeOut = false;
                 }
                 catch (Exception ex)
                 {
-                    if (ex is TimeoutException) cWriteTimeOut = true;
-                    mf.Tls.WriteErrorLog("SerialComm/SendData (" + RCportName + "): " + ex.Message);
+                    if (ex is TimeoutException)
+                    {
+                        if (++WriteErrorCount > 6)
+                        {
+                            CloseRCport();
+                            mf.Tls.ShowHelp("Serial Port " + RCportName + " not sending correctly. It has been closed.", "Serial Port", 5000, true, false, true);
+                            WriteErrorCount = 0;
+                        }
+                    }
+                    mf.Tls.WriteErrorLog("SerialComm/SendData (" + RCportName + "): " + ex.Message + ", Count = " + WriteErrorCount.ToString());
                 }
             }
         }
@@ -162,35 +167,6 @@ namespace RateController
             cLog = cLog.Replace("\0", string.Empty);
         }
 
-        private void CheckConnection(object myObject, EventArgs myEventArgs)
-        {
-            if (cReadTimeOut)
-            {
-                if (++ReadErrorCount > 10)
-                {
-                    mf.Tls.ShowHelp("Serial Port " + RCportName + " not receiving correctly. It will be closed.", "Serial Port", 5000, true,false,true);
-                    CloseRCport();
-                }
-            }
-            else
-            {
-                ReadErrorCount = 0;
-            }
-
-            if (cWriteTimeOut)
-            {
-                if (++WriteErrorCount > 2)
-                {
-                    mf.Tls.ShowHelp("Serial Port " + RCportName + " not sending correctly. It will be closed.", "Serial Port", 5000, true,false, true);
-                    CloseRCport();
-                }
-            }
-            else
-            {
-                WriteErrorCount = 0;
-            }
-        }
-
         private void RCport_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             if (ArduinoPort.IsOpen)
@@ -200,12 +176,19 @@ namespace RateController
                     string sentence = ArduinoPort.ReadLine();
                     mf.BeginInvoke(new NewDataDelegate(ReceiveData), sentence);
                     if (ArduinoPort.BytesToRead > 150) ArduinoPort.DiscardInBuffer();
-                    cReadTimeOut = false;
                 }
                 catch (Exception ex)
                 {
-                    if (ex is TimeoutException) cReadTimeOut = true;
-                    mf.Tls.WriteErrorLog("SerialComm/RCport_DataReceived (" + RCportName + "): " + ex.Message);
+                    if (ex is TimeoutException)
+                    {
+                        if (++ReadErrorCount > 6)
+                        {
+                            CloseRCport();
+                            mf.Tls.ShowHelp("Serial Port " + RCportName + " not receiving correctly. It has been closed.", "Serial Port", 5000, true, false, true);
+                            ReadErrorCount = 0;
+                        }
+                    }
+                    mf.Tls.WriteErrorLog("SerialComm/RCport_DataReceived (" + RCportName + "): " + ex.Message + ", Count = " + ReadErrorCount.ToString());
                 }
             }
         }
@@ -265,6 +248,12 @@ namespace RateController
             {
                 mf.Tls.WriteErrorLog("SerialComm/ReceiveData: " + ex.Message);
             }
+        }
+
+        private void ResetErrors(object myObject, EventArgs myEventArgs)
+        {
+            ReadErrorCount = 0;
+            WriteErrorCount = 0;
         }
 
         private bool SerialPortExists(string PortName)
