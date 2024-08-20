@@ -90,6 +90,7 @@ namespace RateController
         public clsSwitches SwitchObjects;
         public frmSwitches SwitchesForm;
         private int cRateType;
+        public PGN32296 ScaleIndicator;
 
         public FormStart()
         {
@@ -170,6 +171,7 @@ namespace RateController
             AOGsections = new PGN229(this);
             SectionControl = new clsSectionControl(this);
             SwitchObjects = new clsSwitches(this);
+            ScaleIndicator = new PGN32296(this);
         }
         public DateTime StartTime { get { return cStartTime; } }
 

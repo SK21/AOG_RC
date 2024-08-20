@@ -26,8 +26,8 @@ namespace RateController
             cPortNumber = PortNumber;
             RCportName = "RCport" + cPortNumber.ToString();
             ID = "_" + PortNumber.ToString() + "_";
-            ArduinoPort.ReadTimeout = 500;
-            ArduinoPort.WriteTimeout = 500;
+            ArduinoPort.ReadTimeout = 1000;
+            ArduinoPort.WriteTimeout = 1000;
             Timer1.Interval = 45000;    // 45 seconds
             Timer1.Tick += new EventHandler(ResetErrors);
             Timer1.Enabled = true;
@@ -200,48 +200,55 @@ namespace RateController
                 AddToLog(sentence);
 
                 int CommaPosition = sentence.IndexOf(",", StringComparison.Ordinal);
-                int CRposition = sentence.IndexOf("\r");
-                if (CommaPosition > -1 && CRposition > -1)
+                if (CommaPosition > -1)
                 {
-                    // string data
-                    sentence = sentence.Substring(0, CRposition);
-                    string[] words = sentence.Split(',');
-
-                    if (words.Length > 1)
+                    int CRposition = sentence.IndexOf("\r");
+                    if (CRposition > -1)
                     {
-                        if (byte.TryParse(words[0], out LoByte))
+                        // string data
+                        sentence = sentence.Substring(0, CRposition);
+                        string[] words = sentence.Split(',');
+
+                        if (words.Length > 1)
                         {
-                            if (byte.TryParse(words[1], out HiByte))
+                            if (byte.TryParse(words[0], out LoByte))
                             {
-                                int PGN = HiByte << 8 | LoByte;
-                                switch (PGN)
+                                if (byte.TryParse(words[1], out HiByte))
                                 {
-                                    case 32400:
-                                        foreach (clsProduct Prod in mf.Products.Items)
-                                        {
-                                            Prod.SerialFromAruduino(words);
-                                        }
-                                        break;
+                                    int PGN = HiByte << 8 | LoByte;
+                                    switch (PGN)
+                                    {
+                                        case 32400:
+                                            foreach (clsProduct Prod in mf.Products.Items)
+                                            {
+                                                Prod.SerialFromAruduino(words);
+                                            }
+                                            break;
 
-                                    case 32401:
-                                        mf.AnalogData.ParseStringData(words);
-                                        break;
+                                        case 32401:
+                                            mf.AnalogData.ParseStringData(words);
+                                            break;
 
-                                    case 32618:
-                                        if (mf.SwitchBox.ParseStringData(words))
-                                        {
-                                            SBtime = DateTime.Now;
-                                            if (mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
-                                        }
-                                        break;
+                                        case 32618:
+                                            if (mf.SwitchBox.ParseStringData(words))
+                                            {
+                                                SBtime = DateTime.Now;
+                                                if (mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
+                                            }
+                                            break;
+                                    }
                                 }
                             }
                         }
                     }
+                    else
+                    {
+                        // check for byte data
+                    }
                 }
                 else
                 {
-                    // check for byte data
+                    mf.ScaleIndicator.ParseStringData(sentence);
                 }
             }
             catch (Exception ex)

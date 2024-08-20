@@ -278,6 +278,7 @@
     <Compile Include="PGNs\PGN235.cs" />
     <Compile Include="PGNs\PGN238.cs" />
     <Compile Include="PGNs\PGN239.cs" />
+    <Compile Include="PGNs\PGN32296.cs" />
     <Compile Include="PGNs\PGN32400.cs" />
     <Compile Include="PGNs\PGN32401.cs" />
     <Compile Include="PGNs\PGN32500.cs" />
