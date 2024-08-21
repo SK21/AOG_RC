@@ -1,13 +1,8 @@
 ﻿using RateController.Properties;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Policy;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using static RateController.PGN32618;
 
 namespace RateController
 {

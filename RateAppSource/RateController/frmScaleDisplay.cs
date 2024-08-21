@@ -29,7 +29,7 @@ namespace RateController
             btnScale.BackColor = Properties.Settings.Default.DayColour;
             lbValue.BackColor = Properties.Settings.Default.DayColour;
             cProductID = ProductID;
-            this.Text = "Scale " + (cProductID+1).ToString();
+            this.Text = "Scale " + (cProductID + 1).ToString();
         }
 
         private double CurrentAcres()
@@ -46,14 +46,14 @@ namespace RateController
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
             }
-            mf.Tls.SaveFormData(this,cProductID.ToString());
+            mf.Tls.SaveFormData(this, cProductID.ToString());
             timer1.Enabled = false;
             // to do, save starting area, weight, display mode
         }
 
         private void frmScaleDisplay_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this,cProductID.ToString());
+            mf.Tls.LoadFormData(this, cProductID.ToString());
             timer1.Enabled = true;
             UpdateForm();
             // to do, load starting area, weight, display mode
@@ -86,7 +86,7 @@ namespace RateController
                     Hlp2.Close();
                     if (Result2)
                     {
-                        TareWeight = mf.ScaleIndicator.Value;
+                        TareWeight = mf.ScaleIndicator.Value(cProductID);
                     }
                     break;
             }
@@ -121,7 +121,7 @@ namespace RateController
 
         private double NetWeight()
         {
-            double wt = mf.ScaleIndicator.Value - TareWeight;
+            double wt = mf.ScaleIndicator.Value(cProductID) - TareWeight;
             return wt;
         }
 

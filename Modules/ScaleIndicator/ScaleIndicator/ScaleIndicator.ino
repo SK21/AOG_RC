@@ -3,6 +3,7 @@
 
 SoftwareSerial mySerial(10, 11); // RX, TX
 #define BufferSize 50
+#define ProductID 0	// products 0-3
 
 char inChar;
 char inData[BufferSize];
@@ -24,7 +25,8 @@ void setup()
 	//Set Buffer, PGN32296
 	inData[0] = 40;
 	inData[1] = 126;
-	inPointer = 2;
+	inData[2] = ProductID;
+	inPointer = 3;
 }
 
 void loop()
@@ -59,23 +61,25 @@ void loop()
 			Serial.write(inData, inPointer);               // Send to USB
 			inData[0] = 40;
 			inData[1] = 126;
-			inPointer = 2;
+			inData[2] = ProductID;
+			inPointer = 3;
 			break;
 		}
 	}
 
-	if (millis() - LoopTime > 1000)
-	{
-		LoopTime = millis();
-		inData[0] = 40;
-		inData[1] = 126;
-		inData[2] = '1';
-		inData[3] = '5';
-		inData[4] = '4';
-		inData[5] = '.';
-		inData[6] = '2';
-		inData[7] = 13;
-		inData[8] = 10;
-		Serial.write(inData, 9);
-	}
+	// test data
+	//if (millis() - LoopTime > 1000)
+	//{
+	//	LoopTime = millis();
+	//	inData[0] = 40;
+	//	inData[1] = 126;
+	//	inData[2] = '0';
+	//	inData[3] = '5';
+	//	inData[4] = '4';
+	//	inData[5] = '.';
+	//	inData[6] = '2';
+	//	inData[7] = 13;
+	//	inData[8] = 10;
+	//	Serial.write(inData, 9);
+	//}
 }
