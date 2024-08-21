@@ -13,6 +13,7 @@ namespace RateController
         private int mouseY = 0;
         private double StartingAcres = 0;
         private double StartingWeight = 0;
+        private double TareWeight = 0;
         private int TransLeftOffset = 6;
         private int TransTopOffset = 30;
         private int windowLeft = 0;
@@ -54,18 +55,36 @@ namespace RateController
             // to do, load starting area, weight, display mode
         }
 
-        private void lbValue_Click(object sender, EventArgs e)
+        private void lbValue_MouseClick(object sender, MouseEventArgs e)
         {
-            var Hlp = new frmMsgBox(mf, "Reset?", "Reset", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
+            switch (e.Button)
             {
-                StartingAcres = CurrentAcres();
-                StartingWeight = mf.ScaleIndicator.Value;
+                case MouseButtons.Left:
+                    var Hlp = new frmMsgBox(mf, "Reset starting weight and acres?", "Reset", true);
+                    Hlp.TopMost = true;
+
+                    Hlp.ShowDialog();
+                    bool Result = Hlp.Result;
+                    Hlp.Close();
+                    if (Result)
+                    {
+                        StartingAcres = CurrentAcres();
+                        StartingWeight = NetWeight();
+                    }
+                    break;
+
+                case MouseButtons.Right:
+                    var Hlp2 = new frmMsgBox(mf, "Reset tare weight?", "Reset", true);
+                    Hlp2.TopMost = true;
+
+                    Hlp2.ShowDialog();
+                    bool Result2 = Hlp2.Result;
+                    Hlp2.Close();
+                    if (Result2)
+                    {
+                        TareWeight = mf.ScaleIndicator.Value;
+                    }
+                    break;
             }
         }
 
@@ -96,11 +115,25 @@ namespace RateController
             }
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private double NetWeight()
         {
-            cDisplayMode++;
-            if (cDisplayMode > 3) cDisplayMode = 0;
-            UpdateForm();
+            double wt = mf.ScaleIndicator.Value - TareWeight;
+            return wt;
+        }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    cDisplayMode++;
+                    if (cDisplayMode > 3) cDisplayMode = 0;
+                    UpdateForm();
+                    break;
+
+                case MouseButtons.Right:
+                    break;
+            }
         }
 
         private void SetFont()
@@ -111,7 +144,7 @@ namespace RateController
 
                 foreach (Control Ctrl in Controls)
                 {
-                    Ctrl.Font = new Font(TransparentFont, 18);
+                    Ctrl.Font = new Font(TransparentFont, 16, FontStyle.Bold);
                 }
             }
             else
@@ -161,35 +194,34 @@ namespace RateController
         private void UpdateForm()
         {
             if (mf.UseTransparent != IsTransparent) SetTransparent();
-            double Weight = mf.ScaleIndicator.Value;
 
             switch (cDisplayMode)
             {
                 case 1:
                     // applied
-                    lbValue.Text = (StartingWeight - Weight).ToString("N1") + " (A)";
+                    lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + " (Applied)";
                     break;
 
                 case 2:
                     // acres
-                    lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + " (AR)";
+                    lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + " (Area)";
                     break;
 
                 case 3:
                     // rate
-                    double Applied = StartingWeight - Weight;
+                    double Applied = StartingWeight - NetWeight();
                     double Area = StartingAcres - CurrentAcres();
                     double Rate = 0;
                     if (Area > 0)
                     {
                         Rate = Applied / Area;
                     }
-                    lbValue.Text = Rate.ToString("N1") + " (R)";
+                    lbValue.Text = Rate.ToString("N1") + " (Rate)";
                     break;
 
                 default:
                     // weight
-                    lbValue.Text = Weight.ToString("N1") + " (W)";
+                    lbValue.Text = NetWeight().ToString("N1") + " (Weight)";
                     break;
             }
         }

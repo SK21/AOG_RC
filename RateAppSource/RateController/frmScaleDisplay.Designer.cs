@@ -45,8 +45,8 @@
             this.lbValue.Size = new System.Drawing.Size(121, 62);
             this.lbValue.TabIndex = 4;
             this.lbValue.Text = "10000 (AC)";
-            this.lbValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbValue.Click += new System.EventHandler(this.lbValue_Click);
+            this.lbValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbValue.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lbValue_MouseClick);
             // 
             // pictureBox1
             // 
@@ -56,7 +56,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(64, 62);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
@@ -73,6 +73,7 @@
             this.Controls.Add(this.lbValue);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
