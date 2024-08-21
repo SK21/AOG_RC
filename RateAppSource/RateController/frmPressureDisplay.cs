@@ -17,8 +17,8 @@ namespace RateController
 
         public frmPressureDisplay(FormStart CallingForm)
         {
-            mf = CallingForm;
             InitializeComponent();
+            mf = CallingForm;
             this.BackColor = Properties.Settings.Default.DayColour;
             pictureBox1.BackColor = Properties.Settings.Default.DayColour;
             lbPressureValue.BackColor = Properties.Settings.Default.DayColour;

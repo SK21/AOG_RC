@@ -33,7 +33,7 @@ void loop()
 	if (mySerial.available())
 	{
 		inChar = (char)mySerial.read();
-		if (inChar == '.') inChar = ',';
+		if (inChar == ',') inChar = '.';
 		switch (inChar)
 		{   //  Only Numbers & . & , 
 		case '0':
@@ -46,7 +46,7 @@ void loop()
 		case '7':
 		case '8':
 		case '9':
-		case ',':
+		case '.':
 			if (inPointer < (BufferSize - 2))
 			{
 				inData[inPointer++] = inChar;

@@ -225,6 +225,12 @@
     <Compile Include="frmRelays.Designer.cs">
       <DependentUpon>frmRelays.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmScaleDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmScaleDisplay.Designer.cs">
+      <DependentUpon>frmScaleDisplay.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmSections.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -351,6 +357,9 @@
     <EmbeddedResource Include="frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmScaleDisplay.resx">
+      <DependentUpon>frmScaleDisplay.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmSections.resx">
       <DependentUpon>frmSections.cs</DependentUpon>
     </EmbeddedResource>
@@ -422,6 +431,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\scale.png" />
     <None Include="Resources\Default.rcs" />
     <None Include="Resources\Example.rcs" />
     <None Include="Resources\Pins.PNG" />

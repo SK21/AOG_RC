@@ -84,6 +84,7 @@
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
             this.btnReset = new System.Windows.Forms.Button();
+            this.ckScale = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -324,6 +325,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.ckScale);
             this.tabPage2.Controls.Add(this.ckSingle);
             this.tabPage2.Controls.Add(this.ckLargeScreen);
             this.tabPage2.Controls.Add(this.ckPressure);
@@ -339,7 +341,7 @@
             // ckSingle
             // 
             this.ckSingle.AutoSize = true;
-            this.ckSingle.Location = new System.Drawing.Point(219, 76);
+            this.ckSingle.Location = new System.Drawing.Point(222, 52);
             this.ckSingle.Name = "ckSingle";
             this.ckSingle.Size = new System.Drawing.Size(152, 28);
             this.ckSingle.TabIndex = 128;
@@ -353,7 +355,7 @@
             this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckLargeScreen.Location = new System.Drawing.Point(36, 72);
+            this.ckLargeScreen.Location = new System.Drawing.Point(39, 49);
             this.ckLargeScreen.Name = "ckLargeScreen";
             this.ckLargeScreen.Size = new System.Drawing.Size(164, 34);
             this.ckLargeScreen.TabIndex = 127;
@@ -368,7 +370,7 @@
             this.ckPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckPressure.Location = new System.Drawing.Point(219, 145);
+            this.ckPressure.Location = new System.Drawing.Point(222, 118);
             this.ckPressure.Name = "ckPressure";
             this.ckPressure.Size = new System.Drawing.Size(164, 34);
             this.ckPressure.TabIndex = 123;
@@ -382,7 +384,7 @@
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTransparent.Location = new System.Drawing.Point(36, 145);
+            this.ckTransparent.Location = new System.Drawing.Point(39, 118);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(164, 34);
             this.ckTransparent.TabIndex = 119;
@@ -758,6 +760,21 @@
             this.btnReset.Visible = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // ckScale
+            // 
+            this.ckScale.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckScale.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckScale.Location = new System.Drawing.Point(39, 187);
+            this.ckScale.Name = "ckScale";
+            this.ckScale.Size = new System.Drawing.Size(164, 34);
+            this.ckScale.TabIndex = 129;
+            this.ckScale.Text = "Scale Weight";
+            this.ckScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScale.UseVisualStyleBackColor = true;
+            this.ckScale.CheckedChanged += new System.EventHandler(this.ckScale_CheckedChanged);
+            // 
             // frmOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -846,5 +863,6 @@
         private System.Windows.Forms.CheckBox ckDefaultProduct;
         private System.Windows.Forms.CheckBox ckDualAuto;
         private System.Windows.Forms.CheckBox ckSingle;
+        private System.Windows.Forms.CheckBox ckScale;
     }
 }

@@ -23,6 +23,9 @@ namespace RateController
             mf = CalledFrom;
         }
 
+        public double Value
+        { get { return cValue; } }
+
         public bool ParseStringData(string Sentence)
         {
             bool Result = false;

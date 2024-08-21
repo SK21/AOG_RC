@@ -91,6 +91,7 @@ namespace RateController
         public frmSwitches SwitchesForm;
         private int cRateType;
         public PGN32296 ScaleIndicator;
+        private bool cShowScale;
 
         public FormStart()
         {
@@ -257,6 +258,16 @@ namespace RateController
                 cShowPressure = value;
                 Tls.SaveProperty("ShowPressure", value.ToString());
                 DisplayPressure();
+            }
+        }
+        public bool ShowScale
+        {
+            get { return cShowScale; }
+            set
+            {
+                cShowScale = value;
+                Tls.SaveProperty("ShowScale",value.ToString());
+                DisplayScale();
             }
         }
 
@@ -459,6 +470,26 @@ namespace RateController
                 if (fs != null) fs.Close();
             }
         }
+        public void DisplayScale()
+        {
+            Form fs = Tls.IsFormOpen("frmScaleDisplay");
+            if(cShowScale)
+            {
+                if(fs == null)
+                {
+                    Form frm=new frmScaleDisplay(this);
+                    frm.Show();
+                }
+                else
+                {
+                fs.Focus();
+                }
+            }
+            else
+            {
+                if (fs != null) fs.Close();
+            }
+        }
 
         public void DisplaySwitches()
         {
@@ -490,6 +521,7 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
             if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
+            if (bool.TryParse(Tls.LoadProperty("ShowScale"), out bool ss)) cShowScale = ss;
             if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
             if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
             if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
@@ -1067,6 +1099,7 @@ namespace RateController
                 //SwitchScreens();
                 DisplaySwitches();
                 DisplayPressure();
+                DisplayScale();
 
                 timerMain.Enabled = true;
             }
