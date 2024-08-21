@@ -904,6 +904,8 @@ namespace RateController
             if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
             CurrentProduct.PIDscale = cbShift.SelectedIndex;
 
+            mf.SetScale(CurrentProduct.ID, ckScale.Checked);
+
             SaveData();
         }
 
@@ -1808,6 +1810,7 @@ namespace RateController
             rbUPMSpeed.Checked = CurrentProduct.UseMinUPMbySpeed;
             rbUPMFixed.Checked = !CurrentProduct.UseMinUPMbySpeed;
 
+            ckScale.Checked = mf.ShowScale(CurrentProduct.ID);
             Initializing = false;
         }
 
@@ -1834,6 +1837,11 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Bump Buttons");
             hlpevent.Handled = true;
+        }
+
+        private void ckScale_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

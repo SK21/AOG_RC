@@ -287,14 +287,14 @@ namespace RateController
             return Prop;
         }
 
-        public void LoadFormData(Form Frm)
+        public void LoadFormData(Form Frm,string Instance="")
         {
             int Leftloc = 0;
-            int.TryParse(LoadAppProperty(Frm.Name + ".Left"), out Leftloc);
+            int.TryParse(LoadAppProperty(Frm.Name+Instance + ".Left"), out Leftloc);
             Frm.Left = Leftloc;
 
             int Toploc = 0;
-            int.TryParse(LoadAppProperty(Frm.Name + ".Top"), out Toploc);
+            int.TryParse(LoadAppProperty(Frm.Name+Instance + ".Top"), out Toploc);
             Frm.Top = Toploc;
 
             IsOnScreen(Frm, true);
@@ -445,14 +445,14 @@ namespace RateController
             }
         }
 
-        public void SaveFormData(Form Frm)
+        public void SaveFormData(Form Frm,string Instance="")
         {
             try
             {
                 if (Frm.WindowState == FormWindowState.Normal)
                 {
-                    SaveAppProperty(Frm.Name + ".Left", Frm.Left.ToString());
-                    SaveAppProperty(Frm.Name + ".Top", Frm.Top.ToString());
+                    SaveAppProperty(Frm.Name+Instance + ".Left", Frm.Left.ToString());
+                    SaveAppProperty(Frm.Name + Instance + ".Top", Frm.Top.ToString());
                 }
                 FormRemove(Frm);
             }

@@ -7,6 +7,7 @@ namespace RateController
     public partial class frmScaleDisplay : Form
     {
         private int cDisplayMode = 0;
+        private int cProductID;
         private bool IsTransparent;
         private FormStart mf;
         private int mouseX = 0;
@@ -20,18 +21,21 @@ namespace RateController
         private int windowTop = 0;
         // Display mode: 0 - weight, 1 - applied, 2 - acres, 3 - rate
 
-        public frmScaleDisplay(FormStart CallingForm)
+        public frmScaleDisplay(FormStart CallingForm, int ProductID)
         {
             InitializeComponent();
             mf = CallingForm;
             this.BackColor = Properties.Settings.Default.DayColour;
-            pictureBox1.BackColor = Properties.Settings.Default.DayColour;
+            btnScale.BackColor = Properties.Settings.Default.DayColour;
             lbValue.BackColor = Properties.Settings.Default.DayColour;
+            cProductID = ProductID;
+            this.Text = "Scale " + (cProductID+1).ToString();
         }
 
         private double CurrentAcres()
         {
-            return 0;
+            double Area = mf.Products.Item(cProductID).CurrentCoverage();
+            return Area;
         }
 
         private void frmScaleDisplay_FormClosed(object sender, FormClosedEventArgs e)
@@ -42,14 +46,14 @@ namespace RateController
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
             }
-            mf.Tls.SaveFormData(this);
+            mf.Tls.SaveFormData(this,cProductID.ToString());
             timer1.Enabled = false;
             // to do, save starting area, weight, display mode
         }
 
         private void frmScaleDisplay_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this);
+            mf.Tls.LoadFormData(this,cProductID.ToString());
             timer1.Enabled = true;
             UpdateForm();
             // to do, load starting area, weight, display mode
@@ -194,17 +198,18 @@ namespace RateController
         private void UpdateForm()
         {
             if (mf.UseTransparent != IsTransparent) SetTransparent();
+            btnScale.Text = (cProductID + 1).ToString();
 
             switch (cDisplayMode)
             {
                 case 1:
                     // applied
-                    lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + " (Applied)";
+                    lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + "\n(Applied)";
                     break;
 
                 case 2:
                     // acres
-                    lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + " (Area)";
+                    lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + "\n(Area)";
                     break;
 
                 case 3:
@@ -216,12 +221,12 @@ namespace RateController
                     {
                         Rate = Applied / Area;
                     }
-                    lbValue.Text = Rate.ToString("N1") + " (Rate)";
+                    lbValue.Text = Rate.ToString("N1") + "\n(Rate)";
                     break;
 
                 default:
                     // weight
-                    lbValue.Text = NetWeight().ToString("N1") + " (Weight)";
+                    lbValue.Text = NetWeight().ToString("N1") + "\n(Weight)";
                     break;
             }
         }

@@ -44,6 +44,7 @@ namespace RateController
         public clsAlarm RCalarm;
         public clsRelays RelayObjects;
         public bool Restart = false;
+        public PGN32296 ScaleIndicator;
         public clsSectionControl SectionControl;
         public clsSections Sections;
         public PGN235 SectionsPGN;
@@ -52,6 +53,8 @@ namespace RateController
         public bool ShowQuantityRemaining;
         public Color SimColor = Color.FromArgb(255, 182, 0);
         public PGN32618 SwitchBox;
+        public frmSwitches SwitchesForm;
+        public clsSwitches SwitchObjects;
         public clsTools Tls;
 
         public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
@@ -69,11 +72,14 @@ namespace RateController
         private byte cPressureToShowID;
         private int cPrimeDelay = 3;
         private double cPrimeTime = 0;
+        private int cRateType;
         private bool cResumeAfterPrime;
         private bool cShowPressure;
+        private bool[] cShowScale = new bool[4];
         private bool cShowSwitches = false;
         private SimType cSimMode = SimType.None;
         private double cSimSpeed = 0;
+        private DateTime cStartTime;
         private int CurrentPage;
         private int CurrentPageLast;
         private bool cUseDualAuto;
@@ -85,13 +91,7 @@ namespace RateController
         private Label[] ProdName;
         private Label[] Rates;
         private PGN32501[] RelaySettings;
-        private DateTime cStartTime;
         private Label[] Targets;
-        public clsSwitches SwitchObjects;
-        public frmSwitches SwitchesForm;
-        private int cRateType;
-        public PGN32296 ScaleIndicator;
-        private bool cShowScale;
 
         public FormStart()
         {
@@ -174,7 +174,6 @@ namespace RateController
             SwitchObjects = new clsSwitches(this);
             ScaleIndicator = new PGN32296(this);
         }
-        public DateTime StartTime { get { return cStartTime; } }
 
         public event EventHandler ProductChanged;
 
@@ -201,15 +200,6 @@ namespace RateController
             }
         }
 
-        public int RateType
-        {
-            // 0 current rate, 1 instantaneous rate, 2 overall rate
-            get { return cRateType; }
-            set
-            {
-                if (value >= 0 && value < 3) cRateType = value;
-            }
-        }
         public byte PressureToShow
         {
             get { return cPressureToShowID; }
@@ -240,6 +230,16 @@ namespace RateController
             }
         }
 
+        public int RateType
+        {
+            // 0 current rate, 1 instantaneous rate, 2 overall rate
+            get { return cRateType; }
+            set
+            {
+                if (value >= 0 && value < 3) cRateType = value;
+            }
+        }
+
         public bool ResumeAfterPrime
         {
             get { return cResumeAfterPrime; }
@@ -258,16 +258,6 @@ namespace RateController
                 cShowPressure = value;
                 Tls.SaveProperty("ShowPressure", value.ToString());
                 DisplayPressure();
-            }
-        }
-        public bool ShowScale
-        {
-            get { return cShowScale; }
-            set
-            {
-                cShowScale = value;
-                Tls.SaveProperty("ShowScale",value.ToString());
-                DisplayScale();
             }
         }
 
@@ -300,6 +290,9 @@ namespace RateController
             }
         }
 
+        public DateTime StartTime
+        { get { return cStartTime; } }
+
         public bool UseDualAuto
         { get { return cUseDualAuto; } set { cUseDualAuto = value; } }
 
@@ -324,87 +317,6 @@ namespace RateController
                     Tls.SaveProperty("UseLargeScreen", cUseLargeScreen.ToString());
                     SwitchScreens();
                 }
-            }
-        }
-
-        public void SwitchScreens(bool SingleProduct = false)
-        {
-            try
-            {
-                Form fs = Tls.IsFormOpen("frmLargeScreen");
-                if (cUseLargeScreen)
-                {
-                    if (SingleProduct)
-                    {
-                        // hide unused items, set product 4 as default, set product 4 id to 0
-                        foreach (clsProduct Prd in Products.Items)
-                        {
-                            Prd.OnScreen = false;
-                        }
-                        clsProduct P0 = Products.Items[0];
-                        clsProduct P3 = Products.Items[3];
-
-                        P3.ProductName = P0.ProductName;
-                        P3.ControlType = P0.ControlType;
-                        P3.QuantityDescription = P0.QuantityDescription;
-                        P3.CoverageUnits = P0.CoverageUnits;
-                        P3.MeterCal = P0.MeterCal;
-                        P3.ProdDensity = P0.ProdDensity;
-                        P3.EnableProdDensity = P0.EnableProdDensity;
-                        P3.RateSet = P0.RateSet;
-                        P3.RateAlt = P0.RateAlt;
-                        P3.TankSize = P0.TankSize;
-                        P3.TankStart = P0.TankStart;
-
-                        P3.UseVR = P0.UseVR;
-                        P3.VRID = P0.VRID;
-                        P3.VRmax = P0.VRmax;
-                        P3.VRmin = P0.VRmin;
-
-                        P3.PIDkp = P0.PIDkp;
-                        P3.PIDki = P0.PIDki;
-                        P3.PIDkd = P0.PIDkd;
-                        P3.PIDmax = P0.PIDmax;
-                        P3.PIDmin = P0.PIDmin;
-                        P3.PIDscale = P0.PIDscale;
-
-                        Products.Item(2).BumpButtons = true;
-                        P0.ModuleID = 6;
-                        P3.ChangeID(0, 0);
-                        P3.OnScreen = true;
-                        P3.AppMode = P0.AppMode;
-                        P3.UseOffRateAlarm = P0.UseOffRateAlarm;
-                        P3.OffRateSetting = P0.OffRateSetting;
-                        P3.MinUPM = P0.MinUPM;
-                        P3.BumpButtons = false;
-                        P3.UseMultiPulse = P0.UseMultiPulse;
-
-                        P3.CountsRev = P0.CountsRev;
-                        DefaultProduct = 3;
-                        UseTransparent = true;
-                    }
-
-                    if (fs == null)
-                    {
-                        LargeScreenExit = false;
-                        Restart = false;
-                        this.WindowState = FormWindowState.Minimized;
-                        this.ShowInTaskbar = false;
-                        Lscrn = new frmLargeScreen(this);
-                        Lscrn.ShowInTaskbar = true;
-                        Lscrn.SetTransparent();
-                        Lscrn.Show();
-                    }
-                }
-                else
-                {
-                    // use standard screen
-                    if (fs != null) Lscrn.SwitchToStandard();
-                }
-            }
-            catch (Exception ex)
-            {
-                Tls.WriteErrorLog("SwitchScreens: " + ex.Message);
             }
         }
 
@@ -470,24 +382,42 @@ namespace RateController
                 if (fs != null) fs.Close();
             }
         }
-        public void DisplayScale()
+
+        public void DisplayScales()
         {
-            Form fs = Tls.IsFormOpen("frmScaleDisplay");
-            if(cShowScale)
+            bool Found = false;
+            for (int i = 0; i < 4; i++)
             {
-                if(fs == null)
+                Found = false;
+                if (cShowScale[i])
                 {
-                    Form frm=new frmScaleDisplay(this);
-                    frm.Show();
+                    // open instance
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form.Text == "Scale " + (i + 1).ToString())
+                        {
+                            Found = true;
+                            break;
+                        }
+                    }
+                    if (!Found)
+                    {
+                        Form frm = new frmScaleDisplay(this, i);
+                        frm.Show();
+                    }
                 }
                 else
                 {
-                fs.Focus();
+                    // close instance
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form.Text == "Scale " + (i+1).ToString())
+                        {
+                            form.Close();
+                            break;
+                        }
+                    }
                 }
-            }
-            else
-            {
-                if (fs != null) fs.Close();
             }
         }
 
@@ -521,7 +451,13 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
             if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
-            if (bool.TryParse(Tls.LoadProperty("ShowScale"), out bool ss)) cShowScale = ss;
+
+            for (int i = 0; i < 4; i++)
+            {
+                cShowScale[i] = false;
+                if (bool.TryParse(Tls.LoadProperty("ShowScale_" + i.ToString()), out bool ss)) cShowScale[i] = ss;
+            }
+
             if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
             if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
             if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
@@ -620,12 +556,78 @@ namespace RateController
             return Result;
         }
 
+        public void NewFile()
+        {
+            saveFileDialog1.InitialDirectory = Tls.FilesDir();
+            saveFileDialog1.Title = "New File";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    Tls.OpenFile(saveFileDialog1.FileName, true);
+                    LoadSettings();
+                }
+            }
+        }
+
+        public void OpenFile()
+        {
+            try
+            {
+                openFileDialog1.InitialDirectory = Tls.FilesDir();
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Tls.PropertiesFile = openFileDialog1.FileName;
+                    Products.Load();
+                    LoadSettings();
+                }
+            }
+            catch (Exception ex)
+            {
+                Tls.WriteErrorLog("FormStart/OpenFile: " + ex.Message);
+            }
+        }
+
+        public void SaveFileAs()
+        {
+            saveFileDialog1.InitialDirectory = Tls.FilesDir();
+            saveFileDialog1.Title = "Save As";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    Tls.SaveFile(saveFileDialog1.FileName);
+                    Tls.ReadOnly = false;
+                    LoadSettings();
+                }
+            }
+        }
+
+        public void SendRelays()
+        {
+            for (int i = 0; i < MaxModules; i++)
+            {
+                if (ModuleConnected(i)) RelaySettings[i].Send();
+            }
+        }
+
         public void SendSerial(byte[] Data)
         {
             for (int i = 0; i < 3; i++)
             {
                 SER[i].SendData(Data);
             }
+        }
+
+        public void SetScale(int ProductID, bool Show)
+        {
+            cShowScale[ProductID] = Show;
+            Tls.SaveProperty("ShowScale_" + ProductID.ToString(), cShowScale[ProductID].ToString());
+            DisplayScales();
+        }
+        public bool ShowScale(int ProductID)
+        {
+            return cShowScale[ProductID];
         }
 
         public void StartSerial()
@@ -656,6 +658,87 @@ namespace RateController
             {
                 Tls.WriteErrorLog("FormRateControl/StartSerial: " + ex.Message);
                 Tls.ShowHelp(ex.Message, this.Text, 3000, true);
+            }
+        }
+
+        public void SwitchScreens(bool SingleProduct = false)
+        {
+            try
+            {
+                Form fs = Tls.IsFormOpen("frmLargeScreen");
+                if (cUseLargeScreen)
+                {
+                    if (SingleProduct)
+                    {
+                        // hide unused items, set product 4 as default, set product 4 id to 0
+                        foreach (clsProduct Prd in Products.Items)
+                        {
+                            Prd.OnScreen = false;
+                        }
+                        clsProduct P0 = Products.Items[0];
+                        clsProduct P3 = Products.Items[3];
+
+                        P3.ProductName = P0.ProductName;
+                        P3.ControlType = P0.ControlType;
+                        P3.QuantityDescription = P0.QuantityDescription;
+                        P3.CoverageUnits = P0.CoverageUnits;
+                        P3.MeterCal = P0.MeterCal;
+                        P3.ProdDensity = P0.ProdDensity;
+                        P3.EnableProdDensity = P0.EnableProdDensity;
+                        P3.RateSet = P0.RateSet;
+                        P3.RateAlt = P0.RateAlt;
+                        P3.TankSize = P0.TankSize;
+                        P3.TankStart = P0.TankStart;
+
+                        P3.UseVR = P0.UseVR;
+                        P3.VRID = P0.VRID;
+                        P3.VRmax = P0.VRmax;
+                        P3.VRmin = P0.VRmin;
+
+                        P3.PIDkp = P0.PIDkp;
+                        P3.PIDki = P0.PIDki;
+                        P3.PIDkd = P0.PIDkd;
+                        P3.PIDmax = P0.PIDmax;
+                        P3.PIDmin = P0.PIDmin;
+                        P3.PIDscale = P0.PIDscale;
+
+                        Products.Item(2).BumpButtons = true;
+                        P0.ModuleID = 6;
+                        P3.ChangeID(0, 0);
+                        P3.OnScreen = true;
+                        P3.AppMode = P0.AppMode;
+                        P3.UseOffRateAlarm = P0.UseOffRateAlarm;
+                        P3.OffRateSetting = P0.OffRateSetting;
+                        P3.MinUPM = P0.MinUPM;
+                        P3.BumpButtons = false;
+                        P3.UseMultiPulse = P0.UseMultiPulse;
+
+                        P3.CountsRev = P0.CountsRev;
+                        DefaultProduct = 3;
+                        UseTransparent = true;
+                    }
+
+                    if (fs == null)
+                    {
+                        LargeScreenExit = false;
+                        Restart = false;
+                        this.WindowState = FormWindowState.Minimized;
+                        this.ShowInTaskbar = false;
+                        Lscrn = new frmLargeScreen(this);
+                        Lscrn.ShowInTaskbar = true;
+                        Lscrn.SetTransparent();
+                        Lscrn.Show();
+                    }
+                }
+                else
+                {
+                    // use standard screen
+                    if (fs != null) Lscrn.SwitchToStandard();
+                }
+            }
+            catch (Exception ex)
+            {
+                Tls.WriteErrorLog("SwitchScreens: " + ex.Message);
             }
         }
 
@@ -846,6 +929,20 @@ namespace RateController
             catch (Exception ex)
             {
                 Tls.WriteErrorLog("FormStart/UpdateStatus: " + ex.Message);
+            }
+        }
+
+        private void AreaDone_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(this, "Reset?", "Reset", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                Products.Item(CurrentProduct()).ResetCoverage();
             }
         }
 
@@ -1099,7 +1196,7 @@ namespace RateController
                 //SwitchScreens();
                 DisplaySwitches();
                 DisplayPressure();
-                DisplayScale();
+                DisplayScales();
 
                 timerMain.Enabled = true;
             }
@@ -1170,6 +1267,16 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
+        private void lblUnits_Click(object sender, EventArgs e)
+        {
+            ShowSettings();
+        }
+
+        private void lbProduct_Click(object sender, EventArgs e)
+        {
+            ShowSettings();
+        }
+
         private void lbRate_Click(object sender, EventArgs e)
         {
             cRateType++;
@@ -1223,6 +1330,11 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ShowSettings();
+        }
+
         private void LoadDefaultProduct()
         {
             if (int.TryParse(Tls.LoadProperty("DefaultProduct"), out int DP)) cDefaultProduct = DP;
@@ -1262,7 +1374,7 @@ namespace RateController
 
             if (fs == null)
             {
-                 Form frm = new frmOptions(this);
+                Form frm = new frmOptions(this);
                 frm.Show();
             }
             else
@@ -1309,40 +1421,10 @@ namespace RateController
         {
             NewFile();
         }
-        public void NewFile()
-        {
-            saveFileDialog1.InitialDirectory = Tls.FilesDir();
-            saveFileDialog1.Title = "New File";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Tls.OpenFile(saveFileDialog1.FileName,true);
-                    LoadSettings();
-                }
-            }
-        }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFile();
-        }
-        public void OpenFile()
-        {
-            try
-            {
-                openFileDialog1.InitialDirectory = Tls.FilesDir();
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    Tls.PropertiesFile = openFileDialog1.FileName;
-                    Products.Load();
-                    LoadSettings();
-                }
-            }
-            catch (Exception ex)
-            {
-                Tls.WriteErrorLog("FormStart/OpenFile: " + ex.Message);
-            }
         }
 
         private void pressuresToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1368,20 +1450,6 @@ namespace RateController
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileAs();
-        }
-        public void SaveFileAs()
-        {
-            saveFileDialog1.InitialDirectory = Tls.FilesDir();
-            saveFileDialog1.Title = "Save As";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Tls.SaveFile(saveFileDialog1.FileName);
-                    Tls.ReadOnly = false;
-                    LoadSettings();
-                }
-            }
         }
 
         private void sectionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1459,31 +1527,6 @@ namespace RateController
             }
         }
 
-        private void timerMain_Tick(object sender, EventArgs e)
-        {
-            UpdateStatus();
-            SendRelays();
-            Products.Update();
-            SectionControl.ReadRateSwitches();
-        }
-
-        public void SendRelays()
-        {
-            for (int i = 0; i < MaxModules; i++)
-            {
-                if (ModuleConnected(i)) RelaySettings[i].Send();
-            }
-        }
-
-        private void timerPIDs_Tick(object sender, EventArgs e)
-        {
-            Products.UpdatePID();
-        }
-
-        private void lbProduct_Click(object sender, EventArgs e)
-        {
-            ShowSettings();
-        }
         private void ShowSettings()
         {
             //check if window already exists
@@ -1499,30 +1542,6 @@ namespace RateController
             frm.Show();
         }
 
-        private void lblUnits_Click(object sender, EventArgs e)
-        {
-            ShowSettings();
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ShowSettings();
-        }
-
-        private void AreaDone_Click(object sender, EventArgs e)
-        {
-            var Hlp = new frmMsgBox(this, "Reset?", "Reset", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if(Result)
-            {
-                Products.Item(CurrentProduct()).ResetCoverage();
-            }
-        }
-
         private void TankRemain_Click(object sender, EventArgs e)
         {
             var Hlp = new frmMsgBox(this, "Reset?", "Reset", true);
@@ -1535,6 +1554,19 @@ namespace RateController
             {
                 Products.Item(CurrentProduct()).ResetApplied();
             }
+        }
+
+        private void timerMain_Tick(object sender, EventArgs e)
+        {
+            UpdateStatus();
+            SendRelays();
+            Products.Update();
+            SectionControl.ReadRateSwitches();
+        }
+
+        private void timerPIDs_Tick(object sender, EventArgs e)
+        {
+            Products.UpdatePID();
         }
     }
 }

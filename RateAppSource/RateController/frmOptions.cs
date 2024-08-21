@@ -296,7 +296,6 @@ namespace RateController
                 mf.ShowSwitches = ckScreenSwitches.Checked;
                 mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
                 mf.ShowPressure = ckPressure.Checked;
-                mf.ShowScale=ckScale.Checked;
 
                 if (ckSimSpeed.Checked)
                 {
@@ -570,7 +569,6 @@ namespace RateController
             ckScreenSwitches.Checked = mf.ShowSwitches;
             ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
             ckPressure.Checked = mf.ShowPressure;
-            ckScale.Checked = mf.ShowScale;
             ckSimSpeed.Checked = (mf.SimMode == SimType.Speed);
             ckDualAuto.Checked = mf.UseDualAuto;
             ckResume.Checked = mf.ResumeAfterPrime;

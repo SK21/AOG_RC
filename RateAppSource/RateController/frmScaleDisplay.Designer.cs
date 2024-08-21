@@ -31,47 +31,54 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmScaleDisplay));
             this.lbValue = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.btnScale = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbValue
             // 
             this.lbValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbValue.Location = new System.Drawing.Point(85, 12);
+            this.lbValue.Location = new System.Drawing.Point(122, 12);
             this.lbValue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbValue.Name = "lbValue";
-            this.lbValue.Size = new System.Drawing.Size(121, 62);
+            this.lbValue.Size = new System.Drawing.Size(121, 76);
             this.lbValue.TabIndex = 4;
             this.lbValue.Text = "10000 (AC)";
             this.lbValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbValue.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lbValue_MouseClick);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::RateController.Properties.Resources.scale;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(64, 62);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
-            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
-            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // timer1
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // btnScale
+            // 
+            this.btnScale.BackColor = System.Drawing.Color.Transparent;
+            this.btnScale.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnScale.FlatAppearance.BorderSize = 0;
+            this.btnScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnScale.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnScale.Image = global::RateController.Properties.Resources.scale;
+            this.btnScale.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnScale.Location = new System.Drawing.Point(12, 12);
+            this.btnScale.Name = "btnScale";
+            this.btnScale.Size = new System.Drawing.Size(101, 76);
+            this.btnScale.TabIndex = 262;
+            this.btnScale.Text = "4";
+            this.btnScale.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnScale.UseVisualStyleBackColor = false;
+            this.btnScale.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+            this.btnScale.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.btnScale.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            // 
             // frmScaleDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(207, 86);
+            this.ClientSize = new System.Drawing.Size(252, 99);
+            this.Controls.Add(this.btnScale);
             this.Controls.Add(this.lbValue);
-            this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -85,15 +92,13 @@
             this.Load += new System.EventHandler(this.frmScaleDisplay_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label lbValue;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button btnScale;
     }
 }
