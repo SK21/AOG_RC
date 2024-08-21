@@ -46,6 +46,7 @@
             this.lbValue.TabIndex = 4;
             this.lbValue.Text = "10000 (AC)";
             this.lbValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbValue.Click += new System.EventHandler(this.lbValue_Click);
             // 
             // pictureBox1
             // 
