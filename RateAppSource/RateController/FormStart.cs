@@ -1024,12 +1024,12 @@ namespace RateController
                 string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
 
-                for(int i=0;i<3;i++)
+                for (int i = 0; i < 3; i++)
                 {
-                    SER[i].CloseRCport();
+                    SER[i].CloseRCport("true");
                 }
 
-                Tls.SaveProperty("RateType",cRateType.ToString());
+                Tls.SaveProperty("RateType", cRateType.ToString());
             }
             catch (Exception)
             {

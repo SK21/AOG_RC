@@ -20,6 +20,9 @@ namespace RateController
         private int TransTopOffset = 30;
         private int windowLeft = 0;
         private int windowTop = 0;
+        private int cDisplayMode = 0;
+
+        // Display mode: 0 - weight, 1 - applied, 2 - remaining, 3 - acres, 4 - rate
 
         public frmScaleDisplay(FormStart CallingForm)
         {
@@ -134,8 +137,37 @@ namespace RateController
         private void UpdateForm()
         {
             if (mf.UseTransparent != IsTransparent) SetTransparent();
-            double val=mf.ScaleIndicator.Value;
-            lbValue.Text = val.ToString("N1");
+
+            switch (cDisplayMode)
+            {
+                case 1:
+                    // applied
+                    break;
+
+                    case 2:
+                    // remaining
+                    break;
+
+                    case 3:
+                    // acres
+                    break;
+
+                    case 4:
+                    // rate
+                    break;
+
+                default:
+                    // weight
+                    double val = mf.ScaleIndicator.Value;
+                    lbValue.Text = val.ToString("N1") + " (W)";
+                    break;
+            }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            cDisplayMode++;
+            if(cDisplayMode>4) cDisplayMode = 0;
         }
     }
 }

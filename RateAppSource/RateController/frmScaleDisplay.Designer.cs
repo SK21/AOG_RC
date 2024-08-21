@@ -33,7 +33,6 @@
             this.lbValue = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -43,9 +42,9 @@
             this.lbValue.Location = new System.Drawing.Point(85, 12);
             this.lbValue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbValue.Name = "lbValue";
-            this.lbValue.Size = new System.Drawing.Size(64, 62);
+            this.lbValue.Size = new System.Drawing.Size(121, 62);
             this.lbValue.TabIndex = 4;
-            this.lbValue.Text = "42";
+            this.lbValue.Text = "10000 (AC)";
             this.lbValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // pictureBox1
@@ -56,6 +55,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(64, 62);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
@@ -68,7 +68,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(160, 86);
+            this.ClientSize = new System.Drawing.Size(207, 86);
             this.Controls.Add(this.lbValue);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -93,6 +93,5 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label lbValue;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Timer timer2;
     }
 }

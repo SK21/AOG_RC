@@ -48,7 +48,7 @@ namespace RateController
         public bool SwitchBoxConnected
         { get { return ((DateTime.Now - SBtime).TotalSeconds < 4); } }
 
-        public void CloseRCport()
+        public void CloseRCport(string Successful="false")
         {
             try
             {
@@ -64,7 +64,7 @@ namespace RateController
                         mf.Tls.ShowHelp("Could not close serial port. \n" + e.Message, "Comm", 3000, true);
                     }
 
-                    mf.Tls.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), "false");
+                    mf.Tls.SaveProperty("RCportSuccessful" + ID + cPortNumber.ToString(), Successful);
 
                     ArduinoPort.Dispose();
                 }
