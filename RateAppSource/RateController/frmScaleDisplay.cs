@@ -26,10 +26,18 @@ namespace RateController
             InitializeComponent();
             mf = CallingForm;
             this.BackColor = Properties.Settings.Default.DayColour;
-            btnScale.BackColor = Properties.Settings.Default.DayColour;
+            pictureBox1.BackColor = Properties.Settings.Default.DayColour;
             lbValue.BackColor = Properties.Settings.Default.DayColour;
             cProductID = ProductID;
             this.Text = "Scale " + (cProductID + 1).ToString();
+        }
+
+        private void btnScale_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Click to cycle through display.\nCurrent weight, Applied weight, Area, and Rate.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
         }
 
         private double CurrentAcres()
@@ -48,15 +56,23 @@ namespace RateController
             }
             mf.Tls.SaveFormData(this, cProductID.ToString());
             timer1.Enabled = false;
-            // to do, save starting area, weight, display mode
+            SaveData();
         }
 
         private void frmScaleDisplay_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this, cProductID.ToString());
             timer1.Enabled = true;
+            LoadData();
             UpdateForm();
-            // to do, load starting area, weight, display mode
+        }
+
+        private void lbValue_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Click to reset starting weight and acres.\nRight click to reset tare weight.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
         }
 
         private void lbValue_MouseClick(object sender, MouseEventArgs e)
@@ -90,6 +106,14 @@ namespace RateController
                     }
                     break;
             }
+        }
+
+        private void LoadData()
+        {
+            if (int.TryParse(mf.Tls.LoadProperty("Scale_DisplayMode" + cProductID.ToString()), out int md)) cDisplayMode = md;
+            if (double.TryParse(mf.Tls.LoadProperty("Scale_Area" + cProductID.ToString()), out double ar)) StartingAcres = ar;
+            if (double.TryParse(mf.Tls.LoadProperty("Scale_Weight" + cProductID.ToString()), out double wt)) StartingWeight = wt;
+            if (double.TryParse(mf.Tls.LoadProperty("Scale_Tare" + cProductID.ToString()), out double ta)) TareWeight = ta;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -138,6 +162,14 @@ namespace RateController
                 case MouseButtons.Right:
                     break;
             }
+        }
+
+        private void SaveData()
+        {
+            mf.Tls.SaveProperty("Scale_DisplayMode" + cProductID.ToString(), cDisplayMode.ToString());
+            mf.Tls.SaveProperty("Scale_Area" + cProductID.ToString(), StartingAcres.ToString());
+            mf.Tls.SaveProperty("Scale_Weight" + cProductID.ToString(), StartingWeight.ToString());
+            mf.Tls.SaveProperty("Scale_Tare" + cProductID.ToString(), TareWeight.ToString());
         }
 
         private void SetFont()
@@ -198,18 +230,17 @@ namespace RateController
         private void UpdateForm()
         {
             if (mf.UseTransparent != IsTransparent) SetTransparent();
-            btnScale.Text = (cProductID + 1).ToString();
 
             switch (cDisplayMode)
             {
                 case 1:
                     // applied
-                    lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + "\n(Applied)";
+                    lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + "\n(Applied " + cProductID.ToString() + ")";
                     break;
 
                 case 2:
                     // acres
-                    lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + "\n(Area)";
+                    lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + "\n(Area " + cProductID.ToString() + ")";
                     break;
 
                 case 3:
@@ -221,12 +252,12 @@ namespace RateController
                     {
                         Rate = Applied / Area;
                     }
-                    lbValue.Text = Rate.ToString("N1") + "\n(Rate)";
+                    lbValue.Text = Rate.ToString("N1") + "\n(Rate " + cProductID.ToString() + ")";
                     break;
 
                 default:
                     // weight
-                    lbValue.Text = NetWeight().ToString("N1") + "\n(Weight)";
+                    lbValue.Text = NetWeight().ToString("N1") + "\n(Weight " + cProductID.ToString() + ")";
                     break;
             }
         }

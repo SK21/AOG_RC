@@ -582,9 +582,9 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap scale {
+        internal static System.Drawing.Bitmap Scale3 {
             get {
-                object obj = ResourceManager.GetObject("scale", resourceCulture);
+                object obj = ResourceManager.GetObject("Scale3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -431,6 +431,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Scale3.png" />
+    <None Include="Resources\Scale2.png" />
     <None Include="Resources\scale.png" />
     <None Include="Resources\Default.rcs" />
     <None Include="Resources\Example.rcs" />
