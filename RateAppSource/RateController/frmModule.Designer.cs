@@ -50,6 +50,7 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbErrors = new System.Windows.Forms.TextBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
             this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
@@ -69,7 +70,6 @@
             this.lbAppVersion = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
-            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -312,6 +312,17 @@
             this.tabPage5.Text = "Help";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // linkLabel4
+            // 
+            this.linkLabel4.AutoSize = true;
+            this.linkLabel4.Location = new System.Drawing.Point(37, 140);
+            this.linkLabel4.Name = "linkLabel4";
+            this.linkLabel4.Size = new System.Drawing.Size(93, 24);
+            this.linkLabel4.TabIndex = 6;
+            this.linkLabel4.TabStop = true;
+            this.linkLabel4.Text = "PCBsetup";
+            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
+            // 
             // linkLabel3
             // 
             this.linkLabel3.AutoSize = true;
@@ -477,9 +488,9 @@
             // lbDate
             // 
             this.lbDate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDate.Location = new System.Drawing.Point(447, 422);
+            this.lbDate.Location = new System.Drawing.Point(431, 422);
             this.lbDate.Name = "lbDate";
-            this.lbDate.Size = new System.Drawing.Size(116, 23);
+            this.lbDate.Size = new System.Drawing.Size(132, 23);
             this.lbDate.TabIndex = 247;
             this.lbDate.Text = "01 Jan 01";
             this.lbDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -487,7 +498,7 @@
             // lbVersion
             // 
             this.lbVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVersion.Location = new System.Drawing.Point(345, 391);
+            this.lbVersion.Location = new System.Drawing.Point(329, 391);
             this.lbVersion.Name = "lbVersion";
             this.lbVersion.Size = new System.Drawing.Size(105, 23);
             this.lbVersion.TabIndex = 246;
@@ -507,9 +518,9 @@
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(345, 422);
+            this.label11.Location = new System.Drawing.Point(329, 422);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(105, 23);
+            this.label11.Size = new System.Drawing.Size(87, 23);
             this.label11.TabIndex = 248;
             this.label11.Text = "RC Date";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -532,17 +543,6 @@
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             this.btnSave.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSave_HelpRequested);
-            // 
-            // linkLabel4
-            // 
-            this.linkLabel4.AutoSize = true;
-            this.linkLabel4.Location = new System.Drawing.Point(37, 140);
-            this.linkLabel4.Name = "linkLabel4";
-            this.linkLabel4.Size = new System.Drawing.Size(93, 24);
-            this.linkLabel4.TabIndex = 6;
-            this.linkLabel4.TabStop = true;
-            this.linkLabel4.Text = "PCBsetup";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
             // frmModule
             // 
