@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController
 {
@@ -38,7 +35,7 @@ namespace RateController
                         int End = Sentence.IndexOf('\r');
                         if (End > 1)
                         {
-                            cProductID = Data[2];
+                            cProductID = Convert.ToByte(Sentence.Substring(2, 1));
                             string Reading = Sentence.Substring(3, End - 3);
                             cValue[cProductID] = Convert.ToDouble(Reading);
                             Result = true;

@@ -29,7 +29,7 @@ namespace RateController
             pictureBox1.BackColor = Properties.Settings.Default.DayColour;
             lbValue.BackColor = Properties.Settings.Default.DayColour;
             cProductID = ProductID;
-            this.Text = "Scale " + (cProductID + 1).ToString();
+            this.Text = "Scale " + Prd();
         }
 
         private void btnScale_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -164,6 +164,11 @@ namespace RateController
             }
         }
 
+        private string Prd()
+        {
+            return (cProductID + 1).ToString();
+        }
+
         private void SaveData()
         {
             mf.Tls.SaveProperty("Scale_DisplayMode" + cProductID.ToString(), cDisplayMode.ToString());
@@ -235,12 +240,12 @@ namespace RateController
             {
                 case 1:
                     // applied
-                    lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + "\n(Applied " + cProductID.ToString() + ")";
+                    lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + "\n(Applied " + Prd() + ")";
                     break;
 
                 case 2:
                     // acres
-                    lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + "\n(Area " + cProductID.ToString() + ")";
+                    lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + "\n(Area " + Prd() + ")";
                     break;
 
                 case 3:
@@ -252,12 +257,12 @@ namespace RateController
                     {
                         Rate = Applied / Area;
                     }
-                    lbValue.Text = Rate.ToString("N1") + "\n(Rate " + cProductID.ToString() + ")";
+                    lbValue.Text = Rate.ToString("N1") + "\n(Rate " + Prd() + ")";
                     break;
 
                 default:
                     // weight
-                    lbValue.Text = NetWeight().ToString("N1") + "\n(Weight " + cProductID.ToString() + ")";
+                    lbValue.Text = NetWeight().ToString("N1") + "\n(Weight " + Prd() + ")";
                     break;
             }
         }
