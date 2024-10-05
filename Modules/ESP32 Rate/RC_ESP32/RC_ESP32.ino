@@ -29,8 +29,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  10-Aug-2024"
-const uint16_t InoID = 10084;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  05-Oct-2024"
+const uint16_t InoID = 5104;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -207,6 +207,8 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 }
 
 int TimedCombo(byte, bool);	// function prototype
+int TimedAdjustTime = 50;
+int TimedPauseTime = 100;
 
 void setup()
 {
@@ -314,10 +316,10 @@ void CheckWorkPin()
 //uint32_t LastLoop;
 //byte ReadReset;
 //uint32_t MaxLoopTime;
-////double debug1;
-////double debug2;
-////double debug3;
-//
+//double debug1;
+//double debug2;
+//double debug3;
+
 //void Blink()
 //{
 //	if (millis() - LastBlink > 1000)
@@ -330,13 +332,13 @@ void CheckWorkPin()
 //		//Serial.print(MaxLoopTime);
 //
 //		//Serial.print(", ");
-//		//Serial.print(debug1);
+//		Serial.print(debug1);
 //		
-//		//Serial.print(", ");
-//		//Serial.print(debug2);
+//		Serial.print(", ");
+//		Serial.print(TimedAdjustTime);
 //		
-//		//Serial.print(", ");
-//		//Serial.print(debug3);
+//		Serial.print(", ");
+//		Serial.print(TimedPauseTime);
 //
 //		Serial.println("");
 //

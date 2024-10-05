@@ -101,6 +101,7 @@ namespace RateController
             this.btnTuningGraph = new System.Windows.Forms.Button();
             this.btnPIDloadDefaults = new System.Windows.Forms.Button();
             this.tbOptions = new System.Windows.Forms.TabPage();
+            this.ckScale = new System.Windows.Forms.CheckBox();
             this.ckBumpButtons = new System.Windows.Forms.CheckBox();
             this.ckDefault = new System.Windows.Forms.CheckBox();
             this.label28 = new System.Windows.Forms.Label();
@@ -196,7 +197,10 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.ckScale = new System.Windows.Forms.CheckBox();
+            this.tbPause = new System.Windows.Forms.TextBox();
+            this.tbAdjust = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.tcProducts.SuspendLayout();
             this.tbRate.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -801,6 +805,10 @@ namespace RateController
             // 
             // tbControl
             // 
+            this.tbControl.Controls.Add(this.label6);
+            this.tbControl.Controls.Add(this.label4);
+            this.tbControl.Controls.Add(this.tbPause);
+            this.tbControl.Controls.Add(this.tbAdjust);
             this.tbControl.Controls.Add(this.groupBox1);
             this.tbControl.Controls.Add(this.label12);
             this.tbControl.Controls.Add(this.label11);
@@ -1123,6 +1131,21 @@ namespace RateController
             this.tbOptions.TabIndex = 6;
             this.tbOptions.Text = "Options";
             this.tbOptions.UseVisualStyleBackColor = true;
+            // 
+            // ckScale
+            // 
+            this.ckScale.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckScale.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckScale.Location = new System.Drawing.Point(293, 357);
+            this.ckScale.Name = "ckScale";
+            this.ckScale.Size = new System.Drawing.Size(162, 34);
+            this.ckScale.TabIndex = 140;
+            this.ckScale.Text = "Scale Weight";
+            this.ckScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScale.UseVisualStyleBackColor = true;
+            this.ckScale.CheckedChanged += new System.EventHandler(this.ckScale_CheckedChanged);
             // 
             // ckBumpButtons
             // 
@@ -2309,20 +2332,51 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
-            // ckScale
+            // tbPause
             // 
-            this.ckScale.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckScale.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckScale.Location = new System.Drawing.Point(293, 357);
-            this.ckScale.Name = "ckScale";
-            this.ckScale.Size = new System.Drawing.Size(162, 34);
-            this.ckScale.TabIndex = 140;
-            this.ckScale.Text = "Scale Weight";
-            this.ckScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckScale.UseVisualStyleBackColor = true;
-            this.ckScale.CheckedChanged += new System.EventHandler(this.ckScale_CheckedChanged);
+            this.tbPause.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPause.Location = new System.Drawing.Point(78, 375);
+            this.tbPause.MaxLength = 8;
+            this.tbPause.Name = "tbPause";
+            this.tbPause.Size = new System.Drawing.Size(41, 30);
+            this.tbPause.TabIndex = 162;
+            this.tbPause.Tag = "0";
+            this.tbPause.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbPause.TextChanged += new System.EventHandler(this.tbPause_TextChanged);
+            this.tbPause.Enter += new System.EventHandler(this.tbPause_Enter);
+            // 
+            // tbAdjust
+            // 
+            this.tbAdjust.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbAdjust.Location = new System.Drawing.Point(78, 333);
+            this.tbAdjust.MaxLength = 8;
+            this.tbAdjust.Name = "tbAdjust";
+            this.tbAdjust.Size = new System.Drawing.Size(41, 30);
+            this.tbAdjust.TabIndex = 161;
+            this.tbAdjust.Tag = "0";
+            this.tbAdjust.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbAdjust.TextChanged += new System.EventHandler(this.tbAdjust_TextChanged);
+            this.tbAdjust.Enter += new System.EventHandler(this.tbAdjust_Enter);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(9, 338);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(62, 23);
+            this.label4.TabIndex = 163;
+            this.label4.Text = "Adjust";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(9, 378);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 23);
+            this.label6.TabIndex = 164;
+            this.label6.Text = "Pause";
             // 
             // FormSettings
             // 
@@ -2544,5 +2598,9 @@ namespace RateController
         private System.Windows.Forms.RadioButton rbModeTarget;
         private System.Windows.Forms.RadioButton rbModeApplied;
         private System.Windows.Forms.CheckBox ckScale;
+        private System.Windows.Forms.TextBox tbPause;
+        private System.Windows.Forms.TextBox tbAdjust;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label4;
     }
 }

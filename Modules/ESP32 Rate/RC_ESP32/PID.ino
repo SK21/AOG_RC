@@ -16,9 +16,7 @@ double LastUPM[MaxProductCount];
 
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
-byte AdjustTime;
-byte PauseTime;
-const double MinStart = 0.03;	// minimum start ratio. Used to quickly increase rate from off.
+const double MinStart = 0.03;	// minimum start ratio. Used to quickly increase rate from 0.
 
 void SetPWM()
 {
@@ -31,8 +29,6 @@ void SetPWM()
 			{
 			case 5:
 				// combo close timed adjustment
-				AdjustTime = 20;
-				PauseTime = 200;
 				Sensor[i].PWM = TimedCombo(i, false);
 				break;
 
@@ -59,8 +55,6 @@ void SetPWM()
 			{
 			case 5:
 				// combo close timed adjustment
-				AdjustTime = 100;
-				PauseTime = 50;
 				Sensor[i].PWM = TimedCombo(i, true);
 				break;
 
@@ -215,7 +209,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 		if (PauseAdjust[ID])
 		{
 			// pausing state
-			if (millis() - ComboTime[ID] > PauseTime)
+			if (millis() - ComboTime[ID] > TimedPauseTime)
 			{
 				// switch state
 				ComboTime[ID] = millis();
@@ -225,7 +219,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 		else
 		{
 			// adjusting state
-			if (millis() - ComboTime[ID] > AdjustTime)
+			if (millis() - ComboTime[ID] > TimedAdjustTime)
 			{
 				// switch state
 				ComboTime[ID] = millis();

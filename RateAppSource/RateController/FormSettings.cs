@@ -906,6 +906,9 @@ namespace RateController
 
             mf.SetScale(CurrentProduct.ID, ckScale.Checked);
 
+            if (int.TryParse(tbAdjust.Text, out int i)) CurrentProduct.AdjustTime = i;
+            if (int.TryParse(tbPause.Text, out int j)) CurrentProduct.PauseTime = j;
+
             SaveData();
         }
 
@@ -1811,6 +1814,10 @@ namespace RateController
             rbUPMFixed.Checked = !CurrentProduct.UseMinUPMbySpeed;
 
             ckScale.Checked = mf.ShowScale(CurrentProduct.ID);
+
+            tbAdjust.Text = CurrentProduct.AdjustTime.ToString("N0");
+            tbPause.Text = CurrentProduct.PauseTime.ToString("N0");
+
             Initializing = false;
         }
 
@@ -1840,6 +1847,44 @@ namespace RateController
         }
 
         private void ckScale_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbAdjust_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbAdjust.Text, out temp);
+            using (var form = new FormNumeric(10, 150, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbAdjust.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbAdjust_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbPause_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbPause.Text, out temp);
+            using (var form = new FormNumeric(30, 450, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPause.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbPause_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }

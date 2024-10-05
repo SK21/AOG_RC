@@ -268,6 +268,12 @@ void ParseData(byte Data[], uint16_t len)
                         int16_t tmp = Data[10] | Data[11] << 8;
                         Sensor[SensorID].ManualAdjust = tmp;
 
+                        int Time = (Data[12] >>4) * 10;  // max 15*10 = 150 ms
+                        if (Time > 0) TimedAdjustTime = Time;
+
+                        Time = byte(Data[12] & 15) * 30;    // max 15*30 = 450 ms
+                        if (Time > 0) TimedPauseTime = Time;
+
                         Sensor[SensorID].CommTime = millis();
                     }
                 }

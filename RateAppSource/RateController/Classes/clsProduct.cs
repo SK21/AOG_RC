@@ -69,6 +69,8 @@ namespace RateController
         private DateTime LastUpdateTime;
         private PGN32502 ModulePIDdata;
         private bool PauseWork = false;
+        private int cAdjustTime;
+        private int cPauseTime;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -248,6 +250,30 @@ namespace RateController
                 if (value > 0 && value < 10000)
                 {
                     cMeterCal = value;
+                }
+            }
+        }
+
+        public int AdjustTime
+        {
+            get { return cAdjustTime; }
+            set
+            {
+                if (value > 0 && value < 151)
+                {
+                    cAdjustTime = value;
+                }
+            }
+        }
+
+        public int PauseTime
+        {
+            get { return cPauseTime; }
+            set
+            {
+                if (value > 0 && value < 451)
+                {
+                    cPauseTime = value;
                 }
             }
         }
@@ -710,6 +736,9 @@ namespace RateController
             if (double.TryParse(mf.Tls.LoadProperty("Hours2" + IDname), out double h2)) cHours2 = h2;
 
             if (Enum.TryParse(mf.Tls.LoadProperty("AppMode" + IDname), true, out ApplicationMode am)) cAppMode = am;
+
+            if (int.TryParse(mf.Tls.LoadProperty("AdjustTime" + IDname), out int i)) cAdjustTime = i;
+            if (int.TryParse(mf.Tls.LoadProperty("PauseTime" + IDname), out int j)) cPauseTime = j;
         }
 
         public double MinUPMinUse()
@@ -920,6 +949,8 @@ namespace RateController
             mf.Tls.SaveProperty("Hours2" + IDname, cHours2.ToString());
 
             mf.Tls.SaveProperty("AppMode" + IDname, cAppMode.ToString());
+            mf.Tls.SaveProperty("AdjustTime" + IDname, cAdjustTime.ToString());
+            mf.Tls.SaveProperty("PauseTime" + IDname, cPauseTime.ToString());
         }
 
         public void SendPID()
