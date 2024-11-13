@@ -145,9 +145,6 @@ namespace RateController
                 cData[11] = (byte)(Prod.ManualPWM >> 8);
             }
 
-            // timed adjust
-            cData[12] = (byte)(((Prod.AdjustTime / 10) << 4) + (Prod.PauseTime / 30));
-
             // CRC
             cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
 
