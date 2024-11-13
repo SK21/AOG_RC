@@ -31,7 +31,7 @@ struct ModuleConfig
 	uint8_t WorkPin = 2;
 	bool WorkPinIsMomentary = false;
 	uint8_t PressurePin = 15;
-	uint8_t RelaysSingle = 1;	// 0 pair of relays to control a valve, 1 Single relay to control a valve
+	uint8_t ValveSingle = 1;	// 0 pair of relays to control a valve, 1 Single relay to control a valve
 };
 
 ModuleConfig MDL;
@@ -127,7 +127,7 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	}
 }
 
-int TimedCombo(byte, bool);	// function prototype
+int TimedCombo(bool);		// function prototype
 void IRAM_ATTR ISR0();		// function prototype
 
 void setup()
@@ -137,6 +137,8 @@ void setup()
 
 void loop()
 {
+	ReceiveComm();
+	SetPWM();
 	if (millis() - LoopLast >= LoopTime)
 	{
 		LoopLast = millis();
@@ -150,17 +152,7 @@ void loop()
 		GetUPM();
 		AdjustFlow();
 	}
-
-	if (millis() - SendLast > SendTime)
-	{
-		SendLast = millis();
-		CheckWorkPin();
-		SendUDP();
-	}
-
-	SetPWM();
-	ReceiveUDP();
-
+	SendComm();
 	server.handleClient();
 }
 
@@ -200,7 +192,7 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-void CheckWorkPin()
+bool WorkPinOn()
 {
 	WrkCurrent = digitalRead(MDL.WorkPin);
 	if (MDL.WorkPinIsMomentary)
@@ -215,4 +207,5 @@ void CheckWorkPin()
 	{
 		WrkOn = WrkCurrent;
 	}
+	return WrkOn;
 }

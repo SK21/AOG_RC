@@ -12,7 +12,7 @@ void CheckRelays()
     uint8_t mcpOutA = 0; // Output for port A
     uint8_t mcpOutB = 0; // Output for port B
 
-    if (MDL.RelaysSingle)
+    if (MDL.ValveSingle)
     {
         mcpOutA = RelayLo;
         mcpOutB = RelayHi;
