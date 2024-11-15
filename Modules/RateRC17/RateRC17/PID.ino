@@ -194,7 +194,7 @@ int TimedCombo(bool ManualAdjust = false)
 						// check brakepoint
 						if (abs(RateError) > BrakePoint * FlowSensor.TargetUPM)
 						{
-						Result = FlowSensor.KP * RateError;
+							Result = FlowSensor.KP * RateError;
 						}
 						else
 						{

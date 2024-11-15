@@ -191,6 +191,7 @@ void ReceiveComm()
                             // Meter Cal, 1000 times actual
                             uint32_t Temp = Data[6] | (uint32_t)Data[7] << 8 | (uint32_t)Data[8] << 16;
                             FlowSensor.MeterCal = Temp * 0.001;
+                            if (FlowSensor.MeterCal == 0) FlowSensor.MeterCal = 1;
 
                             // command byte
                             byte InCommand = Data[9];
@@ -202,9 +203,6 @@ void ReceiveComm()
                             if ((InCommand & 8) == 8) FlowSensor.ControlType += 4;
 
                             MasterOn = ((InCommand & 16) == 16);
-
-                            FlowSensor.UseMultiPulses = ((InCommand & 32) == 32);
-
                             AutoOn = ((InCommand & 64) == 64);
 
                             int16_t tmp = Data[10] | Data[11] << 8;

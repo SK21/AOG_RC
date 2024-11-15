@@ -169,7 +169,6 @@ void GetUPM()
 			{
 				Hz[ID] = (double)(1000000.0 / CurrentDuration);
 			}
-
 			LastPulse[ID] = millis();
 		}
 
@@ -182,7 +181,7 @@ void GetUPM()
 			Ocount[ID] = 0;
 		}
 
-		// olympic average
+		 //olympic average
 		Osum[ID] += Hz[ID];
 		if (Omax[ID] < Hz[ID]) Omax[ID] = Hz[ID];
 		if (Omin[ID] > Hz[ID]) Omin[ID] = Hz[ID];
@@ -199,7 +198,7 @@ void GetUPM()
 			Ocount[ID] = 0;
 		}
 
-		// units per minute
+		 //units per minute
 		if (Sensor[ID].MeterCal > 0)
 		{
 			Sensor[ID].UPM = (Oave[ID] * 60.0) / Sensor[ID].MeterCal;

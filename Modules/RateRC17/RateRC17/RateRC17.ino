@@ -48,14 +48,13 @@ struct SensorConfig
 	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan, 5 timed combo
 	uint32_t TotalPulses;
 	double TargetUPM;
-	double MeterCal;
+	double MeterCal = 1;	// default to 1
 	double ManualAdjust;
 	double KP;
 	double KI;
 	double KD;
 	byte MinPWM;
 	byte MaxPWM;
-	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
 };
 
 SensorConfig FlowSensor;
