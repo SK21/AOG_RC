@@ -30,6 +30,42 @@ void DoSetup()
 	pinMode(FlowSensor.Motor1, OUTPUT);
 	pinMode(FlowSensor.Motor2, OUTPUT);
 	attachInterrupt(digitalPinToInterrupt(FlowSensor.FlowPin), ISR0, RISING);
+	
+	//// Configure PCNT
+	//pcnt_config_t PCNTconfig;
+	//PCNTconfig.pulse_gpio_num = PCNT_INPUT_SIG_IO;   // Set pulse input GPIO member
+	//PCNTconfig.ctrl_gpio_num = PCNT_PIN_NOT_USED;       // No GPIO for control
+
+	//// What to do on the positive / negative edge of pulse input?
+	//PCNTconfig.pos_mode = PCNT_COUNT_INC;   // Count up on the positive edge
+	//PCNTconfig.neg_mode = PCNT_COUNT_DIS;   // Count down disable
+
+	//// What to do when control input is low or high?
+	//PCNTconfig.lctrl_mode = PCNT_MODE_KEEP; // Keep the primary counter mode if low
+	//PCNTconfig.hctrl_mode = PCNT_MODE_KEEP;    // Keep the primary counter mode 
+
+	//// Set the maximum and minimum limit values to watch
+	//PCNTconfig.counter_h_lim = 1;
+	//PCNTconfig.counter_l_lim = 0;
+
+	//PCNTconfig.unit = PCNT_TEST_UNIT;                           // Select pulse unit
+	//PCNTconfig.channel = PCNT_CHANNEL_0;                      // Select PCNT channel 0
+	//pcnt_unit_config(&PCNTconfig);                            // Configure PCNT
+
+	//pcnt_counter_pause(PCNT_TEST_UNIT);                             // Pause PCNT counter
+	//pcnt_counter_clear(PCNT_TEST_UNIT);                             // Clear PCNT counter
+
+	//pcnt_set_filter_value(PCNT_TEST_UNIT, 1023);         // Maximum filter_val should be limited to 1023.
+	//pcnt_filter_enable(PCNT_TEST_UNIT);                             // Enable filter
+
+	//pcnt_event_enable(PCNT_TEST_UNIT, PCNT_EVT_H_LIM);              // Enable event for when PCNT watch point event: Maximum counter value
+	//pcnt_event_enable(PCNT_TEST_UNIT, PCNT_EVT_L_LIM);
+
+	//// pcnt_isr_register(Counter_ISR, NULL, 0, &user_isr_handle);    // Set call back function for the Event  //!! 
+	//pcnt_isr_service_install(0);
+	//pcnt_isr_handler_add(PCNT_TEST_UNIT, ISR0, NULL);
+	//pcnt_intr_enable(PCNT_TEST_UNIT);                               // Enable Pulse Counter (PCNT)
+	//pcnt_counter_resume(PCNT_TEST_UNIT);
 
 	// flow pwm
 	// DRV8870 IN1

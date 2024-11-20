@@ -9,9 +9,14 @@
 #include <EEPROM.h> 
 #include <Wire.h>
 
+//#include "driver/pcnt.h"
+//#define PCNT_TEST_UNIT      PCNT_UNIT_0
+//#define PCNT_INPUT_SIG_IO   17             // Pulse Input GPIO
+//hw_timer_t* timer = NULL;
+
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1  PCB: RC17
-# define InoDescription "RateRC17 :  12-Nov-2024"
-const uint16_t InoID = 12114;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RateRC17 :  19-Nov-2024"
+const uint16_t InoID = 19114;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 5;		// RateRC17
 
 const uint8_t MCPaddress = 0x20;
@@ -38,9 +43,9 @@ ModuleConfig MDL;
 
 struct SensorConfig
 {
-	uint8_t FlowPin = 13;
-	uint8_t Motor1 = 17;
-	uint8_t Motor2 = 5;
+	uint8_t FlowPin = 17;
+	uint8_t Motor1 = 32;
+	uint8_t Motor2 = 33;
 	bool FlowEnabled;
 	double UPM;				// sent as upm X 1000
 	double PWM;
@@ -127,7 +132,11 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 }
 
 int TimedCombo(bool);		// function prototype
+//void IRAM_ATTR ISR0();		// function prototype
 void IRAM_ATTR ISR0();		// function prototype
+
+const int SampleSize = 24;
+uint32_t Samples[SampleSize];
 
 void setup()
 {
@@ -147,12 +156,13 @@ void loop()
 				|| ((FlowSensor.ControlType == 4) && (FlowSensor.TargetUPM > 0))
 				|| (!AutoOn && MasterOn));
 
-		CheckRelays();
+		//CheckRelays();
 		GetUPM();
 		AdjustFlow();
 	}
 	SendComm();
 	server.handleClient();
+	Blink();
 }
 
 byte ParseModID(byte ID)
@@ -207,4 +217,51 @@ bool WorkPinOn()
 		WrkOn = WrkCurrent;
 	}
 	return WrkOn;
+}
+
+bool State = false;
+uint32_t LastBlink;
+uint32_t LastLoop;
+byte ReadReset;
+uint32_t MaxLoopTime;
+volatile double debug1;
+volatile double debug2;
+volatile double debug3;
+volatile double debug4;
+
+void Blink()
+{
+	if (millis() - LastBlink > 1000)
+	{
+		LastBlink = millis();
+		State = !State;
+		//digitalWrite(LED_BUILTIN, State);
+
+		Serial.print(" Micros: ");
+		Serial.print(MaxLoopTime);
+		Serial.print(", ");
+		Serial.print(debug1/1000,0);
+		Serial.print(", ");
+		Serial.print(debug2/1000,0);
+		Serial.print(", ");
+		Serial.print(debug3,0);
+		Serial.print(", ");
+		Serial.print(debug4);
+
+		for (int i = 0; i < SampleSize; i++)
+		{
+			Serial.print(", ");
+			Serial.print(Samples[i]/1000);
+		}
+
+		Serial.println("");
+
+		if (ReadReset++ > 5)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+		}
+	}
+	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
+	LastLoop = micros();
 }
