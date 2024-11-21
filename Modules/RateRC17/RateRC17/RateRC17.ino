@@ -15,8 +15,8 @@
 //hw_timer_t* timer = NULL;
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1  PCB: RC17
-# define InoDescription "RateRC17 :  19-Nov-2024"
-const uint16_t InoID = 19114;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RateRC17 :  20-Nov-2024"
+const uint16_t InoID = 20114;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 5;		// RateRC17
 
 const uint8_t MCPaddress = 0x20;
@@ -132,11 +132,7 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 }
 
 int TimedCombo(bool);		// function prototype
-//void IRAM_ATTR ISR0();		// function prototype
 void IRAM_ATTR ISR0();		// function prototype
-
-const int SampleSize = 24;
-uint32_t Samples[SampleSize];
 
 void setup()
 {
@@ -237,22 +233,22 @@ void Blink()
 		State = !State;
 		//digitalWrite(LED_BUILTIN, State);
 
-		Serial.print(" Micros: ");
-		Serial.print(MaxLoopTime);
+		Serial.print(MaxLoopTime/1000.0);
 		Serial.print(", ");
-		Serial.print(debug1/1000,0);
+		Serial.print(debug1);
 		Serial.print(", ");
-		Serial.print(debug2/1000,0);
+		Serial.print(debug2);
 		Serial.print(", ");
-		Serial.print(debug3,0);
+		Serial.print(debug3);
 		Serial.print(", ");
 		Serial.print(debug4);
 
-		for (int i = 0; i < SampleSize; i++)
-		{
-			Serial.print(", ");
-			Serial.print(Samples[i]/1000);
-		}
+		//Serial.print("  >>");
+		//for (int i = 0; i < SampleSize; i++)
+		//{
+		//	Serial.print(", ");
+		//	Serial.print(Samples[i]/1000);
+		//}
 
 		Serial.println("");
 
