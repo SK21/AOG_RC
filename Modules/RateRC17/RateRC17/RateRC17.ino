@@ -9,11 +9,6 @@
 #include <EEPROM.h> 
 #include <Wire.h>
 
-//#include "driver/pcnt.h"
-//#define PCNT_TEST_UNIT      PCNT_UNIT_0
-//#define PCNT_INPUT_SIG_IO   17             // Pulse Input GPIO
-//hw_timer_t* timer = NULL;
-
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1  PCB: RC17
 # define InoDescription "RateRC17 :  20-Nov-2024"
 const uint16_t InoID = 20114;	// change to send defaults to eeprom, ddmmy, no leading 0
