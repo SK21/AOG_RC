@@ -28,9 +28,9 @@ struct ModuleConfig
 	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
+	uint8_t PressurePin = 15;
 	uint8_t WorkPin = 2;
 	bool WorkPinIsMomentary = false;
-	uint8_t PressurePin = 15;
 	uint8_t ValveSingle = 1;	// 0 pair of relays to control a valve, 1 Single relay to control a valve
 };
 

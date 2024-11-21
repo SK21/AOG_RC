@@ -323,8 +323,6 @@ void ReceiveComm()
                     if ((tmp & 8) == 8) MDL.WorkPinIsMomentary = 1; else MDL.WorkPinIsMomentary = 0;
                     MDL.ValveSingle = ((tmp & 16) == 16);
 
-                    MDL.WorkPin = Data[29];
-
                     //SaveData();	saved in pgn 3702
                 }
             }
