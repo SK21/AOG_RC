@@ -60,7 +60,6 @@
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.calibrateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pressuresToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.commDiagnosticsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -416,7 +415,6 @@
             this.MnuComm,
             this.calibrateToolStripMenuItem1,
             this.networkToolStripMenuItem,
-            this.pressuresToolStripMenuItem1,
             this.commDiagnosticsToolStripMenuItem1,
             this.MnuOptions,
             this.toolStripSeparator1,
@@ -426,7 +424,7 @@
             this.toolStripSeparator4,
             this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(254, 562);
+            this.mnuSettings.Size = new System.Drawing.Size(254, 542);
             // 
             // MnuProducts
             // 
@@ -475,14 +473,6 @@
             this.networkToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
             this.networkToolStripMenuItem.Text = "Network";
             this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
-            // 
-            // pressuresToolStripMenuItem1
-            // 
-            this.pressuresToolStripMenuItem1.Image = global::RateController.Properties.Resources.pressure;
-            this.pressuresToolStripMenuItem1.Name = "pressuresToolStripMenuItem1";
-            this.pressuresToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
-            this.pressuresToolStripMenuItem1.Text = "Pressures";
-            this.pressuresToolStripMenuItem1.Click += new System.EventHandler(this.pressuresToolStripMenuItem1_Click);
             // 
             // commDiagnosticsToolStripMenuItem1
             // 
@@ -1005,7 +995,6 @@
         private System.Windows.Forms.Timer tmrBorder;
         private System.Windows.Forms.ToolStripMenuItem networkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem calibrateToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem pressuresToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem commDiagnosticsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;

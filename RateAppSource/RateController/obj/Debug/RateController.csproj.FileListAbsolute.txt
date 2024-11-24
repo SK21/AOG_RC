@@ -2328,7 +2328,6 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateControllerApp\ru\RateController.
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormPIDGraph.resources
-C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormPressure.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormSettings.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormStart.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmCalHelp.resources

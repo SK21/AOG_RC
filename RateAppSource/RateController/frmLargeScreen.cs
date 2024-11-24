@@ -46,7 +46,6 @@ namespace RateController
             mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
             mnuSettings.Items["exitToolStripMenuItem"].Text = Lang.lgExit;
 
-            mnuSettings.Items["pressuresToolStripMenuItem1"].Text = Lang.lgPressure;
             mnuSettings.Items["commDiagnosticsToolStripMenuItem1"].Text = Lang.lgCommDiagnostics;
             mnuSettings.Items["newToolStripMenuItem"].Text = Lang.lgNew;
             mnuSettings.Items["openToolStripMenuItem"].Text = Lang.lgOpen;
@@ -616,20 +615,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void pressuresToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Form fs = mf.Tls.IsFormOpen("FormPressure");
-
-            if (fs == null)
-            {
-                Form frm = new FormPressure(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {

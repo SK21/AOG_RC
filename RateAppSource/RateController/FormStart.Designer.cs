@@ -44,8 +44,8 @@ namespace RateController
             this.lblUnits = new System.Windows.Forms.Label();
             this.AreaDone = new System.Windows.Forms.Label();
             this.lbRateAmount = new System.Windows.Forms.Label();
-            this.lbCoverage = new System.Windows.Forms.Label();
             this.lbRemaining = new System.Windows.Forms.Label();
+            this.lbCoverage = new System.Windows.Forms.Label();
             this.panSummary = new System.Windows.Forms.Panel();
             this.tg3 = new System.Windows.Forms.Label();
             this.tg2 = new System.Windows.Forms.Label();
@@ -76,7 +76,6 @@ namespace RateController
             this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
             this.calibrateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pressuresToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.commDiagnosticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -260,17 +259,6 @@ namespace RateController
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbRateAmount.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRate_HelpRequested);
             // 
-            // lbCoverage
-            // 
-            this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCoverage.Location = new System.Drawing.Point(0, 120);
-            this.lbCoverage.Name = "lbCoverage";
-            this.lbCoverage.Size = new System.Drawing.Size(175, 23);
-            this.lbCoverage.TabIndex = 150;
-            this.lbCoverage.Text = "Coverage";
-            this.lbCoverage.Click += new System.EventHandler(this.lbCoverage_Click);
-            this.lbCoverage.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbCoverage_HelpRequested);
-            // 
             // lbRemaining
             // 
             this.lbRemaining.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -281,6 +269,17 @@ namespace RateController
             this.lbRemaining.Text = "Quantity Applied ...";
             this.lbRemaining.Click += new System.EventHandler(this.label34_Click);
             this.lbRemaining.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
+            // 
+            // lbCoverage
+            // 
+            this.lbCoverage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCoverage.Location = new System.Drawing.Point(0, 120);
+            this.lbCoverage.Name = "lbCoverage";
+            this.lbCoverage.Size = new System.Drawing.Size(175, 23);
+            this.lbCoverage.TabIndex = 150;
+            this.lbCoverage.Text = "Coverage";
+            this.lbCoverage.Click += new System.EventHandler(this.lbCoverage_Click);
+            this.lbCoverage.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbCoverage_HelpRequested);
             // 
             // panSummary
             // 
@@ -554,7 +553,6 @@ namespace RateController
             this.MnuComm,
             this.calibrateToolStripMenuItem1,
             this.networkToolStripMenuItem,
-            this.pressuresToolStripMenuItem1,
             this.commDiagnosticsToolStripMenuItem,
             this.MnuOptions,
             this.toolStripSeparator1,
@@ -564,7 +562,7 @@ namespace RateController
             this.toolStripSeparator4,
             this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(254, 562);
+            this.mnuSettings.Size = new System.Drawing.Size(254, 542);
             this.mnuSettings.Opening += new System.ComponentModel.CancelEventHandler(this.mnuSettings_Opening);
             // 
             // MnuProducts
@@ -614,14 +612,6 @@ namespace RateController
             this.networkToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
             this.networkToolStripMenuItem.Text = "Modules";
             this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
-            // 
-            // pressuresToolStripMenuItem1
-            // 
-            this.pressuresToolStripMenuItem1.Image = global::RateController.Properties.Resources.pressure;
-            this.pressuresToolStripMenuItem1.Name = "pressuresToolStripMenuItem1";
-            this.pressuresToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
-            this.pressuresToolStripMenuItem1.Text = "Pressures";
-            this.pressuresToolStripMenuItem1.Click += new System.EventHandler(this.pressuresToolStripMenuItem1_Click);
             // 
             // commDiagnosticsToolStripMenuItem
             // 
@@ -965,7 +955,6 @@ namespace RateController
         private System.Windows.Forms.Label tg2;
         private System.Windows.Forms.Label tg1;
         private System.Windows.Forms.Label tg0;
-        private System.Windows.Forms.ToolStripMenuItem pressuresToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem commDiagnosticsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;

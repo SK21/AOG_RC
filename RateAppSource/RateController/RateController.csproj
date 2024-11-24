@@ -135,12 +135,6 @@
     <Compile Include="FormPIDGraph.designer.cs">
       <DependentUpon>FormPIDGraph.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPressure.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormPressure.Designer.cs">
-      <DependentUpon>FormPressure.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -309,10 +303,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPIDGraph.resx">
       <DependentUpon>FormPIDGraph.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormPressure.resx">
-      <DependentUpon>FormPressure.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettings.resx">
