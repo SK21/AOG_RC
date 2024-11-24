@@ -57,7 +57,6 @@ namespace RateController
         private double CurrentWorkedArea_Hc = 0;
         private bool cUseAltRate = false;
         private bool cUseMinUPMbySpeed = false;
-        private bool cUseMultiPulse;
         private bool cUseOffRateAlarm;
         private bool cUseVR;
         private byte cVRID = 0;
@@ -467,9 +466,6 @@ namespace RateController
             set { cUseMinUPMbySpeed = value; }
         }
 
-        public bool UseMultiPulse
-        { get { return cUseMultiPulse; } set { cUseMultiPulse = value; } }
-
         public bool UseOffRateAlarm
         { get { return cUseOffRateAlarm; } set { cUseOffRateAlarm = value; } }
 
@@ -619,7 +615,6 @@ namespace RateController
 
             cProductName = mf.Tls.LoadProperty("ProductName" + IDname);
 
-            bool.TryParse(mf.Tls.LoadProperty("UseMultiPulse" + IDname), out cUseMultiPulse);
             int.TryParse(mf.Tls.LoadProperty("CountsRev" + IDname), out cCountsRev);
 
             int tmpModuleID = -1;
@@ -875,7 +870,6 @@ namespace RateController
 
             mf.Tls.SaveProperty("ProductName" + IDname, cProductName);
 
-            mf.Tls.SaveProperty("UseMultiPulse" + IDname, cUseMultiPulse.ToString());
             mf.Tls.SaveProperty("CountsRev" + IDname, cCountsRev.ToString());
 
             mf.Tls.SaveProperty("ModuleID" + IDname, cModID.ToString());

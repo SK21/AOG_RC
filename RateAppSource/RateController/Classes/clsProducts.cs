@@ -119,7 +119,6 @@ namespace RateController
                     Prd.PIDmin = 0;
                     Prd.PIDscale = 0;
                     Prd.ChangeID(i / 2, (byte)(i % 2), true);
-                    Prd.UseMultiPulse = true;
                     Prd.OnScreen = true;
                     Prd.AppMode = ApplicationMode.ControlledUPM;
                     Prd.OffRateSetting = 0;

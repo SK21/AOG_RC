@@ -714,7 +714,6 @@ namespace RateController
                         P3.OffRateSetting = P0.OffRateSetting;
                         P3.MinUPM = P0.MinUPM;
                         P3.BumpButtons = false;
-                        P3.UseMultiPulse = P0.UseMultiPulse;
 
                         P3.CountsRev = P0.CountsRev;
                         DefaultProduct = 3;

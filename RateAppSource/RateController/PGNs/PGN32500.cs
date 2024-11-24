@@ -122,8 +122,6 @@ namespace RateController
                 cData[9] |= 0b00010000;
             }
 
-            if (Prod.UseMultiPulse) cData[9] |= 0b00100000;
-
             if ((Prod.mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || Prod.mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate) || Prod.CalSetMeter )
                 && !Prod.CalRun)
             {

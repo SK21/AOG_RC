@@ -548,7 +548,7 @@ namespace RateController
 
         private void tcOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnReset.Visible = (tcOptions.SelectedIndex == 4);
+            btnReset.Visible = (tcOptions.SelectedIndex == 3);
         }
 
         private void UpdateForm(bool UpdateObject = false)

@@ -85,9 +85,6 @@ namespace RateController
             lbMin.Text = Lang.lgPWMmin;
 
             lbSensorID.Text = Lang.lgSensorID;
-            grpRateMethod.Text = Lang.lgRateMethod;
-            rbSinglePulse.Text = Lang.lgTimeForSingle;
-            rbMultiPulse.Text = Lang.lgTimeForMulti;
 
             grpMinUPM.Text = Lang.lgMinUPM;
             ckOffRate.Text = Lang.lgOffRate;
@@ -620,9 +617,6 @@ namespace RateController
 
             tbSenID.Text = CurrentProduct.SensorID.ToString();
 
-            rbSinglePulse.Checked = !(CurrentProduct.UseMultiPulse);
-            rbMultiPulse.Checked = (CurrentProduct.UseMultiPulse);
-
             tbMinUPM.Text = CurrentProduct.MinUPM.ToString("N1");
             tbUPMspeed.Text = CurrentProduct.MinUPMbySpeed.ToString("N1");
             rbUPMSpeed.Checked = CurrentProduct.UseMinUPMbySpeed;
@@ -880,8 +874,6 @@ namespace RateController
 
             int.TryParse(tbCountsRev.Text, out tempInt);
             CurrentProduct.CountsRev = tempInt;
-
-            CurrentProduct.UseMultiPulse = (rbMultiPulse.Checked);
 
             CurrentProduct.UseMinUPMbySpeed = rbUPMSpeed.Checked;
 

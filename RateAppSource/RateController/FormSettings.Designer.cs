@@ -113,9 +113,6 @@ namespace RateController
             this.rbUPMSpeed = new System.Windows.Forms.RadioButton();
             this.rbUPMFixed = new System.Windows.Forms.RadioButton();
             this.tbMinUPM = new System.Windows.Forms.TextBox();
-            this.grpRateMethod = new System.Windows.Forms.GroupBox();
-            this.rbMultiPulse = new System.Windows.Forms.RadioButton();
-            this.rbSinglePulse = new System.Windows.Forms.RadioButton();
             this.grpSensor = new System.Windows.Forms.GroupBox();
             this.lbSensorID = new System.Windows.Forms.Label();
             this.tbSenID = new System.Windows.Forms.TextBox();
@@ -206,7 +203,6 @@ namespace RateController
             this.groupBox1.SuspendLayout();
             this.tbOptions.SuspendLayout();
             this.grpMinUPM.SuspendLayout();
-            this.grpRateMethod.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.Mode.SuspendLayout();
             this.tbDiagnostics.SuspendLayout();
@@ -1115,7 +1111,6 @@ namespace RateController
             this.tbOptions.Controls.Add(this.ckOffRate);
             this.tbOptions.Controls.Add(this.ckOnScreen);
             this.tbOptions.Controls.Add(this.grpMinUPM);
-            this.tbOptions.Controls.Add(this.grpRateMethod);
             this.tbOptions.Controls.Add(this.grpSensor);
             this.tbOptions.Location = new System.Drawing.Point(4, 83);
             this.tbOptions.Name = "tbOptions";
@@ -1130,7 +1125,7 @@ namespace RateController
             this.ckScale.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckScale.Location = new System.Drawing.Point(293, 357);
+            this.ckScale.Location = new System.Drawing.Point(293, 273);
             this.ckScale.Name = "ckScale";
             this.ckScale.Size = new System.Drawing.Size(162, 34);
             this.ckScale.TabIndex = 140;
@@ -1145,7 +1140,7 @@ namespace RateController
             this.ckBumpButtons.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckBumpButtons.Location = new System.Drawing.Point(293, 303);
+            this.ckBumpButtons.Location = new System.Drawing.Point(293, 198);
             this.ckBumpButtons.Name = "ckBumpButtons";
             this.ckBumpButtons.Size = new System.Drawing.Size(162, 32);
             this.ckBumpButtons.TabIndex = 139;
@@ -1161,7 +1156,7 @@ namespace RateController
             this.ckDefault.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDefault.Location = new System.Drawing.Point(293, 249);
+            this.ckDefault.Location = new System.Drawing.Point(293, 123);
             this.ckDefault.Name = "ckDefault";
             this.ckDefault.Size = new System.Drawing.Size(162, 32);
             this.ckDefault.TabIndex = 138;
@@ -1175,7 +1170,7 @@ namespace RateController
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(208, 328);
+            this.label28.Location = new System.Drawing.Point(310, 349);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(29, 23);
             this.label28.TabIndex = 137;
@@ -1185,7 +1180,7 @@ namespace RateController
             // 
             this.tbOffRate.Enabled = false;
             this.tbOffRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(169, 324);
+            this.tbOffRate.Location = new System.Drawing.Point(271, 345);
             this.tbOffRate.MaxLength = 8;
             this.tbOffRate.Name = "tbOffRate";
             this.tbOffRate.Size = new System.Drawing.Size(33, 30);
@@ -1202,7 +1197,7 @@ namespace RateController
             this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOffRate.Location = new System.Drawing.Point(29, 323);
+            this.ckOffRate.Location = new System.Drawing.Point(131, 344);
             this.ckOffRate.Name = "ckOffRate";
             this.ckOffRate.Size = new System.Drawing.Size(134, 32);
             this.ckOffRate.TabIndex = 135;
@@ -1218,7 +1213,7 @@ namespace RateController
             this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOnScreen.Location = new System.Drawing.Point(293, 195);
+            this.ckOnScreen.Location = new System.Drawing.Point(293, 48);
             this.ckOnScreen.Name = "ckOnScreen";
             this.ckOnScreen.Size = new System.Drawing.Size(162, 32);
             this.ckOnScreen.TabIndex = 134;
@@ -1234,7 +1229,7 @@ namespace RateController
             this.grpMinUPM.Controls.Add(this.rbUPMSpeed);
             this.grpMinUPM.Controls.Add(this.rbUPMFixed);
             this.grpMinUPM.Controls.Add(this.tbMinUPM);
-            this.grpMinUPM.Location = new System.Drawing.Point(14, 183);
+            this.grpMinUPM.Location = new System.Drawing.Point(14, 190);
             this.grpMinUPM.Name = "grpMinUPM";
             this.grpMinUPM.Size = new System.Drawing.Size(259, 117);
             this.grpMinUPM.TabIndex = 133;
@@ -1300,53 +1295,6 @@ namespace RateController
             this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbMinUPM.TextChanged += new System.EventHandler(this.tbMinUPM_TextChanged);
             this.tbMinUPM.Enter += new System.EventHandler(this.tbMinUPM_Enter);
-            // 
-            // grpRateMethod
-            // 
-            this.grpRateMethod.Controls.Add(this.rbMultiPulse);
-            this.grpRateMethod.Controls.Add(this.rbSinglePulse);
-            this.grpRateMethod.Location = new System.Drawing.Point(293, 38);
-            this.grpRateMethod.Name = "grpRateMethod";
-            this.grpRateMethod.Size = new System.Drawing.Size(169, 117);
-            this.grpRateMethod.TabIndex = 0;
-            this.grpRateMethod.TabStop = false;
-            this.grpRateMethod.Text = "Rate Method";
-            this.grpRateMethod.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // rbMultiPulse
-            // 
-            this.rbMultiPulse.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbMultiPulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbMultiPulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbMultiPulse.Location = new System.Drawing.Point(13, 73);
-            this.rbMultiPulse.Margin = new System.Windows.Forms.Padding(2);
-            this.rbMultiPulse.Name = "rbMultiPulse";
-            this.rbMultiPulse.Size = new System.Drawing.Size(142, 37);
-            this.rbMultiPulse.TabIndex = 1;
-            this.rbMultiPulse.Tag = "0";
-            this.rbMultiPulse.Text = "Multi-pulse";
-            this.rbMultiPulse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbMultiPulse.UseVisualStyleBackColor = true;
-            this.rbMultiPulse.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbMultiPulse_HelpRequested);
-            // 
-            // rbSinglePulse
-            // 
-            this.rbSinglePulse.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbSinglePulse.Checked = true;
-            this.rbSinglePulse.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbSinglePulse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbSinglePulse.Location = new System.Drawing.Point(13, 25);
-            this.rbSinglePulse.Margin = new System.Windows.Forms.Padding(2);
-            this.rbSinglePulse.Name = "rbSinglePulse";
-            this.rbSinglePulse.Size = new System.Drawing.Size(142, 37);
-            this.rbSinglePulse.TabIndex = 1;
-            this.rbSinglePulse.TabStop = true;
-            this.rbSinglePulse.Tag = "0";
-            this.rbSinglePulse.Text = "Single pulse";
-            this.rbSinglePulse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbSinglePulse.UseVisualStyleBackColor = true;
-            this.rbSinglePulse.CheckedChanged += new System.EventHandler(this.rbSinglePulse_CheckedChanged);
-            this.rbSinglePulse.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbSinglePulse_HelpRequested);
             // 
             // grpSensor
             // 
@@ -2363,7 +2311,6 @@ namespace RateController
             this.tbOptions.PerformLayout();
             this.grpMinUPM.ResumeLayout(false);
             this.grpMinUPM.PerformLayout();
-            this.grpRateMethod.ResumeLayout(false);
             this.grpSensor.ResumeLayout(false);
             this.grpSensor.PerformLayout();
             this.Mode.ResumeLayout(false);
@@ -2457,9 +2404,6 @@ namespace RateController
         private System.Windows.Forms.Label ModuleIndicator;
         private System.Windows.Forms.Label lbConID;
         private System.Windows.Forms.TextBox tbConID;
-        private System.Windows.Forms.GroupBox grpRateMethod;
-        private System.Windows.Forms.RadioButton rbMultiPulse;
-        private System.Windows.Forms.RadioButton rbSinglePulse;
         private System.Windows.Forms.TextBox tbAltRate;
         private System.Windows.Forms.Label lbAltRate;
         private System.Windows.Forms.TextBox tbKI;
