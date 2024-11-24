@@ -224,11 +224,11 @@ namespace RateController
 
         public int RateType
         {
-            // 0 current rate, 1 instantaneous rate, 2 overall rate
+            // 0 current rate, 1 instantaneous rate
             get { return cRateType; }
             set
             {
-                if (value >= 0 && value < 3) cRateType = value;
+                if (value >= 0 && value < 2) cRateType = value;
             }
         }
 
@@ -864,12 +864,6 @@ namespace RateController
                             lbRate.Text = Lang.lgInstantRate;
                             lbRateAmount.Text = Prd.CurrentRate().ToString("N1");
                             break;
-
-                        case 2:
-                            lbRate.Text = Lang.lgOverallRate;
-                            lbRateAmount.Text = Prd.AverageRate().ToString("N1");
-                            break;
-
                         default:
                             lbRate.Text = Lang.lgCurrentRate;
                             lbRateAmount.Text = Prd.SmoothRate().ToString("N1");
@@ -931,7 +925,7 @@ namespace RateController
 
         private void AreaDone_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(this, "Reset?", "Reset", true);
+            var Hlp = new frmMsgBox(this, "Reset area?", "Reset", true);
             Hlp.TopMost = true;
 
             Hlp.ShowDialog();
@@ -1277,7 +1271,7 @@ namespace RateController
         private void lbRate_Click(object sender, EventArgs e)
         {
             cRateType++;
-            if (cRateType > 2) cRateType = 0;
+            if (cRateType > 1) cRateType = 0;
             UpdateStatus();
         }
 
@@ -1527,7 +1521,7 @@ namespace RateController
 
         private void TankRemain_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(this, "Reset?", "Reset", true);
+            var Hlp = new frmMsgBox(this, "Reset quantity?", "Reset", true);
             Hlp.TopMost = true;
 
             Hlp.ShowDialog();

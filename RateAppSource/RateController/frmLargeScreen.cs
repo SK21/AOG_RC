@@ -410,13 +410,13 @@ namespace RateController
 
         private void lbRate_Click(object sender, EventArgs e)
         {
-            if (mf.RateType > 1)
+            if (mf.RateType < 1)
             {
-                mf.RateType = 0;
+                mf.RateType++;
             }
             else
             {
-                mf.RateType++;
+                mf.RateType = 0;
             }
             UpdateForm();
         }
@@ -1272,7 +1272,7 @@ namespace RateController
 
         private void lbQuantityAmount_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(mf, "Reset?", "Reset", true);
+            var Hlp = new frmMsgBox(mf, "Reset quantity?", "Reset", true);
             Hlp.TopMost = true;
 
             Hlp.ShowDialog();
@@ -1286,7 +1286,7 @@ namespace RateController
 
         private void lbCoverageAmount_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(mf, "Reset?", "Reset", true);
+            var Hlp = new frmMsgBox(mf, "Reset area?", "Reset", true);
             Hlp.TopMost = true;
 
             Hlp.ShowDialog();

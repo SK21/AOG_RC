@@ -199,6 +199,7 @@ namespace RateController
             this.SetRate.TabIndex = 156;
             this.SetRate.Text = "1,800.50";
             this.SetRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.SetRate.Click += new System.EventHandler(this.lbTarget_Click);
             // 
             // lbRate
             // 
@@ -257,6 +258,7 @@ namespace RateController
             this.lbRateAmount.TabIndex = 146;
             this.lbRateAmount.Text = "1,800.50";
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbRateAmount.Click += new System.EventHandler(this.lbRate_Click);
             this.lbRateAmount.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRate_HelpRequested);
             // 
             // lbRemaining
@@ -562,7 +564,7 @@ namespace RateController
             this.toolStripSeparator4,
             this.exitToolStripMenuItem});
             this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(254, 542);
+            this.mnuSettings.Size = new System.Drawing.Size(254, 520);
             this.mnuSettings.Opening += new System.ComponentModel.CancelEventHandler(this.mnuSettings_Opening);
             // 
             // MnuProducts
