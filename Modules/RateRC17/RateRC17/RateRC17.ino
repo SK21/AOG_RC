@@ -31,7 +31,7 @@ struct ModuleConfig
 	uint8_t PressurePin = 15;
 	uint8_t WorkPin = 2;
 	bool WorkPinIsMomentary = false;
-	uint8_t ValveSingle = 1;	// 0 pair of relays to control a valve, 1 Single relay to control a valve
+	uint8_t Is3Wire = 1;	// 0 - DRV provides power on/off with Output1/Output2, 1 - DRV provides signal on/off with Output2
 };
 
 ModuleConfig MDL;

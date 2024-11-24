@@ -163,9 +163,9 @@ void ReceiveComm()
             //8     Flow Cal Hi
             //9	    Command
             //	        - bit 0		    reset acc.Quantity
-            //	        - bit 1,2,3		control type 0-4
+            //	        - bit 1,2,3		control type 0-5
             //	        - bit 4		    MasterOn
-            //          - bit 5         0 - time for one pulse, 1 - average time for multiple pulses
+            //          - bit 5         -
             //          - bit 6         AutoOn
             //          - bit 7         -
             //10    manual pwm Lo
@@ -296,7 +296,7 @@ void ReceiveComm()
             //          - bit 1, Flow on high
             //          - bit 2, client mode
             //			- bit 3, work pin is momentary
-            //          - bit 4, ValveSingle
+            //          - bit 4, Is3Wire
             // 5        Relay control type  0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired 
             // 6        wifi module serial port
             // 7        Sensor 0, flow pin
@@ -321,7 +321,7 @@ void ReceiveComm()
                     if ((tmp & 2) == 2) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
                     if ((tmp & 4) == 4) MDL.WifiMode = 1; else MDL.WifiMode = 0;
                     if ((tmp & 8) == 8) MDL.WorkPinIsMomentary = 1; else MDL.WorkPinIsMomentary = 0;
-                    MDL.ValveSingle = ((tmp & 16) == 16);
+                    MDL.Is3Wire = ((tmp & 16) == 16);
 
                     //SaveData();	saved in pgn 3702
                 }
@@ -329,7 +329,7 @@ void ReceiveComm()
             break;
 
         case 32702:
-            // PGN32702, network config
+            // PGN32702, wifi network config
             // 0        190
             // 1        127
             // 2-16     Network Name

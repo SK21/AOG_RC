@@ -17,37 +17,45 @@ namespace RateController
         //8     acc.Quantity Hi
         //9     PWM Lo
         //10    PWM Hi
-        //11    Status
+        //11    Pressure Lo
+        //12    Pressure Hi
+        //13    InoID Lo
+        //14    InoID Hi
+        //15    Status
         //      bit 0   sensor 0 connected
         //      bit 1   sensor 1 connected
         //      bit 2   - wifi rssi < -80
         //      bit 3	- wifi rssi < -70
         //      bit 4	- wifi rssi < -65
-        //      bit 5   Hz only, module only provides Hz of flow sensor, UPM and accumulated quantity are calculated in the app
+        //      bit 5   work switch
         //      bit 6   ethernet connected
         //      bit 7   good pin configuration
-        //12    CRC
+        //16    -
+        //17    CRC
 
         private const byte cByteCount = 13;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 144;
         private readonly clsProduct Prod;
-        private double cAccumulated;
         private double cElapsedTime;
         private bool cEthernetConnected;
         private bool cGoodPins;
+        private UInt16 cInoID;
         private byte cLastStrength;
         private bool cModuleIsReceivingData;
+        private double cPressure;
         private double cPWMsetting;
         private double cQuantity;
         private double cUPM;
         private byte cWifiStrength;
-        private bool HzOnly;
+        private bool cWorkSwitchOn;
         private bool LastEthernetConnected;
         private bool LastGoodPins;
         private bool LastModuleReceiving;
         private bool LastModuleSending;
         private Stopwatch PGNstopWatch;
+        private byte PressureHi;
+        private byte PressureLo;
         private DateTime ReceiveTime;
 
         public PGN32400(clsProduct CalledFrom)
@@ -59,21 +67,25 @@ namespace RateController
         public event EventHandler<PinStatusArgs> PinStatusChanged;
 
         public double AccumulatedQuantity
-        {
-            get
-            {
-                double Result = cQuantity;
-                if (HzOnly)
-                {
-                    Result = cAccumulated;
-                }
-                return Result;
-            }
-            set { cAccumulated = value; }
-        }
+        { get { return cQuantity; } }
 
         public bool GoodPins
         { get { return cGoodPins; } }
+
+        public UInt16 InoID
+        { get { return cInoID; } }
+
+        public double Pressure
+        { get { return cPressure; } }
+
+        public double PWMsetting
+        { get { return cPWMsetting; } }
+
+        public double UPM
+        { get { return cUPM; } }
+
+        public bool WorkSwitchOn
+        { get { return cWorkSwitchOn; } }
 
         public void CheckModuleComm()
         {
@@ -185,31 +197,36 @@ namespace RateController
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
                         cPWMsetting = (Int16)(Data[10] << 8 | Data[9]);  // need to cast to 16 bit integer to preserve the sign bit
 
+                        // Pressure
+                        cPressure = (Data[11] | Data[12] << 8) / 10.0;
+
+                        // Ino ID
+                        cInoID = (UInt16)(Data[13] | Data[14] << 8);
+
                         // status
                         if (tmp == 0)
                         {
                             // sensor 0
-                            cModuleIsReceivingData = ((Data[11] & 0b00000001) == 0b00000001);
+                            cModuleIsReceivingData = ((Data[15] & 0b00000001) == 0b00000001);
                         }
                         else
                         {
                             // sensor 1
-                            cModuleIsReceivingData = ((Data[11] & 0b00000010) == 0b00000010);
+                            cModuleIsReceivingData = ((Data[15] & 0b00000010) == 0b00000010);
                         }
 
                         // wifi strength
                         cWifiStrength = 0;
-                        if ((Data[11] & 0b00000100) == 0b00000100) cWifiStrength = 1;
-                        if ((Data[11] & 0b00001000) == 0b00001000) cWifiStrength = 2;
-                        if ((Data[11] & 0b00010000) == 0b00010000) cWifiStrength = 3;
+                        if ((Data[15] & 0b00000100) == 0b00000100) cWifiStrength = 1;
+                        if ((Data[15] & 0b00001000) == 0b00001000) cWifiStrength = 2;
+                        if ((Data[15] & 0b00010000) == 0b00010000) cWifiStrength = 3;
                         Prod.WifiStrength = cWifiStrength;
 
-                        HzOnly = ((Data[11] & 0b00100000) == 0b00100000);
-                        cEthernetConnected = ((Data[11] & 0b01000000) == 0b01000000);
-                        cGoodPins = ((Data[11] & 0b10000000) == 0b10000000);
+                        cWorkSwitchOn = ((Data[15] & 0b00100000) == 0b00100000);
+                        cEthernetConnected = ((Data[15] & 0b01000000) == 0b01000000);
+                        cGoodPins = ((Data[15] & 0b10000000) == 0b10000000);
 
                         ReceiveTime = DateTime.Now;
-                        cAccumulated += UPM() * (cElapsedTime / 60000.0);
                         Result = true;
                     }
                 }
@@ -232,47 +249,6 @@ namespace RateController
                 Result = ParseByteData(BD);
             }
             return Result;
-        }
-
-        public double PWMsetting()
-        {
-            return cPWMsetting;
-        }
-
-        public double UPM()
-        {
-            double Result = cUPM;
-            if (HzOnly)
-            {
-                if (Prod.MeterCal > 0)
-                {
-                    // convert from Hz to UPM
-                    Result = (cUPM * 60.0) / Prod.MeterCal;
-                }
-                else
-                {
-                    Result = 0;
-                }
-            }
-            return Result;
-        }
-
-        private void CheckRate()
-        {
-            double Ratio;
-            double Trate;
-
-            Trate = Prod.TargetUPM();
-            if (Trate > 0 && cUPM > 0)
-            {
-                Ratio = Math.Abs((cUPM / Trate) - 1);
-                if (Ratio > 0.3)
-                {
-                    Prod.mf.Tls.WriteActivityLog("");
-                    Prod.mf.Tls.WriteActivityLog("Current rate: " + cUPM.ToString("N2") + ", Ave. rate: " + Trate.ToString("N2") + ", Ratio: " + Ratio.ToString("N2")
-                       + ", Quantity: " + cQuantity.ToString("N2") + ", PWM:" + cPWMsetting.ToString("N2"));
-                }
-            }
         }
 
         public class PinStatusArgs : EventArgs

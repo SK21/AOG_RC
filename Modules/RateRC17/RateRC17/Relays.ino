@@ -6,16 +6,25 @@ void CheckRelays()
         // connection lost, enable power and inverted relays
         // for valves that require power to close
         RelayLo = PowerRelayLo | InvertedLo;
-        RelayHi = PowerRelayHi | InvertedHi;
     }
 
     uint8_t mcpOutA = 0; // Output for port A
     uint8_t mcpOutB = 0; // Output for port B
 
-    if (MDL.ValveSingle)
+    if (MDL.Is3Wire)
     {
-        mcpOutA = RelayLo;
-        mcpOutB = RelayHi;
+        // Only Out2 is used on the DRV8870. Each DRV8870 controls 1 valve.
+        // Calculate output for port A
+        mcpOutA = (bitRead(RelayLo, 0) ? 2 : 0) |
+            (bitRead(RelayLo, 1) ? 8 : 0) |
+            (bitRead(RelayLo, 2) ? 32 : 0) |
+            (bitRead(RelayLo, 3) ? 128 : 0);
+
+        // Calculate output for port B
+        mcpOutB = (bitRead(RelayLo, 4) ? 2 : 0) |
+            (bitRead(RelayLo, 5) ? 8 : 0) |
+            (bitRead(RelayLo, 6) ? 32 : 0) |
+            (bitRead(RelayLo, 7) ? 128 : 0);
     }
     else
     {
