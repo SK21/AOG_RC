@@ -226,7 +226,7 @@ namespace RateController
                                             break;
 
                                         case 32401:
-                                            mf.AnalogData.ParseStringData(words);
+                                            mf.ModulesStatus.ParseStringData(words);
                                             break;
 
                                         case 32618:

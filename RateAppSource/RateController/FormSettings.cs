@@ -1069,7 +1069,7 @@ namespace RateController
 
         private void SetModuleIndicator()
         {
-            if (mf.Products.Item(CurrentProduct.ID).ArduinoModule.Connected())
+            if (mf.Products.Item(CurrentProduct.ID).RateSensor.Connected())
             {
                 ModuleIndicator.Image = Properties.Resources.On;
             }
@@ -1707,7 +1707,7 @@ namespace RateController
             }
 
             // wifi
-            wifiBar.Value = CurrentProduct.WifiStrength;
+            wifiBar.Value = mf.ModulesStatus.WifiStrength(CurrentProduct.ModuleID);
 
             // product name
             if (mf.SimMode != SimType.None)

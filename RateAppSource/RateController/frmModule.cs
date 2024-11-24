@@ -176,7 +176,7 @@ namespace RateController
             }
             else
             {
-                lbInoID.Text = mf.AnalogData.InoID(Prod.ModuleID).ToString();
+                lbInoID.Text = mf.ModulesStatus.InoID(Prod.ModuleID).ToString();
                 lbModID.Text = Prod.ModuleID.ToString();
                 lbTime.Text = (Prod.ElapsedTime / 1000.0).ToString("N3");
             }

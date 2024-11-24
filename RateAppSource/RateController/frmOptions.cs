@@ -25,10 +25,10 @@ namespace RateController
 
             #region // language
 
-            tcOptions.TabPages[0].Text = Lang.lgDisplay;
-            tcOptions.TabPages[1].Text = Lang.lgPrimedStart;
-            tcOptions.TabPages[2].Text = Lang.lgSwitches;
-            tcOptions.TabPages[3].Text = Lang.lgConfig;
+            tcOptions.TabPages[0].Text = Lang.lgPage1;
+            tcOptions.TabPages[1].Text = Lang.lgPage2;
+            tcOptions.TabPages[2].Text = Lang.lgPrimedStart;
+            tcOptions.TabPages[3].Text = Lang.lgSwitches;
             tcOptions.TabPages[4].Text = Lang.lgLanguage;
 
             ckMetric.Text = Lang.lgMetric;
@@ -296,6 +296,8 @@ namespace RateController
                 mf.ShowSwitches = ckScreenSwitches.Checked;
                 mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
                 mf.ShowPressure = ckPressure.Checked;
+                if(double.TryParse(tbPressureCal.Text, out double Pressure)) mf.PressureCal = Pressure;
+                if(double.TryParse(tbPressureOffset.Text,out double PresOff))mf.PressureOffset= PresOff;
 
                 if (ckSimSpeed.Checked)
                 {
@@ -532,11 +534,6 @@ namespace RateController
             }
         }
 
-        private void tbTime_TextChanged(object sender, EventArgs e)
-        {
-            if (!Initializing) tbSpeedChanged = true;
-            SetButtons(true);
-        }
 
         private void tbTime_Validating(object sender, CancelEventArgs e)
         {
@@ -574,6 +571,8 @@ namespace RateController
             ckResume.Checked = mf.ResumeAfterPrime;
             ckNoMaster.Checked = mf.MasterOverride;
             ckLargeScreen.Checked = mf.UseLargeScreen;
+            tbPressureOffset.Text = mf.PressureOffset.ToString("N1");
+            tbPressureCal.Text = mf.PressureCal.ToString("N1");
 
             // language
             for (int i = 0; i < LanguageRBs.Length; i++)
@@ -603,9 +602,78 @@ namespace RateController
             Initializing = false;
         }
 
-        private void ckScale_CheckedChanged(object sender, EventArgs e)
+
+        private void groupBox1_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
+        private void groupBox2_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
+        private void tbPressureCal_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPressureCal.Text, out tempD);
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPressureCal.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbPressureCal_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void tbSpeed_TextChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) tbSpeedChanged = true;
+            SetButtons(true);
+        }
+
+        private void tbPressureCal_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPressureCal.Text, out tempD);
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbPressureOffset_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPressureOffset.Text, out tempD);
+            using (var form = new FormNumeric(-10000, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPressureOffset.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbPressureOffset_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPressureOffset.Text, out tempD);
+            if (tempD < -10000 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
         }
     }
 }

@@ -792,6 +792,24 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Page1.
+        /// </summary>
+        internal static string lgPage1 {
+            get {
+                return ResourceManager.GetString("lgPage1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page2.
+        /// </summary>
+        internal static string lgPage2 {
+            get {
+                return ResourceManager.GetString("lgPage2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sections Per Zone.
         /// </summary>
         internal static string lgPerZone {

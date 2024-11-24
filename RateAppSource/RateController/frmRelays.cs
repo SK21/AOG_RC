@@ -339,7 +339,7 @@ namespace RateController
 
         private void SetModuleIndicator()
         {
-            if (mf.ModuleConnected(cbModules.SelectedIndex))
+            if (mf.ModulesStatus.Connected(cbModules.SelectedIndex))
             {
                 ModuleIndicator.Image = Properties.Resources.On;
             }

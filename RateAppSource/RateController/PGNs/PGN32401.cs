@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
     public class PGN32401
     {
-        //PGN32401, module, analog info from module to RC
+        //PGN32401, module info from module to RC
         //0     145
         //1     126
         //2     module ID
@@ -32,14 +31,49 @@ namespace RateController
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 145;
         private readonly FormStart mf;
+        private bool[] cEthernetConnected;
+        private bool[] cGoodPins;
         private UInt16[] cInoID;
-        private byte cModuleID;
+        private double[] cPressure;
         private UInt16[,] cReading = new UInt16[255, 4];
+        private byte[] cWifiSignal;
+        private bool[] cWorkSwitch;
+        private bool[] EthernetConnectedLast;
+        private bool[] GoodPinsLast;
+        private DateTime[] ReceiveTime;
+        private byte[] WifiSignalLast;
 
         public PGN32401(FormStart CalledFrom)
         {
             mf = CalledFrom;
             cInoID = new ushort[mf.MaxModules];
+            cWorkSwitch = new bool[mf.MaxModules];
+            cPressure = new double[mf.MaxModules];
+            ReceiveTime = new DateTime[mf.MaxModules];
+            cWifiSignal = new byte[mf.MaxModules];
+            cEthernetConnected = new bool[mf.MaxModules];
+            cGoodPins = new bool[mf.MaxModules];
+
+            EthernetConnectedLast = new bool[mf.MaxModules];
+            WifiSignalLast = new byte[mf.MaxModules];
+            GoodPinsLast = new bool[mf.MaxModules];
+        }
+
+        public event EventHandler<PinStatusArgs> PinStatusChanged;
+
+        public bool Connected(int Module)
+        {
+            return ((DateTime.Now - ReceiveTime[Module]).TotalSeconds < 4);
+        }
+
+        public bool EthernetConnected(int Module)
+        {
+            return cEthernetConnected[Module];
+        }
+
+        public bool GoodPins(int Module)
+        {
+            return cGoodPins[Module];
         }
 
         public UInt16 InoID(int Module)
@@ -52,16 +86,24 @@ namespace RateController
             bool Result = false;
             if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
-                cModuleID = Data[2];
-                mf.UpdateModuleConnected(cModuleID);
-                for (int i = 0; i < 4; i++)
-                {
-                    cReading[cModuleID, i] = (UInt16)(Data[i * 2 + 4] << 8 | Data[i * 2 + 3]);
-                }
-                cInoID[cModuleID] = (ushort)(Data[11] | Data[12] << 8);
-                mf.SwitchBox.SetRateModuleWorkOn(mf.Tls.BitRead(Data[13], 0), cModuleID);
+                byte ModuleID = Data[2];
+                cPressure[ModuleID] = (double)(Data[3] | Data[4] << 8) / 10.0;
+                cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
+                cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
+
+                // wifi strength
+                cWifiSignal[ModuleID] = 0;
+                if ((Data[13] & 0b00000010) == 0b00000010) cWifiSignal[ModuleID] = 1;
+                if ((Data[13] & 0b00000100) == 0b00000100) cWifiSignal[ModuleID] = 2;
+                if ((Data[13] & 0b00001000) == 0b00001000) cWifiSignal[ModuleID] = 3;
+
+                cEthernetConnected[ModuleID] = ((Data[13] & 0b00010000) == 0b00010000);
+                cGoodPins[ModuleID] = ((Data[13] & 0b00100000) == 0b00100000);
+
+                ReceiveTime[ModuleID] = DateTime.Now;
                 Result = true;
             }
+            UpdateActivity();
             return Result;
         }
 
@@ -81,6 +123,11 @@ namespace RateController
             return Result;
         }
 
+        public double Pressure(int Module)
+        {
+            return cPressure[Module];
+        }
+
         public UInt16 Reading(byte ModuleID, byte SensorID)
         {
             if (SensorID < 4 && ModuleID < 255)
@@ -91,6 +138,72 @@ namespace RateController
             {
                 return 0;
             }
+        }
+
+        public void UpdateActivity()
+        {
+            string Mes;
+            for (int i = 0; i < mf.MaxModules; i++)
+            {
+                if (EthernetConnectedLast[i] != cEthernetConnected[i])
+                {
+                    EthernetConnectedLast[i] = cEthernetConnected[i];
+                    Mes = "Module " + i.ToString() + ", Ethernet connected: " + cEthernetConnected[i].ToString();
+                    mf.Tls.WriteActivityLog(Mes, false, true);
+                }
+
+                if (WifiSignalLast[i] != cWifiSignal[i])
+                {
+                    WifiSignalLast[i] = cWifiSignal[i];
+                    Mes = "Module " + i.ToString() + ", Wifi Strength: " + cWifiSignal[i].ToString();
+                    mf.Tls.WriteActivityLog(Mes, false, true);
+                }
+
+                if (GoodPinsLast[i] != cGoodPins[i])
+                {
+                    GoodPinsLast[i] = cGoodPins[i];
+                    if (cGoodPins[i])
+                    {
+                        Mes = "Module " + i.ToString() + ", Pin Configuration correct.";
+                    }
+                    else
+                    {
+                        Mes = "Module " + i.ToString() + ", Pin Configuration not correct.";
+                    }
+                    mf.Tls.WriteActivityLog(Mes, false, true);
+
+                    PinStatusArgs args = new PinStatusArgs();
+                    args.GoodPins = cGoodPins[i];
+                    args.Module = i;
+                    PinStatusChanged?.Invoke(this, args);
+                }
+            }
+        }
+
+        public byte WifiStrength(int Module)
+        {
+            return cWifiSignal[Module];
+        }
+
+        public bool WorkSwitchOn()
+        {
+            // returns true if any module workswitch is on
+            bool Result = false;
+            for (int i = 0; i < mf.MaxModules; i++)
+            {
+                if (mf.ModulesStatus.Connected(i))
+                {
+                    Result = cWorkSwitch[i];
+                    if (Result) break;
+                }
+            }
+            return Result;
+        }
+
+        public class PinStatusArgs : EventArgs
+        {
+            public bool GoodPins { get; set; }
+            public int Module { get; set; }
         }
     }
 }

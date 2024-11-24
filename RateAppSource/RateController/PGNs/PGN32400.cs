@@ -26,16 +26,10 @@ namespace RateController
         private const byte HeaderLo = 144;
         private readonly clsProduct Prod;
         private double cElapsedTime;
-        private bool cEthernetConnected;
-        private bool cGoodPins;
-        private byte cLastStrength;
-        private bool cModuleIsReceivingData;
         private double cPWMsetting;
         private double cQuantity;
+        private bool cSensorReceiving;
         private double cUPM;
-        private byte cWifiStrength;
-        private bool LastEthernetConnected;
-        private bool LastGoodPins;
         private bool LastModuleReceiving;
         private bool LastModuleSending;
         private Stopwatch PGNstopWatch;
@@ -47,71 +41,14 @@ namespace RateController
             PGNstopWatch = new Stopwatch();
         }
 
-        public event EventHandler<PinStatusArgs> PinStatusChanged;
-
         public double AccumulatedQuantity
         { get { return cQuantity; } }
-
-        public bool GoodPins
-        { get { return cGoodPins; } }
 
         public double PWMsetting
         { get { return cPWMsetting; } }
 
         public double UPM
         { get { return cUPM; } }
-
-        public void CheckModuleComm()
-        {
-            string Mes;
-            if (LastModuleSending != ModuleSending())
-            {
-                LastModuleSending = ModuleSending();
-                Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Sending: " + ModuleSending().ToString();
-
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
-            }
-
-            if (LastModuleReceiving != ModuleReceiving())
-            {
-                LastModuleReceiving = ModuleReceiving();
-                Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Receiving: " + ModuleReceiving().ToString();
-
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
-            }
-
-            if (LastEthernetConnected != cEthernetConnected)
-            {
-                LastEthernetConnected = cEthernetConnected;
-                Mes = "Ethernet connected: " + cEthernetConnected.ToString();
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
-            }
-
-            if (cLastStrength != cWifiStrength)
-            {
-                cLastStrength = cWifiStrength;
-                Mes = "Wifi Strength: " + cWifiStrength.ToString();
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
-            }
-
-            if (LastGoodPins != cGoodPins)
-            {
-                LastGoodPins = cGoodPins;
-                if (cGoodPins)
-                {
-                    Mes = "Pin Configuration correct.";
-                }
-                else
-                {
-                    Mes = "Pin Configuration not correct.";
-                }
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
-
-                PinStatusArgs args = new PinStatusArgs();
-                args.GoodPins = cGoodPins;
-                PinStatusChanged?.Invoke(this, args);
-            }
-        }
 
         public bool Connected()
         {
@@ -122,7 +59,7 @@ namespace RateController
         {
             double Result = 0;
             if (ModuleSending()) Result = cElapsedTime;
-            CheckModuleComm();
+            UpdateActivity();
             return Result;
         }
 
@@ -134,7 +71,7 @@ namespace RateController
             }
             else
             {
-                return cModuleIsReceivingData && ModuleSending();
+                return cSensorReceiving && ModuleSending();
             }
         }
 
@@ -170,36 +107,14 @@ namespace RateController
                         cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 1000.0;
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
                         cPWMsetting = (Int16)(Data[10] << 8 | Data[9]);  // need to cast to 16 bit integer to preserve the sign bit
-
-                        // status
-                        if (tmp == 0)
-                        {
-                            // sensor 0
-                            cModuleIsReceivingData = ((Data[11] & 0b00000001) == 0b00000001);
-                        }
-                        else
-                        {
-                            // sensor 1
-                            cModuleIsReceivingData = ((Data[11] & 0b00000010) == 0b00000010);
-                        }
-
-                        // wifi strength
-                        cWifiStrength = 0;
-                        if ((Data[11] & 0b00000100) == 0b00000100) cWifiStrength = 1;
-                        if ((Data[11] & 0b00001000) == 0b00001000) cWifiStrength = 2;
-                        if ((Data[11] & 0b00010000) == 0b00010000) cWifiStrength = 3;
-                        Prod.WifiStrength = cWifiStrength;
-
-                        //HzOnly = ((Data[11] & 0b00100000) == 0b00100000);
-                        cEthernetConnected = ((Data[11] & 0b01000000) == 0b01000000);
-                        cGoodPins = ((Data[11] & 0b10000000) == 0b10000000);
+                        cSensorReceiving = ((Data[11] & 0b00000001) == 0b00000001);
 
                         ReceiveTime = DateTime.Now;
                         Result = true;
                     }
                 }
             }
-            CheckModuleComm();
+            UpdateActivity();
             return Result;
         }
 
@@ -219,9 +134,24 @@ namespace RateController
             return Result;
         }
 
-        public class PinStatusArgs : EventArgs
+        public void UpdateActivity()
         {
-            public bool GoodPins { get; set; }
+            string Mes;
+            if (LastModuleSending != ModuleSending())
+            {
+                LastModuleSending = ModuleSending();
+                Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Sending: " + ModuleSending().ToString();
+
+                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+            }
+
+            if (LastModuleReceiving != ModuleReceiving())
+            {
+                LastModuleReceiving = ModuleReceiving();
+                Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Receiving: " + ModuleReceiving().ToString();
+
+                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+            }
         }
     }
 }

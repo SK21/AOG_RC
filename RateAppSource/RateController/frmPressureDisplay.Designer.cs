@@ -47,11 +47,10 @@
             this.lbPressureValue.Location = new System.Drawing.Point(85, 12);
             this.lbPressureValue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbPressureValue.Name = "lbPressureValue";
-            this.lbPressureValue.Size = new System.Drawing.Size(64, 62);
+            this.lbPressureValue.Size = new System.Drawing.Size(149, 62);
             this.lbPressureValue.TabIndex = 1;
-            this.lbPressureValue.Text = "42";
+            this.lbPressureValue.Text = "-10,000.0";
             this.lbPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbPressureValue.Click += new System.EventHandler(this.lbPressureValue_Click);
             this.lbPressureValue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbPressureValue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
@@ -68,7 +67,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(160, 86);
+            this.ClientSize = new System.Drawing.Size(249, 86);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbPressureValue);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

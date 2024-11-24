@@ -154,7 +154,7 @@ namespace RateController
                             break;
 
                         case 32401:
-                            mf.AnalogData.ParseByteData(Data);
+                            mf.ModulesStatus.ParseByteData(Data);
                             break;
 
                         case 32618:

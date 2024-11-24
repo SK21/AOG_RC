@@ -43,10 +43,7 @@ namespace RateController
             #endregion // language
 
             mf = Main;
-            for (int i = 0; i < mf.MaxProducts; i++)
-            {
-                mf.Products.Item(i).ArduinoModule.PinStatusChanged += ArduinoModule_PinStatusChanged;
-            }
+            mf.ModulesStatus.PinStatusChanged += ArduinoModule_PinStatusChanged;
 
             RelayTB = new TextBox[] { tbRelay1,tbRelay2,tbRelay3,tbRelay4,tbRelay5,tbRelay6,tbRelay7,tbRelay8,
             tbRelay9,tbRelay10,tbRelay11,tbRelay12,tbRelay13,tbRelay14,tbRelay15,tbRelay16};
@@ -71,9 +68,9 @@ namespace RateController
                 }
             }
         }
-        private void ArduinoModule_PinStatusChanged(object sender, PGN32400.PinStatusArgs e)
+        private void ArduinoModule_PinStatusChanged(object sender, PGN32401.PinStatusArgs e)
         {
-            if (!e.GoodPins) mf.Tls.ShowHelp("Pin configuration not correct. Using default values.");
+            if (!e.GoodPins) mf.Tls.ShowHelp("Pin configuration for Module" + e.Module.ToString() + " not correct. Using default values.");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

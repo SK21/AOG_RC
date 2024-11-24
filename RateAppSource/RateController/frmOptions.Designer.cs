@@ -52,10 +52,22 @@
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
             this.tcOptions = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.ckSingle = new System.Windows.Forms.CheckBox();
-            this.ckLargeScreen = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lbPressureOffset = new System.Windows.Forms.Label();
+            this.tbPressureOffset = new System.Windows.Forms.TextBox();
+            this.lbConID = new System.Windows.Forms.Label();
+            this.tbPressureCal = new System.Windows.Forms.TextBox();
             this.ckPressure = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ckLargeScreen = new System.Windows.Forms.CheckBox();
+            this.ckSingle = new System.Windows.Forms.CheckBox();
             this.ckTransparent = new System.Windows.Forms.CheckBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.ckDefaultProduct = new System.Windows.Forms.CheckBox();
+            this.ckNoMaster = new System.Windows.Forms.CheckBox();
+            this.tbSimSpeed = new System.Windows.Forms.TextBox();
+            this.lbSimUnits = new System.Windows.Forms.Label();
+            this.ckSimSpeed = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.ckResume = new System.Windows.Forms.CheckBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
@@ -72,12 +84,6 @@
             this.dataSection = new System.Data.DataColumn();
             this.dataColumn1 = new System.Data.DataColumn();
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.ckDefaultProduct = new System.Windows.Forms.CheckBox();
-            this.ckNoMaster = new System.Windows.Forms.CheckBox();
-            this.tbSimSpeed = new System.Windows.Forms.TextBox();
-            this.lbSimUnits = new System.Windows.Forms.Label();
-            this.ckSimSpeed = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.rbNederlands = new System.Windows.Forms.RadioButton();
             this.rbHungarian = new System.Windows.Forms.RadioButton();
@@ -86,12 +92,14 @@
             this.btnReset = new System.Windows.Forms.Button();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
-            this.tabPage1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -130,7 +138,7 @@
             this.tbDelay.TabIndex = 333;
             this.tbDelay.Text = "0";
             this.tbDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbDelay.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
+            this.tbDelay.TextChanged += new System.EventHandler(this.tbPressureCal_TextChanged);
             this.tbDelay.Enter += new System.EventHandler(this.tbDelay_Enter);
             this.tbDelay.Validating += new System.ComponentModel.CancelEventHandler(this.tbDelay_Validating);
             // 
@@ -164,7 +172,7 @@
             this.tbTime.TabIndex = 330;
             this.tbTime.Text = "0";
             this.tbTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbTime.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
+            this.tbTime.TextChanged += new System.EventHandler(this.tbPressureCal_TextChanged);
             this.tbTime.Enter += new System.EventHandler(this.tbTime_Enter);
             this.tbTime.Validating += new System.ComponentModel.CancelEventHandler(this.tbTime_Validating);
             // 
@@ -198,7 +206,7 @@
             this.tbSpeed.TabIndex = 327;
             this.tbSpeed.Text = "0";
             this.tbSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbSpeed.TextChanged += new System.EventHandler(this.tbTime_TextChanged);
+            this.tbSpeed.TextChanged += new System.EventHandler(this.tbSpeed_TextChanged);
             this.tbSpeed.Enter += new System.EventHandler(this.tbSpeed_Enter);
             this.tbSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSpeed_Validating);
             // 
@@ -311,9 +319,9 @@
             // tcOptions
             // 
             this.tcOptions.Controls.Add(this.tabPage2);
+            this.tcOptions.Controls.Add(this.tabPage1);
             this.tcOptions.Controls.Add(this.tabPage3);
             this.tcOptions.Controls.Add(this.tabPage5);
-            this.tcOptions.Controls.Add(this.tabPage1);
             this.tcOptions.Controls.Add(this.tabPage4);
             this.tcOptions.Location = new System.Drawing.Point(12, 12);
             this.tcOptions.Name = "tcOptions";
@@ -324,28 +332,104 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.ckSingle);
-            this.tabPage2.Controls.Add(this.ckLargeScreen);
-            this.tabPage2.Controls.Add(this.ckPressure);
-            this.tabPage2.Controls.Add(this.ckTransparent);
+            this.tabPage2.Controls.Add(this.groupBox2);
+            this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(430, 266);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Display";
+            this.tabPage2.Text = "Config1";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // ckSingle
+            // groupBox2
             // 
-            this.ckSingle.AutoSize = true;
-            this.ckSingle.Location = new System.Drawing.Point(222, 76);
-            this.ckSingle.Name = "ckSingle";
-            this.ckSingle.Size = new System.Drawing.Size(152, 28);
-            this.ckSingle.TabIndex = 128;
-            this.ckSingle.Text = "Single Product";
-            this.ckSingle.UseVisualStyleBackColor = true;
-            this.ckSingle.CheckedChanged += new System.EventHandler(this.ckSingle_CheckedChanged);
+            this.groupBox2.Controls.Add(this.lbPressureOffset);
+            this.groupBox2.Controls.Add(this.tbPressureOffset);
+            this.groupBox2.Controls.Add(this.lbConID);
+            this.groupBox2.Controls.Add(this.tbPressureCal);
+            this.groupBox2.Controls.Add(this.ckPressure);
+            this.groupBox2.Location = new System.Drawing.Point(6, 127);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(418, 133);
+            this.groupBox2.TabIndex = 130;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Pressure";
+            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
+            // 
+            // lbPressureOffset
+            // 
+            this.lbPressureOffset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPressureOffset.Location = new System.Drawing.Point(212, 81);
+            this.lbPressureOffset.Name = "lbPressureOffset";
+            this.lbPressureOffset.Size = new System.Drawing.Size(69, 23);
+            this.lbPressureOffset.TabIndex = 155;
+            this.lbPressureOffset.Text = "Offset";
+            // 
+            // tbPressureOffset
+            // 
+            this.tbPressureOffset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPressureOffset.Location = new System.Drawing.Point(315, 78);
+            this.tbPressureOffset.MaxLength = 8;
+            this.tbPressureOffset.Name = "tbPressureOffset";
+            this.tbPressureOffset.Size = new System.Drawing.Size(90, 30);
+            this.tbPressureOffset.TabIndex = 153;
+            this.tbPressureOffset.Text = "0";
+            this.tbPressureOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPressureOffset.TextChanged += new System.EventHandler(this.tbPressureCal_TextChanged);
+            this.tbPressureOffset.Enter += new System.EventHandler(this.tbPressureOffset_Enter);
+            this.tbPressureOffset.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureOffset_Validating);
+            // 
+            // lbConID
+            // 
+            this.lbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbConID.Location = new System.Drawing.Point(212, 33);
+            this.lbConID.Name = "lbConID";
+            this.lbConID.Size = new System.Drawing.Size(97, 23);
+            this.lbConID.TabIndex = 154;
+            this.lbConID.Text = "Cal Value";
+            // 
+            // tbPressureCal
+            // 
+            this.tbPressureCal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPressureCal.Location = new System.Drawing.Point(315, 30);
+            this.tbPressureCal.MaxLength = 8;
+            this.tbPressureCal.Name = "tbPressureCal";
+            this.tbPressureCal.Size = new System.Drawing.Size(90, 30);
+            this.tbPressureCal.TabIndex = 152;
+            this.tbPressureCal.Text = "0";
+            this.tbPressureCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPressureCal.TextChanged += new System.EventHandler(this.tbPressureCal_TextChanged);
+            this.tbPressureCal.Enter += new System.EventHandler(this.tbPressureCal_Enter);
+            this.tbPressureCal.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureCal_Validating);
+            // 
+            // ckPressure
+            // 
+            this.ckPressure.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckPressure.Location = new System.Drawing.Point(22, 52);
+            this.ckPressure.Name = "ckPressure";
+            this.ckPressure.Size = new System.Drawing.Size(164, 34);
+            this.ckPressure.TabIndex = 123;
+            this.ckPressure.Text = "Show";
+            this.ckPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckPressure.UseVisualStyleBackColor = true;
+            this.ckPressure.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.ckLargeScreen);
+            this.groupBox1.Controls.Add(this.ckSingle);
+            this.groupBox1.Controls.Add(this.ckTransparent);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(418, 115);
+            this.groupBox1.TabIndex = 129;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Display";
+            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
             // ckLargeScreen
             // 
@@ -353,7 +437,7 @@
             this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckLargeScreen.Location = new System.Drawing.Point(39, 73);
+            this.ckLargeScreen.Location = new System.Drawing.Point(22, 28);
             this.ckLargeScreen.Name = "ckLargeScreen";
             this.ckLargeScreen.Size = new System.Drawing.Size(164, 34);
             this.ckLargeScreen.TabIndex = 127;
@@ -362,27 +446,23 @@
             this.ckLargeScreen.UseVisualStyleBackColor = true;
             this.ckLargeScreen.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
             // 
-            // ckPressure
+            // ckSingle
             // 
-            this.ckPressure.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckPressure.Location = new System.Drawing.Point(222, 142);
-            this.ckPressure.Name = "ckPressure";
-            this.ckPressure.Size = new System.Drawing.Size(164, 34);
-            this.ckPressure.TabIndex = 123;
-            this.ckPressure.Text = "Pressure";
-            this.ckPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckPressure.UseVisualStyleBackColor = true;
-            this.ckPressure.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
+            this.ckSingle.AutoSize = true;
+            this.ckSingle.Location = new System.Drawing.Point(216, 32);
+            this.ckSingle.Name = "ckSingle";
+            this.ckSingle.Size = new System.Drawing.Size(152, 28);
+            this.ckSingle.TabIndex = 128;
+            this.ckSingle.Text = "Single Product";
+            this.ckSingle.UseVisualStyleBackColor = true;
+            this.ckSingle.CheckedChanged += new System.EventHandler(this.ckSingle_CheckedChanged);
             // 
             // ckTransparent
             // 
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTransparent.Location = new System.Drawing.Point(39, 142);
+            this.ckTransparent.Location = new System.Drawing.Point(22, 68);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(164, 34);
             this.ckTransparent.TabIndex = 119;
@@ -390,6 +470,93 @@
             this.ckTransparent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckTransparent.UseVisualStyleBackColor = true;
             this.ckTransparent.CheckedChanged += new System.EventHandler(this.ckTransparent_CheckedChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.ckDefaultProduct);
+            this.tabPage1.Controls.Add(this.ckNoMaster);
+            this.tabPage1.Controls.Add(this.tbSimSpeed);
+            this.tabPage1.Controls.Add(this.lbSimUnits);
+            this.tabPage1.Controls.Add(this.ckSimSpeed);
+            this.tabPage1.Controls.Add(this.ckMetric);
+            this.tabPage1.Controls.Add(this.ckWorkSwitch);
+            this.tabPage1.Location = new System.Drawing.Point(4, 33);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(430, 266);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Config2";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // ckDefaultProduct
+            // 
+            this.ckDefaultProduct.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDefaultProduct.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckDefaultProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDefaultProduct.Location = new System.Drawing.Point(233, 114);
+            this.ckDefaultProduct.Name = "ckDefaultProduct";
+            this.ckDefaultProduct.Size = new System.Drawing.Size(164, 34);
+            this.ckDefaultProduct.TabIndex = 332;
+            this.ckDefaultProduct.Text = "Reset Products";
+            this.ckDefaultProduct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDefaultProduct.UseVisualStyleBackColor = true;
+            this.ckDefaultProduct.CheckedChanged += new System.EventHandler(this.ckDefaultProduct_CheckedChanged);
+            this.ckDefaultProduct.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckDefaultProduct_HelpRequested);
+            // 
+            // ckNoMaster
+            // 
+            this.ckNoMaster.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckNoMaster.Location = new System.Drawing.Point(233, 34);
+            this.ckNoMaster.Name = "ckNoMaster";
+            this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
+            this.ckNoMaster.TabIndex = 331;
+            this.ckNoMaster.Text = "Master Override";
+            this.ckNoMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckNoMaster.UseVisualStyleBackColor = true;
+            this.ckNoMaster.CheckedChanged += new System.EventHandler(this.ckNoMaster_CheckedChanged);
+            this.ckNoMaster.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckNoMaster_HelpRequested);
+            // 
+            // tbSimSpeed
+            // 
+            this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSimSpeed.Location = new System.Drawing.Point(284, 196);
+            this.tbSimSpeed.MaxLength = 8;
+            this.tbSimSpeed.Name = "tbSimSpeed";
+            this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
+            this.tbSimSpeed.TabIndex = 329;
+            this.tbSimSpeed.Text = "0";
+            this.tbSimSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSimSpeed.TextChanged += new System.EventHandler(this.tbSimSpeed_TextChanged);
+            this.tbSimSpeed.Enter += new System.EventHandler(this.tbSimSpeed_Enter);
+            this.tbSimSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSimSpeed_Validating);
+            // 
+            // lbSimUnits
+            // 
+            this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lbSimUnits.Location = new System.Drawing.Point(355, 199);
+            this.lbSimUnits.Name = "lbSimUnits";
+            this.lbSimUnits.Size = new System.Drawing.Size(57, 24);
+            this.lbSimUnits.TabIndex = 330;
+            this.lbSimUnits.Text = "mph";
+            this.lbSimUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ckSimSpeed
+            // 
+            this.ckSimSpeed.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckSimSpeed.Location = new System.Drawing.Point(36, 194);
+            this.ckSimSpeed.Name = "ckSimSpeed";
+            this.ckSimSpeed.Size = new System.Drawing.Size(242, 34);
+            this.ckSimSpeed.TabIndex = 126;
+            this.ckSimSpeed.Text = "Simulate Speed (No AOG)";
+            this.ckSimSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSimSpeed.UseVisualStyleBackColor = true;
+            this.ckSimSpeed.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
             // 
             // tabPage3
             // 
@@ -575,93 +742,6 @@
             this.ckScreenSwitches.UseVisualStyleBackColor = true;
             this.ckScreenSwitches.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.ckDefaultProduct);
-            this.tabPage1.Controls.Add(this.ckNoMaster);
-            this.tabPage1.Controls.Add(this.tbSimSpeed);
-            this.tabPage1.Controls.Add(this.lbSimUnits);
-            this.tabPage1.Controls.Add(this.ckSimSpeed);
-            this.tabPage1.Controls.Add(this.ckMetric);
-            this.tabPage1.Controls.Add(this.ckWorkSwitch);
-            this.tabPage1.Location = new System.Drawing.Point(4, 33);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(430, 266);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Config";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // ckDefaultProduct
-            // 
-            this.ckDefaultProduct.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckDefaultProduct.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckDefaultProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDefaultProduct.Location = new System.Drawing.Point(233, 114);
-            this.ckDefaultProduct.Name = "ckDefaultProduct";
-            this.ckDefaultProduct.Size = new System.Drawing.Size(164, 34);
-            this.ckDefaultProduct.TabIndex = 332;
-            this.ckDefaultProduct.Text = "Reset Products";
-            this.ckDefaultProduct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDefaultProduct.UseVisualStyleBackColor = true;
-            this.ckDefaultProduct.CheckedChanged += new System.EventHandler(this.ckDefaultProduct_CheckedChanged);
-            this.ckDefaultProduct.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckDefaultProduct_HelpRequested);
-            // 
-            // ckNoMaster
-            // 
-            this.ckNoMaster.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNoMaster.Location = new System.Drawing.Point(233, 34);
-            this.ckNoMaster.Name = "ckNoMaster";
-            this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
-            this.ckNoMaster.TabIndex = 331;
-            this.ckNoMaster.Text = "Master Override";
-            this.ckNoMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckNoMaster.UseVisualStyleBackColor = true;
-            this.ckNoMaster.CheckedChanged += new System.EventHandler(this.ckNoMaster_CheckedChanged);
-            this.ckNoMaster.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckNoMaster_HelpRequested);
-            // 
-            // tbSimSpeed
-            // 
-            this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSimSpeed.Location = new System.Drawing.Point(284, 196);
-            this.tbSimSpeed.MaxLength = 8;
-            this.tbSimSpeed.Name = "tbSimSpeed";
-            this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
-            this.tbSimSpeed.TabIndex = 329;
-            this.tbSimSpeed.Text = "0";
-            this.tbSimSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbSimSpeed.TextChanged += new System.EventHandler(this.tbSimSpeed_TextChanged);
-            this.tbSimSpeed.Enter += new System.EventHandler(this.tbSimSpeed_Enter);
-            this.tbSimSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSimSpeed_Validating);
-            // 
-            // lbSimUnits
-            // 
-            this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSimUnits.Location = new System.Drawing.Point(355, 199);
-            this.lbSimUnits.Name = "lbSimUnits";
-            this.lbSimUnits.Size = new System.Drawing.Size(57, 24);
-            this.lbSimUnits.TabIndex = 330;
-            this.lbSimUnits.Text = "mph";
-            this.lbSimUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // ckSimSpeed
-            // 
-            this.ckSimSpeed.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSimSpeed.Location = new System.Drawing.Point(36, 194);
-            this.ckSimSpeed.Name = "ckSimSpeed";
-            this.ckSimSpeed.Size = new System.Drawing.Size(242, 34);
-            this.ckSimSpeed.TabIndex = 126;
-            this.ckSimSpeed.Text = "Simulate Speed (No AOG)";
-            this.ckSimSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckSimSpeed.UseVisualStyleBackColor = true;
-            this.ckSimSpeed.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.rbFrench);
@@ -781,15 +861,18 @@
             this.Load += new System.EventHandler(this.frmOptions_Load);
             this.tcOptions.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -846,5 +929,11 @@
         private System.Windows.Forms.CheckBox ckDefaultProduct;
         private System.Windows.Forms.CheckBox ckDualAuto;
         private System.Windows.Forms.CheckBox ckSingle;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lbPressureOffset;
+        private System.Windows.Forms.TextBox tbPressureOffset;
+        private System.Windows.Forms.Label lbConID;
+        private System.Windows.Forms.TextBox tbPressureCal;
     }
 }

@@ -22,7 +22,6 @@ namespace RateController
         public readonly int MaxSensors = 8;
         public readonly int MaxSwitches = 16;
         public readonly double MPHtoKPH = 1.6092;
-        public PGN32401 AnalogData;
         public PGN229 AOGsections;
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
@@ -33,6 +32,7 @@ namespace RateController
         public PGN238 MachineConfig;
         public PGN239 MachineData;
         public PGN32700 ModuleConfig;
+        public PGN32401 ModulesStatus;
         public PGN32702 NetworkConfig;
         public clsPressures PressureObjects;
         public clsProducts Products;
@@ -70,6 +70,8 @@ namespace RateController
         private int cRateType;
         private bool cResumeAfterPrime;
         private bool cShowPressure;
+        private double cPressureCal;
+        private double cPressureOffset;
         private bool[] cShowScale = new bool[4];
         private bool cShowSwitches = false;
         private SimType cSimMode = SimType.None;
@@ -82,7 +84,6 @@ namespace RateController
         private bool cUseTransparent = false;
         private Label[] Indicators;
         private bool LoadError = false;
-        private DateTime[] ModuleTime;
         private Label[] ProdName;
         private Label[] Rates;
         private PGN32501[] RelaySettings;
@@ -130,7 +131,7 @@ namespace RateController
             VRdata = new PGN228(this);
 
             SwitchBox = new PGN32618(this);
-            AnalogData = new PGN32401(this);
+            ModulesStatus = new PGN32401(this);
 
             Sections = new clsSections(this);
             Products = new clsProducts(this);
@@ -159,7 +160,6 @@ namespace RateController
                 RelaySettings[i] = new PGN32501(this, i);
             }
 
-            ModuleTime = new DateTime[MaxModules];
             Zones = new clsZones(this);
             vSwitchBox = new clsVirtualSwitchBox(this);
             ModuleConfig = new PGN32700(this);
@@ -253,6 +253,25 @@ namespace RateController
                 cShowPressure = value;
                 Tls.SaveProperty("ShowPressure", value.ToString());
                 DisplayPressure();
+            }
+        }
+        public double PressureCal
+        {
+            get { return cPressureCal; }
+            set
+            {
+                cPressureCal = value;
+                Tls.SaveProperty("PressureCal", value.ToString());
+            }
+        }
+
+        public double PressureOffset
+        {
+            get { return cPressureOffset; }
+            set
+            {
+                cPressureOffset = value;
+                Tls.SaveProperty("PressureOffset",value.ToString());
             }
         }
 
@@ -406,7 +425,7 @@ namespace RateController
                     // close instance
                     foreach (Form form in Application.OpenForms)
                     {
-                        if (form.Text == "Scale " + (i+1).ToString())
+                        if (form.Text == "Scale " + (i + 1).ToString())
                         {
                             form.Close();
                             break;
@@ -446,6 +465,8 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
             if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
+            if (double.TryParse(Tls.LoadProperty("PressureCal"), out double pc)) cPressureCal = pc;
+            if(double.TryParse(Tls.LoadProperty("PressureOffset"),out double po))cPressureOffset= po;
 
             for (int i = 0; i < 4; i++)
             {
@@ -541,16 +562,6 @@ namespace RateController
             if (int.TryParse(Tls.LoadProperty("RateType"), out int rt)) cRateType = rt;
         }
 
-        public bool ModuleConnected(int ModuleID)
-        {
-            bool Result = false;
-            if (ModuleID > -1 && ModuleID < MaxModules)
-            {
-                Result = (DateTime.Now - ModuleTime[ModuleID]).TotalSeconds < 5;
-            }
-            return Result;
-        }
-
         public void NewFile()
         {
             saveFileDialog1.InitialDirectory = Tls.FilesDir();
@@ -602,7 +613,7 @@ namespace RateController
         {
             for (int i = 0; i < MaxModules; i++)
             {
-                if (ModuleConnected(i)) RelaySettings[i].Send();
+                if (ModulesStatus.Connected(i)) RelaySettings[i].Send();
             }
         }
 
@@ -620,6 +631,7 @@ namespace RateController
             Tls.SaveProperty("ShowScale_" + ProductID.ToString(), cShowScale[ProductID].ToString());
             DisplayScales();
         }
+
         public bool ShowScale(int ProductID)
         {
             return cShowScale[ProductID];
@@ -737,11 +749,6 @@ namespace RateController
             }
         }
 
-        public void UpdateModuleConnected(int ModuleID)
-        {
-            if (ModuleID > -1 && ModuleID < MaxModules) ModuleTime[ModuleID] = DateTime.Now;
-        }
-
         public void UpdateStatus()
         {
             try
@@ -782,7 +789,7 @@ namespace RateController
                             Targets[i].Text = Products.Item(i).TargetRate().ToString("N1");
                         }
 
-                        if (Products.Item(i).ArduinoModule.Connected())
+                        if (Products.Item(i).RateSensor.Connected())
                         {
                             Indicators[i].Image = Properties.Resources.OnSmall;
                         }
@@ -874,9 +881,9 @@ namespace RateController
                             break;
                     }
 
-                    if (Prd.ArduinoModule.ModuleSending())
+                    if (Prd.RateSensor.ModuleSending())
                     {
-                        if (Prd.ArduinoModule.ModuleReceiving())
+                        if (Prd.RateSensor.ModuleReceiving())
                         {
                             lbArduinoConnected.BackColor = Color.LightGreen;
                         }

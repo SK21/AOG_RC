@@ -55,7 +55,7 @@ namespace RateController
                     // returns true if at least one module is connected
                     for (int i = 0; i < mf.MaxProducts; i++)
                     {
-                        if (cProducts[i].ArduinoModule.Connected())
+                        if (cProducts[i].RateSensor.Connected())
                         {
                             Result = true;
                             break;
@@ -187,7 +187,7 @@ namespace RateController
         {
             for (int i = 0; i < cProducts.Count; i++)
             {
-                if (cProducts[i].ArduinoModule.Connected()) cProducts[i].SendPID();
+                if (cProducts[i].RateSensor.Connected()) cProducts[i].SendPID();
             }
         }
 

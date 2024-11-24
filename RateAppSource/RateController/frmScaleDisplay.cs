@@ -185,7 +185,7 @@ namespace RateController
 
                 foreach (Control Ctrl in Controls)
                 {
-                    Ctrl.Font = new Font(TransparentFont, 16, FontStyle.Bold);
+                    Ctrl.Font = new Font(TransparentFont, 18);
                 }
             }
             else

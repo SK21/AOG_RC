@@ -13,7 +13,7 @@ namespace RateController
     {
         public readonly FormStart mf;
 
-        public PGN32400 ArduinoModule;
+        public PGN32400 RateSensor;
         public byte CoverageUnits = 0;
         public PGN32500 ModuleRateSettings;
         public double TankSize = 0;
@@ -63,7 +63,6 @@ namespace RateController
         private byte cVRID = 0;
         private double cVRmax;
         private double cVRmin;
-        private byte cWifiStrength;
         private DateTime LastHours1;
         private DateTime LastHours2;
         private DateTime LastUpdateTime;
@@ -78,7 +77,7 @@ namespace RateController
             cSenID = (byte)(ProdID % 2);
             PauseWork = true;
 
-            ArduinoModule = new PGN32400(this);
+            RateSensor = new PGN32400(this);
             ModuleRateSettings = new PGN32500(this);
             ModulePIDdata = new PGN32502(this);
 
@@ -177,7 +176,7 @@ namespace RateController
         }
 
         public double ElapsedTime
-        { get { return ArduinoModule.ElapsedTime(); } }
+        { get { return RateSensor.ElapsedTime(); } }
 
         public bool Enabled
         {
@@ -514,14 +513,6 @@ namespace RateController
             }
         }
 
-        public byte WifiStrength
-        {
-            get { return cWifiStrength; }
-            set
-            {
-                cWifiStrength = value;
-            }
-        }
 
         private string IDname
         { get { return cProductID.ToString(); } }
@@ -732,7 +723,7 @@ namespace RateController
 
         public double PWM()
         {
-            return ArduinoModule.PWMsetting;
+            return RateSensor.PWMsetting;
         }
 
         public double RateApplied()
@@ -745,14 +736,14 @@ namespace RateController
                     if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
-                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM / (cHectaresPerMinute * 2.47);
+                        if (cHectaresPerMinute > 0) Result = RateSensor.UPM / (cHectaresPerMinute * 2.47);
                     }
                     else if (cAppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (HPM > 0) Result = ArduinoModule.UPM / (HPM * 2.47);
+                        if (HPM > 0) Result = RateSensor.UPM / (HPM * 2.47);
                     }
                     else
                     {
@@ -766,14 +757,14 @@ namespace RateController
                     if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
-                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM / cHectaresPerMinute;
+                        if (cHectaresPerMinute > 0) Result = RateSensor.UPM / cHectaresPerMinute;
                     }
                     else if (cAppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (HPM > 0) Result = ArduinoModule.UPM / HPM;
+                        if (HPM > 0) Result = RateSensor.UPM / HPM;
                     }
                     else
                     {
@@ -791,7 +782,7 @@ namespace RateController
                     }
                     else
                     {
-                        Result = ArduinoModule.UPM;
+                        Result = RateSensor.UPM;
                     }
                     break;
 
@@ -804,7 +795,7 @@ namespace RateController
                     }
                     else
                     {
-                        Result = ArduinoModule.UPM * 60;
+                        Result = RateSensor.UPM * 60;
                     }
                     break;
             }
@@ -937,7 +928,7 @@ namespace RateController
                 }
                 else
                 {
-                    if (ArduinoModule.ParseStringData(words))
+                    if (RateSensor.ParseStringData(words))
                     {
                         UpdateUnitsApplied();
                         Result = true;
@@ -1079,7 +1070,7 @@ namespace RateController
                     switch (PGN)
                     {
                         case 32400:
-                            if (ArduinoModule.ParseByteData(data)) UpdateUnitsApplied();
+                            if (RateSensor.ParseByteData(data)) UpdateUnitsApplied();
                             break;
                     }
                 }
@@ -1113,7 +1104,7 @@ namespace RateController
         public void Update()
         {
             DateTime UpdateStartTime;
-            if (ArduinoModule.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)
+            if (RateSensor.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)
             {
                 UpdateStartTime = DateTime.Now;
                 CurrentMinutes = (UpdateStartTime - LastUpdateTime).TotalMinutes;
@@ -1174,9 +1165,9 @@ namespace RateController
                     Data[3] = (byte)Hz;
                     Data[4] = (byte)((int)Hz >> 8);
                     Data[5] = (byte)((int)Hz >> 16);
-                    Data[11] = 0b11100011;	// sensor 0 receiving, sensor 1 receiving, Hz only mode, ethernet connected, good pins
+                    Data[11] = 0b00000001; // sensor connected
                     Data[12] = mf.Tls.CRC(Data, 12);
-                    if (ArduinoModule.ParseByteData(Data)) UpdateUnitsApplied();
+                    if (RateSensor.ParseByteData(Data)) UpdateUnitsApplied();
                 }
             }
             else
@@ -1193,7 +1184,7 @@ namespace RateController
 
         public double UPMapplied()
         {
-            return ArduinoModule.UPM;
+            return RateSensor.UPM;
         }
 
         public double WorkRate()
@@ -1239,18 +1230,18 @@ namespace RateController
             bool Result = false;
             if (ControlType == ControlTypeEnum.Fan)
             {
-                Result = ArduinoModule.Connected();
+                Result = RateSensor.Connected();
             }
             else
             {
-                Result = (ArduinoModule.Connected() && cHectaresPerMinute > 0);
+                Result = (RateSensor.Connected() && cHectaresPerMinute > 0);
             }
             return Result;
         }
 
         private void UpdateUnitsApplied()
         {
-            double AccumulatedUnits = ArduinoModule.AccumulatedQuantity;
+            double AccumulatedUnits = RateSensor.AccumulatedQuantity;
             if (AccumulatedLast > AccumulatedUnits) AccumulatedLast = 0;
             double Diff = AccumulatedUnits - AccumulatedLast;
             AccumulatedLast = AccumulatedUnits;

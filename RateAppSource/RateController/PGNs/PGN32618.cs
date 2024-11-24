@@ -37,15 +37,12 @@ namespace RateController
         private bool cUseWorkSwitch = false;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[24];
-        private bool[] cRateModuleWorkOn;
-        private bool[] SWlast = new bool[24];
 
         public PGN32618(FormStart CalledFrom)
         {
             mf = CalledFrom;
             SW[(int)SwIDs.Auto] = true; // default to auto in case of no switchbox
             if (bool.TryParse(mf.Tls.LoadProperty("UseWorkSwitch"), out bool uw)) cUseWorkSwitch = uw;
-            cRateModuleWorkOn = new bool[mf.MaxModules];
         }
 
         public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
@@ -90,34 +87,14 @@ namespace RateController
             }
         }
 
-        public void SetRateModuleWorkOn(bool IsOn, int ModuleID)
-        {
-            cRateModuleWorkOn[ModuleID] = IsOn;
-        }
-
-        public bool GetRateModuleWorkOn()
-        {
-            // returns true if any module shows workswitch on
-            bool Result = false;
-            for (int i = 0; i < mf.MaxModules; i++)
-            {
-                if (mf.ModuleConnected(i))
-                {
-                    Result = cRateModuleWorkOn[i];
-                }
-                if (Result) break;
-            }
-            return Result;
-        }
-
         public bool WorkOn
         {
-            // returns true if switchbox work switch is on or any 
+            // returns true if switchbox work switch is on or any
             // module shows workswitch on
             get
             {
                 bool Result = true;
-                if (cUseWorkSwitch) Result = SW[23] || GetRateModuleWorkOn();
+                if (cUseWorkSwitch) Result = SW[23] || mf.ModulesStatus.WorkSwitchOn();
                 return Result;
             }
         }

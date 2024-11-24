@@ -383,6 +383,12 @@ Calibration steps:
   <data name="lgOverallRate" xml:space="preserve">
     <value>Overall Rate …</value>
   </data>
+  <data name="lgPage1" xml:space="preserve">
+    <value>Page1</value>
+  </data>
+  <data name="lgPage2" xml:space="preserve">
+    <value>Page2</value>
+  </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sections Per Zone</value>
   </data>

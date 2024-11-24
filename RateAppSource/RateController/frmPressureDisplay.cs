@@ -32,7 +32,7 @@ namespace RateController
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
             }
-                mf.Tls.SaveFormData(this);
+            mf.Tls.SaveFormData(this);
             timer1.Enabled = false;
         }
 
@@ -78,7 +78,7 @@ namespace RateController
 
                 foreach (Control Ctrl in Controls)
                 {
-                    Ctrl.Font = new Font(TransparentFont, 16, FontStyle.Bold);
+                    Ctrl.Font = new Font(TransparentFont, 18);
                 }
             }
             else
@@ -128,16 +128,10 @@ namespace RateController
         private void UpdateForm()
         {
             if (mf.UseTransparent != IsTransparent) SetTransparent();
-            if (mf.PressureToShow > 0)
-            {
-                float Prs = mf.PressureObjects.Item(mf.PressureToShow - 1).Pressure();
-                lbPressureValue.Text = Prs.ToString("N1");
-            }
-        }
-
-        private void lbPressureValue_Click(object sender, EventArgs e)
-        {
-
+            double Pressure = mf.ModulesStatus.Pressure(mf.Products.Items[mf.CurrentProduct()].ModuleID);
+            if (mf.PressureCal > 0) Pressure = Pressure / mf.PressureCal;
+            Pressure += mf.PressureOffset;
+            lbPressureValue.Text = Pressure.ToString("N1");
         }
     }
 }
