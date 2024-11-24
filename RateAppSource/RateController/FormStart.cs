@@ -705,7 +705,7 @@ namespace RateController
                         P3.PIDmin = P0.PIDmin;
                         P3.PIDscale = P0.PIDscale;
 
-                        Products.Item(2).BumpButtons = true;
+                        Products.Item(2).BumpButtons = false;
                         P0.ModuleID = 6;
                         P3.ChangeID(0, 0);
                         P3.OnScreen = true;
