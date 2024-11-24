@@ -10,8 +10,8 @@
 #include <Wire.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1  PCB: RC17
-# define InoDescription "RateRC17 :  20-Nov-2024"
-const uint16_t InoID = 20114;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RateRC17 :  24-Nov-2024"
+const uint16_t InoID = 24114;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 5;		// RateRC17
 
 const uint8_t MCPaddress = 0x20;
@@ -153,7 +153,7 @@ void loop()
 	}
 	SendComm();
 	server.handleClient();
-	Blink();
+	//Blink();
 }
 
 byte ParseModID(byte ID)
@@ -210,49 +210,49 @@ bool WorkPinOn()
 	return WrkOn;
 }
 
-bool State = false;
-uint32_t LastBlink;
-uint32_t LastLoop;
-byte ReadReset;
-uint32_t MaxLoopTime;
-volatile double debug1;
-volatile double debug2;
-volatile double debug3;
-volatile double debug4;
-
-void Blink()
-{
-	if (millis() - LastBlink > 1000)
-	{
-		LastBlink = millis();
-		State = !State;
-		//digitalWrite(LED_BUILTIN, State);
-
-		Serial.print(MaxLoopTime/1000.0);
-		Serial.print(", ");
-		Serial.print(debug1);
-		Serial.print(", ");
-		Serial.print(debug2);
-		Serial.print(", ");
-		Serial.print(debug3);
-		Serial.print(", ");
-		Serial.print(debug4);
-
-		//Serial.print("  >>");
-		//for (int i = 0; i < SampleSize; i++)
-		//{
-		//	Serial.print(", ");
-		//	Serial.print(Samples[i]/1000);
-		//}
-
-		Serial.println("");
-
-		if (ReadReset++ > 5)
-		{
-			ReadReset = 0;
-			MaxLoopTime = 0;
-		}
-	}
-	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
-	LastLoop = micros();
-}
+//bool State = false;
+//uint32_t LastBlink;
+//uint32_t LastLoop;
+//byte ReadReset;
+//uint32_t MaxLoopTime;
+//volatile double debug1;
+//volatile double debug2;
+//volatile double debug3;
+//volatile double debug4;
+//
+//void Blink()
+//{
+//	if (millis() - LastBlink > 1000)
+//	{
+//		LastBlink = millis();
+//		State = !State;
+//		//digitalWrite(LED_BUILTIN, State);
+//
+//		Serial.print(MaxLoopTime/1000.0);
+//		Serial.print(", ");
+//		Serial.print(debug1);
+//		Serial.print(", ");
+//		Serial.print(debug2);
+//		Serial.print(", ");
+//		Serial.print(debug3);
+//		Serial.print(", ");
+//		Serial.print(debug4);
+//
+//		//Serial.print("  >>");
+//		//for (int i = 0; i < SampleSize; i++)
+//		//{
+//		//	Serial.print(", ");
+//		//	Serial.print(Samples[i]/1000);
+//		//}
+//
+//		Serial.println("");
+//
+//		if (ReadReset++ > 5)
+//		{
+//			ReadReset = 0;
+//			MaxLoopTime = 0;
+//		}
+//	}
+//	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
+//	LastLoop = micros();
+//}

@@ -2,7 +2,7 @@
 // based off of https://github.com/br3ttb/Arduino-PID-Library
 
 uint32_t LastCheck;
-const double SampleTime = 10;
+const double SampleTime = 50;
 const double Deadband = 0.03;		// % error below which no adjustment is made
 
 const double BrakePoint = 0.3;		// % error below which reduced adjustment is used

@@ -5,7 +5,7 @@ void SendComm()
     {
         SendLast = millis();
 
-        //PGN32400, Rate info from module to RC
+        //PGN32400, Sensor info from module to RC
         //0     HeaderLo    144
         //1     HeaderHi    126
         //2     Mod/Sen ID          0-15/0-15
@@ -18,14 +18,7 @@ void SendComm()
         //9     PWM Lo
         //10    PWM Hi
         //11    Status
-        //      bit 0 - sensor 0 connected
-        //      bit 1 - sensor 1 connected
-        //      bit 2   - wifi rssi < -80
-        //      bit 3	- wifi rssi < -70
-        //      bit 4	- wifi rssi < -65
-        //      bit 5   flow sensor Hz only
-        //      bit 6   ethernet connected
-        //      bit 7   good pin configuration
+        //      bit 0   sensor connected
         //12    CRC
 
         byte Data[20];
@@ -59,30 +52,9 @@ void SendComm()
         Data[9] = (int)FlowSensor.PWM;
         Data[10] = (int)FlowSensor.PWM >> 8;
 
-
         // status
         Data[11] = 0;
-
-        if (WiFi.isConnected())
-        {
-            int8_t WifiStrength = WiFi.RSSI();
-            if (WifiStrength < -80)
-            {
-                Data[11] |= 0b00000100;
-            }
-            else if (WifiStrength < -70)
-            {
-                Data[11] |= 0b00001000;
-            }
-            else
-            {
-                Data[11] |= 0b00010000;
-            }
-        }
-
         if (millis() - FlowSensor.CommTime < 4000) Data[11] |= 0b00000001;
-
-        Data[11] |= 0b10000000;     // good pins
 
         // crc
         Data[12] = CRC(Data, 12, 0);
@@ -91,29 +63,33 @@ void SendComm()
         UDP_Wifi.write(Data, 13);
         UDP_Wifi.endPacket();
 
-        //PGN32401, module, analog info from module to RC
+        //PGN32401, module info from module to RC
         //0     145
         //1     126
         //2     module ID
-        //3     analog 0, Lo
-        //4     analog 0, Hi
-        //5     analog 1, Lo
-        //6     analog 1, Hi
-        //7     analog 2, Lo
-        //8     analog 2, Hi
-        //9     analog 3, Lo
-        //10    analog 3, Hi
+        //3     Pressure Lo X 10
+        //4     Pressure Hi
+        //5     -
+        //6     -
+        //7     -
+        //8     -
+        //9     -
+        //10    -
         //11    InoID lo
         //12    InoID hi
         //13    status
-        //      - bit 0, work switch
+        //      bit 0   work switch
+        //      bit 1   wifi rssi < -80
+        //      bit 2	wifi rssi < -70
+        //      bit 3	wifi rssi < -65
+        //      bit 4   ethernet connected
+        //      bit 5   good pin configuration
         //14    CRC
 
         Data[0] = 145;
         Data[1] = 126;
         Data[2] = MDL.ID;
-
-        int16_t Pressure = analogRead(MDL.PressurePin);
+        int16_t Pressure = analogRead(MDL.PressurePin) * 10.0;
         Data[3] = (byte)Pressure;
         Data[4] = (byte)(Pressure >> 8);
         Data[5] = 0;
@@ -122,13 +98,31 @@ void SendComm()
         Data[8] = 0;
         Data[9] = 0;
         Data[10] = 0;
-
         Data[11] = (byte)InoID;
         Data[12] = InoID >> 8;
 
         // status
         Data[13] = 0;
         if (WorkPinOn()) Data[13] |= 0b00000001;
+
+        if (WiFi.isConnected())
+        {
+            int8_t WifiStrength = WiFi.RSSI();
+            if (WifiStrength < -80)
+            {
+                Data[13] |= 0b00000010;
+            }
+            else if (WifiStrength < -70)
+            {
+                Data[13] |= 0b00000100;
+            }
+            else
+            {
+                Data[13] |= 0b00001000;
+            }
+        }
+
+        Data[13] |= 0b00100000;     // good pins
 
         Data[14] = CRC(Data, 14, 0);
 

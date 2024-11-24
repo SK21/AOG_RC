@@ -53,11 +53,6 @@ void GetUPM()
 		PulseAvg = ((double)CurrentTotal / CurrentCount) * 0.8 + PulseAvg * 0.2;
 		FlowSensor.UPM = (double)(60000000.0 / PulseAvg) / FlowSensor.MeterCal;
 		PulseMax = PulseAvg * 1.5;
-
-		debug1 = (double)PulseAvg / 1000.0;
-		debug2 = FlowSensor.UPM;
-		debug3 = (double)1000000.0 / PulseAvg;
-		debug4 =(double) PulseMax / 1000.0;
 	}
 
 	// check for no flow
