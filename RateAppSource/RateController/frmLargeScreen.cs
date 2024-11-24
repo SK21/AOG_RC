@@ -14,10 +14,10 @@ namespace RateController
         private bool IsTransparent = false;
         private bool masterOn;
         private bool MasterPressed;
-        private FormStart mf;
+        public FormStart mf;
         private int mouseX = 0;
         private int mouseY = 0;
-        private clsProduct Prd;
+        public clsProduct Prd;
         private Color RateColour = Color.GreenYellow;
         private bool SwitchingScreens = false;
         private bool[] SwON = new bool[9];
