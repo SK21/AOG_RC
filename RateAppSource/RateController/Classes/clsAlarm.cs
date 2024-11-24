@@ -24,13 +24,11 @@ namespace RateController
         public void CheckAlarms()
         {
             bool cRateAlarm = mf.Products.AlarmOn();
-            bool cPressureAlarm = mf.PressureObjects.AlarmOn();
             string cMessage;
 
-            if (cRateAlarm || cPressureAlarm)
+            if (cRateAlarm )
             {
                 cMessage = "Alarm";
-                if (cPressureAlarm) cMessage = "Pressure  " + cMessage;
                 if (cRateAlarm) cMessage = "Rate  " + cMessage;
                 cAlarmButton.Text = cMessage;
 

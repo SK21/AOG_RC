@@ -103,8 +103,6 @@
     <Compile Include="Classes\clsAlarm.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />
-    <Compile Include="Classes\clsPressure.cs" />
-    <Compile Include="Classes\clsPressures.cs" />
     <Compile Include="Classes\clsProducts.cs" />
     <Compile Include="Classes\clsRelay.cs" />
     <Compile Include="Classes\clsRelays.cs" />
