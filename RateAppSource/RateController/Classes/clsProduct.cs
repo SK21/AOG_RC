@@ -197,7 +197,6 @@ namespace RateController
             set
             {
                 cEraseAccumulatedUnits = value;
-                if (value) ArduinoModule.AccumulatedQuantity = 0;
             }
         }
 
@@ -733,7 +732,7 @@ namespace RateController
 
         public double PWM()
         {
-            return ArduinoModule.PWMsetting();
+            return ArduinoModule.PWMsetting;
         }
 
         public double RateApplied()
@@ -746,14 +745,14 @@ namespace RateController
                     if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
-                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / (cHectaresPerMinute * 2.47);
+                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM / (cHectaresPerMinute * 2.47);
                     }
                     else if (cAppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (HPM > 0) Result = ArduinoModule.UPM() / (HPM * 2.47);
+                        if (HPM > 0) Result = ArduinoModule.UPM / (HPM * 2.47);
                     }
                     else
                     {
@@ -767,14 +766,14 @@ namespace RateController
                     if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
-                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM() / cHectaresPerMinute;
+                        if (cHectaresPerMinute > 0) Result = ArduinoModule.UPM / cHectaresPerMinute;
                     }
                     else if (cAppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (HPM > 0) Result = ArduinoModule.UPM() / HPM;
+                        if (HPM > 0) Result = ArduinoModule.UPM / HPM;
                     }
                     else
                     {
@@ -792,7 +791,7 @@ namespace RateController
                     }
                     else
                     {
-                        Result = ArduinoModule.UPM();
+                        Result = ArduinoModule.UPM;
                     }
                     break;
 
@@ -805,7 +804,7 @@ namespace RateController
                     }
                     else
                     {
-                        Result = ArduinoModule.UPM() * 60;
+                        Result = ArduinoModule.UPM * 60;
                     }
                     break;
             }
@@ -1194,7 +1193,7 @@ namespace RateController
 
         public double UPMapplied()
         {
-            return ArduinoModule.UPM();
+            return ArduinoModule.UPM;
         }
 
         public double WorkRate()

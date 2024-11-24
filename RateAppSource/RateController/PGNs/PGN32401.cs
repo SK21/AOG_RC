@@ -9,18 +9,23 @@ namespace RateController
         //0     145
         //1     126
         //2     module ID
-        //3     analog 0, Lo
-        //4     analog 0, Hi
-        //5     analog 1, Lo
-        //6     analog 1, Hi
-        //7     analog 2, Lo
-        //8     analog 2, Hi
-        //9     analog 3, Lo
-        //10    analog 3, Hi
+        //3     Pressure Lo X 10
+        //4     Pressure Hi
+        //5     -
+        //6     -
+        //7     -
+        //8     -
+        //9     -
+        //10    -
         //11    InoID lo
         //12    InoID hi
         //13    status
-        //      - bit 0 work switch
+        //      bit 0   work switch
+        //      bit 1   wifi rssi < -80
+        //      bit 2	wifi rssi < -70
+        //      bit 3	wifi rssi < -65
+        //      bit 4   ethernet connected
+        //      bit 5   good pin configuration
         //14    CRC
 
         private const byte cByteCount = 15;
