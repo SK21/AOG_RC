@@ -419,6 +419,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Valve3wire.png" />
+    <None Include="Resources\Valve2wire.png" />
+    <None Include="Resources\2wire.png" />
+    <None Include="Resources\3wire.png" />
     <None Include="Resources\Scale3.png" />
     <None Include="Resources\Scale2.png" />
     <None Include="Resources\scale.png" />

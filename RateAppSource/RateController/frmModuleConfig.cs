@@ -37,6 +37,7 @@ namespace RateController
             tabControl1.TabPages[3].Text = Lang.lgPins;
             tabControl1.TabPages[4].Text = Lang.lgRelays;
             tabControl1.TabPages[5].Text = Lang.lgWifiClient;
+            tabControl1.TabPages[6].Text = Lang.lgValves;
 
             lbWorkPin.Text = Lang.lgWorkPin;
 
@@ -272,22 +273,22 @@ namespace RateController
                     break;
 
                 case 2:
-                    // RC15, ESP32
+                    // RC17, ESP32
                     tbModuleID.Text = "0";
-                    tbSensorCount.Text = "2";
+                    tbSensorCount.Text = "1";
                     tbWifiPort.Text = "0";
-                    cbRelayControl.SelectedIndex = 6;
+                    cbRelayControl.SelectedIndex = 4;
 
                     ckRelayOn.Checked = true;
                     ckFlowOn.Checked = true;
                     ckMomentary.Checked = false;
 
-                    tbFlow1.Text = "17";
-                    tbFlow2.Text = "16";
-                    tbDir1.Text = "32";
-                    tbDir2.Text = "25";
-                    tbPWM1.Text = "33";
-                    tbPWM2.Text = "26";
+                    tbFlow1.Text = "-";
+                    tbFlow2.Text = "-";
+                    tbDir1.Text = "-";
+                    tbDir2.Text = "-";
+                    tbPWM1.Text = "-";
+                    tbPWM2.Text = "-";
                     tbWrk.Text = "-";
 
                     tbRelay1.Text = "-";
@@ -311,6 +312,7 @@ namespace RateController
                     tbSSID.Text = "Tractor";
                     tbPassword.Text = "111222333";
                     ckClient.Checked = false;
+                    rb3Wire.Checked = true;
                     break;
 
                 default:
@@ -486,6 +488,7 @@ namespace RateController
             mf.ModuleConfig.RelayOnHigh = ckRelayOn.Checked;
             mf.ModuleConfig.FlowOnHigh = ckFlowOn.Checked;
             mf.ModuleConfig.Momentary = ckMomentary.Checked;
+            mf.ModuleConfig.Is3Wire = rb3Wire.Checked;
 
             // flow
             if (byte.TryParse(tbFlow1.Text, out val))
@@ -775,6 +778,7 @@ namespace RateController
             cbRelayControl.SelectedIndex = data[5];
             tbWifiPort.Text = data[6].ToString();
             ckMomentary.Checked = ((data[4] & 8) == 8);
+            rb3Wire.Checked = ((data[4] & 0b0001_0000) == 0b0001_0000);
 
             // flow, motor
             for (int i = 7; i < 13; i++)

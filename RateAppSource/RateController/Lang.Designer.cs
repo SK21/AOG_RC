@@ -1350,6 +1350,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Valves.
+        /// </summary>
+        internal static string lgValves {
+            get {
+                return ResourceManager.GetString("lgValves", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Width.
         /// </summary>
         internal static string lgWidth {
@@ -1359,7 +1368,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wifi Client.
+        ///   Looks up a localized string similar to Wifi .
         /// </summary>
         internal static string lgWifiClient {
             get {

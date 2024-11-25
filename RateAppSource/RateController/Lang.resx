@@ -569,11 +569,14 @@ Calibration steps:
   <data name="lgUseVR" xml:space="preserve">
     <value>Use Variable Rate</value>
   </data>
+  <data name="lgValves" xml:space="preserve">
+    <value>Valves</value>
+  </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Width</value>
   </data>
   <data name="lgWifiClient" xml:space="preserve">
-    <value>Wifi Client</value>
+    <value>Wifi </value>
   </data>
   <data name="lgWifiPort" xml:space="preserve">
     <value>Wifi Port</value>
