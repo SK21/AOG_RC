@@ -2342,6 +2342,7 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Deb
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmPins.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmPressureDisplay.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmRelays.resources
+C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmScaleDisplay.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmSections.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmSwitches.resources
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Lang.resources
@@ -2364,4 +2365,3 @@ C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Deb
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateCont.B5F4215A.Up2Date
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.exe
 C:\Users\CoxDa\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.pdb
-C:\Users\coxda\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmScaleDisplay.resources
