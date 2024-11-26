@@ -149,9 +149,6 @@ void DoSetup()
 	// UDP
 	UDP_Ethernet.begin(ListeningPort);
 
-	// AGIO
-	UDP_AGIO.begin(ListeningPortAGIO);
-
 	// sensors
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{

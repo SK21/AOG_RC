@@ -107,7 +107,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		//	        - bit 0		    reset acc.Quantity
 		//	        - bit 1,2,3		control type 0-4
 		//	        - bit 4		    MasterSwitchOn
-		//          - bit 5         0 - time for one pulse, 1 - average time for multiple pulses
+		//          - bit 5         -
 		//          - bit 6         AutoOn
 		//          - bit 7         -
 		//10    manual pwm Lo
@@ -144,8 +144,6 @@ void ReadPGNs(byte Data[], uint16_t len)
 						if ((InCommand & 8) == 8) Sensor[SensorID].ControlType += 4;
 
 						MasterSwitchOn = ((InCommand & 16) == 16);
-
-						Sensor[SensorID].UseMultiPulses = ((InCommand & 32) == 32);
 
 						AutoOn = ((InCommand & 64) == 64);
 
@@ -267,6 +265,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		//          - bit 1, Flow on high
 		//			- bit 2, client mode
 		//			- bit 3, work pin is momentary
+		//          - bit 4, Is3Wire
 		// 5        Relay control type  0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
 		// 6        wifi module serial port
 		// 7        Sensor 0, flow pin
@@ -318,31 +317,3 @@ void ReadPGNs(byte Data[], uint16_t len)
 	}
 }
 
-void ReceiveAGIO(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, byte* Data, uint16_t len)
-{
-	if (EthernetConnected())
-	{
-		if (len)
-		{
-			if ((Data[0] == 128) && (Data[1] == 129) && (Data[2] == 127))  // 127 is source, AGIO
-			{
-				switch (Data[3])
-				{
-				case 201:
-					if ((Data[4] == 5) && (Data[5] == 201) && (Data[6] == 201))
-					{
-						MDL.IP0 = Data[7];
-						MDL.IP1 = Data[8];
-						MDL.IP2 = Data[9];
-
-						SaveData();
-
-						// restart 
-						resetFunc();
-					}
-					break;
-				}
-			}
-		}
-	}
-}

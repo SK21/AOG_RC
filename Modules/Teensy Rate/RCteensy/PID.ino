@@ -3,22 +3,19 @@
 
 uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
-const double Deadband = 0.04;		// % error below which no adjustment is made
-const double BrakePoint = 0.20;		// % error below which reduced adjustment is used
+const double Deadband = 0.03;		// % error below which no adjustment is made
+
+const double BrakePoint = 0.3;		// % error below which reduced adjustment is used
 const double BrakeSet = 0.75;		// low adjustment rate
-double SF;							// Settings Factor used to reduce adjustment when close to set rate
-double DifValue;					// differential value on UPM
 
 double RateError;
 double LastPWM[MaxProductCount];
-double IntegralSum[MaxProductCount];
-double LastUPM[MaxProductCount];
 
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
-byte AdjustTime;
-byte PauseTime;
-const double MinStart = 0.03;	// minimum start ratio. Used to quickly increase rate from off.
+const double MinStart = 0.03;	// minimum start ratio. Used to quickly increase rate from 0.
+int TimedAdjustTime = 80;		// milliseconds
+int TimedPauseTime = 400;		// milliseconds
 
 void SetPWM()
 {
@@ -31,8 +28,6 @@ void SetPWM()
 			{
 			case 5:
 				// combo close timed adjustment
-				AdjustTime = 20;
-				PauseTime = 200;
 				Sensor[i].PWM = TimedCombo(i, false);
 				break;
 
@@ -59,8 +54,6 @@ void SetPWM()
 			{
 			case 5:
 				// combo close timed adjustment
-				AdjustTime = 100;
-				PauseTime = 50;
 				Sensor[i].PWM = TimedCombo(i, true);
 				break;
 
@@ -71,7 +64,6 @@ void SetPWM()
 				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
 				break;
 			}
-			LastPWM[i] = Sensor[i].PWM;
 		}
 	}
 }
@@ -91,44 +83,22 @@ int PIDmotor(byte ID)
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 			{
-				if (abs(RateError) > Sensor[ID].TargetUPM)
-				{
-					if (RateError > 0)
-					{
-						RateError = Sensor[ID].TargetUPM;
-					}
-					else
-					{
-						RateError = Sensor[ID].TargetUPM * -1;
-					}
-				}
+				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
 				// check brakepoint
 				if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
 				{
-					SF = 1.0;
+					Result += Sensor[ID].KP * RateError;
 				}
 				else
 				{
-					SF = BrakeSet;
+					Result += Sensor[ID].KP * RateError * BrakeSet;
 				}
 
-				IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
-				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
-
-				DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM) * 10.0;
-				Result += Sensor[ID].KP * SF * RateError + IntegralSum[ID] + DifValue;
-
-				if (Result > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM;
-				if (Result < Sensor[ID].MinPWM) Result = Sensor[ID].MinPWM;
+				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
 			}
-			LastUPM[ID] = Sensor[ID].UPM;
 		}
 		LastPWM[ID] = Result;
-	}
-	else
-	{
-		IntegralSum[ID] = 0;
 	}
 
 	return (int)Result;
@@ -149,53 +119,30 @@ int PIDvalve(byte ID)
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 			{
-				if (abs(RateError) > Sensor[ID].TargetUPM)
-				{
-					if (RateError > 0)
-					{
-						RateError = Sensor[ID].TargetUPM;
-					}
-					else
-					{
-						RateError = Sensor[ID].TargetUPM * -1;
-					}
-				}
+				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
 				// check brakepoint
 				if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
 				{
-					SF = 1;
+					Result = Sensor[ID].KP * RateError;
 				}
 				else
 				{
-					SF = BrakeSet;
+					Result = Sensor[ID].KP * RateError * BrakeSet;
 				}
-
-				IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
-				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
-
-				DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM) * 10.0;
-				Result = Sensor[ID].KP * SF * RateError + IntegralSum[ID] + DifValue;
 
 				bool IsPositive = (Result > 0);
 				Result = abs(Result);
-
-				if (Result > Sensor[ID].MaxPWM * SF) Result = Sensor[ID].MaxPWM * SF;
-				if (Result < Sensor[ID].MinPWM) Result = Sensor[ID].MinPWM;
-
-				if (!IsPositive) Result *= -1;
+				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
+				if (!IsPositive) Result *= -1.0;
 			}
 			else
 			{
 				Result = 0;
 			}
-			LastUPM[ID] = Sensor[ID].UPM;
 		}
 	}
-	else
-	{
-		IntegralSum[ID] = 0;
-	}
+
 	LastPWM[ID] = Result;
 	return (int)Result;
 }
@@ -215,7 +162,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 		if (PauseAdjust[ID])
 		{
 			// pausing state
-			if (millis() - ComboTime[ID] > PauseTime)
+			if (millis() - ComboTime[ID] > TimedPauseTime)
 			{
 				// switch state
 				ComboTime[ID] = millis();
@@ -225,7 +172,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 		else
 		{
 			// adjusting state
-			if (millis() - ComboTime[ID] > AdjustTime)
+			if (millis() - ComboTime[ID] > TimedAdjustTime)
 			{
 				// switch state
 				ComboTime[ID] = millis();
@@ -243,47 +190,27 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 				else
 				{
 					// auto adjust
-
 					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 					// check deadband
 					if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 					{
-						if (abs(RateError) > Sensor[ID].TargetUPM)
-						{
-							if (RateError > 0)
-							{
-								RateError = Sensor[ID].TargetUPM;
-							}
-							else
-							{
-								RateError = Sensor[ID].TargetUPM * -1;
-							}
-						}
+						RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
 						// check brakepoint
 						if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
 						{
-							SF = 1;
+							Result = Sensor[ID].KP * RateError;
 						}
 						else
 						{
-							SF = BrakeSet;
+							Result = Sensor[ID].KP * RateError * BrakeSet;
 						}
-
-						IntegralSum[ID] += Sensor[ID].KI * RateError / 1000.0;
-						IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
-
-						DifValue = Sensor[ID].KD * (LastUPM[ID] - Sensor[ID].UPM) * 10.0;
-						Result = Sensor[ID].KP * SF * RateError + IntegralSum[ID] + DifValue;
 
 						bool IsPositive = (Result > 0);
 						Result = abs(Result);
-
-						if (Result > Sensor[ID].MaxPWM * SF) Result = Sensor[ID].MaxPWM * SF;
-						if (Result < Sensor[ID].MinPWM) Result = Sensor[ID].MinPWM;
-
-						if (!IsPositive) Result *= -1;
+						Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
+						if (!IsPositive) Result *= -1.0;
 					}
 					else
 					{
@@ -293,13 +220,5 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 			}
 		}
 	}
-	else
-	{
-		IntegralSum[ID] = 0;
-	}
 	return (int)Result;
 }
-
-
-
-

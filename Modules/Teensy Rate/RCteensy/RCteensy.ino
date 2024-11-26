@@ -23,8 +23,8 @@ extern "C" {
 
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  10-Aug-2024"
-const uint16_t InoID = 10084;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  25-Nov-2024"
+const uint16_t InoID = 25114;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 
@@ -79,7 +79,6 @@ struct SensorConfig
 	double KD;
 	byte MinPWM;
 	byte MaxPWM;
-	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
 };
 
 SensorConfig Sensor[2];
@@ -89,11 +88,6 @@ EthernetUDP UDPcomm;
 uint16_t ListeningPort = 28888;
 uint16_t DestinationPort = 29999;
 IPAddress DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
-
-// AGIO
-EthernetUDP AGIOcomm;
-uint16_t ListeningPortAGIO = 8888;		// to listen on
-uint16_t DestinationPortAGIO = 9999;	// to send to
 
 // Relays
 byte RelayLo = 0;	// sections 0-7
@@ -190,6 +184,10 @@ void setup()
 
 void loop()
 {
+	ReceiveSerial();
+	ReceiveUDPwired();
+	ReceiveESP();
+	ReceiveUpdate();
 	SetPWM();
 
 	if (millis() - LoopLast >= LoopTime)
@@ -210,18 +208,7 @@ void loop()
 		ReadAnalog();
 	}
 
-	if (millis() - SendLast > SendTime)
-	{
-		CheckWorkPin();
-		SendLast = millis();
-		SendData();
-	}
-
-	ReceiveSerial();
-	ReceiveUDPwired();
-	ReceiveAGIO();
-	ReceiveESP();
-	ReceiveUpdate();
+	SendComm();
 	Blink();
 	wdt.feed();
 }
@@ -262,7 +249,7 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-void CheckWorkPin()
+bool WorkPinOn()
 {
 	if (MDL.WorkPin < NC)
 	{
@@ -284,6 +271,7 @@ void CheckWorkPin()
 	{
 		WrkOn = false;
 	}
+	return WrkOn;
 }
 
 bool State = false;

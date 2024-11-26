@@ -28,19 +28,19 @@ void SetPWM()
 			{
 			case 5:
 				// combo close timed adjustment
-				Sensor[i].PWM = TimedCombo(false);
+				Sensor[i].PWM = TimedCombo(i,false);
 				break;
 
 			case 2:
 			case 3:
 			case 4:
 				// motor control
-				Sensor[i].PWM = PIDmotor();
+				Sensor[i].PWM = PIDmotor(i);
 				break;
 
 			default:
 				// valve control
-				Sensor[i].PWM = PIDvalve();
+				Sensor[i].PWM = PIDvalve(i);
 				break;
 			}
 		}
@@ -54,7 +54,7 @@ void SetPWM()
 			{
 			case 5:
 				// combo close timed adjustment
-				Sensor[i].PWM = TimedCombo(true);
+				Sensor[i].PWM = TimedCombo(i,true);
 				break;
 
 			default:
@@ -73,7 +73,7 @@ int PIDmotor(byte ID)
 	double Result = 0;
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
 	{
-		Result = LastPWM;
+		Result = LastPWM[ID];
 		if (millis() - LastCheck[ID] >= SampleTime)
 		{
 			LastCheck[ID] = millis();
@@ -109,7 +109,7 @@ int PIDvalve(byte ID)
 	double Result = 0;
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
 	{
-		Result = LastPWM;
+		Result = LastPWM[ID];
 		if (millis() - LastCheck[ID] >= SampleTime)
 		{
 			LastCheck[ID] = millis();

@@ -56,7 +56,6 @@ void DoSetup()
 
 		//register sub for received data
 		ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
-		ether.udpServerListenOnPort(&ReceiveAGIO, ListeningPortAGIO);
 
 		delay(500);
 		if (EthernetConnected())

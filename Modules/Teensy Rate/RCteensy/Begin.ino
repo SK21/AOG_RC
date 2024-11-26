@@ -102,9 +102,6 @@ void DoSetup()
 	// UDP
 	UDPcomm.begin(ListeningPort);
 
-	// AGIO
-	AGIOcomm.begin(ListeningPortAGIO);
-
 	// update
 	UpdateComm.begin(UpdateReceivePort);
 

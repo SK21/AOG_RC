@@ -15,8 +15,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  10-Aug-2024"
-const uint16_t InoID = 10084;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  25-Nov-2024"
+const uint16_t InoID = 25114;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -59,7 +59,6 @@ struct SensorConfig
 	double KD;
 	byte MinPWM;
 	byte MaxPWM;
-	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
 };
 
 SensorConfig Sensor[2];
@@ -78,10 +77,6 @@ uint16_t DestinationPort = 29999;
 byte DestinationIP[] = { MDL.IP0, MDL.IP1, MDL.IP2, 255 };	// broadcast 255
 unsigned int SourcePort = 5123;		// to send from
 bool ENCfound;
-
-// AGIO
-uint16_t ListeningPortAGIO = 8888;		// to listen on
-uint16_t DestinationPortAGIO = 9999;	// to send to
 
 // Relays
 byte RelayLo = 0;	// sections 0-7
@@ -133,6 +128,16 @@ void setup()
 
 void loop()
 {
+	if (EthernetConnected())
+	{
+		//this must be called for ethercard functions to work.
+		ether.packetLoop(ether.packetReceive());
+	}
+	else
+	{
+		ReceiveSerial();
+	}
+
 	SetPWM();
 
 	if (millis() - LoopLast >= LoopTime)
@@ -152,23 +157,7 @@ void loop()
 		AdjustFlow();
 	}
 
-	if (millis() - SendLast > SendTime)
-	{
-		CheckWorkPin();
-		SendLast = millis();
-		SendData();
-	}
-
-	if (EthernetConnected())
-	{
-		//this must be called for ethercard functions to work.
-		ether.packetLoop(ether.packetReceive());
-	}
-	else
-	{
-		ReceiveSerial();
-	}
-
+	SendData();
 	//DebugTheIno();
 }
 
@@ -208,7 +197,7 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-void CheckWorkPin()
+bool WorkPinOn()
 {
 	if (MDL.WorkPin < NC)
 	{
@@ -230,6 +219,7 @@ void CheckWorkPin()
 	{
 		WrkOn = false;
 	}
+	return WrkOn;
 }
 
 //uint32_t DebugTime;

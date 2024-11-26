@@ -29,8 +29,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  05-Oct-2024"
-const uint16_t InoID = 5104;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  25-Nov-2024"
+const uint16_t InoID = 25114;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -68,6 +68,7 @@ struct ModuleConfig
 	char Password[ModStringLengths] = "111222333";
 	uint8_t WorkPin;
 	bool WorkPinIsMomentary = false;
+	uint8_t Is3Wire = 1;	// 0 - DRV provides power on/off with Output1/Output2, 1 - DRV provides signal on/off with Output2
 };
 
 ModuleConfig MDL;
@@ -91,7 +92,6 @@ struct SensorConfig
 	double KD;
 	byte MinPWM;
 	byte MaxPWM;
-	bool UseMultiPulses;	// 0 - time for one pulse, 1 - average time for multiple pulses
 };
 
 SensorConfig Sensor[2];
@@ -104,11 +104,6 @@ const uint16_t DestinationPort = 29999;
 EthernetUDP UDP_Ethernet;
 IPAddress Ethernet_DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
 bool ChipFound;
-
-// AGIO
-EthernetUDP UDP_AGIO;
-uint16_t ListeningPortAGIO = 8888;		// to listen on
-uint16_t DestinationPortAGIO = 9999;	// to send to
 
 // wifi
 WiFiUDP UDP_Wifi;
@@ -154,7 +149,7 @@ bool MCP23017_found = false;
 struct AnalogConfig
 {
 	int16_t AIN0;	// Pressure 0
-	int16_t AIN1;	// Pressure 1
+	int16_t AIN1;	
 	int16_t AIN2;
 	int16_t AIN3;
 };
@@ -162,9 +157,6 @@ AnalogConfig AINs;
 
 int ADS1115_Address;
 bool ADSfound = false;
-
-void IRAM_ATTR ISR0();		// function prototype
-void IRAM_ATTR ISR1();
 
 bool GoodPins;	// pin configuration correct
 bool WrkOn;
@@ -207,8 +199,8 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 }
 
 int TimedCombo(byte, bool);	// function prototype
-int TimedAdjustTime = 50;
-int TimedPauseTime = 100;
+void IRAM_ATTR ISR0();		// function prototype
+void IRAM_ATTR ISR1();
 
 void setup()
 {
@@ -217,6 +209,8 @@ void setup()
 
 void loop()
 {
+	ReceiveUDP();
+	SetPWM();
 	if (millis() - LoopLast >= LoopTime)
 	{
 		LoopLast = millis();
@@ -234,20 +228,8 @@ void loop()
 		AdjustFlow();
 		ReadAnalog();
 	}
-
-	if (millis() - SendLast > SendTime)
-	{
-		CheckWorkPin();
-		SendLast = millis();
-		SendUDP();
-	}
-
-	SetPWM();
-	ReceiveUDP();
-	ReceiveAGIO();
-
+	SendComm();
 	server.handleClient();
-
 	//Blink();
 }
 
@@ -287,7 +269,7 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-void CheckWorkPin()
+bool WorkPinOn()
 {
 	if (MDL.WorkPin < NC)
 	{
@@ -309,6 +291,7 @@ void CheckWorkPin()
 	{
 		WrkOn = false;
 	}
+	return WrkOn;
 }
 
 //bool State = false;
