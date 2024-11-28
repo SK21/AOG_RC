@@ -3,18 +3,6 @@
 #include <pcf8574.h>		// https://github.com/RobTillaart/PCF8574
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
-#include <Adafruit_PWMServoDriver.h>
-
-#include <Adafruit_MCP23008.h>
-#include <Adafruit_MCP23X08.h>
-#include <Adafruit_MCP23X17.h>
-#include <Adafruit_MCP23XXX.h>
-
-#include <Adafruit_BusIO_Register.h>
-#include <Adafruit_I2CDevice.h>
-#include <Adafruit_I2CRegister.h>
-#include <Adafruit_SPIDevice.h>
-
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <WiFiClient.h>
@@ -38,6 +26,8 @@ const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 #define MaxProductCount 2
 #define EEPROM_SIZE 512
 #define ModStringLengths 20
+const uint8_t MCPaddress = 0x20;
+const uint8_t PCA9685address = 0x40;
 
 // servo driver
 #define OutputEnablePin 27
@@ -139,10 +129,8 @@ bool PCF_found = false;
 PCA9555 PCA;
 bool PCA9555PW_found = false;
 
-Adafruit_PWMServoDriver PWMServoDriver = Adafruit_PWMServoDriver(PCAaddress);
 bool PCA9685_found = false;
 
-Adafruit_MCP23X17 MCP;
 bool MCP23017_found = false;
 
 // analog
@@ -302,7 +290,7 @@ bool WorkPinOn()
 //double debug1;
 //double debug2;
 //double debug3;
-
+//
 //void Blink()
 //{
 //	if (millis() - LastBlink > 1000)
@@ -318,10 +306,10 @@ bool WorkPinOn()
 //		Serial.print(debug1);
 //		
 //		Serial.print(", ");
-//		Serial.print(TimedAdjustTime);
-//		
+//		Serial.print(debug2);
+//
 //		Serial.print(", ");
-//		Serial.print(TimedPauseTime);
+//		Serial.print(debug3);
 //
 //		Serial.println("");
 //

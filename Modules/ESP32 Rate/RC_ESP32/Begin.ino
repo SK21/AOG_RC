@@ -232,7 +232,7 @@ void DoSetup()
 		while (!MCP23017_found)
 		{
 			Serial.print(".");
-			Wire.beginTransmission(0x20);
+			Wire.beginTransmission(MCPaddress);
 			MCP23017_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
@@ -243,12 +243,6 @@ void DoSetup()
 		if (MCP23017_found)
 		{
 			Serial.println("MCP23017 found.");
-			MCP.begin_I2C();
-
-			for (int i = 0; i < 16; i++)
-			{
-				MCP.pinMode(MDL.RelayPins[i], OUTPUT);
-			}
 		}
 		else
 		{
@@ -265,7 +259,9 @@ void DoSetup()
 		while (!PCA9685_found)
 		{
 			Serial.print(".");
-			Wire.beginTransmission(PCAaddress);
+			Wire.beginTransmission(PCA9685address);
+			Wire.write(0x00); // MODE1 register
+			Wire.write(0x20); // Set to normal mode and enable auto-increment (AI bit = 1)	
 			PCA9685_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
@@ -276,9 +272,6 @@ void DoSetup()
 		if (PCA9685_found)
 		{
 			Serial.println("PCA9685 expander found.");
-			PWMServoDriver.begin();
-			PWMServoDriver.setPWMFreq(200);
-
 			pinMode(OutputEnablePin, OUTPUT);
 			digitalWrite(OutputEnablePin, LOW);	//enable
 		}
