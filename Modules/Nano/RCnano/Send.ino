@@ -80,7 +80,7 @@ void SendData()
             }
         }
 
-                //PGN32401, module info from module to RC
+        //PGN32401, module info from module to RC
         //0     145
         //1     126
         //2     module ID
@@ -121,9 +121,9 @@ void SendData()
         Data[13] = 0;
         if (WorkPinOn()) Data[13] |= 0b00000001;
 
-        if (EthernetConnected()) Data[11] |= 0b00010000;
+        if (EthernetConnected()) Data[13] |= 0b00010000;
 
-        if (GoodPins) Data[11] |= 0b00100000;
+        if (GoodPins) Data[13] |= 0b00100000;
 
 
         Data[14] = CRC(Data, 14, 0);
