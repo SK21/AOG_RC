@@ -143,8 +143,8 @@ void SendComm()
             }
         }
 
-        if (Ethernet.linkStatus() == LinkON) Data[11] |= 0b00010000;
-        if (GoodPins) Data[11] |= 0b00100000;
+        if (Ethernet.linkStatus() == LinkON) Data[13] |= 0b00010000;
+        if (GoodPins) Data[13] |= 0b00100000;
 
         Data[14] = CRC(Data, 14, 0);
 

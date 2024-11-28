@@ -20,14 +20,10 @@ extern "C" {
 #include "FlashTxx.h"		// TLC/T3x/T4x/TMM flash primitives
 }
 
-
-
 // rate control with Teensy 4.1
 # define InoDescription "RCteensy :  25-Nov-2024"
 const uint16_t InoID = 25114;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
-
-
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
