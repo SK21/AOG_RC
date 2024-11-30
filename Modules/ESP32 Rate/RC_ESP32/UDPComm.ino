@@ -111,10 +111,8 @@ void SendComm()
         Data[0] = 145;
         Data[1] = 126;
         Data[2] = MDL.ID;
-
-        int16_t Pressure = CurrentPressure();
-        Data[3] = (byte)Pressure;
-        Data[4] = (byte)(Pressure >> 8);
+        Data[3] = (byte)CurrentPressure;
+        Data[4] = (byte)(CurrentPressure >> 8);
         Data[5] = 0;
         Data[6] = 0;
         Data[7] = 0;
@@ -126,7 +124,7 @@ void SendComm()
 
         // status
         Data[13] = 0;
-        if (WorkPinOn()) Data[13] |= 0b00000001;
+        if (WorkSwitchOn) Data[13] |= 0b00000001;
 
         if (WiFi.isConnected())
         {
@@ -370,29 +368,32 @@ void ParseData(byte Data[], uint16_t len)
 
     case 32700:
         // module config
-        // 0        188
-        // 1        127
-        // 2        ID
-        // 3        Sensor count
-        // 4        Commands
-        //          - bit 0, Relay on high
-        //          - bit 1, Flow on high
-        //          - bit 2, client mode
-        //			- bit 3, work pin is momentary
-        //          - bit 4, Is3Wire
-        // 5        Relay control type  0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired 
-        // 6        wifi module serial port
-        // 7        Sensor 0, flow pin
-        // 8        Sensor 0, dir pin
-        // 9        Sensor 0, pwm pin
-        // 10       Sensor 1, flow pin
-        // 11       Sensor 1, dir pin
-        // 12       Sensor 1, pwm pin
-        // 13-28    Relay pins 0-15\
-        // 29		work pin
-        // 30       CRC
+        //0     HeaderLo    188
+        //1     HeaderHi    127
+        //2     Module ID   0-15
+        //3	    sensor count
+        //4     commands
+        //      bit 0 - Relay on high
+        //      bit 1 - Flow on high
+        //      bit 2 - client mode
+        //      bit 3 - work pin is momentary
+        //      bit 4 - Is3Wire valve
+        //5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
+        //                           , 5 - PCA9685, 6 - PCF8574
+        //6	    wifi module serial port
+        //7	    Sensor 0, Flow pin
+        //8     Sensor 0, Dir pin
+        //9     Sensor 0, PWM pin
+        //10    Sensor 1, Flow pin
+        //11    Sensor 1, Dir pin
+        //12    Sensor 1, PWM pin
+        //13    Relay pins 0-15, bytes 13-28
+        //29    work pin
+        //30    pressure pin
+        //31    ADS1115 address
+        //32    CRC
 
-        PGNlength = 31;
+        PGNlength = 33;
         if (len > PGNlength - 1)
         {
             if (GoodCRC(Data, PGNlength))
@@ -421,6 +422,8 @@ void ParseData(byte Data[], uint16_t len)
                 }
 
                 MDL.WorkPin = Data[29];
+                MDL.PressurePin = Data[30];
+                MDL.AdsAddress = Data[31];
 
                 //SaveData();	saved in pgn 3702
             }

@@ -49,8 +49,7 @@ struct ModuleConfig
 	uint8_t IP3 = 50;
 	uint8_t AdsAddress = 0x48;		// 0 - search all, NC - no ads
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
-	uint8_t RelayControl = 6;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
-									//, 5 - PCA9685 single , 6 - PCA9685 paired, 7 - PCF8574
+	uint8_t RelayControl = 5;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
 	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
@@ -148,10 +147,11 @@ int ADS1115_Address;
 bool ADSfound = false;
 
 bool GoodPins;	// pin configuration correct
-bool WrkOn;
+bool WorkSwitchOn;
 bool WrkLast;
 bool WrkCurrent;
 uint8_t DisconnectCount;
+int16_t CurrentPressure;
 
 void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
@@ -216,6 +216,8 @@ void loop()
 		GetUPM();
 		AdjustFlow();
 		ReadAnalog();
+		CheckWorkSwitch();
+		CheckPressure();
 	}
 	SendComm();
 	server.handleClient();
@@ -258,7 +260,7 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-bool WorkPinOn()
+void CheckWorkSwitch()
 {
 	if (MDL.WorkPin < NC)
 	{
@@ -267,34 +269,32 @@ bool WorkPinOn()
 		{
 			if (WrkCurrent != WrkLast)
 			{
-				if (WrkCurrent) WrkOn = !WrkOn;	// only cycle when going from low to high
+				if (WrkCurrent) WorkSwitchOn = !WorkSwitchOn;	// only cycle when going from low to high
 				WrkLast = WrkCurrent;
 			}
 		}
 		else
 		{
-			WrkOn = WrkCurrent;
+			WorkSwitchOn = WrkCurrent;
 		}
 	}
 	else
 	{
-		WrkOn = false;
+		WorkSwitchOn = false;
 	}
-	return WrkOn;
 }
 
-int16_t CurrentPressure()
+void CheckPressure()
 {
-	int16_t Result = 0;
+	CurrentPressure = 0;
 	if (MDL.PressurePin < NC)
 	{
-		Result = analogRead(MDL.PressurePin) * 10.0;
+		CurrentPressure = analogRead(MDL.PressurePin) * 10.0;
 	}
 	else if (ADSfound)
 	{
-		Result = AINs.AIN0 / 10.0;
+		CurrentPressure = AINs.AIN0 / 10.0;
 	}
-	return Result;
 }
 
 //bool State = false;

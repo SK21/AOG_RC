@@ -6,7 +6,6 @@ uint8_t ValidPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33 };	// SPI pin
 void DoSetup()
 {
 	uint8_t ErrorCount;
-	int ADS[] = { 0x48,0x49,0x4A,0x4B };	// ADS1115 addresses
 
 	Sensor[0].FlowEnabled = false;
 	Sensor[1].FlowEnabled = false;
@@ -41,15 +40,18 @@ void DoSetup()
 	// ADS1115
 	if (MDL.AdsAddress == NC)
 	{
+		// no ADS1115
 		ADSfound == false;
 	}
 	else if (MDL.AdsAddress == 0)
 	{
+		// find ads at default addresses
+		int ADS[] = { 0x48,0x49,0x4A,0x4B };
 		for (int i = 0; i < 4; i++)
 		{
 			ADS1115_Address = ADS[i];
 			Serial.print("Starting ADS1115 at address ");
-			Serial.println(ADS1115_Address);
+			Serial.print(ADS1115_Address);
 			ErrorCount = 0;
 			while (!ADSfound)
 			{
@@ -60,7 +62,7 @@ void DoSetup()
 				ADSfound = Wire.available();
 				Serial.print(".");
 				delay(500);
-				if (ErrorCount++ > 5) break;
+				if (ErrorCount++ > 10) break;
 			}
 			Serial.println("");
 			if (ADSfound)
@@ -79,10 +81,10 @@ void DoSetup()
 	}
 	else
 	{
+		// find at listed address
 		ADS1115_Address = MDL.AdsAddress;
 		Serial.print("Starting ADS1115 at address ");
-		Serial.println(ADS1115_Address);
-		ErrorCount = 0;
+		Serial.print(ADS1115_Address);
 		while (!ADSfound)
 		{
 			Wire.beginTransmission(ADS1115_Address);
@@ -92,7 +94,7 @@ void DoSetup()
 			ADSfound = Wire.available();
 			Serial.print(".");
 			delay(500);
-			if (ErrorCount++ > 5) break;
+			if (ErrorCount++ > 10) break;
 		}
 		Serial.println("");
 		if (ADSfound)
@@ -107,7 +109,6 @@ void DoSetup()
 			Serial.println("");
 		}
 	}
-
 	if (!ADSfound)
 	{
 		Serial.println("ADS1115 disabled.");
@@ -265,7 +266,6 @@ void DoSetup()
 		break;
 
 	case 5:
-	case 6:
 		// PCA9685
 		Serial.println("");
 		Serial.println("Starting PCA9685 I/O Expander ...");
@@ -295,7 +295,7 @@ void DoSetup()
 		}
 		break;
 
-	case 7:
+	case 6:
 		// PCF8574
 		Serial.println("");
 		Serial.println("Starting PCF8574 I/O Expander ...");
@@ -572,4 +572,5 @@ bool ValidData()
 	GoodPins = Result;
 	return Result;
 }
+
 

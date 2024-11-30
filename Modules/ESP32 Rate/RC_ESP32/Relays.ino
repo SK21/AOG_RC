@@ -171,7 +171,6 @@ void CheckRelays()
         break;
 
     case 5:
-    case 6:
         // PCA9685
         if (PCA9685_found)
         {
@@ -239,7 +238,7 @@ void CheckRelays()
         }
         break;
 
-    case 7:
+    case 6:
         // PCF8574
         if (PCF_found)
         {
