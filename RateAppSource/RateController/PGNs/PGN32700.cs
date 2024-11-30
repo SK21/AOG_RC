@@ -18,7 +18,7 @@ namespace RateController
         //      bit 3 - work pin is momentary
         //      bit 4 - Is3Wire valve
         //5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
-        //                           , 5 - PCA9685 single , 6 - PCA9685 paired, 7 - PCF8574
+        //                           , 5 - PCA9685, 6 - PCF8574
         //6	    wifi module serial port
         //7	    Sensor 0, Flow pin
         //8     Sensor 0, Dir pin
@@ -28,9 +28,11 @@ namespace RateController
         //12    Sensor 1, PWM pin
         //13    Relay pins 0-15, bytes 13-28
         //29    work pin
-        //30    CRC
+        //30    pressure pin
+        //31    ADS1115 address
+        //32    CRC
 
-        private const byte cByteCount = 31;
+        private const byte cByteCount = 33;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 188;
         private byte[] cData = new byte[cByteCount];
@@ -41,6 +43,9 @@ namespace RateController
             mf = Main;
             Load();
         }
+
+        public byte AdsAddress
+        { set { cData[31] = value; } }
 
         public bool ClientMode
         {
@@ -104,6 +109,9 @@ namespace RateController
                 }
             }
         }
+
+        public byte PressurePin
+        { set { cData[30] = value; } }
 
         public bool RelayOnHigh
         {

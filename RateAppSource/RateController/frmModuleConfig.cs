@@ -14,7 +14,7 @@ namespace RateController
         private int BoardType = 0;  // 0 nano, 1 Teensy, 2 ESP32
         private bool FormEdited;
         private bool Initializing;
-        TextBox[] RelayTB;
+        private TextBox[] RelayTB;
 
         public frmModuleConfig(FormStart Main)
         {
@@ -55,20 +55,7 @@ namespace RateController
                 RelayTB[i].TextChanged += textbox_TextChanged;
             }
         }
-        private void tbRelays_enter(object sender, EventArgs e)
-        {
-            TextBox bx = (TextBox)sender;
-            double temp = 0;
-            if (double.TryParse(bx.Text.Trim(), out double vl)) temp = vl;
-            using (var form = new FormNumeric(0, 50, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    bx.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
+
         private void ArduinoModule_PinStatusChanged(object sender, PGN32401.PinStatusArgs e)
         {
             if (!e.GoodPins) mf.Tls.ShowHelp("Pin configuration for Module" + e.Module.ToString() + " not correct. Using default values.");
@@ -205,9 +192,8 @@ namespace RateController
                             "2 - PCA9555 8 relays, use 8 relay module.\n" +
                             "3 - PCA9555 16 relays, use 16 relay module.\n" +
                             "4 - MCP23017, use a MCP23017 IO expander.\n" +
-                            "5 - PCA9685 single, use each PCA9685 pin to control a single relay.\n" +
-                            "6 - PCA9685 paired, use consecutive pins to control relays in a complementary mode. One is on and the other off.\n" +
-                            "7 - PCF8574";
+                            "5 - PCA9685, usea a PCA9685 IO expander.\n" +
+                            "6 - PCF8574";
 
             mf.Tls.ShowHelp(Message, "Relay Control");
             hlpevent.Handled = true;
@@ -226,138 +212,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void SwitchBoards()
-        {
-            switch (BoardType)
-            {
-                case 1:
-                    // RC11, Teensy
-                    tbModuleID.Text = "0";
-                    tbSensorCount.Text = "2";
-                    tbWifiPort.Text = "1";
-                    cbRelayControl.SelectedIndex = 1;
-
-                    ckRelayOn.Checked = true;
-                    ckFlowOn.Checked = true;
-                    ckMomentary.Checked = false;
-
-                    tbFlow1.Text = "28";
-                    tbFlow2.Text = "29";
-                    tbDir1.Text = "37";
-                    tbDir2.Text = "14";
-                    tbPWM1.Text = "36";
-                    tbPWM2.Text = "15";
-                    tbWrk.Text = "-";
-
-                    tbRelay1.Text = "8";
-                    tbRelay2.Text = "9";
-                    tbRelay3.Text = "10";
-                    tbRelay4.Text = "11";
-                    tbRelay5.Text = "12";
-                    tbRelay6.Text = "25";
-                    tbRelay7.Text = "26";
-                    tbRelay8.Text = "27";
-
-                    tbRelay9.Text = "-";
-                    tbRelay10.Text = "-";
-                    tbRelay11.Text = "-";
-                    tbRelay12.Text = "-";
-                    tbRelay13.Text = "-";
-                    tbRelay14.Text = "-";
-                    tbRelay15.Text = "-";
-                    tbRelay16.Text = "-";
-
-                    tbSSID.Text = "Tractor";
-                    tbPassword.Text = "111222333";
-                    ckClient.Checked = false;
-                    break;
-
-                case 2:
-                    // RC17, ESP32
-                    tbModuleID.Text = "0";
-                    tbSensorCount.Text = "1";
-                    tbWifiPort.Text = "0";
-                    cbRelayControl.SelectedIndex = 4;
-
-                    ckRelayOn.Checked = true;
-                    ckFlowOn.Checked = true;
-                    ckMomentary.Checked = false;
-
-                    tbFlow1.Text = "-";
-                    tbFlow2.Text = "-";
-                    tbDir1.Text = "-";
-                    tbDir2.Text = "-";
-                    tbPWM1.Text = "-";
-                    tbPWM2.Text = "-";
-                    tbWrk.Text = "-";
-
-                    tbRelay1.Text = "-";
-                    tbRelay2.Text = "-";
-                    tbRelay3.Text = "-";
-                    tbRelay4.Text = "-";
-                    tbRelay5.Text = "-";
-                    tbRelay6.Text = "-";
-                    tbRelay7.Text = "-";
-                    tbRelay8.Text = "-";
-
-                    tbRelay9.Text = "-";
-                    tbRelay10.Text = "-";
-                    tbRelay11.Text = "-";
-                    tbRelay12.Text = "-";
-                    tbRelay13.Text = "-";
-                    tbRelay14.Text = "-";
-                    tbRelay15.Text = "-";
-                    tbRelay16.Text = "-";
-
-                    tbSSID.Text = "Tractor";
-                    tbPassword.Text = "111222333";
-                    ckClient.Checked = false;
-                    rb3Wire.Checked = true;
-                    break;
-
-                default:
-                    // RC12, Nano
-                    tbModuleID.Text = "0";
-                    tbSensorCount.Text = "1";
-                    tbWifiPort.Text = "0";
-                    cbRelayControl.SelectedIndex = 2;
-
-                    ckRelayOn.Checked = true;
-                    ckFlowOn.Checked = true;
-                    ckMomentary.Checked = false;
-
-                    tbFlow1.Text = "3";
-                    tbFlow2.Text = "-";
-                    tbDir1.Text = "6";
-                    tbDir2.Text = "-";
-                    tbPWM1.Text = "9";
-                    tbPWM2.Text = "-";
-                    tbWrk.Text = "-";
-
-                    tbRelay1.Text = "-";
-                    tbRelay2.Text = "-";
-                    tbRelay3.Text = "-";
-                    tbRelay4.Text = "-";
-                    tbRelay5.Text = "-";
-                    tbRelay6.Text = "-";
-                    tbRelay7.Text = "-";
-                    tbRelay8.Text = "-";
-
-                    tbRelay9.Text = "-";
-                    tbRelay10.Text = "-";
-                    tbRelay11.Text = "-";
-                    tbRelay12.Text = "-";
-                    tbRelay13.Text = "-";
-                    tbRelay14.Text = "-";
-                    tbRelay15.Text = "-";
-                    tbRelay16.Text = "-";
-
-                    tbSSID.Text = "Tractor";
-                    tbPassword.Text = "111222333";
-                    ckClient.Checked = false;
-                    break;
-            }
-        }
         private void ckDefaultModule_CheckedChanged(object sender, EventArgs e)
         {
             if (ckDefaultModule.Checked)
@@ -550,6 +404,23 @@ namespace RateController
                 mf.ModuleConfig.WorkPin = 255;
             }
 
+            if (byte.TryParse(tbPressure.Text, out val))
+            {
+                mf.ModuleConfig.PressurePin = val;
+            }
+            else
+            {
+                mf.ModuleConfig.PressurePin = 255;
+            }
+            if (byte.TryParse(tbAds.Text, out val))
+            {
+                mf.ModuleConfig.AdsAddress = val;
+            }
+            else
+            {
+                mf.ModuleConfig.AdsAddress = 255;
+            }
+
             // Pins
             for (int i = 0; i < 16; i++)
             {
@@ -706,6 +577,167 @@ namespace RateController
             return Result;
         }
 
+        private void SwitchBoards()
+        {
+            switch (BoardType)
+            {
+                case 1:
+                    // RC11, Teensy
+                    tbModuleID.Text = "0";
+                    tbSensorCount.Text = "2";
+                    tbWifiPort.Text = "1";
+                    cbRelayControl.SelectedIndex = 1;
+
+                    ckRelayOn.Checked = true;
+                    ckFlowOn.Checked = true;
+                    ckMomentary.Checked = false;
+
+                    tbFlow1.Text = "28";
+                    tbFlow2.Text = "29";
+                    tbDir1.Text = "37";
+                    tbDir2.Text = "14";
+                    tbPWM1.Text = "36";
+                    tbPWM2.Text = "15";
+                    tbWrk.Text = "-";
+
+                    tbRelay1.Text = "8";
+                    tbRelay2.Text = "9";
+                    tbRelay3.Text = "10";
+                    tbRelay4.Text = "11";
+                    tbRelay5.Text = "12";
+                    tbRelay6.Text = "25";
+                    tbRelay7.Text = "26";
+                    tbRelay8.Text = "27";
+
+                    tbRelay9.Text = "-";
+                    tbRelay10.Text = "-";
+                    tbRelay11.Text = "-";
+                    tbRelay12.Text = "-";
+                    tbRelay13.Text = "-";
+                    tbRelay14.Text = "-";
+                    tbRelay15.Text = "-";
+                    tbRelay16.Text = "-";
+
+                    tbSSID.Text = "Tractor";
+                    tbPassword.Text = "111222333";
+                    ckClient.Checked = false;
+                    tbAds.Text = "72";
+                    tbPressure.Text = "-";
+                    break;
+
+                case 2:
+                    // RC17, ESP32
+                    tbModuleID.Text = "0";
+                    tbSensorCount.Text = "1";
+                    tbWifiPort.Text = "0";
+                    cbRelayControl.SelectedIndex = 4;
+
+                    ckRelayOn.Checked = true;
+                    ckFlowOn.Checked = true;
+                    ckMomentary.Checked = false;
+
+                    tbFlow1.Text = "13";
+                    tbFlow2.Text = "-";
+                    tbDir1.Text = "17";
+                    tbDir2.Text = "-";
+                    tbPWM1.Text = "5";
+                    tbPWM2.Text = "-";
+                    tbWrk.Text = "2";
+
+                    tbRelay1.Text = "-";
+                    tbRelay2.Text = "-";
+                    tbRelay3.Text = "-";
+                    tbRelay4.Text = "-";
+                    tbRelay5.Text = "-";
+                    tbRelay6.Text = "-";
+                    tbRelay7.Text = "-";
+                    tbRelay8.Text = "-";
+
+                    tbRelay9.Text = "-";
+                    tbRelay10.Text = "-";
+                    tbRelay11.Text = "-";
+                    tbRelay12.Text = "-";
+                    tbRelay13.Text = "-";
+                    tbRelay14.Text = "-";
+                    tbRelay15.Text = "-";
+                    tbRelay16.Text = "-";
+
+                    tbSSID.Text = "Tractor";
+                    tbPassword.Text = "111222333";
+                    ckClient.Checked = false;
+                    rb3Wire.Checked = true;
+                    tbAds.Text = "-";
+                    tbPressure.Text = "15";
+                    break;
+
+                default:
+                    // RC12, Nano
+                    tbModuleID.Text = "0";
+                    tbSensorCount.Text = "1";
+                    tbWifiPort.Text = "0";
+                    cbRelayControl.SelectedIndex = 2;
+
+                    ckRelayOn.Checked = true;
+                    ckFlowOn.Checked = true;
+                    ckMomentary.Checked = false;
+
+                    tbFlow1.Text = "3";
+                    tbFlow2.Text = "-";
+                    tbDir1.Text = "6";
+                    tbDir2.Text = "-";
+                    tbPWM1.Text = "9";
+                    tbPWM2.Text = "-";
+                    tbWrk.Text = "-";
+
+                    tbRelay1.Text = "-";
+                    tbRelay2.Text = "-";
+                    tbRelay3.Text = "-";
+                    tbRelay4.Text = "-";
+                    tbRelay5.Text = "-";
+                    tbRelay6.Text = "-";
+                    tbRelay7.Text = "-";
+                    tbRelay8.Text = "-";
+
+                    tbRelay9.Text = "-";
+                    tbRelay10.Text = "-";
+                    tbRelay11.Text = "-";
+                    tbRelay12.Text = "-";
+                    tbRelay13.Text = "-";
+                    tbRelay14.Text = "-";
+                    tbRelay15.Text = "-";
+                    tbRelay16.Text = "-";
+
+                    tbSSID.Text = "Tractor";
+                    tbPassword.Text = "111222333";
+                    ckClient.Checked = false;
+                    tbAds.Text = "-";
+                    tbPressure.Text = "-";
+                    break;
+            }
+        }
+
+        private void tbAds_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbAds.Text, out temp);
+            using (var form = new FormNumeric(0, 255, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbAds.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbAds_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Enter 255 for not connected.";
+
+            mf.Tls.ShowHelp(Message);
+            hlpevent.Handled = true;
+        }
+
         private void tbPassword_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Password for the network the module connects to in Client Mode.";
@@ -717,6 +749,43 @@ namespace RateController
         private void tbPassword_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void tbPressure_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbPressure.Text, out temp);
+            using (var form = new FormNumeric(0, 255, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPressure.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbRelays_enter(object sender, EventArgs e)
+        {
+            TextBox bx = (TextBox)sender;
+            double temp = 0;
+            if (double.TryParse(bx.Text.Trim(), out double vl)) temp = vl;
+            using (var form = new FormNumeric(0, 50, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    bx.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbSensorCount_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The number of sensors connected.";
+
+            mf.Tls.ShowHelp(Message, "Sensors");
+            hlpevent.Handled = true;
         }
 
         private void tbSSID_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -779,6 +848,7 @@ namespace RateController
             tbWifiPort.Text = data[6].ToString();
             ckMomentary.Checked = ((data[4] & 8) == 8);
             rb3Wire.Checked = ((data[4] & 0b0001_0000) == 0b0001_0000);
+            rb2Wire.Checked = !rb3Wire.Checked;
 
             // flow, motor
             for (int i = 7; i < 13; i++)
@@ -809,6 +879,24 @@ namespace RateController
                 tbWrk.Text = data[29].ToString();
             }
 
+            if (data[30] > 60)
+            {
+                tbPressure.Text = "-";
+            }
+            else
+            {
+                tbPressure.Text = data[30].ToString();
+            }
+
+            if (data[31] > 250)
+            {
+                tbAds.Text = "-";
+            }
+            else
+            {
+                tbAds.Text = data[31].ToString();
+            }
+
             // relays
             for (int i = 13; i < 29; i++)
             {
@@ -821,6 +909,7 @@ namespace RateController
                     display[i] = data[i].ToString();
                 }
             }
+
             tbRelay1.Text = display[13].ToString();
             tbRelay2.Text = display[14].ToString();
             tbRelay3.Text = display[15].ToString();
@@ -851,7 +940,7 @@ namespace RateController
             switch (BoardType)
             {
                 case 1:
-                    rbTeensy.Checked = true; 
+                    rbTeensy.Checked = true;
                     break;
 
                 case 2:
@@ -880,15 +969,6 @@ namespace RateController
                     tbWifiPort.Text = form.ReturnValue.ToString("N0");
                 }
             }
-        }
-
-        private void tbSensorCount_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The number of sensors connected.";
-
-            mf.Tls.ShowHelp(Message, "Sensors");
-            hlpevent.Handled = true;
-
         }
     }
 }

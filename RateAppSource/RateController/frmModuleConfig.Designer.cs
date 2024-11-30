@@ -111,6 +111,10 @@
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.rb3Wire = new System.Windows.Forms.RadioButton();
             this.rb2Wire = new System.Windows.Forms.RadioButton();
+            this.tbPressure = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.tbAds = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
             this.btnPCB = new System.Windows.Forms.Button();
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -293,6 +297,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.tbAds);
+            this.tabPage1.Controls.Add(this.label26);
             this.tabPage1.Controls.Add(this.lbRelay);
             this.tabPage1.Controls.Add(this.cbRelayControl);
             this.tabPage1.Controls.Add(this.tbWifiPort);
@@ -315,7 +321,7 @@
             // lbRelay
             // 
             this.lbRelay.AutoSize = true;
-            this.lbRelay.Location = new System.Drawing.Point(62, 232);
+            this.lbRelay.Location = new System.Drawing.Point(63, 200);
             this.lbRelay.Name = "lbRelay";
             this.lbRelay.Size = new System.Drawing.Size(122, 24);
             this.lbRelay.TabIndex = 47;
@@ -331,10 +337,9 @@
             "PCA9555  8 relays",
             "PCA9555  16 relays",
             "MCP23017",
-            "PCA9685 single",
-            "PCA9685 paired",
+            "PCA9685",
             "PCF8574"});
-            this.cbRelayControl.Location = new System.Drawing.Point(211, 228);
+            this.cbRelayControl.Location = new System.Drawing.Point(212, 196);
             this.cbRelayControl.Name = "cbRelayControl";
             this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
             this.cbRelayControl.TabIndex = 46;
@@ -343,7 +348,7 @@
             // 
             // tbWifiPort
             // 
-            this.tbWifiPort.Location = new System.Drawing.Point(340, 182);
+            this.tbWifiPort.Location = new System.Drawing.Point(341, 148);
             this.tbWifiPort.Name = "tbWifiPort";
             this.tbWifiPort.Size = new System.Drawing.Size(58, 29);
             this.tbWifiPort.TabIndex = 45;
@@ -354,7 +359,7 @@
             // lbWifiPort
             // 
             this.lbWifiPort.AutoSize = true;
-            this.lbWifiPort.Location = new System.Drawing.Point(62, 184);
+            this.lbWifiPort.Location = new System.Drawing.Point(63, 150);
             this.lbWifiPort.Name = "lbWifiPort";
             this.lbWifiPort.Size = new System.Drawing.Size(135, 24);
             this.lbWifiPort.TabIndex = 44;
@@ -365,7 +370,7 @@
             this.ckFlowOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFlowOn.Location = new System.Drawing.Point(256, 298);
+            this.ckFlowOn.Location = new System.Drawing.Point(255, 322);
             this.ckFlowOn.Name = "ckFlowOn";
             this.ckFlowOn.Size = new System.Drawing.Size(117, 69);
             this.ckFlowOn.TabIndex = 43;
@@ -379,7 +384,7 @@
             this.ckRelayOn.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRelayOn.Location = new System.Drawing.Point(91, 298);
+            this.ckRelayOn.Location = new System.Drawing.Point(90, 322);
             this.ckRelayOn.Name = "ckRelayOn";
             this.ckRelayOn.Size = new System.Drawing.Size(117, 69);
             this.ckRelayOn.TabIndex = 42;
@@ -390,7 +395,7 @@
             // 
             // tbSensorCount
             // 
-            this.tbSensorCount.Location = new System.Drawing.Point(340, 134);
+            this.tbSensorCount.Location = new System.Drawing.Point(341, 100);
             this.tbSensorCount.Name = "tbSensorCount";
             this.tbSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbSensorCount.TabIndex = 27;
@@ -402,7 +407,7 @@
             // lbSensorCount
             // 
             this.lbSensorCount.AutoSize = true;
-            this.lbSensorCount.Location = new System.Drawing.Point(62, 136);
+            this.lbSensorCount.Location = new System.Drawing.Point(63, 102);
             this.lbSensorCount.Name = "lbSensorCount";
             this.lbSensorCount.Size = new System.Drawing.Size(125, 24);
             this.lbSensorCount.TabIndex = 26;
@@ -410,7 +415,7 @@
             // 
             // tbModuleID
             // 
-            this.tbModuleID.Location = new System.Drawing.Point(340, 86);
+            this.tbModuleID.Location = new System.Drawing.Point(341, 52);
             this.tbModuleID.Name = "tbModuleID";
             this.tbModuleID.Size = new System.Drawing.Size(58, 29);
             this.tbModuleID.TabIndex = 25;
@@ -421,7 +426,7 @@
             // lbModuleID
             // 
             this.lbModuleID.AutoSize = true;
-            this.lbModuleID.Location = new System.Drawing.Point(62, 88);
+            this.lbModuleID.Location = new System.Drawing.Point(63, 54);
             this.lbModuleID.Name = "lbModuleID";
             this.lbModuleID.Size = new System.Drawing.Size(96, 24);
             this.lbModuleID.TabIndex = 24;
@@ -429,6 +434,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.tbPressure);
+            this.tabPage2.Controls.Add(this.label25);
             this.tabPage2.Controls.Add(this.ckMomentary);
             this.tabPage2.Controls.Add(this.tbWrk);
             this.tabPage2.Controls.Add(this.lbWorkPin);
@@ -458,7 +465,7 @@
             this.ckMomentary.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckMomentary.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMomentary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMomentary.Location = new System.Drawing.Point(309, 327);
+            this.ckMomentary.Location = new System.Drawing.Point(308, 304);
             this.ckMomentary.Name = "ckMomentary";
             this.ckMomentary.Size = new System.Drawing.Size(119, 40);
             this.ckMomentary.TabIndex = 82;
@@ -469,7 +476,7 @@
             // 
             // tbWrk
             // 
-            this.tbWrk.Location = new System.Drawing.Point(236, 332);
+            this.tbWrk.Location = new System.Drawing.Point(235, 310);
             this.tbWrk.Name = "tbWrk";
             this.tbWrk.Size = new System.Drawing.Size(58, 29);
             this.tbWrk.TabIndex = 81;
@@ -480,7 +487,7 @@
             // lbWorkPin
             // 
             this.lbWorkPin.AutoSize = true;
-            this.lbWorkPin.Location = new System.Drawing.Point(115, 335);
+            this.lbWorkPin.Location = new System.Drawing.Point(114, 312);
             this.lbWorkPin.Name = "lbWorkPin";
             this.lbWorkPin.Size = new System.Drawing.Size(86, 24);
             this.lbWorkPin.TabIndex = 80;
@@ -488,7 +495,7 @@
             // 
             // tbPWM2
             // 
-            this.tbPWM2.Location = new System.Drawing.Point(236, 288);
+            this.tbPWM2.Location = new System.Drawing.Point(235, 267);
             this.tbPWM2.Name = "tbPWM2";
             this.tbPWM2.Size = new System.Drawing.Size(58, 29);
             this.tbPWM2.TabIndex = 79;
@@ -499,7 +506,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(115, 290);
+            this.label7.Location = new System.Drawing.Point(114, 269);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 24);
             this.label7.TabIndex = 78;
@@ -507,7 +514,7 @@
             // 
             // tbPWM1
             // 
-            this.tbPWM1.Location = new System.Drawing.Point(236, 246);
+            this.tbPWM1.Location = new System.Drawing.Point(235, 224);
             this.tbPWM1.Name = "tbPWM1";
             this.tbPWM1.Size = new System.Drawing.Size(58, 29);
             this.tbPWM1.TabIndex = 77;
@@ -518,7 +525,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(115, 248);
+            this.label8.Location = new System.Drawing.Point(114, 226);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(71, 24);
             this.label8.TabIndex = 76;
@@ -526,7 +533,7 @@
             // 
             // tbDir2
             // 
-            this.tbDir2.Location = new System.Drawing.Point(236, 204);
+            this.tbDir2.Location = new System.Drawing.Point(235, 181);
             this.tbDir2.Name = "tbDir2";
             this.tbDir2.Size = new System.Drawing.Size(58, 29);
             this.tbDir2.TabIndex = 75;
@@ -537,7 +544,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(115, 206);
+            this.label5.Location = new System.Drawing.Point(114, 183);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(48, 24);
             this.label5.TabIndex = 74;
@@ -545,7 +552,7 @@
             // 
             // tbDir1
             // 
-            this.tbDir1.Location = new System.Drawing.Point(236, 162);
+            this.tbDir1.Location = new System.Drawing.Point(235, 138);
             this.tbDir1.Name = "tbDir1";
             this.tbDir1.Size = new System.Drawing.Size(58, 29);
             this.tbDir1.TabIndex = 73;
@@ -556,7 +563,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(115, 164);
+            this.label6.Location = new System.Drawing.Point(114, 140);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(48, 24);
             this.label6.TabIndex = 72;
@@ -564,7 +571,7 @@
             // 
             // tbFlow2
             // 
-            this.tbFlow2.Location = new System.Drawing.Point(236, 120);
+            this.tbFlow2.Location = new System.Drawing.Point(235, 95);
             this.tbFlow2.Name = "tbFlow2";
             this.tbFlow2.Size = new System.Drawing.Size(58, 29);
             this.tbFlow2.TabIndex = 71;
@@ -575,7 +582,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(115, 122);
+            this.label3.Location = new System.Drawing.Point(114, 97);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(66, 24);
             this.label3.TabIndex = 70;
@@ -583,7 +590,7 @@
             // 
             // tbFlow1
             // 
-            this.tbFlow1.Location = new System.Drawing.Point(236, 78);
+            this.tbFlow1.Location = new System.Drawing.Point(235, 52);
             this.tbFlow1.Name = "tbFlow1";
             this.tbFlow1.Size = new System.Drawing.Size(58, 29);
             this.tbFlow1.TabIndex = 69;
@@ -594,7 +601,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(115, 80);
+            this.label4.Location = new System.Drawing.Point(114, 54);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 24);
             this.label4.TabIndex = 68;
@@ -999,12 +1006,14 @@
             // rb3Wire
             // 
             this.rb3Wire.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rb3Wire.Checked = true;
             this.rb3Wire.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rb3Wire.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rb3Wire.Location = new System.Drawing.Point(341, 58);
             this.rb3Wire.Name = "rb3Wire";
             this.rb3Wire.Size = new System.Drawing.Size(117, 69);
             this.rb3Wire.TabIndex = 51;
+            this.rb3Wire.TabStop = true;
             this.rb3Wire.Text = "3 Wire valves";
             this.rb3Wire.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rb3Wire.UseVisualStyleBackColor = true;
@@ -1013,18 +1022,55 @@
             // rb2Wire
             // 
             this.rb2Wire.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rb2Wire.Checked = true;
             this.rb2Wire.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rb2Wire.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rb2Wire.Location = new System.Drawing.Point(99, 58);
             this.rb2Wire.Name = "rb2Wire";
             this.rb2Wire.Size = new System.Drawing.Size(117, 69);
             this.rb2Wire.TabIndex = 50;
-            this.rb2Wire.TabStop = true;
             this.rb2Wire.Text = "2 Wire valves";
             this.rb2Wire.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rb2Wire.UseVisualStyleBackColor = true;
             this.rb2Wire.CheckedChanged += new System.EventHandler(this.textbox_TextChanged);
+            // 
+            // tbPressure
+            // 
+            this.tbPressure.Location = new System.Drawing.Point(235, 353);
+            this.tbPressure.Name = "tbPressure";
+            this.tbPressure.Size = new System.Drawing.Size(58, 29);
+            this.tbPressure.TabIndex = 84;
+            this.tbPressure.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPressure.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbPressure.Enter += new System.EventHandler(this.tbPressure_Enter);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(114, 355);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(117, 24);
+            this.label25.TabIndex = 83;
+            this.label25.Text = "Pressure Pin";
+            // 
+            // tbAds
+            // 
+            this.tbAds.Location = new System.Drawing.Point(341, 247);
+            this.tbAds.Name = "tbAds";
+            this.tbAds.Size = new System.Drawing.Size(58, 29);
+            this.tbAds.TabIndex = 49;
+            this.tbAds.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbAds.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbAds.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbAds_HelpRequested);
+            this.tbAds.Enter += new System.EventHandler(this.tbAds_Enter);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(63, 249);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(160, 24);
+            this.label26.TabIndex = 48;
+            this.label26.Text = "ADS1115 address";
             // 
             // btnPCB
             // 
@@ -1280,5 +1326,9 @@
         private System.Windows.Forms.RadioButton rb2Wire;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox tbPressure;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox tbAds;
+        private System.Windows.Forms.Label label26;
     }
 }

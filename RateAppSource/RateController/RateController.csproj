@@ -419,6 +419,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Pins.PNG" />
     <None Include="Resources\Valve3wire.png" />
     <None Include="Resources\Valve2wire.png" />
     <None Include="Resources\2wire.png" />
@@ -428,7 +429,6 @@
     <None Include="Resources\scale.png" />
     <None Include="Resources\Default.rcs" />
     <None Include="Resources\Example.rcs" />
-    <None Include="Resources\Pins.PNG" />
     <None Include="Resources\SimGear.png" />
     <None Include="Resources\RateDown.png" />
     <None Include="Resources\Pins1.PNG" />
