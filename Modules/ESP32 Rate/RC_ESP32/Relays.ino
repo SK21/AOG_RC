@@ -181,7 +181,7 @@ void CheckRelays()
                 Wire.beginTransmission(PCA9685address);
                 Wire.write(0x06); // Start at LED0_ON_L register (first PWM channel)
 
-                // Iterate through all 16 channels and write data using auto-increment
+                // Iterate through all 16 channels and write data using auto-increment, IN1 is off
                 for (int i = 0; i < 8; i++)
                 {
                     for (int j = 0; j < 2; j++)

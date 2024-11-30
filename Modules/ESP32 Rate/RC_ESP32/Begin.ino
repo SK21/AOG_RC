@@ -242,6 +242,16 @@ void DoSetup()
 		Serial.println("");
 		if (MCP23017_found)
 		{
+			Wire.beginTransmission(MCPaddress);
+			Wire.write(0x00); // IODIRA register
+			Wire.write(0x00); // set all of port A to outputs
+			Wire.endTransmission();
+
+			Wire.beginTransmission(MCPaddress);
+			Wire.write(0x01); // IODIRB register
+			Wire.write(0x00); // set all of port B to outputs
+			Wire.endTransmission();
+
 			Serial.println("MCP23017 found.");
 		}
 		else
