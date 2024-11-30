@@ -630,7 +630,9 @@ namespace RateController
 
         public bool ShowScale(int ProductID)
         {
-            return cShowScale[ProductID];
+            bool Result = false;
+            if (ProductID < 4) Result = cShowScale[ProductID];
+            return Result;
         }
 
         public void StartSerial()
