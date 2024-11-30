@@ -47,7 +47,7 @@ struct ModuleConfig
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
-	uint8_t AdsAddress = 0x48;			// enter 0 to search all
+	uint8_t AdsAddress = 0x48;		// 0 - search all, NC - no ads
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t RelayControl = 6;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
 									//, 5 - PCA9685 single , 6 - PCA9685 paired, 7 - PCF8574
@@ -56,9 +56,10 @@ struct ModuleConfig
 	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
-	uint8_t WorkPin;
+	uint8_t WorkPin = NC;
 	bool WorkPinIsMomentary = false;
-	uint8_t Is3Wire = 1;	// 0 - DRV provides power on/off with Output1/Output2, 1 - DRV provides signal on/off with Output2
+	uint8_t Is3Wire = 1;			// 0 - DRV provides powered on/off with Output1/Output2, 1 - DRV provides on/off with Output2 only, Output1 is off
+	uint8_t PressurePin = NC;		// NC - no pressure pin
 };
 
 ModuleConfig MDL;
@@ -280,6 +281,20 @@ bool WorkPinOn()
 		WrkOn = false;
 	}
 	return WrkOn;
+}
+
+int16_t CurrentPressure()
+{
+	int16_t Result = 0;
+	if (MDL.PressurePin < NC)
+	{
+		Result = analogRead(MDL.PressurePin) * 10.0;
+	}
+	else if (ADSfound)
+	{
+		Result = AINs.AIN0 / 10.0;
+	}
+	return Result;
 }
 
 //bool State = false;

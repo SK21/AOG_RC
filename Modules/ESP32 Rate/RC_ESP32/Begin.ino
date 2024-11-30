@@ -39,7 +39,11 @@ void DoSetup()
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
 
 	// ADS1115
-	if (MDL.AdsAddress == 0)
+	if (MDL.AdsAddress == NC)
+	{
+		ADSfound == false;
+	}
+	else if (MDL.AdsAddress == 0)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -435,6 +439,7 @@ void LoadDefaults()
 	Serial.println("Loading default settings.");
 
 	MDL.WorkPin = NC;
+	MDL.PressurePin = NC;
 
 	// default flow pins
 	Sensor[0].FlowPin = 17;
@@ -479,6 +484,20 @@ bool ValidData()
 			for (int j = 0; j < sizeof(ValidPins0); j++)
 			{
 				if (MDL.WorkPin == ValidPins0[j])
+				{
+					Result = true;
+					break;
+				}
+			}
+			if (!Result) break;
+		}
+
+		// pressure pin
+		if (Result && MDL.PressurePin < NC)
+		{
+			for (int j = 0; j < sizeof(ValidPins0); j++)
+			{
+				if (MDL.PressurePin == ValidPins0[j])
 				{
 					Result = true;
 					break;

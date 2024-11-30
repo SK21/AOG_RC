@@ -112,7 +112,7 @@ void SendComm()
         Data[1] = 126;
         Data[2] = MDL.ID;
 
-        int16_t Pressure = AINs.AIN0 / 10.0;
+        int16_t Pressure = CurrentPressure();
         Data[3] = (byte)Pressure;
         Data[4] = (byte)(Pressure >> 8);
         Data[5] = 0;
