@@ -44,6 +44,41 @@ void DoSetup()
 	Wire.begin();			// I2C on pins SCL 22, SDA 21
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
 
+	// MCP23017 I/O expander on default address
+	Serial.println("");
+	Serial.println("Starting MCP23017 ...");
+	ErrorCount = 0;
+	bool MCP23017_found = false;
+	while (!MCP23017_found)
+	{
+		Serial.print(".");
+		Wire.beginTransmission(MCPaddress);
+		MCP23017_found = (Wire.endTransmission() == 0);
+		ErrorCount++;
+		delay(500);
+		if (ErrorCount > 5) break;
+	}
+
+	Serial.println("");
+	if (MCP23017_found)
+	{
+		Wire.beginTransmission(MCPaddress);
+		Wire.write(0x00); // IODIRA register
+		Wire.write(0x00); // set all of port A to outputs
+		Wire.endTransmission();
+
+		Wire.beginTransmission(MCPaddress);
+		Wire.write(0x01); // IODIRB register
+		Wire.write(0x00); // set all of port B to outputs
+		Wire.endTransmission();
+
+		Serial.println("MCP23017 found.");
+	}
+	else
+	{
+		Serial.println("MCP23017 not found.");
+	}
+
 	// Wifi
 	WiFi.mode(WIFI_MODE_APSTA);
 	WiFi.disconnect(true);

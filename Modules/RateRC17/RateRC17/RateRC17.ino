@@ -10,8 +10,8 @@
 #include <Wire.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1  PCB: RC17
-# define InoDescription "RateRC17 :  24-Nov-2024"
-const uint16_t InoID = 24114;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RateRC17 :  30-Nov-2024"
+const uint16_t InoID = 30114;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 5;		// RateRC17
 
 const uint8_t MCPaddress = 0x20;
