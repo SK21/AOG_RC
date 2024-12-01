@@ -213,8 +213,8 @@ namespace RateController
             // 
             this.tcProducts.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.tcProducts.Controls.Add(this.tbRate);
-            this.tcProducts.Controls.Add(this.tbVR);
             this.tcProducts.Controls.Add(this.tbControl);
+            this.tcProducts.Controls.Add(this.tbVR);
             this.tcProducts.Controls.Add(this.tbOptions);
             this.tcProducts.Controls.Add(this.Mode);
             this.tcProducts.Controls.Add(this.tbDiagnostics);
@@ -697,10 +697,10 @@ namespace RateController
             this.tbVR.Controls.Add(this.ckVR);
             this.tbVR.Controls.Add(this.lbVariableRate);
             this.tbVR.Controls.Add(this.cbVR);
-            this.tbVR.Location = new System.Drawing.Point(4, 83);
+            this.tbVR.Location = new System.Drawing.Point(4, 42);
             this.tbVR.Name = "tbVR";
             this.tbVR.Padding = new System.Windows.Forms.Padding(3);
-            this.tbVR.Size = new System.Drawing.Size(472, 407);
+            this.tbVR.Size = new System.Drawing.Size(472, 448);
             this.tbVR.TabIndex = 7;
             this.tbVR.Text = "  VR";
             this.tbVR.UseVisualStyleBackColor = true;
@@ -815,10 +815,10 @@ namespace RateController
             this.tbControl.Controls.Add(this.lbProportional);
             this.tbControl.Controls.Add(this.btnTuningGraph);
             this.tbControl.Controls.Add(this.btnPIDloadDefaults);
-            this.tbControl.Location = new System.Drawing.Point(4, 83);
+            this.tbControl.Location = new System.Drawing.Point(4, 42);
             this.tbControl.Name = "tbControl";
             this.tbControl.Padding = new System.Windows.Forms.Padding(3);
-            this.tbControl.Size = new System.Drawing.Size(472, 407);
+            this.tbControl.Size = new System.Drawing.Size(472, 448);
             this.tbControl.TabIndex = 4;
             this.tbControl.Text = "Control";
             this.tbControl.UseVisualStyleBackColor = true;
@@ -1112,9 +1112,9 @@ namespace RateController
             this.tbOptions.Controls.Add(this.ckOnScreen);
             this.tbOptions.Controls.Add(this.grpMinUPM);
             this.tbOptions.Controls.Add(this.grpSensor);
-            this.tbOptions.Location = new System.Drawing.Point(4, 83);
+            this.tbOptions.Location = new System.Drawing.Point(4, 42);
             this.tbOptions.Name = "tbOptions";
-            this.tbOptions.Size = new System.Drawing.Size(472, 407);
+            this.tbOptions.Size = new System.Drawing.Size(472, 448);
             this.tbOptions.TabIndex = 6;
             this.tbOptions.Text = "Options";
             this.tbOptions.UseVisualStyleBackColor = true;
@@ -1379,9 +1379,9 @@ namespace RateController
             this.Mode.Controls.Add(this.rbModeConstant);
             this.Mode.Controls.Add(this.rbModeControlledUPM);
             this.Mode.Controls.Add(this.label8);
-            this.Mode.Location = new System.Drawing.Point(4, 83);
+            this.Mode.Location = new System.Drawing.Point(4, 42);
             this.Mode.Name = "Mode";
-            this.Mode.Size = new System.Drawing.Size(472, 407);
+            this.Mode.Size = new System.Drawing.Size(472, 448);
             this.Mode.TabIndex = 10;
             this.Mode.Text = "Mode";
             this.Mode.UseVisualStyleBackColor = true;

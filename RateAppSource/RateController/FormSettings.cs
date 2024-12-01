@@ -30,7 +30,7 @@ namespace RateController
 
             lbProduct.Text = Lang.lgProduct;
             tcProducts.TabPages[0].Text = Lang.lgRate;
-            tcProducts.TabPages[2].Text = Lang.lgControl;
+            tcProducts.TabPages[1].Text = Lang.lgControl;
             tcProducts.TabPages[3].Text = Lang.lgOptions;
             tcProducts.TabPages[5].Text = Lang.lgDiagnostics;
 
@@ -41,9 +41,7 @@ namespace RateController
             lbSensorCounts.Text = Lang.lgSensorCounts;
             lbBaseRateDes.Text = Lang.lgBaseRate;
             lb6.Text = Lang.lgTankSize;
-            //btnResetCoverage.Text = Lang.lgCoverage;
             btnResetTank.Text = Lang.lgStartQuantity;
-            //btnResetQuantity.Text = Lang.lgQuantity;
 
             lbMax.Text = Lang.lgHighMax;
             lbMin.Text = Lang.lgMinPWM;
@@ -1012,7 +1010,7 @@ namespace RateController
                 if (tcProducts.TabCount < 7)
                 {
                     // add back the removed tabs
-                    tcProducts.TabPages.Insert(1, tbTemp1);
+                    tcProducts.TabPages.Insert(2, tbTemp1);
                     tcProducts.TabPages.Insert(5, tbTemp2);
 
                     ckOffRate.Location = new Point(29, 323);
