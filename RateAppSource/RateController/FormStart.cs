@@ -8,9 +8,8 @@ namespace RateController
 {
     public enum SimType
     {
-        None,
-        VirtualNano,
-        Speed
+        Sim_None,
+        Sim_Speed
     }
 
     public partial class FormStart : Form
@@ -73,7 +72,7 @@ namespace RateController
         private double cPressureOffset;
         private bool[] cShowScale = new bool[4];
         private bool cShowSwitches = false;
-        private SimType cSimMode = SimType.None;
+        private SimType cSimMode = SimType.Sim_None;
         private double cSimSpeed = 0;
         private DateTime cStartTime;
         private int CurrentPage;
@@ -301,9 +300,6 @@ namespace RateController
             }
         }
 
-        public DateTime StartTime
-        { get { return cStartTime; } }
-
         public bool UseDualAuto
         { get { return cUseDualAuto; } set { cUseDualAuto = value; } }
 
@@ -498,7 +494,7 @@ namespace RateController
             }
             else
             {
-                cSimMode = SimType.None;
+                cSimMode = SimType.Sim_None;
             }
 
             if (double.TryParse(Tls.LoadProperty("PrimeTime"), out double ptime))
@@ -752,7 +748,7 @@ namespace RateController
             {
                 this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
-                if (cSimMode == SimType.Speed || SectionControl.PrimeOn)
+                if (cSimMode == SimType.Sim_Speed || SectionControl.PrimeOn)
                 {
                     btnSettings.Image = Properties.Resources.SimGear;
                 }

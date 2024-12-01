@@ -801,20 +801,10 @@ namespace RateController
             }
 
             // set highlight
-            if (mf.SimMode == SimType.VirtualNano)
-            {
-                pnlSelect0.BackColor = mf.SimColor;
-                pnlSelect1.BackColor = mf.SimColor;
-                pnlSelect2.BackColor = mf.SimColor;
-                pnlSelect3.BackColor = mf.SimColor;
-            }
-            else
-            {
-                pnlSelect0.BackColor = Properties.Settings.Default.DayColour;
-                pnlSelect1.BackColor = Properties.Settings.Default.DayColour;
-                pnlSelect2.BackColor = Properties.Settings.Default.DayColour;
-                pnlSelect3.BackColor = Properties.Settings.Default.DayColour;
-            }
+            pnlSelect0.BackColor = Properties.Settings.Default.DayColour;
+            pnlSelect1.BackColor = Properties.Settings.Default.DayColour;
+            pnlSelect2.BackColor = Properties.Settings.Default.DayColour;
+            pnlSelect3.BackColor = Properties.Settings.Default.DayColour;
             switch (Prd.ID)
             {
                 case 0:
@@ -977,7 +967,7 @@ namespace RateController
             lbQuantity.Text = Prd.QuantityDescription;
 
             // aog
-            if (mf.SimMode == SimType.Speed)
+            if (mf.SimMode == SimType.Sim_Speed)
             {
                 btnMenu.Image = Properties.Resources.SimGear;
             }

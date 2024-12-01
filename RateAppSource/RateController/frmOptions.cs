@@ -301,11 +301,11 @@ namespace RateController
 
                 if (ckSimSpeed.Checked)
                 {
-                    mf.SimMode = SimType.Speed;
+                    mf.SimMode = SimType.Sim_Speed;
                 }
                 else
                 {
-                    mf.SimMode = SimType.None;
+                    mf.SimMode = SimType.Sim_None;
                 }
 
                 mf.UseLargeScreen = ckLargeScreen.Checked;
@@ -566,7 +566,7 @@ namespace RateController
             ckScreenSwitches.Checked = mf.ShowSwitches;
             ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
             ckPressure.Checked = mf.ShowPressure;
-            ckSimSpeed.Checked = (mf.SimMode == SimType.Speed);
+            ckSimSpeed.Checked = (mf.SimMode == SimType.Sim_Speed);
             ckDualAuto.Checked = mf.UseDualAuto;
             ckResume.Checked = mf.ResumeAfterPrime;
             ckNoMaster.Checked = mf.MasterOverride;

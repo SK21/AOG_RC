@@ -41,7 +41,7 @@ namespace RateController
 
         private void btnCalStart_Click(object sender, EventArgs e)
         {
-            mf.SimMode = SimType.Speed;
+            mf.SimMode = SimType.Sim_Speed;
             Running = true;
             SetButtons();
             Cals.Running(true);
@@ -51,7 +51,7 @@ namespace RateController
 
         private void btnCalStop_Click(object sender, EventArgs e)
         {
-            mf.SimMode = SimType.None;
+            mf.SimMode = SimType.Sim_None;
             Running = false;
             SetButtons();
             Cals.Running(false);
@@ -118,7 +118,7 @@ namespace RateController
         private void frmCalibrate_FormClosed(object sender, FormClosedEventArgs e)
         {
                 mf.Tls.SaveFormData(this);
-            mf.SimMode = SimType.None;
+            mf.SimMode = SimType.Sim_None;
 
             Cals.Close();
         }

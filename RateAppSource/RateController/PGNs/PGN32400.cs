@@ -65,26 +65,12 @@ namespace RateController
 
         public bool ModuleReceiving()
         {
-            if (Prod.mf.SimMode == SimType.VirtualNano)
-            {
-                return true;
-            }
-            else
-            {
-                return cSensorReceiving && ModuleSending();
-            }
+            return cSensorReceiving && ModuleSending();
         }
 
         public bool ModuleSending()
         {
-            if (Prod.mf.SimMode == SimType.VirtualNano)
-            {
-                return true;
-            }
-            else
-            {
-                return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
-            }
+            return ((DateTime.Now - ReceiveTime).TotalSeconds < 4);
         }
 
         public bool ParseByteData(byte[] Data)

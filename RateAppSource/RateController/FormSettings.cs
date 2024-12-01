@@ -1702,7 +1702,7 @@ namespace RateController
             wifiBar.Value = mf.ModulesStatus.WifiStrength(CurrentProduct.ModuleID);
 
             // product name
-            if (mf.SimMode != SimType.None)
+            if (mf.SimMode != SimType.Sim_None)
             {
                 //lbProduct.Text = lbProduct.Text;
                 lbProduct.BackColor = mf.SimColor;
@@ -1760,7 +1760,7 @@ namespace RateController
                 SetFanDisplay(false);
             }
 
-            if (mf.SimMode != SimType.None)
+            if (mf.SimMode != SimType.Sim_None)
             {
                 lbProduct.BackColor = mf.SimColor;
                 lbProduct.BorderStyle = BorderStyle.FixedSingle;

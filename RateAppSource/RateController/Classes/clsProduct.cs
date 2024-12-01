@@ -908,17 +908,10 @@ namespace RateController
             bool Result = false;    // return true if there is good comm
             try
             {
-                if (RealNano && mf.SimMode == SimType.VirtualNano)
+                if (RateSensor.ParseStringData(words))
                 {
-                    // block PGN32400 from real nano when simulation is with virtual nano
-                }
-                else
-                {
-                    if (RateSensor.ParseStringData(words))
-                    {
-                        UpdateUnitsApplied();
-                        Result = true;
-                    }
+                    UpdateUnitsApplied();
+                    Result = true;
                 }
             }
             catch (Exception)
@@ -960,7 +953,7 @@ namespace RateController
         public double Speed()
         {
             double Result = 0;
-            if (mf.SimMode == SimType.Speed || mf.SectionControl.PrimeOn)
+            if (mf.SimMode == SimType.Sim_Speed || mf.SectionControl.PrimeOn)
             {
                 Result = mf.SimSpeed;
             }
@@ -1193,7 +1186,7 @@ namespace RateController
         private double KMH()
         {
             double Result = 0;
-            if (mf.SimMode == SimType.Speed || mf.SectionControl.PrimeOn)
+            if (mf.SimMode == SimType.Sim_Speed || mf.SectionControl.PrimeOn)
             {
                 if (mf.UseInches)
                 {
