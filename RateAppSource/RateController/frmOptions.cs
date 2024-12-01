@@ -124,7 +124,23 @@ namespace RateController
 
         private void ckDefaultProduct_CheckedChanged(object sender, EventArgs e)
         {
-            if (ckDefaultProduct.Checked) SetButtons(true);
+            if (ckDefaultProduct.Checked)
+            {
+                var Hlp = new frmMsgBox(mf, "Confirm reset all products to default values?", "Reset", true);
+                Hlp.TopMost = true;
+
+                Hlp.ShowDialog();
+                bool Result = Hlp.Result;
+                Hlp.Close();
+                if(Result)
+                {
+                SetButtons(true);
+                }
+                else
+                {
+                    ckDefaultProduct.Checked = false;
+                }
+            }
         }
 
         private void ckDualAuto_CheckedChanged(object sender, EventArgs e)

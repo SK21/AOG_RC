@@ -12,10 +12,8 @@ namespace RateController
 {
     public partial class frmMsgBox : Form
     {
-        private FormStart mf;
         private bool cResult;
-
-        public bool Result { get => cResult; set => cResult = value; }
+        private FormStart mf;
 
         public frmMsgBox(FormStart CallingForm, string Message, string Title = "Help", bool Shrink = false)
         {
@@ -24,7 +22,7 @@ namespace RateController
             this.Text = Title;
             label1.Text = Message;
 
-            if(Shrink)
+            if (Shrink)
             {
                 panel1.Height = 60;
                 this.Height = 198;
@@ -40,16 +38,7 @@ namespace RateController
             }
         }
 
-        private void frmMsgBox_Load(object sender, EventArgs e)
-        {
-            mf.Tls.LoadFormData(this);
-            this.BackColor = Properties.Settings.Default.DayColour;
-        }
-
-        private void frmMsgBox_FormClosed(object sender, FormClosedEventArgs e)
-        {
-                mf.Tls.SaveFormData(this);
-        }
+        public bool Result { get => cResult; set => cResult = value; }
 
         private void bntOK_Click(object sender, EventArgs e)
         {
@@ -69,6 +58,17 @@ namespace RateController
             }
             Result = false;
             this.Hide();
+        }
+
+        private void frmMsgBox_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            mf.Tls.SaveFormData(this);
+        }
+
+        private void frmMsgBox_Load(object sender, EventArgs e)
+        {
+            mf.Tls.LoadFormData(this);
+            this.BackColor = Properties.Settings.Default.DayColour;
         }
     }
 }
