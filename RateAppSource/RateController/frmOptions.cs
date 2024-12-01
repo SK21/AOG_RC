@@ -609,12 +609,6 @@ namespace RateController
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
-        private void groupBox2_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
         private void tbPressureCal_Enter(object sender, EventArgs e)
         {
             double tempD;

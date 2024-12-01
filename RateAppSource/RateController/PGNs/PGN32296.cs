@@ -14,7 +14,6 @@ namespace RateController
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 40;
         private readonly FormStart mf;
-        private byte cProductID;
         private double[] cValue = new double[4];
 
         public PGN32296(FormStart CalledFrom)
@@ -24,6 +23,7 @@ namespace RateController
 
         public bool ParseStringData(string Sentence)
         {
+            byte cProductID;
             bool Result = false;
             try
             {

@@ -44,7 +44,7 @@ namespace RateController
             set
             {
                 string[] data;
-                if (IPAddress.TryParse(value, out IPAddress IP))
+                if (IPAddress.TryParse(value, out _))
                 {
                     data = value.Split('.');
                     cNetworkEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");

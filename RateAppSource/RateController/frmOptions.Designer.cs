@@ -59,6 +59,7 @@
             this.tbPressureCal = new System.Windows.Forms.TextBox();
             this.ckPressure = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ckDefaultProduct = new System.Windows.Forms.CheckBox();
             this.ckLargeScreen = new System.Windows.Forms.CheckBox();
             this.ckSingle = new System.Windows.Forms.CheckBox();
             this.ckTransparent = new System.Windows.Forms.CheckBox();
@@ -89,7 +90,6 @@
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
             this.btnReset = new System.Windows.Forms.Button();
-            this.ckDefaultProduct = new System.Windows.Forms.CheckBox();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -355,7 +355,7 @@
             this.groupBox2.TabIndex = 130;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pressure";
-            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
+            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
             // lbPressureOffset
             // 
@@ -431,6 +431,20 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Display";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // ckDefaultProduct
+            // 
+            this.ckDefaultProduct.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDefaultProduct.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckDefaultProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDefaultProduct.Location = new System.Drawing.Point(241, 68);
+            this.ckDefaultProduct.Name = "ckDefaultProduct";
+            this.ckDefaultProduct.Size = new System.Drawing.Size(164, 34);
+            this.ckDefaultProduct.TabIndex = 333;
+            this.ckDefaultProduct.Text = "Reset Products";
+            this.ckDefaultProduct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDefaultProduct.UseVisualStyleBackColor = true;
+            this.ckDefaultProduct.CheckedChanged += new System.EventHandler(this.ckDefaultProduct_CheckedChanged);
             // 
             // ckLargeScreen
             // 
@@ -825,20 +839,6 @@
             this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Visible = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
-            // ckDefaultProduct
-            // 
-            this.ckDefaultProduct.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckDefaultProduct.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckDefaultProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDefaultProduct.Location = new System.Drawing.Point(241, 68);
-            this.ckDefaultProduct.Name = "ckDefaultProduct";
-            this.ckDefaultProduct.Size = new System.Drawing.Size(164, 34);
-            this.ckDefaultProduct.TabIndex = 333;
-            this.ckDefaultProduct.Text = "Reset Products";
-            this.ckDefaultProduct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDefaultProduct.UseVisualStyleBackColor = true;
-            this.ckDefaultProduct.CheckedChanged += new System.EventHandler(this.ckDefaultProduct_CheckedChanged);
             // 
             // frmOptions
             // 

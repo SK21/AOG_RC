@@ -28,8 +28,7 @@ namespace RateController
 
             if (cRateAlarm )
             {
-                cMessage = "Alarm";
-                if (cRateAlarm) cMessage = "Rate  " + cMessage;
+                cMessage = "Rate Alarm";
                 cAlarmButton.Text = cMessage;
 
                 if (cSilenceAlarm)

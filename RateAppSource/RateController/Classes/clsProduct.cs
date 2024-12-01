@@ -27,7 +27,6 @@ namespace RateController
         private int cCountsRev;
         private bool cEnabled = true;
         private bool cEnableProdDensity = false;
-        private bool cEraseAccumulatedUnits = false;
         private bool cFanOn;
         private double cHectaresPerMinute;
         private double cHours1;
@@ -189,14 +188,7 @@ namespace RateController
         public bool EnableProdDensity
         { get { return cEnableProdDensity; } set { cEnableProdDensity = value; } }
 
-        public bool EraseAccumulatedUnits
-        {
-            get { return cEraseAccumulatedUnits; }
-            set
-            {
-                cEraseAccumulatedUnits = value;
-            }
-        }
+        public bool EraseAccumulatedUnits { get; set; }
 
         public bool FanOn
         {

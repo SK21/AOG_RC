@@ -59,7 +59,7 @@ namespace RateController
             GoodPinsLast = new bool[mf.MaxModules];
         }
 
-        public event EventHandler<PinStatusArgs> PinStatusChanged;
+        public event EventHandler<PinStatusEventArgs> PinStatusChanged;
 
         public bool Connected(int Module)
         {
@@ -172,7 +172,7 @@ namespace RateController
                     }
                     mf.Tls.WriteActivityLog(Mes, false, true);
 
-                    PinStatusArgs args = new PinStatusArgs();
+                    PinStatusEventArgs args = new PinStatusEventArgs();
                     args.GoodPins = cGoodPins[i];
                     args.Module = i;
                     PinStatusChanged?.Invoke(this, args);
@@ -200,7 +200,7 @@ namespace RateController
             return Result;
         }
 
-        public class PinStatusArgs : EventArgs
+        public class PinStatusEventArgs : EventArgs
         {
             public bool GoodPins { get; set; }
             public int Module { get; set; }

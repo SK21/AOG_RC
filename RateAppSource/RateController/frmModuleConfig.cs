@@ -56,7 +56,7 @@ namespace RateController
             }
         }
 
-        private void ArduinoModule_PinStatusChanged(object sender, PGN32401.PinStatusArgs e)
+        private void ArduinoModule_PinStatusChanged(object sender, PGN32401.PinStatusEventArgs e)
         {
             if (!e.GoodPins) mf.Tls.ShowHelp("Pin configuration for Module" + e.Module.ToString() + " not correct. Using default values.");
         }
