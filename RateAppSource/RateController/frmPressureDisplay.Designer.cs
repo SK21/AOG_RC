@@ -43,19 +43,22 @@
             // 
             // lbPressureValue
             // 
-            this.lbPressureValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPressureValue.BackColor = System.Drawing.Color.Transparent;
+            this.lbPressureValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPressureValue.ForeColor = System.Drawing.Color.Yellow;
             this.lbPressureValue.Location = new System.Drawing.Point(85, 12);
             this.lbPressureValue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbPressureValue.Name = "lbPressureValue";
-            this.lbPressureValue.Size = new System.Drawing.Size(149, 62);
+            this.lbPressureValue.Size = new System.Drawing.Size(104, 62);
             this.lbPressureValue.TabIndex = 1;
             this.lbPressureValue.Text = "-10,000.0";
-            this.lbPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbPressureValue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbPressureValue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = global::RateController.Properties.Resources.pressure;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
@@ -67,11 +70,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(249, 86);
+            this.BackColor = System.Drawing.Color.Black;
+            this.ClientSize = new System.Drawing.Size(199, 86);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbPressureValue);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;

@@ -86,6 +86,10 @@ namespace RateController
         private Label[] Rates;
         private PGN32501[] RelaySettings;
         private Label[] Targets;
+        private int mouseX = 0;
+        private int mouseY = 0;
+        private int windowLeft = 0;
+        private int windowTop = 0;
 
         public FormStart()
         {
@@ -167,6 +171,32 @@ namespace RateController
         }
 
         public event EventHandler ProductChanged;
+        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Log the current window location and the mouse location.
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+                mouseX = e.X;
+                mouseY = e.Y;
+            }
+        }
+
+        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+
+                Point pos = new Point(0, 0);
+
+                pos.X = windowLeft + e.X - mouseX;
+                pos.Y = windowTop + e.Y - mouseY;
+                this.Location = pos;
+            }
+        }
 
         public int DefaultProduct
         {
@@ -453,7 +483,7 @@ namespace RateController
         public void LoadSettings()
         {
             StartSerial();
-            SetDayMode();
+            SetDisplay();
 
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
@@ -773,8 +803,9 @@ namespace RateController
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
 
-                        ProdName[i].BackColor = SimColor;
-                        ProdName[i].BorderStyle = BorderStyle.FixedSingle;
+                        ProdName[i].BackColor = Color.Transparent;
+                        ProdName[i].ForeColor = SimColor;
+                        ProdName[i].BorderStyle = BorderStyle.None;
 
                         Rates[i].Text = Products.Item(i).SmoothRate().ToString("N1");
                         if (i < 4)
@@ -970,7 +1001,7 @@ namespace RateController
             ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
             mnuSettings.Show(ptLowerLeft);
             UpdateStatus();
-            SetDayMode();
+            SetDisplay();
         }
 
         private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1017,7 +1048,7 @@ namespace RateController
                 if (ID < 0) ID = 0;
                 clsProduct Prd = Products.Item(ID);
 
-                this.Width = 290;
+                this.Width = 277;
 
                 btAlarm.Top = 21;
                 btAlarm.Left = 33;
@@ -1032,7 +1063,7 @@ namespace RateController
                     panSummary.Top = 0;
                     panSummary.Left = 0;
 
-                    this.Height = 283;
+                    this.Height = 248;
                     btnSettings.Top = 180;
                     btnLeft.Top = 180;
                     btnRight.Top = 180;
@@ -1050,7 +1081,7 @@ namespace RateController
                         panFan.Top = 0;
                         panFan.Left = 0;
 
-                        this.Height = 257;
+                        this.Height = 222;
                         btnSettings.Top = 154;
                         btnLeft.Top = 154;
                         btnRight.Top = 154;
@@ -1065,7 +1096,7 @@ namespace RateController
                         panProducts.Left = 0;
 
                         // product panel
-                        this.Height = 257;
+                        this.Height = 222;
                         btnSettings.Top = 154;
                         btnLeft.Top = 154;
                         btnRight.Top = 154;
@@ -1203,7 +1234,7 @@ namespace RateController
         private void groupBox3_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
-            Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Black);
+            Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Yellow);
         }
 
         private void label34_Click(object sender, EventArgs e)
@@ -1212,10 +1243,6 @@ namespace RateController
             UpdateStatus();
         }
 
-        private void lbAogConnected_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-        }
 
         private void lbAogConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
@@ -1228,7 +1255,10 @@ namespace RateController
 
         private void lbArduinoConnected_Click(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Minimized;
+            int prod = CurrentPage - 1;
+            if (prod < 0) prod = 0;
+            Form restoreform = new RCRestore(this, RateType, Products.Item(prod));
+            restoreform.Show();
         }
 
         private void lbArduinoConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -1441,40 +1471,23 @@ namespace RateController
             frm.Show();
         }
 
-        private void SetDayMode()
+        private void SetDisplay()
         {
-            if (Properties.Settings.Default.IsDay)
+            this.BackColor = Color.Black;
+            foreach (Control c in this.Controls)
             {
-                this.BackColor = Properties.Settings.Default.DayColour;
-                foreach (Control c in this.Controls)
-                {
-                    c.ForeColor = Color.Black;
-                }
-
-                for (int i = 0; i < 5; i++)
-                {
-                    Indicators[i].BackColor = Properties.Settings.Default.DayColour;
-                }
-
-                lbOn.BackColor = Properties.Settings.Default.DayColour;
-                lbOff.BackColor = Properties.Settings.Default.DayColour;
+                c.ForeColor = Color.Yellow;
             }
-            else
+            lbAogConnected.ForeColor = Color.Black;
+            lbArduinoConnected.ForeColor = Color.Black;
+
+            for (int i = 0; i < 6; i++)
             {
-                this.BackColor = Properties.Settings.Default.NightColour;
-                foreach (Control c in this.Controls)
-                {
-                    c.ForeColor = Color.White;
-                }
-
-                for (int i = 0; i < 5; i++)
-                {
-                    Indicators[i].BackColor = Properties.Settings.Default.NightColour;
-                }
-
-                lbOn.BackColor = Properties.Settings.Default.NightColour;
-                lbOff.BackColor = Properties.Settings.Default.NightColour;
+                Indicators[i].BackColor = Color.Transparent;
             }
+
+            lbOn.BackColor = Color.Transparent;
+            lbOff.BackColor = Color.Transparent;
         }
 
         private void SetLanguage()

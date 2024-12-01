@@ -137,7 +137,7 @@ namespace RateController
             this.lbAogConnected.TabIndex = 145;
             this.lbAogConnected.Text = "AOG";
             this.lbAogConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbAogConnected.Click += new System.EventHandler(this.lbAogConnected_Click);
+            this.lbAogConnected.Click += new System.EventHandler(this.lbArduinoConnected_Click);
             this.lbAogConnected.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbAogConnected_HelpRequested);
             // 
             // panProducts
@@ -173,6 +173,7 @@ namespace RateController
             // 
             // groupBox3
             // 
+            this.groupBox3.ForeColor = System.Drawing.Color.Yellow;
             this.groupBox3.Location = new System.Drawing.Point(9, 24);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(252, 1);
@@ -813,6 +814,8 @@ namespace RateController
             this.btnRight.TabIndex = 143;
             this.btnRight.UseVisualStyleBackColor = false;
             this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
+            this.btnRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.btnRight.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // btnLeft
             // 
@@ -826,6 +829,8 @@ namespace RateController
             this.btnLeft.TabIndex = 142;
             this.btnLeft.UseVisualStyleBackColor = false;
             this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
+            this.btnLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.btnLeft.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // btnSettings
             // 
@@ -871,7 +876,7 @@ namespace RateController
             this.Controls.Add(this.panSummary);
             this.Controls.Add(this.panFan);
             this.Controls.Add(this.btAlarm);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -884,6 +889,8 @@ namespace RateController
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStart_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormRateControl_FormClosed);
             this.Load += new System.EventHandler(this.FormStart_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             this.panProducts.ResumeLayout(false);
             this.panSummary.ResumeLayout(false);
             this.mnuSettings.ResumeLayout(false);

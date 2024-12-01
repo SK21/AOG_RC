@@ -12,45 +12,45 @@ namespace RateController
 {
     public partial class RCRestore : Form
     {
-        private frmLargeScreen LS;
+        private clsProduct cCurrentProduct;
+        private int cRateType;
+        private Form FormToHide;
 
-        public RCRestore(frmLargeScreen CallingForm)
+        public RCRestore(Form CallingForm, int RateType, clsProduct CurrentProduct)
         {
-            LS = CallingForm;
-
+            FormToHide = CallingForm;
+            cRateType = RateType;
+            cCurrentProduct = CurrentProduct;
             this.TransparencyKey = this.BackColor;
-
             InitializeComponent();
         }
 
         private void RCRestore_Load(object sender, EventArgs e)
         {
-            this.Top = LS.Top + LS.Height - this.Height;
-            this.Left = LS.Left + LS.Width - this.Width;
+            this.Top = FormToHide.Top + FormToHide.Height - this.Height;
+            this.Left = FormToHide.Left + FormToHide.Width - this.Width;
 
-            LS.WindowState = FormWindowState.Minimized;
-            lbRateAmount.Font = new Font("MS Gothic", 16, FontStyle.Bold);
-            lbRateAmount.ForeColor = Color.Yellow;
+            FormToHide.WindowState = FormWindowState.Minimized;
             timer1.Enabled = true;
         }
 
         private void RestoreLC_Click(object sender, EventArgs e)
         {
-            LS.WindowState = FormWindowState.Normal;
+            FormToHide.WindowState = FormWindowState.Normal;
             timer1.Enabled = false;
             this.Close();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            switch (LS.mf.RateType)
+            switch (cRateType)
             {
                 case 1:
-                    lbRateAmount.Text = LS.Prd.CurrentRate().ToString("N1");
+                    lbRateAmount.Text = cCurrentProduct.CurrentRate().ToString("N1");
                     break;
 
                 default:
-                    lbRateAmount.Text = LS.Prd.SmoothRate().ToString("N1");
+                    lbRateAmount.Text = cCurrentProduct.SmoothRate().ToString("N1");
                     break;
             }
         }

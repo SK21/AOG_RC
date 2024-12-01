@@ -8,15 +8,12 @@ namespace RateController
     {
         private int cDisplayMode = 0;
         private int cProductID;
-        private bool IsTransparent;
         private FormStart mf;
         private int mouseX = 0;
         private int mouseY = 0;
         private double StartingAcres = 0;
         private double StartingWeight = 0;
         private double TareWeight = 0;
-        private int TransLeftOffset = 6;
-        private int TransTopOffset = 30;
         private int windowLeft = 0;
         private int windowTop = 0;
         // Display mode: 0 - weight, 1 - applied, 2 - acres, 3 - rate
@@ -25,9 +22,6 @@ namespace RateController
         {
             InitializeComponent();
             mf = CallingForm;
-            this.BackColor = Properties.Settings.Default.DayColour;
-            pictureBox1.BackColor = Properties.Settings.Default.DayColour;
-            lbValue.BackColor = Properties.Settings.Default.DayColour;
             cProductID = ProductID;
             this.Text = "Scale " + Prd();
         }
@@ -48,12 +42,6 @@ namespace RateController
 
         private void frmScaleDisplay_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (mf.UseTransparent)
-            {
-                // move the window back to the default location
-                this.Top += -TransTopOffset;
-                this.Left += -TransLeftOffset;
-            }
             mf.Tls.SaveFormData(this, cProductID.ToString());
             timer1.Enabled = false;
             SaveData();
@@ -177,55 +165,6 @@ namespace RateController
             mf.Tls.SaveProperty("Scale_Tare" + cProductID.ToString(), TareWeight.ToString());
         }
 
-        private void SetFont()
-        {
-            if (mf.UseTransparent)
-            {
-                string TransparentFont = "MS Gothic";
-
-                foreach (Control Ctrl in Controls)
-                {
-                    Ctrl.Font = new Font(TransparentFont, 16, FontStyle.Bold);
-                }
-            }
-            else
-            {
-                foreach (Control Ctrl in Controls)
-                {
-                    Ctrl.Font = new Font("Tahoma", 14);
-                }
-            }
-        }
-
-        private void SetTransparent()
-        {
-            if (mf.UseTransparent)
-            {
-                this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
-                this.ControlBox = false;
-                this.FormBorderStyle = FormBorderStyle.None;
-                this.Top += TransTopOffset;
-                this.Left += TransLeftOffset;
-                IsTransparent = true;
-
-                Color txtcolor = Color.Yellow;
-                lbValue.ForeColor = txtcolor;
-            }
-            else
-            {
-                this.Text = "Scale";
-                this.TransparencyKey = Color.Empty;
-                this.ControlBox = true;
-                this.FormBorderStyle = FormBorderStyle.FixedDialog;
-                this.Top += -TransTopOffset;
-                this.Left += -TransLeftOffset;
-                IsTransparent = false;
-
-                Color txtcolor = SystemColors.ControlText;
-                lbValue.ForeColor = txtcolor;
-            }
-            SetFont();
-        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -234,7 +173,6 @@ namespace RateController
 
         private void UpdateForm()
         {
-            if (mf.UseTransparent != IsTransparent) SetTransparent();
 
             switch (cDisplayMode)
             {

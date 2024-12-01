@@ -41,7 +41,7 @@ namespace RateController
             this.btRestore.BackgroundImage = global::RateController.Properties.Resources.RC_logo;
             this.btRestore.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btRestore.Location = new System.Drawing.Point(6, 6);
-            this.btRestore.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btRestore.Margin = new System.Windows.Forms.Padding(2);
             this.btRestore.Name = "btRestore";
             this.btRestore.Size = new System.Drawing.Size(50, 52);
             this.btRestore.TabIndex = 199;
@@ -51,14 +51,16 @@ namespace RateController
             // 
             // lbRateAmount
             // 
-            this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRateAmount.BackColor = System.Drawing.Color.Transparent;
+            this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRateAmount.ForeColor = System.Drawing.Color.Yellow;
             this.lbRateAmount.Location = new System.Drawing.Point(68, 21);
             this.lbRateAmount.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbRateAmount.Name = "lbRateAmount";
             this.lbRateAmount.Size = new System.Drawing.Size(92, 23);
             this.lbRateAmount.TabIndex = 200;
             this.lbRateAmount.Text = "0.0";
-            this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // timer1
             // 
@@ -69,12 +71,13 @@ namespace RateController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(185, 65);
+            this.BackColor = System.Drawing.Color.Black;
+            this.ClientSize = new System.Drawing.Size(170, 65);
             this.ControlBox = false;
             this.Controls.Add(this.lbRateAmount);
             this.Controls.Add(this.btRestore);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "RCRestore";
             this.ShowInTaskbar = false;
             this.Text = "RCRestore";
