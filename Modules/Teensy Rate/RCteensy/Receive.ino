@@ -64,7 +64,7 @@ void ReceiveSerial()
 				break;
 
 			case 32700:
-				SerialPGNlength = 31;
+				SerialPGNlength = 33;
 				PGNfound = true;
 				break;
 
@@ -302,30 +302,33 @@ void ReadPGNs(byte Data[], uint16_t len)
 		break;
 
 	case 32700:
-		// PGN32700, module config
-		// 0        188
-		// 1        127
-		// 2        ID
-		// 3        Sensor count
-		// 4        Commands
-		//          - Relay on high
-		//          - Flow on high
-		//          - bit 2, client mode
-		//			- bit 3, work pin is momentary
-		//          - bit 4, Is3Wire
-		// 5        Relay control type  0 - no relays, 1 - PCA9685, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - Teensy GPIO
-		// 6        wifi module serial port
-		// 7        Sensor 0, flow pin
-		// 8        Sensor 0, dir pin
-		// 9        Sensor 0, pwm pin
-		// 10       Sensor 1, flow pin
-		// 11       Sensor 1, dir pin
-		// 12       Sensor 1, pwm pin
-		// 13-28    Relay pins 0-15\
-        // 29		work pin
-		// 30       CRC
+		// module config
+		//0     HeaderLo    188
+		//1     HeaderHi    127
+		//2     Module ID   0-15
+		//3	    sensor count
+		//4     commands
+		//      bit 0 - Relay on high
+		//      bit 1 - Flow on high
+		//      bit 2 - client mode
+		//      bit 3 - work pin is momentary
+		//      bit 4 - Is3Wire valve
+		//5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
+		//                           , 5 - PCA9685, 6 - PCF8574
+		//6	    wifi module serial port
+		//7	    Sensor 0, Flow pin
+		//8     Sensor 0, Dir pin
+		//9     Sensor 0, PWM pin
+		//10    Sensor 1, Flow pin
+		//11    Sensor 1, Dir pin
+		//12    Sensor 1, PWM pin
+		//13    Relay pins 0-15, bytes 13-28
+		//29    work pin
+		//30    pressure pin
+		//31    -
+		//32    CRC
 
-		PGNlength = 31;
+		PGNlength = 33;
 
 		if (len > PGNlength - 1)
 		{
