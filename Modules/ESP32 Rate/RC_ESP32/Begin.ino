@@ -84,18 +84,18 @@ void DoSetup()
 	{
 		if (Ethernet.linkStatus() == LinkON)
 		{
-			Serial.println("Ethernet Connected.");
+			Serial.println("Ethernet connected.");
 		}
 		else
 		{
-			Serial.println("Ethernet Not Connected.");
+			Serial.println("Ethernet not connected.");
 		}
 		Serial.print("IP Address: ");
 		Serial.println(Ethernet.localIP());
 	}
 	else
 	{
-		Serial.println("No ethernet hardware found.");
+		Serial.println("Ethernet hardware not found.");
 	}
 
 	Ethernet_DestinationIP = IPAddress(MDL.IP0, MDL.IP1, MDL.IP2, 255);	// update from saved data
@@ -387,17 +387,18 @@ void LoadDefaults()
 {
 	Serial.println("Loading default settings.");
 
-	MDL.WorkPin = NC;
-	MDL.PressurePin = NC;
+	// RC17
+	MDL.WorkPin = 2;
+	MDL.PressurePin = 15;
 
 	// default flow pins
-	Sensor[0].FlowPin = 17;
-	Sensor[0].IN1 = 32;
-	Sensor[0].IN2 = 33;
+	Sensor[0].FlowPin = 13;
+	Sensor[0].IN1 = 17;
+	Sensor[0].IN2 = 5;
 
-	Sensor[1].FlowPin = 16;
-	Sensor[1].IN1 = 25;
-	Sensor[1].IN2 = 26;
+	Sensor[1].FlowPin = NC;
+	Sensor[1].IN1 = NC;
+	Sensor[1].IN2 = NC;
 
 	// default pid
 	Sensor[0].KP = 5;
@@ -417,6 +418,10 @@ void LoadDefaults()
 	{
 		MDL.RelayPins[i] = NC;
 	}
+	MDL.SensorCount = 1;
+	MDL.RelayControl = 4;
+	MDL.WifiMode = 0;
+	MDL.Is3Wire = true;
 }
 
 bool ValidData()
