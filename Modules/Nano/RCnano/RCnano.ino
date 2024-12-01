@@ -34,7 +34,7 @@ struct ModuleConfig
 	uint8_t IP3 = 50;
 	uint8_t RelayControl = 2;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired
 	uint8_t RelayPins[16] = { 8,9,10,11,12,13,14,15,7,6,5,4,3,2,1,0 };		// MCP23017 pins RC5, RC8
-	uint8_t WorkPin;
+	uint8_t WorkPin = NC;
 	bool WorkPinIsMomentary = false;
 };
 
