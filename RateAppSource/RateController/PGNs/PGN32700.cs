@@ -29,7 +29,7 @@ namespace RateController
         //13    Relay pins 0-15, bytes 13-28
         //29    work pin
         //30    pressure pin
-        //31    ADS1115 address
+        //31    -
         //32    CRC
 
         private const byte cByteCount = 33;
@@ -43,9 +43,6 @@ namespace RateController
             mf = Main;
             Load();
         }
-
-        public byte AdsAddress
-        { set { cData[31] = value; } }
 
         public bool ClientMode
         {

@@ -412,14 +412,6 @@ namespace RateController
             {
                 mf.ModuleConfig.PressurePin = 255;
             }
-            if (byte.TryParse(tbAds.Text, out val))
-            {
-                mf.ModuleConfig.AdsAddress = val;
-            }
-            else
-            {
-                mf.ModuleConfig.AdsAddress = 255;
-            }
 
             // Pins
             for (int i = 0; i < 16; i++)
@@ -621,7 +613,6 @@ namespace RateController
                     tbSSID.Text = "Tractor";
                     tbPassword.Text = "111222333";
                     ckClient.Checked = false;
-                    tbAds.Text = "72";
                     tbPressure.Text = "-";
                     break;
 
@@ -666,7 +657,6 @@ namespace RateController
                     tbPassword.Text = "111222333";
                     ckClient.Checked = false;
                     rb3Wire.Checked = true;
-                    tbAds.Text = "-";
                     tbPressure.Text = "15";
                     break;
 
@@ -710,32 +700,9 @@ namespace RateController
                     tbSSID.Text = "Tractor";
                     tbPassword.Text = "111222333";
                     ckClient.Checked = false;
-                    tbAds.Text = "-";
                     tbPressure.Text = "-";
                     break;
             }
-        }
-
-        private void tbAds_Enter(object sender, EventArgs e)
-        {
-            double temp;
-            double.TryParse(tbAds.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbAds.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbAds_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Enter 255 for not connected.";
-
-            mf.Tls.ShowHelp(Message);
-            hlpevent.Handled = true;
         }
 
         private void tbPassword_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -886,15 +853,6 @@ namespace RateController
             else
             {
                 tbPressure.Text = data[30].ToString();
-            }
-
-            if (data[31] > 250)
-            {
-                tbAds.Text = "-";
-            }
-            else
-            {
-                tbAds.Text = data[31].ToString();
             }
 
             // relays
