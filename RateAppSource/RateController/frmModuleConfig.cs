@@ -928,5 +928,13 @@ namespace RateController
                 }
             }
         }
+
+        private void tbFlow1_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Enter 255 for no connection.";
+
+            mf.Tls.ShowHelp(Message, "Pins");
+            hlpevent.Handled = true;
+        }
     }
 }

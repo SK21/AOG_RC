@@ -1429,7 +1429,7 @@ namespace RateController
             this.rbModeConstant.Size = new System.Drawing.Size(434, 74);
             this.rbModeConstant.TabIndex = 123;
             this.rbModeConstant.Tag = "0";
-            this.rbModeConstant.Text = "2. Constant UPM, compensate total applied";
+            this.rbModeConstant.Text = "2. Constant UPM, compensate total applied  (metered bypass valves)";
             this.rbModeConstant.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbModeConstant.UseVisualStyleBackColor = true;
             this.rbModeConstant.CheckedChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
@@ -1447,7 +1447,7 @@ namespace RateController
             this.rbModeControlledUPM.TabIndex = 122;
             this.rbModeControlledUPM.TabStop = true;
             this.rbModeControlledUPM.Tag = "0";
-            this.rbModeControlledUPM.Text = "1. Section controlled UPM, varies with width";
+            this.rbModeControlledUPM.Text = "1. Section controlled UPM, varies with width  (on/off valves)\r\n";
             this.rbModeControlledUPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbModeControlledUPM.UseVisualStyleBackColor = true;
             this.rbModeControlledUPM.CheckedChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);

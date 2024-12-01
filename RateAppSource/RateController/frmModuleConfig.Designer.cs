@@ -42,8 +42,6 @@
             this.lbModuleIP = new System.Windows.Forms.Label();
             this.lbSubnet = new System.Windows.Forms.Label();
             this.cbEthernet = new System.Windows.Forms.ComboBox();
-            this.btnSendSubnet = new System.Windows.Forms.Button();
-            this.btnRescan = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.lbRelay = new System.Windows.Forms.Label();
             this.cbRelayControl = new System.Windows.Forms.ComboBox();
@@ -113,14 +111,16 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ckClient = new System.Windows.Forms.CheckBox();
             this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.rb3Wire = new System.Windows.Forms.RadioButton();
             this.rb2Wire = new System.Windows.Forms.RadioButton();
             this.btnPCB = new System.Windows.Forms.Button();
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.btnSendSubnet = new System.Windows.Forms.Button();
+            this.btnRescan = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -194,7 +194,7 @@
             this.rbNano.Size = new System.Drawing.Size(170, 37);
             this.rbNano.TabIndex = 0;
             this.rbNano.TabStop = true;
-            this.rbNano.Text = "Nano";
+            this.rbNano.Text = "Nano (RC12)";
             this.rbNano.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbNano.UseVisualStyleBackColor = true;
             this.rbNano.CheckedChanged += new System.EventHandler(this.rbNano_CheckedChanged);
@@ -208,7 +208,7 @@
             this.rbESP32.Name = "rbESP32";
             this.rbESP32.Size = new System.Drawing.Size(170, 37);
             this.rbESP32.TabIndex = 46;
-            this.rbESP32.Text = "ESP32";
+            this.rbESP32.Text = "ESP32 (RC17)";
             this.rbESP32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbESP32.UseVisualStyleBackColor = true;
             this.rbESP32.CheckedChanged += new System.EventHandler(this.rbESP32_CheckedChanged);
@@ -222,7 +222,7 @@
             this.rbTeensy.Name = "rbTeensy";
             this.rbTeensy.Size = new System.Drawing.Size(170, 37);
             this.rbTeensy.TabIndex = 45;
-            this.rbTeensy.Text = "Teensy";
+            this.rbTeensy.Text = "Teensy (RC11)";
             this.rbTeensy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbTeensy.UseVisualStyleBackColor = true;
             this.rbTeensy.CheckedChanged += new System.EventHandler(this.rbTeensy_CheckedChanged);
@@ -292,38 +292,6 @@
             this.cbEthernet.Size = new System.Drawing.Size(157, 32);
             this.cbEthernet.TabIndex = 212;
             this.cbEthernet.SelectedIndexChanged += new System.EventHandler(this.cbEthernet_SelectedIndexChanged);
-            // 
-            // btnSendSubnet
-            // 
-            this.btnSendSubnet.BackColor = System.Drawing.Color.Transparent;
-            this.btnSendSubnet.FlatAppearance.BorderSize = 0;
-            this.btnSendSubnet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSendSubnet.Image = global::RateController.Properties.Resources.Update4;
-            this.btnSendSubnet.Location = new System.Drawing.Point(147, 238);
-            this.btnSendSubnet.Name = "btnSendSubnet";
-            this.btnSendSubnet.Size = new System.Drawing.Size(72, 72);
-            this.btnSendSubnet.TabIndex = 211;
-            this.btnSendSubnet.UseVisualStyleBackColor = false;
-            this.btnSendSubnet.Click += new System.EventHandler(this.btnSendSubnet_Click);
-            this.btnSendSubnet.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendSubnet_HelpRequested);
-            // 
-            // btnRescan
-            // 
-            this.btnRescan.BackColor = System.Drawing.Color.Transparent;
-            this.btnRescan.FlatAppearance.BorderSize = 0;
-            this.btnRescan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGreen;
-            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRescan.Image = global::RateController.Properties.Resources.Update;
-            this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRescan.Location = new System.Drawing.Point(246, 238);
-            this.btnRescan.Name = "btnRescan";
-            this.btnRescan.Size = new System.Drawing.Size(72, 72);
-            this.btnRescan.TabIndex = 210;
-            this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnRescan.UseVisualStyleBackColor = false;
-            this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
-            this.btnRescan.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnRescan_HelpRequested);
             // 
             // tabPage1
             // 
@@ -496,6 +464,7 @@
             this.tbPressure.TabIndex = 84;
             this.tbPressure.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPressure.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbPressure.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFlow1_HelpRequested);
             this.tbPressure.Enter += new System.EventHandler(this.tbPressure_Enter);
             // 
             // label25
@@ -529,6 +498,7 @@
             this.tbWrk.TabIndex = 81;
             this.tbWrk.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbWrk.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbWrk.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFlow1_HelpRequested);
             this.tbWrk.Enter += new System.EventHandler(this.textBox_Enter);
             // 
             // lbWorkPin
@@ -548,6 +518,7 @@
             this.tbPWM2.TabIndex = 79;
             this.tbPWM2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPWM2.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbPWM2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFlow1_HelpRequested);
             this.tbPWM2.Enter += new System.EventHandler(this.textBox_Enter);
             // 
             // label7
@@ -567,6 +538,7 @@
             this.tbPWM1.TabIndex = 77;
             this.tbPWM1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPWM1.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbPWM1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFlow1_HelpRequested);
             this.tbPWM1.Enter += new System.EventHandler(this.textBox_Enter);
             // 
             // label8
@@ -586,6 +558,7 @@
             this.tbDir2.TabIndex = 75;
             this.tbDir2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbDir2.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbDir2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFlow1_HelpRequested);
             this.tbDir2.Enter += new System.EventHandler(this.textBox_Enter);
             // 
             // label5
@@ -605,6 +578,7 @@
             this.tbDir1.TabIndex = 73;
             this.tbDir1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbDir1.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbDir1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFlow1_HelpRequested);
             this.tbDir1.Enter += new System.EventHandler(this.textBox_Enter);
             // 
             // label6
@@ -624,6 +598,7 @@
             this.tbFlow2.TabIndex = 71;
             this.tbFlow2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbFlow2.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbFlow2.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFlow1_HelpRequested);
             this.tbFlow2.Enter += new System.EventHandler(this.textBox_Enter);
             // 
             // label3
@@ -643,6 +618,7 @@
             this.tbFlow1.TabIndex = 69;
             this.tbFlow1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbFlow1.TextChanged += new System.EventHandler(this.textbox_TextChanged);
+            this.tbFlow1.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbFlow1_HelpRequested);
             this.tbFlow1.Enter += new System.EventHandler(this.textBox_Enter);
             // 
             // label4
@@ -1050,26 +1026,6 @@
             this.tabPage7.Text = "Valves";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::RateController.Properties.Resources.Valve2wire;
-            this.pictureBox2.Location = new System.Drawing.Point(11, 133);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(229, 295);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 53;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(246, 133);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(229, 295);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 52;
-            this.pictureBox1.TabStop = false;
-            // 
             // rb3Wire
             // 
             this.rb3Wire.Appearance = System.Windows.Forms.Appearance.Button;
@@ -1166,6 +1122,58 @@
             this.btnClose.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // btnSendSubnet
+            // 
+            this.btnSendSubnet.BackColor = System.Drawing.Color.Transparent;
+            this.btnSendSubnet.FlatAppearance.BorderSize = 0;
+            this.btnSendSubnet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSendSubnet.Image = global::RateController.Properties.Resources.Update4;
+            this.btnSendSubnet.Location = new System.Drawing.Point(147, 238);
+            this.btnSendSubnet.Name = "btnSendSubnet";
+            this.btnSendSubnet.Size = new System.Drawing.Size(72, 72);
+            this.btnSendSubnet.TabIndex = 211;
+            this.btnSendSubnet.UseVisualStyleBackColor = false;
+            this.btnSendSubnet.Click += new System.EventHandler(this.btnSendSubnet_Click);
+            this.btnSendSubnet.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSendSubnet_HelpRequested);
+            // 
+            // btnRescan
+            // 
+            this.btnRescan.BackColor = System.Drawing.Color.Transparent;
+            this.btnRescan.FlatAppearance.BorderSize = 0;
+            this.btnRescan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGreen;
+            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRescan.Image = global::RateController.Properties.Resources.Update;
+            this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnRescan.Location = new System.Drawing.Point(246, 238);
+            this.btnRescan.Name = "btnRescan";
+            this.btnRescan.Size = new System.Drawing.Size(72, 72);
+            this.btnRescan.TabIndex = 210;
+            this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnRescan.UseVisualStyleBackColor = false;
+            this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
+            this.btnRescan.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnRescan_HelpRequested);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::RateController.Properties.Resources.Valve2wire;
+            this.pictureBox2.Location = new System.Drawing.Point(11, 133);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(229, 295);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 53;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(246, 133);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(229, 295);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 52;
+            this.pictureBox1.TabStop = false;
             // 
             // frmModuleConfig
             // 

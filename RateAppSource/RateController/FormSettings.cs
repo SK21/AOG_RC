@@ -1803,6 +1803,7 @@ namespace RateController
             rbUPMFixed.Checked = !CurrentProduct.UseMinUPMbySpeed;
 
             ckScale.Checked = mf.ShowScale(CurrentProduct.ID);
+            ckScale.Visible = (CurrentProduct.ID < 4);
 
             Initializing = false;
         }
