@@ -22,20 +22,20 @@ const uint16_t InoID = 30114;	// change to send defaults to eeprom, ddmmy, no le
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
-#define MaxReadBuffer 100	// bytes
-#define MaxProductCount 2
-#define EEPROM_SIZE 512
-#define ModStringLengths 20
-const uint8_t MCPaddress = 0x20;
-const uint8_t PCA9685address = 0x40;
+const uint8_t MaxReadBuffer = 100;	// bytes
+const uint8_t MaxProductCount = 2;
+const uint16_t EEPROM_SIZE = 512;
+const uint8_t ModStringLengths = 20;
 
 // servo driver
-#define OutputEnablePin 27
-#define PCAaddress 0x55
+const uint8_t OutputEnablePin = 27;
+const uint8_t PCA9685address = 0x55;	// RC15 1010101, 1 + A5-A0
 
-#define PCFaddress 0x20
-#define W5500_SS 5	// W5500 SPI SS
-#define NC 0xFF		// Pin not connected
+const int16_t ADS1115_Address = 0x48;
+const uint8_t MCP23017address = 0x20;
+const uint8_t PCF8574address = 0x20;
+const uint8_t W5500_SS = 5;		// W5500 SPI SS
+const uint8_t NC = 0xFF;		// Pin not connected
 
 struct ModuleConfig
 {
@@ -47,12 +47,11 @@ struct ModuleConfig
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
-	uint8_t AdsAddress = 0x48;		// 0 - search all, NC - no ads
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t RelayControl = 5;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
-	uint8_t WifiMode = 1;			// 0 AP mode, 1 Station + AP
+	uint8_t WifiMode = 0;			// 0 AP mode, 1 Station + AP
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
 	uint8_t WorkPin = NC;
@@ -143,7 +142,6 @@ struct AnalogConfig
 };
 AnalogConfig AINs;
 
-int ADS1115_Address;
 bool ADSfound = false;
 
 bool GoodPins;	// pin configuration correct

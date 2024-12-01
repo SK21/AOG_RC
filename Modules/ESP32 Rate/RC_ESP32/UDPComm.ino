@@ -120,7 +120,7 @@ void SendComm()
         Data[9] = 0;
         Data[10] = 0;
         Data[11] = (byte)InoID;
-        Data[12] = InoID >> 8;
+        Data[12] = (byte)(InoID >> 8);
 
         // status
         Data[13] = 0;
@@ -390,7 +390,7 @@ void ParseData(byte Data[], uint16_t len)
         //13    Relay pins 0-15, bytes 13-28
         //29    work pin
         //30    pressure pin
-        //31    ADS1115 address
+        //31    -
         //32    CRC
 
         PGNlength = 33;
@@ -423,7 +423,6 @@ void ParseData(byte Data[], uint16_t len)
 
                 MDL.WorkPin = Data[29];
                 MDL.PressurePin = Data[30];
-                MDL.AdsAddress = Data[31];
 
                 //SaveData();	saved in pgn 3702
             }

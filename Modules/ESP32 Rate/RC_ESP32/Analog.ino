@@ -1,5 +1,4 @@
 
-//	RC11 config
 //	AIN0	pressure 
 //	AIN1	-
 //	AIN2	-

@@ -162,7 +162,7 @@ void CheckRelays()
             }
 
             // Send both outputs in a single transmission
-            Wire.beginTransmission(MCPaddress);
+            Wire.beginTransmission(MCP23017address);
             Wire.write(0x12); // address port A of MCP
             Wire.write(mcpOutA); // value for port A
             Wire.write(mcpOutB); // value for port B

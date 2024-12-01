@@ -38,79 +38,28 @@ void DoSetup()
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
 
 	// ADS1115
-	if (MDL.AdsAddress == NC)
+	Serial.print("Starting ADS1115 at address ");
+	Serial.println(ADS1115_Address);
+	while (!ADSfound)
 	{
-		// no ADS1115
-		ADSfound == false;
+		Wire.beginTransmission(ADS1115_Address);
+		Wire.write(0b00000000);	//Point to Conversion register
+		Wire.endTransmission();
+		Wire.requestFrom(ADS1115_Address, 2);
+		ADSfound = Wire.available();
+		Serial.print(".");
+		delay(500);
+		if (ErrorCount++ > 10) break;
 	}
-	else if (MDL.AdsAddress == 0)
+	Serial.println("");
+	if (ADSfound)
 	{
-		// find ads at default addresses
-		int ADS[] = { 0x48,0x49,0x4A,0x4B };
-		for (int i = 0; i < 4; i++)
-		{
-			ADS1115_Address = ADS[i];
-			Serial.print("Starting ADS1115 at address ");
-			Serial.print(ADS1115_Address);
-			ErrorCount = 0;
-			while (!ADSfound)
-			{
-				Wire.beginTransmission(ADS1115_Address);
-				Wire.write(0b00000000);	//Point to Conversion register
-				Wire.endTransmission();
-				Wire.requestFrom(ADS1115_Address, 2);
-				ADSfound = Wire.available();
-				Serial.print(".");
-				delay(500);
-				if (ErrorCount++ > 10) break;
-			}
-			Serial.println("");
-			if (ADSfound)
-			{
-				Serial.print("ADS1115 connected at address ");
-				Serial.println(ADS1115_Address);
-				Serial.println("");
-				break;
-			}
-			else
-			{
-				Serial.print("ADS1115 not found.");
-				Serial.println("");
-			}
-		}
+		Serial.println("ADS1115 found.");
+		Serial.println("");
 	}
 	else
 	{
-		// find at listed address
-		ADS1115_Address = MDL.AdsAddress;
-		Serial.print("Starting ADS1115 at address ");
-		Serial.print(ADS1115_Address);
-		while (!ADSfound)
-		{
-			Wire.beginTransmission(ADS1115_Address);
-			Wire.write(0b00000000);	//Point to Conversion register
-			Wire.endTransmission();
-			Wire.requestFrom(ADS1115_Address, 2);
-			ADSfound = Wire.available();
-			Serial.print(".");
-			delay(500);
-			if (ErrorCount++ > 10) break;
-		}
-		Serial.println("");
-		if (ADSfound)
-		{
-			Serial.print("ADS1115 connected at address ");
-			Serial.println(ADS1115_Address);
-			Serial.println("");
-		}
-		else
-		{
-			Serial.print("ADS1115 not found.");
-			Serial.println("");
-		}
-	}
-	if (!ADSfound)
-	{
+		Serial.print("ADS1115 not found.");
 		Serial.println("ADS1115 disabled.");
 		Serial.println("");
 	}
@@ -175,7 +124,7 @@ void DoSetup()
 		// DRV8870 IN1
 		ledcSetup(i * 2, 500, 8);
 		ledcAttachPin(Sensor[i].IN1, i * 2);
-		
+
 		// DRV8870 IN2
 		ledcSetup(i * 2 + 1, 500, 8);
 		ledcAttachPin(Sensor[i].IN2, i * 2 + 1);
@@ -216,7 +165,7 @@ void DoSetup()
 		Serial.println("");
 		if (PCA9555PW_found)
 		{
-			Serial.println("PCA9555 expander found.");
+			Serial.println("PCA9555 found.");
 
 			PCA.attach(Wire);
 			PCA.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
@@ -225,7 +174,7 @@ void DoSetup()
 		}
 		else
 		{
-			Serial.println("PCA9555 expander not found.");
+			Serial.println("PCA9555 not found.");
 		}
 		break;
 
@@ -237,7 +186,7 @@ void DoSetup()
 		while (!MCP23017_found)
 		{
 			Serial.print(".");
-			Wire.beginTransmission(MCPaddress);
+			Wire.beginTransmission(MCP23017address);
 			MCP23017_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
@@ -247,12 +196,12 @@ void DoSetup()
 		Serial.println("");
 		if (MCP23017_found)
 		{
-			Wire.beginTransmission(MCPaddress);
+			Wire.beginTransmission(MCP23017address);
 			Wire.write(0x00); // IODIRA register
 			Wire.write(0x00); // set all of port A to outputs
 			Wire.endTransmission();
 
-			Wire.beginTransmission(MCPaddress);
+			Wire.beginTransmission(MCP23017address);
 			Wire.write(0x01); // IODIRB register
 			Wire.write(0x00); // set all of port B to outputs
 			Wire.endTransmission();
@@ -285,13 +234,13 @@ void DoSetup()
 		Serial.println("");
 		if (PCA9685_found)
 		{
-			Serial.println("PCA9685 expander found.");
+			Serial.println("PCA9685 found.");
 			pinMode(OutputEnablePin, OUTPUT);
 			digitalWrite(OutputEnablePin, LOW);	//enable
 		}
 		else
 		{
-			Serial.println("PCA9685 expander not found.");
+			Serial.println("PCA9685 not found.");
 		}
 		break;
 
@@ -303,7 +252,7 @@ void DoSetup()
 		while (!PCF_found)
 		{
 			Serial.print(".");
-			Wire.beginTransmission(PCFaddress);
+			Wire.beginTransmission(PCF8574address);
 			PCF_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
@@ -313,16 +262,16 @@ void DoSetup()
 		Serial.println("");
 		if (PCF_found)
 		{
-			Serial.println("PCF8574 expander found.");
+			Serial.println("PCF8574 found.");
 			PCF.begin();
 		}
 		else
 		{
-			Serial.println("PCF8574 expander not found.");
+			Serial.println("PCF8574 not found.");
 		}
 		break;
 	}
-	
+
 	// Wifi
 	WiFi.mode(WIFI_MODE_APSTA);
 	WiFi.disconnect(true);
@@ -330,7 +279,7 @@ void DoSetup()
 	// Access Point
 	IPAddress AP_LocalIP = IPAddress(192, 168, MDL.ID + 200, 1);
 	Wifi_DestinationIP = IPAddress(192, 168, MDL.ID + 200, 255);
-	
+
 	String AP = MDL.APname;
 	AP += "  (";
 	AP += WiFi.macAddress();
@@ -344,7 +293,7 @@ void DoSetup()
 	Serial.println("");
 	Serial.print("Access Point name: ");
 	Serial.println(AP);
-	Serial.print("Access Point IP: ");
+	Serial.print("Settings Page IP: ");
 	Serial.println(AP_LocalIP);
 
 	// web server
@@ -366,7 +315,7 @@ void DoSetup()
 
 	/* INITIALIZE ESP2SOTA LIBRARY */
 	ESP2SOTA.begin(&server);
-	
+
 	Serial.println("OTA started.");
 
 	// wifi client mode
