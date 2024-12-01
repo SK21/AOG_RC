@@ -705,6 +705,14 @@ namespace RateController
             }
         }
 
+        private void tbFlow1_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Enter 255 for no connection.";
+
+            mf.Tls.ShowHelp(Message, "Pins");
+            hlpevent.Handled = true;
+        }
+
         private void tbPassword_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Password for the network the module connects to in Client Mode.";
@@ -927,14 +935,6 @@ namespace RateController
                     tbWifiPort.Text = form.ReturnValue.ToString("N0");
                 }
             }
-        }
-
-        private void tbFlow1_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Enter 255 for no connection.";
-
-            mf.Tls.ShowHelp(Message, "Pins");
-            hlpevent.Handled = true;
         }
     }
 }

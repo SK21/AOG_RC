@@ -185,7 +185,7 @@ namespace RateController
 
         private void frmRelays_FormClosed(object sender, FormClosedEventArgs e)
         {
-                mf.Tls.SaveFormData(this);
+            mf.Tls.SaveFormData(this);
         }
 
         private void frmRelays_Load(object sender, EventArgs e)

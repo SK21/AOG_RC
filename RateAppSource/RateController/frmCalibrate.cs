@@ -117,7 +117,7 @@ namespace RateController
 
         private void frmCalibrate_FormClosed(object sender, FormClosedEventArgs e)
         {
-                mf.Tls.SaveFormData(this);
+            mf.Tls.SaveFormData(this);
             mf.SimMode = SimType.Sim_None;
 
             Cals.Close();

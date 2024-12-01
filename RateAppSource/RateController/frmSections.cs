@@ -131,7 +131,7 @@ namespace RateController
             if (!Initializing)
             {
                 UseZones = ckZones.Checked;
-                mf.UseZones= UseZones;
+                mf.UseZones = UseZones;
                 UpdateForm();
             }
         }
@@ -191,7 +191,7 @@ namespace RateController
                     e.FormattingApplied = true;
                 }
             }
-            if (e.ColumnIndex == 0 )
+            if (e.ColumnIndex == 0)
             {
                 e.CellStyle.BackColor = this.BackColor;
             }
@@ -271,7 +271,7 @@ namespace RateController
                 e.Value = "";
                 e.FormattingApplied = true;
             }
-            if(e.ColumnIndex==0||e.ColumnIndex==1)
+            if (e.ColumnIndex == 0 || e.ColumnIndex == 1)
             {
                 e.CellStyle.BackColor = this.BackColor;
             }
@@ -284,7 +284,7 @@ namespace RateController
 
         private void frmSections_FormClosed(object sender, FormClosedEventArgs e)
         {
-                mf.Tls.SaveFormData(this);
+            mf.Tls.SaveFormData(this);
         }
 
         private void frmSections_Load(object sender, EventArgs e)

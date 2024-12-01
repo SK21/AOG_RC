@@ -40,17 +40,11 @@ namespace RateController
             panel1.Width = this.Width - 40;
             panel1.Height = this.Height - 40;
             label1.MaximumSize = new Size(panel1.Width - 10, 0);
-
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void frmHelp_FormClosed(object sender, FormClosedEventArgs e)
         {
-            timer1.Enabled = false;
-            timer1.Dispose();
-            Dispose();
-
-                mf.Tls.SaveFormData(this);
-            Close();
+            mf.Tls.SaveFormData(this);
         }
 
         private void frmHelp_Load(object sender, EventArgs e)
@@ -59,7 +53,6 @@ namespace RateController
             {
                 mf.Tls.LoadFormData(this);
                 this.BackColor = Properties.Settings.Default.DayColour;
-
             }
             catch (Exception ex)
             {
@@ -67,15 +60,19 @@ namespace RateController
             }
         }
 
-        private void frmHelp_FormClosed(object sender, FormClosedEventArgs e)
-        {
-                mf.Tls.SaveFormData(this);
-        }
-
         private void panel1_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            timer1.Enabled = false;
+            timer1.Dispose();
+            Dispose();
+
+            mf.Tls.SaveFormData(this);
+            Close();
+        }
     }
 }

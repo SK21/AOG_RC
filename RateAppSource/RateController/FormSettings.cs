@@ -270,6 +270,14 @@ namespace RateController
             SetButtons(true);
         }
 
+        private void ckBumpButtons_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Display rate UP/Down arrows.";
+
+            mf.Tls.ShowHelp(Message, "Bump Buttons");
+            hlpevent.Handled = true;
+        }
+
         private void ckConstantUPM_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -346,17 +354,9 @@ namespace RateController
             SetButtons(true);
         }
 
-        private void ckQuantityAdjustment_CheckedChanged(object sender, EventArgs e)
+        private void ckScale_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
-        }
-
-        private void ckQuantityAdjustment_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Subtract quantity for off sections from total applied.";
-
-            mf.Tls.ShowHelp(Message, "Quantity Adjustment");
-            hlpevent.Handled = true;
         }
 
         private void ckVR_CheckedChanged(object sender, EventArgs e)
@@ -472,14 +472,6 @@ namespace RateController
             string Message = "Enter the counts per revolution so RPM can be calculated.";
 
             mf.Tls.ShowHelp(Message, "Counts/Rev");
-            hlpevent.Handled = true;
-        }
-
-        private void label25_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Minimum flow rate for acceptable application.";
-
-            mf.Tls.ShowHelp(Message, "Minimum UPM");
             hlpevent.Handled = true;
         }
 
@@ -632,27 +624,6 @@ namespace RateController
             UpdateExample();
         }
 
-        private void SetAppMode(clsProduct Prd)
-        {
-            switch (Prd.AppMode)
-            {
-                case ApplicationMode.ControlledUPM:
-                    rbModeControlledUPM.Checked = true;
-                    break;
-                case ApplicationMode.ConstantUPM:
-                    rbModeConstant.Checked = true;
-                    break;
-                case ApplicationMode.DocumentApplied:
-                    rbModeApplied.Checked = true;
-                    break;
-                case ApplicationMode.DocumentTarget:
-                    rbModeTarget.Checked = true;
-                    break;
-                default:
-                    break;
-            }
-        }
-
         private void pnlMain_Paint(object sender, PaintEventArgs e)
         {
         }
@@ -706,27 +677,6 @@ namespace RateController
             }
         }
 
-        private void rbMultiPulse_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Use the average time of multiple pulses to measure flow rate.";
-
-            mf.Tls.ShowHelp(Message, "Rate Method");
-            hlpevent.Handled = true;
-        }
-
-        private void rbSinglePulse_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void rbSinglePulse_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Use the time for one pulse to measure flow rate.";
-
-            mf.Tls.ShowHelp(Message, "Rate Method");
-            hlpevent.Handled = true;
-        }
-
         private void rbUPMFixed_Click(object sender, EventArgs e)
         {
             tbUPMspeed.Text = "0.0";
@@ -745,6 +695,26 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Minimum UPM using speed");
             hlpevent.Handled = true;
+        }
+
+        private void SaveAppMode(clsProduct Prd)
+        {
+            if (rbModeControlledUPM.Checked)
+            {
+                Prd.AppMode = ApplicationMode.ControlledUPM;
+            }
+            else if (rbModeConstant.Checked)
+            {
+                Prd.AppMode = ApplicationMode.ConstantUPM;
+            }
+            else if (rbModeApplied.Checked)
+            {
+                Prd.AppMode = ApplicationMode.DocumentApplied;
+            }
+            else
+            {
+                Prd.AppMode = ApplicationMode.DocumentTarget;
+            }
         }
 
         private void SaveData()
@@ -901,23 +871,28 @@ namespace RateController
             SaveData();
         }
 
-        private void SaveAppMode(clsProduct Prd)
+        private void SetAppMode(clsProduct Prd)
         {
-            if (rbModeControlledUPM.Checked)
+            switch (Prd.AppMode)
             {
-                Prd.AppMode = ApplicationMode.ControlledUPM;
-            }
-            else if (rbModeConstant.Checked)
-            {
-                Prd.AppMode = ApplicationMode.ConstantUPM;
-            }
-            else if (rbModeApplied.Checked)
-            {
-                Prd.AppMode = ApplicationMode.DocumentApplied;
-            }
-            else
-            {
-                Prd.AppMode = ApplicationMode.DocumentTarget;
+                case ApplicationMode.ControlledUPM:
+                    rbModeControlledUPM.Checked = true;
+                    break;
+
+                case ApplicationMode.ConstantUPM:
+                    rbModeConstant.Checked = true;
+                    break;
+
+                case ApplicationMode.DocumentApplied:
+                    rbModeApplied.Checked = true;
+                    break;
+
+                case ApplicationMode.DocumentTarget:
+                    rbModeTarget.Checked = true;
+                    break;
+
+                default:
+                    break;
             }
         }
 
@@ -1823,19 +1798,6 @@ namespace RateController
             SetButtons(true);
             SetCalDescription();
             UpdateOnTypeChange();
-        }
-
-        private void ckBumpButtons_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Display rate UP/Down arrows.";
-
-            mf.Tls.ShowHelp(Message, "Bump Buttons");
-            hlpevent.Handled = true;
-        }
-
-        private void ckScale_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
         }
     }
 }

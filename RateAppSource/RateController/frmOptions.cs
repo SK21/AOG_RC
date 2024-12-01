@@ -127,14 +127,6 @@ namespace RateController
             if (ckDefaultProduct.Checked) SetButtons(true);
         }
 
-        private void ckDefaultProduct_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Set product values to default.";
-
-            mf.Tls.ShowHelp(Message, "Sensors");
-            hlpevent.Handled = true;
-        }
-
         private void ckDualAuto_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -231,6 +223,12 @@ namespace RateController
             UpdateForm();
         }
 
+        private void groupBox1_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
         private void Language_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -296,8 +294,8 @@ namespace RateController
                 mf.ShowSwitches = ckScreenSwitches.Checked;
                 mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
                 mf.ShowPressure = ckPressure.Checked;
-                if(double.TryParse(tbPressureCal.Text, out double Pressure)) mf.PressureCal = Pressure;
-                if(double.TryParse(tbPressureOffset.Text,out double PresOff))mf.PressureOffset= PresOff;
+                if (double.TryParse(tbPressureCal.Text, out double Pressure)) mf.PressureCal = Pressure;
+                if (double.TryParse(tbPressureOffset.Text, out double PresOff)) mf.PressureOffset = PresOff;
 
                 if (ckSimSpeed.Checked)
                 {
@@ -464,6 +462,61 @@ namespace RateController
             }
         }
 
+        private void tbPressureCal_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPressureCal.Text, out tempD);
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPressureCal.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbPressureCal_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbPressureCal_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPressureCal.Text, out tempD);
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbPressureOffset_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPressureOffset.Text, out tempD);
+            using (var form = new FormNumeric(-10000, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPressureOffset.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbPressureOffset_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPressureOffset.Text, out tempD);
+            if (tempD < -10000 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
         private void tbSimSpeed_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -509,6 +562,12 @@ namespace RateController
             }
         }
 
+        private void tbSpeed_TextChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) tbSpeedChanged = true;
+            SetButtons(true);
+        }
+
         private void tbSpeed_Validating(object sender, CancelEventArgs e)
         {
             double tempD;
@@ -533,7 +592,6 @@ namespace RateController
                 }
             }
         }
-
 
         private void tbTime_Validating(object sender, CancelEventArgs e)
         {
@@ -600,74 +658,6 @@ namespace RateController
             ckSingle.Checked = false;
 
             Initializing = false;
-        }
-
-
-        private void groupBox1_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void tbPressureCal_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbPressureCal.Text, out tempD);
-            using (var form = new FormNumeric(0, 10000, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbPressureCal.Text = form.ReturnValue.ToString("N1");
-                }
-            }
-        }
-
-        private void tbPressureCal_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbSpeed_TextChanged(object sender, EventArgs e)
-        {
-            if (!Initializing) tbSpeedChanged = true;
-            SetButtons(true);
-        }
-
-        private void tbPressureCal_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbPressureCal.Text, out tempD);
-            if (tempD < 0 || tempD > 10000)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbPressureOffset_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbPressureOffset.Text, out tempD);
-            using (var form = new FormNumeric(-10000, 10000, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbPressureOffset.Text = form.ReturnValue.ToString("N1");
-                }
-            }
-        }
-
-        private void tbPressureOffset_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbPressureOffset.Text, out tempD);
-            if (tempD < -10000 || tempD > 10000)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
         }
     }
 }

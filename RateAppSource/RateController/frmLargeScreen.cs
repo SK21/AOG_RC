@@ -8,16 +8,16 @@ namespace RateController
 {
     public partial class frmLargeScreen : Form
     {
+        public FormStart mf;
+        public clsProduct Prd;
         public clsAlarm RCalarm;
         private int Fan1RateType = 0;
         private int Fan2RateType = 0;
         private bool IsTransparent = false;
         private bool masterOn;
         private bool MasterPressed;
-        public FormStart mf;
         private int mouseX = 0;
         private int mouseY = 0;
-        public clsProduct Prd;
         private Color RateColour = Color.GreenYellow;
         private bool SwitchingScreens = false;
         private bool[] SwON = new bool[9];
@@ -335,6 +335,20 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
+        private void lbCoverageAmount_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(mf, "Reset area?", "Reset", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                mf.Products.Item(CurrentProduct()).ResetCoverage();
+            }
+        }
+
         private void lbFan1_Click(object sender, EventArgs e)
         {
             //check if window already exists
@@ -406,6 +420,20 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message, "Remaining");
             hlpevent.Handled = true;
+        }
+
+        private void lbQuantityAmount_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(mf, "Reset quantity?", "Reset", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                mf.Products.Item(CurrentProduct()).ResetApplied();
+            }
         }
 
         private void lbRate_Click(object sender, EventArgs e)
@@ -615,7 +643,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mf.SaveFileAs();
@@ -637,7 +664,7 @@ namespace RateController
                     {
                         Ctrl.Font = new Font(TransparentFont, 16, FontStyle.Bold);
                     }
-                    else if (Ctrl.Name == "btAuto" ||  Ctrl.Name == "btMaster")
+                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "btMaster")
                     {
                         Ctrl.Font = new Font(TransparentFont, 10, FontStyle.Bold);
                     }
@@ -653,7 +680,7 @@ namespace RateController
                 {
                     if (Ctrl.Name == "btAuto" || Ctrl.Name == "btMaster")
                     {
-                        Ctrl.Font = new Font("MS Gothic", 10,FontStyle.Bold);
+                        Ctrl.Font = new Font("MS Gothic", 10, FontStyle.Bold);
                     }
                     else
                     {
@@ -1258,34 +1285,6 @@ namespace RateController
         {
             Prd = mf.Products.Item(3);
             UpdateForm();
-        }
-
-        private void lbQuantityAmount_Click(object sender, EventArgs e)
-        {
-            var Hlp = new frmMsgBox(mf, "Reset quantity?", "Reset", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
-            {
-               mf.Products.Item(CurrentProduct()).ResetApplied();
-            }
-        }
-
-        private void lbCoverageAmount_Click(object sender, EventArgs e)
-        {
-            var Hlp = new frmMsgBox(mf, "Reset area?", "Reset", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
-            {
-                mf.Products.Item(CurrentProduct()).ResetCoverage();
-            }
         }
     }
 }
