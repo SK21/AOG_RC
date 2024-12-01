@@ -95,7 +95,7 @@ namespace RateController
                         if (ID < 0) ID = 0;
                         clsProduct Prd = mf.Products.Item(ID);
 
-                        if (mf.SwitchBox.SwitchIsOn(SwIDs.Auto) | mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate))
+                        if (mf.SwitchBox.AutoRateOn)
                         {
                             // auto rate
                             double CurrentRate = Prd.RateSet;
@@ -139,7 +139,7 @@ namespace RateController
                         if (ID < 0) ID = 0;
                         clsProduct Prd = mf.Products.Item(ID);
 
-                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate) &&
+                        if (!mf.SwitchBox.AutoRateOn &&
                             (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose||Prd.ControlType==ControlTypeEnum.ComboCloseTimed))
                         {
                             Prd.ManualPWM = 0;
@@ -210,7 +210,7 @@ namespace RateController
             }
 
             // set sections on
-            if (mf.AutoSteerPGN.Connected() && !cPrimeOn && mf.SwitchBox.AutoOn)
+            if (mf.AutoSteerPGN.Connected() && !cPrimeOn && mf.SwitchBox.AutoSectionOn)
             {
                 foreach (clsSection Sec in mf.Sections.Items)
                 {
@@ -389,7 +389,7 @@ namespace RateController
             {
                 if (Zn.Enabled)
                 {
-                    if (mf.AutoSteerPGN.Connected() && !cPrimeOn && mf.SwitchBox.AutoOn)
+                    if (mf.AutoSteerPGN.Connected() && !cPrimeOn && mf.SwitchBox.AutoSectionOn)
                     {
                         for (int i = Zn.Start - 1; i < Zn.End; i++)
                         {

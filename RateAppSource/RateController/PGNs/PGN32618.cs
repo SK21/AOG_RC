@@ -47,13 +47,12 @@ namespace RateController
 
         public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
 
-        public bool AutoOn
+        public bool AutoRateOn
+        { get { return SW[(int)SwIDs.Auto] || SW[(int)SwIDs.AutoRate]; } }
+
+        public bool AutoSectionOn
         {
-            get { return SW[0]; }
-            set
-            {
-                SW[0] = value;
-            }
+            get { return SW[(int)SwIDs.Auto] || SW[(int)SwIDs.AutoSection]; }
         }
 
         public bool MasterOn

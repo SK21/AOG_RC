@@ -159,7 +159,7 @@ namespace RateController
 
                 if (mf.SwitchBox.Connected())
                 {
-                    if (mf.SwitchBox.AutoOn)
+                    if (mf.SwitchBox.AutoSectionOn)
                     {
                         // auto on when master switch is on and flow enabled
                         MasterRelayOn = mf.SwitchBox.MasterOn && FlowEnabled;
