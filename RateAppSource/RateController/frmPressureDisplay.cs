@@ -16,6 +16,12 @@ namespace RateController
         {
             InitializeComponent();
             mf = CallingForm;
+            mf.ColorChanged += Mf_ColorChanged;
+        }
+
+        private void Mf_ColorChanged(object sender, EventArgs e)
+        {
+            lbPressureValue.ForeColor = Properties.Settings.Default.ForeColour;
         }
 
         private void frmPressureDisplay_FormClosed(object sender, FormClosedEventArgs e)
@@ -28,6 +34,7 @@ namespace RateController
         {
             mf.Tls.LoadFormData(this);
             timer1.Enabled = true;
+            lbPressureValue.ForeColor = Properties.Settings.Default.ForeColour;
             UpdateForm();
         }
 

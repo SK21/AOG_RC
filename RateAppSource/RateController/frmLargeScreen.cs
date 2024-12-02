@@ -79,6 +79,7 @@ namespace RateController
                     Ctrl.MouseMove += mouseMove_MouseMove;
                 }
             }
+            mf.ColorChanged += Mf_ColorChanged;
         }
 
         public int CurrentProduct()
@@ -99,21 +100,7 @@ namespace RateController
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.Top += TransTopOffset;
                 this.Left += TransLeftOffset;
-                Color txtcolor = Color.Yellow;
-                lbTarget.ForeColor = txtcolor;
-                lbCoverage.ForeColor = txtcolor;
-                lbQuantity.ForeColor = txtcolor;
-                lbRateAmount.ForeColor = txtcolor;
-                lbTargetAmount.ForeColor = txtcolor;
-                lbCoverageAmount.ForeColor = txtcolor;
-                lbQuantityAmount.ForeColor = txtcolor;
-                lbRPM1.ForeColor = txtcolor;
-                lbRPM2.ForeColor = txtcolor;
-                lbUnits.ForeColor = txtcolor;
-                lbRateType.ForeColor = txtcolor;
-                lbTargetType.ForeColor = txtcolor;
-                lbCoverageType.ForeColor = txtcolor;
-                lbQuantityType.ForeColor = txtcolor;
+                SetDisplay(Properties.Settings.Default.ForeColour);
             }
             else
             {
@@ -125,22 +112,7 @@ namespace RateController
                 this.FormBorderStyle = FormBorderStyle.FixedDialog;
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
-
-                Color txtcolor = SystemColors.ControlText;
-                lbTarget.ForeColor = txtcolor;
-                lbCoverage.ForeColor = txtcolor;
-                lbQuantity.ForeColor = txtcolor;
-                lbRateAmount.ForeColor = txtcolor;
-                lbTargetAmount.ForeColor = txtcolor;
-                lbCoverageAmount.ForeColor = txtcolor;
-                lbQuantityAmount.ForeColor = txtcolor;
-                lbRPM1.ForeColor = txtcolor;
-                lbRPM2.ForeColor = txtcolor;
-                lbUnits.ForeColor = txtcolor;
-                lbRateType.ForeColor = txtcolor;
-                lbTargetType.ForeColor = txtcolor;
-                lbCoverageType.ForeColor = txtcolor;
-                lbQuantityType.ForeColor = txtcolor;
+                SetDisplay(SystemColors.ControlText);
             }
             SetFont();
         }
@@ -506,6 +478,11 @@ namespace RateController
             }
         }
 
+        private void Mf_ColorChanged(object sender, EventArgs e)
+        {
+            SetDisplay(Properties.Settings.Default.ForeColour);
+        }
+
         private void MnuComm_Click(object sender, EventArgs e)
         {
             Form fs = mf.Tls.IsFormOpen("frmComm");
@@ -646,6 +623,24 @@ namespace RateController
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mf.SaveFileAs();
+        }
+
+        private void SetDisplay(Color NewColor)
+        {
+            lbTarget.ForeColor = NewColor;
+            lbCoverage.ForeColor = NewColor;
+            lbQuantity.ForeColor = NewColor;
+            lbRateAmount.ForeColor = NewColor;
+            lbTargetAmount.ForeColor = NewColor;
+            lbCoverageAmount.ForeColor = NewColor;
+            lbQuantityAmount.ForeColor = NewColor;
+            lbRPM1.ForeColor = NewColor;
+            lbRPM2.ForeColor = NewColor;
+            lbUnits.ForeColor = NewColor;
+            lbRateType.ForeColor = NewColor;
+            lbTargetType.ForeColor = NewColor;
+            lbCoverageType.ForeColor = NewColor;
+            lbQuantityType.ForeColor = NewColor;
         }
 
         private void SetFont()

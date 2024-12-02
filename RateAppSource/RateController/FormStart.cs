@@ -62,14 +62,14 @@ namespace RateController
         public clsZones Zones;
         private int cDefaultProduct = 0;
         private bool cMasterOverride;
+        private double cPressureCal;
+        private double cPressureOffset;
         private byte cPressureToShowID;
         private int cPrimeDelay = 3;
         private double cPrimeTime = 0;
         private int cRateType;
         private bool cResumeAfterPrime;
         private bool cShowPressure;
-        private double cPressureCal;
-        private double cPressureOffset;
         private bool[] cShowScale = new bool[4];
         private bool cShowSwitches = false;
         private SimType cSimMode = SimType.Sim_None;
@@ -82,12 +82,12 @@ namespace RateController
         private bool cUseTransparent = false;
         private Label[] Indicators;
         private bool LoadError = false;
+        private int mouseX = 0;
+        private int mouseY = 0;
         private Label[] ProdName;
         private Label[] Rates;
         private PGN32501[] RelaySettings;
         private Label[] Targets;
-        private int mouseX = 0;
-        private int mouseY = 0;
         private int windowLeft = 0;
         private int windowTop = 0;
 
@@ -169,39 +169,10 @@ namespace RateController
             SwitchObjects = new clsSwitches(this);
             ScaleIndicator = new PGN32296(this);
         }
+
         public event EventHandler ColorChanged;
-        public void RaiseColorChanged()
-        {
-            ColorChanged?.Invoke(this, EventArgs.Empty);
-            SetDisplay();
-        }
+
         public event EventHandler ProductChanged;
-        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
-        {
-            // Log the current window location and the mouse location.
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-                mouseX = e.X;
-                mouseY = e.Y;
-            }
-        }
-
-        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-
-                Point pos = new Point(0, 0);
-
-                pos.X = windowLeft + e.X - mouseX;
-                pos.Y = windowTop + e.Y - mouseY;
-                this.Location = pos;
-            }
-        }
 
         public int DefaultProduct
         {
@@ -223,6 +194,26 @@ namespace RateController
             {
                 cMasterOverride = value;
                 Tls.SaveProperty("MasterOverride", cMasterOverride.ToString());
+            }
+        }
+
+        public double PressureCal
+        {
+            get { return cPressureCal; }
+            set
+            {
+                cPressureCal = value;
+                Tls.SaveProperty("PressureCal", value.ToString());
+            }
+        }
+
+        public double PressureOffset
+        {
+            get { return cPressureOffset; }
+            set
+            {
+                cPressureOffset = value;
+                Tls.SaveProperty("PressureOffset", value.ToString());
             }
         }
 
@@ -284,25 +275,6 @@ namespace RateController
                 cShowPressure = value;
                 Tls.SaveProperty("ShowPressure", value.ToString());
                 DisplayPressure();
-            }
-        }
-        public double PressureCal
-        {
-            get { return cPressureCal; }
-            set
-            {
-                cPressureCal = value;
-                Tls.SaveProperty("PressureCal", value.ToString());
-            }
-        }
-
-        public double PressureOffset
-        {
-            get { return cPressureOffset; }
-            set
-            {
-                cPressureOffset = value;
-                Tls.SaveProperty("PressureOffset",value.ToString());
             }
         }
 
@@ -494,7 +466,7 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
             if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
             if (double.TryParse(Tls.LoadProperty("PressureCal"), out double pc)) cPressureCal = pc;
-            if(double.TryParse(Tls.LoadProperty("PressureOffset"),out double po))cPressureOffset= po;
+            if (double.TryParse(Tls.LoadProperty("PressureOffset"), out double po)) cPressureOffset = po;
 
             for (int i = 0; i < 4; i++)
             {
@@ -619,6 +591,12 @@ namespace RateController
             {
                 Tls.WriteErrorLog("FormStart/OpenFile: " + ex.Message);
             }
+        }
+
+        public void RaiseColorChanged()
+        {
+            ColorChanged?.Invoke(this, EventArgs.Empty);
+            SetDisplay();
         }
 
         public void SaveFileAs()
@@ -898,6 +876,7 @@ namespace RateController
                             lbRate.Text = Lang.lgInstantRate;
                             lbRateAmount.Text = Prd.CurrentRate().ToString("N1");
                             break;
+
                         default:
                             lbRate.Text = Lang.lgCurrentRate;
                             lbRateAmount.Text = Prd.SmoothRate().ToString("N1");
@@ -1248,7 +1227,6 @@ namespace RateController
             UpdateStatus();
         }
 
-
         private void lbAogConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Indicates if AgOpenGPS is connected. Green is connected, " +
@@ -1426,6 +1404,33 @@ namespace RateController
         {
         }
 
+        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Log the current window location and the mouse location.
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+                mouseX = e.X;
+                mouseY = e.Y;
+            }
+        }
+
+        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+
+                Point pos = new Point(0, 0);
+
+                pos.X = windowLeft + e.X - mouseX;
+                pos.Y = windowTop + e.Y - mouseY;
+                this.Location = pos;
+            }
+        }
+
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form fs = Tls.IsFormOpen("frmModuleConfig");
@@ -1450,7 +1455,6 @@ namespace RateController
         {
             OpenFile();
         }
-
 
         private void productsToolStripMenuItem_Click(object sender, EventArgs e)
         {

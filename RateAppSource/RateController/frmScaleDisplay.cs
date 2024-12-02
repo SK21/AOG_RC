@@ -24,6 +24,12 @@ namespace RateController
             mf = CallingForm;
             cProductID = ProductID;
             this.Text = "Scale " + Prd();
+            mf.ColorChanged += Mf_ColorChanged;
+        }
+
+        private void Mf_ColorChanged(object sender, EventArgs e)
+        {
+            lbValue.ForeColor = Properties.Settings.Default.ForeColour;
         }
 
         private void btnScale_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -52,6 +58,7 @@ namespace RateController
             mf.Tls.LoadFormData(this, cProductID.ToString());
             timer1.Enabled = true;
             LoadData();
+            lbValue.ForeColor = Properties.Settings.Default.ForeColour;
             UpdateForm();
         }
 
