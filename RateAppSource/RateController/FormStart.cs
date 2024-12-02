@@ -1543,6 +1543,7 @@ namespace RateController
             {
                 ProdName[i].ForeColor = Properties.Settings.Default.ForeColour;
             }
+            groupBox3.ForeColor = Properties.Settings.Default.ForeColour;
         }
 
         private void SetLanguage()
