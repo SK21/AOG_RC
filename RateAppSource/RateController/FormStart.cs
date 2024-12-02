@@ -787,7 +787,7 @@ namespace RateController
                         ProdName[i].Text = Products.Item(i).ProductName;
 
                         ProdName[i].BackColor = Color.Transparent;
-                        ProdName[i].ForeColor = SimColor;
+                        ProdName[i].ForeColor = Properties.Settings.Default.ForeColour;
                         ProdName[i].BorderStyle = BorderStyle.None;
 
                         Rates[i].Text = Products.Item(i).SmoothRate().ToString("N1");
@@ -1497,6 +1497,11 @@ namespace RateController
 
             lbOn.BackColor = Color.Transparent;
             lbOff.BackColor = Color.Transparent;
+
+            for (int i = 0; i < MaxProducts; i++)
+            {
+                ProdName[i].ForeColor = Properties.Settings.Default.ForeColour;
+            }
         }
 
         private void SetLanguage()
