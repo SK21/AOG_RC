@@ -32,5 +32,8 @@
     <Setting Name="UserLanguageChange" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="ForeColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Yellow</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

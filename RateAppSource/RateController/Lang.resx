@@ -179,6 +179,9 @@ Calibration steps:
   <data name="lgChannel" xml:space="preserve">
     <value>Channel</value>
   </data>
+  <data name="lgColor" xml:space="preserve">
+    <value>Color</value>
+  </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>Combo Close</value>
   </data>

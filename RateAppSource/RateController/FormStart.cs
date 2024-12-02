@@ -169,7 +169,12 @@ namespace RateController
             SwitchObjects = new clsSwitches(this);
             ScaleIndicator = new PGN32296(this);
         }
-
+        public event EventHandler ColorChanged;
+        public void RaiseColorChanged()
+        {
+            ColorChanged?.Invoke(this, EventArgs.Empty);
+            SetDisplay();
+        }
         public event EventHandler ProductChanged;
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1234,7 +1239,7 @@ namespace RateController
         private void groupBox3_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
-            Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Yellow);
+            Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Properties.Settings.Default.ForeColour);
         }
 
         private void label34_Click(object sender, EventArgs e)
@@ -1476,7 +1481,7 @@ namespace RateController
             this.BackColor = Color.Black;
             foreach (Control c in this.Controls)
             {
-                c.ForeColor = Color.Yellow;
+                c.ForeColor = Properties.Settings.Default.ForeColour;
             }
             lbAogConnected.ForeColor = Color.Black;
             lbArduinoConnected.ForeColor = Color.Black;

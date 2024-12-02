@@ -180,6 +180,15 @@ namespace RateController {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Color.
+        /// </summary>
+        internal static string lgColor {
+            get {
+                return ResourceManager.GetString("lgColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Combo Close.
         /// </summary>
         internal static string lgComboClose {

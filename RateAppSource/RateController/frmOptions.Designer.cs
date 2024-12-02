@@ -89,7 +89,11 @@
             this.rbHungarian = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
             this.btnReset = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.tbExample = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -101,6 +105,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             this.tabPage4.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             this.SuspendLayout();
             // 
             // ckMetric
@@ -275,7 +280,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(299, 321);
+            this.btnCancel.Location = new System.Drawing.Point(296, 369);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
@@ -293,7 +298,7 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.OK;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(378, 321);
+            this.btnOK.Location = new System.Drawing.Point(377, 369);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(72, 72);
             this.btnOK.TabIndex = 123;
@@ -318,15 +323,20 @@
             // 
             // tcOptions
             // 
+            this.tcOptions.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.tcOptions.Controls.Add(this.tabPage2);
             this.tcOptions.Controls.Add(this.tabPage1);
             this.tcOptions.Controls.Add(this.tabPage3);
             this.tcOptions.Controls.Add(this.tabPage5);
             this.tcOptions.Controls.Add(this.tabPage4);
+            this.tcOptions.Controls.Add(this.tabPage6);
             this.tcOptions.Location = new System.Drawing.Point(12, 12);
+            this.tcOptions.Multiline = true;
             this.tcOptions.Name = "tcOptions";
+            this.tcOptions.Padding = new System.Drawing.Point(33, 6);
             this.tcOptions.SelectedIndex = 0;
-            this.tcOptions.Size = new System.Drawing.Size(438, 303);
+            this.tcOptions.Size = new System.Drawing.Size(437, 351);
+            this.tcOptions.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tcOptions.TabIndex = 126;
             this.tcOptions.SelectedIndexChanged += new System.EventHandler(this.tcOptions_SelectedIndexChanged);
             // 
@@ -334,10 +344,10 @@
             // 
             this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 33);
+            this.tabPage2.Location = new System.Drawing.Point(4, 83);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(430, 266);
+            this.tabPage2.Size = new System.Drawing.Size(429, 264);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Config1";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -497,10 +507,10 @@
             this.tabPage1.Controls.Add(this.ckSimSpeed);
             this.tabPage1.Controls.Add(this.ckMetric);
             this.tabPage1.Controls.Add(this.ckWorkSwitch);
-            this.tabPage1.Location = new System.Drawing.Point(4, 33);
+            this.tabPage1.Location = new System.Drawing.Point(4, 83);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(430, 266);
+            this.tabPage1.Size = new System.Drawing.Size(429, 264);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Config2";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -572,9 +582,9 @@
             this.tabPage3.Controls.Add(this.lbDelay);
             this.tabPage3.Controls.Add(this.lbOnTime);
             this.tabPage3.Controls.Add(this.lbOnSeconds);
-            this.tabPage3.Location = new System.Drawing.Point(4, 33);
+            this.tabPage3.Location = new System.Drawing.Point(4, 83);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(430, 266);
+            this.tabPage3.Size = new System.Drawing.Size(429, 264);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Primed Start";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -599,10 +609,10 @@
             this.tabPage5.Controls.Add(this.ckDualAuto);
             this.tabPage5.Controls.Add(this.DGV);
             this.tabPage5.Controls.Add(this.ckScreenSwitches);
-            this.tabPage5.Location = new System.Drawing.Point(4, 33);
+            this.tabPage5.Location = new System.Drawing.Point(4, 83);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(430, 266);
+            this.tabPage5.Size = new System.Drawing.Size(429, 264);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Switches";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -753,9 +763,9 @@
             this.tabPage4.Controls.Add(this.rbPolish);
             this.tabPage4.Controls.Add(this.rbEnglish);
             this.tabPage4.Controls.Add(this.rbDeustch);
-            this.tabPage4.Location = new System.Drawing.Point(4, 33);
+            this.tabPage4.Location = new System.Drawing.Point(4, 83);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(430, 266);
+            this.tabPage4.Size = new System.Drawing.Size(429, 264);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Language";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -823,6 +833,17 @@
             this.rbDeustch.UseVisualStyleBackColor = true;
             this.rbDeustch.CheckedChanged += new System.EventHandler(this.Language_CheckedChanged);
             // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.button1);
+            this.tabPage6.Controls.Add(this.tbExample);
+            this.tabPage6.Location = new System.Drawing.Point(4, 83);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(429, 264);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Color";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
             // btnReset
             // 
             this.btnReset.BackColor = System.Drawing.Color.Transparent;
@@ -831,7 +852,7 @@
             this.btnReset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReset.Image = global::RateController.Properties.Resources.Update;
             this.btnReset.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnReset.Location = new System.Drawing.Point(218, 321);
+            this.btnReset.Location = new System.Drawing.Point(215, 369);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(72, 72);
             this.btnReset.TabIndex = 154;
@@ -840,11 +861,41 @@
             this.btnReset.Visible = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // colorDialog1
+            // 
+            this.colorDialog1.AnyColor = true;
+            this.colorDialog1.Color = System.Drawing.Color.Yellow;
+            // 
+            // tbExample
+            // 
+            this.tbExample.BackColor = System.Drawing.Color.Black;
+            this.tbExample.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbExample.ForeColor = System.Drawing.Color.Yellow;
+            this.tbExample.Location = new System.Drawing.Point(49, 121);
+            this.tbExample.Multiline = true;
+            this.tbExample.Name = "tbExample";
+            this.tbExample.ReadOnly = true;
+            this.tbExample.Size = new System.Drawing.Size(320, 50);
+            this.tbExample.TabIndex = 0;
+            this.tbExample.Text = "Example Text";
+            this.tbExample.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // button1
+            // 
+            this.button1.AutoSize = true;
+            this.button1.Location = new System.Drawing.Point(99, 51);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(232, 34);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Choose a color";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // frmOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(462, 397);
+            this.ClientSize = new System.Drawing.Size(459, 442);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.tcOptions);
             this.Controls.Add(this.btnCancel);
@@ -875,6 +926,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
             this.tabPage4.ResumeLayout(false);
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -936,5 +989,9 @@
         private System.Windows.Forms.Label lbConID;
         private System.Windows.Forms.TextBox tbPressureCal;
         private System.Windows.Forms.CheckBox ckDefaultProduct;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox tbExample;
     }
 }

@@ -30,6 +30,7 @@ namespace RateController
             tcOptions.TabPages[2].Text = Lang.lgPrimedStart;
             tcOptions.TabPages[3].Text = Lang.lgSwitches;
             tcOptions.TabPages[4].Text = Lang.lgLanguage;
+            tcOptions.TabPages[5].Text = Lang.lgColor;
 
             ckMetric.Text = Lang.lgMetric;
             ckScreenSwitches.Text = Lang.lgSwitches;
@@ -54,7 +55,7 @@ namespace RateController
                 LanguageRBs[i].CheckedChanged += Language_CheckedChanged;
             }
 
-            Tabs = new TabPage[] { tabPage1, tabPage2, tabPage3, tabPage4, tabPage5 };
+            Tabs = new TabPage[] { tabPage1, tabPage2, tabPage3, tabPage4, tabPage5,tabPage6 };
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -62,6 +63,7 @@ namespace RateController
             UpdateForm();
             btnOK.Focus();
             SetButtons(false);
+            tbExample.ForeColor = Properties.Settings.Default.ForeColour;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -95,9 +97,19 @@ namespace RateController
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            mf.SwitchObjects.Reset();
-            SetButtons(true);
-            UpdateForm();
+            switch (tcOptions.SelectedIndex)
+            {
+                case 3:
+                    mf.SwitchObjects.Reset();
+                    SetButtons(true);
+                    UpdateForm();
+                    break;
+
+                case 5:
+                    tbExample.ForeColor = Color.Yellow;
+                    SetButtons(true);
+                    break;
+            }
         }
 
         private void CheckRelayDefs(byte RelayID, byte ModuleID)
@@ -237,6 +249,8 @@ namespace RateController
 
             SetDayMode();
             UpdateForm();
+            colorDialog1.Color = Properties.Settings.Default.ForeColour;
+            tbExample.ForeColor = colorDialog1.Color;
         }
 
         private void groupBox1_Paint(object sender, PaintEventArgs e)
@@ -366,6 +380,10 @@ namespace RateController
                 }
                 mf.SwitchObjects.Save();
                 if (mf.SwitchesForm != null) mf.SwitchesForm.SetDescriptions();
+
+                Properties.Settings.Default.ForeColour = tbExample.ForeColor;
+                Properties.Settings.Default.Save();
+                mf.RaiseColorChanged();
             }
             catch (Exception ex)
             {
@@ -622,7 +640,7 @@ namespace RateController
 
         private void tcOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnReset.Visible = (tcOptions.SelectedIndex == 3);
+            btnReset.Visible = (tcOptions.SelectedIndex == 3||tcOptions.SelectedIndex==5);
         }
 
         private void UpdateForm(bool UpdateObject = false)
@@ -674,6 +692,16 @@ namespace RateController
             ckSingle.Checked = false;
 
             Initializing = false;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if(colorDialog1.ShowDialog()==DialogResult.OK)
+            {
+                //Properties.Settings.Default.ForeColour = colorDialog1.Color;
+                tbExample.ForeColor = colorDialog1.Color;
+                SetButtons(true);
+            }
         }
     }
 }
