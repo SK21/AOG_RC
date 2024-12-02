@@ -16,6 +16,7 @@ namespace RateController
         private double TareWeight = 0;
         private int windowLeft = 0;
         private int windowTop = 0;
+        private MouseButtons MouseButtonClicked;
         // Display mode: 0 - weight, 1 - applied, 2 - acres, 3 - rate
 
         public frmScaleDisplay(FormStart CallingForm, int ProductID)
@@ -114,6 +115,7 @@ namespace RateController
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
             // Log the current window location and the mouse location.
+            MouseButtonClicked = e.Button;
             if (e.Button == MouseButtons.Right)
             {
                 windowTop = this.Top;

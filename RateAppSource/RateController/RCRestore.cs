@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,6 +16,11 @@ namespace RateController
         private clsProduct cCurrentProduct;
         private int cRateType;
         private Form FormToHide;
+        private MouseButtons MouseButtonClicked;
+        private int mouseX = 0;
+        private int mouseY = 0;
+        private int windowLeft = 0;
+        private int windowTop = 0;
 
         public RCRestore(Form CallingForm, int RateType, clsProduct CurrentProduct)
         {
@@ -23,6 +29,34 @@ namespace RateController
             cCurrentProduct = CurrentProduct;
             this.TransparencyKey = this.BackColor;
             InitializeComponent();
+        }
+
+        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Log the current window location and the mouse location.
+            MouseButtonClicked = e.Button;
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+                mouseX = e.X;
+                mouseY = e.Y;
+            }
+        }
+
+        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                windowTop = this.Top;
+                windowLeft = this.Left;
+
+                Point pos = new Point(0, 0);
+
+                pos.X = windowLeft + e.X - mouseX;
+                pos.Y = windowTop + e.Y - mouseY;
+                this.Location = pos;
+            }
         }
 
         private void RCRestore_Load(object sender, EventArgs e)
@@ -36,9 +70,12 @@ namespace RateController
 
         private void RestoreLC_Click(object sender, EventArgs e)
         {
-            FormToHide.WindowState = FormWindowState.Normal;
-            timer1.Enabled = false;
-            this.Close();
+            if (MouseButtonClicked == MouseButtons.Left)
+            {
+                FormToHide.WindowState = FormWindowState.Normal;
+                timer1.Enabled = false;
+                this.Close();
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)

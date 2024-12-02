@@ -90,6 +90,7 @@ namespace RateController
         private Label[] Targets;
         private int windowLeft = 0;
         private int windowTop = 0;
+        private MouseButtons MouseButtonClicked;
 
         public FormStart()
         {
@@ -938,15 +939,18 @@ namespace RateController
 
         private void AreaDone_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(this, "Reset area?", "Reset", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
+            if (MouseButtonClicked == MouseButtons.Left)
             {
-                Products.Item(CurrentProduct()).ResetCoverage();
+                var Hlp = new frmMsgBox(this, "Reset area?", "Reset", true);
+                Hlp.TopMost = true;
+
+                Hlp.ShowDialog();
+                bool Result = Hlp.Result;
+                Hlp.Close();
+                if (Result)
+                {
+                    Products.Item(CurrentProduct()).ResetCoverage();
+                }
             }
         }
 
@@ -962,30 +966,39 @@ namespace RateController
 
         private void btnLeft_Click(object sender, EventArgs e)
         {
-            if (CurrentPage > 0)
+            if (MouseButtonClicked == MouseButtons.Left)
             {
-                CurrentPage--;
-                UpdateStatus();
+                if (CurrentPage > 0)
+                {
+                    CurrentPage--;
+                    UpdateStatus();
+                }
             }
         }
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            if (CurrentPage < MaxProducts)
+            if (MouseButtonClicked == MouseButtons.Left)
             {
-                CurrentPage++;
-                UpdateStatus();
+                if (CurrentPage < MaxProducts)
+                {
+                    CurrentPage++;
+                    UpdateStatus();
+                }
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Button btnSender = (Button)sender;
-            Point ptLowerLeft = new Point(0, btnSender.Height);
-            ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
-            mnuSettings.Show(ptLowerLeft);
-            UpdateStatus();
-            SetDisplay();
+            if (MouseButtonClicked == MouseButtons.Left)
+            {
+                Button btnSender = (Button)sender;
+                Point ptLowerLeft = new Point(0, btnSender.Height);
+                ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
+                mnuSettings.Show(ptLowerLeft);
+                UpdateStatus();
+                SetDisplay();
+            }
         }
 
         private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1223,8 +1236,11 @@ namespace RateController
 
         private void label34_Click(object sender, EventArgs e)
         {
-            ShowQuantityRemaining = !ShowQuantityRemaining;
-            UpdateStatus();
+            if (MouseButtonClicked == MouseButtons.Left)
+            {
+                ShowQuantityRemaining = !ShowQuantityRemaining;
+                UpdateStatus();
+            }
         }
 
         private void lbAogConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -1238,10 +1254,13 @@ namespace RateController
 
         private void lbArduinoConnected_Click(object sender, EventArgs e)
         {
-            int prod = CurrentPage - 1;
-            if (prod < 0) prod = 0;
-            Form restoreform = new RCRestore(this, RateType, Products.Item(prod));
-            restoreform.Show();
+            if (MouseButtonClicked == MouseButtons.Left)
+            {
+                int prod = CurrentPage - 1;
+                if (prod < 0) prod = 0;
+                Form restoreform = new RCRestore(this, RateType, Products.Item(prod));
+                restoreform.Show();
+            }
         }
 
         private void lbArduinoConnected_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -1256,8 +1275,11 @@ namespace RateController
 
         private void lbCoverage_Click(object sender, EventArgs e)
         {
-            ShowCoverageRemaining = !ShowCoverageRemaining;
-            UpdateStatus();
+            if (MouseButtonClicked == MouseButtons.Left)
+            {
+                ShowCoverageRemaining = !ShowCoverageRemaining;
+                UpdateStatus();
+            }
         }
 
         private void lbCoverage_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -1271,19 +1293,31 @@ namespace RateController
 
         private void lblUnits_Click(object sender, EventArgs e)
         {
-            ShowSettings();
+            if (MouseButtonClicked == MouseButtons.Left)
+            {
+                ShowSettings();
+            }
         }
 
         private void lbProduct_Click(object sender, EventArgs e)
         {
-            ShowSettings();
+            if (MouseButtonClicked == MouseButtons.Left)
+            {
+                ShowSettings();
+            }
         }
 
         private void lbRate_Click(object sender, EventArgs e)
         {
-            cRateType++;
-            if (cRateType > 1) cRateType = 0;
-            UpdateStatus();
+            if (MouseButtonClicked == MouseButtons.Left)
+            {
+                if (MouseButtonClicked == MouseButtons.Left)
+                {
+                    cRateType++;
+                    if (cRateType > 1) cRateType = 0;
+                    UpdateStatus();
+                }
+            }
         }
 
         private void lbRate_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -1309,17 +1343,23 @@ namespace RateController
 
         private void lbTarget_Click(object sender, EventArgs e)
         {
-            if (!Products.Item(CurrentPage - 1).UseVR)
+            if (MouseButtonClicked == MouseButtons.Left)
             {
-                if (Products.Item(CurrentPage - 1).UseAltRate)
+                if (MouseButtonClicked == MouseButtons.Left)
                 {
-                    lbTarget.Text = Lang.lgTargetRate;
-                    Products.Item(CurrentPage - 1).UseAltRate = false;
-                }
-                else
-                {
-                    lbTarget.Text = Lang.lgTargetRateAlt;
-                    Products.Item(CurrentPage - 1).UseAltRate = true;
+                    if (!Products.Item(CurrentPage - 1).UseVR)
+                    {
+                        if (Products.Item(CurrentPage - 1).UseAltRate)
+                        {
+                            lbTarget.Text = Lang.lgTargetRate;
+                            Products.Item(CurrentPage - 1).UseAltRate = false;
+                        }
+                        else
+                        {
+                            lbTarget.Text = Lang.lgTargetRateAlt;
+                            Products.Item(CurrentPage - 1).UseAltRate = true;
+                        }
+                    }
                 }
             }
         }
@@ -1407,6 +1447,7 @@ namespace RateController
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
             // Log the current window location and the mouse location.
+            MouseButtonClicked = e.Button;
             if (e.Button == MouseButtons.Right)
             {
                 windowTop = this.Top;
@@ -1546,15 +1587,18 @@ namespace RateController
 
         private void TankRemain_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(this, "Reset quantity?", "Reset", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
+            if (MouseButtonClicked == MouseButtons.Left)
             {
-                Products.Item(CurrentProduct()).ResetApplied();
+                var Hlp = new frmMsgBox(this, "Reset quantity?", "Reset", true);
+                Hlp.TopMost = true;
+
+                Hlp.ShowDialog();
+                bool Result = Hlp.Result;
+                Hlp.Close();
+                if (Result)
+                {
+                    Products.Item(CurrentProduct()).ResetApplied();
+                }
             }
         }
 

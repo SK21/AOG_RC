@@ -125,6 +125,8 @@ namespace RateController
             this.lbArduinoConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbArduinoConnected.Click += new System.EventHandler(this.lbArduinoConnected_Click);
             this.lbArduinoConnected.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbArduinoConnected_HelpRequested);
+            this.lbArduinoConnected.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbArduinoConnected.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // lbAogConnected
             // 
@@ -139,6 +141,8 @@ namespace RateController
             this.lbAogConnected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbAogConnected.Click += new System.EventHandler(this.lbArduinoConnected_Click);
             this.lbAogConnected.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbAogConnected_HelpRequested);
+            this.lbAogConnected.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbAogConnected.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // panProducts
             // 
@@ -170,6 +174,8 @@ namespace RateController
             this.lbTarget.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbTarget.Click += new System.EventHandler(this.lbTarget_Click);
             this.lbTarget.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbTarget_HelpRequested);
+            this.lbTarget.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbTarget.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // groupBox3
             // 
@@ -190,6 +196,8 @@ namespace RateController
             this.lbProduct.TabIndex = 157;
             this.lbProduct.Text = "Herbicide";
             this.lbProduct.Click += new System.EventHandler(this.lbProduct_Click);
+            this.lbProduct.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbProduct.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // SetRate
             // 
@@ -201,6 +209,8 @@ namespace RateController
             this.SetRate.Text = "1,800.50";
             this.SetRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.SetRate.Click += new System.EventHandler(this.lbTarget_Click);
+            this.SetRate.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.SetRate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // lbRate
             // 
@@ -214,6 +224,8 @@ namespace RateController
             this.lbRate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbRate.Click += new System.EventHandler(this.lbRate_Click);
             this.lbRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRate_HelpRequested);
+            this.lbRate.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbRate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // TankRemain
             // 
@@ -226,6 +238,8 @@ namespace RateController
             this.TankRemain.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.TankRemain.Click += new System.EventHandler(this.TankRemain_Click);
             this.TankRemain.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
+            this.TankRemain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.TankRemain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // lblUnits
             // 
@@ -237,6 +251,8 @@ namespace RateController
             this.lblUnits.Text = "Imp Gal/Min";
             this.lblUnits.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.lblUnits.Click += new System.EventHandler(this.lblUnits_Click);
+            this.lblUnits.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lblUnits.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // AreaDone
             // 
@@ -249,6 +265,8 @@ namespace RateController
             this.AreaDone.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.AreaDone.Click += new System.EventHandler(this.AreaDone_Click);
             this.AreaDone.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbCoverage_HelpRequested);
+            this.AreaDone.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.AreaDone.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // lbRateAmount
             // 
@@ -261,6 +279,8 @@ namespace RateController
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbRateAmount.Click += new System.EventHandler(this.lbRate_Click);
             this.lbRateAmount.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRate_HelpRequested);
+            this.lbRateAmount.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbRateAmount.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // lbRemaining
             // 
@@ -272,6 +292,8 @@ namespace RateController
             this.lbRemaining.Text = "Quantity Applied ...";
             this.lbRemaining.Click += new System.EventHandler(this.label34_Click);
             this.lbRemaining.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
+            this.lbRemaining.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbRemaining.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // lbCoverage
             // 
@@ -283,6 +305,8 @@ namespace RateController
             this.lbCoverage.Text = "Coverage";
             this.lbCoverage.Click += new System.EventHandler(this.lbCoverage_Click);
             this.lbCoverage.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbCoverage_HelpRequested);
+            this.lbCoverage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbCoverage.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // panSummary
             // 
@@ -846,6 +870,8 @@ namespace RateController
             this.btnSettings.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnSettings.UseVisualStyleBackColor = false;
             this.btnSettings.Click += new System.EventHandler(this.button3_Click);
+            this.btnSettings.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.btnSettings.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // btAlarm
             // 

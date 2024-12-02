@@ -48,6 +48,8 @@ namespace RateController
             this.btRestore.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btRestore.UseVisualStyleBackColor = false;
             this.btRestore.Click += new System.EventHandler(this.RestoreLC_Click);
+            this.btRestore.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.btRestore.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // lbRateAmount
             // 
@@ -61,6 +63,8 @@ namespace RateController
             this.lbRateAmount.TabIndex = 200;
             this.lbRateAmount.Text = "0.0";
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbRateAmount.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbRateAmount.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // timer1
             // 
@@ -83,6 +87,8 @@ namespace RateController
             this.Text = "RCRestore";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.RCRestore_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             this.ResumeLayout(false);
 
         }

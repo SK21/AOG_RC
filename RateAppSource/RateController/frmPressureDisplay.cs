@@ -7,6 +7,7 @@ namespace RateController
     public partial class frmPressureDisplay : Form
     {
         private FormStart mf;
+        private MouseButtons MouseButtonClicked;
         private int mouseX = 0;
         private int mouseY = 0;
         private int windowLeft = 0;
@@ -41,6 +42,7 @@ namespace RateController
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
             // Log the current window location and the mouse location.
+            MouseButtonClicked = e.Button;
             if (e.Button == MouseButtons.Right)
             {
                 windowTop = this.Top;
