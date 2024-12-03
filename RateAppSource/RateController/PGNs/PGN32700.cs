@@ -17,6 +17,7 @@ namespace RateController
         //      bit 2 - client mode
         //      bit 3 - work pin is momentary
         //      bit 4 - Is3Wire valve
+        //      bit 5 - ADS1115 enabled
         //5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
         //                           , 5 - PCA9685, 6 - PCF8574
         //6	    wifi module serial port
@@ -44,8 +45,31 @@ namespace RateController
             Load();
         }
 
+        public bool ADS1115enabled
+        {
+            get
+            {
+                return ((cData[4] & 0b0010_0000) == 0b0010_0000);
+            }
+            set
+            {
+                if (value)
+                {
+                    cData[4] = (byte)(cData[4] | 0b0010_0000);
+                }
+                else
+                {
+                    cData[4] = (byte)(cData[4] & 0b1101_1111);
+                }
+            }
+        }
+
         public bool ClientMode
         {
+            get
+            {
+                return ((cData[4] & 4) == 4);
+            }
             set
             {
                 if (value)
@@ -59,8 +83,12 @@ namespace RateController
             }
         }
 
-        public bool FlowOnHigh
+        public bool InvertFlow
         {
+            get
+            {
+                return ((cData[4] & 2) == 2);
+            }
             set
             {
                 if (value)
@@ -74,8 +102,31 @@ namespace RateController
             }
         }
 
+        public bool InvertRelay
+        {
+            get
+            {
+                return ((cData[4] & 1) == 1);
+            }
+            set
+            {
+                if (value)
+                {
+                    cData[4] = (byte)(cData[4] | 1);
+                }
+                else
+                {
+                    cData[4] = (byte)(cData[4] & 0b1111_1110);
+                }
+            }
+        }
+
         public bool Is3Wire
         {
+            get
+            {
+                return ((cData[4] & 0b0001_0000) == 0b0001_0000);
+            }
             set
             {
                 if (value)
@@ -94,6 +145,10 @@ namespace RateController
 
         public bool Momentary
         {
+            get
+            {
+                return ((cData[4] & 8) == 8);
+            }
             set
             {
                 if (value)
@@ -109,21 +164,6 @@ namespace RateController
 
         public byte PressurePin
         { set { cData[30] = value; } }
-
-        public bool RelayOnHigh
-        {
-            set
-            {
-                if (value)
-                {
-                    cData[4] = (byte)(cData[4] | 1);
-                }
-                else
-                {
-                    cData[4] = (byte)(cData[4] & 0b1111_1110);
-                }
-            }
-        }
 
         public byte RelayType
         { set { cData[5] = value; } }

@@ -339,10 +339,12 @@ namespace RateController
                 mf.ModuleConfig.WifiPort = val;
             }
             mf.ModuleConfig.RelayType = (byte)cbRelayControl.SelectedIndex;
-            mf.ModuleConfig.RelayOnHigh = ckRelayOn.Checked;
-            mf.ModuleConfig.FlowOnHigh = ckFlowOn.Checked;
+            mf.ModuleConfig.InvertRelay = ckRelayOn.Checked;
+            mf.ModuleConfig.InvertFlow = ckFlowOn.Checked;
             mf.ModuleConfig.Momentary = ckMomentary.Checked;
             mf.ModuleConfig.Is3Wire = rb3Wire.Checked;
+            mf.ModuleConfig.ClientMode = ckClient.Checked;
+            mf.ModuleConfig.ADS1115enabled= ckADS1115enabled.Checked;
 
             // flow
             if (byte.TryParse(tbFlow1.Text, out val))
@@ -487,7 +489,6 @@ namespace RateController
                 Pins[15] = val;
             }
 
-            mf.ModuleConfig.ClientMode = ckClient.Checked;
             mf.ModuleConfig.RelayPins(Pins);
             mf.ModuleConfig.Save();
 
@@ -614,6 +615,7 @@ namespace RateController
                     tbPassword.Text = "111222333";
                     ckClient.Checked = false;
                     tbPressure.Text = "-";
+                    ckADS1115enabled.Checked = true;
                     break;
 
                 case 2:
@@ -658,6 +660,7 @@ namespace RateController
                     ckClient.Checked = false;
                     rb3Wire.Checked = true;
                     tbPressure.Text = "33";
+                    ckADS1115enabled.Checked = false;
                     break;
 
                 default:
@@ -701,6 +704,7 @@ namespace RateController
                     tbPassword.Text = "111222333";
                     ckClient.Checked = false;
                     tbPressure.Text = "-";
+                    ckADS1115enabled.Checked = false;
                     break;
             }
         }
@@ -817,13 +821,16 @@ namespace RateController
 
             tbModuleID.Text = data[2].ToString();
             tbSensorCount.Text = data[3].ToString();
-            ckRelayOn.Checked = ((data[4] & 1) == 1);
-            ckFlowOn.Checked = ((data[4] & 2) == 2);
             cbRelayControl.SelectedIndex = data[5];
             tbWifiPort.Text = data[6].ToString();
-            ckMomentary.Checked = ((data[4] & 8) == 8);
-            rb3Wire.Checked = ((data[4] & 0b0001_0000) == 0b0001_0000);
+
+            ckRelayOn.Checked = mf.ModuleConfig.InvertRelay;
+            ckFlowOn.Checked = mf.ModuleConfig.InvertFlow;
+            ckMomentary.Checked = mf.ModuleConfig.Momentary;
+            rb3Wire.Checked = mf.ModuleConfig.Is3Wire;
             rb2Wire.Checked = !rb3Wire.Checked;
+            ckClient.Checked = mf.ModuleConfig.ClientMode;
+            ckADS1115enabled.Checked = mf.ModuleConfig.ADS1115enabled;
 
             // flow, motor
             for (int i = 7; i < 13; i++)
@@ -901,7 +908,6 @@ namespace RateController
 
             tbSSID.Text = mf.NetworkConfig.NetworkName;
             tbPassword.Text = mf.NetworkConfig.NetworkPassword;
-            ckClient.Checked = ((data[4] & 4) == 4);
 
             switch (BoardType)
             {
