@@ -55,7 +55,7 @@ void CheckRelays()
             {
                 if (MDL.RelayPins[i + j * 8] < NC) // check if relay is enabled
                 {
-                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
+                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.InvertRelay); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.InvertRelay);
                 }
             }
         }
@@ -160,6 +160,13 @@ void CheckRelays()
                     (bitRead(RelayLo, 6) ? 32 : 16) |
                     (bitRead(RelayLo, 7) ? 128 : 64);
             }
+            if (MDL.InvertRelay)
+            {
+                mcpOutA = ~mcpOutA;
+                mcpOutB = ~mcpOutB;
+            }
+            debug1 = RelayLo;
+            debug2 = mcpOutA;
 
             // Send both outputs in a single transmission
             Wire.beginTransmission(MCP23017address);
@@ -244,7 +251,7 @@ void CheckRelays()
         {
             for (int i = 0; i < 8; i++)
             {
-                if (bitRead(NewLo, i)) PCF.write(i, MDL.RelayOnSignal); else PCF.write(i, !MDL.RelayOnSignal);
+                if (bitRead(NewLo, i)) PCF.write(i, MDL.InvertRelay); else PCF.write(i, !MDL.InvertRelay);
             }
         }
         break;

@@ -29,7 +29,7 @@ void handleCredentials()
 
 	server.arg("prop1").toCharArray(MDL.SSID, sizeof(MDL.SSID) - 1);
 	server.arg("prop2").toCharArray(MDL.Password, sizeof(MDL.Password) - 1);
-	MDL.WifiMode = 1;
+	MDL.WifiModeUseStation = true;
 
 	server.send(200, "text/html", GetPage0());
 

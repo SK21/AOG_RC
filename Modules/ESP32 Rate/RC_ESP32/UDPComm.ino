@@ -373,11 +373,13 @@ void ParseData(byte Data[], uint16_t len)
         //2     Module ID   0-15
         //3	    sensor count
         //4     commands
-        //      bit 0 - Relay on high
-        //      bit 1 - Flow on high
-        //      bit 2 - client mode
+        //      bit 0 - Invert relay control
+        //      bit 1 - Invert flow control
+        //      bit 2 - wifi station/client mode enabled
         //      bit 3 - work pin is momentary
         //      bit 4 - Is3Wire valve
+        //      bit 5 - ADS1115 enabled
+        //      bit 6 - Ethernet enabled
         //5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
         //                           , 5 - PCA9685, 6 - PCF8574
         //6	    wifi module serial port
@@ -402,11 +404,13 @@ void ParseData(byte Data[], uint16_t len)
                 MDL.SensorCount = Data[3];
 
                 byte tmp = Data[4];
-                if ((tmp & 1) == 1) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
-                if ((tmp & 2) == 2) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
-                if ((tmp & 4) == 4) MDL.WifiMode = 1; else MDL.WifiMode = 0;
-                if ((tmp & 8) == 8) MDL.WorkPinIsMomentary = 1; else MDL.WorkPinIsMomentary = 0;
+                MDL.InvertRelay = ((tmp & 1) == 1);
+                MDL.InvertFlow = ((tmp & 2) == 2);
+                MDL.WifiModeUseStation = ((tmp & 4) == 4);
+                MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
                 MDL.Is3Wire = ((tmp & 16) == 16);
+                MDL.ADS1115Enabled = ((tmp & 32) == 32);
+                MDL.EthernetEnabled = ((tmp & 64) == 64);
 
                 MDL.RelayControl = Data[5];
                 Sensor[0].FlowPin = Data[7];

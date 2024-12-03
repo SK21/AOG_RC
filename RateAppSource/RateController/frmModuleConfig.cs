@@ -627,13 +627,13 @@ namespace RateController
                     ckFlowOn.Checked = true;
                     ckMomentary.Checked = false;
 
-                    tbFlow1.Text = "13";
+                    tbFlow1.Text = "32";
                     tbFlow2.Text = "-";
-                    tbDir1.Text = "17";
+                    tbDir1.Text = "4";
                     tbDir2.Text = "-";
-                    tbPWM1.Text = "5";
+                    tbPWM1.Text = "16";
                     tbPWM2.Text = "-";
-                    tbWrk.Text = "2";
+                    tbWrk.Text = "13";
 
                     tbRelay1.Text = "-";
                     tbRelay2.Text = "-";
@@ -657,7 +657,7 @@ namespace RateController
                     tbPassword.Text = "111222333";
                     ckClient.Checked = false;
                     rb3Wire.Checked = true;
-                    tbPressure.Text = "15";
+                    tbPressure.Text = "33";
                     break;
 
                 default:

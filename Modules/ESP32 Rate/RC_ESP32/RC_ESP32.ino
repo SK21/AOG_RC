@@ -17,8 +17,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  30-Nov-2024"
-const uint16_t InoID = 30114;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  02-Dec-2024"
+const uint16_t InoID = 2124;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -41,8 +41,8 @@ struct ModuleConfig
 {
 	uint8_t ID = 0;
 	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
-	uint8_t RelayOnSignal = 0;	    // value that turns on relays
-	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
+	bool InvertRelay = false;	    // value that turns on relays
+	bool InvertFlow = false;		// sets on value for flow valve or sets motor direction
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
@@ -51,13 +51,15 @@ struct ModuleConfig
 	uint8_t RelayControl = 4;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
-	uint8_t WifiMode = 0;			// 0 AP mode, 1 Station + AP
+	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
 	uint8_t WorkPin = 2;
 	bool WorkPinIsMomentary = false;
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output2 only, Output1 is off
 	uint8_t PressurePin = 15;		// NC - no pressure pin
+	bool ADS1115Enabled = false;
+	bool EthernetEnabled = false;
 };
 
 ModuleConfig MDL;
@@ -179,7 +181,7 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	if (DisconnectCount > 10)
 	{
 		// use AP mode only
-		MDL.WifiMode = 0;
+		MDL.WifiModeUseStation = false;
 		SaveData();
 		ESP.restart();
 	}
@@ -219,7 +221,7 @@ void loop()
 	}
 	SendComm();
 	server.handleClient();
-	//Blink();
+	Blink();
 }
 
 byte ParseModID(byte ID)
@@ -295,43 +297,47 @@ void CheckPressure()
 	}
 }
 
-//bool State = false;
-//uint32_t LastBlink;
-//uint32_t LastLoop;
-//byte ReadReset;
-//uint32_t MaxLoopTime;
-//double debug1;
-//double debug2;
-//double debug3;
-//
-//void Blink()
-//{
-//	if (millis() - LastBlink > 1000)
-//	{
-//		LastBlink = millis();
-//		State = !State;
-//		//digitalWrite(LED_BUILTIN, State);
-//
-//		//Serial.print(" Micros: ");
-//		//Serial.print(MaxLoopTime);
-//
-//		//Serial.print(", ");
-//		Serial.print(debug1);
-//		
-//		Serial.print(", ");
-//		Serial.print(debug2);
-//
-//		Serial.print(", ");
-//		Serial.print(debug3);
-//
-//		Serial.println("");
-//
-//		if (ReadReset++ > 5)
-//		{
-//			ReadReset = 0;
-//			MaxLoopTime = 0;
-//		}
-//	}
-//	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
-//	LastLoop = micros();
-//}
+bool State = false;
+uint32_t LastBlink;
+uint32_t LastLoop;
+byte ReadReset;
+uint32_t MaxLoopTime;
+double debug1;
+double debug2;
+double debug3;
+double debug4;
+
+void Blink()
+{
+	if (millis() - LastBlink > 1000)
+	{
+		LastBlink = millis();
+		State = !State;
+		//digitalWrite(LED_BUILTIN, State);
+
+		//Serial.print(" Micros: ");
+		//Serial.print(MaxLoopTime);
+
+		//Serial.print(", ");
+		Serial.print(debug1);
+		
+		Serial.print(", ");
+		Serial.print(debug2);
+
+		Serial.print(", ");
+		Serial.print(debug3);
+
+		Serial.print(", ");
+		Serial.print(debug4);
+
+		Serial.println("");
+
+		if (ReadReset++ > 5)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+		}
+	}
+	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
+	LastLoop = micros();
+}

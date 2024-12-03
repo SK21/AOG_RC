@@ -46,7 +46,7 @@ void AdjustFlow()
 
 void SetPWM(byte ID, double PWM)
 {
-    if (MDL.FlowOnDirection == 0) PWM *= -1;    // flow on low
+    if (MDL.InvertFlow) PWM *= -1;    // flow on low
 
     if (PWM > 0)
     {
