@@ -17,8 +17,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  02-Dec-2024"
-const uint16_t InoID = 2124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  03-Dec-2024"
+const uint16_t InoID = 3124;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -59,7 +59,6 @@ struct ModuleConfig
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output2 only, Output1 is off
 	uint8_t PressurePin = 15;		// NC - no pressure pin
 	bool ADS1115Enabled = false;
-	bool EthernetEnabled = false;
 };
 
 ModuleConfig MDL;
@@ -317,7 +316,8 @@ void Blink()
 
 		//Serial.print(" Micros: ");
 		//Serial.print(MaxLoopTime);
-
+		debug1 = Sensor[0].FlowPin;
+		debug2 = Sensor[0].MeterCal;
 		//Serial.print(", ");
 		Serial.print(debug1);
 		

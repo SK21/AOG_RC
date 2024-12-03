@@ -68,46 +68,43 @@ void DoSetup()
 	}
 
 	// ethernet 
-	if (MDL.EthernetEnabled)
+	Serial.println("Starting Ethernet ...");
+	MDL.IP3 = MDL.ID + 50;
+	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
+	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
+
+	Ethernet.init(W5500_SS);   // SS pin
+	Ethernet.begin(LocalMac, 0);
+	Ethernet.setLocalIP(LocalIP);
+	IPAddress Mask(255, 255, 255, 0);
+	Ethernet.setSubnetMask(Mask);
+	IPAddress Gateway(MDL.IP0, MDL.IP1, MDL.IP2, 1);
+	Ethernet.setGatewayIP(Gateway);
+
+	delay(1500);
+	ChipFound = (Ethernet.hardwareStatus() != EthernetNoHardware);
+	if (ChipFound)
 	{
-		Serial.println("Starting Ethernet ...");
-		MDL.IP3 = MDL.ID + 50;
-		IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
-		static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
-
-		Ethernet.init(W5500_SS);   // SS pin
-		Ethernet.begin(LocalMac, 0);
-		Ethernet.setLocalIP(LocalIP);
-		IPAddress Mask(255, 255, 255, 0);
-		Ethernet.setSubnetMask(Mask);
-		IPAddress Gateway(MDL.IP0, MDL.IP1, MDL.IP2, 1);
-		Ethernet.setGatewayIP(Gateway);
-
-		delay(1500);
-		ChipFound = (Ethernet.hardwareStatus() != EthernetNoHardware);
-		if (ChipFound)
+		if (Ethernet.linkStatus() == LinkON)
 		{
-			if (Ethernet.linkStatus() == LinkON)
-			{
-				Serial.println("Ethernet connected.");
-			}
-			else
-			{
-				Serial.println("Ethernet not connected.");
-			}
-			Serial.print("IP Address: ");
-			Serial.println(Ethernet.localIP());
+			Serial.println("Ethernet connected.");
 		}
 		else
 		{
-			Serial.println("Ethernet hardware not found.");
+			Serial.println("Ethernet not connected.");
 		}
-
-		Ethernet_DestinationIP = IPAddress(MDL.IP0, MDL.IP1, MDL.IP2, 255);	// update from saved data
-
-		// UDP
-		UDP_Ethernet.begin(ListeningPort);
+		Serial.print("IP Address: ");
+		Serial.println(Ethernet.localIP());
 	}
+	else
+	{
+		Serial.println("Ethernet hardware not found.");
+	}
+
+	Ethernet_DestinationIP = IPAddress(MDL.IP0, MDL.IP1, MDL.IP2, 255);	// update from saved data
+
+	// UDP
+	UDP_Ethernet.begin(ListeningPort);
 
 	// sensors
 	for (int i = 0; i < MDL.SensorCount; i++)
@@ -429,7 +426,6 @@ void LoadDefaults()
 	MDL.WifiModeUseStation = false;
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = false;
-	MDL.EthernetEnabled = false;
 	MDL.InvertFlow = false;
 	MDL.InvertRelay = false;
 }
@@ -469,7 +465,7 @@ bool ValidData()
 			}
 			if (!Result) break;
 		}
-		debug3 = Result;
+
 		if (Result)
 		{
 			for (int i = 0; i < MDL.SensorCount; i++)
@@ -512,7 +508,7 @@ bool ValidData()
 				if (!Result) break;
 			}
 		}
-		debug4 = Result;
+
 		if (Result && MDL.RelayControl == 1)
 		{
 			// check GPIOs for relays

@@ -30,7 +30,7 @@ void CheckRelays()
                 if (Button[i + 8]) bitSet(NewHi, i);
             }
         }
-    }    
+    }
     else if ((millis() - Sensor[0].CommTime < 4000) || (millis() - Sensor[1].CommTime < 4000))
     {
         NewLo = RelayLo;
@@ -131,42 +131,23 @@ void CheckRelays()
             uint8_t mcpOutA = 0; // Output for port A
             uint8_t mcpOutB = 0; // Output for port B
 
-            if (MDL.Is3Wire)
-            {
-                // Only Out2 is used on the DRV8870. Each DRV8870 controls 1 valve.
-                // Calculate output for port A
-                mcpOutA = (bitRead(RelayLo, 0) ? 2 : 0) |
-                    (bitRead(RelayLo, 1) ? 8 : 0) |
-                    (bitRead(RelayLo, 2) ? 32 : 0) |
-                    (bitRead(RelayLo, 3) ? 128 : 0);
+            // Calculate output for port A, DRV sections 9-16
+            mcpOutA = (bitRead(RelayLo, 4) ? 2 : 1) |
+                (bitRead(RelayLo, 5) ? 8 : 4) |
+                (bitRead(RelayLo, 6) ? 32 : 16) |
+                (bitRead(RelayLo, 7) ? 128 : 64);
 
-                // Calculate output for port B
-                mcpOutB = (bitRead(RelayLo, 4) ? 2 : 0) |
-                    (bitRead(RelayLo, 5) ? 8 : 0) |
-                    (bitRead(RelayLo, 6) ? 32 : 0) |
-                    (bitRead(RelayLo, 7) ? 128 : 0);
-            }
-            else
-            {
-                // Calculate output for port A
-                mcpOutA = (bitRead(RelayLo, 0) ? 2 : 1) |
-                    (bitRead(RelayLo, 1) ? 8 : 4) |
-                    (bitRead(RelayLo, 2) ? 32 : 16) |
-                    (bitRead(RelayLo, 3) ? 128 : 64);
+            // Calculate output for port B, DRV sections 1-8
+            mcpOutB = (bitRead(RelayLo, 0) ? 2 : 1) |
+                (bitRead(RelayLo, 1) ? 8 : 4) |
+                (bitRead(RelayLo, 2) ? 32 : 16) |
+                (bitRead(RelayLo, 3) ? 128 : 64);
 
-                // Calculate output for port B
-                mcpOutB = (bitRead(RelayLo, 4) ? 2 : 1) |
-                    (bitRead(RelayLo, 5) ? 8 : 4) |
-                    (bitRead(RelayLo, 6) ? 32 : 16) |
-                    (bitRead(RelayLo, 7) ? 128 : 64);
-            }
             if (MDL.InvertRelay)
             {
                 mcpOutA = ~mcpOutA;
                 mcpOutB = ~mcpOutB;
             }
-            debug1 = RelayLo;
-            debug2 = mcpOutA;
 
             // Send both outputs in a single transmission
             Wire.beginTransmission(MCP23017address);
@@ -222,7 +203,7 @@ void CheckRelays()
                 // Iterate through all 8 channels and write data using auto-increment
                 for (int i = 0; i < 8; i++)
                 {
-                    if (NewLo & (1 << i)) 
+                    if (NewLo & (1 << i))
                     {
                         // Turn on channel: ON = 0, OFF = 4096
                         Wire.write(0);     // ON_L
