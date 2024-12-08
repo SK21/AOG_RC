@@ -60,7 +60,7 @@ void CheckRelays()
             {
                 if (MDL.RelayPins[i + j * 8] < NC) // check if relay is enabled
                 {
-                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
+                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.InvertRelay); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.InvertRelay);
                 }
             }
         }
@@ -143,11 +143,11 @@ void CheckRelays()
                     {
                         if (bitRead(Rlys, i))
                         {
-                            MCP.digitalWrite(IOpin, MDL.RelayOnSignal);
+                            MCP.digitalWrite(IOpin, MDL.InvertRelay);
                         }
                         else
                         {
-                            MCP.digitalWrite(IOpin, !MDL.RelayOnSignal);
+                            MCP.digitalWrite(IOpin, !MDL.InvertRelay);
                         }
                     }
                 }

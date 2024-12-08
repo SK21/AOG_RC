@@ -188,8 +188,8 @@ void SendNetworkConfig()
 
     for (int i = 0; i < 15; i++)
     {
-        Data[i + 2] = MDL.NetName[i];
-        Data[i + 17] = MDL.NetPassword[i];
+        Data[i + 2] = MDL.SSID[i];
+        Data[i + 17] = MDL.Password[i];
     }
 
     Data[32] = CRC(Data, PGNlength - 1, 0);

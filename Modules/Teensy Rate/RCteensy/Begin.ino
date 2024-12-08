@@ -1,8 +1,7 @@
 
 void DoSetup()
 {
-	uint8_t ErrorCount;
-	int ADS[] = { 0x48,0x49,0x4A,0x4B };	// ADS1115 addresses
+	uint8_t ErrorCount = 0;
 
 	//watchdog timer
 	WDT_timings_t config;
@@ -39,12 +38,10 @@ void DoSetup()
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
 
 	// ADS1115
-	for (int i = 0; i < 4; i++)
+	if (MDL.ADS1115Enabled)
 	{
-		ADS1115_Address = ADS[i];
 		Serial.print("Starting ADS1115 at address ");
-		Serial.print(ADS1115_Address);
-		ErrorCount = 0;
+		Serial.println(ADS1115_Address);
 		while (!ADSfound)
 		{
 			Wire.beginTransmission(ADS1115_Address);
@@ -59,21 +56,15 @@ void DoSetup()
 		Serial.println("");
 		if (ADSfound)
 		{
-			Serial.print("ADS1115 connected at address ");
-			Serial.println(ADS1115_Address);
+			Serial.println("ADS1115 found.");
 			Serial.println("");
-			break;
 		}
 		else
 		{
-			Serial.print("ADS1115 not found.");
+			Serial.println("ADS1115 not found.");
+			Serial.println("ADS1115 disabled.");
 			Serial.println("");
 		}
-	}
-	if (!ADSfound)
-	{
-		Serial.println("ADS1115 disabled.");
-		Serial.println("");
 	}
 
 	// ethernet 
@@ -211,7 +202,7 @@ void DoSetup()
 		while (!MCP23017_found)
 		{
 			Serial.print(".");
-			Wire.beginTransmission(0x20);
+			Wire.beginTransmission(MCP23017address);
 			MCP23017_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
@@ -254,7 +245,7 @@ void LoadData()
 	{
 		// load stored data
 		Serial.println("Loading stored settings.");
-		EEPROM.get(110, MDL);
+		EEPROM.get(92, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
 		{
@@ -279,7 +270,7 @@ void SaveData()
 	Serial.println("Updating stored settings.");
 	EEPROM.put(0, InoID);
 	EEPROM.put(4, InoType);
-	EEPROM.put(110, MDL);
+	EEPROM.put(92, MDL);
 
 	for (int i = 0; i < MaxProductCount; i++)
 	{
@@ -323,26 +314,28 @@ void LoadDefaults()
 
 	// module settings
 	MDL.ID = 0;
-	MDL.SensorCount = 2;
-	MDL.RelayOnSignal = 1;
-	MDL.FlowOnDirection = 1;
+	MDL.SensorCount = 1;
+	MDL.InvertRelay = false;
+	MDL.InvertFlow = false;
 	MDL.IP0 = 192;
 	MDL.IP1 = 168;
 	MDL.IP2 = 1;
 	MDL.IP3 = 50;
 	MDL.RelayControl = 1;
 	MDL.ESPserialPort = 1;
-	MDL.WifiMode = 1;
+	MDL.WifiModeUseStation = false;
 	MDL.WorkPin = NC;
 	MDL.WorkPinIsMomentary = false;
+	MDL.Is3Wire = true;
+	MDL.ADS1115Enabled = false;
 
 	// network name
-	memset(MDL.NetName, '\0', sizeof(MDL.NetName)); // erase old name
-	memcpy(MDL.NetName, &DefaultNetName, 14);
+	memset(MDL.SSID, '\0', sizeof(MDL.SSID)); // erase old name
+	memcpy(MDL.SSID, &DefaultNetName, 14);
 
 	// network password
-	memset(MDL.NetPassword, '\0', sizeof(MDL.NetPassword)); // erase old name
-	memcpy(MDL.NetPassword, &DefaultNetPassword, 14);
+	memset(MDL.Password, '\0', sizeof(MDL.Password)); // erase old name
+	memcpy(MDL.Password, &DefaultNetPassword, 14);
 }
 
 bool ValidData()

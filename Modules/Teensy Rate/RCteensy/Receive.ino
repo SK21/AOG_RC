@@ -308,11 +308,12 @@ void ReadPGNs(byte Data[], uint16_t len)
 		//2     Module ID   0-15
 		//3	    sensor count
 		//4     commands
-		//      bit 0 - Relay on high
-		//      bit 1 - Flow on high
-		//      bit 2 - client mode
+		//      bit 0 - Invert relay control
+		//      bit 1 - Invert flow control
+		//      bit 2 - wifi station/client mode enabled
 		//      bit 3 - work pin is momentary
 		//      bit 4 - Is3Wire valve
+		//      bit 5 - ADS1115 enabled
 		//5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
 		//                           , 5 - PCA9685, 6 - PCF8574
 		//6	    wifi module serial port
@@ -338,10 +339,12 @@ void ReadPGNs(byte Data[], uint16_t len)
 				MDL.SensorCount = Data[3];
 
 				byte tmp = Data[4];
-				if ((tmp & 1) == 1) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
-				if ((tmp & 2) == 2) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
-				if ((tmp & 4) == 4) MDL.WifiMode = 1; else MDL.WifiMode = 0;
-				if ((tmp & 8) == 8) MDL.WorkPinIsMomentary = 1; else MDL.WorkPinIsMomentary = 0;
+				MDL.InvertRelay = ((tmp & 1) == 1);
+				MDL.InvertFlow = ((tmp & 2) == 2);
+				MDL.WifiModeUseStation = ((tmp & 4) == 4);
+				MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
+				MDL.Is3Wire = ((tmp & 16) == 16);
+				MDL.ADS1115Enabled = ((tmp & 32) == 32);
 
 				MDL.RelayControl = Data[5];
 				Sensor[0].FlowPin = Data[7];
@@ -357,6 +360,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 				}
 
 				MDL.WorkPin = Data[29];
+				MDL.PressurePin = Data[30];
 
 				//SaveData();	saved in pgn 3702
 			}
@@ -378,12 +382,12 @@ void ReadPGNs(byte Data[], uint16_t len)
 			if (GoodCRC(Data, PGNlength))
 			{
 				// network name
-				memset(MDL.NetName, '\0', sizeof(MDL.NetName)); // erase old name
-				memcpy(MDL.NetName, &Data[2], 14);
+				memset(MDL.SSID, '\0', sizeof(MDL.SSID)); // erase old name
+				memcpy(MDL.SSID, &Data[2], 14);
 
 				// network password
-				memset(MDL.NetPassword, '\0', sizeof(MDL.NetPassword)); // erase old name
-				memcpy(MDL.NetPassword, &Data[17], 14);
+				memset(MDL.Password, '\0', sizeof(MDL.Password)); // erase old name
+				memcpy(MDL.Password, &Data[17], 14);
 
 				SaveData();
 				SendNetworkConfig();
