@@ -9,6 +9,7 @@ namespace RateController
         private int cDisplayMode = 0;
         private int cProductID;
         private FormStart mf;
+        private MouseButtons MouseButtonClicked;
         private int mouseX = 0;
         private int mouseY = 0;
         private double StartingAcres = 0;
@@ -16,7 +17,6 @@ namespace RateController
         private double TareWeight = 0;
         private int windowLeft = 0;
         private int windowTop = 0;
-        private MouseButtons MouseButtonClicked;
         // Display mode: 0 - weight, 1 - applied, 2 - acres, 3 - rate
 
         public frmScaleDisplay(FormStart CallingForm, int ProductID)
@@ -28,9 +28,19 @@ namespace RateController
             mf.ColorChanged += Mf_ColorChanged;
         }
 
-        private void Mf_ColorChanged(object sender, EventArgs e)
+        protected override void OnPaint(PaintEventArgs e)
         {
-            lbValue.ForeColor = Properties.Settings.Default.ForeColour;
+            base.OnPaint(e);
+
+            // Define the border color and thickness
+            Color borderColor = Properties.Settings.Default.ForeColour;
+            int borderWidth = 1;
+
+            // Draw the border
+            using (Pen pen = new Pen(borderColor, borderWidth))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+            }
         }
 
         private void btnScale_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -60,6 +70,7 @@ namespace RateController
             timer1.Enabled = true;
             LoadData();
             lbValue.ForeColor = Properties.Settings.Default.ForeColour;
+            this.BackColor = Properties.Settings.Default.BackColour;
             UpdateForm();
         }
 
@@ -110,6 +121,12 @@ namespace RateController
             if (double.TryParse(mf.Tls.LoadProperty("Scale_Area" + cProductID.ToString()), out double ar)) StartingAcres = ar;
             if (double.TryParse(mf.Tls.LoadProperty("Scale_Weight" + cProductID.ToString()), out double wt)) StartingWeight = wt;
             if (double.TryParse(mf.Tls.LoadProperty("Scale_Tare" + cProductID.ToString()), out double ta)) TareWeight = ta;
+        }
+
+        private void Mf_ColorChanged(object sender, EventArgs e)
+        {
+            lbValue.ForeColor = Properties.Settings.Default.ForeColour;
+            this.BackColor = Properties.Settings.Default.BackColour;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -174,7 +191,6 @@ namespace RateController
             mf.Tls.SaveProperty("Scale_Tare" + cProductID.ToString(), TareWeight.ToString());
         }
 
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateForm();
@@ -182,7 +198,6 @@ namespace RateController
 
         private void UpdateForm()
         {
-
             switch (cDisplayMode)
             {
                 case 1:

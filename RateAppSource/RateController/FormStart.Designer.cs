@@ -47,26 +47,16 @@ namespace RateController
             this.lbRemaining = new System.Windows.Forms.Label();
             this.lbCoverage = new System.Windows.Forms.Label();
             this.panSummary = new System.Windows.Forms.Panel();
-            this.tg3 = new System.Windows.Forms.Label();
-            this.tg2 = new System.Windows.Forms.Label();
-            this.tg1 = new System.Windows.Forms.Label();
-            this.tg0 = new System.Windows.Forms.Label();
-            this.idc5 = new System.Windows.Forms.Label();
             this.rt5 = new System.Windows.Forms.Label();
             this.prd5 = new System.Windows.Forms.Label();
-            this.idc0 = new System.Windows.Forms.Label();
             this.prd4 = new System.Windows.Forms.Label();
             this.rt4 = new System.Windows.Forms.Label();
-            this.idc4 = new System.Windows.Forms.Label();
             this.prd3 = new System.Windows.Forms.Label();
             this.rt3 = new System.Windows.Forms.Label();
-            this.idc3 = new System.Windows.Forms.Label();
             this.prd2 = new System.Windows.Forms.Label();
             this.rt2 = new System.Windows.Forms.Label();
-            this.idc2 = new System.Windows.Forms.Label();
             this.prd1 = new System.Windows.Forms.Label();
             this.rt1 = new System.Windows.Forms.Label();
-            this.idc1 = new System.Windows.Forms.Label();
             this.prd0 = new System.Windows.Forms.Label();
             this.rt0 = new System.Windows.Forms.Label();
             this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -310,26 +300,16 @@ namespace RateController
             // 
             // panSummary
             // 
-            this.panSummary.Controls.Add(this.tg3);
-            this.panSummary.Controls.Add(this.tg2);
-            this.panSummary.Controls.Add(this.tg1);
-            this.panSummary.Controls.Add(this.tg0);
-            this.panSummary.Controls.Add(this.idc5);
             this.panSummary.Controls.Add(this.rt5);
             this.panSummary.Controls.Add(this.prd5);
-            this.panSummary.Controls.Add(this.idc0);
             this.panSummary.Controls.Add(this.prd4);
             this.panSummary.Controls.Add(this.rt4);
-            this.panSummary.Controls.Add(this.idc4);
             this.panSummary.Controls.Add(this.prd3);
             this.panSummary.Controls.Add(this.rt3);
-            this.panSummary.Controls.Add(this.idc3);
             this.panSummary.Controls.Add(this.prd2);
             this.panSummary.Controls.Add(this.rt2);
-            this.panSummary.Controls.Add(this.idc2);
             this.panSummary.Controls.Add(this.prd1);
             this.panSummary.Controls.Add(this.rt1);
-            this.panSummary.Controls.Add(this.idc1);
             this.panSummary.Controls.Add(this.prd0);
             this.panSummary.Controls.Add(this.rt0);
             this.panSummary.Location = new System.Drawing.Point(301, 134);
@@ -337,62 +317,10 @@ namespace RateController
             this.panSummary.Size = new System.Drawing.Size(270, 200);
             this.panSummary.TabIndex = 100;
             // 
-            // tg3
-            // 
-            this.tg3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tg3.Location = new System.Drawing.Point(55, 87);
-            this.tg3.Name = "tg3";
-            this.tg3.Size = new System.Drawing.Size(90, 23);
-            this.tg3.TabIndex = 129;
-            this.tg3.Text = "0";
-            this.tg3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tg2
-            // 
-            this.tg2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tg2.Location = new System.Drawing.Point(55, 58);
-            this.tg2.Name = "tg2";
-            this.tg2.Size = new System.Drawing.Size(90, 23);
-            this.tg2.TabIndex = 128;
-            this.tg2.Text = "0";
-            this.tg2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tg1
-            // 
-            this.tg1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tg1.Location = new System.Drawing.Point(55, 29);
-            this.tg1.Name = "tg1";
-            this.tg1.Size = new System.Drawing.Size(90, 23);
-            this.tg1.TabIndex = 127;
-            this.tg1.Text = "0";
-            this.tg1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tg0
-            // 
-            this.tg0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tg0.Location = new System.Drawing.Point(55, 0);
-            this.tg0.Name = "tg0";
-            this.tg0.Size = new System.Drawing.Size(90, 23);
-            this.tg0.TabIndex = 126;
-            this.tg0.Text = "0";
-            this.tg0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // idc5
-            // 
-            this.idc5.BackColor = System.Drawing.SystemColors.Control;
-            this.idc5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc5.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc5.Image = ((System.Drawing.Image)(resources.GetObject("idc5.Image")));
-            this.idc5.Location = new System.Drawing.Point(240, 145);
-            this.idc5.Name = "idc5";
-            this.idc5.Size = new System.Drawing.Size(30, 23);
-            this.idc5.TabIndex = 125;
-            this.idc5.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // rt5
             // 
             this.rt5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rt5.Location = new System.Drawing.Point(148, 145);
+            this.rt5.Location = new System.Drawing.Point(171, 145);
             this.rt5.Name = "rt5";
             this.rt5.Size = new System.Drawing.Size(90, 23);
             this.rt5.TabIndex = 124;
@@ -405,21 +333,9 @@ namespace RateController
             this.prd5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd5.Location = new System.Drawing.Point(3, 145);
             this.prd5.Name = "prd5";
-            this.prd5.Size = new System.Drawing.Size(74, 23);
+            this.prd5.Size = new System.Drawing.Size(163, 23);
             this.prd5.TabIndex = 123;
             this.prd5.Text = "6";
-            // 
-            // idc0
-            // 
-            this.idc0.BackColor = System.Drawing.SystemColors.Control;
-            this.idc0.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc0.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc0.Image = global::RateController.Properties.Resources.OffSmall;
-            this.idc0.Location = new System.Drawing.Point(240, 0);
-            this.idc0.Name = "idc0";
-            this.idc0.Size = new System.Drawing.Size(30, 23);
-            this.idc0.TabIndex = 122;
-            this.idc0.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // prd4
             // 
@@ -427,31 +343,19 @@ namespace RateController
             this.prd4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd4.Location = new System.Drawing.Point(3, 116);
             this.prd4.Name = "prd4";
-            this.prd4.Size = new System.Drawing.Size(74, 23);
+            this.prd4.Size = new System.Drawing.Size(163, 23);
             this.prd4.TabIndex = 121;
             this.prd4.Text = "5";
             // 
             // rt4
             // 
             this.rt4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rt4.Location = new System.Drawing.Point(148, 116);
+            this.rt4.Location = new System.Drawing.Point(171, 116);
             this.rt4.Name = "rt4";
             this.rt4.Size = new System.Drawing.Size(90, 23);
             this.rt4.TabIndex = 120;
             this.rt4.Text = "0";
             this.rt4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // idc4
-            // 
-            this.idc4.BackColor = System.Drawing.SystemColors.Control;
-            this.idc4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc4.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc4.Image = ((System.Drawing.Image)(resources.GetObject("idc4.Image")));
-            this.idc4.Location = new System.Drawing.Point(240, 116);
-            this.idc4.Name = "idc4";
-            this.idc4.Size = new System.Drawing.Size(30, 23);
-            this.idc4.TabIndex = 119;
-            this.idc4.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // prd3
             // 
@@ -459,31 +363,19 @@ namespace RateController
             this.prd3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd3.Location = new System.Drawing.Point(3, 87);
             this.prd3.Name = "prd3";
-            this.prd3.Size = new System.Drawing.Size(50, 23);
+            this.prd3.Size = new System.Drawing.Size(163, 23);
             this.prd3.TabIndex = 118;
             this.prd3.Text = "4";
             // 
             // rt3
             // 
             this.rt3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rt3.Location = new System.Drawing.Point(148, 87);
+            this.rt3.Location = new System.Drawing.Point(171, 87);
             this.rt3.Name = "rt3";
             this.rt3.Size = new System.Drawing.Size(90, 23);
             this.rt3.TabIndex = 117;
             this.rt3.Text = "0";
             this.rt3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // idc3
-            // 
-            this.idc3.BackColor = System.Drawing.SystemColors.Control;
-            this.idc3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc3.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc3.Image = ((System.Drawing.Image)(resources.GetObject("idc3.Image")));
-            this.idc3.Location = new System.Drawing.Point(240, 87);
-            this.idc3.Name = "idc3";
-            this.idc3.Size = new System.Drawing.Size(30, 23);
-            this.idc3.TabIndex = 116;
-            this.idc3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // prd2
             // 
@@ -491,31 +383,19 @@ namespace RateController
             this.prd2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd2.Location = new System.Drawing.Point(3, 58);
             this.prd2.Name = "prd2";
-            this.prd2.Size = new System.Drawing.Size(50, 23);
+            this.prd2.Size = new System.Drawing.Size(163, 23);
             this.prd2.TabIndex = 115;
             this.prd2.Text = "3";
             // 
             // rt2
             // 
             this.rt2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rt2.Location = new System.Drawing.Point(148, 58);
+            this.rt2.Location = new System.Drawing.Point(171, 58);
             this.rt2.Name = "rt2";
             this.rt2.Size = new System.Drawing.Size(90, 23);
             this.rt2.TabIndex = 114;
             this.rt2.Text = "0";
             this.rt2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // idc2
-            // 
-            this.idc2.BackColor = System.Drawing.SystemColors.Control;
-            this.idc2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc2.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc2.Image = ((System.Drawing.Image)(resources.GetObject("idc2.Image")));
-            this.idc2.Location = new System.Drawing.Point(240, 58);
-            this.idc2.Name = "idc2";
-            this.idc2.Size = new System.Drawing.Size(30, 23);
-            this.idc2.TabIndex = 113;
-            this.idc2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // prd1
             // 
@@ -523,31 +403,19 @@ namespace RateController
             this.prd1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd1.Location = new System.Drawing.Point(3, 29);
             this.prd1.Name = "prd1";
-            this.prd1.Size = new System.Drawing.Size(50, 23);
+            this.prd1.Size = new System.Drawing.Size(163, 23);
             this.prd1.TabIndex = 112;
             this.prd1.Text = "2";
             // 
             // rt1
             // 
             this.rt1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rt1.Location = new System.Drawing.Point(148, 29);
+            this.rt1.Location = new System.Drawing.Point(171, 29);
             this.rt1.Name = "rt1";
             this.rt1.Size = new System.Drawing.Size(90, 23);
             this.rt1.TabIndex = 111;
             this.rt1.Text = "0";
             this.rt1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // idc1
-            // 
-            this.idc1.BackColor = System.Drawing.SystemColors.Control;
-            this.idc1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.idc1.Font = new System.Drawing.Font("Tahoma", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.idc1.Image = ((System.Drawing.Image)(resources.GetObject("idc1.Image")));
-            this.idc1.Location = new System.Drawing.Point(240, 29);
-            this.idc1.Name = "idc1";
-            this.idc1.Size = new System.Drawing.Size(30, 23);
-            this.idc1.TabIndex = 110;
-            this.idc1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // prd0
             // 
@@ -555,14 +423,14 @@ namespace RateController
             this.prd0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.prd0.Location = new System.Drawing.Point(3, 0);
             this.prd0.Name = "prd0";
-            this.prd0.Size = new System.Drawing.Size(50, 23);
+            this.prd0.Size = new System.Drawing.Size(163, 23);
             this.prd0.TabIndex = 109;
             this.prd0.Text = "1";
             // 
             // rt0
             // 
             this.rt0.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rt0.Location = new System.Drawing.Point(147, 0);
+            this.rt0.Location = new System.Drawing.Point(171, 0);
             this.rt0.Name = "rt0";
             this.rt0.Size = new System.Drawing.Size(90, 23);
             this.rt0.TabIndex = 108;
@@ -917,6 +785,7 @@ namespace RateController
             this.Load += new System.EventHandler(this.FormStart_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.Resize += new System.EventHandler(this.FormStart_Resize);
             this.panProducts.ResumeLayout(false);
             this.panSummary.ResumeLayout(false);
             this.mnuSettings.ResumeLayout(false);
@@ -943,19 +812,14 @@ namespace RateController
         private System.Windows.Forms.Label lbCoverage;
         private System.Windows.Forms.Label lbRemaining;
         private System.Windows.Forms.Panel panSummary;
-        private System.Windows.Forms.Label idc0;
         private System.Windows.Forms.Label prd4;
         private System.Windows.Forms.Label rt4;
-        private System.Windows.Forms.Label idc4;
         private System.Windows.Forms.Label prd3;
         private System.Windows.Forms.Label rt3;
-        private System.Windows.Forms.Label idc3;
         private System.Windows.Forms.Label prd2;
         private System.Windows.Forms.Label rt2;
-        private System.Windows.Forms.Label idc2;
         private System.Windows.Forms.Label prd1;
         private System.Windows.Forms.Label rt1;
-        private System.Windows.Forms.Label idc1;
         private System.Windows.Forms.Label prd0;
         private System.Windows.Forms.Label rt0;
         private System.Windows.Forms.Button btnLeft;
@@ -978,7 +842,6 @@ namespace RateController
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbOn;
         private System.Windows.Forms.Label lbOff;
-        private System.Windows.Forms.Label idc5;
         private System.Windows.Forms.Label rt5;
         private System.Windows.Forms.Label prd5;
         private System.Windows.Forms.Timer timerPIDs;
@@ -986,10 +849,6 @@ namespace RateController
         private System.Windows.Forms.ToolStripMenuItem networkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem calibrateToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.Label tg3;
-        private System.Windows.Forms.Label tg2;
-        private System.Windows.Forms.Label tg1;
-        private System.Windows.Forms.Label tg0;
         private System.Windows.Forms.ToolStripMenuItem commDiagnosticsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;

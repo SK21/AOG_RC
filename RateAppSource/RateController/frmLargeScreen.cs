@@ -158,7 +158,7 @@ namespace RateController
 
         private void btMinimize_Click(object sender, EventArgs e)
         {
-            Form restoreform = new RCRestore(this, mf.RateType, Prd);
+            Form restoreform = new RCRestore(this, mf.RateType, Prd,mf);
             restoreform.Show();
         }
 

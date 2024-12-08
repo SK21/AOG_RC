@@ -80,17 +80,15 @@ namespace RateController
         private bool cUseDualAuto;
         private bool cUseLargeScreen = false;
         private bool cUseTransparent = false;
-        private Label[] Indicators;
         private bool LoadError = false;
+        private MouseButtons MouseButtonClicked;
         private int mouseX = 0;
         private int mouseY = 0;
         private Label[] ProdName;
         private Label[] Rates;
         private PGN32501[] RelaySettings;
-        private Label[] Targets;
         private int windowLeft = 0;
         private int windowTop = 0;
-        private MouseButtons MouseButtonClicked;
 
         public FormStart()
         {
@@ -146,8 +144,6 @@ namespace RateController
 
             ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4, prd5 };
             Rates = new Label[] { rt0, rt1, rt2, rt3, rt4, rt5 };
-            Indicators = new Label[] { idc0, idc1, idc2, idc3, idc4, idc5 };
-            Targets = new Label[] { tg0, tg1, tg2, tg3 };
 
             cUseInches = true;
 
@@ -792,19 +788,6 @@ namespace RateController
                         ProdName[i].BorderStyle = BorderStyle.None;
 
                         Rates[i].Text = Products.Item(i).SmoothRate().ToString("N1");
-                        if (i < 4)
-                        {
-                            Targets[i].Text = Products.Item(i).TargetRate().ToString("N1");
-                        }
-
-                        if (Products.Item(i).RateSensor.Connected())
-                        {
-                            Indicators[i].Image = Properties.Resources.OnSmall;
-                        }
-                        else
-                        {
-                            Indicators[i].Image = Properties.Resources.OffSmall;
-                        }
                     }
                     lbArduinoConnected.Visible = false;
                 }
@@ -937,6 +920,21 @@ namespace RateController
             }
         }
 
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            // Define the border color and thickness
+            Color borderColor = Properties.Settings.Default.ForeColour;
+            int borderWidth = 1;
+
+            // Draw the border
+            using (Pen pen = new Pen(borderColor, borderWidth))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+            }
+        }
+
         private void AreaDone_Click(object sender, EventArgs e)
         {
             if (MouseButtonClicked == MouseButtons.Left)
@@ -1045,7 +1043,7 @@ namespace RateController
                 if (ID < 0) ID = 0;
                 clsProduct Prd = Products.Item(ID);
 
-                this.Width = 277;
+                this.Width = 283;
 
                 btAlarm.Top = 21;
                 btAlarm.Left = 33;
@@ -1057,8 +1055,8 @@ namespace RateController
                     panSummary.Visible = true;
                     panFan.Visible = false;
                     panProducts.Visible = false;
-                    panSummary.Top = 0;
-                    panSummary.Left = 0;
+                    panSummary.Top = 6;
+                    panSummary.Left = 6;
 
                     this.Height = 248;
                     btnSettings.Top = 180;
@@ -1075,8 +1073,8 @@ namespace RateController
                         // fan panel
                         panProducts.Visible = false;
                         panFan.Visible = true;
-                        panFan.Top = 0;
-                        panFan.Left = 0;
+                        panFan.Top = 6;
+                        panFan.Left = 6;
 
                         this.Height = 222;
                         btnSettings.Top = 154;
@@ -1089,8 +1087,8 @@ namespace RateController
                     {
                         panProducts.Visible = true;
                         panFan.Visible = false;
-                        panProducts.Top = 0;
-                        panProducts.Left = 0;
+                        panProducts.Top = 6;
+                        panProducts.Left = 6;
 
                         // product panel
                         this.Height = 222;
@@ -1101,6 +1099,7 @@ namespace RateController
                         lbAogConnected.Top = 188;
                     }
                 }
+                Invalidate();
             }
             catch (Exception ex)
             {
@@ -1228,6 +1227,19 @@ namespace RateController
             cStartTime = DateTime.Now;
         }
 
+        private void FormStart_Paint(object sender, PaintEventArgs e)
+        {
+            Rectangle borderRectangle = this.ClientRectangle;
+            borderRectangle.Inflate(-10, -10);
+            ControlPaint.DrawBorder3D(e.Graphics, borderRectangle,
+                Border3DStyle.Raised);
+        }
+
+        private void FormStart_Resize(object sender, EventArgs e)
+        {
+            Invalidate();
+        }
+
         private void groupBox3_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
@@ -1258,7 +1270,7 @@ namespace RateController
             {
                 int prod = CurrentPage - 1;
                 if (prod < 0) prod = 0;
-                Form restoreform = new RCRestore(this, RateType, Products.Item(prod));
+                Form restoreform = new RCRestore(this, RateType, Products.Item(prod),this);
                 restoreform.Show();
             }
         }
@@ -1523,18 +1535,13 @@ namespace RateController
 
         private void SetDisplay()
         {
-            this.BackColor = Color.Black;
+            this.BackColor = Properties.Settings.Default.BackColour;
             foreach (Control c in this.Controls)
             {
                 c.ForeColor = Properties.Settings.Default.ForeColour;
             }
             lbAogConnected.ForeColor = Color.Black;
             lbArduinoConnected.ForeColor = Color.Black;
-
-            for (int i = 0; i < 6; i++)
-            {
-                Indicators[i].BackColor = Color.Transparent;
-            }
 
             lbOn.BackColor = Color.Transparent;
             lbOff.BackColor = Color.Transparent;

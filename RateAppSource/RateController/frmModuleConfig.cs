@@ -619,23 +619,23 @@ namespace RateController
                     break;
 
                 case 2:
-                    // RC17, ESP32
+                    // RC15, ESP32
                     tbModuleID.Text = "0";
-                    tbSensorCount.Text = "1";
+                    tbSensorCount.Text = "2";
                     tbWifiPort.Text = "0";
-                    cbRelayControl.SelectedIndex = 4;
+                    cbRelayControl.SelectedIndex = 5;
 
                     ckRelayOn.Checked = true;
                     ckFlowOn.Checked = true;
                     ckMomentary.Checked = false;
 
-                    tbFlow1.Text = "32";
-                    tbFlow2.Text = "-";
-                    tbDir1.Text = "4";
-                    tbDir2.Text = "-";
-                    tbPWM1.Text = "16";
-                    tbPWM2.Text = "-";
-                    tbWrk.Text = "13";
+                    tbFlow1.Text = "17";
+                    tbFlow2.Text = "16";
+                    tbDir1.Text = "32";
+                    tbDir2.Text = "25";
+                    tbPWM1.Text = "33";
+                    tbPWM2.Text = "26";
+                    tbWrk.Text = "-";
 
                     tbRelay1.Text = "-";
                     tbRelay2.Text = "-";
@@ -659,7 +659,7 @@ namespace RateController
                     tbPassword.Text = "111222333";
                     ckClient.Checked = false;
                     rb3Wire.Checked = true;
-                    tbPressure.Text = "33";
+                    tbPressure.Text = "-";
                     ckADS1115enabled.Checked = false;
                     break;
 

@@ -90,10 +90,11 @@
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
             this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnTextColour = new System.Windows.Forms.Button();
             this.tbExample = new System.Windows.Forms.TextBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.button1 = new System.Windows.Forms.Button();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -836,6 +837,7 @@
             // tabPage6
             // 
             this.tabPage6.Controls.Add(this.button1);
+            this.tabPage6.Controls.Add(this.btnTextColour);
             this.tabPage6.Controls.Add(this.tbExample);
             this.tabPage6.Location = new System.Drawing.Point(4, 83);
             this.tabPage6.Name = "tabPage6";
@@ -844,27 +846,27 @@
             this.tabPage6.Text = "Color";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnTextColour
             // 
-            this.button1.AutoSize = true;
-            this.button1.Location = new System.Drawing.Point(93, 51);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(232, 34);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Choose a color";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnTextColour.AutoSize = true;
+            this.btnTextColour.Location = new System.Drawing.Point(85, 48);
+            this.btnTextColour.Name = "btnTextColour";
+            this.btnTextColour.Size = new System.Drawing.Size(232, 34);
+            this.btnTextColour.TabIndex = 1;
+            this.btnTextColour.Text = "Text color";
+            this.btnTextColour.UseVisualStyleBackColor = true;
+            this.btnTextColour.Click += new System.EventHandler(this.button1_Click);
             // 
             // tbExample
             // 
             this.tbExample.BackColor = System.Drawing.Color.Black;
             this.tbExample.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbExample.ForeColor = System.Drawing.Color.Yellow;
-            this.tbExample.Location = new System.Drawing.Point(49, 121);
+            this.tbExample.Location = new System.Drawing.Point(85, 166);
             this.tbExample.Multiline = true;
             this.tbExample.Name = "tbExample";
             this.tbExample.ReadOnly = true;
-            this.tbExample.Size = new System.Drawing.Size(320, 50);
+            this.tbExample.Size = new System.Drawing.Size(232, 36);
             this.tbExample.TabIndex = 0;
             this.tbExample.Text = "Example Text";
             this.tbExample.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -890,6 +892,17 @@
             // 
             this.colorDialog1.AnyColor = true;
             this.colorDialog1.Color = System.Drawing.Color.Yellow;
+            // 
+            // button1
+            // 
+            this.button1.AutoSize = true;
+            this.button1.Location = new System.Drawing.Point(85, 107);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(232, 34);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Background color";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // frmOptions
             // 
@@ -991,7 +1004,8 @@
         private System.Windows.Forms.CheckBox ckDefaultProduct;
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnTextColour;
         private System.Windows.Forms.TextBox tbExample;
+        private System.Windows.Forms.Button button1;
     }
 }

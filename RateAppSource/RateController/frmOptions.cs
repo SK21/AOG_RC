@@ -106,7 +106,8 @@ namespace RateController
                     break;
 
                 case 5:
-                    tbExample.ForeColor = Color.Yellow;
+                    tbExample.ForeColor = Color.Black;
+                    tbExample.BackColor = Properties.Settings.Default.DayColour;
                     SetButtons(true);
                     break;
             }
@@ -251,6 +252,7 @@ namespace RateController
             UpdateForm();
             colorDialog1.Color = Properties.Settings.Default.ForeColour;
             tbExample.ForeColor = colorDialog1.Color;
+            tbExample.BackColor = mf.BackColor;
         }
 
         private void groupBox1_Paint(object sender, PaintEventArgs e)
@@ -382,6 +384,7 @@ namespace RateController
                 if (mf.SwitchesForm != null) mf.SwitchesForm.SetDescriptions();
 
                 Properties.Settings.Default.ForeColour = tbExample.ForeColor;
+                Properties.Settings.Default.BackColour = tbExample.BackColor;
                 Properties.Settings.Default.Save();
                 mf.RaiseColorChanged();
             }
@@ -698,8 +701,16 @@ namespace RateController
         {
             if(colorDialog1.ShowDialog()==DialogResult.OK)
             {
-                //Properties.Settings.Default.ForeColour = colorDialog1.Color;
                 tbExample.ForeColor = colorDialog1.Color;
+                SetButtons(true);
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                tbExample.BackColor = colorDialog1.Color;
                 SetButtons(true);
             }
         }

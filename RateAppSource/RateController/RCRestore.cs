@@ -22,13 +22,35 @@ namespace RateController
         private int windowLeft = 0;
         private int windowTop = 0;
 
-        public RCRestore(Form CallingForm, int RateType, clsProduct CurrentProduct)
+        public RCRestore(Form CallingForm, int RateType, clsProduct CurrentProduct, FormStart Main)
         {
             FormToHide = CallingForm;
             cRateType = RateType;
             cCurrentProduct = CurrentProduct;
             this.TransparencyKey = this.BackColor;
+            Main.ColorChanged += Main_ColorChanged;
             InitializeComponent();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            // Define the border color and thickness
+            Color borderColor = Properties.Settings.Default.ForeColour;
+            int borderWidth = 1;
+
+            // Draw the border
+            using (Pen pen = new Pen(borderColor, borderWidth))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+            }
+        }
+
+        private void Main_ColorChanged(object sender, EventArgs e)
+        {
+            lbRateAmount.ForeColor = Properties.Settings.Default.ForeColour;
+            this.BackColor = Properties.Settings.Default.BackColour;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -66,6 +88,8 @@ namespace RateController
 
             FormToHide.WindowState = FormWindowState.Minimized;
             timer1.Enabled = true;
+            this.BackColor = Properties.Settings.Default.BackColour;
+            lbRateAmount.ForeColor = Properties.Settings.Default.ForeColour;
         }
 
         private void RestoreLC_Click(object sender, EventArgs e)

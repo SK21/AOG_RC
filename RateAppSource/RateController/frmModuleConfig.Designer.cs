@@ -45,6 +45,7 @@
             this.btnSendSubnet = new System.Windows.Forms.Button();
             this.btnRescan = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.ckADS1115enabled = new System.Windows.Forms.CheckBox();
             this.lbRelay = new System.Windows.Forms.Label();
             this.cbRelayControl = new System.Windows.Forms.ComboBox();
             this.tbWifiPort = new System.Windows.Forms.TextBox();
@@ -121,7 +122,6 @@
             this.btnSendToModule = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
-            this.ckADS1115enabled = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -209,7 +209,7 @@
             this.rbESP32.Name = "rbESP32";
             this.rbESP32.Size = new System.Drawing.Size(170, 37);
             this.rbESP32.TabIndex = 46;
-            this.rbESP32.Text = "ESP32 (RC17)";
+            this.rbESP32.Text = "ESP32 (RC15)";
             this.rbESP32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbESP32.UseVisualStyleBackColor = true;
             this.rbESP32.CheckedChanged += new System.EventHandler(this.rbESP32_CheckedChanged);
@@ -347,6 +347,20 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Config";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // ckADS1115enabled
+            // 
+            this.ckADS1115enabled.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckADS1115enabled.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckADS1115enabled.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckADS1115enabled.Location = new System.Drawing.Point(325, 308);
+            this.ckADS1115enabled.Name = "ckADS1115enabled";
+            this.ckADS1115enabled.Size = new System.Drawing.Size(117, 69);
+            this.ckADS1115enabled.TabIndex = 48;
+            this.ckADS1115enabled.Text = "ADS1115 ";
+            this.ckADS1115enabled.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckADS1115enabled.UseVisualStyleBackColor = true;
+            this.ckADS1115enabled.CheckedChanged += new System.EventHandler(this.textbox_TextChanged);
             // 
             // lbRelay
             // 
@@ -1176,20 +1190,6 @@
             this.btnClose.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // ckADS1115enabled
-            // 
-            this.ckADS1115enabled.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckADS1115enabled.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckADS1115enabled.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckADS1115enabled.Location = new System.Drawing.Point(325, 308);
-            this.ckADS1115enabled.Name = "ckADS1115enabled";
-            this.ckADS1115enabled.Size = new System.Drawing.Size(117, 69);
-            this.ckADS1115enabled.TabIndex = 48;
-            this.ckADS1115enabled.Text = "ADS1115 ";
-            this.ckADS1115enabled.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckADS1115enabled.UseVisualStyleBackColor = true;
-            this.ckADS1115enabled.CheckedChanged += new System.EventHandler(this.textbox_TextChanged);
             // 
             // frmModuleConfig
             // 

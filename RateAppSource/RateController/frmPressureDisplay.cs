@@ -20,9 +20,19 @@ namespace RateController
             mf.ColorChanged += Mf_ColorChanged;
         }
 
-        private void Mf_ColorChanged(object sender, EventArgs e)
+        protected override void OnPaint(PaintEventArgs e)
         {
-            lbPressureValue.ForeColor = Properties.Settings.Default.ForeColour;
+            base.OnPaint(e);
+
+            // Define the border color and thickness
+            Color borderColor = Properties.Settings.Default.ForeColour;
+            int borderWidth = 1;
+
+            // Draw the border
+            using (Pen pen = new Pen(borderColor, borderWidth))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+            }
         }
 
         private void frmPressureDisplay_FormClosed(object sender, FormClosedEventArgs e)
@@ -36,7 +46,14 @@ namespace RateController
             mf.Tls.LoadFormData(this);
             timer1.Enabled = true;
             lbPressureValue.ForeColor = Properties.Settings.Default.ForeColour;
+            this.BackColor = Properties.Settings.Default.BackColour;
             UpdateForm();
+        }
+
+        private void Mf_ColorChanged(object sender, EventArgs e)
+        {
+            lbPressureValue.ForeColor = Properties.Settings.Default.ForeColour;
+            this.BackColor = Properties.Settings.Default.BackColour;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -66,7 +83,6 @@ namespace RateController
                 this.Location = pos;
             }
         }
-
 
         private void timer1_Tick(object sender, EventArgs e)
         {
