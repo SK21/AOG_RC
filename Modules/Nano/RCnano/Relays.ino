@@ -36,7 +36,7 @@ void CheckRelays()
             {
                 if (MDL.RelayPins[i + j * 8] < NC) // check if relay is enabled
                 {
-                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.RelayOnSignal); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.RelayOnSignal);
+                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.InvertRelay); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.InvertRelay);
                 }
             }
         }
@@ -109,25 +109,41 @@ void CheckRelays()
         // MCP23017
         if (MCP23017_found)
         {
-            for (int j = 0; j < 2; j++)
+            uint8_t mcpOutA = 0; // Output for port A
+            uint8_t mcpOutB = 0; // Output for port B
+
+            // Calculate output for port A, sections 1-8
+            mcpOutA = (bitRead(NewLo, 0) ? 1 : 0) |
+                (bitRead(NewLo, 1) ? 2 : 0) |
+                (bitRead(NewLo, 2) ? 4 : 0) |
+                (bitRead(NewLo, 3) ? 8 : 0) |
+                (bitRead(NewLo, 4) ? 16 : 0) |
+                (bitRead(NewLo, 5) ? 32 : 0) |
+                (bitRead(NewLo, 6) ? 64 : 0) |
+                (bitRead(NewLo, 7) ? 128 : 0);
+
+            // Calculate output for port B, sections 9-16
+            mcpOutB = (bitRead(NewHi, 0) ? 1 : 0) |
+                (bitRead(NewHi, 1) ? 2 : 0) |
+                (bitRead(NewHi, 2) ? 4 : 0) |
+                (bitRead(NewHi, 3) ? 8 : 0) |
+                (bitRead(NewHi, 4) ? 16 : 0) |
+                (bitRead(NewHi, 5) ? 32 : 0) |
+                (bitRead(NewHi, 6) ? 64 : 0) |
+                (bitRead(NewHi, 7) ? 128 : 0);
+
+            if (MDL.InvertRelay)
             {
-                if (j < 1) Rlys = NewLo; else Rlys = NewHi;
-                for (int i = 0; i < 8; i++)
-                {
-                    IOpin = MDL.RelayPins[i + j * 8];
-                    if (IOpin < 16)
-                    {
-                        if (bitRead(Rlys, i))
-                        {
-                            MCP.digitalWrite(IOpin, MDL.RelayOnSignal);
-                        }
-                        else
-                        {
-                            MCP.digitalWrite(IOpin, !MDL.RelayOnSignal);
-                        }
-                    }
-                }
+                mcpOutA = ~mcpOutA;
+                mcpOutB = ~mcpOutB;
             }
+
+            // Send both outputs in a single transmission
+            Wire.beginTransmission(MCP23017address);
+            Wire.write(0x12); // address port A of MCP
+            Wire.write(mcpOutA); // value for port A
+            Wire.write(mcpOutB); // value for port B
+            Wire.endTransmission();
         }
         break;
     }

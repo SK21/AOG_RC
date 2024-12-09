@@ -152,7 +152,7 @@ void DoSetup()
 		while (!MCP23017_found)
 		{
 			Serial.print(".");
-			Wire.beginTransmission(0x20);
+			Wire.beginTransmission(MCP23017address);
 			MCP23017_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
@@ -162,13 +162,17 @@ void DoSetup()
 		Serial.println("");
 		if (MCP23017_found)
 		{
-			Serial.println("MCP23017 found.");
-			MCP.begin_I2C();
+			Wire.beginTransmission(MCP23017address);
+			Wire.write(0x00); // IODIRA register
+			Wire.write(0x00); // set all of port A to outputs
+			Wire.endTransmission();
 
-			for (int i = 0; i < 16; i++)
-			{
-				MCP.pinMode(MDL.RelayPins[i], OUTPUT);
-			}
+			Wire.beginTransmission(MCP23017address);
+			Wire.write(0x01); // IODIRB register
+			Wire.write(0x00); // set all of port B to outputs
+			Wire.endTransmission();
+
+			Serial.println("MCP23017 found.");
 		}
 		else
 		{
@@ -231,6 +235,7 @@ void LoadDefaults()
 	Serial.println("Loading default settings.");
 
 	MDL.WorkPin = NC;
+	MDL.PressurePin = NC;
 
 	// default flow pins
 	Sensor[0].FlowPin = 3;
@@ -260,6 +265,12 @@ void LoadDefaults()
 	{
 		MDL.RelayPins[i] = NC;
 	}
+	MDL.SensorCount = 1;
+	MDL.RelayControl = 2;
+	MDL.Is3Wire = true;
+	MDL.ADS1115Enabled = false;
+	MDL.InvertFlow = false;
+	MDL.InvertRelay = false;
 }
 
 bool ValidData()

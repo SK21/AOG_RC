@@ -1,41 +1,36 @@
-#include <Adafruit_MCP23008.h>
-#include <Adafruit_MCP23X08.h>
-#include <Adafruit_MCP23X17.h>
-#include <Adafruit_MCP23XXX.h>
+
 #include <Wire.h>
 #include <EEPROM.h>
-
-#include <Adafruit_BusIO_Register.h>
-#include <Adafruit_I2CDevice.h>
-#include <Adafruit_I2CRegister.h>
-#include <Adafruit_SPIDevice.h>
-
 #include <SPI.h>
 #include <EtherCard.h>
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  25-Nov-2024"
-const uint16_t InoID = 25114;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  8-Dec-2024"
+const uint16_t InoID = 8124;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins are not connected
+const uint8_t MCP23017address = 0x20;
 
 struct ModuleConfig
 {
 	uint8_t ID = 0;
-	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
-	uint8_t RelayOnSignal = 0;	    // value that turns on relays
-	uint8_t FlowOnDirection = 0;	// sets on value for flow valve or sets motor direction
+	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
+	bool InvertRelay = false;	    // value that turns on relays
+	bool InvertFlow = false;		// sets on value for flow valve or sets motor direction
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
-	uint8_t RelayControl = 2;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685 single , 6 - PCA9685 paired
 	uint8_t RelayPins[16] = { 8,9,10,11,12,13,14,15,7,6,5,4,3,2,1,0 };		// MCP23017 pins RC5, RC8
+	uint8_t RelayControl = 2;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	uint8_t WorkPin = NC;
 	bool WorkPinIsMomentary = false;
+	bool Is3Wire = true;			// False - powered on/off, True - powered on only
+	uint8_t PressurePin = NC;		// NC - no pressure pin
+	bool ADS1115Enabled = false;
 };
 
 ModuleConfig MDL;
@@ -97,9 +92,6 @@ bool AutoOn = true;
 PCA9555 PCA;
 bool PCA9555PW_found = false;
 
-Adafruit_MCP23X17 MCP;
-bool MCP23017_found = false;
-
 //reset function
 void(*resetFunc) (void) = 0;
 
@@ -107,6 +99,11 @@ bool GoodPins;	// pin configuration correct
 bool WrkOn;
 bool WrkLast;
 bool WrkCurrent;
+
+int TimedCombo(byte, bool);	// function prototype
+int16_t CurrentPressure = 0;
+bool WorkSwitchOn = false;
+bool MCP23017_found = false;
 
 bool EthernetConnected()
 {
@@ -118,8 +115,6 @@ bool EthernetConnected()
 	}
 	return Result;
 }
-
-int TimedCombo(byte, bool);	// function prototype
 
 void setup()
 {
@@ -155,6 +150,8 @@ void loop()
 		CheckRelays();
 		GetUPM();
 		AdjustFlow();
+		CheckWorkSwitch();
+		CheckPressure();
 	}
 
 	SendData();
@@ -197,7 +194,7 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-bool WorkPinOn()
+void CheckWorkSwitch()
 {
 	if (MDL.WorkPin < NC)
 	{
@@ -206,20 +203,28 @@ bool WorkPinOn()
 		{
 			if (WrkCurrent != WrkLast)
 			{
-				if (WrkCurrent) WrkOn = !WrkOn;	// only cycle when going from low to high
+				if (WrkCurrent) WorkSwitchOn = !WorkSwitchOn;	// only cycle when going from low to high
 				WrkLast = WrkCurrent;
 			}
 		}
 		else
 		{
-			WrkOn = WrkCurrent;
+			WorkSwitchOn = WrkCurrent;
 		}
 	}
 	else
 	{
-		WrkOn = false;
+		WorkSwitchOn = false;
 	}
-	return WrkOn;
+}
+
+void CheckPressure()
+{
+	CurrentPressure = 0;
+	if (MDL.PressurePin < NC)
+	{
+		CurrentPressure = analogRead(MDL.PressurePin) * 10.0;
+	}
 }
 
 //uint32_t DebugTime;
@@ -238,20 +243,20 @@ bool WorkPinOn()
 //		DebugTime = millis();
 //		Serial.println("");
 //
-//		//Serial.print(F(" Micros: "));
-//		//Serial.print(MaxLoopTime);
+//		Serial.print(F(" Micros: "));
+//		Serial.print(MaxLoopTime);
 //
-//		//Serial.print(F(",  SRAM left: "));
-//		//Serial.print(MinMem);
+//		Serial.print(F(",  SRAM left: "));
+//		Serial.print(MinMem);
 //
-//		Serial.print(", ");
-//		Serial.print(debug1, 7);
+//		//Serial.print(", ");
+//		//Serial.print(debug1, 7);
 //
-//		Serial.print(", ");
-//		Serial.print(debug2, 7);
+//		//Serial.print(", ");
+//		//Serial.print(debug2, 7);
 //
-//		Serial.print(", ");
-//		Serial.print(debug3);
+//		//Serial.print(", ");
+//		//Serial.print(debug3);
 //
 //		//Serial.print(", ");
 //		//Serial.print(MasterSwitchOn);

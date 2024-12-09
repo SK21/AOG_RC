@@ -291,9 +291,11 @@ void ReadPGNs(byte Data[], uint16_t len)
 				MDL.SensorCount = Data[3];
 
 				byte tmp = Data[4];
-				if ((tmp & 1) == 1) MDL.RelayOnSignal = 1; else MDL.RelayOnSignal = 0;
-				if ((tmp & 2) == 2) MDL.FlowOnDirection = 1; else MDL.FlowOnDirection = 0;
-				if ((tmp & 8) == 8) MDL.WorkPinIsMomentary = 1; else MDL.WorkPinIsMomentary = 0;
+				MDL.InvertRelay = ((tmp & 1) == 1);
+				MDL.InvertFlow = ((tmp & 2) == 2);
+				MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
+				MDL.Is3Wire = ((tmp & 16) == 16);
+				MDL.ADS1115Enabled = ((tmp & 32) == 32);
 
 				MDL.RelayControl = Data[5];
 				Sensor[0].FlowPin = Data[7];
@@ -309,6 +311,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 				}
 
 				MDL.WorkPin = Data[29];
+				MDL.PressurePin = Data[30];
 
 				SaveData();
 

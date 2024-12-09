@@ -106,8 +106,8 @@ void SendData()
         Data[0] = 145;
         Data[1] = 126;
         Data[2] = MDL.ID;
-        Data[3] = 0;
-        Data[4] = 0;
+        Data[3] = (byte)CurrentPressure;
+        Data[4] = (byte)(CurrentPressure >> 8);
         Data[5] = 0;
         Data[6] = 0;
         Data[7] = 0;
@@ -119,7 +119,7 @@ void SendData()
 
         // status
         Data[13] = 0;
-        if (WorkPinOn()) Data[13] |= 0b00000001;
+        if (WorkSwitchOn) Data[13] |= 0b00000001;
 
         if (EthernetConnected()) Data[13] |= 0b00010000;
 

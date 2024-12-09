@@ -9,13 +9,13 @@ void AdjustFlow()
             if (Sensor[i].PWM >= 0)
             {
                 //increase
-                digitalWrite(Sensor[i].DirPin, MDL.FlowOnDirection);
+                digitalWrite(Sensor[i].DirPin, MDL.InvertFlow);
                 analogWrite(Sensor[i].PWMPin, Sensor[i].PWM);
             }
             else
             {
                 //decrease
-                digitalWrite(Sensor[i].DirPin, !MDL.FlowOnDirection);
+                digitalWrite(Sensor[i].DirPin, !MDL.InvertFlow);
                 analogWrite(Sensor[i].PWMPin, -Sensor[i].PWM);	// offsets the negative pwm value
             }
             break;
@@ -27,20 +27,20 @@ void AdjustFlow()
             {
                 if (Sensor[i].PWM >= 0)
                 {
-                    digitalWrite(Sensor[i].DirPin, MDL.FlowOnDirection);
+                    digitalWrite(Sensor[i].DirPin, MDL.InvertFlow);
                     analogWrite(Sensor[i].PWMPin, Sensor[i].PWM);
                 }
                 else
                 {
                     //decrease
-                    digitalWrite(Sensor[i].DirPin, !MDL.FlowOnDirection);
+                    digitalWrite(Sensor[i].DirPin, !MDL.InvertFlow);
                     analogWrite(Sensor[i].PWMPin, -Sensor[i].PWM);	// offsets the negative pwm value
                 }
             }
             else
             {
                 // stop flow
-                digitalWrite(Sensor[i].DirPin, !MDL.FlowOnDirection);
+                digitalWrite(Sensor[i].DirPin, !MDL.InvertFlow);
                 analogWrite(Sensor[i].PWMPin, 255);
             }
             break;
@@ -53,13 +53,13 @@ void AdjustFlow()
                 if (Sensor[i].PWM >= 0)
                 {
                     //increase
-                    digitalWrite(Sensor[i].DirPin, MDL.FlowOnDirection);
+                    digitalWrite(Sensor[i].DirPin, MDL.InvertFlow);
                     analogWrite(Sensor[i].PWMPin, Sensor[i].PWM);
                 }
                 else
                 {
                     //decrease
-                    digitalWrite(Sensor[i].DirPin, !MDL.FlowOnDirection);
+                    digitalWrite(Sensor[i].DirPin, !MDL.InvertFlow);
                     analogWrite(Sensor[i].PWMPin, -Sensor[i].PWM);	// offsets the negative pwm value
                 }
             }

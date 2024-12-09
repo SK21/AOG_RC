@@ -132,16 +132,16 @@ void CheckRelays()
             uint8_t mcpOutB = 0; // Output for port B
 
             // Calculate output for port A, DRV sections 9-16
-            mcpOutA = (bitRead(RelayLo, 4) ? 2 : 1) |
-                (bitRead(RelayLo, 5) ? 8 : 4) |
-                (bitRead(RelayLo, 6) ? 32 : 16) |
-                (bitRead(RelayLo, 7) ? 128 : 64);
+            mcpOutA = (bitRead(NewLo, 4) ? 2 : 1) |
+                (bitRead(NewLo, 5) ? 8 : 4) |
+                (bitRead(NewLo, 6) ? 32 : 16) |
+                (bitRead(NewLo, 7) ? 128 : 64);
 
             // Calculate output for port B, DRV sections 1-8
-            mcpOutB = (bitRead(RelayLo, 0) ? 2 : 1) |
-                (bitRead(RelayLo, 1) ? 8 : 4) |
-                (bitRead(RelayLo, 2) ? 32 : 16) |
-                (bitRead(RelayLo, 3) ? 128 : 64);
+            mcpOutB = (bitRead(NewLo, 0) ? 2 : 1) |
+                (bitRead(NewLo, 1) ? 8 : 4) |
+                (bitRead(NewLo, 2) ? 32 : 16) |
+                (bitRead(NewLo, 3) ? 128 : 64);
 
             if (MDL.InvertRelay)
             {

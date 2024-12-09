@@ -3,7 +3,7 @@
 
 uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
-const double Deadband = 0.03;		// % error below which no adjustment is made
+const double Deadband = 0.015;		// % error below which no adjustment is made
 
 const double BrakePoint = 0.3;		// % error below which reduced adjustment is used
 const double BrakeSet = 0.75;		// low adjustment rate
