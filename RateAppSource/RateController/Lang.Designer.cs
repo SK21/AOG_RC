@@ -288,7 +288,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current Rate ….
+        ///   Looks up a localized string similar to Current Rate.
         /// </summary>
         internal static string lgCurrentRate {
             get {
@@ -504,7 +504,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Instant Rate ….
+        ///   Looks up a localized string similar to Instant Rate.
         /// </summary>
         internal static string lgInstantRate {
             get {
@@ -792,7 +792,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Overall Rate ….
+        ///   Looks up a localized string similar to Overall Rate.
         /// </summary>
         internal static string lgOverallRate {
             get {
@@ -1233,7 +1233,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Target Rate ....
+        ///   Looks up a localized string similar to Target Rate.
         /// </summary>
         internal static string lgTargetRate {
             get {
@@ -1242,7 +1242,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Target Alt ....
+        ///   Looks up a localized string similar to Target Alt.
         /// </summary>
         internal static string lgTargetRateAlt {
             get {

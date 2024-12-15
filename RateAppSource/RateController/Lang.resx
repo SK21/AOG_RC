@@ -216,7 +216,7 @@ Calibration steps:
     <value>Coverage</value>
   </data>
   <data name="lgCurrentRate" xml:space="preserve">
-    <value>Current Rate …</value>
+    <value>Current Rate</value>
   </data>
   <data name="lgDefaultProduct" xml:space="preserve">
     <value>Default Product</value>
@@ -288,7 +288,7 @@ Calibration steps:
     <value>ID</value>
   </data>
   <data name="lgInstantRate" xml:space="preserve">
-    <value>Instant Rate …</value>
+    <value>Instant Rate</value>
   </data>
   <data name="lgIntegral" xml:space="preserve">
     <value>Integral</value>
@@ -384,7 +384,7 @@ Calibration steps:
     <value>Options</value>
   </data>
   <data name="lgOverallRate" xml:space="preserve">
-    <value>Overall Rate …</value>
+    <value>Overall Rate</value>
   </data>
   <data name="lgPage1" xml:space="preserve">
     <value>Page1</value>
@@ -531,10 +531,10 @@ Calibration steps:
     <value>Quantity Left</value>
   </data>
   <data name="lgTargetRate" xml:space="preserve">
-    <value>Target Rate ...</value>
+    <value>Target Rate</value>
   </data>
   <data name="lgTargetRateAlt" xml:space="preserve">
-    <value>Target Alt ...</value>
+    <value>Target Alt</value>
   </data>
   <data name="lgTimeForMulti" xml:space="preserve">
     <value>Multi-Pulse</value>

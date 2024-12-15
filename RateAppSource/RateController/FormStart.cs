@@ -99,7 +99,7 @@ namespace RateController
             lbRate.Text = Lang.lgCurrentRate;
             lbTarget.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
-            lbRemaining.Text = Lang.lgTank_Remaining + " ...";
+            lbRemaining.Text = Lang.lgTank_Remaining;
 
             mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
             mnuSettings.Items["MnuSections"].Text = Lang.lgSections;
@@ -821,7 +821,7 @@ namespace RateController
 
                     if (ShowCoverageRemaining)
                     {
-                        lbCoverage.Text = CoverageDescriptions[Prd.CoverageUnits] + " Left ...";
+                        lbCoverage.Text = CoverageDescriptions[Prd.CoverageUnits] + " Left";
                         double RT = Prd.SmoothRate();
                         if (RT == 0) RT = Prd.TargetRate();
 
@@ -838,20 +838,29 @@ namespace RateController
                     {
                         // show amount done
                         AreaDone.Text = Prd.CurrentCoverage().ToString("N1");
-                        lbCoverage.Text = Prd.CoverageDescription() + " ...";
+                        lbCoverage.Text = Prd.CoverageDescription();
                     }
 
+                    double Tnk = 0;
                     if (ShowQuantityRemaining)
                     {
-                        lbRemaining.Text = Lang.lgTank_Remaining + " ...";
+                        lbRemaining.Text = Lang.lgTank_Remaining;
                         // calculate remaining
-                        TankRemain.Text = (Prd.TankStart - Prd.UnitsApplied()).ToString("N1");
+                        Tnk = Prd.TankStart - Prd.UnitsApplied();
                     }
                     else
                     {
                         // show amount done
-                        lbRemaining.Text = Lang.lgQuantityApplied + " ...";
-                        TankRemain.Text = Prd.UnitsApplied().ToString("N1");
+                        lbRemaining.Text = Lang.lgQuantityApplied;
+                        Tnk = Prd.UnitsApplied();
+                    }
+                    if (Tnk > 9999)
+                    {
+                        TankRemain.Text = Tnk.ToString("N0");
+                    }
+                    else
+                    {
+                        TankRemain.Text = Tnk.ToString("N1");
                     }
 
                     switch (cRateType)
@@ -1270,7 +1279,7 @@ namespace RateController
             {
                 int prod = CurrentPage - 1;
                 if (prod < 0) prod = 0;
-                Form restoreform = new RCRestore(this, RateType, Products.Item(prod),this);
+                Form restoreform = new RCRestore(this, RateType, Products.Item(prod), this);
                 restoreform.Show();
             }
         }

@@ -34,7 +34,7 @@ namespace RateController
 
             lbTarget.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
-            lbQuantity.Text = Lang.lgTank_Remaining + " ...";
+            lbQuantity.Text = Lang.lgTank_Remaining;
             lbUnits.Text = Lang.lgApplied;
 
             mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
