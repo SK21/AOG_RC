@@ -294,15 +294,11 @@ void LoadDefaults()
 	Sensor[1].PWMPin = 15;
 
 	// default pid
-	Sensor[0].KP = 5;
-	Sensor[0].KI = 0;
-	Sensor[0].KD = 0;
+	Sensor[0].KP = 25;
 	Sensor[0].MinPWM = 5;
 	Sensor[0].MaxPWM = 50;
 
-	Sensor[1].KP = 5;
-	Sensor[1].KI = 0;
-	Sensor[1].KD = 0;
+	Sensor[1].KP = 25;
 	Sensor[1].MinPWM = 5;
 	Sensor[1].MaxPWM = 50;
 

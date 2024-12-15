@@ -78,8 +78,6 @@ struct SensorConfig
 	double MeterCal;
 	double ManualAdjust;
 	double KP;
-	double KI;
-	double KD;
 	byte MinPWM;
 	byte MaxPWM;
 };
