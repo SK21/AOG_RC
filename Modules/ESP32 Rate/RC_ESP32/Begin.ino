@@ -390,18 +390,18 @@ void LoadDefaults()
 {
 	Serial.println("Loading default settings.");
 
-	// RC17
-	MDL.WorkPin = 13;
-	MDL.PressurePin = 33;
+	// RC15
+	MDL.WorkPin = NC;
+	MDL.PressurePin = NC;
 
 	// default flow pins
-	Sensor[0].FlowPin = 32;
-	Sensor[0].IN1 = 4;
-	Sensor[0].IN2 = 16;
+	Sensor[0].FlowPin = 17;
+	Sensor[0].IN1 = 32;
+	Sensor[0].IN2 = 33;
 
-	Sensor[1].FlowPin = NC;
-	Sensor[1].IN1 = NC;
-	Sensor[1].IN2 = NC;
+	Sensor[1].FlowPin = 16;
+	Sensor[1].IN1 = 25;
+	Sensor[1].IN2 = 26;
 
 	// default pid
 	Sensor[0].KP = 5;
@@ -422,7 +422,7 @@ void LoadDefaults()
 		MDL.RelayPins[i] = NC;
 	}
 	MDL.SensorCount = 1;
-	MDL.RelayControl = 4;
+	MDL.RelayControl = 5;
 	MDL.WifiModeUseStation = false;
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = false;

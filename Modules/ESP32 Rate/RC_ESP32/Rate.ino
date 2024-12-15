@@ -62,7 +62,6 @@ void GetUPM()
 	{
 		if (PulseCount[i] && Sensor[i].MeterCal > 0)
 		{
-			debug3++;
 			LastPulse[i] = millis();
 
 			noInterrupts();
