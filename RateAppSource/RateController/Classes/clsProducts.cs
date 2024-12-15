@@ -113,11 +113,8 @@ namespace RateController
                     Prd.VRmax = 100;
                     Prd.VRmin = 0;
                     Prd.PIDkp = 1;
-                    Prd.PIDki = 0;
-                    Prd.PIDkd = 0;
                     Prd.PIDmax = 100;
                     Prd.PIDmin = 0;
-                    Prd.PIDscale = 0;
                     Prd.ChangeID(i / 2, (byte)(i % 2), true);
                     Prd.OnScreen = true;
                     Prd.AppMode = ApplicationMode.ControlledUPM;

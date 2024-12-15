@@ -9,19 +9,17 @@ namespace RateController
         // 1    126
         // 2    Mod/Sen ID     0-15/0-15
         // 3    KP 
-        // 4    KI
-        // 5    KD
+        // 4    -
+        // 5    -
         // 6   MinPWM
         // 7   MaxPWM
-        // 8   PID scale
+        // 8   -
         // 9   CRC
 
         private const byte cByteCount = 10;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 246;
         private readonly clsProduct Prod;
-        private double cKD;
-        private double cKI;
         private double cKP;
         private byte cMaxPWM;
         private byte cMinPWM;
@@ -33,20 +31,6 @@ namespace RateController
             cMinPWM = 0;
             cMaxPWM = 0;
             cKP = 1;
-            cKI = 0;
-            cKD = 0;
-        }
-
-        public double KD
-        {
-            get { return cKD; }
-            set { cKD = value; }
-        }
-
-        public double KI
-        {
-            get { return cKI; }
-            set { cKI = value; }
         }
 
         public double KP
@@ -75,12 +59,12 @@ namespace RateController
             Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
             Data[3] = (byte)cKP;
-            Data[4] = (byte)cKI;
-            Data[5] = (byte)cKD;
+            Data[4] = 0;
+            Data[5] = 0;
 
             Data[6] = MinPWM;
             Data[7] = MaxPWM;
-            Data[8] = (byte)Prod.PIDscale;
+            Data[8] = 0;
 
             Data[9] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 

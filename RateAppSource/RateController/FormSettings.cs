@@ -1,11 +1,9 @@
 ﻿using AgOpenGPS;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RateController
 {
@@ -77,8 +75,6 @@ namespace RateController
             ckVR.Text = Lang.lgUseVR;
 
             lbProportional.Text = Lang.lgProportional;
-            lbIntegral.Text = Lang.lgIntegral;
-            lbDerivative.Text = Lang.lgDerivative;
             lbMax.Text = Lang.lgPWMmax;
             lbMin.Text = Lang.lgPWMmin;
 
@@ -221,12 +217,6 @@ namespace RateController
             formG.Show(this);
         }
 
-        private void cbShift_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-            UpdateExample();
-        }
-
         private void CbUseProdDensity_CheckedChanged_1(object sender, EventArgs e)
         {
             if (CbUseProdDensity.Checked)
@@ -273,19 +263,6 @@ namespace RateController
             string Message = "Display rate UP/Down arrows.";
 
             mf.Tls.ShowHelp(Message, "Bump Buttons");
-            hlpevent.Handled = true;
-        }
-
-        private void ckConstantUPM_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void ckConstantUPM_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "UPM does not vary with the number of sections on or off.";
-
-            mf.Tls.ShowHelp(Message, "Constant UPM");
             hlpevent.Handled = true;
         }
 
@@ -554,12 +531,9 @@ namespace RateController
 
         private void LoadDefaults()
         {
-            tbKP.Text = "1";
-            tbKI.Text = "0";
-            tbKD.Text = "0";
+            tbKP.Text = "25";
             tbMaxPWM.Text = "100";
             tbMinPWM.Text = "5";
-            cbShift.SelectedIndex = 0;
         }
 
         private void LoadSettings()
@@ -600,8 +574,6 @@ namespace RateController
 
             // PID
             tbKP.Text = CurrentProduct.PIDkp.ToString("N0");
-            tbKI.Text = CurrentProduct.PIDki.ToString("N0");
-            tbKD.Text = CurrentProduct.PIDkd.ToString("N0");
             tbMinPWM.Text = CurrentProduct.PIDmin.ToString("N0");
             tbMaxPWM.Text = CurrentProduct.PIDmax.ToString("N0");
 
@@ -618,8 +590,6 @@ namespace RateController
             ckBumpButtons.Checked = CurrentProduct.BumpButtons;
 
             SetAppMode(CurrentProduct);
-            cbShift.SelectedIndex = CurrentProduct.PIDscale;
-            UpdateExample();
         }
 
         private void pnlMain_Paint(object sender, PaintEventArgs e)
@@ -828,12 +798,6 @@ namespace RateController
             double.TryParse(tbKP.Text, out TempDB);
             CurrentProduct.PIDkp = TempDB;
 
-            double.TryParse(tbKI.Text, out TempDB);
-            CurrentProduct.PIDki = TempDB;
-
-            double.TryParse(tbKD.Text, out TempDB);
-            CurrentProduct.PIDkd = TempDB;
-
             byte.TryParse(tbMinPWM.Text, out tempB);
             CurrentProduct.PIDmin = tempB;
 
@@ -862,7 +826,6 @@ namespace RateController
             CurrentProduct.Save();
 
             if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
-            CurrentProduct.PIDscale = cbShift.SelectedIndex;
 
             mf.SetScale(CurrentProduct.ID, ckScale.Checked);
 
@@ -1232,65 +1195,6 @@ namespace RateController
             }
         }
 
-        private void tbKD_Enter(object sender, EventArgs e)
-        {
-            double temp;
-            double.TryParse(tbKD.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbKD.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbKD_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Derivative looks at past errors in the system and" +
-                " calculates the slope of those errors to predict future error values.";
-
-            mf.Tls.ShowHelp(Message, "Derivative");
-            hlpevent.Handled = true;
-        }
-
-        private void tbKD_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbKD.Text, out tempD);
-            if (tempD < 0 || tempD > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbKI_Enter(object sender, EventArgs e)
-        {
-            double temp;
-            double.TryParse(tbKI.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbKI.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbKI_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbKI.Text, out tempD);
-            if (tempD < 0 || tempD > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
         private void tbKP_Enter(object sender, EventArgs e)
         {
             double temp;
@@ -1317,7 +1221,6 @@ namespace RateController
         private void tbKP_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
-            UpdateExample();
         }
 
         private void tbKP_Validating(object sender, CancelEventArgs e)
@@ -1466,16 +1369,6 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
-        }
-
-        private void tbPIDki_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Integral accumulates errors to provide an offset to the" +
-                " rate adjustment. Higher integral increases the offset due to past " +
-                "rate errors. ";
-
-            mf.Tls.ShowHelp(Message, "Integral");
-            hlpevent.Handled = true;
         }
 
         private void tbProduct_TextChanged(object sender, EventArgs e)
@@ -1697,13 +1590,6 @@ namespace RateController
             {
                 btnFan.Image = Properties.Resources.FanOff;
             }
-        }
-
-        private void UpdateExample()
-        {
-            int val = (int)CurrentProduct.PIDkp;
-            if (int.TryParse(tbKP.Text, out int ex)) val = ex;
-            lbExample.Text = (val * Math.Pow(10, -cbShift.SelectedIndex)).ToString("N7");
         }
 
         private void UpdateForm()

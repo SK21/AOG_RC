@@ -707,11 +707,8 @@ namespace RateController
                         P3.VRmin = P0.VRmin;
 
                         P3.PIDkp = P0.PIDkp;
-                        P3.PIDki = P0.PIDki;
-                        P3.PIDkd = P0.PIDkd;
                         P3.PIDmax = P0.PIDmax;
                         P3.PIDmin = P0.PIDmin;
-                        P3.PIDscale = P0.PIDscale;
 
                         Products.Item(2).BumpButtons = false;
                         P0.ModuleID = 6;

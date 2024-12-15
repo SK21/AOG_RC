@@ -6,8 +6,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  8-Dec-2024"
-const uint16_t InoID = 8124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano : 14-Dec-2024"
+const uint16_t InoID = 14124;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -50,8 +50,6 @@ struct SensorConfig
 	double MeterCal;
 	double ManualAdjust;
 	double KP;
-	double KI;
-	double KD;
 	byte MinPWM;
 	byte MaxPWM;
 };
@@ -235,6 +233,7 @@ void CheckPressure()
 //double debug1;
 //double debug2;
 //double debug3;
+//double debug4;
 //
 //void DebugTheIno()
 //{
@@ -249,14 +248,17 @@ void CheckPressure()
 //		Serial.print(F(",  SRAM left: "));
 //		Serial.print(MinMem);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug1, 7);
+//		Serial.print(", ");
+//		Serial.print(debug1);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug2, 7);
+//		Serial.print(", ");
+//		Serial.print(debug2);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug3);
+//		Serial.print(", ");
+//		Serial.print(debug3);
+//
+//		Serial.print(", ");
+//		Serial.print(debug4);
 //
 //		//Serial.print(", ");
 //		//Serial.print(MasterSwitchOn);

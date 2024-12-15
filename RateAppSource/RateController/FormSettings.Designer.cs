@@ -69,29 +69,10 @@ namespace RateController
             this.lb1 = new System.Windows.Forms.Label();
             this.lbBaseRate = new System.Windows.Forms.TextBox();
             this.lbAltRate = new System.Windows.Forms.Label();
-            this.tbVR = new System.Windows.Forms.TabPage();
-            this.lbMinRate = new System.Windows.Forms.Label();
-            this.tbMinRate = new System.Windows.Forms.TextBox();
-            this.lbMaxRate = new System.Windows.Forms.Label();
-            this.tbMaxRate = new System.Windows.Forms.TextBox();
-            this.ckVR = new System.Windows.Forms.CheckBox();
-            this.lbVariableRate = new System.Windows.Forms.Label();
-            this.cbVR = new System.Windows.Forms.ComboBox();
             this.tbControl = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lbExample = new System.Windows.Forms.Label();
-            this.cbShift = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.tbKD = new System.Windows.Forms.TextBox();
-            this.lbDerivative = new System.Windows.Forms.Label();
-            this.tbKI = new System.Windows.Forms.TextBox();
-            this.lbIntegral = new System.Windows.Forms.Label();
             this.tbMaxPWM = new System.Windows.Forms.TextBox();
             this.lbMax = new System.Windows.Forms.Label();
             this.tbMinPWM = new System.Windows.Forms.TextBox();
@@ -100,6 +81,14 @@ namespace RateController
             this.lbProportional = new System.Windows.Forms.Label();
             this.btnTuningGraph = new System.Windows.Forms.Button();
             this.btnPIDloadDefaults = new System.Windows.Forms.Button();
+            this.tbVR = new System.Windows.Forms.TabPage();
+            this.lbMinRate = new System.Windows.Forms.Label();
+            this.tbMinRate = new System.Windows.Forms.TextBox();
+            this.lbMaxRate = new System.Windows.Forms.Label();
+            this.tbMaxRate = new System.Windows.Forms.TextBox();
+            this.ckVR = new System.Windows.Forms.CheckBox();
+            this.lbVariableRate = new System.Windows.Forms.Label();
+            this.cbVR = new System.Windows.Forms.ComboBox();
             this.tbOptions = new System.Windows.Forms.TabPage();
             this.ckScale = new System.Windows.Forms.CheckBox();
             this.ckBumpButtons = new System.Windows.Forms.CheckBox();
@@ -198,9 +187,8 @@ namespace RateController
             this.tbRate.SuspendLayout();
             this.pnlFan.SuspendLayout();
             this.pnlMain.SuspendLayout();
-            this.tbVR.SuspendLayout();
             this.tbControl.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.tbVR.SuspendLayout();
             this.tbOptions.SuspendLayout();
             this.grpMinUPM.SuspendLayout();
             this.grpSensor.SuspendLayout();
@@ -688,6 +676,169 @@ namespace RateController
             this.lbAltRate.TabIndex = 125;
             this.lbAltRate.Text = "Alt. Rate (%)";
             // 
+            // tbControl
+            // 
+            this.tbControl.Controls.Add(this.label10);
+            this.tbControl.Controls.Add(this.label9);
+            this.tbControl.Controls.Add(this.label5);
+            this.tbControl.Controls.Add(this.tbMaxPWM);
+            this.tbControl.Controls.Add(this.lbMax);
+            this.tbControl.Controls.Add(this.tbMinPWM);
+            this.tbControl.Controls.Add(this.lbMin);
+            this.tbControl.Controls.Add(this.tbKP);
+            this.tbControl.Controls.Add(this.lbProportional);
+            this.tbControl.Controls.Add(this.btnTuningGraph);
+            this.tbControl.Controls.Add(this.btnPIDloadDefaults);
+            this.tbControl.Location = new System.Drawing.Point(4, 83);
+            this.tbControl.Name = "tbControl";
+            this.tbControl.Padding = new System.Windows.Forms.Padding(3);
+            this.tbControl.Size = new System.Drawing.Size(472, 407);
+            this.tbControl.TabIndex = 4;
+            this.tbControl.Text = "Control";
+            this.tbControl.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(288, 107);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(71, 23);
+            this.label10.TabIndex = 149;
+            this.label10.Text = "(0-255)";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(288, 187);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(71, 23);
+            this.label9.TabIndex = 148;
+            this.label9.Text = "(0-255)";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(288, 147);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(71, 23);
+            this.label5.TabIndex = 147;
+            this.label5.Text = "(0-255)";
+            // 
+            // tbMaxPWM
+            // 
+            this.tbMaxPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbMaxPWM.Location = new System.Drawing.Point(241, 143);
+            this.tbMaxPWM.MaxLength = 8;
+            this.tbMaxPWM.Name = "tbMaxPWM";
+            this.tbMaxPWM.Size = new System.Drawing.Size(41, 30);
+            this.tbMaxPWM.TabIndex = 1;
+            this.tbMaxPWM.Tag = "3";
+            this.tbMaxPWM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbMaxPWM.TextChanged += new System.EventHandler(this.tbKP_TextChanged);
+            this.tbMaxPWM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label7_HelpRequested);
+            this.tbMaxPWM.Enter += new System.EventHandler(this.tbMaxPWM_Enter);
+            this.tbMaxPWM.Validating += new System.ComponentModel.CancelEventHandler(this.tbMaxPWM_Validating);
+            // 
+            // lbMax
+            // 
+            this.lbMax.AutoSize = true;
+            this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbMax.Location = new System.Drawing.Point(90, 147);
+            this.lbMax.Name = "lbMax";
+            this.lbMax.Size = new System.Drawing.Size(139, 23);
+            this.lbMax.TabIndex = 126;
+            this.lbMax.Text = "PWM Maximum";
+            this.lbMax.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label7_HelpRequested);
+            // 
+            // tbMinPWM
+            // 
+            this.tbMinPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbMinPWM.Location = new System.Drawing.Point(241, 183);
+            this.tbMinPWM.MaxLength = 8;
+            this.tbMinPWM.Name = "tbMinPWM";
+            this.tbMinPWM.Size = new System.Drawing.Size(41, 30);
+            this.tbMinPWM.TabIndex = 4;
+            this.tbMinPWM.Tag = "6";
+            this.tbMinPWM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbMinPWM.TextChanged += new System.EventHandler(this.tbKP_TextChanged);
+            this.tbMinPWM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label3_HelpRequested);
+            this.tbMinPWM.Enter += new System.EventHandler(this.tbMinPWM_Enter);
+            this.tbMinPWM.Validating += new System.ComponentModel.CancelEventHandler(this.tbMinPWM_Validating);
+            // 
+            // lbMin
+            // 
+            this.lbMin.AutoSize = true;
+            this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbMin.Location = new System.Drawing.Point(90, 187);
+            this.lbMin.Name = "lbMin";
+            this.lbMin.Size = new System.Drawing.Size(135, 23);
+            this.lbMin.TabIndex = 122;
+            this.lbMin.Text = "PWM Minimum";
+            this.lbMin.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label3_HelpRequested);
+            // 
+            // tbKP
+            // 
+            this.tbKP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbKP.Location = new System.Drawing.Point(241, 103);
+            this.tbKP.MaxLength = 8;
+            this.tbKP.Name = "tbKP";
+            this.tbKP.Size = new System.Drawing.Size(41, 30);
+            this.tbKP.TabIndex = 1;
+            this.tbKP.Tag = "0";
+            this.tbKP.Text = "100";
+            this.tbKP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbKP.TextChanged += new System.EventHandler(this.tbKP_TextChanged);
+            this.tbKP.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbKP_HelpRequested);
+            this.tbKP.Enter += new System.EventHandler(this.tbKP_Enter);
+            this.tbKP.Validating += new System.ComponentModel.CancelEventHandler(this.tbKP_Validating);
+            // 
+            // lbProportional
+            // 
+            this.lbProportional.AutoSize = true;
+            this.lbProportional.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbProportional.Location = new System.Drawing.Point(90, 107);
+            this.lbProportional.Name = "lbProportional";
+            this.lbProportional.Size = new System.Drawing.Size(110, 23);
+            this.lbProportional.TabIndex = 120;
+            this.lbProportional.Text = "Proportional";
+            // 
+            // btnTuningGraph
+            // 
+            this.btnTuningGraph.BackColor = System.Drawing.Color.Transparent;
+            this.btnTuningGraph.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnTuningGraph.FlatAppearance.BorderSize = 0;
+            this.btnTuningGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTuningGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnTuningGraph.Image = global::RateController.Properties.Resources.Chart;
+            this.btnTuningGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnTuningGraph.Location = new System.Drawing.Point(241, 289);
+            this.btnTuningGraph.Name = "btnTuningGraph";
+            this.btnTuningGraph.Size = new System.Drawing.Size(72, 72);
+            this.btnTuningGraph.TabIndex = 0;
+            this.btnTuningGraph.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnTuningGraph.UseVisualStyleBackColor = false;
+            this.btnTuningGraph.Click += new System.EventHandler(this.btnTuningGraph_Click);
+            // 
+            // btnPIDloadDefaults
+            // 
+            this.btnPIDloadDefaults.BackColor = System.Drawing.Color.Transparent;
+            this.btnPIDloadDefaults.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPIDloadDefaults.FlatAppearance.BorderSize = 0;
+            this.btnPIDloadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPIDloadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnPIDloadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
+            this.btnPIDloadDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnPIDloadDefaults.Location = new System.Drawing.Point(135, 289);
+            this.btnPIDloadDefaults.Name = "btnPIDloadDefaults";
+            this.btnPIDloadDefaults.Size = new System.Drawing.Size(72, 72);
+            this.btnPIDloadDefaults.TabIndex = 154;
+            this.btnPIDloadDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnPIDloadDefaults.UseVisualStyleBackColor = false;
+            this.btnPIDloadDefaults.Click += new System.EventHandler(this.btnPIDloadDefaults_Click);
+            // 
             // tbVR
             // 
             this.tbVR.Controls.Add(this.lbMinRate);
@@ -697,10 +848,10 @@ namespace RateController
             this.tbVR.Controls.Add(this.ckVR);
             this.tbVR.Controls.Add(this.lbVariableRate);
             this.tbVR.Controls.Add(this.cbVR);
-            this.tbVR.Location = new System.Drawing.Point(4, 42);
+            this.tbVR.Location = new System.Drawing.Point(4, 83);
             this.tbVR.Name = "tbVR";
             this.tbVR.Padding = new System.Windows.Forms.Padding(3);
-            this.tbVR.Size = new System.Drawing.Size(472, 448);
+            this.tbVR.Size = new System.Drawing.Size(472, 407);
             this.tbVR.TabIndex = 7;
             this.tbVR.Text = "  VR";
             this.tbVR.UseVisualStyleBackColor = true;
@@ -795,312 +946,6 @@ namespace RateController
             this.cbVR.TabIndex = 126;
             this.cbVR.SelectedIndexChanged += new System.EventHandler(this.cbVR_SelectedIndexChanged_1);
             // 
-            // tbControl
-            // 
-            this.tbControl.Controls.Add(this.groupBox1);
-            this.tbControl.Controls.Add(this.label12);
-            this.tbControl.Controls.Add(this.label11);
-            this.tbControl.Controls.Add(this.label10);
-            this.tbControl.Controls.Add(this.label9);
-            this.tbControl.Controls.Add(this.label5);
-            this.tbControl.Controls.Add(this.tbKD);
-            this.tbControl.Controls.Add(this.lbDerivative);
-            this.tbControl.Controls.Add(this.tbKI);
-            this.tbControl.Controls.Add(this.lbIntegral);
-            this.tbControl.Controls.Add(this.tbMaxPWM);
-            this.tbControl.Controls.Add(this.lbMax);
-            this.tbControl.Controls.Add(this.tbMinPWM);
-            this.tbControl.Controls.Add(this.lbMin);
-            this.tbControl.Controls.Add(this.tbKP);
-            this.tbControl.Controls.Add(this.lbProportional);
-            this.tbControl.Controls.Add(this.btnTuningGraph);
-            this.tbControl.Controls.Add(this.btnPIDloadDefaults);
-            this.tbControl.Location = new System.Drawing.Point(4, 42);
-            this.tbControl.Name = "tbControl";
-            this.tbControl.Padding = new System.Windows.Forms.Padding(3);
-            this.tbControl.Size = new System.Drawing.Size(472, 448);
-            this.tbControl.TabIndex = 4;
-            this.tbControl.Text = "Control";
-            this.tbControl.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.lbExample);
-            this.groupBox1.Controls.Add(this.cbShift);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(64, 215);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(341, 112);
-            this.groupBox1.TabIndex = 160;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "PID Scaling";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // lbExample
-            // 
-            this.lbExample.BackColor = System.Drawing.Color.Transparent;
-            this.lbExample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbExample.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbExample.Location = new System.Drawing.Point(176, 70);
-            this.lbExample.Name = "lbExample";
-            this.lbExample.Size = new System.Drawing.Size(120, 25);
-            this.lbExample.TabIndex = 166;
-            this.lbExample.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // cbShift
-            // 
-            this.cbShift.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbShift.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbShift.FormattingEnabled = true;
-            this.cbShift.Items.AddRange(new object[] {
-            "1",
-            "10",
-            "100",
-            "1,000",
-            "10,000",
-            "100,000",
-            "1,000,000",
-            "10,000,000"});
-            this.cbShift.Location = new System.Drawing.Point(176, 28);
-            this.cbShift.Name = "cbShift";
-            this.cbShift.Size = new System.Drawing.Size(120, 31);
-            this.cbShift.TabIndex = 156;
-            this.cbShift.SelectedIndexChanged += new System.EventHandler(this.cbShift_SelectedIndexChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(27, 31);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 23);
-            this.label1.TabIndex = 157;
-            this.label1.Text = "Divisor";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(27, 71);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(96, 23);
-            this.label3.TabIndex = 158;
-            this.label3.Text = "P example";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(288, 97);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(71, 23);
-            this.label12.TabIndex = 151;
-            this.label12.Text = "(0-255)";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(288, 55);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(71, 23);
-            this.label11.TabIndex = 150;
-            this.label11.Text = "(0-255)";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(288, 13);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(71, 23);
-            this.label10.TabIndex = 149;
-            this.label10.Text = "(0-255)";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(288, 181);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(71, 23);
-            this.label9.TabIndex = 148;
-            this.label9.Text = "(0-255)";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(288, 139);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(71, 23);
-            this.label5.TabIndex = 147;
-            this.label5.Text = "(0-255)";
-            // 
-            // tbKD
-            // 
-            this.tbKD.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbKD.Location = new System.Drawing.Point(241, 93);
-            this.tbKD.MaxLength = 8;
-            this.tbKD.Name = "tbKD";
-            this.tbKD.Size = new System.Drawing.Size(41, 30);
-            this.tbKD.TabIndex = 145;
-            this.tbKD.Tag = "0";
-            this.tbKD.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbKD.TextChanged += new System.EventHandler(this.tbKP_TextChanged);
-            this.tbKD.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbKD_HelpRequested);
-            this.tbKD.Enter += new System.EventHandler(this.tbKD_Enter);
-            this.tbKD.Validating += new System.ComponentModel.CancelEventHandler(this.tbKD_Validating);
-            // 
-            // lbDerivative
-            // 
-            this.lbDerivative.AutoSize = true;
-            this.lbDerivative.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDerivative.Location = new System.Drawing.Point(90, 96);
-            this.lbDerivative.Name = "lbDerivative";
-            this.lbDerivative.Size = new System.Drawing.Size(92, 23);
-            this.lbDerivative.TabIndex = 146;
-            this.lbDerivative.Text = "Derivative";
-            // 
-            // tbKI
-            // 
-            this.tbKI.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbKI.Location = new System.Drawing.Point(241, 51);
-            this.tbKI.MaxLength = 8;
-            this.tbKI.Name = "tbKI";
-            this.tbKI.Size = new System.Drawing.Size(41, 30);
-            this.tbKI.TabIndex = 142;
-            this.tbKI.Tag = "0";
-            this.tbKI.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbKI.TextChanged += new System.EventHandler(this.tbKP_TextChanged);
-            this.tbKI.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPIDki_HelpRequested);
-            this.tbKI.Enter += new System.EventHandler(this.tbKI_Enter);
-            this.tbKI.Validating += new System.ComponentModel.CancelEventHandler(this.tbKI_Validating);
-            // 
-            // lbIntegral
-            // 
-            this.lbIntegral.AutoSize = true;
-            this.lbIntegral.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIntegral.Location = new System.Drawing.Point(90, 54);
-            this.lbIntegral.Name = "lbIntegral";
-            this.lbIntegral.Size = new System.Drawing.Size(82, 23);
-            this.lbIntegral.TabIndex = 143;
-            this.lbIntegral.Text = "Integral ";
-            this.lbIntegral.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbPIDki_HelpRequested);
-            // 
-            // tbMaxPWM
-            // 
-            this.tbMaxPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxPWM.Location = new System.Drawing.Point(241, 135);
-            this.tbMaxPWM.MaxLength = 8;
-            this.tbMaxPWM.Name = "tbMaxPWM";
-            this.tbMaxPWM.Size = new System.Drawing.Size(41, 30);
-            this.tbMaxPWM.TabIndex = 1;
-            this.tbMaxPWM.Tag = "3";
-            this.tbMaxPWM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbMaxPWM.TextChanged += new System.EventHandler(this.tbKP_TextChanged);
-            this.tbMaxPWM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label7_HelpRequested);
-            this.tbMaxPWM.Enter += new System.EventHandler(this.tbMaxPWM_Enter);
-            this.tbMaxPWM.Validating += new System.ComponentModel.CancelEventHandler(this.tbMaxPWM_Validating);
-            // 
-            // lbMax
-            // 
-            this.lbMax.AutoSize = true;
-            this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMax.Location = new System.Drawing.Point(90, 138);
-            this.lbMax.Name = "lbMax";
-            this.lbMax.Size = new System.Drawing.Size(139, 23);
-            this.lbMax.TabIndex = 126;
-            this.lbMax.Text = "PWM Maximum";
-            this.lbMax.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label7_HelpRequested);
-            // 
-            // tbMinPWM
-            // 
-            this.tbMinPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinPWM.Location = new System.Drawing.Point(241, 177);
-            this.tbMinPWM.MaxLength = 8;
-            this.tbMinPWM.Name = "tbMinPWM";
-            this.tbMinPWM.Size = new System.Drawing.Size(41, 30);
-            this.tbMinPWM.TabIndex = 4;
-            this.tbMinPWM.Tag = "6";
-            this.tbMinPWM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbMinPWM.TextChanged += new System.EventHandler(this.tbKP_TextChanged);
-            this.tbMinPWM.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label3_HelpRequested);
-            this.tbMinPWM.Enter += new System.EventHandler(this.tbMinPWM_Enter);
-            this.tbMinPWM.Validating += new System.ComponentModel.CancelEventHandler(this.tbMinPWM_Validating);
-            // 
-            // lbMin
-            // 
-            this.lbMin.AutoSize = true;
-            this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMin.Location = new System.Drawing.Point(90, 180);
-            this.lbMin.Name = "lbMin";
-            this.lbMin.Size = new System.Drawing.Size(135, 23);
-            this.lbMin.TabIndex = 122;
-            this.lbMin.Text = "PWM Minimum";
-            this.lbMin.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label3_HelpRequested);
-            // 
-            // tbKP
-            // 
-            this.tbKP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbKP.Location = new System.Drawing.Point(241, 9);
-            this.tbKP.MaxLength = 8;
-            this.tbKP.Name = "tbKP";
-            this.tbKP.Size = new System.Drawing.Size(41, 30);
-            this.tbKP.TabIndex = 1;
-            this.tbKP.Tag = "0";
-            this.tbKP.Text = "100";
-            this.tbKP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbKP.TextChanged += new System.EventHandler(this.tbKP_TextChanged);
-            this.tbKP.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbKP_HelpRequested);
-            this.tbKP.Enter += new System.EventHandler(this.tbKP_Enter);
-            this.tbKP.Validating += new System.ComponentModel.CancelEventHandler(this.tbKP_Validating);
-            // 
-            // lbProportional
-            // 
-            this.lbProportional.AutoSize = true;
-            this.lbProportional.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbProportional.Location = new System.Drawing.Point(90, 12);
-            this.lbProportional.Name = "lbProportional";
-            this.lbProportional.Size = new System.Drawing.Size(110, 23);
-            this.lbProportional.TabIndex = 120;
-            this.lbProportional.Text = "Proportional";
-            // 
-            // btnTuningGraph
-            // 
-            this.btnTuningGraph.BackColor = System.Drawing.Color.Transparent;
-            this.btnTuningGraph.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnTuningGraph.FlatAppearance.BorderSize = 0;
-            this.btnTuningGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTuningGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnTuningGraph.Image = global::RateController.Properties.Resources.Chart;
-            this.btnTuningGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTuningGraph.Location = new System.Drawing.Point(241, 333);
-            this.btnTuningGraph.Name = "btnTuningGraph";
-            this.btnTuningGraph.Size = new System.Drawing.Size(72, 72);
-            this.btnTuningGraph.TabIndex = 0;
-            this.btnTuningGraph.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnTuningGraph.UseVisualStyleBackColor = false;
-            this.btnTuningGraph.Click += new System.EventHandler(this.btnTuningGraph_Click);
-            // 
-            // btnPIDloadDefaults
-            // 
-            this.btnPIDloadDefaults.BackColor = System.Drawing.Color.Transparent;
-            this.btnPIDloadDefaults.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnPIDloadDefaults.FlatAppearance.BorderSize = 0;
-            this.btnPIDloadDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPIDloadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnPIDloadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnPIDloadDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnPIDloadDefaults.Location = new System.Drawing.Point(135, 333);
-            this.btnPIDloadDefaults.Name = "btnPIDloadDefaults";
-            this.btnPIDloadDefaults.Size = new System.Drawing.Size(72, 72);
-            this.btnPIDloadDefaults.TabIndex = 154;
-            this.btnPIDloadDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnPIDloadDefaults.UseVisualStyleBackColor = false;
-            this.btnPIDloadDefaults.Click += new System.EventHandler(this.btnPIDloadDefaults_Click);
-            // 
             // tbOptions
             // 
             this.tbOptions.Controls.Add(this.ckScale);
@@ -1112,9 +957,9 @@ namespace RateController
             this.tbOptions.Controls.Add(this.ckOnScreen);
             this.tbOptions.Controls.Add(this.grpMinUPM);
             this.tbOptions.Controls.Add(this.grpSensor);
-            this.tbOptions.Location = new System.Drawing.Point(4, 42);
+            this.tbOptions.Location = new System.Drawing.Point(4, 83);
             this.tbOptions.Name = "tbOptions";
-            this.tbOptions.Size = new System.Drawing.Size(472, 448);
+            this.tbOptions.Size = new System.Drawing.Size(472, 407);
             this.tbOptions.TabIndex = 6;
             this.tbOptions.Text = "Options";
             this.tbOptions.UseVisualStyleBackColor = true;
@@ -1379,9 +1224,9 @@ namespace RateController
             this.Mode.Controls.Add(this.rbModeConstant);
             this.Mode.Controls.Add(this.rbModeControlledUPM);
             this.Mode.Controls.Add(this.label8);
-            this.Mode.Location = new System.Drawing.Point(4, 42);
+            this.Mode.Location = new System.Drawing.Point(4, 83);
             this.Mode.Name = "Mode";
-            this.Mode.Size = new System.Drawing.Size(472, 448);
+            this.Mode.Size = new System.Drawing.Size(472, 407);
             this.Mode.TabIndex = 10;
             this.Mode.Text = "Mode";
             this.Mode.UseVisualStyleBackColor = true;
@@ -2301,12 +2146,10 @@ namespace RateController
             this.pnlFan.PerformLayout();
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
-            this.tbVR.ResumeLayout(false);
-            this.tbVR.PerformLayout();
             this.tbControl.ResumeLayout(false);
             this.tbControl.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.tbVR.ResumeLayout(false);
+            this.tbVR.PerformLayout();
             this.tbOptions.ResumeLayout(false);
             this.tbOptions.PerformLayout();
             this.grpMinUPM.ResumeLayout(false);
@@ -2406,8 +2249,6 @@ namespace RateController
         private System.Windows.Forms.TextBox tbConID;
         private System.Windows.Forms.TextBox tbAltRate;
         private System.Windows.Forms.Label lbAltRate;
-        private System.Windows.Forms.TextBox tbKI;
-        private System.Windows.Forms.Label lbIntegral;
         private System.Windows.Forms.TextBox tbVolumeUnits;
         private System.Windows.Forms.Panel pnlMain;
         private System.Windows.Forms.Panel pnlFan;
@@ -2418,13 +2259,9 @@ namespace RateController
         private System.Windows.Forms.Label LabProdDensity;
         private System.Windows.Forms.CheckBox CbUseProdDensity;
         private System.Windows.Forms.TextBox ProdDensity;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox tbKD;
-        private System.Windows.Forms.Label lbDerivative;
         private System.Windows.Forms.Label lbFanErrorValue;
         private System.Windows.Forms.Label lbFanError;
         private System.Windows.Forms.Label lbFanRPMvalue;
@@ -2446,11 +2283,6 @@ namespace RateController
         private System.Windows.Forms.CheckBox ckVR;
         private System.Windows.Forms.Label lbVariableRate;
         private System.Windows.Forms.ComboBox cbVR;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cbShift;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label lbExample;
         private System.Windows.Forms.TabPage tbData;
         private System.Windows.Forms.Label lbArea1;
         private System.Windows.Forms.Label lbAcres1;

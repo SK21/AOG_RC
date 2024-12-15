@@ -48,7 +48,6 @@ namespace RateController
         private double cRateSet = 0;
         private int cSenID;
         private int cSerialPort;
-        private int cShiftRange = 4;
         private double cTankStart = 0;
         private double cUnitsApplied = 0;
         private double cUnitsApplied2 = 0;
@@ -314,12 +313,6 @@ namespace RateController
             set { cOnScreen = value; }
         }
 
-        public double PIDkd
-        { get { return ModulePIDdata.KD; } set { ModulePIDdata.KD = value; } }
-
-        public double PIDki
-        { get { return ModulePIDdata.KI; } set { ModulePIDdata.KI = value; } }
-
         public double PIDkp
         { get { return ModulePIDdata.KP; } set { ModulePIDdata.KP = value; } }
 
@@ -328,9 +321,6 @@ namespace RateController
 
         public byte PIDmin
         { get { return ModulePIDdata.MinPWM; } set { ModulePIDdata.MinPWM = value; } }
-
-        public int PIDscale
-        { get { return cShiftRange; } set { cShiftRange = value; } }
 
         public double ProdDensity
         { get { return cProdDensity; } set { cProdDensity = value; } }
@@ -571,7 +561,7 @@ namespace RateController
 
         public bool IsNew()
         {
-            bool Result = (PIDkd == 0 && PIDki == 0 && PIDkp == 0 && PIDmin == 0 && PIDmax == 0);
+            bool Result = (PIDkp == 0 && PIDmin == 0 && PIDmax == 0);
             return Result;
         }
 
@@ -639,14 +629,6 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("KP" + IDname), out TempDB);
             ModulePIDdata.KP = TempDB;
 
-            TempDB = 0;
-            double.TryParse(mf.Tls.LoadProperty("KI" + IDname), out TempDB);
-            ModulePIDdata.KI = TempDB;
-
-            TempDB = 0;
-            double.TryParse(mf.Tls.LoadProperty("KD" + IDname), out TempDB);
-            ModulePIDdata.KD = TempDB;
-
             val = 0;
             byte.TryParse(mf.Tls.LoadProperty("MinPWM" + IDname), out val);
             ModulePIDdata.MinPWM = val;
@@ -682,7 +664,6 @@ namespace RateController
                 cBumpButtons = false;
             }
 
-            if (int.TryParse(mf.Tls.LoadProperty("ShiftRange" + IDname), out int sr)) cShiftRange = sr;
             if (double.TryParse(mf.Tls.LoadProperty("Hours1" + IDname), out double h1)) cHours1 = h1;
             if (double.TryParse(mf.Tls.LoadProperty("Hours2" + IDname), out double h2)) cHours2 = h2;
 
@@ -883,15 +864,12 @@ namespace RateController
             mf.Tls.SaveProperty("ManualPWM" + IDname, cManualPWM.ToString());
 
             mf.Tls.SaveProperty("KP" + IDname, ModulePIDdata.KP.ToString());
-            mf.Tls.SaveProperty("KI" + IDname, ModulePIDdata.KI.ToString());
-            mf.Tls.SaveProperty("KD" + IDname, ModulePIDdata.KD.ToString());
             mf.Tls.SaveProperty("MinPWM" + IDname, ModulePIDdata.MinPWM.ToString());
             mf.Tls.SaveProperty("MaxPWM" + IDname, ModulePIDdata.MaxPWM.ToString());
 
             mf.Tls.SaveProperty("OnScreen" + IDname, cOnScreen.ToString());
             mf.Tls.SaveProperty("BumpButtons" + IDname, cBumpButtons.ToString());
 
-            mf.Tls.SaveProperty("ShiftRange" + IDname, cShiftRange.ToString());
             mf.Tls.SaveProperty("Hours1" + IDname, cHours1.ToString());
             mf.Tls.SaveProperty("Hours2" + IDname, cHours2.ToString());
 
