@@ -11,6 +11,7 @@ namespace RateController
     public partial class frmOptions : Form
     {
         public FormStart mf;
+        private Bitmap colorBitmap;
         private bool FormEdited;
         private bool Initializing = true;
         private string[] LanguageIDs;
@@ -55,7 +56,10 @@ namespace RateController
                 LanguageRBs[i].CheckedChanged += Language_CheckedChanged;
             }
 
-            Tabs = new TabPage[] { tabPage1, tabPage2, tabPage3, tabPage4, tabPage5,tabPage6 };
+            Tabs = new TabPage[] { tabPage1, tabPage2, tabPage3, tabPage4, tabPage5, tabPage6 };
+
+            this.DoubleBuffered = true;
+            CreateColorBitmap();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -63,7 +67,6 @@ namespace RateController
             UpdateForm();
             btnOK.Focus();
             SetButtons(false);
-            tbExample.ForeColor = Properties.Settings.Default.ForeColour;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -97,20 +100,9 @@ namespace RateController
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            switch (tcOptions.SelectedIndex)
-            {
-                case 3:
-                    mf.SwitchObjects.Reset();
-                    SetButtons(true);
-                    UpdateForm();
-                    break;
-
-                case 5:
-                    tbExample.ForeColor = Color.Black;
-                    tbExample.BackColor = Properties.Settings.Default.DayColour;
-                    SetButtons(true);
-                    break;
-            }
+            mf.SwitchObjects.Reset();
+            SetButtons(true);
+            UpdateForm();
         }
 
         private void CheckRelayDefs(byte RelayID, byte ModuleID)
@@ -145,9 +137,9 @@ namespace RateController
                 Hlp.ShowDialog();
                 bool Result = Hlp.Result;
                 Hlp.Close();
-                if(Result)
+                if (Result)
                 {
-                SetButtons(true);
+                    SetButtons(true);
                 }
                 else
                 {
@@ -182,6 +174,84 @@ namespace RateController
         private void ckTransparent_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private Color ColorFromHSV(float hue, float saturation, float brightness)
+        {
+            Color Result;
+            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            float f = (float)(hue / 60 - Math.Floor(hue / 60));
+            brightness = brightness * 255;
+            int v = Convert.ToInt32(brightness);
+            int p = Convert.ToInt32(brightness * (1 - saturation));
+            int q = Convert.ToInt32((brightness * (1 - f * saturation)));
+            int t = Convert.ToInt32((brightness * (1 - (1 - f) * saturation)));
+
+            switch (hi)
+            {
+                case 0:
+                    Result = Color.FromArgb(255, v, t, p);
+                    break;
+
+                case 1:
+                    Result = Color.FromArgb(255, q, v, p);
+                    break;
+
+                case 2:
+                    Result = Color.FromArgb(255, p, v, t);
+                    break;
+
+                case 3:
+                    Result = Color.FromArgb(255, p, q, v);
+                    break;
+
+                case 4:
+                    Result = Color.FromArgb(255, t, p, v);
+                    break;
+
+                default:
+                    Result = Color.FromArgb(255, v, p, q);
+                    break;
+            }
+            return Result;
+        }
+
+        private void colorPanel_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(colorBitmap, 0, 0, colorPanel.Width, colorPanel.Height);
+        }
+
+        private void ColorPanel_Touch(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                // Get color from touch position
+                float hue = (float)e.X / colorPanel.Width;
+                float brightness = 1 - (float)e.Y / colorPanel.Height;
+                if (rbForeColor.Checked)
+                {
+                    tbColourUser1.ForeColor = ColorFromHSV(hue * 360, 1, brightness);
+                }
+                else
+                {
+                    tbColourUser1.BackColor = ColorFromHSV(hue * 360, 1, brightness);
+                }
+            }
+        }
+
+        private void CreateColorBitmap()
+        {
+            colorBitmap = new Bitmap(colorPanel.Width, colorPanel.Height);
+            for (int x = 0; x < colorPanel.Width; x++)
+            {
+                for (int y = 0; y < colorPanel.Height; y++)
+                {
+                    float hue = (float)x / colorPanel.Width;
+                    float brightness = 1 - (float)y / colorPanel.Height;
+                    Color color = ColorFromHSV(hue * 360, 1, brightness);
+                    colorBitmap.SetPixel(x, y, color);
+                }
+            }
         }
 
         private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -250,9 +320,6 @@ namespace RateController
 
             SetDayMode();
             UpdateForm();
-            colorDialog1.Color = Properties.Settings.Default.ForeColour;
-            tbExample.ForeColor = colorDialog1.Color;
-            tbExample.BackColor = mf.BackColor;
         }
 
         private void groupBox1_Paint(object sender, PaintEventArgs e)
@@ -295,6 +362,12 @@ namespace RateController
             {
                 mf.Tls.WriteErrorLog("frmOptions/LoadData: " + ex.Message);
             }
+        }
+
+        private void rbColour1_Click(object sender, EventArgs e)
+        {
+            SetButtons(true);
+            rbColourUser.Checked = true;
         }
 
         private void rbLarge_CheckedChanged(object sender, EventArgs e)
@@ -383,8 +456,24 @@ namespace RateController
                 mf.SwitchObjects.Save();
                 if (mf.SwitchesForm != null) mf.SwitchesForm.SetDescriptions();
 
-                Properties.Settings.Default.ForeColour = tbExample.ForeColor;
-                Properties.Settings.Default.BackColour = tbExample.BackColor;
+                // set colors
+                if (rbColour1.Checked)
+                {
+                    Properties.Settings.Default.ForeColour = tbColourDefault1.ForeColor;
+                    Properties.Settings.Default.BackColour = tbColourDefault1.BackColor;
+                }
+                else if (rbColour2.Checked)
+                {
+                    Properties.Settings.Default.ForeColour = tbColourDefault2.ForeColor;
+                    Properties.Settings.Default.BackColour = tbColourDefault2.BackColor;
+                }
+                else
+                {
+                    Properties.Settings.Default.ForeColour = tbColourUser1.ForeColor;
+                    Properties.Settings.Default.BackColour = tbColourUser1.BackColor;
+                }
+                Properties.Settings.Default.ForeColourUser1 = tbColourUser1.ForeColor;
+                Properties.Settings.Default.BackColourUser1 = tbColourUser1.BackColor;
                 Properties.Settings.Default.Save();
                 mf.RaiseColorChanged();
             }
@@ -472,6 +561,24 @@ namespace RateController
                     Tabs[i].BackColor = Properties.Settings.Default.NightColour;
                 }
             }
+        }
+
+        private void tbColourDefault1_Click(object sender, EventArgs e)
+        {
+            rbColour1.Checked = true;
+            SetButtons(true);
+        }
+
+        private void tbColourDefault2_Click(object sender, EventArgs e)
+        {
+            rbColour2.Checked = true;
+            SetButtons(true);
+        }
+
+        private void tbColourUser1_Click(object sender, EventArgs e)
+        {
+            rbColourUser.Checked = true;
+            SetButtons(true);
         }
 
         private void tbDelay_Enter(object sender, EventArgs e)
@@ -643,7 +750,7 @@ namespace RateController
 
         private void tcOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnReset.Visible = (tcOptions.SelectedIndex == 3||tcOptions.SelectedIndex==5);
+            btnReset.Visible = (tcOptions.SelectedIndex == 3);
         }
 
         private void UpdateForm(bool UpdateObject = false)
@@ -694,25 +801,23 @@ namespace RateController
             ckDefaultProduct.Checked = false;
             ckSingle.Checked = false;
 
+            // set colours
+            tbColourUser1.ForeColor = Properties.Settings.Default.ForeColourUser1;
+            tbColourUser1.BackColor = Properties.Settings.Default.BackColourUser1;
+            if (Properties.Settings.Default.ForeColour == tbColourDefault1.ForeColor && Properties.Settings.Default.BackColour == tbColourDefault1.BackColor)
+            {
+                rbColour1.Checked = true;
+            }
+            else if (Properties.Settings.Default.ForeColour == tbColourDefault2.ForeColor && Properties.Settings.Default.BackColour == tbColourDefault2.BackColor)
+            {
+                rbColour2.Checked = true;
+            }
+            else
+            {
+                rbColourUser.Checked = true;
+            }
+
             Initializing = false;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if(colorDialog1.ShowDialog()==DialogResult.OK)
-            {
-                tbExample.ForeColor = colorDialog1.Color;
-                SetButtons(true);
-            }
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
-            {
-                tbExample.BackColor = colorDialog1.Color;
-                SetButtons(true);
-            }
         }
     }
 }

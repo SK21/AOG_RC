@@ -145,7 +145,7 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Yellow")]
         public global::System.Drawing.Color ForeColour {
             get {
                 return ((global::System.Drawing.Color)(this["ForeColour"]));
@@ -157,13 +157,37 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("210, 220, 230")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
         public global::System.Drawing.Color BackColour {
             get {
                 return ((global::System.Drawing.Color)(this["BackColour"]));
             }
             set {
                 this["BackColour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public global::System.Drawing.Color ForeColourUser1 {
+            get {
+                return ((global::System.Drawing.Color)(this["ForeColourUser1"]));
+            }
+            set {
+                this["ForeColourUser1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("210, 220, 230")]
+        public global::System.Drawing.Color BackColourUser1 {
+            get {
+                return ((global::System.Drawing.Color)(this["BackColourUser1"]));
+            }
+            set {
+                this["BackColourUser1"] = value;
             }
         }
     }
