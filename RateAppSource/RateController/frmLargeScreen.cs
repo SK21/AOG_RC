@@ -100,7 +100,8 @@ namespace RateController
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.Top += TransTopOffset;
                 this.Left += TransLeftOffset;
-                SetDisplay(Properties.Settings.Default.ForeColour);
+                //SetDisplay(Properties.Settings.Default.ForeColour);
+                SetDisplay(Color.Yellow);
             }
             else
             {
@@ -480,7 +481,7 @@ namespace RateController
 
         private void Mf_ColorChanged(object sender, EventArgs e)
         {
-            SetDisplay(Properties.Settings.Default.ForeColour);
+            //SetDisplay(Properties.Settings.Default.ForeColour);
         }
 
         private void MnuComm_Click(object sender, EventArgs e)

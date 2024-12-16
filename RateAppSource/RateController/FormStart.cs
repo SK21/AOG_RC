@@ -1236,14 +1236,6 @@ namespace RateController
             cStartTime = DateTime.Now;
         }
 
-        private void FormStart_Paint(object sender, PaintEventArgs e)
-        {
-            Rectangle borderRectangle = this.ClientRectangle;
-            borderRectangle.Inflate(-10, -10);
-            ControlPaint.DrawBorder3D(e.Graphics, borderRectangle,
-                Border3DStyle.Raised);
-        }
-
         private void FormStart_Resize(object sender, EventArgs e)
         {
             Invalidate();
@@ -1391,11 +1383,6 @@ namespace RateController
 
             Tls.ShowHelp(Message, "Target Rate");
             hlpevent.Handled = true;
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ShowSettings();
         }
 
         private void LoadDefaultProduct()
