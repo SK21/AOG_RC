@@ -1,6 +1,6 @@
 
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
-#include <pcf8574.h>		// https://github.com/RobTillaart/PCF8574
+#include <PCF8574.h>		// https://github.com/RobTillaart/PCF8574
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 #include <WiFi.h>
