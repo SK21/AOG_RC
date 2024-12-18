@@ -220,11 +220,11 @@ namespace RateController
             // TankRemain
             // 
             this.TankRemain.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TankRemain.Location = new System.Drawing.Point(188, 90);
+            this.TankRemain.Location = new System.Drawing.Point(181, 90);
             this.TankRemain.Name = "TankRemain";
-            this.TankRemain.Size = new System.Drawing.Size(89, 23);
+            this.TankRemain.Size = new System.Drawing.Size(96, 23);
             this.TankRemain.TabIndex = 153;
-            this.TankRemain.Text = "50000.1";
+            this.TankRemain.Text = "-9,999.0";
             this.TankRemain.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.TankRemain.Click += new System.EventHandler(this.TankRemain_Click);
             this.TankRemain.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
@@ -277,9 +277,9 @@ namespace RateController
             this.lbRemaining.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbRemaining.Location = new System.Drawing.Point(0, 90);
             this.lbRemaining.Name = "lbRemaining";
-            this.lbRemaining.Size = new System.Drawing.Size(201, 23);
+            this.lbRemaining.Size = new System.Drawing.Size(175, 23);
             this.lbRemaining.TabIndex = 149;
-            this.lbRemaining.Text = "Quantity Applied ...";
+            this.lbRemaining.Text = "Quantity Applied";
             this.lbRemaining.Click += new System.EventHandler(this.label34_Click);
             this.lbRemaining.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbRemaining_HelpRequested);
             this.lbRemaining.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);

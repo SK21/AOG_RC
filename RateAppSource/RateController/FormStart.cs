@@ -854,7 +854,7 @@ namespace RateController
                         lbRemaining.Text = Lang.lgQuantityApplied;
                         Tnk = Prd.UnitsApplied();
                     }
-                    if (Tnk > 9999)
+                    if (Math.Abs(Tnk) > 9999)
                     {
                         TankRemain.Text = Tnk.ToString("N0");
                     }
