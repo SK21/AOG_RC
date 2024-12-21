@@ -190,17 +190,17 @@ void ReadPGNs(byte Data[], uint16_t len)
 		break;
 
 	case 32502:
-		// PGN32502, PID from RC to module
-		// 0    246
-		// 1    126
-		// 2    Mod/Sen ID     0-15/0-15
-		// 3    KP
-		// 4    BrakeSet, 0-100
-		// 5    BrakePoint, 0-50
-		// 6    MinPWM
-		// 7    MaxPWM
-		// 8    Pscaling
-		// 9    CRC
+		// PGN32502, Control settings from RC to module
+		// 0   246
+		// 1   126
+		// 2   Mod/Sen ID     0-15/0-15
+		// 3   HighAdjust
+		// 4   LowAdjust
+		// 5   Threshold
+		// 6   MinAdjust
+		// 7   MaxAdjust
+		// 8   -
+		// 9   CRC
 
 		PGNlength = 10;
 
@@ -213,14 +213,15 @@ void ReadPGNs(byte Data[], uint16_t len)
 					byte SensorID = ParseSenID(Data[2]);
 					if (SensorID < MDL.SensorCount)
 					{
-						double Pscale = pow(10, Data[8] * -1);	
+						Sensor[SensorID].HighAdjust = (double)(255.0 * Data[3] / 100.0);
+						Sensor[SensorID].LowAdjust = (double)(255.0 * Data[4] / 100.0);
+						Sensor[SensorID].AdjustThreshold = (double)(255.0 * Data[5] / 100.0);
+						Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
+						Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
 
-						Sensor[SensorID].KP = (double)(Data[3] * Pscale);
-						Sensor[SensorID].BrakeSet = (double)(Data[4] / 100.0);
-						Sensor[SensorID].BrakePoint = (double)(Data[5] / 100.0);
-
-						Sensor[SensorID].MinPWM = Data[6];
-						Sensor[SensorID].MaxPWM = Data[7];
+						// using the last % of the HighAdjust, boost the scaling factor
+						double HighAdjust = constrain(Data[3], 70, 100);
+						Sensor[SensorID].Scaling = (double)map(HighAdjust, 70, 100, 15, 100) / 1000.0;
 					}
 				}
 			}

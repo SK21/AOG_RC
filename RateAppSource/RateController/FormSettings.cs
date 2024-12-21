@@ -221,11 +221,6 @@ namespace RateController
             formG.Show(this);
         }
 
-        private void cbShift_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-            UpdateExample();
-        }
 
         private void CbUseProdDensity_CheckedChanged_1(object sender, EventArgs e)
         {
@@ -481,23 +476,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void label3_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The minimum power sent to the valve/motor. The power needed to start to make the" +
-                " valve/motor move.";
-
-            mf.Tls.ShowHelp(Message, "PWM Minimum");
-            hlpevent.Handled = true;
-        }
-
-        private void label7_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The maximum power sent to the valve/motor when far from the target rate.";
-
-            mf.Tls.ShowHelp(Message, "PWM High Max");
-            hlpevent.Handled = true;
-        }
-
         private void lb1_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Quantity units for product. ex: lbs, kgs";
@@ -554,11 +532,11 @@ namespace RateController
 
         private void LoadDefaults()
         {
-            HShigh.Value = 15;
-            HSlow.Value = 10;
-            HSthreshold.Value = 25;
+            HShigh.Value = 70;
+            HSlow.Value = 7;
+            HSthreshold.Value = 50;
             HSmax.Value = 100;
-            HSmin.Value = 10;
+            HSmin.Value = 7;
         }
 
         private void LoadSettings()
@@ -597,12 +575,12 @@ namespace RateController
             if (tmp == "99") tmp = "";
             tbConID.Text = tmp;
 
-            // PID
-            tbKP.Text = CurrentProduct.PIDkp.ToString("N0");
-            tbKI.Text = CurrentProduct.PIDki.ToString("N0");
-            tbKD.Text = CurrentProduct.PIDkd.ToString("N0");
-            tbMinPWM.Text = CurrentProduct.PIDmin.ToString("N0");
-            tbMaxPWM.Text = CurrentProduct.PIDmax.ToString("N0");
+            // flow control
+            HShigh.Value = 15;
+            HSlow.Value = 10;
+            HSthreshold.Value = 30;
+            HSmax.Value = 100;
+            HSmin.Value = 1;
 
             tbSenID.Text = CurrentProduct.SensorID.ToString();
 
@@ -617,8 +595,6 @@ namespace RateController
             ckBumpButtons.Checked = CurrentProduct.BumpButtons;
 
             SetAppMode(CurrentProduct);
-            cbShift.SelectedIndex = CurrentProduct.PIDscale;
-            UpdateExample();
         }
 
         private void pnlMain_Paint(object sender, PaintEventArgs e)
@@ -823,21 +799,12 @@ namespace RateController
             byte.TryParse(tbSenID.Text, out byte tmp2);
             CurrentProduct.ChangeID(tmp1, tmp2);
 
-            // PID
-            double.TryParse(tbKP.Text, out TempDB);
-            CurrentProduct.PIDkp = TempDB;
-
-            double.TryParse(tbKI.Text, out TempDB);
-            CurrentProduct.PIDki = TempDB;
-
-            double.TryParse(tbKD.Text, out TempDB);
-            CurrentProduct.PIDkd = TempDB;
-
-            byte.TryParse(tbMinPWM.Text, out tempB);
-            CurrentProduct.PIDmin = tempB;
-
-            byte.TryParse(tbMaxPWM.Text, out tempB);
-            CurrentProduct.PIDmax = tempB;
+            // flow control
+            CurrentProduct.HighAdjust = HShigh.Value;
+            CurrentProduct.LowAdjust = HSlow.Value;
+            CurrentProduct.Threshold = HSthreshold.Value;
+            CurrentProduct.MaxAdjust=HSmax.Value;
+            CurrentProduct.MinAdjust=HSmin.Value;
 
             int.TryParse(tbCountsRev.Text, out tempInt);
             CurrentProduct.CountsRev = tempInt;
@@ -861,7 +828,6 @@ namespace RateController
             CurrentProduct.Save();
 
             if (ckDefault.Checked) mf.DefaultProduct = CurrentProduct.ID;
-            CurrentProduct.PIDscale = cbShift.SelectedIndex;
 
             mf.SetScale(CurrentProduct.ID, ckScale.Checked);
 
@@ -1231,129 +1197,16 @@ namespace RateController
             }
         }
 
-        private void tbKD_Enter(object sender, EventArgs e)
-        {
-            double temp;
-            double.TryParse(tbKD.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbKD.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
 
-        private void tbKD_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Derivative looks at past errors in the system and" +
-                " calculates the slope of those errors to predict future error values.";
 
-            mf.Tls.ShowHelp(Message, "Derivative");
-            hlpevent.Handled = true;
-        }
 
-        private void tbKD_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbKD.Text, out tempD);
-            if (tempD < 0 || tempD > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
 
-        private void tbKI_Enter(object sender, EventArgs e)
-        {
-            double temp;
-            double.TryParse(tbKI.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbKI.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
 
-        private void tbKI_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbKI.Text, out tempD);
-            if (tempD < 0 || tempD > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
 
-        private void tbKP_Enter(object sender, EventArgs e)
-        {
-            double temp;
-            double.TryParse(tbKP.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbKP.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
 
-        private void tbKP_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Proportional control output has a direct ratio to the error." +
-                " Higher Proportional has a greater response to error.";
 
-            mf.Tls.ShowHelp(Message, "Proportional");
-            hlpevent.Handled = true;
-        }
 
-        private void tbKP_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-            UpdateExample();
-        }
 
-        private void tbKP_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbKP.Text, out tempD);
-            if (tempD < 0 || tempD > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbMaxPWM_Enter(object sender, EventArgs e)
-        {
-            byte temp;
-            byte.TryParse(tbMaxPWM.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbMaxPWM.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbMaxPWM_Validating(object sender, CancelEventArgs e)
-        {
-            byte temp;
-            byte.TryParse(tbMaxPWM.Text, out temp);
-            if (temp < 0 || temp > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
 
         private void tbMaxRate_Enter(object sender, EventArgs e)
         {
@@ -1374,30 +1227,6 @@ namespace RateController
             SetButtons(true);
         }
 
-        private void tbMinPWM_Enter(object sender, EventArgs e)
-        {
-            byte temp;
-            byte.TryParse(tbMinPWM.Text, out temp);
-            using (var form = new FormNumeric(0, 255, temp))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbMinPWM.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbMinPWM_Validating(object sender, CancelEventArgs e)
-        {
-            byte temp;
-            byte.TryParse(tbMinPWM.Text, out temp);
-            if (temp < 0 || temp > 255)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
 
         private void tbMinRate_Enter(object sender, EventArgs e)
         {
@@ -1698,12 +1527,6 @@ namespace RateController
             }
         }
 
-        private void UpdateExample()
-        {
-            int val = (int)CurrentProduct.PIDkp;
-            if (int.TryParse(tbKP.Text, out int ex)) val = ex;
-            lbExample.Text = (val * Math.Pow(10, -cbShift.SelectedIndex)).ToString("N7");
-        }
 
         private void UpdateForm()
         {
@@ -1777,6 +1600,13 @@ namespace RateController
             ckScale.Checked = mf.ShowScale(CurrentProduct.ID);
             ckScale.Visible = (CurrentProduct.ID < 4);
 
+            HShigh.Value = CurrentProduct.HighAdjust;
+            HSlow.Value = CurrentProduct.LowAdjust;
+            HSthreshold.Value = CurrentProduct.Threshold;
+            HSmax.Value = CurrentProduct.MaxAdjust;
+            HSmin.Value = CurrentProduct.MinAdjust;
+
+            UpdateControlDisplay();
             Initializing = false;
         }
 
@@ -1795,6 +1625,62 @@ namespace RateController
             SetButtons(true);
             SetCalDescription();
             UpdateOnTypeChange();
+        }
+
+        private void UpdateControlDisplay()
+        {
+            lbHigh.Text = HShigh.Value.ToString("N0");
+            lbLow.Text = HSlow.Value.ToString("N0");
+            lbThresholdValue.Text = HSthreshold.Value.ToString("N0");
+            lbMaxValue.Text = HSmax.Value.ToString("N0");
+            lbMinValue.Text = HSmin.Value.ToString("N0");
+        }
+
+        private void HShigh_ValueChanged_1(object sender, EventArgs e)
+        {
+            SetButtons(true);
+            UpdateControlDisplay();
+        }
+
+        private void HShigh_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Fast rate adjustment above threshold.";
+
+            mf.Tls.ShowHelp(Message, "Adjust High");
+            hlpevent.Handled = true;
+        }
+
+        private void HSlow_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Slow rate of adjustment below threshold.";
+
+            mf.Tls.ShowHelp(Message, "Adjust Low");
+            hlpevent.Handled = true;
+        }
+
+        private void HSthreshold_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Where the rate adjustment changes from Fast to slow.";
+
+            mf.Tls.ShowHelp(Message, "Adjust Threshold");
+            hlpevent.Handled = true;
+        }
+
+        private void HSmax_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Maximum power sent to the valve/motor.";
+
+            mf.Tls.ShowHelp(Message, "Maximum power.");
+            hlpevent.Handled = true;
+        }
+
+        private void HSmin_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The minimum power sent to the valve/motor. The power needed to start to make the" +
+    " valve/motor move.";
+
+            mf.Tls.ShowHelp(Message, "Minimum power");
+            hlpevent.Handled = true;
         }
     }
 }

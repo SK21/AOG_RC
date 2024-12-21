@@ -1,10 +1,7 @@
 
-// based off of https://github.com/br3ttb/Arduino-PID-Library
-
 uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
-const double Deadband = 0.015;		// % error below which no adjustment is made
-const double MaxErrorAdjust = 0.5;	// max rate error adjustment
+const double Deadband = 0.015;			// error amount below which no adjustment is made
 
 double RateError;
 double LastPWM[MaxProductCount];
@@ -59,7 +56,7 @@ void SetPWM()
 				Sensor[i].PWM = Sensor[i].ManualAdjust;
 				double Direction = 1.0;
 				if (Sensor[i].PWM < 0) Direction = -1.0;
-				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
+				if (abs(Sensor[i].PWM) > Sensor[i].MaxPower) Sensor[i].PWM = Sensor[i].MaxPower * Direction;
 				break;
 			}
 		}
@@ -81,23 +78,16 @@ int PIDmotor(byte ID)
 			// check deadband
 			if (abs(RateError) > Deadband)
 			{
-				RateError = constrain(RateError, -1 * MaxErrorAdjust, MaxErrorAdjust);
-
 				// check brakepoint
-				if (abs(RateError) > Sensor[ID].BrakePoint)
+				if (abs(RateError) > Sensor[ID].AdjustThreshold)
 				{
-					Result += Sensor[ID].KP * RateError;
-					debug3 = Sensor[ID].KP * RateError;
+					Result += Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
 				}
 				else
 				{
-					Result += Sensor[ID].KP * RateError * Sensor[ID].BrakeSet;
-					debug3 = Sensor[ID].KP * RateError * Sensor[ID].BrakeSet;
+					Result += Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
 				}
-				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
-				debug1 = Sensor[0].BrakePoint;
-				debug2 = Sensor[0].BrakeSet;
-				debug4 = RateError;
+				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
 			}
 		}
 		LastPWM[ID] = Result;
@@ -116,26 +106,24 @@ int PIDvalve(byte ID)
 		{
 			LastCheck[ID] = millis();
 
-			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			RateError = (Sensor[ID].TargetUPM - Sensor[ID].UPM) / Sensor[ID].TargetUPM;
 
 			// check deadband
-			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
+			if (abs(RateError) > Deadband)
 			{
-				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
-
 				// check brakepoint
-				if (abs(RateError) > Sensor[ID].BrakePoint * Sensor[ID].TargetUPM)
+				if (abs(RateError) > Sensor[ID].AdjustThreshold)
 				{
-					Result = Sensor[ID].KP * RateError;
+					Result = Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
 				}
 				else
 				{
-					Result = Sensor[ID].KP * RateError * Sensor[ID].BrakeSet;
+					Result = Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
 				}
 
 				bool IsPositive = (Result > 0);
 				Result = abs(Result);
-				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
+				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
 				if (!IsPositive) Result *= -1.0;
 			}
 			else
@@ -187,31 +175,29 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 					Result = Sensor[ID].ManualAdjust;
 					double Direction = 1.0;
 					if (Result < 0) Direction = -1.0;
-					if (abs(Result) > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * Direction;
+					if (abs(Result) > Sensor[ID].MaxPower) Result = Sensor[ID].MaxPower * Direction;
 				}
 				else
 				{
 					// auto adjust
-					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+					RateError = (Sensor[ID].TargetUPM - Sensor[ID].UPM) / Sensor[ID].TargetUPM;
 
 					// check deadband
-					if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
+					if (abs(RateError) > Deadband)
 					{
-						RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
-
 						// check brakepoint
-						if (abs(RateError) > Sensor[ID].BrakePoint * Sensor[ID].TargetUPM)
+						if (abs(RateError) > Sensor[ID].AdjustThreshold)
 						{
-							Result = Sensor[ID].KP * RateError;
+							Result = Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
 						}
 						else
 						{
-							Result = Sensor[ID].KP * RateError * Sensor[ID].BrakeSet;
+							Result = Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
 						}
 
 						bool IsPositive = (Result > 0);
 						Result = abs(Result);
-						Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
+						Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
 						if (!IsPositive) Result *= -1.0;
 					}
 					else

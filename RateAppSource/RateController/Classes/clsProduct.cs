@@ -13,9 +13,9 @@ namespace RateController
     {
         public readonly FormStart mf;
 
-        public PGN32400 RateSensor;
         public byte CoverageUnits = 0;
         public PGN32500 ModuleRateSettings;
+        public PGN32400 RateSensor;
         public double TankSize = 0;
         private double AccumulatedLast = 0;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
@@ -29,10 +29,14 @@ namespace RateController
         private bool cEnableProdDensity = false;
         private bool cFanOn;
         private double cHectaresPerMinute;
+        private int cHighAdjust;
         private double cHours1;
         private double cHours2;
+        private int cLowAdjust;
         private int cManualPWM;
+        private int cMaxAdjust;
         private double cMeterCal = 0;
+        private int cMinAdjust;
         private double cMinUPM;
         private double cMinUPMbySpeed;
         private int cModID;
@@ -50,6 +54,7 @@ namespace RateController
         private int cSerialPort;
         private int cShiftRange = 4;
         private double cTankStart = 0;
+        private int cThreshold;
         private double cUnitsApplied = 0;
         private double cUnitsApplied2 = 0;
         private double CurrentMinutes;
@@ -64,13 +69,8 @@ namespace RateController
         private DateTime LastHours1;
         private DateTime LastHours2;
         private DateTime LastUpdateTime;
-        private PGN32502 ModulePIDdata;
+        private PGN32502 ModuleControlSettings;
         private bool PauseWork = false;
-        private int cHighAdjust;
-        private int cLowAdjust;
-        private int cThreshold;
-        private int cMaxAdjust;
-        private int cMinAdjust;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -82,7 +82,7 @@ namespace RateController
 
             RateSensor = new PGN32400(this);
             ModuleRateSettings = new PGN32500(this);
-            ModulePIDdata = new PGN32502(this);
+            ModuleControlSettings = new PGN32502(this);
 
             if (cProductID > mf.MaxProducts - 3)
             {
@@ -99,51 +99,6 @@ namespace RateController
             get { return cAppMode; }
             set
             { cAppMode = value; }
-        }
-
-        public int HighAdjust
-        {
-            get { return cHighAdjust; }
-            set
-            {
-                if (value > 0 && value <= 100) cHighAdjust = value;
-            }
-        }
-
-        public int LowAdjust
-        {
-            get { return cLowAdjust; }
-            set
-            {
-                if (value > 0 && value <= 100) cLowAdjust = value;
-            }
-        }
-
-        public int Threshold
-        {
-            get { return cThreshold; }  
-            set
-            {
-                if(value>=0 && value <= 100)cThreshold = value;
-            }
-        }
-
-        public int MaxAdjust
-        {
-            get { return cMaxAdjust; }
-            set
-            {
-                if(value>0 && value <= 100) cMaxAdjust= value;
-            }
-        }
-
-        public int MinAdjust
-        {
-            get { return cMinAdjust; }
-            set
-            {
-                if (value > 0 && value <= 100) cMinAdjust = value;
-            }
         }
 
         public bool BumpButtons
@@ -249,6 +204,15 @@ namespace RateController
             }
         }
 
+        public int HighAdjust
+        {
+            get { return cHighAdjust; }
+            set
+            {
+                if (value >= 0 && value <= 100) cHighAdjust = value;
+            }
+        }
+
         public double Hours1
         { get { return cHours1; } }
 
@@ -257,6 +221,15 @@ namespace RateController
 
         public int ID
         { get { return cProductID; } }
+
+        public int LowAdjust
+        {
+            get { return cLowAdjust; }
+            set
+            {
+                if (value >= 0 && value <= 100) cLowAdjust = value;
+            }
+        }
 
         public int ManualPWM
         {
@@ -279,6 +252,15 @@ namespace RateController
             }
         }
 
+        public int MaxAdjust
+        {
+            get { return cMaxAdjust; }
+            set
+            {
+                if (value >= 0 && value <= 100) cMaxAdjust = value;
+            }
+        }
+
         public double MeterCal
         {
             get { return cMeterCal; }
@@ -288,6 +270,15 @@ namespace RateController
                 {
                     cMeterCal = value;
                 }
+            }
+        }
+
+        public int MinAdjust
+        {
+            get { return cMinAdjust; }
+            set
+            {
+                if (value >= 0 && value <= 100) cMinAdjust = value;
             }
         }
 
@@ -363,24 +354,6 @@ namespace RateController
             get { return cOnScreen; }
             set { cOnScreen = value; }
         }
-
-        public double PIDkd
-        { get { return ModulePIDdata.KD; } set { ModulePIDdata.KD = value; } }
-
-        public double PIDki
-        { get { return ModulePIDdata.KI; } set { ModulePIDdata.KI = value; } }
-
-        public double PIDkp
-        { get { return ModulePIDdata.KP; } set { ModulePIDdata.KP = value; } }
-
-        public byte PIDmax
-        { get { return ModulePIDdata.MaxPWM; } set { ModulePIDdata.MaxPWM = value; } }
-
-        public byte PIDmin
-        { get { return ModulePIDdata.MinPWM; } set { ModulePIDdata.MinPWM = value; } }
-
-        public int PIDscale
-        { get { return cShiftRange; } set { cShiftRange = value; } }
 
         public double ProdDensity
         { get { return cProdDensity; } set { cProdDensity = value; } }
@@ -475,18 +448,6 @@ namespace RateController
             }
         }
 
-        public int SerialPort
-        {
-            get { return cSerialPort; }
-            set
-            {
-                if (value > -2 && value < 3)
-                {
-                    cSerialPort = value;
-                }
-            }
-        }
-
         public double TankStart
         {
             get { return cTankStart; }
@@ -496,6 +457,15 @@ namespace RateController
                 {
                     cTankStart = value;
                 }
+            }
+        }
+
+        public int Threshold
+        {
+            get { return cThreshold; }
+            set
+            {
+                if (value >= 0 && value <= 100) cThreshold = value;
             }
         }
 
@@ -550,7 +520,6 @@ namespace RateController
                 if (value >= 0 && value < 100000) cVRmin = value;
             }
         }
-
 
         private string IDname
         { get { return cProductID.ToString(); } }
@@ -621,15 +590,13 @@ namespace RateController
 
         public bool IsNew()
         {
-            bool Result = (PIDkd == 0 && PIDki == 0 && PIDkp == 0 && PIDmin == 0 && PIDmax == 0);
+            bool Result = (cHighAdjust == 0 && cLowAdjust == 0 && cThreshold == 0 && cMaxAdjust == 0 && cMinAdjust == 0);
             return Result;
         }
 
         public void Load()
         {
             int tmp;
-            byte val;
-            double TempDB;
 
             double.TryParse(mf.Tls.LoadProperty("Coverage" + IDname), out Coverage);
             double.TryParse(mf.Tls.LoadProperty("Coverage2" + IDname), out Coverage2);
@@ -685,26 +652,6 @@ namespace RateController
             int.TryParse(mf.Tls.LoadProperty("ManualPWM" + IDname), out tmp);
             cManualPWM = tmp;
 
-            TempDB = 0;
-            double.TryParse(mf.Tls.LoadProperty("KP" + IDname), out TempDB);
-            ModulePIDdata.KP = TempDB;
-
-            TempDB = 0;
-            double.TryParse(mf.Tls.LoadProperty("KI" + IDname), out TempDB);
-            ModulePIDdata.KI = TempDB;
-
-            TempDB = 0;
-            double.TryParse(mf.Tls.LoadProperty("KD" + IDname), out TempDB);
-            ModulePIDdata.KD = TempDB;
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("MinPWM" + IDname), out val);
-            ModulePIDdata.MinPWM = val;
-
-            val = 0;
-            byte.TryParse(mf.Tls.LoadProperty("MaxPWM" + IDname), out val);
-            ModulePIDdata.MaxPWM = val;
-
             if (ID > mf.MaxProducts - 3)
             {
                 cControlType = ControlTypeEnum.Fan;
@@ -737,6 +684,12 @@ namespace RateController
             if (double.TryParse(mf.Tls.LoadProperty("Hours2" + IDname), out double h2)) cHours2 = h2;
 
             if (Enum.TryParse(mf.Tls.LoadProperty("AppMode" + IDname), true, out ApplicationMode am)) cAppMode = am;
+
+            if (int.TryParse(mf.Tls.LoadProperty("AdjustHigh" + IDname), out int ah)) cHighAdjust = ah;
+            if (int.TryParse(mf.Tls.LoadProperty("AdjustLow" + IDname), out int al)) cLowAdjust = al;
+            if (int.TryParse(mf.Tls.LoadProperty("Threshold" + IDname), out int th)) cThreshold = th;
+            if (int.TryParse(mf.Tls.LoadProperty("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
+            if (int.TryParse(mf.Tls.LoadProperty("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
         }
 
         public double MinUPMinUse()
@@ -932,12 +885,6 @@ namespace RateController
             mf.Tls.SaveProperty("SerialPort" + IDname, cSerialPort.ToString());
             mf.Tls.SaveProperty("ManualPWM" + IDname, cManualPWM.ToString());
 
-            mf.Tls.SaveProperty("KP" + IDname, ModulePIDdata.KP.ToString());
-            mf.Tls.SaveProperty("KI" + IDname, ModulePIDdata.KI.ToString());
-            mf.Tls.SaveProperty("KD" + IDname, ModulePIDdata.KD.ToString());
-            mf.Tls.SaveProperty("MinPWM" + IDname, ModulePIDdata.MinPWM.ToString());
-            mf.Tls.SaveProperty("MaxPWM" + IDname, ModulePIDdata.MaxPWM.ToString());
-
             mf.Tls.SaveProperty("OnScreen" + IDname, cOnScreen.ToString());
             mf.Tls.SaveProperty("BumpButtons" + IDname, cBumpButtons.ToString());
 
@@ -946,11 +893,17 @@ namespace RateController
             mf.Tls.SaveProperty("Hours2" + IDname, cHours2.ToString());
 
             mf.Tls.SaveProperty("AppMode" + IDname, cAppMode.ToString());
+
+            mf.Tls.SaveProperty("AdjustHigh" + IDname, cHighAdjust.ToString());
+            mf.Tls.SaveProperty("AdjustLow" + IDname, cLowAdjust.ToString());
+            mf.Tls.SaveProperty("Threshold" + IDname, cThreshold.ToString());
+            mf.Tls.SaveProperty("MaxAdjust" + IDname, cMaxAdjust.ToString());
+            mf.Tls.SaveProperty("MinAdjust" + IDname, cMinAdjust.ToString());
         }
 
         public void SendPID()
         {
-            ModulePIDdata.Send();
+            ModuleControlSettings.Send();
         }
 
         public bool SerialFromAruduino(string[] words, bool RealNano = true)
@@ -1125,7 +1078,7 @@ namespace RateController
 
         public double UnitsApplied2()
         {
-            double Result = cUnitsApplied2; 
+            double Result = cUnitsApplied2;
             if (cEnableProdDensity && cProdDensity > 0) Result *= cProdDensity;
             return Result;
         }

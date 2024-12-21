@@ -918,7 +918,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Max Response.
+        ///   Looks up a localized string similar to Max Power.
         /// </summary>
         internal static string lgPWMmax {
             get {
@@ -927,7 +927,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Min Response.
+        ///   Looks up a localized string similar to Min Power.
         /// </summary>
         internal static string lgPWMmin {
             get {
@@ -963,7 +963,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adjust Rate High.
+        ///   Looks up a localized string similar to Fast Adjust aaa.
         /// </summary>
         internal static string lgRateHigh {
             get {
@@ -972,7 +972,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adjust Rate Low.
+        ///   Looks up a localized string similar to Slow Adjust.
         /// </summary>
         internal static string lgRateLow {
             get {
@@ -1269,7 +1269,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adjust Threshold.
+        ///   Looks up a localized string similar to Threshold.
         /// </summary>
         internal static string lgThreshold {
             get {

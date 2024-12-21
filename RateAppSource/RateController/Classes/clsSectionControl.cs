@@ -119,7 +119,7 @@ namespace RateController
                                 || Prd.ControlType==ControlTypeEnum.ComboCloseTimed)
                             {
                                 // adjust flow valve
-                                byte ADJ = Prd.PIDmin;
+                                byte ADJ = (byte)(255.0 * Prd.MinAdjust / 100.0);
                                 Prd.ManualPWM = (int)((ADJ + ADJ * StepMultiplier * RateStep) * RateDir);
                             }
                             else
