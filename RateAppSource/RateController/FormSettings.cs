@@ -76,9 +76,9 @@ namespace RateController
             lbMinRate.Text = Lang.lgMinRate;
             ckVR.Text = Lang.lgUseVR;
 
-            lbProportional.Text = Lang.lgProportional;
-            lbIntegral.Text = Lang.lgIntegral;
-            lbDerivative.Text = Lang.lgDerivative;
+            lbProportional.Text = Lang.lgRateHigh;
+            lbRateLow.Text = Lang.lgRateLow;
+            lbThreshold.Text = Lang.lgThreshold;
             lbMax.Text = Lang.lgPWMmax;
             lbMin.Text = Lang.lgPWMmin;
 
@@ -554,12 +554,11 @@ namespace RateController
 
         private void LoadDefaults()
         {
-            tbKP.Text = "1";
-            tbKI.Text = "0";
-            tbKD.Text = "0";
-            tbMaxPWM.Text = "100";
-            tbMinPWM.Text = "5";
-            cbShift.SelectedIndex = 0;
+            HShigh.Value = 15;
+            HSlow.Value = 10;
+            HSthreshold.Value = 25;
+            HSmax.Value = 100;
+            HSmin.Value = 10;
         }
 
         private void LoadSettings()

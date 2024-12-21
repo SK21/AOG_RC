@@ -66,6 +66,11 @@ namespace RateController
         private DateTime LastUpdateTime;
         private PGN32502 ModulePIDdata;
         private bool PauseWork = false;
+        private int cHighAdjust;
+        private int cLowAdjust;
+        private int cThreshold;
+        private int cMaxAdjust;
+        private int cMinAdjust;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -94,6 +99,51 @@ namespace RateController
             get { return cAppMode; }
             set
             { cAppMode = value; }
+        }
+
+        public int HighAdjust
+        {
+            get { return cHighAdjust; }
+            set
+            {
+                if (value > 0 && value <= 100) cHighAdjust = value;
+            }
+        }
+
+        public int LowAdjust
+        {
+            get { return cLowAdjust; }
+            set
+            {
+                if (value > 0 && value <= 100) cLowAdjust = value;
+            }
+        }
+
+        public int Threshold
+        {
+            get { return cThreshold; }  
+            set
+            {
+                if(value>=0 && value <= 100)cThreshold = value;
+            }
+        }
+
+        public int MaxAdjust
+        {
+            get { return cMaxAdjust; }
+            set
+            {
+                if(value>0 && value <= 100) cMaxAdjust= value;
+            }
+        }
+
+        public int MinAdjust
+        {
+            get { return cMinAdjust; }
+            set
+            {
+                if (value > 0 && value <= 100) cMinAdjust = value;
+            }
         }
 
         public bool BumpButtons

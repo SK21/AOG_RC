@@ -918,7 +918,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PWM Maximum.
+        ///   Looks up a localized string similar to Max Response.
         /// </summary>
         internal static string lgPWMmax {
             get {
@@ -927,7 +927,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PWM Minimum.
+        ///   Looks up a localized string similar to Min Response.
         /// </summary>
         internal static string lgPWMmin {
             get {
@@ -959,6 +959,24 @@ namespace RateController {
         internal static string lgRate {
             get {
                 return ResourceManager.GetString("lgRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjust Rate High.
+        /// </summary>
+        internal static string lgRateHigh {
+            get {
+                return ResourceManager.GetString("lgRateHigh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjust Rate Low.
+        /// </summary>
+        internal static string lgRateLow {
+            get {
+                return ResourceManager.GetString("lgRateLow", resourceCulture);
             }
         }
         
@@ -1247,6 +1265,15 @@ namespace RateController {
         internal static string lgTargetRateAlt {
             get {
                 return ResourceManager.GetString("lgTargetRateAlt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjust Threshold.
+        /// </summary>
+        internal static string lgThreshold {
+            get {
+                return ResourceManager.GetString("lgThreshold", resourceCulture);
             }
         }
         

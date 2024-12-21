@@ -426,10 +426,10 @@ Calibration steps:
     <value>Pulses</value>
   </data>
   <data name="lgPWMmax" xml:space="preserve">
-    <value>PWM Maximum</value>
+    <value>Max Response</value>
   </data>
   <data name="lgPWMmin" xml:space="preserve">
-    <value>PWM Minimum</value>
+    <value>Min Response</value>
   </data>
   <data name="lgQuantity" xml:space="preserve">
     <value>Quantity</value>
@@ -439,6 +439,12 @@ Calibration steps:
   </data>
   <data name="lgRate" xml:space="preserve">
     <value>Rate</value>
+  </data>
+  <data name="lgRateHigh" xml:space="preserve">
+    <value>Adjust Rate High</value>
+  </data>
+  <data name="lgRateLow" xml:space="preserve">
+    <value>Adjust Rate Low</value>
   </data>
   <data name="lgRateMethod" xml:space="preserve">
     <value>Rate Method</value>
@@ -535,6 +541,9 @@ Calibration steps:
   </data>
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Target Alt</value>
+  </data>
+  <data name="lgThreshold" xml:space="preserve">
+    <value>Adjust Threshold</value>
   </data>
   <data name="lgTimeForMulti" xml:space="preserve">
     <value>Multi-Pulse</value>
