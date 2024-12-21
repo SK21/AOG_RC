@@ -195,11 +195,11 @@ void ReadPGNs(byte Data[], uint16_t len)
 		// 1    126
 		// 2    Mod/Sen ID     0-15/0-15
 		// 3    KP
-		// 4    KI
-		// 5    KD
+		// 4    BrakeSet, 0-100
+		// 5    BrakePoint, 0-50
 		// 6    MinPWM
 		// 7    MaxPWM
-		// 8    PID scaling
+		// 8    Pscaling
 		// 9    CRC
 
 		PGNlength = 10;
@@ -213,11 +213,11 @@ void ReadPGNs(byte Data[], uint16_t len)
 					byte SensorID = ParseSenID(Data[2]);
 					if (SensorID < MDL.SensorCount)
 					{
-						double PIDscale = pow(10, Data[8] * -1);	
+						double Pscale = pow(10, Data[8] * -1);	
 
-						Sensor[SensorID].KP = (double)(Data[3] * PIDscale);
-						Sensor[SensorID].KI = (double)(Data[4] * PIDscale);
-						Sensor[SensorID].KD = (double)(Data[5] * PIDscale);
+						Sensor[SensorID].KP = (double)(Data[3] * Pscale);
+						Sensor[SensorID].BrakeSet = (double)(Data[4] / 100.0);
+						Sensor[SensorID].BrakePoint = (double)(Data[5] / 100.0);
 
 						Sensor[SensorID].MinPWM = Data[6];
 						Sensor[SensorID].MaxPWM = Data[7];
