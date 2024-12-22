@@ -70,6 +70,8 @@
             this.lbAppVersion = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lbFile = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -358,8 +360,8 @@
             // 
             // lbTime
             // 
-            this.lbTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTime.Location = new System.Drawing.Point(192, 453);
+            this.lbTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTime.Location = new System.Drawing.Point(192, 455);
             this.lbTime.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbTime.Name = "lbTime";
             this.lbTime.Size = new System.Drawing.Size(96, 23);
@@ -371,7 +373,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(19, 453);
+            this.label4.Location = new System.Drawing.Point(19, 455);
             this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(93, 23);
@@ -380,7 +382,7 @@
             // 
             // lbModID
             // 
-            this.lbModID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbModID.Location = new System.Drawing.Point(192, 391);
             this.lbModID.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbModID.Name = "lbModID";
@@ -402,8 +404,8 @@
             // 
             // lbInoID
             // 
-            this.lbInoID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbInoID.Location = new System.Drawing.Point(192, 422);
+            this.lbInoID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbInoID.Location = new System.Drawing.Point(192, 423);
             this.lbInoID.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbInoID.Name = "lbInoID";
             this.lbInoID.Size = new System.Drawing.Size(96, 23);
@@ -415,7 +417,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(19, 422);
+            this.label6.Location = new System.Drawing.Point(19, 423);
             this.label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(138, 23);
@@ -424,8 +426,8 @@
             // 
             // lbIP
             // 
-            this.lbIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIP.Location = new System.Drawing.Point(161, 484);
+            this.lbIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbIP.Location = new System.Drawing.Point(174, 489);
             this.lbIP.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbIP.Name = "lbIP";
             this.lbIP.Size = new System.Drawing.Size(127, 23);
@@ -437,7 +439,7 @@
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(19, 484);
+            this.label27.Location = new System.Drawing.Point(19, 489);
             this.label27.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(145, 23);
@@ -458,7 +460,7 @@
             this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.bntOK.Image = global::RateController.Properties.Resources.OK;
             this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(486, 453);
+            this.bntOK.Location = new System.Drawing.Point(488, 484);
             this.bntOK.Margin = new System.Windows.Forms.Padding(6);
             this.bntOK.Name = "bntOK";
             this.bntOK.Size = new System.Drawing.Size(81, 72);
@@ -476,7 +478,7 @@
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnStart.Image = global::RateController.Properties.Resources.Pause;
             this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStart.Location = new System.Drawing.Point(393, 453);
+            this.btnStart.Location = new System.Drawing.Point(395, 484);
             this.btnStart.Margin = new System.Windows.Forms.Padding(6);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(81, 72);
@@ -487,10 +489,10 @@
             // 
             // lbDate
             // 
-            this.lbDate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDate.Location = new System.Drawing.Point(431, 422);
+            this.lbDate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbDate.Location = new System.Drawing.Point(407, 423);
             this.lbDate.Name = "lbDate";
-            this.lbDate.Size = new System.Drawing.Size(132, 23);
+            this.lbDate.Size = new System.Drawing.Size(156, 23);
             this.lbDate.TabIndex = 247;
             this.lbDate.Text = "01 Jan 01";
             this.lbDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -498,7 +500,7 @@
             // lbVersion
             // 
             this.lbVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVersion.Location = new System.Drawing.Point(329, 391);
+            this.lbVersion.Location = new System.Drawing.Point(314, 391);
             this.lbVersion.Name = "lbVersion";
             this.lbVersion.Size = new System.Drawing.Size(105, 23);
             this.lbVersion.TabIndex = 246;
@@ -507,7 +509,7 @@
             // 
             // lbAppVersion
             // 
-            this.lbAppVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbAppVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbAppVersion.Location = new System.Drawing.Point(447, 391);
             this.lbAppVersion.Name = "lbAppVersion";
             this.lbAppVersion.Size = new System.Drawing.Size(116, 23);
@@ -518,7 +520,7 @@
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(329, 422);
+            this.label11.Location = new System.Drawing.Point(314, 423);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(87, 23);
             this.label11.TabIndex = 248;
@@ -534,7 +536,7 @@
             this.btnSave.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnSave.Image = global::RateController.Properties.Resources.Save;
             this.btnSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnSave.Location = new System.Drawing.Point(300, 453);
+            this.btnSave.Location = new System.Drawing.Point(302, 484);
             this.btnSave.Margin = new System.Windows.Forms.Padding(6);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(81, 72);
@@ -544,11 +546,32 @@
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             this.btnSave.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSave_HelpRequested);
             // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(314, 455);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(87, 23);
+            this.label3.TabIndex = 251;
+            this.label3.Text = "File";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lbFile
+            // 
+            this.lbFile.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFile.Location = new System.Drawing.Point(407, 455);
+            this.lbFile.Name = "lbFile";
+            this.lbFile.Size = new System.Drawing.Size(156, 23);
+            this.lbFile.TabIndex = 250;
+            this.lbFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // frmModule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 529);
+            this.ClientSize = new System.Drawing.Size(584, 560);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lbFile);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.lbDate);
@@ -635,5 +658,7 @@
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.LinkLabel linkLabel4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbFile;
     }
 }

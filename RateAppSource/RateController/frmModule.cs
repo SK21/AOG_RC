@@ -194,6 +194,7 @@ namespace RateController
             }
 
             lbIP.Text = mf.UDPmodules.SubNet;
+            lbFile.Text = Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName);
         }
 
         private void UpdateLogs()
