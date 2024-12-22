@@ -963,7 +963,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fast Adjust aaa.
+        ///   Looks up a localized string similar to Fast Adjust.
         /// </summary>
         internal static string lgRateHigh {
             get {

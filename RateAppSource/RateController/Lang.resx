@@ -441,7 +441,7 @@ Calibration steps:
     <value>Rate</value>
   </data>
   <data name="lgRateHigh" xml:space="preserve">
-    <value>Fast Adjust aaa</value>
+    <value>Fast Adjust</value>
   </data>
   <data name="lgRateLow" xml:space="preserve">
     <value>Slow Adjust</value>

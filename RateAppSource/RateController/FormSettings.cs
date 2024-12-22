@@ -221,7 +221,6 @@ namespace RateController
             formG.Show(this);
         }
 
-
         private void CbUseProdDensity_CheckedChanged_1(object sender, EventArgs e)
         {
             if (CbUseProdDensity.Checked)
@@ -268,19 +267,6 @@ namespace RateController
             string Message = "Display rate UP/Down arrows.";
 
             mf.Tls.ShowHelp(Message, "Bump Buttons");
-            hlpevent.Handled = true;
-        }
-
-        private void ckConstantUPM_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void ckConstantUPM_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "UPM does not vary with the number of sections on or off.";
-
-            mf.Tls.ShowHelp(Message, "Constant UPM");
             hlpevent.Handled = true;
         }
 
@@ -458,6 +444,53 @@ namespace RateController
         {
             GroupBox box = sender as GroupBox;
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
+        private void HShigh_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Fast rate adjustment above threshold.";
+
+            mf.Tls.ShowHelp(Message, "Adjust High");
+            hlpevent.Handled = true;
+        }
+
+        private void HShigh_ValueChanged_1(object sender, EventArgs e)
+        {
+            SetButtons(true);
+            UpdateControlDisplay();
+        }
+
+        private void HSlow_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Slow rate of adjustment below threshold.";
+
+            mf.Tls.ShowHelp(Message, "Adjust Low");
+            hlpevent.Handled = true;
+        }
+
+        private void HSmax_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Maximum power sent to the valve/motor.";
+
+            mf.Tls.ShowHelp(Message, "Maximum power.");
+            hlpevent.Handled = true;
+        }
+
+        private void HSmin_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The minimum power sent to the valve/motor. The power needed to start to make the" +
+    " valve/motor move.";
+
+            mf.Tls.ShowHelp(Message, "Minimum power");
+            hlpevent.Handled = true;
+        }
+
+        private void HSthreshold_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "The % of rate error where adjustment changes from fast to slow.";
+
+            mf.Tls.ShowHelp(Message, "Adjust Threshold");
+            hlpevent.Handled = true;
         }
 
         private void label24_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -803,8 +836,8 @@ namespace RateController
             CurrentProduct.HighAdjust = HShigh.Value;
             CurrentProduct.LowAdjust = HSlow.Value;
             CurrentProduct.Threshold = HSthreshold.Value;
-            CurrentProduct.MaxAdjust=HSmax.Value;
-            CurrentProduct.MinAdjust=HSmin.Value;
+            CurrentProduct.MaxAdjust = HSmax.Value;
+            CurrentProduct.MinAdjust = HSmin.Value;
 
             int.TryParse(tbCountsRev.Text, out tempInt);
             CurrentProduct.CountsRev = tempInt;
@@ -1197,17 +1230,6 @@ namespace RateController
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
         private void tbMaxRate_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -1226,7 +1248,6 @@ namespace RateController
         {
             SetButtons(true);
         }
-
 
         private void tbMinRate_Enter(object sender, EventArgs e)
         {
@@ -1294,16 +1315,6 @@ namespace RateController
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
-        }
-
-        private void tbPIDki_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Integral accumulates errors to provide an offset to the" +
-                " rate adjustment. Higher integral increases the offset due to past " +
-                "rate errors. ";
-
-            mf.Tls.ShowHelp(Message, "Integral");
-            hlpevent.Handled = true;
         }
 
         private void tbProduct_TextChanged(object sender, EventArgs e)
@@ -1404,6 +1415,15 @@ namespace RateController
             SetModuleIndicator();
             SetFanStarted();
             UpdateData();
+        }
+
+        private void UpdateControlDisplay()
+        {
+            lbHigh.Text = HShigh.Value.ToString("N0");
+            lbLow.Text = HSlow.Value.ToString("N0");
+            lbThresholdValue.Text = HSthreshold.Value.ToString("N0");
+            lbMaxValue.Text = HSmax.Value.ToString("N0");
+            lbMinValue.Text = HSmin.Value.ToString("N0");
         }
 
         private void UpdateData()
@@ -1527,7 +1547,6 @@ namespace RateController
             }
         }
 
-
         private void UpdateForm()
         {
             Initializing = true;
@@ -1625,62 +1644,6 @@ namespace RateController
             SetButtons(true);
             SetCalDescription();
             UpdateOnTypeChange();
-        }
-
-        private void UpdateControlDisplay()
-        {
-            lbHigh.Text = HShigh.Value.ToString("N0");
-            lbLow.Text = HSlow.Value.ToString("N0");
-            lbThresholdValue.Text = HSthreshold.Value.ToString("N0");
-            lbMaxValue.Text = HSmax.Value.ToString("N0");
-            lbMinValue.Text = HSmin.Value.ToString("N0");
-        }
-
-        private void HShigh_ValueChanged_1(object sender, EventArgs e)
-        {
-            SetButtons(true);
-            UpdateControlDisplay();
-        }
-
-        private void HShigh_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Fast rate adjustment above threshold.";
-
-            mf.Tls.ShowHelp(Message, "Adjust High");
-            hlpevent.Handled = true;
-        }
-
-        private void HSlow_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Slow rate of adjustment below threshold.";
-
-            mf.Tls.ShowHelp(Message, "Adjust Low");
-            hlpevent.Handled = true;
-        }
-
-        private void HSthreshold_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Where the rate adjustment changes from Fast to slow.";
-
-            mf.Tls.ShowHelp(Message, "Adjust Threshold");
-            hlpevent.Handled = true;
-        }
-
-        private void HSmax_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Maximum power sent to the valve/motor.";
-
-            mf.Tls.ShowHelp(Message, "Maximum power.");
-            hlpevent.Handled = true;
-        }
-
-        private void HSmin_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "The minimum power sent to the valve/motor. The power needed to start to make the" +
-    " valve/motor move.";
-
-            mf.Tls.ShowHelp(Message, "Minimum power");
-            hlpevent.Handled = true;
         }
     }
 }
