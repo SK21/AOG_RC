@@ -36,6 +36,7 @@ const uint8_t MCP23017address = 0x20;
 const uint8_t PCF8574address = 0x20;
 const uint8_t W5500_SS = 5;		// W5500 SPI SS
 const uint8_t NC = 0xFF;		// Pin not connected
+const bool UseDRV8870 = true;	// true - DRV8870 flow control, false - Cytron flow control
 
 struct ModuleConfig
 {
@@ -66,8 +67,8 @@ ModuleConfig MDL;
 struct SensorConfig
 {
 	uint8_t FlowPin;
-	uint8_t IN1;
-	uint8_t IN2;
+	uint8_t DirPin;		// IN1
+	uint8_t PWMpin;		// IN2
 	bool FlowEnabled;
 	double UPM;				// sent as upm X 1000
 	double PWM;
@@ -194,6 +195,14 @@ void IRAM_ATTR ISR1();
 void setup()
 {
 	DoSetup();
+
+	Serial.println("");
+	Serial.print(Sensor[0].FlowPin);
+	Serial.print(", ");
+	Serial.print(Sensor[0].DirPin);
+	Serial.print(", ");
+	Serial.print(Sensor[0].PWMpin);
+	Serial.println("");
 }
 
 void loop()
@@ -221,7 +230,7 @@ void loop()
 	}
 	SendComm();
 	server.handleClient();
-	//Blink();
+	Blink();
 }
 
 byte ParseModID(byte ID)
@@ -297,48 +306,47 @@ void CheckPressure()
 	}
 }
 
-//bool State = false;
-//uint32_t LastBlink;
-//uint32_t LastLoop;
-//byte ReadReset;
-//uint32_t MaxLoopTime;
-//double debug1;
-//double debug2;
-//double debug3;
-//double debug4;
-//
-//void Blink()
-//{
-//	if (millis() - LastBlink > 1000)
-//	{
-//		LastBlink = millis();
-//		State = !State;
-//		//digitalWrite(LED_BUILTIN, State);
-//
-//		//Serial.print(" Micros: ");
-//		//Serial.print(MaxLoopTime);
-//		debug1 = Sensor[0].FlowPin;
-//		debug2 = Sensor[0].MeterCal;
-//		//Serial.print(", ");
-//		Serial.print(debug1);
-//		
-//		Serial.print(", ");
-//		Serial.print(debug2);
-//
-//		Serial.print(", ");
-//		Serial.print(debug3);
-//
-//		Serial.print(", ");
-//		Serial.print(debug4);
-//
-//		Serial.println("");
-//
-//		if (ReadReset++ > 5)
-//		{
-//			ReadReset = 0;
-//			MaxLoopTime = 0;
-//		}
-//	}
-//	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
-//	LastLoop = micros();
-//}
+bool State = false;
+uint32_t LastBlink;
+uint32_t LastLoop;
+byte ReadReset;
+uint32_t MaxLoopTime;
+double debug1;
+double debug2;
+double debug3;
+double debug4;
+
+void Blink()
+{
+	if (millis() - LastBlink > 1000)
+	{
+		LastBlink = millis();
+		State = !State;
+		//digitalWrite(LED_BUILTIN, State);
+
+		//Serial.print(" Micros: ");
+		//Serial.print(MaxLoopTime);
+
+		//Serial.print(", ");
+		Serial.print(debug1,3);
+		
+		Serial.print(", ");
+		Serial.print(debug2,3);
+
+		Serial.print(", ");
+		Serial.print(debug3);
+
+		Serial.print(", ");
+		Serial.print(debug4);
+
+		Serial.println("");
+
+		if (ReadReset++ > 5)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+		}
+	}
+	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
+	LastLoop = micros();
+}

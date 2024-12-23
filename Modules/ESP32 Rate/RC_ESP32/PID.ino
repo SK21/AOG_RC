@@ -1,7 +1,7 @@
 
 uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
-const double Deadband = 0.015;			// error amount below which no adjustment is made
+const double Deadband = 0.03;			// error amount below which no adjustment is made
 double RateError;
 double LastPWM[MaxProductCount];
 
@@ -81,17 +81,21 @@ int PIDmotor(byte ID)
 				if (abs(RateError) > Sensor[ID].AdjustThreshold)
 				{
 					Result += Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
+					debug1 = Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
 				}
 				else
 				{
 					Result += Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
+					debug1 = Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
 				}
 				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
 			}
 		}
 		LastPWM[ID] = Result;
 	}
-
+	debug2 = RateError;
+	debug3 = Sensor[0].TargetUPM;
+	debug4 = Sensor[0].UPM;
 	return (int)Result;
 }
 

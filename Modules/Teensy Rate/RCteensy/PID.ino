@@ -81,17 +81,19 @@ int PIDmotor(byte ID)
 				if (abs(RateError) > Sensor[ID].AdjustThreshold)
 				{
 					Result += Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
+					debug1= Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
 				}
 				else
 				{
 					Result += Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
+					debug1= Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
 				}
 				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
 			}
 		}
 		LastPWM[ID] = Result;
 	}
-
+	debug2 = Sensor[0].Scaling;
 	return (int)Result;
 }
 

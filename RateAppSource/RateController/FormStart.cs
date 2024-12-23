@@ -629,9 +629,12 @@ namespace RateController
 
         public void SetScale(int ProductID, bool Show)
         {
-            cShowScale[ProductID] = Show;
-            Tls.SaveProperty("ShowScale_" + ProductID.ToString(), cShowScale[ProductID].ToString());
-            DisplayScales();
+            if (ProductID < 4)
+            {
+                cShowScale[ProductID] = Show;
+                Tls.SaveProperty("ShowScale_" + ProductID.ToString(), cShowScale[ProductID].ToString());
+                DisplayScales();
+            }
         }
 
         public bool ShowScale(int ProductID)

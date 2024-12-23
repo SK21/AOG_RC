@@ -336,7 +336,7 @@ void ParseData(byte Data[], uint16_t len)
 
 						// using the last % of the HighAdjust, boost the scaling factor
 						double HighAdjust = constrain(Data[3], 70, 100);
-						Sensor[SensorID].Scaling = (double)map(HighAdjust, 70, 100, 15, 100) / 1000.0;
+						Sensor[SensorID].Scaling = (double)map(HighAdjust, 70, 100, 1, 100) / 1000.0;
 					}
 				}
 			}
@@ -413,11 +413,11 @@ void ParseData(byte Data[], uint16_t len)
 
                 MDL.RelayControl = Data[5];
                 Sensor[0].FlowPin = Data[7];
-                Sensor[0].IN1 = Data[8];
-                Sensor[0].IN2 = Data[9];
+                Sensor[0].DirPin = Data[8];
+                Sensor[0].PWMpin = Data[9];
                 Sensor[1].FlowPin = Data[10];
-                Sensor[1].IN1 = Data[11];
-                Sensor[1].IN2 = Data[12];
+                Sensor[1].DirPin = Data[11];
+                Sensor[1].PWMpin = Data[12];
 
                 for (int i = 0; i < 16; i++)
                 {
@@ -426,7 +426,6 @@ void ParseData(byte Data[], uint16_t len)
 
                 MDL.WorkPin = Data[29];
                 MDL.PressurePin = Data[30];
-
                 //SaveData();	saved in pgn 3702
             }
         }
