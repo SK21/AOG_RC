@@ -6,8 +6,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  21-Dec-2024"
-const uint16_t InoID = 21124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  24-Dec-2024"
+const uint16_t InoID = 24124;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -120,6 +120,14 @@ bool EthernetConnected()
 void setup()
 {
 	DoSetup();
+
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[0].FlowPin);
+	Serial.print("DIR Pin: ");
+	Serial.println(Sensor[0].DirPin);
+	Serial.print("PWM Pin: ");
+	Serial.print(Sensor[0].PWMPin);
+	Serial.println("");
 }
 
 void loop()

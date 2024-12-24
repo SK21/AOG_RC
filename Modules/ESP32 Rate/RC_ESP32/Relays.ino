@@ -164,7 +164,7 @@ void CheckRelays()
         {
             if (MDL.Is3Wire)
             {
-                // 1 pin for each valve, powered on only, 8 sections, 1 drv for each section, use PWMpin
+                // 1 pin for each valve, powered on only, 8 sections, 1 drv for each section, use PWMPin
                 Wire.beginTransmission(PCA9685address);
                 Wire.write(0x06); // Start at LED0_ON_L register (first PWM channel)
 

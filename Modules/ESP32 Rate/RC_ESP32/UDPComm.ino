@@ -414,10 +414,10 @@ void ParseData(byte Data[], uint16_t len)
                 MDL.RelayControl = Data[5];
                 Sensor[0].FlowPin = Data[7];
                 Sensor[0].DirPin = Data[8];
-                Sensor[0].PWMpin = Data[9];
+                Sensor[0].PWMPin = Data[9];
                 Sensor[1].FlowPin = Data[10];
                 Sensor[1].DirPin = Data[11];
-                Sensor[1].PWMpin = Data[12];
+                Sensor[1].PWMPin = Data[12];
 
                 for (int i = 0; i < 16; i++)
                 {

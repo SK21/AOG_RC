@@ -111,7 +111,7 @@ void DoSetup()
 	{
 		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
 		pinMode(Sensor[i].DirPin, OUTPUT);
-		pinMode(Sensor[i].PWMpin, OUTPUT);
+		pinMode(Sensor[i].PWMPin, OUTPUT);
 
 		switch (i)
 		{
@@ -132,7 +132,7 @@ void DoSetup()
 
 		// DRV8870 IN2 or PWM for cytron
 		ledcSetup(i * 2 + 1, 500, 8);
-		ledcAttachPin(Sensor[i].PWMpin, i * 2 + 1);
+		ledcAttachPin(Sensor[i].PWMPin, i * 2 + 1);
 	}
 
 	// Relays
@@ -399,11 +399,11 @@ void LoadDefaults()
 	// default flow pins
 	Sensor[0].FlowPin = 17;
 	Sensor[0].DirPin = 32;
-	Sensor[0].PWMpin = 33;
+	Sensor[0].PWMPin = 33;
 
 	Sensor[1].FlowPin = 16;
 	Sensor[1].DirPin = 25;
-	Sensor[1].PWMpin = 26;
+	Sensor[1].PWMPin = 26;
 
 	// default control settings
 	Sensor[0].HighAdjust = 50;
@@ -496,11 +496,11 @@ bool ValidData()
 				}
 				if (!Result) break;
 
-				// PWMpin
+				// PWMPin
 				Result = false;
 				for (int j = 0; j < sizeof(ValidPins0); j++)
 				{
-					if (Sensor[i].PWMpin == ValidPins0[j])
+					if (Sensor[i].PWMPin == ValidPins0[j])
 					{
 						Result = true;
 						break;

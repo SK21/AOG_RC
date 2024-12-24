@@ -17,8 +17,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  23-Dec-2024"
-const uint16_t InoID = 23124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  24-Dec-2024"
+const uint16_t InoID = 24124;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -68,7 +68,7 @@ struct SensorConfig
 {
 	uint8_t FlowPin;
 	uint8_t DirPin;		// IN1
-	uint8_t PWMpin;		// IN2
+	uint8_t PWMPin;		// IN2
 	bool FlowEnabled;
 	double UPM;				// sent as upm X 1000
 	double PWM;
@@ -196,12 +196,12 @@ void setup()
 {
 	DoSetup();
 
-	Serial.println("");
-	Serial.print(Sensor[0].FlowPin);
-	Serial.print(", ");
-	Serial.print(Sensor[0].DirPin);
-	Serial.print(", ");
-	Serial.print(Sensor[0].PWMpin);
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[0].FlowPin);
+	Serial.print("DIR Pin: ");
+	Serial.println(Sensor[0].DirPin);
+	Serial.print("PWM Pin: ");
+	Serial.print(Sensor[0].PWMPin);
 	Serial.println("");
 }
 
@@ -230,7 +230,7 @@ void loop()
 	}
 	SendComm();
 	server.handleClient();
-	Blink();
+	//Blink();
 }
 
 byte ParseModID(byte ID)
@@ -306,47 +306,47 @@ void CheckPressure()
 	}
 }
 
-bool State = false;
-uint32_t LastBlink;
-uint32_t LastLoop;
-byte ReadReset;
-uint32_t MaxLoopTime;
-double debug1;
-double debug2;
-double debug3;
-double debug4;
-
-void Blink()
-{
-	if (millis() - LastBlink > 1000)
-	{
-		LastBlink = millis();
-		State = !State;
-		//digitalWrite(LED_BUILTIN, State);
-
-		//Serial.print(" Micros: ");
-		//Serial.print(MaxLoopTime);
-
-		//Serial.print(", ");
-		Serial.print(debug1,3);
-		
-		Serial.print(", ");
-		Serial.print(debug2,3);
-
-		Serial.print(", ");
-		Serial.print(debug3);
-
-		Serial.print(", ");
-		Serial.print(debug4);
-
-		Serial.println("");
-
-		if (ReadReset++ > 5)
-		{
-			ReadReset = 0;
-			MaxLoopTime = 0;
-		}
-	}
-	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
-	LastLoop = micros();
-}
+//bool State = false;
+//uint32_t LastBlink;
+//uint32_t LastLoop;
+//byte ReadReset;
+//uint32_t MaxLoopTime;
+//double debug1;
+//double debug2;
+//double debug3;
+//double debug4;
+//
+//void Blink()
+//{
+//	if (millis() - LastBlink > 1000)
+//	{
+//		LastBlink = millis();
+//		State = !State;
+//		//digitalWrite(LED_BUILTIN, State);
+//
+//		//Serial.print(" Micros: ");
+//		//Serial.print(MaxLoopTime);
+//
+//		//Serial.print(", ");
+//		Serial.print(debug1,3);
+//		
+//		Serial.print(", ");
+//		Serial.print(debug2,3);
+//
+//		Serial.print(", ");
+//		Serial.print(debug3);
+//
+//		Serial.print(", ");
+//		Serial.print(debug4);
+//
+//		Serial.println("");
+//
+//		if (ReadReset++ > 5)
+//		{
+//			ReadReset = 0;
+//			MaxLoopTime = 0;
+//		}
+//	}
+//	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
+//	LastLoop = micros();
+//}

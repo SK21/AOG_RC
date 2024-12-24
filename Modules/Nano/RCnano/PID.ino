@@ -73,13 +73,15 @@ int PIDmotor(byte ID)
 		{
 			LastCheck[ID] = millis();
 
-			RateError = (Sensor[ID].TargetUPM - Sensor[ID].UPM) / Sensor[ID].TargetUPM;
+			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 			// check deadband
-			if (abs(RateError) > Deadband)
+			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 			{
+				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
+
 				// check brakepoint
-				if (abs(RateError) > Sensor[ID].AdjustThreshold)
+				if (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold)
 				{
 					Result += Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
 				}
@@ -92,7 +94,6 @@ int PIDmotor(byte ID)
 		}
 		LastPWM[ID] = Result;
 	}
-
 	return (int)Result;
 }
 
@@ -106,13 +107,15 @@ int PIDvalve(byte ID)
 		{
 			LastCheck[ID] = millis();
 
-			RateError = (Sensor[ID].TargetUPM - Sensor[ID].UPM) / Sensor[ID].TargetUPM;
+			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 			// check deadband
-			if (abs(RateError) > Deadband)
+			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 			{
+				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
+
 				// check brakepoint
-				if (abs(RateError) > Sensor[ID].AdjustThreshold)
+				if (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold)
 				{
 					Result = Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
 				}
@@ -180,13 +183,15 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 				else
 				{
 					// auto adjust
-					RateError = (Sensor[ID].TargetUPM - Sensor[ID].UPM) / Sensor[ID].TargetUPM;
+					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 					// check deadband
-					if (abs(RateError) > Deadband)
+					if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
 					{
+						RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
+
 						// check brakepoint
-						if (abs(RateError) > Sensor[ID].AdjustThreshold)
+						if (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold)
 						{
 							Result = Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
 						}

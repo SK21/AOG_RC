@@ -199,7 +199,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		// 5   Threshold
 		// 6   MinAdjust
 		// 7   MaxAdjust
-		// 8   -
+		// 8   scale factor
 		// 9   CRC
 
 		PGNlength = 10;
@@ -219,9 +219,9 @@ void ReadPGNs(byte Data[], uint16_t len)
 						Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
 						Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
 
-						// using the last % of the HighAdjust, boost the scaling factor
-						double HighAdjust = constrain(Data[3], 70, 100);
-						Sensor[SensorID].Scaling = (double)map(HighAdjust, 70, 100, 15, 100) / 1000.0;
+						// 1.15 ^ ((100 - Scaling scroll bar value)* -1 + 3). 3 changes the max range of the scaling.
+						// 1.17 ^ -100 is approx equivalent to 1/1,000,000
+						Sensor[SensorID].Scaling = pow(1.15, (100 - Data[8]) * -1 + 3);
 					}
 				}
 			}
