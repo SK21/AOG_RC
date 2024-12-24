@@ -13,7 +13,7 @@ namespace RateController
         // 5   Threshold
         // 6   MinAdjust
         // 7   MaxAdjust
-        // 8   -
+        // 8   Scale Factor
         // 9   CRC
 
         private const byte cByteCount = 10;
@@ -38,7 +38,7 @@ namespace RateController
             Data[5] = (byte)Prod.Threshold;
             Data[6] = (byte)Prod.MinAdjust;
             Data[7] = (byte)Prod.MaxAdjust;
-            Data[8] = 0;
+            Data[8] = (byte)Prod.ScalingFactor;
             Data[9] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
             Prod.mf.SendSerial(Data);

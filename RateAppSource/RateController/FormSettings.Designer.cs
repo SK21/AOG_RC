@@ -189,6 +189,9 @@ namespace RateController
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.lbBoost = new System.Windows.Forms.Label();
+            this.HSscaling = new System.Windows.Forms.HScrollBar();
+            this.label3 = new System.Windows.Forms.Label();
             this.tcProducts.SuspendLayout();
             this.tbRate.SuspendLayout();
             this.pnlFan.SuspendLayout();
@@ -222,6 +225,7 @@ namespace RateController
             this.tcProducts.Size = new System.Drawing.Size(480, 494);
             this.tcProducts.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tcProducts.TabIndex = 4;
+            this.tcProducts.SelectedIndexChanged += new System.EventHandler(this.tcProducts_SelectedIndexChanged);
             // 
             // tbRate
             // 
@@ -684,8 +688,11 @@ namespace RateController
             // 
             // tbControl
             // 
+            this.tbControl.Controls.Add(this.lbBoost);
             this.tbControl.Controls.Add(this.lbMinValue);
             this.tbControl.Controls.Add(this.lbMaxValue);
+            this.tbControl.Controls.Add(this.HSscaling);
+            this.tbControl.Controls.Add(this.label3);
             this.tbControl.Controls.Add(this.lbThresholdValue);
             this.tbControl.Controls.Add(this.lbLow);
             this.tbControl.Controls.Add(this.lbHigh);
@@ -696,8 +703,6 @@ namespace RateController
             this.tbControl.Controls.Add(this.HSlow);
             this.tbControl.Controls.Add(this.lbRateLow);
             this.tbControl.Controls.Add(this.HShigh);
-            this.tbControl.Controls.Add(this.btnTuningGraph);
-            this.tbControl.Controls.Add(this.btnPIDloadDefaults);
             this.tbControl.Controls.Add(this.lbProportional);
             this.tbControl.Controls.Add(this.lbMax);
             this.tbControl.Controls.Add(this.lbMin);
@@ -711,8 +716,8 @@ namespace RateController
             // 
             // lbMinValue
             // 
-            this.lbMinValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinValue.Location = new System.Drawing.Point(410, 286);
+            this.lbMinValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbMinValue.Location = new System.Drawing.Point(410, 361);
             this.lbMinValue.Name = "lbMinValue";
             this.lbMinValue.Size = new System.Drawing.Size(59, 23);
             this.lbMinValue.TabIndex = 166;
@@ -721,8 +726,8 @@ namespace RateController
             // 
             // lbMaxValue
             // 
-            this.lbMaxValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMaxValue.Location = new System.Drawing.Point(410, 221);
+            this.lbMaxValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbMaxValue.Location = new System.Drawing.Point(410, 294);
             this.lbMaxValue.Name = "lbMaxValue";
             this.lbMaxValue.Size = new System.Drawing.Size(59, 23);
             this.lbMaxValue.TabIndex = 165;
@@ -731,8 +736,8 @@ namespace RateController
             // 
             // lbThresholdValue
             // 
-            this.lbThresholdValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbThresholdValue.Location = new System.Drawing.Point(410, 156);
+            this.lbThresholdValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbThresholdValue.Location = new System.Drawing.Point(410, 160);
             this.lbThresholdValue.Name = "lbThresholdValue";
             this.lbThresholdValue.Size = new System.Drawing.Size(59, 23);
             this.lbThresholdValue.TabIndex = 164;
@@ -741,8 +746,8 @@ namespace RateController
             // 
             // lbLow
             // 
-            this.lbLow.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbLow.Location = new System.Drawing.Point(410, 91);
+            this.lbLow.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbLow.Location = new System.Drawing.Point(410, 93);
             this.lbLow.Name = "lbLow";
             this.lbLow.Size = new System.Drawing.Size(59, 23);
             this.lbLow.TabIndex = 163;
@@ -751,7 +756,7 @@ namespace RateController
             // 
             // lbHigh
             // 
-            this.lbHigh.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbHigh.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbHigh.Location = new System.Drawing.Point(410, 26);
             this.lbHigh.Name = "lbHigh";
             this.lbHigh.Size = new System.Drawing.Size(59, 23);
@@ -762,7 +767,7 @@ namespace RateController
             // HSmin
             // 
             this.HSmin.LargeChange = 1;
-            this.HSmin.Location = new System.Drawing.Point(142, 275);
+            this.HSmin.Location = new System.Drawing.Point(142, 350);
             this.HSmin.Name = "HSmin";
             this.HSmin.Size = new System.Drawing.Size(263, 45);
             this.HSmin.TabIndex = 161;
@@ -773,7 +778,7 @@ namespace RateController
             // HSmax
             // 
             this.HSmax.LargeChange = 1;
-            this.HSmax.Location = new System.Drawing.Point(142, 210);
+            this.HSmax.Location = new System.Drawing.Point(142, 283);
             this.HSmax.Name = "HSmax";
             this.HSmax.Size = new System.Drawing.Size(263, 45);
             this.HSmax.TabIndex = 160;
@@ -784,7 +789,7 @@ namespace RateController
             // HSthreshold
             // 
             this.HSthreshold.LargeChange = 1;
-            this.HSthreshold.Location = new System.Drawing.Point(142, 145);
+            this.HSthreshold.Location = new System.Drawing.Point(142, 149);
             this.HSthreshold.Name = "HSthreshold";
             this.HSthreshold.Size = new System.Drawing.Size(263, 45);
             this.HSthreshold.TabIndex = 159;
@@ -794,7 +799,7 @@ namespace RateController
             // lbThreshold
             // 
             this.lbThreshold.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbThreshold.Location = new System.Drawing.Point(6, 145);
+            this.lbThreshold.Location = new System.Drawing.Point(6, 149);
             this.lbThreshold.Name = "lbThreshold";
             this.lbThreshold.Size = new System.Drawing.Size(133, 45);
             this.lbThreshold.TabIndex = 158;
@@ -805,7 +810,7 @@ namespace RateController
             // HSlow
             // 
             this.HSlow.LargeChange = 1;
-            this.HSlow.Location = new System.Drawing.Point(142, 80);
+            this.HSlow.Location = new System.Drawing.Point(142, 82);
             this.HSlow.Name = "HSlow";
             this.HSlow.Size = new System.Drawing.Size(263, 45);
             this.HSlow.TabIndex = 157;
@@ -816,11 +821,11 @@ namespace RateController
             // lbRateLow
             // 
             this.lbRateLow.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateLow.Location = new System.Drawing.Point(6, 80);
+            this.lbRateLow.Location = new System.Drawing.Point(6, 82);
             this.lbRateLow.Name = "lbRateLow";
             this.lbRateLow.Size = new System.Drawing.Size(133, 45);
             this.lbRateLow.TabIndex = 156;
-            this.lbRateLow.Text = "Adjust Low";
+            this.lbRateLow.Text = "Low Adjust";
             this.lbRateLow.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbRateLow.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.HSlow_HelpRequested);
             // 
@@ -844,7 +849,7 @@ namespace RateController
             this.btnTuningGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnTuningGraph.Image = global::RateController.Properties.Resources.Chart;
             this.btnTuningGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTuningGraph.Location = new System.Drawing.Point(241, 333);
+            this.btnTuningGraph.Location = new System.Drawing.Point(108, 542);
             this.btnTuningGraph.Name = "btnTuningGraph";
             this.btnTuningGraph.Size = new System.Drawing.Size(72, 72);
             this.btnTuningGraph.TabIndex = 0;
@@ -861,7 +866,7 @@ namespace RateController
             this.btnPIDloadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnPIDloadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
             this.btnPIDloadDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnPIDloadDefaults.Location = new System.Drawing.Point(135, 333);
+            this.btnPIDloadDefaults.Location = new System.Drawing.Point(30, 542);
             this.btnPIDloadDefaults.Name = "btnPIDloadDefaults";
             this.btnPIDloadDefaults.Size = new System.Drawing.Size(72, 72);
             this.btnPIDloadDefaults.TabIndex = 154;
@@ -876,14 +881,14 @@ namespace RateController
             this.lbProportional.Name = "lbProportional";
             this.lbProportional.Size = new System.Drawing.Size(133, 45);
             this.lbProportional.TabIndex = 120;
-            this.lbProportional.Text = "Adjust High";
+            this.lbProportional.Text = "High Adjust";
             this.lbProportional.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbProportional.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.HShigh_HelpRequested);
             // 
             // lbMax
             // 
             this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMax.Location = new System.Drawing.Point(6, 210);
+            this.lbMax.Location = new System.Drawing.Point(6, 283);
             this.lbMax.Name = "lbMax";
             this.lbMax.Size = new System.Drawing.Size(133, 45);
             this.lbMax.TabIndex = 126;
@@ -894,7 +899,7 @@ namespace RateController
             // lbMin
             // 
             this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMin.Location = new System.Drawing.Point(6, 275);
+            this.lbMin.Location = new System.Drawing.Point(6, 350);
             this.lbMin.Name = "lbMin";
             this.lbMin.Size = new System.Drawing.Size(133, 45);
             this.lbMin.TabIndex = 122;
@@ -2180,18 +2185,52 @@ namespace RateController
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
+            // lbBoost
+            // 
+            this.lbBoost.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbBoost.Location = new System.Drawing.Point(410, 227);
+            this.lbBoost.Name = "lbBoost";
+            this.lbBoost.Size = new System.Drawing.Size(59, 23);
+            this.lbBoost.TabIndex = 169;
+            this.lbBoost.Text = "100";
+            this.lbBoost.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // HSscaling
+            // 
+            this.HSscaling.LargeChange = 1;
+            this.HSscaling.Location = new System.Drawing.Point(142, 216);
+            this.HSscaling.Name = "HSscaling";
+            this.HSscaling.Size = new System.Drawing.Size(263, 45);
+            this.HSscaling.TabIndex = 168;
+            this.HSscaling.Value = 1;
+            this.HSscaling.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged_1);
+            this.HSscaling.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.HSscaling_HelpRequested);
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(6, 216);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(133, 45);
+            this.label3.TabIndex = 167;
+            this.label3.Text = "Scaling Factor";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label3.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.HSscaling_HelpRequested);
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(503, 626);
+            this.ClientSize = new System.Drawing.Size(505, 626);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.tcProducts);
+            this.Controls.Add(this.btnTuningGraph);
+            this.Controls.Add(this.btnPIDloadDefaults);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2388,5 +2427,8 @@ namespace RateController
         private System.Windows.Forms.Label lbProportional;
         private System.Windows.Forms.Label lbMax;
         private System.Windows.Forms.Label lbMin;
+        private System.Windows.Forms.Label lbBoost;
+        private System.Windows.Forms.HScrollBar HSscaling;
+        private System.Windows.Forms.Label label3;
     }
 }

@@ -71,6 +71,7 @@ namespace RateController
         private DateTime LastUpdateTime;
         private PGN32502 ModuleControlSettings;
         private bool PauseWork = false;
+        private int cScalingFactor;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -272,7 +273,14 @@ namespace RateController
                 }
             }
         }
-
+        public int ScalingFactor
+        {
+            get { return cScalingFactor; }
+            set
+            {
+                if (value >= 0 && value <= 100) cScalingFactor = value;
+            }
+        }
         public int MinAdjust
         {
             get { return cMinAdjust; }
@@ -690,6 +698,7 @@ namespace RateController
             if (int.TryParse(mf.Tls.LoadProperty("Threshold" + IDname), out int th)) cThreshold = th;
             if (int.TryParse(mf.Tls.LoadProperty("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
             if (int.TryParse(mf.Tls.LoadProperty("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
+            if (int.TryParse(mf.Tls.LoadProperty("Scaling" + IDname), out int sc)) cScalingFactor = sc;
         }
 
         public double MinUPMinUse()
@@ -899,6 +908,7 @@ namespace RateController
             mf.Tls.SaveProperty("Threshold" + IDname, cThreshold.ToString());
             mf.Tls.SaveProperty("MaxAdjust" + IDname, cMaxAdjust.ToString());
             mf.Tls.SaveProperty("MinAdjust" + IDname, cMinAdjust.ToString());
+            mf.Tls.SaveProperty("Scaling" + IDname, cScalingFactor.ToString());
         }
 
         public void SendPID()

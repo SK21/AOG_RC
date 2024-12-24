@@ -565,11 +565,12 @@ namespace RateController
 
         private void LoadDefaults()
         {
-            HShigh.Value = 70;
-            HSlow.Value = 7;
+            HShigh.Value = 50;
+            HSlow.Value = 20;
             HSthreshold.Value = 50;
             HSmax.Value = 100;
-            HSmin.Value = 7;
+            HSmin.Value = 5;
+            HSscaling.Value = 48;
         }
 
         private void LoadSettings()
@@ -609,11 +610,12 @@ namespace RateController
             tbConID.Text = tmp;
 
             // flow control
-            HShigh.Value = 15;
-            HSlow.Value = 10;
-            HSthreshold.Value = 30;
-            HSmax.Value = 100;
-            HSmin.Value = 1;
+            HShigh.Value = CurrentProduct.HighAdjust;
+            HSlow.Value = CurrentProduct.LowAdjust;
+            HSthreshold.Value = CurrentProduct.Threshold;
+            HSmax.Value = CurrentProduct.MaxAdjust;
+            HSmin.Value = CurrentProduct.MinAdjust;
+            HSscaling.Value = CurrentProduct.ScalingFactor;
 
             tbSenID.Text = CurrentProduct.SensorID.ToString();
 
@@ -838,6 +840,7 @@ namespace RateController
             CurrentProduct.Threshold = HSthreshold.Value;
             CurrentProduct.MaxAdjust = HSmax.Value;
             CurrentProduct.MinAdjust = HSmin.Value;
+            CurrentProduct.ScalingFactor = HSscaling.Value;
 
             int.TryParse(tbCountsRev.Text, out tempInt);
             CurrentProduct.CountsRev = tempInt;
@@ -1424,6 +1427,7 @@ namespace RateController
             lbThresholdValue.Text = HSthreshold.Value.ToString("N0");
             lbMaxValue.Text = HSmax.Value.ToString("N0");
             lbMinValue.Text = HSmin.Value.ToString("N0");
+            lbBoost.Text = HSscaling.Value.ToString("N0");
         }
 
         private void UpdateData()
@@ -1624,8 +1628,11 @@ namespace RateController
             HSthreshold.Value = CurrentProduct.Threshold;
             HSmax.Value = CurrentProduct.MaxAdjust;
             HSmin.Value = CurrentProduct.MinAdjust;
+            HSscaling.Value = CurrentProduct.ScalingFactor;
 
             UpdateControlDisplay();
+            btnPIDloadDefaults.Visible = (tcProducts.SelectedTab.Name == "tbControl");
+
             Initializing = false;
         }
 
@@ -1644,6 +1651,23 @@ namespace RateController
             SetButtons(true);
             SetCalDescription();
             UpdateOnTypeChange();
+        }
+
+        private void HSscaling_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "A factor used to change the rate adjustment based on the amount of product" +
+                " being applied. A higher volume of product will require a lower scale factor to scale down" +
+                " the rate of adjustment. Reduce the scale factor slowly until the adjustment doesn't overshoot."+
+                " Increase the scale factor to get to a range where the Fast Adjust can work effectively.";
+
+            mf.Tls.ShowHelp(Message, "Scale Factor");
+            hlpevent.Handled = true;
+
+        }
+
+        private void tcProducts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            btnPIDloadDefaults.Visible = (tcProducts.SelectedTab.Name == "tbControl");
         }
     }
 }
