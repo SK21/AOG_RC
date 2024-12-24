@@ -119,11 +119,7 @@ namespace RateController
                     Prd.MinUPM = 0;
                     Prd.BumpButtons = false;
                     Prd.CountsRev = 1;
-                    Prd.HighAdjust = 15;
-                    Prd.LowAdjust = 10;
-                    Prd.Threshold = 30;
-                    Prd.MaxAdjust = 100;
-                    Prd.LowAdjust = 1;
+                    Prd.LoadDefaultControlSettings();
                     Prd.Save();
 
                     mf.DefaultProduct = 0;

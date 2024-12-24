@@ -196,6 +196,16 @@ namespace RateController
 
         public bool EraseAccumulatedUnits { get; set; }
 
+        public void LoadDefaultControlSettings()
+        {
+            cHighAdjust = 50;
+            cLowAdjust = 20;
+            cThreshold = 50;
+            cMaxAdjust = 100;
+            cMinAdjust = 5;
+            cScalingFactor = 48;
+        }
+
         public bool FanOn
         {
             get { return cFanOn; }

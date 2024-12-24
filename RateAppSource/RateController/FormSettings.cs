@@ -179,7 +179,12 @@ namespace RateController
 
         private void btnPIDloadDefaults_Click(object sender, EventArgs e)
         {
-            LoadDefaults();
+            HShigh.Value = 50;
+            HSlow.Value = 20;
+            HSthreshold.Value = 50;
+            HSmax.Value = 100;
+            HSmin.Value = 5;
+            HSscaling.Value = 48;
         }
 
         private void btnResetTank_Click(object sender, EventArgs e)
@@ -563,15 +568,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void LoadDefaults()
-        {
-            HShigh.Value = 50;
-            HSlow.Value = 20;
-            HSthreshold.Value = 50;
-            HSmax.Value = 100;
-            HSmin.Value = 5;
-            HSscaling.Value = 48;
-        }
 
         private void LoadSettings()
         {
