@@ -16,7 +16,6 @@ namespace RateController
         public byte CoverageUnits = 0;
         public PGN32500 ModuleRateSettings;
         public PGN32400 RateSensor;
-        private double cTankSize = 0;
         private double AccumulatedLast = 0;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
         private bool cBumpButtons;
@@ -50,9 +49,11 @@ namespace RateController
         private string cQuantityDescription = "Lbs";
         private double cRateAlt = 100;
         private double cRateSet = 0;
+        private int cScalingFactor;
         private int cSenID;
         private int cSerialPort;
         private int cShiftRange = 4;
+        private double cTankSize = 0;
         private double cTankStart = 0;
         private int cThreshold;
         private double cUnitsApplied = 0;
@@ -71,7 +72,6 @@ namespace RateController
         private DateTime LastUpdateTime;
         private PGN32502 ModuleControlSettings;
         private bool PauseWork = false;
-        private int cScalingFactor;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -196,20 +196,6 @@ namespace RateController
 
         public bool EraseAccumulatedUnits { get; set; }
 
-        public void LoadDefaultControlSettings()
-        {
-            cHighAdjust = 50;
-            cLowAdjust = 20;
-            cThreshold = 50;
-            cMaxAdjust = 100;
-            cMinAdjust = 5;
-            cScalingFactor = 48;
-        }
-        public double TankSize
-        {
-            get{ return cTankSize; }
-            set { cTankSize = value; }
-        }
         public bool FanOn
         {
             get { return cFanOn; }
@@ -287,14 +273,7 @@ namespace RateController
                 }
             }
         }
-        public int ScalingFactor
-        {
-            get { return cScalingFactor; }
-            set
-            {
-                if (value >= 0 && value <= 100) cScalingFactor = value;
-            }
-        }
+
         public int MinAdjust
         {
             get { return cMinAdjust; }
@@ -454,6 +433,15 @@ namespace RateController
             }
         }
 
+        public int ScalingFactor
+        {
+            get { return cScalingFactor; }
+            set
+            {
+                if (value >= 0 && value <= 100) cScalingFactor = value;
+            }
+        }
+
         public byte SensorID
         {
             get { return (byte)cSenID; }
@@ -468,6 +456,12 @@ namespace RateController
                     throw new ArgumentException("Invalid SensorID.");
                 }
             }
+        }
+
+        public double TankSize
+        {
+            get { return cTankSize; }
+            set { cTankSize = value; }
         }
 
         public double TankStart
@@ -713,6 +707,16 @@ namespace RateController
             if (int.TryParse(mf.Tls.LoadProperty("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
             if (int.TryParse(mf.Tls.LoadProperty("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
             if (int.TryParse(mf.Tls.LoadProperty("Scaling" + IDname), out int sc)) cScalingFactor = sc;
+        }
+
+        public void LoadDefaultControlSettings()
+        {
+            cHighAdjust = mf.HighAdjustDefault;
+            cLowAdjust = mf.LowAdjustDefault;
+            cThreshold = mf.ThresholdDefault;
+            cMaxAdjust = mf.MaxAdjustDefault;
+            cMinAdjust = mf.MinAdjustDefault;
+            cScalingFactor = mf.ScalingDefault;
         }
 
         public double MinUPMinUse()

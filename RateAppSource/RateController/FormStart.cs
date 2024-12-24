@@ -21,6 +21,18 @@ namespace RateController
         public readonly int MaxSensors = 8;
         public readonly int MaxSwitches = 16;
         public readonly double MPHtoKPH = 1.6092;
+
+        #region // flow adjustment defaults
+
+        public readonly int HighAdjustDefault = 50;
+        public readonly int LowAdjustDefault = 20;
+        public readonly int MaxAdjustDefault = 100;
+        public readonly int MinAdjustDefault = 5;
+        public readonly int ScalingDefault = 48;
+        public readonly int ThresholdDefault = 50;
+
+        #endregion // flow adjustment defaults
+
         public PGN229 AOGsections;
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
@@ -211,18 +223,6 @@ namespace RateController
             {
                 cPressureOffset = value;
                 Tls.SaveProperty("PressureOffset", value.ToString());
-            }
-        }
-
-        public byte PressureToShow
-        {
-            get { return cPressureToShowID; }
-            set
-            {
-                if (value >= 0 && value < 17)
-                {
-                    cPressureToShowID = value;
-                }
             }
         }
 
@@ -713,7 +713,7 @@ namespace RateController
                         P3.LowAdjust = P0.LowAdjust;
                         P3.Threshold = P0.Threshold;
                         P3.MaxAdjust = P0.Threshold;
-                        P3.MinAdjust= P0.MinAdjust;
+                        P3.MinAdjust = P0.MinAdjust;
 
                         Products.Item(2).BumpButtons = false;
                         P0.ModuleID = 6;
