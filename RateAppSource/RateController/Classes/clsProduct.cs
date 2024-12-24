@@ -16,7 +16,7 @@ namespace RateController
         public byte CoverageUnits = 0;
         public PGN32500 ModuleRateSettings;
         public PGN32400 RateSensor;
-        public double TankSize = 0;
+        private double cTankSize = 0;
         private double AccumulatedLast = 0;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
         private bool cBumpButtons;
@@ -205,7 +205,11 @@ namespace RateController
             cMinAdjust = 5;
             cScalingFactor = 48;
         }
-
+        public double TankSize
+        {
+            get{ return cTankSize; }
+            set { cTankSize = value; }
+        }
         public bool FanOn
         {
             get { return cFanOn; }
@@ -638,7 +642,7 @@ namespace RateController
             bool.TryParse(mf.Tls.LoadProperty("cEnableProdDensity" + IDname), out cEnableProdDensity);
 
             double.TryParse(mf.Tls.LoadProperty("FlowCal" + IDname), out cMeterCal);
-            double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out TankSize);
+            if (double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out double ts)) cTankSize = ts;
 
             cProductName = mf.Tls.LoadProperty("ProductName" + IDname);
 

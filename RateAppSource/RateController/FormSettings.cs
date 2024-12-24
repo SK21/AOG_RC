@@ -41,7 +41,7 @@ namespace RateController
             lbSensorCounts.Text = Lang.lgSensorCounts;
             lbBaseRateDes.Text = Lang.lgBaseRate;
             lb6.Text = Lang.lgTankSize;
-            btnResetTank.Text = Lang.lgStartQuantity;
+            lbStartQuantity.Text = Lang.lgStartQuantity;
 
             lbMax.Text = Lang.lgHighMax;
             lbMin.Text = Lang.lgMinPWM;
@@ -189,8 +189,7 @@ namespace RateController
 
         private void btnResetTank_Click(object sender, EventArgs e)
         {
-            CurrentProduct.ResetTank();
-            TankRemain.Text = CurrentProduct.TankStart.ToString("N0");
+            TankRemain.Text = CurrentProduct.TankSize.ToString("N0");
         }
 
         private void btnResetTank_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -1628,6 +1627,8 @@ namespace RateController
 
             UpdateControlDisplay();
             btnPIDloadDefaults.Visible = (tcProducts.SelectedTab.Name == "tbControl");
+            btnResetTank.Visible=(tcProducts.SelectedTab.Name=="tbRate");
+            btnTuningGraph.Visible = (tcProducts.SelectedTab.Name == "tbControl");
 
             Initializing = false;
         }
@@ -1664,6 +1665,8 @@ namespace RateController
         private void tcProducts_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnPIDloadDefaults.Visible = (tcProducts.SelectedTab.Name == "tbControl");
+            btnResetTank.Visible = (tcProducts.SelectedTab.Name == "tbRate");
+            btnTuningGraph.Visible = (tcProducts.SelectedTab.Name == "tbControl");
         }
     }
 }

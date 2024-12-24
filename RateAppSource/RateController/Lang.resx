@@ -516,7 +516,7 @@ Calibration steps:
     <value>Start</value>
   </data>
   <data name="lgStartQuantity" xml:space="preserve">
-    <value>Tank Starting Quantity</value>
+    <value>Tank Start Quantity</value>
   </data>
   <data name="lgSubnet" xml:space="preserve">
     <value>Subnet Address</value>

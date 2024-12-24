@@ -419,6 +419,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\sprayer.png" />
     <None Include="Resources\Pins.PNG" />
     <None Include="Resources\Valve3wire.png" />
     <None Include="Resources\Valve2wire.png" />

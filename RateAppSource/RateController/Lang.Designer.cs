@@ -1188,7 +1188,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tank Starting Quantity.
+        ///   Looks up a localized string similar to Tank Start Quantity.
         /// </summary>
         internal static string lgStartQuantity {
             get {
