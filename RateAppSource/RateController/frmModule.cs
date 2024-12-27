@@ -212,6 +212,7 @@ namespace RateController
             tbErrors.ScrollToCaret();
 
             btnOpen.Visible = (tabControl1.SelectedTab.Name != "tabPage5");
+            btnStart.Visible = btnOpen.Visible;
         }
 
         private void VisitLink(string Link)
