@@ -397,16 +397,17 @@ namespace RateController
 
         private void lbQuantityAmount_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(mf, "Reset quantity?", "Reset", true);
-            Hlp.TopMost = true;
+            //check if window already exists
+            Form fs = mf.Tls.IsFormOpen("frmResetQuantity");
 
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
+            if (fs != null)
             {
-                mf.Products.Item(CurrentProduct()).ResetApplied();
+                fs.Focus();
+                return;
             }
+
+            Form frm = new frmResetQuantity(mf);
+            frm.Show();
         }
 
         private void lbRate_Click(object sender, EventArgs e)

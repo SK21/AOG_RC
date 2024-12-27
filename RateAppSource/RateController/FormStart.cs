@@ -1595,16 +1595,17 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                var Hlp = new frmMsgBox(this, "Reset quantity?", "Reset", true);
-                Hlp.TopMost = true;
+                //check if window already exists
+                Form fs = Tls.IsFormOpen("frmResetQuantity");
 
-                Hlp.ShowDialog();
-                bool Result = Hlp.Result;
-                Hlp.Close();
-                if (Result)
+                if (fs != null)
                 {
-                    Products.Item(CurrentProduct()).ResetApplied();
+                    fs.Focus();
+                    return;
                 }
+
+                Form frm = new frmResetQuantity(this);
+                frm.Show();
             }
         }
 

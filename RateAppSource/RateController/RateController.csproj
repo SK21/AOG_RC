@@ -217,6 +217,12 @@
     <Compile Include="frmRelays.Designer.cs">
       <DependentUpon>frmRelays.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmResetQuantity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmResetQuantity.Designer.cs">
+      <DependentUpon>frmResetQuantity.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmScaleDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -344,6 +350,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmResetQuantity.resx">
+      <DependentUpon>frmResetQuantity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmScaleDisplay.resx">
       <DependentUpon>frmScaleDisplay.cs</DependentUpon>
