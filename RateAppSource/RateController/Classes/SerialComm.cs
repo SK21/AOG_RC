@@ -80,8 +80,12 @@ namespace RateController
 
         public string Log()
         {
-            mf.Tls.WriteLog("Serial Log.txt", cLog);
             return cLog;
+        }
+        public void UpdateLog()
+        {
+            mf.Tls.WriteLog("Serial Log.txt", cLog);
+            cLog = "";
         }
 
         public void OpenRCport(bool SuppressErrors = false)

@@ -500,7 +500,7 @@
             // lbVersion
             // 
             this.lbVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVersion.Location = new System.Drawing.Point(314, 391);
+            this.lbVersion.Location = new System.Drawing.Point(296, 391);
             this.lbVersion.Name = "lbVersion";
             this.lbVersion.Size = new System.Drawing.Size(105, 23);
             this.lbVersion.TabIndex = 246;
@@ -510,17 +510,17 @@
             // lbAppVersion
             // 
             this.lbAppVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAppVersion.Location = new System.Drawing.Point(447, 391);
+            this.lbAppVersion.Location = new System.Drawing.Point(407, 391);
             this.lbAppVersion.Name = "lbAppVersion";
-            this.lbAppVersion.Size = new System.Drawing.Size(116, 23);
+            this.lbAppVersion.Size = new System.Drawing.Size(156, 23);
             this.lbAppVersion.TabIndex = 245;
-            this.lbAppVersion.Text = "1.0.0";
+            this.lbAppVersion.Text = "3.9.0-beta.1";
             this.lbAppVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(314, 423);
+            this.label11.Location = new System.Drawing.Point(296, 423);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(87, 23);
             this.label11.TabIndex = 248;
@@ -530,7 +530,7 @@
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(314, 455);
+            this.label3.Location = new System.Drawing.Point(296, 455);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(87, 23);
             this.label3.TabIndex = 251;

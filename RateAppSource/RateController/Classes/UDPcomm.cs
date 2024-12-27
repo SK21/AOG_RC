@@ -70,8 +70,12 @@ namespace RateController
 
         public string Log()
         {
-            mf.Tls.WriteLog("Ethernet Log.txt", cLog);
             return cLog;
+        }
+        public void UpdateLog()
+        {
+            mf.Tls.WriteLog("Ethernet Log.txt", cLog);
+            cLog = "";
         }
 
         public void SendUDPMessage(byte[] byteData)

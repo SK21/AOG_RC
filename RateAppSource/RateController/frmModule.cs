@@ -38,10 +38,12 @@ namespace RateController
             {
                 case "tabPage1":
                     FileName = "Ethernet Log.txt";
+                    mf.UDPmodules.UpdateLog(); 
                     break;
 
                 case "tabPage2":
                     FileName = "Serial Log.txt";
+                    mf.SER[CommPort].UpdateLog();
                     break;
 
                 case "tabPage3":
@@ -53,7 +55,10 @@ namespace RateController
                     break;
             }
 
-            mf.Tls.OpenTextFile(FileName);
+            if(!mf.Tls.OpenTextFile(FileName))
+            {
+                mf.Tls.ShowHelp("File not found.");
+            }
         }
 
         private void btnStart_Click(object sender, EventArgs e)

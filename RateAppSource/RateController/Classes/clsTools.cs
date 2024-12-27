@@ -35,12 +35,12 @@ namespace RateController
         #endregion Form Dragging API Support
 
         private string cAppName = "RateController";
-        private string cAppVersion = "3.8.1";
+        private string cAppVersion = "3.9.0-beta.1";
         private bool cIsReadOnly = false;
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "24-Dec-2024";
+        private string cVersionDate = "27-Dec-2024";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
@@ -387,14 +387,17 @@ namespace RateController
             FileName = cSettingsDir + "\\" + FileName;
             try
             {
-                StreamReader sr = new StreamReader(FileName);
-                Line = sr.ReadLine();
-                while (Line != null)
+                if (File.Exists(FileName))
                 {
-                    Result += Line + Environment.NewLine;
+                    StreamReader sr = new StreamReader(FileName);
                     Line = sr.ReadLine();
+                    while (Line != null)
+                    {
+                        Result += Line + Environment.NewLine;
+                        Line = sr.ReadLine();
+                    }
+                    sr.Close();
                 }
-                sr.Close();
             }
             catch (Exception)
             {
@@ -560,23 +563,30 @@ namespace RateController
         {
             return cVersionDate;
         }
-        public void OpenTextFile(string FileName)
+        public bool OpenTextFile(string FileName)
         {
+            bool Result = false;
             try
             {
                 string Name = cSettingsDir + "\\" + FileName;
-                Process.Start(new ProcessStartInfo(Name) { UseShellExecute = true });
+                if (File.Exists(Name))
+                {
+                    Process.Start(new ProcessStartInfo(Name) { UseShellExecute = true });
+                    Result = true;
+                }
             }
             catch (Exception ex)
             {
                 WriteErrorLog("Tools: OpenTextFile: " + ex.Message);
             }
+            return Result;
         }
 
         public void WriteLog(string LogName, string Message, bool NewLine = false, bool UseDate = false)
         {
             string Line = "";
             string DF = "";
+            if (Message == null) Message = "";
             try
             {
                 string FileName = cSettingsDir + "\\" + LogName;
