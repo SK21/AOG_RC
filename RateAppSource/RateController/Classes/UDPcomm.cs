@@ -30,6 +30,7 @@ namespace RateController
             cSendFromPort = SendFromPort;
             cConnectionName = ConnectionName;
             SetEP(DestinationEndPoint);
+            mf.Tls.WriteLog("Ethernet Log.txt", "", true, true);
         }
 
         // Status delegate
@@ -64,10 +65,12 @@ namespace RateController
         {
             recvSocket.Close();
             sendSocket.Close();
+            mf.Tls.WriteLog("Ethernet Log.txt", cLog);
         }
 
         public string Log()
         {
+            mf.Tls.WriteLog("Ethernet Log.txt", cLog);
             return cLog;
         }
 

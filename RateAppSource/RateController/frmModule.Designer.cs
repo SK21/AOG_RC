@@ -69,9 +69,9 @@
             this.lbVersion = new System.Windows.Forms.Label();
             this.lbAppVersion = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.btnSave = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.lbFile = new System.Windows.Forms.Label();
+            this.btnOpen = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -527,25 +527,6 @@
             this.label11.Text = "RC Date";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btnSave
-            // 
-            this.btnSave.BackColor = System.Drawing.Color.Transparent;
-            this.btnSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnSave.FlatAppearance.BorderSize = 0;
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnSave.Image = global::RateController.Properties.Resources.Save;
-            this.btnSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnSave.Location = new System.Drawing.Point(302, 484);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(6);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(81, 72);
-            this.btnSave.TabIndex = 249;
-            this.btnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            this.btnSave.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.btnSave_HelpRequested);
-            // 
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -565,14 +546,32 @@
             this.lbFile.TabIndex = 250;
             this.lbFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnOpen
+            // 
+            this.btnOpen.BackColor = System.Drawing.Color.Transparent;
+            this.btnOpen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnOpen.FlatAppearance.BorderSize = 0;
+            this.btnOpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOpen.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnOpen.Image = global::RateController.Properties.Resources.OpenFile1;
+            this.btnOpen.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnOpen.Location = new System.Drawing.Point(302, 484);
+            this.btnOpen.Margin = new System.Windows.Forms.Padding(6);
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(81, 72);
+            this.btnOpen.TabIndex = 252;
+            this.btnOpen.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnOpen.UseVisualStyleBackColor = false;
+            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
             // frmModule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 560);
+            this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lbFile);
-            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.lbDate);
             this.Controls.Add(this.lbVersion);
@@ -652,7 +651,6 @@
         private System.Windows.Forms.TextBox tbActivity;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TextBox tbErrors;
-        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.LinkLabel linkLabel2;
@@ -660,5 +658,6 @@
         private System.Windows.Forms.LinkLabel linkLabel4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lbFile;
+        private System.Windows.Forms.Button btnOpen;
     }
 }

@@ -354,7 +354,6 @@ namespace RateController
                 WriteErrorLog("Tools: OpenFile: " + ex.Message);
             }
         }
-
         public byte ParseModID(byte ID)
         {
             // top 4 bits
@@ -560,6 +559,49 @@ namespace RateController
         public string VersionDate()
         {
             return cVersionDate;
+        }
+        public void OpenTextFile(string FileName)
+        {
+            try
+            {
+                string Name = cSettingsDir + "\\" + FileName;
+                Process.Start(new ProcessStartInfo(Name) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: OpenTextFile: " + ex.Message);
+            }
+        }
+
+        public void WriteLog(string LogName, string Message, bool NewLine = false, bool UseDate = false)
+        {
+            string Line = "";
+            string DF = "";
+            try
+            {
+                string FileName = cSettingsDir + "\\" + LogName;
+                TrimFile(FileName);
+
+                if (NewLine) Line = "\r\n";
+
+                if (UseDate)
+                {
+                    DF = "MMM-dd hh:mm:ss";
+                }
+                else
+                {
+                    DF = "hh:mm:ss";
+                }
+
+                if (UseDate || Message.Length > 0)
+                {
+                    File.AppendAllText(FileName, Line + DateTime.Now.ToString(DF) + "  -  " + Message + "\r\n");
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: WriteLog: " + ex.Message);
+            }
         }
 
         public void WriteActivityLog(string Message, bool Newline = false, bool NoDate = false)

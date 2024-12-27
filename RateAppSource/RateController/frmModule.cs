@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -30,26 +31,29 @@ namespace RateController
             this.Close();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnOpen_Click(object sender, EventArgs e)
         {
-            try
+            string FileName = "";
+            switch (tabControl1.SelectedTab.Name)
             {
-                File.WriteAllText(mf.Tls.FilesDir() + "\\Ethernet Log.txt", tbEthernet.Text);
-                File.WriteAllText(mf.Tls.FilesDir() + "\\Serial Log.txt", tbSerial.Text);
-                mf.Tls.ShowHelp("File saved.", "Save", 10000);
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog("frmModules/btnSave_Click: " + ex.Message);
-            }
-        }
+                case "tabPage1":
+                    FileName = "Ethernet Log.txt";
+                    break;
 
-        private void btnSave_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Save information to file. In location 'Documents/RateController'";
+                case "tabPage2":
+                    FileName = "Serial Log.txt";
+                    break;
 
-            mf.Tls.ShowHelp(Message, "Save");
-            hlpevent.Handled = true;
+                case "tabPage3":
+                    FileName = "Activity Log.txt";
+                    break;
+
+                case "tabPage4":
+                    FileName = "Error Log.txt";
+                    break;
+            }
+
+            mf.Tls.OpenTextFile(FileName);
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -103,7 +107,7 @@ namespace RateController
             tbErrors.BackColor = this.BackColor;
 
             cboPort1.SelectedIndex = 0;
-            UpdateLogs();
+            UpdateForm();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -160,7 +164,7 @@ namespace RateController
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateLogs();
+            UpdateForm();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -190,14 +194,14 @@ namespace RateController
                 tbEthernet.Select(tbEthernet.Text.Length, 0);
                 tbEthernet.ScrollToCaret();
 
-                UpdateLogs();
+                UpdateForm();
             }
 
             lbIP.Text = mf.UDPmodules.SubNet;
             lbFile.Text = Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName);
         }
 
-        private void UpdateLogs()
+        private void UpdateForm()
         {
             tbActivity.Text = mf.Tls.ReadTextFile("Activity Log.txt");
             tbActivity.Select(tbActivity.Text.Length, 0);
@@ -206,6 +210,8 @@ namespace RateController
             tbErrors.Text = mf.Tls.ReadTextFile("Error Log.txt");
             tbErrors.Select(tbErrors.Text.Length, 0);
             tbErrors.ScrollToCaret();
+
+            btnOpen.Visible = (tabControl1.SelectedTab.Name != "tabPage5");
         }
 
         private void VisitLink(string Link)

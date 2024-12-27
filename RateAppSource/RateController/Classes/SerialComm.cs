@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Ports;
 
 namespace RateController
@@ -31,6 +32,7 @@ namespace RateController
             Timer1.Interval = 45000;    // 45 seconds
             Timer1.Tick += new EventHandler(ResetErrors);
             Timer1.Enabled = true;
+            mf.Tls.WriteLog("Serial Log.txt", "", true, true);
         }
 
         // new data event
@@ -68,6 +70,7 @@ namespace RateController
 
                     ArduinoPort.Dispose();
                 }
+                mf.Tls.WriteLog("Serial Log.txt", cLog);
             }
             catch (Exception ex)
             {
@@ -77,6 +80,7 @@ namespace RateController
 
         public string Log()
         {
+            mf.Tls.WriteLog("Serial Log.txt", cLog);
             return cLog;
         }
 
