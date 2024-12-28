@@ -130,6 +130,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmResetQuantity";
+            this.ShowInTaskbar = false;
             this.Text = "Reset Quantity";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmResetQuantity_FormClosed);
             this.Load += new System.EventHandler(this.frmResetQuantity_Load);
