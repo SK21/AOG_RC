@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -41,6 +40,16 @@ namespace RateController
             Timer1.Interval = 250;
         }
 
+        public bool AutoRateOn
+        {
+            get { return cAutoRate; }
+        }
+
+        public bool AutoSectionOn
+        {
+            get { return cAutoSection; }
+        }
+
         public bool Enabled
         {
             get { return cEnabled; }
@@ -80,14 +89,6 @@ namespace RateController
                 cSwitchScreenOn = value;
                 Enabled = value;
             }
-        }
-        public bool AutoRateOn
-        {
-            get { return cAutoRate; }
-        }
-        public bool AutoSectionOn
-        {
-            get { return cAutoSection; }
         }
 
         public void PressSwitch(SwIDs ID, bool FromLargeScreen = false)
@@ -183,11 +184,6 @@ namespace RateController
                     break;
             }
             PressedData[5] = mf.Tls.CRC(PressedData, 5);
-
-            Debug.Print("");
-            Debug.Print(DateTime.Now.ToString("T"));
-            Debug.Print("auto rate: "+cAutoRate.ToString());
-            Debug.Print("auto section: "+cAutoSection.ToString());
         }
 
         public void ReleaseSwitch()

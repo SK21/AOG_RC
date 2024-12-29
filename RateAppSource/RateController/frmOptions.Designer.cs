@@ -47,8 +47,6 @@
             this.rbFrench = new System.Windows.Forms.RadioButton();
             this.rbRussian = new System.Windows.Forms.RadioButton();
             this.rbPolish = new System.Windows.Forms.RadioButton();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
             this.tcOptions = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.ckDefaultProduct = new System.Windows.Forms.CheckBox();
@@ -101,6 +99,8 @@
             this.colorPanel = new System.Windows.Forms.Panel();
             this.tbColourDefault2 = new System.Windows.Forms.TextBox();
             this.btnReset = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
             this.tcOptions.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -121,7 +121,7 @@
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMetric.Location = new System.Drawing.Point(133, 48);
+            this.ckMetric.Location = new System.Drawing.Point(136, 48);
             this.ckMetric.Name = "ckMetric";
             this.ckMetric.Size = new System.Drawing.Size(164, 34);
             this.ckMetric.TabIndex = 119;
@@ -237,7 +237,7 @@
             this.rbFrench.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbFrench.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbFrench.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbFrench.Location = new System.Drawing.Point(226, 160);
+            this.rbFrench.Location = new System.Drawing.Point(235, 172);
             this.rbFrench.Margin = new System.Windows.Forms.Padding(2);
             this.rbFrench.Name = "rbFrench";
             this.rbFrench.Size = new System.Drawing.Size(140, 34);
@@ -252,7 +252,7 @@
             this.rbRussian.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbRussian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbRussian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbRussian.Location = new System.Drawing.Point(226, 119);
+            this.rbRussian.Location = new System.Drawing.Point(235, 117);
             this.rbRussian.Margin = new System.Windows.Forms.Padding(2);
             this.rbRussian.Name = "rbRussian";
             this.rbRussian.Size = new System.Drawing.Size(140, 34);
@@ -267,7 +267,7 @@
             this.rbPolish.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbPolish.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbPolish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbPolish.Location = new System.Drawing.Point(226, 76);
+            this.rbPolish.Location = new System.Drawing.Point(235, 62);
             this.rbPolish.Margin = new System.Windows.Forms.Padding(2);
             this.rbPolish.Name = "rbPolish";
             this.rbPolish.Size = new System.Drawing.Size(140, 34);
@@ -276,42 +276,6 @@
             this.rbPolish.Text = "Polish";
             this.rbPolish.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbPolish.UseVisualStyleBackColor = true;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
-            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
-            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(296, 440);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
-            this.btnCancel.TabIndex = 124;
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnOK
-            // 
-            this.btnOK.BackColor = System.Drawing.Color.Transparent;
-            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnOK.FlatAppearance.BorderSize = 0;
-            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnOK.Image = global::RateController.Properties.Resources.OK;
-            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(377, 440);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
-            this.btnOK.TabIndex = 123;
-            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnOK.UseVisualStyleBackColor = false;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // tcOptions
             // 
@@ -351,7 +315,7 @@
             this.ckDefaultProduct.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckDefaultProduct.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDefaultProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDefaultProduct.Location = new System.Drawing.Point(119, 268);
+            this.ckDefaultProduct.Location = new System.Drawing.Point(136, 268);
             this.ckDefaultProduct.Name = "ckDefaultProduct";
             this.ckDefaultProduct.Size = new System.Drawing.Size(164, 34);
             this.ckDefaultProduct.TabIndex = 333;
@@ -366,7 +330,7 @@
             this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckLargeScreen.Location = new System.Drawing.Point(119, 28);
+            this.ckLargeScreen.Location = new System.Drawing.Point(136, 28);
             this.ckLargeScreen.Name = "ckLargeScreen";
             this.ckLargeScreen.Size = new System.Drawing.Size(164, 34);
             this.ckLargeScreen.TabIndex = 127;
@@ -380,7 +344,7 @@
             this.ckSingle.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckSingle.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckSingle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSingle.Location = new System.Drawing.Point(119, 188);
+            this.ckSingle.Location = new System.Drawing.Point(136, 188);
             this.ckSingle.Name = "ckSingle";
             this.ckSingle.Size = new System.Drawing.Size(164, 34);
             this.ckSingle.TabIndex = 128;
@@ -394,7 +358,7 @@
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTransparent.Location = new System.Drawing.Point(119, 108);
+            this.ckTransparent.Location = new System.Drawing.Point(136, 108);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(164, 34);
             this.ckTransparent.TabIndex = 119;
@@ -421,7 +385,7 @@
             // tbSimSpeed
             // 
             this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSimSpeed.Location = new System.Drawing.Point(275, 136);
+            this.tbSimSpeed.Location = new System.Drawing.Point(285, 136);
             this.tbSimSpeed.MaxLength = 8;
             this.tbSimSpeed.Name = "tbSimSpeed";
             this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
@@ -511,7 +475,7 @@
             // lbSimUnits
             // 
             this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSimUnits.Location = new System.Drawing.Point(346, 139);
+            this.lbSimUnits.Location = new System.Drawing.Point(356, 139);
             this.lbSimUnits.Name = "lbSimUnits";
             this.lbSimUnits.Size = new System.Drawing.Size(57, 24);
             this.lbSimUnits.TabIndex = 333;
@@ -558,7 +522,7 @@
             this.ckResume.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckResume.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckResume.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckResume.Location = new System.Drawing.Point(132, 213);
+            this.ckResume.Location = new System.Drawing.Point(136, 213);
             this.ckResume.Name = "ckResume";
             this.ckResume.Size = new System.Drawing.Size(164, 34);
             this.ckResume.TabIndex = 335;
@@ -589,7 +553,7 @@
             this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNoMaster.Location = new System.Drawing.Point(11, 118);
+            this.ckNoMaster.Location = new System.Drawing.Point(252, 64);
             this.ckNoMaster.Name = "ckNoMaster";
             this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
             this.ckNoMaster.TabIndex = 334;
@@ -597,6 +561,7 @@
             this.ckNoMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckNoMaster.UseVisualStyleBackColor = true;
             this.ckNoMaster.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
+            this.ckNoMaster.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckNoMaster_HelpRequested);
             // 
             // ckAutoRate
             // 
@@ -604,14 +569,15 @@
             this.ckAutoRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckAutoRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckAutoRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckAutoRate.Location = new System.Drawing.Point(252, 62);
+            this.ckAutoRate.Location = new System.Drawing.Point(118, 117);
             this.ckAutoRate.Name = "ckAutoRate";
-            this.ckAutoRate.Size = new System.Drawing.Size(164, 34);
+            this.ckAutoRate.Size = new System.Drawing.Size(201, 34);
             this.ckAutoRate.TabIndex = 333;
-            this.ckAutoRate.Text = "Auto Rate Off";
+            this.ckAutoRate.Text = "Auto Rate Disabled";
             this.ckAutoRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckAutoRate.UseVisualStyleBackColor = true;
             this.ckAutoRate.CheckedChanged += new System.EventHandler(this.rbLarge_CheckedChanged);
+            this.ckAutoRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckAutoRate_HelpRequested);
             // 
             // ckWorkSwitch
             // 
@@ -619,7 +585,7 @@
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWorkSwitch.Location = new System.Drawing.Point(11, 62);
+            this.ckWorkSwitch.Location = new System.Drawing.Point(11, 64);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
             this.ckWorkSwitch.Size = new System.Drawing.Size(164, 34);
             this.ckWorkSwitch.TabIndex = 126;
@@ -634,7 +600,7 @@
             this.ckDualAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDualAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDualAuto.Location = new System.Drawing.Point(252, 6);
+            this.ckDualAuto.Location = new System.Drawing.Point(252, 11);
             this.ckDualAuto.Name = "ckDualAuto";
             this.ckDualAuto.Size = new System.Drawing.Size(164, 34);
             this.ckDualAuto.TabIndex = 125;
@@ -756,7 +722,7 @@
             this.ckScreenSwitches.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckScreenSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckScreenSwitches.Location = new System.Drawing.Point(11, 6);
+            this.ckScreenSwitches.Location = new System.Drawing.Point(11, 11);
             this.ckScreenSwitches.Name = "ckScreenSwitches";
             this.ckScreenSwitches.Size = new System.Drawing.Size(164, 34);
             this.ckScreenSwitches.TabIndex = 123;
@@ -786,7 +752,7 @@
             this.rbNederlands.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbNederlands.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbNederlands.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbNederlands.Location = new System.Drawing.Point(51, 201);
+            this.rbNederlands.Location = new System.Drawing.Point(47, 227);
             this.rbNederlands.Margin = new System.Windows.Forms.Padding(2);
             this.rbNederlands.Name = "rbNederlands";
             this.rbNederlands.Size = new System.Drawing.Size(140, 34);
@@ -801,7 +767,7 @@
             this.rbHungarian.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbHungarian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbHungarian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbHungarian.Location = new System.Drawing.Point(51, 160);
+            this.rbHungarian.Location = new System.Drawing.Point(47, 172);
             this.rbHungarian.Margin = new System.Windows.Forms.Padding(2);
             this.rbHungarian.Name = "rbHungarian";
             this.rbHungarian.Size = new System.Drawing.Size(140, 34);
@@ -816,7 +782,7 @@
             this.rbEnglish.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbEnglish.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbEnglish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbEnglish.Location = new System.Drawing.Point(51, 119);
+            this.rbEnglish.Location = new System.Drawing.Point(47, 117);
             this.rbEnglish.Margin = new System.Windows.Forms.Padding(2);
             this.rbEnglish.Name = "rbEnglish";
             this.rbEnglish.Size = new System.Drawing.Size(140, 34);
@@ -832,7 +798,7 @@
             this.rbDeustch.Checked = true;
             this.rbDeustch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbDeustch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbDeustch.Location = new System.Drawing.Point(51, 76);
+            this.rbDeustch.Location = new System.Drawing.Point(47, 62);
             this.rbDeustch.Margin = new System.Windows.Forms.Padding(2);
             this.rbDeustch.Name = "rbDeustch";
             this.rbDeustch.Size = new System.Drawing.Size(140, 34);
@@ -1015,6 +981,42 @@
             this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Visible = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
+            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnCancel.Location = new System.Drawing.Point(296, 440);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.TabIndex = 124;
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnOK
+            // 
+            this.btnOK.BackColor = System.Drawing.Color.Transparent;
+            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnOK.FlatAppearance.BorderSize = 0;
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnOK.Image = global::RateController.Properties.Resources.OK;
+            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnOK.Location = new System.Drawing.Point(377, 440);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.TabIndex = 123;
+            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // frmOptions
             // 

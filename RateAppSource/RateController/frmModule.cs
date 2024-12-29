@@ -38,7 +38,7 @@ namespace RateController
             {
                 case "tabPage1":
                     FileName = "Ethernet Log.txt";
-                    mf.UDPmodules.UpdateLog(); 
+                    mf.UDPmodules.UpdateLog();
                     break;
 
                 case "tabPage2":
@@ -55,7 +55,7 @@ namespace RateController
                     break;
             }
 
-            if(!mf.Tls.OpenTextFile(FileName))
+            if (!mf.Tls.OpenTextFile(FileName))
             {
                 mf.Tls.ShowHelp("File not found.");
             }
@@ -110,6 +110,7 @@ namespace RateController
             tbSerial.BackColor = this.BackColor;
             tbActivity.BackColor = this.BackColor;
             tbErrors.BackColor = this.BackColor;
+            ModuleIndicator.BackColor = this.BackColor;
 
             cboPort1.SelectedIndex = 0;
             UpdateForm();
@@ -205,13 +206,13 @@ namespace RateController
             lbIP.Text = mf.UDPmodules.SubNet;
             lbFile.Text = Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName);
 
-            if(mf.SwitchBox.RealConnected())
+            if (mf.SwitchBox.RealConnected())
             {
-                lbSwitchbox.BackColor = Color.LightGreen;
+                ModuleIndicator.Image = Properties.Resources.On;
             }
             else
             {
-                lbSwitchbox.BackColor = Color.Red;
+                ModuleIndicator.Image = Properties.Resources.Off;
             }
         }
 

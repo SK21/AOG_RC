@@ -161,11 +161,6 @@ namespace RateController
             SetButtons(true);
         }
 
-        private void ckNoMaster_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
         private void ckNoMaster_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Send master switch always on to modules.";
@@ -843,6 +838,5 @@ namespace RateController
 
             Initializing = false;
         }
-
     }
 }

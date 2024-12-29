@@ -63,16 +63,17 @@
             this.lbIP = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.bntOK = new System.Windows.Forms.Button();
-            this.btnStart = new System.Windows.Forms.Button();
             this.lbDate = new System.Windows.Forms.Label();
             this.lbVersion = new System.Windows.Forms.Label();
             this.lbAppVersion = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lbFile = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.ModuleIndicator = new System.Windows.Forms.Label();
             this.btnOpen = new System.Windows.Forms.Button();
-            this.lbSwitchbox = new System.Windows.Forms.Label();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.bntOK = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -362,7 +363,7 @@
             // lbTime
             // 
             this.lbTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTime.Location = new System.Drawing.Point(192, 455);
+            this.lbTime.Location = new System.Drawing.Point(192, 457);
             this.lbTime.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbTime.Name = "lbTime";
             this.lbTime.Size = new System.Drawing.Size(96, 23);
@@ -374,7 +375,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(19, 455);
+            this.label4.Location = new System.Drawing.Point(19, 457);
             this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(93, 23);
@@ -406,7 +407,7 @@
             // lbInoID
             // 
             this.lbInoID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbInoID.Location = new System.Drawing.Point(192, 423);
+            this.lbInoID.Location = new System.Drawing.Point(192, 424);
             this.lbInoID.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbInoID.Name = "lbInoID";
             this.lbInoID.Size = new System.Drawing.Size(96, 23);
@@ -418,7 +419,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(19, 423);
+            this.label6.Location = new System.Drawing.Point(19, 424);
             this.label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(138, 23);
@@ -428,7 +429,7 @@
             // lbIP
             // 
             this.lbIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIP.Location = new System.Drawing.Point(174, 489);
+            this.lbIP.Location = new System.Drawing.Point(174, 490);
             this.lbIP.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbIP.Name = "lbIP";
             this.lbIP.Size = new System.Drawing.Size(127, 23);
@@ -440,7 +441,7 @@
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(19, 489);
+            this.label27.Location = new System.Drawing.Point(19, 490);
             this.label27.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(145, 23);
@@ -452,46 +453,10 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // bntOK
-            // 
-            this.bntOK.BackColor = System.Drawing.Color.Transparent;
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.FlatAppearance.BorderSize = 0;
-            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = global::RateController.Properties.Resources.OK;
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(488, 484);
-            this.bntOK.Margin = new System.Windows.Forms.Padding(6);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(81, 72);
-            this.bntOK.TabIndex = 210;
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = false;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
-            // 
-            // btnStart
-            // 
-            this.btnStart.BackColor = System.Drawing.Color.Transparent;
-            this.btnStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnStart.FlatAppearance.BorderSize = 0;
-            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnStart.Image = global::RateController.Properties.Resources.Pause;
-            this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStart.Location = new System.Drawing.Point(395, 484);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(6);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(81, 72);
-            this.btnStart.TabIndex = 243;
-            this.btnStart.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnStart.UseVisualStyleBackColor = false;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            // 
             // lbDate
             // 
             this.lbDate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDate.Location = new System.Drawing.Point(407, 423);
+            this.lbDate.Location = new System.Drawing.Point(407, 424);
             this.lbDate.Name = "lbDate";
             this.lbDate.Size = new System.Drawing.Size(156, 23);
             this.lbDate.TabIndex = 247;
@@ -521,7 +486,7 @@
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(296, 423);
+            this.label11.Location = new System.Drawing.Point(296, 424);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(87, 23);
             this.label11.TabIndex = 248;
@@ -531,7 +496,7 @@
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(296, 455);
+            this.label3.Location = new System.Drawing.Point(296, 457);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(87, 23);
             this.label3.TabIndex = 251;
@@ -541,11 +506,33 @@
             // lbFile
             // 
             this.lbFile.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFile.Location = new System.Drawing.Point(407, 455);
+            this.lbFile.Location = new System.Drawing.Point(407, 457);
             this.lbFile.Name = "lbFile";
             this.lbFile.Size = new System.Drawing.Size(156, 23);
             this.lbFile.TabIndex = 250;
             this.lbFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(19, 523);
+            this.label13.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(95, 23);
+            this.label13.TabIndex = 254;
+            this.label13.Text = "SwitchBox";
+            // 
+            // ModuleIndicator
+            // 
+            this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
+            this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
+            this.ModuleIndicator.Location = new System.Drawing.Point(217, 516);
+            this.ModuleIndicator.Name = "ModuleIndicator";
+            this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
+            this.ModuleIndicator.TabIndex = 255;
+            this.ModuleIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnOpen
             // 
@@ -565,24 +552,49 @@
             this.btnOpen.UseVisualStyleBackColor = false;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
-            // lbSwitchbox
+            // btnStart
             // 
-            this.lbSwitchbox.BackColor = System.Drawing.Color.Red;
-            this.lbSwitchbox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbSwitchbox.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSwitchbox.Location = new System.Drawing.Point(19, 524);
-            this.lbSwitchbox.Name = "lbSwitchbox";
-            this.lbSwitchbox.Size = new System.Drawing.Size(282, 27);
-            this.lbSwitchbox.TabIndex = 253;
-            this.lbSwitchbox.Text = "SwitchBox Connected";
-            this.lbSwitchbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnStart.BackColor = System.Drawing.Color.Transparent;
+            this.btnStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnStart.FlatAppearance.BorderSize = 0;
+            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnStart.Image = global::RateController.Properties.Resources.Pause;
+            this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnStart.Location = new System.Drawing.Point(395, 484);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(6);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(81, 72);
+            this.btnStart.TabIndex = 243;
+            this.btnStart.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnStart.UseVisualStyleBackColor = false;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            // 
+            // bntOK
+            // 
+            this.bntOK.BackColor = System.Drawing.Color.Transparent;
+            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bntOK.FlatAppearance.BorderSize = 0;
+            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.bntOK.Image = global::RateController.Properties.Resources.OK;
+            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.bntOK.Location = new System.Drawing.Point(488, 484);
+            this.bntOK.Margin = new System.Windows.Forms.Padding(6);
+            this.bntOK.Name = "bntOK";
+            this.bntOK.Size = new System.Drawing.Size(81, 72);
+            this.bntOK.TabIndex = 210;
+            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.bntOK.UseVisualStyleBackColor = false;
+            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // frmModule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 560);
-            this.Controls.Add(this.lbSwitchbox);
+            this.ClientSize = new System.Drawing.Size(581, 560);
+            this.Controls.Add(this.ModuleIndicator);
+            this.Controls.Add(this.label13);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lbFile);
@@ -673,6 +685,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lbFile;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.Label lbSwitchbox;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label ModuleIndicator;
     }
 }
