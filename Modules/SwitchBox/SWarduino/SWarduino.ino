@@ -3,8 +3,8 @@
 #include <SPI.h>
 
 // Nano board for rate control switches
-# define InoDescription "SWarduino  :  08-Jun-2024"
-const int16_t InoID = 8064;	// change to send defaults to eeprom
+# define InoDescription "SWarduino  :  29-Dec-2024"
+const int16_t InoID = 29124;	// change to send defaults to eeprom
 const uint8_t InoType = 3;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define NC 255		// not connected
@@ -13,13 +13,12 @@ struct ModuleConfig
 {
 	// SW2 pcb
 	uint8_t ID = 0;
-	uint8_t	Auto = A5;
 	uint8_t MasterOn = 5;
 	uint8_t	MasterOff = 3;
 	uint8_t	RateUp = A3;
 	uint8_t RateDown = A2;
-	uint8_t AutoSection = NC;
-	uint8_t AutoRate = NC;
+	uint8_t AutoSection = A5;
+	uint8_t AutoRate = A5;
 	uint8_t WorkPin = NC;
 	uint8_t SectionPins[16];
 	uint8_t IP0 = 192;
@@ -73,15 +72,13 @@ void loop()
 		SendData();
 	}
 
-	ReceiveSerial();
-
 	if (EthernetConnected())
 	{
 		//this must be called for ethercard functions to work.
 		ether.packetLoop(ether.packetReceive());
 	}
 
-	//Blink();
+	Blink();
 }
 
 bool GoodCRC(byte Data[], byte Length)
@@ -103,21 +100,20 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-double debug1;
-double debug2;
+//double debug1;
+//double debug2;
 void Blink()
 {
 	if (millis() - BlinkTime > 1000)
 	{
 		BlinkTime = millis();
-		Serial.print(". ");
 
-		Serial.println("");
-		Serial.print(debug1);
+		//Serial.println("");
+		//Serial.print(debug1);
 
-		Serial.print(", ");
-		Serial.print(debug2);
+		//Serial.print(", ");
+		//Serial.print(debug2);
 
-		Serial.println("");
+		//Serial.println("");
 	}
 }

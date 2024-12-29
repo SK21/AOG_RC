@@ -17,7 +17,6 @@ void DoSetup()
 	LoadData();
 
 	// pins
-	if (MDL.Auto < NC) pinMode(MDL.Auto, INPUT_PULLUP);
 	if (MDL.MasterOn < NC) pinMode(MDL.MasterOn, INPUT_PULLUP);
 	if (MDL.MasterOff < NC) pinMode(MDL.MasterOff, INPUT_PULLUP);
 	if (MDL.RateUp < NC) pinMode(MDL.RateUp, INPUT_PULLUP);
@@ -62,7 +61,6 @@ void DoSetup()
 		{
 			Serial.println("");
 			ether.printIp("IP Address:     ", ether.myip);
-			Serial.println("Serial data disabled.");
 		}
 		else
 		{
@@ -73,8 +71,6 @@ void DoSetup()
 	{
 		Serial.println("");
 		Serial.println("Ethernet controller not found.");
-		Serial.println("");
-		Serial.println("Serial data enabled.");
 	}
 
 	Serial.println("");
@@ -121,13 +117,12 @@ void LoadDefaults()
 	Serial.println("Loading default settings.");
 
 	// SW2 pcb
-	MDL.Auto = A5;
 	MDL.MasterOn = 3;
 	MDL.MasterOff = 5;
 	MDL.RateUp = A3;
 	MDL.RateDown = A2;
-	MDL.AutoSection = NC;
-	MDL.AutoRate = NC;
+	MDL.AutoSection = A5;
+	MDL.AutoRate = A5;
 	MDL.WorkPin = NC;
 	MDL.IP0 = 192;
 	MDL.IP1 = 168;
@@ -151,17 +146,8 @@ bool ValidData()
 	bool Found = false;
 	for (int i = 0; i < sizeof(ValidPins0); i++)
 	{
-		Found = ((MDL.Auto == ValidPins0[i]) || (MDL.Auto == NC));
+		Found = ((MDL.MasterOn == ValidPins0[i]) || (MDL.MasterOn == NC));
 		if (Found) break;
-	}
-
-	if (Found)
-	{
-		for (int i = 0; i < sizeof(ValidPins0); i++)
-		{
-			Found = ((MDL.MasterOn == ValidPins0[i]) || (MDL.MasterOn == NC));
-			if (Found) break;
-		}
 	}
 
 	if (Found)

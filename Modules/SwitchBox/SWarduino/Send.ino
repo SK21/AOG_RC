@@ -3,7 +3,7 @@ void SendData()
 	//PGN32618, switch data
 	//0     HeaderLo    106
 	//1     HeaderHi    127
-	// 2    - bit 0 Auto both section and rate
+	// 2    - bit 0 -
 	//      - bit 1 MasterOn
 	//      - bit 2 MasterOff
 	//      - bit 3 RateUp
@@ -23,7 +23,6 @@ void SendData()
 	// read switches
 	Data[2] = 0;
 
-	if (MDL.Auto < NC) Pins[0] = !digitalRead(MDL.Auto);
 	if (MDL.MasterOn < NC) Pins[1] = !digitalRead(MDL.MasterOn);
 	if (MDL.MasterOff < NC) Pins[2] = !digitalRead(MDL.MasterOff);
 	if (MDL.RateUp < NC) Pins[3] = !digitalRead(MDL.RateUp);
@@ -62,15 +61,5 @@ void SendData()
 	{
 		// send ethernet
 		ether.sendUdp(Data, 6, SourcePort, DestinationIP, DestinationPort);
-	}
-	else
-	{
-		// send serial
-		for (int i = 0; i < 6; i++)
-		{
-			Serial.print(Data[i]);
-			if (i < 5) Serial.print(",");
-		}
-		Serial.println();
 	}
 }
