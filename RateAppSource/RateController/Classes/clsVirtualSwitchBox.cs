@@ -8,7 +8,7 @@ namespace RateController
         // to Rate Controller from virtual switch box
         // 0   106
         // 1   127
-        // 2    - bit 0 Auto
+        // 2    - bit 0 -
         //      - bit 1 MasterOn
         //      - bit 2 MasterOff
         //      - bit 3 RateUp
@@ -20,7 +20,6 @@ namespace RateController
         // 4    sw8 to sw15
         // 5    crc
 
-        private bool cAuto;
         private bool cAutoRate;
         private bool cAutoSection;
         private bool cEnabled;
@@ -82,27 +81,20 @@ namespace RateController
                 Enabled = value;
             }
         }
+        public bool AutoRateOn
+        {
+            get { return cAutoRate; }
+        }
+        public bool AutoSectionOn
+        {
+            get { return cAutoSection; }
+        }
 
         public void PressSwitch(SwIDs ID, bool FromLargeScreen = false)
         {
             // build PGN32618
             switch (ID)
             {
-                case SwIDs.Auto:
-                    if (cAuto)
-                    {
-                        // turn off
-                        PressedData[2] = mf.Tls.BitClear(PressedData[2], 0);
-                        cAuto = false;
-                    }
-                    else
-                    {
-                        // turn on
-                        PressedData[2] = mf.Tls.BitSet(PressedData[2], 0);
-                        cAuto = true;
-                    }
-                    break;
-
                 case SwIDs.AutoRate:
                     if (cAutoRate)
                     {
@@ -191,6 +183,11 @@ namespace RateController
                     break;
             }
             PressedData[5] = mf.Tls.CRC(PressedData, 5);
+
+            Debug.Print("");
+            Debug.Print(DateTime.Now.ToString("T"));
+            Debug.Print("auto rate: "+cAutoRate.ToString());
+            Debug.Print("auto section: "+cAutoSection.ToString());
         }
 
         public void ReleaseSwitch()

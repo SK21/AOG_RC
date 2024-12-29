@@ -6,7 +6,7 @@ namespace RateController
 {
     public enum SwIDs
     {
-        Auto, MasterOn, MasterOff, RateUp, RateDown, sw0, sw1, sw2, sw3, sw4, sw5,
+        NotUsed, MasterOn, MasterOff, RateUp, RateDown, sw0, sw1, sw2, sw3, sw4, sw5,
         sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, AutoSection, AutoRate, WorkSwitch
     };
 
@@ -15,7 +15,7 @@ namespace RateController
         // to Rate Controller from arduino switch box
         // 0   106
         // 1   127
-        // 2    - bit 0 Auto both section and rate
+        // 2    - bit 0 -
         //      - bit 1 MasterOn
         //      - bit 2 MasterOff
         //      - bit 3 RateUp
@@ -31,28 +31,50 @@ namespace RateController
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
         private readonly FormStart mf;
+        private bool cAutoRateDisabled = false;
         private bool cMasterOn = false;
         private bool cRateDown = false;
         private bool cRateUp = false;
         private bool cUseWorkSwitch = false;
+        private DateTime ReceivedReal;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[24];
 
         public PGN32618(FormStart CalledFrom)
         {
             mf = CalledFrom;
-            SW[(int)SwIDs.Auto] = true; // default to auto in case of no switchbox
+            SW[(int)SwIDs.AutoSection] = true; // default to auto in case of no switchbox
+            SW[(int)SwIDs.AutoRate] = true;
+
             if (bool.TryParse(mf.Tls.LoadProperty("UseWorkSwitch"), out bool uw)) cUseWorkSwitch = uw;
+            if (bool.TryParse(mf.Tls.LoadProperty("SwitchboxAutoRateDisabled"), out bool auto)) cAutoRateDisabled = auto;
         }
 
-        public event EventHandler<SwitchPGNargs> SwitchPGNreceived;
+        public event EventHandler SwitchPGNreceived;
+
+        public bool AutoRateDisabled
+        {
+            get { return cAutoRateDisabled; }
+            set
+            {
+                cAutoRateDisabled = value;
+                mf.Tls.SaveProperty("SwitchboxAutoRateDisabled", cAutoRateDisabled.ToString());
+            }
+        }
 
         public bool AutoRateOn
-        { get { return SW[(int)SwIDs.Auto] || SW[(int)SwIDs.AutoRate]; } }
+        {
+            get
+            {
+                bool Result = false;
+                if (!AutoRateDisabled) Result = SW[(int)SwIDs.AutoRate];
+                return Result;
+            }
+        }
 
         public bool AutoSectionOn
         {
-            get { return SW[(int)SwIDs.Auto] || SW[(int)SwIDs.AutoSection]; }
+            get { return SW[(int)SwIDs.AutoSection]; }
         }
 
         public bool MasterOn
@@ -72,9 +94,6 @@ namespace RateController
             get { return cRateUp; }
             set { cRateUp = value; }
         }
-
-        public bool[] Switches
-        { get { return SW; } }
 
         public bool UseWorkSwitch
         {
@@ -103,14 +122,13 @@ namespace RateController
             return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
         }
 
-        public bool ParseByteData(byte[] Data)
+        public bool ParseByteData(byte[] Data, bool RealSwitchBox = false)
         {
             bool Result = false;
 
             if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
-                // auto both section and rate
-                SW[0] = mf.Tls.BitRead(Data[2], 0);
+                if (RealSwitchBox) ReceivedReal = DateTime.Now;
 
                 // master
                 SW[1] = mf.Tls.BitRead(Data[2], 1);     // master on
@@ -119,14 +137,11 @@ namespace RateController
                 if (SW[1]) cMasterOn = true;
                 else if (SW[2]) cMasterOn = false;
 
-                // rate
                 SW[3] = mf.Tls.BitRead(Data[2], 3);     // rate up
                 SW[4] = mf.Tls.BitRead(Data[2], 4);     // rate down
 
-                // separate autos
                 SW[21] = mf.Tls.BitRead(Data[2], 5);    // auto section
                 SW[22] = mf.Tls.BitRead(Data[2], 6);    // auto rate
-
                 SW[23] = mf.Tls.BitRead(Data[2], 7);    // work switch
 
                 if (SW[3])
@@ -154,9 +169,7 @@ namespace RateController
                     }
                 }
 
-                SwitchPGNargs args = new SwitchPGNargs();   // need to continuously send for primed start to work
-                args.Switches = SW;
-                SwitchPGNreceived?.Invoke(this, args);
+                SwitchPGNreceived?.Invoke(this, EventArgs.Empty);
 
                 ReceiveTime = DateTime.Now;
                 Result = true;
@@ -180,6 +193,11 @@ namespace RateController
             return Result;
         }
 
+        public bool RealConnected()
+        {
+            return (DateTime.Now - ReceivedReal).TotalSeconds < 4;
+        }
+
         public bool SectionSwitchOn(int ID)
         {
             bool Result = false;
@@ -193,11 +211,6 @@ namespace RateController
         public bool SwitchIsOn(SwIDs ID)
         {
             return SW[(int)ID];
-        }
-
-        public class SwitchPGNargs : EventArgs
-        {
-            public bool[] Switches { get; set; }
         }
     }
 }

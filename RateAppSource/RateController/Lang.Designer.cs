@@ -801,7 +801,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Page1.
+        ///   Looks up a localized string similar to Display.
         /// </summary>
         internal static string lgPage1 {
             get {
@@ -810,7 +810,7 @@ namespace RateController {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Page2.
+        ///   Looks up a localized string similar to Config.
         /// </summary>
         internal static string lgPage2 {
             get {
@@ -1229,6 +1229,15 @@ namespace RateController {
         internal static string lgSwitches {
             get {
                 return ResourceManager.GetString("lgSwitches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On Screen.
+        /// </summary>
+        internal static string lgSwitchesOnScreen {
+            get {
+                return ResourceManager.GetString("lgSwitchesOnScreen", resourceCulture);
             }
         }
         

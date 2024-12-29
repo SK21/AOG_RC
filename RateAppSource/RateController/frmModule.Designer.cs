@@ -72,6 +72,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lbFile = new System.Windows.Forms.Label();
             this.btnOpen = new System.Windows.Forms.Button();
+            this.lbSwitchbox = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -564,11 +565,24 @@
             this.btnOpen.UseVisualStyleBackColor = false;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
+            // lbSwitchbox
+            // 
+            this.lbSwitchbox.BackColor = System.Drawing.Color.Red;
+            this.lbSwitchbox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbSwitchbox.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSwitchbox.Location = new System.Drawing.Point(19, 524);
+            this.lbSwitchbox.Name = "lbSwitchbox";
+            this.lbSwitchbox.Size = new System.Drawing.Size(282, 27);
+            this.lbSwitchbox.TabIndex = 253;
+            this.lbSwitchbox.Text = "SwitchBox Connected";
+            this.lbSwitchbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // frmModule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 560);
+            this.Controls.Add(this.lbSwitchbox);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lbFile);
@@ -659,5 +673,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lbFile;
         private System.Windows.Forms.Button btnOpen;
+        private System.Windows.Forms.Label lbSwitchbox;
     }
 }

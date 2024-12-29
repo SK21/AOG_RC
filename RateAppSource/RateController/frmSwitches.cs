@@ -12,7 +12,6 @@ namespace RateController
         private FormStart mf;
         private int mouseX = 0;
         private int mouseY = 0;
-        private bool[] SwON = new bool[23];
         private int TransLeftOffset = 6;
         private int TransTopOffset = 30;
         private bool UpPressed;
@@ -44,7 +43,8 @@ namespace RateController
 
         private void btAuto_Click(object sender, EventArgs e)
         {
-            mf.vSwitchBox.PressSwitch(SwIDs.Auto);
+            mf.vSwitchBox.PressSwitch(SwIDs.AutoRate);
+            if (mf.vSwitchBox.AutoRateOn != mf.vSwitchBox.AutoSectionOn) mf.vSwitchBox.PressSwitch(SwIDs.AutoSection);
         }
 
         private void btn1_Click(object sender, EventArgs e)
@@ -158,7 +158,6 @@ namespace RateController
         private void frmSimulation_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
-            SwON = mf.SwitchBox.Switches;
             UpdateForm();
             timer1.Enabled = true;
             mf.vSwitchBox.SwitchScreenOn = true;
@@ -219,9 +218,8 @@ namespace RateController
             }
         }
 
-        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
+        private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
-            SwON = e.Switches;
             UpdateForm();
         }
 
@@ -243,7 +241,7 @@ namespace RateController
         {
             if (mf.UseTransparent != IsTransparent) SetTransparent();
 
-            if (SwON[0])
+            if (mf.SwitchBox.AutoRateOn||mf.SwitchBox.AutoSectionOn)
             {
                 btAuto.BackColor = Color.LightGreen;
             }
@@ -261,7 +259,7 @@ namespace RateController
                 btnMaster.BackColor = Color.Red;
             }
 
-            if (SwON[3])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.RateUp))
             {
                 btnUp.BackColor = Color.LightGreen;
             }
@@ -270,7 +268,7 @@ namespace RateController
                 btnUp.BackColor = this.TransparencyKey;
             }
 
-            if (SwON[4])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.RateDown))
             {
                 btnDown.BackColor = Color.LightGreen;
             }
@@ -279,7 +277,7 @@ namespace RateController
                 btnDown.BackColor = this.TransparencyKey;
             }
 
-            if (SwON[5])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.sw0))
             {
                 btn1.BackColor = Color.LightGreen;
             }
@@ -288,7 +286,7 @@ namespace RateController
                 btn1.BackColor = Color.Red;
             }
 
-            if (SwON[6])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.sw1))
             {
                 btn2.BackColor = Color.LightGreen;
             }
@@ -297,7 +295,7 @@ namespace RateController
                 btn2.BackColor = Color.Red;
             }
 
-            if (SwON[7])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.sw2))
             {
                 btn3.BackColor = Color.LightGreen;
             }
@@ -306,7 +304,7 @@ namespace RateController
                 btn3.BackColor = Color.Red;
             }
 
-            if (SwON[8])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.sw3))
             {
                 btn4.BackColor = Color.LightGreen;
             }
@@ -315,7 +313,7 @@ namespace RateController
                 btn4.BackColor = Color.Red;
             }
 
-            if (SwON[9])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.sw4))
             {
                 btn5.BackColor = Color.LightGreen;
             }
@@ -324,7 +322,7 @@ namespace RateController
                 btn5.BackColor = Color.Red;
             }
 
-            if (SwON[10])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.sw5))
             {
                 btn6.BackColor = Color.LightGreen;
             }
@@ -333,7 +331,7 @@ namespace RateController
                 btn6.BackColor = Color.Red;
             }
 
-            if (SwON[11])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.sw6))
             {
                 btn7.BackColor = Color.LightGreen;
             }
@@ -342,7 +340,7 @@ namespace RateController
                 btn7.BackColor = Color.Red;
             }
 
-            if (SwON[12])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.sw7))
             {
                 btn8.BackColor = Color.LightGreen;
             }
@@ -351,7 +349,7 @@ namespace RateController
                 btn8.BackColor = Color.Red;
             }
 
-            if (SwON[21])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
             {
                 btnAutoSection.BackColor = Color.LightGreen;
             }
@@ -360,7 +358,7 @@ namespace RateController
                 btnAutoSection.BackColor = Color.Red;
             }
 
-            if (SwON[22])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate))
             {
                 btnAutoRate.BackColor = Color.LightGreen;
             }
@@ -376,8 +374,6 @@ namespace RateController
                 btnAutoRate.Visible = true;
                 btnAutoSection.Visible = true;
                 this.Height = 272;
-                // turn off auto button
-                if (SwON[0]) mf.vSwitchBox.PressSwitch(SwIDs.Auto);
             }
             else
             {
@@ -386,9 +382,6 @@ namespace RateController
                 btnAutoRate.Visible = false;
                 btnAutoSection.Visible = false;
                 this.Height = 221;
-                // turn off auto rate, auto section
-                if (SwON[21]) mf.vSwitchBox.PressSwitch(SwIDs.AutoSection);
-                if (SwON[22]) mf.vSwitchBox.PressSwitch(SwIDs.AutoRate);
             }
         }
     }

@@ -20,7 +20,6 @@ namespace RateController
         private int mouseY = 0;
         private Color RateColour = Color.GreenYellow;
         private bool SwitchingScreens = false;
-        private bool[] SwON = new bool[9];
         private int TransLeftOffset = 6;
         private int TransTopOffset = 30;
         private int windowLeft = 0;
@@ -133,7 +132,8 @@ namespace RateController
 
         private void btAuto_Click(object sender, EventArgs e)
         {
-            mf.vSwitchBox.PressSwitch(SwIDs.Auto, true);
+            mf.vSwitchBox.PressSwitch(SwIDs.AutoRate, true);
+            if (mf.vSwitchBox.AutoRateOn != mf.vSwitchBox.AutoSectionOn) mf.vSwitchBox.PressSwitch(SwIDs.AutoSection, true);
         }
 
         private void btMaster_Click(object sender, EventArgs e)
@@ -165,7 +165,7 @@ namespace RateController
 
         private void btnDown_Click(object sender, EventArgs e)
         {
-            if (SwON[0])
+            if (mf.SwitchBox.AutoRateOn)
             {
                 Prd.RateSet = Prd.RateSet / 1.05;
             }
@@ -197,7 +197,7 @@ namespace RateController
 
         private void btnUp_Click(object sender, EventArgs e)
         {
-            if (SwON[0])
+            if (mf.SwitchBox.AutoRateOn)
             {
                 Prd.RateSet = Prd.RateSet * 1.05;
             }
@@ -779,9 +779,8 @@ namespace RateController
             frm.Show();
         }
 
-        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
+        private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
-            SwON = e.Switches;
             UpdateSwitches();
         }
 
@@ -1203,7 +1202,7 @@ namespace RateController
         private void UpdateSwitches()
         {
             // auto button
-            if (SwON[0])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate)||mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
             {
                 btAuto.BackColor = Color.LightGreen;
                 btAuto.Text = "AUTO";
@@ -1232,7 +1231,7 @@ namespace RateController
                 masterOn = false;
             }
 
-            if (SwON[3])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.RateUp))
             {
                 btnUp.BackColor = Color.Blue;
             }
@@ -1241,7 +1240,7 @@ namespace RateController
                 btnUp.BackColor = Properties.Settings.Default.DayColour;
             }
 
-            if (SwON[4])
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.RateDown))
             {
                 btnDown.BackColor = Color.Blue;
             }

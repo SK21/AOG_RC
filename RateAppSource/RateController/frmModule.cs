@@ -204,6 +204,15 @@ namespace RateController
 
             lbIP.Text = mf.UDPmodules.SubNet;
             lbFile.Text = Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName);
+
+            if(mf.SwitchBox.RealConnected())
+            {
+                lbSwitchbox.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                lbSwitchbox.BackColor = Color.Red;
+            }
         }
 
         private void UpdateForm()

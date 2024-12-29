@@ -34,7 +34,7 @@ namespace RateController
             tcOptions.TabPages[5].Text = Lang.lgColor;
 
             ckMetric.Text = Lang.lgMetric;
-            ckScreenSwitches.Text = Lang.lgSwitches;
+            ckScreenSwitches.Text = Lang.lgOnScreen;
             ckWorkSwitch.Text = Lang.lgWorkSwitch;
             ckLargeScreen.Text = Lang.lgLargeScreen;
             ckTransparent.Text = Lang.lgTransparent;
@@ -127,6 +127,14 @@ namespace RateController
             }
         }
 
+        private void ckAutoRate_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Auto rate is disabled. The switch box auto button only switches section control mode.";
+
+            mf.Tls.ShowHelp(Message, "Auto Rate");
+            hlpevent.Handled = true;
+        }
+
         private void ckDefaultProduct_CheckedChanged(object sender, EventArgs e)
         {
             if (ckDefaultProduct.Checked)
@@ -193,7 +201,7 @@ namespace RateController
             if (v < 0) v = 0;
             if (p < 0) p = 0;
             if (q < 0) q = 0;
-            if (t < 0) t = 0;   
+            if (t < 0) t = 0;
 
             switch (hi)
             {
@@ -406,6 +414,7 @@ namespace RateController
                 mf.UseInches = !ckMetric.Checked;
                 mf.ShowSwitches = ckScreenSwitches.Checked;
                 mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
+                mf.SwitchBox.AutoRateDisabled = ckAutoRate.Checked;
                 mf.ShowPressure = ckPressure.Checked;
                 if (double.TryParse(tbPressureCal.Text, out double Pressure)) mf.PressureCal = Pressure;
                 if (double.TryParse(tbPressureOffset.Text, out double PresOff)) mf.PressureOffset = PresOff;
@@ -422,7 +431,13 @@ namespace RateController
                 mf.UseLargeScreen = ckLargeScreen.Checked;
                 if (ckSingle.Checked) mf.SwitchScreens(true);
 
+                if (mf.UseDualAuto != ckDualAuto.Checked && mf.UseDualAuto)
+                {
+                    // keep auto switches in sync when only one switch
+                    if (mf.vSwitchBox.AutoRateOn != mf.vSwitchBox.AutoSectionOn) mf.vSwitchBox.PressSwitch(SwIDs.AutoSection);
+                }
                 mf.UseDualAuto = ckDualAuto.Checked;
+
                 mf.ResumeAfterPrime = ckResume.Checked;
 
                 SaveLanguage();
@@ -775,6 +790,7 @@ namespace RateController
             ckMetric.Checked = !mf.UseInches;
             ckScreenSwitches.Checked = mf.ShowSwitches;
             ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
+            ckAutoRate.Checked = mf.SwitchBox.AutoRateDisabled;
             ckPressure.Checked = mf.ShowPressure;
             ckSimSpeed.Checked = (mf.SimMode == SimType.Sim_Speed);
             ckDualAuto.Checked = mf.UseDualAuto;
@@ -827,5 +843,6 @@ namespace RateController
 
             Initializing = false;
         }
+
     }
 }

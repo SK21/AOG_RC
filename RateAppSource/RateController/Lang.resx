@@ -387,10 +387,10 @@ Calibration steps:
     <value>Overall Rate</value>
   </data>
   <data name="lgPage1" xml:space="preserve">
-    <value>Page1</value>
+    <value>Display</value>
   </data>
   <data name="lgPage2" xml:space="preserve">
-    <value>Page2</value>
+    <value>Config</value>
   </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sections Per Zone</value>
@@ -529,6 +529,9 @@ Calibration steps:
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Switches</value>
+  </data>
+  <data name="lgSwitchesOnScreen" xml:space="preserve">
+    <value>On Screen</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
     <value>Tank Size</value>

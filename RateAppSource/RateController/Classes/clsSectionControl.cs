@@ -10,7 +10,6 @@ namespace RateController
         private const int StepDelay = 2000;
         private const double StepMultiplier = 0.05;   // rate change amount for each step
         private DateTime AdjustTime;
-        private bool AutoLast;
         private bool AutoSectionLast;
         private bool AutoSectionsChanged;
         private bool Changed;
@@ -250,13 +249,12 @@ namespace RateController
                         }
                     }
 
-                    if (AutoLast != mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                    if ( AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                     {
                         AutoSectionsChanged = true;
-                        AutoLast = mf.SwitchBox.SwitchIsOn(SwIDs.Auto);
                         AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
 
-                        if (AutoLast && MasterIsOn || AutoSectionLast & MasterIsOn)
+                        if (AutoSectionLast & MasterIsOn)
                         {
                             // auto on
                             ToAOG.Command = 1;
@@ -273,7 +271,7 @@ namespace RateController
                         MasterIsOnChanged = false;
                         AutoSectionsChanged = false;
 
-                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                        if ( !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                         {
                             // auto off, send on bytes to match switchbox
                             for (int i = 0; i < Max; i++)
@@ -317,7 +315,6 @@ namespace RateController
                     {
                         MasterIsOnChanged = false;
                         ToAOG.Command = 2;  // auto off
-                        AutoLast = false;
                         AutoSectionLast = false;
                         ToAOG.OffLo = 255;
                         ToAOG.OffHi = 255;
@@ -429,13 +426,12 @@ namespace RateController
                         }
                     }
 
-                    if (AutoLast != mf.SwitchBox.SwitchIsOn(SwIDs.Auto) || AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                    if (AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                     {
                         AutoSectionsChanged = true;
-                        AutoLast = mf.SwitchBox.SwitchIsOn(SwIDs.Auto);
                         AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
 
-                        if (AutoLast && MasterIsOn || AutoSectionLast & MasterIsOn)
+                        if (AutoSectionLast & MasterIsOn)
                         {
                             // auto on
                             ToAOG.Command = 1;
@@ -452,7 +448,7 @@ namespace RateController
                         MasterIsOnChanged = false;
                         AutoSectionsChanged = false;
 
-                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.Auto) && !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                        if ( !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                         {
                             // auto off, send on bytes to match RC zones
                             foreach (clsZone Zn in mf.Zones.Items)
@@ -475,7 +471,6 @@ namespace RateController
                     {
                         MasterIsOnChanged = false;
                         ToAOG.Command = 2;  // auto off
-                        AutoLast = false;
                         AutoSectionLast = false;
                         ToAOG.OffLo = 255;
                         ToAOG.OffHi = 255;
@@ -540,7 +535,7 @@ namespace RateController
             }
         }
 
-        private void SwitchBox_SwitchPGNreceived(object sender, PGN32618.SwitchPGNargs e)
+        private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
             ReadRateSwitches();
             if (mf.UseZones)

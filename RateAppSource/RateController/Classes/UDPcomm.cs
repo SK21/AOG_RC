@@ -165,7 +165,7 @@ namespace RateController
                             break;
 
                         case 32618:
-                            if (mf.SwitchBox.ParseByteData(Data))
+                            if (mf.SwitchBox.ParseByteData(Data,true))
                             {
                                 SBtime = DateTime.Now;
                                 if (mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
