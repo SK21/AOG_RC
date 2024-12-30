@@ -16,14 +16,11 @@ namespace RateController
         private bool IsTransparent = false;
         private bool masterOn;
         private bool MasterPressed;
-        private int mouseX = 0;
-        private int mouseY = 0;
         private Color RateColour = Color.GreenYellow;
         private bool SwitchingScreens = false;
         private int TransLeftOffset = 6;
         private int TransTopOffset = 30;
-        private int windowLeft = 0;
-        private int windowTop = 0;
+        private Point MouseDownLocation;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -560,29 +557,12 @@ namespace RateController
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
-            // Log the current window location and the mouse location.
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-                mouseX = e.X;
-                mouseY = e.Y;
-            }
+            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
         }
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-
-                Point pos = new Point(0, 0);
-
-                pos.X = windowLeft + e.X - mouseX;
-                pos.Y = windowTop + e.Y - mouseY;
-                this.Location = pos;
-            }
+            if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)

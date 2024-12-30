@@ -838,5 +838,13 @@ namespace RateController
 
             Initializing = false;
         }
+
+        private void ckDualAuto_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Use Auto Rate and Auto Section instead of just Auto on the on-screen switches. The rate and the sections can be controlled independently.";
+
+            mf.Tls.ShowHelp(Message, "Dual Auto");
+            hlpevent.Handled = true;
+        }
     }
 }

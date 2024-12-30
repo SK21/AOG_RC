@@ -94,13 +94,10 @@ namespace RateController
         private bool cUseTransparent = false;
         private bool LoadError = false;
         private MouseButtons MouseButtonClicked;
-        private int mouseX = 0;
-        private int mouseY = 0;
+        private Point MouseDownLocation;
         private Label[] ProdName;
         private Label[] Rates;
         private PGN32501[] RelaySettings;
-        private int windowLeft = 0;
-        private int windowTop = 0;
 
         public FormStart()
         {
@@ -1326,12 +1323,9 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                if (MouseButtonClicked == MouseButtons.Left)
-                {
-                    cRateType++;
-                    if (cRateType > 1) cRateType = 0;
-                    UpdateStatus();
-                }
+                cRateType++;
+                if (cRateType > 1) cRateType = 0;
+                UpdateStatus();
             }
         }
 
@@ -1360,20 +1354,17 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                if (MouseButtonClicked == MouseButtons.Left)
+                if (!Products.Item(CurrentPage - 1).UseVR)
                 {
-                    if (!Products.Item(CurrentPage - 1).UseVR)
+                    if (Products.Item(CurrentPage - 1).UseAltRate)
                     {
-                        if (Products.Item(CurrentPage - 1).UseAltRate)
-                        {
-                            lbTarget.Text = Lang.lgTargetRate;
-                            Products.Item(CurrentPage - 1).UseAltRate = false;
-                        }
-                        else
-                        {
-                            lbTarget.Text = Lang.lgTargetRateAlt;
-                            Products.Item(CurrentPage - 1).UseAltRate = true;
-                        }
+                        lbTarget.Text = Lang.lgTargetRate;
+                        Products.Item(CurrentPage - 1).UseAltRate = false;
+                    }
+                    else
+                    {
+                        lbTarget.Text = Lang.lgTargetRateAlt;
+                        Products.Item(CurrentPage - 1).UseAltRate = true;
                     }
                 }
             }
@@ -1456,30 +1447,13 @@ namespace RateController
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
-            // Log the current window location and the mouse location.
             MouseButtonClicked = e.Button;
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-                mouseX = e.X;
-                mouseY = e.Y;
-            }
+            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
         }
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-
-                Point pos = new Point(0, 0);
-
-                pos.X = windowLeft + e.X - mouseX;
-                pos.Y = windowTop + e.Y - mouseY;
-                this.Location = pos;
-            }
+            if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private void networkToolStripMenuItem_Click(object sender, EventArgs e)

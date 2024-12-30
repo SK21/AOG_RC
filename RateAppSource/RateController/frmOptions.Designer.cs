@@ -608,6 +608,7 @@
             this.ckDualAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDualAuto.UseVisualStyleBackColor = true;
             this.ckDualAuto.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            this.ckDualAuto.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckDualAuto_HelpRequested);
             // 
             // DGV
             // 

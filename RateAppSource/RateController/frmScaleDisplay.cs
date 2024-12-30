@@ -9,14 +9,10 @@ namespace RateController
         private int cDisplayMode = 0;
         private int cProductID;
         private FormStart mf;
-        private MouseButtons MouseButtonClicked;
-        private int mouseX = 0;
-        private int mouseY = 0;
+        private Point MouseDownLocation;
         private double StartingAcres = 0;
         private double StartingWeight = 0;
         private double TareWeight = 0;
-        private int windowLeft = 0;
-        private int windowTop = 0;
         // Display mode: 0 - weight, 1 - applied, 2 - acres, 3 - rate
 
         public frmScaleDisplay(FormStart CallingForm, int ProductID)
@@ -131,30 +127,12 @@ namespace RateController
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
-            // Log the current window location and the mouse location.
-            MouseButtonClicked = e.Button;
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-                mouseX = e.X;
-                mouseY = e.Y;
-            }
+            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
         }
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-
-                Point pos = new Point(0, 0);
-
-                pos.X = windowLeft + e.X - mouseX;
-                pos.Y = windowTop + e.Y - mouseY;
-                this.Location = pos;
-            }
+            if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private double NetWeight()

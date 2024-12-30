@@ -114,6 +114,7 @@ namespace RateController
 
             cboPort1.SelectedIndex = 0;
             UpdateForm();
+            timer1_Tick(this, null);
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
