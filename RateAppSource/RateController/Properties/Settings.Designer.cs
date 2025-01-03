@@ -190,5 +190,17 @@ namespace RateController.Properties {
                 this["BackColourUser1"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkSlateBlue")]
+        public global::System.Drawing.Color MouseDown {
+            get {
+                return ((global::System.Drawing.Color)(this["MouseDown"]));
+            }
+            set {
+                this["MouseDown"] = value;
+            }
+        }
     }
 }

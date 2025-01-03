@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Language;
+using System;
 using System.Diagnostics;
 
 namespace RateController

@@ -44,5 +44,8 @@
     <Setting Name="BackColourUser1" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">210, 220, 230</Value>
     </Setting>
+    <Setting Name="MouseDown" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">DarkSlateBlue</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

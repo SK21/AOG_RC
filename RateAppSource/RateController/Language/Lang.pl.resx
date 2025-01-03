@@ -1,0 +1,578 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="lgAcres" xml:space="preserve">
+    <value>Akry</value>
+  </data>
+  <data name="lgAcresHr" xml:space="preserve">
+    <value>Akry/Ha</value>
+  </data>
+  <data name="lgAlreadyRunning" xml:space="preserve">
+    <value>Wszystko gotowe</value>
+  </data>
+  <data name="lgAltRate" xml:space="preserve">
+    <value>Alt. Rate (%)</value>
+  </data>
+  <data name="lgBaseRate" xml:space="preserve">
+    <value>Dawka Bazowa</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>Wersja PCB</value>
+  </data>
+  <data name="lgCalFactor" xml:space="preserve">
+    <value>Współczynnik (impulsy/jednostka)</value>
+  </data>
+  <data name="lgCalHelp" xml:space="preserve">
+    <value>Kroki kalibracji:
+1.Wprowadź prędkość jazdy
+2.Ustaw prędkość miernika kalibracyjnego (rpm)
+* Zacznij od wyłączenia głównego wyłącznika
+* Włącz produkt przyciskiem zasilania
+* Wprowadź początkową stawkę bazową
+* Wprowadź początkowy współczynnik kalibracji
+* Naciśnij start, RC spróbuje dostosować przepływ/natężenie do wartości docelowej
+* Jeśli pomyślna prędkość licznika jest zablokowana
+* Naciśnij stop
+3.Ustaw współczynnik kalibracji (impulsy/jednostkę)
+* Zacznij od wyłączenia głównego wyłącznika
+* Naciśnij przycisk Start, włącz wyłącznik główny i pozwól,
+aby urządzenie uruchomiło się, aby uzyskać odpowiednią ilość próbki
+* Naciśnij stop i wprowadź zmierzoną ilość. Obliczany jest współczynnik kal.
+* Naciśnij przycisk Zapisz, aby zapisać nowe wartości
+4.Opcje rozpoczęcia od nowa
+* Jeśli RC nie uda się zablokować prędkości licznika, dostosuj początkowy współczynnik kalibracji,
+prędkość jazdy, minimum PWM, maksimum PWM lub zakres napędu dozowania maszyny.
+Rozpocznij ponownie krok 2.
+* Aby ponownie ustawić prędkość licznika, można nacisnąć przycisk blokady w celu odblokowania.
+RC podejmie następnie próbę znalezienia nowej prędkości licznika po ponownym wykonaniu kroku 2.
+* Aby rozpocząć od wcześniej zapisanego ustawienia, można nacisnąć przycisk blokady, aby zablokować.
+Następnie przejdź do kroku 3</value>
+  </data>
+  <data name="lgCalibrate" xml:space="preserve">
+    <value>Kalibracja</value>
+  </data>
+  <data name="lgCalProduct" xml:space="preserve">
+    <value>Produkt</value>
+  </data>
+  <data name="lgCalSpeed" xml:space="preserve">
+    <value>Prędkość Kalibracji</value>
+  </data>
+  <data name="lgChannel" xml:space="preserve">
+    <value>Kanał</value>
+  </data>
+  <data name="lgComboClose" xml:space="preserve">
+    <value>Combo Close</value>
+  </data>
+  <data name="lgComboTimed" xml:space="preserve">
+    <value>Combo Timed</value>
+  </data>
+  <data name="lgComm" xml:space="preserve">
+    <value>COM</value>
+  </data>
+  <data name="lgCommDiagnostics" xml:space="preserve">
+    <value>COM Diagnostyka</value>
+  </data>
+  <data name="lgConfig" xml:space="preserve">
+    <value>konfiguracja</value>
+  </data>
+  <data name="lgConfigIP" xml:space="preserve">
+    <value>Local IP</value>
+  </data>
+  <data name="lgConnect" xml:space="preserve">
+    <value>Połącz</value>
+  </data>
+  <data name="lgControl" xml:space="preserve">
+    <value>Kontrol</value>
+  </data>
+  <data name="lgControlType" xml:space="preserve">
+    <value>Typ kontroli</value>
+  </data>
+  <data name="lgCountsRev" xml:space="preserve">
+    <value>Liczba/obr</value>
+  </data>
+  <data name="lgCoverage" xml:space="preserve">
+    <value>Powierzchnia</value>
+  </data>
+  <data name="lgCurrentRate" xml:space="preserve">
+    <value>Wydatek chwilowy</value>
+  </data>
+  <data name="lgDefaultProduct" xml:space="preserve">
+    <value>Produkt domyślny</value>
+  </data>
+  <data name="lgDensity" xml:space="preserve">
+    <value>Gęstość</value>
+  </data>
+  <data name="lgDerivative" xml:space="preserve">
+    <value>Pochodna</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+  <data name="lgDiagnostics" xml:space="preserve">
+    <value>Diagnostyka</value>
+  </data>
+  <data name="lgDisconnect" xml:space="preserve">
+    <value>Rozłącz</value>
+  </data>
+  <data name="lgEnd" xml:space="preserve">
+    <value>Koniec</value>
+  </data>
+  <data name="lgEqual" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lgError" xml:space="preserve">
+    <value>Error %</value>
+  </data>
+  <data name="lgExit" xml:space="preserve">
+    <value>Wyjście</value>
+  </data>
+  <data name="lgExpectedAmount" xml:space="preserve">
+    <value>Oczekiwana Dawka</value>
+  </data>
+  <data name="lgFan" xml:space="preserve">
+    <value>Wentylator</value>
+  </data>
+  <data name="lgFlowOnHigh" xml:space="preserve">
+    <value>Przepływ</value>
+  </data>
+  <data name="lgGeoStop" xml:space="preserve">
+    <value>Geo Stop</value>
+  </data>
+  <data name="lgHectares" xml:space="preserve">
+    <value>Hektary</value>
+  </data>
+  <data name="lgHectares_Hr" xml:space="preserve">
+    <value>Hektary/ha</value>
+  </data>
+  <data name="lgHighMax" xml:space="preserve">
+    <value>PWM Max</value>
+  </data>
+  <data name="lgHour" xml:space="preserve">
+    <value>Godzina</value>
+  </data>
+  <data name="lgHours" xml:space="preserve">
+    <value>Godziny</value>
+  </data>
+  <data name="lgHydDown" xml:space="preserve">
+    <value>Dawka  do Góry</value>
+  </data>
+  <data name="lgHydUp" xml:space="preserve">
+    <value>Dawka w Dół</value>
+  </data>
+  <data name="lgID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="lgInstantRate" xml:space="preserve">
+    <value>dawka  chwilowa</value>
+  </data>
+  <data name="lgIntegral" xml:space="preserve">
+    <value>Całkowity</value>
+  </data>
+  <data name="lgInvertSection" xml:space="preserve">
+    <value>Odwróć sekcję</value>
+  </data>
+  <data name="lgKPH" xml:space="preserve">
+    <value>km/h</value>
+  </data>
+  <data name="lgLanguage" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="lgLargeScreen" xml:space="preserve">
+    <value>Ekran Główny/Duży ekran</value>
+  </data>
+  <data name="lgMaster" xml:space="preserve">
+    <value>Głowny</value>
+  </data>
+  <data name="lgMaxRate" xml:space="preserve">
+    <value>Dawka Max</value>
+  </data>
+  <data name="lgMeasuredAmount" xml:space="preserve">
+    <value>Ilość zmierzona</value>
+  </data>
+  <data name="lgMeterSet" xml:space="preserve">
+    <value>Metryczne</value>
+  </data>
+  <data name="lgMetric" xml:space="preserve">
+    <value>Jednostki metryczne</value>
+  </data>
+  <data name="lgMinPWM" xml:space="preserve">
+    <value>PWM Min</value>
+  </data>
+  <data name="lgMinRate" xml:space="preserve">
+    <value>Dawka Min</value>
+  </data>
+  <data name="lgMinUPM" xml:space="preserve">
+    <value>Min UPM</value>
+  </data>
+  <data name="lgMinute" xml:space="preserve">
+    <value>Minuta</value>
+  </data>
+  <data name="lgMinutes" xml:space="preserve">
+    <value>Minuty</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Moduł</value>
+  </data>
+  <data name="lgModuleID" xml:space="preserve">
+    <value>Moduł ID</value>
+  </data>
+  <data name="lgModules" xml:space="preserve">
+    <value>Moduły</value>
+  </data>
+  <data name="lgMotor" xml:space="preserve">
+    <value>Silnik</value>
+  </data>
+  <data name="lgMotorWeight" xml:space="preserve">
+    <value>Silnik/Masa</value>
+  </data>
+  <data name="lgMPH" xml:space="preserve">
+    <value>MPH</value>
+  </data>
+  <data name="lgNetwork" xml:space="preserve">
+    <value>Sieć</value>
+  </data>
+  <data name="lgNew" xml:space="preserve">
+    <value>Nowy</value>
+  </data>
+  <data name="lgNone" xml:space="preserve">
+    <value>Żaden</value>
+  </data>
+  <data name="lgNumSections" xml:space="preserve">
+    <value>Liczba sekcji</value>
+  </data>
+  <data name="lgOffRate" xml:space="preserve">
+    <value>Alarm wyłączenia</value>
+  </data>
+  <data name="lgOffset" xml:space="preserve">
+    <value>Wyrównaj</value>
+  </data>
+  <data name="lgOnScreen" xml:space="preserve">
+    <value>Ekran głowny</value>
+  </data>
+  <data name="lgOnTime" xml:space="preserve">
+    <value>Czas</value>
+  </data>
+  <data name="lgOpen" xml:space="preserve">
+    <value>Otwórz</value>
+  </data>
+  <data name="lgOptions" xml:space="preserve">
+    <value>Opcje</value>
+  </data>
+  <data name="lgOverallRate" xml:space="preserve">
+    <value>Wydatek całkowity</value>
+  </data>
+  <data name="lgPerZone" xml:space="preserve">
+    <value>Sekcji na strefę</value>
+  </data>
+  <data name="lgPIDTune" xml:space="preserve">
+    <value>Wykres strojenia PID</value>
+  </data>
+  <data name="lgPins" xml:space="preserve">
+    <value>Piny</value>
+  </data>
+  <data name="lgPower" xml:space="preserve">
+    <value>Zasilanie</value>
+  </data>
+  <data name="lgPressure" xml:space="preserve">
+    <value>Ciśnienie</value>
+  </data>
+  <data name="lgPrimedStart" xml:space="preserve">
+    <value>Ustawienia początkowe</value>
+  </data>
+  <data name="lgProduct" xml:space="preserve">
+    <value>Produkt</value>
+  </data>
+  <data name="lgProductName" xml:space="preserve">
+    <value>Nazwa produktu</value>
+  </data>
+  <data name="lgProducts" xml:space="preserve">
+    <value>Products/Fans</value>
+  </data>
+  <data name="lgProportional" xml:space="preserve">
+    <value>Proporcjonalny/stosunek</value>
+  </data>
+  <data name="lgPulses" xml:space="preserve">
+    <value>Impulsy</value>
+  </data>
+  <data name="lgPWMmax" xml:space="preserve">
+    <value>PWM Max</value>
+  </data>
+  <data name="lgPWMmin" xml:space="preserve">
+    <value>PWM Min</value>
+  </data>
+  <data name="lgQuantity" xml:space="preserve">
+    <value>Liczba</value>
+  </data>
+  <data name="lgQuantityApplied" xml:space="preserve">
+    <value>Aktualne Stosowanie</value>
+  </data>
+  <data name="lgRate" xml:space="preserve">
+    <value>Dawka</value>
+  </data>
+  <data name="lgRateMethod" xml:space="preserve">
+    <value>Wskaźnik dawki</value>
+  </data>
+  <data name="lgRelay" xml:space="preserve">
+    <value>Zmiana</value>
+  </data>
+  <data name="lgRelayControl" xml:space="preserve">
+    <value>Zmiany Konf</value>
+  </data>
+  <data name="lgRelayOnHigh" xml:space="preserve">
+    <value>Poziom wysoki</value>
+  </data>
+  <data name="lgRelays" xml:space="preserve">
+    <value>Przekaźniki</value>
+  </data>
+  <data name="lgRPM" xml:space="preserve">
+    <value>obr/min</value>
+  </data>
+  <data name="lgSaveAs" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="lgSeconds" xml:space="preserve">
+    <value>Sekundy</value>
+  </data>
+  <data name="lgSection" xml:space="preserve">
+    <value>Sekcja</value>
+  </data>
+  <data name="lgSectionNum" xml:space="preserve">
+    <value>Sekcja#</value>
+  </data>
+  <data name="lgSections" xml:space="preserve">
+    <value>Sekcje</value>
+  </data>
+  <data name="lgSelectedSubnet" xml:space="preserve">
+    <value>Wybrana  sieć</value>
+  </data>
+  <data name="lgSensor" xml:space="preserve">
+    <value>Czujnik</value>
+  </data>
+  <data name="lgSensorCount" xml:space="preserve">
+    <value>licznik</value>
+  </data>
+  <data name="lgSensorCounts" xml:space="preserve">
+    <value>Licznik/ unit</value>
+  </data>
+  <data name="lgSensorID" xml:space="preserve">
+    <value>Id Czujnika</value>
+  </data>
+  <data name="lgSensorLocation" xml:space="preserve">
+    <value>Czujnik położenia</value>
+  </data>
+  <data name="lgShowPressure" xml:space="preserve">
+    <value>Ciśnienie robocze</value>
+  </data>
+  <data name="lgSlave" xml:space="preserve">
+    <value>Praca</value>
+  </data>
+  <data name="lgSpeed" xml:space="preserve">
+    <value>Prędkość</value>
+  </data>
+  <data name="lgStandard" xml:space="preserve">
+    <value>Zawór główny</value>
+  </data>
+  <data name="lgStandardScreen" xml:space="preserve">
+    <value>Ekran Główny</value>
+  </data>
+  <data name="lgStart" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="lgStartQuantity" xml:space="preserve">
+    <value>Ilość w zbiorniku</value>
+  </data>
+  <data name="lgSubnet" xml:space="preserve">
+    <value>Adres podsieci</value>
+  </data>
+  <data name="lgSwitch" xml:space="preserve">
+    <value>Przełacznik</value>
+  </data>
+  <data name="lgSwitchDelay" xml:space="preserve">
+    <value>Opóźnienie zmiany</value>
+  </data>
+  <data name="lgSwitches" xml:space="preserve">
+    <value>Przełączniki</value>
+  </data>
+  <data name="lgTankSize" xml:space="preserve">
+    <value>Pojemność zbiornika</value>
+  </data>
+  <data name="lgTank_Remaining" xml:space="preserve">
+    <value>Pozostała ilość</value>
+  </data>
+  <data name="lgTargetRate" xml:space="preserve">
+    <value>Dawka Zadana</value>
+  </data>
+  <data name="lgTargetRateAlt" xml:space="preserve">
+    <value>Dawka Alt…</value>
+  </data>
+  <data name="lgTimeForMulti" xml:space="preserve">
+    <value>Średni Czas /impuls (&lt;50 ms/impuls)</value>
+  </data>
+  <data name="lgTimeForSingle" xml:space="preserve">
+    <value>Czas dla jednego impulsu (&gt;50 ms/impuls)</value>
+  </data>
+  <data name="lgTramLeft" xml:space="preserve">
+    <value>Tram Left</value>
+  </data>
+  <data name="lgTramRight" xml:space="preserve">
+    <value>Tram right</value>
+  </data>
+  <data name="lgTransparent" xml:space="preserve">
+    <value>Przejżystość</value>
+  </data>
+  <data name="lgType" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="lgUnitsVolt" xml:space="preserve">
+    <value>Volty</value>
+  </data>
+  <data name="lgUPMApplied" xml:space="preserve">
+    <value>UPM Zadane</value>
+  </data>
+  <data name="lgUPMerror" xml:space="preserve">
+    <value>Error %</value>
+  </data>
+  <data name="lgUPMPWM" xml:space="preserve">
+    <value>UPM/PWM</value>
+  </data>
+  <data name="lgUPMTarget" xml:space="preserve">
+    <value>Docelowa dawka</value>
+  </data>
+  <data name="lgUseVR" xml:space="preserve">
+    <value>Dawka Zmienna</value>
+  </data>
+  <data name="lgWidth" xml:space="preserve">
+    <value>Szerokość</value>
+  </data>
+  <data name="lgWifiPort" xml:space="preserve">
+    <value>Wifi Port</value>
+  </data>
+  <data name="lgWifiSignal" xml:space="preserve">
+    <value>Wifi sygnał</value>
+  </data>
+  <data name="lgWorkingWidthFT" xml:space="preserve">
+    <value>Szerokość robocza (stopy)</value>
+  </data>
+  <data name="lgWorkingWidthM" xml:space="preserve">
+    <value>Szerokość robocza (metry)</value>
+  </data>
+  <data name="lgZone" xml:space="preserve">
+    <value>Strefa</value>
+  </data>
+</root>

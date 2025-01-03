@@ -118,163 +118,175 @@
     <Compile Include="Classes\clsZones.cs" />
     <Compile Include="Classes\SerialComm.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
-    <Compile Include="Classes\VerticalProgressBar.cs">
+    <Compile Include="Controls\VerticalProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="FormNumeric.cs">
+    <Compile Include="Forms\FormNumeric.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormNumeric.Designer.cs">
+    <Compile Include="Forms\FormNumeric.Designer.cs">
       <DependentUpon>FormNumeric.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPIDGraph.cs">
+    <Compile Include="Forms\FormPIDGraph.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPIDGraph.designer.cs">
+    <Compile Include="Forms\FormPIDGraph.designer.cs">
       <DependentUpon>FormPIDGraph.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSettings.cs">
+    <Compile Include="Forms\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSettings.designer.cs">
+    <Compile Include="Forms\FormSettings.designer.cs">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormStart.cs">
+    <Compile Include="Forms\FormStart.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormStart.designer.cs">
+    <Compile Include="Forms\FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmCalHelp.cs">
+    <Compile Include="Forms\frmCalHelp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmCalHelp.Designer.cs">
+    <Compile Include="Forms\frmCalHelp.Designer.cs">
       <DependentUpon>frmCalHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmCalibrate.cs">
+    <Compile Include="Forms\frmCalibrate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmCalibrate.Designer.cs">
+    <Compile Include="Forms\frmCalibrate.Designer.cs">
       <DependentUpon>frmCalibrate.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmComm.cs">
+    <Compile Include="Forms\frmComm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmComm.Designer.cs">
+    <Compile Include="Forms\frmComm.Designer.cs">
       <DependentUpon>frmComm.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmHelp.cs">
+    <Compile Include="Forms\frmHelp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmHelp.Designer.cs">
+    <Compile Include="Forms\frmHelp.Designer.cs">
       <DependentUpon>frmHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmLargeScreen.cs">
+    <Compile Include="Forms\frmLargeScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmLargeScreen.Designer.cs">
+    <Compile Include="Forms\frmLargeScreen.Designer.cs">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmModule.cs">
+    <Compile Include="Menu\frmMenu.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmModule.Designer.cs">
+    <Compile Include="Menu\frmMenu.Designer.cs">
+      <DependentUpon>frmMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmModule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmModule.Designer.cs">
       <DependentUpon>frmModule.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmModuleConfig.cs">
+    <Compile Include="Forms\frmModuleConfig.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmModuleConfig.Designer.cs">
+    <Compile Include="Forms\frmModuleConfig.Designer.cs">
       <DependentUpon>frmModuleConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMsgBox.cs">
+    <Compile Include="Forms\frmMsgBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMsgBox.Designer.cs">
+    <Compile Include="Forms\frmMsgBox.Designer.cs">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmOptions.cs">
+    <Compile Include="Forms\frmOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmOptions.Designer.cs">
+    <Compile Include="Forms\frmOptions.Designer.cs">
       <DependentUpon>frmOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmPins.cs">
+    <Compile Include="Forms\frmPins.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmPins.Designer.cs">
+    <Compile Include="Forms\frmPins.Designer.cs">
       <DependentUpon>frmPins.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmPressureDisplay.cs">
+    <Compile Include="Forms\frmPressureDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmPressureDisplay.Designer.cs">
+    <Compile Include="Forms\frmPressureDisplay.Designer.cs">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmRelays.cs">
+    <Compile Include="Forms\frmRelays.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmRelays.Designer.cs">
+    <Compile Include="Forms\frmRelays.Designer.cs">
       <DependentUpon>frmRelays.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmResetQuantity.cs">
+    <Compile Include="Forms\frmResetQuantity.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmResetQuantity.Designer.cs">
+    <Compile Include="Forms\frmResetQuantity.Designer.cs">
       <DependentUpon>frmResetQuantity.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmScaleDisplay.cs">
+    <Compile Include="Forms\frmScaleDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmScaleDisplay.Designer.cs">
+    <Compile Include="Forms\frmScaleDisplay.Designer.cs">
       <DependentUpon>frmScaleDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSections.cs">
+    <Compile Include="Forms\frmSections.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSections.Designer.cs">
+    <Compile Include="Forms\frmSections.Designer.cs">
       <DependentUpon>frmSections.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSwitches.cs">
+    <Compile Include="Forms\frmSwitches.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSwitches.Designer.cs">
+    <Compile Include="Forms\frmSwitches.Designer.cs">
       <DependentUpon>frmSwitches.cs</DependentUpon>
     </Compile>
-    <Compile Include="Lang.de.Designer.cs">
+    <Compile Include="Language\Lang.de.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.de.resx</DependentUpon>
     </Compile>
-    <Compile Include="Lang.Designer.cs">
+    <Compile Include="Language\Lang.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.resx</DependentUpon>
     </Compile>
-    <Compile Include="Lang.fr.Designer.cs">
+    <Compile Include="Language\Lang.fr.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.fr.resx</DependentUpon>
     </Compile>
-    <Compile Include="Lang.hu.Designer.cs">
+    <Compile Include="Language\Lang.hu.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.hu.resx</DependentUpon>
     </Compile>
-    <Compile Include="Lang.nl.Designer.cs">
+    <Compile Include="Language\Lang.nl.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.nl.resx</DependentUpon>
     </Compile>
-    <Compile Include="Lang.pl.Designer.cs">
+    <Compile Include="Language\Lang.pl.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.pl.resx</DependentUpon>
     </Compile>
-    <Compile Include="Lang.ru.Designer.cs">
+    <Compile Include="Language\Lang.ru.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.ru.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuRate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuRate.Designer.cs">
+      <DependentUpon>frmMenuRate.cs</DependentUpon>
     </Compile>
     <Compile Include="PGNs\PGN228.cs" />
     <Compile Include="PGNs\PGN229.cs" />
@@ -295,108 +307,114 @@
     <Compile Include="PGNs\PGN32702.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RCRestore.cs">
+    <Compile Include="Forms\RCRestore.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RCRestore.Designer.cs">
+    <Compile Include="Forms\RCRestore.Designer.cs">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="FormNumeric.resx">
+    <EmbeddedResource Include="Forms\FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPIDGraph.resx">
+    <EmbeddedResource Include="Forms\FormPIDGraph.resx">
       <DependentUpon>FormPIDGraph.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSettings.resx">
+    <EmbeddedResource Include="Forms\FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormStart.resx">
+    <EmbeddedResource Include="Forms\FormStart.resx">
       <DependentUpon>FormStart.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmCalHelp.resx">
+    <EmbeddedResource Include="Forms\frmCalHelp.resx">
       <DependentUpon>frmCalHelp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmCalibrate.resx">
+    <EmbeddedResource Include="Forms\frmCalibrate.resx">
       <DependentUpon>frmCalibrate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmComm.resx">
+    <EmbeddedResource Include="Forms\frmComm.resx">
       <DependentUpon>frmComm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmHelp.resx">
+    <EmbeddedResource Include="Forms\frmHelp.resx">
       <DependentUpon>frmHelp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLargeScreen.resx">
+    <EmbeddedResource Include="Forms\frmLargeScreen.resx">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmModule.resx">
+    <EmbeddedResource Include="Menu\frmMenu.resx">
+      <DependentUpon>frmMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmModule.resx">
       <DependentUpon>frmModule.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmModuleConfig.resx">
+    <EmbeddedResource Include="Forms\frmModuleConfig.resx">
       <DependentUpon>frmModuleConfig.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMsgBox.resx">
+    <EmbeddedResource Include="Forms\frmMsgBox.resx">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmOptions.resx">
+    <EmbeddedResource Include="Forms\frmOptions.resx">
       <DependentUpon>frmOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPins.resx">
+    <EmbeddedResource Include="Forms\frmPins.resx">
       <DependentUpon>frmPins.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPressureDisplay.resx">
+    <EmbeddedResource Include="Forms\frmPressureDisplay.resx">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmRelays.resx">
+    <EmbeddedResource Include="Forms\frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmResetQuantity.resx">
+    <EmbeddedResource Include="Forms\frmResetQuantity.resx">
       <DependentUpon>frmResetQuantity.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmScaleDisplay.resx">
+    <EmbeddedResource Include="Forms\frmScaleDisplay.resx">
       <DependentUpon>frmScaleDisplay.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSections.resx">
+    <EmbeddedResource Include="Forms\frmSections.resx">
       <DependentUpon>frmSections.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSwitches.resx">
+    <EmbeddedResource Include="Forms\frmSwitches.resx">
       <DependentUpon>frmSwitches.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lang.de.resx">
+    <EmbeddedResource Include="Language\Lang.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.de.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lang.fr.resx">
+    <EmbeddedResource Include="Language\Lang.fr.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.fr.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lang.hu.resx">
+    <EmbeddedResource Include="Language\Lang.hu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.hu.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lang.nl.resx">
+    <EmbeddedResource Include="Language\Lang.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.nl.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lang.pl.resx">
+    <EmbeddedResource Include="Language\Lang.pl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.pl.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lang.resx">
+    <EmbeddedResource Include="Language\Lang.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Lang.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lang.ru.resx">
+    <EmbeddedResource Include="Language\Lang.ru.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.ru.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuRate.resx">
+      <DependentUpon>frmMenuRate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -408,7 +426,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="RCRestore.resx">
+    <EmbeddedResource Include="Forms\RCRestore.resx">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -428,6 +446,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Diag.png" />
+    <None Include="Resources\SteerDriveOff.png" />
+    <None Include="Resources\spray2.png" />
+    <None Include="Resources\FileExplorerWindows.png" />
+    <None Include="Resources\x-bold2.png" />
+    <None Include="Resources\x-bold64.png" />
+    <None Include="Resources\x-bold.png" />
     <None Include="Resources\OnSmall.png" />
     <None Include="Resources\On.png" />
     <None Include="Resources\sprayer.png" />
@@ -452,9 +477,6 @@
     <None Include="Resources\PrimeTime.png" />
     <None Include="Resources\Pause.png" />
     <None Include="Resources\SubnetSend.png" />
-    <None Include="Images\calibration.ico" />
-    <None Include="Images\calibration.jpg" />
-    <None Include="Images\calibration.png" />
     <None Include="Images\add.png" />
     <Content Include="Images\Cancel64.png" />
     <None Include="Resources\GreenGear.png" />
@@ -492,7 +514,6 @@
     <None Include="Resources\Menu.png" />
     <None Include="Resources\pressure.png" />
     <None Include="Resources\Comm.jpg" />
-    <None Include="Resources\spray2.png" />
     <None Include="Resources\Stop_Normal_Red_Icon_64 %282%29.jpg" />
     <None Include="Resources\SettingsGear64.png" />
     <None Include="Resources\Stop_Normal_Red_Icon_64.png" />
@@ -540,20 +561,14 @@
     <Content Include="Images\OpenFile.png" />
     <None Include="Images\RateCal.png" />
     <Content Include="Images\RateControlOff.ico" />
-    <Content Include="Images\RateControlOff.png" />
     <None Include="Images\SectionsExample.png" />
     <None Include="Images\SectionsNoZones.png" />
     <None Include="Images\SectionsWithZones.png" />
     <None Include="Images\SectionsNoZones2.png" />
     <None Include="Images\refresh.png" />
     <Content Include="Images\SettingsGear64.png" />
-    <None Include="Images\WindowDayMode.png" />
-    <None Include="Images\WindowNightMode.png" />
     <None Include="Images\UpArrow64.png" />
     <None Include="Images\Stop_Normal_Red_Icon_64.png" />
-    <None Include="Images\Update.png" />
-    <None Include="Images\UpdateNet.png" />
-    <None Include="Images\Update5.png" />
     <None Include="Images\Update4.png" />
     <Content Include="RateControlOff.ico" />
   </ItemGroup>
@@ -569,5 +584,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,369 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="lgAcres" xml:space="preserve">
+    <value>Акр</value>
+  </data>
+  <data name="lgAcresHr" xml:space="preserve">
+    <value>Акр/ч</value>
+  </data>
+  <data name="lgAlreadyRunning" xml:space="preserve">
+    <value>Уже работает</value>
+  </data>
+  <data name="lgAltRate" xml:space="preserve">
+    <value>Альт Расход</value>
+  </data>
+  <data name="lgBaseRate" xml:space="preserve">
+    <value>Расход уст</value>
+  </data>
+  <data name="lgCalibrate" xml:space="preserve">
+    <value>Калибровка</value>
+  </data>
+  <data name="lgComboClose" xml:space="preserve">
+    <value>Комбо Закрыть</value>
+  </data>
+  <data name="lgComm" xml:space="preserve">
+    <value>Связь</value>
+  </data>
+  <data name="lgConnect" xml:space="preserve">
+    <value>Соединить</value>
+  </data>
+  <data name="lgControl" xml:space="preserve">
+    <value>Контроль</value>
+  </data>
+  <data name="lgControlType" xml:space="preserve">
+    <value>Тип контроля</value>
+  </data>
+  <data name="lgCountsRev" xml:space="preserve">
+    <value>Количество/об</value>
+  </data>
+  <data name="lgCoverage" xml:space="preserve">
+    <value>Охват</value>
+  </data>
+  <data name="lgCurrentRate" xml:space="preserve">
+    <value>Текущий расход …</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="lgDiagnostics" xml:space="preserve">
+    <value>Диагностика</value>
+  </data>
+  <data name="lgDisconnect" xml:space="preserve">
+    <value>Отключить</value>
+  </data>
+  <data name="lgEqual" xml:space="preserve">
+    <value>=1</value>
+  </data>
+  <data name="lgHectares" xml:space="preserve">
+    <value>Гектар</value>
+  </data>
+  <data name="lgHectares_Hr" xml:space="preserve">
+    <value>Гектар/ч</value>
+  </data>
+  <data name="lgHighMax" xml:space="preserve">
+    <value>ШИМ Высокий Макс.</value>
+  </data>
+  <data name="lgHour" xml:space="preserve">
+    <value>Час</value>
+  </data>
+  <data name="lgHours" xml:space="preserve">
+    <value>Часов</value>
+  </data>
+  <data name="lgInstantRate" xml:space="preserve">
+    <value>Мгновенный расход …</value>
+  </data>
+  <data name="lgInvertSection" xml:space="preserve">
+    <value>Инверт Секция</value>
+  </data>
+  <data name="lgKPH" xml:space="preserve">
+    <value>км/ч</value>
+  </data>
+  <data name="lgLanguage" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="lgMaster" xml:space="preserve">
+    <value>Главный</value>
+  </data>
+  <data name="lgMinPWM" xml:space="preserve">
+    <value>ШИМ Минимум</value>
+  </data>
+  <data name="lgMinUPM" xml:space="preserve">
+    <value>Мин ед/мин</value>
+  </data>
+  <data name="lgMinute" xml:space="preserve">
+    <value>Минута</value>
+  </data>
+  <data name="lgMinutes" xml:space="preserve">
+    <value>Минуты</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Модуль</value>
+  </data>
+  <data name="lgModuleID" xml:space="preserve">
+    <value>Идентификатор модуля</value>
+  </data>
+  <data name="lgMotor" xml:space="preserve">
+    <value>Мотор</value>
+  </data>
+  <data name="lgMPH" xml:space="preserve">
+    <value>Миль в час</value>
+  </data>
+  <data name="lgNew" xml:space="preserve">
+    <value>Новый</value>
+  </data>
+  <data name="lgNumSections" xml:space="preserve">
+    <value>Количество секций</value>
+  </data>
+  <data name="lgOffRate" xml:space="preserve">
+    <value>Отклонение Расхода</value>
+  </data>
+  <data name="lgOffset" xml:space="preserve">
+    <value>Поправка</value>
+  </data>
+  <data name="lgOpen" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="lgOptions" xml:space="preserve">
+    <value>Опции</value>
+  </data>
+  <data name="lgOverallRate" xml:space="preserve">
+    <value>Общий расход …</value>
+  </data>
+  <data name="lgPower" xml:space="preserve">
+    <value>Питание</value>
+  </data>
+  <data name="lgPressure" xml:space="preserve">
+    <value>Давление</value>
+  </data>
+  <data name="lgProduct" xml:space="preserve">
+    <value>Продукт</value>
+  </data>
+  <data name="lgProductName" xml:space="preserve">
+    <value>Имя продукта</value>
+  </data>
+  <data name="lgProducts" xml:space="preserve">
+    <value>Продукты</value>
+  </data>
+  <data name="lgQuantity" xml:space="preserve">
+    <value>Количество</value>
+  </data>
+  <data name="lgQuantityApplied" xml:space="preserve">
+    <value>Количество применено</value>
+  </data>
+  <data name="lgRate" xml:space="preserve">
+    <value>Расход</value>
+  </data>
+  <data name="lgRateMethod" xml:space="preserve">
+    <value>Способ измерения</value>
+  </data>
+  <data name="lgRelay" xml:space="preserve">
+    <value>Реле</value>
+  </data>
+  <data name="lgRelays" xml:space="preserve">
+    <value>Реле</value>
+  </data>
+  <data name="lgRPM" xml:space="preserve">
+    <value>Об/мин</value>
+  </data>
+  <data name="lgSaveAs" xml:space="preserve">
+    <value>Сохранить как</value>
+  </data>
+  <data name="lgSection" xml:space="preserve">
+    <value>Секции</value>
+  </data>
+  <data name="lgSectionNum" xml:space="preserve">
+    <value>Номер раздела</value>
+  </data>
+  <data name="lgSections" xml:space="preserve">
+    <value>Секции для этого продукта</value>
+  </data>
+  <data name="lgSensor" xml:space="preserve">
+    <value>Датчик</value>
+  </data>
+  <data name="lgSensorCounts" xml:space="preserve">
+    <value>Датчик отсчетов/единица измерения</value>
+  </data>
+  <data name="lgSensorID" xml:space="preserve">
+    <value>Датчик ИН</value>
+  </data>
+  <data name="lgSensorLocation" xml:space="preserve">
+    <value>Расположение датчика расхода</value>
+  </data>
+  <data name="lgShowPressure" xml:space="preserve">
+    <value>Давление Вкл</value>
+  </data>
+  <data name="lgSlave" xml:space="preserve">
+    <value>Подчиненный</value>
+  </data>
+  <data name="lgSpeed" xml:space="preserve">
+    <value>Скорость</value>
+  </data>
+  <data name="lgStandard" xml:space="preserve">
+    <value>Стандарт</value>
+  </data>
+  <data name="lgStartQuantity" xml:space="preserve">
+    <value>Начальная емкость бака</value>
+  </data>
+  <data name="lgSwitch" xml:space="preserve">
+    <value>Тумблер</value>
+  </data>
+  <data name="lgTankSize" xml:space="preserve">
+    <value>Емкость Бака</value>
+  </data>
+  <data name="lgTank_Remaining" xml:space="preserve">
+    <value>Количество ост</value>
+  </data>
+  <data name="lgTargetRate" xml:space="preserve">
+    <value>Расход Уст ...</value>
+  </data>
+  <data name="lgTargetRateAlt" xml:space="preserve">
+    <value>Альт Расход Уст ...</value>
+  </data>
+  <data name="lgTimeForMulti" xml:space="preserve">
+    <value>Сред время имп (&lt;50 мс)</value>
+  </data>
+  <data name="lgTimeForSingle" xml:space="preserve">
+    <value>Время имп (&gt;50 мс)</value>
+  </data>
+  <data name="lgType" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="lgUnitsVolt" xml:space="preserve">
+    <value>Ед/вольт</value>
+  </data>
+  <data name="lgUPMApplied" xml:space="preserve">
+    <value>Едизм/мин Применяемый</value>
+  </data>
+  <data name="lgUPMerror" xml:space="preserve">
+    <value>Ошибка %</value>
+  </data>
+  <data name="lgUPMTarget" xml:space="preserve">
+    <value>Едизм/мин целевой</value>
+  </data>
+  <data name="lgWidth" xml:space="preserve">
+    <value>Ширина</value>
+  </data>
+  <data name="lgWorkingWidthFT" xml:space="preserve">
+    <value>Рабочая ширина Фут</value>
+  </data>
+  <data name="lgWorkingWidthM" xml:space="preserve">
+    <value>Рабочая ширина (M)</value>
+  </data>
+</root>

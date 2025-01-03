@@ -243,6 +243,16 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Diag {
+            get {
+                object obj = ResourceManager.GetObject("Diag", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Diagnostics {
             get {
                 object obj = ResourceManager.GetObject("Diagnostics", resourceCulture);
@@ -316,6 +326,16 @@ namespace RateController.Properties {
         internal static System.Drawing.Bitmap FileCopy {
             get {
                 object obj = ResourceManager.GetObject("FileCopy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FileExplorerWindows {
+            get {
+                object obj = ResourceManager.GetObject("FileExplorerWindows", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -665,6 +685,16 @@ namespace RateController.Properties {
         internal static System.Drawing.Bitmap Start {
             get {
                 object obj = ResourceManager.GetObject("Start", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SteerDriveOff {
+            get {
+                object obj = ResourceManager.GetObject("SteerDriveOff", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
