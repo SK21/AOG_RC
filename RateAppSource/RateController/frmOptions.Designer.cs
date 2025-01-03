@@ -832,9 +832,9 @@
             // 
             this.panel1.Controls.Add(this.rbBackColor);
             this.panel1.Controls.Add(this.rbForeColor);
-            this.panel1.Location = new System.Drawing.Point(3, 213);
+            this.panel1.Location = new System.Drawing.Point(3, 215);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(164, 119);
+            this.panel1.Size = new System.Drawing.Size(164, 105);
             this.panel1.TabIndex = 4;
             // 
             // rbBackColor
@@ -842,7 +842,7 @@
             this.rbBackColor.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbBackColor.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbBackColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbBackColor.Location = new System.Drawing.Point(4, 71);
+            this.rbBackColor.Location = new System.Drawing.Point(5, 64);
             this.rbBackColor.Margin = new System.Windows.Forms.Padding(2);
             this.rbBackColor.Name = "rbBackColor";
             this.rbBackColor.Size = new System.Drawing.Size(157, 36);
@@ -858,7 +858,7 @@
             this.rbForeColor.Checked = true;
             this.rbForeColor.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbForeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbForeColor.Location = new System.Drawing.Point(4, 2);
+            this.rbForeColor.Location = new System.Drawing.Point(5, 2);
             this.rbForeColor.Margin = new System.Windows.Forms.Padding(2);
             this.rbForeColor.Name = "rbForeColor";
             this.rbForeColor.Size = new System.Drawing.Size(157, 36);
@@ -887,7 +887,7 @@
             this.rbColour2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.rbColour2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbColour2.ForeColor = System.Drawing.Color.Yellow;
-            this.rbColour2.Location = new System.Drawing.Point(10, 82);
+            this.rbColour2.Location = new System.Drawing.Point(8, 82);
             this.rbColour2.Name = "rbColour2";
             this.rbColour2.Size = new System.Drawing.Size(21, 36);
             this.rbColour2.TabIndex = 7;
@@ -915,7 +915,7 @@
             this.tbColourUser1.BackColor = System.Drawing.Color.Black;
             this.tbColourUser1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbColourUser1.ForeColor = System.Drawing.Color.Yellow;
-            this.tbColourUser1.Location = new System.Drawing.Point(37, 150);
+            this.tbColourUser1.Location = new System.Drawing.Point(32, 150);
             this.tbColourUser1.Multiline = true;
             this.tbColourUser1.Name = "tbColourUser1";
             this.tbColourUser1.ReadOnly = true;
@@ -930,7 +930,7 @@
             this.tbColourDefault1.BackColor = System.Drawing.Color.Black;
             this.tbColourDefault1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbColourDefault1.ForeColor = System.Drawing.Color.Yellow;
-            this.tbColourDefault1.Location = new System.Drawing.Point(37, 14);
+            this.tbColourDefault1.Location = new System.Drawing.Point(32, 14);
             this.tbColourDefault1.Multiline = true;
             this.tbColourDefault1.Name = "tbColourDefault1";
             this.tbColourDefault1.ReadOnly = true;
@@ -956,7 +956,7 @@
             this.tbColourDefault2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.tbColourDefault2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbColourDefault2.ForeColor = System.Drawing.Color.Black;
-            this.tbColourDefault2.Location = new System.Drawing.Point(37, 82);
+            this.tbColourDefault2.Location = new System.Drawing.Point(32, 82);
             this.tbColourDefault2.Multiline = true;
             this.tbColourDefault2.Name = "tbColourDefault2";
             this.tbColourDefault2.ReadOnly = true;

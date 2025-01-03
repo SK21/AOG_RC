@@ -698,6 +698,8 @@ namespace RateController
             // 
             this.btnRight.BackColor = System.Drawing.Color.Transparent;
             this.btnRight.FlatAppearance.BorderSize = 0;
+            this.btnRight.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnRight.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
             this.btnRight.Location = new System.Drawing.Point(138, 153);
@@ -713,6 +715,8 @@ namespace RateController
             // 
             this.btnLeft.BackColor = System.Drawing.Color.Transparent;
             this.btnLeft.FlatAppearance.BorderSize = 0;
+            this.btnLeft.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnLeft.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
             this.btnLeft.Location = new System.Drawing.Point(71, 153);
@@ -728,6 +732,8 @@ namespace RateController
             // 
             this.btnSettings.BackColor = System.Drawing.Color.Transparent;
             this.btnSettings.FlatAppearance.BorderSize = 0;
+            this.btnSettings.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btnSettings.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSettings.Image = global::RateController.Properties.Resources.SettingsGear64;

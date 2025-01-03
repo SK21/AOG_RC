@@ -3,6 +3,7 @@ using RateController.Properties;
 using System;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -161,6 +162,14 @@ namespace RateController
             SetButtons(true);
         }
 
+        private void ckDualAuto_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Use Auto Rate and Auto Section instead of just Auto on the on-screen switches. The rate and the sections can be controlled independently.";
+
+            mf.Tls.ShowHelp(Message, "Dual Auto");
+            hlpevent.Handled = true;
+        }
+
         private void ckNoMaster_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "Send master switch always on to modules.";
@@ -234,19 +243,44 @@ namespace RateController
 
         private void ColorPanel_Touch(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            try
             {
-                // Get color from touch position
-                float hue = (float)e.X / colorPanel.Width;
-                float brightness = 1 - (float)e.Y / colorPanel.Height;
-                if (rbForeColor.Checked)
+                int saturation = 1;
+
+                if (e.Button == MouseButtons.Left)
                 {
-                    tbColourUser1.ForeColor = ColorFromHSV(hue * 360, 1, brightness);
+                    // Get color from touch position
+                    float hue = (float)e.X / colorPanel.Width;
+                    float brightness = 1 - (float)e.Y / colorPanel.Height;
+
+                    if (e.Y < 5)
+                    {
+                        saturation = 0;
+                    }
+                    else
+                    {
+                        saturation = 1;
+                    }
+
+                    Color NewColor = ColorFromHSV(hue * 360, saturation, brightness);
+                    if (NewColor.A == 255 && NewColor.R == 255 && NewColor.G == 255 && NewColor.B == 255)
+                    {
+                        NewColor = Color.FromArgb(255, 255, 255, 254);
+                    }
+
+                    if (rbForeColor.Checked)
+                    {
+                        tbColourUser1.ForeColor = NewColor;
+                    }
+                    else
+                    {
+                        tbColourUser1.BackColor = NewColor;
+                    }
                 }
-                else
-                {
-                    tbColourUser1.BackColor = ColorFromHSV(hue * 360, 1, brightness);
-                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmOptions/ColorPanel_Touch: " + ex.Message);
             }
         }
 
@@ -837,14 +871,6 @@ namespace RateController
             }
 
             Initializing = false;
-        }
-
-        private void ckDualAuto_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Use Auto Rate and Auto Section instead of just Auto on the on-screen switches. The rate and the sections can be controlled independently.";
-
-            mf.Tls.ShowHelp(Message, "Dual Auto");
-            hlpevent.Handled = true;
         }
     }
 }
