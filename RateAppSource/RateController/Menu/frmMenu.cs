@@ -401,5 +401,10 @@ namespace RateController
         {
             MenuMoved?.Invoke(this, EventArgs.Empty);
         }
+
+        private void butPowerOff_Click(object sender, EventArgs e)
+        {
+            mf.Close();
+        }
     }
 }

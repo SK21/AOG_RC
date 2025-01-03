@@ -76,7 +76,7 @@
             this.butClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
             this.butClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butClose.Location = new System.Drawing.Point(170, 8);
+            this.butClose.Location = new System.Drawing.Point(145, 8);
             this.butClose.Name = "butClose";
             this.butClose.Size = new System.Drawing.Size(70, 63);
             this.butClose.TabIndex = 1;
@@ -98,6 +98,7 @@
             this.butPowerOff.TabIndex = 8;
             this.butPowerOff.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butPowerOff.UseVisualStyleBackColor = false;
+            this.butPowerOff.Click += new System.EventHandler(this.butPowerOff_Click);
             // 
             // butDiag
             // 
@@ -745,7 +746,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 641);
+            this.ClientSize = new System.Drawing.Size(784, 757);
             this.Controls.Add(this.butHelp);
             this.Controls.Add(this.butError);
             this.Controls.Add(this.butActivity);

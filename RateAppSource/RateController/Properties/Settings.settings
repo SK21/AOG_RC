@@ -47,5 +47,8 @@
     <Setting Name="MouseDown" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">DarkSlateBlue</Value>
     </Setting>
+    <Setting Name="MenuFontSmall" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Microsoft Sans Serif, 14.25pt, style=Bold</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
