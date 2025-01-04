@@ -1,16 +1,43 @@
 ﻿using RateController.Menu;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController
 {
+    public enum MenuScreens
+    {
+        None,
+        File_New,
+        File_Open,
+        File_SaveAs,
+        Products_Rate,
+        Products_Control,
+        Products_Settings,
+        Products_Mode,
+        Products_Monitoring,
+        Products_Data,
+        Machine_Sections,
+        Machine_Relays,
+        Machine_Calibrate,
+        Modules_Network,
+        Modules_Boards,
+        Modules_Config,
+        Modules_Pins,
+        Modules_RelayPins,
+        Modules_Wifi,
+        Modules_Valves,
+        Options_Display,
+        Options_PrimedStart,
+        Options_Switches,
+        Options_Language,
+        Options_Other,
+        Diagnostics_TuningChart,
+        Diagnostics_Ethernet,
+        Diagnostics_ActivityLog,
+        Diagnostics_ErrorLog,
+        Diagnostics_Help
+    }
+
     public partial class frmMenu : Form
     {
         public const int StartLeft = 100;
@@ -20,348 +47,393 @@ namespace RateController
         private const int SubFirstSpacing = 75;
         private const int SubOffset = 10;
         private const int SubSpacing = 55;
+        private clsProduct cCurrentProduct;
         private bool Expanded = false;
+        private string LastScreen = "";
+        private bool LoadLast = false;
         private FormStart mf;
 
-        public frmMenu(FormStart cf)
+        public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
             InitializeComponent();
             this.mf = cf;
+            ChangeProduct(ProductID);
+            LoadLast = LoadLst;
         }
 
         public event EventHandler MenuMoved;
 
+        public clsProduct CurrentProduct
+        {
+            get { return cCurrentProduct; }
+        }
+
+        public void ChangeProduct(int NewID)
+        {
+            if (NewID >= 0 && NewID < mf.MaxProducts)
+            {
+                cCurrentProduct = mf.Products.Item(NewID);
+            }
+        }
+
+        private void butClose_Click(object sender, EventArgs e)
+        {
+            if (ClosedOwned()) this.Close();
+        }
+
         private void butDiag_Click(object sender, EventArgs e)
         {
-            CloseOwned();
-            butTuning.Visible = !Expanded;
-            butEthernet.Visible = !Expanded;
-            butActivity.Visible = !Expanded;
-            butError.Visible = !Expanded;
-            butHelp.Visible = !Expanded;
-
-            if (Expanded)
+            if (ClosedOwned())
             {
-                Expanded = false;
-                butFile.Visible = true;
-                butProducts.Visible = true;
-                butMachine.Visible = true;
-                butModules.Visible = true;
-                butOptions.Visible = true;
-                butDiag.Visible = true;
-                butDiag.Top = (int)butDiag.Tag;
-            }
-            else
-            {
-                Expanded = true;
-                butFile.Visible = false;
-                butProducts.Visible = false;
-                butMachine.Visible = false;
-                butModules.Visible = false;
-                butOptions.Visible = false;
-                butDiag.Visible = true;
-                butDiag.Tag = butDiag.Top;
-                butDiag.Top = butFile.Top;
+                butTuning.Visible = !Expanded;
+                butEthernet.Visible = !Expanded;
+                butActivity.Visible = !Expanded;
+                butError.Visible = !Expanded;
+                butHelp.Visible = !Expanded;
 
-                int Pos = butFile.Top;
-                butTuning.Left = butFile.Left + SubOffset;
-                Pos += SubFirstSpacing;
-                butTuning.Top = Pos;
+                if (Expanded)
+                {
+                    Expanded = false;
+                    butFile.Visible = true;
+                    butProducts.Visible = true;
+                    butMachine.Visible = true;
+                    butModules.Visible = true;
+                    butOptions.Visible = true;
+                    butDiag.Visible = true;
+                    butDiag.Top = (int)butDiag.Tag;
+                }
+                else
+                {
+                    Expanded = true;
+                    butFile.Visible = false;
+                    butProducts.Visible = false;
+                    butMachine.Visible = false;
+                    butModules.Visible = false;
+                    butOptions.Visible = false;
+                    butDiag.Visible = true;
+                    butDiag.Tag = butDiag.Top;
+                    butDiag.Top = butFile.Top;
 
-                butEthernet.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butEthernet.Top = Pos;
+                    int Pos = butFile.Top;
+                    butTuning.Left = butFile.Left + SubOffset;
+                    Pos += SubFirstSpacing;
+                    butTuning.Top = Pos;
 
-                butActivity.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butActivity.Top = Pos;
+                    butEthernet.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butEthernet.Top = Pos;
 
-                butError.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butError.Top = Pos;
+                    butActivity.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butActivity.Top = Pos;
 
-                butHelp.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butHelp.Top = Pos;
+                    butError.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butError.Top = Pos;
+
+                    butHelp.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butHelp.Top = Pos;
+                }
             }
         }
 
         private void butFile_Click(object sender, EventArgs e)
         {
-            CloseOwned();
-            if (Expanded)
+            if (ClosedOwned())
             {
-                Expanded = false;
-                butFile.Visible = true;
-                butProducts.Visible = true;
-                butMachine.Visible = true;
-                butModules.Visible = true;
-                butOptions.Visible = true;
-                butDiag.Visible = true;
-                butNew.Visible = false;
-                butOpen.Visible = false;
-                butSaveAs.Visible = false;
-            }
-            else
-            {
-                Expanded = true;
-                butFile.Visible = true;
-                butProducts.Visible = false;
-                butMachine.Visible = false;
-                butModules.Visible = false;
-                butOptions.Visible = false;
-                butDiag.Visible = false;
+                if (Expanded)
+                {
+                    Expanded = false;
+                    butFile.Visible = true;
+                    butProducts.Visible = true;
+                    butMachine.Visible = true;
+                    butModules.Visible = true;
+                    butOptions.Visible = true;
+                    butDiag.Visible = true;
+                    butNew.Visible = false;
+                    butOpen.Visible = false;
+                    butSaveAs.Visible = false;
+                }
+                else
+                {
+                    Expanded = true;
+                    butFile.Visible = true;
+                    butProducts.Visible = false;
+                    butMachine.Visible = false;
+                    butModules.Visible = false;
+                    butOptions.Visible = false;
+                    butDiag.Visible = false;
 
-                int Pos = butFile.Top;
-                butNew.Visible = true;
-                butNew.Left = butFile.Left + SubOffset;
-                Pos += SubFirstSpacing;
-                butNew.Top = Pos;
+                    int Pos = butFile.Top;
+                    butNew.Visible = true;
+                    butNew.Left = butFile.Left + SubOffset;
+                    Pos += SubFirstSpacing;
+                    butNew.Top = Pos;
 
-                butOpen.Visible = true;
-                butOpen.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butOpen.Top = Pos;
+                    butOpen.Visible = true;
+                    butOpen.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butOpen.Top = Pos;
 
-                butSaveAs.Visible = true;
-                butSaveAs.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butSaveAs.Top = Pos;
+                    butSaveAs.Visible = true;
+                    butSaveAs.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butSaveAs.Top = Pos;
+                }
             }
         }
 
         private void butMachine_Click(object sender, EventArgs e)
         {
-            CloseOwned();
-            butSections.Visible = !Expanded;
-            butRelays.Visible = !Expanded;
-            butCalibrate.Visible = !Expanded;
-
-            if (Expanded)
+            if (ClosedOwned())
             {
-                Expanded = false;
-                butFile.Visible = true;
-                butProducts.Visible = true;
-                butMachine.Visible = true;
-                butModules.Visible = true;
-                butOptions.Visible = true;
-                butDiag.Visible = true;
-                butMachine.Top = (int)butMachine.Tag;
-            }
-            else
-            {
-                Expanded = true;
-                butFile.Visible = false;
-                butProducts.Visible = false;
-                butMachine.Visible = true;
-                butModules.Visible = false;
-                butOptions.Visible = false;
-                butDiag.Visible = false;
-                butMachine.Tag = butMachine.Top;
-                butMachine.Top = butFile.Top;
+                butSections.Visible = !Expanded;
+                butRelays.Visible = !Expanded;
+                butCalibrate.Visible = !Expanded;
 
-                int Pos = butFile.Top;
-                butSections.Left = butFile.Left + SubOffset;
-                Pos += SubFirstSpacing;
-                butSections.Top = Pos;
+                if (Expanded)
+                {
+                    Expanded = false;
+                    butFile.Visible = true;
+                    butProducts.Visible = true;
+                    butMachine.Visible = true;
+                    butModules.Visible = true;
+                    butOptions.Visible = true;
+                    butDiag.Visible = true;
+                    butMachine.Top = (int)butMachine.Tag;
+                }
+                else
+                {
+                    Expanded = true;
+                    butFile.Visible = false;
+                    butProducts.Visible = false;
+                    butMachine.Visible = true;
+                    butModules.Visible = false;
+                    butOptions.Visible = false;
+                    butDiag.Visible = false;
+                    butMachine.Tag = butMachine.Top;
+                    butMachine.Top = butFile.Top;
 
-                butRelays.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butRelays.Top = Pos;
+                    int Pos = butFile.Top;
+                    butSections.Left = butFile.Left + SubOffset;
+                    Pos += SubFirstSpacing;
+                    butSections.Top = Pos;
 
-                butCalibrate.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butCalibrate.Top = Pos;
+                    butRelays.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butRelays.Top = Pos;
+
+                    butCalibrate.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butCalibrate.Top = Pos;
+                }
             }
         }
 
         private void butModules_Click(object sender, EventArgs e)
         {
-            CloseOwned();
-            butNetwork.Visible = !Expanded;
-            butBoards.Visible = !Expanded;
-            butConfig.Visible = !Expanded;
-            butPins.Visible = !Expanded;
-            butRelayPins.Visible = !Expanded;
-            butWifi.Visible = !Expanded;
-            butValves.Visible = !Expanded;
-
-            if (Expanded)
+            if (ClosedOwned())
             {
-                Expanded = false;
-                butFile.Visible = true;
-                butProducts.Visible = true;
-                butMachine.Visible = true;
-                butModules.Visible = true;
-                butOptions.Visible = true;
-                butDiag.Visible = true;
-                butModules.Top = (int)butModules.Tag;
+                butNetwork.Visible = !Expanded;
+                butBoards.Visible = !Expanded;
+                butConfig.Visible = !Expanded;
+                butPins.Visible = !Expanded;
+                butRelayPins.Visible = !Expanded;
+                butWifi.Visible = !Expanded;
+                butValves.Visible = !Expanded;
+
+                if (Expanded)
+                {
+                    Expanded = false;
+                    butFile.Visible = true;
+                    butProducts.Visible = true;
+                    butMachine.Visible = true;
+                    butModules.Visible = true;
+                    butOptions.Visible = true;
+                    butDiag.Visible = true;
+                    butModules.Top = (int)butModules.Tag;
+                }
+                else
+                {
+                    Expanded = true;
+                    butFile.Visible = false;
+                    butProducts.Visible = false;
+                    butMachine.Visible = false;
+                    butModules.Visible = true;
+                    butOptions.Visible = false;
+                    butDiag.Visible = false;
+                    butModules.Tag = butModules.Top;
+                    butModules.Top = butFile.Top;
+
+                    int Pos = butFile.Top;
+                    butNetwork.Left = butFile.Left + SubOffset;
+                    Pos += SubFirstSpacing;
+                    butNetwork.Top = Pos;
+
+                    butBoards.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butBoards.Top = Pos;
+
+                    butConfig.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butConfig.Top = Pos;
+
+                    butPins.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butPins.Top = Pos;
+
+                    butRelayPins.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butRelayPins.Top = Pos;
+
+                    butWifi.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butWifi.Top = Pos;
+
+                    butValves.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butValves.Top = Pos;
+                }
             }
-            else
-            {
-                Expanded = true;
-                butFile.Visible = false;
-                butProducts.Visible = false;
-                butMachine.Visible = false;
-                butModules.Visible = true;
-                butOptions.Visible = false;
-                butDiag.Visible = false;
-                butModules.Tag = butModules.Top;
-                butModules.Top = butFile.Top;
+        }
 
-                int Pos = butFile.Top;
-                butNetwork.Left = butFile.Left + SubOffset;
-                Pos += SubFirstSpacing;
-                butNetwork.Top = Pos;
-
-                butBoards.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butBoards.Top = Pos;
-
-                butConfig.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butConfig.Top = Pos;
-
-                butPins.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butPins.Top = Pos;
-
-                butRelayPins.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butRelayPins.Top = Pos;
-
-                butWifi.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butWifi.Top = Pos;
-
-                butValves.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butValves.Top = Pos;
-            }
+        private void butNew_Click(object sender, EventArgs e)
+        {
         }
 
         private void butOptions_Click(object sender, EventArgs e)
         {
-            CloseOwned();
-            butDisplay.Visible = !Expanded;
-            butPrimed.Visible = !Expanded;
-            butSwitches.Visible = !Expanded;
-            butLanguage.Visible = !Expanded;
-            butOther.Visible = !Expanded;
-
-            if (Expanded)
+            if (ClosedOwned())
             {
-                Expanded = false;
-                butFile.Visible = true;
-                butProducts.Visible = true;
-                butMachine.Visible = true;
-                butModules.Visible = true;
-                butOptions.Visible = true;
-                butDiag.Visible = true;
-                butOptions.Top = (int)butOptions.Tag;
+                butDisplay.Visible = !Expanded;
+                butPrimed.Visible = !Expanded;
+                butSwitches.Visible = !Expanded;
+                butLanguage.Visible = !Expanded;
+                butOther.Visible = !Expanded;
+
+                if (Expanded)
+                {
+                    Expanded = false;
+                    butFile.Visible = true;
+                    butProducts.Visible = true;
+                    butMachine.Visible = true;
+                    butModules.Visible = true;
+                    butOptions.Visible = true;
+                    butDiag.Visible = true;
+                    butOptions.Top = (int)butOptions.Tag;
+                }
+                else
+                {
+                    Expanded = true;
+                    butFile.Visible = false;
+                    butProducts.Visible = false;
+                    butMachine.Visible = false;
+                    butModules.Visible = false;
+                    butOptions.Visible = true;
+                    butDiag.Visible = false;
+                    butOptions.Tag = butOptions.Top;
+                    butOptions.Top = butFile.Top;
+
+                    int Pos = butFile.Top;
+                    butDisplay.Left = butFile.Left + SubOffset;
+                    Pos += SubFirstSpacing;
+                    butDisplay.Top = Pos;
+
+                    butPrimed.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butPrimed.Top = Pos;
+
+                    butSwitches.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butSwitches.Top = Pos;
+
+                    butLanguage.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butLanguage.Top = Pos;
+
+                    butOther.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butOther.Top = Pos;
+                }
             }
-            else
-            {
-                Expanded = true;
-                butFile.Visible = false;
-                butProducts.Visible = false;
-                butMachine.Visible = false;
-                butModules.Visible = false;
-                butOptions.Visible = true;
-                butDiag.Visible = false;
-                butOptions.Tag = butOptions.Top;
-                butOptions.Top = butFile.Top;
+        }
 
-                int Pos = butFile.Top;
-                butDisplay.Left = butFile.Left + SubOffset;
-                Pos += SubFirstSpacing;
-                butDisplay.Top = Pos;
-
-                butPrimed.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butPrimed.Top = Pos;
-
-                butSwitches.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butSwitches.Top = Pos;
-
-                butLanguage.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butLanguage.Top = Pos;
-
-                butOther.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butOther.Top = Pos;
-            }
+        private void butPowerOff_Click(object sender, EventArgs e)
+        {
+            if (ClosedOwned()) mf.Close();
         }
 
         private void butProducts_Click(object sender, EventArgs e)
         {
-            CloseOwned();
-            butRate.Visible = !Expanded;
-            butControl.Visible = !Expanded;
-            butSettings.Visible = !Expanded;
-            butMode.Visible = !Expanded;
-            butMonitor.Visible = !Expanded;
-            butData.Visible = !Expanded;
-
-            if (Expanded)
+            if (ClosedOwned())
             {
-                Expanded = false;
-                butFile.Visible = true;
-                butProducts.Visible = true;
-                butMachine.Visible = true;
-                butModules.Visible = true;
-                butOptions.Visible = true;
-                butDiag.Visible = true;
-                butProducts.Top = (int)butProducts.Tag;
-            }
-            else
-            {
-                Expanded = true;
-                butFile.Visible = false;
-                butProducts.Visible = true;
-                butMachine.Visible = false;
-                butModules.Visible = false;
-                butOptions.Visible = false;
-                butDiag.Visible = false;
-                butProducts.Tag = butProducts.Top;
-                butProducts.Top = butFile.Top;
+                butRate.Visible = !Expanded;
+                butControl.Visible = !Expanded;
+                butSettings.Visible = !Expanded;
+                butMode.Visible = !Expanded;
+                butMonitor.Visible = !Expanded;
+                butData.Visible = !Expanded;
 
-                int Pos = butFile.Top;
-                butRate.Left = butFile.Left + SubOffset;
-                Pos += SubFirstSpacing;
-                butRate.Top = Pos;
+                if (Expanded)
+                {
+                    Expanded = false;
+                    butFile.Visible = true;
+                    butProducts.Visible = true;
+                    butMachine.Visible = true;
+                    butModules.Visible = true;
+                    butOptions.Visible = true;
+                    butDiag.Visible = true;
+                    butProducts.Top = (int)butProducts.Tag;
+                }
+                else
+                {
+                    Expanded = true;
+                    butFile.Visible = false;
+                    butProducts.Visible = true;
+                    butMachine.Visible = false;
+                    butModules.Visible = false;
+                    butOptions.Visible = false;
+                    butDiag.Visible = false;
+                    butProducts.Tag = butProducts.Top;
+                    butProducts.Top = butFile.Top;
 
-                butControl.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butControl.Top = Pos;
+                    int Pos = butFile.Top;
+                    butRate.Left = butFile.Left + SubOffset;
+                    Pos += SubFirstSpacing;
+                    butRate.Top = Pos;
 
-                butSettings.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butSettings.Top = Pos;
+                    butControl.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butControl.Top = Pos;
 
-                butMode.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butMode.Top = Pos;
+                    butSettings.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butSettings.Top = Pos;
 
-                butMonitor.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butMonitor.Top = Pos;
+                    butMode.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butMode.Top = Pos;
 
-                butData.Left = butFile.Left + SubOffset;
-                Pos += SubSpacing;
-                butData.Top = Pos;
+                    butMonitor.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butMonitor.Top = Pos;
+
+                    butData.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butData.Top = Pos;
+                }
             }
         }
 
         private void butRate_Click(object sender, EventArgs e)
         {
-            Form fs = mf.Tls.IsFormOpen("frmMenuRate");
+            LastScreen = "frmMenuRate";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
             {
-                Form frm = new frmMenuRate(this);
+                Form frm = new frmMenuRate(mf, this);
                 frm.Owner = this;
                 frm.Show();
             }
@@ -371,12 +443,19 @@ namespace RateController
             }
         }
 
-        private void CloseOwned()
+        private bool ClosedOwned()
         {
             foreach (Form ownedForm in this.OwnedForms)
             {
                 ownedForm.Close();
             }
+            return !Convert.ToBoolean(OwnedForms.Length);    // check if all closed, could be unsaved data
+        }
+
+        private void frmMenu_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            mf.Tls.SaveFormData(this);
+            if (LastScreen != "" && LastScreen != null) mf.Tls.SaveProperty("LastScreen", LastScreen);
         }
 
         private void frmMenu_Load(object sender, EventArgs e)
@@ -395,6 +474,9 @@ namespace RateController
                     but.FlatAppearance.MouseDownBackColor = Properties.Settings.Default.MouseDown;
                 }
             }
+            gbLine1.ForeColor = Properties.Settings.Default.ForeColour;
+            gbLine1.BackColor = Properties.Settings.Default.ForeColour;
+            if (LoadLast) LoadLastScreen();
         }
 
         private void frmMenu_LocationChanged(object sender, EventArgs e)
@@ -402,9 +484,32 @@ namespace RateController
             MenuMoved?.Invoke(this, EventArgs.Empty);
         }
 
-        private void butPowerOff_Click(object sender, EventArgs e)
+        private void LoadLastScreen()
         {
-            mf.Close();
+            try
+            {
+                string Last = mf.Tls.LoadProperty("LastScreen");
+                if (mf.Tls.IsFormNameValid(Last))
+                {
+                    Form fs = mf.Tls.IsFormOpen(Last);
+
+                    if (fs == null)
+                    {
+                        Form frm = new frmMenuRate(mf, this);
+                        frm.Owner = this;
+                        LastScreen = Last;
+                        frm.Show();
+                    }
+                    else
+                    {
+                        fs.Focus();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmMenu/LoadLastScree: " + ex.Message);
+            }
         }
     }
 }

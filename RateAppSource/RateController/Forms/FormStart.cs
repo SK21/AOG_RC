@@ -997,27 +997,7 @@ namespace RateController
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (MouseButtonClicked == MouseButtons.Left)
-            {
-                Form fs = Tls.IsFormOpen("frmMenu");
-
-                if (fs == null)
-                {
-                    Form frm = new frmMenu(this);
-                    frm.Show();
-                }
-                else
-                {
-                    fs.Focus();
-                }
-
-                //Button btnSender = (Button)sender;
-                //Point ptLowerLeft = new Point(0, btnSender.Height);
-                //ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
-                //mnuSettings.Show(ptLowerLeft);
-                //UpdateStatus();
-                //SetDisplay();
-            }
+            ShowSettings();
         }
 
         private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1320,7 +1300,7 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                ShowSettings();
+                ShowSettings(true);
             }
         }
 
@@ -1328,7 +1308,7 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                ShowSettings();
+                ShowSettings(true);
             }
         }
 
@@ -1563,19 +1543,22 @@ namespace RateController
             }
         }
 
-        private void ShowSettings()
+        private void ShowSettings(bool OpenLast = false)
         {
             //check if window already exists
-            Form fs = Tls.IsFormOpen("FormSettings");
+            Form fs = Tls.IsFormOpen("frmMenu");
 
-            if (fs != null)
+            if (fs == null)
+            {
+                int Prd = CurrentPage - 2;
+                if (Prd < 0) Prd = 0;
+                Form frm = new frmMenu(this, Prd, OpenLast);
+                frm.Show();
+            }
+            else
             {
                 fs.Focus();
-                return;
             }
-
-            Form frm = new FormSettings(this, CurrentPage);
-            frm.Show();
         }
 
         private void TankRemain_Click(object sender, EventArgs e)

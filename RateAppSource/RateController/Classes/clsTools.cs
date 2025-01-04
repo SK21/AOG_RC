@@ -8,6 +8,7 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -54,7 +55,18 @@ namespace RateController
             OpenFile(Properties.Settings.Default.FileName);
         }
 
-        public string PropertiesFile
+        public bool IsFormNameValid(string formName)
+        {
+            // Get the current assembly
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            // Check if a type with the given name exists and inherits from Form
+            var formType = assembly.GetTypes().FirstOrDefault(t => t.Name == formName && t.IsSubclassOf(typeof(Form)));
+            return formType != null;
+        }
+
+
+    public string PropertiesFile
         {
             get
             {
@@ -409,21 +421,31 @@ namespace RateController
 
         public void SaveAppProperty(string Key, string Value)
         {
-            bool Changed = false;
-            if (PropsApp.ContainsKey(Key))
+            try
             {
-                if (!PropsApp[Key].ToString().Equals(Value))
+                if (Value != null)
                 {
-                    PropsApp[Key] = Value;
-                    Changed = true;
+                    bool Changed = false;
+                    if (PropsApp.ContainsKey(Key))
+                    {
+                        if (!PropsApp[Key].ToString().Equals(Value))
+                        {
+                            PropsApp[Key] = Value;
+                            Changed = true;
+                        }
+                    }
+                    else
+                    {
+                        PropsApp.Add(Key, Value);
+                        Changed = true;
+                    }
+                    if (Changed) SaveAppProperties();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                PropsApp.Add(Key, Value);
-                Changed = true;
+                WriteErrorLog("clsTools/SaveAppProperty: " + ex.Message);
             }
-            if (Changed) SaveAppProperties();
         }
 
         public void SaveFile(string NewFile)
@@ -466,23 +488,30 @@ namespace RateController
 
         public void SaveProperty(string Key, string Value, bool IgnoreReadOnly = false)
         {
-            if (!ReadOnly || IgnoreReadOnly)
+            try
             {
-                bool Changed = false;
-                if (Props.ContainsKey(Key))
+                if (!ReadOnly || IgnoreReadOnly || Value != null)
                 {
-                    if (!Props[Key].ToString().Equals(Value))
+                    bool Changed = false;
+                    if (Props.ContainsKey(Key))
                     {
-                        Props[Key] = Value;
+                        if (!Props[Key].ToString().Equals(Value))
+                        {
+                            Props[Key] = Value;
+                            Changed = true;
+                        }
+                    }
+                    else
+                    {
+                        Props.Add(Key, Value);
                         Changed = true;
                     }
+                    if (Changed) SaveProperties();
                 }
-                else
-                {
-                    Props.Add(Key, Value);
-                    Changed = true;
-                }
-                if (Changed) SaveProperties();
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("clsTools/SaveProperty: " + ex.Message);
             }
         }
 

@@ -66,6 +66,7 @@
             this.butActivity = new System.Windows.Forms.Button();
             this.butEthernet = new System.Windows.Forms.Button();
             this.butTuning = new System.Windows.Forms.Button();
+            this.gbLine1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -82,6 +83,7 @@
             this.butClose.TabIndex = 1;
             this.butClose.Text = "X";
             this.butClose.UseVisualStyleBackColor = false;
+            this.butClose.Click += new System.EventHandler(this.butClose_Click);
             // 
             // butPowerOff
             // 
@@ -236,6 +238,7 @@
             this.butNew.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butNew.UseVisualStyleBackColor = false;
             this.butNew.Visible = false;
+            this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
             // butOpen
             // 
@@ -742,11 +745,21 @@
             this.butTuning.UseVisualStyleBackColor = false;
             this.butTuning.Visible = false;
             // 
+            // gbLine1
+            // 
+            this.gbLine1.ForeColor = System.Drawing.Color.Yellow;
+            this.gbLine1.Location = new System.Drawing.Point(237, 0);
+            this.gbLine1.Name = "gbLine1";
+            this.gbLine1.Size = new System.Drawing.Size(1, 750);
+            this.gbLine1.TabIndex = 159;
+            this.gbLine1.TabStop = false;
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 757);
+            this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.Controls.Add(this.gbLine1);
             this.Controls.Add(this.butHelp);
             this.Controls.Add(this.butError);
             this.Controls.Add(this.butActivity);
@@ -786,7 +799,9 @@
             this.Controls.Add(this.butClose);
             this.Controls.Add(this.pictureBox1);
             this.Name = "frmMenu";
+            this.ShowInTaskbar = false;
             this.Text = "frmMenu";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenu_FormClosed);
             this.Load += new System.EventHandler(this.frmMenu_Load);
             this.LocationChanged += new System.EventHandler(this.frmMenu_LocationChanged);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -834,5 +849,6 @@
         private System.Windows.Forms.Button butActivity;
         private System.Windows.Forms.Button butEthernet;
         private System.Windows.Forms.Button butTuning;
+        private System.Windows.Forms.GroupBox gbLine1;
     }
 }
