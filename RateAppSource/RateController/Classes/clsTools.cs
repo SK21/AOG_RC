@@ -300,18 +300,20 @@ namespace RateController
             return Prop;
         }
 
-        public void LoadFormData(Form Frm,string Instance="")
+        public void LoadFormData(Form Frm,string Instance="",bool SetLocation=true)
         {
-            int Leftloc = 0;
-            int.TryParse(LoadAppProperty(Frm.Name+Instance + ".Left"), out Leftloc);
-            Frm.Left = Leftloc;
+            if (SetLocation)
+            {
+                int Leftloc = 0;
+                int.TryParse(LoadAppProperty(Frm.Name + Instance + ".Left"), out Leftloc);
+                Frm.Left = Leftloc;
 
-            int Toploc = 0;
-            int.TryParse(LoadAppProperty(Frm.Name+Instance + ".Top"), out Toploc);
-            Frm.Top = Toploc;
+                int Toploc = 0;
+                int.TryParse(LoadAppProperty(Frm.Name + Instance + ".Top"), out Toploc);
+                Frm.Top = Toploc;
 
-            IsOnScreen(Frm, true);
-
+                IsOnScreen(Frm, true);
+            }
             FormAdd(Frm);
         }
 

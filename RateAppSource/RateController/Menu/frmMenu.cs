@@ -1,5 +1,6 @@
 ﻿using RateController.Menu;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController
@@ -52,6 +53,8 @@ namespace RateController
         private string LastScreen = "";
         private bool LoadLast = false;
         private FormStart mf;
+        private MouseButtons MouseButtonClicked;
+        private Point MouseDownLocation;
 
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
@@ -460,6 +463,7 @@ namespace RateController
 
         private void frmMenu_Load(object sender, EventArgs e)
         {
+            mf.Tls.LoadFormData(this);
             this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = FormWidth;
             this.Height = FormHeight;
@@ -482,6 +486,32 @@ namespace RateController
         private void frmMenu_LocationChanged(object sender, EventArgs e)
         {
             MenuMoved?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void frmMenu_MouseDown(object sender, MouseEventArgs e)
+        {
+            MouseButtonClicked = e.Button;
+            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
+        }
+
+        private void frmMenu_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            // Define the border color and thickness
+            Color borderColor = Properties.Settings.Default.ForeColour;
+            int borderWidth = 1;
+
+            // Draw the border
+            using (Pen pen = new Pen(borderColor, borderWidth))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+            }
         }
 
         private void LoadLastScreen()

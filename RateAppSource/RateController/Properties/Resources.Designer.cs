@@ -742,6 +742,16 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap up_and_down_arrows {
+            get {
+                object obj = ResourceManager.GetObject("up_and_down_arrows", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap UpArrow64 {
             get {
                 object obj = ResourceManager.GetObject("UpArrow64", resourceCulture);

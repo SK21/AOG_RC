@@ -1,16 +1,9 @@
 ﻿using AgOpenGPS;
 using RateController.Language;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -28,6 +21,30 @@ namespace RateController.Menu
             MainMenu = menu;
             MainMenu.MenuMoved += MyMenu_MenuMoved;
             mf = main;
+            SetLanguage();
+        }
+        private void SetLanguage()
+        {
+            lb0.Text = Lang.lgProductName;
+            lb5.Text = Lang.lgControlType;
+            lb1.Text = Lang.lgQuantity;
+            lb2.Text = Lang.lgCoverage;
+            lbSensorCounts.Text = Lang.lgSensorCounts;
+            LabProdDensity.Text = Lang.lgDensity;
+            lbBaseRateDes.Text = Lang.lgBaseRate;
+            lbAltRate.Text = Lang.lgAltRate;
+            lb6.Text = Lang.lgTankSize;
+            lbStartQuantity.Text = Lang.lgStartQuantity;
+
+            ValveType.Items[0] = Lang.lgStandard;
+            ValveType.Items[1] = Lang.lgComboClose;
+            ValveType.Items[2] = Lang.lgMotor;
+            ValveType.Items[3] = Lang.lgComboTimed;
+
+            AreaUnits.Items[0] = Lang.lgAcres;
+            AreaUnits.Items[1] = Lang.lgHectares;
+            AreaUnits.Items[2] = Lang.lgMinute;
+            AreaUnits.Items[3] = Lang.lgHour;
         }
 
         public bool Edited
@@ -52,6 +69,45 @@ namespace RateController.Menu
         {
             MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID - 1);
             UpdateForm();
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // save changes
+                MainMenu.CurrentProduct.ProductName = tbProduct.Text;
+                MainMenu.CurrentProduct.ControlType = ConvertValveIndex(ValveType.SelectedIndex);
+                MainMenu.CurrentProduct.QuantityDescription = tbVolumeUnits.Text;
+
+                if (MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Fan)
+                {
+                    // set rate by fan
+                    if (double.TryParse(tbTargetRPM.Text, out var rpm)) MainMenu.CurrentProduct.RateSet = rpm;
+                    if (double.TryParse(tbCountsRPM.Text, out double cnts)) MainMenu.CurrentProduct.MeterCal = cnts;
+                    MainMenu.CurrentProduct.CoverageUnits = 2;   // minutes
+                }
+                else
+                {
+                    // set rate by product
+                    MainMenu.CurrentProduct.EnableProdDensity = CbUseProdDensity.Checked;
+                    if (double.TryParse(lbBaseRate.Text, out double bs)) MainMenu.CurrentProduct.RateSet = bs;
+                    if (double.TryParse(ProdDensity.Text, out double de)) MainMenu.CurrentProduct.ProdDensity = de;
+                    if (double.TryParse(FlowCal.Text, out double fc)) MainMenu.CurrentProduct.MeterCal = fc;
+                    MainMenu.CurrentProduct.CoverageUnits = Convert.ToByte(AreaUnits.SelectedIndex);
+                }
+                if (double.TryParse(tbAltRate.Text, out double ar)) MainMenu.CurrentProduct.RateAlt = ar;
+                if (double.TryParse(TankSize.Text, out double tk)) MainMenu.CurrentProduct.TankSize = tk;
+                if (double.TryParse(TankRemain.Text, out double tr)) MainMenu.CurrentProduct.TankStart = tr;
+
+                string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+                SetButtons(false);
+                UpdateForm();
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmMenuRates/btnOK_Click: " + ex.Message);
+            }
         }
 
         private void btnResetTank_Click(object sender, EventArgs e)
@@ -187,11 +243,30 @@ namespace RateController.Menu
             }
         }
 
+        private void frmMenuRate_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            mf.Tls.SaveFormData(this);
+        }
+
+        private void frmMenuRate_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Edited)
+            {
+                var Hlp = new frmMsgBox(mf, "Unsaved Changes, Confirm Exit?", "Exit", true);
+                Hlp.TopMost = true;
+
+                Hlp.ShowDialog();
+                bool Result = Hlp.Result;
+                Hlp.Close();
+                if (!Result) e.Cancel = true;
+            }
+        }
+
         private void frmMenuRate_Load(object sender, EventArgs e)
         {
             // menu 800,600
             // sub menu 540,630
-            mf.Tls.LoadFormData(this);
+            mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;
@@ -294,8 +369,8 @@ namespace RateController.Menu
 
         private void PositionForm()
         {
-            this.Top = MainMenu.Top + 36;
-            this.Left = MainMenu.Left + 251;
+            this.Top = MainMenu.Top + 30;
+            this.Left = MainMenu.Left + 246;
         }
 
         private void ProdDensity_Enter(object sender, EventArgs e)
@@ -545,7 +620,7 @@ namespace RateController.Menu
             {
                 // fans
                 pnlFan.Visible = true;
-                pnlFan.Left = 76;
+                pnlFan.Left = 71;
                 pnlFan.Top = 48;
                 pnlMain.Visible = false;
                 lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
@@ -585,64 +660,6 @@ namespace RateController.Menu
             TankSize.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             TankRemain.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
-        }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // save changes
-                MainMenu.CurrentProduct.ProductName = tbProduct.Text;
-                MainMenu.CurrentProduct.ControlType = ConvertValveIndex(ValveType.SelectedIndex);
-                MainMenu.CurrentProduct.QuantityDescription = tbVolumeUnits.Text;
-
-                if (MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Fan)
-                {
-                    // set rate by fan
-                    if (double.TryParse(tbTargetRPM.Text, out var rpm)) MainMenu.CurrentProduct.RateSet = rpm;
-                    if (double.TryParse(tbCountsRPM.Text, out double cnts)) MainMenu.CurrentProduct.MeterCal = cnts;
-                    MainMenu.CurrentProduct.CoverageUnits = 2;   // minutes
-                }
-                else
-                {
-                    // set rate by product
-                    MainMenu.CurrentProduct.EnableProdDensity = CbUseProdDensity.Checked;
-                    if (double.TryParse(lbBaseRate.Text, out double bs)) MainMenu.CurrentProduct.RateSet = bs;
-                    if (double.TryParse(ProdDensity.Text, out double de)) MainMenu.CurrentProduct.ProdDensity = de;
-                    if (double.TryParse(FlowCal.Text, out double fc)) MainMenu.CurrentProduct.MeterCal = fc;
-                    MainMenu.CurrentProduct.CoverageUnits = Convert.ToByte(AreaUnits.SelectedIndex);
-                }
-                if (double.TryParse(tbAltRate.Text, out double ar)) MainMenu.CurrentProduct.RateAlt = ar;
-                if (double.TryParse(TankSize.Text, out double tk)) MainMenu.CurrentProduct.TankSize = tk;
-                if (double.TryParse(TankRemain.Text, out double tr)) MainMenu.CurrentProduct.TankStart = tr;
-
-                string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
-                SetButtons(false);
-                UpdateForm();
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog("frmMenuRates/btnOK_Click: " + ex.Message);
-            }
-        }
-
-        private void frmMenuRate_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (Edited)
-            {
-                var Hlp = new frmMsgBox(mf, "Unsaved Changes, Confirm Exit?", "Exit", true);
-                Hlp.TopMost = true;
-
-                Hlp.ShowDialog();
-                bool Result = Hlp.Result;
-                Hlp.Close();
-                if (!Result) e.Cancel = true;
-            }
-        }
-
-        private void frmMenuRate_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            mf.Tls.SaveFormData(this);
         }
     }
 }

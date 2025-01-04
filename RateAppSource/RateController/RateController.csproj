@@ -446,6 +446,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\up-and-down-arrows.png" />
+    <None Include="Resources\double-arrow.png" />
     <None Include="Resources\Diag.png" />
     <None Include="Resources\SteerDriveOff.png" />
     <None Include="Resources\spray2.png" />

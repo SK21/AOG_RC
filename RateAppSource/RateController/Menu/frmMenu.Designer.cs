@@ -29,14 +29,6 @@
         private void InitializeComponent()
         {
             this.butClose = new System.Windows.Forms.Button();
-            this.butPowerOff = new System.Windows.Forms.Button();
-            this.butDiag = new System.Windows.Forms.Button();
-            this.butOptions = new System.Windows.Forms.Button();
-            this.butModules = new System.Windows.Forms.Button();
-            this.butMachine = new System.Windows.Forms.Button();
-            this.butProducts = new System.Windows.Forms.Button();
-            this.butFile = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.butNew = new System.Windows.Forms.Button();
             this.butOpen = new System.Windows.Forms.Button();
             this.butSaveAs = new System.Windows.Forms.Button();
@@ -67,6 +59,14 @@
             this.butEthernet = new System.Windows.Forms.Button();
             this.butTuning = new System.Windows.Forms.Button();
             this.gbLine1 = new System.Windows.Forms.GroupBox();
+            this.butPowerOff = new System.Windows.Forms.Button();
+            this.butDiag = new System.Windows.Forms.Button();
+            this.butOptions = new System.Windows.Forms.Button();
+            this.butModules = new System.Windows.Forms.Button();
+            this.butMachine = new System.Windows.Forms.Button();
+            this.butProducts = new System.Windows.Forms.Button();
+            this.butFile = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -84,142 +84,6 @@
             this.butClose.Text = "X";
             this.butClose.UseVisualStyleBackColor = false;
             this.butClose.Click += new System.EventHandler(this.butClose_Click);
-            // 
-            // butPowerOff
-            // 
-            this.butPowerOff.BackColor = System.Drawing.Color.Transparent;
-            this.butPowerOff.FlatAppearance.BorderSize = 0;
-            this.butPowerOff.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butPowerOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butPowerOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butPowerOff.Image = global::RateController.Properties.Resources.SwitchOff;
-            this.butPowerOff.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butPowerOff.Location = new System.Drawing.Point(12, 633);
-            this.butPowerOff.Name = "butPowerOff";
-            this.butPowerOff.Size = new System.Drawing.Size(228, 66);
-            this.butPowerOff.TabIndex = 8;
-            this.butPowerOff.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butPowerOff.UseVisualStyleBackColor = false;
-            this.butPowerOff.Click += new System.EventHandler(this.butPowerOff_Click);
-            // 
-            // butDiag
-            // 
-            this.butDiag.BackColor = System.Drawing.Color.Transparent;
-            this.butDiag.FlatAppearance.BorderSize = 0;
-            this.butDiag.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butDiag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butDiag.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butDiag.Image = global::RateController.Properties.Resources.Diag;
-            this.butDiag.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butDiag.Location = new System.Drawing.Point(12, 469);
-            this.butDiag.Name = "butDiag";
-            this.butDiag.Size = new System.Drawing.Size(228, 66);
-            this.butDiag.TabIndex = 7;
-            this.butDiag.Text = "Diagnostics";
-            this.butDiag.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butDiag.UseVisualStyleBackColor = false;
-            this.butDiag.Click += new System.EventHandler(this.butDiag_Click);
-            // 
-            // butOptions
-            // 
-            this.butOptions.BackColor = System.Drawing.Color.Transparent;
-            this.butOptions.FlatAppearance.BorderSize = 0;
-            this.butOptions.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butOptions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butOptions.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butOptions.Image = global::RateController.Properties.Resources.Menu;
-            this.butOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butOptions.Location = new System.Drawing.Point(12, 392);
-            this.butOptions.Name = "butOptions";
-            this.butOptions.Size = new System.Drawing.Size(228, 66);
-            this.butOptions.TabIndex = 6;
-            this.butOptions.Text = "Options";
-            this.butOptions.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butOptions.UseVisualStyleBackColor = false;
-            this.butOptions.Click += new System.EventHandler(this.butOptions_Click);
-            // 
-            // butModules
-            // 
-            this.butModules.BackColor = System.Drawing.Color.Transparent;
-            this.butModules.FlatAppearance.BorderSize = 0;
-            this.butModules.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butModules.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butModules.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butModules.Image = global::RateController.Properties.Resources.SubnetSend;
-            this.butModules.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butModules.Location = new System.Drawing.Point(12, 315);
-            this.butModules.Name = "butModules";
-            this.butModules.Size = new System.Drawing.Size(228, 66);
-            this.butModules.TabIndex = 5;
-            this.butModules.Text = "Modules";
-            this.butModules.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butModules.UseVisualStyleBackColor = false;
-            this.butModules.Click += new System.EventHandler(this.butModules_Click);
-            // 
-            // butMachine
-            // 
-            this.butMachine.BackColor = System.Drawing.Color.Transparent;
-            this.butMachine.FlatAppearance.BorderSize = 0;
-            this.butMachine.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butMachine.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butMachine.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butMachine.Image = global::RateController.Properties.Resources.SteerDriveOff;
-            this.butMachine.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butMachine.Location = new System.Drawing.Point(12, 238);
-            this.butMachine.Name = "butMachine";
-            this.butMachine.Size = new System.Drawing.Size(228, 66);
-            this.butMachine.TabIndex = 4;
-            this.butMachine.Text = "Machine";
-            this.butMachine.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butMachine.UseVisualStyleBackColor = false;
-            this.butMachine.Click += new System.EventHandler(this.butMachine_Click);
-            // 
-            // butProducts
-            // 
-            this.butProducts.BackColor = System.Drawing.Color.Transparent;
-            this.butProducts.FlatAppearance.BorderSize = 0;
-            this.butProducts.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butProducts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butProducts.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butProducts.Image = global::RateController.Properties.Resources.spray2;
-            this.butProducts.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butProducts.Location = new System.Drawing.Point(12, 161);
-            this.butProducts.Name = "butProducts";
-            this.butProducts.Size = new System.Drawing.Size(228, 66);
-            this.butProducts.TabIndex = 3;
-            this.butProducts.Text = "Products";
-            this.butProducts.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butProducts.UseVisualStyleBackColor = false;
-            this.butProducts.Click += new System.EventHandler(this.butProducts_Click);
-            // 
-            // butFile
-            // 
-            this.butFile.BackColor = System.Drawing.Color.Transparent;
-            this.butFile.FlatAppearance.BorderSize = 0;
-            this.butFile.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butFile.Image = global::RateController.Properties.Resources.FileExplorerWindows;
-            this.butFile.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butFile.Location = new System.Drawing.Point(12, 84);
-            this.butFile.Name = "butFile";
-            this.butFile.Size = new System.Drawing.Size(228, 66);
-            this.butFile.TabIndex = 2;
-            this.butFile.Text = "File";
-            this.butFile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butFile.UseVisualStyleBackColor = false;
-            this.butFile.Click += new System.EventHandler(this.butFile_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = global::RateController.Properties.Resources.RC_logo;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(70, 55);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
             // 
             // butNew
             // 
@@ -754,6 +618,144 @@
             this.gbLine1.TabIndex = 159;
             this.gbLine1.TabStop = false;
             // 
+            // butPowerOff
+            // 
+            this.butPowerOff.BackColor = System.Drawing.Color.Transparent;
+            this.butPowerOff.FlatAppearance.BorderSize = 0;
+            this.butPowerOff.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butPowerOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butPowerOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butPowerOff.Image = global::RateController.Properties.Resources.SwitchOff;
+            this.butPowerOff.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butPowerOff.Location = new System.Drawing.Point(12, 633);
+            this.butPowerOff.Name = "butPowerOff";
+            this.butPowerOff.Size = new System.Drawing.Size(70, 66);
+            this.butPowerOff.TabIndex = 8;
+            this.butPowerOff.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butPowerOff.UseVisualStyleBackColor = false;
+            this.butPowerOff.Click += new System.EventHandler(this.butPowerOff_Click);
+            // 
+            // butDiag
+            // 
+            this.butDiag.BackColor = System.Drawing.Color.Transparent;
+            this.butDiag.FlatAppearance.BorderSize = 0;
+            this.butDiag.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butDiag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butDiag.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butDiag.Image = global::RateController.Properties.Resources.Diag;
+            this.butDiag.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butDiag.Location = new System.Drawing.Point(12, 469);
+            this.butDiag.Name = "butDiag";
+            this.butDiag.Size = new System.Drawing.Size(228, 66);
+            this.butDiag.TabIndex = 7;
+            this.butDiag.Text = "Diagnostics";
+            this.butDiag.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butDiag.UseVisualStyleBackColor = false;
+            this.butDiag.Click += new System.EventHandler(this.butDiag_Click);
+            // 
+            // butOptions
+            // 
+            this.butOptions.BackColor = System.Drawing.Color.Transparent;
+            this.butOptions.FlatAppearance.BorderSize = 0;
+            this.butOptions.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butOptions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butOptions.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butOptions.Image = global::RateController.Properties.Resources.Menu;
+            this.butOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butOptions.Location = new System.Drawing.Point(12, 392);
+            this.butOptions.Name = "butOptions";
+            this.butOptions.Size = new System.Drawing.Size(228, 66);
+            this.butOptions.TabIndex = 6;
+            this.butOptions.Text = "Options";
+            this.butOptions.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butOptions.UseVisualStyleBackColor = false;
+            this.butOptions.Click += new System.EventHandler(this.butOptions_Click);
+            // 
+            // butModules
+            // 
+            this.butModules.BackColor = System.Drawing.Color.Transparent;
+            this.butModules.FlatAppearance.BorderSize = 0;
+            this.butModules.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butModules.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butModules.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butModules.Image = global::RateController.Properties.Resources.SubnetSend;
+            this.butModules.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butModules.Location = new System.Drawing.Point(12, 315);
+            this.butModules.Name = "butModules";
+            this.butModules.Size = new System.Drawing.Size(228, 66);
+            this.butModules.TabIndex = 5;
+            this.butModules.Text = "Modules";
+            this.butModules.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butModules.UseVisualStyleBackColor = false;
+            this.butModules.Click += new System.EventHandler(this.butModules_Click);
+            // 
+            // butMachine
+            // 
+            this.butMachine.BackColor = System.Drawing.Color.Transparent;
+            this.butMachine.FlatAppearance.BorderSize = 0;
+            this.butMachine.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butMachine.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butMachine.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butMachine.Image = global::RateController.Properties.Resources.SteerDriveOff;
+            this.butMachine.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butMachine.Location = new System.Drawing.Point(12, 238);
+            this.butMachine.Name = "butMachine";
+            this.butMachine.Size = new System.Drawing.Size(228, 66);
+            this.butMachine.TabIndex = 4;
+            this.butMachine.Text = "Machine";
+            this.butMachine.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butMachine.UseVisualStyleBackColor = false;
+            this.butMachine.Click += new System.EventHandler(this.butMachine_Click);
+            // 
+            // butProducts
+            // 
+            this.butProducts.BackColor = System.Drawing.Color.Transparent;
+            this.butProducts.FlatAppearance.BorderSize = 0;
+            this.butProducts.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butProducts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butProducts.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butProducts.Image = global::RateController.Properties.Resources.spray2;
+            this.butProducts.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butProducts.Location = new System.Drawing.Point(12, 161);
+            this.butProducts.Name = "butProducts";
+            this.butProducts.Size = new System.Drawing.Size(228, 66);
+            this.butProducts.TabIndex = 3;
+            this.butProducts.Text = "Products";
+            this.butProducts.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butProducts.UseVisualStyleBackColor = false;
+            this.butProducts.Click += new System.EventHandler(this.butProducts_Click);
+            // 
+            // butFile
+            // 
+            this.butFile.BackColor = System.Drawing.Color.Transparent;
+            this.butFile.FlatAppearance.BorderSize = 0;
+            this.butFile.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butFile.Image = global::RateController.Properties.Resources.FileExplorerWindows;
+            this.butFile.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butFile.Location = new System.Drawing.Point(12, 84);
+            this.butFile.Name = "butFile";
+            this.butFile.Size = new System.Drawing.Size(228, 66);
+            this.butFile.TabIndex = 2;
+            this.butFile.Text = "File";
+            this.butFile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butFile.UseVisualStyleBackColor = false;
+            this.butFile.Click += new System.EventHandler(this.butFile_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Image = global::RateController.Properties.Resources.RC_logo;
+            this.pictureBox1.Location = new System.Drawing.Point(12, 8);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(70, 63);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -798,12 +800,15 @@
             this.Controls.Add(this.butFile);
             this.Controls.Add(this.butClose);
             this.Controls.Add(this.pictureBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMenu";
             this.ShowInTaskbar = false;
             this.Text = "frmMenu";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenu_FormClosed);
             this.Load += new System.EventHandler(this.frmMenu_Load);
             this.LocationChanged += new System.EventHandler(this.frmMenu_LocationChanged);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

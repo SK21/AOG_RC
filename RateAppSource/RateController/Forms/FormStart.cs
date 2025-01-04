@@ -1550,7 +1550,7 @@ namespace RateController
 
             if (fs == null)
             {
-                int Prd = CurrentPage - 2;
+                int Prd = CurrentPage - 1;
                 if (Prd < 0) Prd = 0;
                 Form frm = new frmMenu(this, Prd, OpenLast);
                 frm.Show();
