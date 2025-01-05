@@ -230,6 +230,7 @@
             this.butSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butSettings.UseVisualStyleBackColor = false;
             this.butSettings.Visible = false;
+            this.butSettings.Click += new System.EventHandler(this.butSettings_Click);
             // 
             // butRate
             // 

@@ -1,5 +1,6 @@
 ﻿using RateController.Menu;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -485,16 +486,28 @@ namespace RateController
             try
             {
                 string Last = mf.Tls.LoadProperty("LastScreen");
+                Debug.Print("Last screen: " + Last);
                 if (mf.Tls.IsFormNameValid(Last))
                 {
                     Form fs = mf.Tls.IsFormOpen(Last);
 
                     if (fs == null)
                     {
-                        Form frm = new frmMenuRate(mf, this);
-                        frm.Owner = this;
+                        switch (Last)
+                        {
+                            case "frmMenuControl":
+                                fs = new frmMenuControl(mf, this);
+                                butProducts.PerformClick();
+                                break;
+
+                            default:
+                                fs = new frmMenuRate(mf, this);
+                                butProducts.PerformClick();
+                                break;
+                        }
+                        fs.Owner = this;
                         LastScreen = Last;
-                        frm.Show();
+                        fs.Show();
                     }
                     else
                     {
@@ -516,6 +529,23 @@ namespace RateController
             if (fs == null)
             {
                 Form frm = new frmMenuControl(mf, this);
+                frm.Owner = this;
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
+        private void butSettings_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuSettings";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuSettings(mf, this);
                 frm.Owner = this;
                 frm.Show();
             }

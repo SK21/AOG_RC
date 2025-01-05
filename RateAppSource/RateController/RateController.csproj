@@ -300,6 +300,12 @@
     <Compile Include="Menu\frmMenuRate.Designer.cs">
       <DependentUpon>frmMenuRate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuSettings.Designer.cs">
+      <DependentUpon>frmMenuSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="PGNs\PGN228.cs" />
     <Compile Include="PGNs\PGN229.cs" />
     <Compile Include="PGNs\PGN234.cs" />
@@ -433,6 +439,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuRate.resx">
       <DependentUpon>frmMenuRate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuSettings.resx">
+      <DependentUpon>frmMenuSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

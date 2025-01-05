@@ -284,9 +284,11 @@
             // 
             this.HSmin.HelpMode = false;
             this.HSmin.HoverTime = 500;
+            this.HSmin.LargeChange = 1;
             this.HSmin.Location = new System.Drawing.Point(173, 410);
             this.HSmin.Name = "HSmin";
             this.HSmin.Size = new System.Drawing.Size(263, 45);
+            this.HSmin.SmallChange = 1;
             this.HSmin.TabIndex = 332;
             this.HSmin.Value = 0;
             this.HSmin.Clicked += new System.EventHandler(this.HSmin_Clicked);
@@ -296,9 +298,11 @@
             // 
             this.HSmax.HelpMode = false;
             this.HSmax.HoverTime = 500;
+            this.HSmax.LargeChange = 1;
             this.HSmax.Location = new System.Drawing.Point(173, 343);
             this.HSmax.Name = "HSmax";
             this.HSmax.Size = new System.Drawing.Size(263, 45);
+            this.HSmax.SmallChange = 1;
             this.HSmax.TabIndex = 331;
             this.HSmax.Value = 0;
             this.HSmax.Clicked += new System.EventHandler(this.HSmax_Clicked);
@@ -308,9 +312,11 @@
             // 
             this.HSscaling.HelpMode = false;
             this.HSscaling.HoverTime = 500;
+            this.HSscaling.LargeChange = 1;
             this.HSscaling.Location = new System.Drawing.Point(173, 276);
             this.HSscaling.Name = "HSscaling";
             this.HSscaling.Size = new System.Drawing.Size(263, 45);
+            this.HSscaling.SmallChange = 1;
             this.HSscaling.TabIndex = 330;
             this.HSscaling.Value = 0;
             this.HSscaling.Clicked += new System.EventHandler(this.HSscaling_Clicked);
@@ -320,9 +326,11 @@
             // 
             this.HSthreshold.HelpMode = false;
             this.HSthreshold.HoverTime = 500;
+            this.HSthreshold.LargeChange = 1;
             this.HSthreshold.Location = new System.Drawing.Point(173, 209);
             this.HSthreshold.Name = "HSthreshold";
             this.HSthreshold.Size = new System.Drawing.Size(263, 45);
+            this.HSthreshold.SmallChange = 1;
             this.HSthreshold.TabIndex = 329;
             this.HSthreshold.Value = 0;
             this.HSthreshold.Clicked += new System.EventHandler(this.HSthreshold_Clicked);
@@ -332,9 +340,11 @@
             // 
             this.HSlow.HelpMode = false;
             this.HSlow.HoverTime = 500;
+            this.HSlow.LargeChange = 1;
             this.HSlow.Location = new System.Drawing.Point(173, 142);
             this.HSlow.Name = "HSlow";
             this.HSlow.Size = new System.Drawing.Size(263, 45);
+            this.HSlow.SmallChange = 1;
             this.HSlow.TabIndex = 328;
             this.HSlow.Value = 0;
             this.HSlow.Clicked += new System.EventHandler(this.HSlow_Clicked);
@@ -344,9 +354,11 @@
             // 
             this.HShigh.HelpMode = false;
             this.HShigh.HoverTime = 500;
+            this.HShigh.LargeChange = 1;
             this.HShigh.Location = new System.Drawing.Point(173, 75);
             this.HShigh.Name = "HShigh";
             this.HShigh.Size = new System.Drawing.Size(263, 45);
+            this.HShigh.SmallChange = 1;
             this.HShigh.TabIndex = 327;
             this.HShigh.Value = 0;
             this.HShigh.Clicked += new System.EventHandler(this.HShigh_Clicked);
@@ -384,6 +396,7 @@
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMenuControl";
+            this.ShowInTaskbar = false;
             this.Text = "frmMenuControl";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuControl_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuControl_FormClosed);
