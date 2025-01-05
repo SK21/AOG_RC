@@ -118,6 +118,12 @@
     <Compile Include="Classes\clsZones.cs" />
     <Compile Include="Classes\SerialComm.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
+    <Compile Include="Controls\Hbar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Hbar.Designer.cs">
+      <DependentUpon>Hbar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\VerticalProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -282,6 +288,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.ru.resx</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuControl.Designer.cs">
+      <DependentUpon>frmMenuControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuRate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -313,6 +325,9 @@
     <Compile Include="Forms\RCRestore.Designer.cs">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Controls\Hbar.resx">
+      <DependentUpon>Hbar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -413,6 +428,9 @@
       <LastGenOutput>Lang.ru.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuControl.resx">
+      <DependentUpon>frmMenuControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuRate.resx">
       <DependentUpon>frmMenuRate.cs</DependentUpon>
     </EmbeddedResource>
@@ -446,6 +464,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\HelpUnder.png" />
+    <None Include="Resources\HelpIcon.ico" />
     <None Include="Resources\up-and-down-arrows.png" />
     <None Include="Resources\double-arrow.png" />
     <None Include="Resources\Diag.png" />

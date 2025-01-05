@@ -157,6 +157,7 @@
             this.butControl.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butControl.UseVisualStyleBackColor = false;
             this.butControl.Visible = false;
+            this.butControl.Click += new System.EventHandler(this.butControl_Click);
             // 
             // butData
             // 

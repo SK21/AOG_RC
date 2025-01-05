@@ -11,6 +11,7 @@ namespace RateController.Menu
     public partial class frmMenuRate : Form
     {
         private bool cEdited;
+        private bool HelpMode = false;
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
@@ -19,50 +20,46 @@ namespace RateController.Menu
         {
             InitializeComponent();
             MainMenu = menu;
-            MainMenu.MenuMoved += MyMenu_MenuMoved;
             mf = main;
-            SetLanguage();
-        }
-        private void SetLanguage()
-        {
-            lb0.Text = Lang.lgProductName;
-            lb5.Text = Lang.lgControlType;
-            lb1.Text = Lang.lgQuantity;
-            lb2.Text = Lang.lgCoverage;
-            lbSensorCounts.Text = Lang.lgSensorCounts;
-            LabProdDensity.Text = Lang.lgDensity;
-            lbBaseRateDes.Text = Lang.lgBaseRate;
-            lbAltRate.Text = Lang.lgAltRate;
-            lb6.Text = Lang.lgTankSize;
-            lbStartQuantity.Text = Lang.lgStartQuantity;
-
-            ValveType.Items[0] = Lang.lgStandard;
-            ValveType.Items[1] = Lang.lgComboClose;
-            ValveType.Items[2] = Lang.lgMotor;
-            ValveType.Items[3] = Lang.lgComboTimed;
-
-            AreaUnits.Items[0] = Lang.lgAcres;
-            AreaUnits.Items[1] = Lang.lgHectares;
-            AreaUnits.Items[2] = Lang.lgMinute;
-            AreaUnits.Items[3] = Lang.lgHour;
         }
 
         public bool Edited
         { get { return cEdited; } }
 
-        private void AreaUnits_HelpRequested(object sender, HelpEventArgs hlpevent)
+        private void AreaUnits_Click(object sender, EventArgs e)
         {
-            // coverage
-            string Message = "Area or time units. When using time units AOG is not required.";
+            if (HelpMode)
+            {
+                // coverage
+                string Message = "Area or time units. When using time units AOG is not required.";
 
-            mf.Tls.ShowHelp(Message, "Coverage");
-            hlpevent.Handled = true;
+                mf.Tls.ShowHelp(Message, "Coverage");
+                btnHelp.PerformClick();
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            if (HelpMode)
+            {
+                this.Cursor = Cursors.Default;
+                HelpMode = false;
+                //btnHelp.Image = Properties.Resources.Help;
+                btnHelp.FlatAppearance.BorderSize = 0;
+            }
+            else
+            {
+                this.Cursor = Cursors.Help;
+                HelpMode = true;
+                //btnHelp.Image = Properties.Resources.HelpUnder;
+                btnHelp.FlatAppearance.BorderSize = 1;
+            }
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
@@ -137,6 +134,11 @@ namespace RateController.Menu
             SetButtons(true);
         }
 
+        private void CbUseProdDensity_Click(object sender, EventArgs e)
+        {
+            if (HelpMode) btnHelp.PerformClick();
+        }
+
         private void ComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender; // Draw the background of the ComboBox
@@ -208,28 +210,30 @@ namespace RateController.Menu
             return Result;
         }
 
-        private void FlowCal_Enter(object sender, EventArgs e)
+        private void FlowCal_Click(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(FlowCal.Text, out tempD);
-            using (var form = new FormNumeric(0.01, 10000, tempD))
+            if (HelpMode)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                string Message = "This is the number of flow sensor counts for 1 unit of product.";
+                //string Message = "For flow sensors this is the sensor counts for 1 unit of product.\n";
+                //"For weight control this is Units per Minute for each Pulse Width Modulation value.";
+
+                mf.Tls.ShowHelp(Message, "Sensor Counts");
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(FlowCal.Text, out tempD);
+                using (var form = new FormNumeric(0.01, 10000, tempD))
                 {
-                    FlowCal.Text = form.ReturnValue.ToString("N3");
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        FlowCal.Text = form.ReturnValue.ToString("N3");
+                    }
                 }
             }
-        }
-
-        private void FlowCal_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "This is the number of flow sensor counts for 1 unit of product.";
-            //string Message = "For flow sensors this is the sensor counts for 1 unit of product.\n";
-            //"For weight control this is Units per Minute for each Pulse Width Modulation value.";
-
-            mf.Tls.ShowHelp(Message, "Sensor Counts");
-            hlpevent.Handled = true;
         }
 
         private void FlowCal_Validating(object sender, CancelEventArgs e)
@@ -266,6 +270,8 @@ namespace RateController.Menu
         {
             // menu 800,600
             // sub menu 540,630
+            SetLanguage();
+            MainMenu.MenuMoved += MyMenu_MenuMoved;
             mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = MainMenu.Width - 260;
@@ -280,6 +286,8 @@ namespace RateController.Menu
             btnLeft.Top = btnOK.Top;
             btnResetTank.Left = btnLeft.Left - 78;
             btnResetTank.Top = btnOK.Top;
+            btnHelp.Left = btnResetTank.Left - 78;
+            btnHelp.Top = btnOK.Top;
             PositionForm();
 
             foreach (Control con in this.Controls)
@@ -337,18 +345,29 @@ namespace RateController.Menu
             UpdateForm();
         }
 
-        private void lbBaseRate_Enter(object sender, EventArgs e)
+        private void lbBaseRate_Click(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(lbBaseRate.Text, out tempD);
-            using (var form = new FormNumeric(0, 50000, tempD))
+            if (HelpMode)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(lbBaseRate.Text, out tempD);
+                using (var form = new FormNumeric(0, 50000, tempD))
                 {
-                    lbBaseRate.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        lbBaseRate.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
+        }
+
+        private void lbBaseRate_Enter(object sender, EventArgs e)
+        {
         }
 
         private void lbBaseRate_Validating(object sender, CancelEventArgs e)
@@ -373,16 +392,23 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + 246;
         }
 
-        private void ProdDensity_Enter(object sender, EventArgs e)
+        private void ProdDensity_Click(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(ProdDensity.Text, out tempD);
-            using (var form = new FormNumeric(0, 10000, tempD))
+            if (HelpMode)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(ProdDensity.Text, out tempD);
+                using (var form = new FormNumeric(0, 10000, tempD))
                 {
-                    ProdDensity.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        ProdDensity.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
         }
@@ -422,16 +448,47 @@ namespace RateController.Menu
             }
         }
 
-        private void TankRemain_Enter(object sender, EventArgs e)
+        private void SetLanguage()
         {
-            double tempD;
-            double.TryParse(TankRemain.Text, out tempD);
-            using (var form = new FormNumeric(0, 100000, tempD))
+            lb0.Text = Lang.lgProductName;
+            lb5.Text = Lang.lgControlType;
+            lb1.Text = Lang.lgQuantity;
+            lb2.Text = Lang.lgCoverage;
+            lbSensorCounts.Text = Lang.lgSensorCounts;
+            LabProdDensity.Text = Lang.lgDensity;
+            lbBaseRateDes.Text = Lang.lgBaseRate;
+            lbAltRate.Text = Lang.lgAltRate;
+            lb6.Text = Lang.lgTankSize;
+            lbStartQuantity.Text = Lang.lgStartQuantity;
+
+            ValveType.Items[0] = Lang.lgStandard;
+            ValveType.Items[1] = Lang.lgComboClose;
+            ValveType.Items[2] = Lang.lgMotor;
+            ValveType.Items[3] = Lang.lgComboTimed;
+
+            AreaUnits.Items[0] = Lang.lgAcres;
+            AreaUnits.Items[1] = Lang.lgHectares;
+            AreaUnits.Items[2] = Lang.lgMinute;
+            AreaUnits.Items[3] = Lang.lgHour;
+        }
+
+        private void TankRemain_Click(object sender, EventArgs e)
+        {
+            if (HelpMode)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(TankRemain.Text, out tempD);
+                using (var form = new FormNumeric(0, 100000, tempD))
                 {
-                    TankRemain.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        TankRemain.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
         }
@@ -447,16 +504,23 @@ namespace RateController.Menu
             }
         }
 
-        private void TankSize_Enter(object sender, EventArgs e)
+        private void TankSize_Click(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(TankSize.Text, out tempD);
-            using (var form = new FormNumeric(0, 100000, tempD))
+            if (HelpMode)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(TankSize.Text, out tempD);
+                using (var form = new FormNumeric(0, 100000, tempD))
                 {
-                    TankSize.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        TankSize.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
         }
@@ -472,26 +536,28 @@ namespace RateController.Menu
             }
         }
 
-        private void tbAltRate_Enter(object sender, EventArgs e)
+        private void tbAltRate_Click(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(tbAltRate.Text, out tempD);
-            using (var form = new FormNumeric(1, 200, tempD))
+            if (HelpMode)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                string Message = "Alternate Rate as % of base rate.";
+
+                mf.Tls.ShowHelp(Message, "Alternate Rate");
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(tbAltRate.Text, out tempD);
+                using (var form = new FormNumeric(1, 200, tempD))
                 {
-                    tbAltRate.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        tbAltRate.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
-        }
-
-        private void tbAltRate_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "Alternate Rate as % of base rate.";
-
-            mf.Tls.ShowHelp(Message, "Alternate Rate");
-            hlpevent.Handled = true;
         }
 
         private void tbAltRate_Validating(object sender, CancelEventArgs e)
@@ -505,16 +571,23 @@ namespace RateController.Menu
             }
         }
 
-        private void tbCountsRPM_Enter(object sender, EventArgs e)
+        private void tbCountsRPM_Click(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(tbCountsRPM.Text, out tempD);
-            using (var form = new FormNumeric(0, 50000, tempD))
+            if (HelpMode)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(tbCountsRPM.Text, out tempD);
+                using (var form = new FormNumeric(0, 50000, tempD))
                 {
-                    tbCountsRPM.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        tbCountsRPM.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
         }
@@ -530,21 +603,33 @@ namespace RateController.Menu
             }
         }
 
+        private void tbProduct_Click(object sender, EventArgs e)
+        {
+            if (HelpMode) btnHelp.PerformClick();
+        }
+
         private void tbProduct_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
-        private void tbTargetRPM_Enter(object sender, EventArgs e)
+        private void tbTargetRPM_Click(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(tbTargetRPM.Text, out tempD);
-            using (var form = new FormNumeric(0, 50000, tempD))
+            if (HelpMode)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(tbTargetRPM.Text, out tempD);
+                using (var form = new FormNumeric(0, 50000, tempD))
                 {
-                    tbTargetRPM.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        tbTargetRPM.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
         }
@@ -560,12 +645,15 @@ namespace RateController.Menu
             }
         }
 
-        private void tbVolumeUnits_HelpRequested(object sender, HelpEventArgs hlpevent)
+        private void tbVolumeUnits_Click(object sender, EventArgs e)
         {
-            string Message = "Quantity units for product. ex: lbs, kgs";
+            if (HelpMode)
+            {
+                string Message = "Quantity units for product. ex: lbs, kgs";
 
-            mf.Tls.ShowHelp(Message, "Quantity");
-            hlpevent.Handled = true;
+                mf.Tls.ShowHelp(Message, "Quantity");
+                btnHelp.PerformClick();
+            }
         }
 
         private void UpdateFans()
@@ -642,15 +730,18 @@ namespace RateController.Menu
             Initializing = false;
         }
 
-        private void ValveType_HelpRequested(object sender, HelpEventArgs hlpevent)
+        private void ValveType_Click(object sender, EventArgs e)
         {
-            string Message = "1 - Standard, use a valve to vary rate \n " +
+            if (HelpMode)
+            {
+                string Message = "1 - Standard, use a valve to vary rate \n " +
                 "2 - Combo Close, use a valve to vary rate and on/off \n" +
                 "3 - Motor, vary motor speed to control rate \n" +
                 "4 - Combo Timed, use adjust/pause time for control";
 
-            mf.Tls.ShowHelp(Message, "Control Type");
-            hlpevent.Handled = true;
+                mf.Tls.ShowHelp(Message, "Control Type");
+                btnHelp.PerformClick();
+            }
         }
 
         private void ValveType_SelectedIndexChanged(object sender, EventArgs e)

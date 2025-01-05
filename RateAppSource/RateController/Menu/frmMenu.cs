@@ -5,40 +5,6 @@ using System.Windows.Forms;
 
 namespace RateController
 {
-    public enum MenuScreens
-    {
-        None,
-        File_New,
-        File_Open,
-        File_SaveAs,
-        Products_Rate,
-        Products_Control,
-        Products_Settings,
-        Products_Mode,
-        Products_Monitoring,
-        Products_Data,
-        Machine_Sections,
-        Machine_Relays,
-        Machine_Calibrate,
-        Modules_Network,
-        Modules_Boards,
-        Modules_Config,
-        Modules_Pins,
-        Modules_RelayPins,
-        Modules_Wifi,
-        Modules_Valves,
-        Options_Display,
-        Options_PrimedStart,
-        Options_Switches,
-        Options_Language,
-        Options_Other,
-        Diagnostics_TuningChart,
-        Diagnostics_Ethernet,
-        Diagnostics_ActivityLog,
-        Diagnostics_ErrorLog,
-        Diagnostics_Help
-    }
-
     public partial class frmMenu : Form
     {
         public const int StartLeft = 100;
@@ -76,6 +42,21 @@ namespace RateController
             if (NewID >= 0 && NewID < mf.MaxProducts)
             {
                 cCurrentProduct = mf.Products.Item(NewID);
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            // Define the border color and thickness
+            Color borderColor = Properties.Settings.Default.ForeColour;
+            int borderWidth = 1;
+
+            // Draw the border
+            using (Pen pen = new Pen(borderColor, borderWidth))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
             }
         }
 
@@ -499,21 +480,6 @@ namespace RateController
             if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-
-            // Define the border color and thickness
-            Color borderColor = Properties.Settings.Default.ForeColour;
-            int borderWidth = 1;
-
-            // Draw the border
-            using (Pen pen = new Pen(borderColor, borderWidth))
-            {
-                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
-            }
-        }
-
         private void LoadLastScreen()
         {
             try
@@ -539,6 +505,23 @@ namespace RateController
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("frmMenu/LoadLastScree: " + ex.Message);
+            }
+        }
+
+        private void butControl_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuControl";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuControl(mf, this);
+                frm.Owner = this;
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
             }
         }
     }
