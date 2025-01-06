@@ -145,7 +145,7 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Yellow")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
         public global::System.Drawing.Color ForeColour {
             get {
                 return ((global::System.Drawing.Color)(this["ForeColour"]));
@@ -157,7 +157,7 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        [global::System.Configuration.DefaultSettingValueAttribute("210, 220, 230")]
         public global::System.Drawing.Color BackColour {
             get {
                 return ((global::System.Drawing.Color)(this["BackColour"]));

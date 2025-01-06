@@ -1,4 +1,5 @@
-﻿using RateController.Menu;
+﻿using RateController.Controls;
+using RateController.Menu;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -76,6 +77,12 @@ namespace RateController
                 {
                     cb.BackColor = Properties.Settings.Default.ForeColour;
                     cb.FlatAppearance.CheckedBackColor = Color.LightGreen;
+                }
+
+                if (con is CKbox bx)
+                {
+                    bx.BackColor = Properties.Settings.Default.ForeColour;
+                    bx.SetColors(Properties.Settings.Default.ForeColour, Properties.Settings.Default.BackColour, Color.LightGreen);
                 }
 
                 if (con.HasChildren) StyleControls(con);

@@ -12,6 +12,7 @@ namespace RateController.Controls
 {
     public partial class CKbox : UserControl
     {
+        private Color Bcolor;
         private Color Fcolor;
 
         public CKbox()
@@ -20,6 +21,8 @@ namespace RateController.Controls
             checkBox1.Dock = DockStyle.Fill;
             checkBox1.CheckedChanged += CheckBox1_CheckedChanged;
             Fcolor = checkBox1.ForeColor;
+            Bcolor = checkBox1.BackColor;
+            DoColors();
         }
 
         public Appearance Appearance
@@ -55,16 +58,31 @@ namespace RateController.Controls
             set { checkBox1.Text = value; }
         }
 
+        public void SetColors(Color ForeColor, Color BackColor, Color CheckedColor)
+        {
+            Fcolor = ForeColor;
+            Bcolor = BackColor;
+            checkBox1.ForeColor = ForeColor;
+            checkBox1.BackColor = BackColor;
+            checkBox1.FlatAppearance.CheckedBackColor = CheckedColor;
+            DoColors();
+        }
+
         private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            DoColors();
+        }
+
+        private void DoColors()
         {
             if (checkBox1.Checked)
             {
-                Fcolor = checkBox1.ForeColor;
-                checkBox1.ForeColor = checkBox1.BackColor;
+                checkBox1.ForeColor = Bcolor;
             }
             else
             {
                 checkBox1.ForeColor = Fcolor;
+                checkBox1.BackColor = Bcolor;
             }
         }
     }

@@ -52,7 +52,6 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.lbProduct = new System.Windows.Forms.Label();
-            this.cKbox1 = new RateController.Controls.CKbox();
             this.grpMinUPM.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.SuspendLayout();
@@ -371,24 +370,11 @@
             this.lbProduct.Text = "Product";
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // cKbox1
-            // 
-            this.cKbox1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.cKbox1.CheckAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cKbox1.Checked = false;
-            this.cKbox1.Location = new System.Drawing.Point(337, 49);
-            this.cKbox1.Name = "cKbox1";
-            this.cKbox1.Size = new System.Drawing.Size(162, 32);
-            this.cKbox1.TabIndex = 333;
-            this.cKbox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.cKbox1.Txt = "On Screen";
-            // 
             // frmMenuSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
-            this.Controls.Add(this.cKbox1);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.btnRight);
@@ -444,6 +430,5 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Label lbProduct;
-        private Controls.CKbox cKbox1;
     }
 }

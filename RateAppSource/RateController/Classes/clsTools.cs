@@ -53,6 +53,8 @@ namespace RateController
             mf = CallingForm;
             CheckFolders();
             OpenFile(Properties.Settings.Default.FileName);
+            Properties.Settings.Default.ForeColour = Color.Black;
+            Properties.Settings.Default.BackColour = Color.FromArgb(255, 210, 220, 230);
         }
 
         public bool IsFormNameValid(string formName)

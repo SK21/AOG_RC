@@ -33,10 +33,10 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ForeColour" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Yellow</Value>
+      <Value Profile="(Default)">Black</Value>
     </Setting>
     <Setting Name="BackColour" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Black</Value>
+      <Value Profile="(Default)">210, 220, 230</Value>
     </Setting>
     <Setting Name="ForeColourUser1" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
