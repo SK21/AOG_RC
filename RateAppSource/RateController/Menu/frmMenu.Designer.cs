@@ -196,6 +196,7 @@
             this.butMonitor.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butMonitor.UseVisualStyleBackColor = false;
             this.butMonitor.Visible = false;
+            this.butMonitor.Click += new System.EventHandler(this.butMonitor_Click);
             // 
             // butMode
             // 

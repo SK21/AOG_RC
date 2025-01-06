@@ -39,12 +39,12 @@ namespace RateController
             get { return cCurrentProduct; }
         }
 
-        public void ChangeProduct(int NewID)
+        public void ChangeProduct(int NewID, bool NoFans = false)
         {
-            if (NewID >= 0 && NewID < mf.MaxProducts)
-            {
-                cCurrentProduct = mf.Products.Item(NewID);
-            }
+            if (NewID < 0) NewID = 0;
+            if (NewID > mf.MaxProducts - 1) NewID = mf.MaxProducts - 1;
+            if (NoFans && NewID > mf.MaxProducts - 3) NewID = mf.MaxProducts - 3;
+            cCurrentProduct = mf.Products.Item(NewID);
         }
 
         public void StyleControls(Control Parent)
@@ -578,6 +578,11 @@ namespace RateController
                                 butProducts.PerformClick();
                                 break;
 
+                            case "frmMenuMonitoring":
+                                fs = new frmMenuMonitoring(mf, this);
+                                butProducts.PerformClick();
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();
@@ -672,7 +677,25 @@ namespace RateController
                 fs.Text = "Focused";
                 fs.Focus();
             }
+        }
 
+        private void butMonitor_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuMonitoring";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuMonitoring(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
         }
     }
 }
