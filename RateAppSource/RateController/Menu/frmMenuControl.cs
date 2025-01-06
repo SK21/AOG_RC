@@ -103,50 +103,8 @@ namespace RateController.Menu
             btnLeft.Top = btnOK.Top;
             btnPIDloadDefaults.Left = btnLeft.Left - 78;
             btnPIDloadDefaults.Top = btnOK.Top;
+            MainMenu.StyleControls(this);
             PositionForm();
-
-            foreach (Control con in this.Controls)
-            {
-                if (con is Label ctl)
-                {
-                    ctl.ForeColor = Properties.Settings.Default.ForeColour;
-                    ctl.BackColor = Properties.Settings.Default.BackColour;
-                    ctl.Font = Properties.Settings.Default.MenuFontSmall;
-                }
-                if (con is Button but)
-                {
-                    but.ForeColor = Properties.Settings.Default.ForeColour;
-                    but.BackColor = Properties.Settings.Default.BackColour;
-                    but.FlatAppearance.MouseDownBackColor = Properties.Settings.Default.MouseDown;
-                }
-                if (con is Panel pnl)
-                {
-                    pnl.BackColor = Properties.Settings.Default.BackColour;
-                    foreach (Control pcon in pnl.Controls)
-                    {
-                        if (pcon is Label pctl)
-                        {
-                            pctl.ForeColor = Properties.Settings.Default.ForeColour;
-                            pctl.BackColor = Properties.Settings.Default.BackColour;
-                            pctl.Font = Properties.Settings.Default.MenuFontSmall;
-                        }
-
-                        if (pcon is TextBox tb)
-                        {
-                            tb.ForeColor = Properties.Settings.Default.ForeColour;
-                            tb.BackColor = Properties.Settings.Default.BackColour;
-                            tb.Font = Properties.Settings.Default.MenuFontSmall;
-                            tb.BorderStyle = BorderStyle.FixedSingle;
-                        }
-
-                        if (pcon is CheckBox cb)
-                        {
-                            cb.BackColor = Properties.Settings.Default.ForeColour;
-                            cb.FlatAppearance.CheckedBackColor = Color.LightGreen;
-                        }
-                    }
-                }
-            }
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             UpdateForm();
         }

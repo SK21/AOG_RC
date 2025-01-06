@@ -573,6 +573,11 @@ namespace RateController
                                 butProducts.PerformClick(); 
                                 break;
 
+                            case "frmMenuMode":
+                                fs = new frmMenuMode(mf, this);
+                                butProducts.PerformClick();
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();
@@ -648,6 +653,26 @@ namespace RateController
 
                 mf.Tls.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
             }
+        }
+
+        private void butMode_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuMode";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuMode(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+
         }
     }
 }

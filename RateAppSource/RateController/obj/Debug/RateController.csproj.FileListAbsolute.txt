@@ -2422,3 +2422,4 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\Rate
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuRate.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuSettings.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuControl.pdf
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuMode.resources

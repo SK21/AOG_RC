@@ -288,6 +288,12 @@
     <Compile Include="Menu\frmMenuControl.Designer.cs">
       <DependentUpon>frmMenuControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuMode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuMode.Designer.cs">
+      <DependentUpon>frmMenuMode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuRate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -427,6 +433,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuControl.resx">
       <DependentUpon>frmMenuControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuMode.resx">
+      <DependentUpon>frmMenuMode.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuRate.resx">
       <DependentUpon>frmMenuRate.cs</DependentUpon>

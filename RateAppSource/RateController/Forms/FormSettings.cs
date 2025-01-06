@@ -490,6 +490,17 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
+        private void HSscaling_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "A factor used to change the rate adjustment based on the amount of product" +
+                " being applied. A higher volume of product will require a lower scale factor to scale down" +
+                " the rate of adjustment. Reduce the scale factor slowly until the adjustment doesn't overshoot." +
+                " Increase the scale factor to get to a range where the Fast Adjust can work effectively.";
+
+            mf.Tls.ShowHelp(Message, "Scale Factor");
+            hlpevent.Handled = true;
+        }
+
         private void HSthreshold_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             string Message = "The % of rate error where adjustment changes from fast to slow.";
@@ -567,7 +578,6 @@ namespace RateController
             mf.Tls.ShowHelp(Message, "Working Width");
             hlpevent.Handled = true;
         }
-
 
         private void LoadSettings()
         {
@@ -685,6 +695,10 @@ namespace RateController
         {
             tbUPMspeed.Text = "0.0";
             SetButtons(true);
+        }
+
+        private void rbUPMSpeed_CheckedChanged(object sender, EventArgs e)
+        {
         }
 
         private void rbUPMSpeed_Click(object sender, EventArgs e)
@@ -1408,6 +1422,13 @@ namespace RateController
             SetButtons(true);
         }
 
+        private void tcProducts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            btnPIDloadDefaults.Visible = (tcProducts.SelectedTab.Name == "tbControl");
+            btnResetTank.Visible = (tcProducts.SelectedTab.Name == "tbRate");
+            btnTuningGraph.Visible = (tcProducts.SelectedTab.Name == "tbControl");
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateDiags();
@@ -1628,7 +1649,7 @@ namespace RateController
 
             UpdateControlDisplay();
             btnPIDloadDefaults.Visible = (tcProducts.SelectedTab.Name == "tbControl");
-            btnResetTank.Visible=(tcProducts.SelectedTab.Name=="tbRate");
+            btnResetTank.Visible = (tcProducts.SelectedTab.Name == "tbRate");
             btnTuningGraph.Visible = (tcProducts.SelectedTab.Name == "tbControl");
 
             Initializing = false;
@@ -1649,30 +1670,6 @@ namespace RateController
             SetButtons(true);
             SetCalDescription();
             UpdateOnTypeChange();
-        }
-
-        private void HSscaling_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-            string Message = "A factor used to change the rate adjustment based on the amount of product" +
-                " being applied. A higher volume of product will require a lower scale factor to scale down" +
-                " the rate of adjustment. Reduce the scale factor slowly until the adjustment doesn't overshoot."+
-                " Increase the scale factor to get to a range where the Fast Adjust can work effectively.";
-
-            mf.Tls.ShowHelp(Message, "Scale Factor");
-            hlpevent.Handled = true;
-
-        }
-
-        private void tcProducts_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            btnPIDloadDefaults.Visible = (tcProducts.SelectedTab.Name == "tbControl");
-            btnResetTank.Visible = (tcProducts.SelectedTab.Name == "tbRate");
-            btnTuningGraph.Visible = (tcProducts.SelectedTab.Name == "tbControl");
-        }
-
-        private void rbUPMSpeed_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

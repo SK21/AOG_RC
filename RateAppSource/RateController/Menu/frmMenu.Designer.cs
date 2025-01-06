@@ -214,6 +214,7 @@
             this.butMode.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butMode.UseVisualStyleBackColor = false;
             this.butMode.Visible = false;
+            this.butMode.Click += new System.EventHandler(this.butMode_Click);
             // 
             // butSettings
             // 
