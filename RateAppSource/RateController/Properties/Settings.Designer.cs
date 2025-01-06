@@ -145,18 +145,6 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color ForeColour {
-            get {
-                return ((global::System.Drawing.Color)(this["ForeColour"]));
-            }
-            set {
-                this["ForeColour"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("210, 220, 230")]
         public global::System.Drawing.Color BackColour {
             get {
@@ -205,13 +193,25 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 14.25pt, style=Bold")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 14.25pt")]
         public global::System.Drawing.Font MenuFontSmall {
             get {
                 return ((global::System.Drawing.Font)(this["MenuFontSmall"]));
             }
             set {
                 this["MenuFontSmall"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public global::System.Drawing.Color ForeColour {
+            get {
+                return ((global::System.Drawing.Color)(this["ForeColour"]));
+            }
+            set {
+                this["ForeColour"] = value;
             }
         }
     }

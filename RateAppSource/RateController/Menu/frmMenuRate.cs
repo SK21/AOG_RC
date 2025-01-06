@@ -139,25 +139,6 @@ namespace RateController.Menu
             if (HelpMode) btnHelp.PerformClick();
         }
 
-        private void ComboBox_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender; // Draw the background of the ComboBox
-            if (e.Index >= 0)
-            {
-                // Set the background color when the ComboBox is not dropped down
-                e.Graphics.FillRectangle(new SolidBrush(Properties.Settings.Default.BackColour), e.Bounds);
-                // Draw the text of the ComboBox
-                e.Graphics.DrawString(comboBox.Items[e.Index].ToString(), comboBox.Font, Brushes.White, e.Bounds);
-            }
-            else
-            {
-                // Draw the background and text for the selected item when not dropped down
-                e.Graphics.FillRectangle(new SolidBrush(Properties.Settings.Default.BackColour), e.Bounds);
-                e.Graphics.DrawString(comboBox.Text, comboBox.Font, Brushes.White, e.Bounds);
-            }
-            // Draw focus rectangle if ComboBox has focus
-            e.DrawFocusRectangle();
-        }
 
         private int ConvertControlType(ControlTypeEnum Type)
         {
@@ -273,7 +254,6 @@ namespace RateController.Menu
             SetLanguage();
             MainMenu.MenuMoved += MyMenu_MenuMoved;
             mf.Tls.LoadFormData(this, "", false);
-            this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;
             btnOK.Left = this.Width - 84;
@@ -289,58 +269,7 @@ namespace RateController.Menu
             btnHelp.Left = btnResetTank.Left - 78;
             btnHelp.Top = btnOK.Top;
             PositionForm();
-
-            foreach (Control con in this.Controls)
-            {
-                if (con is Label ctl)
-                {
-                    ctl.ForeColor = Properties.Settings.Default.ForeColour;
-                    ctl.BackColor = Properties.Settings.Default.BackColour;
-                    ctl.Font = Properties.Settings.Default.MenuFontSmall;
-                }
-                if (con is Button but)
-                {
-                    but.ForeColor = Properties.Settings.Default.ForeColour;
-                    but.BackColor = Properties.Settings.Default.BackColour;
-                    but.FlatAppearance.MouseDownBackColor = Properties.Settings.Default.MouseDown;
-                }
-                if (con is Panel pnl)
-                {
-                    pnl.BackColor = Properties.Settings.Default.BackColour;
-                    foreach (Control pcon in pnl.Controls)
-                    {
-                        if (pcon is Label pctl)
-                        {
-                            pctl.ForeColor = Properties.Settings.Default.ForeColour;
-                            pctl.BackColor = Properties.Settings.Default.BackColour;
-                            pctl.Font = Properties.Settings.Default.MenuFontSmall;
-                        }
-
-                        if (pcon is TextBox tb)
-                        {
-                            tb.ForeColor = Properties.Settings.Default.ForeColour;
-                            tb.BackColor = Properties.Settings.Default.BackColour;
-                            tb.Font = Properties.Settings.Default.MenuFontSmall;
-                            tb.BorderStyle = BorderStyle.FixedSingle;
-                        }
-
-                        if (pcon is CheckBox cb)
-                        {
-                            cb.BackColor = Properties.Settings.Default.ForeColour;
-                            cb.FlatAppearance.CheckedBackColor = Color.LightGreen;
-                        }
-
-                        if (pcon is ComboBox cbox)
-                        {
-                            cbox.ForeColor = Properties.Settings.Default.ForeColour;
-                            cbox.BackColor = Properties.Settings.Default.BackColour;
-                            cbox.Font = Properties.Settings.Default.MenuFontSmall;
-                            cbox.DrawMode = DrawMode.OwnerDrawFixed;
-                            cbox.DrawItem += ComboBox_DrawItem;
-                        }
-                    }
-                }
-            }
+            MainMenu.StyleControls(this);
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             UpdateForm();
         }

@@ -49,6 +49,11 @@ namespace RateController
 
         public void StyleControls(Control Parent)
         {
+            if (Parent is Form frm)
+            {
+                frm.BackColor = Properties.Settings.Default.BackColour;
+            }
+
             foreach (Control con in Parent.Controls)
             {
                 if (con is Label ctl)
@@ -70,19 +75,13 @@ namespace RateController
                     cbox.ForeColor = Properties.Settings.Default.ForeColour;
                     cbox.BackColor = Properties.Settings.Default.BackColour;
                     cbox.Font = Properties.Settings.Default.MenuFontSmall;
-                    cbox.DrawMode = DrawMode.OwnerDrawFixed;
                 }
 
                 if (con is CheckBox cb)
                 {
-                    cb.BackColor = Properties.Settings.Default.ForeColour;
+                    cb.ForeColor = Properties.Settings.Default.ForeColour;
+                    cb.BackColor = Properties.Settings.Default.BackColour;
                     cb.FlatAppearance.CheckedBackColor = Color.LightGreen;
-                }
-
-                if (con is CKbox bx)
-                {
-                    bx.BackColor = Properties.Settings.Default.ForeColour;
-                    bx.SetColors(Properties.Settings.Default.ForeColour, Properties.Settings.Default.BackColour, Color.LightGreen);
                 }
 
                 if (con.HasChildren) StyleControls(con);
@@ -450,6 +449,8 @@ namespace RateController
                     butData.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butData.Top = Pos;
+
+                    butRate.PerformClick();
                 }
             }
         }
@@ -489,22 +490,10 @@ namespace RateController
         private void frmMenu_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
-            this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = FormWidth;
             this.Height = FormHeight;
             butPowerOff.Top = this.Height - 117;
-
-            foreach (Control con in this.Controls)
-            {
-                if (con is Button but)
-                {
-                    but.ForeColor = Properties.Settings.Default.ForeColour;
-                    but.BackColor = Properties.Settings.Default.BackColour;
-                    but.FlatAppearance.MouseDownBackColor = Properties.Settings.Default.MouseDown;
-                }
-            }
-            gbLine1.ForeColor = Properties.Settings.Default.ForeColour;
-            gbLine1.BackColor = Properties.Settings.Default.ForeColour;
+            StyleControls(this);
             if (LoadLast) LoadLastScreen();
         }
 

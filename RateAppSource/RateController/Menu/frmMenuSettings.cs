@@ -38,7 +38,6 @@ namespace RateController.Menu
             //SetLanguage();
             //MainMenu.MenuMoved += MyMenu_MenuMoved;
             mf.Tls.LoadFormData(this, "", false);
-            this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;
             btnOK.Left = this.Width - 84;
@@ -55,6 +54,23 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             //UpdateForm();
+
+        }
+
+        private void grpSensor_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
+        private void grpMinUPM_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
+        private void ckOffRate_CheckedChanged(object sender, EventArgs e)
+        {
 
         }
     }

@@ -63,7 +63,7 @@
             this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckScale.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckScale.Location = new System.Drawing.Point(328, 329);
+            this.ckScale.Location = new System.Drawing.Point(278, 409);
             this.ckScale.Name = "ckScale";
             this.ckScale.Size = new System.Drawing.Size(162, 34);
             this.ckScale.TabIndex = 149;
@@ -78,9 +78,9 @@
             this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckBumpButtons.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckBumpButtons.Location = new System.Drawing.Point(328, 254);
+            this.ckBumpButtons.Location = new System.Drawing.Point(86, 409);
             this.ckBumpButtons.Name = "ckBumpButtons";
-            this.ckBumpButtons.Size = new System.Drawing.Size(162, 32);
+            this.ckBumpButtons.Size = new System.Drawing.Size(162, 34);
             this.ckBumpButtons.TabIndex = 148;
             this.ckBumpButtons.Text = "Bump Buttons";
             this.ckBumpButtons.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -93,9 +93,9 @@
             this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckDefault.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckDefault.Location = new System.Drawing.Point(328, 179);
+            this.ckDefault.Location = new System.Drawing.Point(86, 344);
             this.ckDefault.Name = "ckDefault";
-            this.ckDefault.Size = new System.Drawing.Size(162, 32);
+            this.ckDefault.Size = new System.Drawing.Size(162, 34);
             this.ckDefault.TabIndex = 147;
             this.ckDefault.Text = "Default Product";
             this.ckDefault.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -105,7 +105,7 @@
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(345, 405);
+            this.label28.Location = new System.Drawing.Point(317, 480);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(29, 23);
             this.label28.TabIndex = 146;
@@ -115,7 +115,7 @@
             // 
             this.tbOffRate.Enabled = false;
             this.tbOffRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(306, 401);
+            this.tbOffRate.Location = new System.Drawing.Point(278, 477);
             this.tbOffRate.MaxLength = 8;
             this.tbOffRate.Name = "tbOffRate";
             this.tbOffRate.Size = new System.Drawing.Size(33, 29);
@@ -130,13 +130,14 @@
             this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckOffRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckOffRate.Location = new System.Drawing.Point(166, 400);
+            this.ckOffRate.Location = new System.Drawing.Point(86, 474);
             this.ckOffRate.Name = "ckOffRate";
-            this.ckOffRate.Size = new System.Drawing.Size(134, 32);
+            this.ckOffRate.Size = new System.Drawing.Size(162, 34);
             this.ckOffRate.TabIndex = 144;
             this.ckOffRate.Text = "Off-rate Alarm   ";
             this.ckOffRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOffRate.UseVisualStyleBackColor = true;
+            this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
             // 
             // ckOnScreen
             // 
@@ -145,9 +146,9 @@
             this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckOnScreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckOnScreen.Location = new System.Drawing.Point(328, 104);
+            this.ckOnScreen.Location = new System.Drawing.Point(278, 344);
             this.ckOnScreen.Name = "ckOnScreen";
-            this.ckOnScreen.Size = new System.Drawing.Size(162, 32);
+            this.ckOnScreen.Size = new System.Drawing.Size(162, 34);
             this.ckOnScreen.TabIndex = 143;
             this.ckOnScreen.Text = "On Screen";
             this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -160,17 +161,18 @@
             this.grpMinUPM.Controls.Add(this.rbUPMFixed);
             this.grpMinUPM.Controls.Add(this.tbMinUPM);
             this.grpMinUPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpMinUPM.Location = new System.Drawing.Point(49, 246);
+            this.grpMinUPM.Location = new System.Drawing.Point(86, 196);
             this.grpMinUPM.Name = "grpMinUPM";
-            this.grpMinUPM.Size = new System.Drawing.Size(259, 117);
+            this.grpMinUPM.Size = new System.Drawing.Size(354, 117);
             this.grpMinUPM.TabIndex = 142;
             this.grpMinUPM.TabStop = false;
             this.grpMinUPM.Text = "Minimum UPM";
+            this.grpMinUPM.Paint += new System.Windows.Forms.PaintEventHandler(this.grpMinUPM_Paint);
             // 
             // tbUPMspeed
             // 
             this.tbUPMspeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbUPMspeed.Location = new System.Drawing.Point(155, 73);
+            this.tbUPMspeed.Location = new System.Drawing.Point(250, 73);
             this.tbUPMspeed.MaxLength = 8;
             this.tbUPMspeed.Name = "tbUPMspeed";
             this.tbUPMspeed.Size = new System.Drawing.Size(75, 29);
@@ -214,7 +216,7 @@
             // tbMinUPM
             // 
             this.tbMinUPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinUPM.Location = new System.Drawing.Point(155, 30);
+            this.tbMinUPM.Location = new System.Drawing.Point(250, 30);
             this.tbMinUPM.MaxLength = 8;
             this.tbMinUPM.Name = "tbMinUPM";
             this.tbMinUPM.Size = new System.Drawing.Size(75, 29);
@@ -229,12 +231,13 @@
             this.grpSensor.Controls.Add(this.lbConID);
             this.grpSensor.Controls.Add(this.tbConID);
             this.grpSensor.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpSensor.Location = new System.Drawing.Point(49, 94);
+            this.grpSensor.Location = new System.Drawing.Point(86, 48);
             this.grpSensor.Name = "grpSensor";
-            this.grpSensor.Size = new System.Drawing.Size(259, 117);
+            this.grpSensor.Size = new System.Drawing.Size(354, 117);
             this.grpSensor.TabIndex = 141;
             this.grpSensor.TabStop = false;
             this.grpSensor.Text = "Rate Sensor Location";
+            this.grpSensor.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSensor_Paint);
             // 
             // lbSensorID
             // 
@@ -248,7 +251,7 @@
             // tbSenID
             // 
             this.tbSenID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSenID.Location = new System.Drawing.Point(137, 75);
+            this.tbSenID.Location = new System.Drawing.Point(184, 76);
             this.tbSenID.MaxLength = 8;
             this.tbSenID.Name = "tbSenID";
             this.tbSenID.Size = new System.Drawing.Size(67, 30);
@@ -261,7 +264,7 @@
             this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
             this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(210, 47);
+            this.ModuleIndicator.Location = new System.Drawing.Point(299, 46);
             this.ModuleIndicator.Name = "ModuleIndicator";
             this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
             this.ModuleIndicator.TabIndex = 149;
@@ -279,7 +282,7 @@
             // tbConID
             // 
             this.tbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbConID.Location = new System.Drawing.Point(137, 27);
+            this.tbConID.Location = new System.Drawing.Point(184, 28);
             this.tbConID.MaxLength = 8;
             this.tbConID.Name = "tbConID";
             this.tbConID.Size = new System.Drawing.Size(67, 30);

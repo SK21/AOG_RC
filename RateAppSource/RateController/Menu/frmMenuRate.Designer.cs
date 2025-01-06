@@ -319,6 +319,7 @@
             this.lbBaseRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.lbBaseRate.Click += new System.EventHandler(this.lbBaseRate_Click);
             this.lbBaseRate.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.lbBaseRate.Enter += new System.EventHandler(this.lbBaseRate_Enter);
             this.lbBaseRate.Validating += new System.ComponentModel.CancelEventHandler(this.lbBaseRate_Validating);
             // 
             // lbAltRate

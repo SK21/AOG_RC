@@ -32,9 +32,6 @@
     <Setting Name="UserLanguageChange" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="ForeColour" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Black</Value>
-    </Setting>
     <Setting Name="BackColour" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">210, 220, 230</Value>
     </Setting>
@@ -48,7 +45,10 @@
       <Value Profile="(Default)">DarkSlateBlue</Value>
     </Setting>
     <Setting Name="MenuFontSmall" Type="System.Drawing.Font" Scope="User">
-      <Value Profile="(Default)">Microsoft Sans Serif, 14.25pt, style=Bold</Value>
+      <Value Profile="(Default)">Microsoft Sans Serif, 14.25pt</Value>
+    </Setting>
+    <Setting Name="ForeColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
     </Setting>
   </Settings>
 </SettingsFile>
