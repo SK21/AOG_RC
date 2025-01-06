@@ -46,6 +46,42 @@ namespace RateController
             }
         }
 
+        public void StyleControls(Control Parent)
+        {
+            foreach (Control con in Parent.Controls)
+            {
+                if (con is Label ctl)
+                {
+                    ctl.ForeColor = Properties.Settings.Default.ForeColour;
+                    ctl.BackColor = Properties.Settings.Default.BackColour;
+                    ctl.Font = Properties.Settings.Default.MenuFontSmall;
+                }
+
+                if (con is Button but)
+                {
+                    but.ForeColor = Properties.Settings.Default.ForeColour;
+                    but.BackColor = Properties.Settings.Default.BackColour;
+                    but.FlatAppearance.MouseDownBackColor = Properties.Settings.Default.MouseDown;
+                }
+
+                if (con is ComboBox cbox)
+                {
+                    cbox.ForeColor = Properties.Settings.Default.ForeColour;
+                    cbox.BackColor = Properties.Settings.Default.BackColour;
+                    cbox.Font = Properties.Settings.Default.MenuFontSmall;
+                    cbox.DrawMode = DrawMode.OwnerDrawFixed;
+                }
+
+                if (con is CheckBox cb)
+                {
+                    cb.BackColor = Properties.Settings.Default.ForeColour;
+                    cb.FlatAppearance.CheckedBackColor = Color.LightGreen;
+                }
+
+                if (con.HasChildren) StyleControls(con);
+            }
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);

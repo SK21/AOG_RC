@@ -49,63 +49,10 @@ namespace RateController.Menu
             btnRight.Top = btnOK.Top;
             btnLeft.Left = btnRight.Left - 78;
             btnLeft.Top = btnOK.Top;
-            //btnResetTank.Left = btnLeft.Left - 78;
-            //btnResetTank.Top = btnOK.Top;
-            //btnHelp.Left = btnResetTank.Left - 78;
-            //btnHelp.Top = btnOK.Top;
+            btnHelp.Left = btnLeft.Left - 78;
+            btnHelp.Top = btnOK.Top;
             PositionForm();
-
-            foreach (Control con in this.Controls)
-            {
-                if (con is Label ctl)
-                {
-                    ctl.ForeColor = Properties.Settings.Default.ForeColour;
-                    ctl.BackColor = Properties.Settings.Default.BackColour;
-                    ctl.Font = Properties.Settings.Default.MenuFontSmall;
-                }
-                if (con is Button but)
-                {
-                    but.ForeColor = Properties.Settings.Default.ForeColour;
-                    but.BackColor = Properties.Settings.Default.BackColour;
-                    but.FlatAppearance.MouseDownBackColor = Properties.Settings.Default.MouseDown;
-                }
-                if (con is Panel pnl)
-                {
-                    pnl.BackColor = Properties.Settings.Default.BackColour;
-                    foreach (Control pcon in pnl.Controls)
-                    {
-                        if (pcon is Label pctl)
-                        {
-                            pctl.ForeColor = Properties.Settings.Default.ForeColour;
-                            pctl.BackColor = Properties.Settings.Default.BackColour;
-                            pctl.Font = Properties.Settings.Default.MenuFontSmall;
-                        }
-
-                        if (pcon is TextBox tb)
-                        {
-                            tb.ForeColor = Properties.Settings.Default.ForeColour;
-                            tb.BackColor = Properties.Settings.Default.BackColour;
-                            tb.Font = Properties.Settings.Default.MenuFontSmall;
-                            tb.BorderStyle = BorderStyle.FixedSingle;
-                        }
-
-                        if (pcon is CheckBox cb)
-                        {
-                            cb.BackColor = Properties.Settings.Default.ForeColour;
-                            cb.FlatAppearance.CheckedBackColor = Color.LightGreen;
-                        }
-
-                        //if (pcon is ComboBox cbox)
-                        //{
-                        //    cbox.ForeColor = Properties.Settings.Default.ForeColour;
-                        //    cbox.BackColor = Properties.Settings.Default.BackColour;
-                        //    cbox.Font = Properties.Settings.Default.MenuFontSmall;
-                        //    cbox.DrawMode = DrawMode.OwnerDrawFixed;
-                        //    cbox.DrawItem += ComboBox_DrawItem;
-                        //}
-                    }
-                }
-            }
+            MainMenu.StyleControls(this);
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             //UpdateForm();
 
