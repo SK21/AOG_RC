@@ -1,5 +1,4 @@
-﻿using RateController.Controls;
-using RateController.Menu;
+﻿using RateController.Menu;
 using System;
 using System.Diagnostics;
 using System.Drawing;

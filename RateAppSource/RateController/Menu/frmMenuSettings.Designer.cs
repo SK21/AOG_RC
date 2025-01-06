@@ -47,7 +47,6 @@
             this.ModuleIndicator = new System.Windows.Forms.Label();
             this.lbConID = new System.Windows.Forms.Label();
             this.tbConID = new System.Windows.Forms.TextBox();
-            this.btnHelp = new System.Windows.Forms.Button();
             this.btnRight = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -102,7 +101,7 @@
             this.ckDefault.Text = "Default Product";
             this.ckDefault.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDefault.UseVisualStyleBackColor = true;
-            this.ckDefault.Click += new System.EventHandler(this.ckDefault_Click);
+            this.ckDefault.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
             // 
             // label28
             // 
@@ -180,7 +179,7 @@
             this.tbUPMspeed.Size = new System.Drawing.Size(75, 29);
             this.tbUPMspeed.TabIndex = 124;
             this.tbUPMspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbUPMspeed.Click += new System.EventHandler(this.tbUPMspeed_Click);
+            this.tbUPMspeed.Enter += new System.EventHandler(this.tbUPMspeed_Enter);
             // 
             // rbUPMSpeed
             // 
@@ -197,7 +196,7 @@
             this.rbUPMSpeed.Text = "By Speed";
             this.rbUPMSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbUPMSpeed.UseVisualStyleBackColor = true;
-            this.rbUPMSpeed.Click += new System.EventHandler(this.rbUPMSpeed_Click);
+            this.rbUPMSpeed.CheckedChanged += new System.EventHandler(this.rbUPMSpeed_CheckedChanged);
             // 
             // rbUPMFixed
             // 
@@ -217,7 +216,6 @@
             this.rbUPMFixed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbUPMFixed.UseVisualStyleBackColor = true;
             this.rbUPMFixed.CheckedChanged += new System.EventHandler(this.rbUPMFixed_CheckedChanged);
-            this.rbUPMFixed.Click += new System.EventHandler(this.rbUPMFixed_Click);
             // 
             // tbMinUPM
             // 
@@ -228,7 +226,7 @@
             this.tbMinUPM.Size = new System.Drawing.Size(75, 29);
             this.tbMinUPM.TabIndex = 1;
             this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbMinUPM.Click += new System.EventHandler(this.tbMinUPM_Click);
+            this.tbMinUPM.Enter += new System.EventHandler(this.tbMinUPM_Enter);
             // 
             // grpSensor
             // 
@@ -265,8 +263,8 @@
             this.tbSenID.TabIndex = 1;
             this.tbSenID.Text = "0";
             this.tbSenID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbSenID.Click += new System.EventHandler(this.tbSenID_Click);
             this.tbSenID.TextChanged += new System.EventHandler(this.tbConID_TextChanged);
+            this.tbSenID.Enter += new System.EventHandler(this.tbSenID_Enter);
             this.tbSenID.Validating += new System.ComponentModel.CancelEventHandler(this.tbSenID_Validating);
             // 
             // ModuleIndicator
@@ -299,23 +297,9 @@
             this.tbConID.TabIndex = 0;
             this.tbConID.Text = "0";
             this.tbConID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbConID.Click += new System.EventHandler(this.tbConID_Click);
             this.tbConID.TextChanged += new System.EventHandler(this.tbConID_TextChanged);
+            this.tbConID.Enter += new System.EventHandler(this.tbConID_Enter);
             this.tbConID.Validating += new System.ComponentModel.CancelEventHandler(this.tbConID_Validating);
-            // 
-            // btnHelp
-            // 
-            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
-            this.btnHelp.FlatAppearance.BorderColor = System.Drawing.SystemColors.Highlight;
-            this.btnHelp.FlatAppearance.BorderSize = 0;
-            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
-            this.btnHelp.Location = new System.Drawing.Point(144, 546);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(72, 72);
-            this.btnHelp.TabIndex = 331;
-            this.btnHelp.UseVisualStyleBackColor = false;
-            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // btnRight
             // 
@@ -398,7 +382,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.Controls.Add(this.lbProduct);
-            this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.btnCancel);
@@ -449,7 +432,6 @@
         private System.Windows.Forms.Label ModuleIndicator;
         private System.Windows.Forms.Label lbConID;
         private System.Windows.Forms.TextBox tbConID;
-        private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Button btnCancel;

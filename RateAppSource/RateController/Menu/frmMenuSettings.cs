@@ -1,13 +1,7 @@
 ﻿using AgOpenGPS;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -15,7 +9,6 @@ namespace RateController.Menu
     public partial class frmMenuSettings : Form
     {
         private bool cEdited;
-        private bool HelpMode = false;
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
@@ -30,6 +23,22 @@ namespace RateController.Menu
 
         public bool Edited
         { get { return cEdited; } }
+
+        private void ckDefault_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void frmMenuSettings_Activated(object sender, EventArgs e)
+        {
+            switch (this.Text)
+            {
+                case "Focused":
+                    this.Text = "";
+                    UpdateForm();
+                    break;
+            }
+        }
 
         private void frmMenuSettings_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -54,8 +63,6 @@ namespace RateController.Menu
             btnRight.Top = btnOK.Top;
             btnLeft.Left = btnRight.Left - 78;
             btnLeft.Top = btnOK.Top;
-            btnHelp.Left = btnLeft.Left - 78;
-            btnHelp.Top = btnOK.Top;
             PositionForm();
             MainMenu.StyleControls(this);
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
@@ -86,6 +93,42 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + 246;
         }
 
+        private void rbUPMFixed_CheckedChanged(object sender, EventArgs e)
+        {
+            tbUPMspeed.Text = "0.0";
+            SetButtons(true);
+        }
+
+        private void rbUPMSpeed_CheckedChanged(object sender, EventArgs e)
+        {
+            tbMinUPM.Text = "0.0";
+            SetButtons(true);
+        }
+
+        private void SetButtons(bool Edited)
+        {
+            if (!Initializing)
+            {
+                if (Edited)
+                {
+                    btnCancel.Enabled = true;
+                    btnLeft.Enabled = false;
+                    btnRight.Enabled = false;
+                    btnOK.Enabled = true;
+                }
+                else
+                {
+                    btnCancel.Enabled = false;
+                    btnLeft.Enabled = true;
+                    btnRight.Enabled = true;
+                    btnOK.Enabled = false;
+                }
+
+                cEdited = Edited;
+                this.Tag = cEdited;
+            }
+        }
+
         private void SetModuleIndicator()
         {
             if (mf.Products.Item(MainMenu.CurrentProduct.ID).RateSensor.Connected())
@@ -95,6 +138,89 @@ namespace RateController.Menu
             else
             {
                 ModuleIndicator.Image = Properties.Resources.Off;
+            }
+        }
+
+        private void tbConID_Enter(object sender, EventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbConID.Text, out tempInt);
+            using (var form = new FormNumeric(0, 7, tempInt))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbConID.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbConID_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbConID_Validating(object sender, CancelEventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbConID.Text, out tempInt);
+            if (tempInt < 0 || tempInt > 15)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbMinUPM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbMinUPM.Text, out tempD);
+            using (var form = new FormNumeric(0, 500, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbMinUPM.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbSenID_Enter(object sender, EventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbSenID.Text, out tempInt);
+            using (var form = new FormNumeric(0, 15, tempInt))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSenID.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbSenID_Validating(object sender, CancelEventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbSenID.Text, out tempInt);
+            if (tempInt < 0 || tempInt > 15)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbUPMspeed_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbUPMspeed.Text, out tempD);
+            using (var form = new FormNumeric(0, 30, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbUPMspeed.Text = form.ReturnValue.ToString();
+                }
             }
         }
 
@@ -136,226 +262,6 @@ namespace RateController.Menu
             SetModuleIndicator();
 
             Initializing = false;
-        }
-
-        private void frmMenuSettings_Activated(object sender, EventArgs e)
-        {
-            switch (this.Text)
-            {
-                case "Focused":
-                    this.Text = "";
-                    UpdateForm();
-                    break;
-            }
-        }
-        private void SetButtons(bool Edited)
-        {
-            if (!Initializing)
-            {
-                if (Edited)
-                {
-                    btnCancel.Enabled = true;
-                    btnLeft.Enabled = false;
-                    btnRight.Enabled = false;
-                    btnOK.Enabled = true;
-                }
-                else
-                {
-                    btnCancel.Enabled = false;
-                    btnLeft.Enabled = true;
-                    btnRight.Enabled = true;
-                    btnOK.Enabled = false;
-                }
-
-                cEdited = Edited;
-                this.Tag = cEdited;
-            }
-        }
-
-        private void tbConID_Click(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "The unique ID of each arduino module.";
-                mf.Tls.ShowHelp(Message, "Module ID");
-                btnHelp.PerformClick();
-            }
-            else
-            {
-                int tempInt;
-                int.TryParse(tbConID.Text, out tempInt);
-                using (var form = new FormNumeric(0, 7, tempInt))
-                {
-                    var result = form.ShowDialog();
-                    if (result == DialogResult.OK)
-                    {
-                        tbConID.Text = form.ReturnValue.ToString();
-                    }
-                }
-            }
-        }
-
-        private void tbConID_TextChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void tbConID_Validating(object sender, CancelEventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbConID.Text, out tempInt);
-            if (tempInt < 0 || tempInt > 15)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbSenID_Click(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "The unique flow sensor ID within each arduino module.";
-                mf.Tls.ShowHelp(Message, "Sensor ID");
-                btnHelp.PerformClick();
-            }
-            else
-            {
-                int tempInt;
-                int.TryParse(tbSenID.Text, out tempInt);
-                using (var form = new FormNumeric(0, 15, tempInt))
-                {
-                    var result = form.ShowDialog();
-                    if (result == DialogResult.OK)
-                    {
-                        tbSenID.Text = form.ReturnValue.ToString();
-                    }
-                }
-            }
-        }
-
-        private void tbSenID_Validating(object sender, CancelEventArgs e)
-        {
-            int tempInt;
-            int.TryParse(tbSenID.Text, out tempInt);
-            if (tempInt < 0 || tempInt > 15)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void rbUPMFixed_Click(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "Minimum UPM.";
-                mf.Tls.ShowHelp(Message, "Minimum UPM");
-                btnHelp.PerformClick();
-            }
-            else
-            {
-                tbUPMspeed.Text = "0.0";
-                SetButtons(true);
-            }
-            Debug.Print("Click");
-        }
-
-        private void rbUPMSpeed_Click(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "Speed used to calculate minimum UPM based on application rate.";
-                mf.Tls.ShowHelp(Message, "Minimum UPM using speed");
-                btnHelp.PerformClick();
-            }
-            else
-            {
-                tbMinUPM.Text = "0.0";
-                SetButtons(true);
-            }
-        }
-
-        private void tbMinUPM_Click(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "Minimum UPM.";
-                mf.Tls.ShowHelp(Message, "Minimum UPM");
-                btnHelp.PerformClick();
-            }
-            else
-            {
-                double tempD;
-                double.TryParse(tbMinUPM.Text, out tempD);
-                using (var form = new FormNumeric(0, 500, tempD))
-                {
-                    var result = form.ShowDialog();
-                    if (result == DialogResult.OK)
-                    {
-                        tbMinUPM.Text = form.ReturnValue.ToString();
-                    }
-                }
-            }
-
-        }
-
-        private void tbUPMspeed_Click(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "Speed used to calculate minimum UPM based on application rate.";
-                mf.Tls.ShowHelp(Message, "Minimum UPM using speed");
-                btnHelp.PerformClick();
-            }
-            else
-            {
-                double tempD;
-                double.TryParse(tbUPMspeed.Text, out tempD);
-                using (var form = new FormNumeric(0, 30, tempD))
-                {
-                    var result = form.ShowDialog();
-                    if (result == DialogResult.OK)
-                    {
-                        tbUPMspeed.Text = form.ReturnValue.ToString();
-                    }
-                }
-            }
-        }
-
-        private void ckDefault_Click(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "Product that is loaded at startup.";
-                mf.Tls.ShowHelp(Message, "Default Product");
-                btnHelp.PerformClick();
-            }
-            else
-            {
-                SetButtons(true);
-            }
-        }
-
-        private void btnHelp_Click(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                this.Cursor = Cursors.Default;
-                HelpMode = false;
-                btnHelp.FlatAppearance.BorderSize = 0;
-            }
-            else
-            {
-                this.Cursor = Cursors.Help;
-                HelpMode = true;
-                btnHelp.FlatAppearance.BorderSize = 1;
-            }
-        }
-
-        private void rbUPMFixed_CheckedChanged(object sender, EventArgs e)
-        {
-            Debug.Print("CheckChanged");
         }
     }
 }

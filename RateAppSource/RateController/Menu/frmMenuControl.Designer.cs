@@ -46,13 +46,12 @@
             this.lbMax = new System.Windows.Forms.Label();
             this.lbMin = new System.Windows.Forms.Label();
             this.lbProduct = new System.Windows.Forms.Label();
-            this.btnHelp = new System.Windows.Forms.Button();
-            this.HSmin = new RateController.Controls.Hbar();
-            this.HSmax = new RateController.Controls.Hbar();
-            this.HSscaling = new RateController.Controls.Hbar();
-            this.HSthreshold = new RateController.Controls.Hbar();
-            this.HSlow = new RateController.Controls.Hbar();
-            this.HShigh = new RateController.Controls.Hbar();
+            this.HSmin = new System.Windows.Forms.HScrollBar();
+            this.HSmax = new System.Windows.Forms.HScrollBar();
+            this.HSscaling = new System.Windows.Forms.HScrollBar();
+            this.HSthreshold = new System.Windows.Forms.HScrollBar();
+            this.HSlow = new System.Windows.Forms.HScrollBar();
+            this.HShigh = new System.Windows.Forms.HScrollBar();
             this.SuspendLayout();
             // 
             // btnRight
@@ -266,102 +265,58 @@
             this.lbProduct.Text = "Product";
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // btnHelp
-            // 
-            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
-            this.btnHelp.FlatAppearance.BorderColor = System.Drawing.SystemColors.Highlight;
-            this.btnHelp.FlatAppearance.BorderSize = 0;
-            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
-            this.btnHelp.Location = new System.Drawing.Point(66, 546);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(72, 72);
-            this.btnHelp.TabIndex = 326;
-            this.btnHelp.UseVisualStyleBackColor = false;
-            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
-            // 
             // HSmin
             // 
-            this.HSmin.HelpMode = false;
-            this.HSmin.HoverTime = 500;
             this.HSmin.LargeChange = 1;
             this.HSmin.Location = new System.Drawing.Point(173, 410);
             this.HSmin.Name = "HSmin";
             this.HSmin.Size = new System.Drawing.Size(263, 45);
-            this.HSmin.SmallChange = 1;
-            this.HSmin.TabIndex = 332;
-            this.HSmin.Value = 0;
-            this.HSmin.Clicked += new System.EventHandler(this.HSmin_Clicked);
+            this.HSmin.TabIndex = 333;
             this.HSmin.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
             // 
             // HSmax
             // 
-            this.HSmax.HelpMode = false;
-            this.HSmax.HoverTime = 500;
             this.HSmax.LargeChange = 1;
             this.HSmax.Location = new System.Drawing.Point(173, 343);
             this.HSmax.Name = "HSmax";
             this.HSmax.Size = new System.Drawing.Size(263, 45);
-            this.HSmax.SmallChange = 1;
-            this.HSmax.TabIndex = 331;
-            this.HSmax.Value = 0;
-            this.HSmax.Clicked += new System.EventHandler(this.HSmax_Clicked);
+            this.HSmax.TabIndex = 334;
             this.HSmax.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
             // 
             // HSscaling
             // 
-            this.HSscaling.HelpMode = false;
-            this.HSscaling.HoverTime = 500;
             this.HSscaling.LargeChange = 1;
             this.HSscaling.Location = new System.Drawing.Point(173, 276);
             this.HSscaling.Name = "HSscaling";
             this.HSscaling.Size = new System.Drawing.Size(263, 45);
-            this.HSscaling.SmallChange = 1;
-            this.HSscaling.TabIndex = 330;
-            this.HSscaling.Value = 0;
-            this.HSscaling.Clicked += new System.EventHandler(this.HSscaling_Clicked);
+            this.HSscaling.TabIndex = 335;
             this.HSscaling.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
             // 
             // HSthreshold
             // 
-            this.HSthreshold.HelpMode = false;
-            this.HSthreshold.HoverTime = 500;
             this.HSthreshold.LargeChange = 1;
             this.HSthreshold.Location = new System.Drawing.Point(173, 209);
             this.HSthreshold.Name = "HSthreshold";
             this.HSthreshold.Size = new System.Drawing.Size(263, 45);
-            this.HSthreshold.SmallChange = 1;
-            this.HSthreshold.TabIndex = 329;
-            this.HSthreshold.Value = 0;
-            this.HSthreshold.Clicked += new System.EventHandler(this.HSthreshold_Clicked);
+            this.HSthreshold.TabIndex = 336;
             this.HSthreshold.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
             // 
             // HSlow
             // 
-            this.HSlow.HelpMode = false;
-            this.HSlow.HoverTime = 500;
             this.HSlow.LargeChange = 1;
             this.HSlow.Location = new System.Drawing.Point(173, 142);
             this.HSlow.Name = "HSlow";
             this.HSlow.Size = new System.Drawing.Size(263, 45);
-            this.HSlow.SmallChange = 1;
-            this.HSlow.TabIndex = 328;
-            this.HSlow.Value = 0;
-            this.HSlow.Clicked += new System.EventHandler(this.HSlow_Clicked);
+            this.HSlow.TabIndex = 337;
             this.HSlow.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
             // 
             // HShigh
             // 
-            this.HShigh.HelpMode = false;
-            this.HShigh.HoverTime = 500;
             this.HShigh.LargeChange = 1;
             this.HShigh.Location = new System.Drawing.Point(173, 75);
             this.HShigh.Name = "HShigh";
             this.HShigh.Size = new System.Drawing.Size(263, 45);
-            this.HShigh.SmallChange = 1;
-            this.HShigh.TabIndex = 327;
-            this.HShigh.Value = 0;
-            this.HShigh.Clicked += new System.EventHandler(this.HShigh_Clicked);
+            this.HShigh.TabIndex = 338;
             this.HShigh.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
             // 
             // frmMenuControl
@@ -369,13 +324,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
-            this.Controls.Add(this.HSmin);
-            this.Controls.Add(this.HSmax);
-            this.Controls.Add(this.HSscaling);
-            this.Controls.Add(this.HSthreshold);
-            this.Controls.Add(this.HSlow);
             this.Controls.Add(this.HShigh);
-            this.Controls.Add(this.btnHelp);
+            this.Controls.Add(this.HSlow);
+            this.Controls.Add(this.HSthreshold);
+            this.Controls.Add(this.HSscaling);
+            this.Controls.Add(this.HSmax);
+            this.Controls.Add(this.HSmin);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.lbBoost);
             this.Controls.Add(this.lbMinValue);
@@ -426,12 +380,11 @@
         private System.Windows.Forms.Label lbMax;
         private System.Windows.Forms.Label lbMin;
         private System.Windows.Forms.Label lbProduct;
-        private System.Windows.Forms.Button btnHelp;
-        private Controls.Hbar HShigh;
-        private Controls.Hbar HSlow;
-        private Controls.Hbar HSthreshold;
-        private Controls.Hbar HSscaling;
-        private Controls.Hbar HSmax;
-        private Controls.Hbar HSmin;
+        private System.Windows.Forms.HScrollBar HSmin;
+        private System.Windows.Forms.HScrollBar HSmax;
+        private System.Windows.Forms.HScrollBar HSscaling;
+        private System.Windows.Forms.HScrollBar HSthreshold;
+        private System.Windows.Forms.HScrollBar HSlow;
+        private System.Windows.Forms.HScrollBar HShigh;
     }
 }

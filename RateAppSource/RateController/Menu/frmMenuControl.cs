@@ -8,7 +8,6 @@ namespace RateController.Menu
     public partial class frmMenuControl : Form
     {
         private bool cEdited;
-        private bool HelpMode = false;
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
@@ -24,35 +23,34 @@ namespace RateController.Menu
         public bool Edited
         { get { return cEdited; } }
 
+        public void UpdateForm()
+        {
+            Debug.Print("MenuControl: " + MainMenu.CurrentProduct.ID);
+            Initializing = true;
+            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
+            {
+                // fans
+                lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
+            }
+            else
+            {
+                lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
+            }
+
+            HShigh.Value = MainMenu.CurrentProduct.HighAdjust;
+            HSlow.Value = MainMenu.CurrentProduct.LowAdjust;
+            HSthreshold.Value = MainMenu.CurrentProduct.Threshold;
+            HSscaling.Value = MainMenu.CurrentProduct.MaxAdjust;
+            HSmin.Value = MainMenu.CurrentProduct.MinAdjust;
+            HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;
+            UpdateControlDisplay();
+            Initializing = false;
+        }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
-        }
-
-        private void btnHelp_Click(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                this.Cursor = Cursors.Default;
-                HelpMode = false;
-                btnHelp.FlatAppearance.BorderSize = 0;
-                btnHelp.FlatAppearance.BorderColor = Color.White;
-            }
-            else
-            {
-                this.Cursor = Cursors.Help;
-                HelpMode = true;
-                btnHelp.FlatAppearance.BorderSize = 1;
-                btnHelp.FlatAppearance.BorderColor = SystemColors.Highlight;
-            }
-            HShigh.HelpMode = HelpMode;
-            HSlow.HelpMode = HelpMode;
-            HSlow.HelpMode = HelpMode;
-            HSmax.HelpMode = HelpMode;
-            HSscaling.HelpMode = HelpMode;
-            HSthreshold.HelpMode = HelpMode;
-            HSmin.HelpMode = HelpMode;
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
@@ -94,6 +92,26 @@ namespace RateController.Menu
         {
             MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID + 1);
             UpdateForm();
+        }
+
+        private void frmMenuControl_Activated(object sender, EventArgs e)
+        {
+            switch (this.Text)
+            {
+                case "Focused":
+                    this.Text = "";
+                    UpdateForm();
+                    break;
+            }
+        }
+
+        private void frmMenuControl_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            mf.Tls.SaveFormData(this);
+        }
+
+        private void frmMenuControl_FormClosing(object sender, FormClosingEventArgs e)
+        {
         }
 
         private void frmMenuControl_Load(object sender, EventArgs e)
@@ -164,74 +182,10 @@ namespace RateController.Menu
             UpdateForm();
         }
 
-        private void HShigh_Clicked(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "Fast rate adjustment above threshold.";
-                mf.Tls.ShowHelp(Message, "Adjust High");
-                btnHelp.PerformClick();
-            }
-        }
-
         private void HShigh_ValueChanged(object sender, EventArgs e)
         {
             SetButtons(true);
             UpdateControlDisplay();
-        }
-
-        private void HSlow_Clicked(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "Slow rate of adjustment below threshold.";
-                mf.Tls.ShowHelp(Message, "Adjust Low");
-                btnHelp.PerformClick();
-            }
-        }
-
-        private void HSmax_Clicked(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "Maximum power sent to the valve/motor.";
-                mf.Tls.ShowHelp(Message, "Maximum power.");
-                btnHelp.PerformClick();
-            }
-        }
-
-        private void HSmin_Clicked(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "The minimum power sent to the valve/motor. The power needed to start to make the" +
-                                    " valve/motor move.";
-                mf.Tls.ShowHelp(Message, "Minimum power");
-                btnHelp.PerformClick();
-            }
-        }
-
-        private void HSscaling_Clicked(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "A factor used to change the rate adjustment based on the amount of product" +
-                    " being applied. A higher volume of product will require a lower scale factor to scale down" +
-                    " the rate of adjustment. Reduce the scale factor slowly until the adjustment doesn't overshoot." +
-                    " Increase the scale factor to get to a range where the Fast Adjust can work effectively.";
-                mf.Tls.ShowHelp(Message, "Scale Factor");
-                btnHelp.PerformClick();
-            }
-        }
-
-        private void HSthreshold_Clicked(object sender, EventArgs e)
-        {
-            if (HelpMode)
-            {
-                string Message = "The % of rate error where adjustment changes from fast to slow.";
-                mf.Tls.ShowHelp(Message, "Adjust Threshold");
-                btnHelp.PerformClick();
-            }
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -281,51 +235,6 @@ namespace RateController.Menu
             lbMaxValue.Text = HSscaling.Value.ToString("N0");
             lbMinValue.Text = HSmin.Value.ToString("N0");
             lbBoost.Text = HSscaling.Value.ToString("N0");
-        }
-
-        public void UpdateForm()
-        {
-            Debug.Print("MenuControl: " + MainMenu.CurrentProduct.ID);
-            Initializing = true;
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
-            {
-                // fans
-                lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
-            }
-            else
-            {
-                lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
-            }
-
-            HShigh.Value = MainMenu.CurrentProduct.HighAdjust;
-            HSlow.Value = MainMenu.CurrentProduct.LowAdjust;
-            HSthreshold.Value = MainMenu.CurrentProduct.Threshold;
-            HSscaling.Value = MainMenu.CurrentProduct.MaxAdjust;
-            HSmin.Value = MainMenu.CurrentProduct.MinAdjust;
-            HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;
-            UpdateControlDisplay();
-            Initializing = false;
-        }
-
-        private void frmMenuControl_FormClosing(object sender, FormClosingEventArgs e)
-        {
-        }
-
-        private void frmMenuControl_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            mf.Tls.SaveFormData(this);
-        }
-
-        private void frmMenuControl_Activated(object sender, EventArgs e)
-        {
-            switch (this.Text)
-            {
-                case "Focused":
-                    this.Text = "";
-                    UpdateForm();
-                    break;
-            }
-
         }
     }
 }

@@ -118,18 +118,6 @@
     <Compile Include="Classes\clsZones.cs" />
     <Compile Include="Classes\SerialComm.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
-    <Compile Include="Controls\CKbox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\CKbox.Designer.cs">
-      <DependentUpon>CKbox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Hbar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Hbar.Designer.cs">
-      <DependentUpon>Hbar.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\VerticalProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -337,12 +325,6 @@
     <Compile Include="Forms\RCRestore.Designer.cs">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Controls\CKbox.resx">
-      <DependentUpon>CKbox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Hbar.resx">
-      <DependentUpon>Hbar.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
       <SubType>Designer</SubType>
