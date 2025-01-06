@@ -1669,5 +1669,10 @@ namespace RateController
             btnResetTank.Visible = (tcProducts.SelectedTab.Name == "tbRate");
             btnTuningGraph.Visible = (tcProducts.SelectedTab.Name == "tbControl");
         }
+
+        private void rbUPMSpeed_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

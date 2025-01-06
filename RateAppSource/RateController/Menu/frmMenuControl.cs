@@ -20,33 +20,6 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
-        public bool Edited
-        { get { return cEdited; } }
-
-        public void UpdateForm()
-        {
-            Debug.Print("MenuControl: " + MainMenu.CurrentProduct.ID);
-            Initializing = true;
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
-            {
-                // fans
-                lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
-            }
-            else
-            {
-                lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
-            }
-
-            HShigh.Value = MainMenu.CurrentProduct.HighAdjust;
-            HSlow.Value = MainMenu.CurrentProduct.LowAdjust;
-            HSthreshold.Value = MainMenu.CurrentProduct.Threshold;
-            HSscaling.Value = MainMenu.CurrentProduct.MaxAdjust;
-            HSmin.Value = MainMenu.CurrentProduct.MinAdjust;
-            HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;
-            UpdateControlDisplay();
-            Initializing = false;
-        }
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
@@ -108,10 +81,6 @@ namespace RateController.Menu
         private void frmMenuControl_FormClosed(object sender, FormClosedEventArgs e)
         {
             mf.Tls.SaveFormData(this);
-        }
-
-        private void frmMenuControl_FormClosing(object sender, FormClosingEventArgs e)
-        {
         }
 
         private void frmMenuControl_Load(object sender, EventArgs e)
@@ -235,6 +204,29 @@ namespace RateController.Menu
             lbMaxValue.Text = HSscaling.Value.ToString("N0");
             lbMinValue.Text = HSmin.Value.ToString("N0");
             lbBoost.Text = HSscaling.Value.ToString("N0");
+        }
+
+        private void UpdateForm()
+        {
+            Initializing = true;
+            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
+            {
+                // fans
+                lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
+            }
+            else
+            {
+                lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
+            }
+
+            HShigh.Value = MainMenu.CurrentProduct.HighAdjust;
+            HSlow.Value = MainMenu.CurrentProduct.LowAdjust;
+            HSthreshold.Value = MainMenu.CurrentProduct.Threshold;
+            HSscaling.Value = MainMenu.CurrentProduct.MaxAdjust;
+            HSmin.Value = MainMenu.CurrentProduct.MinAdjust;
+            HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;
+            UpdateControlDisplay();
+            Initializing = false;
         }
     }
 }

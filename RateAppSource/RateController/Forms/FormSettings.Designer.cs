@@ -1171,6 +1171,7 @@ namespace RateController
             this.rbUPMSpeed.Text = "By Speed";
             this.rbUPMSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbUPMSpeed.UseVisualStyleBackColor = true;
+            this.rbUPMSpeed.CheckedChanged += new System.EventHandler(this.rbUPMSpeed_CheckedChanged);
             this.rbUPMSpeed.Click += new System.EventHandler(this.rbUPMSpeed_Click);
             this.rbUPMSpeed.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbUPMSpeed_HelpRequested);
             // 

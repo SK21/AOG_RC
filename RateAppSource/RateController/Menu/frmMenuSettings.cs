@@ -2,7 +2,9 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Security.Cryptography;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RateController.Menu
 {
@@ -21,12 +23,79 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
-        public bool Edited
-        { get { return cEdited; } }
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            UpdateForm();
+            SetButtons(false);
+        }
+
+        private void btnLeft_Click(object sender, EventArgs e)
+        {
+            MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID - 1);
+            UpdateForm();
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                byte ModID = 0;
+                byte SenID = 0;
+                byte.TryParse(tbConID.Text, out ModID);
+                byte.TryParse(tbSenID.Text, out SenID);
+
+                if (mf.Products.UniqueModSen(ModID, SenID, MainMenu.CurrentProduct.ID))
+                {
+                    byte.TryParse(tbConID.Text, out byte tmp1);
+                    byte.TryParse(tbSenID.Text, out byte tmp2);
+                    MainMenu.CurrentProduct.ChangeID(tmp1, tmp2);
+                    if (double.TryParse(tbMinUPM.Text, out double mu)) MainMenu.CurrentProduct.MinUPM = mu;
+                    if (double.TryParse(tbUPMspeed.Text, out double sp)) MainMenu.CurrentProduct.MinUPMbySpeed = sp;
+                    if (ckDefault.Checked) mf.DefaultProduct = MainMenu.CurrentProduct.ID;
+                    MainMenu.CurrentProduct.OnScreen = ckOnScreen.Checked;
+                    MainMenu.CurrentProduct.BumpButtons = ckBumpButtons.Checked;
+                    mf.SetScale(MainMenu.CurrentProduct.ID, ckScale.Checked);
+                    MainMenu.CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
+                    if (byte.TryParse(tbOffRate.Text, out byte off)) MainMenu.CurrentProduct.OffRateSetting = off;
+
+                    SetButtons(false);
+                    UpdateForm();
+                }
+                else
+                {
+                    mf.Tls.ShowHelp("Module ID / Sensor ID pair must be unique.", "Help", 3000);
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmMenuSettings/btnOk_Click: " + ex.Message);
+            }
+        }
+
+        private void btnRight_Click(object sender, EventArgs e)
+        {
+            MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID + 1);
+            UpdateForm();
+        }
 
         private void ckDefault_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void ckOffRate_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+
+            if (ckOffRate.Checked)
+            {
+                tbOffRate.Enabled = true;
+            }
+            else
+            {
+                tbOffRate.Enabled = false;
+                tbOffRate.Text = "0";
+            }
         }
 
         private void frmMenuSettings_Activated(object sender, EventArgs e)
@@ -185,6 +254,31 @@ namespace RateController.Menu
             }
         }
 
+        private void tbOffRate_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbOffRate.Text, out tempD);
+            using (var form = new FormNumeric(0, 40, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbOffRate.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbOffRate_Validating(object sender, CancelEventArgs e)
+        {
+            int tempInt;
+            int.TryParse(tbOffRate.Text, out tempInt);
+            if (tempInt < 0 || tempInt > 40)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
         private void tbSenID_Enter(object sender, EventArgs e)
         {
             int tempInt;
@@ -260,6 +354,13 @@ namespace RateController.Menu
             tbMinUPM.Text = MainMenu.CurrentProduct.MinUPM.ToString("N1");
             tbUPMspeed.Text = MainMenu.CurrentProduct.MinUPMbySpeed.ToString("N1");
             SetModuleIndicator();
+
+            string tmp = MainMenu.CurrentProduct.ModuleID.ToString();
+            if (tmp == "99") tmp = "";
+            tbConID.Text = tmp;
+
+            ckOffRate.Checked = MainMenu.CurrentProduct.UseOffRateAlarm;
+            tbSenID.Text = MainMenu.CurrentProduct.SensorID.ToString();
 
             Initializing = false;
         }

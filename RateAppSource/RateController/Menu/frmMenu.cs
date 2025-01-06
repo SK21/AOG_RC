@@ -568,6 +568,11 @@ namespace RateController
                                 butProducts.PerformClick();
                                 break;
 
+                            case "frmMenuSettings":
+                                fs=new frmMenuSettings(mf, this);
+                                butProducts.PerformClick(); 
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();

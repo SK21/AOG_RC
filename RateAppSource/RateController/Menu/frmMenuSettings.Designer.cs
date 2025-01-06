@@ -71,6 +71,7 @@
             this.ckScale.Text = "Scale Weight";
             this.ckScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckScale.UseVisualStyleBackColor = true;
+            this.ckScale.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
             // 
             // ckBumpButtons
             // 
@@ -86,6 +87,7 @@
             this.ckBumpButtons.Text = "Bump Buttons";
             this.ckBumpButtons.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckBumpButtons.UseVisualStyleBackColor = true;
+            this.ckBumpButtons.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
             // 
             // ckDefault
             // 
@@ -97,7 +99,7 @@
             this.ckDefault.Location = new System.Drawing.Point(86, 344);
             this.ckDefault.Name = "ckDefault";
             this.ckDefault.Size = new System.Drawing.Size(162, 34);
-            this.ckDefault.TabIndex = 147;
+            this.ckDefault.TabIndex = 0;
             this.ckDefault.Text = "Default Product";
             this.ckDefault.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDefault.UseVisualStyleBackColor = true;
@@ -124,6 +126,9 @@
             this.tbOffRate.TabIndex = 145;
             this.tbOffRate.Text = "20";
             this.tbOffRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbOffRate.TextChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
+            this.tbOffRate.Enter += new System.EventHandler(this.tbOffRate_Enter);
+            this.tbOffRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbOffRate_Validating);
             // 
             // ckOffRate
             // 
@@ -139,6 +144,7 @@
             this.ckOffRate.Text = "Off-rate Alarm   ";
             this.ckOffRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOffRate.UseVisualStyleBackColor = true;
+            this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
             // 
             // ckOnScreen
             // 
@@ -154,6 +160,7 @@
             this.ckOnScreen.Text = "On Screen";
             this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOnScreen.UseVisualStyleBackColor = true;
+            this.ckOnScreen.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
             // 
             // grpMinUPM
             // 
@@ -179,6 +186,7 @@
             this.tbUPMspeed.Size = new System.Drawing.Size(75, 29);
             this.tbUPMspeed.TabIndex = 124;
             this.tbUPMspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbUPMspeed.TextChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
             this.tbUPMspeed.Enter += new System.EventHandler(this.tbUPMspeed_Enter);
             // 
             // rbUPMSpeed
@@ -226,6 +234,7 @@
             this.tbMinUPM.Size = new System.Drawing.Size(75, 29);
             this.tbMinUPM.TabIndex = 1;
             this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbMinUPM.TextChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
             this.tbMinUPM.Enter += new System.EventHandler(this.tbMinUPM_Enter);
             // 
             // grpSensor
@@ -312,6 +321,7 @@
             this.btnRight.Size = new System.Drawing.Size(72, 72);
             this.btnRight.TabIndex = 330;
             this.btnRight.UseVisualStyleBackColor = false;
+            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
             // 
             // btnLeft
             // 
@@ -324,6 +334,7 @@
             this.btnLeft.Size = new System.Drawing.Size(72, 72);
             this.btnLeft.TabIndex = 329;
             this.btnLeft.UseVisualStyleBackColor = false;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
             // btnCancel
             // 
@@ -341,6 +352,7 @@
             this.btnCancel.TabIndex = 328;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOK
             // 
@@ -358,6 +370,7 @@
             this.btnOK.TabIndex = 327;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // lbProduct
             // 
