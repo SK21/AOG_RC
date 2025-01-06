@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace RateController.Menu
             InitializeComponent();
             MainMenu = menu;
             mf = main;
+            this.Tag = false;
         }
 
         public bool Edited
@@ -263,6 +265,7 @@ namespace RateController.Menu
                 }
 
                 cEdited = Edited;
+                this.Tag = cEdited;
             }
         }
 
@@ -280,8 +283,9 @@ namespace RateController.Menu
             lbBoost.Text = HSscaling.Value.ToString("N0");
         }
 
-        private void UpdateForm()
+        public void UpdateForm()
         {
+            Debug.Print("MenuControl: " + MainMenu.CurrentProduct.ID);
             Initializing = true;
             if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
             {
@@ -305,21 +309,16 @@ namespace RateController.Menu
 
         private void frmMenuControl_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Edited)
-            {
-                var Hlp = new frmMsgBox(mf, "Unsaved Changes, Confirm Exit?", "Exit", true);
-                Hlp.TopMost = true;
-
-                Hlp.ShowDialog();
-                bool Result = Hlp.Result;
-                Hlp.Close();
-                if (!Result) e.Cancel = true;
-            }
         }
 
         private void frmMenuControl_FormClosed(object sender, FormClosedEventArgs e)
         {
             mf.Tls.SaveFormData(this);
+        }
+
+        private void frmMenuControl_Activated(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
     }
 }

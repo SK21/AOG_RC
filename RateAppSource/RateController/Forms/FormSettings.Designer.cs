@@ -213,10 +213,10 @@ namespace RateController
             this.tcProducts.Controls.Add(this.tbRate);
             this.tcProducts.Controls.Add(this.tbControl);
             this.tcProducts.Controls.Add(this.tbVR);
-            this.tcProducts.Controls.Add(this.tbOptions);
             this.tcProducts.Controls.Add(this.Mode);
             this.tcProducts.Controls.Add(this.tbDiagnostics);
             this.tcProducts.Controls.Add(this.tbData);
+            this.tcProducts.Controls.Add(this.tbOptions);
             this.tcProducts.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tcProducts.Location = new System.Drawing.Point(12, 42);
             this.tcProducts.Multiline = true;

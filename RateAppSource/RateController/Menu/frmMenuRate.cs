@@ -2,6 +2,7 @@
 using RateController.Language;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -21,6 +22,7 @@ namespace RateController.Menu
             InitializeComponent();
             MainMenu = menu;
             mf = main;
+            this.Tag = false;
         }
 
         public bool Edited
@@ -233,19 +235,6 @@ namespace RateController.Menu
             mf.Tls.SaveFormData(this);
         }
 
-        private void frmMenuRate_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (Edited)
-            {
-                var Hlp = new frmMsgBox(mf, "Unsaved Changes, Confirm Exit?", "Exit", true);
-                Hlp.TopMost = true;
-
-                Hlp.ShowDialog();
-                bool Result = Hlp.Result;
-                Hlp.Close();
-                if (!Result) e.Cancel = true;
-            }
-        }
 
         private void frmMenuRate_Load(object sender, EventArgs e)
         {
@@ -362,6 +351,7 @@ namespace RateController.Menu
                 }
 
                 cEdited = Edited;
+                this.Tag = cEdited;
             }
         }
 
@@ -606,8 +596,9 @@ namespace RateController.Menu
             lbFanPWMvalue.Text = MainMenu.CurrentProduct.PWM().ToString("N0");
         }
 
-        private void UpdateForm()
+        public void UpdateForm()
         {
+            Debug.Print("MenuRate: " + MainMenu.CurrentProduct.ID);
             Initializing = true;
 
             if (MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Fan)
@@ -680,6 +671,11 @@ namespace RateController.Menu
             TankSize.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             TankRemain.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
+        }
+
+        private void frmMenuRate_Activated(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
     }
 }

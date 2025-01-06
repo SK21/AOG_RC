@@ -637,11 +637,12 @@
             this.Controls.Add(this.btnResetTank);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMenuRate";
             this.ShowInTaskbar = false;
             this.Text = "frmMenuRate";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuRate_FormClosing);
+            this.Activated += new System.EventHandler(this.frmMenuRate_Activated);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuRate_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuRate_Load);
             this.pnlFan.ResumeLayout(false);

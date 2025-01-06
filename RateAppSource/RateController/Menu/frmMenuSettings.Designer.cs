@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.ckScale = new System.Windows.Forms.CheckBox();
             this.ckBumpButtons = new System.Windows.Forms.CheckBox();
             this.ckDefault = new System.Windows.Forms.CheckBox();
@@ -52,6 +53,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.lbProduct = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.grpMinUPM.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.SuspendLayout();
@@ -137,7 +139,6 @@
             this.ckOffRate.Text = "Off-rate Alarm   ";
             this.ckOffRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOffRate.UseVisualStyleBackColor = true;
-            this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
             // 
             // ckOnScreen
             // 
@@ -258,6 +259,9 @@
             this.tbSenID.TabIndex = 1;
             this.tbSenID.Text = "0";
             this.tbSenID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSenID.Click += new System.EventHandler(this.tbSenID_Click);
+            this.tbSenID.TextChanged += new System.EventHandler(this.tbConID_TextChanged);
+            this.tbSenID.Validating += new System.ComponentModel.CancelEventHandler(this.tbSenID_Validating);
             // 
             // ModuleIndicator
             // 
@@ -289,6 +293,9 @@
             this.tbConID.TabIndex = 0;
             this.tbConID.Text = "0";
             this.tbConID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbConID.Click += new System.EventHandler(this.tbConID_Click);
+            this.tbConID.TextChanged += new System.EventHandler(this.tbConID_TextChanged);
+            this.tbConID.Validating += new System.ComponentModel.CancelEventHandler(this.tbConID_Validating);
             // 
             // btnHelp
             // 
@@ -373,6 +380,11 @@
             this.lbProduct.Text = "Product";
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // frmMenuSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -393,10 +405,13 @@
             this.Controls.Add(this.ckOnScreen);
             this.Controls.Add(this.grpMinUPM);
             this.Controls.Add(this.grpSensor);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMenuSettings";
             this.ShowInTaskbar = false;
             this.Text = "frmMenuSettings";
+            this.Activated += new System.EventHandler(this.frmMenuSettings_Activated);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuSettings_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuSettings_Load);
             this.grpMinUPM.ResumeLayout(false);
             this.grpMinUPM.PerformLayout();
@@ -433,5 +448,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Label lbProduct;
+        private System.Windows.Forms.Timer timer1;
     }
 }

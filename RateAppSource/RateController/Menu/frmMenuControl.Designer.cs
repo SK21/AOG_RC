@@ -394,11 +394,12 @@
             this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMenuControl";
             this.ShowInTaskbar = false;
             this.Text = "frmMenuControl";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuControl_FormClosing);
+            this.Activated += new System.EventHandler(this.frmMenuControl_Activated);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuControl_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuControl_Load);
             this.ResumeLayout(false);

@@ -3,6 +3,7 @@ using RateController.Menu;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace RateController
@@ -457,18 +458,21 @@ namespace RateController
 
         private void butRate_Click(object sender, EventArgs e)
         {
-            LastScreen = "frmMenuRate";
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
+            if (CheckEdited())
+            {
+                LastScreen = "frmMenuRate";
+                Form fs = mf.Tls.IsFormOpen(LastScreen);
 
-            if (fs == null)
-            {
-                Form frm = new frmMenuRate(mf, this);
-                frm.Owner = this;
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
+                if (fs == null)
+                {
+                    Form frm = new frmMenuRate(mf, this);
+                    frm.Owner = this;
+                    frm.Show();
+                }
+                else
+                {
+                    fs.Focus();
+                }
             }
         }
 
@@ -479,6 +483,34 @@ namespace RateController
                 ownedForm.Close();
             }
             return !Convert.ToBoolean(OwnedForms.Length);    // check if all closed, could be unsaved data
+        }
+        private bool CheckEdited()
+        {
+            bool Result = true;
+            foreach(Form OwnedForm in this.OwnedForms)
+            {
+                if ((bool)OwnedForm.Tag)
+                {
+                    var Hlp = new frmMsgBox(mf, "Unsaved Changes, Confirm Exit?", "Exit", true);
+                    Hlp.TopMost = true;
+
+                    Hlp.ShowDialog();
+                    bool Res = Hlp.Result;
+                    Hlp.Close();
+                    if (Res)
+                    {
+                        // move from form
+                        OwnedForm.Close();
+                    }
+                    else
+                    {
+                        // don't move from form
+                        Result = false;
+                        break;
+                    }
+                }
+            }
+            return Result;
         }
 
         private void frmMenu_FormClosed(object sender, FormClosedEventArgs e)
@@ -555,18 +587,21 @@ namespace RateController
 
         private void butControl_Click(object sender, EventArgs e)
         {
-            LastScreen = "frmMenuControl";
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
+            if (CheckEdited())
+            {
+                LastScreen = "frmMenuControl";
+                Form fs = mf.Tls.IsFormOpen(LastScreen);
 
-            if (fs == null)
-            {
-                Form frm = new frmMenuControl(mf, this);
-                frm.Owner = this;
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
+                if (fs == null)
+                {
+                    Form frm = new frmMenuControl(mf, this);
+                    frm.Owner = this;
+                    frm.Show();
+                }
+                else
+                {
+                    fs.Focus();
+                }
             }
         }
 
