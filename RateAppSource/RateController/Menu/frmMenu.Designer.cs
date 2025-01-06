@@ -67,6 +67,8 @@
             this.butProducts = new System.Windows.Forms.Button();
             this.butFile = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+            this.btnHelp = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -630,7 +632,7 @@
             this.butPowerOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butPowerOff.Image = global::RateController.Properties.Resources.SwitchOff;
             this.butPowerOff.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butPowerOff.Location = new System.Drawing.Point(12, 633);
+            this.butPowerOff.Location = new System.Drawing.Point(12, 571);
             this.butPowerOff.Name = "butPowerOff";
             this.butPowerOff.Size = new System.Drawing.Size(70, 66);
             this.butPowerOff.TabIndex = 8;
@@ -759,11 +761,29 @@
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
             // 
+            // btnHelp
+            // 
+            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
+            this.btnHelp.FlatAppearance.BorderSize = 0;
+            this.btnHelp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
+            this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHelp.Location = new System.Drawing.Point(145, 574);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(70, 66);
+            this.btnHelp.TabIndex = 160;
+            this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnHelp.UseVisualStyleBackColor = false;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.gbLine1);
             this.Controls.Add(this.butHelp);
             this.Controls.Add(this.butError);
@@ -859,5 +879,7 @@
         private System.Windows.Forms.Button butEthernet;
         private System.Windows.Forms.Button butTuning;
         private System.Windows.Forms.GroupBox gbLine1;
+        private System.Windows.Forms.HelpProvider helpProvider1;
+        private System.Windows.Forms.Button btnHelp;
     }
 }

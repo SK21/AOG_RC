@@ -70,7 +70,6 @@
             this.btnResetTank = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.btnHelp = new System.Windows.Forms.Button();
             this.pnlFan.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -96,8 +95,6 @@
             this.tbProduct.TabIndex = 137;
             this.tbProduct.Text = "P1";
             this.tbProduct.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbProduct.Click += new System.EventHandler(this.tbProduct_Click);
-            this.tbProduct.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
             // 
             // ValveType
             // 
@@ -115,7 +112,6 @@
             this.ValveType.Size = new System.Drawing.Size(176, 31);
             this.ValveType.TabIndex = 139;
             this.ValveType.SelectedIndexChanged += new System.EventHandler(this.ValveType_SelectedIndexChanged);
-            this.ValveType.Click += new System.EventHandler(this.ValveType_Click);
             // 
             // lb5
             // 
@@ -170,8 +166,8 @@
             this.ProdDensity.TabIndex = 155;
             this.ProdDensity.Text = "143";
             this.ProdDensity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.ProdDensity.Click += new System.EventHandler(this.ProdDensity_Click);
             this.ProdDensity.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.ProdDensity.Enter += new System.EventHandler(this.ProdDensity_Enter);
             // 
             // lbSensorCounts
             // 
@@ -197,7 +193,6 @@
             this.AreaUnits.Size = new System.Drawing.Size(176, 31);
             this.AreaUnits.TabIndex = 141;
             this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.tbProduct_TextChanged);
-            this.AreaUnits.Click += new System.EventHandler(this.AreaUnits_Click);
             // 
             // tbVolumeUnits
             // 
@@ -209,7 +204,6 @@
             this.tbVolumeUnits.TabIndex = 154;
             this.tbVolumeUnits.Text = "Gallons";
             this.tbVolumeUnits.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbVolumeUnits.Click += new System.EventHandler(this.tbVolumeUnits_Click);
             this.tbVolumeUnits.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
             // 
             // TankSize
@@ -222,8 +216,8 @@
             this.TankSize.TabIndex = 144;
             this.TankSize.Text = "0";
             this.TankSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TankSize.Click += new System.EventHandler(this.TankSize_Click);
             this.TankSize.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.TankSize.Enter += new System.EventHandler(this.TankSize_Enter);
             this.TankSize.Validating += new System.ComponentModel.CancelEventHandler(this.TankSize_Validating);
             // 
             // TankRemain
@@ -236,8 +230,8 @@
             this.TankRemain.TabIndex = 145;
             this.TankRemain.Text = "0";
             this.TankRemain.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TankRemain.Click += new System.EventHandler(this.TankRemain_Click);
             this.TankRemain.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.TankRemain.Enter += new System.EventHandler(this.TankRemain_Enter);
             this.TankRemain.Validating += new System.ComponentModel.CancelEventHandler(this.TankRemain_Validating);
             // 
             // FlowCal
@@ -249,8 +243,8 @@
             this.FlowCal.Size = new System.Drawing.Size(100, 30);
             this.FlowCal.TabIndex = 142;
             this.FlowCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.FlowCal.Click += new System.EventHandler(this.FlowCal_Click);
             this.FlowCal.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.FlowCal.Enter += new System.EventHandler(this.FlowCal_Enter);
             this.FlowCal.Validating += new System.ComponentModel.CancelEventHandler(this.FlowCal_Validating);
             // 
             // lb6
@@ -273,8 +267,8 @@
             this.tbAltRate.TabIndex = 153;
             this.tbAltRate.Text = "75";
             this.tbAltRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbAltRate.Click += new System.EventHandler(this.tbAltRate_Click);
             this.tbAltRate.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.tbAltRate.Enter += new System.EventHandler(this.tbAltRate_Enter);
             this.tbAltRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbAltRate_Validating);
             // 
             // lbBaseRateDes
@@ -317,7 +311,6 @@
             this.lbBaseRate.TabIndex = 143;
             this.lbBaseRate.Text = "0";
             this.lbBaseRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.lbBaseRate.Click += new System.EventHandler(this.lbBaseRate_Click);
             this.lbBaseRate.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
             this.lbBaseRate.Enter += new System.EventHandler(this.lbBaseRate_Enter);
             this.lbBaseRate.Validating += new System.ComponentModel.CancelEventHandler(this.lbBaseRate_Validating);
@@ -475,8 +468,8 @@
             this.tbCountsRPM.Size = new System.Drawing.Size(102, 30);
             this.tbCountsRPM.TabIndex = 116;
             this.tbCountsRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbCountsRPM.Click += new System.EventHandler(this.tbCountsRPM_Click);
             this.tbCountsRPM.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.tbCountsRPM.Enter += new System.EventHandler(this.tbCountsRPM_Enter);
             this.tbCountsRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRPM_Validating);
             // 
             // lbTargetRPM
@@ -499,8 +492,8 @@
             this.tbTargetRPM.TabIndex = 113;
             this.tbTargetRPM.Text = "0";
             this.tbTargetRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbTargetRPM.Click += new System.EventHandler(this.tbTargetRPM_Click);
             this.tbTargetRPM.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.tbTargetRPM.Enter += new System.EventHandler(this.tbTargetRPM_Enter);
             this.tbTargetRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbTargetRPM_Validating);
             // 
             // pnlMain
@@ -609,26 +602,11 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // btnHelp
-            // 
-            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
-            this.btnHelp.FlatAppearance.BorderColor = System.Drawing.SystemColors.Highlight;
-            this.btnHelp.FlatAppearance.BorderSize = 0;
-            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
-            this.btnHelp.Location = new System.Drawing.Point(66, 546);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(72, 72);
-            this.btnHelp.TabIndex = 327;
-            this.btnHelp.UseVisualStyleBackColor = false;
-            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
-            // 
             // frmMenuRate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1173, 630);
-            this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlFan);
             this.Controls.Add(this.lbProduct);
@@ -697,6 +675,5 @@
         private System.Windows.Forms.Label lbTargetRPM;
         private System.Windows.Forms.TextBox tbTargetRPM;
         private System.Windows.Forms.Panel pnlMain;
-        private System.Windows.Forms.Button btnHelp;
     }
 }

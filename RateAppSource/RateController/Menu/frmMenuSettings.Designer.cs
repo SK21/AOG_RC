@@ -102,6 +102,7 @@
             this.ckDefault.Text = "Default Product";
             this.ckDefault.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDefault.UseVisualStyleBackColor = true;
+            this.ckDefault.Click += new System.EventHandler(this.ckDefault_Click);
             // 
             // label28
             // 
@@ -179,6 +180,7 @@
             this.tbUPMspeed.Size = new System.Drawing.Size(75, 29);
             this.tbUPMspeed.TabIndex = 124;
             this.tbUPMspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbUPMspeed.Click += new System.EventHandler(this.tbUPMspeed_Click);
             // 
             // rbUPMSpeed
             // 
@@ -195,6 +197,7 @@
             this.rbUPMSpeed.Text = "By Speed";
             this.rbUPMSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbUPMSpeed.UseVisualStyleBackColor = true;
+            this.rbUPMSpeed.Click += new System.EventHandler(this.rbUPMSpeed_Click);
             // 
             // rbUPMFixed
             // 
@@ -213,6 +216,8 @@
             this.rbUPMFixed.Text = "Fixed Value";
             this.rbUPMFixed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbUPMFixed.UseVisualStyleBackColor = true;
+            this.rbUPMFixed.CheckedChanged += new System.EventHandler(this.rbUPMFixed_CheckedChanged);
+            this.rbUPMFixed.Click += new System.EventHandler(this.rbUPMFixed_Click);
             // 
             // tbMinUPM
             // 
@@ -223,6 +228,7 @@
             this.tbMinUPM.Size = new System.Drawing.Size(75, 29);
             this.tbMinUPM.TabIndex = 1;
             this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbMinUPM.Click += new System.EventHandler(this.tbMinUPM_Click);
             // 
             // grpSensor
             // 
@@ -309,6 +315,7 @@
             this.btnHelp.Size = new System.Drawing.Size(72, 72);
             this.btnHelp.TabIndex = 331;
             this.btnHelp.UseVisualStyleBackColor = false;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // btnRight
             // 

@@ -47,11 +47,11 @@ namespace RateController.Menu
                 btnHelp.FlatAppearance.BorderColor = SystemColors.Highlight;
             }
             HShigh.HelpMode = HelpMode;
-            HSlow.HelpMode= HelpMode;
+            HSlow.HelpMode = HelpMode;
             HSlow.HelpMode = HelpMode;
             HSmax.HelpMode = HelpMode;
-            HSscaling.HelpMode= HelpMode;
-            HSthreshold.HelpMode= HelpMode;
+            HSscaling.HelpMode = HelpMode;
+            HSthreshold.HelpMode = HelpMode;
             HSmin.HelpMode = HelpMode;
         }
 
@@ -318,7 +318,14 @@ namespace RateController.Menu
 
         private void frmMenuControl_Activated(object sender, EventArgs e)
         {
-            UpdateForm();
+            switch (this.Text)
+            {
+                case "Focused":
+                    this.Text = "";
+                    UpdateForm();
+                    break;
+            }
+
         }
     }
 }

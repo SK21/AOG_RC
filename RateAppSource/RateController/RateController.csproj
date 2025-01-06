@@ -465,6 +465,12 @@
     <EmbeddedResource Include="Forms\RCRestore.resx">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Help\frmMenuRate.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuSettings.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">

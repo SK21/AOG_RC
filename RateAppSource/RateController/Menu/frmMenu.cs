@@ -467,10 +467,12 @@ namespace RateController
                 {
                     Form frm = new frmMenuRate(mf, this);
                     frm.Owner = this;
+                    frm.Text = "Opened";
                     frm.Show();
                 }
                 else
                 {
+                    fs.Text = "Focused";
                     fs.Focus();
                 }
             }
@@ -524,8 +526,11 @@ namespace RateController
             mf.Tls.LoadFormData(this);
             this.Width = FormWidth;
             this.Height = FormHeight;
-            butPowerOff.Top = this.Height - 117;
             StyleControls(this);
+            butPowerOff.Left = 12;
+            butPowerOff.Top = this.Height - 100;
+            btnHelp.Left = 145;
+            btnHelp.Top = butPowerOff.Top + 3;
             if (LoadLast) LoadLastScreen();
         }
 
@@ -596,10 +601,12 @@ namespace RateController
                 {
                     Form frm = new frmMenuControl(mf, this);
                     frm.Owner = this;
+                    frm.Text = "Opened";
                     frm.Show();
                 }
                 else
                 {
+                    fs.Text = "Focused";
                     fs.Focus();
                 }
             }
@@ -614,11 +621,28 @@ namespace RateController
             {
                 Form frm = new frmMenuSettings(mf, this);
                 frm.Owner = this;
+                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
+                fs.Text = "Focused";
                 fs.Focus();
+            }
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string FileName = exeDirectory + "Help\\" + LastScreen + ".pdf";
+            try
+            {
+                Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+
+                mf.Tls.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
             }
         }
     }

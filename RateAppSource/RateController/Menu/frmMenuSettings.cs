@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -139,7 +140,13 @@ namespace RateController.Menu
 
         private void frmMenuSettings_Activated(object sender, EventArgs e)
         {
-            UpdateForm();
+            switch (this.Text)
+            {
+                case "Focused":
+                    this.Text = "";
+                    UpdateForm();
+                    break;
+            }
         }
         private void SetButtons(bool Edited)
         {
@@ -236,6 +243,119 @@ namespace RateController.Menu
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
+        }
+
+        private void rbUPMFixed_Click(object sender, EventArgs e)
+        {
+            if (HelpMode)
+            {
+                string Message = "Minimum UPM.";
+                mf.Tls.ShowHelp(Message, "Minimum UPM");
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                tbUPMspeed.Text = "0.0";
+                SetButtons(true);
+            }
+            Debug.Print("Click");
+        }
+
+        private void rbUPMSpeed_Click(object sender, EventArgs e)
+        {
+            if (HelpMode)
+            {
+                string Message = "Speed used to calculate minimum UPM based on application rate.";
+                mf.Tls.ShowHelp(Message, "Minimum UPM using speed");
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                tbMinUPM.Text = "0.0";
+                SetButtons(true);
+            }
+        }
+
+        private void tbMinUPM_Click(object sender, EventArgs e)
+        {
+            if (HelpMode)
+            {
+                string Message = "Minimum UPM.";
+                mf.Tls.ShowHelp(Message, "Minimum UPM");
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(tbMinUPM.Text, out tempD);
+                using (var form = new FormNumeric(0, 500, tempD))
+                {
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        tbMinUPM.Text = form.ReturnValue.ToString();
+                    }
+                }
+            }
+
+        }
+
+        private void tbUPMspeed_Click(object sender, EventArgs e)
+        {
+            if (HelpMode)
+            {
+                string Message = "Speed used to calculate minimum UPM based on application rate.";
+                mf.Tls.ShowHelp(Message, "Minimum UPM using speed");
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                double tempD;
+                double.TryParse(tbUPMspeed.Text, out tempD);
+                using (var form = new FormNumeric(0, 30, tempD))
+                {
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        tbUPMspeed.Text = form.ReturnValue.ToString();
+                    }
+                }
+            }
+        }
+
+        private void ckDefault_Click(object sender, EventArgs e)
+        {
+            if (HelpMode)
+            {
+                string Message = "Product that is loaded at startup.";
+                mf.Tls.ShowHelp(Message, "Default Product");
+                btnHelp.PerformClick();
+            }
+            else
+            {
+                SetButtons(true);
+            }
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            if (HelpMode)
+            {
+                this.Cursor = Cursors.Default;
+                HelpMode = false;
+                btnHelp.FlatAppearance.BorderSize = 0;
+            }
+            else
+            {
+                this.Cursor = Cursors.Help;
+                HelpMode = true;
+                btnHelp.FlatAppearance.BorderSize = 1;
+            }
+        }
+
+        private void rbUPMFixed_CheckedChanged(object sender, EventArgs e)
+        {
+            Debug.Print("CheckChanged");
         }
     }
 }

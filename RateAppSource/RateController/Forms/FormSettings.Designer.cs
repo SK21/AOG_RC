@@ -230,12 +230,12 @@ namespace RateController
             // 
             // tbRate
             // 
-            this.tbRate.Controls.Add(this.pnlFan);
             this.tbRate.Controls.Add(this.pnlMain);
             this.tbRate.Controls.Add(this.lb0);
             this.tbRate.Controls.Add(this.tbProduct);
             this.tbRate.Controls.Add(this.ValveType);
             this.tbRate.Controls.Add(this.lb5);
+            this.tbRate.Controls.Add(this.pnlFan);
             this.tbRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbRate.Location = new System.Drawing.Point(4, 83);
             this.tbRate.Name = "tbRate";
