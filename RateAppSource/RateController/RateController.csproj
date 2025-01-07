@@ -372,6 +372,12 @@
     <Compile Include="Menu\frmMenuSettings.Designer.cs">
       <DependentUpon>frmMenuSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuSwitches.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuSwitches.Designer.cs">
+      <DependentUpon>frmMenuSwitches.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuValves.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -559,6 +565,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuSettings.resx">
       <DependentUpon>frmMenuSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuSwitches.resx">
+      <DependentUpon>frmMenuSwitches.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuValves.resx">
       <DependentUpon>frmMenuValves.cs</DependentUpon>

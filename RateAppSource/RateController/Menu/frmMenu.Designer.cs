@@ -482,6 +482,7 @@
             this.butSwitches.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butSwitches.UseVisualStyleBackColor = false;
             this.butSwitches.Visible = false;
+            this.butSwitches.Click += new System.EventHandler(this.butSwitches_Click);
             // 
             // butPrimed
             // 
