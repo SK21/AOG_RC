@@ -31,7 +31,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ckDefaultProduct = new System.Windows.Forms.CheckBox();
+            this.ckReset = new System.Windows.Forms.CheckBox();
             this.ckLargeScreen = new System.Windows.Forms.CheckBox();
             this.ckSingle = new System.Windows.Forms.CheckBox();
             this.ckTransparent = new System.Windows.Forms.CheckBox();
@@ -83,7 +83,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.ckDefaultProduct);
+            this.groupBox1.Controls.Add(this.ckReset);
             this.groupBox1.Controls.Add(this.ckLargeScreen);
             this.groupBox1.Controls.Add(this.ckSingle);
             this.groupBox1.Controls.Add(this.ckTransparent);
@@ -94,19 +94,21 @@
             this.groupBox1.TabIndex = 163;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Display";
+            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
-            // ckDefaultProduct
+            // ckReset
             // 
-            this.ckDefaultProduct.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckDefaultProduct.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckDefaultProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDefaultProduct.Location = new System.Drawing.Point(241, 68);
-            this.ckDefaultProduct.Name = "ckDefaultProduct";
-            this.ckDefaultProduct.Size = new System.Drawing.Size(164, 34);
-            this.ckDefaultProduct.TabIndex = 333;
-            this.ckDefaultProduct.Text = "Reset Products";
-            this.ckDefaultProduct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDefaultProduct.UseVisualStyleBackColor = true;
+            this.ckReset.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckReset.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckReset.Location = new System.Drawing.Point(241, 68);
+            this.ckReset.Name = "ckReset";
+            this.ckReset.Size = new System.Drawing.Size(164, 34);
+            this.ckReset.TabIndex = 333;
+            this.ckReset.Text = "Reset Products";
+            this.ckReset.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckReset.UseVisualStyleBackColor = true;
+            this.ckReset.CheckedChanged += new System.EventHandler(this.ckReset_CheckedChanged);
             // 
             // ckLargeScreen
             // 
@@ -121,6 +123,7 @@
             this.ckLargeScreen.Text = "Large Screen";
             this.ckLargeScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckLargeScreen.UseVisualStyleBackColor = true;
+            this.ckLargeScreen.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
             // 
             // ckSingle
             // 
@@ -134,6 +137,7 @@
             this.ckSingle.Text = "Single Product";
             this.ckSingle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSingle.UseVisualStyleBackColor = true;
+            this.ckSingle.CheckedChanged += new System.EventHandler(this.ckSingle_CheckedChanged);
             // 
             // ckTransparent
             // 
@@ -147,6 +151,7 @@
             this.ckTransparent.Text = "Transparent";
             this.ckTransparent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckTransparent.UseVisualStyleBackColor = true;
+            this.ckTransparent.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -162,6 +167,7 @@
             this.groupBox2.TabIndex = 164;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pressure";
+            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
             // lbPressureOffset
             // 
@@ -182,6 +188,9 @@
             this.tbPressureOffset.TabIndex = 153;
             this.tbPressureOffset.Text = "0";
             this.tbPressureOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPressureOffset.TextChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
+            this.tbPressureOffset.Enter += new System.EventHandler(this.tbPressureOffset_Enter);
+            this.tbPressureOffset.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureOffset_Validating);
             // 
             // lbConID
             // 
@@ -202,6 +211,9 @@
             this.tbPressureCal.TabIndex = 152;
             this.tbPressureCal.Text = "0";
             this.tbPressureCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPressureCal.TextChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
+            this.tbPressureCal.Enter += new System.EventHandler(this.tbPressureCal_Enter);
+            this.tbPressureCal.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureCal_Validating);
             // 
             // ckPressure
             // 
@@ -216,6 +228,7 @@
             this.ckPressure.Text = "Show";
             this.ckPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckPressure.UseVisualStyleBackColor = true;
+            this.ckPressure.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
             // 
             // frmMenuDisplay
             // 
@@ -230,6 +243,8 @@
             this.Name = "frmMenuDisplay";
             this.ShowInTaskbar = false;
             this.Text = "frmMenuDisplay";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuDisplay_FormClosed);
+            this.Load += new System.EventHandler(this.frmMenuDisplay_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -242,7 +257,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox ckDefaultProduct;
+        private System.Windows.Forms.CheckBox ckReset;
         private System.Windows.Forms.CheckBox ckLargeScreen;
         private System.Windows.Forms.CheckBox ckSingle;
         private System.Windows.Forms.CheckBox ckTransparent;

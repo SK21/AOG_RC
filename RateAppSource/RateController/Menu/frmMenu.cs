@@ -660,6 +660,11 @@ namespace RateController
                                 butModules.PerformClick();
                                 break;
 
+                            case "frmMenuDisplay":
+                                fs = new frmMenuDisplay(mf, this);
+                                butOptions.PerformClick();
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();
@@ -1034,6 +1039,26 @@ namespace RateController
                 // highlight selected
                 Items[ID].FlatAppearance.BorderSize = 1;
                 Items[ID].FlatAppearance.BorderColor = Color.Blue;
+            }
+        }
+
+        private void butDisplay_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuDisplay";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuDisplay(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
             }
         }
     }
