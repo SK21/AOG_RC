@@ -79,11 +79,11 @@
             this.butClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
             this.butClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butClose.Image = global::RateController.Properties.Resources.CloseButton;
             this.butClose.Location = new System.Drawing.Point(145, 8);
             this.butClose.Name = "butClose";
             this.butClose.Size = new System.Drawing.Size(70, 63);
             this.butClose.TabIndex = 1;
-            this.butClose.Text = "X";
             this.butClose.UseVisualStyleBackColor = false;
             this.butClose.Click += new System.EventHandler(this.butClose_Click);
             // 
@@ -311,6 +311,7 @@
             this.butSections.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butSections.UseVisualStyleBackColor = false;
             this.butSections.Visible = false;
+            this.butSections.Click += new System.EventHandler(this.butSections_Click);
             // 
             // butValves
             // 

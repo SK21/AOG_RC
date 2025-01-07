@@ -489,6 +489,9 @@
     <None Include="Help\frmMenuRate.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Help\frmMenuSections.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Help\frmMenuSettings.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -509,6 +512,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\CloseButton.png" />
     <None Include="Resources\HelpUnder.png" />
     <None Include="Resources\HelpIcon.ico" />
     <None Include="Resources\up-and-down-arrows.png" />

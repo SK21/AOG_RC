@@ -28,27 +28,174 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.ckZones = new System.Windows.Forms.CheckBox();
-            this.btnEqual = new System.Windows.Forms.Button();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.DGV = new System.Windows.Forms.DataGridView();
+            this.DGV2 = new System.Windows.Forms.DataGridView();
             this.lbPerZone = new System.Windows.Forms.Label();
             this.tbSectionsPerZone = new System.Windows.Forms.TextBox();
+            this.ckZones = new System.Windows.Forms.CheckBox();
             this.lbFeet = new System.Windows.Forms.Label();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
+            this.btnEqual = new System.Windows.Forms.Button();
             this.lbNumZones = new System.Windows.Forms.Label();
             this.tbSectionCount = new System.Windows.Forms.TextBox();
             this.lbWidth = new System.Windows.Forms.Label();
-            this.DGV = new System.Windows.Forms.DataGridView();
-            this.SectionWidth = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Switch = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DGV2 = new System.Windows.Forms.DataGridView();
+            this.dataSet1 = new System.Data.DataSet();
+            this.dataTable1 = new System.Data.DataTable();
+            this.dataColumn1 = new System.Data.DataColumn();
+            this.dataColumn2 = new System.Data.DataColumn();
+            this.dataColumn3 = new System.Data.DataColumn();
+            this.dataSet2 = new System.Data.DataSet();
+            this.dataTable2 = new System.Data.DataTable();
+            this.dataColumn4 = new System.Data.DataColumn();
+            this.dataColumn5 = new System.Data.DataColumn();
+            this.dataColumn6 = new System.Data.DataColumn();
+            this.dataColumn7 = new System.Data.DataColumn();
+            this.dataColumn8 = new System.Data.DataColumn();
+            this.sectionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.widthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.switchDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.zoneDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.startDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.endDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.widthDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.switchDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable2)).BeginInit();
             this.SuspendLayout();
+            // 
+            // DGV
+            // 
+            this.DGV.AllowUserToAddRows = false;
+            this.DGV.AllowUserToDeleteRows = false;
+            this.DGV.AllowUserToResizeColumns = false;
+            this.DGV.AllowUserToResizeRows = false;
+            this.DGV.AutoGenerateColumns = false;
+            this.DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.sectionDataGridViewTextBoxColumn,
+            this.widthDataGridViewTextBoxColumn,
+            this.switchDataGridViewTextBoxColumn});
+            this.DGV.DataMember = "Table1";
+            this.DGV.DataSource = this.dataSet1;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.NullValue = "<dbnull>";
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle14;
+            this.DGV.Location = new System.Drawing.Point(85, 30);
+            this.DGV.Margin = new System.Windows.Forms.Padding(11, 11, 11, 11);
+            this.DGV.Name = "DGV";
+            this.DGV.RowHeadersVisible = false;
+            this.DGV.RowTemplate.Height = 40;
+            this.DGV.Size = new System.Drawing.Size(369, 352);
+            this.DGV.TabIndex = 171;
+            this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
+            this.DGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGV_CellFormatting);
+            this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
+            // 
+            // DGV2
+            // 
+            this.DGV2.AllowUserToAddRows = false;
+            this.DGV2.AllowUserToDeleteRows = false;
+            this.DGV2.AllowUserToResizeColumns = false;
+            this.DGV2.AllowUserToResizeRows = false;
+            this.DGV2.AutoGenerateColumns = false;
+            this.DGV2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGV2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.zoneDataGridViewTextBoxColumn,
+            this.startDataGridViewTextBoxColumn,
+            this.endDataGridViewTextBoxColumn,
+            this.widthDataGridViewTextBoxColumn1,
+            this.switchDataGridViewTextBoxColumn1});
+            this.DGV2.DataMember = "Table1";
+            this.DGV2.DataSource = this.dataSet2;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle20.NullValue = "<dbnull>";
+            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV2.DefaultCellStyle = dataGridViewCellStyle20;
+            this.DGV2.Location = new System.Drawing.Point(0, 30);
+            this.DGV2.Margin = new System.Windows.Forms.Padding(11, 11, 11, 11);
+            this.DGV2.Name = "DGV2";
+            this.DGV2.RowHeadersVisible = false;
+            this.DGV2.RowTemplate.Height = 40;
+            this.DGV2.Size = new System.Drawing.Size(540, 352);
+            this.DGV2.TabIndex = 172;
+            this.DGV2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV2_CellClick);
+            this.DGV2.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGV2_CellFormatting);
+            this.DGV2.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV2_CellValueChanged);
+            // 
+            // lbPerZone
+            // 
+            this.lbPerZone.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPerZone.Location = new System.Drawing.Point(280, 409);
+            this.lbPerZone.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lbPerZone.Name = "lbPerZone";
+            this.lbPerZone.Size = new System.Drawing.Size(179, 28);
+            this.lbPerZone.TabIndex = 202;
+            this.lbPerZone.Text = "Sections per Zone";
+            // 
+            // tbSectionsPerZone
+            // 
+            this.tbSectionsPerZone.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSectionsPerZone.Location = new System.Drawing.Point(471, 409);
+            this.tbSectionsPerZone.Margin = new System.Windows.Forms.Padding(6);
+            this.tbSectionsPerZone.Name = "tbSectionsPerZone";
+            this.tbSectionsPerZone.Size = new System.Drawing.Size(54, 29);
+            this.tbSectionsPerZone.TabIndex = 198;
+            this.tbSectionsPerZone.Text = "9999";
+            this.tbSectionsPerZone.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSectionsPerZone.TextChanged += new System.EventHandler(this.tbSectionsPerZone_TextChanged);
+            this.tbSectionsPerZone.Enter += new System.EventHandler(this.tbSectionsPerZone_Enter);
+            this.tbSectionsPerZone.Validating += new System.ComponentModel.CancelEventHandler(this.tbSectionsPerZone_Validating);
+            // 
+            // ckZones
+            // 
+            this.ckZones.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckZones.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckZones.Image = global::RateController.Properties.Resources.SectionsNoZones2;
+            this.ckZones.Location = new System.Drawing.Point(92, 515);
+            this.ckZones.Name = "ckZones";
+            this.ckZones.Size = new System.Drawing.Size(113, 100);
+            this.ckZones.TabIndex = 1;
+            this.ckZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckZones.UseVisualStyleBackColor = true;
+            this.ckZones.CheckedChanged += new System.EventHandler(this.ckZones_CheckedChanged);
+            // 
+            // lbFeet
+            // 
+            this.lbFeet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFeet.Location = new System.Drawing.Point(198, 464);
+            this.lbFeet.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lbFeet.Name = "lbFeet";
+            this.lbFeet.Size = new System.Drawing.Size(133, 24);
+            this.lbFeet.TabIndex = 201;
+            this.lbFeet.Text = "100.6 FT";
+            this.lbFeet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnCancel
             // 
@@ -60,42 +207,32 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(378, 546);
+            this.btnCancel.Location = new System.Drawing.Point(356, 543);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
-            this.btnCancel.TabIndex = 168;
+            this.btnCancel.TabIndex = 3;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOK
             // 
             this.btnOK.BackColor = System.Drawing.Color.Transparent;
             this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnOK.Enabled = false;
             this.btnOK.FlatAppearance.BorderSize = 0;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnOK.Image = global::RateController.Properties.Resources.Save;
+            this.btnOK.Image = global::RateController.Properties.Resources.OK;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(456, 546);
+            this.btnOK.Location = new System.Drawing.Point(453, 543);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(6);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(72, 72);
-            this.btnOK.TabIndex = 167;
+            this.btnOK.TabIndex = 4;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
-            // 
-            // ckZones
-            // 
-            this.ckZones.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckZones.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckZones.Image = global::RateController.Properties.Resources.SectionsNoZones2;
-            this.ckZones.Location = new System.Drawing.Point(130, 515);
-            this.ckZones.Name = "ckZones";
-            this.ckZones.Size = new System.Drawing.Size(113, 100);
-            this.ckZones.TabIndex = 169;
-            this.ckZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckZones.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // btnEqual
             // 
@@ -105,198 +242,273 @@
             this.btnEqual.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEqual.Image = global::RateController.Properties.Resources.Copy;
             this.btnEqual.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnEqual.Location = new System.Drawing.Point(268, 543);
+            this.btnEqual.Location = new System.Drawing.Point(230, 543);
             this.btnEqual.Margin = new System.Windows.Forms.Padding(6);
             this.btnEqual.Name = "btnEqual";
             this.btnEqual.Size = new System.Drawing.Size(101, 72);
-            this.btnEqual.TabIndex = 170;
+            this.btnEqual.TabIndex = 2;
             this.btnEqual.Text = "=1";
             this.btnEqual.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEqual.UseVisualStyleBackColor = false;
-            // 
-            // lbPerZone
-            // 
-            this.lbPerZone.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPerZone.Location = new System.Drawing.Point(310, 400);
-            this.lbPerZone.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lbPerZone.Name = "lbPerZone";
-            this.lbPerZone.Size = new System.Drawing.Size(179, 28);
-            this.lbPerZone.TabIndex = 178;
-            this.lbPerZone.Text = "Sections per Zone";
-            // 
-            // tbSectionsPerZone
-            // 
-            this.tbSectionsPerZone.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSectionsPerZone.Location = new System.Drawing.Point(501, 400);
-            this.tbSectionsPerZone.Margin = new System.Windows.Forms.Padding(6);
-            this.tbSectionsPerZone.Name = "tbSectionsPerZone";
-            this.tbSectionsPerZone.Size = new System.Drawing.Size(54, 29);
-            this.tbSectionsPerZone.TabIndex = 174;
-            this.tbSectionsPerZone.Text = "9999";
-            this.tbSectionsPerZone.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // lbFeet
-            // 
-            this.lbFeet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFeet.Location = new System.Drawing.Point(205, 435);
-            this.lbFeet.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lbFeet.Name = "lbFeet";
-            this.lbFeet.Size = new System.Drawing.Size(133, 24);
-            this.lbFeet.TabIndex = 177;
-            this.lbFeet.Text = "100.6 FT";
-            this.lbFeet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnEqual.Click += new System.EventHandler(this.btnEqual_Click);
             // 
             // lbNumZones
             // 
             this.lbNumZones.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbNumZones.Location = new System.Drawing.Point(8, 400);
+            this.lbNumZones.Location = new System.Drawing.Point(5, 409);
             this.lbNumZones.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbNumZones.Name = "lbNumZones";
             this.lbNumZones.Size = new System.Drawing.Size(185, 28);
-            this.lbNumZones.TabIndex = 176;
+            this.lbNumZones.TabIndex = 200;
             this.lbNumZones.Text = "Number of Sections";
             // 
             // tbSectionCount
             // 
             this.tbSectionCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSectionCount.Location = new System.Drawing.Point(205, 400);
+            this.tbSectionCount.Location = new System.Drawing.Point(202, 409);
             this.tbSectionCount.Margin = new System.Windows.Forms.Padding(6);
             this.tbSectionCount.Name = "tbSectionCount";
             this.tbSectionCount.Size = new System.Drawing.Size(54, 29);
-            this.tbSectionCount.TabIndex = 173;
+            this.tbSectionCount.TabIndex = 197;
             this.tbSectionCount.Text = "9999";
             this.tbSectionCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSectionCount.TextChanged += new System.EventHandler(this.tbSectionCount_TextChanged);
+            this.tbSectionCount.Enter += new System.EventHandler(this.tbSectionCount_Enter);
+            this.tbSectionCount.Validating += new System.ComponentModel.CancelEventHandler(this.tbSectionCount_Validating);
             // 
             // lbWidth
             // 
             this.lbWidth.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWidth.Location = new System.Drawing.Point(8, 435);
+            this.lbWidth.Location = new System.Drawing.Point(1, 464);
             this.lbWidth.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbWidth.Name = "lbWidth";
             this.lbWidth.Size = new System.Drawing.Size(187, 24);
-            this.lbWidth.TabIndex = 175;
+            this.lbWidth.TabIndex = 0;
             this.lbWidth.Text = "Width:  1200 Inches";
             this.lbWidth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // DGV
+            // dataSet1
             // 
-            this.DGV.AllowUserToAddRows = false;
-            this.DGV.AllowUserToDeleteRows = false;
-            this.DGV.AllowUserToResizeColumns = false;
-            this.DGV.AllowUserToResizeRows = false;
-            this.DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.SectionWidth,
-            this.Switch});
-            this.DGV.DataMember = "Table1";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.NullValue = "<dbnull>";
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle3;
-            this.DGV.Location = new System.Drawing.Point(97, 36);
-            this.DGV.Margin = new System.Windows.Forms.Padding(6);
-            this.DGV.Name = "DGV";
-            this.DGV.RowHeadersVisible = false;
-            this.DGV.RowTemplate.Height = 40;
-            this.DGV.Size = new System.Drawing.Size(369, 352);
-            this.DGV.TabIndex = 171;
+            this.dataSet1.DataSetName = "NewDataSet";
+            this.dataSet1.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable1});
             // 
-            // SectionWidth
+            // dataTable1
             // 
-            this.SectionWidth.DataPropertyName = "Width";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.Format = "N0";
-            dataGridViewCellStyle1.NullValue = null;
-            this.SectionWidth.DefaultCellStyle = dataGridViewCellStyle1;
-            this.SectionWidth.HeaderText = "Width";
-            this.SectionWidth.Name = "SectionWidth";
-            this.SectionWidth.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataTable1.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn1,
+            this.dataColumn2,
+            this.dataColumn3});
+            this.dataTable1.TableName = "Table1";
             // 
-            // Switch
+            // dataColumn1
             // 
-            this.Switch.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Switch.DataPropertyName = "Switch";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.Format = "N0";
-            dataGridViewCellStyle2.NullValue = null;
-            this.Switch.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Switch.HeaderText = "Switch";
-            this.Switch.Name = "Switch";
-            this.Switch.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataColumn1.Caption = "Section";
+            this.dataColumn1.ColumnName = "Section";
+            this.dataColumn1.DataType = typeof(short);
             // 
-            // DGV2
+            // dataColumn2
             // 
-            this.DGV2.AllowUserToAddRows = false;
-            this.DGV2.AllowUserToDeleteRows = false;
-            this.DGV2.AllowUserToResizeColumns = false;
-            this.DGV2.AllowUserToResizeRows = false;
-            this.DGV2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGV2.DataMember = "Table1";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.NullValue = "<dbnull>";
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV2.DefaultCellStyle = dataGridViewCellStyle4;
-            this.DGV2.Location = new System.Drawing.Point(8, 36);
-            this.DGV2.Margin = new System.Windows.Forms.Padding(6);
-            this.DGV2.Name = "DGV2";
-            this.DGV2.RowHeadersVisible = false;
-            this.DGV2.RowTemplate.Height = 40;
-            this.DGV2.Size = new System.Drawing.Size(547, 352);
-            this.DGV2.TabIndex = 172;
+            this.dataColumn2.Caption = "Width";
+            this.dataColumn2.ColumnName = "Width";
+            this.dataColumn2.DataType = typeof(double);
+            // 
+            // dataColumn3
+            // 
+            this.dataColumn3.ColumnName = "Switch";
+            this.dataColumn3.DataType = typeof(short);
+            // 
+            // dataSet2
+            // 
+            this.dataSet2.DataSetName = "NewDataSet";
+            this.dataSet2.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable2});
+            // 
+            // dataTable2
+            // 
+            this.dataTable2.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn4,
+            this.dataColumn5,
+            this.dataColumn6,
+            this.dataColumn7,
+            this.dataColumn8});
+            this.dataTable2.TableName = "Table1";
+            // 
+            // dataColumn4
+            // 
+            this.dataColumn4.Caption = "Section";
+            this.dataColumn4.ColumnName = "Zone";
+            this.dataColumn4.DataType = typeof(short);
+            // 
+            // dataColumn5
+            // 
+            this.dataColumn5.Caption = "Width";
+            this.dataColumn5.ColumnName = "Start";
+            this.dataColumn5.DataType = typeof(short);
+            // 
+            // dataColumn6
+            // 
+            this.dataColumn6.ColumnName = "End";
+            this.dataColumn6.DataType = typeof(short);
+            // 
+            // dataColumn7
+            // 
+            this.dataColumn7.ColumnName = "Width";
+            this.dataColumn7.DataType = typeof(double);
+            // 
+            // dataColumn8
+            // 
+            this.dataColumn8.ColumnName = "Switch";
+            this.dataColumn8.DataType = typeof(short);
+            // 
+            // sectionDataGridViewTextBoxColumn
+            // 
+            this.sectionDataGridViewTextBoxColumn.DataPropertyName = "Section";
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.sectionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle11;
+            this.sectionDataGridViewTextBoxColumn.HeaderText = "Section";
+            this.sectionDataGridViewTextBoxColumn.Name = "sectionDataGridViewTextBoxColumn";
+            this.sectionDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sectionDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // widthDataGridViewTextBoxColumn
+            // 
+            this.widthDataGridViewTextBoxColumn.DataPropertyName = "Width";
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.widthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle12;
+            this.widthDataGridViewTextBoxColumn.HeaderText = "Width";
+            this.widthDataGridViewTextBoxColumn.Name = "widthDataGridViewTextBoxColumn";
+            this.widthDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // switchDataGridViewTextBoxColumn
+            // 
+            this.switchDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.switchDataGridViewTextBoxColumn.DataPropertyName = "Switch";
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.switchDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle13;
+            this.switchDataGridViewTextBoxColumn.HeaderText = "Switch";
+            this.switchDataGridViewTextBoxColumn.Name = "switchDataGridViewTextBoxColumn";
+            this.switchDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // zoneDataGridViewTextBoxColumn
+            // 
+            this.zoneDataGridViewTextBoxColumn.DataPropertyName = "Zone";
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.zoneDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle15;
+            this.zoneDataGridViewTextBoxColumn.HeaderText = "Zone";
+            this.zoneDataGridViewTextBoxColumn.Name = "zoneDataGridViewTextBoxColumn";
+            this.zoneDataGridViewTextBoxColumn.ReadOnly = true;
+            this.zoneDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // startDataGridViewTextBoxColumn
+            // 
+            this.startDataGridViewTextBoxColumn.DataPropertyName = "Start";
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.startDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle16;
+            this.startDataGridViewTextBoxColumn.HeaderText = "Start";
+            this.startDataGridViewTextBoxColumn.Name = "startDataGridViewTextBoxColumn";
+            this.startDataGridViewTextBoxColumn.ReadOnly = true;
+            this.startDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // endDataGridViewTextBoxColumn
+            // 
+            this.endDataGridViewTextBoxColumn.DataPropertyName = "End";
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle17.Format = "N0";
+            this.endDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle17;
+            this.endDataGridViewTextBoxColumn.HeaderText = "End";
+            this.endDataGridViewTextBoxColumn.Name = "endDataGridViewTextBoxColumn";
+            this.endDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // widthDataGridViewTextBoxColumn1
+            // 
+            this.widthDataGridViewTextBoxColumn1.DataPropertyName = "Width";
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle18.Format = "N0";
+            this.widthDataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle18;
+            this.widthDataGridViewTextBoxColumn1.HeaderText = "Width";
+            this.widthDataGridViewTextBoxColumn1.Name = "widthDataGridViewTextBoxColumn1";
+            this.widthDataGridViewTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // switchDataGridViewTextBoxColumn1
+            // 
+            this.switchDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.switchDataGridViewTextBoxColumn1.DataPropertyName = "Switch";
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle19.Format = "N0";
+            this.switchDataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle19;
+            this.switchDataGridViewTextBoxColumn1.HeaderText = "Switch";
+            this.switchDataGridViewTextBoxColumn1.Name = "switchDataGridViewTextBoxColumn1";
+            this.switchDataGridViewTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
             // frmMenuSections
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.DGV2);
             this.Controls.Add(this.lbPerZone);
             this.Controls.Add(this.tbSectionsPerZone);
+            this.Controls.Add(this.ckZones);
             this.Controls.Add(this.lbFeet);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.btnEqual);
             this.Controls.Add(this.lbNumZones);
             this.Controls.Add(this.tbSectionCount);
             this.Controls.Add(this.lbWidth);
             this.Controls.Add(this.DGV);
-            this.Controls.Add(this.DGV2);
-            this.Controls.Add(this.ckZones);
-            this.Controls.Add(this.btnEqual);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "frmMenuSections";
             this.ShowInTaskbar = false;
             this.Text = "frmMenuSections";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuSections_FormClosed);
+            this.Load += new System.EventHandler(this.frmMenuSections_Load);
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.CheckBox ckZones;
-        private System.Windows.Forms.Button btnEqual;
+        private System.Windows.Forms.DataGridView DGV;
+        private System.Windows.Forms.DataGridView DGV2;
         private System.Windows.Forms.Label lbPerZone;
         private System.Windows.Forms.TextBox tbSectionsPerZone;
+        private System.Windows.Forms.CheckBox ckZones;
         private System.Windows.Forms.Label lbFeet;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button btnEqual;
         private System.Windows.Forms.Label lbNumZones;
         private System.Windows.Forms.TextBox tbSectionCount;
         private System.Windows.Forms.Label lbWidth;
-        private System.Windows.Forms.DataGridView DGV;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SectionWidth;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Switch;
-        private System.Windows.Forms.DataGridView DGV2;
+        private System.Data.DataSet dataSet1;
+        private System.Data.DataTable dataTable1;
+        private System.Data.DataColumn dataColumn1;
+        private System.Data.DataColumn dataColumn2;
+        private System.Data.DataColumn dataColumn3;
+        private System.Data.DataSet dataSet2;
+        private System.Data.DataTable dataTable2;
+        private System.Data.DataColumn dataColumn4;
+        private System.Data.DataColumn dataColumn5;
+        private System.Data.DataColumn dataColumn6;
+        private System.Data.DataColumn dataColumn7;
+        private System.Data.DataColumn dataColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sectionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn widthDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn switchDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn zoneDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn startDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn endDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn widthDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn switchDataGridViewTextBoxColumn1;
     }
 }

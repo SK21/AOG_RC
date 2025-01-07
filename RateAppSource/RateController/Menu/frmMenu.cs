@@ -529,8 +529,9 @@ namespace RateController
             StyleControls(this);
             butPowerOff.Left = 12;
             butPowerOff.Top = this.Height - 100;
-            btnHelp.Left = 145;
+            btnHelp.Left = 160;
             btnHelp.Top = butPowerOff.Top + 3;
+            butClose.Left = btnHelp.Left;
             if (LoadLast) LoadLastScreen();
         }
 
@@ -587,6 +588,11 @@ namespace RateController
                             case "frmMenuData":
                                 fs = new frmMenuData(mf, this);
                                 butProducts.PerformClick();
+                                break;
+
+                            case "frmMenuSections":
+                                fs = new frmMenuSections(mf, this);
+                                butMachine.PerformClick();
                                 break;
 
                             default:
@@ -731,6 +737,25 @@ namespace RateController
         private void butSaveAs_Click(object sender, EventArgs e)
         {
             mf.SaveFileAs();
+        }
+
+        private void butSections_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuSections";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuSections(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
         }
     }
 }
