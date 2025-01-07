@@ -464,6 +464,7 @@
             this.butLanguage.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butLanguage.UseVisualStyleBackColor = false;
             this.butLanguage.Visible = false;
+            this.butLanguage.Click += new System.EventHandler(this.butLanguage_Click);
             // 
             // butSwitches
             // 

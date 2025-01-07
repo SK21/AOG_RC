@@ -1,0 +1,169 @@
+﻿using RateController.Properties;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace RateController.Menu
+{
+    public partial class frmMenuLanguage : Form
+    {
+        private bool cEdited;
+        private bool Initializing = false;
+        private frmMenu MainMenu;
+        private FormStart mf;
+        private RadioButton[] LanguageRBs;
+        private string[] LanguageIDs;
+        public frmMenuLanguage(FormStart main, frmMenu menu)
+        {
+            InitializeComponent();
+            MainMenu = menu;
+            mf = main;
+            this.Tag = false;
+
+            LanguageRBs = new RadioButton[] { rbEnglish, rbDeustch, rbHungarian, rbNederlands, rbPolish, rbRussian, rbFrench };
+            LanguageIDs = new string[] { "en", "de", "hu", "nl", "pl", "ru", "fr" };
+            for (int i = 0; i < LanguageRBs.Length; i++)
+            {
+                LanguageRBs[i].CheckedChanged += Language_CheckedChanged;
+            }
+        }
+
+        private void Language_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            UpdateForm();
+            SetButtons(false);
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int Lan = 0;
+                for (int i = 0; i < LanguageRBs.Length; i++)
+                {
+                    if (LanguageRBs[i].Checked)
+                    {
+                        Lan = i;
+                        break;
+                    }
+                }
+
+                if (Properties.Settings.Default.setF_culture != LanguageIDs[Lan])
+                {
+                    Properties.Settings.Default.setF_culture = LanguageIDs[Lan];
+                    Settings.Default.UserLanguageChange = true;
+                    Properties.Settings.Default.Save();
+
+                    Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
+                    if (fs != null)
+                    {
+                        mf.Restart = true;
+                        mf.Lscrn.Close();
+                    }
+                    else
+                    {
+                        mf.ChangeLanguage();
+                    }
+                }
+
+                SetButtons(false);
+                UpdateForm();
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmMenuLanguage/btnOk_Click: " + ex.Message);
+            }
+
+        }
+
+        private void frmMenuLanguage_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            mf.Tls.SaveFormData(this);
+        }
+
+        private void frmMenuLanguage_Load(object sender, EventArgs e)
+        {
+            // menu 800,600
+            // sub menu 540,630
+            SetLanguage();
+            MainMenu.MenuMoved += MainMenu_MenuMoved;
+            mf.Tls.LoadFormData(this, "", false);
+            this.BackColor = Properties.Settings.Default.BackColour;
+            this.Width = MainMenu.Width - 260;
+            this.Height = MainMenu.Height - 50;
+            btnOK.Left = this.Width - 84;
+            btnOK.Top = this.Height - 84;
+            btnCancel.Left = btnOK.Left - 78;
+            btnCancel.Top = btnOK.Top;
+            MainMenu.StyleControls(this);
+            PositionForm();
+            UpdateForm();
+
+        }
+        private void PositionForm()
+        {
+            this.Top = MainMenu.Top + 30;
+            this.Left = MainMenu.Left + 246;
+        }
+        private void SetButtons(bool Edited)
+        {
+            if (!Initializing)
+            {
+                if (Edited)
+                {
+                    btnCancel.Enabled = true;
+                    btnOK.Enabled = true;
+                }
+                else
+                {
+                    btnCancel.Enabled = false;
+                    btnOK.Enabled = false;
+                }
+
+                cEdited = Edited;
+                this.Tag = cEdited;
+            }
+        }
+
+        private void SetLanguage()
+        {
+        }
+
+        private void UpdateForm()
+        {
+            Initializing = true;
+
+            for (int i = 0; i < LanguageRBs.Length; i++)
+            {
+                if (LanguageIDs[i] == Properties.Settings.Default.setF_culture)
+                {
+                    LanguageRBs[i].Checked = true;
+                    break;
+                }
+            }
+
+            Initializing = false;
+        }
+
+        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        {
+            PositionForm();
+        }
+
+        private void rbDeustch_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+    }
+}
