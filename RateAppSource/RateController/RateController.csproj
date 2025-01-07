@@ -282,11 +282,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.ru.resx</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuBoards.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuBoards.Designer.cs">
+      <DependentUpon>frmMenuBoards.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuCalibrate.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Menu\frmMenuCalibrate.Designer.cs">
       <DependentUpon>frmMenuCalibrate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuConfig.Designer.cs">
+      <DependentUpon>frmMenuConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="Menu\frmMenuControl.cs">
       <SubType>Form</SubType>
@@ -467,8 +479,14 @@
       <LastGenOutput>Lang.ru.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuBoards.resx">
+      <DependentUpon>frmMenuBoards.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuCalibrate.resx">
       <DependentUpon>frmMenuCalibrate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuConfig.resx">
+      <DependentUpon>frmMenuConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuControl.resx">
       <DependentUpon>frmMenuControl.cs</DependentUpon>

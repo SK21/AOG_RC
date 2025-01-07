@@ -23,6 +23,7 @@ namespace RateController
         private FormStart mf;
         private MouseButtons MouseButtonClicked;
         private Point MouseDownLocation;
+        private int cBoard;
 
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
@@ -30,6 +31,14 @@ namespace RateController
             this.mf = cf;
             ChangeProduct(ProductID);
             LoadLast = LoadLst;
+        }
+        public int Board {
+            get { return cBoard; } 
+            set
+            {
+                cBoard = value;
+                mf.Tls.SaveProperty("DefaultBoard", cBoard.ToString());
+            } 
         }
 
         public event EventHandler MenuMoved;
@@ -263,7 +272,6 @@ namespace RateController
             if (ClosedOwned())
             {
                 butNetwork.Visible = !Expanded;
-                butBoards.Visible = !Expanded;
                 butConfig.Visible = !Expanded;
                 butPins.Visible = !Expanded;
                 butRelayPins.Visible = !Expanded;
@@ -297,10 +305,6 @@ namespace RateController
                     butNetwork.Left = butFile.Left + SubOffset;
                     Pos += SubFirstSpacing;
                     butNetwork.Top = Pos;
-
-                    butBoards.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butBoards.Top = Pos;
 
                     butConfig.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -533,6 +537,7 @@ namespace RateController
             btnHelp.Top = butPowerOff.Top + 3;
             butClose.Left = btnHelp.Left;
             if (LoadLast) LoadLastScreen();
+            if (int.TryParse(mf.Tls.LoadProperty("DefaultBoard"), out int value)) cBoard = value;
         }
 
         private void frmMenu_LocationChanged(object sender, EventArgs e)
@@ -607,6 +612,11 @@ namespace RateController
 
                             case "frmMenuNetwork":
                                 fs = new frmMenuNetwork(mf, this);
+                                butModules.PerformClick();
+                                break;
+
+                            case "frmMenuConfig":
+                                fs = new frmMenuConfig(mf, this);
                                 butModules.PerformClick();
                                 break;
 
@@ -819,6 +829,25 @@ namespace RateController
             if (fs == null)
             {
                 Form frm = new frmMenuNetwork(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butConfig_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuConfig";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuConfig(mf, this);
                 frm.Owner = this;
                 frm.Text = "Opened";
                 frm.Show();
