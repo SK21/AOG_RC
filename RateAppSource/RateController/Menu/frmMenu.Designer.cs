@@ -332,6 +332,7 @@
             this.butValves.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butValves.UseVisualStyleBackColor = false;
             this.butValves.Visible = false;
+            this.butValves.Click += new System.EventHandler(this.butValves_Click);
             // 
             // butWifi
             // 

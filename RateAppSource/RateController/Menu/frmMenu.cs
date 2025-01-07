@@ -645,6 +645,11 @@ namespace RateController
                                 butModules.PerformClick();
                                 break;
 
+                            case "frmMenuValves":
+                                fs = new frmMenuValves(mf, this);
+                                butModules.PerformClick();
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();
@@ -930,6 +935,25 @@ namespace RateController
             if (fs == null)
             {
                 Form frm = new frmMenuWifi(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butValves_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuValves";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuValves(mf, this);
                 frm.Owner = this;
                 frm.Text = "Opened";
                 frm.Show();
