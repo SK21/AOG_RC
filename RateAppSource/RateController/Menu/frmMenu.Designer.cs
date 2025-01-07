@@ -440,6 +440,7 @@
             this.butNetwork.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butNetwork.UseVisualStyleBackColor = false;
             this.butNetwork.Visible = false;
+            this.butNetwork.Click += new System.EventHandler(this.butNetwork_Click);
             // 
             // butOther
             // 

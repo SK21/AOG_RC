@@ -312,6 +312,12 @@
     <Compile Include="Menu\frmMenuMonitoring.Designer.cs">
       <DependentUpon>frmMenuMonitoring.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuNetwork.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuNetwork.Designer.cs">
+      <DependentUpon>frmMenuNetwork.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuRate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -476,6 +482,9 @@
     <EmbeddedResource Include="Menu\frmMenuMonitoring.resx">
       <DependentUpon>frmMenuMonitoring.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuNetwork.resx">
+      <DependentUpon>frmMenuNetwork.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuRate.resx">
       <DependentUpon>frmMenuRate.cs</DependentUpon>
     </EmbeddedResource>
@@ -505,6 +514,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Help\frmMenuControl.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuNetwork.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Help\frmMenuRate.pdf">
