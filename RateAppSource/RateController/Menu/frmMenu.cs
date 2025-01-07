@@ -595,6 +595,11 @@ namespace RateController
                                 butMachine.PerformClick();
                                 break;
 
+                            case "frmMenuRelays":
+                                fs = new frmMenuRelays(mf, this);
+                                butMachine.PerformClick();
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();
@@ -747,6 +752,25 @@ namespace RateController
             if (fs == null)
             {
                 Form frm = new frmMenuSections(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butRelays_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuRelays";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRelays(mf, this);
                 frm.Owner = this;
                 frm.Text = "Opened";
                 frm.Show();

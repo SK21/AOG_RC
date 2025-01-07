@@ -293,6 +293,7 @@
             this.butRelays.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butRelays.UseVisualStyleBackColor = false;
             this.butRelays.Visible = false;
+            this.butRelays.Click += new System.EventHandler(this.butRelays_Click);
             // 
             // butSections
             // 
