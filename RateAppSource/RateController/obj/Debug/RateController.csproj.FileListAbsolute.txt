@@ -2429,3 +2429,5 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\Rate
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuSections.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuRelays.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuRelays.pdf
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuCalibrate.resources
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuCalibrate.pdf

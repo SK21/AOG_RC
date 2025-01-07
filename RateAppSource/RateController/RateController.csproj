@@ -175,6 +175,11 @@
     <Compile Include="Forms\frmLargeScreen.Designer.cs">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Language\Lang.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.resx</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -252,11 +257,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.de.resx</DependentUpon>
     </Compile>
-    <Compile Include="Language\Lang.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Lang.resx</DependentUpon>
-    </Compile>
     <Compile Include="Language\Lang.fr.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -281,6 +281,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.ru.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuCalibrate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuCalibrate.Designer.cs">
+      <DependentUpon>frmMenuCalibrate.cs</DependentUpon>
     </Compile>
     <Compile Include="Menu\frmMenuControl.cs">
       <SubType>Form</SubType>
@@ -455,6 +461,9 @@
       <LastGenOutput>Lang.ru.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuCalibrate.resx">
+      <DependentUpon>frmMenuCalibrate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuControl.resx">
       <DependentUpon>frmMenuControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -492,6 +501,9 @@
     <EmbeddedResource Include="Forms\RCRestore.resx">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Help\frmMenuCalibrate.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Help\frmMenuControl.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

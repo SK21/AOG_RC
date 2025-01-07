@@ -275,6 +275,7 @@
             this.butCalibrate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butCalibrate.UseVisualStyleBackColor = false;
             this.butCalibrate.Visible = false;
+            this.butCalibrate.Click += new System.EventHandler(this.butCalibrate_Click);
             // 
             // butRelays
             // 

@@ -124,7 +124,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cal. Factor (Pulses/Unit).
+        ///   Looks up a localized string similar to Meter Cal.
         /// </summary>
         internal static string lgCalFactor {
             get {
@@ -396,7 +396,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected Amount.
+        ///   Looks up a localized string similar to Exp..
         /// </summary>
         internal static string lgExpectedAmount {
             get {
@@ -576,7 +576,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Measured Amount.
+        ///   Looks up a localized string similar to Amt..
         /// </summary>
         internal static string lgMeasuredAmount {
             get {
@@ -585,7 +585,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Meter Set.
+        ///   Looks up a localized string similar to Set.
         /// </summary>
         internal static string lgMeterSet {
             get {

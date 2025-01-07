@@ -139,7 +139,7 @@
     <value>Boards</value>
   </data>
   <data name="lgCalFactor" xml:space="preserve">
-    <value>Cal. Factor (Pulses/Unit)</value>
+    <value>Meter Cal</value>
   </data>
   <data name="lgCalHelp" xml:space="preserve">
     <value>This screen is used to set the Cal Factor (pulses/unit) for a product. The goal is to have a consistent rpm each time the calibration is done and have the meter roller at a rpm that is normally being used in the field.
@@ -252,7 +252,7 @@ Calibration steps:
     <value>Exit</value>
   </data>
   <data name="lgExpectedAmount" xml:space="preserve">
-    <value>Expected Amount</value>
+    <value>Exp.</value>
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Fan</value>
@@ -312,10 +312,10 @@ Calibration steps:
     <value>Maximum Rate</value>
   </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
-    <value>Measured Amount</value>
+    <value>Amt.</value>
   </data>
   <data name="lgMeterSet" xml:space="preserve">
-    <value>Meter Set</value>
+    <value>Set</value>
   </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Metric Units</value>
