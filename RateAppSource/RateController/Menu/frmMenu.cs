@@ -680,6 +680,11 @@ namespace RateController
                                 butOptions.PerformClick();
                                 break;
 
+                            case "frmMenuOther":
+                                fs = new frmMenuOther(mf, this);
+                                butOptions.PerformClick();
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();
@@ -1126,6 +1131,26 @@ namespace RateController
             if (fs == null)
             {
                 Form frm = new frmMenuLanguage(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butOther_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuOther";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuOther(mf, this);
                 frm.Owner = this;
                 frm.Text = "Opened";
                 frm.Show();
