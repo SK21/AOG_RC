@@ -342,6 +342,12 @@
     <Compile Include="Menu\frmMenuRate.Designer.cs">
       <DependentUpon>frmMenuRate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuRelayPins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuRelayPins.Designer.cs">
+      <DependentUpon>frmMenuRelayPins.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuRelays.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -359,6 +365,12 @@
     </Compile>
     <Compile Include="Menu\frmMenuSettings.Designer.cs">
       <DependentUpon>frmMenuSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuWifi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuWifi.Designer.cs">
+      <DependentUpon>frmMenuWifi.cs</DependentUpon>
     </Compile>
     <Compile Include="PGNs\PGN228.cs" />
     <Compile Include="PGNs\PGN229.cs" />
@@ -515,6 +527,9 @@
     <EmbeddedResource Include="Menu\frmMenuRate.resx">
       <DependentUpon>frmMenuRate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuRelayPins.resx">
+      <DependentUpon>frmMenuRelayPins.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuRelays.resx">
       <DependentUpon>frmMenuRelays.cs</DependentUpon>
     </EmbeddedResource>
@@ -523,6 +538,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuSettings.resx">
       <DependentUpon>frmMenuSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuWifi.resx">
+      <DependentUpon>frmMenuWifi.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -37,6 +37,7 @@ namespace RateController.Menu
                 mf.ModuleConfig.InvertFlow = ckFlowOn.Checked;
                 mf.ModuleConfig.ADS1115enabled = ckADS1115enabled.Checked;
                 mf.ModuleConfig.RelayType = (byte)cbRelayControl.SelectedIndex;
+                mf.ModuleConfig.Save();
 
                 SetButtons(false);
                 UpdateForm();

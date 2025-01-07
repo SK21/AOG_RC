@@ -350,6 +350,7 @@
             this.butWifi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butWifi.UseVisualStyleBackColor = false;
             this.butWifi.Visible = false;
+            this.butWifi.Click += new System.EventHandler(this.butWifi_Click);
             // 
             // butRelayPins
             // 
@@ -368,6 +369,7 @@
             this.butRelayPins.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butRelayPins.UseVisualStyleBackColor = false;
             this.butRelayPins.Visible = false;
+            this.butRelayPins.Click += new System.EventHandler(this.butRelayPins_Click);
             // 
             // butPins
             // 

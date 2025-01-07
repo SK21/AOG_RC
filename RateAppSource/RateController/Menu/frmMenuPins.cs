@@ -90,7 +90,6 @@ namespace RateController.Menu
                     mf.ModuleConfig.Sensor1Flow = 255;
                 }
 
-
                 // motor
                 if (byte.TryParse(tbDir1.Text, out val))
                 {
@@ -144,6 +143,7 @@ namespace RateController.Menu
                 {
                     mf.ModuleConfig.PressurePin = 255;
                 }
+                mf.ModuleConfig.Save();
 
                 SetButtons(false);
                 UpdateForm();

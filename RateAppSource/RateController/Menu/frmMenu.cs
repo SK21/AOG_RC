@@ -635,6 +635,16 @@ namespace RateController
                                 butModules.PerformClick();
                                 break;
 
+                            case "frmMenuRelayPins":
+                                fs = new frmMenuRelayPins(mf, this);
+                                butModules.PerformClick();
+                                break;
+
+                            case "frmMenuWifi":
+                                fs = new frmMenuWifi(mf, this);
+                                butModules.PerformClick();
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();
@@ -882,6 +892,44 @@ namespace RateController
             if (fs == null)
             {
                 Form frm = new frmMenuPins(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butRelayPins_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuRelayPins";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRelayPins(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butWifi_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuWifi";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuWifi(mf, this);
                 frm.Owner = this;
                 frm.Text = "Opened";
                 frm.Show();
