@@ -123,6 +123,7 @@
             this.butOpen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butOpen.UseVisualStyleBackColor = false;
             this.butOpen.Visible = false;
+            this.butOpen.Click += new System.EventHandler(this.butOpen_Click);
             // 
             // butSaveAs
             // 
@@ -141,6 +142,7 @@
             this.butSaveAs.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butSaveAs.UseVisualStyleBackColor = false;
             this.butSaveAs.Visible = false;
+            this.butSaveAs.Click += new System.EventHandler(this.butSaveAs_Click);
             // 
             // butControl
             // 
@@ -178,6 +180,7 @@
             this.butData.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butData.UseVisualStyleBackColor = false;
             this.butData.Visible = false;
+            this.butData.Click += new System.EventHandler(this.butData_Click);
             // 
             // butMonitor
             // 

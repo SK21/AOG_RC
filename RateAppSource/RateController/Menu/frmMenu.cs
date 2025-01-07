@@ -327,6 +327,7 @@ namespace RateController
 
         private void butNew_Click(object sender, EventArgs e)
         {
+            mf.NewFile();
         }
 
         private void butOptions_Click(object sender, EventArgs e)
@@ -583,6 +584,11 @@ namespace RateController
                                 butProducts.PerformClick();
                                 break;
 
+                            case "frmMenuData":
+                                fs = new frmMenuData(mf, this);
+                                butProducts.PerformClick();
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();
@@ -696,6 +702,35 @@ namespace RateController
                 fs.Text = "Focused";
                 fs.Focus();
             }
+        }
+
+        private void butData_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuData";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuData(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butOpen_Click(object sender, EventArgs e)
+        {
+            mf.OpenFile();
+        }
+
+        private void butSaveAs_Click(object sender, EventArgs e)
+        {
+            mf.SaveFileAs();
         }
     }
 }
