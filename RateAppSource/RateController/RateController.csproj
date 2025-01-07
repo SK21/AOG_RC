@@ -330,6 +330,12 @@
     <Compile Include="Menu\frmMenuNetwork.Designer.cs">
       <DependentUpon>frmMenuNetwork.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuPins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuPins.Designer.cs">
+      <DependentUpon>frmMenuPins.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuRate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -502,6 +508,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuNetwork.resx">
       <DependentUpon>frmMenuNetwork.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuPins.resx">
+      <DependentUpon>frmMenuPins.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuRate.resx">
       <DependentUpon>frmMenuRate.cs</DependentUpon>

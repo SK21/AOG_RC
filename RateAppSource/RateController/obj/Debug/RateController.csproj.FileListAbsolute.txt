@@ -2436,3 +2436,4 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuNetwork.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuBoards.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuConfig.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuConfig.pdf
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuPins.resources

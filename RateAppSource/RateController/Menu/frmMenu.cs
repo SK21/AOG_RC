@@ -263,6 +263,8 @@ namespace RateController
                     butCalibrate.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butCalibrate.Top = Pos;
+
+                    butSections.PerformClick();
                 }
             }
         }
@@ -277,6 +279,7 @@ namespace RateController
                 butRelayPins.Visible = !Expanded;
                 butWifi.Visible = !Expanded;
                 butValves.Visible = !Expanded;
+                butUpdateModules.Visible=!Expanded; 
 
                 if (Expanded)
                 {
@@ -325,6 +328,12 @@ namespace RateController
                     butValves.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butValves.Top = Pos;
+
+                    butUpdateModules.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butUpdateModules.Top = Pos;
+
+                    butNetwork.PerformClick();
                 }
             }
         }
@@ -531,11 +540,12 @@ namespace RateController
             this.Width = FormWidth;
             this.Height = FormHeight;
             StyleControls(this);
-            butPowerOff.Left = 12;
-            butPowerOff.Top = this.Height - 100;
-            btnHelp.Left = 160;
-            btnHelp.Top = butPowerOff.Top + 3;
-            butClose.Left = btnHelp.Left;
+            butClose.Left = 160;
+            butClose.Top = this.Height - 100;
+            btnHelp.Left = 20;
+            btnHelp.Top = this.Height - 105;
+            butPowerOff.Left = 160;
+            butPowerOff.Top = 8;
             if (LoadLast) LoadLastScreen();
             if (int.TryParse(mf.Tls.LoadProperty("DefaultBoard"), out int value)) cBoard = value;
         }
@@ -617,6 +627,11 @@ namespace RateController
 
                             case "frmMenuConfig":
                                 fs = new frmMenuConfig(mf, this);
+                                butModules.PerformClick();
+                                break;
+
+                            case "frmMenuPins":
+                                fs = new frmMenuPins(mf, this);
                                 butModules.PerformClick();
                                 break;
 
@@ -848,6 +863,25 @@ namespace RateController
             if (fs == null)
             {
                 Form frm = new frmMenuConfig(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butPins_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuPins";
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuPins(mf, this);
                 frm.Owner = this;
                 frm.Text = "Opened";
                 frm.Show();

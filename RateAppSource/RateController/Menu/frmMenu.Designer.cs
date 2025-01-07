@@ -68,6 +68,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.btnHelp = new System.Windows.Forms.Button();
+            this.butUpdateModules = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -78,7 +79,7 @@
             this.butClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
             this.butClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butClose.Image = global::RateController.Properties.Resources.Cancel64;
+            this.butClose.Image = global::RateController.Properties.Resources.OK;
             this.butClose.Location = new System.Drawing.Point(145, 8);
             this.butClose.Name = "butClose";
             this.butClose.Size = new System.Drawing.Size(70, 63);
@@ -385,6 +386,7 @@
             this.butPins.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butPins.UseVisualStyleBackColor = false;
             this.butPins.Visible = false;
+            this.butPins.Click += new System.EventHandler(this.butPins_Click);
             // 
             // butConfig
             // 
@@ -769,11 +771,31 @@
             this.btnHelp.UseVisualStyleBackColor = false;
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
+            // butUpdateModules
+            // 
+            this.butUpdateModules.BackColor = System.Drawing.Color.Transparent;
+            this.butUpdateModules.FlatAppearance.BorderSize = 0;
+            this.butUpdateModules.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butUpdateModules.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butUpdateModules.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butUpdateModules.Image = global::RateController.Properties.Resources.UpArrow64;
+            this.butUpdateModules.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butUpdateModules.Location = new System.Drawing.Point(598, 486);
+            this.butUpdateModules.Name = "butUpdateModules";
+            this.butUpdateModules.Size = new System.Drawing.Size(158, 62);
+            this.butUpdateModules.TabIndex = 161;
+            this.butUpdateModules.Text = "Send";
+            this.butUpdateModules.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butUpdateModules.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butUpdateModules.UseVisualStyleBackColor = false;
+            this.butUpdateModules.Visible = false;
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.Controls.Add(this.butUpdateModules);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.gbLine1);
             this.Controls.Add(this.butHelp);
@@ -870,5 +892,6 @@
         private System.Windows.Forms.GroupBox gbLine1;
         private System.Windows.Forms.HelpProvider helpProvider1;
         private System.Windows.Forms.Button btnHelp;
+        private System.Windows.Forms.Button butUpdateModules;
     }
 }
