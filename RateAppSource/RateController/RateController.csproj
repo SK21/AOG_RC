@@ -384,11 +384,11 @@
     <Compile Include="Menu\frmMenuWifi.Designer.cs">
       <DependentUpon>frmMenuWifi.cs</DependentUpon>
     </Compile>
-    <Compile Include="Menu\frmPrimed.cs">
+    <Compile Include="Menu\frmMenuPrimed.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Menu\frmPrimed.Designer.cs">
-      <DependentUpon>frmPrimed.cs</DependentUpon>
+    <Compile Include="Menu\frmMenuPrimed.Designer.cs">
+      <DependentUpon>frmMenuPrimed.cs</DependentUpon>
     </Compile>
     <Compile Include="PGNs\PGN228.cs" />
     <Compile Include="PGNs\PGN229.cs" />
@@ -566,8 +566,8 @@
     <EmbeddedResource Include="Menu\frmMenuWifi.resx">
       <DependentUpon>frmMenuWifi.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Menu\frmPrimed.resx">
-      <DependentUpon>frmPrimed.cs</DependentUpon>
+    <EmbeddedResource Include="Menu\frmMenuPrimed.resx">
+      <DependentUpon>frmMenuPrimed.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -500,6 +500,7 @@
             this.butPrimed.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butPrimed.UseVisualStyleBackColor = false;
             this.butPrimed.Visible = false;
+            this.butPrimed.Click += new System.EventHandler(this.butPrimed_Click);
             // 
             // butDisplay
             // 
