@@ -31,6 +31,7 @@ namespace RateController.Menu
                 mf.ModuleConfig.Is3Wire = rb3Wire.Checked;
                 SetButtons(false);
                 UpdateForm();
+                MainMenu.HighlightUpdateButton();
             }
             catch (Exception ex)
             {

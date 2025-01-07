@@ -33,6 +33,7 @@ namespace RateController.Menu
                 mf.NetworkConfig.NetworkPassword = tbPassword.Text;
                 SetButtons(false);
                 UpdateForm();
+                MainMenu.HighlightUpdateButton();
             }
             catch (Exception ex)
             {

@@ -147,6 +147,7 @@ namespace RateController.Menu
 
                 SetButtons(false);
                 UpdateForm();
+                MainMenu.HighlightUpdateButton();
             }
             catch (Exception ex)
             {

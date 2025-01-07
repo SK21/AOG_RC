@@ -44,6 +44,7 @@ namespace RateController.Menu
                 mf.UDPmodules.NetworkEP = cbEthernet.Text;
                 SetButtons(false);
                 UpdateForm();
+                MainMenu.HighlightUpdateButton();
             }
             catch (Exception ex)
             {

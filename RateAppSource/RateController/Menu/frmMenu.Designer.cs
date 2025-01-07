@@ -792,6 +792,7 @@
             this.butUpdateModules.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butUpdateModules.UseVisualStyleBackColor = false;
             this.butUpdateModules.Visible = false;
+            this.butUpdateModules.Click += new System.EventHandler(this.butUpdateModules_Click);
             // 
             // frmMenu
             // 

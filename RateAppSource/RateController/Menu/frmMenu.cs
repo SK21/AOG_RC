@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace RateController
@@ -24,21 +25,29 @@ namespace RateController
         private MouseButtons MouseButtonClicked;
         private Point MouseDownLocation;
         private int cBoard;
+        private Button[] Items;
 
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
             InitializeComponent();
             this.mf = cf;
+
+            Items = new Button[] { butNew, butOpen, butSaveAs, butRate, butControl, butSettings, butMode, butMonitor,
+                butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins, butWifi,
+                butValves, butDisplay, butPrimed, butSwitches, butLanguage, butOther, butTuning,
+                butEthernet, butActivity, butError, butHelp };
+
             ChangeProduct(ProductID);
             LoadLast = LoadLst;
         }
-        public int Board {
-            get { return cBoard; } 
+        public int Board
+        {
+            get { return cBoard; }
             set
             {
                 cBoard = value;
                 mf.Tls.SaveProperty("DefaultBoard", cBoard.ToString());
-            } 
+            }
         }
 
         public event EventHandler MenuMoved;
@@ -279,7 +288,7 @@ namespace RateController
                 butRelayPins.Visible = !Expanded;
                 butWifi.Visible = !Expanded;
                 butValves.Visible = !Expanded;
-                butUpdateModules.Visible=!Expanded; 
+                butUpdateModules.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -340,6 +349,7 @@ namespace RateController
 
         private void butNew_Click(object sender, EventArgs e)
         {
+            HighlightButton("butNew");
             mf.NewFile();
         }
 
@@ -474,6 +484,7 @@ namespace RateController
             if (CheckEdited())
             {
                 LastScreen = "frmMenuRate";
+               HighlightButton(LastScreen);
                 Form fs = mf.Tls.IsFormOpen(LastScreen);
 
                 if (fs == null)
@@ -502,7 +513,7 @@ namespace RateController
         private bool CheckEdited()
         {
             bool Result = true;
-            foreach(Form OwnedForm in this.OwnedForms)
+            foreach (Form OwnedForm in this.OwnedForms)
             {
                 if ((bool)OwnedForm.Tag)
                 {
@@ -571,7 +582,6 @@ namespace RateController
             try
             {
                 string Last = mf.Tls.LoadProperty("LastScreen");
-                Debug.Print("Last screen: " + Last);
                 if (mf.Tls.IsFormNameValid(Last))
                 {
                     Form fs = mf.Tls.IsFormOpen(Last);
@@ -586,8 +596,8 @@ namespace RateController
                                 break;
 
                             case "frmMenuSettings":
-                                fs=new frmMenuSettings(mf, this);
-                                butProducts.PerformClick(); 
+                                fs = new frmMenuSettings(mf, this);
+                                butProducts.PerformClick();
                                 break;
 
                             case "frmMenuMode":
@@ -676,6 +686,7 @@ namespace RateController
             if (CheckEdited())
             {
                 LastScreen = "frmMenuControl";
+                HighlightButton(LastScreen);
                 Form fs = mf.Tls.IsFormOpen(LastScreen);
 
                 if (fs == null)
@@ -696,6 +707,7 @@ namespace RateController
         private void butSettings_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuSettings";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -730,6 +742,7 @@ namespace RateController
         private void butMode_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuMode";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -749,6 +762,7 @@ namespace RateController
         private void butMonitor_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuMonitoring";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -768,6 +782,7 @@ namespace RateController
         private void butData_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuData";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -786,17 +801,20 @@ namespace RateController
 
         private void butOpen_Click(object sender, EventArgs e)
         {
+            HighlightButton("butOpen");
             mf.OpenFile();
         }
 
         private void butSaveAs_Click(object sender, EventArgs e)
         {
+            HighlightButton("butSaveAs");
             mf.SaveFileAs();
         }
 
         private void butSections_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuSections";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -816,6 +834,7 @@ namespace RateController
         private void butRelays_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuRelays";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -835,6 +854,7 @@ namespace RateController
         private void butCalibrate_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuCalibrate";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -854,6 +874,7 @@ namespace RateController
         private void butNetwork_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuNetwork";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -873,6 +894,7 @@ namespace RateController
         private void butConfig_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuConfig";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -892,6 +914,7 @@ namespace RateController
         private void butPins_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuPins";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -911,6 +934,7 @@ namespace RateController
         private void butRelayPins_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuRelayPins";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -930,6 +954,7 @@ namespace RateController
         private void butWifi_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuWifi";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -949,6 +974,7 @@ namespace RateController
         private void butValves_Click(object sender, EventArgs e)
         {
             LastScreen = "frmMenuValves";
+            HighlightButton(LastScreen);
             Form fs = mf.Tls.IsFormOpen(LastScreen);
 
             if (fs == null)
@@ -962,6 +988,52 @@ namespace RateController
             {
                 fs.Text = "Focused";
                 fs.Focus();
+            }
+        }
+
+        private void butUpdateModules_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mf.ModuleConfig.Send();
+                mf.NetworkConfig.Send();
+                mf.Tls.ShowHelp("Settings sent to module", "Config", 10000);
+
+                HighlightUpdateButton(false);
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 10000, true, true);
+            }
+        }
+        public void HighlightUpdateButton(bool Highlight=true)
+        {
+            if(Highlight)
+            {
+                butUpdateModules.FlatAppearance.BorderSize = 4;
+                butUpdateModules.FlatAppearance.BorderColor = Color.DarkGreen;
+            }
+            else
+            {
+            butUpdateModules.FlatAppearance.BorderSize = 0;
+            }
+        }
+
+        private void HighlightButton(string Name, bool Highlight = true)
+        {
+            int ID = 0;
+            // clear hightlights
+            for (int i = 0; i < Items.Length; i++)
+            {
+                Items[i].FlatAppearance.BorderSize = 0;
+                if (Items[i].Name == Name) ID = i;
+            }
+
+            if (Highlight)
+            {
+                // highlight selected
+                Items[ID].FlatAppearance.BorderSize = 1;
+                Items[ID].FlatAppearance.BorderColor = Color.Blue;
             }
         }
     }
