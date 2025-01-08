@@ -76,7 +76,7 @@
             // tbSSID
             // 
             this.tbSSID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSSID.Location = new System.Drawing.Point(250, 253);
+            this.tbSSID.Location = new System.Drawing.Point(250, 246);
             this.tbSSID.MaxLength = 19;
             this.tbSSID.Name = "tbSSID";
             this.tbSSID.Size = new System.Drawing.Size(213, 29);
@@ -88,7 +88,7 @@
             // tbPassword
             // 
             this.tbPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPassword.Location = new System.Drawing.Point(250, 293);
+            this.tbPassword.Location = new System.Drawing.Point(250, 322);
             this.tbPassword.MaxLength = 19;
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.Size = new System.Drawing.Size(213, 29);
@@ -100,7 +100,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(78, 293);
+            this.label2.Location = new System.Drawing.Point(58, 324);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(166, 24);
             this.label2.TabIndex = 224;
@@ -110,7 +110,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(78, 253);
+            this.label1.Location = new System.Drawing.Point(58, 248);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(135, 24);
             this.label1.TabIndex = 223;

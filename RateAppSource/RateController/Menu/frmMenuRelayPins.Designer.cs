@@ -121,7 +121,7 @@
             // tbRelay16
             // 
             this.tbRelay16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay16.Location = new System.Drawing.Point(425, 427);
+            this.tbRelay16.Location = new System.Drawing.Point(425, 429);
             this.tbRelay16.Name = "tbRelay16";
             this.tbRelay16.Size = new System.Drawing.Size(58, 29);
             this.tbRelay16.TabIndex = 189;
@@ -131,7 +131,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(304, 429);
+            this.label13.Location = new System.Drawing.Point(304, 431);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(82, 24);
             this.label13.TabIndex = 188;
@@ -159,7 +159,7 @@
             // tbRelay14
             // 
             this.tbRelay14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay14.Location = new System.Drawing.Point(425, 325);
+            this.tbRelay14.Location = new System.Drawing.Point(425, 323);
             this.tbRelay14.Name = "tbRelay14";
             this.tbRelay14.Size = new System.Drawing.Size(58, 29);
             this.tbRelay14.TabIndex = 185;
@@ -169,7 +169,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(304, 327);
+            this.label16.Location = new System.Drawing.Point(304, 325);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(82, 24);
             this.label16.TabIndex = 184;
@@ -178,7 +178,7 @@
             // tbRelay13
             // 
             this.tbRelay13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay13.Location = new System.Drawing.Point(425, 274);
+            this.tbRelay13.Location = new System.Drawing.Point(425, 270);
             this.tbRelay13.Name = "tbRelay13";
             this.tbRelay13.Size = new System.Drawing.Size(58, 29);
             this.tbRelay13.TabIndex = 183;
@@ -188,7 +188,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(304, 276);
+            this.label17.Location = new System.Drawing.Point(304, 272);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(82, 24);
             this.label17.TabIndex = 182;
@@ -197,7 +197,7 @@
             // tbRelay12
             // 
             this.tbRelay12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay12.Location = new System.Drawing.Point(425, 223);
+            this.tbRelay12.Location = new System.Drawing.Point(425, 217);
             this.tbRelay12.Name = "tbRelay12";
             this.tbRelay12.Size = new System.Drawing.Size(58, 29);
             this.tbRelay12.TabIndex = 181;
@@ -207,7 +207,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(304, 225);
+            this.label18.Location = new System.Drawing.Point(304, 219);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(82, 24);
             this.label18.TabIndex = 180;
@@ -216,7 +216,7 @@
             // tbRelay11
             // 
             this.tbRelay11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay11.Location = new System.Drawing.Point(425, 172);
+            this.tbRelay11.Location = new System.Drawing.Point(425, 164);
             this.tbRelay11.Name = "tbRelay11";
             this.tbRelay11.Size = new System.Drawing.Size(58, 29);
             this.tbRelay11.TabIndex = 179;
@@ -226,7 +226,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(304, 174);
+            this.label19.Location = new System.Drawing.Point(304, 166);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(82, 24);
             this.label19.TabIndex = 178;
@@ -235,7 +235,7 @@
             // tbRelay10
             // 
             this.tbRelay10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay10.Location = new System.Drawing.Point(425, 121);
+            this.tbRelay10.Location = new System.Drawing.Point(425, 111);
             this.tbRelay10.Name = "tbRelay10";
             this.tbRelay10.Size = new System.Drawing.Size(58, 29);
             this.tbRelay10.TabIndex = 177;
@@ -245,7 +245,7 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(304, 123);
+            this.label20.Location = new System.Drawing.Point(304, 113);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(82, 24);
             this.label20.TabIndex = 176;
@@ -254,7 +254,7 @@
             // tbRelay9
             // 
             this.tbRelay9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay9.Location = new System.Drawing.Point(425, 70);
+            this.tbRelay9.Location = new System.Drawing.Point(425, 58);
             this.tbRelay9.Name = "tbRelay9";
             this.tbRelay9.Size = new System.Drawing.Size(58, 29);
             this.tbRelay9.TabIndex = 175;
@@ -264,7 +264,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(304, 72);
+            this.label21.Location = new System.Drawing.Point(304, 60);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(72, 24);
             this.label21.TabIndex = 174;
@@ -273,7 +273,7 @@
             // tbRelay8
             // 
             this.tbRelay8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay8.Location = new System.Drawing.Point(179, 427);
+            this.tbRelay8.Location = new System.Drawing.Point(179, 429);
             this.tbRelay8.Name = "tbRelay8";
             this.tbRelay8.Size = new System.Drawing.Size(58, 29);
             this.tbRelay8.TabIndex = 173;
@@ -283,7 +283,7 @@
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(58, 429);
+            this.label22.Location = new System.Drawing.Point(58, 431);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(72, 24);
             this.label22.TabIndex = 172;
@@ -311,7 +311,7 @@
             // tbRelay6
             // 
             this.tbRelay6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay6.Location = new System.Drawing.Point(179, 325);
+            this.tbRelay6.Location = new System.Drawing.Point(179, 323);
             this.tbRelay6.Name = "tbRelay6";
             this.tbRelay6.Size = new System.Drawing.Size(58, 29);
             this.tbRelay6.TabIndex = 169;
@@ -321,7 +321,7 @@
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(58, 327);
+            this.label24.Location = new System.Drawing.Point(58, 325);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(72, 24);
             this.label24.TabIndex = 168;
@@ -330,7 +330,7 @@
             // tbRelay5
             // 
             this.tbRelay5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay5.Location = new System.Drawing.Point(179, 274);
+            this.tbRelay5.Location = new System.Drawing.Point(179, 270);
             this.tbRelay5.Name = "tbRelay5";
             this.tbRelay5.Size = new System.Drawing.Size(58, 29);
             this.tbRelay5.TabIndex = 167;
@@ -340,7 +340,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(58, 276);
+            this.label14.Location = new System.Drawing.Point(58, 272);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(72, 24);
             this.label14.TabIndex = 166;
@@ -349,7 +349,7 @@
             // tbRelay4
             // 
             this.tbRelay4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay4.Location = new System.Drawing.Point(179, 223);
+            this.tbRelay4.Location = new System.Drawing.Point(179, 217);
             this.tbRelay4.Name = "tbRelay4";
             this.tbRelay4.Size = new System.Drawing.Size(58, 29);
             this.tbRelay4.TabIndex = 165;
@@ -359,7 +359,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(58, 225);
+            this.label11.Location = new System.Drawing.Point(58, 219);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(72, 24);
             this.label11.TabIndex = 164;
@@ -368,7 +368,7 @@
             // tbRelay3
             // 
             this.tbRelay3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay3.Location = new System.Drawing.Point(179, 172);
+            this.tbRelay3.Location = new System.Drawing.Point(179, 164);
             this.tbRelay3.Name = "tbRelay3";
             this.tbRelay3.Size = new System.Drawing.Size(58, 29);
             this.tbRelay3.TabIndex = 163;
@@ -378,7 +378,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(58, 174);
+            this.label12.Location = new System.Drawing.Point(58, 166);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(72, 24);
             this.label12.TabIndex = 162;
@@ -387,7 +387,7 @@
             // tbRelay2
             // 
             this.tbRelay2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay2.Location = new System.Drawing.Point(179, 121);
+            this.tbRelay2.Location = new System.Drawing.Point(179, 111);
             this.tbRelay2.Name = "tbRelay2";
             this.tbRelay2.Size = new System.Drawing.Size(58, 29);
             this.tbRelay2.TabIndex = 161;
@@ -397,7 +397,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(58, 123);
+            this.label9.Location = new System.Drawing.Point(58, 113);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(72, 24);
             this.label9.TabIndex = 160;
@@ -406,7 +406,7 @@
             // tbRelay1
             // 
             this.tbRelay1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRelay1.Location = new System.Drawing.Point(179, 70);
+            this.tbRelay1.Location = new System.Drawing.Point(179, 58);
             this.tbRelay1.Name = "tbRelay1";
             this.tbRelay1.Size = new System.Drawing.Size(58, 29);
             this.tbRelay1.TabIndex = 159;
@@ -416,7 +416,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(58, 72);
+            this.label10.Location = new System.Drawing.Point(58, 60);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(72, 24);
             this.label10.TabIndex = 158;

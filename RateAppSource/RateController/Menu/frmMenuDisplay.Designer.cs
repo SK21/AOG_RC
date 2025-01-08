@@ -90,7 +90,7 @@
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(45, 84);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(418, 115);
+            this.groupBox1.Size = new System.Drawing.Size(418, 144);
             this.groupBox1.TabIndex = 163;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Display";
@@ -101,7 +101,7 @@
             this.ckReset.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckReset.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckReset.Location = new System.Drawing.Point(241, 68);
+            this.ckReset.Location = new System.Drawing.Point(241, 89);
             this.ckReset.Name = "ckReset";
             this.ckReset.Size = new System.Drawing.Size(164, 34);
             this.ckReset.TabIndex = 333;
@@ -144,7 +144,7 @@
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTransparent.Location = new System.Drawing.Point(22, 68);
+            this.ckTransparent.Location = new System.Drawing.Point(22, 89);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(164, 34);
             this.ckTransparent.TabIndex = 119;

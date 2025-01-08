@@ -107,7 +107,7 @@
             this.rbModeApplied.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbModeApplied.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbModeApplied.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbModeApplied.Location = new System.Drawing.Point(54, 252);
+            this.rbModeApplied.Location = new System.Drawing.Point(54, 312);
             this.rbModeApplied.Margin = new System.Windows.Forms.Padding(2);
             this.rbModeApplied.Name = "rbModeApplied";
             this.rbModeApplied.Size = new System.Drawing.Size(434, 74);
@@ -124,7 +124,7 @@
             this.rbModeTarget.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbModeTarget.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbModeTarget.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbModeTarget.Location = new System.Drawing.Point(54, 342);
+            this.rbModeTarget.Location = new System.Drawing.Point(54, 432);
             this.rbModeTarget.Margin = new System.Windows.Forms.Padding(2);
             this.rbModeTarget.Name = "rbModeTarget";
             this.rbModeTarget.Size = new System.Drawing.Size(434, 74);
@@ -141,7 +141,7 @@
             this.rbModeConstant.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbModeConstant.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbModeConstant.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbModeConstant.Location = new System.Drawing.Point(54, 162);
+            this.rbModeConstant.Location = new System.Drawing.Point(54, 192);
             this.rbModeConstant.Margin = new System.Windows.Forms.Padding(2);
             this.rbModeConstant.Name = "rbModeConstant";
             this.rbModeConstant.Size = new System.Drawing.Size(434, 74);

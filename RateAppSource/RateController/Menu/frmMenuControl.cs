@@ -105,8 +105,15 @@ namespace RateController.Menu
             btnPIDloadDefaults.Top = btnOK.Top;
             MainMenu.StyleControls(this);
             PositionForm();
-            lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             UpdateForm();
+            lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
+            Font ValFont=new Font(lbProduct.Font.FontFamily,14, FontStyle.Bold);
+            lbHigh.Font = ValFont;
+            lbLow.Font = ValFont;
+           lbThresholdValue.Font = ValFont;
+            lbBoost.Font = ValFont;
+            lbMaxValue.Font = ValFont;
+            lbMinValue.Font = ValFont;
         }
 
         private void HShigh_ValueChanged(object sender, EventArgs e)
@@ -185,6 +192,21 @@ namespace RateController.Menu
             HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;
             UpdateControlDisplay();
             Initializing = false;
+        }
+
+        private void butGraph_Click(object sender, EventArgs e)
+        {
+            Form fs = mf.Tls.IsFormOpen("frmMenuRateGraph");
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRateGraph(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
     }
 }

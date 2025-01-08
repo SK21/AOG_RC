@@ -67,7 +67,6 @@ namespace RateController
                 cData[4] = (byte)((int)RateSet >> 8);
                 cData[5] = (byte)((int)RateSet >> 16);
             }
-            Debug.Print("RateSet: " + RateSet.ToString());
 
             // flow cal
             Tmp = Prod.MeterCal * 1000.0;
