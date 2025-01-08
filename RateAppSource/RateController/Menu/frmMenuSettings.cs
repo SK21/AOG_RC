@@ -327,6 +327,7 @@ namespace RateController.Menu
         {
             Initializing = true;
 
+            SetModuleIndicator();
             if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
             {
                 // fans
@@ -353,7 +354,6 @@ namespace RateController.Menu
             tbOffRate.Text = MainMenu.CurrentProduct.OffRateSetting.ToString("N0");
             tbMinUPM.Text = MainMenu.CurrentProduct.MinUPM.ToString("N1");
             tbUPMspeed.Text = MainMenu.CurrentProduct.MinUPMbySpeed.ToString("N1");
-            SetModuleIndicator();
 
             string tmp = MainMenu.CurrentProduct.ModuleID.ToString();
             if (tmp == "99") tmp = "";

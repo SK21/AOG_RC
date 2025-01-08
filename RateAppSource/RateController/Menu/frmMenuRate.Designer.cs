@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.lb0 = new System.Windows.Forms.Label();
             this.tbProduct = new System.Windows.Forms.TextBox();
             this.ValveType = new System.Windows.Forms.ComboBox();
@@ -70,6 +71,7 @@
             this.btnResetTank = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlFan.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -368,6 +370,7 @@
             this.btnFan.Size = new System.Drawing.Size(50, 50);
             this.btnFan.TabIndex = 202;
             this.btnFan.UseVisualStyleBackColor = false;
+            this.btnFan.Click += new System.EventHandler(this.btnFan_Click);
             // 
             // label7
             // 
@@ -602,6 +605,11 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // frmMenuRate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -675,5 +683,6 @@
         private System.Windows.Forms.Label lbTargetRPM;
         private System.Windows.Forms.TextBox tbTargetRPM;
         private System.Windows.Forms.Panel pnlMain;
+        private System.Windows.Forms.Timer timer1;
     }
 }

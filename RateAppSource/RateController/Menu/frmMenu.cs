@@ -584,6 +584,8 @@ namespace RateController
                     butOther.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butOther.Top = Pos;
+
+                    butDisplay.PerformClick();
                 }
             }
         }

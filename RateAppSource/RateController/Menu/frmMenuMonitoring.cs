@@ -179,6 +179,7 @@ namespace RateController.Menu
             double RateError = 0;
             lbRateAppliedData.Text = Applied.ToString("N1");
             lbRateSetData.Text = Target.ToString("N1");
+            lbErrorPercent.Text = RateError.ToString("N1");
 
             if (Target > 0)
             {

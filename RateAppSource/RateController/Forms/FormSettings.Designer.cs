@@ -33,20 +33,6 @@ namespace RateController
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.tcProducts = new System.Windows.Forms.TabControl();
             this.tbRate = new System.Windows.Forms.TabPage();
-            this.pnlFan = new System.Windows.Forms.Panel();
-            this.btnFan = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.lbFanStarted = new System.Windows.Forms.Label();
-            this.lbFanErrorValue = new System.Windows.Forms.Label();
-            this.lbFanError = new System.Windows.Forms.Label();
-            this.lbFanRPMvalue = new System.Windows.Forms.Label();
-            this.lbFanRPM = new System.Windows.Forms.Label();
-            this.lbFanPWMvalue = new System.Windows.Forms.Label();
-            this.lbFanPWM = new System.Windows.Forms.Label();
-            this.lbCountsRPM = new System.Windows.Forms.Label();
-            this.tbCountsRPM = new System.Windows.Forms.TextBox();
-            this.lbTargetRPM = new System.Windows.Forms.Label();
-            this.tbTargetRPM = new System.Windows.Forms.TextBox();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.lbStartQuantity = new System.Windows.Forms.Label();
             this.LabProdDensity = new System.Windows.Forms.Label();
@@ -69,6 +55,20 @@ namespace RateController
             this.tbProduct = new System.Windows.Forms.TextBox();
             this.ValveType = new System.Windows.Forms.ComboBox();
             this.lb5 = new System.Windows.Forms.Label();
+            this.pnlFan = new System.Windows.Forms.Panel();
+            this.btnFan = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lbFanStarted = new System.Windows.Forms.Label();
+            this.lbFanErrorValue = new System.Windows.Forms.Label();
+            this.lbFanError = new System.Windows.Forms.Label();
+            this.lbFanRPMvalue = new System.Windows.Forms.Label();
+            this.lbFanRPM = new System.Windows.Forms.Label();
+            this.lbFanPWMvalue = new System.Windows.Forms.Label();
+            this.lbFanPWM = new System.Windows.Forms.Label();
+            this.lbCountsRPM = new System.Windows.Forms.Label();
+            this.tbCountsRPM = new System.Windows.Forms.TextBox();
+            this.lbTargetRPM = new System.Windows.Forms.Label();
+            this.tbTargetRPM = new System.Windows.Forms.TextBox();
             this.tbControl = new System.Windows.Forms.TabPage();
             this.lbBoost = new System.Windows.Forms.Label();
             this.lbMinValue = new System.Windows.Forms.Label();
@@ -96,25 +96,6 @@ namespace RateController
             this.ckVR = new System.Windows.Forms.CheckBox();
             this.lbVariableRate = new System.Windows.Forms.Label();
             this.cbVR = new System.Windows.Forms.ComboBox();
-            this.tbOptions = new System.Windows.Forms.TabPage();
-            this.ckScale = new System.Windows.Forms.CheckBox();
-            this.ckBumpButtons = new System.Windows.Forms.CheckBox();
-            this.ckDefault = new System.Windows.Forms.CheckBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.tbOffRate = new System.Windows.Forms.TextBox();
-            this.ckOffRate = new System.Windows.Forms.CheckBox();
-            this.ckOnScreen = new System.Windows.Forms.CheckBox();
-            this.grpMinUPM = new System.Windows.Forms.GroupBox();
-            this.tbUPMspeed = new System.Windows.Forms.TextBox();
-            this.rbUPMSpeed = new System.Windows.Forms.RadioButton();
-            this.rbUPMFixed = new System.Windows.Forms.RadioButton();
-            this.tbMinUPM = new System.Windows.Forms.TextBox();
-            this.grpSensor = new System.Windows.Forms.GroupBox();
-            this.lbSensorID = new System.Windows.Forms.Label();
-            this.tbSenID = new System.Windows.Forms.TextBox();
-            this.ModuleIndicator = new System.Windows.Forms.Label();
-            this.lbConID = new System.Windows.Forms.Label();
-            this.tbConID = new System.Windows.Forms.TextBox();
             this.Mode = new System.Windows.Forms.TabPage();
             this.rbModeApplied = new System.Windows.Forms.RadioButton();
             this.rbModeTarget = new System.Windows.Forms.RadioButton();
@@ -182,6 +163,25 @@ namespace RateController
             this.lbAcres1 = new System.Windows.Forms.Label();
             this.lbArea2 = new System.Windows.Forms.Label();
             this.lbAcres2 = new System.Windows.Forms.Label();
+            this.tbOptions = new System.Windows.Forms.TabPage();
+            this.ckScale = new System.Windows.Forms.CheckBox();
+            this.ckBumpButtons = new System.Windows.Forms.CheckBox();
+            this.ckDefault = new System.Windows.Forms.CheckBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.tbOffRate = new System.Windows.Forms.TextBox();
+            this.ckOffRate = new System.Windows.Forms.CheckBox();
+            this.ckOnScreen = new System.Windows.Forms.CheckBox();
+            this.grpMinUPM = new System.Windows.Forms.GroupBox();
+            this.tbUPMspeed = new System.Windows.Forms.TextBox();
+            this.rbUPMSpeed = new System.Windows.Forms.RadioButton();
+            this.rbUPMFixed = new System.Windows.Forms.RadioButton();
+            this.tbMinUPM = new System.Windows.Forms.TextBox();
+            this.grpSensor = new System.Windows.Forms.GroupBox();
+            this.lbSensorID = new System.Windows.Forms.Label();
+            this.tbSenID = new System.Windows.Forms.TextBox();
+            this.ModuleIndicator = new System.Windows.Forms.Label();
+            this.lbConID = new System.Windows.Forms.Label();
+            this.tbConID = new System.Windows.Forms.TextBox();
             this.btnResetTank = new System.Windows.Forms.Button();
             this.btnTuningGraph = new System.Windows.Forms.Button();
             this.btnPIDloadDefaults = new System.Windows.Forms.Button();
@@ -195,16 +195,16 @@ namespace RateController
             this.btnOK = new System.Windows.Forms.Button();
             this.tcProducts.SuspendLayout();
             this.tbRate.SuspendLayout();
-            this.pnlFan.SuspendLayout();
             this.pnlMain.SuspendLayout();
+            this.pnlFan.SuspendLayout();
             this.tbControl.SuspendLayout();
             this.tbVR.SuspendLayout();
-            this.tbOptions.SuspendLayout();
-            this.grpMinUPM.SuspendLayout();
-            this.grpSensor.SuspendLayout();
             this.Mode.SuspendLayout();
             this.tbDiagnostics.SuspendLayout();
             this.tbData.SuspendLayout();
+            this.tbOptions.SuspendLayout();
+            this.grpMinUPM.SuspendLayout();
+            this.grpSensor.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcProducts
@@ -230,7 +230,6 @@ namespace RateController
             // 
             // tbRate
             // 
-            this.tbRate.Controls.Add(this.pnlMain);
             this.tbRate.Controls.Add(this.lb0);
             this.tbRate.Controls.Add(this.tbProduct);
             this.tbRate.Controls.Add(this.ValveType);
@@ -244,166 +243,6 @@ namespace RateController
             this.tbRate.TabIndex = 0;
             this.tbRate.Text = "Rate";
             this.tbRate.UseVisualStyleBackColor = true;
-            // 
-            // pnlFan
-            // 
-            this.pnlFan.Controls.Add(this.btnFan);
-            this.pnlFan.Controls.Add(this.label7);
-            this.pnlFan.Controls.Add(this.lbFanStarted);
-            this.pnlFan.Controls.Add(this.lbFanErrorValue);
-            this.pnlFan.Controls.Add(this.lbFanError);
-            this.pnlFan.Controls.Add(this.lbFanRPMvalue);
-            this.pnlFan.Controls.Add(this.lbFanRPM);
-            this.pnlFan.Controls.Add(this.lbFanPWMvalue);
-            this.pnlFan.Controls.Add(this.lbFanPWM);
-            this.pnlFan.Controls.Add(this.lbCountsRPM);
-            this.pnlFan.Controls.Add(this.tbCountsRPM);
-            this.pnlFan.Controls.Add(this.lbTargetRPM);
-            this.pnlFan.Controls.Add(this.tbTargetRPM);
-            this.pnlFan.Location = new System.Drawing.Point(0, 3);
-            this.pnlFan.Name = "pnlFan";
-            this.pnlFan.Size = new System.Drawing.Size(481, 424);
-            this.pnlFan.TabIndex = 145;
-            // 
-            // btnFan
-            // 
-            this.btnFan.BackColor = System.Drawing.Color.Transparent;
-            this.btnFan.FlatAppearance.BorderSize = 0;
-            this.btnFan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFan.Image = global::RateController.Properties.Resources.FanOff;
-            this.btnFan.Location = new System.Drawing.Point(200, 320);
-            this.btnFan.Name = "btnFan";
-            this.btnFan.Size = new System.Drawing.Size(50, 50);
-            this.btnFan.TabIndex = 202;
-            this.btnFan.UseVisualStyleBackColor = false;
-            this.btnFan.Click += new System.EventHandler(this.btnFan_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(80, 266);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(71, 23);
-            this.label7.TabIndex = 201;
-            this.label7.Text = "Started";
-            // 
-            // lbFanStarted
-            // 
-            this.lbFanStarted.BackColor = System.Drawing.SystemColors.Control;
-            this.lbFanStarted.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanStarted.Image = global::RateController.Properties.Resources.Off;
-            this.lbFanStarted.Location = new System.Drawing.Point(310, 259);
-            this.lbFanStarted.Name = "lbFanStarted";
-            this.lbFanStarted.Size = new System.Drawing.Size(41, 37);
-            this.lbFanStarted.TabIndex = 200;
-            this.lbFanStarted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbFanErrorValue
-            // 
-            this.lbFanErrorValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFanErrorValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanErrorValue.Location = new System.Drawing.Point(279, 177);
-            this.lbFanErrorValue.Name = "lbFanErrorValue";
-            this.lbFanErrorValue.Size = new System.Drawing.Size(102, 30);
-            this.lbFanErrorValue.TabIndex = 196;
-            this.lbFanErrorValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbFanError
-            // 
-            this.lbFanError.AutoSize = true;
-            this.lbFanError.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanError.Location = new System.Drawing.Point(76, 181);
-            this.lbFanError.Name = "lbFanError";
-            this.lbFanError.Size = new System.Drawing.Size(77, 23);
-            this.lbFanError.TabIndex = 197;
-            this.lbFanError.Text = "Error %";
-            // 
-            // lbFanRPMvalue
-            // 
-            this.lbFanRPMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFanRPMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanRPMvalue.Location = new System.Drawing.Point(279, 136);
-            this.lbFanRPMvalue.Name = "lbFanRPMvalue";
-            this.lbFanRPMvalue.Size = new System.Drawing.Size(102, 30);
-            this.lbFanRPMvalue.TabIndex = 194;
-            this.lbFanRPMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbFanRPM
-            // 
-            this.lbFanRPM.AutoSize = true;
-            this.lbFanRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanRPM.Location = new System.Drawing.Point(76, 140);
-            this.lbFanRPM.Name = "lbFanRPM";
-            this.lbFanRPM.Size = new System.Drawing.Size(116, 23);
-            this.lbFanRPM.TabIndex = 195;
-            this.lbFanRPM.Text = "Current RPM";
-            // 
-            // lbFanPWMvalue
-            // 
-            this.lbFanPWMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbFanPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanPWMvalue.Location = new System.Drawing.Point(279, 218);
-            this.lbFanPWMvalue.Name = "lbFanPWMvalue";
-            this.lbFanPWMvalue.Size = new System.Drawing.Size(102, 30);
-            this.lbFanPWMvalue.TabIndex = 190;
-            this.lbFanPWMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbFanPWM
-            // 
-            this.lbFanPWM.AutoSize = true;
-            this.lbFanPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanPWM.Location = new System.Drawing.Point(76, 222);
-            this.lbFanPWM.Name = "lbFanPWM";
-            this.lbFanPWM.Size = new System.Drawing.Size(52, 23);
-            this.lbFanPWM.TabIndex = 191;
-            this.lbFanPWM.Text = "PWM";
-            // 
-            // lbCountsRPM
-            // 
-            this.lbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCountsRPM.Location = new System.Drawing.Point(76, 58);
-            this.lbCountsRPM.Name = "lbCountsRPM";
-            this.lbCountsRPM.Size = new System.Drawing.Size(197, 23);
-            this.lbCountsRPM.TabIndex = 117;
-            this.lbCountsRPM.Text = "Sensor Counts / RPM";
-            // 
-            // tbCountsRPM
-            // 
-            this.tbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCountsRPM.Location = new System.Drawing.Point(279, 54);
-            this.tbCountsRPM.MaxLength = 8;
-            this.tbCountsRPM.Name = "tbCountsRPM";
-            this.tbCountsRPM.Size = new System.Drawing.Size(102, 30);
-            this.tbCountsRPM.TabIndex = 116;
-            this.tbCountsRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbCountsRPM.TextChanged += new System.EventHandler(this.tbCountsRPM_TextChanged);
-            this.tbCountsRPM.Enter += new System.EventHandler(this.tbCountsRPM_Enter);
-            this.tbCountsRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRPM_Validating);
-            // 
-            // lbTargetRPM
-            // 
-            this.lbTargetRPM.AutoSize = true;
-            this.lbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTargetRPM.Location = new System.Drawing.Point(76, 99);
-            this.lbTargetRPM.Name = "lbTargetRPM";
-            this.lbTargetRPM.Size = new System.Drawing.Size(108, 23);
-            this.lbTargetRPM.TabIndex = 114;
-            this.lbTargetRPM.Text = "Target RPM";
-            // 
-            // tbTargetRPM
-            // 
-            this.tbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTargetRPM.Location = new System.Drawing.Point(279, 95);
-            this.tbTargetRPM.MaxLength = 8;
-            this.tbTargetRPM.Name = "tbTargetRPM";
-            this.tbTargetRPM.Size = new System.Drawing.Size(102, 30);
-            this.tbTargetRPM.TabIndex = 113;
-            this.tbTargetRPM.Text = "0";
-            this.tbTargetRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbTargetRPM.TextChanged += new System.EventHandler(this.tbTargetRPM_TextChanged);
-            this.tbTargetRPM.Enter += new System.EventHandler(this.tbTargetRPM_Enter);
-            this.tbTargetRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbTargetRPM_Validating);
             // 
             // pnlMain
             // 
@@ -424,7 +263,7 @@ namespace RateController
             this.pnlMain.Controls.Add(this.lb1);
             this.pnlMain.Controls.Add(this.lbBaseRate);
             this.pnlMain.Controls.Add(this.lbAltRate);
-            this.pnlMain.Location = new System.Drawing.Point(37, 80);
+            this.pnlMain.Location = new System.Drawing.Point(635, 186);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(444, 343);
             this.pnlMain.TabIndex = 144;
@@ -682,6 +521,166 @@ namespace RateController
             this.lb5.TabIndex = 111;
             this.lb5.Text = "Control Type";
             this.lb5.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lb5_HelpRequested);
+            // 
+            // pnlFan
+            // 
+            this.pnlFan.Controls.Add(this.btnFan);
+            this.pnlFan.Controls.Add(this.label7);
+            this.pnlFan.Controls.Add(this.lbFanStarted);
+            this.pnlFan.Controls.Add(this.lbFanErrorValue);
+            this.pnlFan.Controls.Add(this.lbFanError);
+            this.pnlFan.Controls.Add(this.lbFanRPMvalue);
+            this.pnlFan.Controls.Add(this.lbFanRPM);
+            this.pnlFan.Controls.Add(this.lbFanPWMvalue);
+            this.pnlFan.Controls.Add(this.lbFanPWM);
+            this.pnlFan.Controls.Add(this.lbCountsRPM);
+            this.pnlFan.Controls.Add(this.tbCountsRPM);
+            this.pnlFan.Controls.Add(this.lbTargetRPM);
+            this.pnlFan.Controls.Add(this.tbTargetRPM);
+            this.pnlFan.Location = new System.Drawing.Point(0, 3);
+            this.pnlFan.Name = "pnlFan";
+            this.pnlFan.Size = new System.Drawing.Size(481, 424);
+            this.pnlFan.TabIndex = 145;
+            // 
+            // btnFan
+            // 
+            this.btnFan.BackColor = System.Drawing.Color.Transparent;
+            this.btnFan.FlatAppearance.BorderSize = 0;
+            this.btnFan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFan.Image = global::RateController.Properties.Resources.FanOff;
+            this.btnFan.Location = new System.Drawing.Point(200, 320);
+            this.btnFan.Name = "btnFan";
+            this.btnFan.Size = new System.Drawing.Size(50, 50);
+            this.btnFan.TabIndex = 202;
+            this.btnFan.UseVisualStyleBackColor = false;
+            this.btnFan.Click += new System.EventHandler(this.btnFan_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(80, 266);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(71, 23);
+            this.label7.TabIndex = 201;
+            this.label7.Text = "Started";
+            // 
+            // lbFanStarted
+            // 
+            this.lbFanStarted.BackColor = System.Drawing.SystemColors.Control;
+            this.lbFanStarted.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanStarted.Image = global::RateController.Properties.Resources.Off;
+            this.lbFanStarted.Location = new System.Drawing.Point(310, 259);
+            this.lbFanStarted.Name = "lbFanStarted";
+            this.lbFanStarted.Size = new System.Drawing.Size(41, 37);
+            this.lbFanStarted.TabIndex = 200;
+            this.lbFanStarted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbFanErrorValue
+            // 
+            this.lbFanErrorValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFanErrorValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanErrorValue.Location = new System.Drawing.Point(279, 177);
+            this.lbFanErrorValue.Name = "lbFanErrorValue";
+            this.lbFanErrorValue.Size = new System.Drawing.Size(102, 30);
+            this.lbFanErrorValue.TabIndex = 196;
+            this.lbFanErrorValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbFanError
+            // 
+            this.lbFanError.AutoSize = true;
+            this.lbFanError.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanError.Location = new System.Drawing.Point(76, 181);
+            this.lbFanError.Name = "lbFanError";
+            this.lbFanError.Size = new System.Drawing.Size(77, 23);
+            this.lbFanError.TabIndex = 197;
+            this.lbFanError.Text = "Error %";
+            // 
+            // lbFanRPMvalue
+            // 
+            this.lbFanRPMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFanRPMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanRPMvalue.Location = new System.Drawing.Point(279, 136);
+            this.lbFanRPMvalue.Name = "lbFanRPMvalue";
+            this.lbFanRPMvalue.Size = new System.Drawing.Size(102, 30);
+            this.lbFanRPMvalue.TabIndex = 194;
+            this.lbFanRPMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbFanRPM
+            // 
+            this.lbFanRPM.AutoSize = true;
+            this.lbFanRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanRPM.Location = new System.Drawing.Point(76, 140);
+            this.lbFanRPM.Name = "lbFanRPM";
+            this.lbFanRPM.Size = new System.Drawing.Size(116, 23);
+            this.lbFanRPM.TabIndex = 195;
+            this.lbFanRPM.Text = "Current RPM";
+            // 
+            // lbFanPWMvalue
+            // 
+            this.lbFanPWMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFanPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanPWMvalue.Location = new System.Drawing.Point(279, 218);
+            this.lbFanPWMvalue.Name = "lbFanPWMvalue";
+            this.lbFanPWMvalue.Size = new System.Drawing.Size(102, 30);
+            this.lbFanPWMvalue.TabIndex = 190;
+            this.lbFanPWMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbFanPWM
+            // 
+            this.lbFanPWM.AutoSize = true;
+            this.lbFanPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanPWM.Location = new System.Drawing.Point(76, 222);
+            this.lbFanPWM.Name = "lbFanPWM";
+            this.lbFanPWM.Size = new System.Drawing.Size(52, 23);
+            this.lbFanPWM.TabIndex = 191;
+            this.lbFanPWM.Text = "PWM";
+            // 
+            // lbCountsRPM
+            // 
+            this.lbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCountsRPM.Location = new System.Drawing.Point(76, 58);
+            this.lbCountsRPM.Name = "lbCountsRPM";
+            this.lbCountsRPM.Size = new System.Drawing.Size(197, 23);
+            this.lbCountsRPM.TabIndex = 117;
+            this.lbCountsRPM.Text = "Sensor Counts / RPM";
+            // 
+            // tbCountsRPM
+            // 
+            this.tbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbCountsRPM.Location = new System.Drawing.Point(279, 54);
+            this.tbCountsRPM.MaxLength = 8;
+            this.tbCountsRPM.Name = "tbCountsRPM";
+            this.tbCountsRPM.Size = new System.Drawing.Size(102, 30);
+            this.tbCountsRPM.TabIndex = 116;
+            this.tbCountsRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbCountsRPM.TextChanged += new System.EventHandler(this.tbCountsRPM_TextChanged);
+            this.tbCountsRPM.Enter += new System.EventHandler(this.tbCountsRPM_Enter);
+            this.tbCountsRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRPM_Validating);
+            // 
+            // lbTargetRPM
+            // 
+            this.lbTargetRPM.AutoSize = true;
+            this.lbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTargetRPM.Location = new System.Drawing.Point(76, 99);
+            this.lbTargetRPM.Name = "lbTargetRPM";
+            this.lbTargetRPM.Size = new System.Drawing.Size(108, 23);
+            this.lbTargetRPM.TabIndex = 114;
+            this.lbTargetRPM.Text = "Target RPM";
+            // 
+            // tbTargetRPM
+            // 
+            this.tbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbTargetRPM.Location = new System.Drawing.Point(279, 95);
+            this.tbTargetRPM.MaxLength = 8;
+            this.tbTargetRPM.Name = "tbTargetRPM";
+            this.tbTargetRPM.Size = new System.Drawing.Size(102, 30);
+            this.tbTargetRPM.TabIndex = 113;
+            this.tbTargetRPM.Text = "0";
+            this.tbTargetRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbTargetRPM.TextChanged += new System.EventHandler(this.tbTargetRPM_TextChanged);
+            this.tbTargetRPM.Enter += new System.EventHandler(this.tbTargetRPM_Enter);
+            this.tbTargetRPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbTargetRPM_Validating);
             // 
             // tbControl
             // 
@@ -1008,278 +1007,6 @@ namespace RateController
             this.cbVR.Size = new System.Drawing.Size(58, 31);
             this.cbVR.TabIndex = 126;
             this.cbVR.SelectedIndexChanged += new System.EventHandler(this.cbVR_SelectedIndexChanged_1);
-            // 
-            // tbOptions
-            // 
-            this.tbOptions.Controls.Add(this.ckScale);
-            this.tbOptions.Controls.Add(this.ckBumpButtons);
-            this.tbOptions.Controls.Add(this.ckDefault);
-            this.tbOptions.Controls.Add(this.label28);
-            this.tbOptions.Controls.Add(this.tbOffRate);
-            this.tbOptions.Controls.Add(this.ckOffRate);
-            this.tbOptions.Controls.Add(this.ckOnScreen);
-            this.tbOptions.Controls.Add(this.grpMinUPM);
-            this.tbOptions.Controls.Add(this.grpSensor);
-            this.tbOptions.Location = new System.Drawing.Point(4, 83);
-            this.tbOptions.Name = "tbOptions";
-            this.tbOptions.Size = new System.Drawing.Size(472, 407);
-            this.tbOptions.TabIndex = 6;
-            this.tbOptions.Text = "Options";
-            this.tbOptions.UseVisualStyleBackColor = true;
-            // 
-            // ckScale
-            // 
-            this.ckScale.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckScale.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckScale.Location = new System.Drawing.Point(293, 273);
-            this.ckScale.Name = "ckScale";
-            this.ckScale.Size = new System.Drawing.Size(162, 34);
-            this.ckScale.TabIndex = 140;
-            this.ckScale.Text = "Scale Weight";
-            this.ckScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckScale.UseVisualStyleBackColor = true;
-            this.ckScale.CheckedChanged += new System.EventHandler(this.ckScale_CheckedChanged);
-            // 
-            // ckBumpButtons
-            // 
-            this.ckBumpButtons.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckBumpButtons.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckBumpButtons.Location = new System.Drawing.Point(293, 198);
-            this.ckBumpButtons.Name = "ckBumpButtons";
-            this.ckBumpButtons.Size = new System.Drawing.Size(162, 32);
-            this.ckBumpButtons.TabIndex = 139;
-            this.ckBumpButtons.Text = "Bump Buttons";
-            this.ckBumpButtons.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckBumpButtons.UseVisualStyleBackColor = true;
-            this.ckBumpButtons.CheckedChanged += new System.EventHandler(this.ckBumpButtons_CheckChanged);
-            this.ckBumpButtons.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckBumpButtons_HelpRequested);
-            // 
-            // ckDefault
-            // 
-            this.ckDefault.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckDefault.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDefault.Location = new System.Drawing.Point(293, 123);
-            this.ckDefault.Name = "ckDefault";
-            this.ckDefault.Size = new System.Drawing.Size(162, 32);
-            this.ckDefault.TabIndex = 138;
-            this.ckDefault.Text = "Default Product";
-            this.ckDefault.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDefault.UseVisualStyleBackColor = true;
-            this.ckDefault.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
-            this.ckDefault.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckDefault_HelpRequested);
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(310, 349);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(29, 23);
-            this.label28.TabIndex = 137;
-            this.label28.Text = "%";
-            // 
-            // tbOffRate
-            // 
-            this.tbOffRate.Enabled = false;
-            this.tbOffRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(271, 345);
-            this.tbOffRate.MaxLength = 8;
-            this.tbOffRate.Name = "tbOffRate";
-            this.tbOffRate.Size = new System.Drawing.Size(33, 30);
-            this.tbOffRate.TabIndex = 136;
-            this.tbOffRate.Text = "20";
-            this.tbOffRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbOffRate.TextChanged += new System.EventHandler(this.tbOffRate_TextChanged);
-            this.tbOffRate.Enter += new System.EventHandler(this.tbOffRate_Enter);
-            this.tbOffRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbOffRate_Validating);
-            // 
-            // ckOffRate
-            // 
-            this.ckOffRate.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOffRate.Location = new System.Drawing.Point(131, 344);
-            this.ckOffRate.Name = "ckOffRate";
-            this.ckOffRate.Size = new System.Drawing.Size(134, 32);
-            this.ckOffRate.TabIndex = 135;
-            this.ckOffRate.Text = "Off-rate Alarm   ";
-            this.ckOffRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOffRate.UseVisualStyleBackColor = true;
-            this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
-            this.ckOffRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOffRate_HelpRequested);
-            // 
-            // ckOnScreen
-            // 
-            this.ckOnScreen.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOnScreen.Location = new System.Drawing.Point(293, 48);
-            this.ckOnScreen.Name = "ckOnScreen";
-            this.ckOnScreen.Size = new System.Drawing.Size(162, 32);
-            this.ckOnScreen.TabIndex = 134;
-            this.ckOnScreen.Text = "On Screen";
-            this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckOnScreen.UseVisualStyleBackColor = true;
-            this.ckOnScreen.CheckedChanged += new System.EventHandler(this.ckOnScreen_CheckedChanged);
-            this.ckOnScreen.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOnScreen_HelpRequested);
-            // 
-            // grpMinUPM
-            // 
-            this.grpMinUPM.Controls.Add(this.tbUPMspeed);
-            this.grpMinUPM.Controls.Add(this.rbUPMSpeed);
-            this.grpMinUPM.Controls.Add(this.rbUPMFixed);
-            this.grpMinUPM.Controls.Add(this.tbMinUPM);
-            this.grpMinUPM.Location = new System.Drawing.Point(14, 190);
-            this.grpMinUPM.Name = "grpMinUPM";
-            this.grpMinUPM.Size = new System.Drawing.Size(259, 117);
-            this.grpMinUPM.TabIndex = 133;
-            this.grpMinUPM.TabStop = false;
-            this.grpMinUPM.Text = "Minimum UPM";
-            this.grpMinUPM.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // tbUPMspeed
-            // 
-            this.tbUPMspeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbUPMspeed.Location = new System.Drawing.Point(155, 73);
-            this.tbUPMspeed.MaxLength = 8;
-            this.tbUPMspeed.Name = "tbUPMspeed";
-            this.tbUPMspeed.Size = new System.Drawing.Size(75, 30);
-            this.tbUPMspeed.TabIndex = 124;
-            this.tbUPMspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbUPMspeed.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbUPMspeed_HelpRequested);
-            this.tbUPMspeed.Enter += new System.EventHandler(this.tbUPMspeed_Enter);
-            // 
-            // rbUPMSpeed
-            // 
-            this.rbUPMSpeed.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbUPMSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbUPMSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbUPMSpeed.Location = new System.Drawing.Point(15, 70);
-            this.rbUPMSpeed.Margin = new System.Windows.Forms.Padding(2);
-            this.rbUPMSpeed.Name = "rbUPMSpeed";
-            this.rbUPMSpeed.Size = new System.Drawing.Size(128, 37);
-            this.rbUPMSpeed.TabIndex = 123;
-            this.rbUPMSpeed.Tag = "0";
-            this.rbUPMSpeed.Text = "By Speed";
-            this.rbUPMSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbUPMSpeed.UseVisualStyleBackColor = true;
-            this.rbUPMSpeed.CheckedChanged += new System.EventHandler(this.rbUPMSpeed_CheckedChanged);
-            this.rbUPMSpeed.Click += new System.EventHandler(this.rbUPMSpeed_Click);
-            this.rbUPMSpeed.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbUPMSpeed_HelpRequested);
-            // 
-            // rbUPMFixed
-            // 
-            this.rbUPMFixed.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbUPMFixed.Checked = true;
-            this.rbUPMFixed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbUPMFixed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbUPMFixed.Location = new System.Drawing.Point(15, 27);
-            this.rbUPMFixed.Margin = new System.Windows.Forms.Padding(2);
-            this.rbUPMFixed.Name = "rbUPMFixed";
-            this.rbUPMFixed.Size = new System.Drawing.Size(128, 37);
-            this.rbUPMFixed.TabIndex = 122;
-            this.rbUPMFixed.TabStop = true;
-            this.rbUPMFixed.Tag = "0";
-            this.rbUPMFixed.Text = "Fixed Value";
-            this.rbUPMFixed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbUPMFixed.UseVisualStyleBackColor = true;
-            this.rbUPMFixed.CheckedChanged += new System.EventHandler(this.rbUPMFixed_Click);
-            // 
-            // tbMinUPM
-            // 
-            this.tbMinUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinUPM.Location = new System.Drawing.Point(155, 30);
-            this.tbMinUPM.MaxLength = 8;
-            this.tbMinUPM.Name = "tbMinUPM";
-            this.tbMinUPM.Size = new System.Drawing.Size(75, 30);
-            this.tbMinUPM.TabIndex = 1;
-            this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbMinUPM.TextChanged += new System.EventHandler(this.tbMinUPM_TextChanged);
-            this.tbMinUPM.Enter += new System.EventHandler(this.tbMinUPM_Enter);
-            // 
-            // grpSensor
-            // 
-            this.grpSensor.Controls.Add(this.lbSensorID);
-            this.grpSensor.Controls.Add(this.tbSenID);
-            this.grpSensor.Controls.Add(this.ModuleIndicator);
-            this.grpSensor.Controls.Add(this.lbConID);
-            this.grpSensor.Controls.Add(this.tbConID);
-            this.grpSensor.Location = new System.Drawing.Point(14, 38);
-            this.grpSensor.Name = "grpSensor";
-            this.grpSensor.Size = new System.Drawing.Size(259, 117);
-            this.grpSensor.TabIndex = 0;
-            this.grpSensor.TabStop = false;
-            this.grpSensor.Text = "Rate Sensor Location";
-            this.grpSensor.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
-            // 
-            // lbSensorID
-            // 
-            this.lbSensorID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSensorID.Location = new System.Drawing.Point(11, 79);
-            this.lbSensorID.Name = "lbSensorID";
-            this.lbSensorID.Size = new System.Drawing.Size(93, 23);
-            this.lbSensorID.TabIndex = 151;
-            this.lbSensorID.Text = "Sensor ID";
-            this.lbSensorID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label26_HelpRequested);
-            // 
-            // tbSenID
-            // 
-            this.tbSenID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSenID.Location = new System.Drawing.Point(137, 75);
-            this.tbSenID.MaxLength = 8;
-            this.tbSenID.Name = "tbSenID";
-            this.tbSenID.Size = new System.Drawing.Size(67, 30);
-            this.tbSenID.TabIndex = 1;
-            this.tbSenID.Text = "0";
-            this.tbSenID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbSenID.TextChanged += new System.EventHandler(this.tbSenID_TextChanged);
-            this.tbSenID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label26_HelpRequested);
-            this.tbSenID.Enter += new System.EventHandler(this.tbSenID_Enter);
-            this.tbSenID.Validating += new System.ComponentModel.CancelEventHandler(this.tbSenID_Validating);
-            // 
-            // ModuleIndicator
-            // 
-            this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
-            this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(210, 47);
-            this.ModuleIndicator.Name = "ModuleIndicator";
-            this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
-            this.ModuleIndicator.TabIndex = 149;
-            this.ModuleIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbConID
-            // 
-            this.lbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbConID.Location = new System.Drawing.Point(6, 30);
-            this.lbConID.Name = "lbConID";
-            this.lbConID.Size = new System.Drawing.Size(97, 23);
-            this.lbConID.TabIndex = 148;
-            this.lbConID.Text = "Module ID";
-            this.lbConID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbConID_HelpRequested);
-            // 
-            // tbConID
-            // 
-            this.tbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbConID.Location = new System.Drawing.Point(137, 27);
-            this.tbConID.MaxLength = 8;
-            this.tbConID.Name = "tbConID";
-            this.tbConID.Size = new System.Drawing.Size(67, 30);
-            this.tbConID.TabIndex = 0;
-            this.tbConID.Text = "0";
-            this.tbConID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbConID.TextChanged += new System.EventHandler(this.tbConID_TextChanged);
-            this.tbConID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbConID_HelpRequested);
-            this.tbConID.Enter += new System.EventHandler(this.tbConID_Enter);
-            this.tbConID.Validating += new System.ComponentModel.CancelEventHandler(this.tbConID_Validating);
             // 
             // Mode
             // 
@@ -2099,6 +1826,278 @@ namespace RateController
             this.lbAcres2.TabIndex = 168;
             this.lbAcres2.Text = "Acres 2";
             // 
+            // tbOptions
+            // 
+            this.tbOptions.Controls.Add(this.ckScale);
+            this.tbOptions.Controls.Add(this.ckBumpButtons);
+            this.tbOptions.Controls.Add(this.ckDefault);
+            this.tbOptions.Controls.Add(this.label28);
+            this.tbOptions.Controls.Add(this.tbOffRate);
+            this.tbOptions.Controls.Add(this.ckOffRate);
+            this.tbOptions.Controls.Add(this.ckOnScreen);
+            this.tbOptions.Controls.Add(this.grpMinUPM);
+            this.tbOptions.Controls.Add(this.grpSensor);
+            this.tbOptions.Location = new System.Drawing.Point(4, 83);
+            this.tbOptions.Name = "tbOptions";
+            this.tbOptions.Size = new System.Drawing.Size(472, 407);
+            this.tbOptions.TabIndex = 6;
+            this.tbOptions.Text = "Options";
+            this.tbOptions.UseVisualStyleBackColor = true;
+            // 
+            // ckScale
+            // 
+            this.ckScale.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckScale.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckScale.Location = new System.Drawing.Point(293, 273);
+            this.ckScale.Name = "ckScale";
+            this.ckScale.Size = new System.Drawing.Size(162, 34);
+            this.ckScale.TabIndex = 140;
+            this.ckScale.Text = "Scale Weight";
+            this.ckScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckScale.UseVisualStyleBackColor = true;
+            this.ckScale.CheckedChanged += new System.EventHandler(this.ckScale_CheckedChanged);
+            // 
+            // ckBumpButtons
+            // 
+            this.ckBumpButtons.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckBumpButtons.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckBumpButtons.Location = new System.Drawing.Point(293, 198);
+            this.ckBumpButtons.Name = "ckBumpButtons";
+            this.ckBumpButtons.Size = new System.Drawing.Size(162, 32);
+            this.ckBumpButtons.TabIndex = 139;
+            this.ckBumpButtons.Text = "Bump Buttons";
+            this.ckBumpButtons.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckBumpButtons.UseVisualStyleBackColor = true;
+            this.ckBumpButtons.CheckedChanged += new System.EventHandler(this.ckBumpButtons_CheckChanged);
+            this.ckBumpButtons.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckBumpButtons_HelpRequested);
+            // 
+            // ckDefault
+            // 
+            this.ckDefault.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDefault.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDefault.Location = new System.Drawing.Point(293, 123);
+            this.ckDefault.Name = "ckDefault";
+            this.ckDefault.Size = new System.Drawing.Size(162, 32);
+            this.ckDefault.TabIndex = 138;
+            this.ckDefault.Text = "Default Product";
+            this.ckDefault.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDefault.UseVisualStyleBackColor = true;
+            this.ckDefault.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
+            this.ckDefault.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckDefault_HelpRequested);
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.Location = new System.Drawing.Point(310, 349);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(29, 23);
+            this.label28.TabIndex = 137;
+            this.label28.Text = "%";
+            // 
+            // tbOffRate
+            // 
+            this.tbOffRate.Enabled = false;
+            this.tbOffRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbOffRate.Location = new System.Drawing.Point(271, 345);
+            this.tbOffRate.MaxLength = 8;
+            this.tbOffRate.Name = "tbOffRate";
+            this.tbOffRate.Size = new System.Drawing.Size(33, 30);
+            this.tbOffRate.TabIndex = 136;
+            this.tbOffRate.Text = "20";
+            this.tbOffRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbOffRate.TextChanged += new System.EventHandler(this.tbOffRate_TextChanged);
+            this.tbOffRate.Enter += new System.EventHandler(this.tbOffRate_Enter);
+            this.tbOffRate.Validating += new System.ComponentModel.CancelEventHandler(this.tbOffRate_Validating);
+            // 
+            // ckOffRate
+            // 
+            this.ckOffRate.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckOffRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckOffRate.Location = new System.Drawing.Point(131, 344);
+            this.ckOffRate.Name = "ckOffRate";
+            this.ckOffRate.Size = new System.Drawing.Size(134, 32);
+            this.ckOffRate.TabIndex = 135;
+            this.ckOffRate.Text = "Off-rate Alarm   ";
+            this.ckOffRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckOffRate.UseVisualStyleBackColor = true;
+            this.ckOffRate.CheckedChanged += new System.EventHandler(this.ckOffRate_CheckedChanged);
+            this.ckOffRate.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOffRate_HelpRequested);
+            // 
+            // ckOnScreen
+            // 
+            this.ckOnScreen.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckOnScreen.Location = new System.Drawing.Point(293, 48);
+            this.ckOnScreen.Name = "ckOnScreen";
+            this.ckOnScreen.Size = new System.Drawing.Size(162, 32);
+            this.ckOnScreen.TabIndex = 134;
+            this.ckOnScreen.Text = "On Screen";
+            this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckOnScreen.UseVisualStyleBackColor = true;
+            this.ckOnScreen.CheckedChanged += new System.EventHandler(this.ckOnScreen_CheckedChanged);
+            this.ckOnScreen.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.ckOnScreen_HelpRequested);
+            // 
+            // grpMinUPM
+            // 
+            this.grpMinUPM.Controls.Add(this.tbUPMspeed);
+            this.grpMinUPM.Controls.Add(this.rbUPMSpeed);
+            this.grpMinUPM.Controls.Add(this.rbUPMFixed);
+            this.grpMinUPM.Controls.Add(this.tbMinUPM);
+            this.grpMinUPM.Location = new System.Drawing.Point(14, 190);
+            this.grpMinUPM.Name = "grpMinUPM";
+            this.grpMinUPM.Size = new System.Drawing.Size(259, 117);
+            this.grpMinUPM.TabIndex = 133;
+            this.grpMinUPM.TabStop = false;
+            this.grpMinUPM.Text = "Minimum UPM";
+            this.grpMinUPM.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
+            // 
+            // tbUPMspeed
+            // 
+            this.tbUPMspeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbUPMspeed.Location = new System.Drawing.Point(155, 73);
+            this.tbUPMspeed.MaxLength = 8;
+            this.tbUPMspeed.Name = "tbUPMspeed";
+            this.tbUPMspeed.Size = new System.Drawing.Size(75, 30);
+            this.tbUPMspeed.TabIndex = 124;
+            this.tbUPMspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbUPMspeed.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.tbUPMspeed_HelpRequested);
+            this.tbUPMspeed.Enter += new System.EventHandler(this.tbUPMspeed_Enter);
+            // 
+            // rbUPMSpeed
+            // 
+            this.rbUPMSpeed.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbUPMSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbUPMSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbUPMSpeed.Location = new System.Drawing.Point(15, 70);
+            this.rbUPMSpeed.Margin = new System.Windows.Forms.Padding(2);
+            this.rbUPMSpeed.Name = "rbUPMSpeed";
+            this.rbUPMSpeed.Size = new System.Drawing.Size(128, 37);
+            this.rbUPMSpeed.TabIndex = 123;
+            this.rbUPMSpeed.Tag = "0";
+            this.rbUPMSpeed.Text = "By Speed";
+            this.rbUPMSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbUPMSpeed.UseVisualStyleBackColor = true;
+            this.rbUPMSpeed.CheckedChanged += new System.EventHandler(this.rbUPMSpeed_CheckedChanged);
+            this.rbUPMSpeed.Click += new System.EventHandler(this.rbUPMSpeed_Click);
+            this.rbUPMSpeed.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.rbUPMSpeed_HelpRequested);
+            // 
+            // rbUPMFixed
+            // 
+            this.rbUPMFixed.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbUPMFixed.Checked = true;
+            this.rbUPMFixed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbUPMFixed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbUPMFixed.Location = new System.Drawing.Point(15, 27);
+            this.rbUPMFixed.Margin = new System.Windows.Forms.Padding(2);
+            this.rbUPMFixed.Name = "rbUPMFixed";
+            this.rbUPMFixed.Size = new System.Drawing.Size(128, 37);
+            this.rbUPMFixed.TabIndex = 122;
+            this.rbUPMFixed.TabStop = true;
+            this.rbUPMFixed.Tag = "0";
+            this.rbUPMFixed.Text = "Fixed Value";
+            this.rbUPMFixed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbUPMFixed.UseVisualStyleBackColor = true;
+            this.rbUPMFixed.CheckedChanged += new System.EventHandler(this.rbUPMFixed_Click);
+            // 
+            // tbMinUPM
+            // 
+            this.tbMinUPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbMinUPM.Location = new System.Drawing.Point(155, 30);
+            this.tbMinUPM.MaxLength = 8;
+            this.tbMinUPM.Name = "tbMinUPM";
+            this.tbMinUPM.Size = new System.Drawing.Size(75, 30);
+            this.tbMinUPM.TabIndex = 1;
+            this.tbMinUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbMinUPM.TextChanged += new System.EventHandler(this.tbMinUPM_TextChanged);
+            this.tbMinUPM.Enter += new System.EventHandler(this.tbMinUPM_Enter);
+            // 
+            // grpSensor
+            // 
+            this.grpSensor.Controls.Add(this.lbSensorID);
+            this.grpSensor.Controls.Add(this.tbSenID);
+            this.grpSensor.Controls.Add(this.ModuleIndicator);
+            this.grpSensor.Controls.Add(this.lbConID);
+            this.grpSensor.Controls.Add(this.tbConID);
+            this.grpSensor.Location = new System.Drawing.Point(14, 38);
+            this.grpSensor.Name = "grpSensor";
+            this.grpSensor.Size = new System.Drawing.Size(259, 117);
+            this.grpSensor.TabIndex = 0;
+            this.grpSensor.TabStop = false;
+            this.grpSensor.Text = "Rate Sensor Location";
+            this.grpSensor.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSections_Paint);
+            // 
+            // lbSensorID
+            // 
+            this.lbSensorID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSensorID.Location = new System.Drawing.Point(11, 79);
+            this.lbSensorID.Name = "lbSensorID";
+            this.lbSensorID.Size = new System.Drawing.Size(93, 23);
+            this.lbSensorID.TabIndex = 151;
+            this.lbSensorID.Text = "Sensor ID";
+            this.lbSensorID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label26_HelpRequested);
+            // 
+            // tbSenID
+            // 
+            this.tbSenID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSenID.Location = new System.Drawing.Point(137, 75);
+            this.tbSenID.MaxLength = 8;
+            this.tbSenID.Name = "tbSenID";
+            this.tbSenID.Size = new System.Drawing.Size(67, 30);
+            this.tbSenID.TabIndex = 1;
+            this.tbSenID.Text = "0";
+            this.tbSenID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSenID.TextChanged += new System.EventHandler(this.tbSenID_TextChanged);
+            this.tbSenID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.label26_HelpRequested);
+            this.tbSenID.Enter += new System.EventHandler(this.tbSenID_Enter);
+            this.tbSenID.Validating += new System.ComponentModel.CancelEventHandler(this.tbSenID_Validating);
+            // 
+            // ModuleIndicator
+            // 
+            this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
+            this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
+            this.ModuleIndicator.Location = new System.Drawing.Point(210, 47);
+            this.ModuleIndicator.Name = "ModuleIndicator";
+            this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
+            this.ModuleIndicator.TabIndex = 149;
+            this.ModuleIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbConID
+            // 
+            this.lbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbConID.Location = new System.Drawing.Point(6, 30);
+            this.lbConID.Name = "lbConID";
+            this.lbConID.Size = new System.Drawing.Size(97, 23);
+            this.lbConID.TabIndex = 148;
+            this.lbConID.Text = "Module ID";
+            this.lbConID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbConID_HelpRequested);
+            // 
+            // tbConID
+            // 
+            this.tbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbConID.Location = new System.Drawing.Point(137, 27);
+            this.tbConID.MaxLength = 8;
+            this.tbConID.Name = "tbConID";
+            this.tbConID.Size = new System.Drawing.Size(67, 30);
+            this.tbConID.TabIndex = 0;
+            this.tbConID.Text = "0";
+            this.tbConID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbConID.TextChanged += new System.EventHandler(this.tbConID_TextChanged);
+            this.tbConID.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbConID_HelpRequested);
+            this.tbConID.Enter += new System.EventHandler(this.tbConID_Enter);
+            this.tbConID.Validating += new System.ComponentModel.CancelEventHandler(this.tbConID_Validating);
+            // 
             // btnResetTank
             // 
             this.btnResetTank.BackColor = System.Drawing.Color.Transparent;
@@ -2237,7 +2236,8 @@ namespace RateController
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(503, 626);
+            this.ClientSize = new System.Drawing.Size(1146, 626);
+            this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
@@ -2260,25 +2260,25 @@ namespace RateController
             this.tcProducts.ResumeLayout(false);
             this.tbRate.ResumeLayout(false);
             this.tbRate.PerformLayout();
-            this.pnlFan.ResumeLayout(false);
-            this.pnlFan.PerformLayout();
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
+            this.pnlFan.ResumeLayout(false);
+            this.pnlFan.PerformLayout();
             this.tbControl.ResumeLayout(false);
             this.tbVR.ResumeLayout(false);
             this.tbVR.PerformLayout();
-            this.tbOptions.ResumeLayout(false);
-            this.tbOptions.PerformLayout();
-            this.grpMinUPM.ResumeLayout(false);
-            this.grpMinUPM.PerformLayout();
-            this.grpSensor.ResumeLayout(false);
-            this.grpSensor.PerformLayout();
             this.Mode.ResumeLayout(false);
             this.Mode.PerformLayout();
             this.tbDiagnostics.ResumeLayout(false);
             this.tbDiagnostics.PerformLayout();
             this.tbData.ResumeLayout(false);
             this.tbData.PerformLayout();
+            this.tbOptions.ResumeLayout(false);
+            this.tbOptions.PerformLayout();
+            this.grpMinUPM.ResumeLayout(false);
+            this.grpMinUPM.PerformLayout();
+            this.grpSensor.ResumeLayout(false);
+            this.grpSensor.PerformLayout();
             this.ResumeLayout(false);
 
         }

@@ -196,6 +196,7 @@ namespace RateController.Menu
         private void frmMenuRate_FormClosed(object sender, FormClosedEventArgs e)
         {
             mf.Tls.SaveFormData(this);
+            timer1.Enabled = false;
         }
 
         private void frmMenuRate_Load(object sender, EventArgs e)
@@ -221,6 +222,7 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             UpdateForm();
+            timer1.Enabled = true;
         }
 
         private void lbBaseRate_Enter(object sender, EventArgs e)
@@ -482,16 +484,31 @@ namespace RateController.Menu
 
             lbFanErrorValue.Text = RateError.ToString("N1");
             lbFanPWMvalue.Text = MainMenu.CurrentProduct.PWM().ToString("N0");
+
+            // fan button
+            if (MainMenu.CurrentProduct.FanOn)
+            {
+                btnFan.Image = Properties.Resources.FanOn;
+                lbFanStarted.Image = Properties.Resources.On;
+            }
+            else
+            {
+                btnFan.Image = Properties.Resources.FanOff;
+                lbFanStarted.Image = Properties.Resources.Off;
+            }
         }
 
         private void UpdateForm()
         {
             Initializing = true;
 
+            SetCalDescription();
+
             if (MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Fan)
             {
                 tbTargetRPM.Text = MainMenu.CurrentProduct.RateSet.ToString("N1");
                 tbCountsRPM.Text = MainMenu.CurrentProduct.MeterCal.ToString("N3");
+                UpdateFans();
             }
             else
             {
@@ -510,7 +527,6 @@ namespace RateController.Menu
             TankSize.Text = MainMenu.CurrentProduct.TankSize.ToString("N0");
             ValveType.SelectedIndex = ConvertControlType(MainMenu.CurrentProduct.ControlType);
 
-            SetCalDescription();
             if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
             {
                 // fans
@@ -532,8 +548,6 @@ namespace RateController.Menu
             btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             TankRemain.Text = MainMenu.CurrentProduct.TankStart.ToString("N0");
 
-            UpdateFans();
-
             Initializing = false;
         }
 
@@ -544,6 +558,17 @@ namespace RateController.Menu
             TankSize.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             TankRemain.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
+        }
+
+        private void btnFan_Click(object sender, EventArgs e)
+        {
+            MainMenu.CurrentProduct.FanOn = !MainMenu.CurrentProduct.FanOn;
+            UpdateFans();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            UpdateFans();
         }
     }
 }
