@@ -17,15 +17,15 @@ namespace RateController
         private const int SubFirstSpacing = 75;
         private const int SubOffset = 10;
         private const int SubSpacing = 55;
+        private int cBoard;
         private clsProduct cCurrentProduct;
         private bool Expanded = false;
+        private Button[] Items;
         private string LastScreen = "";
         private bool LoadLast = false;
         private FormStart mf;
-        private MouseButtons MouseButtonClicked;
         private Point MouseDownLocation;
-        private int cBoard;
-        private Button[] Items;
+
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
             InitializeComponent();
@@ -33,12 +33,14 @@ namespace RateController
 
             Items = new Button[] { butNew, butOpen, butSaveAs, butRate, butControl, butSettings, butMode, butMonitor,
                 butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins, butWifi,
-                butValves, butDisplay, butPrimed, butSwitches, butLanguage, butOther, butTuning,
-                butEthernet, butActivity, butError, butHelp };
+                butValves, butDisplay, butPrimed, butSwitches, butLanguage, butOther };
 
             ChangeProduct(ProductID);
             LoadLast = LoadLst;
         }
+
+        public event EventHandler MenuMoved;
+
         public int Board
         {
             get { return cBoard; }
@@ -48,8 +50,6 @@ namespace RateController
                 mf.Tls.SaveProperty("DefaultBoard", cBoard.ToString());
             }
         }
-
-        public event EventHandler MenuMoved;
 
         public clsProduct CurrentProduct
         {
@@ -62,6 +62,19 @@ namespace RateController
             if (NewID > mf.MaxProducts - 1) NewID = mf.MaxProducts - 1;
             if (NoFans && NewID > mf.MaxProducts - 3) NewID = mf.MaxProducts - 3;
             cCurrentProduct = mf.Products.Item(NewID);
+        }
+
+        public void HighlightUpdateButton(bool Highlight = true)
+        {
+            if (Highlight)
+            {
+                butUpdateModules.FlatAppearance.BorderSize = 4;
+                butUpdateModules.FlatAppearance.BorderColor = Color.DarkGreen;
+            }
+            else
+            {
+                butUpdateModules.FlatAppearance.BorderSize = 0;
+            }
         }
 
         public void StyleControls(Control Parent)
@@ -120,65 +133,125 @@ namespace RateController
             }
         }
 
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string FileName = exeDirectory + "Help\\" + LastScreen + ".pdf";
+            try
+            {
+                Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
+            }
+        }
+
+        private void butCalibrate_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuCalibrate";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuCalibrate(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
         private void butClose_Click(object sender, EventArgs e)
         {
             if (ClosedOwned()) this.Close();
         }
 
-        private void butDiag_Click(object sender, EventArgs e)
+        private void butConfig_Click(object sender, EventArgs e)
         {
-            if (ClosedOwned())
-            {
-                butTuning.Visible = !Expanded;
-                butEthernet.Visible = !Expanded;
-                butActivity.Visible = !Expanded;
-                butError.Visible = !Expanded;
-                butHelp.Visible = !Expanded;
+            LastScreen = "frmMenuConfig";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
 
-                if (Expanded)
+            if (fs == null)
+            {
+                Form frm = new frmMenuConfig(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butControl_Click(object sender, EventArgs e)
+        {
+            if (CheckEdited())
+            {
+                LastScreen = "frmMenuControl";
+                HighlightButton(LastScreen);
+                Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+                if (fs == null)
                 {
-                    Expanded = false;
-                    butFile.Visible = true;
-                    butProducts.Visible = true;
-                    butMachine.Visible = true;
-                    butModules.Visible = true;
-                    butOptions.Visible = true;
-                    butDiag.Visible = true;
-                    butDiag.Top = (int)butDiag.Tag;
+                    Form frm = new frmMenuControl(mf, this);
+                    frm.Owner = this;
+                    frm.Text = "Opened";
+                    frm.Show();
                 }
                 else
                 {
-                    Expanded = true;
-                    butFile.Visible = false;
-                    butProducts.Visible = false;
-                    butMachine.Visible = false;
-                    butModules.Visible = false;
-                    butOptions.Visible = false;
-                    butDiag.Visible = true;
-                    butDiag.Tag = butDiag.Top;
-                    butDiag.Top = butFile.Top;
-
-                    int Pos = butFile.Top;
-                    butTuning.Left = butFile.Left + SubOffset;
-                    Pos += SubFirstSpacing;
-                    butTuning.Top = Pos;
-
-                    butEthernet.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butEthernet.Top = Pos;
-
-                    butActivity.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butActivity.Top = Pos;
-
-                    butError.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butError.Top = Pos;
-
-                    butHelp.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butHelp.Top = Pos;
+                    fs.Text = "Focused";
+                    fs.Focus();
                 }
+            }
+        }
+
+        private void butData_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuData";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuData(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butDisplay_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuDisplay";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuDisplay(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
             }
         }
 
@@ -194,7 +267,7 @@ namespace RateController
                     butMachine.Visible = true;
                     butModules.Visible = true;
                     butOptions.Visible = true;
-                    butDiag.Visible = true;
+                    butHelpScreen.Visible = true;
                     butNew.Visible = false;
                     butOpen.Visible = false;
                     butSaveAs.Visible = false;
@@ -207,7 +280,7 @@ namespace RateController
                     butMachine.Visible = false;
                     butModules.Visible = false;
                     butOptions.Visible = false;
-                    butDiag.Visible = false;
+                    butHelpScreen.Visible = false;
 
                     int Pos = butFile.Top;
                     butNew.Visible = true;
@@ -228,6 +301,46 @@ namespace RateController
             }
         }
 
+        private void butHelpScreen_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuHelp";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuHelp(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butLanguage_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuLanguage";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuLanguage(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
         private void butMachine_Click(object sender, EventArgs e)
         {
             if (ClosedOwned())
@@ -244,7 +357,7 @@ namespace RateController
                     butMachine.Visible = true;
                     butModules.Visible = true;
                     butOptions.Visible = true;
-                    butDiag.Visible = true;
+                    butHelpScreen.Visible = true;
                     butMachine.Top = (int)butMachine.Tag;
                 }
                 else
@@ -255,7 +368,7 @@ namespace RateController
                     butMachine.Visible = true;
                     butModules.Visible = false;
                     butOptions.Visible = false;
-                    butDiag.Visible = false;
+                    butHelpScreen.Visible = false;
                     butMachine.Tag = butMachine.Top;
                     butMachine.Top = butFile.Top;
 
@@ -274,6 +387,26 @@ namespace RateController
 
                     butSections.PerformClick();
                 }
+            }
+        }
+
+        private void butMode_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuMode";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuMode(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
             }
         }
 
@@ -297,7 +430,7 @@ namespace RateController
                     butMachine.Visible = true;
                     butModules.Visible = true;
                     butOptions.Visible = true;
-                    butDiag.Visible = true;
+                    butHelpScreen.Visible = true;
                     butModules.Top = (int)butModules.Tag;
                 }
                 else
@@ -308,7 +441,7 @@ namespace RateController
                     butMachine.Visible = false;
                     butModules.Visible = true;
                     butOptions.Visible = false;
-                    butDiag.Visible = false;
+                    butHelpScreen.Visible = false;
                     butModules.Tag = butModules.Top;
                     butModules.Top = butFile.Top;
 
@@ -346,10 +479,56 @@ namespace RateController
             }
         }
 
+        private void butMonitor_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuMonitoring";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuMonitoring(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butNetwork_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuNetwork";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuNetwork(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
         private void butNew_Click(object sender, EventArgs e)
         {
             HighlightButton("butNew");
             mf.NewFile();
+        }
+
+        private void butOpen_Click(object sender, EventArgs e)
+        {
+            HighlightButton("butOpen");
+            mf.OpenFile();
         }
 
         private void butOptions_Click(object sender, EventArgs e)
@@ -370,7 +549,7 @@ namespace RateController
                     butMachine.Visible = true;
                     butModules.Visible = true;
                     butOptions.Visible = true;
-                    butDiag.Visible = true;
+                    butHelpScreen.Visible = true;
                     butOptions.Top = (int)butOptions.Tag;
                 }
                 else
@@ -381,7 +560,7 @@ namespace RateController
                     butMachine.Visible = false;
                     butModules.Visible = false;
                     butOptions.Visible = true;
-                    butDiag.Visible = false;
+                    butHelpScreen.Visible = false;
                     butOptions.Tag = butOptions.Top;
                     butOptions.Top = butFile.Top;
 
@@ -409,9 +588,69 @@ namespace RateController
             }
         }
 
+        private void butOther_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuOther";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuOther(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butPins_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuPins";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuPins(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
         private void butPowerOff_Click(object sender, EventArgs e)
         {
             if (ClosedOwned()) mf.Close();
+        }
+
+        private void butPrimed_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuPrimed";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuPrimed(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
         }
 
         private void butProducts_Click(object sender, EventArgs e)
@@ -433,7 +672,7 @@ namespace RateController
                     butMachine.Visible = true;
                     butModules.Visible = true;
                     butOptions.Visible = true;
-                    butDiag.Visible = true;
+                    butHelpScreen.Visible = true;
                     butProducts.Top = (int)butProducts.Tag;
                 }
                 else
@@ -444,7 +683,7 @@ namespace RateController
                     butMachine.Visible = false;
                     butModules.Visible = false;
                     butOptions.Visible = false;
-                    butDiag.Visible = false;
+                    butHelpScreen.Visible = false;
                     butProducts.Tag = butProducts.Top;
                     butProducts.Top = butFile.Top;
 
@@ -483,7 +722,7 @@ namespace RateController
             if (CheckEdited())
             {
                 LastScreen = "frmMenuRate";
-               HighlightButton(LastScreen);
+                HighlightButton(LastScreen);
                 Form fs = mf.Tls.IsFormOpen(LastScreen);
 
                 if (fs == null)
@@ -501,14 +740,168 @@ namespace RateController
             }
         }
 
-        private bool ClosedOwned()
+        private void butRelayPins_Click(object sender, EventArgs e)
         {
-            foreach (Form ownedForm in this.OwnedForms)
+            LastScreen = "frmMenuRelayPins";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
             {
-                ownedForm.Close();
+                Form frm = new frmMenuRelayPins(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
             }
-            return !Convert.ToBoolean(OwnedForms.Length);    // check if all closed, could be unsaved data
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
         }
+
+        private void butRelays_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuRelays";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRelays(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butSaveAs_Click(object sender, EventArgs e)
+        {
+            HighlightButton("butSaveAs");
+            mf.SaveFileAs();
+        }
+
+        private void butSections_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuSections";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuSections(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butSettings_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuSettings";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuSettings(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butSwitches_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuSwitches";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuSwitches(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butUpdateModules_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mf.ModuleConfig.Send();
+                mf.NetworkConfig.Send();
+                mf.Tls.ShowHelp("Settings sent to module", "Config", 10000);
+
+                HighlightUpdateButton(false);
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 10000, true, true);
+            }
+        }
+
+        private void butValves_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuValves";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuValves(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butWifi_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuWifi";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuWifi(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
         private bool CheckEdited()
         {
             bool Result = true;
@@ -536,6 +929,15 @@ namespace RateController
                 }
             }
             return Result;
+        }
+
+        private bool ClosedOwned()
+        {
+            foreach (Form ownedForm in this.OwnedForms)
+            {
+                ownedForm.Close();
+            }
+            return !Convert.ToBoolean(OwnedForms.Length);    // check if all closed, could be unsaved data
         }
 
         private void frmMenu_FormClosed(object sender, FormClosedEventArgs e)
@@ -567,13 +969,30 @@ namespace RateController
 
         private void frmMenu_MouseDown(object sender, MouseEventArgs e)
         {
-            MouseButtonClicked = e.Button;
             if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
         }
 
         private void frmMenu_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+        }
+
+        private void HighlightButton(string Name, bool Highlight = true)
+        {
+            int ID = 0;
+            // clear hightlights
+            for (int i = 0; i < Items.Length; i++)
+            {
+                Items[i].FlatAppearance.BorderSize = 0;
+                if (Items[i].Name == Name) ID = i;
+            }
+
+            if (Highlight)
+            {
+                // highlight selected
+                Items[ID].FlatAppearance.BorderSize = 1;
+                Items[ID].FlatAppearance.BorderColor = Color.Blue;
+            }
         }
 
         private void LoadLastScreen()
@@ -684,6 +1103,10 @@ namespace RateController
                                 butOptions.PerformClick();
                                 break;
 
+                            case "frmMenuHelp":
+                                fs = new frmMenuHelp(mf, this);
+                                break;
+
                             default:
                                 fs = new frmMenuRate(mf, this);
                                 butProducts.PerformClick();
@@ -702,477 +1125,6 @@ namespace RateController
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("frmMenu/LoadLastScree: " + ex.Message);
-            }
-        }
-
-        private void butControl_Click(object sender, EventArgs e)
-        {
-            if (CheckEdited())
-            {
-                LastScreen = "frmMenuControl";
-                HighlightButton(LastScreen);
-                Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-                if (fs == null)
-                {
-                    Form frm = new frmMenuControl(mf, this);
-                    frm.Owner = this;
-                    frm.Text = "Opened";
-                    frm.Show();
-                }
-                else
-                {
-                    fs.Text = "Focused";
-                    fs.Focus();
-                }
-            }
-        }
-
-        private void butSettings_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuSettings";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuSettings(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void btnHelp_Click(object sender, EventArgs e)
-        {
-            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string FileName = exeDirectory + "Help\\" + LastScreen + ".pdf";
-            try
-            {
-                Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-
-                mf.Tls.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
-            }
-        }
-
-        private void butMode_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuMode";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuMode(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butMonitor_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuMonitoring";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuMonitoring(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butData_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuData";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuData(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butOpen_Click(object sender, EventArgs e)
-        {
-            HighlightButton("butOpen");
-            mf.OpenFile();
-        }
-
-        private void butSaveAs_Click(object sender, EventArgs e)
-        {
-            HighlightButton("butSaveAs");
-            mf.SaveFileAs();
-        }
-
-        private void butSections_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuSections";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuSections(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butRelays_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuRelays";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuRelays(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butCalibrate_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuCalibrate";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuCalibrate(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butNetwork_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuNetwork";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuNetwork(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butConfig_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuConfig";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuConfig(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butPins_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuPins";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuPins(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butRelayPins_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuRelayPins";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuRelayPins(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butWifi_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuWifi";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuWifi(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butValves_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuValves";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuValves(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butUpdateModules_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                mf.ModuleConfig.Send();
-                mf.NetworkConfig.Send();
-                mf.Tls.ShowHelp("Settings sent to module", "Config", 10000);
-
-                HighlightUpdateButton(false);
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.ShowHelp("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 10000, true, true);
-            }
-        }
-        public void HighlightUpdateButton(bool Highlight=true)
-        {
-            if(Highlight)
-            {
-                butUpdateModules.FlatAppearance.BorderSize = 4;
-                butUpdateModules.FlatAppearance.BorderColor = Color.DarkGreen;
-            }
-            else
-            {
-            butUpdateModules.FlatAppearance.BorderSize = 0;
-            }
-        }
-
-        private void HighlightButton(string Name, bool Highlight = true)
-        {
-            int ID = 0;
-            // clear hightlights
-            for (int i = 0; i < Items.Length; i++)
-            {
-                Items[i].FlatAppearance.BorderSize = 0;
-                if (Items[i].Name == Name) ID = i;
-            }
-
-            if (Highlight)
-            {
-                // highlight selected
-                Items[ID].FlatAppearance.BorderSize = 1;
-                Items[ID].FlatAppearance.BorderColor = Color.Blue;
-            }
-        }
-
-        private void butDisplay_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuDisplay";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuDisplay(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butPrimed_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuPrimed";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuPrimed(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butSwitches_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuSwitches";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuSwitches(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butLanguage_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuLanguage";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuLanguage(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butOther_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuOther";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuOther(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
-            }
-        }
-
-        private void butTuning_Click(object sender, EventArgs e)
-        {
-            Form fs = mf.Tls.IsFormOpen("frmMenuRateGraph");
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuRateGraph(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
             }
         }
     }

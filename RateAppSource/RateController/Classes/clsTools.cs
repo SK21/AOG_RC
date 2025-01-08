@@ -37,12 +37,12 @@ namespace RateController
         #endregion Form Dragging API Support
 
         private string cAppName = "RateController";
-        private string cAppVersion = "3.9.0-beta.2";
+        private string cAppVersion = "4.0.0-beta.1";
         private bool cIsReadOnly = false;
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "29-Dec-2024";
+        private string cVersionDate = "07-Jan-2025";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
