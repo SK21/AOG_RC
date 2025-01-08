@@ -56,7 +56,7 @@ namespace RateController.Menu
             HShigh.Value = mf.HighAdjustDefault;
             HSlow.Value = mf.LowAdjustDefault;
             HSthreshold.Value = mf.ThresholdDefault;
-            HSscaling.Value = mf.MaxAdjustDefault;
+            HSmax.Value = mf.MaxAdjustDefault;
             HSmin.Value = mf.MinAdjustDefault;
             HSscaling.Value = mf.ScalingDefault;
         }
@@ -159,7 +159,7 @@ namespace RateController.Menu
             lbHigh.Text = HShigh.Value.ToString("N0");
             lbLow.Text = HSlow.Value.ToString("N0");
             lbThresholdValue.Text = HSthreshold.Value.ToString("N0");
-            lbMaxValue.Text = HSscaling.Value.ToString("N0");
+            lbMaxValue.Text = HSmax.Value.ToString("N0");
             lbMinValue.Text = HSmin.Value.ToString("N0");
             lbBoost.Text = HSscaling.Value.ToString("N0");
         }
@@ -180,7 +180,7 @@ namespace RateController.Menu
             HShigh.Value = MainMenu.CurrentProduct.HighAdjust;
             HSlow.Value = MainMenu.CurrentProduct.LowAdjust;
             HSthreshold.Value = MainMenu.CurrentProduct.Threshold;
-            HSscaling.Value = MainMenu.CurrentProduct.MaxAdjust;
+            HSmax.Value = MainMenu.CurrentProduct.MaxAdjust;
             HSmin.Value = MainMenu.CurrentProduct.MinAdjust;
             HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;
             UpdateControlDisplay();
