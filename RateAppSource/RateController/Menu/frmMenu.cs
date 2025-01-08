@@ -26,7 +26,6 @@ namespace RateController
         private Point MouseDownLocation;
         private int cBoard;
         private Button[] Items;
-
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
             InitializeComponent();
@@ -1158,6 +1157,21 @@ namespace RateController
             else
             {
                 fs.Text = "Focused";
+                fs.Focus();
+            }
+        }
+
+        private void butTuning_Click(object sender, EventArgs e)
+        {
+            Form fs = mf.Tls.IsFormOpen("frmMenuRateGraph");
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRateGraph(mf);
+                frm.Show();
+            }
+            else
+            {
                 fs.Focus();
             }
         }

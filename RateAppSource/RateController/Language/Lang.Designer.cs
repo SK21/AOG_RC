@@ -828,7 +828,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PID Tuning Chart.
+        ///   Looks up a localized string similar to Tuning Chart.
         /// </summary>
         internal static string lgPIDTune {
             get {

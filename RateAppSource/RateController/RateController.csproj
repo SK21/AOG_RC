@@ -360,6 +360,12 @@
     <Compile Include="Menu\frmMenuRate.Designer.cs">
       <DependentUpon>frmMenuRate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuRateGraph.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuRateGraph.Designer.cs">
+      <DependentUpon>frmMenuRateGraph.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuRelayPins.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -571,6 +577,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuRate.resx">
       <DependentUpon>frmMenuRate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuRateGraph.resx">
+      <DependentUpon>frmMenuRateGraph.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuRelayPins.resx">
       <DependentUpon>frmMenuRelayPins.cs</DependentUpon>

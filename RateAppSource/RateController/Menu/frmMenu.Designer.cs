@@ -613,6 +613,7 @@
             this.butTuning.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butTuning.UseVisualStyleBackColor = false;
             this.butTuning.Visible = false;
+            this.butTuning.Click += new System.EventHandler(this.butTuning_Click);
             // 
             // gbLine1
             // 

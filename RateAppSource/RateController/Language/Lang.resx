@@ -396,7 +396,7 @@ Calibration steps:
     <value>Sections Per Zone</value>
   </data>
   <data name="lgPIDTune" xml:space="preserve">
-    <value>PID Tuning Chart</value>
+    <value>Tuning Chart</value>
   </data>
   <data name="lgPins" xml:space="preserve">
     <value>Pins</value>
