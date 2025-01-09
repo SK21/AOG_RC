@@ -57,6 +57,7 @@ namespace RateController.Menu
             // sub menu 540,630
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
+            MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
             mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = MainMenu.Width - 260;
@@ -68,6 +69,12 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             PositionForm();
             UpdateForm();
+        }
+
+        private void MainMenu_ModuleDefaultsSet(object sender, EventArgs e)
+        {
+            UpdateForm();
+            SetButtons(false);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)

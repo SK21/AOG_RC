@@ -1,23 +1,16 @@
 ﻿using RateController.Language;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RateController.Menu
 {
     public partial class frmMenuNetwork : Form
     {
+        private int BoardType = 0;
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
@@ -33,6 +26,7 @@ namespace RateController.Menu
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (int.TryParse(mf.Tls.LoadProperty("BoardType"), out int bt)) BoardType = bt;
             UpdateForm();
             SetButtons(false);
         }
@@ -41,14 +35,57 @@ namespace RateController.Menu
         {
             try
             {
+                if (ckDefaultModule.Checked) SetDefaults();
                 mf.UDPmodules.NetworkEP = cbEthernet.Text;
                 SetButtons(false);
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();
+                mf.Tls.SaveProperty("BoardType", BoardType.ToString());
             }
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("frmMenuNetwork/btnOk_Click: " + ex.Message);
+            }
+        }
+
+        private void btnRescan_Click(object sender, EventArgs e)
+        {
+            UpdateForm();
+        }
+
+        private void btnSendSubnet_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                PGN32503 SetSubnet = new PGN32503(mf);
+                if (SetSubnet.Send(mf.UDPmodules.NetworkEP))
+                {
+                    mf.Tls.ShowHelp("New Subnet address sent.", "Subnet", 10000);
+
+                    // set app subnet
+                    mf.UDPmodules.NetworkEP = cbEthernet.Text;
+                }
+                else
+                {
+                    mf.Tls.ShowHelp("New Subnet address not sent.", "Subnet", 10000);
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, "frmModuleConfig/btnSendSubnet", 15000, true);
+            }
+        }
+
+        private void cbEthernet_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void ckDefaultModule_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckDefaultModule.Checked)
+            {
+                SetButtons(true);
             }
         }
 
@@ -73,53 +110,25 @@ namespace RateController.Menu
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
             PositionForm();
+            if (int.TryParse(mf.Tls.LoadProperty("BoardType"), out int bt)) BoardType = bt;
+
+            // check for no settings
+            if (mf.ModuleConfig.Sensor0Flow == 0 && mf.ModuleConfig.Sensor0Dir == 0 && mf.ModuleConfig.Sensor0PWM == 0
+                && mf.ModuleConfig.Sensor1Dir == 0 && mf.ModuleConfig.Sensor1Flow == 0 && mf.ModuleConfig.Sensor1PWM == 0)
+            {
+                mf.Tls.ShowHelp("Empty settings, default values selected.", "Default Values");
+                ckDefaultModule.Checked = true;
+                SetButtons(true);
+            }
+
             UpdateForm();
         }
 
-        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        private void groupBox2_Paint(object sender, PaintEventArgs e)
         {
-            PositionForm();
+            mf.Tls.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
-        private void PositionForm()
-        {
-            this.Top = MainMenu.Top + 30;
-            this.Left = MainMenu.Left + 246;
-        }
-
-        private void SetButtons(bool Edited)
-        {
-            if (!Initializing)
-            {
-                if (Edited)
-                {
-                    btnCancel.Enabled = true;
-                    btnOK.Enabled = true;
-                }
-                else
-                {
-                    btnCancel.Enabled = false;
-                    btnOK.Enabled = false;
-                }
-
-                cEdited = Edited;
-                this.Tag = cEdited;
-            }
-        }
-
-        private void SetLanguage()
-        {
-            lbSubnet.Text = Lang.lgSelectedSubnet;
-            lbIP.Text = Lang.lgConfigIP;
-        }
-
-        private void UpdateForm()
-        {
-            Initializing = true;
-            LoadCombo();
-            lbModuleIP.Text = mf.UDPmodules.SubNet;
-            Initializing = false;
-        }
         private void LoadCombo()
         {
             // https://stackoverflow.com/questions/6803073/get-local-ip-address
@@ -146,6 +155,163 @@ namespace RateController.Menu
                 mf.Tls.WriteErrorLog("frmModuleConfig/LoadCombo " + ex.Message);
             }
         }
+
+        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        {
+            PositionForm();
+        }
+
+        private void PositionForm()
+        {
+            this.Top = MainMenu.Top + 30;
+            this.Left = MainMenu.Left + 246;
+        }
+
+        private void rbESP32_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                BoardType = 2;
+                ckDefaultModule.Checked = true;
+                SetButtons(true);
+            }
+        }
+
+        private void rbNano_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                BoardType = 0;
+                ckDefaultModule.Checked = true;
+                SetButtons(true);
+            }
+        }
+
+        private void rbTeensy_CheckedChanged(object sender, EventArgs e)
+        {
+            BoardType = 1;
+            ckDefaultModule.Checked = true;
+            SetButtons(true);
+        }
+
+        private void SetButtons(bool Edited)
+        {
+            if (!Initializing)
+            {
+                if (Edited)
+                {
+                    btnCancel.Enabled = true;
+                    btnOK.Enabled = true;
+                }
+                else
+                {
+                    btnCancel.Enabled = false;
+                    btnOK.Enabled = false;
+                }
+
+                cEdited = Edited;
+                this.Tag = cEdited;
+            }
+        }
+
+        private void SetDefaults()
+        {
+            PGN32700 Set = mf.ModuleConfig;
+            byte[] Pins = new byte[16];
+
+            for (int i = 0; i < 16; i++)
+            {
+                Pins[i] = 255;
+            }
+
+            switch (BoardType)
+            {
+                case 1:
+                    // RC11, Teensy
+                    Set.ModuleID = 0;
+                    Set.SensorCount = 2;
+                    Set.WifiPort = 1;
+                    Set.RelayType = 1;
+                    Set.InvertRelay = true;
+                    Set.InvertFlow = true;
+                    Set.Momentary = false;
+                    Set.Sensor0Flow = 28;
+                    Set.Sensor1Flow = 29;
+                    Set.Sensor0Dir = 37;
+                    Set.Sensor1Dir = 14;
+                    Set.Sensor0PWM = 36;
+                    Set.Sensor1PWM = 15;
+                    Set.WorkPin = 255;
+                    Set.PressurePin = 255;
+                    Set.ClientMode = false;
+
+                    Pins[0] = 8;    // relay 1
+                    Pins[1] = 9;
+                    Pins[2] = 10;
+                    Pins[3] = 11;
+                    Pins[4] = 12;
+                    Pins[5] = 25;
+                    Pins[6] = 26;
+                    Pins[7] = 27;
+                    break;
+
+                case 2:
+                    // RC15, ESP32
+                    Set.ModuleID = 0;
+                    Set.SensorCount = 2;
+                    Set.WifiPort = 0;
+                    Set.RelayType = 5;
+                    Set.InvertRelay = true;
+                    Set.InvertFlow = true;
+                    Set.Momentary = false;
+                    Set.Sensor0Flow = 17;
+                    Set.Sensor1Flow = 16;
+                    Set.Sensor0Dir = 32;
+                    Set.Sensor1Dir = 25;
+                    Set.Sensor0PWM = 33;
+                    Set.Sensor1PWM = 26;
+                    Set.WorkPin = 255;
+                    Set.PressurePin = 255;
+                    Set.ClientMode = false;
+                    break;
+
+                default:
+                    // RC12, Nano
+                    Set.ModuleID = 0;
+                    Set.SensorCount = 1;
+                    Set.WifiPort = 0;
+                    Set.RelayType = 2;
+                    Set.InvertRelay = true;
+                    Set.InvertFlow = true;
+                    Set.Momentary = false;
+                    Set.Sensor0Flow = 3;
+                    Set.Sensor1Flow = 255;
+                    Set.Sensor0Dir = 6;
+                    Set.Sensor1Dir = 255;
+                    Set.Sensor0PWM = 9;
+                    Set.Sensor1PWM = 255;
+                    Set.WorkPin = 255;
+                    Set.PressurePin = 255;
+                    Set.ClientMode = false;
+                    break;
+            }
+
+            Set.RelayPins(Pins);
+            Set.Save();
+
+            mf.NetworkConfig.NetworkName = "Tractor";
+            mf.NetworkConfig.NetworkPassword = "111222333";
+            mf.NetworkConfig.Save();
+
+            MainMenu.DefaultsSet();
+        }
+
+        private void SetLanguage()
+        {
+            lbSubnet.Text = Lang.lgSelectedSubnet;
+            lbIP.Text = Lang.lgConfigIP;
+        }
+
         private string SubAddress(string Address)
         {
             IPAddress IP;
@@ -160,37 +326,29 @@ namespace RateController.Menu
             return Result;
         }
 
-        private void cbEthernet_SelectedIndexChanged(object sender, EventArgs e)
+        private void UpdateForm()
         {
-            SetButtons(true);
-        }
+            Initializing = true;
+            LoadCombo();
+            lbModuleIP.Text = mf.UDPmodules.SubNet;
 
-        private void btnSendSubnet_Click(object sender, EventArgs e)
-        {
-            try
+            switch (BoardType)
             {
-                PGN32503 SetSubnet = new PGN32503(mf);
-                if (SetSubnet.Send(mf.UDPmodules.NetworkEP))
-                {
-                    mf.Tls.ShowHelp("New Subnet address sent.", "Subnet", 10000);
+                case 1:
+                    rbTeensy.Checked = true;
+                    break;
 
-                    // set app subnet
-                    mf.UDPmodules.NetworkEP = cbEthernet.Text;
-                }
-                else
-                {
-                    mf.Tls.ShowHelp("New Subnet address not sent.", "Subnet", 10000);
-                }
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.ShowHelp(ex.Message, "frmModuleConfig/btnSendSubnet", 15000, true);
-            }
-        }
+                case 2:
+                    rbESP32.Checked = true;
+                    break;
 
-        private void btnRescan_Click(object sender, EventArgs e)
-        {
-            UpdateForm();
+                default:
+                    rbNano.Checked = true;
+                    break;
+            }
+
+            ckDefaultModule.Checked = false;
+            Initializing = false;
         }
     }
 }

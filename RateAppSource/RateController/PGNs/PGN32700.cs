@@ -169,22 +169,40 @@ namespace RateController
         { set { cData[5] = value; } }
 
         public byte Sensor0Dir
-        { set { cData[8] = value; } }
+        {
+            get { return cData[8]; }
+            set { cData[8] = value; } 
+        }
 
         public byte Sensor0Flow
-        { set { cData[7] = value; } }
+        {
+            get { return cData[7]; }
+            set { cData[7] = value; } 
+        }
 
         public byte Sensor0PWM
-        { set { cData[9] = value; } }
+        {
+            get { return cData[9]; }
+            set { cData[9] = value; } 
+        }
 
         public byte Sensor1Dir
-        { set { cData[11] = value; } }
+        {
+            get { return cData[11]; }
+            set { cData[11] = value; }
+        }
 
         public byte Sensor1Flow
-        { set { cData[10] = value; } }
+        {
+            get { return cData[10]; }
+            set { cData[10] = value; } 
+        }
 
         public byte Sensor1PWM
-        { set { cData[12] = value; } }
+        {
+            get { return cData[12]; }
+            set { cData[12] = value; } 
+        }
 
         public byte SensorCount
         { set { cData[3] = value; } }

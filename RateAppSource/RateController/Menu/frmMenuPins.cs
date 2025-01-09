@@ -155,19 +155,6 @@ namespace RateController.Menu
             }
         }
 
-        private void butDefaults_Click(object sender, EventArgs e)
-        {
-            var Brd = new frmMenuBoards(mf);
-            Brd.Board = MainMenu.Board;
-            Brd.ShowDialog();
-            if (!Brd.Cancelled)
-            {
-                SwitchBoards(Brd.Board);
-                MainMenu.Board = Brd.Board;
-            }
-            Brd.Close();
-        }
-
         private void frmMenuPins_FormClosed(object sender, FormClosedEventArgs e)
         {
             mf.Tls.SaveFormData(this);
@@ -179,6 +166,7 @@ namespace RateController.Menu
             // sub menu 540,630
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
+            MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
             mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = MainMenu.Width - 260;
@@ -190,6 +178,12 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             PositionForm();
             UpdateForm();
+        }
+
+        private void MainMenu_ModuleDefaultsSet(object sender, EventArgs e)
+        {
+            UpdateForm();
+            SetButtons(false);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -226,48 +220,6 @@ namespace RateController.Menu
         private void SetLanguage()
         {
             lbWorkPin.Text = Lang.lgWorkPin;
-        }
-
-        private void SwitchBoards(int BoardType)
-        {
-            switch (BoardType)
-            {
-                case 1:
-                    // RC11, Teensy
-                    ckMomentary.Checked = false;
-                    tbFlow1.Text = "28";
-                    tbFlow2.Text = "29";
-                    tbDir1.Text = "37";
-                    tbDir2.Text = "14";
-                    tbPWM1.Text = "36";
-                    tbPWM2.Text = "15";
-                    tbWrk.Text = "-";
-                    break;
-
-                case 2:
-                    // RC15, ESP32
-                    ckMomentary.Checked = false;
-                    tbFlow1.Text = "17";
-                    tbFlow2.Text = "16";
-                    tbDir1.Text = "32";
-                    tbDir2.Text = "25";
-                    tbPWM1.Text = "33";
-                    tbPWM2.Text = "26";
-                    tbWrk.Text = "-";
-                    break;
-
-                default:
-                    // RC12, Nano
-                    ckMomentary.Checked = false;
-                    tbFlow1.Text = "3";
-                    tbFlow2.Text = "-";
-                    tbDir1.Text = "6";
-                    tbDir2.Text = "-";
-                    tbPWM1.Text = "9";
-                    tbPWM2.Text = "-";
-                    tbWrk.Text = "-";
-                    break;
-            }
         }
 
         private void UpdateForm()

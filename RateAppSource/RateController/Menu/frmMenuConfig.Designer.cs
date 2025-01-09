@@ -41,7 +41,6 @@
             this.lbSensorCount = new System.Windows.Forms.Label();
             this.tbModuleID = new System.Windows.Forms.TextBox();
             this.lbModuleID = new System.Windows.Forms.Label();
-            this.butDefaults = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -122,6 +121,7 @@
             this.cbRelayControl.Name = "cbRelayControl";
             this.cbRelayControl.Size = new System.Drawing.Size(187, 32);
             this.cbRelayControl.TabIndex = 173;
+            this.cbRelayControl.TabStop = false;
             this.cbRelayControl.SelectedIndexChanged += new System.EventHandler(this.tbModuleID_TextChanged);
             // 
             // tbWifiPort
@@ -131,6 +131,7 @@
             this.tbWifiPort.Name = "tbWifiPort";
             this.tbWifiPort.Size = new System.Drawing.Size(58, 29);
             this.tbWifiPort.TabIndex = 172;
+            this.tbWifiPort.TabStop = false;
             this.tbWifiPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbWifiPort.TextChanged += new System.EventHandler(this.tbModuleID_TextChanged);
             this.tbWifiPort.Enter += new System.EventHandler(this.tbWifiPort_Enter);
@@ -182,6 +183,7 @@
             this.tbSensorCount.Name = "tbSensorCount";
             this.tbSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbSensorCount.TabIndex = 168;
+            this.tbSensorCount.TabStop = false;
             this.tbSensorCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbSensorCount.TextChanged += new System.EventHandler(this.tbModuleID_TextChanged);
             this.tbSensorCount.Enter += new System.EventHandler(this.tbSensorCount_Enter);
@@ -203,6 +205,7 @@
             this.tbModuleID.Name = "tbModuleID";
             this.tbModuleID.Size = new System.Drawing.Size(58, 29);
             this.tbModuleID.TabIndex = 166;
+            this.tbModuleID.TabStop = false;
             this.tbModuleID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbModuleID.TextChanged += new System.EventHandler(this.tbModuleID_TextChanged);
             this.tbModuleID.Enter += new System.EventHandler(this.tbModuleID_Enter);
@@ -217,29 +220,11 @@
             this.lbModuleID.TabIndex = 165;
             this.lbModuleID.Text = "Module ID";
             // 
-            // butDefaults
-            // 
-            this.butDefaults.BackColor = System.Drawing.Color.Transparent;
-            this.butDefaults.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.butDefaults.FlatAppearance.BorderSize = 0;
-            this.butDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.butDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.butDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butDefaults.Location = new System.Drawing.Point(300, 546);
-            this.butDefaults.Name = "butDefaults";
-            this.butDefaults.Size = new System.Drawing.Size(72, 72);
-            this.butDefaults.TabIndex = 2;
-            this.butDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.butDefaults.UseVisualStyleBackColor = false;
-            this.butDefaults.Click += new System.EventHandler(this.butDefaults_Click);
-            // 
             // frmMenuConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
-            this.Controls.Add(this.butDefaults);
             this.Controls.Add(this.ckADS1115enabled);
             this.Controls.Add(this.lbRelay);
             this.Controls.Add(this.cbRelayControl);
@@ -279,6 +264,5 @@
         private System.Windows.Forms.Label lbSensorCount;
         private System.Windows.Forms.TextBox tbModuleID;
         private System.Windows.Forms.Label lbModuleID;
-        private System.Windows.Forms.Button butDefaults;
     }
 }

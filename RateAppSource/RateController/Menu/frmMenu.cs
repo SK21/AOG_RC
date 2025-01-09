@@ -17,7 +17,6 @@ namespace RateController
         private const int SubFirstSpacing = 75;
         private const int SubOffset = 10;
         private const int SubSpacing = 55;
-        private int cBoard;
         private clsProduct cCurrentProduct;
         private bool Expanded = false;
         private Button[] Items;
@@ -40,16 +39,7 @@ namespace RateController
         }
 
         public event EventHandler MenuMoved;
-
-        public int Board
-        {
-            get { return cBoard; }
-            set
-            {
-                cBoard = value;
-                mf.Tls.SaveProperty("DefaultBoard", cBoard.ToString());
-            }
-        }
+        public event EventHandler ModuleDefaultsSet;
 
         public clsProduct CurrentProduct
         {
@@ -961,12 +951,15 @@ namespace RateController
             butPowerOff.Left = 160;
             butPowerOff.Top = 8;
             if (LoadLast) LoadLastScreen();
-            if (int.TryParse(mf.Tls.LoadProperty("DefaultBoard"), out int value)) cBoard = value;
         }
 
         private void frmMenu_LocationChanged(object sender, EventArgs e)
         {
             MenuMoved?.Invoke(this, EventArgs.Empty);
+        }
+        public void DefaultsSet()
+        {
+            ModuleDefaultsSet?.Invoke(this, EventArgs.Empty);
         }
 
         private void frmMenu_MouseDown(object sender, MouseEventArgs e)

@@ -96,18 +96,6 @@ namespace RateController.Menu
             }
         }
 
-        private void butDefaults_Click(object sender, EventArgs e)
-        {
-            var Brd = new frmMenuBoards(mf);
-            Brd.Board = MainMenu.Board;
-            Brd.ShowDialog();
-            if (!Brd.Cancelled)
-            {
-                SwitchBoards(Brd.Board);
-                MainMenu.Board = Brd.Board;
-            }
-            Brd.Close();
-        }
 
         private void frmMenuRelayPins_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -120,6 +108,7 @@ namespace RateController.Menu
             // sub menu 540,630
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
+            MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
             mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = MainMenu.Width - 260;
@@ -131,6 +120,12 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             PositionForm();
             UpdateForm();
+        }
+
+        private void MainMenu_ModuleDefaultsSet(object sender, EventArgs e)
+        {
+            UpdateForm();
+            SetButtons(false);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -168,74 +163,6 @@ namespace RateController.Menu
         {
         }
 
-        private void SwitchBoards(int BoardType)
-        {
-            switch (BoardType)
-            {
-                case 1:
-                    // RC11, Teensy
-                    tbRelay1.Text = "8";
-                    tbRelay2.Text = "9";
-                    tbRelay3.Text = "10";
-                    tbRelay4.Text = "11";
-                    tbRelay5.Text = "12";
-                    tbRelay6.Text = "25";
-                    tbRelay7.Text = "26";
-                    tbRelay8.Text = "27";
-
-                    tbRelay9.Text = "-";
-                    tbRelay10.Text = "-";
-                    tbRelay11.Text = "-";
-                    tbRelay12.Text = "-";
-                    tbRelay13.Text = "-";
-                    tbRelay14.Text = "-";
-                    tbRelay15.Text = "-";
-                    tbRelay16.Text = "-";
-                    break;
-
-                case 2:
-                    // RC15, ESP32
-                    tbRelay1.Text = "-";
-                    tbRelay2.Text = "-";
-                    tbRelay3.Text = "-";
-                    tbRelay4.Text = "-";
-                    tbRelay5.Text = "-";
-                    tbRelay6.Text = "-";
-                    tbRelay7.Text = "-";
-                    tbRelay8.Text = "-";
-
-                    tbRelay9.Text = "-";
-                    tbRelay10.Text = "-";
-                    tbRelay11.Text = "-";
-                    tbRelay12.Text = "-";
-                    tbRelay13.Text = "-";
-                    tbRelay14.Text = "-";
-                    tbRelay15.Text = "-";
-                    tbRelay16.Text = "-";
-                    break;
-
-                default:
-                    // RC12, Nano
-                    tbRelay1.Text = "-";
-                    tbRelay2.Text = "-";
-                    tbRelay3.Text = "-";
-                    tbRelay4.Text = "-";
-                    tbRelay5.Text = "-";
-                    tbRelay6.Text = "-";
-                    tbRelay7.Text = "-";
-                    tbRelay8.Text = "-";
-
-                    tbRelay9.Text = "-";
-                    tbRelay10.Text = "-";
-                    tbRelay11.Text = "-";
-                    tbRelay12.Text = "-";
-                    tbRelay13.Text = "-";
-                    tbRelay14.Text = "-";
-                    tbRelay15.Text = "-";
-                    tbRelay16.Text = "-";
-                    break;
-            }
-        }
         private void UpdateForm()
         {
             Initializing = true;

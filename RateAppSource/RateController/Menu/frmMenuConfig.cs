@@ -49,19 +49,6 @@ namespace RateController.Menu
             }
         }
 
-        private void butDefaults_Click(object sender, EventArgs e)
-        {
-            var Brd = new frmMenuBoards(mf);
-            Brd.Board = MainMenu.Board;          
-            Brd.ShowDialog();
-            if (!Brd.Cancelled)
-            {
-                SwitchBoards(Brd.Board);
-                MainMenu.Board = Brd.Board;
-            }
-            Brd.Close();
-        }
-
         private void frmMenuConfig_FormClosed(object sender, FormClosedEventArgs e)
         {
             mf.Tls.SaveFormData(this);
@@ -73,6 +60,7 @@ namespace RateController.Menu
             // sub menu 540,630
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
+            MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
             mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = MainMenu.Width - 260;
@@ -81,10 +69,15 @@ namespace RateController.Menu
             btnOK.Top = this.Height - 84;
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
-            butDefaults.Top = btnOK.Top;
             MainMenu.StyleControls(this);
             PositionForm();
             UpdateForm();
+        }
+
+        private void MainMenu_ModuleDefaultsSet(object sender, EventArgs e)
+        {
+            UpdateForm();
+            SetButtons(false);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -124,48 +117,6 @@ namespace RateController.Menu
             lbSensorCount.Text = Lang.lgSensorCount;
             lbWifiPort.Text = Lang.lgWifiPort;
             lbRelay.Text = Lang.lgRelayControl;
-        }
-
-        private void SwitchBoards(int BoardType)
-        {
-            switch (BoardType)
-            {
-                case 1:
-                    // RC11, Teensy
-                    tbModuleID.Text = "0";
-                    tbSensorCount.Text = "2";
-                    tbWifiPort.Text = "1";
-                    cbRelayControl.SelectedIndex = 1;
-
-                    ckRelayOn.Checked = true;
-                    ckFlowOn.Checked = true;
-                    ckADS1115enabled.Checked = true;
-                    break;
-
-                case 2:
-                    // RC15, ESP32
-                    tbModuleID.Text = "0";
-                    tbSensorCount.Text = "2";
-                    tbWifiPort.Text = "0";
-                    cbRelayControl.SelectedIndex = 5;
-
-                    ckRelayOn.Checked = true;
-                    ckFlowOn.Checked = true;
-                    ckADS1115enabled.Checked = false;
-                    break;
-
-                default:
-                    // RC12, Nano
-                    tbModuleID.Text = "0";
-                    tbSensorCount.Text = "1";
-                    tbWifiPort.Text = "0";
-                    cbRelayControl.SelectedIndex = 2;
-
-                    ckRelayOn.Checked = true;
-                    ckFlowOn.Checked = true;
-                    ckADS1115enabled.Checked = false;
-                    break;
-            }
         }
 
         private void tbModuleID_Enter(object sender, EventArgs e)

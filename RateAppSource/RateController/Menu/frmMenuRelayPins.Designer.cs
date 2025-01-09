@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.butDefaults = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.tbRelay16 = new System.Windows.Forms.TextBox();
@@ -64,23 +63,6 @@
             this.tbRelay1 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // butDefaults
-            // 
-            this.butDefaults.BackColor = System.Drawing.Color.Transparent;
-            this.butDefaults.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.butDefaults.FlatAppearance.BorderSize = 0;
-            this.butDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.butDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.butDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butDefaults.Location = new System.Drawing.Point(300, 546);
-            this.butDefaults.Name = "butDefaults";
-            this.butDefaults.Size = new System.Drawing.Size(72, 72);
-            this.butDefaults.TabIndex = 157;
-            this.butDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.butDefaults.UseVisualStyleBackColor = false;
-            this.butDefaults.Click += new System.EventHandler(this.butDefaults_Click);
             // 
             // btnCancel
             // 
@@ -125,6 +107,7 @@
             this.tbRelay16.Name = "tbRelay16";
             this.tbRelay16.Size = new System.Drawing.Size(58, 29);
             this.tbRelay16.TabIndex = 189;
+            this.tbRelay16.TabStop = false;
             this.tbRelay16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label13
@@ -144,6 +127,7 @@
             this.tbRelay15.Name = "tbRelay15";
             this.tbRelay15.Size = new System.Drawing.Size(58, 29);
             this.tbRelay15.TabIndex = 187;
+            this.tbRelay15.TabStop = false;
             this.tbRelay15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label15
@@ -163,6 +147,7 @@
             this.tbRelay14.Name = "tbRelay14";
             this.tbRelay14.Size = new System.Drawing.Size(58, 29);
             this.tbRelay14.TabIndex = 185;
+            this.tbRelay14.TabStop = false;
             this.tbRelay14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label16
@@ -182,6 +167,7 @@
             this.tbRelay13.Name = "tbRelay13";
             this.tbRelay13.Size = new System.Drawing.Size(58, 29);
             this.tbRelay13.TabIndex = 183;
+            this.tbRelay13.TabStop = false;
             this.tbRelay13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label17
@@ -201,6 +187,7 @@
             this.tbRelay12.Name = "tbRelay12";
             this.tbRelay12.Size = new System.Drawing.Size(58, 29);
             this.tbRelay12.TabIndex = 181;
+            this.tbRelay12.TabStop = false;
             this.tbRelay12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label18
@@ -220,6 +207,7 @@
             this.tbRelay11.Name = "tbRelay11";
             this.tbRelay11.Size = new System.Drawing.Size(58, 29);
             this.tbRelay11.TabIndex = 179;
+            this.tbRelay11.TabStop = false;
             this.tbRelay11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label19
@@ -239,6 +227,7 @@
             this.tbRelay10.Name = "tbRelay10";
             this.tbRelay10.Size = new System.Drawing.Size(58, 29);
             this.tbRelay10.TabIndex = 177;
+            this.tbRelay10.TabStop = false;
             this.tbRelay10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label20
@@ -258,6 +247,7 @@
             this.tbRelay9.Name = "tbRelay9";
             this.tbRelay9.Size = new System.Drawing.Size(58, 29);
             this.tbRelay9.TabIndex = 175;
+            this.tbRelay9.TabStop = false;
             this.tbRelay9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label21
@@ -277,6 +267,7 @@
             this.tbRelay8.Name = "tbRelay8";
             this.tbRelay8.Size = new System.Drawing.Size(58, 29);
             this.tbRelay8.TabIndex = 173;
+            this.tbRelay8.TabStop = false;
             this.tbRelay8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label22
@@ -296,6 +287,7 @@
             this.tbRelay7.Name = "tbRelay7";
             this.tbRelay7.Size = new System.Drawing.Size(58, 29);
             this.tbRelay7.TabIndex = 171;
+            this.tbRelay7.TabStop = false;
             this.tbRelay7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label23
@@ -315,6 +307,7 @@
             this.tbRelay6.Name = "tbRelay6";
             this.tbRelay6.Size = new System.Drawing.Size(58, 29);
             this.tbRelay6.TabIndex = 169;
+            this.tbRelay6.TabStop = false;
             this.tbRelay6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label24
@@ -334,6 +327,7 @@
             this.tbRelay5.Name = "tbRelay5";
             this.tbRelay5.Size = new System.Drawing.Size(58, 29);
             this.tbRelay5.TabIndex = 167;
+            this.tbRelay5.TabStop = false;
             this.tbRelay5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label14
@@ -353,6 +347,7 @@
             this.tbRelay4.Name = "tbRelay4";
             this.tbRelay4.Size = new System.Drawing.Size(58, 29);
             this.tbRelay4.TabIndex = 165;
+            this.tbRelay4.TabStop = false;
             this.tbRelay4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label11
@@ -372,6 +367,7 @@
             this.tbRelay3.Name = "tbRelay3";
             this.tbRelay3.Size = new System.Drawing.Size(58, 29);
             this.tbRelay3.TabIndex = 163;
+            this.tbRelay3.TabStop = false;
             this.tbRelay3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label12
@@ -391,6 +387,7 @@
             this.tbRelay2.Name = "tbRelay2";
             this.tbRelay2.Size = new System.Drawing.Size(58, 29);
             this.tbRelay2.TabIndex = 161;
+            this.tbRelay2.TabStop = false;
             this.tbRelay2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label9
@@ -410,6 +407,7 @@
             this.tbRelay1.Name = "tbRelay1";
             this.tbRelay1.Size = new System.Drawing.Size(58, 29);
             this.tbRelay1.TabIndex = 159;
+            this.tbRelay1.TabStop = false;
             this.tbRelay1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label10
@@ -459,7 +457,6 @@
             this.Controls.Add(this.label9);
             this.Controls.Add(this.tbRelay1);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.butDefaults);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -474,8 +471,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button butDefaults;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.TextBox tbRelay16;

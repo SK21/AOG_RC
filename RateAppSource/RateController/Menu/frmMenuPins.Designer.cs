@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.butDefaults = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.tbPressure = new System.Windows.Forms.TextBox();
@@ -49,23 +48,6 @@
             this.tbFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // butDefaults
-            // 
-            this.butDefaults.BackColor = System.Drawing.Color.Transparent;
-            this.butDefaults.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.butDefaults.FlatAppearance.BorderSize = 0;
-            this.butDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.butDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.butDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butDefaults.Location = new System.Drawing.Point(300, 546);
-            this.butDefaults.Name = "butDefaults";
-            this.butDefaults.Size = new System.Drawing.Size(72, 72);
-            this.butDefaults.TabIndex = 154;
-            this.butDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.butDefaults.UseVisualStyleBackColor = false;
-            this.butDefaults.Click += new System.EventHandler(this.butDefaults_Click);
             // 
             // btnCancel
             // 
@@ -110,6 +92,7 @@
             this.tbPressure.Name = "tbPressure";
             this.tbPressure.Size = new System.Drawing.Size(58, 29);
             this.tbPressure.TabIndex = 238;
+            this.tbPressure.TabStop = false;
             this.tbPressure.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label25
@@ -144,6 +127,7 @@
             this.tbWrk.Name = "tbWrk";
             this.tbWrk.Size = new System.Drawing.Size(58, 29);
             this.tbWrk.TabIndex = 235;
+            this.tbWrk.TabStop = false;
             this.tbWrk.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // lbWorkPin
@@ -163,6 +147,7 @@
             this.tbPWM2.Name = "tbPWM2";
             this.tbPWM2.Size = new System.Drawing.Size(58, 29);
             this.tbPWM2.TabIndex = 233;
+            this.tbPWM2.TabStop = false;
             this.tbPWM2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label7
@@ -182,6 +167,7 @@
             this.tbPWM1.Name = "tbPWM1";
             this.tbPWM1.Size = new System.Drawing.Size(58, 29);
             this.tbPWM1.TabIndex = 231;
+            this.tbPWM1.TabStop = false;
             this.tbPWM1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label8
@@ -201,6 +187,7 @@
             this.tbDir2.Name = "tbDir2";
             this.tbDir2.Size = new System.Drawing.Size(58, 29);
             this.tbDir2.TabIndex = 229;
+            this.tbDir2.TabStop = false;
             this.tbDir2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label5
@@ -220,6 +207,7 @@
             this.tbDir1.Name = "tbDir1";
             this.tbDir1.Size = new System.Drawing.Size(58, 29);
             this.tbDir1.TabIndex = 227;
+            this.tbDir1.TabStop = false;
             this.tbDir1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label6
@@ -239,6 +227,7 @@
             this.tbFlow2.Name = "tbFlow2";
             this.tbFlow2.Size = new System.Drawing.Size(58, 29);
             this.tbFlow2.TabIndex = 225;
+            this.tbFlow2.TabStop = false;
             this.tbFlow2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label3
@@ -258,6 +247,7 @@
             this.tbFlow1.Name = "tbFlow1";
             this.tbFlow1.Size = new System.Drawing.Size(58, 29);
             this.tbFlow1.TabIndex = 223;
+            this.tbFlow1.TabStop = false;
             this.tbFlow1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label4
@@ -292,7 +282,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tbFlow1);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.butDefaults);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -307,7 +296,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button butDefaults;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.TextBox tbPressure;
