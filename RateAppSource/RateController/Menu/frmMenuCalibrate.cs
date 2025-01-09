@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
@@ -35,11 +36,12 @@ namespace RateController.Menu
 
         private void btnCalStart_Click(object sender, EventArgs e)
         {
+            // btnCalStop needs to be next in tab order 
+            // after btnCalStart to receive the focus
             mf.SimMode = SimType.Sim_Speed;
             Running = true;
-            SetButtons();
+            SetButtons();   
             Cals.Running(true);
-            btnCalStop.Focus();
         }
 
         private void btnCalStop_Click(object sender, EventArgs e)
@@ -118,8 +120,6 @@ namespace RateController.Menu
 
             PositionForm();
 
-            LoadCals();
-
             if (mf.UseInches)
             {
                 lbSpeed.Text = "MPH";
@@ -134,6 +134,7 @@ namespace RateController.Menu
                 c.Tag = c.ForeColor;
             }
 
+            LoadCals();
             Cals.Update();
             UpdateForm();
             SetButtons();
@@ -207,16 +208,15 @@ namespace RateController.Menu
                 {
                     btnCancel.Enabled = true;
                     btnOK.Enabled = true;
-                    btnCalStart.Enabled = false;
                     btnCalStop.Enabled = false;
+                    btnCalStart.Enabled = false;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
                     btnOK.Enabled = false;
-                    btnCalStart.Enabled = !Running;
                     btnCalStop.Enabled = Running;
-                    //btnOK.Enabled = !Running;
+                    btnCalStart.Enabled = !Running;
                 }
 
                 tbSpeed.Enabled = !Running;
@@ -274,5 +274,11 @@ namespace RateController.Menu
             tbSpeed.Text = mf.SimSpeed.ToString("N1");
             Initializing = false;
         }
+
+        private void btnPwr0_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

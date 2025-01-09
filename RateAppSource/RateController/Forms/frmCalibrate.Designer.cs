@@ -436,7 +436,7 @@
             this.tbRate0.MaxLength = 8;
             this.tbRate0.Name = "tbRate0";
             this.tbRate0.Size = new System.Drawing.Size(99, 30);
-            this.tbRate0.TabIndex = 321;
+            this.tbRate0.TabIndex = 500;
             this.tbRate0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // tbRate1
@@ -496,7 +496,7 @@
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
-            this.btnCancel.TabIndex = 1;
+            this.btnCancel.TabIndex = 2;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -562,7 +562,7 @@
             this.btnCalStop.Location = new System.Drawing.Point(453, 464);
             this.btnCalStop.Name = "btnCalStop";
             this.btnCalStop.Size = new System.Drawing.Size(72, 72);
-            this.btnCalStop.TabIndex = 2;
+            this.btnCalStop.TabIndex = 1;
             this.btnCalStop.UseVisualStyleBackColor = false;
             this.btnCalStop.Click += new System.EventHandler(this.btnCalStop_Click);
             // 
@@ -575,7 +575,7 @@
             this.btnCalStart.Location = new System.Drawing.Point(374, 464);
             this.btnCalStart.Name = "btnCalStart";
             this.btnCalStart.Size = new System.Drawing.Size(72, 72);
-            this.btnCalStart.TabIndex = 3;
+            this.btnCalStart.TabIndex = 0;
             this.btnCalStart.UseVisualStyleBackColor = false;
             this.btnCalStart.Click += new System.EventHandler(this.btnCalStart_Click);
             // 
@@ -640,7 +640,7 @@
             this.btnOK.Location = new System.Drawing.Point(611, 464);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(72, 72);
-            this.btnOK.TabIndex = 0;
+            this.btnOK.TabIndex = 3;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);

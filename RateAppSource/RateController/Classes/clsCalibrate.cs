@@ -7,6 +7,7 @@ namespace RateController
 {
     public class clsCalibrate
     {
+        private ApplicationMode ApplicationModeStart;
         private int CalPWM;
         private double cCalFactor;
         private TextBox cCalFactorBox;
@@ -25,25 +26,25 @@ namespace RateController
         private TextBox cRateBox;
         private bool cRunning;
         private Timer cTimer = new Timer();
+        private bool FirstRun;
         private bool Initializing;
         private double MeasuredAmount;
         private FormStart mf;
         private double PulseCountStart;
         private double PulseCountTotal;
         private int SetCount;
-        private ApplicationMode ApplicationModeStart;
-
 
         public clsCalibrate(FormStart CallingFrom, int ID)
         {
             mf = CallingFrom;
             cID = ID;
+            FirstRun = true;
             cProduct = mf.Products.Item(cID);
             cCalFactor = cProduct.MeterCal;
-            PulseCountStart = cProduct.Pulses();
-            cProduct.Enabled = false;
-            ApplicationModeStart = cProduct.AppMode;
-            cProduct.AppMode = ApplicationMode.ConstantUPM;
+            //ApplicationModeStart = cProduct.AppMode;
+            //cProduct.Enabled = false;
+            //PulseCountStart = cProduct.Pulses();
+            //cProduct.AppMode = ApplicationMode.ConstantUPM;
 
             cTimer.Interval = 1000;
             cTimer.Enabled = false;
@@ -185,9 +186,10 @@ namespace RateController
 
         public void Load()
         {
-            double.TryParse(mf.Tls.LoadProperty(Name() + "_Pulses"), out PulseCountTotal);
-            double.TryParse(mf.Tls.LoadProperty(Name() + "_Amount"), out MeasuredAmount);
-            int.TryParse(mf.Tls.LoadProperty(Name() + "_CalPWM"), out CalPWM);
+            if (bool.TryParse(mf.Tls.LoadProperty(Name() + "_IsLocked"), out bool lk)) cIsLocked = lk;
+            if (double.TryParse(mf.Tls.LoadProperty(Name() + "_Pulses"), out double pl)) PulseCountTotal = pl;
+            if (double.TryParse(mf.Tls.LoadProperty(Name() + "_Amount"), out double amt)) MeasuredAmount = amt;
+            if (int.TryParse(mf.Tls.LoadProperty(Name() + "_CalPWM"), out int pwm)) CalPWM = pwm;
         }
 
         public void Reset()
@@ -215,6 +217,7 @@ namespace RateController
                     mf.Tls.SaveProperty(Name() + "_Pulses", PulseCountTotal.ToString());
                     mf.Tls.SaveProperty(Name() + "_Amount", MeasuredAmount.ToString());
                     mf.Tls.SaveProperty(Name() + "_CalPWM", CalPWM.ToString());
+                    mf.Tls.SaveProperty(Name() + "_IsLocked", cIsLocked.ToString());
 
                     double.TryParse(cCalFactorBox.Text, out cCalFactor);
                     cProduct.MeterCal = cCalFactor;
@@ -392,6 +395,17 @@ namespace RateController
 
         private void CPower_Click(object sender, EventArgs e)
         {
+            if (FirstRun)
+            {
+                // Prevent turning off product when frmMenuCalibrate loads.
+                // Only turn off when calibration is going to be used.
+                FirstRun = false;
+                cCalFactor = cProduct.MeterCal;
+                ApplicationModeStart = cProduct.AppMode;
+                cProduct.Enabled = false;
+                PulseCountStart = cProduct.Pulses();
+                cProduct.AppMode = ApplicationMode.ConstantUPM;
+            }
             cEnabled = !cEnabled;
             cProduct.CalUseBaseRate = cEnabled;
             Update();

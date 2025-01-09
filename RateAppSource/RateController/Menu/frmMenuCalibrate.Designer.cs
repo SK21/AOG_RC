@@ -93,7 +93,7 @@
             this.btnCancel.Location = new System.Drawing.Point(378, 546);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
-            this.btnCancel.TabIndex = 1;
+            this.btnCancel.TabIndex = 5;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -111,7 +111,7 @@
             this.btnOK.Location = new System.Drawing.Point(456, 546);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(72, 72);
-            this.btnOK.TabIndex = 0;
+            this.btnOK.TabIndex = 6;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -135,9 +135,10 @@
             this.btnPwr0.Location = new System.Drawing.Point(12, 82);
             this.btnPwr0.Name = "btnPwr0";
             this.btnPwr0.Size = new System.Drawing.Size(72, 72);
-            this.btnPwr0.TabIndex = 226;
+            this.btnPwr0.TabIndex = 0;
             this.btnPwr0.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnPwr0.UseVisualStyleBackColor = false;
+            this.btnPwr0.Click += new System.EventHandler(this.btnPwr0_Click);
             // 
             // lbPulses0
             // 
@@ -145,7 +146,7 @@
             this.lbPulses0.Location = new System.Drawing.Point(93, 106);
             this.lbPulses0.Name = "lbPulses0";
             this.lbPulses0.Size = new System.Drawing.Size(58, 24);
-            this.lbPulses0.TabIndex = 227;
+            this.lbPulses0.TabIndex = 0;
             this.lbPulses0.Text = "9,999";
             this.lbPulses0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -157,6 +158,7 @@
             this.tbRate0.Name = "tbRate0";
             this.tbRate0.Size = new System.Drawing.Size(66, 30);
             this.tbRate0.TabIndex = 322;
+            this.tbRate0.TabStop = false;
             this.tbRate0.Text = "99,999";
             this.tbRate0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -168,6 +170,7 @@
             this.tbFactor0.Name = "tbFactor0";
             this.tbFactor0.Size = new System.Drawing.Size(66, 30);
             this.tbFactor0.TabIndex = 323;
+            this.tbFactor0.TabStop = false;
             this.tbFactor0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lbExpected0
@@ -188,6 +191,7 @@
             this.tbMeasured0.Name = "tbMeasured0";
             this.tbMeasured0.Size = new System.Drawing.Size(65, 30);
             this.tbMeasured0.TabIndex = 325;
+            this.tbMeasured0.TabStop = false;
             this.tbMeasured0.Text = "100.5";
             this.tbMeasured0.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -222,6 +226,7 @@
             this.tbRate3.Name = "tbRate3";
             this.tbRate3.Size = new System.Drawing.Size(66, 30);
             this.tbRate3.TabIndex = 354;
+            this.tbRate3.TabStop = false;
             this.tbRate3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // tbRate2
@@ -232,6 +237,7 @@
             this.tbRate2.Name = "tbRate2";
             this.tbRate2.Size = new System.Drawing.Size(66, 30);
             this.tbRate2.TabIndex = 353;
+            this.tbRate2.TabStop = false;
             this.tbRate2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // tbRate1
@@ -242,6 +248,7 @@
             this.tbRate1.Name = "tbRate1";
             this.tbRate1.Size = new System.Drawing.Size(66, 30);
             this.tbRate1.TabIndex = 352;
+            this.tbRate1.TabStop = false;
             this.tbRate1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // pb3
@@ -282,6 +289,7 @@
             this.tbMeasured3.Name = "tbMeasured3";
             this.tbMeasured3.Size = new System.Drawing.Size(65, 30);
             this.tbMeasured3.TabIndex = 348;
+            this.tbMeasured3.TabStop = false;
             this.tbMeasured3.Text = "100.5";
             this.tbMeasured3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -293,6 +301,7 @@
             this.tbMeasured2.Name = "tbMeasured2";
             this.tbMeasured2.Size = new System.Drawing.Size(65, 30);
             this.tbMeasured2.TabIndex = 347;
+            this.tbMeasured2.TabStop = false;
             this.tbMeasured2.Text = "100.5";
             this.tbMeasured2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -304,6 +313,7 @@
             this.tbMeasured1.Name = "tbMeasured1";
             this.tbMeasured1.Size = new System.Drawing.Size(65, 30);
             this.tbMeasured1.TabIndex = 346;
+            this.tbMeasured1.TabStop = false;
             this.tbMeasured1.Text = "100.5";
             this.tbMeasured1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -354,6 +364,7 @@
             this.tbFactor3.Name = "tbFactor3";
             this.tbFactor3.Size = new System.Drawing.Size(66, 30);
             this.tbFactor3.TabIndex = 342;
+            this.tbFactor3.TabStop = false;
             this.tbFactor3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // tbFactor2
@@ -364,6 +375,7 @@
             this.tbFactor2.Name = "tbFactor2";
             this.tbFactor2.Size = new System.Drawing.Size(66, 30);
             this.tbFactor2.TabIndex = 341;
+            this.tbFactor2.TabStop = false;
             this.tbFactor2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // tbFactor1
@@ -374,6 +386,7 @@
             this.tbFactor1.Name = "tbFactor1";
             this.tbFactor1.Size = new System.Drawing.Size(66, 30);
             this.tbFactor1.TabIndex = 340;
+            this.tbFactor1.TabStop = false;
             this.tbFactor1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnSet3
@@ -586,7 +599,7 @@
             this.lbSpeed.Location = new System.Drawing.Point(126, 591);
             this.lbSpeed.Name = "lbSpeed";
             this.lbSpeed.Size = new System.Drawing.Size(54, 24);
-            this.lbSpeed.TabIndex = 366;
+            this.lbSpeed.TabIndex = 1;
             this.lbSpeed.Text = "mph";
             this.lbSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -598,6 +611,7 @@
             this.tbSpeed.Name = "tbSpeed";
             this.tbSpeed.Size = new System.Drawing.Size(65, 30);
             this.tbSpeed.TabIndex = 365;
+            this.tbSpeed.TabStop = false;
             this.tbSpeed.Text = "5.0";
             this.tbSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbSpeed.TextChanged += new System.EventHandler(this.tbSpeed_TextChanged);
@@ -608,10 +622,10 @@
             // 
             this.lbCalSpeed.AutoSize = true;
             this.lbCalSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCalSpeed.Location = new System.Drawing.Point(23, 551);
+            this.lbCalSpeed.Location = new System.Drawing.Point(23, 546);
             this.lbCalSpeed.Name = "lbCalSpeed";
             this.lbCalSpeed.Size = new System.Drawing.Size(157, 23);
-            this.lbCalSpeed.TabIndex = 364;
+            this.lbCalSpeed.TabIndex = 5;
             this.lbCalSpeed.Text = "Calibration Speed";
             // 
             // btnCalStop
@@ -623,7 +637,7 @@
             this.btnCalStop.Location = new System.Drawing.Point(300, 546);
             this.btnCalStop.Name = "btnCalStop";
             this.btnCalStop.Size = new System.Drawing.Size(72, 72);
-            this.btnCalStop.TabIndex = 2;
+            this.btnCalStop.TabIndex = 4;
             this.btnCalStop.UseVisualStyleBackColor = false;
             this.btnCalStop.Click += new System.EventHandler(this.btnCalStop_Click);
             // 
