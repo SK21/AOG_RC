@@ -18,18 +18,6 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                File.WriteAllText(mf.Tls.FilesDir() + "\\Ethernet Log.txt", tbEthernet.Text);
-                mf.Tls.ShowHelp("File saved.", "Save", 10000);
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog("frmModules/btnSave_Click: " + ex.Message);
-            }
-        }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
@@ -115,6 +103,7 @@ namespace RateController.Menu
             lbAppVersion.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
             lbDate.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
             lbFile.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
+            ModuleIndicator.BackColor = this.BackColor;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -210,6 +199,15 @@ namespace RateController.Menu
 
             lbIP.Text = mf.UDPmodules.SubNet;
             lbFile.Text = Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName);
+         
+            if (mf.SwitchBox.RealConnected())
+            {
+                ModuleIndicator.Image = Properties.Resources.On;
+            }
+            else
+            {
+                ModuleIndicator.Image = Properties.Resources.Off;
+            }
         }
 
         private void VisitLink(string Link)

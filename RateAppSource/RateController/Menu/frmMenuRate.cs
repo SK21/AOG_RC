@@ -77,7 +77,7 @@ namespace RateController.Menu
 
         private void btnResetTank_Click(object sender, EventArgs e)
         {
-            TankRemain.Text = MainMenu.CurrentProduct.TankSize.ToString("N0");
+            MainMenu.CurrentProduct.TankStart = MainMenu.CurrentProduct.TankSize;
         }
 
         private void btnRight_Click(object sender, EventArgs e)

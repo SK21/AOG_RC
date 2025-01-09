@@ -177,9 +177,6 @@ namespace RateController.Menu
             double Target = MainMenu.CurrentProduct.TargetUPM();
             double Applied = MainMenu.CurrentProduct.UPMapplied();
             double RateError = 0;
-            lbRateAppliedData.Text = Applied.ToString("N1");
-            lbRateSetData.Text = Target.ToString("N1");
-            lbErrorPercent.Text = RateError.ToString("N1");
 
             if (Target > 0)
             {
@@ -190,6 +187,9 @@ namespace RateController.Menu
                 if (IsNegative) RateError *= -1;
             }
 
+            lbErrorPercent.Text = RateError.ToString("N1");
+            lbRateAppliedData.Text = Applied.ToString("N1");
+            lbRateSetData.Text = Target.ToString("N1");
             lbPWMdata.Text = MainMenu.CurrentProduct.PWM().ToString("N0");
 
             if (MainMenu.CurrentProduct.CountsRev > 0)
