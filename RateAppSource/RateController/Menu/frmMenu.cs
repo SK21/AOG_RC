@@ -362,6 +362,7 @@ namespace RateController
                 butSections.Visible = !Expanded;
                 butRelays.Visible = !Expanded;
                 butCalibrate.Visible = !Expanded;
+                butSwitches.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -394,6 +395,10 @@ namespace RateController
                     butRelays.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butRelays.Top = Pos;
+
+                    butSwitches.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butSwitches.Top = Pos;
 
                     butCalibrate.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -551,7 +556,6 @@ namespace RateController
             {
                 butDisplay.Visible = !Expanded;
                 butPrimed.Visible = !Expanded;
-                butSwitches.Visible = !Expanded;
                 butLanguage.Visible = !Expanded;
                 butColor.Visible = !Expanded;
 
@@ -586,10 +590,6 @@ namespace RateController
                     butPrimed.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butPrimed.Top = Pos;
-
-                    butSwitches.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butSwitches.Top = Pos;
 
                     butLanguage.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -1043,6 +1043,11 @@ namespace RateController
                                 butMachine.PerformClick();
                                 break;
 
+                            case "frmMenuSwitches":
+                                fs = new frmMenuSwitches(mf, this);
+                                butMachine.PerformClick();
+                                break;
+
                             case "frmMenuNetwork":
                                 fs = new frmMenuNetwork(mf, this);
                                 butModules.PerformClick();
@@ -1083,18 +1088,8 @@ namespace RateController
                                 butOptions.PerformClick();
                                 break;
 
-                            case "frmMenuSwitches":
-                                fs = new frmMenuSwitches(mf, this);
-                                butOptions.PerformClick();
-                                break;
-
                             case "frmMenuLanguage":
                                 fs = new frmMenuLanguage(mf, this);
-                                butOptions.PerformClick();
-                                break;
-
-                            case "frmMenuOther":
-                                fs = new frmMenuOther(mf, this);
                                 butOptions.PerformClick();
                                 break;
 
