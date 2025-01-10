@@ -47,7 +47,6 @@
             this.butPins = new System.Windows.Forms.Button();
             this.butConfig = new System.Windows.Forms.Button();
             this.butNetwork = new System.Windows.Forms.Button();
-            this.butOther = new System.Windows.Forms.Button();
             this.butLanguage = new System.Windows.Forms.Button();
             this.butSwitches = new System.Windows.Forms.Button();
             this.butPrimed = new System.Windows.Forms.Button();
@@ -425,25 +424,6 @@
             this.butNetwork.Visible = false;
             this.butNetwork.Click += new System.EventHandler(this.butNetwork_Click);
             // 
-            // butOther
-            // 
-            this.butOther.BackColor = System.Drawing.Color.Transparent;
-            this.butOther.FlatAppearance.BorderSize = 0;
-            this.butOther.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butOther.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butOther.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butOther.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butOther.Location = new System.Drawing.Point(970, 420);
-            this.butOther.Name = "butOther";
-            this.butOther.Size = new System.Drawing.Size(158, 49);
-            this.butOther.TabIndex = 32;
-            this.butOther.Text = "Other";
-            this.butOther.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butOther.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butOther.UseVisualStyleBackColor = false;
-            this.butOther.Visible = false;
-            this.butOther.Click += new System.EventHandler(this.butOther_Click);
-            // 
             // butLanguage
             // 
             this.butLanguage.BackColor = System.Drawing.Color.Transparent;
@@ -752,7 +732,6 @@
             this.Controls.Add(this.butUpdateModules);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.gbLine1);
-            this.Controls.Add(this.butOther);
             this.Controls.Add(this.butLanguage);
             this.Controls.Add(this.butSwitches);
             this.Controls.Add(this.butPrimed);
@@ -828,7 +807,6 @@
         private System.Windows.Forms.Button butPins;
         private System.Windows.Forms.Button butConfig;
         private System.Windows.Forms.Button butNetwork;
-        private System.Windows.Forms.Button butOther;
         private System.Windows.Forms.Button butLanguage;
         private System.Windows.Forms.Button butSwitches;
         private System.Windows.Forms.Button butPrimed;

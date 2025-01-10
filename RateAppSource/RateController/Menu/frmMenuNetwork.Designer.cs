@@ -37,11 +37,11 @@
             this.btnSendSubnet = new System.Windows.Forms.Button();
             this.btnRescan = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ckDefaultModule = new System.Windows.Forms.CheckBox();
             this.rbNano = new System.Windows.Forms.RadioButton();
             this.rbESP32 = new System.Windows.Forms.RadioButton();
             this.rbTeensy = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.ckDefaultModule = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -86,7 +86,7 @@
             // 
             this.lbIP.AutoSize = true;
             this.lbIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIP.Location = new System.Drawing.Point(26, 81);
+            this.lbIP.Location = new System.Drawing.Point(26, 74);
             this.lbIP.Name = "lbIP";
             this.lbIP.Size = new System.Drawing.Size(76, 24);
             this.lbIP.TabIndex = 223;
@@ -95,7 +95,7 @@
             // lbModuleIP
             // 
             this.lbModuleIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModuleIP.Location = new System.Drawing.Point(191, 38);
+            this.lbModuleIP.Location = new System.Drawing.Point(191, 31);
             this.lbModuleIP.Name = "lbModuleIP";
             this.lbModuleIP.Size = new System.Drawing.Size(161, 24);
             this.lbModuleIP.TabIndex = 222;
@@ -106,7 +106,7 @@
             // 
             this.lbSubnet.AutoSize = true;
             this.lbSubnet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSubnet.Location = new System.Drawing.Point(26, 38);
+            this.lbSubnet.Location = new System.Drawing.Point(26, 31);
             this.lbSubnet.Name = "lbSubnet";
             this.lbSubnet.Size = new System.Drawing.Size(149, 24);
             this.lbSubnet.TabIndex = 221;
@@ -117,7 +117,7 @@
             this.cbEthernet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEthernet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbEthernet.FormattingEnabled = true;
-            this.cbEthernet.Location = new System.Drawing.Point(195, 78);
+            this.cbEthernet.Location = new System.Drawing.Point(195, 71);
             this.cbEthernet.Name = "cbEthernet";
             this.cbEthernet.Size = new System.Drawing.Size(157, 32);
             this.cbEthernet.TabIndex = 220;
@@ -129,7 +129,7 @@
             this.btnSendSubnet.FlatAppearance.BorderSize = 0;
             this.btnSendSubnet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSendSubnet.Image = global::RateController.Properties.Resources.Update4;
-            this.btnSendSubnet.Location = new System.Drawing.Point(219, 134);
+            this.btnSendSubnet.Location = new System.Drawing.Point(219, 127);
             this.btnSendSubnet.Name = "btnSendSubnet";
             this.btnSendSubnet.Size = new System.Drawing.Size(72, 72);
             this.btnSendSubnet.TabIndex = 219;
@@ -145,7 +145,7 @@
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.Image = global::RateController.Properties.Resources.Update;
             this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRescan.Location = new System.Drawing.Point(97, 134);
+            this.btnRescan.Location = new System.Drawing.Point(97, 127);
             this.btnRescan.Name = "btnRescan";
             this.btnRescan.Size = new System.Drawing.Size(72, 72);
             this.btnRescan.TabIndex = 218;
@@ -160,13 +160,30 @@
             this.groupBox1.Controls.Add(this.rbESP32);
             this.groupBox1.Controls.Add(this.rbTeensy);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(77, 301);
+            this.groupBox1.Location = new System.Drawing.Point(62, 331);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(373, 221);
+            this.groupBox1.Size = new System.Drawing.Size(398, 200);
             this.groupBox1.TabIndex = 224;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Board";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
+            // 
+            // ckDefaultModule
+            // 
+            this.ckDefaultModule.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDefaultModule.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckDefaultModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDefaultModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckDefaultModule.Image = global::RateController.Properties.Resources.VehFileLoad;
+            this.ckDefaultModule.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.ckDefaultModule.Location = new System.Drawing.Point(254, 51);
+            this.ckDefaultModule.Name = "ckDefaultModule";
+            this.ckDefaultModule.Size = new System.Drawing.Size(98, 112);
+            this.ckDefaultModule.TabIndex = 226;
+            this.ckDefaultModule.Text = "Load Defaults";
+            this.ckDefaultModule.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.ckDefaultModule.UseVisualStyleBackColor = true;
+            this.ckDefaultModule.CheckedChanged += new System.EventHandler(this.ckDefaultModule_CheckedChanged);
             // 
             // rbNano
             // 
@@ -174,7 +191,7 @@
             this.rbNano.Checked = true;
             this.rbNano.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbNano.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbNano.Location = new System.Drawing.Point(58, 41);
+            this.rbNano.Location = new System.Drawing.Point(58, 28);
             this.rbNano.Name = "rbNano";
             this.rbNano.Size = new System.Drawing.Size(170, 37);
             this.rbNano.TabIndex = 0;
@@ -189,7 +206,7 @@
             this.rbESP32.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbESP32.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbESP32.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbESP32.Location = new System.Drawing.Point(58, 163);
+            this.rbESP32.Location = new System.Drawing.Point(58, 150);
             this.rbESP32.Name = "rbESP32";
             this.rbESP32.Size = new System.Drawing.Size(170, 37);
             this.rbESP32.TabIndex = 46;
@@ -203,7 +220,7 @@
             this.rbTeensy.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbTeensy.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbTeensy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbTeensy.Location = new System.Drawing.Point(58, 102);
+            this.rbTeensy.Location = new System.Drawing.Point(58, 89);
             this.rbTeensy.Name = "rbTeensy";
             this.rbTeensy.Size = new System.Drawing.Size(170, 37);
             this.rbTeensy.TabIndex = 45;
@@ -221,30 +238,13 @@
             this.groupBox2.Controls.Add(this.lbIP);
             this.groupBox2.Controls.Add(this.lbModuleIP);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(77, 36);
+            this.groupBox2.Location = new System.Drawing.Point(62, 74);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(373, 231);
+            this.groupBox2.Size = new System.Drawing.Size(398, 215);
             this.groupBox2.TabIndex = 225;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Network";
             this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
-            // 
-            // ckDefaultModule
-            // 
-            this.ckDefaultModule.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckDefaultModule.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckDefaultModule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDefaultModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckDefaultModule.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.ckDefaultModule.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.ckDefaultModule.Location = new System.Drawing.Point(254, 64);
-            this.ckDefaultModule.Name = "ckDefaultModule";
-            this.ckDefaultModule.Size = new System.Drawing.Size(98, 112);
-            this.ckDefaultModule.TabIndex = 226;
-            this.ckDefaultModule.Text = "Load Defaults";
-            this.ckDefaultModule.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.ckDefaultModule.UseVisualStyleBackColor = true;
-            this.ckDefaultModule.CheckedChanged += new System.EventHandler(this.ckDefaultModule_CheckedChanged);
             // 
             // frmMenuNetwork
             // 

@@ -40,6 +40,8 @@ namespace RateController.Menu
             {
                 mf.ShowSwitches = ckScreenSwitches.Checked;
                 mf.UseDualAuto = ckDualAuto.Checked;
+                mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
+                mf.MasterOverride = ckNoMaster.Checked;
 
                 // data grid
                 for (int i = 0; i < DGV.Rows.Count; i++)
@@ -161,6 +163,10 @@ namespace RateController.Menu
             }
         }
 
+        private void DGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
         private void DGV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (!Initializing) SetButtons(true);
@@ -263,6 +269,7 @@ namespace RateController.Menu
         private void SetLanguage()
         {
             ckScreenSwitches.Text = Lang.lgSwitches;
+            ckWorkSwitch.Text = Lang.lgWorkSwitch;
         }
 
         private void UpdateForm(bool UpdateObject = false)
@@ -270,9 +277,16 @@ namespace RateController.Menu
             Initializing = true;
             ckScreenSwitches.Checked = mf.ShowSwitches;
             ckDualAuto.Checked = mf.UseDualAuto;
+            ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
+            ckNoMaster.Checked = mf.MasterOverride;
             LoadData(UpdateObject);
 
             Initializing = false;
+        }
+
+        private void groupBox2_Paint(object sender, PaintEventArgs e)
+        {
+            mf.Tls.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
     }
 }

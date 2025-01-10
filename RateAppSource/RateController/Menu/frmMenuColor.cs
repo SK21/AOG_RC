@@ -7,7 +7,6 @@ namespace RateController.Menu
     public partial class frmMenuColor : Form
     {
         private bool cEdited;
-        private Bitmap colorBitmap;
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
@@ -63,54 +62,6 @@ namespace RateController.Menu
             }
         }
 
-        private Color ColorFromHSV(float hue, float saturation, float brightness)
-        {
-            Color Result;
-            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
-            float f = (float)(hue / 60 - Math.Floor(hue / 60));
-            brightness = brightness * 255;
-            int v = Convert.ToInt32(brightness);
-            int p = Convert.ToInt32(brightness * (1 - saturation));
-            int q = Convert.ToInt32((brightness * (1 - f * saturation)));
-            int t = Convert.ToInt32((brightness * (1 - (1 - f) * saturation)));
-            if (v > 255) v = 255;
-            if (p > 255) p = 255;
-            if (q > 255) q = 255;
-            if (t > 255) t = 255;
-            if (v < 0) v = 0;
-            if (p < 0) p = 0;
-            if (q < 0) q = 0;
-            if (t < 0) t = 0;
-
-            switch (hi)
-            {
-                case 0:
-                    Result = Color.FromArgb(255, v, t, p);
-                    break;
-
-                case 1:
-                    Result = Color.FromArgb(255, q, v, p);
-                    break;
-
-                case 2:
-                    Result = Color.FromArgb(255, p, v, t);
-                    break;
-
-                case 3:
-                    Result = Color.FromArgb(255, p, q, v);
-                    break;
-
-                case 4:
-                    Result = Color.FromArgb(255, t, p, v);
-                    break;
-
-                default:
-                    Result = Color.FromArgb(255, v, p, q);
-                    break;
-            }
-            return Result;
-        }
-
         private void colorPanel_Click(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -119,7 +70,7 @@ namespace RateController.Menu
 
         private void colorPanel_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(colorBitmap, 0, 0, colorPanel.Width, colorPanel.Height);
+            e.Graphics.DrawImage(mf.Tls.ScreenBitmap, 0, 0, colorPanel.Width, colorPanel.Height);
         }
 
         private void ColorPanel_Touch(object sender, MouseEventArgs e)
@@ -143,7 +94,7 @@ namespace RateController.Menu
                         saturation = 1;
                     }
 
-                    Color NewColor = ColorFromHSV(hue * 360, saturation, brightness);
+                    Color NewColor = mf.Tls.ColorFromHSV(hue * 360, saturation, brightness);
                     if (NewColor.A == 255 && NewColor.R == 255 && NewColor.G == 255 && NewColor.B == 255)
                     {
                         NewColor = Color.FromArgb(255, 255, 255, 254);
@@ -162,21 +113,6 @@ namespace RateController.Menu
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("frmMenuColor/ColorPanel_Touch: " + ex.Message);
-            }
-        }
-
-        private void CreateColorBitmap()
-        {
-            colorBitmap = new Bitmap(colorPanel.Width, colorPanel.Height);
-            for (int x = 0; x < colorPanel.Width; x++)
-            {
-                for (int y = 0; y < colorPanel.Height; y++)
-                {
-                    float hue = (float)x / colorPanel.Width;
-                    float brightness = 1 - (float)y / colorPanel.Height;
-                    Color color = ColorFromHSV(hue * 360, 1, brightness);
-                    colorBitmap.SetPixel(x, y, color);
-                }
             }
         }
 
@@ -202,7 +138,6 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             PositionForm();
             UpdateForm();
-            CreateColorBitmap();
             this.Visible = true;
         }
 

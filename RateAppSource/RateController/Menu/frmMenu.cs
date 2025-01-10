@@ -30,7 +30,7 @@ namespace RateController
 
             Items = new Button[] { butNew, butOpen, butSaveAs, butRate, butControl, butSettings, butMode, butMonitor,
                 butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins, butWifi,
-                butValves, butDisplay, butPrimed, butSwitches, butLanguage, butOther, butColor };
+                butValves, butDisplay, butPrimed, butSwitches, butLanguage, butColor };
 
             ChangeProduct(ProductID);
             LoadLast = LoadLst;
@@ -554,7 +554,6 @@ namespace RateController
                 butSwitches.Visible = !Expanded;
                 butLanguage.Visible = !Expanded;
                 butColor.Visible = !Expanded;
-                butOther.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -600,32 +599,8 @@ namespace RateController
                     Pos += SubSpacing;
                     butColor.Top = Pos;
 
-                    butOther.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butOther.Top = Pos;
-
                     butDisplay.PerformClick();
                 }
-            }
-        }
-
-        private void butOther_Click(object sender, EventArgs e)
-        {
-            LastScreen = "frmMenuOther";
-            HighlightButton(LastScreen);
-            Form fs = mf.Tls.IsFormOpen(LastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuOther(mf, this);
-                frm.Owner = this;
-                frm.Text = "Opened";
-                frm.Show();
-            }
-            else
-            {
-                fs.Text = "Focused";
-                fs.Focus();
             }
         }
 

@@ -1,17 +1,14 @@
 ﻿using RateController.Language;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Media;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RateController
 {
@@ -48,25 +45,23 @@ namespace RateController
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
         private SortedDictionary<string, string> PropsApp = new SortedDictionary<string, string>();
 
+        #region ScreenBitMap
+
+        private Bitmap cScreenBitmap;
+        private int cScreenBitmapHeight = 465;  // from frmMenuColor colorPanel
+        private int cScreenBitmapWidth = 516;
+
+        #endregion ScreenBitMap
+
         public clsTools(FormStart CallingForm)
         {
             mf = CallingForm;
             CheckFolders();
             OpenFile(Properties.Settings.Default.FileName);
+            CreateColorBitmap();
         }
 
-        public bool IsFormNameValid(string formName)
-        {
-            // Get the current assembly
-            Assembly assembly = Assembly.GetExecutingAssembly();
-
-            // Check if a type with the given name exists and inherits from Form
-            var formType = assembly.GetTypes().FirstOrDefault(t => t.Name == formName && t.IsSubclassOf(typeof(Form)));
-            return formType != null;
-        }
-
-
-    public string PropertiesFile
+        public string PropertiesFile
         {
             get
             {
@@ -90,6 +85,76 @@ namespace RateController
                 SaveProperty("ReadOnly", cIsReadOnly.ToString(), true);
             }
         }
+
+        #region ScreenBitMapCode
+
+        public Bitmap ScreenBitmap
+        { get { return cScreenBitmap; } }
+
+        public Color ColorFromHSV(float hue, float saturation, float brightness)
+        {
+            Color Result;
+            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            float f = (float)(hue / 60 - Math.Floor(hue / 60));
+            brightness = brightness * 255;
+            int v = Convert.ToInt32(brightness);
+            int p = Convert.ToInt32(brightness * (1 - saturation));
+            int q = Convert.ToInt32((brightness * (1 - f * saturation)));
+            int t = Convert.ToInt32((brightness * (1 - (1 - f) * saturation)));
+            if (v > 255) v = 255;
+            if (p > 255) p = 255;
+            if (q > 255) q = 255;
+            if (t > 255) t = 255;
+            if (v < 0) v = 0;
+            if (p < 0) p = 0;
+            if (q < 0) q = 0;
+            if (t < 0) t = 0;
+
+            switch (hi)
+            {
+                case 0:
+                    Result = Color.FromArgb(255, v, t, p);
+                    break;
+
+                case 1:
+                    Result = Color.FromArgb(255, q, v, p);
+                    break;
+
+                case 2:
+                    Result = Color.FromArgb(255, p, v, t);
+                    break;
+
+                case 3:
+                    Result = Color.FromArgb(255, p, q, v);
+                    break;
+
+                case 4:
+                    Result = Color.FromArgb(255, t, p, v);
+                    break;
+
+                default:
+                    Result = Color.FromArgb(255, v, p, q);
+                    break;
+            }
+            return Result;
+        }
+
+        private void CreateColorBitmap()
+        {
+            cScreenBitmap = new Bitmap(cScreenBitmapWidth, cScreenBitmapHeight);
+            for (int x = 0; x < cScreenBitmap.Width; x++)
+            {
+                for (int y = 0; y < cScreenBitmap.Height; y++)
+                {
+                    float hue = (float)x / cScreenBitmap.Width;
+                    float brightness = 1 - (float)y / cScreenBitmap.Height;
+                    Color color = ColorFromHSV(hue * 360, 1, brightness);
+                    cScreenBitmap.SetPixel(x, y, color);
+                }
+            }
+        }
+
+        #endregion ScreenBitMapCode
 
         public string AppVersion()
         {
@@ -262,6 +327,16 @@ namespace RateController
             return Result;
         }
 
+        public bool IsFormNameValid(string formName)
+        {
+            // Get the current assembly
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            // Check if a type with the given name exists and inherits from Form
+            var formType = assembly.GetTypes().FirstOrDefault(t => t.Name == formName && t.IsSubclassOf(typeof(Form)));
+            return formType != null;
+        }
+
         public Form IsFormOpen(string Name)
         {
             Form Result = null;
@@ -300,7 +375,7 @@ namespace RateController
             return Prop;
         }
 
-        public void LoadFormData(Form Frm,string Instance="",bool SetLocation=true)
+        public void LoadFormData(Form Frm, string Instance = "", bool SetLocation = true)
         {
             if (SetLocation)
             {
@@ -369,6 +444,26 @@ namespace RateController
                 WriteErrorLog("Tools: OpenFile: " + ex.Message);
             }
         }
+
+        public bool OpenTextFile(string FileName)
+        {
+            bool Result = false;
+            try
+            {
+                string Name = cSettingsDir + "\\" + FileName;
+                if (File.Exists(Name))
+                {
+                    Process.Start(new ProcessStartInfo(Name) { UseShellExecute = true });
+                    Result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: OpenTextFile: " + ex.Message);
+            }
+            return Result;
+        }
+
         public byte ParseModID(byte ID)
         {
             // top 4 bits
@@ -472,13 +567,13 @@ namespace RateController
             }
         }
 
-        public void SaveFormData(Form Frm,string Instance="")
+        public void SaveFormData(Form Frm, string Instance = "")
         {
             try
             {
                 if (Frm.WindowState == FormWindowState.Normal)
                 {
-                    SaveAppProperty(Frm.Name+Instance + ".Left", Frm.Left.ToString());
+                    SaveAppProperty(Frm.Name + Instance + ".Left", Frm.Left.ToString());
                     SaveAppProperty(Frm.Name + Instance + ".Top", Frm.Top.ToString());
                 }
                 FormRemove(Frm);
@@ -595,56 +690,6 @@ namespace RateController
         {
             return cVersionDate;
         }
-        public bool OpenTextFile(string FileName)
-        {
-            bool Result = false;
-            try
-            {
-                string Name = cSettingsDir + "\\" + FileName;
-                if (File.Exists(Name))
-                {
-                    Process.Start(new ProcessStartInfo(Name) { UseShellExecute = true });
-                    Result = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Tools: OpenTextFile: " + ex.Message);
-            }
-            return Result;
-        }
-
-        public void WriteLog(string LogName, string Message, bool NewLine = false, bool UseDate = false)
-        {
-            string Line = "";
-            string DF = "";
-            if (Message == null) Message = "";
-            try
-            {
-                string FileName = cSettingsDir + "\\" + LogName;
-                TrimFile(FileName);
-
-                if (NewLine) Line = "\r\n";
-
-                if (UseDate)
-                {
-                    DF = "MMM-dd hh:mm:ss";
-                }
-                else
-                {
-                    DF = "hh:mm:ss";
-                }
-
-                if (UseDate || Message.Length > 0)
-                {
-                    File.AppendAllText(FileName, Line + DateTime.Now.ToString(DF) + "  -  " + Message + "\r\n");
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Tools: WriteLog: " + ex.Message);
-            }
-        }
 
         public void WriteActivityLog(string Message, bool Newline = false, bool NoDate = false)
         {
@@ -684,6 +729,38 @@ namespace RateController
             }
             catch (Exception)
             {
+            }
+        }
+
+        public void WriteLog(string LogName, string Message, bool NewLine = false, bool UseDate = false)
+        {
+            string Line = "";
+            string DF = "";
+            if (Message == null) Message = "";
+            try
+            {
+                string FileName = cSettingsDir + "\\" + LogName;
+                TrimFile(FileName);
+
+                if (NewLine) Line = "\r\n";
+
+                if (UseDate)
+                {
+                    DF = "MMM-dd hh:mm:ss";
+                }
+                else
+                {
+                    DF = "hh:mm:ss";
+                }
+
+                if (UseDate || Message.Length > 0)
+                {
+                    File.AppendAllText(FileName, Line + DateTime.Now.ToString(DF) + "  -  " + Message + "\r\n");
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: WriteLog: " + ex.Message);
             }
         }
 

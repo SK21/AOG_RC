@@ -41,8 +41,14 @@
             this.lbConID = new System.Windows.Forms.Label();
             this.tbPressureCal = new System.Windows.Forms.TextBox();
             this.ckPressure = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.ckMetric = new System.Windows.Forms.CheckBox();
+            this.tbSimSpeed = new System.Windows.Forms.TextBox();
+            this.lbSimUnits = new System.Windows.Forms.Label();
+            this.ckSimSpeed = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -88,7 +94,7 @@
             this.groupBox1.Controls.Add(this.ckSingle);
             this.groupBox1.Controls.Add(this.ckTransparent);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(45, 84);
+            this.groupBox1.Location = new System.Drawing.Point(45, 24);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(418, 144);
             this.groupBox1.TabIndex = 163;
@@ -161,7 +167,7 @@
             this.groupBox2.Controls.Add(this.tbPressureCal);
             this.groupBox2.Controls.Add(this.ckPressure);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(45, 298);
+            this.groupBox2.Location = new System.Drawing.Point(45, 213);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(418, 133);
             this.groupBox2.TabIndex = 164;
@@ -230,11 +236,82 @@
             this.ckPressure.UseVisualStyleBackColor = true;
             this.ckPressure.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.ckMetric);
+            this.groupBox3.Controls.Add(this.tbSimSpeed);
+            this.groupBox3.Controls.Add(this.lbSimUnits);
+            this.groupBox3.Controls.Add(this.ckSimSpeed);
+            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox3.Location = new System.Drawing.Point(45, 391);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(418, 135);
+            this.groupBox3.TabIndex = 227;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Other";
+            this.groupBox3.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // ckMetric
+            // 
+            this.ckMetric.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckMetric.Location = new System.Drawing.Point(22, 28);
+            this.ckMetric.Name = "ckMetric";
+            this.ckMetric.Size = new System.Drawing.Size(164, 34);
+            this.ckMetric.TabIndex = 340;
+            this.ckMetric.Text = "Metric Units";
+            this.ckMetric.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMetric.UseVisualStyleBackColor = true;
+            this.ckMetric.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
+            // 
+            // tbSimSpeed
+            // 
+            this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSimSpeed.Location = new System.Drawing.Point(284, 85);
+            this.tbSimSpeed.MaxLength = 8;
+            this.tbSimSpeed.Name = "tbSimSpeed";
+            this.tbSimSpeed.Size = new System.Drawing.Size(65, 30);
+            this.tbSimSpeed.TabIndex = 338;
+            this.tbSimSpeed.Text = "0";
+            this.tbSimSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSimSpeed.TextChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
+            this.tbSimSpeed.Enter += new System.EventHandler(this.tbSimSpeed_Enter);
+            this.tbSimSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSimSpeed_Validating);
+            // 
+            // lbSimUnits
+            // 
+            this.lbSimUnits.AutoSize = true;
+            this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lbSimUnits.Location = new System.Drawing.Point(355, 88);
+            this.lbSimUnits.Name = "lbSimUnits";
+            this.lbSimUnits.Size = new System.Drawing.Size(48, 24);
+            this.lbSimUnits.TabIndex = 339;
+            this.lbSimUnits.Text = "mph";
+            this.lbSimUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ckSimSpeed
+            // 
+            this.ckSimSpeed.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckSimSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSimSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckSimSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckSimSpeed.Location = new System.Drawing.Point(22, 83);
+            this.ckSimSpeed.Name = "ckSimSpeed";
+            this.ckSimSpeed.Size = new System.Drawing.Size(242, 34);
+            this.ckSimSpeed.TabIndex = 337;
+            this.ckSimSpeed.Text = "Simulate Speed (No AOG)";
+            this.ckSimSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSimSpeed.UseVisualStyleBackColor = true;
+            this.ckSimSpeed.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
+            // 
             // frmMenuDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnCancel);
@@ -248,6 +325,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -267,5 +346,10 @@
         private System.Windows.Forms.Label lbConID;
         private System.Windows.Forms.TextBox tbPressureCal;
         private System.Windows.Forms.CheckBox ckPressure;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox ckMetric;
+        private System.Windows.Forms.TextBox tbSimSpeed;
+        private System.Windows.Forms.Label lbSimUnits;
+        private System.Windows.Forms.CheckBox ckSimSpeed;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Language;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -31,6 +32,17 @@ namespace RateController.Menu
         {
             try
             {
+                if (ckSimSpeed.Checked)
+                {
+                    mf.SimMode = SimType.Sim_Speed;
+                }
+                else
+                {
+                    mf.SimMode = SimType.Sim_None;
+                }
+
+                if (double.TryParse(tbSimSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
+                mf.UseInches = !ckMetric.Checked;
                 mf.UseTransparent = ckTransparent.Checked;
                 mf.ShowPressure = ckPressure.Checked;
                 if (double.TryParse(tbPressureCal.Text, out double Pressure)) mf.PressureCal = Pressure;
@@ -140,6 +152,7 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            ckMetric.Text = Lang.lgMetric;
         }
 
         private void tbPressureCal_Enter(object sender, EventArgs e)
@@ -192,10 +205,47 @@ namespace RateController.Menu
             }
         }
 
+        private void tbSimSpeed_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSimSpeed.Text, out tempD);
+            using (var form = new FormNumeric(0, 40, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSimSpeed.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbSimSpeed_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSimSpeed.Text, out tempD);
+            if (tempD < 0 || tempD > 40)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
         private void UpdateForm()
         {
             Initializing = true;
 
+            if (mf.UseInches)
+            {
+                lbSimUnits.Text = "MPH";
+            }
+            else
+            {
+                lbSimUnits.Text = "KMH";
+            }
+
+            tbSimSpeed.Text = mf.SimSpeed.ToString("N1");
+            ckSimSpeed.Checked = (mf.SimMode == SimType.Sim_Speed);
+            ckMetric.Checked = !mf.UseInches;
             ckTransparent.Checked = mf.UseTransparent;
             ckPressure.Checked = mf.ShowPressure;
             ckLargeScreen.Checked = mf.UseLargeScreen;
