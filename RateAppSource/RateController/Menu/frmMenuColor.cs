@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -19,6 +20,7 @@ namespace RateController.Menu
             mf = main;
             this.Tag = false;
             this.DoubleBuffered = true;
+            this.Visible = false;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -123,19 +125,44 @@ namespace RateController.Menu
 
         private void ColorPanel_Touch(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            try
             {
-                // Get color from touch position
-                float hue = (float)e.X / colorPanel.Width;
-                float brightness = 1 - (float)e.Y / colorPanel.Height;
-                if (rbForeColor.Checked)
+                int saturation = 1;
+
+                if (e.Button == MouseButtons.Left)
                 {
-                    tbColourUser1.ForeColor = ColorFromHSV(hue * 360, 1, brightness);
+                    // Get color from touch position
+                    float hue = (float)e.X / colorPanel.Width;
+                    float brightness = 1 - (float)e.Y / colorPanel.Height;
+
+                    if (e.Y < 10)
+                    {
+                        saturation = 0;
+                    }
+                    else
+                    {
+                        saturation = 1;
+                    }
+
+                    Color NewColor = ColorFromHSV(hue * 360, saturation, brightness);
+                    if (NewColor.A == 255 && NewColor.R == 255 && NewColor.G == 255 && NewColor.B == 255)
+                    {
+                        NewColor = Color.FromArgb(255, 255, 255, 254);
+                    }
+
+                    if (rbForeColor.Checked)
+                    {
+                        tbColourUser1.ForeColor = NewColor;
+                    }
+                    else
+                    {
+                        tbColourUser1.BackColor = NewColor;
+                    }
                 }
-                else
-                {
-                    tbColourUser1.BackColor = ColorFromHSV(hue * 360, 1, brightness);
-                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmMenuColor/ColorPanel_Touch: " + ex.Message);
             }
         }
 
@@ -177,6 +204,7 @@ namespace RateController.Menu
             PositionForm();
             UpdateForm();
             CreateColorBitmap();
+            this.Visible = true;
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
