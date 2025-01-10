@@ -64,6 +64,7 @@
             this.btnHelp = new System.Windows.Forms.Button();
             this.butUpdateModules = new System.Windows.Forms.Button();
             this.butBoards = new System.Windows.Forms.Button();
+            this.butColor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -432,7 +433,7 @@
             this.butOther.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butOther.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butOther.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butOther.Location = new System.Drawing.Point(970, 382);
+            this.butOther.Location = new System.Drawing.Point(970, 420);
             this.butOther.Name = "butOther";
             this.butOther.Size = new System.Drawing.Size(158, 49);
             this.butOther.TabIndex = 32;
@@ -722,11 +723,31 @@
             this.butBoards.UseVisualStyleBackColor = false;
             this.butBoards.Visible = false;
             // 
+            // butColor
+            // 
+            this.butColor.BackColor = System.Drawing.Color.Transparent;
+            this.butColor.FlatAppearance.BorderSize = 0;
+            this.butColor.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butColor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butColor.Location = new System.Drawing.Point(970, 365);
+            this.butColor.Name = "butColor";
+            this.butColor.Size = new System.Drawing.Size(158, 49);
+            this.butColor.TabIndex = 163;
+            this.butColor.Text = "Color";
+            this.butColor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butColor.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butColor.UseVisualStyleBackColor = false;
+            this.butColor.Visible = false;
+            this.butColor.Click += new System.EventHandler(this.butColor_Click);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.Controls.Add(this.butColor);
             this.Controls.Add(this.butBoards);
             this.Controls.Add(this.butUpdateModules);
             this.Controls.Add(this.btnHelp);
@@ -816,5 +837,6 @@
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.Button butUpdateModules;
         private System.Windows.Forms.Button butBoards;
+        private System.Windows.Forms.Button butColor;
     }
 }

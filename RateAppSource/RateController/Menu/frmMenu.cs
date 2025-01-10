@@ -32,13 +32,14 @@ namespace RateController
 
             Items = new Button[] { butNew, butOpen, butSaveAs, butRate, butControl, butSettings, butMode, butMonitor,
                 butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins, butWifi,
-                butValves, butDisplay, butPrimed, butSwitches, butLanguage, butOther };
+                butValves, butDisplay, butPrimed, butSwitches, butLanguage, butOther, butColor };
 
             ChangeProduct(ProductID);
             LoadLast = LoadLst;
         }
 
         public event EventHandler MenuMoved;
+
         public event EventHandler ModuleDefaultsSet;
 
         public clsProduct CurrentProduct
@@ -52,6 +53,11 @@ namespace RateController
             if (NewID > mf.MaxProducts - 1) NewID = mf.MaxProducts - 1;
             if (NoFans && NewID > mf.MaxProducts - 3) NewID = mf.MaxProducts - 3;
             cCurrentProduct = mf.Products.Item(NewID);
+        }
+
+        public void DefaultsSet()
+        {
+            ModuleDefaultsSet?.Invoke(this, EventArgs.Empty);
         }
 
         public void HighlightUpdateButton(bool Highlight = true)
@@ -160,6 +166,26 @@ namespace RateController
         private void butClose_Click(object sender, EventArgs e)
         {
             if (ClosedOwned()) this.Close();
+        }
+
+        private void butColor_Click(object sender, EventArgs e)
+        {
+            LastScreen = "frmMenuColor";
+            HighlightButton(LastScreen);
+            Form fs = mf.Tls.IsFormOpen(LastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuColor(mf, this);
+                frm.Owner = this;
+                frm.Text = "Opened";
+                frm.Show();
+            }
+            else
+            {
+                fs.Text = "Focused";
+                fs.Focus();
+            }
         }
 
         private void butConfig_Click(object sender, EventArgs e)
@@ -529,6 +555,7 @@ namespace RateController
                 butPrimed.Visible = !Expanded;
                 butSwitches.Visible = !Expanded;
                 butLanguage.Visible = !Expanded;
+                butColor.Visible = !Expanded;
                 butOther.Visible = !Expanded;
 
                 if (Expanded)
@@ -570,6 +597,10 @@ namespace RateController
                     butLanguage.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butLanguage.Top = Pos;
+
+                    butColor.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butColor.Top = Pos;
 
                     butOther.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -957,10 +988,6 @@ namespace RateController
         {
             MenuMoved?.Invoke(this, EventArgs.Empty);
         }
-        public void DefaultsSet()
-        {
-            ModuleDefaultsSet?.Invoke(this, EventArgs.Empty);
-        }
 
         private void frmMenu_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1100,6 +1127,11 @@ namespace RateController
 
                             case "frmMenuHelp":
                                 fs = new frmMenuHelp(mf, this);
+                                break;
+
+                            case "frmMenuColor":
+                                fs = new frmMenuColor(mf, this);
+                                butOptions.PerformClick();
                                 break;
 
                             default:

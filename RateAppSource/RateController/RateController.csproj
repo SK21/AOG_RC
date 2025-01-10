@@ -294,6 +294,12 @@
     <Compile Include="Menu\frmMenuCalibrate.Designer.cs">
       <DependentUpon>frmMenuCalibrate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuColor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuColor.Designer.cs">
+      <DependentUpon>frmMenuColor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -550,6 +556,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuCalibrate.resx">
       <DependentUpon>frmMenuCalibrate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuColor.resx">
+      <DependentUpon>frmMenuColor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuConfig.resx">
       <DependentUpon>frmMenuConfig.cs</DependentUpon>

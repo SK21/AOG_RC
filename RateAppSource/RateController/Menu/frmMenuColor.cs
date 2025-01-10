@@ -1,0 +1,263 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace RateController.Menu
+{
+    public partial class frmMenuColor : Form
+    {
+        private bool cEdited;
+        private Bitmap colorBitmap;
+        private bool Initializing = false;
+        private frmMenu MainMenu;
+        private FormStart mf;
+
+        public frmMenuColor(FormStart main, frmMenu menu)
+        {
+            InitializeComponent();
+            MainMenu = menu;
+            mf = main;
+            this.Tag = false;
+            this.DoubleBuffered = true;
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            UpdateForm();
+            btnOK.Focus();
+            SetButtons(false);
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // set colors
+                if (rbColour1.Checked)
+                {
+                    Properties.Settings.Default.ForeColour = tbColourDefault1.ForeColor;
+                    Properties.Settings.Default.BackColour = tbColourDefault1.BackColor;
+                }
+                else if (rbColour2.Checked)
+                {
+                    Properties.Settings.Default.ForeColour = tbColourDefault2.ForeColor;
+                    Properties.Settings.Default.BackColour = tbColourDefault2.BackColor;
+                }
+                else
+                {
+                    Properties.Settings.Default.ForeColour = tbColourUser1.ForeColor;
+                    Properties.Settings.Default.BackColour = tbColourUser1.BackColor;
+                }
+                Properties.Settings.Default.ForeColourUser1 = tbColourUser1.ForeColor;
+                Properties.Settings.Default.BackColourUser1 = tbColourUser1.BackColor;
+                Properties.Settings.Default.Save();
+                mf.RaiseColorChanged();
+
+                SetButtons(false);
+                UpdateForm();
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("frmMenuConfig/btnOk_Click: " + ex.Message);
+            }
+        }
+
+        private Color ColorFromHSV(float hue, float saturation, float brightness)
+        {
+            Color Result;
+            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            float f = (float)(hue / 60 - Math.Floor(hue / 60));
+            brightness = brightness * 255;
+            int v = Convert.ToInt32(brightness);
+            int p = Convert.ToInt32(brightness * (1 - saturation));
+            int q = Convert.ToInt32((brightness * (1 - f * saturation)));
+            int t = Convert.ToInt32((brightness * (1 - (1 - f) * saturation)));
+            if (v > 255) v = 255;
+            if (p > 255) p = 255;
+            if (q > 255) q = 255;
+            if (t > 255) t = 255;
+            if (v < 0) v = 0;
+            if (p < 0) p = 0;
+            if (q < 0) q = 0;
+            if (t < 0) t = 0;
+
+            switch (hi)
+            {
+                case 0:
+                    Result = Color.FromArgb(255, v, t, p);
+                    break;
+
+                case 1:
+                    Result = Color.FromArgb(255, q, v, p);
+                    break;
+
+                case 2:
+                    Result = Color.FromArgb(255, p, v, t);
+                    break;
+
+                case 3:
+                    Result = Color.FromArgb(255, p, q, v);
+                    break;
+
+                case 4:
+                    Result = Color.FromArgb(255, t, p, v);
+                    break;
+
+                default:
+                    Result = Color.FromArgb(255, v, p, q);
+                    break;
+            }
+            return Result;
+        }
+
+        private void colorPanel_Click(object sender, EventArgs e)
+        {
+            SetButtons(true);
+            rbColourUser.Checked = true;
+        }
+
+        private void colorPanel_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(colorBitmap, 0, 0, colorPanel.Width, colorPanel.Height);
+        }
+
+        private void ColorPanel_Touch(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                // Get color from touch position
+                float hue = (float)e.X / colorPanel.Width;
+                float brightness = 1 - (float)e.Y / colorPanel.Height;
+                if (rbForeColor.Checked)
+                {
+                    tbColourUser1.ForeColor = ColorFromHSV(hue * 360, 1, brightness);
+                }
+                else
+                {
+                    tbColourUser1.BackColor = ColorFromHSV(hue * 360, 1, brightness);
+                }
+            }
+        }
+
+        private void CreateColorBitmap()
+        {
+            colorBitmap = new Bitmap(colorPanel.Width, colorPanel.Height);
+            for (int x = 0; x < colorPanel.Width; x++)
+            {
+                for (int y = 0; y < colorPanel.Height; y++)
+                {
+                    float hue = (float)x / colorPanel.Width;
+                    float brightness = 1 - (float)y / colorPanel.Height;
+                    Color color = ColorFromHSV(hue * 360, 1, brightness);
+                    colorBitmap.SetPixel(x, y, color);
+                }
+            }
+        }
+
+        private void frmMenuColor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            mf.Tls.SaveFormData(this);
+        }
+
+        private void frmMenuColor_Load(object sender, EventArgs e)
+        {
+            // menu 800,600
+            // sub menu 540,630
+            SetLanguage();
+            MainMenu.MenuMoved += MainMenu_MenuMoved;
+            mf.Tls.LoadFormData(this, "", false);
+            this.BackColor = Properties.Settings.Default.BackColour;
+            this.Width = MainMenu.Width - 260;
+            this.Height = MainMenu.Height - 50;
+            btnOK.Left = this.Width - 84;
+            btnOK.Top = this.Height - 84;
+            btnCancel.Left = btnOK.Left - 78;
+            btnCancel.Top = btnOK.Top;
+            MainMenu.StyleControls(this);
+            PositionForm();
+            UpdateForm();
+            CreateColorBitmap();
+        }
+
+        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        {
+            PositionForm();
+        }
+
+        private void PositionForm()
+        {
+            this.Top = MainMenu.Top + 30;
+            this.Left = MainMenu.Left + 246;
+        }
+
+        private void rbColour1_Click(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void SetButtons(bool Edited)
+        {
+            if (!Initializing)
+            {
+                if (Edited)
+                {
+                    btnCancel.Enabled = true;
+                    btnOK.Enabled = true;
+                }
+                else
+                {
+                    btnCancel.Enabled = false;
+                    btnOK.Enabled = false;
+                }
+
+                cEdited = Edited;
+                this.Tag = cEdited;
+            }
+        }
+
+        private void SetLanguage()
+        {
+        }
+
+        private void tbColourDefault1_Click(object sender, EventArgs e)
+        {
+            rbColour1.Checked = true;
+            SetButtons(true);
+        }
+
+        private void tbColourDefault2_Click(object sender, EventArgs e)
+        {
+            rbColour2.Checked = true;
+            SetButtons(true);
+        }
+
+        private void tbColourUser1_Click(object sender, EventArgs e)
+        {
+            rbColourUser.Checked = true;
+            SetButtons(true);
+        }
+
+        private void UpdateForm()
+        {
+            Initializing = true;
+
+            // set colours
+            tbColourUser1.ForeColor = Properties.Settings.Default.ForeColourUser1;
+            tbColourUser1.BackColor = Properties.Settings.Default.BackColourUser1;
+            if (Properties.Settings.Default.ForeColour == tbColourDefault1.ForeColor && Properties.Settings.Default.BackColour == tbColourDefault1.BackColor)
+            {
+                rbColour1.Checked = true;
+            }
+            else if (Properties.Settings.Default.ForeColour == tbColourDefault2.ForeColor && Properties.Settings.Default.BackColour == tbColourDefault2.BackColor)
+            {
+                rbColour2.Checked = true;
+            }
+            else
+            {
+                rbColourUser.Checked = true;
+            }
+
+            Initializing = false;
+        }
+    }
+}
