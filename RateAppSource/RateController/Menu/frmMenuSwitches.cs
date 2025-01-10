@@ -1,13 +1,8 @@
 ﻿using AgOpenGPS;
 using RateController.Language;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -42,7 +37,7 @@ namespace RateController.Menu
                 mf.UseDualAuto = ckDualAuto.Checked;
                 mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
                 mf.MasterOverride = ckNoMaster.Checked;
-
+                mf.SwitchBox.AutoRateDisabled = rbSections.Checked;
                 // data grid
                 for (int i = 0; i < DGV.Rows.Count; i++)
                 {
@@ -204,6 +199,11 @@ namespace RateController.Menu
             UpdateForm();
         }
 
+        private void groupBox2_Paint(object sender, PaintEventArgs e)
+        {
+            mf.Tls.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
         private void LoadData(bool UpdateObject = false)
         {
             try
@@ -281,12 +281,9 @@ namespace RateController.Menu
             ckNoMaster.Checked = mf.MasterOverride;
             LoadData(UpdateObject);
 
-            Initializing = false;
-        }
+            rbSections.Checked = mf.SwitchBox.AutoRateDisabled;
 
-        private void groupBox2_Paint(object sender, PaintEventArgs e)
-        {
-            mf.Tls.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+            Initializing = false;
         }
     }
 }

@@ -53,7 +53,6 @@
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.rbSections = new System.Windows.Forms.RadioButton();
-            this.rbRate = new System.Windows.Forms.RadioButton();
             this.rbAutoAll = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
@@ -174,12 +173,12 @@
             dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.DGV.DefaultCellStyle = dataGridViewCellStyle5;
             this.DGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
-            this.DGV.Location = new System.Drawing.Point(49, 244);
+            this.DGV.Location = new System.Drawing.Point(30, 193);
             this.DGV.Margin = new System.Windows.Forms.Padding(11);
             this.DGV.Name = "DGV";
             this.DGV.RowHeadersVisible = false;
             this.DGV.RowTemplate.Height = 40;
-            this.DGV.Size = new System.Drawing.Size(451, 288);
+            this.DGV.Size = new System.Drawing.Size(470, 339);
             this.DGV.TabIndex = 166;
             this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
             this.DGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellContentClick);
@@ -259,7 +258,7 @@
             this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNoMaster.Location = new System.Drawing.Point(49, 196);
+            this.ckNoMaster.Location = new System.Drawing.Point(316, 145);
             this.ckNoMaster.Name = "ckNoMaster";
             this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
             this.ckNoMaster.TabIndex = 339;
@@ -286,11 +285,10 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.rbSections);
-            this.groupBox1.Controls.Add(this.rbRate);
             this.groupBox1.Controls.Add(this.rbAutoAll);
             this.groupBox1.Location = new System.Drawing.Point(300, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 180);
+            this.groupBox1.Size = new System.Drawing.Size(200, 119);
             this.groupBox1.TabIndex = 340;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Auto Switch";
@@ -301,26 +299,14 @@
             this.rbSections.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbSections.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbSections.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbSections.Location = new System.Drawing.Point(16, 130);
+            this.rbSections.Location = new System.Drawing.Point(16, 73);
             this.rbSections.Name = "rbSections";
             this.rbSections.Size = new System.Drawing.Size(170, 37);
             this.rbSections.TabIndex = 3;
             this.rbSections.Text = "Sections";
             this.rbSections.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbSections.UseVisualStyleBackColor = true;
-            // 
-            // rbRate
-            // 
-            this.rbRate.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbRate.Location = new System.Drawing.Point(16, 79);
-            this.rbRate.Name = "rbRate";
-            this.rbRate.Size = new System.Drawing.Size(170, 37);
-            this.rbRate.TabIndex = 2;
-            this.rbRate.Text = "Rate";
-            this.rbRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbRate.UseVisualStyleBackColor = true;
+            this.rbSections.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
             // rbAutoAll
             // 
@@ -336,6 +322,7 @@
             this.rbAutoAll.Text = "Rate + Sections";
             this.rbAutoAll.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbAutoAll.UseVisualStyleBackColor = true;
+            this.rbAutoAll.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -400,7 +387,6 @@
         private System.Windows.Forms.CheckBox ckNoMaster;
         private System.Windows.Forms.CheckBox ckWorkSwitch;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton rbRate;
         private System.Windows.Forms.RadioButton rbAutoAll;
         private System.Windows.Forms.RadioButton rbSections;
         private System.Windows.Forms.GroupBox groupBox2;
