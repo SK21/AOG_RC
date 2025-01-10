@@ -317,25 +317,13 @@ namespace RateController
 
         private void SetDayMode()
         {
-            if (Properties.Settings.Default.IsDay)
-            {
-                this.BackColor = Properties.Settings.Default.DayColour;
-                ModuleIndicator.BackColor = Properties.Settings.Default.DayColour;
+                this.BackColor = Properties.Settings.Default.MainBackColour;
+                ModuleIndicator.BackColor = Properties.Settings.Default.MainBackColour;
 
                 foreach (Control c in this.Controls)
                 {
                     c.ForeColor = Color.Black;
                 }
-            }
-            else
-            {
-                this.BackColor = Properties.Settings.Default.NightColour;
-
-                foreach (Control c in this.Controls)
-                {
-                    c.ForeColor = Color.White;
-                }
-            }
         }
 
         private void SetModuleIndicator()

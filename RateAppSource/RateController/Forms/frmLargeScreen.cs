@@ -56,17 +56,17 @@ namespace RateController
 
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
 
-            this.BackColor = Properties.Settings.Default.DayColour;
-            pnlRate0.BackColor = Properties.Settings.Default.DayColour;
-            pnlRate1.BackColor = Properties.Settings.Default.DayColour;
-            pnlRate1.BackColor = Properties.Settings.Default.DayColour;
-            pnlRate1.BackColor = Properties.Settings.Default.DayColour;
-            pnlQuantity0.BackColor = Properties.Settings.Default.DayColour;
-            pnlQuantity1.BackColor = Properties.Settings.Default.DayColour;
-            pnlQuantity2.BackColor = Properties.Settings.Default.DayColour;
-            pnlQuantity3.BackColor = Properties.Settings.Default.DayColour;
-            btnUp.BackColor = Properties.Settings.Default.DayColour;
-            btnDown.BackColor = Properties.Settings.Default.DayColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlRate0.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlRate1.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlRate1.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlRate1.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlQuantity0.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlQuantity1.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlQuantity2.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlQuantity3.BackColor = Properties.Settings.Default.MainBackColour;
+            btnUp.BackColor = Properties.Settings.Default.MainBackColour;
+            btnDown.BackColor = Properties.Settings.Default.MainBackColour;
 
             foreach (Control Ctrl in Controls)
             {
@@ -90,7 +90,7 @@ namespace RateController
             if (mf.UseTransparent)
             {
                 this.Text = string.Empty;
-                this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
+                this.TransparencyKey = Properties.Settings.Default.MainBackColour;
                 //this.Opacity = .5;
                 this.HelpButton = false;
                 this.ControlBox = false;
@@ -805,10 +805,10 @@ namespace RateController
             }
 
             // set highlight
-            pnlSelect0.BackColor = Properties.Settings.Default.DayColour;
-            pnlSelect1.BackColor = Properties.Settings.Default.DayColour;
-            pnlSelect2.BackColor = Properties.Settings.Default.DayColour;
-            pnlSelect3.BackColor = Properties.Settings.Default.DayColour;
+            pnlSelect0.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlSelect1.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlSelect2.BackColor = Properties.Settings.Default.MainBackColour;
+            pnlSelect3.BackColor = Properties.Settings.Default.MainBackColour;
             switch (Prd.ID)
             {
                 case 0:
@@ -1218,7 +1218,7 @@ namespace RateController
             }
             else
             {
-                btnUp.BackColor = Properties.Settings.Default.DayColour;
+                btnUp.BackColor = Properties.Settings.Default.MainBackColour;
             }
 
             if (mf.SwitchBox.SwitchIsOn(SwIDs.RateDown))
@@ -1227,7 +1227,7 @@ namespace RateController
             }
             else
             {
-                btnDown.BackColor = Properties.Settings.Default.DayColour;
+                btnDown.BackColor = Properties.Settings.Default.MainBackColour;
             }
         }
 

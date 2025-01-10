@@ -942,18 +942,16 @@ namespace RateController
 
         private void SetDayMode()
         {
-            if (Properties.Settings.Default.IsDay)
-            {
-                this.BackColor = Properties.Settings.Default.DayColour;
+                this.BackColor = Properties.Settings.Default.MainBackColour;
 
                 foreach (TabPage tb in tcProducts.TabPages)
                 {
-                    tb.BackColor = Properties.Settings.Default.DayColour;
+                    tb.BackColor = Properties.Settings.Default.MainBackColour;
                 }
 
-                ModuleIndicator.BackColor = Properties.Settings.Default.DayColour;
-                lbProduct.BackColor = Properties.Settings.Default.DayColour;
-                lbFanStarted.BackColor = Properties.Settings.Default.DayColour;
+                ModuleIndicator.BackColor = Properties.Settings.Default.MainBackColour;
+                lbProduct.BackColor = Properties.Settings.Default.MainBackColour;
+                lbFanStarted.BackColor = Properties.Settings.Default.MainBackColour;
 
                 foreach (Control c in this.Controls)
                 {
@@ -962,35 +960,8 @@ namespace RateController
 
                 for (int i = 0; i < 16; i++)
                 {
-                    Sec[i].BackColor = Properties.Settings.Default.DayColour;
+                    Sec[i].BackColor = Properties.Settings.Default.MainBackColour;
                 }
-            }
-            else
-            {
-                this.BackColor = Properties.Settings.Default.NightColour;
-
-                foreach (TabPage tb in tcProducts.TabPages)
-                {
-                    tb.BackColor = Properties.Settings.Default.NightColour;
-                }
-
-                foreach (Control c in this.Controls)
-                {
-                    c.ForeColor = Color.White;
-                }
-
-                for (int i = 0; i < 16; i++)
-                {
-                    Sec[i].BackColor = Properties.Settings.Default.NightColour;
-                }
-            }
-
-            // fix backcolor
-            this.BackColor = Properties.Settings.Default.DayColour;
-            for (int i = 0; i < tcProducts.TabCount; i++)
-            {
-                tcProducts.TabPages[i].BackColor = Properties.Settings.Default.DayColour;
-            }
         }
 
         private void SetFanDisplay(bool IsFan)
@@ -1553,7 +1524,7 @@ namespace RateController
             else
             {
                 lbProduct.ForeColor = SystemColors.ControlText;
-                lbProduct.BackColor = Properties.Settings.Default.DayColour;
+                lbProduct.BackColor = Properties.Settings.Default.MainBackColour;
                 lbProduct.BorderStyle = BorderStyle.None;
             }
 
@@ -1603,7 +1574,7 @@ namespace RateController
             else
             {
                 lbProduct.ForeColor = SystemColors.ControlText;
-                lbProduct.BackColor = Properties.Settings.Default.DayColour;
+                lbProduct.BackColor = Properties.Settings.Default.MainBackColour;
                 lbProduct.BorderStyle = BorderStyle.None;
             }
 

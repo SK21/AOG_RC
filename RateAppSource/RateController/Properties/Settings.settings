@@ -2,15 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RateController.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="IsDay" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DayColour" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">210, 220, 230</Value>
-    </Setting>
-    <Setting Name="NightColour" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">60, 60, 60</Value>
-    </Setting>
     <Setting Name="FileName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Default.rcs</Value>
     </Setting>
@@ -48,6 +39,12 @@
       <Value Profile="(Default)">Microsoft Sans Serif, 14.25pt</Value>
     </Setting>
     <Setting Name="ForeColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="MainBackColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">210, 220, 230</Value>
+    </Setting>
+    <Setting Name="MainForeColour" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
   </Settings>

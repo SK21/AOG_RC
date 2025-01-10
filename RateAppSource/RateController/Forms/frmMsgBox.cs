@@ -68,7 +68,7 @@ namespace RateController
         private void frmMsgBox_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
-            this.BackColor = Properties.Settings.Default.DayColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
         }
     }
 }

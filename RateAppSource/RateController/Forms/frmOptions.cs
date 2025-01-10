@@ -588,9 +588,7 @@ namespace RateController
 
         private void SetDayMode()
         {
-            if (Properties.Settings.Default.IsDay)
-            {
-                this.BackColor = Properties.Settings.Default.DayColour;
+                this.BackColor = Properties.Settings.Default.MainBackColour;
                 foreach (Control c in this.Controls)
                 {
                     c.ForeColor = Color.Black;
@@ -598,22 +596,8 @@ namespace RateController
 
                 for (int i = 0; i < Tabs.Length; i++)
                 {
-                    Tabs[i].BackColor = Properties.Settings.Default.DayColour;
+                    Tabs[i].BackColor = Properties.Settings.Default.MainBackColour;
                 }
-            }
-            else
-            {
-                this.BackColor = Properties.Settings.Default.NightColour;
-                foreach (Control c in this.Controls)
-                {
-                    c.ForeColor = Color.White;
-                }
-
-                for (int i = 0; i < Tabs.Length; i++)
-                {
-                    Tabs[i].BackColor = Properties.Settings.Default.NightColour;
-                }
-            }
         }
 
         private void tbColourDefault1_Click(object sender, EventArgs e)

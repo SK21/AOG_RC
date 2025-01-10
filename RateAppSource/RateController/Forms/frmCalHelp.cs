@@ -29,8 +29,8 @@ namespace RateController
         private void frmCalHelp_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
-            this.BackColor = Properties.Settings.Default.DayColour;
-            textBox2.BackColor = Properties.Settings.Default.DayColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
+            textBox2.BackColor = Properties.Settings.Default.MainBackColour;
             textBox2.SelectionLength = 0;
             textBox2.SelectionStart = 0;
         }

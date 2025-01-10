@@ -544,11 +544,11 @@ namespace RateController
         {
             try
             {
-                this.BackColor = Properties.Settings.Default.DayColour;
+                this.BackColor = Properties.Settings.Default.MainBackColour;
 
                 for (int i = 0; i < tabControl1.TabCount; i++)
                 {
-                    tabControl1.TabPages[i].BackColor = Properties.Settings.Default.DayColour;
+                    tabControl1.TabPages[i].BackColor = Properties.Settings.Default.MainBackColour;
                 }
             }
             catch (Exception ex)

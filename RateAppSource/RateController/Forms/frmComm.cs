@@ -210,11 +210,11 @@ namespace RateController
 
         private void UpdateForm()
         {
-            PortIndicator1.BackColor = Properties.Settings.Default.DayColour;
-            PortIndicator2.BackColor = Properties.Settings.Default.DayColour;
-            PortIndicator3.BackColor = Properties.Settings.Default.DayColour;
+            PortIndicator1.BackColor = Properties.Settings.Default.MainBackColour;
+            PortIndicator2.BackColor = Properties.Settings.Default.MainBackColour;
+            PortIndicator3.BackColor = Properties.Settings.Default.MainBackColour;
 
-            this.BackColor = Properties.Settings.Default.DayColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
 
             foreach (Control c in this.Controls)
             {

@@ -28,7 +28,7 @@ namespace RateController
         private void frmPins_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
-            this.BackColor = Properties.Settings.Default.DayColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
         }
     }
 }

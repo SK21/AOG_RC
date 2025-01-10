@@ -67,7 +67,7 @@ namespace RateController
         {
             mf.Tls.LoadFormData(this);
             TankSize = mf.Products.Item(mf.CurrentProduct()).TankSize;
-            this.BackColor = Properties.Settings.Default.DayColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
             UpdateForm();
         }
 

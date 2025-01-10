@@ -96,7 +96,7 @@ namespace RateController
             lbDate.Text = mf.Tls.VersionDate();
             timer1.Enabled = true;
 
-            this.BackColor = Properties.Settings.Default.DayColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
             foreach (Control c in this.Controls)
             {
                 c.ForeColor = Color.Black;

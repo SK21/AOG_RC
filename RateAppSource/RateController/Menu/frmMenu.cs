@@ -2,8 +2,6 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace RateController
@@ -77,36 +75,36 @@ namespace RateController
         {
             if (Parent is Form frm)
             {
-                frm.BackColor = Properties.Settings.Default.BackColour;
+                frm.BackColor = Properties.Settings.Default.MainBackColour;
             }
 
             foreach (Control con in Parent.Controls)
             {
                 if (con is Label ctl)
                 {
-                    ctl.ForeColor = Properties.Settings.Default.ForeColour;
-                    ctl.BackColor = Properties.Settings.Default.BackColour;
+                    ctl.ForeColor = Properties.Settings.Default.MainForeColour;
+                    ctl.BackColor = Properties.Settings.Default.MainBackColour;
                     ctl.Font = Properties.Settings.Default.MenuFontSmall;
                 }
 
                 if (con is Button but)
                 {
-                    but.ForeColor = Properties.Settings.Default.ForeColour;
-                    but.BackColor = Properties.Settings.Default.BackColour;
+                    but.ForeColor = Properties.Settings.Default.MainForeColour;
+                    but.BackColor = Properties.Settings.Default.MainBackColour;
                     but.FlatAppearance.MouseDownBackColor = Properties.Settings.Default.MouseDown;
                 }
 
                 if (con is ComboBox cbox)
                 {
-                    cbox.ForeColor = Properties.Settings.Default.ForeColour;
-                    cbox.BackColor = Properties.Settings.Default.BackColour;
+                    cbox.ForeColor = Properties.Settings.Default.MainForeColour;
+                    cbox.BackColor = Properties.Settings.Default.MainBackColour;
                     cbox.Font = Properties.Settings.Default.MenuFontSmall;
                 }
 
                 if (con is CheckBox cb)
                 {
-                    cb.ForeColor = Properties.Settings.Default.ForeColour;
-                    cb.BackColor = Properties.Settings.Default.BackColour;
+                    cb.ForeColor = Properties.Settings.Default.MainForeColour;
+                    cb.BackColor = Properties.Settings.Default.MainBackColour;
                     cb.FlatAppearance.CheckedBackColor = Color.LightGreen;
                 }
 
@@ -119,7 +117,7 @@ namespace RateController
             base.OnPaint(e);
 
             // Define the border color and thickness
-            Color borderColor = Properties.Settings.Default.ForeColour;
+            Color borderColor = Properties.Settings.Default.MainForeColour;
             int borderWidth = 1;
 
             // Draw the border

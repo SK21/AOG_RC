@@ -79,6 +79,7 @@
             this.rbForeColor.Name = "rbForeColor";
             this.rbForeColor.Size = new System.Drawing.Size(157, 36);
             this.rbForeColor.TabIndex = 7;
+            this.rbForeColor.TabStop = true;
             this.rbForeColor.Tag = "0";
             this.rbForeColor.Text = "Text Color";
             this.rbForeColor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -120,6 +121,7 @@
             this.rbColour1.Name = "rbColour1";
             this.rbColour1.Size = new System.Drawing.Size(21, 36);
             this.rbColour1.TabIndex = 14;
+            this.rbColour1.TabStop = true;
             this.rbColour1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbColour1.UseVisualStyleBackColor = false;
             this.rbColour1.Click += new System.EventHandler(this.rbColour1_Click);
@@ -144,7 +146,7 @@
             // 
             this.tbColourDefault1.BackColor = System.Drawing.Color.Black;
             this.tbColourDefault1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbColourDefault1.ForeColor = System.Drawing.Color.Yellow;
+            this.tbColourDefault1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.tbColourDefault1.Location = new System.Drawing.Point(32, 483);
             this.tbColourDefault1.Multiline = true;
             this.tbColourDefault1.Name = "tbColourDefault1";

@@ -25,42 +25,6 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IsDay {
-            get {
-                return ((bool)(this["IsDay"]));
-            }
-            set {
-                this["IsDay"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("210, 220, 230")]
-        public global::System.Drawing.Color DayColour {
-            get {
-                return ((global::System.Drawing.Color)(this["DayColour"]));
-            }
-            set {
-                this["DayColour"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60, 60, 60")]
-        public global::System.Drawing.Color NightColour {
-            get {
-                return ((global::System.Drawing.Color)(this["NightColour"]));
-            }
-            set {
-                this["NightColour"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Default.rcs")]
         public string FileName {
             get {
@@ -212,6 +176,30 @@ namespace RateController.Properties {
             }
             set {
                 this["ForeColour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("210, 220, 230")]
+        public global::System.Drawing.Color MainBackColour {
+            get {
+                return ((global::System.Drawing.Color)(this["MainBackColour"]));
+            }
+            set {
+                this["MainBackColour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public global::System.Drawing.Color MainForeColour {
+            get {
+                return ((global::System.Drawing.Color)(this["MainForeColour"]));
+            }
+            set {
+                this["MainForeColour"] = value;
             }
         }
     }

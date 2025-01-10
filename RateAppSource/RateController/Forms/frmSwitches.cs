@@ -24,7 +24,7 @@ namespace RateController
             InitializeComponent();
 
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
-            this.BackColor = Properties.Settings.Default.DayColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
         }
 
         public void SetDescriptions()
@@ -199,7 +199,7 @@ namespace RateController
         {
             if (mf.UseTransparent)
             {
-                this.TransparencyKey = (Properties.Settings.Default.IsDay) ? Properties.Settings.Default.DayColour : Properties.Settings.Default.NightColour;
+                this.TransparencyKey = Properties.Settings.Default.MainBackColour;
                 this.ControlBox = false;
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.Top += TransTopOffset;
