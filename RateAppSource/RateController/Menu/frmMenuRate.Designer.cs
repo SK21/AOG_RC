@@ -470,6 +470,7 @@
             this.tbCountsRPM.Name = "tbCountsRPM";
             this.tbCountsRPM.Size = new System.Drawing.Size(102, 30);
             this.tbCountsRPM.TabIndex = 116;
+            this.tbCountsRPM.TabStop = false;
             this.tbCountsRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbCountsRPM.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
             this.tbCountsRPM.Enter += new System.EventHandler(this.tbCountsRPM_Enter);
@@ -493,6 +494,7 @@
             this.tbTargetRPM.Name = "tbTargetRPM";
             this.tbTargetRPM.Size = new System.Drawing.Size(102, 30);
             this.tbTargetRPM.TabIndex = 113;
+            this.tbTargetRPM.TabStop = false;
             this.tbTargetRPM.Text = "0";
             this.tbTargetRPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbTargetRPM.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);

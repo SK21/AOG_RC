@@ -336,6 +336,15 @@ namespace RateController.Menu
                 ckDefault.Visible = false;
                 ckBumpButtons.Visible = false;
                 ckScale.Visible = false;
+
+                ckOnScreen.Left = 184;
+                ckOnScreen.Top = 193;
+                ckOffRate.Left = 122;
+                ckOffRate.Top = 253;
+                tbOffRate.Left = 314;
+                tbOffRate.Top = 256;
+                lbPercent.Left = 353;
+                lbPercent.Top = 259;
             }
             else
             {
@@ -344,6 +353,15 @@ namespace RateController.Menu
                 ckDefault.Visible = true;
                 ckBumpButtons.Visible = true;
                 ckScale.Visible = true;
+
+                ckOnScreen.Left = 278;
+                ckOnScreen.Top = 344;
+                ckOffRate.Left = 86;
+                ckOffRate.Top = 474;
+                tbOffRate.Left = 278;
+                tbOffRate.Top = 477;
+                lbPercent.Left = 317;
+                lbPercent.Top = 480;
             }
             rbUPMSpeed.Checked = MainMenu.CurrentProduct.UseMinUPMbySpeed;
             rbUPMFixed.Checked = !MainMenu.CurrentProduct.UseMinUPMbySpeed;

@@ -20,6 +20,11 @@ namespace RateController
             Name = "Zone" + ID.ToString();
         }
 
+        public bool Enabled
+        {
+            get { return (SecEnd > 0 && SecStart > 0 && cWidth > 0); }
+        }
+
         public int End
         {
             get { return SecEnd; }
@@ -47,10 +52,6 @@ namespace RateController
                     cEdited = true;
                 }
             }
-        }
-        public bool Enabled
-        {
-            get { return (SecEnd > 0 && SecStart > 0 && cWidth > 0); }
         }
 
         public int SwitchID

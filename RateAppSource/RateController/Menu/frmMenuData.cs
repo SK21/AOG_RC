@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Language;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -175,6 +176,10 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            lbAcres1.Text = Lang.lgCoverage + " 1";
+            lbAcres2.Text = Lang.lgCoverage + " 2";
+            lbGallons1.Text = Lang.lgQuantity + " 1";
+            lbGallons2.Text = Lang.lgQuantity + " 2";
         }
 
         private void timer1_Tick(object sender, EventArgs e)

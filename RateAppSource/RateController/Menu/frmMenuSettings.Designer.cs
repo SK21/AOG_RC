@@ -32,7 +32,7 @@
             this.ckScale = new System.Windows.Forms.CheckBox();
             this.ckBumpButtons = new System.Windows.Forms.CheckBox();
             this.ckDefault = new System.Windows.Forms.CheckBox();
-            this.label28 = new System.Windows.Forms.Label();
+            this.lbPercent = new System.Windows.Forms.Label();
             this.tbOffRate = new System.Windows.Forms.TextBox();
             this.ckOffRate = new System.Windows.Forms.CheckBox();
             this.ckOnScreen = new System.Windows.Forms.CheckBox();
@@ -105,15 +105,15 @@
             this.ckDefault.UseVisualStyleBackColor = true;
             this.ckDefault.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
             // 
-            // label28
+            // lbPercent
             // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(317, 480);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(29, 23);
-            this.label28.TabIndex = 146;
-            this.label28.Text = "%";
+            this.lbPercent.AutoSize = true;
+            this.lbPercent.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPercent.Location = new System.Drawing.Point(317, 480);
+            this.lbPercent.Name = "lbPercent";
+            this.lbPercent.Size = new System.Drawing.Size(29, 23);
+            this.lbPercent.TabIndex = 146;
+            this.lbPercent.Text = "%";
             // 
             // tbOffRate
             // 
@@ -402,7 +402,7 @@
             this.Controls.Add(this.ckScale);
             this.Controls.Add(this.ckBumpButtons);
             this.Controls.Add(this.ckDefault);
-            this.Controls.Add(this.label28);
+            this.Controls.Add(this.lbPercent);
             this.Controls.Add(this.tbOffRate);
             this.Controls.Add(this.ckOffRate);
             this.Controls.Add(this.ckOnScreen);
@@ -430,7 +430,7 @@
         private System.Windows.Forms.CheckBox ckScale;
         private System.Windows.Forms.CheckBox ckBumpButtons;
         private System.Windows.Forms.CheckBox ckDefault;
-        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label lbPercent;
         private System.Windows.Forms.TextBox tbOffRate;
         private System.Windows.Forms.CheckBox ckOffRate;
         private System.Windows.Forms.CheckBox ckOnScreen;
