@@ -60,7 +60,6 @@ namespace RateController
         public Color SimColor = Color.FromArgb(255, 182, 0);
         public PGN32618 SwitchBox;
         public frmSwitches SwitchesForm;
-        public clsSwitches SwitchObjects;
         public clsTools Tls;
 
         public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
@@ -110,20 +109,6 @@ namespace RateController
             lbTarget.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
             lbRemaining.Text = Lang.lgTank_Remaining;
-
-            mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
-            mnuSettings.Items["MnuSections"].Text = Lang.lgSections;
-            mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
-            mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
-            mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
-            mnuSettings.Items["calibrateToolStripMenuItem1"].Text = Lang.lgCalibrate;
-            mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgModules;
-            mnuSettings.Items["exitToolStripMenuItem"].Text = Lang.lgExit;
-
-            mnuSettings.Items["commDiagnosticsToolStripMenuItem"].Text = Lang.lgCommDiagnostics;
-            mnuSettings.Items["newToolStripMenuItem"].Text = Lang.lgNew; ;
-            mnuSettings.Items["openToolStripMenuItem"].Text = Lang.lgOpen;
-            mnuSettings.Items["saveAsToolStripMenuItem"].Text = Lang.lgSaveAs;
 
             #endregion // language
 
@@ -1000,42 +985,6 @@ namespace RateController
             ShowSettings(true);
         }
 
-        private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = Tls.IsFormOpen("frmCalibrate");
-
-            if (fs == null)
-            {
-                Form frm = new frmCalibrate(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void commDiagnosticsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = Tls.IsFormOpen("frmModule");
-
-            if (fs == null)
-            {
-                Form frm = new frmModule(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void FormatDisplay()
         {
             try
@@ -1389,55 +1338,6 @@ namespace RateController
             CurrentPage = cDefaultProduct + 1;
         }
 
-        private void MnuComm_Click(object sender, EventArgs e)
-        {
-            Form fs = Tls.IsFormOpen("frmComm");
-
-            if (fs == null)
-            {
-                Form frm = new frmComm(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void MnuOptions_Click(object sender, EventArgs e)
-        {
-            Form fs = Tls.IsFormOpen("frmOptions");
-
-            if (fs == null)
-            {
-                Form frm = new frmOptions(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void MnuRelays_Click_1(object sender, EventArgs e)
-        {
-            Form fs = Tls.IsFormOpen("frmRelays");
-
-            if (fs == null)
-            {
-                Form frm = new frmRelays(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void mnuSettings_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-        }
-
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
             MouseButtonClicked = e.Button;
@@ -1447,55 +1347,6 @@ namespace RateController
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
-        }
-
-        private void networkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = Tls.IsFormOpen("frmModuleConfig");
-
-            if (fs == null)
-            {
-                Form frm = new frmModuleConfig(this);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void newToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
-            NewFile();
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFile();
-        }
-
-        private void productsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowSettings();
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileAs();
-        }
-
-        private void sectionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = Tls.IsFormOpen("frmSections");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new frmSections(this);
-            frm.Show();
         }
 
         private void SetDisplay()

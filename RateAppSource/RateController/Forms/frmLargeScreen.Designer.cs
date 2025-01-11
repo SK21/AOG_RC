@@ -53,21 +53,6 @@
             this.pnlQuantity3 = new System.Windows.Forms.Panel();
             this.pbQuantity3 = new RateController.VerticalProgressBar();
             this.btAlarm = new System.Windows.Forms.Button();
-            this.mnuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.MnuProducts = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuSections = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuRelays = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuComm = new System.Windows.Forms.ToolStripMenuItem();
-            this.calibrateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commDiagnosticsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
@@ -103,7 +88,6 @@
             this.pnlQuantity1.SuspendLayout();
             this.pnlQuantity2.SuspendLayout();
             this.pnlQuantity3.SuspendLayout();
-            this.mnuSettings.SuspendLayout();
             this.pnlRate3.SuspendLayout();
             this.pnlRate2.SuspendLayout();
             this.pnlRate1.SuspendLayout();
@@ -403,134 +387,6 @@
             this.btAlarm.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btAlarm.UseVisualStyleBackColor = true;
             this.btAlarm.Click += new System.EventHandler(this.btAlarm_Click);
-            // 
-            // mnuSettings
-            // 
-            this.mnuSettings.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mnuSettings.ImageScalingSize = new System.Drawing.Size(36, 36);
-            this.mnuSettings.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MnuProducts,
-            this.MnuSections,
-            this.MnuRelays,
-            this.MnuComm,
-            this.calibrateToolStripMenuItem1,
-            this.networkToolStripMenuItem,
-            this.commDiagnosticsToolStripMenuItem1,
-            this.MnuOptions,
-            this.toolStripSeparator1,
-            this.newToolStripMenuItem,
-            this.openToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.exitToolStripMenuItem});
-            this.mnuSettings.Name = "mnuSettings";
-            this.mnuSettings.Size = new System.Drawing.Size(254, 542);
-            // 
-            // MnuProducts
-            // 
-            this.MnuProducts.Image = global::RateController.Properties.Resources.spray2;
-            this.MnuProducts.Name = "MnuProducts";
-            this.MnuProducts.Size = new System.Drawing.Size(253, 42);
-            this.MnuProducts.Text = "Products/Fans";
-            this.MnuProducts.Click += new System.EventHandler(this.MnuProducts_Click);
-            // 
-            // MnuSections
-            // 
-            this.MnuSections.Image = global::RateController.Properties.Resources.Sec1;
-            this.MnuSections.Name = "MnuSections";
-            this.MnuSections.Size = new System.Drawing.Size(253, 42);
-            this.MnuSections.Text = "Sections";
-            this.MnuSections.Click += new System.EventHandler(this.MnuSections_Click);
-            // 
-            // MnuRelays
-            // 
-            this.MnuRelays.Image = global::RateController.Properties.Resources.Industry_Circuit_icon;
-            this.MnuRelays.Name = "MnuRelays";
-            this.MnuRelays.Size = new System.Drawing.Size(253, 42);
-            this.MnuRelays.Text = "Relays";
-            this.MnuRelays.Click += new System.EventHandler(this.MnuRelays_Click);
-            // 
-            // MnuComm
-            // 
-            this.MnuComm.Image = global::RateController.Properties.Resources.cableusb_119960;
-            this.MnuComm.Name = "MnuComm";
-            this.MnuComm.Size = new System.Drawing.Size(253, 42);
-            this.MnuComm.Text = "Comm";
-            this.MnuComm.Click += new System.EventHandler(this.MnuComm_Click);
-            // 
-            // calibrateToolStripMenuItem1
-            // 
-            this.calibrateToolStripMenuItem1.Image = global::RateController.Properties.Resources.RateCal;
-            this.calibrateToolStripMenuItem1.Name = "calibrateToolStripMenuItem1";
-            this.calibrateToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
-            this.calibrateToolStripMenuItem1.Text = "Calibrate";
-            this.calibrateToolStripMenuItem1.Click += new System.EventHandler(this.calibrateToolStripMenuItem1_Click);
-            // 
-            // networkToolStripMenuItem
-            // 
-            this.networkToolStripMenuItem.Image = global::RateController.Properties.Resources.SubnetSend;
-            this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
-            this.networkToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
-            this.networkToolStripMenuItem.Text = "Network";
-            this.networkToolStripMenuItem.Click += new System.EventHandler(this.networkToolStripMenuItem_Click);
-            // 
-            // commDiagnosticsToolStripMenuItem1
-            // 
-            this.commDiagnosticsToolStripMenuItem1.Image = global::RateController.Properties.Resources.Diagnostics;
-            this.commDiagnosticsToolStripMenuItem1.Name = "commDiagnosticsToolStripMenuItem1";
-            this.commDiagnosticsToolStripMenuItem1.Size = new System.Drawing.Size(253, 42);
-            this.commDiagnosticsToolStripMenuItem1.Text = "Comm Diagnostics";
-            this.commDiagnosticsToolStripMenuItem1.Click += new System.EventHandler(this.commDiagnosticsToolStripMenuItem1_Click);
-            // 
-            // MnuOptions
-            // 
-            this.MnuOptions.Image = global::RateController.Properties.Resources.Menu;
-            this.MnuOptions.Name = "MnuOptions";
-            this.MnuOptions.Size = new System.Drawing.Size(253, 42);
-            this.MnuOptions.Text = "Options";
-            this.MnuOptions.Click += new System.EventHandler(this.MnuOptions_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(250, 6);
-            // 
-            // newToolStripMenuItem
-            // 
-            this.newToolStripMenuItem.Image = global::RateController.Properties.Resources.FileNew1;
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
-            this.newToolStripMenuItem.Text = "New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.Image = global::RateController.Properties.Resources.OpenFile1;
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
-            this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
-            // 
-            // saveAsToolStripMenuItem
-            // 
-            this.saveAsToolStripMenuItem.Image = global::RateController.Properties.Resources.close2;
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
-            this.saveAsToolStripMenuItem.Text = "Save As";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(250, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Image = global::RateController.Properties.Resources.SwitchOff;
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(253, 42);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -927,7 +783,6 @@
             this.pnlQuantity1.ResumeLayout(false);
             this.pnlQuantity2.ResumeLayout(false);
             this.pnlQuantity3.ResumeLayout(false);
-            this.mnuSettings.ResumeLayout(false);
             this.pnlRate3.ResumeLayout(false);
             this.pnlRate2.ResumeLayout(false);
             this.pnlRate1.ResumeLayout(false);
@@ -960,12 +815,6 @@
         private VerticalProgressBar pbQuantity2;
         private System.Windows.Forms.Panel pnlQuantity3;
         private VerticalProgressBar pbQuantity3;
-        private System.Windows.Forms.ContextMenuStrip mnuSettings;
-        private System.Windows.Forms.ToolStripMenuItem MnuProducts;
-        private System.Windows.Forms.ToolStripMenuItem MnuSections;
-        private System.Windows.Forms.ToolStripMenuItem MnuComm;
-        private System.Windows.Forms.ToolStripMenuItem MnuRelays;
-        private System.Windows.Forms.ToolStripMenuItem MnuOptions;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Timer timerMain;
@@ -986,21 +835,12 @@
         private System.Windows.Forms.Panel pnlRate1;
         private VerticalProgressBar pbRate1;
         private System.Windows.Forms.Panel pnlRate0;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Button btnMenu;
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btAuto;
         private System.Windows.Forms.Button btMinimize;
         private System.Windows.Forms.Timer tmrBorder;
-        private System.Windows.Forms.ToolStripMenuItem networkToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem calibrateToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem commDiagnosticsToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.Timer tmrRelease;
         private System.Windows.Forms.Label lbRateType;
         private System.Windows.Forms.Label lbTargetType;

@@ -1,6 +1,5 @@
 ﻿using RateController.Language;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -17,11 +16,11 @@ namespace RateController
         private bool IsTransparent = false;
         private bool masterOn;
         private bool MasterPressed;
+        private Point MouseDownLocation;
         private Color RateColour = Color.GreenYellow;
         private bool SwitchingScreens = false;
         private int TransLeftOffset = 6;
         private int TransTopOffset = 30;
-        private Point MouseDownLocation;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -33,20 +32,6 @@ namespace RateController
             lbCoverage.Text = Lang.lgCoverage;
             lbQuantity.Text = Lang.lgTank_Remaining;
             lbUnits.Text = Lang.lgApplied;
-
-            mnuSettings.Items["MnuProducts"].Text = Lang.lgProducts;
-            mnuSettings.Items["MnuSections"].Text = Lang.lgSections;
-            mnuSettings.Items["MnuRelays"].Text = Lang.lgRelays;
-            mnuSettings.Items["MnuComm"].Text = Lang.lgComm;
-            mnuSettings.Items["calibrateToolStripMenuItem1"].Text = Lang.lgCalibrate;
-            mnuSettings.Items["networkToolStripMenuItem"].Text = Lang.lgModules;
-            mnuSettings.Items["MnuOptions"].Text = Lang.lgOptions;
-            mnuSettings.Items["exitToolStripMenuItem"].Text = Lang.lgExit;
-
-            mnuSettings.Items["commDiagnosticsToolStripMenuItem1"].Text = Lang.lgCommDiagnostics;
-            mnuSettings.Items["newToolStripMenuItem"].Text = Lang.lgNew;
-            mnuSettings.Items["openToolStripMenuItem"].Text = Lang.lgOpen;
-            mnuSettings.Items["saveAsToolStripMenuItem"].Text = Lang.lgSaveAs;
 
             #endregion // language
 
@@ -157,7 +142,7 @@ namespace RateController
 
         private void btMinimize_Click(object sender, EventArgs e)
         {
-            Form restoreform = new RCRestore(this, mf.RateType, Prd,mf);
+            Form restoreform = new RCRestore(this, mf.RateType, Prd, mf);
             restoreform.Show();
         }
 
@@ -187,10 +172,7 @@ namespace RateController
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            Button btnSender = (Button)sender;
-            Point ptLowerLeft = new Point(0, btnSender.Height);
-            ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
-            mnuSettings.Show(ptLowerLeft);
+            ShowSettings(Prd.ID, true);
         }
 
         private void btnUp_Click(object sender, EventArgs e)
@@ -203,42 +185,6 @@ namespace RateController
             {
                 Prd.ManualPWM += 5;
             }
-        }
-
-        private void calibrateToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("frmCalibrate");
-
-            if (fs == null)
-            {
-                Form frm = new frmCalibrate(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void commDiagnosticsToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Form fs = mf.Tls.IsFormOpen("frmModule");
-
-            if (fs == null)
-            {
-                Form frm = new frmModule(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void frmLargeScreen_Activated(object sender, EventArgs e)
@@ -352,7 +298,7 @@ namespace RateController
 
         private void lbName0_Click(object sender, EventArgs e)
         {
-            ShowSettings(0);
+            ShowSettings(0, true);
         }
 
         private void lbName0_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -365,17 +311,17 @@ namespace RateController
 
         private void lbName1_Click(object sender, EventArgs e)
         {
-            ShowSettings(1);
+            ShowSettings(1, true);
         }
 
         private void lbName2_Click(object sender, EventArgs e)
         {
-            ShowSettings(2);
+            ShowSettings(2, true);
         }
 
         private void lbName3_Click(object sender, EventArgs e)
         {
-            ShowSettings(3);
+            ShowSettings(3, true);
         }
 
         private void lbQuantity_Click(object sender, EventArgs e)
@@ -483,79 +429,6 @@ namespace RateController
             //SetDisplay(Properties.Settings.Default.ForeColour);
         }
 
-        private void MnuComm_Click(object sender, EventArgs e)
-        {
-            Form fs = mf.Tls.IsFormOpen("frmComm");
-
-            if (fs == null)
-            {
-                Form frm = new frmComm(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void MnuOptions_Click(object sender, EventArgs e)
-        {
-            Form fs = mf.Tls.IsFormOpen("frmOptions");
-
-            if (fs == null)
-            {
-                Form frm = new frmOptions(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void MnuProducts_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("FormSettings");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormSettings(mf, Prd.ID + 1);
-            frm.Show();
-        }
-
-        private void MnuRelays_Click(object sender, EventArgs e)
-        {
-            Form fs = mf.Tls.IsFormOpen("frmRelays");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new frmRelays(mf);
-            frm.Show();
-        }
-
-        private void MnuSections_Click(object sender, EventArgs e)
-        {
-            Form fs = mf.Tls.IsFormOpen("frmSections");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new frmSections(mf);
-            frm.Show();
-        }
-
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
@@ -564,31 +437,6 @@ namespace RateController
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
-        }
-
-        private void networkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form fs = mf.Tls.IsFormOpen("frmModuleConfig");
-
-            if (fs == null)
-            {
-                Form frm = new frmModuleConfig(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            mf.NewFile();
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            mf.OpenFile();
         }
 
         private void pbRate0_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -601,11 +449,6 @@ namespace RateController
 
             mf.Tls.ShowHelp(Message);
             hlpevent.Handled = true;
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            mf.SaveFileAs();
         }
 
         private void SetDisplay(Color NewColor)
@@ -742,22 +585,23 @@ namespace RateController
             }
         }
 
-        private void ShowSettings(int ProductID)
+        private void ShowSettings(int ProductID, bool OpenLast = false)
         {
             Prd = mf.Products.Item(ProductID);
             UpdateForm();
 
             //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("FormSettings");
+            Form fs = mf.Tls.IsFormOpen("frmMenu");
 
-            if (fs != null)
+            if (fs == null)
+            {
+                Form frm = new frmMenu(mf, Prd.ID + 1, OpenLast);
+                frm.Show();
+            }
+            else
             {
                 fs.Focus();
-                return;
             }
-
-            Form frm = new FormSettings(mf, Prd.ID + 1);
-            frm.Show();
         }
 
         private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
@@ -1183,7 +1027,7 @@ namespace RateController
         private void UpdateSwitches()
         {
             // auto button
-            if (mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate)||mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+            if (mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate) || mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
             {
                 btAuto.BackColor = Color.LightGreen;
                 btAuto.Text = "AUTO";
