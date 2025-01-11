@@ -125,41 +125,11 @@
     <Compile Include="Forms\FormNumeric.Designer.cs">
       <DependentUpon>FormNumeric.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormsOld\FormPIDGraph.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\FormPIDGraph.designer.cs">
-      <DependentUpon>FormPIDGraph.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormsOld\FormSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\FormSettings.designer.cs">
-      <DependentUpon>FormSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormStart.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormsOld\frmCalHelp.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\frmCalHelp.Designer.cs">
-      <DependentUpon>frmCalHelp.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormsOld\frmCalibrate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\frmCalibrate.Designer.cs">
-      <DependentUpon>frmCalibrate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormsOld\frmComm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\frmComm.Designer.cs">
-      <DependentUpon>frmComm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmHelp.cs">
       <SubType>Form</SubType>
@@ -184,41 +154,17 @@
     <Compile Include="Menu\frmMenu.Designer.cs">
       <DependentUpon>frmMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormsOld\frmModule.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\frmModule.Designer.cs">
-      <DependentUpon>frmModule.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormsOld\frmModuleConfig.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\frmModuleConfig.Designer.cs">
-      <DependentUpon>frmModuleConfig.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmMsgBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmMsgBox.Designer.cs">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormsOld\frmPins.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\frmPins.Designer.cs">
-      <DependentUpon>frmPins.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmPressureDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmPressureDisplay.Designer.cs">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormsOld\frmRelays.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\frmRelays.Designer.cs">
-      <DependentUpon>frmRelays.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmResetQuantity.cs">
       <SubType>Form</SubType>
@@ -231,12 +177,6 @@
     </Compile>
     <Compile Include="Forms\frmScaleDisplay.Designer.cs">
       <DependentUpon>frmScaleDisplay.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormsOld\frmSections.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormsOld\frmSections.Designer.cs">
-      <DependentUpon>frmSections.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmSwitches.cs">
       <SubType>Form</SubType>
@@ -441,24 +381,8 @@
       <DependentUpon>FormNumeric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\FormPIDGraph.resx">
-      <DependentUpon>FormPIDGraph.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\FormSettings.resx">
-      <DependentUpon>FormSettings.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormStart.resx">
       <DependentUpon>FormStart.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\frmCalHelp.resx">
-      <DependentUpon>frmCalHelp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\frmCalibrate.resx">
-      <DependentUpon>frmCalibrate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\frmComm.resx">
-      <DependentUpon>frmComm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmHelp.resx">
       <DependentUpon>frmHelp.cs</DependentUpon>
@@ -469,32 +393,17 @@
     <EmbeddedResource Include="Menu\frmMenu.resx">
       <DependentUpon>frmMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\frmModule.resx">
-      <DependentUpon>frmModule.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\frmModuleConfig.resx">
-      <DependentUpon>frmModuleConfig.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMsgBox.resx">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\frmPins.resx">
-      <DependentUpon>frmPins.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmPressureDisplay.resx">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\frmRelays.resx">
-      <DependentUpon>frmRelays.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmResetQuantity.resx">
       <DependentUpon>frmResetQuantity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmScaleDisplay.resx">
       <DependentUpon>frmScaleDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormsOld\frmSections.resx">
-      <DependentUpon>frmSections.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSwitches.resx">
       <DependentUpon>frmSwitches.cs</DependentUpon>

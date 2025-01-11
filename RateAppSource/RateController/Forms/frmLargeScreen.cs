@@ -18,7 +18,6 @@ namespace RateController
         private bool MasterPressed;
         private Point MouseDownLocation;
         private Color RateColour = Color.GreenYellow;
-        private bool SwitchingScreens = false;
         private int TransLeftOffset = 6;
         private int TransTopOffset = 30;
 
@@ -104,7 +103,6 @@ namespace RateController
         {
             this.ShowInTaskbar = false;
             mf.ShowInTaskbar = true;
-            SwitchingScreens = true;
             this.Close();
         }
 
@@ -216,7 +214,6 @@ namespace RateController
 
             UpdateForm();
             timerMain.Enabled = true;
-            SwitchingScreens = false;
             mf.vSwitchBox.LargeScreenOn = true;
             mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
             tmrRelease.Enabled = true;
