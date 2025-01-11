@@ -199,17 +199,6 @@ namespace RateController
             {
                 Result = true;
             }
-            else
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    if (mf.SER[i].SwitchBoxConnected)
-                    {
-                        Result = true;
-                        break;
-                    }
-                }
-            }
             return Result;
         }
 

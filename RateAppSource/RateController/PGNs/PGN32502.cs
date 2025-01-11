@@ -41,7 +41,6 @@ namespace RateController
             Data[8] = (byte)Prod.ScalingFactor;
             Data[9] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
-            Prod.mf.SendSerial(Data);
             Prod.mf.UDPmodules.SendUDPMessage(Data);
         }
     }

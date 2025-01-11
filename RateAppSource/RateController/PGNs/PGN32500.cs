@@ -146,7 +146,6 @@ namespace RateController
             cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
 
             // send
-            Prod.mf.SendSerial(cData);
             Prod.mf.UDPmodules.SendUDPMessage(cData);
 
             cSendTime = DateTime.Now;

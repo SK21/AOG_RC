@@ -54,7 +54,6 @@ namespace RateController
         public clsSectionControl SectionControl;
         public clsSections Sections;
         public PGN235 SectionsPGN;
-        public SerialComm[] SER = new SerialComm[3];
         public bool ShowCoverageRemaining;
         public bool ShowQuantityRemaining;
         public Color SimColor = Color.FromArgb(255, 182, 0);
@@ -132,10 +131,6 @@ namespace RateController
             Products = new clsProducts(this);
             RCalarm = new clsAlarm(this, btAlarm);
 
-            for (int i = 0; i < 3; i++)
-            {
-                SER[i] = new SerialComm(this, i);
-            }
 
             ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4, prd5 };
             Rates = new Label[] { rt0, rt1, rt2, rt3, rt4, rt5 };
@@ -438,7 +433,6 @@ namespace RateController
 
         public void LoadSettings()
         {
-            StartSerial();
             SetDisplay();
 
             if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
@@ -592,13 +586,6 @@ namespace RateController
             }
         }
 
-        public void SendSerial(byte[] Data)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                SER[i].SendData(Data);
-            }
-        }
 
         public void SetScale(int ProductID, bool Show)
         {
@@ -617,36 +604,6 @@ namespace RateController
             return Result;
         }
 
-        public void StartSerial()
-        {
-            try
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    String ID = "_" + i.ToString() + "_";
-                    SER[i].RCportName = Tls.LoadProperty("RCportName" + ID + i.ToString());
-
-                    int tmp;
-                    if (int.TryParse(Tls.LoadProperty("RCportBaud" + ID + i.ToString()), out tmp))
-                    {
-                        SER[i].RCportBaud = tmp;
-                    }
-                    else
-                    {
-                        SER[i].RCportBaud = 38400;
-                    }
-
-                    bool tmp2;
-                    bool.TryParse(Tls.LoadProperty("RCportSuccessful" + ID + i.ToString()), out tmp2);
-                    if (tmp2) SER[i].OpenRCport();
-                }
-            }
-            catch (Exception ex)
-            {
-                Tls.WriteErrorLog("FormRateControl/StartSerial: " + ex.Message);
-                Tls.ShowHelp(ex.Message, this.Text, 3000, true);
-            }
-        }
 
         public void SwitchScreens(bool SingleProduct = false)
         {
@@ -1077,10 +1034,6 @@ namespace RateController
                 string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
 
-                for (int i = 0; i < 3; i++)
-                {
-                    SER[i].CloseRCport("true");
-                }
 
                 Tls.SaveProperty("RateType", cRateType.ToString());
             }
