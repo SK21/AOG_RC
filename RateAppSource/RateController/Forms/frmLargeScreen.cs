@@ -209,19 +209,6 @@ namespace RateController
             mf.vSwitchBox.LargeScreenOn = false;
         }
 
-        private void frmLargeScreen_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (!SwitchingScreens && !mf.Restart && mf.Products.Connected())
-            {
-                var Hlp = new frmMsgBox(mf, "Confirm Exit?", "Exit", true);
-                Hlp.TopMost = true;
-                Hlp.ShowDialog();
-                bool Result = Hlp.Result;
-                Hlp.Close();
-                if (!Result) e.Cancel = true;
-            }
-        }
-
         private void frmLargeScreen_Load(object sender, EventArgs e)
         {
             mf.Tls.LoadFormData(this);
@@ -264,36 +251,6 @@ namespace RateController
             {
                 mf.Products.Item(CurrentProduct()).ResetCoverage();
             }
-        }
-
-        private void lbFan1_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("FormSettings");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormSettings(mf, mf.MaxProducts - 1);
-            frm.Show();
-        }
-
-        private void lbFan2_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("FormSettings");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new FormSettings(mf, mf.MaxProducts);
-            frm.Show();
         }
 
         private void lbName0_Click(object sender, EventArgs e)
@@ -595,7 +552,7 @@ namespace RateController
 
             if (fs == null)
             {
-                Form frm = new frmMenu(mf, Prd.ID + 1, OpenLast);
+                Form frm = new frmMenu(mf, Prd.ID, OpenLast);
                 frm.Show();
             }
             else

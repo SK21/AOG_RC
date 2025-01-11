@@ -158,7 +158,6 @@ namespace RateController
             NetworkConfig = new PGN32702(this);
             AOGsections = new PGN229(this);
             SectionControl = new clsSectionControl(this);
-            SwitchObjects = new clsSwitches(this);
             ScaleIndicator = new PGN32296(this);
         }
 
@@ -501,7 +500,6 @@ namespace RateController
 
             LoadDefaultProduct();
             Zones.Load();
-            SwitchObjects.Load();
 
             if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS))
             {
@@ -522,14 +520,6 @@ namespace RateController
             }
 
             // check loaded forms, reload to update
-            Form Opts = Tls.IsFormOpen("frmOptions");
-            if (Opts != null)
-            {
-                Opts.Close();
-                Opts = new frmOptions(this);
-                Opts.Show();
-            }
-
             Form Swt = Tls.IsFormOpen("frmSwitches");
             if (Swt != null)
             {

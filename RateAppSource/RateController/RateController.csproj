@@ -125,16 +125,16 @@
     <Compile Include="Forms\FormNumeric.Designer.cs">
       <DependentUpon>FormNumeric.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormPIDGraph.cs">
+    <Compile Include="FormsOld\FormPIDGraph.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormPIDGraph.designer.cs">
+    <Compile Include="FormsOld\FormPIDGraph.designer.cs">
       <DependentUpon>FormPIDGraph.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormSettings.cs">
+    <Compile Include="FormsOld\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormSettings.designer.cs">
+    <Compile Include="FormsOld\FormSettings.designer.cs">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormStart.cs">
@@ -143,22 +143,22 @@
     <Compile Include="Forms\FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmCalHelp.cs">
+    <Compile Include="FormsOld\frmCalHelp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmCalHelp.Designer.cs">
+    <Compile Include="FormsOld\frmCalHelp.Designer.cs">
       <DependentUpon>frmCalHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmCalibrate.cs">
+    <Compile Include="FormsOld\frmCalibrate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmCalibrate.Designer.cs">
+    <Compile Include="FormsOld\frmCalibrate.Designer.cs">
       <DependentUpon>frmCalibrate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmComm.cs">
+    <Compile Include="FormsOld\frmComm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmComm.Designer.cs">
+    <Compile Include="FormsOld\frmComm.Designer.cs">
       <DependentUpon>frmComm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmHelp.cs">
@@ -184,16 +184,16 @@
     <Compile Include="Menu\frmMenu.Designer.cs">
       <DependentUpon>frmMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmModule.cs">
+    <Compile Include="FormsOld\frmModule.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmModule.Designer.cs">
+    <Compile Include="FormsOld\frmModule.Designer.cs">
       <DependentUpon>frmModule.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmModuleConfig.cs">
+    <Compile Include="FormsOld\frmModuleConfig.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmModuleConfig.Designer.cs">
+    <Compile Include="FormsOld\frmModuleConfig.Designer.cs">
       <DependentUpon>frmModuleConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmMsgBox.cs">
@@ -202,16 +202,10 @@
     <Compile Include="Forms\frmMsgBox.Designer.cs">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmOptions.cs">
+    <Compile Include="FormsOld\frmPins.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmOptions.Designer.cs">
-      <DependentUpon>frmOptions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmPins.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmPins.Designer.cs">
+    <Compile Include="FormsOld\frmPins.Designer.cs">
       <DependentUpon>frmPins.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmPressureDisplay.cs">
@@ -220,10 +214,10 @@
     <Compile Include="Forms\frmPressureDisplay.Designer.cs">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmRelays.cs">
+    <Compile Include="FormsOld\frmRelays.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmRelays.Designer.cs">
+    <Compile Include="FormsOld\frmRelays.Designer.cs">
       <DependentUpon>frmRelays.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmResetQuantity.cs">
@@ -238,10 +232,10 @@
     <Compile Include="Forms\frmScaleDisplay.Designer.cs">
       <DependentUpon>frmScaleDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmSections.cs">
+    <Compile Include="FormsOld\frmSections.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmSections.Designer.cs">
+    <Compile Include="FormsOld\frmSections.Designer.cs">
       <DependentUpon>frmSections.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmSwitches.cs">
@@ -447,23 +441,23 @@
       <DependentUpon>FormNumeric.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormPIDGraph.resx">
+    <EmbeddedResource Include="FormsOld\FormPIDGraph.resx">
       <DependentUpon>FormPIDGraph.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormSettings.resx">
+    <EmbeddedResource Include="FormsOld\FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormStart.resx">
       <DependentUpon>FormStart.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmCalHelp.resx">
+    <EmbeddedResource Include="FormsOld\frmCalHelp.resx">
       <DependentUpon>frmCalHelp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmCalibrate.resx">
+    <EmbeddedResource Include="FormsOld\frmCalibrate.resx">
       <DependentUpon>frmCalibrate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmComm.resx">
+    <EmbeddedResource Include="FormsOld\frmComm.resx">
       <DependentUpon>frmComm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmHelp.resx">
@@ -475,25 +469,22 @@
     <EmbeddedResource Include="Menu\frmMenu.resx">
       <DependentUpon>frmMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmModule.resx">
+    <EmbeddedResource Include="FormsOld\frmModule.resx">
       <DependentUpon>frmModule.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmModuleConfig.resx">
+    <EmbeddedResource Include="FormsOld\frmModuleConfig.resx">
       <DependentUpon>frmModuleConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMsgBox.resx">
       <DependentUpon>frmMsgBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmOptions.resx">
-      <DependentUpon>frmOptions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmPins.resx">
+    <EmbeddedResource Include="FormsOld\frmPins.resx">
       <DependentUpon>frmPins.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmPressureDisplay.resx">
       <DependentUpon>frmPressureDisplay.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmRelays.resx">
+    <EmbeddedResource Include="FormsOld\frmRelays.resx">
       <DependentUpon>frmRelays.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmResetQuantity.resx">
@@ -502,7 +493,7 @@
     <EmbeddedResource Include="Forms\frmScaleDisplay.resx">
       <DependentUpon>frmScaleDisplay.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSections.resx">
+    <EmbeddedResource Include="FormsOld\frmSections.resx">
       <DependentUpon>frmSections.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSwitches.resx">

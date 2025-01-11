@@ -29,16 +29,14 @@ namespace RateController
 
         public void SetDescriptions()
         {
-            mf.SwitchObjects.CheckDescriptions();
-
-            btn1.Text = mf.SwitchObjects.Item(0).Description;
-            btn2.Text = mf.SwitchObjects.Item(1).Description;
-            btn3.Text = mf.SwitchObjects.Item(2).Description;
-            btn4.Text = mf.SwitchObjects.Item(3).Description;
-            btn5.Text = mf.SwitchObjects.Item(4).Description;
-            btn6.Text = mf.SwitchObjects.Item(5).Description;
-            btn7.Text = mf.SwitchObjects.Item(6).Description;
-            btn8.Text = mf.SwitchObjects.Item(7).Description;
+            btn1.Text = "1";
+            btn2.Text = "2";
+            btn3.Text = "3";
+            btn4.Text = "4";
+            btn5.Text = "5";
+            btn6.Text = "6";
+            btn7.Text = "7";
+            btn8.Text = "8";
         }
 
         private void btAuto_Click(object sender, EventArgs e)

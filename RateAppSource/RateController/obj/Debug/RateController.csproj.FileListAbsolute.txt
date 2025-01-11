@@ -2396,7 +2396,6 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\Rate
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmModule.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmModuleConfig.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmMsgBox.resources
-G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmOptions.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmPins.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmPressureDisplay.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmRelays.resources
