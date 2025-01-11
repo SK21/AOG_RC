@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -42,7 +41,7 @@ namespace RateController
             MasterIsOn = false;
             ForceOff = true;
             MasterIsOnLast = true;  // to cause a change flag to be set
-            PrimeTimer.Tick += new EventHandler(Timer1_Tick);
+            PrimeTimer.Tick += new EventHandler(PrimingTimerTick);
             PrimeTimer.Interval = 1000;
             PrimeTimer.Enabled = false;
         }
@@ -115,7 +114,7 @@ namespace RateController
                         {
                             // manual rate
                             if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose
-                                || Prd.ControlType==ControlTypeEnum.ComboCloseTimed)
+                                || Prd.ControlType == ControlTypeEnum.ComboCloseTimed)
                             {
                                 // adjust flow valve
                                 byte ADJ = (byte)(255.0 * Prd.MinAdjust / 100.0);
@@ -139,7 +138,7 @@ namespace RateController
                         clsProduct Prd = mf.Products.Item(ID);
 
                         if (!mf.SwitchBox.AutoRateOn &&
-                            (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose||Prd.ControlType==ControlTypeEnum.ComboCloseTimed))
+                            (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed))
                         {
                             Prd.ManualPWM = 0;
                         }
@@ -154,6 +153,8 @@ namespace RateController
 
         public void UpdateSectionStatusNoZones()
         {
+            // only runs when switchbox is connected
+
             bool WorkSWOn = mf.SwitchBox.WorkOn;
             bool MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
             bool MasterSWOn = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn);
@@ -249,7 +250,7 @@ namespace RateController
                         }
                     }
 
-                    if ( AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                    if (AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                     {
                         AutoSectionsChanged = true;
                         AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
@@ -271,7 +272,7 @@ namespace RateController
                         MasterIsOnChanged = false;
                         AutoSectionsChanged = false;
 
-                        if ( !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                         {
                             // auto off, send on bytes to match switchbox
                             for (int i = 0; i < Max; i++)
@@ -327,6 +328,8 @@ namespace RateController
 
         public void UpdateSectionStatusWithZones()
         {
+            // only runs when switchbox is connected
+
             bool WorkSWOn = mf.SwitchBox.WorkOn;
             bool MasterSWOff = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOff);
             bool MasterSWOn = mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn);
@@ -448,7 +451,7 @@ namespace RateController
                         MasterIsOnChanged = false;
                         AutoSectionsChanged = false;
 
-                        if ( !mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
                         {
                             // auto off, send on bytes to match RC zones
                             foreach (clsZone Zn in mf.Zones.Items)
@@ -511,6 +514,21 @@ namespace RateController
             }
         }
 
+        private void PrimingTimerTick(Object myObject, EventArgs myEventArgs)
+        {
+            TimerCount++;
+            if (TimerCount > mf.PrimeTime)
+            {
+                TimerCount = 0;
+                PrimeTimer.Enabled = false;
+                cPrimeOn = false;
+                PrimeInitialized = false;
+
+                ForceOff = !mf.ResumeAfterPrime;
+                if (!mf.ResumeAfterPrime) mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
+            }
+        }
+
         private void SetPriming()
         {
             // turn sections on if master held in on position for a defined time
@@ -547,21 +565,6 @@ namespace RateController
                 UpdateSectionStatusNoZones();
             }
             mf.SendRelays();    // for quicker response than waiting for TimerMain
-        }
-
-        private void Timer1_Tick(Object myObject, EventArgs myEventArgs)
-        {
-            TimerCount++;
-            if (TimerCount > mf.PrimeTime)
-            {
-                TimerCount = 0;
-                PrimeTimer.Enabled = false;
-                cPrimeOn = false;
-                PrimeInitialized = false;
-
-                ForceOff = !mf.ResumeAfterPrime;
-                if (!mf.ResumeAfterPrime) mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
-            }
         }
     }
 }

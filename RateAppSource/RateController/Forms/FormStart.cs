@@ -1575,7 +1575,7 @@ namespace RateController
                 }
 
                 Form frm = new frmResetQuantity(this);
-                frm.Show();
+                frm.ShowDialog();
             }
         }
 

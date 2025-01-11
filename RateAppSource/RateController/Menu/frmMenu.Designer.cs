@@ -261,7 +261,7 @@
             this.butCalibrate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butCalibrate.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butCalibrate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butCalibrate.Location = new System.Drawing.Point(642, 237);
+            this.butCalibrate.Location = new System.Drawing.Point(633, 345);
             this.butCalibrate.Name = "butCalibrate";
             this.butCalibrate.Size = new System.Drawing.Size(158, 49);
             this.butCalibrate.TabIndex = 20;
@@ -280,7 +280,7 @@
             this.butRelays.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butRelays.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butRelays.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butRelays.Location = new System.Drawing.Point(642, 165);
+            this.butRelays.Location = new System.Drawing.Point(633, 156);
             this.butRelays.Name = "butRelays";
             this.butRelays.Size = new System.Drawing.Size(158, 49);
             this.butRelays.TabIndex = 19;
@@ -299,7 +299,7 @@
             this.butSections.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butSections.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butSections.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butSections.Location = new System.Drawing.Point(642, 93);
+            this.butSections.Location = new System.Drawing.Point(633, 93);
             this.butSections.Name = "butSections";
             this.butSections.Size = new System.Drawing.Size(158, 49);
             this.butSections.TabIndex = 18;
@@ -432,7 +432,7 @@
             this.butLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butLanguage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butLanguage.Location = new System.Drawing.Point(970, 310);
+            this.butLanguage.Location = new System.Drawing.Point(970, 149);
             this.butLanguage.Name = "butLanguage";
             this.butLanguage.Size = new System.Drawing.Size(158, 49);
             this.butLanguage.TabIndex = 31;
@@ -451,7 +451,7 @@
             this.butSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butSwitches.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butSwitches.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butSwitches.Location = new System.Drawing.Point(970, 238);
+            this.butSwitches.Location = new System.Drawing.Point(633, 219);
             this.butSwitches.Name = "butSwitches";
             this.butSwitches.Size = new System.Drawing.Size(158, 49);
             this.butSwitches.TabIndex = 30;
@@ -470,7 +470,7 @@
             this.butPrimed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butPrimed.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butPrimed.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butPrimed.Location = new System.Drawing.Point(970, 166);
+            this.butPrimed.Location = new System.Drawing.Point(633, 282);
             this.butPrimed.Name = "butPrimed";
             this.butPrimed.Size = new System.Drawing.Size(158, 49);
             this.butPrimed.TabIndex = 29;
@@ -588,7 +588,7 @@
             this.butMachine.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
             this.butMachine.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butMachine.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butMachine.Image = global::RateController.Properties.Resources.SteerDriveOff;
+            this.butMachine.Image = global::RateController.Properties.Resources.Machine;
             this.butMachine.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.butMachine.Location = new System.Drawing.Point(12, 238);
             this.butMachine.Name = "butMachine";
@@ -711,7 +711,7 @@
             this.butColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butColor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butColor.Location = new System.Drawing.Point(970, 365);
+            this.butColor.Location = new System.Drawing.Point(970, 204);
             this.butColor.Name = "butColor";
             this.butColor.Size = new System.Drawing.Size(158, 49);
             this.butColor.TabIndex = 163;

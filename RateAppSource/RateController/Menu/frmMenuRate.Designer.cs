@@ -560,7 +560,7 @@
             this.btnResetTank.FlatAppearance.BorderSize = 0;
             this.btnResetTank.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnResetTank.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetTank.Image = global::RateController.Properties.Resources.sprayer;
+            this.btnResetTank.Image = global::RateController.Properties.Resources.Update;
             this.btnResetTank.Location = new System.Drawing.Point(144, 546);
             this.btnResetTank.Name = "btnResetTank";
             this.btnResetTank.Size = new System.Drawing.Size(72, 72);

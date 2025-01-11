@@ -3,7 +3,7 @@
 namespace RateController
 {
     public enum RelayTypes
-    { Section, Slave, Master, Power, Invert_Section,HydUp,HydDown,TramRight,TramLeft,GeoStop,Switch,None };
+    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None };
 
     public class clsRelay
     {

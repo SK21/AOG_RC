@@ -651,6 +651,9 @@
     <None Include="Help\frmMenuSettings.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Help\frmMenuSwitches.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
@@ -668,6 +671,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Machine.png" />
     <None Include="Resources\file-text.png" />
     <None Include="Resources\CloseButton.png" />
     <None Include="Resources\HelpUnder.png" />

@@ -85,7 +85,7 @@
             this.ckResume.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckResume.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckResume.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckResume.Location = new System.Drawing.Point(185, 365);
+            this.ckResume.Location = new System.Drawing.Point(183, 365);
             this.ckResume.Name = "ckResume";
             this.ckResume.Size = new System.Drawing.Size(164, 34);
             this.ckResume.TabIndex = 7;
@@ -98,7 +98,7 @@
             // 
             this.lbDelaySeconds.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbDelaySeconds.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbDelaySeconds.Location = new System.Drawing.Point(338, 296);
+            this.lbDelaySeconds.Location = new System.Drawing.Point(373, 292);
             this.lbDelaySeconds.Name = "lbDelaySeconds";
             this.lbDelaySeconds.Size = new System.Drawing.Size(89, 24);
             this.lbDelaySeconds.TabIndex = 344;
@@ -108,7 +108,7 @@
             // tbTime
             // 
             this.tbTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTime.Location = new System.Drawing.Point(267, 173);
+            this.tbTime.Location = new System.Drawing.Point(302, 169);
             this.tbTime.MaxLength = 8;
             this.tbTime.Name = "tbTime";
             this.tbTime.Size = new System.Drawing.Size(65, 30);
@@ -122,7 +122,7 @@
             // tbSpeed
             // 
             this.tbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSpeed.Location = new System.Drawing.Point(267, 233);
+            this.tbSpeed.Location = new System.Drawing.Point(302, 229);
             this.tbSpeed.MaxLength = 8;
             this.tbSpeed.Name = "tbSpeed";
             this.tbSpeed.Size = new System.Drawing.Size(65, 30);
@@ -136,7 +136,7 @@
             // tbDelay
             // 
             this.tbDelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDelay.Location = new System.Drawing.Point(267, 293);
+            this.tbDelay.Location = new System.Drawing.Point(302, 289);
             this.tbDelay.MaxLength = 8;
             this.tbDelay.Name = "tbDelay";
             this.tbDelay.Size = new System.Drawing.Size(65, 30);
@@ -151,7 +151,7 @@
             // 
             this.lbPrimedSpeed.AutoSize = true;
             this.lbPrimedSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPrimedSpeed.Location = new System.Drawing.Point(102, 237);
+            this.lbPrimedSpeed.Location = new System.Drawing.Point(98, 233);
             this.lbPrimedSpeed.Name = "lbPrimedSpeed";
             this.lbPrimedSpeed.Size = new System.Drawing.Size(63, 23);
             this.lbPrimedSpeed.TabIndex = 5;
@@ -161,7 +161,7 @@
             // 
             this.lbSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbSpeed.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSpeed.Location = new System.Drawing.Point(338, 236);
+            this.lbSpeed.Location = new System.Drawing.Point(373, 232);
             this.lbSpeed.Name = "lbSpeed";
             this.lbSpeed.Size = new System.Drawing.Size(57, 24);
             this.lbSpeed.TabIndex = 338;
@@ -172,17 +172,18 @@
             // 
             this.lbDelay.AutoSize = true;
             this.lbDelay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDelay.Location = new System.Drawing.Point(102, 297);
+            this.lbDelay.Location = new System.Drawing.Point(98, 292);
             this.lbDelay.Name = "lbDelay";
-            this.lbDelay.Size = new System.Drawing.Size(117, 23);
+            this.lbDelay.Size = new System.Drawing.Size(179, 23);
             this.lbDelay.TabIndex = 3;
-            this.lbDelay.Text = "Switch Delay";
+            this.lbDelay.Text = "Master Switch Delay";
+            this.lbDelay.Click += new System.EventHandler(this.lbDelay_Click);
             // 
             // lbOnTime
             // 
             this.lbOnTime.AutoSize = true;
             this.lbOnTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOnTime.Location = new System.Drawing.Point(102, 177);
+            this.lbOnTime.Location = new System.Drawing.Point(98, 173);
             this.lbOnTime.Name = "lbOnTime";
             this.lbOnTime.Size = new System.Drawing.Size(81, 23);
             this.lbOnTime.TabIndex = 6;
@@ -192,7 +193,7 @@
             // 
             this.lbOnSeconds.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbOnSeconds.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbOnSeconds.Location = new System.Drawing.Point(338, 176);
+            this.lbOnSeconds.Location = new System.Drawing.Point(373, 172);
             this.lbOnSeconds.Name = "lbOnSeconds";
             this.lbOnSeconds.Size = new System.Drawing.Size(89, 24);
             this.lbOnSeconds.TabIndex = 341;

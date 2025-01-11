@@ -217,7 +217,7 @@ namespace RateController.Menu
                     Rw[1] = SW.Description;
                     Rw[2] = SW.ModuleID;
 
-                    if (SW.RelayID == 0)
+                    if (SW.RelayID <1)
                     {
                         Rw[3] = "";
                     }

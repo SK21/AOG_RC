@@ -363,6 +363,7 @@ namespace RateController
                 butRelays.Visible = !Expanded;
                 butCalibrate.Visible = !Expanded;
                 butSwitches.Visible = !Expanded;
+                butPrimed.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -399,6 +400,10 @@ namespace RateController
                     butSwitches.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butSwitches.Top = Pos;
+
+                    butPrimed.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butPrimed.Top = Pos;
 
                     butCalibrate.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -555,7 +560,6 @@ namespace RateController
             if (ClosedOwned())
             {
                 butDisplay.Visible = !Expanded;
-                butPrimed.Visible = !Expanded;
                 butLanguage.Visible = !Expanded;
                 butColor.Visible = !Expanded;
 
@@ -586,10 +590,6 @@ namespace RateController
                     butDisplay.Left = butFile.Left + SubOffset;
                     Pos += SubFirstSpacing;
                     butDisplay.Top = Pos;
-
-                    butPrimed.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butPrimed.Top = Pos;
 
                     butLanguage.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -1038,6 +1038,11 @@ namespace RateController
                                 butMachine.PerformClick();
                                 break;
 
+                            case "frmMenuPrimed":
+                                fs = new frmMenuPrimed(mf, this);
+                                butMachine.PerformClick();
+                                break;
+
                             case "frmMenuCalibrate":
                                 fs = new frmMenuCalibrate(mf, this);
                                 butMachine.PerformClick();
@@ -1080,11 +1085,6 @@ namespace RateController
 
                             case "frmMenuDisplay":
                                 fs = new frmMenuDisplay(mf, this);
-                                butOptions.PerformClick();
-                                break;
-
-                            case "frmMenuPrimed":
-                                fs = new frmMenuPrimed(mf, this);
                                 butOptions.PerformClick();
                                 break;
 

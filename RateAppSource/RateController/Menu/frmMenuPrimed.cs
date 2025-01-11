@@ -206,5 +206,10 @@ namespace RateController.Menu
                 e.Cancel = true;
             }
         }
+
+        private void lbDelay_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -77,7 +77,18 @@ namespace RateController.Menu
 
         private void btnResetTank_Click(object sender, EventArgs e)
         {
-            MainMenu.CurrentProduct.TankStart = MainMenu.CurrentProduct.TankSize;
+            //check if window already exists
+            Form fs = mf.Tls.IsFormOpen("frmResetQuantity");
+
+            if (fs != null)
+            {
+                fs.Focus();
+                return;
+            }
+
+            Form frm = new frmResetQuantity(mf);
+            frm.ShowDialog();
+            UpdateForm();
         }
 
         private void btnRight_Click(object sender, EventArgs e)

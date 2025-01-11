@@ -43,10 +43,6 @@
             this.dataColumn1 = new System.Data.DataColumn();
             this.ckDualAuto = new System.Windows.Forms.CheckBox();
             this.DGV = new System.Windows.Forms.DataGridView();
-            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.moduleDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Relay = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.ckNoMaster = new System.Windows.Forms.CheckBox();
@@ -55,6 +51,10 @@
             this.rbSections = new System.Windows.Forms.RadioButton();
             this.rbAutoAll = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.moduleDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Relay = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
@@ -185,42 +185,6 @@
             this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
             this.DGV.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.DGV_DataError);
             // 
-            // iDDataGridViewTextBoxColumn
-            // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.iDDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.iDDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // descriptionDataGridViewTextBoxColumn
-            // 
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
-            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            this.descriptionDataGridViewTextBoxColumn.Width = 120;
-            // 
-            // moduleDataGridViewTextBoxColumn
-            // 
-            this.moduleDataGridViewTextBoxColumn.DataPropertyName = "Module";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.moduleDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-            this.moduleDataGridViewTextBoxColumn.HeaderText = "Module";
-            this.moduleDataGridViewTextBoxColumn.Name = "moduleDataGridViewTextBoxColumn";
-            // 
-            // Relay
-            // 
-            this.Relay.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Relay.DataPropertyName = "Relay";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Relay.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Relay.HeaderText = "Relay";
-            this.Relay.Name = "Relay";
-            // 
             // ckScreenSwitches
             // 
             this.ckScreenSwitches.Appearance = System.Windows.Forms.Appearance.Button;
@@ -336,6 +300,41 @@
             this.groupBox2.Text = "On-Screen";
             this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
+            // iDDataGridViewTextBoxColumn
+            // 
+            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.iDDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.iDDataGridViewTextBoxColumn.HeaderText = "Switch";
+            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // descriptionDataGridViewTextBoxColumn
+            // 
+            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
+            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
+            this.descriptionDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // moduleDataGridViewTextBoxColumn
+            // 
+            this.moduleDataGridViewTextBoxColumn.DataPropertyName = "Module";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.moduleDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            this.moduleDataGridViewTextBoxColumn.HeaderText = "Module";
+            this.moduleDataGridViewTextBoxColumn.Name = "moduleDataGridViewTextBoxColumn";
+            // 
+            // Relay
+            // 
+            this.Relay.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Relay.DataPropertyName = "Relay";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Relay.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Relay.HeaderText = "Relay";
+            this.Relay.Name = "Relay";
+            // 
             // frmMenuSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -378,10 +377,6 @@
         private System.Data.DataColumn dataColumn1;
         private System.Windows.Forms.CheckBox ckDualAuto;
         private System.Windows.Forms.DataGridView DGV;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn moduleDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Relay;
         private System.Windows.Forms.CheckBox ckScreenSwitches;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.CheckBox ckNoMaster;
@@ -390,5 +385,9 @@
         private System.Windows.Forms.RadioButton rbAutoAll;
         private System.Windows.Forms.RadioButton rbSections;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn moduleDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Relay;
     }
 }
