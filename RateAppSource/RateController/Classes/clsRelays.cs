@@ -70,6 +70,14 @@ namespace RateController
             return Result;
         }
 
+        public RelayTypes RelayTypeID(string Description)
+        {
+            RelayTypes Result = RelayTypes.None;
+            var index = Array.IndexOf(mf.TypeDescriptions, Description);
+            if (index != -1) Result = (RelayTypes)index;
+            return Result;
+        }
+
         public void Renumber(int StartRelay, int StartModule, int StartSection)
         {
             try
@@ -278,17 +286,7 @@ namespace RateController
                                 break;
 
                             case RelayTypes.Switch:
-                                bool Found = false;
-                                foreach (clsSwitch SW in mf.SwitchObjects.Items)
-                                {
-                                    if (SW.RelayID - 1 == Rly.ID && SW.ModuleID == ModuleID)
-                                    {
-                                        Rly.IsON = mf.SwitchBox.SwitchIsOn((SwIDs)(SW.ID + 5));
-                                        Found = true;
-                                        break;
-                                    }
-                                }
-                                if (!Found) Rly.IsON = false;
+                                Rly.IsON = mf.SwitchBox.SwitchIsOn((SwIDs)(Rly.SwitchID + 5));
                                 break;
                         }
 

@@ -28,36 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.dataSet1 = new System.Data.DataSet();
-            this.dataTable1 = new System.Data.DataTable();
-            this.dataRelay = new System.Data.DataColumn();
-            this.dataType = new System.Data.DataColumn();
-            this.dataSection = new System.Data.DataColumn();
-            this.dataColumn1 = new System.Data.DataColumn();
             this.ckDualAuto = new System.Windows.Forms.CheckBox();
-            this.DGV = new System.Windows.Forms.DataGridView();
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
-            this.btnReset = new System.Windows.Forms.Button();
             this.ckNoMaster = new System.Windows.Forms.CheckBox();
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.rbSections = new System.Windows.Forms.RadioButton();
             this.rbAutoAll = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.moduleDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Relay = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -98,92 +78,20 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // dataSet1
-            // 
-            this.dataSet1.DataSetName = "NewDataSet";
-            this.dataSet1.Tables.AddRange(new System.Data.DataTable[] {
-            this.dataTable1});
-            // 
-            // dataTable1
-            // 
-            this.dataTable1.Columns.AddRange(new System.Data.DataColumn[] {
-            this.dataRelay,
-            this.dataType,
-            this.dataSection,
-            this.dataColumn1});
-            this.dataTable1.TableName = "Table1";
-            // 
-            // dataRelay
-            // 
-            this.dataRelay.Caption = "Relay";
-            this.dataRelay.ColumnName = "ID";
-            this.dataRelay.DataType = typeof(short);
-            // 
-            // dataType
-            // 
-            this.dataType.Caption = "Type";
-            this.dataType.ColumnName = "Description";
-            // 
-            // dataSection
-            // 
-            this.dataSection.Caption = "Section";
-            this.dataSection.ColumnName = "Module";
-            // 
-            // dataColumn1
-            // 
-            this.dataColumn1.ColumnName = "Relay";
-            // 
             // ckDualAuto
             // 
             this.ckDualAuto.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckDualAuto.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDualAuto.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDualAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDualAuto.Location = new System.Drawing.Point(19, 73);
+            this.ckDualAuto.Location = new System.Drawing.Point(16, 97);
             this.ckDualAuto.Name = "ckDualAuto";
-            this.ckDualAuto.Size = new System.Drawing.Size(164, 34);
+            this.ckDualAuto.Size = new System.Drawing.Size(170, 37);
             this.ckDualAuto.TabIndex = 167;
             this.ckDualAuto.Text = "Dual Auto";
             this.ckDualAuto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDualAuto.UseVisualStyleBackColor = true;
             this.ckDualAuto.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
-            // 
-            // DGV
-            // 
-            this.DGV.AllowUserToAddRows = false;
-            this.DGV.AllowUserToDeleteRows = false;
-            this.DGV.AllowUserToResizeColumns = false;
-            this.DGV.AllowUserToResizeRows = false;
-            this.DGV.AutoGenerateColumns = false;
-            this.DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.iDDataGridViewTextBoxColumn,
-            this.descriptionDataGridViewTextBoxColumn,
-            this.moduleDataGridViewTextBoxColumn,
-            this.Relay});
-            this.DGV.DataMember = "Table1";
-            this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.NullValue = "<dbnull>";
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle5;
-            this.DGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
-            this.DGV.Location = new System.Drawing.Point(30, 193);
-            this.DGV.Margin = new System.Windows.Forms.Padding(11);
-            this.DGV.Name = "DGV";
-            this.DGV.RowHeadersVisible = false;
-            this.DGV.RowTemplate.Height = 40;
-            this.DGV.Size = new System.Drawing.Size(470, 339);
-            this.DGV.TabIndex = 166;
-            this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
-            this.DGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellContentClick);
-            this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
-            this.DGV.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.DGV_DataError);
             // 
             // ckScreenSwitches
             // 
@@ -191,30 +99,14 @@
             this.ckScreenSwitches.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckScreenSwitches.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckScreenSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckScreenSwitches.Location = new System.Drawing.Point(19, 28);
+            this.ckScreenSwitches.Location = new System.Drawing.Point(16, 28);
             this.ckScreenSwitches.Name = "ckScreenSwitches";
-            this.ckScreenSwitches.Size = new System.Drawing.Size(164, 34);
+            this.ckScreenSwitches.Size = new System.Drawing.Size(170, 37);
             this.ckScreenSwitches.TabIndex = 165;
             this.ckScreenSwitches.Text = "Use Switches";
             this.ckScreenSwitches.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckScreenSwitches.UseVisualStyleBackColor = true;
             this.ckScreenSwitches.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
-            // 
-            // btnReset
-            // 
-            this.btnReset.BackColor = System.Drawing.Color.Transparent;
-            this.btnReset.FlatAppearance.BorderSize = 0;
-            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReset.Image = global::RateController.Properties.Resources.Update;
-            this.btnReset.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnReset.Location = new System.Drawing.Point(300, 546);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(72, 72);
-            this.btnReset.TabIndex = 168;
-            this.btnReset.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnReset.UseVisualStyleBackColor = false;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // ckNoMaster
             // 
@@ -222,9 +114,9 @@
             this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNoMaster.Location = new System.Drawing.Point(316, 145);
+            this.ckNoMaster.Location = new System.Drawing.Point(316, 302);
             this.ckNoMaster.Name = "ckNoMaster";
-            this.ckNoMaster.Size = new System.Drawing.Size(164, 34);
+            this.ckNoMaster.Size = new System.Drawing.Size(170, 37);
             this.ckNoMaster.TabIndex = 339;
             this.ckNoMaster.Text = "Master Override";
             this.ckNoMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -237,9 +129,9 @@
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWorkSwitch.Location = new System.Drawing.Point(49, 145);
+            this.ckWorkSwitch.Location = new System.Drawing.Point(49, 302);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
-            this.ckWorkSwitch.Size = new System.Drawing.Size(164, 34);
+            this.ckWorkSwitch.Size = new System.Drawing.Size(170, 37);
             this.ckWorkSwitch.TabIndex = 338;
             this.ckWorkSwitch.Text = "Work Switch";
             this.ckWorkSwitch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -250,9 +142,9 @@
             // 
             this.groupBox1.Controls.Add(this.rbSections);
             this.groupBox1.Controls.Add(this.rbAutoAll);
-            this.groupBox1.Location = new System.Drawing.Point(300, 12);
+            this.groupBox1.Location = new System.Drawing.Point(300, 119);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 119);
+            this.groupBox1.Size = new System.Drawing.Size(200, 151);
             this.groupBox1.TabIndex = 340;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Auto Switch";
@@ -263,7 +155,7 @@
             this.rbSections.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbSections.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbSections.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbSections.Location = new System.Drawing.Point(16, 73);
+            this.rbSections.Location = new System.Drawing.Point(16, 97);
             this.rbSections.Name = "rbSections";
             this.rbSections.Size = new System.Drawing.Size(170, 37);
             this.rbSections.TabIndex = 3;
@@ -292,48 +184,13 @@
             // 
             this.groupBox2.Controls.Add(this.ckScreenSwitches);
             this.groupBox2.Controls.Add(this.ckDualAuto);
-            this.groupBox2.Location = new System.Drawing.Point(30, 12);
+            this.groupBox2.Location = new System.Drawing.Point(30, 119);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 119);
+            this.groupBox2.Size = new System.Drawing.Size(200, 151);
             this.groupBox2.TabIndex = 341;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "On-Screen";
             this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
-            // 
-            // iDDataGridViewTextBoxColumn
-            // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.iDDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-            this.iDDataGridViewTextBoxColumn.HeaderText = "Switch";
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // descriptionDataGridViewTextBoxColumn
-            // 
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
-            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            this.descriptionDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // moduleDataGridViewTextBoxColumn
-            // 
-            this.moduleDataGridViewTextBoxColumn.DataPropertyName = "Module";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.moduleDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-            this.moduleDataGridViewTextBoxColumn.HeaderText = "Module";
-            this.moduleDataGridViewTextBoxColumn.Name = "moduleDataGridViewTextBoxColumn";
-            // 
-            // Relay
-            // 
-            this.Relay.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Relay.DataPropertyName = "Relay";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Relay.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Relay.HeaderText = "Relay";
-            this.Relay.Name = "Relay";
             // 
             // frmMenuSwitches
             // 
@@ -344,8 +201,6 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.ckNoMaster);
             this.Controls.Add(this.ckWorkSwitch);
-            this.Controls.Add(this.btnReset);
-            this.Controls.Add(this.DGV);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -356,9 +211,6 @@
             this.Text = "frmMenuSwitches";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuSwitches_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuSwitches_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -369,25 +221,13 @@
 
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
-        private System.Data.DataSet dataSet1;
-        private System.Data.DataTable dataTable1;
-        private System.Data.DataColumn dataRelay;
-        private System.Data.DataColumn dataType;
-        private System.Data.DataColumn dataSection;
-        private System.Data.DataColumn dataColumn1;
         private System.Windows.Forms.CheckBox ckDualAuto;
-        private System.Windows.Forms.DataGridView DGV;
         private System.Windows.Forms.CheckBox ckScreenSwitches;
-        private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.CheckBox ckNoMaster;
         private System.Windows.Forms.CheckBox ckWorkSwitch;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rbAutoAll;
         private System.Windows.Forms.RadioButton rbSections;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn moduleDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Relay;
     }
 }

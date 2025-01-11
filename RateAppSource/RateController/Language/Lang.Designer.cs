@@ -1008,6 +1008,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Number.
+        /// </summary>
+        internal static string lgRelayControlNumer {
+            get {
+                return ResourceManager.GetString("lgRelayControlNumer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invert Relay Control.
         /// </summary>
         internal static string lgRelayOnHigh {

@@ -18,6 +18,7 @@ namespace RateController.Menu
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
+        private bool Reset = false;
 
         public frmMenuRelays(FormStart main, frmMenu menu)
         {
@@ -38,6 +39,12 @@ namespace RateController.Menu
         {
             try
             {
+                if(Reset)
+                {
+                    Reset = false;
+                    mf.RelayObjects.Reset();
+                    UpdateForm();
+                }
                 SaveData();
                 SetButtons(false);
                 UpdateForm();
@@ -73,9 +80,8 @@ namespace RateController.Menu
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            mf.RelayObjects.Reset();
+            Reset = true;
             SetButtons(true);
-            UpdateForm();
         }
 
         private void cbModules_SelectedIndexChanged(object sender, EventArgs e)
@@ -96,9 +102,11 @@ namespace RateController.Menu
                         break;
 
                     case 2:
-                        // section
+                        // either a section # (128) or a switch # (16)
+                        int max = 128;
+                        if (mf.RelayObjects.RelayTypeID(DGV.Rows[e.RowIndex].Cells[1].EditedFormattedValue.ToString()) == RelayTypes.Switch) max = 16;
                         double.TryParse(val, out Temp);
-                        using (var form = new FormNumeric(0, 128, Temp))
+                        using (var form = new FormNumeric(0, max, Temp))
                         {
                             var result = form.ShowDialog();
                             if (result == DialogResult.OK)
@@ -191,6 +199,17 @@ namespace RateController.Menu
                                 }
                                 break;
 
+                            case RelayTypes.Switch:
+                                if (Rly.SwitchID < 1)
+                                {
+                                    Rw[2] = "";
+                                }
+                                else
+                                {
+                                    Rw[2] = Rly.SwitchID + 1;
+                                }
+                                break;
+
                             default:
                                 Rw[2] = "";
                                 break;
@@ -235,8 +254,16 @@ namespace RateController.Menu
                                 break;
 
                             case 2:
-                                // section
-                                mf.RelayObjects.Item(i, cbModules.SelectedIndex).SectionID = Convert.ToInt32(val) - 1;
+                                if (mf.RelayObjects.Item(i, cbModules.SelectedIndex).Type == RelayTypes.Switch)
+                                {
+                                    // switch number
+                                    mf.RelayObjects.Item(i, cbModules.SelectedIndex).SwitchID = Convert.ToInt32(val) - 1;
+                                }
+                                else
+                                {
+                                    // section number
+                                    mf.RelayObjects.Item(i, cbModules.SelectedIndex).SectionID = Convert.ToInt32(val) - 1;
+                                }
                                 break;
                         }
                     }
@@ -279,7 +306,7 @@ namespace RateController.Menu
         {
             DGV.Columns[0].HeaderText = Lang.lgRelay;
             DGV.Columns[1].HeaderText = Lang.lgType;
-            DGV.Columns[2].HeaderText = Lang.lgSectionNum;
+            DGV.Columns[2].HeaderText = Lang.lgRelayControlNumer;
         }
 
         private void SetModuleIndicator()

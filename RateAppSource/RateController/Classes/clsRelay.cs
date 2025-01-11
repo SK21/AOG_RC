@@ -12,7 +12,8 @@ namespace RateController
         private byte cModuleID;         // 0-7
         private string cName;
         private bool cRelayOn = false;
-        private int cSectionID;
+        private int cSectionID;         // 0-127
+        private int cSwitchID;          // 0-15
         private RelayTypes cType = RelayTypes.Section;
 
         public clsRelay(FormStart main, int RelayID, int ModuleID)
@@ -40,6 +41,7 @@ namespace RateController
 
         public int SectionID
         {
+            // for 'Section' type relays
             get { return cSectionID; }
             set
             {
@@ -49,7 +51,24 @@ namespace RateController
                 }
                 else
                 {
-                    cSectionID = -1;    // no section value
+                    cSectionID = -1;    // no section
+                }
+            }
+        }
+
+        public int SwitchID
+        {
+            // for 'Switch' type relays
+            get { return cSwitchID; }
+            set
+            {
+                if (value >= -1 && value < mf.MaxSwitches)
+                {
+                    cSwitchID = value;
+                }
+                else
+                {
+                    cSwitchID = -1;    // no switch
                 }
             }
         }
@@ -74,6 +93,7 @@ namespace RateController
         {
             if (Enum.TryParse(mf.Tls.LoadProperty("RelayType" + cName), true, out RelayTypes tmp)) cType = tmp;
             if (int.TryParse(mf.Tls.LoadProperty("RelaySection" + cName), out int T)) cSectionID = T;
+            if (int.TryParse(mf.Tls.LoadProperty("RelaySwitch" + cName), out int sw)) cSwitchID = sw;
         }
 
         public void Save()
@@ -82,6 +102,7 @@ namespace RateController
             // BuildPowerRelays on change.
             mf.Tls.SaveProperty("RelayType" + cName, cType.ToString());
             mf.Tls.SaveProperty("RelaySection" + cName, cSectionID.ToString());
+            mf.Tls.SaveProperty("RelaySwitch" + cName, cSwitchID.ToString());
         }
     }
 }
