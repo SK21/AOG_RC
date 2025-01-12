@@ -14,32 +14,13 @@ namespace RateController
 {
     public class clsTools
     {
-        #region Form Dragging API Support
-
-        // https://www.c-sharpcorner.com/article/transparent-borderless-forms-in-C-Sharp/
-        // add to form:
-        // private void Form1_MouseDown(object sender, MouseEventArgs e)
-        // {
-        //    if (e.Button == MouseButtons.Left) Tls.DragForm(this);
-        // }
-
-        //ReleaseCapture releases a mouse capture
-        [DllImportAttribute("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
-        public static extern bool ReleaseCapture();
-
-        //The SendMessage function sends a message to a window or windows.
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
-
-        #endregion Form Dragging API Support
-
         private string cAppName = "RateController";
         private string cAppVersion = "4.0.0-beta.1";
         private bool cIsReadOnly = false;
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "11-Jan-2025";
+        private string cVersionDate = "12-Jan-2025";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
@@ -251,11 +232,6 @@ namespace RateController
             return Result;
         }
 
-        public void DragForm(Form Frm)
-        {
-            ReleaseCapture();
-            SendMessage(Frm.Handle, 0xa1, 0x2, 0);
-        }
 
         public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
         {
@@ -348,15 +324,6 @@ namespace RateController
                     break;
                 }
             }
-
-            //foreach (Form OpenForm in Application.OpenForms)
-            //{
-            //    if (OpenForm.Name == Name)
-            //    {
-            //        Result = OpenForm;
-            //        break;
-            //    }
-            //}
             return Result;
         }
 
