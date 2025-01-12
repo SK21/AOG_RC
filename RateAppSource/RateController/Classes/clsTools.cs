@@ -39,7 +39,7 @@ namespace RateController
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
-        private string cVersionDate = "07-Jan-2025";
+        private string cVersionDate = "11-Jan-2025";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
@@ -348,6 +348,15 @@ namespace RateController
                     break;
                 }
             }
+
+            //foreach (Form OpenForm in Application.OpenForms)
+            //{
+            //    if (OpenForm.Name == Name)
+            //    {
+            //        Result = OpenForm;
+            //        break;
+            //    }
+            //}
             return Result;
         }
 
@@ -790,6 +799,7 @@ namespace RateController
 
         private void FormAdd(Form frm)
         {
+            Debug.Print("form added: " + frm.Text);
             bool Found = false;
             for (int i = 0; i < OpenForms.Length; i++)
             {
@@ -814,6 +824,7 @@ namespace RateController
 
         private void FormRemove(Form frm)
         {
+            Debug.Print("Form removed: " + frm.Text);
             for (int i = 0; i < OpenForms.Length; i++)
             {
                 if (OpenForms[i] != null && OpenForms[i].Name == frm.Name)

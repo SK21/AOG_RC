@@ -261,6 +261,7 @@
             this.Text = "frmMenuNetwork";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuNetwork_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuNetwork_Load);
+            this.Shown += new System.EventHandler(this.frmMenuNetwork_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

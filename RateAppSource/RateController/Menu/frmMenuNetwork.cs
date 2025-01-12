@@ -112,18 +112,9 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             PositionForm();
             if (int.TryParse(mf.Tls.LoadProperty("BoardType"), out int bt)) BoardType = bt;
-
-            // check for no settings
-            if (mf.ModuleConfig.Sensor0Flow == 0 && mf.ModuleConfig.Sensor0Dir == 0 && mf.ModuleConfig.Sensor0PWM == 0
-                && mf.ModuleConfig.Sensor1Dir == 0 && mf.ModuleConfig.Sensor1Flow == 0 && mf.ModuleConfig.Sensor1PWM == 0)
-            {
-                mf.Tls.ShowHelp("Empty settings, default values selected.", "Default Values");
-                ckDefaultModule.Checked = true;
-                SetButtons(true);
-            }
-
             UpdateForm();
         }
+
 
         private void groupBox2_Paint(object sender, PaintEventArgs e)
         {
@@ -245,6 +236,7 @@ namespace RateController.Menu
                     Set.WorkPin = 255;
                     Set.PressurePin = 255;
                     Set.ClientMode = false;
+                    Set.Is3Wire = true;
 
                     Pins[0] = 8;    // relay 1
                     Pins[1] = 9;
@@ -274,6 +266,7 @@ namespace RateController.Menu
                     Set.WorkPin = 255;
                     Set.PressurePin = 255;
                     Set.ClientMode = false;
+                    Set.Is3Wire = true;
                     break;
 
                 default:
@@ -294,6 +287,7 @@ namespace RateController.Menu
                     Set.WorkPin = 255;
                     Set.PressurePin = 255;
                     Set.ClientMode = false;
+                    Set.Is3Wire = true;
                     break;
             }
 
@@ -350,6 +344,22 @@ namespace RateController.Menu
 
             ckDefaultModule.Checked = false;
             Initializing = false;
+        }
+
+        private void frmMenuNetwork_Shown(object sender, EventArgs e)
+        {
+            // check for no settings
+            if (!MainMenu.MenuNetworkHasRan)
+            {
+                MainMenu.MenuNetworkHasRan = true;
+                if (mf.ModuleConfig.Sensor0Flow == 0 && mf.ModuleConfig.Sensor0Dir == 0 && mf.ModuleConfig.Sensor0PWM == 0
+                    && mf.ModuleConfig.Sensor1Dir == 0 && mf.ModuleConfig.Sensor1Flow == 0 && mf.ModuleConfig.Sensor1PWM == 0)
+                {
+                    mf.Tls.ShowHelp("Empty settings, default values selected.", "Default Values");
+                    ckDefaultModule.Checked = true;
+                    SetButtons(true);
+                }
+            }
         }
     }
 }

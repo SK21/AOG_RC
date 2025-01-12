@@ -85,6 +85,7 @@ namespace RateController
         public void Load(bool Reset=false)
         {
             cProducts.Clear();
+
             for (int i = 0; i < mf.MaxProducts; i++)
             {
                 clsProduct Prod = new clsProduct(mf, i);
@@ -97,7 +98,7 @@ namespace RateController
                 clsProduct Prd = cProducts[i];
                 if (Prd.IsNew()||Reset)
                 {
-                    Prd.ProductName = "P" + (i + 1).ToString();
+                    Prd.ProductName = "Product  " + (char)(64 + i);
                     Prd.ControlType = ControlTypeEnum.Valve;
                     Prd.QuantityDescription = "Gallons";
                     Prd.CoverageUnits = 0;
@@ -159,7 +160,7 @@ namespace RateController
             return Result;
         }
 
-        public void Update()
+        public void Save()
         {
             for (int i = 0; i < mf.MaxProducts; i++)
             {

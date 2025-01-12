@@ -16,6 +16,7 @@ namespace RateController
         private const int SubOffset = 10;
         private const int SubSpacing = 55;
         private clsProduct cCurrentProduct;
+        private bool cMenuNetworkHasRan = false;
         private bool Expanded = false;
         private Button[] Items;
         private string LastScreen = "";
@@ -44,6 +45,9 @@ namespace RateController
         {
             get { return cCurrentProduct; }
         }
+
+        public bool MenuNetworkHasRan
+        { get { return cMenuNetworkHasRan; } set { cMenuNetworkHasRan = value; } }
 
         public void ChangeProduct(int NewID, bool NoFans = false)
         {
@@ -151,12 +155,10 @@ namespace RateController
             {
                 Form frm = new frmMenuCalibrate(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -176,12 +178,10 @@ namespace RateController
             {
                 Form frm = new frmMenuColor(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -196,12 +196,10 @@ namespace RateController
             {
                 Form frm = new frmMenuConfig(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -218,12 +216,10 @@ namespace RateController
                 {
                     Form frm = new frmMenuControl(mf, this);
                     frm.Owner = this;
-                    frm.Text = "Opened";
                     frm.Show();
                 }
                 else
                 {
-                    fs.Text = "Focused";
                     fs.Focus();
                 }
             }
@@ -239,12 +235,10 @@ namespace RateController
             {
                 Form frm = new frmMenuData(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -259,12 +253,10 @@ namespace RateController
             {
                 Form frm = new frmMenuDisplay(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -325,12 +317,10 @@ namespace RateController
             {
                 Form frm = new frmMenuHelp(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -345,12 +335,10 @@ namespace RateController
             {
                 Form frm = new frmMenuLanguage(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -424,12 +412,10 @@ namespace RateController
             {
                 Form frm = new frmMenuMode(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -513,12 +499,10 @@ namespace RateController
             {
                 Form frm = new frmMenuMonitoring(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -531,14 +515,13 @@ namespace RateController
 
             if (fs == null)
             {
+                Debug.Print("frmMenuNetwork is null");
                 Form frm = new frmMenuNetwork(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -547,12 +530,15 @@ namespace RateController
         {
             HighlightButton("butNew");
             mf.NewFile();
+            ChangeProduct(0);
         }
 
         private void butOpen_Click(object sender, EventArgs e)
         {
+            Debug.Print("butOpen_Click");
             HighlightButton("butOpen");
             mf.OpenFile();
+            ChangeProduct(0);
         }
 
         private void butOptions_Click(object sender, EventArgs e)
@@ -614,12 +600,10 @@ namespace RateController
             {
                 Form frm = new frmMenuPins(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -639,18 +623,17 @@ namespace RateController
             {
                 Form frm = new frmMenuPrimed(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
 
         private void butProducts_Click(object sender, EventArgs e)
         {
+            Debug.Print("butProducts_Click");
             if (ClosedOwned())
             {
                 butRate.Visible = !Expanded;
@@ -725,12 +708,10 @@ namespace RateController
                 {
                     Form frm = new frmMenuRate(mf, this);
                     frm.Owner = this;
-                    frm.Text = "Opened";
                     frm.Show();
                 }
                 else
                 {
-                    fs.Text = "Focused";
                     fs.Focus();
                 }
             }
@@ -746,12 +727,10 @@ namespace RateController
             {
                 Form frm = new frmMenuRelayPins(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -766,12 +745,10 @@ namespace RateController
             {
                 Form frm = new frmMenuRelays(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -792,12 +769,10 @@ namespace RateController
             {
                 Form frm = new frmMenuSections(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -812,12 +787,10 @@ namespace RateController
             {
                 Form frm = new frmMenuSettings(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -832,12 +805,10 @@ namespace RateController
             {
                 Form frm = new frmMenuSwitches(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -868,12 +839,10 @@ namespace RateController
             {
                 Form frm = new frmMenuValves(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -888,12 +857,10 @@ namespace RateController
             {
                 Form frm = new frmMenuWifi(mf, this);
                 frm.Owner = this;
-                frm.Text = "Opened";
                 frm.Show();
             }
             else
             {
-                fs.Text = "Focused";
                 fs.Focus();
             }
         }
@@ -933,6 +900,7 @@ namespace RateController
             {
                 ownedForm.Close();
             }
+            Debug.Print("ClosedOwned");
             return !Convert.ToBoolean(OwnedForms.Length);    // check if all closed, could be unsaved data
         }
 
@@ -944,6 +912,8 @@ namespace RateController
 
         private void frmMenu_Load(object sender, EventArgs e)
         {
+            Debug.Print("");
+            Debug.Print("frmMenu_Load");
             mf.Tls.LoadFormData(this);
             this.Width = FormWidth;
             this.Height = FormHeight;
@@ -992,134 +962,172 @@ namespace RateController
 
         private void LoadLastScreen()
         {
+            Debug.Print("LoadLastScreen");
             try
             {
                 string Last = mf.Tls.LoadProperty("LastScreen");
                 if (mf.Tls.IsFormNameValid(Last))
                 {
-                    Form fs = mf.Tls.IsFormOpen(Last);
-
-                    if (fs == null)
+                    Form fs;
+                    switch (Last)
                     {
-                        switch (Last)
-                        {
-                            case "frmMenuControl":
-                                fs = new frmMenuControl(mf, this);
-                                butProducts.PerformClick();
-                                break;
+                        case "frmMenuControl":
+                            butProducts.PerformClick();
+                            fs = new frmMenuControl(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuSettings":
-                                fs = new frmMenuSettings(mf, this);
-                                butProducts.PerformClick();
-                                break;
+                        case "frmMenuSettings":
+                            butProducts.PerformClick();
+                            fs = new frmMenuSettings(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuMode":
-                                fs = new frmMenuMode(mf, this);
-                                butProducts.PerformClick();
-                                break;
+                        case "frmMenuMode":
+                            butProducts.PerformClick();
+                            fs = new frmMenuMode(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuMonitoring":
-                                fs = new frmMenuMonitoring(mf, this);
-                                butProducts.PerformClick();
-                                break;
+                        case "frmMenuMonitoring":
+                            butProducts.PerformClick();
+                            fs = new frmMenuMonitoring(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuData":
-                                fs = new frmMenuData(mf, this);
-                                butProducts.PerformClick();
-                                break;
+                        case "frmMenuData":
+                            butProducts.PerformClick();
+                            fs = new frmMenuData(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuSections":
-                                fs = new frmMenuSections(mf, this);
-                                butMachine.PerformClick();
-                                break;
+                        case "frmMenuSections":
+                            butMachine.PerformClick();  // frmMenuSections opened by default
+                            break;
 
-                            case "frmMenuRelays":
-                                fs = new frmMenuRelays(mf, this);
-                                butMachine.PerformClick();
-                                break;
+                        case "frmMenuRelays":
+                            butMachine.PerformClick();
+                            fs = new frmMenuRelays(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuPrimed":
-                                fs = new frmMenuPrimed(mf, this);
-                                butMachine.PerformClick();
-                                break;
+                        case "frmMenuPrimed":
+                            butMachine.PerformClick();
+                            fs = new frmMenuPrimed(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuCalibrate":
-                                fs = new frmMenuCalibrate(mf, this);
-                                butMachine.PerformClick();
-                                break;
+                        case "frmMenuCalibrate":
+                            butMachine.PerformClick();
+                            fs = new frmMenuCalibrate(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuSwitches":
-                                fs = new frmMenuSwitches(mf, this);
-                                butMachine.PerformClick();
-                                break;
+                        case "frmMenuSwitches":
+                            butMachine.PerformClick();
+                            fs = new frmMenuSwitches(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuNetwork":
-                                fs = new frmMenuNetwork(mf, this);
-                                butModules.PerformClick();
-                                break;
+                        case "frmMenuNetwork":
+                            butModules.PerformClick();  // frmMenuNetwork opened by default
+                            break;
 
-                            case "frmMenuConfig":
-                                fs = new frmMenuConfig(mf, this);
-                                butModules.PerformClick();
-                                break;
+                        case "frmMenuConfig":
+                            butModules.PerformClick();
+                            fs = new frmMenuConfig(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuPins":
-                                fs = new frmMenuPins(mf, this);
-                                butModules.PerformClick();
-                                break;
+                        case "frmMenuPins":
+                            butModules.PerformClick();
+                            fs = new frmMenuPins(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuRelayPins":
-                                fs = new frmMenuRelayPins(mf, this);
-                                butModules.PerformClick();
-                                break;
+                        case "frmMenuRelayPins":
+                            butModules.PerformClick();
+                            fs = new frmMenuRelayPins(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuWifi":
-                                fs = new frmMenuWifi(mf, this);
-                                butModules.PerformClick();
-                                break;
+                        case "frmMenuWifi":
+                            butModules.PerformClick();
+                            fs = new frmMenuWifi(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuValves":
-                                fs = new frmMenuValves(mf, this);
-                                butModules.PerformClick();
-                                break;
+                        case "frmMenuValves":
+                            butModules.PerformClick();
+                            fs = new frmMenuValves(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuDisplay":
-                                fs = new frmMenuDisplay(mf, this);
-                                butOptions.PerformClick();
-                                break;
+                        case "frmMenuDisplay":
+                            butOptions.PerformClick();  // frmMenuDisplay opened by default
+                            break;
 
-                            case "frmMenuLanguage":
-                                fs = new frmMenuLanguage(mf, this);
-                                butOptions.PerformClick();
-                                break;
+                        case "frmMenuLanguage":
+                            butOptions.PerformClick();
+                            fs = new frmMenuLanguage(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuHelp":
-                                fs = new frmMenuHelp(mf, this);
-                                break;
+                        case "frmMenuColor":
+                            butOptions.PerformClick();
+                            fs = new frmMenuColor(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            case "frmMenuColor":
-                                fs = new frmMenuColor(mf, this);
-                                butOptions.PerformClick();
-                                break;
+                        case "frmMenuHelp":
+                            fs = new frmMenuHelp(mf, this);
+                            fs.Owner = this;
+                            LastScreen = Last;
+                            fs.Show();
+                            break;
 
-                            default:
-                                fs = new frmMenuRate(mf, this);
-                                butProducts.PerformClick();
-                                break;
-                        }
-                        fs.Owner = this;
-                        LastScreen = Last;
-                        fs.Show();
-                    }
-                    else
-                    {
-                        fs.Focus();
+                        default:
+                            // frmMenuRate
+                            butProducts.PerformClick(); // frmMenuRate opened by default
+                            break;
                     }
                 }
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenu/LoadLastScree: " + ex.Message);
+                mf.Tls.WriteErrorLog("frmMenu/LoadLastScreen: " + ex.Message);
             }
         }
     }

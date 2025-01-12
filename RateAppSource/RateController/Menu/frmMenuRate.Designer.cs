@@ -630,7 +630,6 @@
             this.Name = "frmMenuRate";
             this.ShowInTaskbar = false;
             this.Text = "frmMenuRate";
-            this.Activated += new System.EventHandler(this.frmMenuRate_Activated);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuRate_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuRate_Load);
             this.pnlFan.ResumeLayout(false);

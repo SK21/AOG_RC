@@ -77,6 +77,7 @@ namespace RateController.Menu
                     MainMenu.CurrentProduct.ResetHours2();
                     ckHours2.Checked = false;
                 }
+                MainMenu.CurrentProduct.Save();
                 SetButtons(false);
                 UpdateForm();
             }

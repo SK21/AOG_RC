@@ -607,7 +607,8 @@ namespace RateController
 
         public bool IsNew()
         {
-            bool Result = (cHighAdjust == 0 && cLowAdjust == 0 && cThreshold == 0 && cMaxAdjust == 0 && cMinAdjust == 0);
+            bool Result = true;
+            if (bool.TryParse(mf.Tls.LoadProperty("IsNew"), out bool nw)) Result = nw;
             return Result;
         }
 
@@ -708,6 +709,8 @@ namespace RateController
             if (int.TryParse(mf.Tls.LoadProperty("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
             if (int.TryParse(mf.Tls.LoadProperty("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
             if (int.TryParse(mf.Tls.LoadProperty("Scaling" + IDname), out int sc)) cScalingFactor = sc;
+
+            Debug.Print("Loaded product: " + IDname + ", FileName: " + Properties.Settings.Default.FileName + "Base Rate: " + cRateSet.ToString());
         }
 
         public void LoadDefaultControlSettings()
@@ -871,6 +874,7 @@ namespace RateController
 
         public void Save()
         {
+            mf.Tls.SaveProperty("IsNew", "false");
             mf.Tls.SaveProperty("Coverage" + IDname, Coverage.ToString());
             mf.Tls.SaveProperty("Coverage2" + IDname, Coverage2.ToString());
             mf.Tls.SaveProperty("CoverageUnits" + IDname, CoverageUnits.ToString());
@@ -928,6 +932,7 @@ namespace RateController
             mf.Tls.SaveProperty("MaxAdjust" + IDname, cMaxAdjust.ToString());
             mf.Tls.SaveProperty("MinAdjust" + IDname, cMinAdjust.ToString());
             mf.Tls.SaveProperty("Scaling" + IDname, cScalingFactor.ToString());
+            Debug.Print("Saved product: " + IDname + ", FileName: " + Properties.Settings.Default.FileName + "Base Rate: " + cRateSet.ToString());
         }
 
         public void SendPID()

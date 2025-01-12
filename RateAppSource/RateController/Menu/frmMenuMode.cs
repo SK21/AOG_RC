@@ -125,6 +125,7 @@ namespace RateController.Menu
             {
                 Prd.AppMode = ApplicationMode.DocumentTarget;
             }
+            MainMenu.CurrentProduct.Save();
         }
 
         private void SetButtons(bool Edited)

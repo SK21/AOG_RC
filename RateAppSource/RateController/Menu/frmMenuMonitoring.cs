@@ -41,6 +41,7 @@ namespace RateController.Menu
             try
             {
                 if (int.TryParse(tbCountsRev.Text, out int cr)) MainMenu.CurrentProduct.CountsRev = cr;
+                MainMenu.CurrentProduct.Save();
                 SetButtons(false);
                 UpdateForm();
             }

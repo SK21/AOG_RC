@@ -58,6 +58,7 @@ namespace RateController.Menu
                     MainMenu.CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
                     if (byte.TryParse(tbOffRate.Text, out byte off)) MainMenu.CurrentProduct.OffRateSetting = off;
 
+                    MainMenu.CurrentProduct.Save();
                     SetButtons(false);
                     UpdateForm();
                 }

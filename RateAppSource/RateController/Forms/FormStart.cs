@@ -1,9 +1,11 @@
 ﻿using RateController.Language;
 using RateController.Properties;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace RateController
 {
@@ -523,6 +525,7 @@ namespace RateController
             }
 
             if (int.TryParse(Tls.LoadProperty("RateType"), out int rt)) cRateType = rt;
+            Debug.Print("frmStart/LoadSettings: , FileName: " + Properties.Settings.Default.FileName) ;
         }
 
         public void NewFile()
@@ -547,7 +550,6 @@ namespace RateController
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     Tls.PropertiesFile = openFileDialog1.FileName;
-                    Products.Load();
                     LoadSettings();
                 }
             }
@@ -1339,6 +1341,7 @@ namespace RateController
 
         private void ShowSettings(bool OpenLast = false)
         {
+            Debug.Print("ShowSettings");
             //check if window already exists
             Form fs = Tls.IsFormOpen("frmMenu");
 
@@ -1377,7 +1380,7 @@ namespace RateController
         {
             UpdateStatus();
             SendRelays();
-            Products.Update();
+            Products.Save();
             SectionControl.ReadRateSwitches();
         }
 
