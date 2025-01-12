@@ -335,7 +335,7 @@ namespace RateController.Menu
             Initializing = true;
 
             SetModuleIndicator();
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
+            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3 )
             {
                 // fans
                 lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
