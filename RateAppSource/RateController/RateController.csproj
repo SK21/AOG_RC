@@ -533,6 +533,9 @@
     <None Include="Help\frmMenuControl.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Help\frmMenuHelp.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Help\frmMenuNetwork.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

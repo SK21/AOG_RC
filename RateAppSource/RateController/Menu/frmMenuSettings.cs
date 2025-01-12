@@ -141,11 +141,6 @@ namespace RateController.Menu
             UpdateForm();
         }
 
-        private void MainMenu_ProductChanged(object sender, EventArgs e)
-        {
-            UpdateForm();
-        }
-
         private void grpMinUPM_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
@@ -161,6 +156,11 @@ namespace RateController.Menu
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
+        }
+
+        private void MainMenu_ProductChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void PositionForm()
@@ -335,7 +335,7 @@ namespace RateController.Menu
             Initializing = true;
 
             SetModuleIndicator();
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3 )
+            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
             {
                 // fans
                 lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
@@ -369,6 +369,7 @@ namespace RateController.Menu
                 tbOffRate.Top = 477;
                 lbPercent.Left = 317;
                 lbPercent.Top = 480;
+                ckScale.Checked = mf.ShowScale(MainMenu.CurrentProduct.ID);
             }
             rbUPMSpeed.Checked = MainMenu.CurrentProduct.UseMinUPMbySpeed;
             rbUPMFixed.Checked = !MainMenu.CurrentProduct.UseMinUPMbySpeed;

@@ -133,7 +133,6 @@ namespace RateController
             Products = new clsProducts(this);
             RCalarm = new clsAlarm(this, btAlarm);
 
-
             ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4, prd5 };
             Rates = new Label[] { rt0, rt1, rt2, rt3, rt4, rt5 };
 
@@ -587,7 +586,6 @@ namespace RateController
             }
         }
 
-
         public void SetScale(int ProductID, bool Show)
         {
             if (ProductID < 4)
@@ -604,7 +602,6 @@ namespace RateController
             if (ProductID < 4) Result = cShowScale[ProductID];
             return Result;
         }
-
 
         public void SwitchScreens(bool SingleProduct = false)
         {
@@ -1034,7 +1031,6 @@ namespace RateController
                 Tls.WriteActivityLog("Stopped");
                 string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
-
 
                 Tls.SaveProperty("RateType", cRateType.ToString());
             }
