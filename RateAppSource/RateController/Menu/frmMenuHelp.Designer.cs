@@ -161,7 +161,7 @@
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnStart.Image = global::RateController.Properties.Resources.Pause;
             this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStart.Location = new System.Drawing.Point(439, 543);
+            this.btnStart.Location = new System.Drawing.Point(436, 543);
             this.btnStart.Margin = new System.Windows.Forms.Padding(6);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(81, 72);
@@ -229,7 +229,7 @@
             this.butActivity.Image = global::RateController.Properties.Resources.file_text;
             this.butActivity.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butActivity.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butActivity.Location = new System.Drawing.Point(121, 543);
+            this.butActivity.Location = new System.Drawing.Point(117, 543);
             this.butActivity.Margin = new System.Windows.Forms.Padding(6);
             this.butActivity.Name = "butActivity";
             this.butActivity.Size = new System.Drawing.Size(81, 72);
@@ -249,7 +249,7 @@
             this.butErrors.Image = global::RateController.Properties.Resources.file_text;
             this.butErrors.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butErrors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butErrors.Location = new System.Drawing.Point(227, 543);
+            this.butErrors.Location = new System.Drawing.Point(219, 543);
             this.butErrors.Margin = new System.Windows.Forms.Padding(6);
             this.butErrors.Name = "butErrors";
             this.butErrors.Size = new System.Drawing.Size(81, 72);
@@ -434,12 +434,12 @@
             this.butNet.Image = global::RateController.Properties.Resources.file_text;
             this.butNet.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butNet.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butNet.Location = new System.Drawing.Point(333, 543);
+            this.butNet.Location = new System.Drawing.Point(321, 543);
             this.butNet.Margin = new System.Windows.Forms.Padding(6);
             this.butNet.Name = "butNet";
-            this.butNet.Size = new System.Drawing.Size(81, 72);
+            this.butNet.Size = new System.Drawing.Size(94, 72);
             this.butNet.TabIndex = 281;
-            this.butNet.Text = "Net";
+            this.butNet.Text = "Network";
             this.butNet.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.butNet.UseVisualStyleBackColor = false;
             this.butNet.Click += new System.EventHandler(this.butNet_Click);

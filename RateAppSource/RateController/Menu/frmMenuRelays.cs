@@ -153,6 +153,10 @@ namespace RateController.Menu
             btnOK.Top = this.Height - 84;
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
+            btnRenumber.Left = btnCancel.Left - 78;
+            btnRenumber.Top = btnOK.Top;
+            btnReset.Left = btnRenumber.Left - 78;
+            btnReset.Top = btnOK.Top;
             MainMenu.StyleControls(this);
             PositionForm();
 

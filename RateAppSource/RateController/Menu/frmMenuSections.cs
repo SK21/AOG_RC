@@ -1,13 +1,8 @@
 ﻿using AgOpenGPS;
 using RateController.Language;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -15,6 +10,7 @@ namespace RateController.Menu
     public partial class frmMenuSections : Form
     {
         private bool cEdited;
+        private double DefaultWidth;
         private bool Initializing = false;
         private double LastValue;
         private frmMenu MainMenu;
@@ -57,6 +53,13 @@ namespace RateController.Menu
                     SaveDGV();
                     mf.Sections.Save();
                 }
+
+                if (double.TryParse(tbDefaultWidth.Text, out double dw))
+                {
+                    mf.Tls.SaveProperty("SectionDefaultWidth", dw.ToString());
+                    DefaultWidth = dw;
+                }
+
                 mf.Sections.CheckSwitchDefinitions();
                 SetButtons(false);
                 UpdateForm();
@@ -80,26 +83,30 @@ namespace RateController.Menu
 
         private void btnEqual_Click(object sender, EventArgs e)
         {
+            double CurrentDefaultWidth = 300;
+            if (double.TryParse(tbDefaultWidth.Text, out double wd)) CurrentDefaultWidth = wd;
             try
             {
                 if (UseZones)
                 {
-                    string val = DGV2.Rows[0].Cells[3].EditedFormattedValue.ToString();
-
                     for (int i = 0; i < DGV2.Rows.Count; i++)
                     {
-                        if (mf.Zones.Item(i).Start > 0) DGV2.Rows[i].Cells[3].Value = Convert.ToDouble(val);
+                        if (mf.Zones.Item(i).Start > 0)
+                        {
+                            DGV2.Rows[i].Cells[3].Value = CurrentDefaultWidth;
+                            DGV2.Rows[i].Cells[4].Value = i + 1;
+                        }
                     }
                 }
                 else
                 {
-                    string val = DGV.Rows[0].Cells[1].EditedFormattedValue.ToString();
-
                     for (int i = 0; i < DGV.Rows.Count; i++)
                     {
-                        DGV.Rows[i].Cells[1].Value = Convert.ToDouble(val);
+                        DGV.Rows[i].Cells[1].Value = CurrentDefaultWidth;
+                        DGV.Rows[i].Cells[2].Value = i + 1;
                     }
                 }
+                UpdateDisplayWidth();
             }
             catch (Exception ex)
             {
@@ -282,6 +289,10 @@ namespace RateController.Menu
             btnOK.Top = this.Height - 84;
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
+            btnEqual.Left = btnCancel.Left - 78;
+            btnEqual.Top = btnCancel.Top;
+            ckZones.Left = btnEqual.Left - 122;
+            ckZones.Top = btnCancel.Top - 25;
             MainMenu.StyleControls(this);
             PositionForm();
 
@@ -293,7 +304,8 @@ namespace RateController.Menu
             UseZones = mf.UseZones;
             int.TryParse(mf.Tls.LoadProperty("SectionsPerZone"), out SectionsPerZone);
             if (SectionsPerZone < 1) SectionsPerZone = 1;
-
+            DefaultWidth = 300;
+            if (Double.TryParse(mf.Tls.LoadProperty("SectionDefaultWidth"), out double dw)) DefaultWidth = dw;
             UpdateForm();
         }
 
@@ -494,7 +506,6 @@ namespace RateController.Menu
             lbNumZones.Text = Lang.lgNumSections;
 
             lbWidth.Text = Lang.lgWidth;
-            btnEqual.Text = Lang.lgEqual;
             this.Text = Lang.lgSection;
 
             DGV2.Columns[0].HeaderText = Lang.lgZone;
@@ -512,6 +523,38 @@ namespace RateController.Menu
             for (int i = tmp; i < DGV.Rows.Count; i++)
             {
                 DGV.Rows[i].Cells[1].Value = 0;
+            }
+        }
+
+        private void tbDefaultWidth_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbDefaultWidth.Text, out tempD);
+            using (var form = new FormNumeric(1, 1000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbDefaultWidth.Text = form.ReturnValue.ToString();
+                }
+            }
+        }
+
+        private void tbDefaultWidth_Validating(object sender, CancelEventArgs e)
+        {
+            try
+            {
+                double tempD;
+                double.TryParse(tbDefaultWidth.Text, out tempD);
+                if (tempD < 1 || tempD > 1000)
+                {
+                    System.Media.SystemSounds.Exclamation.Play();
+                    e.Cancel = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowHelp(ex.Message, this.Text, 3000, true);
             }
         }
 
@@ -597,10 +640,45 @@ namespace RateController.Menu
             }
         }
 
+        private void UpdateDisplayWidth()
+        {
+            double DisplayWidth = 0;
+            if (UseZones)
+            {
+                for (int i = 0; i < DGV2.Rows.Count; i++)
+                {
+                    if (mf.Zones.Item(i).Start > 0)
+                    {
+                        string val = DGV2.Rows[i].Cells[3].EditedFormattedValue.ToString();
+                        DisplayWidth += Convert.ToDouble(val);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < DGV.Rows.Count; i++)
+                {
+                    string val = DGV.Rows[i].Cells[1].EditedFormattedValue.ToString();
+                    DisplayWidth += Convert.ToDouble(val);
+                }
+            }
+
+            if (mf.UseInches)
+            {
+                lbWidth.Text = Lang.lgWidth + ":  " + ((DisplayWidth).ToString("N0")) + " Inches";
+                lbFeet.Text = (DisplayWidth/12.0).ToString("N1") + "  FT";
+                lbFeet.Visible = true;
+            }
+            else
+            {
+                lbWidth.Text = Lang.lgWidth + ":  " + (DisplayWidth * 100).ToString("N0") + " cm";
+                lbFeet.Visible = false;
+            }
+        }
+
         private void UpdateForm()
         {
             Initializing = true;
-            int offset = 135;
 
             DGV.Visible = !UseZones;
             DGV2.Visible = UseZones;
@@ -608,19 +686,11 @@ namespace RateController.Menu
             {
                 LoadDGV2();
                 ckZones.Image = Properties.Resources.SectionsWithZones;
-                lbNumZones.Left = 15;
-                tbSectionCount.Left = 212;
-                lbWidth.Left = 15;
-                lbFeet.Left = 212;
             }
             else
             {
                 LoadDGV();
                 ckZones.Image = Properties.Resources.SectionsNoZones2;
-                lbNumZones.Left = 15 + offset;
-                tbSectionCount.Left = 212 + offset;
-                lbWidth.Left = 15 + offset;
-                lbFeet.Left = 212 + offset;
             }
 
             lbPerZone.Visible = UseZones;
@@ -631,7 +701,7 @@ namespace RateController.Menu
             ckZones.Checked = UseZones;
             UpdateTotalWidth();
             tbSectionsPerZone.Text = SectionsPerZone.ToString("N0");
-
+            tbDefaultWidth.Text = DefaultWidth.ToString("N0");
             Initializing = false;
         }
 
@@ -639,14 +709,16 @@ namespace RateController.Menu
         {
             if (mf.UseInches)
             {
-                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth(true) * 12).ToString("N0") + " Inches";
+                lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth(true) * 12.0).ToString("N0") + " Inches";
                 lbFeet.Text = (mf.Sections.TotalWidth(true)).ToString("N1") + "  FT";
                 lbFeet.Visible = true;
+                lbUnits.Text = "Inches";
             }
             else
             {
                 lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth(false) * 100).ToString("N0") + " cm";
                 lbFeet.Visible = false;
+                lbUnits.Text = "cm";
             }
         }
     }

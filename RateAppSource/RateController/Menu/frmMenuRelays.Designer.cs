@@ -127,7 +127,7 @@
             this.btnReset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReset.Image = global::RateController.Properties.Resources.Update;
             this.btnReset.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnReset.Location = new System.Drawing.Point(214, 543);
+            this.btnReset.Location = new System.Drawing.Point(214, 546);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(72, 72);
             this.btnReset.TabIndex = 178;
@@ -144,7 +144,7 @@
             this.btnRenumber.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnRenumber.Image = global::RateController.Properties.Resources.add;
             this.btnRenumber.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnRenumber.Location = new System.Drawing.Point(297, 543);
+            this.btnRenumber.Location = new System.Drawing.Point(297, 546);
             this.btnRenumber.Margin = new System.Windows.Forms.Padding(6);
             this.btnRenumber.Name = "btnRenumber";
             this.btnRenumber.Size = new System.Drawing.Size(72, 72);

@@ -2369,6 +2369,7 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuCalibrate.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuConfig.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuControl.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuNetwork.pdf
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuPrimed.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuRate.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuRelays.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuSections.pdf
@@ -2437,4 +2438,3 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\ru\R
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateCont.B5F4215A.Up2Date
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.exe
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.pdb
-G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuPrimed.pdf

@@ -95,6 +95,10 @@ namespace RateController
             }
         }
 
+        public void Renumber()
+        {
+        }
+
         public void Save()
         {
             for (int i = 0; i < cSections.Count; i++)
@@ -103,7 +107,7 @@ namespace RateController
             }
         }
 
-        public float TotalWidth(bool UseInches=false)
+        public float TotalWidth(bool UseInches = false)
         {
             float Result = 0;
             float cWorkingWidth_cm = 0;
@@ -127,7 +131,7 @@ namespace RateController
             return Result;
         }
 
-        public float WorkingWidth(bool UseInches=false)
+        public float WorkingWidth(bool UseInches = false)
         {
             float Result = 0;
             float cWorkingWidth_cm = 0;
