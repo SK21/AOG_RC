@@ -98,7 +98,7 @@ namespace RateController
                 clsProduct Prd = cProducts[i];
                 if (Prd.IsNew()||Reset)
                 {
-                    Prd.ProductName = "Product  " + (char)(64 + i);
+                    Prd.ProductName = "Product  " + (char)(65 + i);
                     Prd.ControlType = ControlTypeEnum.Valve;
                     Prd.QuantityDescription = "Gallons";
                     Prd.CoverageUnits = 0;

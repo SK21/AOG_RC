@@ -568,6 +568,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Default.rcs" />
+    <None Include="Resources\Example.rcs" />
     <None Include="Resources\Machine.png" />
     <None Include="Resources\file-text.png" />
     <None Include="Resources\CloseButton.png" />
@@ -593,8 +595,6 @@
     <None Include="Resources\Scale3.png" />
     <None Include="Resources\Scale2.png" />
     <None Include="Resources\scale.png" />
-    <None Include="Resources\Default.rcs" />
-    <None Include="Resources\Example.rcs" />
     <None Include="Resources\SimGear.png" />
     <None Include="Resources\RateDown.png" />
     <None Include="Resources\Pins1.PNG" />

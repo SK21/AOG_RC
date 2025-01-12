@@ -40,6 +40,7 @@ namespace RateController
         public event EventHandler MenuMoved;
 
         public event EventHandler ModuleDefaultsSet;
+        public event EventHandler ProductChanged;
 
         public clsProduct CurrentProduct
         {
@@ -55,6 +56,7 @@ namespace RateController
             if (NewID > mf.MaxProducts - 1) NewID = mf.MaxProducts - 1;
             if (NoFans && NewID > mf.MaxProducts - 3) NewID = mf.MaxProducts - 3;
             cCurrentProduct = mf.Products.Item(NewID);
+            ProductChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void DefaultsSet()
@@ -515,7 +517,6 @@ namespace RateController
 
             if (fs == null)
             {
-                Debug.Print("frmMenuNetwork is null");
                 Form frm = new frmMenuNetwork(mf, this);
                 frm.Owner = this;
                 frm.Show();
@@ -535,7 +536,6 @@ namespace RateController
 
         private void butOpen_Click(object sender, EventArgs e)
         {
-            Debug.Print("butOpen_Click");
             HighlightButton("butOpen");
             mf.OpenFile();
             ChangeProduct(0);
@@ -633,7 +633,6 @@ namespace RateController
 
         private void butProducts_Click(object sender, EventArgs e)
         {
-            Debug.Print("butProducts_Click");
             if (ClosedOwned())
             {
                 butRate.Visible = !Expanded;
@@ -900,7 +899,6 @@ namespace RateController
             {
                 ownedForm.Close();
             }
-            Debug.Print("ClosedOwned");
             return !Convert.ToBoolean(OwnedForms.Length);    // check if all closed, could be unsaved data
         }
 
@@ -912,8 +910,6 @@ namespace RateController
 
         private void frmMenu_Load(object sender, EventArgs e)
         {
-            Debug.Print("");
-            Debug.Print("frmMenu_Load");
             mf.Tls.LoadFormData(this);
             this.Width = FormWidth;
             this.Height = FormHeight;
@@ -962,7 +958,6 @@ namespace RateController
 
         private void LoadLastScreen()
         {
-            Debug.Print("LoadLastScreen");
             try
             {
                 string Last = mf.Tls.LoadProperty("LastScreen");

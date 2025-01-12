@@ -90,6 +90,7 @@ namespace RateController.Menu
             // sub menu 540,630
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
+            MainMenu.ProductChanged += MainMenu_ProductChanged;
             mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.BackColour;
             this.Width = MainMenu.Width - 260;
@@ -115,6 +116,11 @@ namespace RateController.Menu
             lbBoost.Font = ValFont;
             lbMaxValue.Font = ValFont;
             lbMinValue.Font = ValFont;
+        }
+
+        private void MainMenu_ProductChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void HShigh_ValueChanged(object sender, EventArgs e)

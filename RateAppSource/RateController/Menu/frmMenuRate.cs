@@ -65,11 +65,6 @@ namespace RateController.Menu
                 if (double.TryParse(TankSize.Text, out double tk)) MainMenu.CurrentProduct.TankSize = tk;
                 if (double.TryParse(TankRemain.Text, out double tr)) MainMenu.CurrentProduct.TankStart = tr;
 
-                Debug.Print("Saving rate");
-                Debug.Print("current product: " + MainMenu.CurrentProduct.ID.ToString());
-                Debug.Print("base rate: " + MainMenu.CurrentProduct.RateSet.ToString());
-                Debug.Print("file: " + Properties.Settings.Default.FileName);
-
                 string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
                 MainMenu.CurrentProduct.Save();
                 SetButtons(false);
@@ -201,7 +196,6 @@ namespace RateController.Menu
 
         private void frmMenuRate_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Debug.Print("frmMenuRate_FormClosed");
             mf.Tls.SaveFormData(this);
             timer1.Enabled = false;
         }
@@ -211,9 +205,9 @@ namespace RateController.Menu
             // menu 800,600
             // sub menu 540,630
             mf.Tls.LoadFormData(this, "", false);
-            Debug.Print("frmMenuRate load.");
             SetLanguage();
             MainMenu.MenuMoved += MyMenu_MenuMoved;
+            MainMenu.ProductChanged += MainMenu_ProductChanged;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;
             btnOK.Left = this.Width - 84;
@@ -233,6 +227,10 @@ namespace RateController.Menu
             timer1.Enabled = true;
         }
 
+        private void MainMenu_ProductChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
+        }
 
         private void lbBaseRate_Enter(object sender, EventArgs e)
         {
@@ -510,7 +508,6 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            Debug.Print("Update MenuRate, Base Rate = " + MainMenu.CurrentProduct.RateSet.ToString());
             SetCalDescription();
 
             if (MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Fan)

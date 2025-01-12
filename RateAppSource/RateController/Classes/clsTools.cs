@@ -799,7 +799,6 @@ namespace RateController
 
         private void FormAdd(Form frm)
         {
-            Debug.Print("form added: " + frm.Text);
             bool Found = false;
             for (int i = 0; i < OpenForms.Length; i++)
             {
@@ -824,7 +823,6 @@ namespace RateController
 
         private void FormRemove(Form frm)
         {
-            Debug.Print("Form removed: " + frm.Text);
             for (int i = 0; i < OpenForms.Length; i++)
             {
                 if (OpenForms[i] != null && OpenForms[i].Name == frm.Name)

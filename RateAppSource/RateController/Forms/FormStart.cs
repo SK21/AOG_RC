@@ -525,7 +525,6 @@ namespace RateController
             }
 
             if (int.TryParse(Tls.LoadProperty("RateType"), out int rt)) cRateType = rt;
-            Debug.Print("frmStart/LoadSettings: , FileName: " + Properties.Settings.Default.FileName) ;
         }
 
         public void NewFile()
@@ -1341,7 +1340,6 @@ namespace RateController
 
         private void ShowSettings(bool OpenLast = false)
         {
-            Debug.Print("ShowSettings");
             //check if window already exists
             Form fs = Tls.IsFormOpen("frmMenu");
 

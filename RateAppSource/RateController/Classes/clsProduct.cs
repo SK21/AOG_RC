@@ -608,7 +608,7 @@ namespace RateController
         public bool IsNew()
         {
             bool Result = true;
-            if (bool.TryParse(mf.Tls.LoadProperty("IsNew"), out bool nw)) Result = nw;
+            if (bool.TryParse(mf.Tls.LoadProperty("IsNew" + IDname), out bool nw)) Result = nw;
             return Result;
         }
 
@@ -874,7 +874,7 @@ namespace RateController
 
         public void Save()
         {
-            mf.Tls.SaveProperty("IsNew", "false");
+            mf.Tls.SaveProperty("IsNew" + IDname, "false");
             mf.Tls.SaveProperty("Coverage" + IDname, Coverage.ToString());
             mf.Tls.SaveProperty("Coverage2" + IDname, Coverage2.ToString());
             mf.Tls.SaveProperty("CoverageUnits" + IDname, CoverageUnits.ToString());

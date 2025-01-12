@@ -122,6 +122,7 @@ namespace RateController.Menu
             // sub menu 540,630
             //SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
+            MainMenu.ProductChanged += MainMenu_ProductChanged;
             mf.Tls.LoadFormData(this, "", false);
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;
@@ -137,6 +138,11 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             timer1.Enabled = true;
+            UpdateForm();
+        }
+
+        private void MainMenu_ProductChanged(object sender, EventArgs e)
+        {
             UpdateForm();
         }
 
