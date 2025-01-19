@@ -74,16 +74,16 @@
     <Reference Include="Keypad">
       <HintPath>.\Keypad.dll</HintPath>
     </Reference>
-    <Reference Include="MoreLinq, Version=3.3.2.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
-      <HintPath>..\packages\morelinq.3.3.2\lib\net451\MoreLinq.dll</HintPath>
+    <Reference Include="MoreLinq, Version=4.4.0.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.4.4.0\lib\netstandard2.0\MoreLinq.dll</HintPath>
     </Reference>
     <Reference Include="RepeatButtonControl">
       <HintPath>.\RepeatButtonControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Ports, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Ports.4.7.0\lib\net461\System.IO.Ports.dll</HintPath>
+    <Reference Include="System.IO.Ports, Version=9.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Ports.9.0.1\lib\net462\System.IO.Ports.dll</HintPath>
     </Reference>
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
@@ -114,6 +114,9 @@
     <Compile Include="Classes\clsVirtualSwitchBox.cs" />
     <Compile Include="Classes\clsZone.cs" />
     <Compile Include="Classes\clsZones.cs" />
+    <Compile Include="Classes\FileNameValidator.cs" />
+    <Compile Include="Classes\MapZone.cs" />
+    <Compile Include="Classes\ShapefileHelper.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
     <Compile Include="Controls\VerticalProgressBar.cs">
       <SubType>Component</SubType>
@@ -351,6 +354,12 @@
     <Compile Include="Menu\frmMenuPrimed.Designer.cs">
       <DependentUpon>frmMenuPrimed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuRateMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuRateMap.Designer.cs">
+      <DependentUpon>frmMenuRateMap.cs</DependentUpon>
+    </Compile>
     <Compile Include="PGNs\PGN228.cs" />
     <Compile Include="PGNs\PGN229.cs" />
     <Compile Include="PGNs\PGN234.cs" />
@@ -510,6 +519,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuPrimed.resx">
       <DependentUpon>frmMenuPrimed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuRateMap.resx">
+      <DependentUpon>frmMenuRateMap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

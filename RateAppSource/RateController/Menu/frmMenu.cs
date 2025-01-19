@@ -646,6 +646,7 @@ namespace RateController
                 butMode.Visible = !Expanded;
                 butMonitor.Visible = !Expanded;
                 butData.Visible = !Expanded;
+                butMap.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -694,6 +695,10 @@ namespace RateController
                     butData.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butData.Top = Pos;
+
+                    butMap.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butMap.Top = Pos;
 
                     butRate.PerformClick();
                 }
@@ -1011,6 +1016,14 @@ namespace RateController
                             fs.Show();
                             break;
 
+                        case "frmMenuRateMap":
+                            butProducts.PerformClick();
+                            fs = new frmMenuRateMap(mf, this);
+                            fs.Owner = this;
+                            cLastScreen = Last;
+                            fs.Show();
+                            break;
+
                         case "frmMenuSections":
                             butMachine.PerformClick();  // frmMenuSections opened by default
                             break;
@@ -1128,6 +1141,24 @@ namespace RateController
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("frmMenu/LoadLastScreen: " + ex.Message);
+            }
+        }
+
+        private void butMap_Click(object sender, EventArgs e)
+        {
+            cLastScreen = "frmMenuRateMap";
+            HighlightButton(cLastScreen);
+            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRateMap(mf, this);
+                frm.Owner = this;
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
             }
         }
     }

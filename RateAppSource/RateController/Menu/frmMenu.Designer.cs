@@ -64,6 +64,7 @@
             this.butUpdateModules = new System.Windows.Forms.Button();
             this.butBoards = new System.Windows.Forms.Button();
             this.butColor = new System.Windows.Forms.Button();
+            this.butMap = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -722,11 +723,31 @@
             this.butColor.Visible = false;
             this.butColor.Click += new System.EventHandler(this.butColor_Click);
             // 
+            // butMap
+            // 
+            this.butMap.BackColor = System.Drawing.Color.Transparent;
+            this.butMap.FlatAppearance.BorderSize = 0;
+            this.butMap.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butMap.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butMap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butMap.Location = new System.Drawing.Point(448, 506);
+            this.butMap.Name = "butMap";
+            this.butMap.Size = new System.Drawing.Size(158, 49);
+            this.butMap.TabIndex = 164;
+            this.butMap.Text = "Rate Map";
+            this.butMap.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butMap.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butMap.UseVisualStyleBackColor = false;
+            this.butMap.Visible = false;
+            this.butMap.Click += new System.EventHandler(this.butMap_Click);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.Controls.Add(this.butMap);
             this.Controls.Add(this.butColor);
             this.Controls.Add(this.butBoards);
             this.Controls.Add(this.butUpdateModules);
@@ -816,5 +837,6 @@
         private System.Windows.Forms.Button butUpdateModules;
         private System.Windows.Forms.Button butBoards;
         private System.Windows.Forms.Button butColor;
+        private System.Windows.Forms.Button butMap;
     }
 }
