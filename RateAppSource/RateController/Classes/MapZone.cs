@@ -1,9 +1,8 @@
-﻿using System;
+﻿using GMap.NET;
+using GMap.NET.WindowsForms;
+using NetTopologySuite.Geometries;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
@@ -20,7 +19,7 @@ namespace RateController.Classes
         public Polygon Geometry { get; set; }
         public string Name { get; set; }
         public Dictionary<string, int> Rates { get; set; }
-        public Color ZoneColor { get; set; } // New property for color
+        public Color ZoneColor { get; set; } 
 
         public bool Contains(PointLatLng point)
         {

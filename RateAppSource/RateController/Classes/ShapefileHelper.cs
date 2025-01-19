@@ -1,4 +1,7 @@
-﻿using System;
+﻿using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO.Esri;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,6 +13,52 @@ namespace RateController.Classes
 {
     public class ShapefileHelper
     {
+        public List<string> GetShapefileAttributes(string shapefilePath)
+        {
+            using (var shapefile = Shapefile.OpenRead(shapefilePath))
+            {
+                //if (shapefile.Features.Count > 0)
+                //{
+                //    var feature = shapefile.Features[0];
+                //    return new List<string>(feature.Attributes.GetNames());
+                //}
+
+                foreach (var feature in shapefile)
+                {
+                    return new List<string>(feature.Attributes.GetNames());
+                }
+            }
+
+            return new List<string>();
+        }
+
+        public List<MapZone> LoadAndMapShapefile(string shapefilePath, Dictionary<string, string> attributeMapping)
+        {
+            var mapZones = new List<MapZone>();
+
+            using (var shapefile = Shapefile.OpenRead(shapefilePath))
+            {
+                foreach (var feature in shapefile)
+                {
+                    if (feature.Geometry is Polygon polygon)
+                    {
+                        ProcessPolygonWithMapping(feature, polygon, mapZones, attributeMapping);
+                    }
+                    else if (feature.Geometry is MultiPolygon multiPolygon)
+                    {
+                        foreach (var poly in multiPolygon.Geometries)
+                        {
+                            if (poly is Polygon multiPolygonPolygon)
+                            {
+                                ProcessPolygonWithMapping(feature, multiPolygonPolygon, mapZones, attributeMapping);
+                            }
+                        }
+                    }
+                }
+            }
+            return mapZones;
+        }
+
         public List<MapZone> LoadMapZones(string shapefilePath)
         {
             var mapZones = new List<MapZone>();
@@ -102,54 +151,6 @@ namespace RateController.Classes
             mapZones.Add(new MapZone(name, polygon, rates, zoneColor)); // Pass color to MapZone
         }
 
-
-        public List<string> GetShapefileAttributes(string shapefilePath)
-        {
-            using (var shapefile = Shapefile.OpenRead(shapefilePath))
-            {
-                //if (shapefile.Features.Count > 0)
-                //{
-                //    var feature = shapefile.Features[0];
-                //    return new List<string>(feature.Attributes.GetNames());
-                //}
-
-                foreach (var feature in shapefile)
-                {
-                    return new List<string>(feature.Attributes.GetNames());
-                }
-            }
-
-            return new List<string>();
-        }
-
-        public List<MapZone> LoadAndMapShapefile(string shapefilePath, Dictionary<string, string> attributeMapping)
-        {
-            var mapZones = new List<MapZone>();
-
-            using (var shapefile = Shapefile.OpenRead(shapefilePath))
-            {
-                foreach (var feature in shapefile)
-                {
-                    if (feature.Geometry is Polygon polygon)
-                    {
-                        ProcessPolygonWithMapping(feature, polygon, mapZones, attributeMapping);
-                    }
-                    else if (feature.Geometry is MultiPolygon multiPolygon)
-                    {
-                        foreach (var poly in multiPolygon.Geometries)
-                        {
-                            if (poly is Polygon multiPolygonPolygon)
-                            {
-                                ProcessPolygonWithMapping(feature, multiPolygonPolygon, mapZones, attributeMapping);
-                            }
-                        }
-                    }
-                }
-            }
-            return mapZones;
-        }
-
-
         private void ProcessPolygonWithMapping(IFeature feature, Polygon polygon, List<MapZone> mapZones, Dictionary<string, string> attributeMapping)
         {
             string Name = "Unnamed Zone";
@@ -199,50 +200,6 @@ namespace RateController.Classes
             rates.Add("ProductD", RateD);
 
             mapZones.Add(new MapZone(Name, polygon, rates, ZoneColor)); // Pass color to MapZone
-        }
-
-        private void ProcessPolygonWithMapping2(
-        IFeature feature,
-        Polygon polygon,
-        List<MapZone> mapZones,
-        Dictionary<string, string> attributeMapping)
-        {
-            var name = feature.Attributes.Exists(attributeMapping["Name"])
-                ? feature.Attributes[attributeMapping["Name"]].ToString()
-                : "Unnamed Zone";
-
-            var productARate = feature.Attributes.Exists(attributeMapping["ProductA"]) &&
-                               int.TryParse(feature.Attributes[attributeMapping["ProductA"]]?.ToString(), out var aRate)
-                ? aRate
-                : 0;
-
-            var productBRate = feature.Attributes.Exists(attributeMapping["ProductB"]) &&
-                               int.TryParse(feature.Attributes[attributeMapping["ProductB"]]?.ToString(), out var bRate)
-                ? bRate
-                : 0;
-
-            var productCRate = feature.Attributes.Exists(attributeMapping["ProductC"]) &&
-                               int.TryParse(feature.Attributes[attributeMapping["ProductC"]]?.ToString(), out var cRate)
-                ? cRate
-                : 0;
-
-            var productDRate = feature.Attributes.Exists(attributeMapping["ProductD"]) &&
-                               int.TryParse(feature.Attributes[attributeMapping["ProductD"]]?.ToString(), out var dRate)
-                ? dRate
-                : 0;
-
-            var colorString = feature.Attributes.Exists("Color") ? feature.Attributes["Color"].ToString() : "#FF0000"; // Default to red
-            var zoneColor = ColorTranslator.FromHtml(colorString); // Convert HTML string to Color
-
-            var rates = new Dictionary<string, int>
-            {
-                { "ProductA", productARate },
-                { "ProductB", productBRate },
-                { "ProductC", productCRate },
-                { "ProductD", productDRate }
-            };
-
-            mapZones.Add(new MapZone(name, polygon, rates, zoneColor)); // Pass color to MapZone
         }
     }
 }

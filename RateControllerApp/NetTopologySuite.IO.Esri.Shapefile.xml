@@ -1,0 +1,1714 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NetTopologySuite.IO.Esri.Shapefile</name>
+    </assembly>
+    <members>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Dbf">
+            <summary>
+            Manages configurations and constants specific to the structure and operation of DBF files in the dBASE III format.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Dbf.DbfEncoding.Latin1">
+            <summary>
+            The Latin1 Encoding
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfEncoding.GetLanguageDriverId(System.Text.Encoding)">
+            <summary>
+            Get the language driver id for an encoding
+            </summary>
+            <param name="encoding">The encoding</param>
+            <returns>A language driver id</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfEncoding.GetEncodingForLanguageDriverId(System.Byte)">
+            <summary>
+            Get the Encoding for an language driver id 
+            </summary>
+            <param name="ldid">Language Driver ID</param>
+            <returns>Encoding</returns>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.DbfReader">
+            <summary>
+                Class that allows records in a dbase file to be enumerated.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.DbfReader.LastUpdateDate">
+            <summary>
+            Sets or returns the date this file was last updated.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.DbfReader.RecordCount">
+            <summary>
+            Return the number of records in the file. 
+            </summary>
+            <returns></returns>
+            <remarks>RecordCount is saved in DBF file as 32-bit unisigned integer. Record count is limited to 1 Billion (http://www.dbase.com/Knowledgebase/faq/dBASE_Limits_FAQ.html), so it is les than int.MaxValue </remarks>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.DbfReader.RecordSize">
+            <summary>
+            Return the length of the records in bytes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.DbfReader.Fields">
+            <summary>
+            Returns the fields in the dbase file.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.DbfReader.Encoding">
+            <summary>
+            Encoding used by dBASE file.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfReader.#ctor(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Initializes new instance of the reader.
+            </summary>
+            <param name="stream">Stream of source DBF file.</param>
+            <param name="encoding">DBF file encoding or null if encoding should be resolved from DBF reserved bytes.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfReader.#ctor(System.String,System.Text.Encoding)">
+            <summary>
+            Initializes new instance of the reader.
+            </summary>
+            <param name="dbfPath">Path to DBF file.</param>
+            <param name="encoding">DBF file encoding or null if encoding should be resolved from DBF reserved bytes.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfReader.Read">
+            <summary>
+            Reads field values from underlying stream and advances the enumerator to the next record.
+            </summary>
+            <returns>
+            true if the enumerator was successfully advanced to the next record;
+            false if the enumerator has passed the end of the table.
+            </returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfReader.Read(System.Boolean@)">
+            <summary>
+            Reads field values from underlying stream and advances the enumerator to the next record.
+            </summary>
+            <param name="deleted">Indicates if the record was marked as deleted.</param>
+            <returns>
+            true if the enumerator was successfully advanced to the next record;
+            false if the enumerator has passed the end of the table.
+            </returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfReader.Read(NetTopologySuite.Features.IAttributesTable@,System.Boolean@)">
+            <summary>
+            Reads values from underlying stream and advances the enumerator to the next record.
+            </summary>
+            <param name="values">Array of field values. If null specified new array will be created.</param>
+            <param name="deleted">Indicates if the reacord was marked as deleted.</param>
+            <returns>
+            true if the enumerator was successfully advanced to the next element;
+            false if the enumerator has passed the end of the collection.
+            </returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfReader.ReadEntry(System.Int32)">
+            <summary>
+            Moves enumerator to specified position and reads values from underlying stream.
+            </summary>
+            <param name="index">Thre record index.</param>
+            <returns>
+            Table containing record fields (attributes).
+            </returns>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.DbfType">
+            <summary>
+            dBASE field type
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Dbf.DbfType.Character">
+            <summary>
+            Character
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Dbf.DbfType.Date">
+            <summary>
+            Date - 8 bytes (stored as a string in the format YYYYMMDD).
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Dbf.DbfType.Numeric">
+            <summary>
+            Numeric - positive or negative numbers. Number stored as a string. Can store integer and decimal numbers but Esri software uses it only for integer values. 
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Dbf.DbfType.Float">
+            <summary>
+            Positive or negative numbers. Identical to Numeric; maintained for compatibility. Used by Esri software.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Dbf.DbfType.Logical">
+            <summary>
+            Logical - one character ('T','F')
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Dbf.DbfType.Shape">
+            <summary>
+            Shapefile's shape stored in SHP file (not dBASE standard).
+            </summary>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.DbfWriter">
+            <summary>
+             Class that allows records in a dbase file to be enumerated.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.DbfWriter.Fields">
+            <summary>
+            Returns the fields in the dbase file.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.DbfWriter.Encoding">
+            <summary>
+            Encoding of dBASE file
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.DbfWriter.RecordSize">
+            <summary>
+            Return the length of the records in bytes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.DbfWriter.RecordCount">
+            <summary>
+            Return the number of records in the file. 
+            </summary>
+            <returns></returns>
+            <remarks>RecordCount is saved in DBF file as 32-bit unisigned integer. Record count is limited to 1 Billion (http://www.dbase.com/Knowledgebase/faq/dBASE_Limits_FAQ.html), so it is les than int.MaxValue </remarks>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfWriter.#ctor(System.IO.Stream,System.Collections.Generic.IReadOnlyList{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.Text.Encoding)">
+            <summary>
+            Initializes new DbaseStreamReader
+            </summary>
+            <param name="stream">Stream of source DBF file.</param>
+            <param name="fields">dBASE field definitions.</param>
+            <param name="encoding">DBF file encoding. Defaults to UTF8.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfWriter.#ctor(System.String,System.Collections.Generic.IReadOnlyList{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.Text.Encoding)">
+            <summary>
+            Initializes new DbaseStreamReader
+            </summary>
+            <param name="dbfPath">Path to DBF file.</param>
+            <param name="fields">dBASE field definitions.</param>
+            <param name="encoding">DBF file encoding. Defaults to UTF8.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfWriter.Write">
+            <summary>
+            Writes field values to the underlying stream and advances the position to the next record.
+            </summary>
+            <returns>
+            true if the enumerator was successfully advanced to the next element;
+            false if the enumerator has passed the end of the collection.
+            </returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfWriter.Write(System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Writes record values to the underlying stream and advances the position to the next record.
+            </summary>
+            <returns>
+            true if the enumerator was successfully advanced to the next element;
+            false if the enumerator has passed the end of the collection.
+            </returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.DbfWriter.DisposeManagedResources">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfCharacterField">
+            <summary>
+            Character field definition.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfCharacterField.#ctor(System.String,System.Int32)">
+            <summary>
+             Initializes a new instance of the field class.
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="length">Field length.</param>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfCharacterField.StringValue">
+            <summary>
+            String representation of current field value.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfCharacterField.Value">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfCharacterField.IsNull">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfDateField">
+            <summary>
+            Date field definition.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfDateField.#ctor(System.String,System.Int32)">
+            <summary>
+             Initializes a new instance of the field class.
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="length">Field length.</param>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfDateField.DateValue">
+            <summary>
+            Date representation of current field value.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfDateField.Value">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfDateField.IsNull">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField">
+            <summary>
+            dBASE field definition.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.Name">
+            <summary>
+            Field Name.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.FieldType">
+            <summary>
+            Field Type.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.Length">
+            <summary>
+            Length of the data in bytes or total number of digits in the numeric value.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.NumericScale">
+            <summary>
+            Number of digits after the decimal point in the numeric value.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.#ctor(System.String,NetTopologySuite.IO.Esri.Dbf.DbfType,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the field class.
+            </summary>
+            <param name="name">Field name (max 10 characters).</param>
+            <param name="type">Field type.</param>
+            <param name="length">Field length.</param>
+            <param name="precision">Decimal places count.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.Value">
+            <summary>
+            Current field value.
+            </summary>
+            <remarks>
+            <see cref="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.Value"/> is used by shapefile readers and writers to hold current record field value.
+            </remarks>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.IsNull">
+            <summary>
+            Determines if the field currently does not contain any value.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfField.Create(System.String,System.Type)">
+            <summary>
+            Creates dBASE field determined using specified value. 
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="type">Field value type.</param>
+            <returns>dBase field definition.</returns>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldCollection">
+            <summary>
+            Collection of dBASE field definitions.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldCollection.Item(System.Int32)">
+            <summary>
+            Gets the field at the specified index.
+            </summary>
+            <param name="index">The zero-based index of the field to get.</param>
+            <returns> The field at the specified index.</returns>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldCollection.Item(System.String)">
+            <summary>
+            Gets the field with specified name.
+            </summary>
+            <param name="name">The of the field.</param>
+            <returns>The field with specified name or null if name was not found.</returns>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldCollection.Count">
+            <summary>
+            Gets the number of fields contained in the collection.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldCollection.ToDictionary">
+            <summary>
+            Reads current fields values.
+            </summary>
+            <returns>Dictionary containging field names and values.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldCollection.ToAttributesTable">
+            <summary>
+            Reads current fields values.
+            </summary>
+            <returns>Dictionary containging field names and values.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldCollection.GetValues">
+            <summary>
+            Reads current fields values.
+            </summary>
+            <returns>Array of field values.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldCollection.SetValues(System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Sets current filed values.
+            </summary>
+            <param name="values"></param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldCollection.SetValues(System.Collections.Generic.IReadOnlyList{System.Object})">
+            <summary>
+            Sets current filed values.
+            </summary>
+            <param name="values"></param>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions">
+            <summary>
+            DbfField collection extensions.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions.AddField(System.Collections.Generic.ICollection{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.String,System.Type)">
+            <summary>
+            Adds a DBF field.
+            </summary>
+            <param name="fields">The field list.</param>
+            <param name="name">Field name.</param>
+            <param name="type">Field type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions.AddField``1(System.Collections.Generic.ICollection{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.String)">
+            <summary>
+            Adds a DBF field.
+            </summary>
+            <param name="fields">The field list.</param>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions.AddCharacterField(System.Collections.Generic.ICollection{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.String,System.Int32)">
+            <summary>
+            Adds a character string field.
+            </summary>
+            <param name="fields">The field list.</param>
+            <param name="name">Field name.</param>
+            <param name="length">Field lenght.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions.AddDateField(System.Collections.Generic.ICollection{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.String)">
+            <summary>
+            Adds a date field.
+            </summary>
+            <param name="fields">The field list.</param>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions.AddLogicalField(System.Collections.Generic.ICollection{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.String)">
+            <summary>
+            Adds a logical field.
+            </summary>
+            <param name="fields">The field list.</param>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions.AddNumericInt32Field(System.Collections.Generic.ICollection{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.String)">
+            <summary>
+            Adds an Int32 field.
+            </summary>
+            <param name="fields">The field list.</param>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions.AddNumericInt64Field(System.Collections.Generic.ICollection{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.String)">
+            <summary>
+            Adds an Int64 field.
+            </summary>
+            <param name="fields">The field list.</param>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions.AddNumericDoubleField(System.Collections.Generic.ICollection{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.String)">
+            <summary>
+            Adds a Double field.
+            </summary>
+            <param name="fields">The field list.</param>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFieldsExtensions.AddFloatField(System.Collections.Generic.ICollection{NetTopologySuite.IO.Esri.Dbf.Fields.DbfField},System.String)">
+            <summary>
+            Adds a float field.
+            </summary>
+            <param name="fields">The field list.</param>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFloatField">
+            <summary>
+            Numeric field definition.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFloatField.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Intializes new instance of the numerif field class.
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="length">The number of significant digits (including decimal separator).</param>
+            <param name="precision">The number of fractional digits.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFloatField.#ctor(System.String)">
+            <summary>
+             Initializes a new instance of the field class.
+            </summary>
+            <param name="name">Field name.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFloatField.StringToNumber(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfFloatField.NumberToString(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfLogicalField">
+            <summary>
+            Logical field definition.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfLogicalField.#ctor(System.String,System.Int32)">
+            <summary>
+             Initializes a new instance of the field class.
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="length">Field length.</param>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfLogicalField.LogicalValue">
+            <summary>
+            Logical representation of current field value.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfLogicalField.Value">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfLogicalField.IsNull">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericDecimalField">
+            <summary>
+            Int64 field definition.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericDecimalField.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Intializes new instance of the numerif field class.
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="length">The number of significant digits (including decimal separator).</param>
+            <param name="precision">The number of fractional digits.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericDecimalField.#ctor(System.String)">
+            <summary>
+             Initializes a new instance of the field class.
+            </summary>
+            <param name="name">Field name.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericDecimalField.StringToNumber(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericDoubleField">
+            <summary>
+            Int64 field definition.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericDoubleField.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Intializes new instance of the numerif field class.
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="length">The number of significant digits (including decimal separator).</param>
+            <param name="precision">The number of fractional digits.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericDoubleField.#ctor(System.String)">
+            <summary>
+             Initializes a new instance of the field class.
+            </summary>
+            <param name="name">Field name.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericDoubleField.StringToNumber(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericField">
+            <summary>
+            Numeric field definition.
+            </summary>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericField`1">
+            <summary>
+            Numeric field definition.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericField`1.NumericValue">
+            <summary>
+            Numeric representation of current field value.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericField`1.Value">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericField`1.IsNull">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericField`1.NumberToString(`0)">
+            <summary>
+            Converts the number to its string representation.
+            </summary>
+            <param name="number">Number to convert.</param>
+            <returns>A string that is equivalent to the specified numer.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericField`1.StringToNumber(System.String)">
+            <summary>
+            Converts the string representation of a number to its number equivalent.
+            </summary>
+            <param name="s">A string that contains a number to convert.</param>
+            <returns>A number that is equivalent to the specified string representation of numeric value.</returns>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericInt32Field">
+            <summary>
+            Int32 field definition.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericInt32Field.#ctor(System.String,System.Int32)">
+            <summary>
+            Intializes new instance of the numerif field class.
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="length">The number of digits.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericInt32Field.#ctor(System.String)">
+            <summary>
+             Initializes a new instance of the field class.
+            </summary>
+            <param name="name">Field name.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericInt32Field.StringToNumber(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericInt64Field">
+            <summary>
+            Int64 field definition.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericInt64Field.#ctor(System.String,System.Int32)">
+            <summary>
+            Intializes new instance of the numerif field class.
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="length">The number of digits.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericInt64Field.#ctor(System.String)">
+            <summary>
+             Initializes a new instance of the field class.
+            </summary>
+            <param name="name">Field name.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Dbf.Fields.DbfNumericInt64Field.StringToNumber(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.FeatureExtensions">
+            <summary>
+            Feature helper methods.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.FeatureExtensions.GetShapeType(NetTopologySuite.Geometries.Geometry)">
+            <summary>
+            Gets default <see cref="T:NetTopologySuite.IO.Esri.ShapeType"/> for specified geometry.
+            </summary>
+            <param name="geometry">A Geometry object.</param>
+            <returns>Shape type.</returns>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.ManagedDisposable">
+            <summary>
+            Base class witha a mechanism for releasing managed resources.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ManagedDisposable.AddManagedResource(System.IDisposable)">
+            <summary>
+            Adds a resource which will be disposed at the end of life of this instance.
+            </summary>
+            <param name="resource"></param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ManagedDisposable.DisposeManagedResources">
+            <summary>
+            Disposes managed objects assosiated with this instance.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ManagedDisposable.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.StreamExtensions.Advance(System.IO.Stream,System.Int32)">
+            <summary>
+            Moves data processing ahead a specified number of items.
+            </summary>
+            <param name="stream"></param>
+            <param name="count"></param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.StreamExtensions.AssignFrom(System.IO.MemoryStream,System.IO.Stream,System.Int32)">
+            <summary>
+            Clears the content of the stream and loads content
+            from <paramref name="source"/> stream. Copying begins at the current position
+            in the <paramref name="source"/> stream and ends after
+            specifed <paramref name="count"/> of bytes.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.StreamExtensions.WriteString(System.IO.Stream,System.String,System.Int32,System.Text.Encoding)">
+            <summary>
+            Writes string to BinaryDataWriter.
+            </summary>
+            <param name="stream">Data stream.</param>
+            <param name="s">String value to write.</param>
+            <param name="bytesCount">Bytes count to be written in BinaryDataWriter.</param>
+            <param name="encoding">Encoding used to translate string to bytes.</param>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefile">
+            <summary>
+            Base shapefile class.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Shapefile.MeasureMinValue">
+            <summary>
+            Minimal Measure value considered as not "no-data".
+            </summary>
+            <remarks>
+            Any floating point number smaller than –10E38 is considered by a shapefile reader
+            to represent a "no data" value. This rule is used only for measures (M values).
+            <br />
+            http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf (page 2, bottom)
+            </remarks>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefile.ShapeType">
+            <summary>
+            Shape type.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.GetShapeType(System.IO.Stream)">
+            <summary>
+            Reads shape type information from SHP stream.
+            </summary>
+            <param name="shpStream">SHP file stream.</param>
+            <returns>Shape type.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.GetShapeType(NetTopologySuite.Geometries.Geometry)">
+            <summary>
+            Gets default <see cref="P:NetTopologySuite.IO.Esri.Shapefile.ShapeType"/> for specified geometry.
+            </summary>
+            <param name="geometry">A Geometry object.</param>
+            <returns>Shape type.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.GetShapeType(System.String)">
+            <summary>
+            Reads shape type information from SHP file.
+            </summary>
+            <param name="shpPath">Path to SHP file.</param>
+            <returns>Shape type.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.OpenRead(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <summary>
+            Opens shapefile reader.
+            </summary>
+            <param name="shpStream">SHP stream.</param>
+            <param name="dbfStream">DBF stream.</param>
+            <param name="options">Reader options.</param>
+            <returns>Shapefile reader.</returns>
+            <exception cref="T:NetTopologySuite.IO.Esri.ShapefileException"></exception>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.OpenRead(System.String,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <summary>
+            Opens shapefile reader.
+            </summary>
+            <param name="shpPath">Path to shapefile.</param>
+            <param name="options">Reader options.</param>
+            <returns>Shapefile reader.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.ReadAllFeatures(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <summary>
+            Reads all features from shapefile.
+            </summary>
+            <param name="shpStream">shp stream.</param>
+            <param name="dbfStream">dbf stream.</param>
+            <param name="options">Reader options.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.ReadAllFeatures(System.String,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <summary>
+            Reads all features from shapefile.
+            </summary>
+            <param name="shpPath">Path to shapefile.</param>
+            <param name="options">Reader options.</param>
+            <returns>Shapefile features.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.ReadAllGeometries(System.String,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <summary>
+            Reads all geometries from SHP file.
+            </summary>
+            <param name="shpPath">Path to SHP file.</param>
+            <param name="options">Reader options.</param>
+            <returns>Shapefile geometries.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.OpenWrite(System.IO.Stream,System.IO.Stream,System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <summary>
+            Opens shapefile writer.
+            </summary>
+            <param name="shpStream">SHP stream.</param>
+            <param name="shxStream">SHX stream.</param>
+            <param name="dbfStream">DBF stream.</param>
+            <param name="prjStream">PRJ stream.</param>
+            <param name="options">Writer options.</param>
+            <returns>Shapefile writer.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.OpenWrite(System.String,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <summary>
+            Opens shapefile writer.
+            </summary>
+            <param name="shpPath">Path to shapefile.</param>
+            <param name="options">Writer options.</param>
+            <returns>Shapefile writer.</returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.WriteAllFeatures(System.Collections.Generic.IEnumerable{NetTopologySuite.Features.IFeature},System.IO.Stream,System.IO.Stream,System.IO.Stream,System.IO.Stream,System.String,System.Text.Encoding)">
+            <summary>
+            Writes features to the shapefile.
+            </summary>
+            <param name="features">Features to be written.</param>
+            <param name="shpStream">SHP stream.</param>
+            <param name="shxStream">SHX stream.</param>
+            <param name="dbfStream">DBF stream.</param>
+            <param name="prjStream">PRJ stream.</param>
+            <param name="projection">Projection metadata for the shapefile (content of the PRJ file).</param>
+            <param name="encoding">DBF file encoding (if not set UTF8 is used).</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.WriteAllFeatures(System.Collections.Generic.IEnumerable{NetTopologySuite.Features.IFeature},System.String,System.String,System.Text.Encoding)">
+            <summary>
+            Writes features to the shapefile.
+            </summary>
+            <param name="features">Features to be written.</param>
+            <param name="shpPath">Path to shapefile.</param>
+            <param name="projection">Projection metadata for the shapefile (content of the PRJ file).</param>
+            <param name="encoding">DBF file encoding (if not set UTF8 is used).</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefile.ValidateComponentSize(System.Int64)">
+            <summary>
+            Validates a 2 GB size limit for any shapefile component file.
+            </summary>
+            <param name="size">Shapefile component file size.</param>
+            <exception cref="T:NetTopologySuite.IO.Esri.ShapefileException"></exception>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.ShapefileException">
+            <summary>
+            The exception that is thrown when a non-fatal application error occurs related to Shapefile functionality.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapefileException.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapefileException.#ctor(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapefileException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapefileException.#ctor(System.String,System.Exception)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapefileException.#ctor(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapefileException.#ctor(System.String,System.String,System.Exception)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Readers.GeometryBuilderMode">
+            <summary>
+            Specifies the geometry building algorithm to use.
+            </summary>
+            <seealso href="https://gis.stackexchange.com/a/147971/26684">Rings order explained.</seealso>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Shapefiles.Readers.GeometryBuilderMode.Strict">
+            <summary>
+            Shape geometry will be read assuming that it does conform to ESRI Shapefile specification.
+            For example polygons will be created based on Shapefile's ring orientation semantics.
+            <list type="table">
+            <listheader><term>Ring type</term><description>Orientation</description></listheader>
+            <item><term>Shell</term><description>Clockwise, Shapefile's left-hand-rule</description></item>
+            <item><term>Hole</term><description>Counter-Clockwise, Shapefile's right-hand-rule</description></item>
+            </list>
+            In case of an invalid shape an error will be thrown.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Shapefiles.Readers.GeometryBuilderMode.IgnoreInvalidShapes">
+            <summary>
+            Shape geometry will be read assuming that it does conform to ESRI Shapefile specification.
+            In case of an invalid shape generated geometry will be empty or will have <see cref="P:NetTopologySuite.Geometries.Geometry.IsValid"/> property set to <c>false</c>.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Shapefiles.Readers.GeometryBuilderMode.SkipInvalidShapes">
+            <summary>
+            Shape geometry that does not conform to ESRI Shapefile specification will be skipped.
+            The reader will omit the geometry and related attributes as if they didn't exist.
+            This will result in proceding the enumeration until the end of the file is reached
+            even if some features are corrupted (so possibly valid shapes are not ignored).
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Shapefiles.Readers.GeometryBuilderMode.FixInvalidShapes">
+            <summary>
+            Invalid shape geometry will will be tried to be fixed using all possible methods.
+            For polygons following logic will be applied:
+            <list type="number">
+            <item>Sort all rings.</item>
+            <item>Consider all rings as a potential shell, search the valid holes for any possible shell.</item>
+            <item>Check if the ring is inside any shell: if <c>true</c>, it can be considered a potential hole for the shell.</item>
+            <item>Check if the ring is inside any hole of the shell: if <c>true</c>, this means that is actually a shell of a distinct geometry,
+            and NOT a valid hole for the shell. A hole inside another hole is not allowed.</item>
+            </list>
+            </summary>
+            <remarks>
+            This option is considerably slower, especially for complex geometries
+            (i.e.: polygons with a large number of holes having large numer of vertices).
+            </remarks>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Shapefiles.Readers.GeometryBuilderMode.QuickFixInvalidShapes">
+            <summary>
+            Invalid shape geometry will will be tried to be fixed using only basic methods.
+            For polygons following logic will be applied:
+            <list type="number">
+            <item>Do not sort rings but assume that polygons are serialized in the following order: <c>Shell[, Holes][, Shell[, Holes][, ...]]</c>.</item>
+            <item>Assume that the first ring that is not contained by the current polygon is the start of a new polygon.</item>
+            </list>
+            </summary>
+            <remarks>
+            This option is is faster than <see cref="F:NetTopologySuite.IO.Esri.Shapefiles.Readers.GeometryBuilderMode.FixInvalidShapes"/> but can result in geometries having <see cref="P:NetTopologySuite.Geometries.Geometry.IsValid"/> property set to <c>false</c>.
+            </remarks>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileMultiPointReader">
+            <summary>
+            MultiPoint shapefile reader.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileMultiPointReader.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileMultiPointReader.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefilePointReader">
+            <summary>
+            Point shapefile reader.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefilePointReader.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefilePointReader.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefilePolygonReader">
+            <summary>
+            Polygon shapefile reader.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefilePolygonReader.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefilePolygonReader.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefilePolyLineReader">
+            <summary>
+            PolyLine shapefile reader.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefilePolyLineReader.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefilePolyLineReader.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader">
+            <summary>
+            Base class for reading a shapefile.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Encoding">
+            <summary>
+            Encoding used by the shapefile.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Projection">
+            <summary>
+            Well-known text representation of coordinate reference system metadata from .prj file.
+            </summary>
+            <remarks>
+            <a href="https://support.esri.com/en/technical-article/000001897">https://support.esri.com/en/technical-article/000001897</a>
+            </remarks>/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.BoundingBox">
+            <summary>
+            The Bounding Box stored in the SHP file header representing the actual extent of the shapes in the file.
+            If the shapefile is empty (that is, has no records), the Bounding Box values are unspecified.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Geometry">
+            <summary>
+            Shape geometry.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Fields">
+            <summary>
+            Shapefile attribute definitions with current attribute values.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.RecordCount">
+            <summary>
+            Record count.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.#ctor(NetTopologySuite.IO.Esri.Dbf.DbfReader)">
+            <summary>
+            Initializes a new instance of the reader class.
+            </summary>
+            <param name="dbfReader">DBF file stream reader.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Restart">
+            <summary>
+            Moves reader back to its initial position. 
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Read(System.Boolean@,NetTopologySuite.Features.Feature@)">
+            <summary>
+            Reads feature geometry and attributes from underlying SHP and DBF files. 
+            </summary>
+            <param name="deleted">Indicates if the record was marked as deleted.</param>
+            <param name="feature">Shapefile feature.</param>
+            <returns>
+            true if the enumerator was successfully advanced to the next record;
+            false if the enumerator has passed the end of the table.
+            </returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Read(System.Boolean@)">
+            <summary>
+            Reads feature geometry and attributes from underlying SHP and DBF files into <see cref="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Geometry"/> and <see cref="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Fields"/> properties. 
+            </summary>
+            <param name="deleted">Indicates if the record was marked as deleted.</param>
+            <returns>
+            true if the enumerator was successfully advanced to the next record;
+            false if the enumerator has passed the end of the table.
+            </returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Read">
+            <summary>
+            Reads feature geometry and attributes from underlying SHP and DBF files into <see cref="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Geometry"/> and <see cref="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.Fields"/> properties. 
+            </summary>
+            <returns>
+            true if the enumerator was successfully advanced to the next record;
+            false if the enumerator has passed the end of the table.
+            </returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader.DisposeManagedResources">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1">
+            <summary>
+            Generic base class for reading a shapefile.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.ShapeType">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.BoundingBox">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.Shape">
+            <summary>
+            Shape geometry.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.Geometry">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.Projection">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <summary>
+            Initializes a new instance of the reader class.
+            </summary>
+            <param name="shpStream">SHP file stream.</param>
+            <param name="dbfStream">DBF file stream.</param>
+            <param name="options">Reader options.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <summary>
+            Initializes a new instance of the reader class.
+            </summary>
+            <param name="shpPath">Path to SHP file.</param>
+            <param name="options">Reader options.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.Read(System.Boolean@)">
+            <summary>
+            Reads feature geometry and attributes from underlying SHP and DBF files. 
+            </summary>
+            <param name="deleted">Indicates if the record was marked as deleted.</param>
+            <returns>
+            true if the enumerator was successfully advanced to the next record;
+            false if the enumerator has passed the end of the table.
+            </returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.Read(System.Boolean@,NetTopologySuite.Features.Feature@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.Restart">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader`1.DisposeManagedResources">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions">
+            <summary>
+             Shapefile reader options
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions.Factory">
+            <summary>
+            Geometry factory
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions.Encoding">
+            <summary>
+            DBF file encoding. If null encoding will be guess from related .CPG file or from reserved DBF bytes
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions.GeometryBuilderMode">
+            <summary>
+            Specifies the geometry building algorithm to use.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions.MbrFilter">
+            <summary>
+            The minimum bounding rectangle (BMR) used to filter out shapes located outside it.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions.MbrFilterOption">
+            <summary>
+             Minimum bounding rectangle (MBR) filtering options.
+            </summary>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Readers.MbrFilterOption">
+            <summary>
+             Minimum bounding rectangle (MBR) filtering options.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Shapefiles.Readers.MbrFilterOption.FilterByExtent">
+            <summary>
+            Filter by geometry extent. This option is faster but gives less acurate results (it can get some shapes that are not actually in the MBR).
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Shapefiles.Readers.MbrFilterOption.FilterByGeometry">
+            <summary>
+            Filter by geometry shape. This option gives precise results but it also greatly affect the performance.
+            </summary>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileMultiPointWriter">
+            <summary>
+            MultiPoint shapefile writer.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileMultiPointWriter.#ctor(System.IO.Stream,System.IO.Stream,System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileMultiPointWriter.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefilePointWriter">
+            <summary>
+            Point shapefile writer.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefilePointWriter.#ctor(System.IO.Stream,System.IO.Stream,System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefilePointWriter.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefilePolygonWriter">
+            <summary>
+            Polygon shapefile writer.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefilePolygonWriter.#ctor(System.IO.Stream,System.IO.Stream,System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefilePolygonWriter.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefilePolyLineWriter">
+            <summary>
+            PolyLine shapefile writer.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefilePolyLineWriter.#ctor(System.IO.Stream,System.IO.Stream,System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefilePolyLineWriter.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter">
+            <summary>
+            Base class for writing a shapefile.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter.Fields">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter.Geometry">
+            <summary>
+            Shape geometry.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter.#ctor(NetTopologySuite.IO.Esri.Dbf.DbfWriter)">
+            <summary>
+            Initializes a new instance of the writer class.
+            </summary>
+            <param name="dbfWriter">DBF file stream writer.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter.Write">
+            <summary>
+            Wrties geometry and attributes into underlying SHP and DBF files.
+            Attribute values must be set using Value property of DbfFiled(s) provided during initialization.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter.Write(NetTopologySuite.Features.IFeature)">
+            <summary>
+            Writes feature to the shapefile.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter.Write(System.Collections.Generic.IEnumerable{NetTopologySuite.Features.IFeature})">
+            <summary>
+            Writes features to the shapefile.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter.DisposeManagedResources">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter`1">
+            <summary>
+            Generic base class for writing a shapefile.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter`1.ShapeType">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter`1.Shape">
+            <summary>
+            Shape geometry.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter`1.Geometry">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter`1.#ctor(System.IO.Stream,System.IO.Stream,System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <summary>
+            Initializes a new instance of the writer class.
+            </summary>
+            <param name="shpStream">SHP file stream.</param>
+            <param name="shxStream">SHX file stream.</param>
+            <param name="dbfStream">DBF file stream.</param>
+            <param name="prjStream">PRJ file stream.</param>
+            <param name="options">Writer options.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter`1.#ctor(System.String,NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions)">
+            <summary>
+            Initializes a new instance of the writer class.
+            </summary>
+            <param name="shpPath">Path to SHP file.</param>
+            <param name="options">Writer options.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter`1.Write">
+            <summary>
+            Wrties geometry and attributes into underlying SHP and DBF files.
+            Attribute values must be set using Value property of DbfFiled(s) provided during initialization.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter`1.Write(NetTopologySuite.Features.IFeature)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriter`1.DisposeManagedResources">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions">
+            <summary>
+             Shapefile writer options
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.ShapeType">
+            <summary>
+            Shape type.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.Fields">
+            <summary>
+            Shapefile fields definitions.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.Encoding">
+            <summary>
+            DBF file encoding.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.Projection">
+            <summary>
+            Projection metadata for the shapefile (content of the PRJ file).
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.#ctor(NetTopologySuite.IO.Esri.ShapeType,NetTopologySuite.IO.Esri.Dbf.Fields.DbfField[])">
+            <summary>
+            Creates new instance of ShapefileWriterOptions class.
+            </summary>
+            <param name="type">Shape type.</param>
+            <param name="fields">Shapefile fields definitions.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.#ctor(NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReader)">
+            <summary>
+            Creates new instance of ShapefileWriterOptions class based on existing ShapefileReader.
+            </summary>
+            <param name="reader">Shape reader.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.AddField(System.String,System.Type)">
+            <summary>
+            Adds a DBF field (feature attribute).
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="type">Field type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.AddField``1(System.String)">
+            <summary>
+            Adds a DBF field.
+            </summary>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.AddCharacterField(System.String,System.Int32)">
+            <summary>
+            Adds a character string field (feature attribute).
+            </summary>
+            <param name="name">Field name.</param>
+            <param name="length">Field lenght.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.AddDateField(System.String)">
+            <summary>
+            Adds a date field (feature attribute).
+            </summary>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.AddFloatField(System.String)">
+            <summary>
+            Adds a float field (feature attribute).
+            </summary>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.AddLogicalField(System.String)">
+            <summary>
+            Adds a logical field (feature attribute).
+            </summary>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.AddNumericInt32Field(System.String)">
+            <summary>
+            Adds an Int32 field (feature attribute).
+            </summary>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.AddNumericInt64Field(System.String)">
+            <summary>
+            Adds an Int64 field (feature attribute).
+            </summary>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shapefiles.Writers.ShapefileWriterOptions.AddNumericDoubleField(System.String)">
+            <summary>
+            Adds a Double field (feature attribute).
+            </summary>
+            <param name="name">Field name.</param>
+            <returns></returns>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.ShapeType">
+            <summary>
+            Shapefile geometry types.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.NullShape">
+            <summary>
+            Null Shape
+            </summary>
+            <remarks>
+            Indicates a null shape, with no geometric data for the shape. Each feature type (point, line, polygon, etc.)
+            supports nulls - it is valid to have points and null points in the same shapefile. Often null shapes are place
+            holders - they are used during shapefile creation and are populated with geometric data soon after they are created.
+            </remarks>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.Point">
+            <summary>
+            Point in the X, Y space.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.PolyLine">
+            <summary>
+            PolyLine in the X, Y space.
+            </summary>
+            <remarks>
+            A PolyLine is an ordered set of vertices that consists of one or more parts.
+            A part is a connected sequence of two or more points.
+            Parts may or may not be connected to one another. Parts may or may not intersect one another.
+            </remarks>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.Polygon">
+            <summary>
+            Polygon in the X, Y space.
+            </summary>
+            <remarks>
+             A polygon consists of one or more rings. A ring is a connected sequence of four or more points that form a closed, non-self-intersecting loop.
+             A polygon may contain multiple outer rings. The order of vertices or orientation for a ring indicates which side of the ring
+             is the interior of the polygon. The neighborhood to the right of an observer walking along
+             the ring in vertex order is the neighborhood inside the polygon. Vertices of rings defining
+             holes in polygons are in a counterclockwise direction. Vertices for a single, ringed
+             polygon are, therefore, always in clockwise order. The rings of a polygon are referred to
+             as its parts.
+            </remarks>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.MultiPoint">
+            <summary>
+            MultiPoint in the X, Y space.
+            </summary>
+            <remarks>
+            A MultiPoint represents a set of points.
+            </remarks>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.PointZM">
+            <summary>
+            Measured Point in the X, Y, Z space.
+            </summary>
+            <remarks>Named as <i>PointZ</i> in ESRI Shapefile Technical Description. </remarks>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.PolyLineZM">
+            <summary>
+            Measured PolyLine in the X, Y, Z space.
+            </summary>
+            <remarks>Named as <i>PolyLineZ</i> in ESRI Shapefile Technical Description. </remarks>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.PolygonZM">
+            <summary>
+            Measured Polygon in the X, Y, Z space.
+            </summary>
+            <remarks>Named as <i>PolygonZ</i> in ESRI Shapefile Technical Description. </remarks>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.MultiPointZM">
+            <summary>
+            Measured MultiPoint in the X, Y, Z space.
+            </summary>
+            <remarks>Named as <i>MultiPointZ</i> in ESRI Shapefile Technical Description. </remarks>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.PointM">
+            <summary>
+            Measured Point in the X, Y space.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.PolyLineM">
+            <summary>
+            Measured LineString in the X, Y space.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.PolygonM">
+            <summary>
+            Measured Polygon in the X, Y space.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.MultiPointM">
+            <summary>
+            Measured MultiPoint in the X, Y space.
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.ShapeType.MultiPatch">
+            <summary>
+            MultiPatch
+            </summary>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.ShapeTypeExtensions">
+            <summary>
+            Helper methods for ShapeType enumeration.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapeTypeExtensions.HasZ(NetTopologySuite.IO.Esri.ShapeType)">
+            <summary>
+            Indicates if the geometric data for the shape associated with this type contains Z coordinate.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapeTypeExtensions.HasM(NetTopologySuite.IO.Esri.ShapeType)">
+            <summary>
+            Indicates if the geometric data for the shape associated with this type contains Measure value.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapeTypeExtensions.IsPoint(NetTopologySuite.IO.Esri.ShapeType)">
+            <summary>
+            Indicates if shape associated with this type is a Point.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapeTypeExtensions.IsMultiPoint(NetTopologySuite.IO.Esri.ShapeType)">
+            <summary>
+            Indicates if shape associated with this type is a MultiPoint.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapeTypeExtensions.IsPolyLine(NetTopologySuite.IO.Esri.ShapeType)">
+            <summary>
+            Indicates if shape associated with this type is a PolyLine.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.ShapeTypeExtensions.IsPolygon(NetTopologySuite.IO.Esri.ShapeType)">
+            <summary>
+            Indicates if shape associated with this type is a Polygon.
+            </summary>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Readers.ShpMultiPointReader">
+            <summary>
+            MultiPoint SHP file reader. 
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpMultiPointReader.#ctor(System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Readers.ShpPointReader">
+            <summary>
+            Point SHP file reader. 
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpPointReader.#ctor(System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpPolygonReader.#ctor(System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpPolyLineReader.#ctor(System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader">
+            <summary>
+            Base class class for reading a fixed-length file header and variable-length records from a *.SHP file. 
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader.#ctor(NetTopologySuite.IO.Esri.ShapeType)">
+            <summary>
+            Initializes a new instance of the ShpReader class.
+            </summary>
+            <param name="shapeType">Shape type.</param>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader.BoundingBox">
+            <summary>
+            The Bounding Box stored in the SHP file header representing the actual extent of the shapes in the file.
+            If the shapefile is empty (that is, has no records), the Bounding Box values are unspecified.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader.Geometry">
+            <summary>
+            Shape geometry.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader.Read">
+            <summary>
+            Reads content of the <see cref="P:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader.Geometry"/> from the underlying stream.
+            </summary>
+            <returns>Value indicating if reading next record was successful.</returns>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1">
+            <summary>
+            Base class class for reading a fixed-length file header and variable-length records from a *.SHP file. 
+            </summary>
+        </member>
+        <member name="F:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1.RecordNumber">
+            <summary>
+            Shapefile Spec: <br/>
+            The one-to-one relationship between geometry and attributes is based on record number.
+            Attribute records in the dBASE file must be in the same order as records in the main file.
+            </summary>
+            <remarks>
+            DBF does not have recor number attribute.
+            </remarks>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1.BoundingBox">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1.Errors">
+            <summary>
+            Errors which occured during reading process. Valid only if ShapefileReaderOptions.SkipFailures option is set to true.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1.Shape">
+            <summary>
+            SHP geometry.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1.Geometry">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1.#ctor(System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <summary>
+            Initializes a new instance of the reader class.
+            </summary>
+            <param name="shpStream">SHP file stream.</param>
+            <param name="options">Reader options.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1.Read">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1.Read(System.Int32@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Readers.ShpReader`1.ReadCore(System.Int32@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Shp">
+            <summary>
+            Base class class for reading and writing a fixed-length file header and variable-length records from a *.SHP file.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shp.Shp.ShapeType">
+            <summary>
+            Shape type.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Shp.#ctor(NetTopologySuite.IO.Esri.ShapeType)">
+            <summary>
+            Initializes a new instance of the reader class.
+            </summary>
+            <param name="shapeType">Shape type.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Shp.OpenRead(System.IO.Stream,NetTopologySuite.IO.Esri.Shapefiles.Readers.ShapefileReaderOptions)">
+            <summary>
+            Opens SHP reader.
+            </summary>
+            <param name="shpStream">SHP file stream.</param>
+            <param name="options">Reader options.</param>
+            <returns>SHP reader.</returns>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.ShpCoordinateExtensions">
+            <summary>
+            Helper methods for ordinate converting as specified in the ESRI Shapefile Technical Description.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.ShpCoordinateExtensions.ToValidShpCoordinate(System.Double)">
+            <summary>
+            Converts Z ordinate to value as specified in the ESRI Shapefile Technical Description.
+            </summary>
+            <param name="coordinate">Z value.</param>
+            <returns>
+            • 0.0 if  specified <paramref name="coordinate"/> value is <see cref="F:System.Double.NaN"/> <br />
+            • <see cref="F:System.Double.MaxValue"/> if specified <paramref name="coordinate"/> value is <see cref="F:System.Double.PositiveInfinity"/> <br />
+            • <see cref="F:System.Double.MinValue"/> if specified <paramref name="coordinate"/> value is <see cref="F:System.Double.NegativeInfinity"/> <br />
+            otherwise it returns specified <paramref name="coordinate"/> value.
+            </returns>
+            <remarks>
+            SHP Spec: Floating point numbers must be numeric values. Positive infinity, negative infinity,
+            and Not-a-Number(NaN) values are not allowed in shapefiles. 
+            </remarks>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.ShpCoordinateExtensions.ToValidShpMeasure(System.Double)">
+            <summary>
+            Converts Measure to value as specified in the ESRI Shapefile Technical Description.
+            </summary>
+            <param name="m">Measure value.</param>
+            <returns>
+            • value less than –10E38 if  specified <paramref name="m"/> value is <see cref="F:System.Double.NaN"/> <br />
+            • <see cref="F:System.Double.MaxValue"/> if specified <paramref name="m"/> value is <see cref="F:System.Double.PositiveInfinity"/> <br />
+            • -10E38 if specified <paramref name="m"/> value is <see cref="F:System.Double.NegativeInfinity"/> <br />
+            otherwise it returns specified <paramref name="m"/> value.
+            </returns>
+            <remarks>
+            SHP Spec: Floating point numbers must be numeric values. Positive infinity, negative infinity,
+            and Not-a-Number(NaN) values are not allowed in shapefiles. Nevertheless, shapefiles
+            support the concept of "no data" values, but they are currently used only for measures.
+            Any floating point number smaller than –10E38 is considered by a shapefile reader to represent a "no data" value.
+            </remarks>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Writers.ShpMultiPointWriter">
+            <summary>
+            MultiPoint SHP file writer. 
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Writers.ShpMultiPointWriter.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.ShapeType)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Writers.ShpPointWriter">
+            <summary>
+            Point SHP file writer. 
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Writers.ShpPointWriter.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.ShapeType)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Writers.ShpPolygonWriter">
+            <summary>
+            Polygon SHP file writer. 
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Writers.ShpPolygonWriter.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.ShapeType)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Writers.ShpPolyLineWriter">
+            <summary>
+            MultiLine SHP file writer. 
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Writers.ShpPolyLineWriter.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.ShapeType)">
+            <inheritdoc/>
+        </member>
+        <member name="T:NetTopologySuite.IO.Esri.Shp.Writers.ShpWriter`1">
+            <summary>
+            Base class class for writing a fixed-length file header and variable-length records to a *.SHP file.
+            </summary>
+        </member>
+        <member name="P:NetTopologySuite.IO.Esri.Shp.Writers.ShpWriter`1.Geometry">
+            <summary>
+            SHP geometry.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Writers.ShpWriter`1.#ctor(System.IO.Stream,System.IO.Stream,NetTopologySuite.IO.Esri.ShapeType)">
+            <summary>
+            Initializes a new instance of the writer class.
+            </summary>
+            <param name="shpStream">SHP file stream.</param>
+            <param name="shxStream">SHX file stream.</param>
+            <param name="shapeType">Shape type.</param>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Writers.ShpWriter`1.Write">
+            <summary>
+            Writes the geometry to the underlying stream.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Writers.ShpWriter`1.Write(`0)">
+            <summary>
+            Writes the geometry to the underlying stream.
+            </summary>
+        </member>
+        <member name="M:NetTopologySuite.IO.Esri.Shp.Writers.ShpWriter`1.DisposeManagedResources">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>
