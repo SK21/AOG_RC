@@ -321,6 +321,7 @@
             this.ckEnable.Text = "Enable Variable Rate";
             this.ckEnable.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEnable.UseVisualStyleBackColor = true;
+            this.ckEnable.CheckedChanged += new System.EventHandler(this.ckEnable_CheckedChanged);
             // 
             // openFileDialog1
             // 

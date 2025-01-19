@@ -20,6 +20,7 @@ namespace RateController
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
+        private bool cUseVariableRate = false;
         private string cVersionDate = "12-Jan-2025";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
@@ -64,6 +65,16 @@ namespace RateController
             {
                 cIsReadOnly = value;
                 SaveProperty("ReadOnly", cIsReadOnly.ToString(), true);
+            }
+        }
+
+        public bool UseVariableRate
+        {
+            get { return cUseVariableRate; }
+            set
+            {
+                cUseVariableRate = value;
+                SaveProperty("UseVariableRate_" + cPropertiesFile, cUseVariableRate.ToString());
             }
         }
 
@@ -164,6 +175,23 @@ namespace RateController
             return (byte)((ArdID << 4) | (SenID & 0b00001111));
         }
 
+        public void CenterForm(Form form)
+        {
+            // Retrieve screen width and height
+            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+
+            // Retrieve form width and height
+            int formWidth = form.Width;
+            int formHeight = form.Height;
+
+            // Calculate the appropriate position
+            int xPosition = (screenWidth / 2) - (formWidth / 2);
+            int yPosition = (screenHeight / 2) - (formHeight / 2);
+
+            form.Location = new Point(xPosition, yPosition);
+        }
+
         public string ControlTypeDescription(ControlTypeEnum CT)
         {
             string Result = "";
@@ -231,7 +259,6 @@ namespace RateController
             }
             return Result;
         }
-
 
         public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
         {
@@ -337,8 +364,7 @@ namespace RateController
 
             if (!IsOn & PutOnScreen)
             {
-                form.Top = 0;
-                form.Left = 0;
+                CenterForm(form);
             }
 
             return IsOn;
@@ -355,14 +381,20 @@ namespace RateController
         {
             if (SetLocation)
             {
-                int Leftloc = 0;
-                int.TryParse(LoadAppProperty(Frm.Name + Instance + ".Left"), out Leftloc);
-                Frm.Left = Leftloc;
+                int Leftloc = -1;
+                int Toploc = -1;
+                if (int.TryParse(LoadAppProperty(Frm.Name + Instance + ".Left"), out int lft)) Leftloc = lft;
+                if (int.TryParse(LoadAppProperty(Frm.Name + Instance + ".Top"), out int tl)) Toploc = tl;
 
-                int Toploc = 0;
-                int.TryParse(LoadAppProperty(Frm.Name + Instance + ".Top"), out Toploc);
-                Frm.Top = Toploc;
-
+                if (Leftloc == -1 || Toploc == -1)
+                {
+                    CenterForm(Frm);
+                }
+                else
+                {
+                    Frm.Left = Leftloc;
+                    Frm.Top = Toploc;
+                }
                 IsOnScreen(Frm, true);
             }
             FormAdd(Frm);
@@ -414,6 +446,14 @@ namespace RateController
                 cPropertiesApp = Properties.Settings.Default.FilesDir + "\\AppData.txt";
                 if (!File.Exists(cPropertiesApp)) File.Create(cPropertiesApp).Dispose();
                 LoadAppData(cPropertiesApp);
+                if (bool.TryParse(LoadProperty("UseVariableRate_" + cPropertiesFile), out bool vr))
+                {
+                    cUseVariableRate = vr;
+                }
+                else
+                {
+                    cUseVariableRate = false;
+                }
             }
             catch (Exception ex)
             {

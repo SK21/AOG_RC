@@ -467,6 +467,8 @@ namespace RateController.Menu
         {
             Initializing = true;
 
+            ckEnable.Checked = mf.Tls.UseVariableRate;
+
             Initializing = false;
         }
 
@@ -503,6 +505,11 @@ namespace RateController.Menu
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             gmap.Zoom = (gmap.MaxZoom - gmap.MinZoom) * VSzoom.Value / 100 + gmap.MinZoom;
+        }
+
+        private void ckEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) mf.Tls.UseVariableRate = ckEnable.Checked;
         }
     }
 }
