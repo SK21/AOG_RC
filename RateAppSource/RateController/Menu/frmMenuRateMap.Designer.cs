@@ -49,10 +49,11 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.ckFullScreen = new System.Windows.Forms.CheckBox();
             this.VSzoom = new System.Windows.Forms.VScrollBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ckEnable = new System.Windows.Forms.CheckBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -60,7 +61,7 @@
             // 
             // tbMapName
             // 
-            this.tbMapName.Location = new System.Drawing.Point(6, 392);
+            this.tbMapName.Location = new System.Drawing.Point(6, 32);
             this.tbMapName.Name = "tbMapName";
             this.tbMapName.Size = new System.Drawing.Size(131, 29);
             this.tbMapName.TabIndex = 17;
@@ -68,30 +69,33 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(30, 96);
+            this.btnLoad.Location = new System.Drawing.Point(30, 139);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(82, 64);
             this.btnLoad.TabIndex = 14;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // btnNew
             // 
-            this.btnNew.Location = new System.Drawing.Point(30, 24);
+            this.btnNew.Location = new System.Drawing.Point(30, 68);
             this.btnNew.Name = "btnNew";
             this.btnNew.Size = new System.Drawing.Size(82, 64);
             this.btnNew.TabIndex = 16;
             this.btnNew.Text = "New";
             this.btnNew.UseVisualStyleBackColor = true;
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(30, 248);
+            this.btnImport.Location = new System.Drawing.Point(30, 289);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(82, 64);
             this.btnImport.TabIndex = 342;
             this.btnImport.Text = "Import";
             this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // groupBox1
             // 
@@ -125,6 +129,7 @@
             this.btnReset.TabIndex = 13;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // btnDelete
             // 
@@ -134,6 +139,7 @@
             this.btnDelete.TabIndex = 12;
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnCreateZone
             // 
@@ -143,6 +149,7 @@
             this.btnCreateZone.TabIndex = 2;
             this.btnCreateZone.Text = "Create";
             this.btnCreateZone.UseVisualStyleBackColor = true;
+            this.btnCreateZone.Click += new System.EventHandler(this.btnCreateZone_Click);
             // 
             // lbP4
             // 
@@ -180,6 +187,7 @@
             this.ckEdit.Text = "Edit";
             this.ckEdit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEdit.UseVisualStyleBackColor = true;
+            this.ckEdit.CheckedChanged += new System.EventHandler(this.ckEdit_CheckedChanged);
             // 
             // tbP3
             // 
@@ -231,9 +239,9 @@
             // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(232, 22);
+            this.tbName.Location = new System.Drawing.Point(128, 22);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(122, 29);
+            this.tbName.Size = new System.Drawing.Size(226, 29);
             this.tbName.TabIndex = 2;
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -241,22 +249,22 @@
             // 
             this.btnSave.BackColor = System.Drawing.Color.Transparent;
             this.btnSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnSave.Enabled = false;
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnSave.Image = global::RateController.Properties.Resources.Save;
             this.btnSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnSave.Location = new System.Drawing.Point(35, 168);
+            this.btnSave.Location = new System.Drawing.Point(35, 210);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(72, 72);
             this.btnSave.TabIndex = 347;
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.checkBox1);
+            this.groupBox2.Controls.Add(this.ckFullScreen);
             this.groupBox2.Controls.Add(this.tbMapName);
             this.groupBox2.Controls.Add(this.btnImport);
             this.groupBox2.Controls.Add(this.btnSave);
@@ -270,18 +278,19 @@
             this.groupBox2.Text = "Map";
             this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
-            // checkBox1
+            // ckFullScreen
             // 
-            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox1.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.checkBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.checkBox1.Location = new System.Drawing.Point(30, 320);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(82, 64);
-            this.checkBox1.TabIndex = 348;
-            this.checkBox1.Text = "Full Screen";
-            this.checkBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.ckFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckFullScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckFullScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckFullScreen.Location = new System.Drawing.Point(30, 360);
+            this.ckFullScreen.Name = "ckFullScreen";
+            this.ckFullScreen.Size = new System.Drawing.Size(82, 64);
+            this.ckFullScreen.TabIndex = 348;
+            this.ckFullScreen.Text = "Full Screen";
+            this.ckFullScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckFullScreen.UseVisualStyleBackColor = true;
+            this.ckFullScreen.CheckedChanged += new System.EventHandler(this.ckFullScreen_CheckedChanged);
             // 
             // VSzoom
             // 
@@ -290,6 +299,7 @@
             this.VSzoom.Name = "VSzoom";
             this.VSzoom.Size = new System.Drawing.Size(45, 238);
             this.VSzoom.TabIndex = 349;
+            this.VSzoom.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VSzoom_Scroll);
             // 
             // pictureBox1
             // 
@@ -312,11 +322,16 @@
             this.ckEnable.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEnable.UseVisualStyleBackColor = true;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // frmMenuRateMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ControlBox = false;
             this.Controls.Add(this.ckEnable);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.VSzoom);
@@ -327,7 +342,7 @@
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "frmMenuRateMap";
             this.ShowInTaskbar = false;
-            this.Text = "mnuRateMap";
+            this.Text = "Rate Map";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mnuRateMap_FormClosed);
             this.Load += new System.EventHandler(this.mnuRateMap_Load);
             this.groupBox1.ResumeLayout(false);
@@ -363,7 +378,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.VScrollBar VSzoom;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox ckFullScreen;
         private System.Windows.Forms.CheckBox ckEnable;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
