@@ -247,7 +247,10 @@ namespace RateController.Classes
             cTractorPosition = NewLocation;
             tractorMarker.Position = NewLocation; // Update the marker position
             gmap.Refresh(); // Refresh the map to show the updated marker
+            UpdateValuesFromZone();
+            MapChanged?.Invoke(this, EventArgs.Empty);
         }
+        public PointLatLng GetTractorPosition { get { return cTractorPosition; } }
         private void AddToCache()
         {
             var area = gmap.ViewArea;

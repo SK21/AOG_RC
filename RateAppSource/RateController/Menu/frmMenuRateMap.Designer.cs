@@ -143,7 +143,7 @@
             // 
             this.lbP4.Location = new System.Drawing.Point(6, 232);
             this.lbP4.Name = "lbP4";
-            this.lbP4.Size = new System.Drawing.Size(116, 24);
+            this.lbP4.Size = new System.Drawing.Size(275, 24);
             this.lbP4.TabIndex = 11;
             this.lbP4.Text = "Product D";
             // 
@@ -159,7 +159,7 @@
             // 
             this.lbP3.Location = new System.Drawing.Point(6, 180);
             this.lbP3.Name = "lbP3";
-            this.lbP3.Size = new System.Drawing.Size(116, 24);
+            this.lbP3.Size = new System.Drawing.Size(275, 24);
             this.lbP3.TabIndex = 9;
             this.lbP3.Text = "Product C";
             // 

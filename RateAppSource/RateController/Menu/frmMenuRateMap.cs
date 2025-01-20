@@ -1,4 +1,5 @@
-﻿using GMap.NET.WindowsForms;
+﻿using GMap.NET;
+using GMap.NET.WindowsForms;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -93,7 +94,7 @@ namespace RateController.Menu
 
         private void ckEnable_CheckedChanged(object sender, EventArgs e)
         {
-            if (!Initializing) mf.Tls.UseVariableRate = ckEnable.Checked;
+            if (!Initializing) mf.Tls.VariableRateEnabled = ckEnable.Checked;
         }
 
         private void ckFullScreen_CheckedChanged(object sender, EventArgs e)
@@ -187,7 +188,7 @@ namespace RateController.Menu
             GMapControl gmap = mf.Tls.Manager.gmapObject;
             VSzoom.Value = (int)((gmap.Zoom - gmap.MinZoom) * 100) / (gmap.MaxZoom - gmap.MinZoom);
 
-            ckEnable.Checked = mf.Tls.UseVariableRate;
+            ckEnable.Checked = mf.Tls.VariableRateEnabled;
             Initializing = false;
         }
 

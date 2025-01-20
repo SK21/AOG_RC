@@ -1,4 +1,6 @@
-﻿using RateController.Language;
+﻿using GMap.NET;
+using RateController.Language;
+using RateController.PGNs;
 using RateController.Properties;
 using System;
 using System.Diagnostics;
@@ -99,6 +101,7 @@ namespace RateController
         private Label[] ProdName;
         private Label[] Rates;
         private PGN32501[] RelaySettings;
+        public PGN100 GPS;
 
         public FormStart()
         {
@@ -155,6 +158,7 @@ namespace RateController
             AOGsections = new PGN229(this);
             SectionControl = new clsSectionControl(this);
             ScaleIndicator = new PGN32296(this);
+            GPS = new PGN100(this);
         }
 
         public event EventHandler ColorChanged;
@@ -1376,6 +1380,12 @@ namespace RateController
             SendRelays();
             Products.Save();
             SectionControl.ReadRateSwitches();
+
+            if (GPS.Connected())
+            {
+                PointLatLng Position = new PointLatLng(GPS.Latitude, GPS.Longitude);
+                Tls.Manager.SetTractorPosition(Position);
+            }
         }
 
         private void timerPIDs_Tick(object sender, EventArgs e)

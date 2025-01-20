@@ -70,7 +70,7 @@ namespace RateController
             }
         }
 
-        public bool UseVariableRate
+        public bool VariableRateEnabled
         {
             get { return cUseVariableRate; }
             set

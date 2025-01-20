@@ -165,45 +165,53 @@ namespace RateController
                             break;
 
                         case 32618:
-                            if (mf.SwitchBox.ParseByteData(Data,true))
+                            if (mf.SwitchBox.ParseByteData(Data, true))
                             {
                                 SBtime = DateTime.Now;
                                 if (mf.vSwitchBox.Enabled) mf.vSwitchBox.Enabled = false;
                             }
                             break;
-                            
+
                         case 33152: // AOG, 0x81, 0x80
-                            switch (Data[3])
+                            if ((Data[3] << 8 | Data[2]) == 25727)
                             {
-                                case 228:
-                                    // vr data
-                                    mf.VRdata.ParseByteData(Data);
-                                    break;
+                                // AOG roll corrected lat,lon
+                                mf.GPS.ParseByteData(Data);
+                            }
+                            else
+                            {
+                                switch (Data[3])
+                                {
+                                    case 228:
+                                        // vr data
+                                        mf.VRdata.ParseByteData(Data);
+                                        break;
 
-                                case 229:
-                                    // aog sections
-                                    mf.AOGsections.ParseByteData(Data);
-                                    break;
+                                    case 229:
+                                        // aog sections
+                                        mf.AOGsections.ParseByteData(Data);
+                                        break;
 
-                                case 235:
-                                    // section widths
-                                    mf.SectionsPGN.ParseByteData(Data);
-                                    break;
+                                    case 235:
+                                        // section widths
+                                        mf.SectionsPGN.ParseByteData(Data);
+                                        break;
 
-                                case 238:
-                                    // machine config
-                                    mf.MachineConfig.ParseByteData(Data);
-                                    break;
+                                    case 238:
+                                        // machine config
+                                        mf.MachineConfig.ParseByteData(Data);
+                                        break;
 
-                                case 239:
-                                    // machine data
-                                    mf.MachineData.ParseByteData(Data);
-                                    break;
+                                    case 239:
+                                        // machine data
+                                        mf.MachineData.ParseByteData(Data);
+                                        break;
 
-                                case 254:
-                                    // AutoSteer AGIO PGN
-                                    mf.AutoSteerPGN.ParseByteData(Data);
-                                    break;
+                                    case 254:
+                                        // AutoSteer AGIO PGN
+                                        mf.AutoSteerPGN.ParseByteData(Data);
+                                        break;
+                                }
                             }
                             break;
                     }

@@ -1007,9 +1007,11 @@ namespace RateController
         public double TargetRate()
         {
             double Result = 0;
-            if (cUseVR && !CalUseBaseRate)
+            cUseVR = true;
+            if (cUseVR && !CalUseBaseRate && mf.Tls.VariableRateEnabled)
             {
-                Result = cVRmin + (cVRmax - cVRmin) * mf.VRdata.Percentage(cVRID) * 0.01;
+                int[] Rates = mf.Tls.Manager.GetRates();
+                Result = Rates[ID];
             }
             else
             {
