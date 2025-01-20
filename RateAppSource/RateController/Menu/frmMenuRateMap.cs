@@ -108,8 +108,8 @@ namespace RateController.Menu
             {
                 this.Width = 540;
                 this.Height = 630;
-                pictureBox1.Size = new Size(306, 238);
-                pictureBox1.Location = new System.Drawing.Point(222, 380);
+                pictureBox1.Size = new Size(467,294);
+                pictureBox1.Location = new System.Drawing.Point(66, 324);
                 PositionForm();
             }
         }

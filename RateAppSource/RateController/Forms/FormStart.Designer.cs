@@ -556,7 +556,7 @@ namespace RateController
             this.btnRight.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.btnRight.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
+            this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight;
             this.btnRight.Location = new System.Drawing.Point(138, 153);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(63, 62);
@@ -573,7 +573,7 @@ namespace RateController
             this.btnLeft.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.btnLeft.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
+            this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft;
             this.btnLeft.Location = new System.Drawing.Point(71, 153);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(60, 62);

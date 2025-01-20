@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuNetwork));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.lbIP = new System.Windows.Forms.Label();
@@ -143,7 +144,7 @@
             this.btnRescan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGreen;
             this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRescan.Image = global::RateController.Properties.Resources.Update;
+            this.btnRescan.Image = ((System.Drawing.Image)(resources.GetObject("btnRescan.Image")));
             this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnRescan.Location = new System.Drawing.Point(97, 127);
             this.btnRescan.Name = "btnRescan";
@@ -180,7 +181,7 @@
             this.ckDefaultModule.Name = "ckDefaultModule";
             this.ckDefaultModule.Size = new System.Drawing.Size(98, 112);
             this.ckDefaultModule.TabIndex = 226;
-            this.ckDefaultModule.Text = "Load Defaults";
+            this.ckDefaultModule.Text = "Defaults";
             this.ckDefaultModule.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.ckDefaultModule.UseVisualStyleBackColor = true;
             this.ckDefaultModule.CheckedChanged += new System.EventHandler(this.ckDefaultModule_CheckedChanged);

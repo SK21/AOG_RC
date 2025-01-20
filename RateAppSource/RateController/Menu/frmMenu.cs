@@ -927,7 +927,7 @@ namespace RateController
             butClose.Left = 160;
             butClose.Top = this.Height - 100;
             btnHelp.Left = 20;
-            btnHelp.Top = this.Height - 105;
+            btnHelp.Top = this.Height - 100;
             butPowerOff.Left = 160;
             butPowerOff.Top = 8;
             if (LoadLast) LoadLastScreen();

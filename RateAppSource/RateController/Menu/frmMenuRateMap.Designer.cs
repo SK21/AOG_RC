@@ -44,7 +44,6 @@
             this.tbP2 = new System.Windows.Forms.TextBox();
             this.lbP1 = new System.Windows.Forms.Label();
             this.tbP1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -53,6 +52,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ckEnable = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -60,7 +60,7 @@
             // 
             // tbMapName
             // 
-            this.tbMapName.Location = new System.Drawing.Point(6, 32);
+            this.tbMapName.Location = new System.Drawing.Point(6, 28);
             this.tbMapName.Name = "tbMapName";
             this.tbMapName.Size = new System.Drawing.Size(131, 29);
             this.tbMapName.TabIndex = 17;
@@ -68,29 +68,33 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(30, 139);
+            this.btnLoad.FlatAppearance.BorderSize = 0;
+            this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoad.Image = global::RateController.Properties.Resources.VehFileLoad;
+            this.btnLoad.Location = new System.Drawing.Point(30, 155);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(82, 64);
             this.btnLoad.TabIndex = 14;
-            this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // btnNew
             // 
-            this.btnNew.Location = new System.Drawing.Point(30, 68);
+            this.btnNew.FlatAppearance.BorderSize = 0;
+            this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNew.Image = global::RateController.Properties.Resources.NewFile;
+            this.btnNew.Location = new System.Drawing.Point(30, 76);
             this.btnNew.Name = "btnNew";
             this.btnNew.Size = new System.Drawing.Size(82, 64);
             this.btnNew.TabIndex = 16;
-            this.btnNew.Text = "New";
             this.btnNew.UseVisualStyleBackColor = true;
             this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(30, 289);
+            this.btnImport.Location = new System.Drawing.Point(8, 12);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(82, 64);
+            this.btnImport.Size = new System.Drawing.Size(89, 64);
             this.btnImport.TabIndex = 342;
             this.btnImport.Text = "Import";
             this.btnImport.UseVisualStyleBackColor = true;
@@ -109,11 +113,10 @@
             this.groupBox1.Controls.Add(this.tbP2);
             this.groupBox1.Controls.Add(this.lbP1);
             this.groupBox1.Controls.Add(this.tbP1);
-            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.tbName);
-            this.groupBox1.Location = new System.Drawing.Point(157, 12);
+            this.groupBox1.Location = new System.Drawing.Point(255, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(371, 362);
+            this.groupBox1.Size = new System.Drawing.Size(278, 318);
             this.groupBox1.TabIndex = 21;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Zone";
@@ -121,35 +124,39 @@
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(140, 285);
+            this.btnDelete.FlatAppearance.BorderSize = 0;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDelete.Location = new System.Drawing.Point(10, 242);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 12;
-            this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnCreateZone
             // 
-            this.btnCreateZone.Location = new System.Drawing.Point(272, 285);
+            this.btnCreateZone.FlatAppearance.BorderSize = 0;
+            this.btnCreateZone.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCreateZone.Image = global::RateController.Properties.Resources.Save;
+            this.btnCreateZone.Location = new System.Drawing.Point(184, 242);
             this.btnCreateZone.Name = "btnCreateZone";
             this.btnCreateZone.Size = new System.Drawing.Size(82, 64);
             this.btnCreateZone.TabIndex = 2;
-            this.btnCreateZone.Text = "Create";
             this.btnCreateZone.UseVisualStyleBackColor = true;
             this.btnCreateZone.Click += new System.EventHandler(this.btnCreateZone_Click);
             // 
             // lbP4
             // 
-            this.lbP4.Location = new System.Drawing.Point(6, 232);
+            this.lbP4.Location = new System.Drawing.Point(6, 199);
             this.lbP4.Name = "lbP4";
-            this.lbP4.Size = new System.Drawing.Size(275, 24);
+            this.lbP4.Size = new System.Drawing.Size(116, 24);
             this.lbP4.TabIndex = 11;
             this.lbP4.Text = "Product D";
             // 
             // tbP4
             // 
-            this.tbP4.Location = new System.Drawing.Point(287, 230);
+            this.tbP4.Location = new System.Drawing.Point(199, 197);
             this.tbP4.Name = "tbP4";
             this.tbP4.Size = new System.Drawing.Size(67, 29);
             this.tbP4.TabIndex = 10;
@@ -157,29 +164,30 @@
             // 
             // lbP3
             // 
-            this.lbP3.Location = new System.Drawing.Point(6, 180);
+            this.lbP3.Location = new System.Drawing.Point(6, 157);
             this.lbP3.Name = "lbP3";
-            this.lbP3.Size = new System.Drawing.Size(275, 24);
+            this.lbP3.Size = new System.Drawing.Size(116, 24);
             this.lbP3.TabIndex = 9;
             this.lbP3.Text = "Product C";
             // 
             // ckEdit
             // 
             this.ckEdit.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckEdit.FlatAppearance.BorderSize = 0;
             this.ckEdit.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEdit.Location = new System.Drawing.Point(8, 285);
+            this.ckEdit.Image = global::RateController.Properties.Resources.FileEditName;
+            this.ckEdit.Location = new System.Drawing.Point(97, 242);
             this.ckEdit.Name = "ckEdit";
             this.ckEdit.Size = new System.Drawing.Size(82, 64);
             this.ckEdit.TabIndex = 339;
-            this.ckEdit.Text = "Edit";
             this.ckEdit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEdit.UseVisualStyleBackColor = true;
             this.ckEdit.CheckedChanged += new System.EventHandler(this.ckEdit_CheckedChanged);
             // 
             // tbP3
             // 
-            this.tbP3.Location = new System.Drawing.Point(287, 178);
+            this.tbP3.Location = new System.Drawing.Point(199, 155);
             this.tbP3.Name = "tbP3";
             this.tbP3.Size = new System.Drawing.Size(67, 29);
             this.tbP3.TabIndex = 8;
@@ -187,7 +195,7 @@
             // 
             // lbP2
             // 
-            this.lbP2.Location = new System.Drawing.Point(6, 128);
+            this.lbP2.Location = new System.Drawing.Point(6, 115);
             this.lbP2.Name = "lbP2";
             this.lbP2.Size = new System.Drawing.Size(116, 24);
             this.lbP2.TabIndex = 7;
@@ -195,7 +203,7 @@
             // 
             // tbP2
             // 
-            this.tbP2.Location = new System.Drawing.Point(287, 126);
+            this.tbP2.Location = new System.Drawing.Point(199, 113);
             this.tbP2.Name = "tbP2";
             this.tbP2.Size = new System.Drawing.Size(67, 29);
             this.tbP2.TabIndex = 6;
@@ -203,7 +211,7 @@
             // 
             // lbP1
             // 
-            this.lbP1.Location = new System.Drawing.Point(6, 76);
+            this.lbP1.Location = new System.Drawing.Point(6, 73);
             this.lbP1.Name = "lbP1";
             this.lbP1.Size = new System.Drawing.Size(116, 24);
             this.lbP1.TabIndex = 5;
@@ -211,25 +219,17 @@
             // 
             // tbP1
             // 
-            this.tbP1.Location = new System.Drawing.Point(287, 74);
+            this.tbP1.Location = new System.Drawing.Point(199, 71);
             this.tbP1.Name = "tbP1";
             this.tbP1.Size = new System.Drawing.Size(67, 29);
             this.tbP1.TabIndex = 4;
             this.tbP1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(6, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 24);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Name";
-            // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(128, 22);
+            this.tbName.Location = new System.Drawing.Point(10, 29);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(226, 29);
+            this.tbName.Size = new System.Drawing.Size(256, 29);
             this.tbName.TabIndex = 2;
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -242,7 +242,7 @@
             this.btnSave.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnSave.Image = global::RateController.Properties.Resources.Save;
             this.btnSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnSave.Location = new System.Drawing.Point(35, 210);
+            this.btnSave.Location = new System.Drawing.Point(35, 234);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(72, 72);
             this.btnSave.TabIndex = 347;
@@ -252,15 +252,13 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.ckFullScreen);
             this.groupBox2.Controls.Add(this.tbMapName);
-            this.groupBox2.Controls.Add(this.btnImport);
             this.groupBox2.Controls.Add(this.btnSave);
             this.groupBox2.Controls.Add(this.btnNew);
             this.groupBox2.Controls.Add(this.btnLoad);
-            this.groupBox2.Location = new System.Drawing.Point(8, 12);
+            this.groupBox2.Location = new System.Drawing.Point(106, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(143, 433);
+            this.groupBox2.Size = new System.Drawing.Size(143, 318);
             this.groupBox2.TabIndex = 348;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Map";
@@ -271,9 +269,9 @@
             this.ckFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFullScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFullScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFullScreen.Location = new System.Drawing.Point(30, 360);
+            this.ckFullScreen.Location = new System.Drawing.Point(8, 172);
             this.ckFullScreen.Name = "ckFullScreen";
-            this.ckFullScreen.Size = new System.Drawing.Size(82, 64);
+            this.ckFullScreen.Size = new System.Drawing.Size(89, 64);
             this.ckFullScreen.TabIndex = 348;
             this.ckFullScreen.Text = "Full Screen";
             this.ckFullScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -283,17 +281,17 @@
             // VSzoom
             // 
             this.VSzoom.LargeChange = 1;
-            this.VSzoom.Location = new System.Drawing.Point(157, 380);
+            this.VSzoom.Location = new System.Drawing.Point(9, 324);
             this.VSzoom.Name = "VSzoom";
-            this.VSzoom.Size = new System.Drawing.Size(45, 238);
+            this.VSzoom.Size = new System.Drawing.Size(45, 294);
             this.VSzoom.TabIndex = 349;
             this.VSzoom.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VSzoom_Scroll);
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(222, 380);
+            this.pictureBox1.Location = new System.Drawing.Point(66, 324);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(306, 238);
+            this.pictureBox1.Size = new System.Drawing.Size(467, 294);
             this.pictureBox1.TabIndex = 350;
             this.pictureBox1.TabStop = false;
             // 
@@ -302,11 +300,11 @@
             this.ckEnable.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckEnable.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEnable.Location = new System.Drawing.Point(8, 461);
+            this.ckEnable.Location = new System.Drawing.Point(8, 252);
             this.ckEnable.Name = "ckEnable";
-            this.ckEnable.Size = new System.Drawing.Size(143, 157);
+            this.ckEnable.Size = new System.Drawing.Size(89, 64);
             this.ckEnable.TabIndex = 351;
-            this.ckEnable.Text = "Enable Variable Rate";
+            this.ckEnable.Text = "Enable VR";
             this.ckEnable.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEnable.UseVisualStyleBackColor = true;
             this.ckEnable.CheckedChanged += new System.EventHandler(this.ckEnable_CheckedChanged);
@@ -315,12 +313,28 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox1.FlatAppearance.BorderSize = 0;
+            this.checkBox1.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.checkBox1.Location = new System.Drawing.Point(8, 92);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(89, 64);
+            this.checkBox1.TabIndex = 352;
+            this.checkBox1.Text = "Restore";
+            this.checkBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // frmMenuRateMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.ControlBox = false;
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.btnImport);
+            this.Controls.Add(this.ckFullScreen);
             this.Controls.Add(this.ckEnable);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.VSzoom);
@@ -359,7 +373,6 @@
         private System.Windows.Forms.TextBox tbP2;
         private System.Windows.Forms.Label lbP1;
         private System.Windows.Forms.TextBox tbP1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.CheckBox ckEdit;
@@ -370,5 +383,6 @@
         private System.Windows.Forms.CheckBox ckFullScreen;
         private System.Windows.Forms.CheckBox ckEnable;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
