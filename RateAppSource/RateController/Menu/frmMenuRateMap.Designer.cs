@@ -33,7 +33,6 @@
             this.btnNew = new System.Windows.Forms.Button();
             this.btnImport = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnReset = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnCreateZone = new System.Windows.Forms.Button();
             this.lbP4 = new System.Windows.Forms.Label();
@@ -99,7 +98,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.btnReset);
             this.groupBox1.Controls.Add(this.btnDelete);
             this.groupBox1.Controls.Add(this.btnCreateZone);
             this.groupBox1.Controls.Add(this.lbP4);
@@ -121,19 +119,9 @@
             this.groupBox1.Text = "Zone";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
-            // btnReset
-            // 
-            this.btnReset.Location = new System.Drawing.Point(96, 285);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(82, 64);
-            this.btnReset.TabIndex = 13;
-            this.btnReset.Text = "Reset";
-            this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(184, 285);
+            this.btnDelete.Location = new System.Drawing.Point(140, 285);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 12;
@@ -344,6 +332,7 @@
             this.Name = "frmMenuRateMap";
             this.ShowInTaskbar = false;
             this.Text = "Rate Map";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuRateMap_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mnuRateMap_FormClosed);
             this.Load += new System.EventHandler(this.mnuRateMap_Load);
             this.groupBox1.ResumeLayout(false);
@@ -360,7 +349,6 @@
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Button btnNew;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnCreateZone;
         private System.Windows.Forms.Label lbP4;

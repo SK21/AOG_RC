@@ -1,4 +1,5 @@
-﻿using RateController.Language;
+﻿using RateController.Classes;
+using RateController.Language;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,7 +33,7 @@ namespace RateController
         private Bitmap cScreenBitmap;
         private int cScreenBitmapHeight = 465;  // from frmMenuColor colorPanel
         private int cScreenBitmapWidth = 516;
-
+        private MapManager cManager;
         #endregion ScreenBitMap
 
         public clsTools(FormStart CallingForm)
@@ -41,8 +42,9 @@ namespace RateController
             CheckFolders();
             OpenFile(Properties.Settings.Default.FileName);
             CreateColorBitmap();
+            cManager=new MapManager(mf);
         }
-
+        public MapManager Manager { get { return cManager; } }
         public string PropertiesFile
         {
             get

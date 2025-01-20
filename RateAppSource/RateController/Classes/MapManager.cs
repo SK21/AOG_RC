@@ -47,12 +47,11 @@ namespace RateController.Classes
             gmap.MouseUp += Gmap_MouseUp;
         }
 
-        public event EventHandler MapLoaded;
+        public event EventHandler MapChanged;
 
-        public event EventHandler MapMove;
 
         public bool EditMode { get; set; }
-
+        public string RootPath { get { return cRootPath; } }
         public GMapControl gmapObject
         { get { return gmap; } }
 
@@ -126,7 +125,7 @@ namespace RateController.Classes
             return Result;
         }
 
-        public bool DeleteCurrentZone(string name)
+        public bool DeleteZone(string name)
         {
             bool Result = false;
             // Find the zone to delete
@@ -192,7 +191,7 @@ namespace RateController.Classes
                     gmap.Refresh();
                     gmap.Zoom = 16;
                     Result = true;
-                    MapLoaded?.Invoke(this, EventArgs.Empty);
+                    MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
             return Result;
@@ -324,7 +323,7 @@ namespace RateController.Classes
                 else
                 {
                     PointLatLng Location = gmap.FromLocalToLatLng(e.X, e.Y);
-                    MapMove?.Invoke(this, EventArgs.Empty);
+                    MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
