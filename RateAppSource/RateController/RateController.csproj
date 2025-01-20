@@ -177,6 +177,7 @@
     <Compile Include="Classes\clsZone.cs" />
     <Compile Include="Classes\clsZones.cs" />
     <Compile Include="Classes\FileNameValidator.cs" />
+    <Compile Include="Classes\MapManager.cs" />
     <Compile Include="Classes\MapZone.cs" />
     <Compile Include="Classes\ShapefileHelper.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
