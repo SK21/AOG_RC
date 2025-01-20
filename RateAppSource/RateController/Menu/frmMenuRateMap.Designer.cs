@@ -65,6 +65,8 @@
             this.tbMapName.Size = new System.Drawing.Size(131, 29);
             this.tbMapName.TabIndex = 17;
             this.tbMapName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbMapName.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tbMapName_MouseClick);
+            this.tbMapName.TextChanged += new System.EventHandler(this.tbMapName_TextChanged);
             // 
             // btnLoad
             // 
@@ -161,6 +163,9 @@
             this.tbP4.Size = new System.Drawing.Size(67, 29);
             this.tbP4.TabIndex = 10;
             this.tbP4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbP4.TextChanged += new System.EventHandler(this.tbName_TextChanged);
+            this.tbP4.Enter += new System.EventHandler(this.tbP4_Enter);
+            this.tbP4.Validating += new System.ComponentModel.CancelEventHandler(this.tbP4_Validating);
             // 
             // lbP3
             // 
@@ -192,6 +197,9 @@
             this.tbP3.Size = new System.Drawing.Size(67, 29);
             this.tbP3.TabIndex = 8;
             this.tbP3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbP3.TextChanged += new System.EventHandler(this.tbName_TextChanged);
+            this.tbP3.Enter += new System.EventHandler(this.tbP3_Enter);
+            this.tbP3.Validating += new System.ComponentModel.CancelEventHandler(this.tbP3_Validating);
             // 
             // lbP2
             // 
@@ -208,6 +216,9 @@
             this.tbP2.Size = new System.Drawing.Size(67, 29);
             this.tbP2.TabIndex = 6;
             this.tbP2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbP2.TextChanged += new System.EventHandler(this.tbName_TextChanged);
+            this.tbP2.Enter += new System.EventHandler(this.tbP2_Enter);
+            this.tbP2.Validating += new System.ComponentModel.CancelEventHandler(this.tbP2_Validating);
             // 
             // lbP1
             // 
@@ -224,6 +235,9 @@
             this.tbP1.Size = new System.Drawing.Size(67, 29);
             this.tbP1.TabIndex = 4;
             this.tbP1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbP1.TextChanged += new System.EventHandler(this.tbName_TextChanged);
+            this.tbP1.Enter += new System.EventHandler(this.tbP1_Enter);
+            this.tbP1.Validating += new System.ComponentModel.CancelEventHandler(this.tbP1_Validating);
             // 
             // tbName
             // 
@@ -232,6 +246,8 @@
             this.tbName.Size = new System.Drawing.Size(256, 29);
             this.tbName.TabIndex = 2;
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbName.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tbName_MouseClick);
+            this.tbName.TextChanged += new System.EventHandler(this.tbName_TextChanged);
             // 
             // btnSave
             // 
@@ -322,9 +338,10 @@
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(89, 64);
             this.checkBox1.TabIndex = 352;
-            this.checkBox1.Text = "Restore";
+            this.checkBox1.Text = "Resume";
             this.checkBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // frmMenuRateMap
             // 

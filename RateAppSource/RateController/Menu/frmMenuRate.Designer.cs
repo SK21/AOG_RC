@@ -97,6 +97,7 @@
             this.tbProduct.TabIndex = 137;
             this.tbProduct.Text = "P1";
             this.tbProduct.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbProduct.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
             // 
             // ValveType
             // 

@@ -1,7 +1,9 @@
-﻿using GMap.NET.WindowsForms;
+﻿using AgOpenGPS;
+using GMap.NET.WindowsForms;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RateController.Menu
 {
@@ -34,6 +36,7 @@ namespace RateController.Menu
             {
                 MessageBox.Show("A map zone must have at least three vertices.", "Error");
             }
+            btnCreateZone.FlatAppearance.BorderSize = 0;
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -83,12 +86,23 @@ namespace RateController.Menu
             {
                 MessageBox.Show("Map could not be saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            btnSave.FlatAppearance.BorderSize = 0;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            Initializing = true;
+            if (!mf.Tls.Manager.LoadLastMap())
+            {
+                MessageBox.Show("Map could not be loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            Initializing = false;
         }
 
         private void ckEdit_CheckedChanged(object sender, EventArgs e)
         {
             mf.Tls.Manager.EditMode = ckEdit.Checked;
-            SetButtons();
+            EnableButtons();
         }
 
         private void ckEnable_CheckedChanged(object sender, EventArgs e)
@@ -108,10 +122,19 @@ namespace RateController.Menu
             {
                 this.Width = 540;
                 this.Height = 630;
-                pictureBox1.Size = new Size(467,294);
+                pictureBox1.Size = new Size(467, 294);
                 pictureBox1.Location = new System.Drawing.Point(66, 324);
                 PositionForm();
             }
+        }
+
+        private void EnableButtons()
+        {
+            tbName.Enabled = mf.Tls.Manager.EditMode;
+            tbP1.Enabled = mf.Tls.Manager.EditMode;
+            tbP2.Enabled = mf.Tls.Manager.EditMode;
+            tbP3.Enabled = mf.Tls.Manager.EditMode;
+            tbP4.Enabled = mf.Tls.Manager.EditMode;
         }
 
         private void frmMenuRateMap_FormClosing(object sender, FormClosingEventArgs e)
@@ -155,7 +178,7 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             PositionForm();
             UpdateForm();
-            SetButtons();
+            EnableButtons();
         }
 
         private void PositionForm()
@@ -164,17 +187,126 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + 246;
         }
 
-        private void SetButtons()
-        {
-            tbName.Enabled = mf.Tls.Manager.EditMode;
-            tbP1.Enabled = mf.Tls.Manager.EditMode;
-            tbP2.Enabled = mf.Tls.Manager.EditMode;
-            tbP3.Enabled = mf.Tls.Manager.EditMode;
-            tbP4.Enabled = mf.Tls.Manager.EditMode;
-        }
-
         private void SetLanguage()
         {
+        }
+
+        private void tbMapName_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (!String.IsNullOrEmpty(tbMapName.Text))
+            {
+                tbMapName.SelectionStart = 0;
+                tbMapName.SelectionLength = tbMapName.Text.Length;
+            }
+        }
+
+        private void tbName_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (!String.IsNullOrEmpty(tbName.Text))
+            {
+                tbName.SelectionStart = 0;
+                tbName.SelectionLength = tbName.Text.Length;
+            }
+        }
+
+        private void tbP1_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP1.Text, out tempD);
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbP1.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbP1_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP1.Text, out tempD);
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbP2_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP2.Text, out tempD);
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbP2.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbP2_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP2.Text, out tempD);
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbP3_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP3.Text, out tempD);
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbP3.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbP3_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP3.Text, out tempD);
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbP4_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP4.Text, out tempD);
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbP4.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbP4_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP4.Text, out tempD);
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
         }
 
         private void UpdateForm()
@@ -199,6 +331,33 @@ namespace RateController.Menu
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
+        }
+
+        private void tbMapName_TextChanged(object sender, EventArgs e)
+        {
+            HighlightMapSave();
+        }
+        private void HighlightMapSave()
+        {
+            if (!Initializing)
+            {
+                btnSave.FlatAppearance.BorderSize = 2;
+                btnSave.FlatAppearance.BorderColor = Color.Blue;
+            }
+        }
+
+        private void tbName_TextChanged(object sender, EventArgs e)
+        {
+            if (ckEdit.Checked)
+            {
+                HighlightZoneSave();
+                HighlightMapSave();
+            }
+        }
+        private void HighlightZoneSave()
+        {
+            btnCreateZone.FlatAppearance.BorderSize = 2;
+            btnCreateZone.FlatAppearance.BorderColor= Color.Blue;
         }
     }
 }

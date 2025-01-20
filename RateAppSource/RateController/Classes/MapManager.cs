@@ -33,7 +33,7 @@ namespace RateController.Classes
         private GMapOverlay tempMarkerOverlay;
         private GMapOverlay zoneOverlay;
         private GMarkerGoogle tractorMarker;
-
+        private string LastFile;
         public MapManager(FormStart main)
         {
             mf = main;
@@ -170,6 +170,11 @@ namespace RateController.Classes
             return cZoneRates;
         }
 
+        public bool LoadLastMap()
+        {
+            LastFile = mf.Tls.LoadProperty("LastMapFile");
+            return LoadMap(LastFile);
+        }
         public bool LoadMap(string path)
         {
             bool Result = false;
@@ -194,6 +199,7 @@ namespace RateController.Classes
                     gmap.Zoom = 16;
                     Result = true;
                     MapChanged?.Invoke(this, EventArgs.Empty);
+                    mf.Tls.SaveProperty("LastMapFile", path);
                 }
             }
             return Result;
