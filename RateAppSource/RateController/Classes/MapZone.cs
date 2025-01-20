@@ -13,7 +13,7 @@ namespace RateController.Classes
             Name = name;
             Geometry = geometry;
             Rates = rates;
-            ZoneColor = zoneColor; // Initialize color
+            ZoneColor = zoneColor; 
         }
 
         public Polygon Geometry { get; set; }

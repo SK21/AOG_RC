@@ -37,6 +37,7 @@
             this.rbPolish = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.rbDeustch = new System.Windows.Forms.RadioButton();
+            this.rbLithuanian = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -89,6 +90,7 @@
             this.rbFrench.Text = "French";
             this.rbFrench.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbFrench.UseVisualStyleBackColor = true;
+            this.rbFrench.CheckedChanged += new System.EventHandler(this.rbFrench_CheckedChanged);
             // 
             // rbNederlands
             // 
@@ -182,11 +184,27 @@
             this.rbDeustch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbDeustch.UseVisualStyleBackColor = true;
             // 
+            // rbLithuanian
+            // 
+            this.rbLithuanian.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbLithuanian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbLithuanian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbLithuanian.Location = new System.Drawing.Point(301, 392);
+            this.rbLithuanian.Margin = new System.Windows.Forms.Padding(2);
+            this.rbLithuanian.Name = "rbLithuanian";
+            this.rbLithuanian.Size = new System.Drawing.Size(140, 34);
+            this.rbLithuanian.TabIndex = 172;
+            this.rbLithuanian.Tag = "6";
+            this.rbLithuanian.Text = "Lithuanian";
+            this.rbLithuanian.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbLithuanian.UseVisualStyleBackColor = true;
+            // 
             // frmMenuLanguage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.rbLithuanian);
             this.Controls.Add(this.rbFrench);
             this.Controls.Add(this.rbNederlands);
             this.Controls.Add(this.rbRussian);
@@ -219,5 +237,6 @@
         private System.Windows.Forms.RadioButton rbPolish;
         private System.Windows.Forms.RadioButton rbEnglish;
         private System.Windows.Forms.RadioButton rbDeustch;
+        private System.Windows.Forms.RadioButton rbLithuanian;
     }
 }

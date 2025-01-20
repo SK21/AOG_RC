@@ -19,6 +19,20 @@ namespace RateController.Menu
             MainMenu = menu;
             mf = main;
             this.Tag = false;
+            InitializeColorComboBox();
+        }
+
+        public void SetSelectedColor(Color color)
+        {
+            for (int i = 0; i < colorComboBox.Items.Count; i++)
+            {
+                if (colorComboBox.Items[i] is Color itemColor && itemColor == color)
+                {
+                    colorComboBox.SelectedIndex = i;
+                    return;
+                }
+            }
+            colorComboBox.SelectedIndex = 1;
         }
 
         private void btnCreateZone_Click(object sender, EventArgs e)
@@ -32,11 +46,12 @@ namespace RateController.Menu
             if (int.TryParse(tbP3.Text, out int p3)) RateC = p3;
             if (int.TryParse(tbP4.Text, out int p4)) RateD = p4;
 
-            if (!mf.Tls.Manager.CreateZone(tbName.Text, RateA, RateB, RateC, RateD))
+            if (!mf.Tls.Manager.UpdateZone(tbName.Text, RateA, RateB, RateC, RateD, GetSelectedColor()))
             {
-                MessageBox.Show("A map zone must have at least three vertices.", "Error");
+                MessageBox.Show("Could not save zone.", "Error");
             }
             btnCreateZone.FlatAppearance.BorderSize = 0;
+            ckEdit.Checked = false;
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -70,7 +85,11 @@ namespace RateController.Menu
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            if (!mf.Tls.Manager.NewMap())
+            if (mf.Tls.Manager.NewMap())
+            {
+                tbMapName.Text = "New Map";
+            }
+            else
             {
                 MessageBox.Show("New zone could not be created.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -78,7 +97,7 @@ namespace RateController.Menu
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (mf.Tls.Manager.SaveMap())
+            if (mf.Tls.Manager.SaveMap(tbMapName.Text))
             {
                 MessageBox.Show("Map saved successfully!");
             }
@@ -128,6 +147,34 @@ namespace RateController.Menu
             }
         }
 
+        private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0)
+                return;
+
+            // Get the color object to draw
+            Color color = (Color)colorComboBox.Items[e.Index];
+
+            // Draw the background
+            e.DrawBackground();
+
+            // Draw a rectangle filled with the color
+            using (Brush brush = new SolidBrush(color))
+            {
+                int rectSize = e.Bounds.Height - 2;
+                Rectangle rect = new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 1, rectSize, rectSize);
+
+                e.Graphics.FillRectangle(brush, rect);
+                e.Graphics.DrawRectangle(Pens.Black, rect);
+            }
+
+            // Draw the color name next to the rectangle
+            e.Graphics.DrawString(color.Name, e.Font, Brushes.Black, e.Bounds.X + e.Bounds.Height + 2, e.Bounds.Y);
+
+            // Draw focus rectangle if the combo box has focus
+            e.DrawFocusRectangle();
+        }
+
         private void EnableButtons()
         {
             tbName.Enabled = mf.Tls.Manager.EditMode;
@@ -135,6 +182,9 @@ namespace RateController.Menu
             tbP2.Enabled = mf.Tls.Manager.EditMode;
             tbP3.Enabled = mf.Tls.Manager.EditMode;
             tbP4.Enabled = mf.Tls.Manager.EditMode;
+            btnDelete.Enabled = !mf.Tls.Manager.EditMode;
+            btnCreateZone.Enabled = mf.Tls.Manager.EditMode;
+            colorComboBox.Enabled = mf.Tls.Manager.EditMode;
         }
 
         private void frmMenuRateMap_FormClosing(object sender, FormClosingEventArgs e)
@@ -142,10 +192,55 @@ namespace RateController.Menu
             pictureBox1.Controls.Remove(mf.Tls.Manager.gmapObject);
         }
 
+        private Color GetSelectedColor()
+        {
+            Color Result = Color.Blue;
+            if (colorComboBox.SelectedItem != null)
+            {
+                Result = (Color)colorComboBox.SelectedItem;
+            }
+            return Result;
+        }
+
         private void groupBox1_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
+        private void HighlightMapSave()
+        {
+            if (!Initializing)
+            {
+                btnSave.FlatAppearance.BorderSize = 2;
+                btnSave.FlatAppearance.BorderColor = Color.Blue;
+            }
+        }
+
+        private void HighlightZoneSave()
+        {
+            btnCreateZone.FlatAppearance.BorderSize = 2;
+            btnCreateZone.FlatAppearance.BorderColor = Color.Blue;
+        }
+
+        private void InitializeColorComboBox()
+        {
+            // Clear any existing items
+            colorComboBox.Items.Clear();
+
+            // Iterate through the KnownColor enum to get all known colors
+            foreach (KnownColor knownColor in Enum.GetValues(typeof(KnownColor)))
+            {
+                Color color = Color.FromKnownColor(knownColor);
+                colorComboBox.Items.Add(color);
+            }
+
+            // Optionally set a default selected item
+            colorComboBox.SelectedIndex = 0;
+
+            // Attach the DrawItem event
+            colorComboBox.DrawMode = DrawMode.OwnerDrawFixed;
+            colorComboBox.DrawItem += new DrawItemEventHandler(colorComboBox_DrawItem);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -191,21 +286,17 @@ namespace RateController.Menu
         {
         }
 
-        private void tbMapName_MouseClick(object sender, MouseEventArgs e)
+        private void tbMapName_TextChanged(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(tbMapName.Text))
-            {
-                tbMapName.SelectionStart = 0;
-                tbMapName.SelectionLength = tbMapName.Text.Length;
-            }
+            HighlightMapSave();
         }
 
-        private void tbName_MouseClick(object sender, MouseEventArgs e)
+        private void tbName_TextChanged(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(tbName.Text))
+            if (ckEdit.Checked)
             {
-                tbName.SelectionStart = 0;
-                tbName.SelectionLength = tbName.Text.Length;
+                HighlightZoneSave();
+                HighlightMapSave();
             }
         }
 
@@ -320,6 +411,7 @@ namespace RateController.Menu
             tbP2.Text = Rates[1].ToString();
             tbP3.Text = Rates[2].ToString();
             tbP4.Text = Rates[3].ToString();
+            SetSelectedColor(mf.Tls.Manager.ZoneColor);
 
             GMapControl gmap = mf.Tls.Manager.gmapObject;
             VSzoom.Value = (int)((gmap.Zoom - gmap.MinZoom) * 100) / (gmap.MaxZoom - gmap.MinZoom);
@@ -331,33 +423,6 @@ namespace RateController.Menu
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
-        }
-
-        private void tbMapName_TextChanged(object sender, EventArgs e)
-        {
-            HighlightMapSave();
-        }
-        private void HighlightMapSave()
-        {
-            if (!Initializing)
-            {
-                btnSave.FlatAppearance.BorderSize = 2;
-                btnSave.FlatAppearance.BorderColor = Color.Blue;
-            }
-        }
-
-        private void tbName_TextChanged(object sender, EventArgs e)
-        {
-            if (ckEdit.Checked)
-            {
-                HighlightZoneSave();
-                HighlightMapSave();
-            }
-        }
-        private void HighlightZoneSave()
-        {
-            btnCreateZone.FlatAppearance.BorderSize = 2;
-            btnCreateZone.FlatAppearance.BorderColor= Color.Blue;
         }
     }
 }

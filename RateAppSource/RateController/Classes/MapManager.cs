@@ -22,18 +22,20 @@ namespace RateController.Classes
         private string cRootPath;
         private PointLatLng cTractorPosition;
         private List<PointLatLng> currentZoneVertices;
+        private Color cZoneColor;
         private string cZoneName = "Unnamed Zone";
         private int[] cZoneRates = new int[4];
         private GMapControl gmap;
         private GMapOverlay gpsMarkerOverlay;
         private bool isDragging = false;
+        private string LastFile;
         private System.Drawing.Point lastMousePosition;
         private List<MapZone> mapZones;
         private FormStart mf;
         private GMapOverlay tempMarkerOverlay;
-        private GMapOverlay zoneOverlay;
         private GMarkerGoogle tractorMarker;
-        private string LastFile;
+        private GMapOverlay zoneOverlay;
+
         public MapManager(FormStart main)
         {
             mf = main;
@@ -50,6 +52,9 @@ namespace RateController.Classes
         public event EventHandler MapChanged;
 
         public bool EditMode { get; set; }
+
+        public PointLatLng GetTractorPosition
+        { get { return cTractorPosition; } }
 
         public GMapControl gmapObject
         { get { return gmap; } }
@@ -74,6 +79,9 @@ namespace RateController.Classes
         public string RootPath
         { get { return cRootPath; } }
 
+        public Color ZoneColor
+        { get { return cZoneColor; } }
+
         public string ZoneName
         {
             get { return cZoneName; }
@@ -89,42 +97,6 @@ namespace RateController.Classes
                     cZoneName = "Unnamed Zone";
                 }
             }
-        }
-
-        public bool CreateZone(string name, int Rt0, int Rt1, int Rt2, int Rt3)
-        {
-            bool Result = false;
-            if (currentZoneVertices.Count > 2)
-            {
-                var geometryFactory = new GeometryFactory();
-                var coordinates = currentZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
-
-                if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
-                {
-                    Array.Resize(ref coordinates, coordinates.Length + 1);
-                    coordinates[coordinates.Length - 1] = coordinates[0];
-                }
-                var polygon = geometryFactory.CreatePolygon(coordinates);
-
-                if (name == "") name = "Zone " + mapZones.Count.ToString();
-                var zoneColor = zoneColors[mapZones.Count % zoneColors.Length];
-
-                var mapZone = new MapZone(name, polygon, new Dictionary<string, int>
-                    {
-                        { "ProductA", Rt0 },
-                        { "ProductB", Rt1 },
-                        { "ProductC", Rt2 },
-                        { "ProductD", Rt3 }
-                    }, zoneColor);
-
-                mapZones.Add(mapZone);
-                zoneOverlay.Polygons.Add(mapZone.ToGMapPolygon());
-
-                currentZoneVertices.Clear();
-                tempMarkerOverlay.Markers.Clear();
-                Result = true;
-            }
-            return Result;
         }
 
         public bool DeleteZone(string name)
@@ -175,6 +147,7 @@ namespace RateController.Classes
             LastFile = mf.Tls.LoadProperty("LastMapFile");
             return LoadMap(LastFile);
         }
+
         public bool LoadMap(string path)
         {
             bool Result = false;
@@ -222,17 +195,18 @@ namespace RateController.Classes
             return Result;
         }
 
-        public bool SaveMap()
+        public bool SaveMap(string name, bool UpdateCache = true)
         {
             bool Result = false;
-            string path = GetFolder(cRootPath, MapName);
-            if (FileNameValidator.IsValidFolderName(MapName) && FileNameValidator.IsValidFileName(MapName))
+            string path = GetFolder(cRootPath, name);
+            if (FileNameValidator.IsValidFolderName(name) && FileNameValidator.IsValidFileName(name))
             {
                 var shapefileHelper = new ShapefileHelper();
-                path += "\\" + MapName;
+                path += "\\" + name;
                 shapefileHelper.SaveMapZones(path, mapZones);
-                AddToCache();
+                if (UpdateCache) AddToCache();
                 Result = true;
+                MapName = name;
             }
             return Result;
         }
@@ -256,7 +230,72 @@ namespace RateController.Classes
             UpdateValuesFromZone();
             MapChanged?.Invoke(this, EventArgs.Empty);
         }
-        public PointLatLng GetTractorPosition { get { return cTractorPosition; } }
+
+        public bool UpdateZone(string name, int Rt0, int Rt1, int Rt2, int Rt3, Color zoneColor)
+        {
+            bool Result = false;
+            if (currentZoneVertices.Count > 2)
+            {
+                // creating a new zone
+                var geometryFactory = new GeometryFactory();
+                var coordinates = currentZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
+
+                if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
+                {
+                    Array.Resize(ref coordinates, coordinates.Length + 1);
+                    coordinates[coordinates.Length - 1] = coordinates[0];
+                }
+                var polygon = geometryFactory.CreatePolygon(coordinates);
+
+                if (name == "") name = "Zone " + mapZones.Count.ToString();
+
+                var mapZone = new MapZone(name, polygon, new Dictionary<string, int>
+                    {
+                        { "ProductA", Rt0 },
+                        { "ProductB", Rt1 },
+                        { "ProductC", Rt2 },
+                        { "ProductD", Rt3 }
+                    }, zoneColor);
+
+                mapZones.Add(mapZone);
+                zoneOverlay.Polygons.Add(mapZone.ToGMapPolygon());
+
+                currentZoneVertices.Clear();
+                tempMarkerOverlay.Markers.Clear();
+                Result = true;
+            }
+            else
+            {
+                // editing the current zone
+                bool Found = false;
+                for (int i = mapZones.Count - 1; i >= 0; i--)
+                {
+                    var zone = mapZones[i];
+                    if (zone.Contains(cTractorPosition))
+                    {
+                        zone.Name = name;
+                        zone.Rates = new Dictionary<string, int>
+                        {
+                            { "ProductA", Rt0 },
+                            { "ProductB", Rt1 },
+                            { "ProductC", Rt2 },
+                            { "ProductD", Rt3 }
+                        };
+                        zone.ZoneColor = zoneColor;
+                        Found = true;
+                        SaveMap(MapName, false);
+                        LoadLastMap();
+                        //gmap.Overlays.Remove(zoneOverlay);
+                        //gmap.Overlays.Add(zoneOverlay);
+                        //gmap.Refresh();
+                        break;
+                    }
+                }
+                Result = Found;
+            }
+            return Result;
+        }
+
         private void AddToCache()
         {
             var area = gmap.ViewArea;
@@ -405,7 +444,7 @@ namespace RateController.Classes
             gpsMarkerOverlay = new GMapOverlay("gpsMarkers");
             tempMarkerOverlay = new GMapOverlay("tempMarkers");
 
-            tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0),GMarkerGoogleType.green); // Initialize with a default position
+            tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0), GMarkerGoogleType.green); // Initialize with a default position
             gpsMarkerOverlay.Markers.Add(tractorMarker); // Add the tractor marker to the overlay
 
             gmap.Overlays.Add(zoneOverlay);
@@ -432,6 +471,7 @@ namespace RateController.Classes
                     cZoneRates[1] = zone.Rates["ProductB"];
                     cZoneRates[2] = zone.Rates["ProductC"];
                     cZoneRates[3] = zone.Rates["ProductD"];
+                    cZoneColor = zone.ZoneColor;
                     Found = true;
                     break;
                 }
@@ -443,6 +483,7 @@ namespace RateController.Classes
                 cZoneRates[1] = 0;
                 cZoneRates[2] = 0;
                 cZoneRates[3] = 0;
+                cZoneColor = Color.Blue;
             }
         }
     }

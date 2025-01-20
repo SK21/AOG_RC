@@ -53,6 +53,8 @@
             this.ckEnable = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.colorComboBox = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -65,7 +67,6 @@
             this.tbMapName.Size = new System.Drawing.Size(131, 29);
             this.tbMapName.TabIndex = 17;
             this.tbMapName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbMapName.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tbMapName_MouseClick);
             this.tbMapName.TextChanged += new System.EventHandler(this.tbMapName_TextChanged);
             // 
             // btnLoad
@@ -104,6 +105,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.colorComboBox);
             this.groupBox1.Controls.Add(this.btnDelete);
             this.groupBox1.Controls.Add(this.btnCreateZone);
             this.groupBox1.Controls.Add(this.lbP4);
@@ -140,7 +143,7 @@
             // 
             this.btnCreateZone.FlatAppearance.BorderSize = 0;
             this.btnCreateZone.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCreateZone.Image = global::RateController.Properties.Resources.Save;
+            this.btnCreateZone.Image = global::RateController.Properties.Resources.OK;
             this.btnCreateZone.Location = new System.Drawing.Point(184, 242);
             this.btnCreateZone.Name = "btnCreateZone";
             this.btnCreateZone.Size = new System.Drawing.Size(82, 64);
@@ -150,7 +153,7 @@
             // 
             // lbP4
             // 
-            this.lbP4.Location = new System.Drawing.Point(6, 199);
+            this.lbP4.Location = new System.Drawing.Point(6, 171);
             this.lbP4.Name = "lbP4";
             this.lbP4.Size = new System.Drawing.Size(116, 24);
             this.lbP4.TabIndex = 11;
@@ -158,7 +161,7 @@
             // 
             // tbP4
             // 
-            this.tbP4.Location = new System.Drawing.Point(199, 197);
+            this.tbP4.Location = new System.Drawing.Point(199, 169);
             this.tbP4.Name = "tbP4";
             this.tbP4.Size = new System.Drawing.Size(67, 29);
             this.tbP4.TabIndex = 10;
@@ -169,7 +172,7 @@
             // 
             // lbP3
             // 
-            this.lbP3.Location = new System.Drawing.Point(6, 157);
+            this.lbP3.Location = new System.Drawing.Point(6, 136);
             this.lbP3.Name = "lbP3";
             this.lbP3.Size = new System.Drawing.Size(116, 24);
             this.lbP3.TabIndex = 9;
@@ -192,7 +195,7 @@
             // 
             // tbP3
             // 
-            this.tbP3.Location = new System.Drawing.Point(199, 155);
+            this.tbP3.Location = new System.Drawing.Point(199, 134);
             this.tbP3.Name = "tbP3";
             this.tbP3.Size = new System.Drawing.Size(67, 29);
             this.tbP3.TabIndex = 8;
@@ -203,7 +206,7 @@
             // 
             // lbP2
             // 
-            this.lbP2.Location = new System.Drawing.Point(6, 115);
+            this.lbP2.Location = new System.Drawing.Point(6, 101);
             this.lbP2.Name = "lbP2";
             this.lbP2.Size = new System.Drawing.Size(116, 24);
             this.lbP2.TabIndex = 7;
@@ -211,7 +214,7 @@
             // 
             // tbP2
             // 
-            this.tbP2.Location = new System.Drawing.Point(199, 113);
+            this.tbP2.Location = new System.Drawing.Point(199, 99);
             this.tbP2.Name = "tbP2";
             this.tbP2.Size = new System.Drawing.Size(67, 29);
             this.tbP2.TabIndex = 6;
@@ -222,7 +225,7 @@
             // 
             // lbP1
             // 
-            this.lbP1.Location = new System.Drawing.Point(6, 73);
+            this.lbP1.Location = new System.Drawing.Point(6, 66);
             this.lbP1.Name = "lbP1";
             this.lbP1.Size = new System.Drawing.Size(116, 24);
             this.lbP1.TabIndex = 5;
@@ -230,7 +233,7 @@
             // 
             // tbP1
             // 
-            this.tbP1.Location = new System.Drawing.Point(199, 71);
+            this.tbP1.Location = new System.Drawing.Point(199, 64);
             this.tbP1.Name = "tbP1";
             this.tbP1.Size = new System.Drawing.Size(67, 29);
             this.tbP1.TabIndex = 4;
@@ -246,7 +249,6 @@
             this.tbName.Size = new System.Drawing.Size(256, 29);
             this.tbName.TabIndex = 2;
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbName.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tbName_MouseClick);
             this.tbName.TextChanged += new System.EventHandler(this.tbName_TextChanged);
             // 
             // btnSave
@@ -343,6 +345,28 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // colorComboBox
+            // 
+            this.colorComboBox.FormattingEnabled = true;
+            this.colorComboBox.Items.AddRange(new object[] {
+            "Blue",
+            "Green",
+            "Red ",
+            "Purple",
+            "Orange"});
+            this.colorComboBox.Location = new System.Drawing.Point(80, 204);
+            this.colorComboBox.Name = "colorComboBox";
+            this.colorComboBox.Size = new System.Drawing.Size(186, 32);
+            this.colorComboBox.TabIndex = 340;
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(6, 207);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(68, 24);
+            this.label1.TabIndex = 341;
+            this.label1.Text = "Color";
+            // 
             // frmMenuRateMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -401,5 +425,7 @@
         private System.Windows.Forms.CheckBox ckEnable;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox colorComboBox;
     }
 }

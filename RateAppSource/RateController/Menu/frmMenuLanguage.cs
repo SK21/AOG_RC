@@ -15,10 +15,11 @@ namespace RateController.Menu
     {
         private bool cEdited;
         private bool Initializing = false;
+        private string[] LanguageIDs;
+        private RadioButton[] LanguageRBs;
         private frmMenu MainMenu;
         private FormStart mf;
-        private RadioButton[] LanguageRBs;
-        private string[] LanguageIDs;
+
         public frmMenuLanguage(FormStart main, frmMenu menu)
         {
             InitializeComponent();
@@ -26,17 +27,12 @@ namespace RateController.Menu
             mf = main;
             this.Tag = false;
 
-            LanguageRBs = new RadioButton[] { rbEnglish, rbDeustch, rbHungarian, rbNederlands, rbPolish, rbRussian, rbFrench };
-            LanguageIDs = new string[] { "en", "de", "hu", "nl", "pl", "ru", "fr" };
+            LanguageRBs = new RadioButton[] { rbEnglish, rbDeustch, rbHungarian, rbNederlands, rbPolish, rbRussian, rbFrench, rbLithuanian };
+            LanguageIDs = new string[] { "en", "de", "hu", "nl", "pl", "ru", "fr", "lt" };
             for (int i = 0; i < LanguageRBs.Length; i++)
             {
                 LanguageRBs[i].CheckedChanged += Language_CheckedChanged;
             }
-        }
-
-        private void Language_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -84,7 +80,6 @@ namespace RateController.Menu
             {
                 mf.Tls.WriteErrorLog("frmMenuLanguage/btnOk_Click: " + ex.Message);
             }
-
         }
 
         private void frmMenuLanguage_FormClosed(object sender, FormClosedEventArgs e)
@@ -109,13 +104,33 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             PositionForm();
             UpdateForm();
-
         }
+
+        private void Language_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        {
+            PositionForm();
+        }
+
         private void PositionForm()
         {
             this.Top = MainMenu.Top + 30;
             this.Left = MainMenu.Left + 246;
         }
+
+        private void rbDeustch_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void rbFrench_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
         private void SetButtons(bool Edited)
         {
             if (!Initializing)
@@ -154,16 +169,6 @@ namespace RateController.Menu
             }
 
             Initializing = false;
-        }
-
-        private void MainMenu_MenuMoved(object sender, EventArgs e)
-        {
-            PositionForm();
-        }
-
-        private void rbDeustch_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
         }
     }
 }

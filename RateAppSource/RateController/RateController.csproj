@@ -219,6 +219,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.resx</DependentUpon>
     </Compile>
+    <Compile Include="Language\Lang.lt.Designer.cs" />
     <Compile Include="Menu\frmMenu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -470,6 +471,7 @@
     <EmbeddedResource Include="Forms\frmLargeScreen.resx">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Language\Lang.lt.resx" />
     <EmbeddedResource Include="Menu\frmMenu.resx">
       <DependentUpon>frmMenu.cs</DependentUpon>
     </EmbeddedResource>
