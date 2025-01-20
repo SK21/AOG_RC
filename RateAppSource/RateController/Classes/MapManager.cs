@@ -45,13 +45,13 @@ namespace RateController.Classes
             gmap.MouseDown += Gmap_MouseDown;
             gmap.MouseMove += Gmap_MouseMove;
             gmap.MouseUp += Gmap_MouseUp;
+            gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
         }
 
         public event EventHandler MapChanged;
 
-
         public bool EditMode { get; set; }
-        public string RootPath { get { return cRootPath; } }
+
         public GMapControl gmapObject
         { get { return gmap; } }
 
@@ -71,6 +71,9 @@ namespace RateController.Classes
                 }
             }
         }
+
+        public string RootPath
+        { get { return cRootPath; } }
 
         public string ZoneName
         {
@@ -323,6 +326,7 @@ namespace RateController.Classes
                 else
                 {
                     PointLatLng Location = gmap.FromLocalToLatLng(e.X, e.Y);
+                    SetTractorPosition(Location);
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -359,6 +363,11 @@ namespace RateController.Classes
             {
                 isDragging = false;
             }
+        }
+
+        private void Gmap_OnMapZoomChanged()
+        {
+            MapChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void InitializeMap()
