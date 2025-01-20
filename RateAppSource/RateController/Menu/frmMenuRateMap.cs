@@ -7,7 +7,6 @@ namespace RateController.Menu
 {
     public partial class frmMenuRateMap : Form
     {
-        private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
@@ -177,10 +176,9 @@ namespace RateController.Menu
         {
             Initializing = true;
 
-            ckEnable.Checked = mf.Tls.UseVariableRate;
+            int[] Rates = mf.Tls.Manager.GetRates();
             tbMapName.Text = mf.Tls.Manager.MapName;
             tbName.Text = mf.Tls.Manager.ZoneName;
-            int[] Rates = mf.Tls.Manager.GetRates();
             tbP1.Text = Rates[0].ToString();
             tbP2.Text = Rates[1].ToString();
             tbP3.Text = Rates[2].ToString();
@@ -189,6 +187,7 @@ namespace RateController.Menu
             GMapControl gmap = mf.Tls.Manager.gmapObject;
             VSzoom.Value = (int)((gmap.Zoom - gmap.MinZoom) * 100) / (gmap.MaxZoom - gmap.MinZoom);
 
+            ckEnable.Checked = mf.Tls.UseVariableRate;
             Initializing = false;
         }
 

@@ -21,19 +21,18 @@ namespace RateController.Classes
         private string cMapName = "Unnamed Map";
         private string cRootPath;
         private PointLatLng cTractorPosition;
-        private PointLatLng currentLocation;
         private List<PointLatLng> currentZoneVertices;
         private string cZoneName = "Unnamed Zone";
         private int[] cZoneRates = new int[4];
         private GMapControl gmap;
         private GMapOverlay gpsMarkerOverlay;
-        private bool Initializing = false;
         private bool isDragging = false;
         private System.Drawing.Point lastMousePosition;
         private List<MapZone> mapZones;
         private FormStart mf;
         private GMapOverlay tempMarkerOverlay;
         private GMapOverlay zoneOverlay;
+        private GMarkerGoogle tractorMarker;
 
         public MapManager(FormStart main)
         {
@@ -246,8 +245,9 @@ namespace RateController.Classes
         public void SetTractorPosition(PointLatLng NewLocation)
         {
             cTractorPosition = NewLocation;
+            tractorMarker.Position = NewLocation; // Update the marker position
+            gmap.Refresh(); // Refresh the map to show the updated marker
         }
-
         private void AddToCache()
         {
             var area = gmap.ViewArea;
@@ -395,6 +395,9 @@ namespace RateController.Classes
             zoneOverlay = new GMapOverlay("mapzones");
             gpsMarkerOverlay = new GMapOverlay("gpsMarkers");
             tempMarkerOverlay = new GMapOverlay("tempMarkers");
+
+            tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0),GMarkerGoogleType.green); // Initialize with a default position
+            gpsMarkerOverlay.Markers.Add(tractorMarker); // Add the tractor marker to the overlay
 
             gmap.Overlays.Add(zoneOverlay);
             gmap.Overlays.Add(gpsMarkerOverlay);

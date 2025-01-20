@@ -658,6 +658,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Marker.png" />
     <None Include="Resources\Default.rcs" />
     <None Include="Resources\Example.rcs" />
     <None Include="Resources\Machine.png" />
