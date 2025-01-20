@@ -430,7 +430,6 @@
       <DependentUpon>frmMenuRateMap.cs</DependentUpon>
     </Compile>
     <Compile Include="PGNs\PGN100.cs" />
-    <Compile Include="PGNs\PGN228.cs" />
     <Compile Include="PGNs\PGN229.cs" />
     <Compile Include="PGNs\PGN234.cs" />
     <Compile Include="PGNs\PGN235.cs" />

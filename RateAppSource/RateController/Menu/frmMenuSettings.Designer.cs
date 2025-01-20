@@ -53,6 +53,7 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.lbProduct = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.ckVR = new System.Windows.Forms.CheckBox();
             this.grpMinUPM.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.SuspendLayout();
@@ -64,7 +65,7 @@
             this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckScale.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckScale.Location = new System.Drawing.Point(278, 409);
+            this.ckScale.Location = new System.Drawing.Point(305, 409);
             this.ckScale.Name = "ckScale";
             this.ckScale.Size = new System.Drawing.Size(162, 34);
             this.ckScale.TabIndex = 149;
@@ -80,7 +81,7 @@
             this.ckBumpButtons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckBumpButtons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckBumpButtons.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckBumpButtons.Location = new System.Drawing.Point(86, 409);
+            this.ckBumpButtons.Location = new System.Drawing.Point(75, 409);
             this.ckBumpButtons.Name = "ckBumpButtons";
             this.ckBumpButtons.Size = new System.Drawing.Size(162, 34);
             this.ckBumpButtons.TabIndex = 148;
@@ -96,7 +97,7 @@
             this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckDefault.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckDefault.Location = new System.Drawing.Point(86, 344);
+            this.ckDefault.Location = new System.Drawing.Point(75, 344);
             this.ckDefault.Name = "ckDefault";
             this.ckDefault.Size = new System.Drawing.Size(162, 34);
             this.ckDefault.TabIndex = 0;
@@ -109,7 +110,7 @@
             // 
             this.lbPercent.AutoSize = true;
             this.lbPercent.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPercent.Location = new System.Drawing.Point(317, 480);
+            this.lbPercent.Location = new System.Drawing.Point(275, 479);
             this.lbPercent.Name = "lbPercent";
             this.lbPercent.Size = new System.Drawing.Size(29, 23);
             this.lbPercent.TabIndex = 146;
@@ -119,10 +120,10 @@
             // 
             this.tbOffRate.Enabled = false;
             this.tbOffRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(278, 477);
+            this.tbOffRate.Location = new System.Drawing.Point(224, 476);
             this.tbOffRate.MaxLength = 8;
             this.tbOffRate.Name = "tbOffRate";
-            this.tbOffRate.Size = new System.Drawing.Size(33, 29);
+            this.tbOffRate.Size = new System.Drawing.Size(45, 29);
             this.tbOffRate.TabIndex = 145;
             this.tbOffRate.Text = "20";
             this.tbOffRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -137,9 +138,9 @@
             this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckOffRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckOffRate.Location = new System.Drawing.Point(86, 474);
+            this.ckOffRate.Location = new System.Drawing.Point(75, 474);
             this.ckOffRate.Name = "ckOffRate";
-            this.ckOffRate.Size = new System.Drawing.Size(162, 34);
+            this.ckOffRate.Size = new System.Drawing.Size(143, 34);
             this.ckOffRate.TabIndex = 144;
             this.ckOffRate.Text = "Off-rate Alarm   ";
             this.ckOffRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -153,7 +154,7 @@
             this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckOnScreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckOnScreen.Location = new System.Drawing.Point(278, 344);
+            this.ckOnScreen.Location = new System.Drawing.Point(305, 344);
             this.ckOnScreen.Name = "ckOnScreen";
             this.ckOnScreen.Size = new System.Drawing.Size(162, 34);
             this.ckOnScreen.TabIndex = 143;
@@ -389,11 +390,28 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // ckVR
+            // 
+            this.ckVR.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckVR.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckVR.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckVR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckVR.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckVR.Location = new System.Drawing.Point(324, 474);
+            this.ckVR.Name = "ckVR";
+            this.ckVR.Size = new System.Drawing.Size(143, 34);
+            this.ckVR.TabIndex = 333;
+            this.ckVR.Text = "Variable Rate";
+            this.ckVR.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckVR.UseVisualStyleBackColor = true;
+            this.ckVR.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
+            // 
             // frmMenuSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.ckVR);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
@@ -451,5 +469,6 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Label lbProduct;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.CheckBox ckVR;
     }
 }

@@ -1,5 +1,4 @@
-﻿using GMap.NET;
-using GMap.NET.WindowsForms;
+﻿using GMap.NET.WindowsForms;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -115,6 +114,11 @@ namespace RateController.Menu
             }
         }
 
+        private void frmMenuRateMap_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            pictureBox1.Controls.Remove(mf.Tls.Manager.gmapObject);
+        }
+
         private void groupBox1_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
@@ -195,11 +199,6 @@ namespace RateController.Menu
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
-        }
-
-        private void frmMenuRateMap_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            pictureBox1.Controls.Remove(mf.Tls.Manager.gmapObject);
         }
     }
 }

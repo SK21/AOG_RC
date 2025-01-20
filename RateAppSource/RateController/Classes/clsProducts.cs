@@ -110,9 +110,6 @@ namespace RateController
                     Prd.TankSize = 1000;
                     Prd.TankStart = 1000;
                     Prd.UseVR = false;
-                    Prd.VRID = 0;
-                    Prd.VRmax = 100;
-                    Prd.VRmin = 0;
                     Prd.ChangeID(i / 2, (byte)(i % 2), true);
                     Prd.OnScreen = true;
                     Prd.AppMode = ApplicationMode.ControlledUPM;

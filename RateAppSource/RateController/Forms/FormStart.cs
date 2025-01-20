@@ -71,7 +71,6 @@ namespace RateController
 
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
-        public PGN228 VRdata;
         public clsVirtualSwitchBox vSwitchBox;
         public string WiFiIP;
         public clsZones Zones;
@@ -127,7 +126,6 @@ namespace RateController
             SectionsPGN = new PGN235(this);
             MachineConfig = new PGN238(this);
             MachineData = new PGN239(this);
-            VRdata = new PGN228(this);
 
             SwitchBox = new PGN32618(this);
             ModulesStatus = new PGN32401(this);
@@ -637,9 +635,6 @@ namespace RateController
                         P3.TankStart = P0.TankStart;
 
                         P3.UseVR = P0.UseVR;
-                        P3.VRID = P0.VRID;
-                        P3.VRmax = P0.VRmax;
-                        P3.VRmin = P0.VRmin;
 
                         P3.HighAdjust = P0.HighAdjust;
                         P3.LowAdjust = P0.LowAdjust;

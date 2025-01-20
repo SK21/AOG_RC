@@ -64,9 +64,6 @@ namespace RateController
         private bool cUseMinUPMbySpeed = false;
         private bool cUseOffRateAlarm;
         private bool cUseVR;
-        private byte cVRID = 0;
-        private double cVRmax;
-        private double cVRmin;
         private DateTime LastHours1;
         private DateTime LastHours2;
         private DateTime LastUpdateTime;
@@ -503,40 +500,6 @@ namespace RateController
             set { cUseVR = value; }
         }
 
-        public byte VRID
-        {
-            get { return cVRID; }
-            set
-            {
-                if (value < (mf.VRdata.ChannelCount))
-                {
-                    cVRID = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid Variable Rate option.");
-                }
-            }
-        }
-
-        public double VRmax
-        {
-            get { return cVRmax; }
-            set
-            {
-                if (value > 0 && value < 100000) cVRmax = value;
-            }
-        }
-
-        public double VRmin
-        {
-            get { return cVRmin; }
-            set
-            {
-                if (value >= 0 && value < 100000) cVRmin = value;
-            }
-        }
-
         private string IDname
         { get { return cProductID.ToString(); } }
 
@@ -655,11 +618,7 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("MinUPMbySpeed" + IDname), out cMinUPMbySpeed);
             if (bool.TryParse(mf.Tls.LoadProperty("UseMinUPMbySpeed" + IDname), out bool ms)) cUseMinUPMbySpeed = ms;
 
-            byte.TryParse(mf.Tls.LoadProperty("VRID" + IDname), out cVRID);
-
             if (bool.TryParse(mf.Tls.LoadProperty("UseVR" + IDname), out bool tmp3)) cUseVR = tmp3;
-            if (double.TryParse(mf.Tls.LoadProperty("VRmax" + IDname), out double tmp4)) cVRmax = tmp4;
-            if (double.TryParse(mf.Tls.LoadProperty("VRmin" + IDname), out double tmp5)) cVRmin = tmp5;
 
             tmp = 0;
             int.TryParse(mf.Tls.LoadProperty("SerialPort" + IDname), out tmp);
@@ -906,10 +865,7 @@ namespace RateController
             mf.Tls.SaveProperty("MinUPMbySpeed" + IDname, cMinUPMbySpeed.ToString());
             mf.Tls.SaveProperty("UseMinUPMbySpeed" + IDname, cUseMinUPMbySpeed.ToString());
 
-            mf.Tls.SaveProperty("VRID" + IDname, cVRID.ToString());
             mf.Tls.SaveProperty("UseVR" + IDname, cUseVR.ToString());
-            mf.Tls.SaveProperty("VRmax" + IDname, cVRmax.ToString());
-            mf.Tls.SaveProperty("VRmin" + IDname, cVRmin.ToString());
 
             mf.Tls.SaveProperty("SerialPort" + IDname, cSerialPort.ToString());
             mf.Tls.SaveProperty("ManualPWM" + IDname, cManualPWM.ToString());
@@ -1007,7 +963,6 @@ namespace RateController
         public double TargetRate()
         {
             double Result = 0;
-            cUseVR = true;
             if (cUseVR && !CalUseBaseRate && mf.Tls.VariableRateEnabled)
             {
                 int[] Rates = mf.Tls.Manager.GetRates();

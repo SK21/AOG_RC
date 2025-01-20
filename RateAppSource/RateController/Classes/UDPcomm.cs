@@ -72,11 +72,6 @@ namespace RateController
         {
             return cLog;
         }
-        public void UpdateLog()
-        {
-            mf.Tls.WriteLog("Ethernet Log.txt", cLog);
-            cLog = "";
-        }
 
         public void SendUDPMessage(byte[] byteData)
         {
@@ -132,6 +127,12 @@ namespace RateController
             }
         }
 
+        public void UpdateLog()
+        {
+            mf.Tls.WriteLog("Ethernet Log.txt", cLog);
+            cLog = "";
+        }
+
         private void AddToLog(string NewData)
         {
             cLog += DateTime.Now.Second.ToString() + "  " + NewData + Environment.NewLine;
@@ -173,45 +174,37 @@ namespace RateController
                             break;
 
                         case 33152: // AOG, 0x81, 0x80
-                            if ((Data[3] << 8 | Data[2]) == 25727)
+                            switch (Data[3])
                             {
-                                // AOG roll corrected lat,lon
-                                mf.GPS.ParseByteData(Data);
-                            }
-                            else
-                            {
-                                switch (Data[3])
-                                {
-                                    case 228:
-                                        // vr data
-                                        mf.VRdata.ParseByteData(Data);
-                                        break;
+                                case 100:
+                                    // AOG roll corrected lat,lon
+                                    mf.GPS.ParseByteData(Data);
+                                    break;
 
-                                    case 229:
-                                        // aog sections
-                                        mf.AOGsections.ParseByteData(Data);
-                                        break;
+                                case 229:
+                                    // aog sections
+                                    mf.AOGsections.ParseByteData(Data);
+                                    break;
 
-                                    case 235:
-                                        // section widths
-                                        mf.SectionsPGN.ParseByteData(Data);
-                                        break;
+                                case 235:
+                                    // section widths
+                                    mf.SectionsPGN.ParseByteData(Data);
+                                    break;
 
-                                    case 238:
-                                        // machine config
-                                        mf.MachineConfig.ParseByteData(Data);
-                                        break;
+                                case 238:
+                                    // machine config
+                                    mf.MachineConfig.ParseByteData(Data);
+                                    break;
 
-                                    case 239:
-                                        // machine data
-                                        mf.MachineData.ParseByteData(Data);
-                                        break;
+                                case 239:
+                                    // machine data
+                                    mf.MachineData.ParseByteData(Data);
+                                    break;
 
-                                    case 254:
-                                        // AutoSteer AGIO PGN
-                                        mf.AutoSteerPGN.ParseByteData(Data);
-                                        break;
-                                }
+                                case 254:
+                                    // AutoSteer AGIO PGN
+                                    mf.AutoSteerPGN.ParseByteData(Data);
+                                    break;
                             }
                             break;
                     }
