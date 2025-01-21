@@ -634,8 +634,6 @@ namespace RateController
                         P3.TankSize = P0.TankSize;
                         P3.TankStart = P0.TankStart;
 
-                        P3.UseVR = P0.UseVR;
-
                         P3.HighAdjust = P0.HighAdjust;
                         P3.LowAdjust = P0.LowAdjust;
                         P3.Threshold = P0.Threshold;
@@ -725,7 +723,7 @@ namespace RateController
                     // product pages
                     clsProduct Prd = Products.Item(CurrentPage - 1);
 
-                    if (Prd.UseVR)
+                    if (Tls.VariableRateEnabled)
                     {
                         lbTarget.Text = "VR Target";
                     }
@@ -1235,7 +1233,7 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                if (!Products.Item(CurrentPage - 1).UseVR)
+                if (!Tls.VariableRateEnabled)
                 {
                     if (Products.Item(CurrentPage - 1).UseAltRate)
                     {

@@ -53,7 +53,6 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.lbProduct = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.ckVR = new System.Windows.Forms.CheckBox();
             this.grpMinUPM.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.SuspendLayout();
@@ -390,28 +389,11 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // ckVR
-            // 
-            this.ckVR.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckVR.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckVR.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckVR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckVR.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckVR.Location = new System.Drawing.Point(324, 474);
-            this.ckVR.Name = "ckVR";
-            this.ckVR.Size = new System.Drawing.Size(143, 34);
-            this.ckVR.TabIndex = 333;
-            this.ckVR.Text = "Variable Rate";
-            this.ckVR.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckVR.UseVisualStyleBackColor = true;
-            this.ckVR.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
-            // 
             // frmMenuSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
-            this.Controls.Add(this.ckVR);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
@@ -469,6 +451,5 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Label lbProduct;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.CheckBox ckVR;
     }
 }

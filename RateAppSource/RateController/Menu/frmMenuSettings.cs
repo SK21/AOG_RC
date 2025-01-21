@@ -57,7 +57,6 @@ namespace RateController.Menu
                     mf.SetScale(MainMenu.CurrentProduct.ID, ckScale.Checked);
                     MainMenu.CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
                     if (byte.TryParse(tbOffRate.Text, out byte off)) MainMenu.CurrentProduct.OffRateSetting = off;
-                    MainMenu.CurrentProduct.UseVR=ckVR.Checked;
 
                     MainMenu.CurrentProduct.Save();
                     SetButtons(false);
@@ -344,7 +343,6 @@ namespace RateController.Menu
                 ckDefault.Visible = false;
                 ckBumpButtons.Visible = false;
                 ckScale.Visible = false;
-                ckVR.Visible= false;
 
                 ckOnScreen.Left = 184;
                 ckOnScreen.Top = 193;
@@ -362,7 +360,6 @@ namespace RateController.Menu
                 ckDefault.Visible = true;
                 ckBumpButtons.Visible = true;
                 ckScale.Visible = true;
-                ckVR.Visible = true;
 
                 ckOnScreen.Left = 305;
                 ckOnScreen.Top = 344;
@@ -390,7 +387,6 @@ namespace RateController.Menu
 
             ckOffRate.Checked = MainMenu.CurrentProduct.UseOffRateAlarm;
             tbSenID.Text = MainMenu.CurrentProduct.SensorID.ToString();
-            ckVR.Checked = MainMenu.CurrentProduct.UseVR;
 
             Initializing = false;
         }

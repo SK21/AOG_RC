@@ -63,7 +63,6 @@ namespace RateController
         private bool cUseAltRate = false;
         private bool cUseMinUPMbySpeed = false;
         private bool cUseOffRateAlarm;
-        private bool cUseVR;
         private DateTime LastHours1;
         private DateTime LastHours2;
         private DateTime LastUpdateTime;
@@ -494,12 +493,6 @@ namespace RateController
         public bool UseOffRateAlarm
         { get { return cUseOffRateAlarm; } set { cUseOffRateAlarm = value; } }
 
-        public bool UseVR
-        {
-            get { return cUseVR; }
-            set { cUseVR = value; }
-        }
-
         private string IDname
         { get { return cProductID.ToString(); } }
 
@@ -617,8 +610,6 @@ namespace RateController
             double.TryParse(mf.Tls.LoadProperty("MinUPM" + IDname), out cMinUPM);
             double.TryParse(mf.Tls.LoadProperty("MinUPMbySpeed" + IDname), out cMinUPMbySpeed);
             if (bool.TryParse(mf.Tls.LoadProperty("UseMinUPMbySpeed" + IDname), out bool ms)) cUseMinUPMbySpeed = ms;
-
-            if (bool.TryParse(mf.Tls.LoadProperty("UseVR" + IDname), out bool tmp3)) cUseVR = tmp3;
 
             tmp = 0;
             int.TryParse(mf.Tls.LoadProperty("SerialPort" + IDname), out tmp);
@@ -865,8 +856,6 @@ namespace RateController
             mf.Tls.SaveProperty("MinUPMbySpeed" + IDname, cMinUPMbySpeed.ToString());
             mf.Tls.SaveProperty("UseMinUPMbySpeed" + IDname, cUseMinUPMbySpeed.ToString());
 
-            mf.Tls.SaveProperty("UseVR" + IDname, cUseVR.ToString());
-
             mf.Tls.SaveProperty("SerialPort" + IDname, cSerialPort.ToString());
             mf.Tls.SaveProperty("ManualPWM" + IDname, cManualPWM.ToString());
 
@@ -963,7 +952,7 @@ namespace RateController
         public double TargetRate()
         {
             double Result = 0;
-            if (cUseVR && !CalUseBaseRate && mf.Tls.VariableRateEnabled)
+            if (!CalUseBaseRate && mf.Tls.VariableRateEnabled)
             {
                 int[] Rates = mf.Tls.Manager.GetRates();
                 Result = Rates[ID];

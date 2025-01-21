@@ -589,7 +589,7 @@ namespace RateController
 
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
 
-            if (Prd.UseVR)
+            if (mf.Tls.VariableRateEnabled)
             {
                 lbTargetType.Text = "V";
             }

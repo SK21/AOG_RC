@@ -16,8 +16,8 @@ namespace RateController.Classes
 {
     public class MapManager
     {
-        private readonly Color[] zoneColors = { Color.Blue, Color.Green, Color.Red, Color.Purple, Color.Orange };
         private string CachePath;
+        private bool cEditMode;
         private string cMapName = "Unnamed Map";
         private string cRootPath;
         private PointLatLng cTractorPosition;
@@ -51,7 +51,16 @@ namespace RateController.Classes
 
         public event EventHandler MapChanged;
 
-        public bool EditMode { get; set; }
+        public bool EditMode
+        {
+            get { return cEditMode; }
+            set
+            {
+                cEditMode = value;
+                tempMarkerOverlay.Clear();
+                currentZoneVertices.Clear();
+            }
+        }
 
         public PointLatLng GetTractorPosition
         { get { return cTractorPosition; } }
@@ -222,13 +231,16 @@ namespace RateController.Classes
             return Result;
         }
 
-        public void SetTractorPosition(PointLatLng NewLocation)
+        public void SetTractorPosition(PointLatLng NewLocation, bool FromMouseClick = false)
         {
-            cTractorPosition = NewLocation;
-            tractorMarker.Position = NewLocation; // Update the marker position
-            gmap.Refresh(); // Refresh the map to show the updated marker
-            UpdateValuesFromZone();
-            MapChanged?.Invoke(this, EventArgs.Empty);
+            if (FromMouseClick || (!cEditMode && !FromMouseClick))
+            {
+                cTractorPosition = NewLocation;
+                tractorMarker.Position = NewLocation; // Update the marker position
+                gmap.Refresh(); // Refresh the map to show the updated marker
+                UpdateValuesFromZone();
+                MapChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public bool UpdateZone(string name, int Rt0, int Rt1, int Rt2, int Rt3, Color zoneColor)
@@ -285,9 +297,6 @@ namespace RateController.Classes
                         Found = true;
                         SaveMap(MapName, false);
                         LoadLastMap();
-                        //gmap.Overlays.Remove(zoneOverlay);
-                        //gmap.Overlays.Add(zoneOverlay);
-                        //gmap.Refresh();
                         break;
                     }
                 }
@@ -374,7 +383,7 @@ namespace RateController.Classes
                 else
                 {
                     PointLatLng Location = gmap.FromLocalToLatLng(e.X, e.Y);
-                    SetTractorPosition(Location);
+                    SetTractorPosition(Location, true);
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
