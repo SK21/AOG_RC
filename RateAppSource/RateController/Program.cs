@@ -39,7 +39,12 @@ namespace RateController
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
 
-            Application.Run(new FormStart());
+            using(FormStart frmStart=new FormStart())
+            {
+                Application.Run(frmStart);
+            }
+
+            Environment.Exit(0);
         }
     }
 }
