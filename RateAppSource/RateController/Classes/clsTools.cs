@@ -16,13 +16,13 @@ namespace RateController
     public class clsTools
     {
         private string cAppName = "RateController";
-        private string cAppVersion = "4.0.0-beta.2";
+        private string cAppVersion = "4.0.0-beta.4";
         private bool cIsReadOnly = false;
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
         private bool cUseVariableRate = false;
-        private string cVersionDate = "20-Jan-2025";
+        private string cVersionDate = "21-Jan-2025";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
