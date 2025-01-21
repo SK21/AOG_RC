@@ -429,7 +429,7 @@ namespace RateController.Classes
             {
                 Dock = DockStyle.Fill,
                 MapProvider = GMapProviders.BingSatelliteMap,
-                Position = new PointLatLng(53.38955, -103.625677),
+                Position = new PointLatLng(52.157902, -106.670158),
                 MinZoom = 5,
                 MaxZoom = 19,
                 Zoom = 16,
