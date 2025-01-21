@@ -220,17 +220,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        public bool SetRate(int ID, int Rate)
-        {
-            bool Result = false;
-            if (Rate >= 0 && Rate < 10000 && ID >= 0 && ID < 4)
-            {
-                cZoneRates[ID] = Rate;
-                Result = true;
-            }
-            return Result;
-        }
-
         public void SetTractorPosition(PointLatLng NewLocation, bool FromMouseClick = false)
         {
             if (FromMouseClick || (!cEditMode && !FromMouseClick))
