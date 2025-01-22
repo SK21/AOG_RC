@@ -116,6 +116,7 @@ namespace RateController
             #endregion // language
 
             Tls = new clsTools(this);
+            Tls.StartMapManager();
 
             //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
 
@@ -1379,6 +1380,7 @@ namespace RateController
                 PointLatLng Position = new PointLatLng(GPS.Latitude, GPS.Longitude);
                 Tls.Manager.SetTractorPosition(Position);
             }
+            Tls.Manager.UpdateRates();
         }
 
         private void timerPIDs_Tick(object sender, EventArgs e)

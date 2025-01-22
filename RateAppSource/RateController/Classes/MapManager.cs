@@ -23,6 +23,7 @@ namespace RateController.Classes
         private PointLatLng cTractorPosition;
         private List<PointLatLng> currentZoneVertices;
         private Color cZoneColor;
+        private double cZoneHectares;
         private string cZoneName = "Unnamed Zone";
         private int[] cZoneRates = new int[4];
         private GMapControl gmap;
@@ -91,6 +92,9 @@ namespace RateController.Classes
         public Color ZoneColor
         { get { return cZoneColor; } }
 
+        public double ZoneHectares
+        { get { return cZoneHectares; } }
+
         public string ZoneName
         {
             get { return cZoneName; }
@@ -145,10 +149,14 @@ namespace RateController.Classes
             return Result;
         }
 
-        public int[] GetRates()
+        public int GetRate(int RateID)
         {
-            UpdateValuesFromZone();
-            return cZoneRates;
+            int Result = 0;
+            if (RateID >= 0 && RateID < 4)
+            {
+                Result = cZoneRates[RateID];
+            }
+            return Result;
         }
 
         public bool LoadLastMap()
@@ -227,13 +235,45 @@ namespace RateController.Classes
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation; // Update the marker position
                 gmap.Refresh(); // Refresh the map to show the updated marker
-                UpdateValuesFromZone();
+                UpdateRates();
                 MapChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public void UpdateRates()
+        {
+            bool Found = false;
+            for (int i = mapZones.Count - 1; i >= 0; i--)
+            {
+                var zone = mapZones[i];
+                if (zone.Contains(cTractorPosition))
+                {
+                    cZoneName = zone.Name;
+                    cZoneRates[0] = zone.Rates["ProductA"];
+                    cZoneRates[1] = zone.Rates["ProductB"];
+                    cZoneRates[2] = zone.Rates["ProductC"];
+                    cZoneRates[3] = zone.Rates["ProductD"];
+                    cZoneColor = zone.ZoneColor;
+                    cZoneHectares = zone.Hectares();
+                    Found = true;
+                    break;
+                }
+            }
+            if (!Found)
+            {
+                cZoneName = "N/A (Outside Zones)";
+                cZoneRates[0] = 0;
+                cZoneRates[1] = 0;
+                cZoneRates[2] = 0;
+                cZoneRates[3] = 0;
+                cZoneColor = Color.Blue;
+                cZoneHectares = 0;
             }
         }
 
         public bool UpdateZone(string name, int Rt0, int Rt1, int Rt2, int Rt3, Color zoneColor)
         {
+            // creating a zone
             bool Result = false;
             if (currentZoneVertices.Count > 2)
             {
@@ -350,6 +390,8 @@ namespace RateController.Classes
         {
             var centroid = CalculateCentroid(zone.Geometry); // Assuming Geometry is a Polygon
             gmap.Position = new PointLatLng(centroid.Y, centroid.X); // Set the map position to the centroid
+            mf.Tls.SaveProperty("LastMapLat", centroid.Y.ToString());
+            mf.Tls.SaveProperty("LastMapLng", centroid.X.ToString());
         }
 
         private string GetFolder(string StartFolder, string SubFolder, bool CreateNew = true)
@@ -425,13 +467,25 @@ namespace RateController.Classes
                 CacheLocation = CachePath
             };
 
+            double Lat = 200;
+            double Lng = 200;
+            if (double.TryParse(mf.Tls.LoadProperty("LastMapLat"), out double latpos)) Lat = latpos;
+            if (double.TryParse(mf.Tls.LoadProperty("LastMapLng"), out double lngpos)) Lng = lngpos;
+
+            if (Lat < -90 || Lat > 90 || Lng < -180 || Lng > 180)
+            {
+                // invalid position, use default
+                Lat = 52.157902;
+                Lng = -106.670158;
+            }
+
             gmap = new GMapControl
             {
                 Dock = DockStyle.Fill,
                 MapProvider = GMapProviders.BingSatelliteMap,
-                Position = new PointLatLng(52.157902, -106.670158),
-                MinZoom = 5,
-                MaxZoom = 19,
+                Position = new PointLatLng(Lat, Lng),
+                MinZoom = 3,
+                MaxZoom = 20,
                 Zoom = 16,
                 ShowCenter = false
             };
@@ -454,35 +508,6 @@ namespace RateController.Classes
         {
             mapZones = new List<MapZone>();
             currentZoneVertices = new List<PointLatLng>();
-        }
-
-        private void UpdateValuesFromZone()
-        {
-            bool Found = false;
-            for (int i = mapZones.Count - 1; i >= 0; i--)
-            {
-                var zone = mapZones[i];
-                if (zone.Contains(cTractorPosition))
-                {
-                    cZoneName = zone.Name;
-                    cZoneRates[0] = zone.Rates["ProductA"];
-                    cZoneRates[1] = zone.Rates["ProductB"];
-                    cZoneRates[2] = zone.Rates["ProductC"];
-                    cZoneRates[3] = zone.Rates["ProductD"];
-                    cZoneColor = zone.ZoneColor;
-                    Found = true;
-                    break;
-                }
-            }
-            if (!Found)
-            {
-                cZoneName = "N/A (Outside Zones)";
-                cZoneRates[0] = 0;
-                cZoneRates[1] = 0;
-                cZoneRates[2] = 0;
-                cZoneRates[3] = 0;
-                cZoneColor = Color.Blue;
-            }
         }
     }
 }

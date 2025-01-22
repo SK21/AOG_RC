@@ -16,7 +16,7 @@ namespace RateController
     public class clsTools
     {
         private string cAppName = "RateController";
-        private string cAppVersion = "4.0.0-beta.4";
+        private string cAppVersion = "4.0.0-beta.5";
         private bool cIsReadOnly = false;
         private string cPropertiesApp;
         private string cPropertiesFile;
@@ -42,9 +42,13 @@ namespace RateController
             CheckFolders();
             OpenFile(Properties.Settings.Default.FileName);
             CreateColorBitmap();
-            cManager=new MapManager(mf);
         }
         public MapManager Manager { get { return cManager; } }
+
+        public void StartMapManager()
+        {
+            cManager = new MapManager(mf);
+        }
         public string PropertiesFile
         {
             get

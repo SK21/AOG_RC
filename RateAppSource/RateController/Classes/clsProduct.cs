@@ -954,8 +954,7 @@ namespace RateController
             double Result = 0;
             if (!CalUseBaseRate && mf.Tls.VariableRateEnabled)
             {
-                int[] Rates = mf.Tls.Manager.GetRates();
-                Result = Rates[ID];
+                Result = mf.Tls.Manager.GetRate(ID);
             }
             else
             {

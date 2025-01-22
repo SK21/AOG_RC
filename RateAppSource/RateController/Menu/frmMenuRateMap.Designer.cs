@@ -33,6 +33,8 @@
             this.btnNew = new System.Windows.Forms.Button();
             this.btnImport = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.colorComboBox = new System.Windows.Forms.ComboBox();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnCreateZone = new System.Windows.Forms.Button();
             this.lbP4 = new System.Windows.Forms.Label();
@@ -53,8 +55,7 @@
             this.ckEnable = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.colorComboBox = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbArea = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -105,6 +106,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lbArea);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.colorComboBox);
             this.groupBox1.Controls.Add(this.btnDelete);
@@ -126,6 +128,28 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Zone";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(6, 207);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(68, 24);
+            this.label1.TabIndex = 341;
+            this.label1.Text = "Color";
+            // 
+            // colorComboBox
+            // 
+            this.colorComboBox.FormattingEnabled = true;
+            this.colorComboBox.Items.AddRange(new object[] {
+            "Blue",
+            "Green",
+            "Red ",
+            "Purple",
+            "Orange"});
+            this.colorComboBox.Location = new System.Drawing.Point(80, 204);
+            this.colorComboBox.Name = "colorComboBox";
+            this.colorComboBox.Size = new System.Drawing.Size(186, 32);
+            this.colorComboBox.TabIndex = 340;
             // 
             // btnDelete
             // 
@@ -246,7 +270,7 @@
             // 
             this.tbName.Location = new System.Drawing.Point(10, 29);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(256, 29);
+            this.tbName.Size = new System.Drawing.Size(169, 29);
             this.tbName.TabIndex = 2;
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbName.TextChanged += new System.EventHandler(this.tbName_TextChanged);
@@ -345,27 +369,14 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // colorComboBox
+            // lbArea
             // 
-            this.colorComboBox.FormattingEnabled = true;
-            this.colorComboBox.Items.AddRange(new object[] {
-            "Blue",
-            "Green",
-            "Red ",
-            "Purple",
-            "Orange"});
-            this.colorComboBox.Location = new System.Drawing.Point(80, 204);
-            this.colorComboBox.Name = "colorComboBox";
-            this.colorComboBox.Size = new System.Drawing.Size(186, 32);
-            this.colorComboBox.TabIndex = 340;
-            // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(6, 207);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 24);
-            this.label1.TabIndex = 341;
-            this.label1.Text = "Color";
+            this.lbArea.Location = new System.Drawing.Point(199, 31);
+            this.lbArea.Name = "lbArea";
+            this.lbArea.Size = new System.Drawing.Size(67, 24);
+            this.lbArea.TabIndex = 342;
+            this.lbArea.Text = "9999.0";
+            this.lbArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // frmMenuRateMap
             // 
@@ -427,5 +438,6 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox colorComboBox;
+        private System.Windows.Forms.Label lbArea;
     }
 }

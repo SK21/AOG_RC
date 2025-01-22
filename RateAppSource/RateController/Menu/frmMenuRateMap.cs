@@ -403,14 +403,22 @@ namespace RateController.Menu
         {
             Initializing = true;
 
-            int[] Rates = mf.Tls.Manager.GetRates();
             tbMapName.Text = mf.Tls.Manager.MapName;
             tbName.Text = mf.Tls.Manager.ZoneName;
-            tbP1.Text = Rates[0].ToString();
-            tbP2.Text = Rates[1].ToString();
-            tbP3.Text = Rates[2].ToString();
-            tbP4.Text = Rates[3].ToString();
+            mf.Tls.Manager.UpdateRates();
+            tbP1.Text = mf.Tls.Manager.GetRate(0).ToString();
+            tbP2.Text = mf.Tls.Manager.GetRate(1).ToString();
+            tbP3.Text = mf.Tls.Manager.GetRate(2).ToString();
+            tbP4.Text = mf.Tls.Manager.GetRate(3).ToString();
             SetSelectedColor(mf.Tls.Manager.ZoneColor);
+            if (mf.UseInches)
+            {
+                lbArea.Text = (mf.Tls.Manager.ZoneHectares * 2.47).ToString("N1");
+            }
+            else
+            {
+                lbArea.Text = mf.Tls.Manager.ZoneHectares.ToString("N1");
+            }
 
             GMapControl gmap = mf.Tls.Manager.gmapObject;
             VSzoom.Value = (int)((gmap.Zoom - gmap.MinZoom) * 100) / (gmap.MaxZoom - gmap.MinZoom);
