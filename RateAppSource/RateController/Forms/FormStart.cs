@@ -6,6 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Security.Policy;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -175,6 +176,18 @@ namespace RateController
                     Tls.SaveProperty("DefaultProduct", cDefaultProduct.ToString());
                 }
             }
+        }
+
+        public int LSLeft
+        {
+            get { return Lscrn.Left; }
+            set { Lscrn.Left = value; }
+        }
+
+        public int LSTop
+        {
+            get { return Lscrn.Top; }
+            set { Lscrn.Top = value; }
         }
 
         public bool MasterOverride

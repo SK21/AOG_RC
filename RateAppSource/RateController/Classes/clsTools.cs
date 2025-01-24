@@ -22,7 +22,7 @@ namespace RateController
         private string cPropertiesFile;
         private string cSettingsDir;
         private bool cUseVariableRate = false;
-        private string cVersionDate = "21-Jan-2025";
+        private string cVersionDate = "24-Jan-2025";
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();

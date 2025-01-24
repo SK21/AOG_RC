@@ -677,7 +677,7 @@ namespace RateController
             {
                 double KPH = cMinUPMbySpeed;
                 if (mf.UseInches) KPH *= mf.MPHtoKPH;
-                double HPM = mf.Sections.TotalWidth(false) * KPH / 600.0;
+                double HPM = mf.Sections.TotalWidth(false) * KPH / 600.0;   // hectares per minute
                 Result = TargetRate() * HPM;
                 if (CoverageUnits == 0) Result *= 2.47;
             }

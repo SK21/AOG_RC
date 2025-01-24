@@ -57,6 +57,7 @@ namespace RateController.Menu
                     mf.SetScale(MainMenu.CurrentProduct.ID, ckScale.Checked);
                     MainMenu.CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
                     if (byte.TryParse(tbOffRate.Text, out byte off)) MainMenu.CurrentProduct.OffRateSetting = off;
+                    MainMenu.CurrentProduct.UseMinUPMbySpeed=rbUPMSpeed.Checked;
 
                     MainMenu.CurrentProduct.Save();
                     SetButtons(false);

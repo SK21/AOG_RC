@@ -11,6 +11,8 @@ namespace RateController.Menu
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
+        int MainLeft = 0;
+        int MainTop = 0;
 
         public frmMenuRateMap(FormStart main, frmMenu menu)
         {
@@ -135,6 +137,17 @@ namespace RateController.Menu
                 this.Bounds = Screen.GetWorkingArea(this);
                 pictureBox1.Size = new Size(this.ClientSize.Width - 565, this.ClientSize.Height - 28);
                 pictureBox1.Location = new System.Drawing.Point(550, 14);
+
+                if (mf.UseLargeScreen)
+                {
+                    mf.LSLeft = 66 + this.Left;
+                    mf.LSTop = 324 + this.Top;
+                }
+                else
+                {
+                    mf.Left = 66 + this.Left;
+                    mf.Top = 324 + this.Top;
+                }
             }
             else
             {
@@ -143,6 +156,17 @@ namespace RateController.Menu
                 pictureBox1.Size = new Size(467, 294);
                 pictureBox1.Location = new System.Drawing.Point(66, 324);
                 PositionForm();
+
+                if (mf.UseLargeScreen)
+                {
+                    mf.LSLeft = MainLeft;
+                    mf.LSTop = MainTop;
+                }
+                else
+                {
+                    mf.Left = MainLeft;
+                    mf.Top = MainTop;
+                }
             }
         }
 
@@ -273,6 +297,15 @@ namespace RateController.Menu
             PositionForm();
             UpdateForm();
             EnableButtons();
+
+            MainLeft = mf.Left;
+            MainTop = mf.Top;
+
+            if (mf.UseLargeScreen)
+            {
+                MainLeft = mf.LSLeft;
+                MainTop = mf.LSTop;
+            }
         }
 
         private void PositionForm()
