@@ -147,7 +147,10 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
+                if (ex.Message != "The system cannot find the file specified")
+                {
+                    mf.Tls.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
+                }
             }
         }
 
