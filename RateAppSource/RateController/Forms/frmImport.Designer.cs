@@ -83,22 +83,28 @@
             // 
             // btnSave
             // 
+            this.btnSave.BackColor = System.Drawing.Color.Transparent;
+            this.btnSave.FlatAppearance.BorderSize = 0;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Image = global::RateController.Properties.Resources.Save;
             this.btnSave.Location = new System.Drawing.Point(325, 334);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(82, 64);
             this.btnSave.TabIndex = 7;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnSelectFile
             // 
+            this.btnSelectFile.BackColor = System.Drawing.Color.Transparent;
+            this.btnSelectFile.FlatAppearance.BorderSize = 0;
+            this.btnSelectFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSelectFile.Image = global::RateController.Properties.Resources.VehFileLoad;
             this.btnSelectFile.Location = new System.Drawing.Point(237, 334);
             this.btnSelectFile.Name = "btnSelectFile";
             this.btnSelectFile.Size = new System.Drawing.Size(82, 64);
             this.btnSelectFile.TabIndex = 6;
-            this.btnSelectFile.Text = "Load";
-            this.btnSelectFile.UseVisualStyleBackColor = true;
+            this.btnSelectFile.UseVisualStyleBackColor = false;
             this.btnSelectFile.Click += new System.EventHandler(this.btnSelectFile_Click);
             // 
             // frmImport

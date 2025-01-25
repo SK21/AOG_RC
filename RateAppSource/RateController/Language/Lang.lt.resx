@@ -132,6 +132,10 @@
   <data name="lgApplied" xml:space="preserve">
     <value>Dabar</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lgBackground" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Norma</value>
   </data>
@@ -140,32 +144,6 @@
   </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Kal. Faktorius (Pulsai/Vnt)</value>
-  </data>
-  <data name="lgCalHelp" xml:space="preserve">
-    <value>This screen is used to set the Cal Factor (pulses/unit) for a product. The goal is to have a consistent rpm each time the calibration is done and have the meter roller at a rpm that is normally being used in the field.
-
-  First the rpm must be set. This is done by entering the usual operating speed and expected product application rate. After entering an estimated Cal Factor RC will try to set the rpm of the meter roller to produce the expected rate. If RC is not successful in reaching this rate be sure ground speed matches what you normally operate at. Estimated Cal Factor, PWM minimum, PWM maximum or machine metering drive range may need to be adjusted. When RC does set the rpm and displays an engaged lock, then the next step is to set the actual Cal Factor. If the rpm is not set the next step can not continue.
-
-  Next the Cal Factor is set. Run the meter roller to get an adequate sample to measure. RC takes the measured amount and divides it by the meter roller pulses to get the new Cal Factor. This value is saved and calibration is complete.
-
-Calibration steps:
-1. enter ground speed you normally operate at
-2. set calibration meter speed (rpm)
-    - start with SwitchBox Master switch off
-    - switch product on with the power button
-    - enter initial base rate
-    - enter estimated Cal Factor
-    - press start, RC attempts to adjust flow/rate to target
-    - if successful meter speed is locked
-    - press stop
-3. set Cal Factor (pulses/unit)
-    - start with Master switch off
-    - press start, turn Master switch on and let run to get an adequate sample amount
-    - press stop and enter measured amount. Cal Factor is calculated.
-    - press save to record new values
-4. options to start over
-    - to redo the meter speed the lock button can be pressed to unlock. RC will then attempt to find a new meter speed when step 2 is redone.
-    - to start from a previously saved setting the lock button can be pressed to lock. Then continue with step 3.</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Kalibruoti</value>
@@ -176,9 +154,6 @@ Calibration steps:
   <data name="lgCalSpeed" xml:space="preserve">
     <value>Kalibracijos Greitis</value>
   </data>
-  <data name="lgChannel" xml:space="preserve">
-    <value>Kanalas</value>
-  </data>
   <data name="lgColor" xml:space="preserve">
     <value>Spalva</value>
   </data>
@@ -187,12 +162,6 @@ Calibration steps:
   </data>
   <data name="lgComboTimed" xml:space="preserve">
     <value>Combo Timed</value>
-  </data>
-  <data name="lgComm" xml:space="preserve">
-    <value>ryšys</value>
-  </data>
-  <data name="lgCommDiagnostics" xml:space="preserve">
-    <value>ryšio diagnostika</value>
   </data>
   <data name="lgConfig" xml:space="preserve">
     <value>Konfiguracija</value>
@@ -224,26 +193,14 @@ Calibration steps:
   <data name="lgDensity" xml:space="preserve">
     <value>Tankumas</value>
   </data>
-  <data name="lgDerivative" xml:space="preserve">
-    <value>Derivatyvas</value>
-  </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Apibudinimas</value>
-  </data>
-  <data name="lgDiagnostics" xml:space="preserve">
-    <value>Diagnostika</value>
-  </data>
-  <data name="lgDisconnect" xml:space="preserve">
-    <value>Atsijūngti</value>
   </data>
   <data name="lgDisplay" xml:space="preserve">
     <value>Displėjus</value>
   </data>
   <data name="lgEnd" xml:space="preserve">
     <value>Baigti</value>
-  </data>
-  <data name="lgEqual" xml:space="preserve">
-    <value>=1</value>
   </data>
   <data name="lgError" xml:space="preserve">
     <value>Paklaida %</value>
@@ -256,9 +213,6 @@ Calibration steps:
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Ventiliatorius</value>
-  </data>
-  <data name="lgFlowOnHigh" xml:space="preserve">
-    <value>Invertuoti srauto valdyma</value>
   </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
@@ -290,8 +244,11 @@ Calibration steps:
   <data name="lgInstantRate" xml:space="preserve">
     <value>Greita Norma</value>
   </data>
-  <data name="lgIntegral" xml:space="preserve">
-    <value>Integralas</value>
+  <data name="lgInvertFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="lgInvertRelays" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Invertuoti sekcijas</value>
@@ -383,15 +340,6 @@ Calibration steps:
   <data name="lgOptions" xml:space="preserve">
     <value>Opcijos</value>
   </data>
-  <data name="lgOverallRate" xml:space="preserve">
-    <value>Normos vidurkis</value>
-  </data>
-  <data name="lgPage1" xml:space="preserve">
-    <value>1 Lapas</value>
-  </data>
-  <data name="lgPage2" xml:space="preserve">
-    <value>2 Lapas</value>
-  </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sekcijos per Zona</value>
   </data>
@@ -419,9 +367,6 @@ Calibration steps:
   <data name="lgProducts" xml:space="preserve">
     <value>Produktai/Ventiliatoiai</value>
   </data>
-  <data name="lgProportional" xml:space="preserve">
-    <value>P dedamoji</value>
-  </data>
   <data name="lgPulses" xml:space="preserve">
     <value>Pulsai</value>
   </data>
@@ -448,9 +393,6 @@ Calibration steps:
   </data>
   <data name="lgRelayControl" xml:space="preserve">
     <value>Relių valdymas</value>
-  </data>
-  <data name="lgRelayOnHigh" xml:space="preserve">
-    <value>Invertuoti relės</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
     <value>Relės</value>
@@ -536,6 +478,9 @@ Calibration steps:
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Alt. Norma</value>
   </data>
+  <data name="lgTextColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgTimeForMulti" xml:space="preserve">
     <value>Daugiapulsis</value>
   </data>
@@ -569,8 +514,8 @@ Calibration steps:
   <data name="lgUPMTarget" xml:space="preserve">
     <value>VPM Taikinys</value>
   </data>
-  <data name="lgUseVR" xml:space="preserve">
-    <value>Kintama norma</value>
+  <data name="lgUserColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgValves" xml:space="preserve">
     <value>Vožtuvai</value>

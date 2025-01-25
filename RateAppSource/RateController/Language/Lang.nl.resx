@@ -147,15 +147,6 @@
   <data name="lgCurrentRate" xml:space="preserve">
     <value>toepassing</value>
   </data>
-  <data name="lgDiagnostics" xml:space="preserve">
-    <value>diagnose</value>
-  </data>
-  <data name="lgDisconnect" xml:space="preserve">
-    <value>verbreken</value>
-  </data>
-  <data name="lgEqual" xml:space="preserve">
-    <value>=1</value>
-  </data>
   <data name="lgHectares" xml:space="preserve">
     <value>hectare</value>
   </data>
@@ -200,9 +191,6 @@
   </data>
   <data name="lgOptions" xml:space="preserve">
     <value>opties</value>
-  </data>
-  <data name="lgOverallRate" xml:space="preserve">
-    <value>globale hoeveelheid</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>product</value>

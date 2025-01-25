@@ -166,6 +166,12 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            lbProportional.Text = Language.Lang.lgHighAdjust;
+            lbRateLow.Text = Language.Lang.lgLowAdjust;
+            lbThreshold.Text = Language.Lang.lgThreshold;
+            lbScaling.Text = Language.Lang.lgScaling;
+            lbMax.Text = Language.Lang.lgPWMmax;
+            lbMin.Text=Language.Lang.lgPWMmin;
         }
 
         private void UpdateControlDisplay()

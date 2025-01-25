@@ -187,6 +187,8 @@ namespace RateController.Menu
             lbAcres2.Text = Lang.lgCoverage + " 2";
             lbGallons1.Text = Lang.lgQuantity + " 1";
             lbGallons2.Text = Lang.lgQuantity + " 2";
+            lbHours1.Text = Lang.lgHours + " 1";
+            lbHours2.Text = Lang.lgHours + " 2";
         }
 
         private void timer1_Tick(object sender, EventArgs e)
