@@ -129,18 +129,11 @@
   <data name="lgAltRate" xml:space="preserve">
     <value>Альт Расход</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lgBackground" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Расход уст</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Калибровка</value>
-  </data>
-  <data name="lgCalValue" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>Комбо Закрыть</value>
@@ -166,17 +159,11 @@
   <data name="lgDescription" xml:space="preserve">
     <value>Название</value>
   </data>
-  <data name="lgFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgHectares" xml:space="preserve">
     <value>Гектар</value>
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
     <value>Гектар/ч</value>
-  </data>
-  <data name="lgHighAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgHighMax" xml:space="preserve">
     <value>ШИМ Высокий Макс.</value>
@@ -190,12 +177,6 @@
   <data name="lgInstantRate" xml:space="preserve">
     <value>Мгновенный расход …</value>
   </data>
-  <data name="lgInvertFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="lgInvertRelays" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Инверт Секция</value>
   </data>
@@ -204,9 +185,6 @@
   </data>
   <data name="lgLanguage" xml:space="preserve">
     <value>Язык</value>
-  </data>
-  <data name="lgLowAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Главный</value>
@@ -253,9 +231,6 @@
   <data name="lgOptions" xml:space="preserve">
     <value>Опции</value>
   </data>
-  <data name="lgOther" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgPower" xml:space="preserve">
     <value>Питание</value>
   </data>
@@ -289,17 +264,11 @@
   <data name="lgRelays" xml:space="preserve">
     <value>Реле</value>
   </data>
-  <data name="lgResetProducts" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgRPM" xml:space="preserve">
     <value>Об/мин</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
     <value>Сохранить как</value>
-  </data>
-  <data name="lgScaling" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgSection" xml:space="preserve">
     <value>Секции</value>
@@ -324,9 +293,6 @@
   </data>
   <data name="lgShowPressure" xml:space="preserve">
     <value>Давление Вкл</value>
-  </data>
-  <data name="lgSingleProduct" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Подчиненный</value>
@@ -355,9 +321,6 @@
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Альт Расход Уст ...</value>
   </data>
-  <data name="lgTextColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgTimeForMulti" xml:space="preserve">
     <value>Сред время имп (&lt;50 мс)</value>
   </data>
@@ -373,11 +336,11 @@
   <data name="lgUPMApplied" xml:space="preserve">
     <value>Едизм/мин Применяемый</value>
   </data>
+  <data name="lgUPMerror" xml:space="preserve">
+    <value>Ошибка %</value>
+  </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>Едизм/мин целевой</value>
-  </data>
-  <data name="lgUserColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Ширина</value>

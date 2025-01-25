@@ -143,12 +143,6 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            lbUPMApplied.Text = Lang.lgUPMApplied;
-            lbUPMTarget.Text = Lang.lgUPMTarget;
-            lbError.Text = Lang.lgError;
-            lbCounts.Text = Lang.lgCountsRev;
-            lbSpeed.Text = Lang.lgSpeed;
-            lbWifi.Text = Lang.lgWifiSignal;
         }
 
         private void tbCountsRev_Enter(object sender, EventArgs e)

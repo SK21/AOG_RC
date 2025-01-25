@@ -220,10 +220,6 @@ namespace RateController.Menu
         private void SetLanguage()
         {
             lbWorkPin.Text = Lang.lgWorkPin;
-            lbFlow1.Text = Lang.lgFlow + " 1";
-            lbFlow2.Text = Lang.lgFlow + " 2";
-            //ckMomentary.Text = Lang.
-
         }
 
         private void UpdateForm()

@@ -376,15 +376,6 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Flow.
-        /// </summary>
-        internal static string lgFlow {
-            get {
-                return ResourceManager.GetString("lgFlow", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Geo Stop.
         /// </summary>
         internal static string lgGeoStop {
@@ -1425,6 +1416,15 @@ namespace RateController.Language {
         internal static string lgUPMApplied {
             get {
                 return ResourceManager.GetString("lgUPMApplied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error %.
+        /// </summary>
+        internal static string lgUPMerror {
+            get {
+                return ResourceManager.GetString("lgUPMerror", resourceCulture);
             }
         }
         

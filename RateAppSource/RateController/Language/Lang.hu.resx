@@ -129,18 +129,11 @@
   <data name="lgAltRate" xml:space="preserve">
     <value>Alt. Ráta (%)</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lgBackground" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Alap Ráta</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Kalibrál</value>
-  </data>
-  <data name="lgCalValue" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>Kombinált zárás</value>
@@ -166,23 +159,14 @@
   <data name="lgDescription" xml:space="preserve">
     <value>Leírás</value>
   </data>
-  <data name="lgError" xml:space="preserve">
-    <value>Hiba %</value>
-  </data>
   <data name="lgFan" xml:space="preserve">
     <value>Ventillátor</value>
-  </data>
-  <data name="lgFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgHectares" xml:space="preserve">
     <value>Hektár</value>
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
     <value>Hektár/Óra</value>
-  </data>
-  <data name="lgHighAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgHighMax" xml:space="preserve">
     <value>PWM Maximum</value>
@@ -199,12 +183,6 @@
   <data name="lgInstantRate" xml:space="preserve">
     <value>Pillanatnyi Ráta</value>
   </data>
-  <data name="lgInvertFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="lgInvertRelays" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Szakaszt Invertál</value>
   </data>
@@ -213,9 +191,6 @@
   </data>
   <data name="lgLanguage" xml:space="preserve">
     <value>Nyelv</value>
-  </data>
-  <data name="lgLowAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Főelzáró</value>
@@ -271,9 +246,6 @@
   <data name="lgOptions" xml:space="preserve">
     <value>Beállítások</value>
   </data>
-  <data name="lgOther" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgPIDTune" xml:space="preserve">
     <value>PID grafikon</value>
   </data>
@@ -316,17 +288,11 @@
   <data name="lgRelays" xml:space="preserve">
     <value>Relék</value>
   </data>
-  <data name="lgResetProducts" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgRPM" xml:space="preserve">
     <value>Fordulatszám</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
     <value>Mentés másként</value>
-  </data>
-  <data name="lgScaling" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgSection" xml:space="preserve">
     <value>Szakaszok</value>
@@ -351,9 +317,6 @@
   </data>
   <data name="lgShowPressure" xml:space="preserve">
     <value>Nyomás kiejlzése</value>
-  </data>
-  <data name="lgSingleProduct" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Slave</value>
@@ -385,9 +348,6 @@
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Cél Alt. Ráta</value>
   </data>
-  <data name="lgTextColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgTimeForMulti" xml:space="preserve">
     <value>Átlag idő / pulzus (&lt;50 ms/pulzus)</value>
   </data>
@@ -403,14 +363,14 @@
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Pillanatynilag</value>
   </data>
+  <data name="lgUPMerror" xml:space="preserve">
+    <value>Hiba %</value>
+  </data>
   <data name="lgUPMPWM" xml:space="preserve">
     <value>UPM/PWM</value>
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Cél</value>
-  </data>
-  <data name="lgUserColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Szélesség</value>

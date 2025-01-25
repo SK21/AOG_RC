@@ -44,9 +44,9 @@
             this.tbDir1 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tbFlow2 = new System.Windows.Forms.TextBox();
-            this.lbFlow2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.tbFlow1 = new System.Windows.Forms.TextBox();
-            this.lbFlow1 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -230,15 +230,15 @@
             this.tbFlow2.TabStop = false;
             this.tbFlow2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // lbFlow2
+            // label3
             // 
-            this.lbFlow2.AutoSize = true;
-            this.lbFlow2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFlow2.Location = new System.Drawing.Point(91, 117);
-            this.lbFlow2.Name = "lbFlow2";
-            this.lbFlow2.Size = new System.Drawing.Size(66, 24);
-            this.lbFlow2.TabIndex = 224;
-            this.lbFlow2.Text = "Flow 2";
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(91, 117);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(66, 24);
+            this.label3.TabIndex = 224;
+            this.label3.Text = "Flow 2";
             // 
             // tbFlow1
             // 
@@ -250,15 +250,15 @@
             this.tbFlow1.TabStop = false;
             this.tbFlow1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // lbFlow1
+            // label4
             // 
-            this.lbFlow1.AutoSize = true;
-            this.lbFlow1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFlow1.Location = new System.Drawing.Point(91, 64);
-            this.lbFlow1.Name = "lbFlow1";
-            this.lbFlow1.Size = new System.Drawing.Size(66, 24);
-            this.lbFlow1.TabIndex = 222;
-            this.lbFlow1.Text = "Flow 1";
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(91, 64);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(66, 24);
+            this.label4.TabIndex = 222;
+            this.label4.Text = "Flow 1";
             // 
             // frmMenuPins
             // 
@@ -279,9 +279,9 @@
             this.Controls.Add(this.tbDir1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.tbFlow2);
-            this.Controls.Add(this.lbFlow2);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.tbFlow1);
-            this.Controls.Add(this.lbFlow1);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -312,8 +312,8 @@
         private System.Windows.Forms.TextBox tbDir1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tbFlow2;
-        private System.Windows.Forms.Label lbFlow2;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbFlow1;
-        private System.Windows.Forms.Label lbFlow1;
+        private System.Windows.Forms.Label label4;
     }
 }
