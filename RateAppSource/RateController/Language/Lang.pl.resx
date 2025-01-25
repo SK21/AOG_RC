@@ -129,10 +129,6 @@
   <data name="lgAltRate" xml:space="preserve">
     <value>Alt. Rate (%)</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lgBackground" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Dawka Bazowa</value>
   </data>
@@ -141,6 +137,32 @@
   </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Współczynnik (impulsy/jednostka)</value>
+  </data>
+  <data name="lgCalHelp" xml:space="preserve">
+    <value>Kroki kalibracji:
+1.Wprowadź prędkość jazdy
+2.Ustaw prędkość miernika kalibracyjnego (rpm)
+* Zacznij od wyłączenia głównego wyłącznika
+* Włącz produkt przyciskiem zasilania
+* Wprowadź początkową stawkę bazową
+* Wprowadź początkowy współczynnik kalibracji
+* Naciśnij start, RC spróbuje dostosować przepływ/natężenie do wartości docelowej
+* Jeśli pomyślna prędkość licznika jest zablokowana
+* Naciśnij stop
+3.Ustaw współczynnik kalibracji (impulsy/jednostkę)
+* Zacznij od wyłączenia głównego wyłącznika
+* Naciśnij przycisk Start, włącz wyłącznik główny i pozwól,
+aby urządzenie uruchomiło się, aby uzyskać odpowiednią ilość próbki
+* Naciśnij stop i wprowadź zmierzoną ilość. Obliczany jest współczynnik kal.
+* Naciśnij przycisk Zapisz, aby zapisać nowe wartości
+4.Opcje rozpoczęcia od nowa
+* Jeśli RC nie uda się zablokować prędkości licznika, dostosuj początkowy współczynnik kalibracji,
+prędkość jazdy, minimum PWM, maksimum PWM lub zakres napędu dozowania maszyny.
+Rozpocznij ponownie krok 2.
+* Aby ponownie ustawić prędkość licznika, można nacisnąć przycisk blokady w celu odblokowania.
+RC podejmie następnie próbę znalezienia nowej prędkości licznika po ponownym wykonaniu kroku 2.
+* Aby rozpocząć od wcześniej zapisanego ustawienia, można nacisnąć przycisk blokady, aby zablokować.
+Następnie przejdź do kroku 3</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Kalibracja</value>
@@ -151,11 +173,20 @@
   <data name="lgCalSpeed" xml:space="preserve">
     <value>Prędkość Kalibracji</value>
   </data>
+  <data name="lgChannel" xml:space="preserve">
+    <value>Kanał</value>
+  </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>Combo Close</value>
   </data>
   <data name="lgComboTimed" xml:space="preserve">
     <value>Combo Timed</value>
+  </data>
+  <data name="lgComm" xml:space="preserve">
+    <value>COM</value>
+  </data>
+  <data name="lgCommDiagnostics" xml:space="preserve">
+    <value>COM Diagnostyka</value>
   </data>
   <data name="lgConfig" xml:space="preserve">
     <value>konfiguracja</value>
@@ -187,11 +218,23 @@
   <data name="lgDensity" xml:space="preserve">
     <value>Gęstość</value>
   </data>
+  <data name="lgDerivative" xml:space="preserve">
+    <value>Pochodna</value>
+  </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Opis</value>
   </data>
+  <data name="lgDiagnostics" xml:space="preserve">
+    <value>Diagnostyka</value>
+  </data>
+  <data name="lgDisconnect" xml:space="preserve">
+    <value>Rozłącz</value>
+  </data>
   <data name="lgEnd" xml:space="preserve">
     <value>Koniec</value>
+  </data>
+  <data name="lgEqual" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="lgError" xml:space="preserve">
     <value>Error %</value>
@@ -204,6 +247,9 @@
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Wentylator</value>
+  </data>
+  <data name="lgFlowOnHigh" xml:space="preserve">
+    <value>Przepływ</value>
   </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
@@ -235,11 +281,8 @@
   <data name="lgInstantRate" xml:space="preserve">
     <value>dawka  chwilowa</value>
   </data>
-  <data name="lgInvertFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="lgInvertRelays" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="lgIntegral" xml:space="preserve">
+    <value>Całkowity</value>
   </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Odwróć sekcję</value>
@@ -331,6 +374,9 @@
   <data name="lgOptions" xml:space="preserve">
     <value>Opcje</value>
   </data>
+  <data name="lgOverallRate" xml:space="preserve">
+    <value>Wydatek całkowity</value>
+  </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sekcji na strefę</value>
   </data>
@@ -358,6 +404,9 @@
   <data name="lgProducts" xml:space="preserve">
     <value>Products/Fans</value>
   </data>
+  <data name="lgProportional" xml:space="preserve">
+    <value>Proporcjonalny/stosunek</value>
+  </data>
   <data name="lgPulses" xml:space="preserve">
     <value>Impulsy</value>
   </data>
@@ -384,6 +433,9 @@
   </data>
   <data name="lgRelayControl" xml:space="preserve">
     <value>Zmiany Konf</value>
+  </data>
+  <data name="lgRelayOnHigh" xml:space="preserve">
+    <value>Poziom wysoki</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
     <value>Przekaźniki</value>
@@ -469,9 +521,6 @@
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Dawka Alt…</value>
   </data>
-  <data name="lgTextColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="lgTimeForMulti" xml:space="preserve">
     <value>Średni Czas /impuls (&lt;50 ms/impuls)</value>
   </data>
@@ -505,8 +554,8 @@
   <data name="lgUPMTarget" xml:space="preserve">
     <value>Docelowa dawka</value>
   </data>
-  <data name="lgUserColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="lgUseVR" xml:space="preserve">
+    <value>Dawka Zmienna</value>
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Szerokość</value>

@@ -138,6 +138,12 @@
   <data name="lgComboClose" xml:space="preserve">
     <value>Combo Close</value>
   </data>
+  <data name="lgComm" xml:space="preserve">
+    <value>Port COM</value>
+  </data>
+  <data name="lgCommDiagnostics" xml:space="preserve">
+    <value>COM Diagnostics</value>
+  </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Connecter</value>
   </data>
@@ -156,8 +162,20 @@
   <data name="lgCurrentRate" xml:space="preserve">
     <value>Dose Actuel :</value>
   </data>
+  <data name="lgDerivative" xml:space="preserve">
+    <value>Dérivée</value>
+  </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="lgDiagnostics" xml:space="preserve">
+    <value>Diagnostiques</value>
+  </data>
+  <data name="lgDisconnect" xml:space="preserve">
+    <value>Déconnecter</value>
+  </data>
+  <data name="lgEqual" xml:space="preserve">
+    <value>=1</value>
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Fan</value>
@@ -182,6 +200,9 @@
   </data>
   <data name="lgInstantRate" xml:space="preserve">
     <value>Dose Actuel :</value>
+  </data>
+  <data name="lgIntegral" xml:space="preserve">
+    <value>Integral</value>
   </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Section Inversée</value>
@@ -246,6 +267,9 @@
   <data name="lgOptions" xml:space="preserve">
     <value>Options</value>
   </data>
+  <data name="lgOverallRate" xml:space="preserve">
+    <value>Dose Moyenne :</value>
+  </data>
   <data name="lgPIDTune" xml:space="preserve">
     <value>Tableau de réglage PID</value>
   </data>
@@ -263,6 +287,9 @@
   </data>
   <data name="lgProducts" xml:space="preserve">
     <value>Produits/Fans</value>
+  </data>
+  <data name="lgProportional" xml:space="preserve">
+    <value>Proportionel</value>
   </data>
   <data name="lgPWMmax" xml:space="preserve">
     <value>PWM Maximum</value>

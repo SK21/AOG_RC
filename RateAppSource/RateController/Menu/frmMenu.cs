@@ -408,24 +408,6 @@ namespace RateController
             }
         }
 
-        private void butMap_Click(object sender, EventArgs e)
-        {
-            cLastScreen = "frmMenuRateMap";
-            HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuRateMap(mf, this);
-                frm.Owner = this;
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
         private void butMode_Click(object sender, EventArgs e)
         {
             cLastScreen = "frmMenuMode";
@@ -949,7 +931,6 @@ namespace RateController
             butPowerOff.Left = 160;
             butPowerOff.Top = 8;
             if (LoadLast) LoadLastScreen();
-            SetLanguage();
         }
 
         private void frmMenu_LocationChanged(object sender, EventArgs e)
@@ -1163,40 +1144,22 @@ namespace RateController
             }
         }
 
-        private void SetLanguage()
+        private void butMap_Click(object sender, EventArgs e)
         {
-            butFile.Text = Language.Lang.lgFile;
-            butProducts.Text = Language.Lang.lgProductsMenu;
-            butMachine.Text = Language.Lang.lgMachine;
-            butModules.Text = Language.Lang.lgModules;
-            butOptions.Text = Language.Lang.lgOptions;
-            butHelpScreen.Text = Language.Lang.lgHelp;
-            butNew.Text = Language.Lang.lgNew;
-            butOpen.Text = Language.Lang.lgOpen;
-            butSaveAs.Text= Language.Lang.lgSaveAs;
-            butRate.Text = Language.Lang.lgRate;
-            butControl.Text= Language.Lang.lgControl;
-            butSettings.Text = Language.Lang.lgSettings;
-            butMode.Text = Language.Lang.lgMode;
-            butMonitor.Text = Language.Lang.lgMonitoring;
-            butData.Text = Language.Lang.lgData;
-            butMap.Text = Language.Lang.lgRateMap;
-            butSections.Text = Language.Lang.lgSections;
-            butRelays.Text = Language.Lang.lgRelays;
-            butSwitches.Text = Language.Lang.lgSwitches;
-            butPrimed.Text = Language.Lang.lgPrimedStart;
-            butCalibrate.Text = Language.Lang.lgCalibrate;
-            butBoards.Text = Language.Lang.lgBoards;
-            butNetwork.Text = Language.Lang.lgNetwork;
-            butConfig.Text = Language.Lang.lgConfig;
-            butPins.Text = Language.Lang.lgPins;
-            butRelayPins.Text = Language.Lang.lgRelayPins;
-            butWifi.Text = Language.Lang.lgWifiClient;
-            butValves.Text = Language.Lang.lgValves;
-            butUpdateModules.Text = Language.Lang.lgSend;
-            butDisplay.Text = Language.Lang.lgDisplay;
-            butLanguage.Text=Language.Lang.lgLanguage;
-            butColor.Text = Language.Lang.lgColor;
+            cLastScreen = "frmMenuRateMap";
+            HighlightButton(cLastScreen);
+            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRateMap(mf, this);
+                frm.Owner = this;
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
     }
 }

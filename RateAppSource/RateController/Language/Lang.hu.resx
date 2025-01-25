@@ -138,6 +138,9 @@
   <data name="lgComboClose" xml:space="preserve">
     <value>Kombinált zárás</value>
   </data>
+  <data name="lgComm" xml:space="preserve">
+    <value>Kommunikáció</value>
+  </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Csatlakozás</value>
   </data>
@@ -156,8 +159,20 @@
   <data name="lgCurrentRate" xml:space="preserve">
     <value>Aktuális Ráta</value>
   </data>
+  <data name="lgDerivative" xml:space="preserve">
+    <value>Derivatív</value>
+  </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Leírás</value>
+  </data>
+  <data name="lgDiagnostics" xml:space="preserve">
+    <value>Diagnosztika</value>
+  </data>
+  <data name="lgDisconnect" xml:space="preserve">
+    <value>Székapcsol</value>
+  </data>
+  <data name="lgEqual" xml:space="preserve">
+    <value>=1</value>
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Ventillátor</value>
@@ -182,6 +197,9 @@
   </data>
   <data name="lgInstantRate" xml:space="preserve">
     <value>Pillanatnyi Ráta</value>
+  </data>
+  <data name="lgIntegral" xml:space="preserve">
+    <value>Integrál</value>
   </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Szakaszt Invertál</value>
@@ -246,6 +264,9 @@
   <data name="lgOptions" xml:space="preserve">
     <value>Beállítások</value>
   </data>
+  <data name="lgOverallRate" xml:space="preserve">
+    <value>Össz Ráta</value>
+  </data>
   <data name="lgPIDTune" xml:space="preserve">
     <value>PID grafikon</value>
   </data>
@@ -263,6 +284,9 @@
   </data>
   <data name="lgProducts" xml:space="preserve">
     <value>Anyagok/Veniltárok</value>
+  </data>
+  <data name="lgProportional" xml:space="preserve">
+    <value>Proportional</value>
   </data>
   <data name="lgPWMmax" xml:space="preserve">
     <value>PWM Maximum</value>

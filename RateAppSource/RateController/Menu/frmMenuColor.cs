@@ -179,11 +179,6 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            tbColourDefault1.Text = Language.Lang.lgColor + " 1";
-            tbColourDefault2.Text = Language.Lang.lgColor + " 2";
-            tbColourUser1.Text = Language.Lang.lgUserColor;
-            rbForeColor.Text = Language.Lang.lgTextColor;
-            rbBackColor.Text = Language.Lang.lgBackground;
         }
 
         private void tbColourDefault1_Click(object sender, EventArgs e)

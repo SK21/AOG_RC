@@ -147,6 +147,15 @@
   <data name="lgCurrentRate" xml:space="preserve">
     <value>Ausbringrate</value>
   </data>
+  <data name="lgDiagnostics" xml:space="preserve">
+    <value>Diagnose</value>
+  </data>
+  <data name="lgDisconnect" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
+  <data name="lgEqual" xml:space="preserve">
+    <value>=1</value>
+  </data>
   <data name="lgHectares" xml:space="preserve">
     <value>Hektar</value>
   </data>
@@ -191,6 +200,9 @@
   </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Optionen</value>
+  </data>
+  <data name="lgOverallRate" xml:space="preserve">
+    <value>Rate seit Nullung</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Produkt</value>

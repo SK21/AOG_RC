@@ -138,6 +138,9 @@
   <data name="lgComboClose" xml:space="preserve">
     <value>Комбо Закрыть</value>
   </data>
+  <data name="lgComm" xml:space="preserve">
+    <value>Связь</value>
+  </data>
   <data name="lgConnect" xml:space="preserve">
     <value>Соединить</value>
   </data>
@@ -158,6 +161,15 @@
   </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Название</value>
+  </data>
+  <data name="lgDiagnostics" xml:space="preserve">
+    <value>Диагностика</value>
+  </data>
+  <data name="lgDisconnect" xml:space="preserve">
+    <value>Отключить</value>
+  </data>
+  <data name="lgEqual" xml:space="preserve">
+    <value>=1</value>
   </data>
   <data name="lgHectares" xml:space="preserve">
     <value>Гектар</value>
@@ -230,6 +242,9 @@
   </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Опции</value>
+  </data>
+  <data name="lgOverallRate" xml:space="preserve">
+    <value>Общий расход …</value>
   </data>
   <data name="lgPower" xml:space="preserve">
     <value>Питание</value>

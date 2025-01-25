@@ -117,8 +117,6 @@ namespace RateController.Menu
             lbSensorCount.Text = Lang.lgSensorCount;
             lbWifiPort.Text = Lang.lgWifiPort;
             lbRelay.Text = Lang.lgRelayControl;
-            ckRelayOn.Text = Lang.lgInvertRelays;
-            ckFlowOn.Text = Lang.lgInvertFlow;
         }
 
         private void tbModuleID_Enter(object sender, EventArgs e)

@@ -36,7 +36,7 @@
             this.lbBoost = new System.Windows.Forms.Label();
             this.lbMinValue = new System.Windows.Forms.Label();
             this.lbMaxValue = new System.Windows.Forms.Label();
-            this.lbScaling = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.lbThresholdValue = new System.Windows.Forms.Label();
             this.lbLow = new System.Windows.Forms.Label();
             this.lbHigh = new System.Windows.Forms.Label();
@@ -164,15 +164,15 @@
             this.lbMaxValue.Text = "100";
             this.lbMaxValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lbScaling
+            // label3
             // 
-            this.lbScaling.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbScaling.Location = new System.Drawing.Point(34, 301);
-            this.lbScaling.Name = "lbScaling";
-            this.lbScaling.Size = new System.Drawing.Size(133, 45);
-            this.lbScaling.TabIndex = 185;
-            this.lbScaling.Text = "Scaling Factor";
-            this.lbScaling.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(34, 301);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(133, 45);
+            this.label3.TabIndex = 185;
+            this.label3.Text = "Scaling Factor";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbThresholdValue
             // 
@@ -353,7 +353,7 @@
             this.Controls.Add(this.lbBoost);
             this.Controls.Add(this.lbMinValue);
             this.Controls.Add(this.lbMaxValue);
-            this.Controls.Add(this.lbScaling);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.lbThresholdValue);
             this.Controls.Add(this.lbLow);
             this.Controls.Add(this.lbHigh);
@@ -389,7 +389,7 @@
         private System.Windows.Forms.Label lbBoost;
         private System.Windows.Forms.Label lbMinValue;
         private System.Windows.Forms.Label lbMaxValue;
-        private System.Windows.Forms.Label lbScaling;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lbThresholdValue;
         private System.Windows.Forms.Label lbLow;
         private System.Windows.Forms.Label lbHigh;
