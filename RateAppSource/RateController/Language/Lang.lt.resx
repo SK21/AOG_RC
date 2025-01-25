@@ -154,6 +154,9 @@
   <data name="lgCalSpeed" xml:space="preserve">
     <value>Kalibracijos Greitis</value>
   </data>
+  <data name="lgCalValue" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgColor" xml:space="preserve">
     <value>Spalva</value>
   </data>
@@ -214,6 +217,9 @@
   <data name="lgFan" xml:space="preserve">
     <value>Ventiliatorius</value>
   </data>
+  <data name="lgFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
   </data>
@@ -222,6 +228,9 @@
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
     <value>Hektarai/Valanda</value>
+  </data>
+  <data name="lgHighAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgHighMax" xml:space="preserve">
     <value>Maksimalus PPM</value>
@@ -261,6 +270,9 @@
   </data>
   <data name="lgLargeScreen" xml:space="preserve">
     <value>Didelis Langas</value>
+  </data>
+  <data name="lgLowAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Pagrindinis</value>
@@ -340,6 +352,9 @@
   <data name="lgOptions" xml:space="preserve">
     <value>Opcijos</value>
   </data>
+  <data name="lgOther" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sekcijos per Zona</value>
   </data>
@@ -397,11 +412,17 @@
   <data name="lgRelays" xml:space="preserve">
     <value>Relės</value>
   </data>
+  <data name="lgResetProducts" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgRPM" xml:space="preserve">
     <value>APM</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
     <value>Išsaugoti kaip</value>
+  </data>
+  <data name="lgScaling" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgSeconds" xml:space="preserve">
     <value>Sekundės</value>
@@ -435,6 +456,9 @@
   </data>
   <data name="lgShowPressure" xml:space="preserve">
     <value>Rodytį spaudimą</value>
+  </data>
+  <data name="lgSingleProduct" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Vergas</value>
@@ -504,9 +528,6 @@
   </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>Apdoroti VPM </value>
-  </data>
-  <data name="lgUPMerror" xml:space="preserve">
-    <value>Paklaida %</value>
   </data>
   <data name="lgUPMPWM" xml:space="preserve">
     <value>VPM/PPM</value>

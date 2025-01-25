@@ -34,29 +34,29 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.lbProduct = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lbWifi = new System.Windows.Forms.Label();
             this.wifiBar = new System.Windows.Forms.ProgressBar();
             this.tbCountsRev = new System.Windows.Forms.TextBox();
-            this.label24 = new System.Windows.Forms.Label();
+            this.lbCounts = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.lbRPM = new System.Windows.Forms.Label();
             this.lbErrorPercent = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
+            this.lbError = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.lbSections = new System.Windows.Forms.Label();
             this.lbRateAppliedData = new System.Windows.Forms.Label();
-            this.lb33 = new System.Windows.Forms.Label();
+            this.lbUPMApplied = new System.Windows.Forms.Label();
             this.lbRateSetData = new System.Windows.Forms.Label();
-            this.lb32 = new System.Windows.Forms.Label();
+            this.lbUPMTarget = new System.Windows.Forms.Label();
             this.lbSpeedData = new System.Windows.Forms.Label();
             this.lbSpeed = new System.Windows.Forms.Label();
             this.lbWidthData = new System.Windows.Forms.Label();
             this.lbWidth = new System.Windows.Forms.Label();
             this.lbPWMdata = new System.Windows.Forms.Label();
-            this.lb34 = new System.Windows.Forms.Label();
+            this.lbPWM = new System.Windows.Forms.Label();
             this.lbWorkRateData = new System.Windows.Forms.Label();
             this.lbWorkRate = new System.Windows.Forms.Label();
             this.sec15 = new System.Windows.Forms.Label();
@@ -153,15 +153,15 @@
             this.lbProduct.Text = "Product";
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // label2
+            // lbWifi
             // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(83, 412);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(114, 23);
-            this.label2.TabIndex = 249;
-            this.label2.Text = "Wifi Signal";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbWifi.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWifi.Location = new System.Drawing.Point(83, 412);
+            this.lbWifi.Name = "lbWifi";
+            this.lbWifi.Size = new System.Drawing.Size(114, 23);
+            this.lbWifi.TabIndex = 249;
+            this.lbWifi.Text = "Wifi Signal";
+            this.lbWifi.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // wifiBar
             // 
@@ -185,15 +185,15 @@
             this.tbCountsRev.Enter += new System.EventHandler(this.tbCountsRev_Enter);
             this.tbCountsRev.Validating += new System.ComponentModel.CancelEventHandler(this.tbCountsRev_Validating);
             // 
-            // label24
+            // lbCounts
             // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(83, 217);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(105, 23);
-            this.label24.TabIndex = 247;
-            this.label24.Text = "Counts/Rev";
+            this.lbCounts.AutoSize = true;
+            this.lbCounts.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCounts.Location = new System.Drawing.Point(83, 217);
+            this.lbCounts.Name = "lbCounts";
+            this.lbCounts.Size = new System.Drawing.Size(105, 23);
+            this.lbCounts.TabIndex = 247;
+            this.lbCounts.Text = "Counts/Rev";
             // 
             // label23
             // 
@@ -225,15 +225,15 @@
             this.lbErrorPercent.TabIndex = 243;
             this.lbErrorPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label15
+            // lbError
             // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(83, 139);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(77, 23);
-            this.label15.TabIndex = 244;
-            this.label15.Text = "Error %";
+            this.lbError.AutoSize = true;
+            this.lbError.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbError.Location = new System.Drawing.Point(83, 139);
+            this.lbError.Name = "lbError";
+            this.lbError.Size = new System.Drawing.Size(77, 23);
+            this.lbError.TabIndex = 244;
+            this.lbError.Text = "Error %";
             // 
             // label20
             // 
@@ -296,15 +296,15 @@
             this.lbRateAppliedData.TabIndex = 209;
             this.lbRateAppliedData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lb33
+            // lbUPMApplied
             // 
-            this.lb33.AutoSize = true;
-            this.lb33.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb33.Location = new System.Drawing.Point(83, 61);
-            this.lb33.Name = "lb33";
-            this.lb33.Size = new System.Drawing.Size(115, 23);
-            this.lb33.TabIndex = 221;
-            this.lb33.Text = "UPM Applied";
+            this.lbUPMApplied.AutoSize = true;
+            this.lbUPMApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbUPMApplied.Location = new System.Drawing.Point(83, 61);
+            this.lbUPMApplied.Name = "lbUPMApplied";
+            this.lbUPMApplied.Size = new System.Drawing.Size(115, 23);
+            this.lbUPMApplied.TabIndex = 221;
+            this.lbUPMApplied.Text = "UPM Applied";
             // 
             // lbRateSetData
             // 
@@ -316,15 +316,15 @@
             this.lbRateSetData.TabIndex = 219;
             this.lbRateSetData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lb32
+            // lbUPMTarget
             // 
-            this.lb32.AutoSize = true;
-            this.lb32.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb32.Location = new System.Drawing.Point(83, 100);
-            this.lb32.Name = "lb32";
-            this.lb32.Size = new System.Drawing.Size(108, 23);
-            this.lb32.TabIndex = 220;
-            this.lb32.Text = "UPM Target";
+            this.lbUPMTarget.AutoSize = true;
+            this.lbUPMTarget.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbUPMTarget.Location = new System.Drawing.Point(83, 100);
+            this.lbUPMTarget.Name = "lbUPMTarget";
+            this.lbUPMTarget.Size = new System.Drawing.Size(108, 23);
+            this.lbUPMTarget.TabIndex = 220;
+            this.lbUPMTarget.Text = "UPM Target";
             // 
             // lbSpeedData
             // 
@@ -376,15 +376,15 @@
             this.lbPWMdata.TabIndex = 213;
             this.lbPWMdata.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lb34
+            // lbPWM
             // 
-            this.lb34.AutoSize = true;
-            this.lb34.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb34.Location = new System.Drawing.Point(83, 178);
-            this.lb34.Name = "lb34";
-            this.lb34.Size = new System.Drawing.Size(52, 23);
-            this.lb34.TabIndex = 214;
-            this.lb34.Text = "PWM";
+            this.lbPWM.AutoSize = true;
+            this.lbPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPWM.Location = new System.Drawing.Point(83, 178);
+            this.lbPWM.Name = "lbPWM";
+            this.lbPWM.Size = new System.Drawing.Size(52, 23);
+            this.lbPWM.TabIndex = 214;
+            this.lbPWM.Text = "PWM";
             // 
             // lbWorkRateData
             // 
@@ -608,29 +608,29 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lbWifi);
             this.Controls.Add(this.wifiBar);
             this.Controls.Add(this.tbCountsRev);
-            this.Controls.Add(this.label24);
+            this.Controls.Add(this.lbCounts);
             this.Controls.Add(this.label23);
             this.Controls.Add(this.lbRPM);
             this.Controls.Add(this.lbErrorPercent);
-            this.Controls.Add(this.label15);
+            this.Controls.Add(this.lbError);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.lbSections);
             this.Controls.Add(this.lbRateAppliedData);
-            this.Controls.Add(this.lb33);
+            this.Controls.Add(this.lbUPMApplied);
             this.Controls.Add(this.lbRateSetData);
-            this.Controls.Add(this.lb32);
+            this.Controls.Add(this.lbUPMTarget);
             this.Controls.Add(this.lbSpeedData);
             this.Controls.Add(this.lbSpeed);
             this.Controls.Add(this.lbWidthData);
             this.Controls.Add(this.lbWidth);
             this.Controls.Add(this.lbPWMdata);
-            this.Controls.Add(this.lb34);
+            this.Controls.Add(this.lbPWM);
             this.Controls.Add(this.lbWorkRateData);
             this.Controls.Add(this.lbWorkRate);
             this.Controls.Add(this.sec15);
@@ -673,29 +673,29 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Label lbProduct;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbWifi;
         private System.Windows.Forms.ProgressBar wifiBar;
         private System.Windows.Forms.TextBox tbCountsRev;
-        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label lbCounts;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label lbRPM;
         private System.Windows.Forms.Label lbErrorPercent;
-        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label lbError;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label lbSections;
         private System.Windows.Forms.Label lbRateAppliedData;
-        private System.Windows.Forms.Label lb33;
+        private System.Windows.Forms.Label lbUPMApplied;
         private System.Windows.Forms.Label lbRateSetData;
-        private System.Windows.Forms.Label lb32;
+        private System.Windows.Forms.Label lbUPMTarget;
         private System.Windows.Forms.Label lbSpeedData;
         private System.Windows.Forms.Label lbSpeed;
         private System.Windows.Forms.Label lbWidthData;
         private System.Windows.Forms.Label lbWidth;
         private System.Windows.Forms.Label lbPWMdata;
-        private System.Windows.Forms.Label lb34;
+        private System.Windows.Forms.Label lbPWM;
         private System.Windows.Forms.Label lbWorkRateData;
         private System.Windows.Forms.Label lbWorkRate;
         private System.Windows.Forms.Label sec15;

@@ -151,6 +151,9 @@
   <data name="lgCalSpeed" xml:space="preserve">
     <value>Prędkość Kalibracji</value>
   </data>
+  <data name="lgCalValue" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>Combo Close</value>
   </data>
@@ -205,6 +208,9 @@
   <data name="lgFan" xml:space="preserve">
     <value>Wentylator</value>
   </data>
+  <data name="lgFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
   </data>
@@ -213,6 +219,9 @@
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
     <value>Hektary/ha</value>
+  </data>
+  <data name="lgHighAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgHighMax" xml:space="preserve">
     <value>PWM Max</value>
@@ -252,6 +261,9 @@
   </data>
   <data name="lgLargeScreen" xml:space="preserve">
     <value>Ekran Główny/Duży ekran</value>
+  </data>
+  <data name="lgLowAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Głowny</value>
@@ -331,6 +343,9 @@
   <data name="lgOptions" xml:space="preserve">
     <value>Opcje</value>
   </data>
+  <data name="lgOther" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sekcji na strefę</value>
   </data>
@@ -388,11 +403,17 @@
   <data name="lgRelays" xml:space="preserve">
     <value>Przekaźniki</value>
   </data>
+  <data name="lgResetProducts" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgRPM" xml:space="preserve">
     <value>obr/min</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
     <value>Zapisz</value>
+  </data>
+  <data name="lgScaling" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgSeconds" xml:space="preserve">
     <value>Sekundy</value>
@@ -426,6 +447,9 @@
   </data>
   <data name="lgShowPressure" xml:space="preserve">
     <value>Ciśnienie robocze</value>
+  </data>
+  <data name="lgSingleProduct" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Praca</value>
@@ -495,9 +519,6 @@
   </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Zadane</value>
-  </data>
-  <data name="lgUPMerror" xml:space="preserve">
-    <value>Error %</value>
   </data>
   <data name="lgUPMPWM" xml:space="preserve">
     <value>UPM/PWM</value>

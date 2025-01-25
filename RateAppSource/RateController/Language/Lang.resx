@@ -222,6 +222,9 @@
   <data name="lgFile" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="lgFlow" xml:space="preserve">
+    <value>Flow</value>
+  </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
   </data>
@@ -569,9 +572,6 @@
   </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Applied</value>
-  </data>
-  <data name="lgUPMerror" xml:space="preserve">
-    <value>Error %</value>
   </data>
   <data name="lgUPMPWM" xml:space="preserve">
     <value>UPM/PWM</value>

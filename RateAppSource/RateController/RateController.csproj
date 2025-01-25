@@ -529,7 +529,7 @@
     <EmbeddedResource Include="Language\Lang.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>Lang.Designer.cs</LastGenOutput>
+      <LastGenOutput>Lang1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Language\Lang.ru.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -126,8 +126,15 @@
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>draait al</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lgBackground" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>calibreren</value>
+  </data>
+  <data name="lgCalValue" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>combiventiel</value>
@@ -147,11 +154,20 @@
   <data name="lgCurrentRate" xml:space="preserve">
     <value>toepassing</value>
   </data>
+  <data name="lgError" xml:space="preserve">
+    <value>fout eenheden/min</value>
+  </data>
+  <data name="lgFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgHectares" xml:space="preserve">
     <value>hectare</value>
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
     <value>hectare_ha</value>
+  </data>
+  <data name="lgHighAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgHighMax" xml:space="preserve">
     <value>HoogMax</value>
@@ -165,8 +181,17 @@
   <data name="lgInstantRate" xml:space="preserve">
     <value>momentane toepassing</value>
   </data>
+  <data name="lgInvertFlow" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="lgInvertRelays" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgKPH" xml:space="preserve">
     <value>km/h</value>
+  </data>
+  <data name="lgLowAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgMinPWM" xml:space="preserve">
     <value>MinPWM</value>
@@ -192,6 +217,9 @@
   <data name="lgOptions" xml:space="preserve">
     <value>opties</value>
   </data>
+  <data name="lgOther" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgProduct" xml:space="preserve">
     <value>product</value>
   </data>
@@ -210,11 +238,17 @@
   <data name="lgRate" xml:space="preserve">
     <value>toepassing</value>
   </data>
+  <data name="lgResetProducts" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgRPM" xml:space="preserve">
     <value>omw./min</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
     <value>opslaan als</value>
+  </data>
+  <data name="lgScaling" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgSection" xml:space="preserve">
     <value>sectie</value>
@@ -230,6 +264,9 @@
   </data>
   <data name="lgSensorLocation" xml:space="preserve">
     <value>sensorlocatie</value>
+  </data>
+  <data name="lgSingleProduct" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgSpeed" xml:space="preserve">
     <value>snelheid</value>
@@ -249,14 +286,17 @@
   <data name="lgTargetRate" xml:space="preserve">
     <value>doelwaarde toepassing</value>
   </data>
+  <data name="lgTextColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>eenheden/min</value>
   </data>
-  <data name="lgUPMerror" xml:space="preserve">
-    <value>fout eenheden/min</value>
-  </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>doelwaarde eenheden/min</value>
+  </data>
+  <data name="lgUserColor" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>breedte</value>
