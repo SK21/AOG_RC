@@ -1,7 +1,5 @@
-﻿using AgOpenGPS;
-using RateController.Language;
+﻿using RateController.Language;
 using System;
-using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -117,6 +115,12 @@ namespace RateController.Menu
         {
             ckScreenSwitches.Text = Lang.lgSwitches;
             ckWorkSwitch.Text = Lang.lgWorkSwitch;
+            gbOnScreen.Text = Lang.lgOnScreen;
+            gbAutoSwitch.Text = Lang.lgAutoSwitch;
+            ckDualAuto.Text = Lang.lgDualAuto;
+            rbSections.Text = Lang.lgSections;
+            rbAutoAll.Text = Lang.lgAutoAll;
+            ckNoMaster.Text = Lang.lgNoMaster;
         }
 
         private void UpdateForm(bool UpdateObject = false)

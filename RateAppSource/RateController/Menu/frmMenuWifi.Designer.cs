@@ -32,8 +32,8 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.tbSSID = new System.Windows.Forms.TextBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbPassword = new System.Windows.Forms.Label();
+            this.lbName = new System.Windows.Forms.Label();
             this.ckClient = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
@@ -96,25 +96,25 @@
             this.tbPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbPassword.TextChanged += new System.EventHandler(this.ckClient_CheckedChanged);
             // 
-            // label2
+            // lbPassword
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(58, 324);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(166, 24);
-            this.label2.TabIndex = 224;
-            this.label2.Text = "Network Password";
+            this.lbPassword.AutoSize = true;
+            this.lbPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPassword.Location = new System.Drawing.Point(58, 324);
+            this.lbPassword.Name = "lbPassword";
+            this.lbPassword.Size = new System.Drawing.Size(166, 24);
+            this.lbPassword.TabIndex = 224;
+            this.lbPassword.Text = "Network Password";
             // 
-            // label1
+            // lbName
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(58, 248);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(135, 24);
-            this.label1.TabIndex = 223;
-            this.label1.Text = "Network Name";
+            this.lbName.AutoSize = true;
+            this.lbName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbName.Location = new System.Drawing.Point(58, 248);
+            this.lbName.Name = "lbName";
+            this.lbName.Size = new System.Drawing.Size(135, 24);
+            this.lbName.TabIndex = 223;
+            this.lbName.Text = "Network Name";
             // 
             // ckClient
             // 
@@ -138,8 +138,8 @@
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.Controls.Add(this.tbSSID);
             this.Controls.Add(this.tbPassword);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbPassword);
+            this.Controls.Add(this.lbName);
             this.Controls.Add(this.ckClient);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -160,8 +160,8 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.TextBox tbSSID;
         private System.Windows.Forms.TextBox tbPassword;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbPassword;
+        private System.Windows.Forms.Label lbName;
         private System.Windows.Forms.CheckBox ckClient;
     }
 }

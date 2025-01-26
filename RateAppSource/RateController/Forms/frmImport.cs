@@ -8,20 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController.Forms
 {
     public partial class frmImport : Form
     {
+        private Dictionary<string, string> attributeMapping;
         private FormStart mf;
         private string selectedShapefilePath;
-        private Dictionary<string, string> attributeMapping;
+
         public frmImport(FormStart CallingForm)
         {
             InitializeComponent();
-            mf= CallingForm;
+            mf = CallingForm;
             dgvMapping.AutoGenerateColumns = false;
             dgvMapping.AllowUserToAddRows = false;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveCrossReferencedShapefile();
         }
 
         private void btnSelectFile_Click(object sender, EventArgs e)
@@ -29,20 +36,21 @@ namespace RateController.Forms
             SelectShapefile(dgvMapping);
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void frmImport_FormClosed(object sender, FormClosedEventArgs e)
         {
-            SaveCrossReferencedShapefile();
+            mf.Tls.SaveFormData(this);
         }
-        private void SelectShapefile(DataGridView dgvMapping)
+
+        private void frmImport_Load(object sender, EventArgs e)
         {
-            using (var ofd = new OpenFileDialog { Filter = "Shapefiles (*.shp)|*.shp" })
-            {
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    selectedShapefilePath = ofd.FileName;
-                    LoadShapefileAttributes(dgvMapping);
-                }
-            }
+            mf.Tls.LoadFormData(this);
+            this.BackColor = Properties.Settings.Default.MainBackColour;
+            SetLanguage();
+        }
+        private void SetLanguage()
+        {
+            dgvMapping.Columns[0].HeaderText = Lang.lgZoneAttributes;
+            dgvMapping.Columns[1].HeaderText = Lang.lgShapefileAttributes;
         }
 
         private void LoadShapefileAttributes(DataGridView dgvMapping)
@@ -69,6 +77,7 @@ namespace RateController.Forms
                 int rowIndex = dgvMapping.Rows.Add(predefined, string.Empty); // Add a row with the predefined attribute name
             }
         }
+
         private void SaveCrossReferencedShapefile()
         {
             if (string.IsNullOrEmpty(selectedShapefilePath))
@@ -108,15 +117,16 @@ namespace RateController.Forms
             }
         }
 
-        private void frmImport_FormClosed(object sender, FormClosedEventArgs e)
+        private void SelectShapefile(DataGridView dgvMapping)
         {
-            mf.Tls.SaveFormData(this);
-        }
-
-        private void frmImport_Load(object sender, EventArgs e)
-        {
-            mf.Tls.LoadFormData(this);
-            this.BackColor = Properties.Settings.Default.MainBackColour;
+            using (var ofd = new OpenFileDialog { Filter = "Shapefiles (*.shp)|*.shp" })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    selectedShapefilePath = ofd.FileName;
+                    LoadShapefileAttributes(dgvMapping);
+                }
+            }
         }
     }
 }

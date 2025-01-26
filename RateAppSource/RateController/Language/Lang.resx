@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lg2Wire" xml:space="preserve">
+    <value>2 Wire Valves</value>
+  </data>
+  <data name="lg3Wire" xml:space="preserve">
+    <value>3 Wire Valves</value>
+  </data>
   <data name="lgAcres" xml:space="preserve">
     <value>Acres</value>
   </data>
@@ -137,6 +143,21 @@
   </data>
   <data name="lgApplied" xml:space="preserve">
     <value>Applied</value>
+  </data>
+  <data name="lgAuto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="lgAutoAll" xml:space="preserve">
+    <value>Rate + Sections</value>
+  </data>
+  <data name="lgAutoRate" xml:space="preserve">
+    <value>Auto Rate</value>
+  </data>
+  <data name="lgAutoSection" xml:space="preserve">
+    <value>Auto Section</value>
+  </data>
+  <data name="lgAutoSwitch" xml:space="preserve">
+    <value>Auto Switch</value>
   </data>
   <data name="lgBackColor" xml:space="preserve">
     <value>Background</value>
@@ -213,6 +234,9 @@
   <data name="lgDisplay" xml:space="preserve">
     <value>Display</value>
   </data>
+  <data name="lgDualAuto" xml:space="preserve">
+    <value>Dual Auto</value>
+  </data>
   <data name="lgEnableVR" xml:space="preserve">
     <value>Enable VR</value>
   </data>
@@ -236,6 +260,9 @@
   </data>
   <data name="lgFile" xml:space="preserve">
     <value>File</value>
+  </data>
+  <data name="lgFillTank" xml:space="preserve">
+    <value>Fill Tank</value>
   </data>
   <data name="lgFullScreen" xml:space="preserve">
     <value>Full Screen</value>
@@ -357,8 +384,17 @@
   <data name="lgNetwork" xml:space="preserve">
     <value>Network</value>
   </data>
+  <data name="lgNetworkName" xml:space="preserve">
+    <value>Network Name</value>
+  </data>
+  <data name="lgNetworkPassword" xml:space="preserve">
+    <value>Network Password</value>
+  </data>
   <data name="lgNew" xml:space="preserve">
     <value>New</value>
+  </data>
+  <data name="lgNoMaster" xml:space="preserve">
+    <value>Master Override</value>
   </data>
   <data name="lgNone" xml:space="preserve">
     <value>None</value>
@@ -459,6 +495,9 @@
   <data name="lgRelays" xml:space="preserve">
     <value>Relays</value>
   </data>
+  <data name="lgResetApplied" xml:space="preserve">
+    <value>Reset Applied</value>
+  </data>
   <data name="lgResetProducts" xml:space="preserve">
     <value>Reset Products</value>
   </data>
@@ -515,6 +554,9 @@
   </data>
   <data name="lgSettings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="lgShapefileAttributes" xml:space="preserve">
+    <value>Shapefile Attribute</value>
   </data>
   <data name="lgShowPressure" xml:space="preserve">
     <value>Show</value>
@@ -612,6 +654,9 @@
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Target</value>
   </data>
+  <data name="lgUseWifi" xml:space="preserve">
+    <value>Use Wifi Client Mode</value>
+  </data>
   <data name="lgValves" xml:space="preserve">
     <value>Valves</value>
   </data>
@@ -644,5 +689,8 @@
   </data>
   <data name="lgZone" xml:space="preserve">
     <value>Zone</value>
+  </data>
+  <data name="lgZoneAttributes" xml:space="preserve">
+    <value>Zone Attribute</value>
   </data>
 </root>

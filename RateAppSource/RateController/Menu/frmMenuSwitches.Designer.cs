@@ -34,12 +34,12 @@
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
             this.ckNoMaster = new System.Windows.Forms.CheckBox();
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbAutoSwitch = new System.Windows.Forms.GroupBox();
             this.rbSections = new System.Windows.Forms.RadioButton();
             this.rbAutoAll = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.gbOnScreen = new System.Windows.Forms.GroupBox();
+            this.gbAutoSwitch.SuspendLayout();
+            this.gbOnScreen.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -138,17 +138,17 @@
             this.ckWorkSwitch.UseVisualStyleBackColor = true;
             this.ckWorkSwitch.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
-            // groupBox1
+            // gbAutoSwitch
             // 
-            this.groupBox1.Controls.Add(this.rbSections);
-            this.groupBox1.Controls.Add(this.rbAutoAll);
-            this.groupBox1.Location = new System.Drawing.Point(300, 119);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 151);
-            this.groupBox1.TabIndex = 340;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Auto Switch";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
+            this.gbAutoSwitch.Controls.Add(this.rbSections);
+            this.gbAutoSwitch.Controls.Add(this.rbAutoAll);
+            this.gbAutoSwitch.Location = new System.Drawing.Point(300, 119);
+            this.gbAutoSwitch.Name = "gbAutoSwitch";
+            this.gbAutoSwitch.Size = new System.Drawing.Size(200, 151);
+            this.gbAutoSwitch.TabIndex = 340;
+            this.gbAutoSwitch.TabStop = false;
+            this.gbAutoSwitch.Text = "Auto Switch";
+            this.gbAutoSwitch.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
             // rbSections
             // 
@@ -180,25 +180,25 @@
             this.rbAutoAll.UseVisualStyleBackColor = true;
             this.rbAutoAll.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
-            // groupBox2
+            // gbOnScreen
             // 
-            this.groupBox2.Controls.Add(this.ckScreenSwitches);
-            this.groupBox2.Controls.Add(this.ckDualAuto);
-            this.groupBox2.Location = new System.Drawing.Point(30, 119);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 151);
-            this.groupBox2.TabIndex = 341;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "On-Screen";
-            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
+            this.gbOnScreen.Controls.Add(this.ckScreenSwitches);
+            this.gbOnScreen.Controls.Add(this.ckDualAuto);
+            this.gbOnScreen.Location = new System.Drawing.Point(30, 119);
+            this.gbOnScreen.Name = "gbOnScreen";
+            this.gbOnScreen.Size = new System.Drawing.Size(200, 151);
+            this.gbOnScreen.TabIndex = 341;
+            this.gbOnScreen.TabStop = false;
+            this.gbOnScreen.Text = "On-Screen";
+            this.gbOnScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
             // frmMenuSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbOnScreen);
+            this.Controls.Add(this.gbAutoSwitch);
             this.Controls.Add(this.ckNoMaster);
             this.Controls.Add(this.ckWorkSwitch);
             this.Controls.Add(this.btnCancel);
@@ -211,8 +211,8 @@
             this.Text = "frmMenuSwitches";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuSwitches_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuSwitches_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
+            this.gbAutoSwitch.ResumeLayout(false);
+            this.gbOnScreen.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -225,9 +225,9 @@
         private System.Windows.Forms.CheckBox ckScreenSwitches;
         private System.Windows.Forms.CheckBox ckNoMaster;
         private System.Windows.Forms.CheckBox ckWorkSwitch;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbAutoSwitch;
         private System.Windows.Forms.RadioButton rbAutoAll;
         private System.Windows.Forms.RadioButton rbSections;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbOnScreen;
     }
 }

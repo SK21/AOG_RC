@@ -61,6 +61,24 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 2 Wire Valves.
+        /// </summary>
+        internal static string lg2Wire {
+            get {
+                return ResourceManager.GetString("lg2Wire", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3 Wire Valves.
+        /// </summary>
+        internal static string lg3Wire {
+            get {
+                return ResourceManager.GetString("lg3Wire", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Acres.
         /// </summary>
         internal static string lgAcres {
@@ -120,6 +138,51 @@ namespace RateController.Language {
         internal static string lgApplied {
             get {
                 return ResourceManager.GetString("lgApplied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto.
+        /// </summary>
+        internal static string lgAuto {
+            get {
+                return ResourceManager.GetString("lgAuto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate + Sections.
+        /// </summary>
+        internal static string lgAutoAll {
+            get {
+                return ResourceManager.GetString("lgAutoAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Rate.
+        /// </summary>
+        internal static string lgAutoRate {
+            get {
+                return ResourceManager.GetString("lgAutoRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Section.
+        /// </summary>
+        internal static string lgAutoSection {
+            get {
+                return ResourceManager.GetString("lgAutoSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Switch.
+        /// </summary>
+        internal static string lgAutoSwitch {
+            get {
+                return ResourceManager.GetString("lgAutoSwitch", resourceCulture);
             }
         }
         
@@ -349,6 +412,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dual Auto.
+        /// </summary>
+        internal static string lgDualAuto {
+            get {
+                return ResourceManager.GetString("lgDualAuto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable VR.
         /// </summary>
         internal static string lgEnableVR {
@@ -417,6 +489,15 @@ namespace RateController.Language {
         internal static string lgFile {
             get {
                 return ResourceManager.GetString("lgFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fill Tank.
+        /// </summary>
+        internal static string lgFillTank {
+            get {
+                return ResourceManager.GetString("lgFillTank", resourceCulture);
             }
         }
         
@@ -781,11 +862,38 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Network Name.
+        /// </summary>
+        internal static string lgNetworkName {
+            get {
+                return ResourceManager.GetString("lgNetworkName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network Password.
+        /// </summary>
+        internal static string lgNetworkPassword {
+            get {
+                return ResourceManager.GetString("lgNetworkPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New.
         /// </summary>
         internal static string lgNew {
             get {
                 return ResourceManager.GetString("lgNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Master Override.
+        /// </summary>
+        internal static string lgNoMaster {
+            get {
+                return ResourceManager.GetString("lgNoMaster", resourceCulture);
             }
         }
         
@@ -1087,6 +1195,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset Applied.
+        /// </summary>
+        internal static string lgResetApplied {
+            get {
+                return ResourceManager.GetString("lgResetApplied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset Products.
         /// </summary>
         internal static string lgResetProducts {
@@ -1254,6 +1371,15 @@ namespace RateController.Language {
         internal static string lgSettings {
             get {
                 return ResourceManager.GetString("lgSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shapefile Attribute.
+        /// </summary>
+        internal static string lgShapefileAttributes {
+            get {
+                return ResourceManager.GetString("lgShapefileAttributes", resourceCulture);
             }
         }
         
@@ -1546,6 +1672,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use Wifi Client Mode.
+        /// </summary>
+        internal static string lgUseWifi {
+            get {
+                return ResourceManager.GetString("lgUseWifi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Valves.
         /// </summary>
         internal static string lgValves {
@@ -1641,6 +1776,15 @@ namespace RateController.Language {
         internal static string lgZone {
             get {
                 return ResourceManager.GetString("lgZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zone Attribute.
+        /// </summary>
+        internal static string lgZoneAttributes {
+            get {
+                return ResourceManager.GetString("lgZoneAttributes", resourceCulture);
             }
         }
     }

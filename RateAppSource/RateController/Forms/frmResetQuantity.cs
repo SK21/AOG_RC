@@ -1,6 +1,7 @@
 ﻿using AgOpenGPS;
 using System;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController
 {
@@ -69,6 +70,13 @@ namespace RateController
             TankSize = mf.Products.Item(mf.CurrentProduct()).TankSize;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             UpdateForm();
+            SetLanguage();
+        }
+
+        private void SetLanguage()
+        {
+            ckFill.Text = Lang.lgFillTank;
+            ckReset.Text = Lang.lgResetApplied;
         }
 
         private void SetButtons(bool Edited = false)

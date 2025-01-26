@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController
 {
@@ -164,6 +165,14 @@ namespace RateController
             SetDescriptions();
 
             UpdateForm();
+            SetLanguage();
+        }
+
+        private void SetLanguage()
+        {
+            btnAutoRate.Text = Lang.lgAutoRate;
+            btnAutoSection.Text = Lang.lgAutoSection;
+            btAuto.Text = Lang.lgAuto;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -239,7 +248,7 @@ namespace RateController
         {
             if (mf.UseTransparent != IsTransparent) SetTransparent();
 
-            if (mf.SwitchBox.AutoRateOn||mf.SwitchBox.AutoSectionOn)
+            if (mf.SwitchBox.AutoRateOn || mf.SwitchBox.AutoSectionOn)
             {
                 btAuto.BackColor = Color.LightGreen;
             }

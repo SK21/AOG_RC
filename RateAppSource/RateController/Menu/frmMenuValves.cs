@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -102,6 +103,8 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            rb2Wire.Text = Lang.lg2Wire;
+            rb3Wire.Text= Lang.lg3Wire;
         }
 
         private void UpdateForm()

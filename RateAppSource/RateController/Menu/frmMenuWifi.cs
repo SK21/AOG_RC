@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -72,15 +73,15 @@ namespace RateController.Menu
             UpdateForm();
         }
 
+        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        {
+            PositionForm();
+        }
+
         private void MainMenu_ModuleDefaultsSet(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
-        }
-
-        private void MainMenu_MenuMoved(object sender, EventArgs e)
-        {
-            PositionForm();
         }
 
         private void PositionForm()
@@ -111,6 +112,9 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            ckClient.Text = Lang.lgUseWifi;
+            lbName.Text = Lang.lgNetworkName;
+            lbPassword.Text = Lang.lgNetworkPassword;
         }
 
         private void UpdateForm()
