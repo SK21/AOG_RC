@@ -88,6 +88,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actual.
+        /// </summary>
+        internal static string lgActual {
+            get {
+                return ResourceManager.GetString("lgActual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Already Running.
         /// </summary>
         internal static string lgAlreadyRunning {
@@ -138,6 +147,15 @@ namespace RateController.Language {
         internal static string lgBoards {
             get {
                 return ResourceManager.GetString("lgBoards", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bump Buttons.
+        /// </summary>
+        internal static string lgBumpButtons {
+            get {
+                return ResourceManager.GetString("lgBumpButtons", resourceCulture);
             }
         }
         
@@ -331,6 +349,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable VR.
+        /// </summary>
+        internal static string lgEnableVR {
+            get {
+                return ResourceManager.GetString("lgEnableVR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to End.
         /// </summary>
         internal static string lgEnd {
@@ -390,6 +417,15 @@ namespace RateController.Language {
         internal static string lgFile {
             get {
                 return ResourceManager.GetString("lgFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full Screen.
+        /// </summary>
+        internal static string lgFullScreen {
+            get {
+                return ResourceManager.GetString("lgFullScreen", resourceCulture);
             }
         }
         
@@ -484,6 +520,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        internal static string lgImport {
+            get {
+                return ResourceManager.GetString("lgImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Instant Rate.
         /// </summary>
         internal static string lgInstantRate {
@@ -561,6 +606,15 @@ namespace RateController.Language {
         internal static string lgMachine {
             get {
                 return ResourceManager.GetString("lgMachine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map.
+        /// </summary>
+        internal static string lgMap {
+            get {
+                return ResourceManager.GetString("lgMap", resourceCulture);
             }
         }
         
@@ -1069,6 +1123,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scale Weight.
+        /// </summary>
+        internal static string lgScaleWeight {
+            get {
+                return ResourceManager.GetString("lgScaleWeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scaling Factor.
         /// </summary>
         internal static string lgScaling {
@@ -1168,11 +1231,20 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sensor Location.
+        ///   Looks up a localized string similar to Rate Sensor Location.
         /// </summary>
         internal static string lgSensorLocation {
             get {
                 return ResourceManager.GetString("lgSensorLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Point.
+        /// </summary>
+        internal static string lgSetPoint {
+            get {
+                return ResourceManager.GetString("lgSetPoint", resourceCulture);
             }
         }
         
@@ -1438,6 +1510,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fixed Value.
+        /// </summary>
+        internal static string lgUPMFixed {
+            get {
+                return ResourceManager.GetString("lgUPMFixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPM/PWM.
         /// </summary>
         internal static string lgUPMPWM {
@@ -1447,20 +1528,20 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to By Speed.
+        /// </summary>
+        internal static string lgUPMSpeed {
+            get {
+                return ResourceManager.GetString("lgUPMSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPM Target.
         /// </summary>
         internal static string lgUPMTarget {
             get {
                 return ResourceManager.GetString("lgUPMTarget", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use Variable Rate.
-        /// </summary>
-        internal static string lgUseVR {
-            get {
-                return ResourceManager.GetString("lgUseVR", resourceCulture);
             }
         }
         

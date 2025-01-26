@@ -32,7 +32,8 @@
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnNew = new System.Windows.Forms.Button();
             this.btnImport = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbZone = new System.Windows.Forms.GroupBox();
+            this.lbArea = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.colorComboBox = new System.Windows.Forms.ComboBox();
             this.btnDelete = new System.Windows.Forms.Button();
@@ -48,16 +49,15 @@
             this.tbP1 = new System.Windows.Forms.TextBox();
             this.tbName = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.gbMap = new System.Windows.Forms.GroupBox();
             this.ckFullScreen = new System.Windows.Forms.CheckBox();
             this.VSzoom = new System.Windows.Forms.VScrollBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ckEnable = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.lbArea = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.btnResume = new System.Windows.Forms.Button();
+            this.gbZone.SuspendLayout();
+            this.gbMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -104,30 +104,39 @@
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
-            // groupBox1
+            // gbZone
             // 
-            this.groupBox1.Controls.Add(this.lbArea);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.colorComboBox);
-            this.groupBox1.Controls.Add(this.btnDelete);
-            this.groupBox1.Controls.Add(this.btnCreateZone);
-            this.groupBox1.Controls.Add(this.lbP4);
-            this.groupBox1.Controls.Add(this.tbP4);
-            this.groupBox1.Controls.Add(this.lbP3);
-            this.groupBox1.Controls.Add(this.ckEdit);
-            this.groupBox1.Controls.Add(this.tbP3);
-            this.groupBox1.Controls.Add(this.lbP2);
-            this.groupBox1.Controls.Add(this.tbP2);
-            this.groupBox1.Controls.Add(this.lbP1);
-            this.groupBox1.Controls.Add(this.tbP1);
-            this.groupBox1.Controls.Add(this.tbName);
-            this.groupBox1.Location = new System.Drawing.Point(255, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(278, 318);
-            this.groupBox1.TabIndex = 21;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Zone";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            this.gbZone.Controls.Add(this.lbArea);
+            this.gbZone.Controls.Add(this.label1);
+            this.gbZone.Controls.Add(this.colorComboBox);
+            this.gbZone.Controls.Add(this.btnDelete);
+            this.gbZone.Controls.Add(this.btnCreateZone);
+            this.gbZone.Controls.Add(this.lbP4);
+            this.gbZone.Controls.Add(this.tbP4);
+            this.gbZone.Controls.Add(this.lbP3);
+            this.gbZone.Controls.Add(this.ckEdit);
+            this.gbZone.Controls.Add(this.tbP3);
+            this.gbZone.Controls.Add(this.lbP2);
+            this.gbZone.Controls.Add(this.tbP2);
+            this.gbZone.Controls.Add(this.lbP1);
+            this.gbZone.Controls.Add(this.tbP1);
+            this.gbZone.Controls.Add(this.tbName);
+            this.gbZone.Location = new System.Drawing.Point(255, 0);
+            this.gbZone.Name = "gbZone";
+            this.gbZone.Size = new System.Drawing.Size(278, 318);
+            this.gbZone.TabIndex = 21;
+            this.gbZone.TabStop = false;
+            this.gbZone.Text = "Zone";
+            this.gbZone.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // lbArea
+            // 
+            this.lbArea.Location = new System.Drawing.Point(199, 31);
+            this.lbArea.Name = "lbArea";
+            this.lbArea.Size = new System.Drawing.Size(67, 24);
+            this.lbArea.TabIndex = 342;
+            this.lbArea.Text = "9999.0";
+            this.lbArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label1
             // 
@@ -292,19 +301,19 @@
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // groupBox2
+            // gbMap
             // 
-            this.groupBox2.Controls.Add(this.tbMapName);
-            this.groupBox2.Controls.Add(this.btnSave);
-            this.groupBox2.Controls.Add(this.btnNew);
-            this.groupBox2.Controls.Add(this.btnLoad);
-            this.groupBox2.Location = new System.Drawing.Point(106, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(143, 318);
-            this.groupBox2.TabIndex = 348;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Map";
-            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            this.gbMap.Controls.Add(this.tbMapName);
+            this.gbMap.Controls.Add(this.btnSave);
+            this.gbMap.Controls.Add(this.btnNew);
+            this.gbMap.Controls.Add(this.btnLoad);
+            this.gbMap.Location = new System.Drawing.Point(106, 0);
+            this.gbMap.Name = "gbMap";
+            this.gbMap.Size = new System.Drawing.Size(143, 318);
+            this.gbMap.TabIndex = 348;
+            this.gbMap.TabStop = false;
+            this.gbMap.Text = "Map";
+            this.gbMap.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
             // ckFullScreen
             // 
@@ -355,28 +364,15 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // checkBox1
+            // btnResume
             // 
-            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox1.FlatAppearance.BorderSize = 0;
-            this.checkBox1.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.checkBox1.Location = new System.Drawing.Point(8, 92);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(89, 64);
-            this.checkBox1.TabIndex = 352;
-            this.checkBox1.Text = "Resume";
-            this.checkBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // lbArea
-            // 
-            this.lbArea.Location = new System.Drawing.Point(199, 31);
-            this.lbArea.Name = "lbArea";
-            this.lbArea.Size = new System.Drawing.Size(67, 24);
-            this.lbArea.TabIndex = 342;
-            this.lbArea.Text = "9999.0";
-            this.lbArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnResume.Location = new System.Drawing.Point(8, 92);
+            this.btnResume.Name = "btnResume";
+            this.btnResume.Size = new System.Drawing.Size(89, 64);
+            this.btnResume.TabIndex = 353;
+            this.btnResume.Text = "Resume";
+            this.btnResume.UseVisualStyleBackColor = true;
+            this.btnResume.Click += new System.EventHandler(this.btnResume_Click);
             // 
             // frmMenuRateMap
             // 
@@ -384,14 +380,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.ControlBox = false;
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.btnResume);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.ckFullScreen);
             this.Controls.Add(this.ckEnable);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.VSzoom);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbMap);
+            this.Controls.Add(this.gbZone);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(6);
@@ -401,10 +397,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuRateMap_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mnuRateMap_FormClosed);
             this.Load += new System.EventHandler(this.mnuRateMap_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.gbZone.ResumeLayout(false);
+            this.gbZone.PerformLayout();
+            this.gbMap.ResumeLayout(false);
+            this.gbMap.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -414,7 +410,7 @@
         private System.Windows.Forms.TextBox tbMapName;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Button btnNew;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbZone;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnCreateZone;
         private System.Windows.Forms.Label lbP4;
@@ -429,15 +425,15 @@
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.CheckBox ckEdit;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbMap;
         private System.Windows.Forms.VScrollBar VSzoom;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox ckFullScreen;
         private System.Windows.Forms.CheckBox ckEnable;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox colorComboBox;
         private System.Windows.Forms.Label lbArea;
+        private System.Windows.Forms.Button btnResume;
     }
 }

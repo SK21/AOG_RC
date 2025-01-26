@@ -30,6 +30,12 @@ namespace RateController.Menu
             SetButtons(false);
         }
 
+        private void btnFan_Click(object sender, EventArgs e)
+        {
+            MainMenu.CurrentProduct.FanOn = !MainMenu.CurrentProduct.FanOn;
+            UpdateFans();
+        }
+
         private void btnLeft_Click(object sender, EventArgs e)
         {
             MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID - 1);
@@ -227,11 +233,6 @@ namespace RateController.Menu
             timer1.Enabled = true;
         }
 
-        private void MainMenu_ProductChanged(object sender, EventArgs e)
-        {
-            UpdateForm();
-        }
-
         private void lbBaseRate_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -255,6 +256,11 @@ namespace RateController.Menu
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
             }
+        }
+
+        private void MainMenu_ProductChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void MyMenu_MenuMoved(object sender, EventArgs e)
@@ -472,6 +478,11 @@ namespace RateController.Menu
             }
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            UpdateFans();
+        }
+
         private void UpdateFans()
         {
             double Target = MainMenu.CurrentProduct.TargetUPM();
@@ -564,17 +575,6 @@ namespace RateController.Menu
             TankSize.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             TankRemain.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
-        }
-
-        private void btnFan_Click(object sender, EventArgs e)
-        {
-            MainMenu.CurrentProduct.FanOn = !MainMenu.CurrentProduct.FanOn;
-            UpdateFans();
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            UpdateFans();
         }
     }
 }

@@ -2,9 +2,8 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Security.Cryptography;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -57,7 +56,7 @@ namespace RateController.Menu
                     mf.SetScale(MainMenu.CurrentProduct.ID, ckScale.Checked);
                     MainMenu.CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
                     if (byte.TryParse(tbOffRate.Text, out byte off)) MainMenu.CurrentProduct.OffRateSetting = off;
-                    MainMenu.CurrentProduct.UseMinUPMbySpeed=rbUPMSpeed.Checked;
+                    MainMenu.CurrentProduct.UseMinUPMbySpeed = rbUPMSpeed.Checked;
 
                     MainMenu.CurrentProduct.Save();
                     SetButtons(false);
@@ -140,6 +139,22 @@ namespace RateController.Menu
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             timer1.Enabled = true;
             UpdateForm();
+            SetLanguage();
+        }
+
+        private void SetLanguage()
+        {
+            grpSensor.Text = Lang.lgSensorLocation;
+            grpMinUPM.Text = Lang.lgMinUPM;
+            lbModuleID.Text = Lang.lgModuleID;
+            lbSensorID.Text = Lang.lgSensorID;
+            rbUPMFixed.Text = Lang.lgUPMFixed;
+            rbUPMSpeed.Text = Lang.lgUPMSpeed;
+            ckDefault.Text = Lang.lgDefaultProduct;
+            ckBumpButtons.Text = Lang.lgBumpButtons;
+            ckOffRate.Text = Lang.lgOffRate;
+            ckOnScreen.Text = Lang.lgOnScreen;
+            ckScale.Text = Lang.lgScaleWeight;
         }
 
         private void grpMinUPM_Paint(object sender, PaintEventArgs e)

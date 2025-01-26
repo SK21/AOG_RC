@@ -126,6 +126,9 @@
   <data name="lgActivity" xml:space="preserve">
     <value>Activity</value>
   </data>
+  <data name="lgActual" xml:space="preserve">
+    <value>Actual</value>
+  </data>
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>Already Running</value>
   </data>
@@ -143,6 +146,9 @@
   </data>
   <data name="lgBoards" xml:space="preserve">
     <value>Boards</value>
+  </data>
+  <data name="lgBumpButtons" xml:space="preserve">
+    <value>Bump Buttons</value>
   </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Meter Cal</value>
@@ -207,6 +213,9 @@
   <data name="lgDisplay" xml:space="preserve">
     <value>Display</value>
   </data>
+  <data name="lgEnableVR" xml:space="preserve">
+    <value>Enable VR</value>
+  </data>
   <data name="lgEnd" xml:space="preserve">
     <value>End</value>
   </data>
@@ -227,6 +236,9 @@
   </data>
   <data name="lgFile" xml:space="preserve">
     <value>File</value>
+  </data>
+  <data name="lgFullScreen" xml:space="preserve">
+    <value>Full Screen</value>
   </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
@@ -258,6 +270,9 @@
   <data name="lgID" xml:space="preserve">
     <value>ID</value>
   </data>
+  <data name="lgImport" xml:space="preserve">
+    <value>Import</value>
+  </data>
   <data name="lgInstantRate" xml:space="preserve">
     <value>Instant Rate</value>
   </data>
@@ -284,6 +299,9 @@
   </data>
   <data name="lgMachine" xml:space="preserve">
     <value>Machine</value>
+  </data>
+  <data name="lgMap" xml:space="preserve">
+    <value>Map</value>
   </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Master</value>
@@ -453,6 +471,9 @@
   <data name="lgSaveAs" xml:space="preserve">
     <value>Save As</value>
   </data>
+  <data name="lgScaleWeight" xml:space="preserve">
+    <value>Scale Weight</value>
+  </data>
   <data name="lgScaling" xml:space="preserve">
     <value>Scaling Factor</value>
   </data>
@@ -487,7 +508,10 @@
     <value>Sensor ID</value>
   </data>
   <data name="lgSensorLocation" xml:space="preserve">
-    <value>Sensor Location</value>
+    <value>Rate Sensor Location</value>
+  </data>
+  <data name="lgSetPoint" xml:space="preserve">
+    <value>Set Point</value>
   </data>
   <data name="lgSettings" xml:space="preserve">
     <value>Settings</value>
@@ -576,14 +600,17 @@
   <data name="lgUPMerror" xml:space="preserve">
     <value>Error %</value>
   </data>
+  <data name="lgUPMFixed" xml:space="preserve">
+    <value>Fixed Value</value>
+  </data>
   <data name="lgUPMPWM" xml:space="preserve">
     <value>UPM/PWM</value>
   </data>
+  <data name="lgUPMSpeed" xml:space="preserve">
+    <value>By Speed</value>
+  </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Target</value>
-  </data>
-  <data name="lgUseVR" xml:space="preserve">
-    <value>Use Variable Rate</value>
   </data>
   <data name="lgValves" xml:space="preserve">
     <value>Valves</value>

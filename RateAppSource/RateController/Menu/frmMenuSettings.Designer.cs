@@ -45,7 +45,7 @@
             this.lbSensorID = new System.Windows.Forms.Label();
             this.tbSenID = new System.Windows.Forms.TextBox();
             this.ModuleIndicator = new System.Windows.Forms.Label();
-            this.lbConID = new System.Windows.Forms.Label();
+            this.lbModuleID = new System.Windows.Forms.Label();
             this.tbConID = new System.Windows.Forms.TextBox();
             this.btnRight = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
@@ -242,7 +242,7 @@
             this.grpSensor.Controls.Add(this.lbSensorID);
             this.grpSensor.Controls.Add(this.tbSenID);
             this.grpSensor.Controls.Add(this.ModuleIndicator);
-            this.grpSensor.Controls.Add(this.lbConID);
+            this.grpSensor.Controls.Add(this.lbModuleID);
             this.grpSensor.Controls.Add(this.tbConID);
             this.grpSensor.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpSensor.Location = new System.Drawing.Point(86, 48);
@@ -287,14 +287,14 @@
             this.ModuleIndicator.TabIndex = 149;
             this.ModuleIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lbConID
+            // lbModuleID
             // 
-            this.lbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbConID.Location = new System.Drawing.Point(6, 30);
-            this.lbConID.Name = "lbConID";
-            this.lbConID.Size = new System.Drawing.Size(97, 23);
-            this.lbConID.TabIndex = 148;
-            this.lbConID.Text = "Module ID";
+            this.lbModuleID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModuleID.Location = new System.Drawing.Point(6, 30);
+            this.lbModuleID.Name = "lbModuleID";
+            this.lbModuleID.Size = new System.Drawing.Size(97, 23);
+            this.lbModuleID.TabIndex = 148;
+            this.lbModuleID.Text = "Module ID";
             // 
             // tbConID
             // 
@@ -443,7 +443,7 @@
         private System.Windows.Forms.Label lbSensorID;
         private System.Windows.Forms.TextBox tbSenID;
         private System.Windows.Forms.Label ModuleIndicator;
-        private System.Windows.Forms.Label lbConID;
+        private System.Windows.Forms.Label lbModuleID;
         private System.Windows.Forms.TextBox tbConID;
         private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Button btnLeft;

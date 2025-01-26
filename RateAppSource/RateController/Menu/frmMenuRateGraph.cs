@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -26,12 +27,13 @@ namespace RateController.Menu
             InitializeComponent();
             mf = CallingForm;
             Prod = mf.Products.Item(mf.CurrentProduct());
+
             #region // language
 
-            this.label5.Text = Lang.lgUPMTarget;
-            this.label1.Text = Lang.lgUPMApplied;
+            this.lbSetPoint.Text = Lang.lgUPMTarget;
+            this.lbActual.Text = Lang.lgUPMApplied;
             this.Text = Lang.lgPIDTune;
-            label7.Text = Lang.lgError;
+            lbError.Text = Lang.lgError;
 
             #endregion // language
         }
@@ -169,6 +171,14 @@ namespace RateController.Menu
             lblMin.Text = ((int)(unoChart.ChartAreas[0].AxisY.Minimum * 0.01)).ToString();
 
             btnGainAuto.PerformClick();
+            SetLanguage();
+        }
+
+        private void SetLanguage()
+        {
+            lbActual.Text = Lang.lgActual;
+            lbSetPoint.Text = Lang.lgSetPoint;
+            lbError.Text = Lang.lgUPMerror;
         }
 
         private void timer1_Tick(object sender, EventArgs e)

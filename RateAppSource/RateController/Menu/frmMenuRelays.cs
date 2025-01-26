@@ -1,13 +1,7 @@
 ﻿using AgOpenGPS;
 using RateController.Language;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -39,7 +33,7 @@ namespace RateController.Menu
         {
             try
             {
-                if(Reset)
+                if (Reset)
                 {
                     Reset = false;
                     mf.RelayObjects.Reset();

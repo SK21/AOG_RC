@@ -666,7 +666,7 @@ namespace RateController.Menu
             if (mf.UseInches)
             {
                 lbWidth.Text = Lang.lgWidth + ":  " + ((DisplayWidth).ToString("N0")) + " Inches";
-                lbFeet.Text = (DisplayWidth/12.0).ToString("N1") + "  FT";
+                lbFeet.Text = (DisplayWidth / 12.0).ToString("N1") + "  FT";
                 lbFeet.Visible = true;
             }
             else

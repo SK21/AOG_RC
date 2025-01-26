@@ -1,5 +1,6 @@
 ﻿using AgOpenGPS;
 using GMap.NET.WindowsForms;
+using RateController.Language;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,10 +10,10 @@ namespace RateController.Menu
     public partial class frmMenuRateMap : Form
     {
         private bool Initializing = false;
+        private int MainLeft = 0;
         private frmMenu MainMenu;
+        private int MainTop = 0;
         private FormStart mf;
-        int MainLeft = 0;
-        int MainTop = 0;
 
         public frmMenuRateMap(FormStart main, frmMenu menu)
         {
@@ -94,6 +95,16 @@ namespace RateController.Menu
             {
                 mf.Tls.ShowMessage("New zone could not be created.");
             }
+        }
+
+        private void btnResume_Click(object sender, EventArgs e)
+        {
+            Initializing = true;
+            if (!mf.Tls.Manager.LoadLastMap())
+            {
+                mf.Tls.ShowMessage("Map could not be loaded.");
+            }
+            Initializing = false;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -316,6 +327,12 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            btnImport.Text = Lang.lgImport;
+            btnResume.Text = Lang.lgResume;
+            ckFullScreen.Text = Lang.lgFullScreen;
+            ckEnable.Text = Lang.lgEnableVR;
+            gbMap.Text = Lang.lgMap;
+            gbZone.Text = Lang.lgZone;
         }
 
         private void tbMapName_TextChanged(object sender, EventArgs e)
