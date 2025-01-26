@@ -295,6 +295,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Defaults.
+        /// </summary>
+        internal static string lgDefaults {
+            get {
+                return ResourceManager.GetString("lgDefaults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Density.
         /// </summary>
         internal static string lgDensity {
@@ -664,6 +673,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Momentary.
+        /// </summary>
+        internal static string lgMomentary {
+            get {
+                return ResourceManager.GetString("lgMomentary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Monitoring.
         /// </summary>
         internal static string lgMonitoring {
@@ -844,6 +862,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pressure Pin.
+        /// </summary>
+        internal static string lgPressurePin {
+            get {
+                return ResourceManager.GetString("lgPressurePin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Primed Start.
         /// </summary>
         internal static string lgPrimedStart {
@@ -1011,6 +1038,15 @@ namespace RateController.Language {
         internal static string lgResetProducts {
             get {
                 return ResourceManager.GetString("lgResetProducts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resume.
+        /// </summary>
+        internal static string lgResume {
+            get {
+                return ResourceManager.GetString("lgResume", resourceCulture);
             }
         }
         
@@ -1249,7 +1285,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Switch Delay.
+        ///   Looks up a localized string similar to Master Switch Delay.
         /// </summary>
         internal static string lgSwitchDelay {
             get {

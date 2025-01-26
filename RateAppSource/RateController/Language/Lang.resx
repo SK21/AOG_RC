@@ -195,6 +195,9 @@
   <data name="lgDefaultProduct" xml:space="preserve">
     <value>Default Product</value>
   </data>
+  <data name="lgDefaults" xml:space="preserve">
+    <value>Defaults</value>
+  </data>
   <data name="lgDensity" xml:space="preserve">
     <value>Density</value>
   </data>
@@ -318,6 +321,9 @@
   <data name="lgModules" xml:space="preserve">
     <value>Modules</value>
   </data>
+  <data name="lgMomentary" xml:space="preserve">
+    <value>Momentary</value>
+  </data>
   <data name="lgMonitoring" xml:space="preserve">
     <value>Monitoring</value>
   </data>
@@ -378,6 +384,9 @@
   <data name="lgPressure" xml:space="preserve">
     <value>Pressure</value>
   </data>
+  <data name="lgPressurePin" xml:space="preserve">
+    <value>Pressure Pin</value>
+  </data>
   <data name="lgPrimedStart" xml:space="preserve">
     <value>Primed Start</value>
   </data>
@@ -434,6 +443,9 @@
   </data>
   <data name="lgResetProducts" xml:space="preserve">
     <value>Reset Products</value>
+  </data>
+  <data name="lgResume" xml:space="preserve">
+    <value>Resume</value>
   </data>
   <data name="lgRPM" xml:space="preserve">
     <value>RPM</value>
@@ -514,7 +526,7 @@
     <value>Switch</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>Switch Delay</value>
+    <value>Master Switch Delay</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Switches</value>

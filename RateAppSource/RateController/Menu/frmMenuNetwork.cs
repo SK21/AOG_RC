@@ -115,6 +115,21 @@ namespace RateController.Menu
             UpdateForm();
         }
 
+        private void frmMenuNetwork_Shown(object sender, EventArgs e)
+        {
+            // check for no settings
+            if (!MainMenu.MenuNetworkHasRan)
+            {
+                MainMenu.MenuNetworkHasRan = true;
+                if (mf.ModuleConfig.Sensor0Flow == 0 && mf.ModuleConfig.Sensor0Dir == 0 && mf.ModuleConfig.Sensor0PWM == 0
+                    && mf.ModuleConfig.Sensor1Dir == 0 && mf.ModuleConfig.Sensor1Flow == 0 && mf.ModuleConfig.Sensor1PWM == 0)
+                {
+                    mf.Tls.ShowMessage("Empty settings, default values selected.", "Default Values");
+                    ckDefaultModule.Checked = true;
+                    SetButtons(true);
+                }
+            }
+        }
 
         private void groupBox2_Paint(object sender, PaintEventArgs e)
         {
@@ -305,6 +320,9 @@ namespace RateController.Menu
         {
             lbSubnet.Text = Lang.lgSelectedSubnet;
             lbIP.Text = Lang.lgConfigIP;
+            gbNetwork.Text = Lang.lgNetwork;
+            gbBoards.Text = Lang.lgBoards;
+            ckDefaultModule.Text = Lang.lgDefaults;
         }
 
         private string SubAddress(string Address)
@@ -344,22 +362,6 @@ namespace RateController.Menu
 
             ckDefaultModule.Checked = false;
             Initializing = false;
-        }
-
-        private void frmMenuNetwork_Shown(object sender, EventArgs e)
-        {
-            // check for no settings
-            if (!MainMenu.MenuNetworkHasRan)
-            {
-                MainMenu.MenuNetworkHasRan = true;
-                if (mf.ModuleConfig.Sensor0Flow == 0 && mf.ModuleConfig.Sensor0Dir == 0 && mf.ModuleConfig.Sensor0PWM == 0
-                    && mf.ModuleConfig.Sensor1Dir == 0 && mf.ModuleConfig.Sensor1Flow == 0 && mf.ModuleConfig.Sensor1PWM == 0)
-                {
-                    mf.Tls.ShowMessage("Empty settings, default values selected.", "Default Values");
-                    ckDefaultModule.Checked = true;
-                    SetButtons(true);
-                }
-            }
         }
     }
 }

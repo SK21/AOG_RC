@@ -37,14 +37,14 @@
             this.cbEthernet = new System.Windows.Forms.ComboBox();
             this.btnSendSubnet = new System.Windows.Forms.Button();
             this.btnRescan = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbBoards = new System.Windows.Forms.GroupBox();
             this.ckDefaultModule = new System.Windows.Forms.CheckBox();
             this.rbNano = new System.Windows.Forms.RadioButton();
             this.rbESP32 = new System.Windows.Forms.RadioButton();
             this.rbTeensy = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.gbNetwork = new System.Windows.Forms.GroupBox();
+            this.gbBoards.SuspendLayout();
+            this.gbNetwork.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -154,20 +154,20 @@
             this.btnRescan.UseVisualStyleBackColor = false;
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             // 
-            // groupBox1
+            // gbBoards
             // 
-            this.groupBox1.Controls.Add(this.ckDefaultModule);
-            this.groupBox1.Controls.Add(this.rbNano);
-            this.groupBox1.Controls.Add(this.rbESP32);
-            this.groupBox1.Controls.Add(this.rbTeensy);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(62, 331);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(398, 200);
-            this.groupBox1.TabIndex = 224;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Board";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
+            this.gbBoards.Controls.Add(this.ckDefaultModule);
+            this.gbBoards.Controls.Add(this.rbNano);
+            this.gbBoards.Controls.Add(this.rbESP32);
+            this.gbBoards.Controls.Add(this.rbTeensy);
+            this.gbBoards.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbBoards.Location = new System.Drawing.Point(62, 331);
+            this.gbBoards.Name = "gbBoards";
+            this.gbBoards.Size = new System.Drawing.Size(398, 200);
+            this.gbBoards.TabIndex = 224;
+            this.gbBoards.TabStop = false;
+            this.gbBoards.Text = "Board";
+            this.gbBoards.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
             // ckDefaultModule
             // 
@@ -230,30 +230,30 @@
             this.rbTeensy.UseVisualStyleBackColor = true;
             this.rbTeensy.CheckedChanged += new System.EventHandler(this.rbTeensy_CheckedChanged);
             // 
-            // groupBox2
+            // gbNetwork
             // 
-            this.groupBox2.Controls.Add(this.cbEthernet);
-            this.groupBox2.Controls.Add(this.lbSubnet);
-            this.groupBox2.Controls.Add(this.btnSendSubnet);
-            this.groupBox2.Controls.Add(this.btnRescan);
-            this.groupBox2.Controls.Add(this.lbIP);
-            this.groupBox2.Controls.Add(this.lbModuleIP);
-            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(62, 74);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(398, 215);
-            this.groupBox2.TabIndex = 225;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Network";
-            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
+            this.gbNetwork.Controls.Add(this.cbEthernet);
+            this.gbNetwork.Controls.Add(this.lbSubnet);
+            this.gbNetwork.Controls.Add(this.btnSendSubnet);
+            this.gbNetwork.Controls.Add(this.btnRescan);
+            this.gbNetwork.Controls.Add(this.lbIP);
+            this.gbNetwork.Controls.Add(this.lbModuleIP);
+            this.gbNetwork.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbNetwork.Location = new System.Drawing.Point(62, 74);
+            this.gbNetwork.Name = "gbNetwork";
+            this.gbNetwork.Size = new System.Drawing.Size(398, 215);
+            this.gbNetwork.TabIndex = 225;
+            this.gbNetwork.TabStop = false;
+            this.gbNetwork.Text = "Network";
+            this.gbNetwork.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
             // frmMenuNetwork
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbNetwork);
+            this.Controls.Add(this.gbBoards);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -263,9 +263,9 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuNetwork_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuNetwork_Load);
             this.Shown += new System.EventHandler(this.frmMenuNetwork_Shown);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.gbBoards.ResumeLayout(false);
+            this.gbNetwork.ResumeLayout(false);
+            this.gbNetwork.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -280,11 +280,11 @@
         private System.Windows.Forms.ComboBox cbEthernet;
         private System.Windows.Forms.Button btnSendSubnet;
         private System.Windows.Forms.Button btnRescan;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbBoards;
         private System.Windows.Forms.RadioButton rbNano;
         private System.Windows.Forms.RadioButton rbESP32;
         private System.Windows.Forms.RadioButton rbTeensy;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbNetwork;
         private System.Windows.Forms.CheckBox ckDefaultModule;
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -74,6 +75,10 @@ namespace RateController.Menu
             UpdateForm();
         }
 
+        private void lbDelay_Click(object sender, EventArgs e)
+        {
+        }
+
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
@@ -107,24 +112,62 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            lbOnTime.Text = Lang.lgOnTime;
+            lbSpeed.Text = Lang.lgSpeed;
+            lbDelay.Text = Lang.lgSwitchDelay;
+            ckResume.Text = Lang.lgResume;
+            lbOnSeconds.Text = Lang.lgSeconds;
+            lbDelaySeconds.Text = Lang.lgSeconds;
         }
 
-        private void UpdateForm()
+        private void tbDelay_Enter(object sender, EventArgs e)
         {
-            Initializing = true;
-            tbSpeed.Text = mf.SimSpeed.ToString("N1");
-            tbTime.Text = mf.PrimeTime.ToString("N0");
-            tbDelay.Text = mf.PrimeDelay.ToString("N0");
+            double tempD;
+            double.TryParse(tbDelay.Text, out tempD);
+            using (var form = new FormNumeric(0, 8, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbDelay.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
 
-            if (mf.UseInches)
+        private void tbDelay_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbDelay.Text, out tempD);
+            if (tempD < 0 || tempD > 8)
             {
-                lbSpeed.Text = "MPH";
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
             }
-            else
+        }
+
+        private void tbSpeed_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSpeed.Text, out tempD);
+            using (var form = new FormNumeric(0, 40, tempD))
             {
-                lbSpeed.Text = "KMH";
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSpeed.Text = form.ReturnValue.ToString("N1");
+                }
             }
-            Initializing = false;
+        }
+
+        private void tbSpeed_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSpeed.Text, out tempD);
+            if (tempD < 0 || tempD > 40)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
         }
 
         private void tbTime_Enter(object sender, EventArgs e)
@@ -157,59 +200,22 @@ namespace RateController.Menu
             }
         }
 
-        private void tbSpeed_Enter(object sender, EventArgs e)
+        private void UpdateForm()
         {
-            double tempD;
-            double.TryParse(tbSpeed.Text, out tempD);
-            using (var form = new FormNumeric(0, 40, tempD))
+            Initializing = true;
+            tbSpeed.Text = mf.SimSpeed.ToString("N1");
+            tbTime.Text = mf.PrimeTime.ToString("N0");
+            tbDelay.Text = mf.PrimeDelay.ToString("N0");
+
+            if (mf.UseInches)
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbSpeed.Text = form.ReturnValue.ToString("N1");
-                }
+                lbSpeed.Text = "MPH";
             }
-        }
-
-        private void tbSpeed_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbSpeed.Text, out tempD);
-            if (tempD < 0 || tempD > 40)
+            else
             {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
+                lbSpeed.Text = "KMH";
             }
-        }
-
-        private void tbDelay_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbDelay.Text, out tempD);
-            using (var form = new FormNumeric(0, 8, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbDelay.Text = form.ReturnValue.ToString("N0");
-                }
-            }
-        }
-
-        private void tbDelay_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbDelay.Text, out tempD);
-            if (tempD < 0 || tempD > 8)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void lbDelay_Click(object sender, EventArgs e)
-        {
-
+            Initializing = false;
         }
     }
 }

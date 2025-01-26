@@ -31,7 +31,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.tbPressure = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
+            this.lbPressure = new System.Windows.Forms.Label();
             this.ckMomentary = new System.Windows.Forms.CheckBox();
             this.tbWrk = new System.Windows.Forms.TextBox();
             this.lbWorkPin = new System.Windows.Forms.Label();
@@ -95,15 +95,15 @@
             this.tbPressure.TabStop = false;
             this.tbPressure.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label25
+            // lbPressure
             // 
-            this.label25.AutoSize = true;
-            this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(91, 435);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(117, 24);
-            this.label25.TabIndex = 237;
-            this.label25.Text = "Pressure Pin";
+            this.lbPressure.AutoSize = true;
+            this.lbPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPressure.Location = new System.Drawing.Point(91, 435);
+            this.lbPressure.Name = "lbPressure";
+            this.lbPressure.Size = new System.Drawing.Size(117, 24);
+            this.lbPressure.TabIndex = 237;
+            this.lbPressure.Text = "Pressure Pin";
             // 
             // ckMomentary
             // 
@@ -266,7 +266,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.Controls.Add(this.tbPressure);
-            this.Controls.Add(this.label25);
+            this.Controls.Add(this.lbPressure);
             this.Controls.Add(this.ckMomentary);
             this.Controls.Add(this.tbWrk);
             this.Controls.Add(this.lbWorkPin);
@@ -299,7 +299,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.TextBox tbPressure;
-        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label lbPressure;
         private System.Windows.Forms.CheckBox ckMomentary;
         private System.Windows.Forms.TextBox tbWrk;
         private System.Windows.Forms.Label lbWorkPin;
