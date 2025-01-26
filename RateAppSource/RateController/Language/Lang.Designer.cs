@@ -169,6 +169,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cal Value.
+        /// </summary>
+        internal static string lgCalValue {
+            get {
+                return ResourceManager.GetString("lgCalValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Color.
         /// </summary>
         internal static string lgColor {
@@ -763,6 +772,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        internal static string lgOther {
+            get {
+                return ResourceManager.GetString("lgOther", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sections Per Zone.
         /// </summary>
         internal static string lgPerZone {
@@ -970,6 +988,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset Products.
+        /// </summary>
+        internal static string lgResetProducts {
+            get {
+                return ResourceManager.GetString("lgResetProducts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to RPM.
         /// </summary>
         internal static string lgRPM {
@@ -1105,11 +1132,29 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show Pressure.
+        ///   Looks up a localized string similar to Show.
         /// </summary>
         internal static string lgShowPressure {
             get {
                 return ResourceManager.GetString("lgShowPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simulate Speed (No AOG).
+        /// </summary>
+        internal static string lgSimulateSpeed {
+            get {
+                return ResourceManager.GetString("lgSimulateSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single Product.
+        /// </summary>
+        internal static string lgSingleProduct {
+            get {
+                return ResourceManager.GetString("lgSingleProduct", resourceCulture);
             }
         }
         

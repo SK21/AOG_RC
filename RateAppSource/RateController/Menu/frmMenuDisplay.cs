@@ -153,6 +153,18 @@ namespace RateController.Menu
         private void SetLanguage()
         {
             ckMetric.Text = Lang.lgMetric;
+            gbDisplay.Text = Lang.lgDisplay;
+            ckLargeScreen.Text = Lang.lgLargeScreen;
+            ckTransparent.Text= Lang.lgTransparent;
+            ckSingle.Text = Lang.lgSingleProduct;
+            ckReset.Text = Lang.lgResetProducts;
+            gbPressure.Text = Lang.lgPressure;
+            ckPressure.Text = Lang.lgShowPressure;
+            lbCalValue.Text = Lang.lgCalValue;
+            lbPressureOffset.Text = Lang.lgOffset;
+            gbOther.Text = Lang.lgOther;
+            ckMetric.Text = Lang.lgMetric;
+            ckSimSpeed.Text = Lang.lgSimulateSpeed;
         }
 
         private void tbPressureCal_Enter(object sender, EventArgs e)

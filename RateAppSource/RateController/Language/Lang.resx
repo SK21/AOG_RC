@@ -153,6 +153,9 @@
   <data name="lgCalSpeed" xml:space="preserve">
     <value>Calibration Speed</value>
   </data>
+  <data name="lgCalValue" xml:space="preserve">
+    <value>Cal Value</value>
+  </data>
   <data name="lgColor" xml:space="preserve">
     <value>Color</value>
   </data>
@@ -351,6 +354,9 @@
   <data name="lgOptions" xml:space="preserve">
     <value>Options</value>
   </data>
+  <data name="lgOther" xml:space="preserve">
+    <value>Other</value>
+  </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sections Per Zone</value>
   </data>
@@ -420,6 +426,9 @@
   <data name="lgRelays" xml:space="preserve">
     <value>Relays</value>
   </data>
+  <data name="lgResetProducts" xml:space="preserve">
+    <value>Reset Products</value>
+  </data>
   <data name="lgRPM" xml:space="preserve">
     <value>RPM</value>
   </data>
@@ -466,7 +475,13 @@
     <value>Settings</value>
   </data>
   <data name="lgShowPressure" xml:space="preserve">
-    <value>Show Pressure</value>
+    <value>Show</value>
+  </data>
+  <data name="lgSimulateSpeed" xml:space="preserve">
+    <value>Simulate Speed (No AOG)</value>
+  </data>
+  <data name="lgSingleProduct" xml:space="preserve">
+    <value>Single Product</value>
   </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Slave</value>

@@ -30,25 +30,25 @@
         {
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbDisplay = new System.Windows.Forms.GroupBox();
             this.ckReset = new System.Windows.Forms.CheckBox();
             this.ckLargeScreen = new System.Windows.Forms.CheckBox();
             this.ckSingle = new System.Windows.Forms.CheckBox();
             this.ckTransparent = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.gbPressure = new System.Windows.Forms.GroupBox();
             this.lbPressureOffset = new System.Windows.Forms.Label();
             this.tbPressureOffset = new System.Windows.Forms.TextBox();
-            this.lbConID = new System.Windows.Forms.Label();
+            this.lbCalValue = new System.Windows.Forms.Label();
             this.tbPressureCal = new System.Windows.Forms.TextBox();
             this.ckPressure = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.gbOther = new System.Windows.Forms.GroupBox();
             this.ckMetric = new System.Windows.Forms.CheckBox();
             this.tbSimSpeed = new System.Windows.Forms.TextBox();
             this.lbSimUnits = new System.Windows.Forms.Label();
             this.ckSimSpeed = new System.Windows.Forms.CheckBox();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.gbDisplay.SuspendLayout();
+            this.gbPressure.SuspendLayout();
+            this.gbOther.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -87,20 +87,20 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // groupBox1
+            // gbDisplay
             // 
-            this.groupBox1.Controls.Add(this.ckReset);
-            this.groupBox1.Controls.Add(this.ckLargeScreen);
-            this.groupBox1.Controls.Add(this.ckSingle);
-            this.groupBox1.Controls.Add(this.ckTransparent);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(45, 24);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(418, 144);
-            this.groupBox1.TabIndex = 163;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Display";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            this.gbDisplay.Controls.Add(this.ckReset);
+            this.gbDisplay.Controls.Add(this.ckLargeScreen);
+            this.gbDisplay.Controls.Add(this.ckSingle);
+            this.gbDisplay.Controls.Add(this.ckTransparent);
+            this.gbDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbDisplay.Location = new System.Drawing.Point(45, 24);
+            this.gbDisplay.Name = "gbDisplay";
+            this.gbDisplay.Size = new System.Drawing.Size(418, 144);
+            this.gbDisplay.TabIndex = 163;
+            this.gbDisplay.TabStop = false;
+            this.gbDisplay.Text = "Display";
+            this.gbDisplay.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
             // ckReset
             // 
@@ -159,21 +159,21 @@
             this.ckTransparent.UseVisualStyleBackColor = true;
             this.ckTransparent.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
             // 
-            // groupBox2
+            // gbPressure
             // 
-            this.groupBox2.Controls.Add(this.lbPressureOffset);
-            this.groupBox2.Controls.Add(this.tbPressureOffset);
-            this.groupBox2.Controls.Add(this.lbConID);
-            this.groupBox2.Controls.Add(this.tbPressureCal);
-            this.groupBox2.Controls.Add(this.ckPressure);
-            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(45, 213);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(418, 133);
-            this.groupBox2.TabIndex = 164;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Pressure";
-            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            this.gbPressure.Controls.Add(this.lbPressureOffset);
+            this.gbPressure.Controls.Add(this.tbPressureOffset);
+            this.gbPressure.Controls.Add(this.lbCalValue);
+            this.gbPressure.Controls.Add(this.tbPressureCal);
+            this.gbPressure.Controls.Add(this.ckPressure);
+            this.gbPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbPressure.Location = new System.Drawing.Point(45, 213);
+            this.gbPressure.Name = "gbPressure";
+            this.gbPressure.Size = new System.Drawing.Size(418, 133);
+            this.gbPressure.TabIndex = 164;
+            this.gbPressure.TabStop = false;
+            this.gbPressure.Text = "Pressure";
+            this.gbPressure.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
             // lbPressureOffset
             // 
@@ -198,14 +198,14 @@
             this.tbPressureOffset.Enter += new System.EventHandler(this.tbPressureOffset_Enter);
             this.tbPressureOffset.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureOffset_Validating);
             // 
-            // lbConID
+            // lbCalValue
             // 
-            this.lbConID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbConID.Location = new System.Drawing.Point(212, 33);
-            this.lbConID.Name = "lbConID";
-            this.lbConID.Size = new System.Drawing.Size(97, 23);
-            this.lbConID.TabIndex = 154;
-            this.lbConID.Text = "Cal Value";
+            this.lbCalValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCalValue.Location = new System.Drawing.Point(212, 33);
+            this.lbCalValue.Name = "lbCalValue";
+            this.lbCalValue.Size = new System.Drawing.Size(97, 23);
+            this.lbCalValue.TabIndex = 154;
+            this.lbCalValue.Text = "Cal Value";
             // 
             // tbPressureCal
             // 
@@ -236,20 +236,20 @@
             this.ckPressure.UseVisualStyleBackColor = true;
             this.ckPressure.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
             // 
-            // groupBox3
+            // gbOther
             // 
-            this.groupBox3.Controls.Add(this.ckMetric);
-            this.groupBox3.Controls.Add(this.tbSimSpeed);
-            this.groupBox3.Controls.Add(this.lbSimUnits);
-            this.groupBox3.Controls.Add(this.ckSimSpeed);
-            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(45, 391);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(418, 135);
-            this.groupBox3.TabIndex = 227;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Other";
-            this.groupBox3.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            this.gbOther.Controls.Add(this.ckMetric);
+            this.gbOther.Controls.Add(this.tbSimSpeed);
+            this.gbOther.Controls.Add(this.lbSimUnits);
+            this.gbOther.Controls.Add(this.ckSimSpeed);
+            this.gbOther.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbOther.Location = new System.Drawing.Point(45, 391);
+            this.gbOther.Name = "gbOther";
+            this.gbOther.Size = new System.Drawing.Size(418, 135);
+            this.gbOther.TabIndex = 227;
+            this.gbOther.TabStop = false;
+            this.gbOther.Text = "Other";
+            this.gbOther.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
             // ckMetric
             // 
@@ -311,9 +311,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbOther);
+            this.Controls.Add(this.gbPressure);
+            this.Controls.Add(this.gbDisplay);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -322,11 +322,11 @@
             this.Text = "frmMenuDisplay";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuDisplay_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuDisplay_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.gbDisplay.ResumeLayout(false);
+            this.gbPressure.ResumeLayout(false);
+            this.gbPressure.PerformLayout();
+            this.gbOther.ResumeLayout(false);
+            this.gbOther.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -335,18 +335,18 @@
 
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbDisplay;
         private System.Windows.Forms.CheckBox ckReset;
         private System.Windows.Forms.CheckBox ckLargeScreen;
         private System.Windows.Forms.CheckBox ckSingle;
         private System.Windows.Forms.CheckBox ckTransparent;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbPressure;
         private System.Windows.Forms.Label lbPressureOffset;
         private System.Windows.Forms.TextBox tbPressureOffset;
-        private System.Windows.Forms.Label lbConID;
+        private System.Windows.Forms.Label lbCalValue;
         private System.Windows.Forms.TextBox tbPressureCal;
         private System.Windows.Forms.CheckBox ckPressure;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox gbOther;
         private System.Windows.Forms.CheckBox ckMetric;
         private System.Windows.Forms.TextBox tbSimSpeed;
         private System.Windows.Forms.Label lbSimUnits;
