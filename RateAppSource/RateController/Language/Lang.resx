@@ -180,6 +180,9 @@
   <data name="lgCurrentRate" xml:space="preserve">
     <value>Current Rate</value>
   </data>
+  <data name="lgData" xml:space="preserve">
+    <value>Data</value>
+  </data>
   <data name="lgDefaultProduct" xml:space="preserve">
     <value>Default Product</value>
   </data>
@@ -279,6 +282,9 @@
   <data name="lgMinutes" xml:space="preserve">
     <value>Minutes</value>
   </data>
+  <data name="lgMode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
   <data name="lgModule" xml:space="preserve">
     <value>Module</value>
   </data>
@@ -287,6 +293,9 @@
   </data>
   <data name="lgModules" xml:space="preserve">
     <value>Modules</value>
+  </data>
+  <data name="lgMonitoring" xml:space="preserve">
+    <value>Monitoring</value>
   </data>
   <data name="lgMotor" xml:space="preserve">
     <value>Motor</value>
@@ -375,11 +384,17 @@
   <data name="lgRate" xml:space="preserve">
     <value>Rate</value>
   </data>
+  <data name="lgRateMap" xml:space="preserve">
+    <value>Rate Map</value>
+  </data>
   <data name="lgRelay" xml:space="preserve">
     <value>Relay</value>
   </data>
   <data name="lgRelayControl" xml:space="preserve">
     <value>Relay Control</value>
+  </data>
+  <data name="lgRelayPins" xml:space="preserve">
+    <value>Relay Pins</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
     <value>Relays</value>
@@ -405,6 +420,9 @@
   <data name="lgSelectedSubnet" xml:space="preserve">
     <value>Selected Subnet</value>
   </data>
+  <data name="lgSend" xml:space="preserve">
+    <value>Send</value>
+  </data>
   <data name="lgSensor" xml:space="preserve">
     <value>Sensor</value>
   </data>
@@ -419,6 +437,9 @@
   </data>
   <data name="lgSensorLocation" xml:space="preserve">
     <value>Sensor Location</value>
+  </data>
+  <data name="lgSettings" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="lgShowPressure" xml:space="preserve">
     <value>Show Pressure</value>
@@ -509,6 +530,9 @@
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Width</value>
+  </data>
+  <data name="lgWifi" xml:space="preserve">
+    <value>Wifi</value>
   </data>
   <data name="lgWifiClient" xml:space="preserve">
     <value>Wifi </value>

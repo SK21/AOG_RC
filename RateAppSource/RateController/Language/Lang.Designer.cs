@@ -250,6 +250,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data.
+        /// </summary>
+        internal static string lgData {
+            get {
+                return ResourceManager.GetString("lgData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Product.
         /// </summary>
         internal static string lgDefaultProduct {
@@ -547,6 +556,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mode.
+        /// </summary>
+        internal static string lgMode {
+            get {
+                return ResourceManager.GetString("lgMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Module.
         /// </summary>
         internal static string lgModule {
@@ -570,6 +588,15 @@ namespace RateController.Language {
         internal static string lgModules {
             get {
                 return ResourceManager.GetString("lgModules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monitoring.
+        /// </summary>
+        internal static string lgMonitoring {
+            get {
+                return ResourceManager.GetString("lgMonitoring", resourceCulture);
             }
         }
         
@@ -835,6 +862,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rate Map.
+        /// </summary>
+        internal static string lgRateMap {
+            get {
+                return ResourceManager.GetString("lgRateMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Relay.
         /// </summary>
         internal static string lgRelay {
@@ -849,6 +885,15 @@ namespace RateController.Language {
         internal static string lgRelayControl {
             get {
                 return ResourceManager.GetString("lgRelayControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Relay Pins.
+        /// </summary>
+        internal static string lgRelayPins {
+            get {
+                return ResourceManager.GetString("lgRelayPins", resourceCulture);
             }
         }
         
@@ -925,6 +970,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Send.
+        /// </summary>
+        internal static string lgSend {
+            get {
+                return ResourceManager.GetString("lgSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sensor.
         /// </summary>
         internal static string lgSensor {
@@ -966,6 +1020,15 @@ namespace RateController.Language {
         internal static string lgSensorLocation {
             get {
                 return ResourceManager.GetString("lgSensorLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string lgSettings {
+            get {
+                return ResourceManager.GetString("lgSettings", resourceCulture);
             }
         }
         
@@ -1236,6 +1299,15 @@ namespace RateController.Language {
         internal static string lgWidth {
             get {
                 return ResourceManager.GetString("lgWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wifi.
+        /// </summary>
+        internal static string lgWifi {
+            get {
+                return ResourceManager.GetString("lgWifi", resourceCulture);
             }
         }
         

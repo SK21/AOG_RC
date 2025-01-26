@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using RateController.Language;
+using GMap.NET.MapProviders;
 
 namespace RateController
 {
@@ -1175,6 +1176,34 @@ namespace RateController
             butModules.Text = Lang.lgModules;
             butOptions.Text = Lang.lgOptions;
             butHelpScreen.Text = Lang.lgHelp;
+
+            butNew.Text = Lang.lgNew;
+            butOpen.Text = Lang.lgOpen;
+            butSaveAs.Text = Lang.lgSaveAs;
+            butRate.Text = Lang.lgRate;
+            butControl.Text = Lang.lgControl;
+            butSettings.Text = Lang.lgSettings;
+            butMode.Text = Lang.lgMode;
+            butMonitor.Text = Lang.lgMonitoring;
+            butData.Text = Lang.lgData;
+            butMap.Text = Lang.lgRateMap;
+
+            butSections.Text = Lang.lgSections;
+            butRelays.Text = Lang.lgRelays;
+            butSwitches.Text = Lang.lgSwitches;
+            butPrimed.Text = Lang.lgPrimedStart;
+            butCalibrate.Text = Lang.lgCalibrate;
+            butBoards.Text = Lang.lgBoards;
+            butNetwork.Text = Lang.lgNetwork;
+            butConfig.Text = Lang.lgConfig;
+            butPins.Text = Lang.lgPins;
+            butRelayPins.Text = Lang.lgRelayPins;
+            butWifi.Text = Lang.lgWifi;
+            butValves.Text = Lang.lgValves;
+            butUpdateModules.Text = Lang.lgSend;
+            butDisplay.Text= Lang.lgDisplay;
+            butLanguage.Text = Lang.lgLanguage;
+            butColor.Text = Lang.lgColor;
         }
     }
 }
