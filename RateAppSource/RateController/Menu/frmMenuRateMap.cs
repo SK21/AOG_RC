@@ -49,7 +49,7 @@ namespace RateController.Menu
 
             if (!mf.Tls.Manager.UpdateZone(tbName.Text, RateA, RateB, RateC, RateD, GetSelectedColor()))
             {
-                MessageBox.Show("Could not save zone.", "Error");
+                mf.Tls.ShowMessage("Could not save Zone.");
             }
             btnCreateZone.FlatAppearance.BorderSize = 0;
             ckEdit.Checked = false;
@@ -59,7 +59,7 @@ namespace RateController.Menu
         {
             if (!mf.Tls.Manager.DeleteZone(tbName.Text))
             {
-                MessageBox.Show("Zone could not be deleted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                mf.Tls.ShowMessage("Zone could not be deleted.");
             }
         }
 
@@ -79,7 +79,7 @@ namespace RateController.Menu
             {
                 if (!mf.Tls.Manager.LoadMap(openFileDialog1.FileName))
                 {
-                    MessageBox.Show("Map could not be loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    mf.Tls.ShowMessage("Map could not be loaded.");
                 }
             }
         }
@@ -92,7 +92,7 @@ namespace RateController.Menu
             }
             else
             {
-                MessageBox.Show("New zone could not be created.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                mf.Tls.ShowMessage("New zone could not be created.");
             }
         }
 
@@ -100,11 +100,11 @@ namespace RateController.Menu
         {
             if (mf.Tls.Manager.SaveMap(tbMapName.Text))
             {
-                MessageBox.Show("Map saved successfully!");
+                mf.Tls.ShowMessage("Map saved successfully.");
             }
             else
             {
-                MessageBox.Show("Map could not be saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                mf.Tls.ShowMessage("Map could not be saved.");
             }
             btnSave.FlatAppearance.BorderSize = 0;
         }
@@ -114,7 +114,7 @@ namespace RateController.Menu
             Initializing = true;
             if (!mf.Tls.Manager.LoadLastMap())
             {
-                MessageBox.Show("Map could not be loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                mf.Tls.ShowMessage("Map could not be loaded.");
             }
             Initializing = false;
         }

@@ -197,7 +197,7 @@ namespace RateController
                 {
                     Items[i].Width_cm = (float)mf.SectionsPGN.Width_cm(i);
                 }
-                mf.Tls.ShowHelp("Sections changed. Check switch definitions.", "Sections", 5000);
+                mf.Tls.ShowMessage("Sections changed. Check switch definitions.", "Sections", 5000);
             }
         }
 

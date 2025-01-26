@@ -1089,7 +1089,7 @@ namespace RateController
 
                 if (Tls.PrevInstance())
                 {
-                    Tls.ShowHelp(Lang.lgAlreadyRunning, "Help", 3000);
+                    Tls.ShowMessage(Lang.lgAlreadyRunning, "Help", 3000);
                     this.Close();
                 }
 
@@ -1097,13 +1097,13 @@ namespace RateController
                 UDPmodules.StartUDPServer();
                 if (!UDPmodules.IsUDPSendConnected)
                 {
-                    Tls.ShowHelp("UDPnetwork failed to start.", "", 3000, true, true);
+                    Tls.ShowMessage("UDPnetwork failed to start.", "", 3000, true, true);
                 }
 
                 UDPaog.StartUDPServer();
                 if (!UDPaog.IsUDPSendConnected)
                 {
-                    Tls.ShowHelp("UDPagio failed to start.", "", 3000, true, true);
+                    Tls.ShowMessage("UDPagio failed to start.", "", 3000, true, true);
                 }
 
                 LoadSettings();
@@ -1119,7 +1119,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                Tls.ShowHelp("Failed to load properly: " + ex.Message, "Help", 30000, true);
+                Tls.ShowMessage("Failed to load properly: " + ex.Message, "Help", 30000, true);
                 LoadError = true;
                 Close();
             }
@@ -1153,7 +1153,7 @@ namespace RateController
             string Message = "Indicates if AgOpenGPS is connected. Green is connected, " +
                 "red is not connected. Press to minimize window.";
 
-            this.Tls.ShowHelp(Message, "AOG");
+            this.Tls.ShowMessage(Message, "AOG");
             hlpevent.Handled = true;
         }
 
@@ -1174,7 +1174,7 @@ namespace RateController
                 "not receiving (AOG needs to be connected for some Coverage Types), " +
                 " red indicates module is not sending or receiving, yellow is simulation mode. Press to minimize window.";
 
-            this.Tls.ShowHelp(Message, "MOD");
+            this.Tls.ShowMessage(Message, "MOD");
             hlpevent.Handled = true;
         }
 
@@ -1192,7 +1192,7 @@ namespace RateController
             string Message = "Shows either coverage done or area that can be done with the remaining quantity." +
                 "\n Press to change.";
 
-            Tls.ShowHelp(Message, "Coverage");
+            Tls.ShowMessage(Message, "Coverage");
             hlpevent.Handled = true;
         }
 
@@ -1230,7 +1230,7 @@ namespace RateController
                 "\n 3 - Overall, averages total quantity applied over area done." +
                 "\n Press to change.";
 
-            Tls.ShowHelp(Message, "Rate");
+            Tls.ShowMessage(Message, "Rate");
             hlpevent.Handled = true;
         }
 
@@ -1239,7 +1239,7 @@ namespace RateController
             string Message = "Shows either quantity applied or quantity remaining." +
                 "\n Press to change.";
 
-            Tls.ShowHelp(Message, "Remaining");
+            Tls.ShowMessage(Message, "Remaining");
             hlpevent.Handled = true;
         }
 
@@ -1267,7 +1267,7 @@ namespace RateController
         {
             string Message = "Press to switch between base rate and alternate rate.";
 
-            Tls.ShowHelp(Message, "Target Rate");
+            Tls.ShowMessage(Message, "Target Rate");
             hlpevent.Handled = true;
         }
 

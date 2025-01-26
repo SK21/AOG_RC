@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using RateController.Language;
 using GMap.NET.MapProviders;
+using System.IO;
 
 namespace RateController
 {
@@ -145,14 +146,18 @@ namespace RateController
             string FileName = exeDirectory + "Help\\" + cLastScreen + ".pdf";
             try
             {
-                Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
+                if (File.Exists(FileName))
+                {
+                    Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
+                }
+                else
+                {
+                    mf.Tls.ShowMessage("No help available.");
+                }
             }
             catch (Exception ex)
             {
-                if (ex.Message != "The system cannot find the file specified")
-                {
-                    mf.Tls.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
-                }
+                mf.Tls.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
             }
         }
 
@@ -851,13 +856,13 @@ namespace RateController
             {
                 mf.ModuleConfig.Send();
                 mf.NetworkConfig.Send();
-                mf.Tls.ShowHelp("Settings sent to module", "Config", 10000);
+                mf.Tls.ShowMessage("Settings sent to module", "Config", 10000);
 
                 HighlightUpdateButton(false);
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowHelp("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 10000, true, true);
+                mf.Tls.ShowMessage("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 10000, true, true);
             }
         }
 

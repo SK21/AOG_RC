@@ -639,8 +639,8 @@ namespace RateController
             return cSettingsDir;
         }
 
-        public void ShowHelp(string Message, string Title = "Help",
-            int timeInMsec = 30000, bool LogError = false, bool Modal = false
+        public void ShowMessage(string Message, string Title = "Help",
+            int timeInMsec = 20000, bool LogError = false, bool Modal = false
             , bool PlayErrorSound = false)
         {
             var Hlp = new frmHelp(mf, Message, Title, timeInMsec);

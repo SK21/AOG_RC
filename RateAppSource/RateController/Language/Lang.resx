@@ -123,6 +123,9 @@
   <data name="lgAcresHr" xml:space="preserve">
     <value>Acres/Hr</value>
   </data>
+  <data name="lgActivity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>Already Running</value>
   </data>
@@ -206,6 +209,9 @@
   </data>
   <data name="lgError" xml:space="preserve">
     <value>Error %</value>
+  </data>
+  <data name="lgErrors" xml:space="preserve">
+    <value>Errors</value>
   </data>
   <data name="lgExit" xml:space="preserve">
     <value>Exit</value>

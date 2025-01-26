@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -37,7 +38,7 @@ namespace RateController.Menu
         {
             if (!mf.Tls.OpenTextFile("Activity Log.txt"))
             {
-                mf.Tls.ShowHelp("File not found.");
+                mf.Tls.ShowMessage("File not found.");
             }
         }
 
@@ -45,7 +46,7 @@ namespace RateController.Menu
         {
             if (!mf.Tls.OpenTextFile("Error Log.txt"))
             {
-                mf.Tls.ShowHelp("File not found.");
+                mf.Tls.ShowMessage("File not found.");
             }
         }
 
@@ -69,7 +70,7 @@ namespace RateController.Menu
             mf.UDPmodules.UpdateLog();
             if (!mf.Tls.OpenTextFile("Ethernet Log.txt"))
             {
-                mf.Tls.ShowHelp("File not found.");
+                mf.Tls.ShowMessage("File not found.");
             }
         }
 
@@ -115,7 +116,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowHelp(ex.Message, "Help", 15000, true);
+                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
             }
         }
 
@@ -128,7 +129,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowHelp(ex.Message, "Help", 15000, true);
+                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
             }
         }
 
@@ -141,7 +142,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowHelp(ex.Message, "Help", 15000, true);
+                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
             }
         }
 
@@ -154,7 +155,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowHelp(ex.Message, "Help", 15000, true);
+                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
             }
         }
 
@@ -171,6 +172,9 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            butNet.Text = Lang.lgNetwork;
+            butActivity.Text = Lang.lgActivity;
+            butErrors.Text = Lang.lgErrors;
         }
 
         private void timer1_Tick(object sender, EventArgs e)

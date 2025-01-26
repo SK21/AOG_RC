@@ -79,6 +79,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activity.
+        /// </summary>
+        internal static string lgActivity {
+            get {
+                return ResourceManager.GetString("lgActivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Already Running.
         /// </summary>
         internal static string lgAlreadyRunning {
@@ -327,6 +336,15 @@ namespace RateController.Language {
         internal static string lgError {
             get {
                 return ResourceManager.GetString("lgError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errors.
+        /// </summary>
+        internal static string lgErrors {
+            get {
+                return ResourceManager.GetString("lgErrors", resourceCulture);
             }
         }
         

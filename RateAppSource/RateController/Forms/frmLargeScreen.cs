@@ -232,7 +232,7 @@ namespace RateController
             string Message = "Shows either coverage applied (A) or area that can be done with the remaining quantity (R)." +
                 "\n Press to change.";
 
-            mf.Tls.ShowHelp(Message, "Coverage");
+            mf.Tls.ShowMessage(Message, "Coverage");
             hlpevent.Handled = true;
         }
 
@@ -259,7 +259,7 @@ namespace RateController
         {
             string Message = "Indicates if the sensor is connected. Click to access settings.";
 
-            mf.Tls.ShowHelp(Message);
+            mf.Tls.ShowMessage(Message);
             hlpevent.Handled = true;
         }
 
@@ -289,7 +289,7 @@ namespace RateController
             string Message = "Shows either quantity applied (A) or quantity remaining (R)." +
                 "\n Press to change.";
 
-            mf.Tls.ShowHelp(Message, "Remaining");
+            mf.Tls.ShowMessage(Message, "Remaining");
             hlpevent.Handled = true;
         }
 
@@ -329,7 +329,7 @@ namespace RateController
                 "\n O - Overall, averages total quantity applied over area done." +
                 "\n Press to change.";
 
-            mf.Tls.ShowHelp(Message, "Rate");
+            mf.Tls.ShowMessage(Message, "Rate");
             hlpevent.Handled = true;
         }
 
@@ -365,7 +365,7 @@ namespace RateController
         {
             string Message = "Press to switch between base rate (R) and alternate rate (A).";
 
-            mf.Tls.ShowHelp(Message, "Target Rate");
+            mf.Tls.ShowMessage(Message, "Target Rate");
             hlpevent.Handled = true;
         }
 
@@ -401,7 +401,7 @@ namespace RateController
                 " Click to select product and view" +
                 " the product's information.";
 
-            mf.Tls.ShowHelp(Message);
+            mf.Tls.ShowMessage(Message);
             hlpevent.Handled = true;
         }
 
@@ -1034,7 +1034,7 @@ namespace RateController
             string Message = "Indicates quantity remaining. Click to select product and view" +
                 " the product's information.";
 
-            mf.Tls.ShowHelp(Message);
+            mf.Tls.ShowMessage(Message);
             hlpevent.Handled = true;
         }
 

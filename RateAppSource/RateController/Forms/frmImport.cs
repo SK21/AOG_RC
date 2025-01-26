@@ -73,7 +73,7 @@ namespace RateController.Forms
         {
             if (string.IsNullOrEmpty(selectedShapefilePath))
             {
-                MessageBox.Show("Please select a shapefile first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                mf.Tls.ShowMessage("Please select a shapefile first.");
                 return;
             }
 
@@ -98,11 +98,11 @@ namespace RateController.Forms
                 {
                     if (shapefileHelper.SaveMapZones(sfd.FileName, mapZones))
                     {
-                        MessageBox.Show("Cross-referenced shapefile saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        mf.Tls.ShowMessage("Cross-referenced shapefile saved successfully.");
                     }
                     else
                     {
-                        MessageBox.Show("Failed to map attributes. File not saved.", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        mf.Tls.ShowMessage("Failed to map attributes. File not saved.");
                     }
                 }
             }

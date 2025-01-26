@@ -43,7 +43,7 @@ namespace RateController
         {
             string Message = "Click to cycle through display.\nCurrent weight, Applied weight, Area, and Rate.";
 
-            mf.Tls.ShowHelp(Message);
+            mf.Tls.ShowMessage(Message);
             hlpevent.Handled = true;
         }
 
@@ -74,7 +74,7 @@ namespace RateController
         {
             string Message = "Click to reset starting weight and acres.\nRight click to reset tare weight.";
 
-            mf.Tls.ShowHelp(Message);
+            mf.Tls.ShowMessage(Message);
             hlpevent.Handled = true;
         }
 
