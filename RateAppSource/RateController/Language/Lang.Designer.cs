@@ -331,6 +331,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File.
+        /// </summary>
+        internal static string lgFile {
+            get {
+                return ResourceManager.GetString("lgFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Geo Stop.
         /// </summary>
         internal static string lgGeoStop {
@@ -354,6 +363,15 @@ namespace RateController.Language {
         internal static string lgHectares_Hr {
             get {
                 return ResourceManager.GetString("lgHectares_Hr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        internal static string lgHelp {
+            get {
+                return ResourceManager.GetString("lgHelp", resourceCulture);
             }
         }
         
@@ -444,6 +462,15 @@ namespace RateController.Language {
         internal static string lgLargeScreen {
             get {
                 return ResourceManager.GetString("lgLargeScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine.
+        /// </summary>
+        internal static string lgMachine {
+            get {
+                return ResourceManager.GetString("lgMachine", resourceCulture);
             }
         }
         

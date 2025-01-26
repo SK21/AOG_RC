@@ -207,6 +207,9 @@
   <data name="lgFan" xml:space="preserve">
     <value>Fan</value>
   </data>
+  <data name="lgFile" xml:space="preserve">
+    <value>File</value>
+  </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
   </data>
@@ -215,6 +218,9 @@
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
     <value>Hectares/Hr</value>
+  </data>
+  <data name="lgHelp" xml:space="preserve">
+    <value>Help</value>
   </data>
   <data name="lgHour" xml:space="preserve">
     <value>Hour</value>
@@ -245,6 +251,9 @@
   </data>
   <data name="lgLargeScreen" xml:space="preserve">
     <value>Large Screen</value>
+  </data>
+  <data name="lgMachine" xml:space="preserve">
+    <value>Machine</value>
   </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Master</value>

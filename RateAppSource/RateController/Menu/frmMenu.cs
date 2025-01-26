@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController
 {
@@ -408,6 +409,24 @@ namespace RateController
 
                     butSections.PerformClick();
                 }
+            }
+        }
+
+        private void butMap_Click(object sender, EventArgs e)
+        {
+            cLastScreen = "frmMenuRateMap";
+            HighlightButton(cLastScreen);
+            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRateMap(mf, this);
+                frm.Owner = this;
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
             }
         }
 
@@ -934,6 +953,7 @@ namespace RateController
             butPowerOff.Left = 160;
             butPowerOff.Top = 8;
             if (LoadLast) LoadLastScreen();
+            SetLanguage();
         }
 
         private void frmMenu_LocationChanged(object sender, EventArgs e)
@@ -1147,22 +1167,14 @@ namespace RateController
             }
         }
 
-        private void butMap_Click(object sender, EventArgs e)
+        private void SetLanguage()
         {
-            cLastScreen = "frmMenuRateMap";
-            HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuRateMap(mf, this);
-                frm.Owner = this;
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
+            butFile.Text = Lang.lgFile;
+            butProducts.Text=Lang.lgProducts;
+            butMachine.Text = Lang.lgMachine;
+            butModules.Text = Lang.lgModules;
+            butOptions.Text = Lang.lgOptions;
+            butHelpScreen.Text = Lang.lgHelp;
         }
     }
 }
