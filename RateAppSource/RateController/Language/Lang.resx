@@ -141,32 +141,6 @@
   <data name="lgCalFactor" xml:space="preserve">
     <value>Meter Cal</value>
   </data>
-  <data name="lgCalHelp" xml:space="preserve">
-    <value>This screen is used to set the Cal Factor (pulses/unit) for a product. The goal is to have a consistent rpm each time the calibration is done and have the meter roller at a rpm that is normally being used in the field.
-
-  First the rpm must be set. This is done by entering the usual operating speed and expected product application rate. After entering an estimated Cal Factor RC will try to set the rpm of the meter roller to produce the expected rate. If RC is not successful in reaching this rate be sure ground speed matches what you normally operate at. Estimated Cal Factor, PWM minimum, PWM maximum or machine metering drive range may need to be adjusted. When RC does set the rpm and displays an engaged lock, then the next step is to set the actual Cal Factor. If the rpm is not set the next step can not continue.
-
-  Next the Cal Factor is set. Run the meter roller to get an adequate sample to measure. RC takes the measured amount and divides it by the meter roller pulses to get the new Cal Factor. This value is saved and calibration is complete.
-
-Calibration steps:
-1. enter ground speed you normally operate at
-2. set calibration meter speed (rpm)
-    - start with SwitchBox Master switch off
-    - switch product on with the power button
-    - enter initial base rate
-    - enter estimated Cal Factor
-    - press start, RC attempts to adjust flow/rate to target
-    - if successful meter speed is locked
-    - press stop
-3. set Cal Factor (pulses/unit)
-    - start with Master switch off
-    - press start, turn Master switch on and let run to get an adequate sample amount
-    - press stop and enter measured amount. Cal Factor is calculated.
-    - press save to record new values
-4. options to start over
-    - to redo the meter speed the lock button can be pressed to unlock. RC will then attempt to find a new meter speed when step 2 is redone.
-    - to start from a previously saved setting the lock button can be pressed to lock. Then continue with step 3.</value>
-  </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Calibrate</value>
   </data>
@@ -175,9 +149,6 @@ Calibration steps:
   </data>
   <data name="lgCalSpeed" xml:space="preserve">
     <value>Calibration Speed</value>
-  </data>
-  <data name="lgChannel" xml:space="preserve">
-    <value>Channel</value>
   </data>
   <data name="lgColor" xml:space="preserve">
     <value>Color</value>
@@ -188,20 +159,11 @@ Calibration steps:
   <data name="lgComboTimed" xml:space="preserve">
     <value>Combo Timed</value>
   </data>
-  <data name="lgComm" xml:space="preserve">
-    <value>Comm</value>
-  </data>
-  <data name="lgCommDiagnostics" xml:space="preserve">
-    <value>Comm Diagnostics</value>
-  </data>
   <data name="lgConfig" xml:space="preserve">
     <value>Config</value>
   </data>
   <data name="lgConfigIP" xml:space="preserve">
     <value>Local IP</value>
-  </data>
-  <data name="lgConnect" xml:space="preserve">
-    <value>Connect</value>
   </data>
   <data name="lgControl" xml:space="preserve">
     <value>Control</value>
@@ -224,26 +186,14 @@ Calibration steps:
   <data name="lgDensity" xml:space="preserve">
     <value>Density</value>
   </data>
-  <data name="lgDerivative" xml:space="preserve">
-    <value>Derivative</value>
-  </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Description</value>
-  </data>
-  <data name="lgDiagnostics" xml:space="preserve">
-    <value>Diagnostics</value>
-  </data>
-  <data name="lgDisconnect" xml:space="preserve">
-    <value>Disconnect</value>
   </data>
   <data name="lgDisplay" xml:space="preserve">
     <value>Display</value>
   </data>
   <data name="lgEnd" xml:space="preserve">
     <value>End</value>
-  </data>
-  <data name="lgEqual" xml:space="preserve">
-    <value>=1</value>
   </data>
   <data name="lgError" xml:space="preserve">
     <value>Error %</value>
@@ -257,9 +207,6 @@ Calibration steps:
   <data name="lgFan" xml:space="preserve">
     <value>Fan</value>
   </data>
-  <data name="lgFlowOnHigh" xml:space="preserve">
-    <value>Invert Flow Control</value>
-  </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
   </data>
@@ -268,9 +215,6 @@ Calibration steps:
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
     <value>Hectares/Hr</value>
-  </data>
-  <data name="lgHighMax" xml:space="preserve">
-    <value>PWM Maximum</value>
   </data>
   <data name="lgHour" xml:space="preserve">
     <value>Hour</value>
@@ -290,9 +234,6 @@ Calibration steps:
   <data name="lgInstantRate" xml:space="preserve">
     <value>Instant Rate</value>
   </data>
-  <data name="lgIntegral" xml:space="preserve">
-    <value>Integral</value>
-  </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Invert_Section</value>
   </data>
@@ -308,9 +249,6 @@ Calibration steps:
   <data name="lgMaster" xml:space="preserve">
     <value>Master</value>
   </data>
-  <data name="lgMaxRate" xml:space="preserve">
-    <value>Maximum Rate</value>
-  </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
     <value>Amt.</value>
   </data>
@@ -322,9 +260,6 @@ Calibration steps:
   </data>
   <data name="lgMinPWM" xml:space="preserve">
     <value>PWM Minimum</value>
-  </data>
-  <data name="lgMinRate" xml:space="preserve">
-    <value>Minimum Rate</value>
   </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Minimum UPM</value>
@@ -383,15 +318,6 @@ Calibration steps:
   <data name="lgOptions" xml:space="preserve">
     <value>Options</value>
   </data>
-  <data name="lgOverallRate" xml:space="preserve">
-    <value>Overall Rate</value>
-  </data>
-  <data name="lgPage1" xml:space="preserve">
-    <value>Display</value>
-  </data>
-  <data name="lgPage2" xml:space="preserve">
-    <value>Config</value>
-  </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sections Per Zone</value>
   </data>
@@ -440,26 +366,11 @@ Calibration steps:
   <data name="lgRate" xml:space="preserve">
     <value>Rate</value>
   </data>
-  <data name="lgRateHigh" xml:space="preserve">
-    <value>Fast Adjust</value>
-  </data>
-  <data name="lgRateLow" xml:space="preserve">
-    <value>Slow Adjust</value>
-  </data>
-  <data name="lgRateMethod" xml:space="preserve">
-    <value>Rate Method</value>
-  </data>
   <data name="lgRelay" xml:space="preserve">
     <value>Relay</value>
   </data>
   <data name="lgRelayControl" xml:space="preserve">
     <value>Relay Control</value>
-  </data>
-  <data name="lgRelayControlNumer" xml:space="preserve">
-    <value>Number</value>
-  </data>
-  <data name="lgRelayOnHigh" xml:space="preserve">
-    <value>Invert Relay Control</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
     <value>Relays</value>
@@ -568,9 +479,6 @@ Calibration steps:
   </data>
   <data name="lgType" xml:space="preserve">
     <value>Type</value>
-  </data>
-  <data name="lgUnitsVolt" xml:space="preserve">
-    <value>Units/Volt</value>
   </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Applied</value>
