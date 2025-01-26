@@ -799,6 +799,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Products.
+        /// </summary>
+        internal static string lgProductsMenu {
+            get {
+                return ResourceManager.GetString("lgProductsMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Proportional.
         /// </summary>
         internal static string lgProportional {
@@ -885,6 +894,15 @@ namespace RateController.Language {
         internal static string lgRelayControl {
             get {
                 return ResourceManager.GetString("lgRelayControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number.
+        /// </summary>
+        internal static string lgRelayControlNumber {
+            get {
+                return ResourceManager.GetString("lgRelayControlNumber", resourceCulture);
             }
         }
         

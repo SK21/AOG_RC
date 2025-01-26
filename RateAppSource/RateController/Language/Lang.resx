@@ -363,6 +363,9 @@
   <data name="lgProducts" xml:space="preserve">
     <value>Products/Fans</value>
   </data>
+  <data name="lgProductsMenu" xml:space="preserve">
+    <value>Products</value>
+  </data>
   <data name="lgProportional" xml:space="preserve">
     <value>Proportional</value>
   </data>
@@ -392,6 +395,9 @@
   </data>
   <data name="lgRelayControl" xml:space="preserve">
     <value>Relay Control</value>
+  </data>
+  <data name="lgRelayControlNumber" xml:space="preserve">
+    <value>Number</value>
   </data>
   <data name="lgRelayPins" xml:space="preserve">
     <value>Relay Pins</value>

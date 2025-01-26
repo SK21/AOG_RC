@@ -1171,7 +1171,7 @@ namespace RateController
         private void SetLanguage()
         {
             butFile.Text = Lang.lgFile;
-            butProducts.Text=Lang.lgProducts;
+            butProducts.Text = Lang.lgProductsMenu;
             butMachine.Text = Lang.lgMachine;
             butModules.Text = Lang.lgModules;
             butOptions.Text = Lang.lgOptions;

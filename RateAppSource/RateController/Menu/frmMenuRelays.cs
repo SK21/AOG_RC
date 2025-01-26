@@ -310,7 +310,7 @@ namespace RateController.Menu
         {
             DGV.Columns[0].HeaderText = Lang.lgRelay;
             DGV.Columns[1].HeaderText = Lang.lgType;
-            DGV.Columns[2].HeaderText = Lang.lgRelayControlNumer;
+            DGV.Columns[2].HeaderText = Lang.lgRelayControlNumber;
         }
 
         private void SetModuleIndicator()
