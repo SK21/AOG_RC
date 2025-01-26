@@ -106,6 +106,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background.
+        /// </summary>
+        internal static string lgBackColor {
+            get {
+                return ResourceManager.GetString("lgBackColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Base Rate.
         /// </summary>
         internal static string lgBaseRate {
@@ -385,6 +394,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to High Adjust.
+        /// </summary>
+        internal static string lgHighAdjust {
+            get {
+                return ResourceManager.GetString("lgHighAdjust", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hour.
         /// </summary>
         internal static string lgHour {
@@ -439,6 +457,24 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invert Flow Control.
+        /// </summary>
+        internal static string lgInvertFlow {
+            get {
+                return ResourceManager.GetString("lgInvertFlow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invert Relays.
+        /// </summary>
+        internal static string lgInvertRelays {
+            get {
+                return ResourceManager.GetString("lgInvertRelays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invert_Section.
         /// </summary>
         internal static string lgInvertSection {
@@ -471,6 +507,15 @@ namespace RateController.Language {
         internal static string lgLargeScreen {
             get {
                 return ResourceManager.GetString("lgLargeScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low Adjust.
+        /// </summary>
+        internal static string lgLowAdjust {
+            get {
+                return ResourceManager.GetString("lgLowAdjust", resourceCulture);
             }
         }
         
@@ -943,6 +988,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scaling Factor.
+        /// </summary>
+        internal static string lgScaling {
+            get {
+                return ResourceManager.GetString("lgScaling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Seconds.
         /// </summary>
         internal static string lgSeconds {
@@ -1191,6 +1245,15 @@ namespace RateController.Language {
         internal static string lgTargetRateAlt {
             get {
                 return ResourceManager.GetString("lgTargetRateAlt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text Color.
+        /// </summary>
+        internal static string lgTextColor {
+            get {
+                return ResourceManager.GetString("lgTextColor", resourceCulture);
             }
         }
         

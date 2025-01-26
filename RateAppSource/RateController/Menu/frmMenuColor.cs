@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -179,6 +180,10 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            tbColourDefault1.Text = Lang.lgColor + " 1";
+            tbColourDefault2.Text = Lang.lgColor + " 2";
+            rbForeColor.Text = Lang.lgTextColor;
+            rbBackColor.Text = Lang.lgBackColor;
         }
 
         private void tbColourDefault1_Click(object sender, EventArgs e)

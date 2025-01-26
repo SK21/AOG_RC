@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -166,6 +167,12 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            lbProportional.Text = Lang.lgHighAdjust;
+            lbRateLow.Text = Lang.lgLowAdjust;
+            lbThreshold.Text = Lang.lgThreshold;
+            lbScaling.Text = Lang.lgScaling;
+            lbMax.Text = Lang.lgPWMmax;
+            lbMin.Text = Lang.lgPWMmin;
         }
 
         private void UpdateControlDisplay()

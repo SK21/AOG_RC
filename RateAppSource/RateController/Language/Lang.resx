@@ -132,6 +132,9 @@
   <data name="lgApplied" xml:space="preserve">
     <value>Applied</value>
   </data>
+  <data name="lgBackColor" xml:space="preserve">
+    <value>Background</value>
+  </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Base Rate</value>
   </data>
@@ -225,6 +228,9 @@
   <data name="lgHelp" xml:space="preserve">
     <value>Help</value>
   </data>
+  <data name="lgHighAdjust" xml:space="preserve">
+    <value>High Adjust</value>
+  </data>
   <data name="lgHour" xml:space="preserve">
     <value>Hour</value>
   </data>
@@ -243,6 +249,12 @@
   <data name="lgInstantRate" xml:space="preserve">
     <value>Instant Rate</value>
   </data>
+  <data name="lgInvertFlow" xml:space="preserve">
+    <value>Invert Flow Control</value>
+  </data>
+  <data name="lgInvertRelays" xml:space="preserve">
+    <value>Invert Relays</value>
+  </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Invert_Section</value>
   </data>
@@ -254,6 +266,9 @@
   </data>
   <data name="lgLargeScreen" xml:space="preserve">
     <value>Large Screen</value>
+  </data>
+  <data name="lgLowAdjust" xml:space="preserve">
+    <value>Low Adjust</value>
   </data>
   <data name="lgMachine" xml:space="preserve">
     <value>Machine</value>
@@ -411,6 +426,9 @@
   <data name="lgSaveAs" xml:space="preserve">
     <value>Save As</value>
   </data>
+  <data name="lgScaling" xml:space="preserve">
+    <value>Scaling Factor</value>
+  </data>
   <data name="lgSeconds" xml:space="preserve">
     <value>Seconds</value>
   </data>
@@ -494,6 +512,9 @@
   </data>
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Target Alt</value>
+  </data>
+  <data name="lgTextColor" xml:space="preserve">
+    <value>Text Color</value>
   </data>
   <data name="lgThreshold" xml:space="preserve">
     <value>Threshold</value>
