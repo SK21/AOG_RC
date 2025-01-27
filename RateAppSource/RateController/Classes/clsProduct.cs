@@ -1,5 +1,6 @@
 ﻿using RateController.Language;
 using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -58,16 +59,12 @@ namespace RateController
         private int cThreshold;
         private double cUnitsApplied = 0;
         private double cUnitsApplied2 = 0;
-        private double CurrentMinutes;
         private double CurrentWorkedArea_Hc = 0;
         private bool cUseAltRate = false;
         private bool cUseMinUPMbySpeed = false;
         private bool cUseOffRateAlarm;
-        private DateTime LastHours1;
-        private DateTime LastHours2;
-        private DateTime LastUpdateTime;
         private PGN32502 ModuleControlSettings;
-        private bool PauseWork = false;
+        private Stopwatch UpdateStopWatch;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -75,7 +72,6 @@ namespace RateController
             cProductID = ProdID;
             cModID = ProdID / 2;
             cSenID = (byte)(ProdID % 2);
-            PauseWork = true;
 
             RateSensor = new PGN32400(this);
             ModuleRateSettings = new PGN32500(this);
@@ -87,8 +83,7 @@ namespace RateController
                 ProductName = "fan";
             }
 
-            LastHours1 = DateTime.Now;
-            LastHours2 = DateTime.Now;
+            UpdateStopWatch = new Stopwatch();
         }
 
         public ApplicationMode AppMode
@@ -771,17 +766,6 @@ namespace RateController
             return Result;
         }
 
-        public void RecordHours()
-        {
-            if (ProductOn() && TargetRate() > 0)
-            {
-                cHours1 += (DateTime.Now - LastHours1).TotalHours;
-                cHours2 += (DateTime.Now - LastHours2).TotalHours;
-            }
-            LastHours1 = DateTime.Now;
-            LastHours2 = DateTime.Now;
-        }
-
         public void ResetApplied()
         {
             cUnitsApplied = 0;
@@ -796,7 +780,6 @@ namespace RateController
         public void ResetCoverage()
         {
             Coverage = 0;
-            LastUpdateTime = DateTime.Now;
         }
 
         public void ResetCoverage2()
@@ -879,24 +862,6 @@ namespace RateController
         public void SendPID()
         {
             ModuleControlSettings.Send();
-        }
-
-        public bool SerialFromAruduino(string[] words, bool RealNano = true)
-        {
-            bool Result = false;    // return true if there is good comm
-            try
-            {
-                if (RateSensor.ParseStringData(words))
-                {
-                    UpdateUnitsApplied();
-                    Result = true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return Result;
         }
 
         public double SmoothRate()
@@ -1060,18 +1025,10 @@ namespace RateController
 
         public void Update()
         {
-            DateTime UpdateStartTime;
             if (RateSensor.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)
             {
-                UpdateStartTime = DateTime.Now;
-                CurrentMinutes = (UpdateStartTime - LastUpdateTime).TotalMinutes;
-                LastUpdateTime = UpdateStartTime;
-
-                if (CurrentMinutes < 0 || CurrentMinutes > 1 || PauseWork)
-                {
-                    CurrentMinutes = 0;
-                    PauseWork = false;
-                }
+                double CurrentMinutes = UpdateStopWatch.ElapsedMilliseconds / 60000.0;
+                UpdateStopWatch.Restart();
 
                 // update worked area
                 cHectaresPerMinute = mf.Sections.WorkingWidth(false) * KMH() / 600.0;
@@ -1106,6 +1063,9 @@ namespace RateController
                             Coverage2 += CurrentMinutes / 60;
                             break;
                     }
+
+                    cHours1 += CurrentMinutes / 60.0;
+                    cHours2 += CurrentMinutes / 60.0;
                 }
 
                 // send to arduino
@@ -1130,7 +1090,7 @@ namespace RateController
             else
             {
                 // connection lost
-                PauseWork = true;
+                UpdateStopWatch.Reset();
             }
 
             if (cControlType == ControlTypeEnum.MotorWeights)
@@ -1199,9 +1159,10 @@ namespace RateController
         private void UpdateUnitsApplied()
         {
             double AccumulatedUnits = RateSensor.AccumulatedQuantity;
-            if (AccumulatedLast > AccumulatedUnits) AccumulatedLast = 0;
             double Diff = AccumulatedUnits - AccumulatedLast;
+            if (Diff < 0 || Diff > 1000) Diff = 0;
             AccumulatedLast = AccumulatedUnits;
+
             cUnitsApplied += Diff;
             cUnitsApplied2 += Diff;
 
