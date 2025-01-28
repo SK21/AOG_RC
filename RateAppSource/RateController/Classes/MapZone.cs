@@ -1,11 +1,10 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
 using NetTopologySuite.Geometries;
-using ProjNet.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
 using System.Collections.Generic;
 using System.Drawing;
-using System;
 
 namespace RateController.Classes
 {
@@ -61,7 +60,7 @@ namespace RateController.Classes
 
             // Define the source and target coordinate systems
             var geographicCS = GeographicCoordinateSystem.WGS84;
-            var utmCS = ProjectedCoordinateSystem.WGS84_UTM(utmZone, true); 
+            var utmCS = ProjectedCoordinateSystem.WGS84_UTM(utmZone, true);
 
             // Create coordinate transformation
             var transformationFactory = new CoordinateTransformationFactory();

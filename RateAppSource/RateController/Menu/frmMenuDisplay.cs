@@ -155,7 +155,7 @@ namespace RateController.Menu
             ckMetric.Text = Lang.lgMetric;
             gbDisplay.Text = Lang.lgDisplay;
             ckLargeScreen.Text = Lang.lgLargeScreen;
-            ckTransparent.Text= Lang.lgTransparent;
+            ckTransparent.Text = Lang.lgTransparent;
             ckSingle.Text = Lang.lgSingleProduct;
             ckReset.Text = Lang.lgResetProducts;
             gbPressure.Text = Lang.lgPressure;

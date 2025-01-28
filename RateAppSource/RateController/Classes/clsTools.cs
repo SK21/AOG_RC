@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Media;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace RateController

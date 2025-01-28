@@ -1,9 +1,9 @@
 ﻿using AgOpenGPS;
+using RateController.Language;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using RateController.Language;
 
 namespace RateController.Menu
 {

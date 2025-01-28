@@ -3,12 +3,9 @@ using RateController.Language;
 using RateController.PGNs;
 using RateController.Properties;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Security.Policy;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace RateController
 {

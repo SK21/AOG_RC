@@ -26,7 +26,7 @@ namespace RateController
             bool cRateAlarm = mf.Products.AlarmOn();
             string cMessage;
 
-            if (cRateAlarm )
+            if (cRateAlarm)
             {
                 cMessage = "Rate Alarm";
                 cAlarmButton.Text = cMessage;

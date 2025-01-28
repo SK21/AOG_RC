@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.PGNs
 {
@@ -48,7 +44,7 @@ namespace RateController.PGNs
         {
             get
             {
-                if (Connected()  && ExtendedPGN)
+                if (Connected() && ExtendedPGN)
                 {
                     return cFix2Fix;
                 }

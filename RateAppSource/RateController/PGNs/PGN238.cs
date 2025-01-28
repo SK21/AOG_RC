@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace RateController
+﻿namespace RateController
 {
     public class PGN238
     {

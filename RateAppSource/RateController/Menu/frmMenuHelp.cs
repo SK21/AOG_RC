@@ -1,7 +1,7 @@
-﻿using System;
+﻿using RateController.Language;
+using System;
 using System.IO;
 using System.Windows.Forms;
-using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -203,7 +203,7 @@ namespace RateController.Menu
 
             lbIP.Text = mf.UDPmodules.SubNet;
             lbFile.Text = Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName);
-         
+
             if (mf.SwitchBox.RealConnected())
             {
                 ModuleIndicator.Image = Properties.Resources.On;

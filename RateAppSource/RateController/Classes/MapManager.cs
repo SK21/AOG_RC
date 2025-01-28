@@ -8,9 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace RateController.Classes
 {

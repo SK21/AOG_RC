@@ -82,7 +82,7 @@ namespace RateController
             return cProducts[IDX];
         }
 
-        public void Load(bool Reset=false)
+        public void Load(bool Reset = false)
         {
             cProducts.Clear();
 
@@ -96,7 +96,7 @@ namespace RateController
             for (int i = 0; i < mf.MaxProducts; i++)
             {
                 clsProduct Prd = cProducts[i];
-                if (Prd.IsNew()||Reset)
+                if (Prd.IsNew() || Reset)
                 {
                     Prd.ProductName = "Product  " + (char)(65 + i);
                     Prd.ControlType = ControlTypeEnum.Valve;

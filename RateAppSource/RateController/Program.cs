@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using RateController.Properties;
+using System;
 using System.Threading;
-using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace RateController
 {
@@ -39,7 +35,7 @@ namespace RateController
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.setF_culture);
 
-            using(FormStart frmStart=new FormStart())
+            using (FormStart frmStart = new FormStart())
             {
                 Application.Run(frmStart);
             }

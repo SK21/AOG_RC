@@ -1,15 +1,5 @@
 ﻿using AgOpenGPS;
-using RateController.Language;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -72,9 +62,9 @@ namespace RateController.Menu
                 byte val;
                 byte[] Pins = new byte[16];
 
-                for (int i=0;i<16;i++)
+                for (int i = 0; i < 16; i++)
                 {
-                    if (byte.TryParse(Boxes[i].Text,out val))
+                    if (byte.TryParse(Boxes[i].Text, out val))
                     {
                         Pins[i] = val;
                     }

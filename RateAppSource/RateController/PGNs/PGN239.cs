@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static RateController.PGN254;
 
 namespace RateController
 {
@@ -39,10 +34,10 @@ namespace RateController
 
         public bool GeoStop
         {
-            get 
+            get
             {
                 return (cGeoStop == 1) && Connected();
-            } 
+            }
         }
 
         public byte HydLift
@@ -57,7 +52,7 @@ namespace RateController
 
         public bool TramLeft
         {
-            get 
+            get
             {
                 return mf.Tls.BitRead(cTram, 1) && Connected();
             }

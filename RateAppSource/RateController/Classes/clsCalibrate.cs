@@ -1,6 +1,5 @@
 ﻿using AgOpenGPS;
 using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace RateController

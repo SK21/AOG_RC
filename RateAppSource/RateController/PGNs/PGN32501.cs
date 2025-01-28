@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -50,7 +49,7 @@ namespace RateController
             cData[6] = (byte)(Power >> 8);
 
             // inverted relays
-            int Inverted=mf.RelayObjects.InvertedRelays(cModuleID);
+            int Inverted = mf.RelayObjects.InvertedRelays(cModuleID);
             cData[7] = (byte)Inverted;
             cData[8] = (byte)(Inverted >> 8);
 

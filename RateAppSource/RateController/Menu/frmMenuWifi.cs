@@ -1,6 +1,6 @@
-﻿using System;
+﻿using RateController.Language;
+using System;
 using System.Windows.Forms;
-using RateController.Language;
 
 namespace RateController.Menu
 {

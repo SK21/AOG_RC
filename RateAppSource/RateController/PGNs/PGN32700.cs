@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Text;
 
 namespace RateController
 {
@@ -171,19 +169,19 @@ namespace RateController
         public byte Sensor0Dir
         {
             get { return cData[8]; }
-            set { cData[8] = value; } 
+            set { cData[8] = value; }
         }
 
         public byte Sensor0Flow
         {
             get { return cData[7]; }
-            set { cData[7] = value; } 
+            set { cData[7] = value; }
         }
 
         public byte Sensor0PWM
         {
             get { return cData[9]; }
-            set { cData[9] = value; } 
+            set { cData[9] = value; }
         }
 
         public byte Sensor1Dir
@@ -195,13 +193,13 @@ namespace RateController
         public byte Sensor1Flow
         {
             get { return cData[10]; }
-            set { cData[10] = value; } 
+            set { cData[10] = value; }
         }
 
         public byte Sensor1PWM
         {
             get { return cData[12]; }
-            set { cData[12] = value; } 
+            set { cData[12] = value; }
         }
 
         public byte SensorCount

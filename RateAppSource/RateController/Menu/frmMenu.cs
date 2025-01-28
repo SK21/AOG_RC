@@ -1,11 +1,10 @@
-﻿using RateController.Menu;
+﻿using RateController.Language;
+using RateController.Menu;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Windows.Forms;
-using RateController.Language;
-using GMap.NET.MapProviders;
 using System.IO;
+using System.Windows.Forms;
 
 namespace RateController
 {
@@ -1206,7 +1205,7 @@ namespace RateController
             butWifi.Text = Lang.lgWifi;
             butValves.Text = Lang.lgValves;
             butUpdateModules.Text = Lang.lgSend;
-            butDisplay.Text= Lang.lgDisplay;
+            butDisplay.Text = Lang.lgDisplay;
             butLanguage.Text = Lang.lgLanguage;
             butColor.Text = Lang.lgColor;
         }

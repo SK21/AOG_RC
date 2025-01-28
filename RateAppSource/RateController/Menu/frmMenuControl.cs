@@ -1,8 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using RateController.Language;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using RateController.Language;
 
 namespace RateController.Menu
 {
@@ -110,10 +109,10 @@ namespace RateController.Menu
             PositionForm();
             UpdateForm();
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
-            Font ValFont=new Font(lbProduct.Font.FontFamily,14, FontStyle.Bold);
+            Font ValFont = new Font(lbProduct.Font.FontFamily, 14, FontStyle.Bold);
             lbHigh.Font = ValFont;
             lbLow.Font = ValFont;
-           lbThresholdValue.Font = ValFont;
+            lbThresholdValue.Font = ValFont;
             lbBoost.Font = ValFont;
             lbMaxValue.Font = ValFont;
             lbMinValue.Font = ValFont;
@@ -188,7 +187,7 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3 )
+            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
             {
                 // fans
                 lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();

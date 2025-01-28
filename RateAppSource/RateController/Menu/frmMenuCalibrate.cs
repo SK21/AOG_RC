@@ -1,17 +1,9 @@
 ﻿using AgOpenGPS;
 using RateController.Language;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RateController.Menu
 {
@@ -40,7 +32,7 @@ namespace RateController.Menu
             // after btnCalStart to receive the focus
             mf.SimMode = SimType.Sim_Speed;
             Running = true;
-            SetButtons();   
+            SetButtons();
             Cals.Running(true);
         }
 
@@ -107,15 +99,15 @@ namespace RateController.Menu
             lbDescription.ForeColor = SystemColors.Highlight;
             lbPulses.Font = new Font("Tahoma", 12);
             lbPulses.ForeColor = SystemColors.Highlight;
-            lbBaseRate.Font= new Font("Tahoma", 12);
+            lbBaseRate.Font = new Font("Tahoma", 12);
             lbBaseRate.ForeColor = SystemColors.Highlight;
-            lbCalFactor.Font= new Font("Tahoma", 12);
+            lbCalFactor.Font = new Font("Tahoma", 12);
             lbCalFactor.ForeColor = SystemColors.Highlight;
-            lbExpected.Font= new Font("Tahoma", 12);
+            lbExpected.Font = new Font("Tahoma", 12);
             lbExpected.ForeColor = SystemColors.Highlight;
-            lbMeasured.Font= new Font("Tahoma", 12);
+            lbMeasured.Font = new Font("Tahoma", 12);
             lbMeasured.ForeColor = SystemColors.Highlight;
-            lbMeterSet.Font= new Font("Tahoma", 12);
+            lbMeterSet.Font = new Font("Tahoma", 12);
             lbMeterSet.ForeColor = SystemColors.Highlight;
 
             PositionForm();
@@ -200,7 +192,7 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + 246;
         }
 
-        private void SetButtons(bool Edited=false)
+        private void SetButtons(bool Edited = false)
         {
             if (!Initializing)
             {

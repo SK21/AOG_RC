@@ -84,7 +84,7 @@ namespace RateController
             }
             else
             {
-                 //return section status from PGN254
+                //return section status from PGN254
                 if (ID < 8)
                 {
                     Bit = (byte)Math.Pow(2, ID);
