@@ -29,10 +29,11 @@ namespace RateController
 
         #region ScreenBitMap
 
+        private MapManager cManager;
         private Bitmap cScreenBitmap;
         private int cScreenBitmapHeight = 465;  // from frmMenuColor colorPanel
         private int cScreenBitmapWidth = 516;
-        private MapManager cManager;
+
         #endregion ScreenBitMap
 
         public clsTools(FormStart CallingForm)
@@ -42,12 +43,10 @@ namespace RateController
             OpenFile(Properties.Settings.Default.FileName);
             CreateColorBitmap();
         }
-        public MapManager Manager { get { return cManager; } }
 
-        public void StartMapManager()
-        {
-            cManager = new MapManager(mf);
-        }
+        public MapManager Manager
+        { get { return cManager; } }
+
         public string PropertiesFile
         {
             get
@@ -82,76 +81,6 @@ namespace RateController
                 SaveProperty("UseVariableRate_" + cPropertiesFile, cUseVariableRate.ToString());
             }
         }
-
-        #region ScreenBitMapCode
-
-        public Bitmap ScreenBitmap
-        { get { return cScreenBitmap; } }
-
-        public Color ColorFromHSV(float hue, float saturation, float brightness)
-        {
-            Color Result;
-            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
-            float f = (float)(hue / 60 - Math.Floor(hue / 60));
-            brightness = brightness * 255;
-            int v = Convert.ToInt32(brightness);
-            int p = Convert.ToInt32(brightness * (1 - saturation));
-            int q = Convert.ToInt32((brightness * (1 - f * saturation)));
-            int t = Convert.ToInt32((brightness * (1 - (1 - f) * saturation)));
-            if (v > 255) v = 255;
-            if (p > 255) p = 255;
-            if (q > 255) q = 255;
-            if (t > 255) t = 255;
-            if (v < 0) v = 0;
-            if (p < 0) p = 0;
-            if (q < 0) q = 0;
-            if (t < 0) t = 0;
-
-            switch (hi)
-            {
-                case 0:
-                    Result = Color.FromArgb(255, v, t, p);
-                    break;
-
-                case 1:
-                    Result = Color.FromArgb(255, q, v, p);
-                    break;
-
-                case 2:
-                    Result = Color.FromArgb(255, p, v, t);
-                    break;
-
-                case 3:
-                    Result = Color.FromArgb(255, p, q, v);
-                    break;
-
-                case 4:
-                    Result = Color.FromArgb(255, t, p, v);
-                    break;
-
-                default:
-                    Result = Color.FromArgb(255, v, p, q);
-                    break;
-            }
-            return Result;
-        }
-
-        private void CreateColorBitmap()
-        {
-            cScreenBitmap = new Bitmap(cScreenBitmapWidth, cScreenBitmapHeight);
-            for (int x = 0; x < cScreenBitmap.Width; x++)
-            {
-                for (int y = 0; y < cScreenBitmap.Height; y++)
-                {
-                    float hue = (float)x / cScreenBitmap.Width;
-                    float brightness = 1 - (float)y / cScreenBitmap.Height;
-                    Color color = ColorFromHSV(hue * 360, 1, brightness);
-                    cScreenBitmap.SetPixel(x, y, color);
-                }
-            }
-        }
-
-        #endregion ScreenBitMapCode
 
         public string AppVersion()
         {
@@ -655,6 +584,81 @@ namespace RateController
             if (LogError) WriteErrorLog(Message);
             if (PlayErrorSound) SystemSounds.Exclamation.Play();
         }
+
+        public void StartMapManager()
+        {
+            cManager = new MapManager(mf);
+        }
+
+        #region ScreenBitMapCode
+
+        public Bitmap ScreenBitmap
+        { get { return cScreenBitmap; } }
+
+        public Color ColorFromHSV(float hue, float saturation, float brightness)
+        {
+            Color Result;
+            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            float f = (float)(hue / 60 - Math.Floor(hue / 60));
+            brightness = brightness * 255;
+            int v = Convert.ToInt32(brightness);
+            int p = Convert.ToInt32(brightness * (1 - saturation));
+            int q = Convert.ToInt32((brightness * (1 - f * saturation)));
+            int t = Convert.ToInt32((brightness * (1 - (1 - f) * saturation)));
+            if (v > 255) v = 255;
+            if (p > 255) p = 255;
+            if (q > 255) q = 255;
+            if (t > 255) t = 255;
+            if (v < 0) v = 0;
+            if (p < 0) p = 0;
+            if (q < 0) q = 0;
+            if (t < 0) t = 0;
+
+            switch (hi)
+            {
+                case 0:
+                    Result = Color.FromArgb(255, v, t, p);
+                    break;
+
+                case 1:
+                    Result = Color.FromArgb(255, q, v, p);
+                    break;
+
+                case 2:
+                    Result = Color.FromArgb(255, p, v, t);
+                    break;
+
+                case 3:
+                    Result = Color.FromArgb(255, p, q, v);
+                    break;
+
+                case 4:
+                    Result = Color.FromArgb(255, t, p, v);
+                    break;
+
+                default:
+                    Result = Color.FromArgb(255, v, p, q);
+                    break;
+            }
+            return Result;
+        }
+
+        private void CreateColorBitmap()
+        {
+            cScreenBitmap = new Bitmap(cScreenBitmapWidth, cScreenBitmapHeight);
+            for (int x = 0; x < cScreenBitmap.Width; x++)
+            {
+                for (int y = 0; y < cScreenBitmap.Height; y++)
+                {
+                    float hue = (float)x / cScreenBitmap.Width;
+                    float brightness = 1 - (float)y / cScreenBitmap.Height;
+                    Color color = ColorFromHSV(hue * 360, 1, brightness);
+                    cScreenBitmap.SetPixel(x, y, color);
+                }
+            }
+        }
+
+        #endregion ScreenBitMapCode
 
         public void StartWifi()
         {
