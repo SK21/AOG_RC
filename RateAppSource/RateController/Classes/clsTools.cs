@@ -35,13 +35,17 @@ namespace RateController
         private int cScreenBitmapWidth = 516;
 
         #endregion ScreenBitMap
-
+        private string lastMessage;
+        private DateTime lastMessageTime;
         public clsTools(FormStart CallingForm)
         {
             mf = CallingForm;
             CheckFolders();
             OpenFile(Properties.Settings.Default.FileName);
             CreateColorBitmap();
+
+            lastMessage = string.Empty;
+            lastMessageTime = DateTime.MinValue;
         }
 
         public MapManager Manager
@@ -571,18 +575,24 @@ namespace RateController
             int timeInMsec = 20000, bool LogError = false, bool Modal = false
             , bool PlayErrorSound = false)
         {
-            var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
-            if (Modal)
+            if (Message != lastMessage || (DateTime.Now - lastMessageTime).TotalSeconds > 30)
             {
-                Hlp.ShowDialog();
-            }
-            else
-            {
-                Hlp.Show();
-            }
+                var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
+                if (Modal)
+                {
+                    Hlp.ShowDialog();
+                }
+                else
+                {
+                    Hlp.Show();
+                }
 
-            if (LogError) WriteErrorLog(Message);
-            if (PlayErrorSound) SystemSounds.Exclamation.Play();
+                if (LogError) WriteErrorLog(Message);
+                if (PlayErrorSound) SystemSounds.Exclamation.Play();
+
+                lastMessage = Message;
+                lastMessageTime = DateTime.Now;
+            }
         }
 
         public void StartMapManager()

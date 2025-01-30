@@ -49,7 +49,7 @@ namespace RateController.Forms
 
         private void LoadShapefileAttributes(DataGridView dgvMapping)
         {
-            var shapefileHelper = new ShapefileHelper();
+            var shapefileHelper = new ShapefileHelper(mf);
             var shapefileAttributes = shapefileHelper.GetShapefileAttributes(selectedShapefilePath);
 
             // add shapefile attribute names
@@ -92,7 +92,7 @@ namespace RateController.Forms
                 }
             }
 
-            var shapefileHelper = new ShapefileHelper();
+            var shapefileHelper = new ShapefileHelper(mf);
             var mapZones = shapefileHelper.LoadAndMapShapefile(selectedShapefilePath, attributeMapping);
 
             using (var sfd = new SaveFileDialog { Filter = "Shapefiles (*.shp)|*.shp" })

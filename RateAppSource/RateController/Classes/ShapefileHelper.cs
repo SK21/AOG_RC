@@ -8,6 +8,11 @@ namespace RateController.Classes
 {
     public class ShapefileHelper
     {
+        FormStart mf;
+        public ShapefileHelper(FormStart mf)
+        {
+            this.mf = mf;
+        }
         public List<string> GetShapefileAttributes(string shapefilePath)
         {
             using (var shapefile = Shapefile.OpenRead(shapefilePath))
@@ -143,7 +148,7 @@ namespace RateController.Classes
                 { "ProductD", productDRate }
             };
 
-            mapZones.Add(new MapZone(name, polygon, rates, zoneColor)); // Pass color to MapZone
+            mapZones.Add(new MapZone(name, polygon, rates, zoneColor, mf)); // Pass color to MapZone
         }
 
         private void ProcessPolygonWithMapping(IFeature feature, Polygon polygon, List<MapZone> mapZones, Dictionary<string, string> attributeMapping)
@@ -194,7 +199,7 @@ namespace RateController.Classes
             rates.Add("ProductC", RateC);
             rates.Add("ProductD", RateD);
 
-            mapZones.Add(new MapZone(Name, polygon, rates, ZoneColor)); // Pass color to MapZone
+            mapZones.Add(new MapZone(Name, polygon, rates, ZoneColor,mf)); // Pass color to MapZone
         }
     }
 }

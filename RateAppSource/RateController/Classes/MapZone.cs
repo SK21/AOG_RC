@@ -5,17 +5,20 @@ using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace RateController.Classes
 {
     public class MapZone
     {
-        public MapZone(string name, Polygon geometry, Dictionary<string, int> rates, Color zoneColor)
+        FormStart mf;
+        public MapZone(string name, Polygon geometry, Dictionary<string, int> rates, Color zoneColor, FormStart mf)
         {
             Name = name;
             Geometry = geometry;
             Rates = rates;
             ZoneColor = zoneColor;
+            this.mf = mf;
         }
 
         public Polygon Geometry { get; set; }
@@ -55,35 +58,43 @@ namespace RateController.Classes
 
         private double CalculateArea(Polygon polygon)
         {
-            // Determine the UTM zone from the first vertex
-            int utmZone = (int)(((polygon.Coordinates[0].X + 180) / 6) + 1);
-
-            // Define the source and target coordinate systems
-            var geographicCS = GeographicCoordinateSystem.WGS84;
-            var utmCS = ProjectedCoordinateSystem.WGS84_UTM(utmZone, true);
-
-            // Create coordinate transformation
-            var transformationFactory = new CoordinateTransformationFactory();
-            var transform = transformationFactory.CreateFromCoordinateSystems(geographicCS, utmCS);
-
-            // Transform the polygon to the projected coordinate system
-            var transformedCoordinates = new Coordinate[polygon.Coordinates.Length];
-            for (int i = 0; i < polygon.Coordinates.Length; i++)
+            double Result = 0;
+            try
             {
-                double[] xy = { polygon.Coordinates[i].X, polygon.Coordinates[i].Y };
-                double[] transformedXY = transform.MathTransform.Transform(xy);
+                // Determine the UTM zone from the first vertex
+                int utmZone = (int)(((polygon.Coordinates[0].X + 180) / 6) + 1);
 
-                transformedCoordinates[i] = new Coordinate(transformedXY[0], transformedXY[1]);
+                // Define the source and target coordinate systems
+                var geographicCS = GeographicCoordinateSystem.WGS84;
+                var utmCS = ProjectedCoordinateSystem.WGS84_UTM(utmZone, true);
+
+                // Create coordinate transformation
+                var transformationFactory = new CoordinateTransformationFactory();
+                var transform = transformationFactory.CreateFromCoordinateSystems(geographicCS, utmCS);
+
+                // Transform the polygon to the projected coordinate system
+                var transformedCoordinates = new Coordinate[polygon.Coordinates.Length];
+                for (int i = 0; i < polygon.Coordinates.Length; i++)
+                {
+                    double[] xy = { polygon.Coordinates[i].X, polygon.Coordinates[i].Y };
+                    double[] transformedXY = transform.MathTransform.Transform(xy);
+
+                    transformedCoordinates[i] = new Coordinate(transformedXY[0], transformedXY[1]);
+                }
+
+                var projectedPolygon = new Polygon(new LinearRing(transformedCoordinates));
+
+                // Calculate area in square meters
+                var areaSqMeters = projectedPolygon.Area;
+
+                // Convert to hectares
+                Result = areaSqMeters / 10000;
             }
-
-            var projectedPolygon = new Polygon(new LinearRing(transformedCoordinates));
-
-            // Calculate area in square meters
-            var areaSqMeters = projectedPolygon.Area;
-
-            // Convert to hectares
-            var areaHectares = areaSqMeters / 10000;
-            return areaHectares;
+            catch (System.Exception ex)
+            {
+                mf.Tls.ShowMessage("MapZone.CalculateArea: " + ex.Message, "Help", 20000, true);
+            }
+            return Result;
         }
     }
 }

@@ -171,7 +171,7 @@ namespace RateController.Classes
                 if (File.Exists(path))
                 {
                     MapName = Path.GetFileNameWithoutExtension(path);
-                    var shapefileHelper = new ShapefileHelper();
+                    var shapefileHelper = new ShapefileHelper(mf);
                     mapZones = shapefileHelper.LoadMapZones(path);
 
                     zoneOverlay.Polygons.Clear();
@@ -216,7 +216,7 @@ namespace RateController.Classes
             string path = GetFolder(cRootPath, name);
             if (FileNameValidator.IsValidFolderName(name) && FileNameValidator.IsValidFileName(name))
             {
-                var shapefileHelper = new ShapefileHelper();
+                var shapefileHelper = new ShapefileHelper(mf);
                 path += "\\" + name;
                 shapefileHelper.SaveMapZones(path, mapZones);
                 if (UpdateCache) AddToCache();
@@ -240,32 +240,40 @@ namespace RateController.Classes
 
         public void UpdateRates()
         {
-            bool Found = false;
-            for (int i = mapZones.Count - 1; i >= 0; i--)
+            try
             {
-                var zone = mapZones[i];
-                if (zone.Contains(cTractorPosition))
+                bool Found = false;
+                for (int i = mapZones.Count - 1; i >= 0; i--)
                 {
-                    cZoneName = zone.Name;
-                    cZoneRates[0] = zone.Rates["ProductA"];
-                    cZoneRates[1] = zone.Rates["ProductB"];
-                    cZoneRates[2] = zone.Rates["ProductC"];
-                    cZoneRates[3] = zone.Rates["ProductD"];
-                    cZoneColor = zone.ZoneColor;
-                    cZoneHectares = zone.Hectares();
-                    Found = true;
-                    break;
+                    var zone = mapZones[i];
+                    if (zone.Contains(cTractorPosition))
+                    {
+                        cZoneName = zone.Name;
+                        cZoneRates[0] = zone.Rates["ProductA"];
+                        cZoneRates[1] = zone.Rates["ProductB"];
+                        cZoneRates[2] = zone.Rates["ProductC"];
+                        cZoneRates[3] = zone.Rates["ProductD"];
+                        cZoneColor = zone.ZoneColor;
+                        cZoneHectares = zone.Hectares();
+                        Found = true;
+                        break;
+                    }
+                }
+                if (!Found)
+                {
+                    cZoneName = "N/A (Outside Zones)";
+                    cZoneRates[0] = 0;
+                    cZoneRates[1] = 0;
+                    cZoneRates[2] = 0;
+                    cZoneRates[3] = 0;
+                    cZoneColor = Color.Blue;
+                    cZoneHectares = 0;
                 }
             }
-            if (!Found)
+            catch (Exception ex)
             {
-                cZoneName = "N/A (Outside Zones)";
-                cZoneRates[0] = 0;
-                cZoneRates[1] = 0;
-                cZoneRates[2] = 0;
-                cZoneRates[3] = 0;
-                cZoneColor = Color.Blue;
-                cZoneHectares = 0;
+                mf.Tls.ShowMessage("MapManager.UpdateRates: " + ex.Message, "Error", 20000, true);
+                throw;
             }
         }
 
@@ -294,7 +302,7 @@ namespace RateController.Classes
                         { "ProductB", Rt1 },
                         { "ProductC", Rt2 },
                         { "ProductD", Rt3 }
-                    }, zoneColor);
+                    }, zoneColor,mf);
 
                 mapZones.Add(mapZone);
                 zoneOverlay.Polygons.Add(mapZone.ToGMapPolygon());
