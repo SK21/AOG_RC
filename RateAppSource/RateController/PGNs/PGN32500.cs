@@ -18,7 +18,7 @@ namespace RateController
         //	        - bit 0		    reset acc.Quantity
         //	        - bit 1,2,3		control type 0-4
         //	        - bit 4		    MasterOn
-        //          - bit 5         0 - time for one pulse, 1 - average time for multiple pulses
+        //          - bit 5         -
         //          - bit 6         AutoOn
         //          - bit 7         -
         //10    manual pwm Lo
