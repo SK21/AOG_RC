@@ -18,6 +18,7 @@ namespace RateController.Classes
         private bool cEditMode;
         private string cMapName = "Unnamed Map";
         private string cRootPath;
+        private bool cShowTiles = true;
         private PointLatLng cTractorPosition;
         private List<PointLatLng> currentZoneVertices;
         private Color cZoneColor;
@@ -40,6 +41,8 @@ namespace RateController.Classes
             mf = main;
             cRootPath = GetFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RateMap");
             CachePath = GetFolder(cRootPath, "MapCache");
+
+            if (bool.TryParse(mf.Tls.LoadProperty("ShowTiles"), out bool st)) cShowTiles = st;
             InitializeMap();
             InitializeMapZones();
             gmap.MouseDown += Gmap_MouseDown;
@@ -86,6 +89,25 @@ namespace RateController.Classes
 
         public string RootPath
         { get { return cRootPath; } }
+
+        public bool ShowTiles
+        {
+            get { return cShowTiles; }
+            set
+            {
+                cShowTiles = value;
+                if (value)
+                {
+                    gmap.MapProvider = GMapProviders.BingSatelliteMap;
+                }
+                else
+                {
+                    gmap.MapProvider = GMapProviders.EmptyProvider;
+                }
+                gmap.Refresh();
+                mf.Tls.SaveProperty("ShowTiles", cShowTiles.ToString());
+            }
+        }
 
         public Color ZoneColor
         { get { return cZoneColor; } }
@@ -188,6 +210,7 @@ namespace RateController.Classes
                     Result = true;
                     MapChanged?.Invoke(this, EventArgs.Empty);
                     mf.Tls.SaveProperty("LastMapFile", path);
+                    ZoomToFit();
                 }
             }
             return Result;
@@ -196,17 +219,24 @@ namespace RateController.Classes
         public bool NewMap()
         {
             bool Result = false;
-            gmap.Overlays.Clear();
-            zoneOverlay = new GMapOverlay("zones");
-            gpsMarkerOverlay = new GMapOverlay();
-            tempMarkerOverlay = new GMapOverlay();
-            gmap.Overlays.Add(zoneOverlay);
-            gmap.Overlays.Add(gpsMarkerOverlay);
-            gmap.Overlays.Add(tempMarkerOverlay);
-            currentZoneVertices = new List<PointLatLng>();
-            mapZones.Clear();
-            gmap.Refresh();
-            Result = true;
+            try
+            {
+                gmap.Overlays.Clear();
+                zoneOverlay = new GMapOverlay("zones");
+                gpsMarkerOverlay = new GMapOverlay();
+                tempMarkerOverlay = new GMapOverlay();
+                gmap.Overlays.Add(zoneOverlay);
+                gmap.Overlays.Add(gpsMarkerOverlay);
+                gmap.Overlays.Add(tempMarkerOverlay);
+                currentZoneVertices = new List<PointLatLng>();
+                mapZones.Clear();
+                gmap.Refresh();
+                Result = true;
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowMessage("MapManager.NewMap: " + ex.Message, "Error", 20000);
+            }
             return Result;
         }
 
@@ -302,7 +332,7 @@ namespace RateController.Classes
                         { "ProductB", Rt1 },
                         { "ProductC", Rt2 },
                         { "ProductD", Rt3 }
-                    }, zoneColor,mf);
+                    }, zoneColor, mf);
 
                 mapZones.Add(mapZone);
                 zoneOverlay.Polygons.Add(mapZone.ToGMapPolygon());
@@ -338,6 +368,34 @@ namespace RateController.Classes
                 Result = Found;
             }
             return Result;
+        }
+
+        public void ZoomToFit()
+        {
+            if (zoneOverlay.Polygons.Count > 0)
+            {
+                // Initialize min and max values
+                double minLat = double.MaxValue;
+                double maxLat = double.MinValue;
+                double minLng = double.MaxValue;
+                double maxLng = double.MinValue;
+
+                // Iterate through all polygons to find the overall bounding box
+                foreach (var polygon in zoneOverlay.Polygons)
+                {
+                    if (polygon.Points.Count == 0) continue;
+
+                    // Update min and max latitude and longitude
+                    minLat = Math.Min(minLat, polygon.Points.Min(p => p.Lat));
+                    maxLat = Math.Max(maxLat, polygon.Points.Max(p => p.Lat));
+                    minLng = Math.Min(minLng, polygon.Points.Min(p => p.Lng));
+                    maxLng = Math.Max(maxLng, polygon.Points.Max(p => p.Lng));
+                }
+
+                // Create the bounding box from the min and max values
+                RectLatLng boundingBox = new RectLatLng(maxLat, minLng, maxLng - minLng, maxLat - minLat);
+                gmap.SetZoomToFitRect(boundingBox);
+            }
         }
 
         private void AddToCache()
@@ -467,6 +525,7 @@ namespace RateController.Classes
         private void InitializeMap()
         {
             //GMaps.Instance.Mode = AccessMode.CacheOnly;
+            //GMaps.Instance.Mode = AccessMode.ServerOnly;
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
             GMaps.Instance.PrimaryCache = new GMap.NET.CacheProviders.SQLitePureImageCache
             {
@@ -488,13 +547,21 @@ namespace RateController.Classes
             gmap = new GMapControl
             {
                 Dock = DockStyle.Fill,
-                MapProvider = GMapProviders.BingSatelliteMap,
                 Position = new PointLatLng(Lat, Lng),
                 MinZoom = 3,
                 MaxZoom = 20,
                 Zoom = 16,
                 ShowCenter = false
             };
+
+            if (cShowTiles)
+            {
+                gmap.MapProvider = GMapProviders.BingSatelliteMap;
+            }
+            else
+            {
+                gmap.MapProvider = GMapProviders.EmptyProvider;
+            }
 
             gmap.MouseClick += Gmap_MouseClick;
 

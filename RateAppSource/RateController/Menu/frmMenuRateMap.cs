@@ -179,6 +179,12 @@ namespace RateController.Menu
                     mf.Top = MainTop;
                 }
             }
+            mf.Tls.Manager.ZoomToFit();
+        }
+
+        private void ckMap_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) mf.Tls.Manager.ShowTiles = ckMap.Checked;
         }
 
         private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -474,6 +480,7 @@ namespace RateController.Menu
             VSzoom.Value = (int)((gmap.Zoom - gmap.MinZoom) * 100) / (gmap.MaxZoom - gmap.MinZoom);
 
             ckEnable.Checked = mf.Tls.VariableRateEnabled;
+            ckMap.Checked = mf.Tls.Manager.ShowTiles;
             Initializing = false;
         }
 

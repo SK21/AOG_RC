@@ -56,6 +56,7 @@
             this.ckEnable = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnResume = new System.Windows.Forms.Button();
+            this.ckMap = new System.Windows.Forms.CheckBox();
             this.gbZone.SuspendLayout();
             this.gbMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -75,9 +76,9 @@
             this.btnLoad.FlatAppearance.BorderSize = 0;
             this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLoad.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnLoad.Location = new System.Drawing.Point(30, 155);
+            this.btnLoad.Location = new System.Drawing.Point(30, 123);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(82, 64);
+            this.btnLoad.Size = new System.Drawing.Size(82, 60);
             this.btnLoad.TabIndex = 14;
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
@@ -87,9 +88,9 @@
             this.btnNew.FlatAppearance.BorderSize = 0;
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNew.Image = global::RateController.Properties.Resources.NewFile;
-            this.btnNew.Location = new System.Drawing.Point(30, 76);
+            this.btnNew.Location = new System.Drawing.Point(30, 60);
             this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(82, 64);
+            this.btnNew.Size = new System.Drawing.Size(82, 60);
             this.btnNew.TabIndex = 16;
             this.btnNew.UseVisualStyleBackColor = true;
             this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
@@ -293,9 +294,9 @@
             this.btnSave.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnSave.Image = global::RateController.Properties.Resources.Save;
             this.btnSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnSave.Location = new System.Drawing.Point(35, 234);
+            this.btnSave.Location = new System.Drawing.Point(30, 186);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(72, 72);
+            this.btnSave.Size = new System.Drawing.Size(82, 60);
             this.btnSave.TabIndex = 347;
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnSave.UseVisualStyleBackColor = false;
@@ -303,6 +304,7 @@
             // 
             // gbMap
             // 
+            this.gbMap.Controls.Add(this.ckMap);
             this.gbMap.Controls.Add(this.tbMapName);
             this.gbMap.Controls.Add(this.btnSave);
             this.gbMap.Controls.Add(this.btnNew);
@@ -374,6 +376,20 @@
             this.btnResume.UseVisualStyleBackColor = true;
             this.btnResume.Click += new System.EventHandler(this.btnResume_Click);
             // 
+            // ckMap
+            // 
+            this.ckMap.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMap.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckMap.Image = global::RateController.Properties.Resources.map;
+            this.ckMap.Location = new System.Drawing.Point(30, 249);
+            this.ckMap.Name = "ckMap";
+            this.ckMap.Size = new System.Drawing.Size(82, 60);
+            this.ckMap.TabIndex = 349;
+            this.ckMap.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMap.UseVisualStyleBackColor = true;
+            this.ckMap.CheckedChanged += new System.EventHandler(this.ckMap_CheckedChanged);
+            // 
             // frmMenuRateMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -435,5 +451,6 @@
         private System.Windows.Forms.ComboBox colorComboBox;
         private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.Button btnResume;
+        private System.Windows.Forms.CheckBox ckMap;
     }
 }
