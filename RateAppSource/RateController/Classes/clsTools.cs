@@ -15,7 +15,7 @@ namespace RateController
     public class clsTools
     {
         private string cAppName = "RateController";
-        private string cAppVersion = "4.0.0-beta.7";
+        private string cAppVersion = "4.0.0-beta.8";
         private bool cIsReadOnly = false;
         private string cPropertiesApp;
         private string cPropertiesFile;
