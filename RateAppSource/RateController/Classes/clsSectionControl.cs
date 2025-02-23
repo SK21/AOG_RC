@@ -209,6 +209,23 @@ namespace RateController
                 }
             }
 
+
+            //if (MasterSWOff)
+            //{
+            //    MasterIsOn = false;
+            //    cPrimeOn = false;
+            //    PrimeTimer.Enabled = false;
+            //    ForceOff = false;
+            //}
+            //else if (MasterSWOn || mf.Tls.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly)
+            //{
+            //    // set RC sections by switchbox switch positions
+            //    foreach (clsSection Sec in mf.Sections.Items)
+            //    {
+            //        RCsectionOn[Sec.ID] = (mf.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
+            //    }
+            //}
+
             // set sections on
             if (mf.AutoSteerPGN.Connected() && !cPrimeOn && mf.SwitchBox.AutoSectionOn)
             {

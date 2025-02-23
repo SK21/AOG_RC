@@ -4,11 +4,6 @@ using System.Diagnostics;
 
 namespace RateController
 {
-    public enum ApplicationMode
-    { ControlledUPM, ConstantUPM, DocumentApplied, DocumentTarget }
-
-    public enum ControlTypeEnum
-    { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
 
     public class clsProduct
     {

@@ -333,6 +333,15 @@
   <data name="lgMaster" xml:space="preserve">
     <value>Master</value>
   </data>
+  <data name="lgMasterAll" xml:space="preserve">
+    <value>Control All</value>
+  </data>
+  <data name="lgMasterOverride" xml:space="preserve">
+    <value>Master Override</value>
+  </data>
+  <data name="lgMasterRelayOnly" xml:space="preserve">
+    <value>Master Relay Only</value>
+  </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
     <value>Amt.</value>
   </data>
@@ -392,9 +401,6 @@
   </data>
   <data name="lgNew" xml:space="preserve">
     <value>New</value>
-  </data>
-  <data name="lgNoMaster" xml:space="preserve">
-    <value>Master Override</value>
   </data>
   <data name="lgNone" xml:space="preserve">
     <value>None</value>

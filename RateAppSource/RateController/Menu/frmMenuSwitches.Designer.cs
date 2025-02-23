@@ -32,14 +32,18 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.ckDualAuto = new System.Windows.Forms.CheckBox();
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
-            this.ckNoMaster = new System.Windows.Forms.CheckBox();
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
             this.gbAutoSwitch = new System.Windows.Forms.GroupBox();
             this.rbSections = new System.Windows.Forms.RadioButton();
             this.rbAutoAll = new System.Windows.Forms.RadioButton();
             this.gbOnScreen = new System.Windows.Forms.GroupBox();
+            this.gbMasterSwitch = new System.Windows.Forms.GroupBox();
+            this.rbMasterOverride = new System.Windows.Forms.RadioButton();
+            this.rbMasterRelayOnly = new System.Windows.Forms.RadioButton();
+            this.rbMasterAll = new System.Windows.Forms.RadioButton();
             this.gbAutoSwitch.SuspendLayout();
             this.gbOnScreen.SuspendLayout();
+            this.gbMasterSwitch.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -108,28 +112,13 @@
             this.ckScreenSwitches.UseVisualStyleBackColor = true;
             this.ckScreenSwitches.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
-            // ckNoMaster
-            // 
-            this.ckNoMaster.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckNoMaster.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckNoMaster.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckNoMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNoMaster.Location = new System.Drawing.Point(316, 302);
-            this.ckNoMaster.Name = "ckNoMaster";
-            this.ckNoMaster.Size = new System.Drawing.Size(170, 37);
-            this.ckNoMaster.TabIndex = 339;
-            this.ckNoMaster.Text = "Master Override";
-            this.ckNoMaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckNoMaster.UseVisualStyleBackColor = true;
-            this.ckNoMaster.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
-            // 
             // ckWorkSwitch
             // 
             this.ckWorkSwitch.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWorkSwitch.Location = new System.Drawing.Point(49, 302);
+            this.ckWorkSwitch.Location = new System.Drawing.Point(53, 396);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
             this.ckWorkSwitch.Size = new System.Drawing.Size(170, 37);
             this.ckWorkSwitch.TabIndex = 338;
@@ -184,7 +173,7 @@
             // 
             this.gbOnScreen.Controls.Add(this.ckScreenSwitches);
             this.gbOnScreen.Controls.Add(this.ckDualAuto);
-            this.gbOnScreen.Location = new System.Drawing.Point(30, 119);
+            this.gbOnScreen.Location = new System.Drawing.Point(300, 299);
             this.gbOnScreen.Name = "gbOnScreen";
             this.gbOnScreen.Size = new System.Drawing.Size(200, 151);
             this.gbOnScreen.TabIndex = 341;
@@ -192,14 +181,71 @@
             this.gbOnScreen.Text = "On-Screen";
             this.gbOnScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
+            // gbMasterSwitch
+            // 
+            this.gbMasterSwitch.Controls.Add(this.rbMasterOverride);
+            this.gbMasterSwitch.Controls.Add(this.rbMasterRelayOnly);
+            this.gbMasterSwitch.Controls.Add(this.rbMasterAll);
+            this.gbMasterSwitch.Location = new System.Drawing.Point(37, 119);
+            this.gbMasterSwitch.Name = "gbMasterSwitch";
+            this.gbMasterSwitch.Size = new System.Drawing.Size(200, 222);
+            this.gbMasterSwitch.TabIndex = 342;
+            this.gbMasterSwitch.TabStop = false;
+            this.gbMasterSwitch.Text = "Master Switch";
+            this.gbMasterSwitch.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
+            // 
+            // rbMasterOverride
+            // 
+            this.rbMasterOverride.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbMasterOverride.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbMasterOverride.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbMasterOverride.Location = new System.Drawing.Point(16, 166);
+            this.rbMasterOverride.Name = "rbMasterOverride";
+            this.rbMasterOverride.Size = new System.Drawing.Size(170, 37);
+            this.rbMasterOverride.TabIndex = 4;
+            this.rbMasterOverride.Text = "Master Override";
+            this.rbMasterOverride.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbMasterOverride.UseVisualStyleBackColor = true;
+            this.rbMasterOverride.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            // 
+            // rbMasterRelayOnly
+            // 
+            this.rbMasterRelayOnly.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbMasterRelayOnly.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbMasterRelayOnly.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbMasterRelayOnly.Location = new System.Drawing.Point(16, 97);
+            this.rbMasterRelayOnly.Name = "rbMasterRelayOnly";
+            this.rbMasterRelayOnly.Size = new System.Drawing.Size(170, 37);
+            this.rbMasterRelayOnly.TabIndex = 3;
+            this.rbMasterRelayOnly.Text = "Master Relay only";
+            this.rbMasterRelayOnly.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbMasterRelayOnly.UseVisualStyleBackColor = true;
+            this.rbMasterRelayOnly.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            // 
+            // rbMasterAll
+            // 
+            this.rbMasterAll.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbMasterAll.Checked = true;
+            this.rbMasterAll.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbMasterAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbMasterAll.Location = new System.Drawing.Point(16, 28);
+            this.rbMasterAll.Name = "rbMasterAll";
+            this.rbMasterAll.Size = new System.Drawing.Size(170, 37);
+            this.rbMasterAll.TabIndex = 1;
+            this.rbMasterAll.TabStop = true;
+            this.rbMasterAll.Text = "Controll All";
+            this.rbMasterAll.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbMasterAll.UseVisualStyleBackColor = true;
+            this.rbMasterAll.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            // 
             // frmMenuSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.gbMasterSwitch);
             this.Controls.Add(this.gbOnScreen);
             this.Controls.Add(this.gbAutoSwitch);
-            this.Controls.Add(this.ckNoMaster);
             this.Controls.Add(this.ckWorkSwitch);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -213,6 +259,7 @@
             this.Load += new System.EventHandler(this.frmMenuSwitches_Load);
             this.gbAutoSwitch.ResumeLayout(false);
             this.gbOnScreen.ResumeLayout(false);
+            this.gbMasterSwitch.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -223,11 +270,14 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.CheckBox ckDualAuto;
         private System.Windows.Forms.CheckBox ckScreenSwitches;
-        private System.Windows.Forms.CheckBox ckNoMaster;
         private System.Windows.Forms.CheckBox ckWorkSwitch;
         private System.Windows.Forms.GroupBox gbAutoSwitch;
         private System.Windows.Forms.RadioButton rbAutoAll;
         private System.Windows.Forms.RadioButton rbSections;
         private System.Windows.Forms.GroupBox gbOnScreen;
+        private System.Windows.Forms.GroupBox gbMasterSwitch;
+        private System.Windows.Forms.RadioButton rbMasterRelayOnly;
+        private System.Windows.Forms.RadioButton rbMasterAll;
+        private System.Windows.Forms.RadioButton rbMasterOverride;
     }
 }

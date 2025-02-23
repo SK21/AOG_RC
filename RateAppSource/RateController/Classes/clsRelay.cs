@@ -2,9 +2,6 @@
 
 namespace RateController
 {
-    public enum RelayTypes
-    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None };
-
     public class clsRelay
     {
         private readonly int cID;       // 0-15

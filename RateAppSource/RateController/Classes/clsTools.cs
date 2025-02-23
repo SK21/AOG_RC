@@ -12,16 +12,42 @@ using System.Windows.Forms;
 
 namespace RateController
 {
+    public enum ApplicationMode
+    { ControlledUPM, ConstantUPM, DocumentApplied, DocumentTarget }
+
+    public enum ControlTypeEnum
+    { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
+
+    public enum MasterSwitchMode
+    { ControlAll, ControlMasterRelayOnly, Override };
+
+    public enum RelayTypes
+    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None };
+
+    public enum SimType
+    { Sim_None, Sim_Speed }
+
+    public enum SwIDs
+    {
+        // 0 Used to be AutoSwitch. It was replaced with AutoSection and AutoRate.
+        NotUsed, MasterOn, MasterOff, RateUp, RateDown, sw0, sw1, sw2, sw3, sw4, sw5,
+
+        sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, AutoSection, AutoRate, WorkSwitch
+    };
+
     public class clsTools
     {
         private string cAppName = "RateController";
         private string cAppVersion = "4.0.0-beta.8";
         private bool cIsReadOnly = false;
+        private MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
         private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
         private bool cUseVariableRate = false;
         private string cVersionDate = "17-Feb-2025";
+        private string lastMessage;
+        private DateTime lastMessageTime;
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
         private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
@@ -35,8 +61,7 @@ namespace RateController
         private int cScreenBitmapWidth = 516;
 
         #endregion ScreenBitMap
-        private string lastMessage;
-        private DateTime lastMessageTime;
+
         public clsTools(FormStart CallingForm)
         {
             mf = CallingForm;
@@ -50,6 +75,16 @@ namespace RateController
 
         public MapManager Manager
         { get { return cManager; } }
+
+        public MasterSwitchMode MasterSwitchMode
+        {
+            get { return cMasterSwitchMode; }
+            set
+            {
+                cMasterSwitchMode = value;
+                SaveProperty("MasterSwitchMode", cMasterSwitchMode.ToString());
+            }
+        }
 
         public string PropertiesFile
         {
@@ -82,7 +117,7 @@ namespace RateController
             set
             {
                 cUseVariableRate = value;
-                SaveProperty("UseVariableRate_" + cPropertiesFile, cUseVariableRate.ToString());
+                SaveProperty("UseVariableRate_" + Properties.Settings.Default.FileName, cUseVariableRate.ToString());
             }
         }
 
@@ -384,13 +419,22 @@ namespace RateController
                 cPropertiesApp = Properties.Settings.Default.FilesDir + "\\AppData.txt";
                 if (!File.Exists(cPropertiesApp)) File.Create(cPropertiesApp).Dispose();
                 LoadAppData(cPropertiesApp);
-                if (bool.TryParse(LoadProperty("UseVariableRate_" + cPropertiesFile), out bool vr))
+                if (bool.TryParse(LoadProperty("UseVariableRate_" + Properties.Settings.Default.FileName), out bool vr))
                 {
                     cUseVariableRate = vr;
                 }
                 else
                 {
                     cUseVariableRate = false;
+                }
+
+                if (Enum.TryParse(LoadProperty("MasterSwitchMode"), out MasterSwitchMode msm))
+                {
+                    cMasterSwitchMode = msm;
+                }
+                else
+                {
+                    cMasterSwitchMode = MasterSwitchMode.ControlAll;
                 }
             }
             catch (Exception ex)

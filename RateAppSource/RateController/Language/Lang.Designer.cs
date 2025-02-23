@@ -709,6 +709,33 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Control All.
+        /// </summary>
+        internal static string lgMasterAll {
+            get {
+                return ResourceManager.GetString("lgMasterAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Master Override.
+        /// </summary>
+        internal static string lgMasterOverride {
+            get {
+                return ResourceManager.GetString("lgMasterOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Master Relay Only.
+        /// </summary>
+        internal static string lgMasterRelayOnly {
+            get {
+                return ResourceManager.GetString("lgMasterRelayOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amt..
         /// </summary>
         internal static string lgMeasuredAmount {
@@ -885,15 +912,6 @@ namespace RateController.Language {
         internal static string lgNew {
             get {
                 return ResourceManager.GetString("lgNew", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Master Override.
-        /// </summary>
-        internal static string lgNoMaster {
-            get {
-                return ResourceManager.GetString("lgNoMaster", resourceCulture);
             }
         }
         

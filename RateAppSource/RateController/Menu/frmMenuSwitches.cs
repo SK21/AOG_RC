@@ -34,8 +34,21 @@ namespace RateController.Menu
                 mf.ShowSwitches = ckScreenSwitches.Checked;
                 mf.UseDualAuto = ckDualAuto.Checked;
                 mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
-                mf.MasterOverride = ckNoMaster.Checked;
                 mf.SwitchBox.AutoRateDisabled = rbSections.Checked;
+
+                if (rbMasterAll.Checked)
+                {
+                    mf.Tls.MasterSwitchMode = MasterSwitchMode.ControlAll;
+                }
+                else if (rbMasterRelayOnly.Checked)
+                {
+                    mf.Tls.MasterSwitchMode = MasterSwitchMode.ControlMasterRelayOnly;
+                }
+                else if (rbMasterOverride.Checked)
+                {
+                    mf.Tls.MasterSwitchMode = MasterSwitchMode.Override;
+                }
+
                 SetButtons(false);
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();
@@ -120,7 +133,9 @@ namespace RateController.Menu
             ckDualAuto.Text = Lang.lgDualAuto;
             rbSections.Text = Lang.lgSections;
             rbAutoAll.Text = Lang.lgAutoAll;
-            ckNoMaster.Text = Lang.lgNoMaster;
+            rbMasterAll.Text = Lang.lgMasterAll;
+            rbMasterOverride.Text = Lang.lgMasterOverride;
+            rbMasterRelayOnly.Text = Lang.lgMasterRelayOnly;
         }
 
         private void UpdateForm(bool UpdateObject = false)
@@ -130,8 +145,22 @@ namespace RateController.Menu
             ckScreenSwitches.Checked = mf.ShowSwitches;
             ckDualAuto.Checked = mf.UseDualAuto;
             ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
-            ckNoMaster.Checked = mf.MasterOverride;
             rbSections.Checked = mf.SwitchBox.AutoRateDisabled;
+
+            switch (mf.Tls.MasterSwitchMode)
+            {
+                case MasterSwitchMode.ControlAll:
+                    rbMasterAll.Checked = true;
+                    break;
+
+                case MasterSwitchMode.ControlMasterRelayOnly:
+                    rbMasterRelayOnly.Checked = true;
+                    break;
+
+                case MasterSwitchMode.Override:
+                    rbMasterOverride.Checked = true;
+                    break;
+            }
 
             Initializing = false;
         }

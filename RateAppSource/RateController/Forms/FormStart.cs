@@ -9,11 +9,6 @@ using System.Windows.Forms;
 
 namespace RateController
 {
-    public enum SimType
-    {
-        Sim_None,
-        Sim_Speed
-    }
 
     public partial class FormStart : Form
     {
@@ -73,7 +68,6 @@ namespace RateController
         public string WiFiIP;
         public clsZones Zones;
         private int cDefaultProduct = 0;
-        private bool cMasterOverride;
         private double cPressureCal;
         private double cPressureOffset;
         private byte cPressureToShowID;
@@ -185,16 +179,6 @@ namespace RateController
         {
             get { return Lscrn.Top; }
             set { Lscrn.Top = value; }
-        }
-
-        public bool MasterOverride
-        {
-            get { return cMasterOverride; }
-            set
-            {
-                cMasterOverride = value;
-                Tls.SaveProperty("MasterOverride", cMasterOverride.ToString());
-            }
         }
 
         public double PressureCal
@@ -466,7 +450,6 @@ namespace RateController
             if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
             if (bool.TryParse(Tls.LoadProperty("UseDualAuto"), out bool ud)) cUseDualAuto = ud;
             if (bool.TryParse(Tls.LoadProperty("ResumeAfterPrime"), out bool re)) cResumeAfterPrime = re;
-            if (bool.TryParse(Tls.LoadProperty("MasterOverride"), out bool mo)) cMasterOverride = mo;
             if (int.TryParse(Tls.LoadProperty("PrimeDelay"), out int PD))
             {
                 cPrimeDelay = PD;

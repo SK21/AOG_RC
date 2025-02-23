@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -42,16 +43,21 @@ namespace RateController
 
             cData[3] = (byte)Relays;
             cData[4] = (byte)(Relays >> 8);
+            Debug.Print("");
+            Debug.Print("-----------------");
+            Debug.Print("Relays: " + cData[3].ToString()+ ", " + cData[4].ToString());
 
             // power relays
             int Power = mf.RelayObjects.PowerRelays(cModuleID);
             cData[5] = (byte)Power;
             cData[6] = (byte)(Power >> 8);
+            Debug.Print("Power: " + cData[5].ToString() + ", " + cData[6].ToString());
 
             // inverted relays
             int Inverted = mf.RelayObjects.InvertedRelays(cModuleID);
             cData[7] = (byte)Inverted;
             cData[8] = (byte)(Inverted >> 8);
+            Debug.Print("Inverted: " + cData[7].ToString() + ", " + cData[8].ToString());
 
             // CRC
             cData[cByteCount - 1] = mf.Tls.CRC(cData, cByteCount - 1);
