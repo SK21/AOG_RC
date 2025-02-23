@@ -230,11 +230,8 @@ namespace RateController
                         switch (Rly.Type)
                         {
                             case RelayTypes.Section:
-                                if (MasterFound && !MasterRelayOn)
-                                {
-                                    // master is switched, don't adjust section relays
-                                }
-                                else
+                                if ((MasterFound && MasterRelayOn) || !MasterFound
+                                    || (MasterFound && mf.Tls.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
                                 {
                                     // set relay by section
                                     if (Rly.SectionID == -1)
@@ -250,11 +247,8 @@ namespace RateController
                                 break;
 
                             case RelayTypes.Slave:
-                                if (MasterFound && !MasterRelayOn)
-                                {
-                                    // master is switched, don't adjust slave relays
-                                }
-                                else
+                                if ((MasterFound && MasterRelayOn) || !MasterFound
+                                    || (MasterFound && mf.Tls.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
                                 {
                                     // set relay if at lease one section on
                                     Rly.IsON = SectionsOn;
@@ -266,11 +260,8 @@ namespace RateController
                                 break;
 
                             case RelayTypes.Invert_Section:
-                                if (MasterFound && !MasterRelayOn)
-                                {
-                                    // master is switched, don't adjust invert relays
-                                }
-                                else
+                                if ((MasterFound && MasterRelayOn) || !MasterFound
+                                    || (MasterFound && mf.Tls.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
                                 {
                                     // set relay by section
                                     if (Rly.SectionID == -1)
@@ -291,7 +282,10 @@ namespace RateController
                         }
 
                         // build return int
-                        if (Rly.IsON) Result |= (int)Math.Pow(2, Rly.ID);
+                        if (Rly.IsON)
+                        {
+                            Result |= (int)Math.Pow(2, Rly.ID);
+                        }
                     }
                 }
             }
