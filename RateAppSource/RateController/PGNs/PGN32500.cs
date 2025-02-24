@@ -17,8 +17,8 @@ namespace RateController
         //9	    Command
         //	        - bit 0		    reset acc.Quantity
         //	        - bit 1,2,3		control type 0-4
-        //	        - bit 4		    MasterOn
-        //          - bit 5         -
+        //	        - bit 4		    MasterOn mode
+        //          - bit 5         MasterOn switch position
         //          - bit 6         AutoOn
         //          - bit 7         -
         //10    manual pwm Lo
@@ -117,6 +117,8 @@ namespace RateController
                 if (Prod.mf.SectionControl.MasterOn || Prod.CalRun || Prod.CalSetMeter 
                     || Prod.mf.Tls.MasterSwitchMode==MasterSwitchMode.Override 
                     || Prod.mf.Tls.MasterSwitchMode==MasterSwitchMode.ControlMasterRelayOnly) cData[9] |= 0b00010000;
+
+                if (Prod.mf.SwitchBox.MasterOn) cData[9] |= 0b00100000;
             }
             else
             {
