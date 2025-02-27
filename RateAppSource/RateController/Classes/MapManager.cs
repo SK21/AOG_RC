@@ -140,29 +140,31 @@ namespace RateController.Classes
 
             if (zoneToRemove != null)
             {
-                // Convert to polygon
-                var polygonToRemove = zoneToRemove.ToGMapPolygon();
-
-                if (polygonToRemove != null)
+                // Convert to polygons
+                List<GMapPolygon> polygonsToRemove = zoneToRemove.ToGMapPolygons();
+                foreach (var polygonToRemove in polygonsToRemove)
                 {
-                    // Find the actual polygon object in the overlay
-                    var polygonInOverlay = zoneOverlay.Polygons
-                        .FirstOrDefault(polygon => polygon.Points.SequenceEqual(polygonToRemove.Points));
-
-                    if (polygonInOverlay != null)
+                    if (polygonToRemove != null)
                     {
-                        // Remove the polygon from the overlay
-                        zoneOverlay.Polygons.Remove(polygonInOverlay);
+                        // Find the actual polygon object in the overlay
+                        var polygonInOverlay = zoneOverlay.Polygons
+                            .FirstOrDefault(polygon => polygon.Points.SequenceEqual(polygonToRemove.Points));
 
-                        // Remove the zone from the list
-                        mapZones.Remove(zoneToRemove);
+                        if (polygonInOverlay != null)
+                        {
+                            // Remove the polygon from the overlay
+                            zoneOverlay.Polygons.Remove(polygonInOverlay);
 
-                        // Re-bind the overlay to the map
-                        gmap.Overlays.Remove(zoneOverlay);
-                        gmap.Overlays.Add(zoneOverlay);
+                            // Remove the zone from the list
+                            mapZones.Remove(zoneToRemove);
 
-                        gmap.Refresh();
-                        Result = true;
+                            // Re-bind the overlay to the map
+                            gmap.Overlays.Remove(zoneOverlay);
+                            gmap.Overlays.Add(zoneOverlay);
+
+                            gmap.Refresh();
+                            Result = true;
+                        }
                     }
                 }
             }
@@ -202,7 +204,7 @@ namespace RateController.Classes
 
                     foreach (var mapZone in mapZones)
                     {
-                        zoneOverlay.Polygons.Add(mapZone.ToGMapPolygon());
+                        zoneOverlay=AddPolygons(zoneOverlay,mapZone.ToGMapPolygons());
                     }
 
                     gmap.Refresh();
@@ -214,6 +216,15 @@ namespace RateController.Classes
                 }
             }
             return Result;
+        }
+
+        private GMapOverlay AddPolygons(GMapOverlay overlay, List<GMapPolygon> polygons)
+        {
+            foreach (var polygon in polygons)
+            {
+                overlay.Polygons.Add(polygon);
+            }
+            return overlay;
         }
 
         public bool NewMap()
@@ -335,7 +346,7 @@ namespace RateController.Classes
                     }, zoneColor, mf);
 
                 mapZones.Add(mapZone);
-                zoneOverlay.Polygons.Add(mapZone.ToGMapPolygon());
+                zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
 
                 currentZoneVertices.Clear();
                 tempMarkerOverlay.Markers.Clear();
