@@ -194,7 +194,7 @@ namespace RateController.Classes
                 {
                     MapName = Path.GetFileNameWithoutExtension(path);
                     var shapefileHelper = new ShapefileHelper(mf);
-                    mapZones = shapefileHelper.CreateMapZones(path);
+                    mapZones = shapefileHelper.CreateZoneList(path);
 
                     zoneOverlay.Polygons.Clear();
 

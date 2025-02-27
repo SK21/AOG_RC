@@ -93,7 +93,7 @@ namespace RateController.Forms
             }
 
             var shapefileHelper = new ShapefileHelper(mf);
-            var mapZones = shapefileHelper.CreateMapZones(selectedShapefilePath, attributeMapping);
+            var mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
 
             using (var sfd = new SaveFileDialog { Filter = "Shapefiles (*.shp)|*.shp" })
             {

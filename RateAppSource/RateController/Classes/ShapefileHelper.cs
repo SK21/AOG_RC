@@ -17,104 +17,41 @@ namespace RateController.Classes
             this.mf = mf;
         }
 
-        public List<MapZone> CreateMapZones(string shapefilePath, Dictionary<string, string> attributeMapping = null)
+        public List<MapZone> CreateZoneList(string shapefilePath, Dictionary<string, string> attributeMapping = null)
         {
             var mapZones = new List<MapZone>();
-            var geometryFactory = new GeometryFactory();
-
             try
             {
                 using (var shapefile = Shapefile.OpenRead(shapefilePath))
                 {
-                    List<IFeature> featureList = shapefile.Cast<IFeature>().ToList();
-                    mf.Tls.WriteActivityLog($"Loaded {featureList.Count} features from shapefile.");
-                    List<Polygon> polygons = new List<Polygon>();
-                    polygons = polygons.OrderByDescending(p => p.Area).ToList();
-                    Dictionary<Polygon, IFeature> featureMapping = new Dictionary<Polygon, IFeature>();
-
-                    // Extract all polygons and their features
-                    foreach (var feature in featureList)
+                    foreach (var feature in shapefile)
                     {
                         if (feature.Geometry is Polygon polygon)
                         {
-                            polygons.Add(polygon);
-                            featureMapping[polygon] = feature;
+                            var mapZone = CreateMapZone(feature, polygon, attributeMapping);
+                            if (mapZone != null) mapZones.Add(mapZone);
                         }
                         else if (feature.Geometry is MultiPolygon multiPolygon)
                         {
-                            foreach (var geom in multiPolygon.Geometries)
+                            foreach (var poly in multiPolygon.Geometries)
                             {
-                                if (geom is Polygon poly)
+                                if (poly is Polygon multiPolygonPolygon)
                                 {
-                                    polygons.Add(poly);
-                                    featureMapping[poly] = feature;
+                                    var mapZone = CreateMapZone(feature, multiPolygonPolygon, attributeMapping);
+                                    if (mapZone != null) mapZones.Add(mapZone);
                                 }
                             }
                         }
                     }
-                    mf.Tls.WriteActivityLog($"Extracted {polygons.Count} polygons from shapefile.");
-
-                    // Detect outer polygons and holes
-                    var processed = new HashSet<Polygon>();
-                    foreach (var outer in polygons)
-                    {
-                        if (processed.Contains(outer)) continue;
-
-                        var holes = polygons.Where(inner => outer != inner && outer.Contains(inner))
-                            .ToList();
-
-                        mf.Tls.WriteActivityLog($"Processing polygon with {outer.Coordinates.Length} vertices. Found {holes.Count} potential holes.");
-
-                        if (outer.Coordinates.Length == 97)
-                        {
-                            if (holes.Any())
-                            {
-                                var outerRing = geometryFactory.CreateLinearRing(outer.ExteriorRing.Coordinates);
-                                var holeRings = holes.Select(h => geometryFactory.CreateLinearRing(h.ExteriorRing.Coordinates)).ToArray();
-                                var polygonWithHoles = geometryFactory.CreatePolygon(outerRing, holeRings);
-                                var mapZone = CreateMapZone(featureMapping[outer], polygonWithHoles, attributeMapping);
-                                if (mapZone != null)
-                                {
-                                    mapZones.Add(mapZone);
-                                    mf.Tls.WriteActivityLog($"Added polygon with {holes.Count} holes: {mapZone.Name}");
-                                }
-                                else
-                                {
-                                    mf.Tls.WriteErrorLog("MapZone creation failed for a polygon with holes.");
-                                }
-                                processed.Add(outer);
-                                foreach (var inner in holes)
-                                {
-                                    processed.Add(inner);
-                                }
-                            }
-                            else
-                            {
-                                var singlePolygon = geometryFactory.CreatePolygon(outer.ExteriorRing.Coordinates);
-                                var mapZone = CreateMapZone(featureMapping[outer], singlePolygon, attributeMapping);
-                                if (mapZone != null)
-                                {
-                                    mapZones.Add(mapZone);
-                                    mf.Tls.WriteActivityLog($"Added standalone polygon: {mapZone.Name}");
-                                }
-                                else
-                                {
-                                    mf.Tls.WriteErrorLog("MapZone creation failed for a standalone polygon.");
-                                }
-                                processed.Add(outer);
-                            }
-                        }
-                    }
-                    mf.Tls.WriteActivityLog($"Total MapZones created: {mapZones.Count}");
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                mf.Tls.WriteErrorLog("ShapefileHelper/CreateMapZones: " + ex.Message);
+                mf.Tls.WriteErrorLog("ShapefileHelper/LoadAndMapShapefile: " + ex.Message);
             }
-
             return mapZones;
         }
+
         public List<string> GetShapefileAttributes(string shapefilePath)
         {
             using (var shapefile = Shapefile.OpenRead(shapefilePath))
