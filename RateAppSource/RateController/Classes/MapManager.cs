@@ -204,7 +204,7 @@ namespace RateController.Classes
 
                     foreach (var mapZone in mapZones)
                     {
-                        zoneOverlay=AddPolygons(zoneOverlay,mapZone.ToGMapPolygons());
+                        zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
                     }
 
                     gmap.Refresh();
@@ -216,15 +216,6 @@ namespace RateController.Classes
                 }
             }
             return Result;
-        }
-
-        private GMapOverlay AddPolygons(GMapOverlay overlay, List<GMapPolygon> polygons)
-        {
-            foreach (var polygon in polygons)
-            {
-                overlay.Polygons.Add(polygon);
-            }
-            return overlay;
         }
 
         public bool NewMap()
@@ -407,6 +398,15 @@ namespace RateController.Classes
                 RectLatLng boundingBox = new RectLatLng(maxLat, minLng, maxLng - minLng, maxLat - minLat);
                 gmap.SetZoomToFitRect(boundingBox);
             }
+        }
+
+        private GMapOverlay AddPolygons(GMapOverlay overlay, List<GMapPolygon> polygons)
+        {
+            foreach (var polygon in polygons)
+            {
+                overlay.Polygons.Add(polygon);
+            }
+            return overlay;
         }
 
         private void AddToCache()
