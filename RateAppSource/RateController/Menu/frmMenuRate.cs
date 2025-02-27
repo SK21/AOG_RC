@@ -178,7 +178,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(FlowCal.Text, out tempD);
-            using (var form = new FormNumeric(0.01, 10000, tempD))
+            using (var form = new FormNumeric(0.01, 16700, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -192,7 +192,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(FlowCal.Text, out tempD);
-            if (tempD < 0.01 || tempD > 10000)
+            if (tempD < 0.01 || tempD > 16700)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;

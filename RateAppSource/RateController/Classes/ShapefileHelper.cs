@@ -1,8 +1,10 @@
 ﻿using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO.Esri;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace RateController.Classes
 {
@@ -15,16 +17,108 @@ namespace RateController.Classes
             this.mf = mf;
         }
 
+        public List<MapZone> CreateMapZones(string shapefilePath, Dictionary<string, string> attributeMapping = null)
+        {
+            var mapZones = new List<MapZone>();
+            var geometryFactory = new GeometryFactory();
+
+            try
+            {
+                using (var shapefile = Shapefile.OpenRead(shapefilePath))
+                {
+                    List<IFeature> featureList = shapefile.Cast<IFeature>().ToList();
+                    mf.Tls.WriteActivityLog($"Loaded {featureList.Count} features from shapefile.");
+                    List<Polygon> polygons = new List<Polygon>();
+                    polygons = polygons.OrderByDescending(p => p.Area).ToList();
+                    Dictionary<Polygon, IFeature> featureMapping = new Dictionary<Polygon, IFeature>();
+
+                    // Extract all polygons and their features
+                    foreach (var feature in featureList)
+                    {
+                        if (feature.Geometry is Polygon polygon)
+                        {
+                            polygons.Add(polygon);
+                            featureMapping[polygon] = feature;
+                        }
+                        else if (feature.Geometry is MultiPolygon multiPolygon)
+                        {
+                            foreach (var geom in multiPolygon.Geometries)
+                            {
+                                if (geom is Polygon poly)
+                                {
+                                    polygons.Add(poly);
+                                    featureMapping[poly] = feature;
+                                }
+                            }
+                        }
+                    }
+                    mf.Tls.WriteActivityLog($"Extracted {polygons.Count} polygons from shapefile.");
+
+                    // Detect outer polygons and holes
+                    var processed = new HashSet<Polygon>();
+                    foreach (var outer in polygons)
+                    {
+                        if (processed.Contains(outer)) continue;
+
+                        var holes = polygons.Where(inner => outer != inner && outer.Contains(inner))
+                            .ToList();
+
+                        mf.Tls.WriteActivityLog($"Processing polygon with {outer.Coordinates.Length} vertices. Found {holes.Count} potential holes.");
+
+                        if (outer.Coordinates.Length == 97)
+                        {
+                            if (holes.Any())
+                            {
+                                var outerRing = geometryFactory.CreateLinearRing(outer.ExteriorRing.Coordinates);
+                                var holeRings = holes.Select(h => geometryFactory.CreateLinearRing(h.ExteriorRing.Coordinates)).ToArray();
+                                var polygonWithHoles = geometryFactory.CreatePolygon(outerRing, holeRings);
+                                var mapZone = CreateMapZone(featureMapping[outer], polygonWithHoles, attributeMapping);
+                                if (mapZone != null)
+                                {
+                                    mapZones.Add(mapZone);
+                                    mf.Tls.WriteActivityLog($"Added polygon with {holes.Count} holes: {mapZone.Name}");
+                                }
+                                else
+                                {
+                                    mf.Tls.WriteErrorLog("MapZone creation failed for a polygon with holes.");
+                                }
+                                processed.Add(outer);
+                                foreach (var inner in holes)
+                                {
+                                    processed.Add(inner);
+                                }
+                            }
+                            else
+                            {
+                                var singlePolygon = geometryFactory.CreatePolygon(outer.ExteriorRing.Coordinates);
+                                var mapZone = CreateMapZone(featureMapping[outer], singlePolygon, attributeMapping);
+                                if (mapZone != null)
+                                {
+                                    mapZones.Add(mapZone);
+                                    mf.Tls.WriteActivityLog($"Added standalone polygon: {mapZone.Name}");
+                                }
+                                else
+                                {
+                                    mf.Tls.WriteErrorLog("MapZone creation failed for a standalone polygon.");
+                                }
+                                processed.Add(outer);
+                            }
+                        }
+                    }
+                    mf.Tls.WriteActivityLog($"Total MapZones created: {mapZones.Count}");
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("ShapefileHelper/CreateMapZones: " + ex.Message);
+            }
+
+            return mapZones;
+        }
         public List<string> GetShapefileAttributes(string shapefilePath)
         {
             using (var shapefile = Shapefile.OpenRead(shapefilePath))
             {
-                //if (shapefile.Features.Count > 0)
-                //{
-                //    var feature = shapefile.Features[0];
-                //    return new List<string>(feature.Attributes.GetNames());
-                //}
-
                 foreach (var feature in shapefile)
                 {
                     return new List<string>(feature.Attributes.GetNames());
@@ -32,73 +126,6 @@ namespace RateController.Classes
             }
 
             return new List<string>();
-        }
-
-        public List<MapZone> LoadAndMapShapefile(string shapefilePath, Dictionary<string, string> attributeMapping)
-        {
-            var mapZones = new List<MapZone>();
-            try
-            {
-                using (var shapefile = Shapefile.OpenRead(shapefilePath))
-                {
-                    foreach (var feature in shapefile)
-                    {
-                        if (feature.Geometry is Polygon polygon)
-                        {
-                            ProcessPolygonWithMapping(feature, polygon, mapZones, attributeMapping);
-                        }
-                        else if (feature.Geometry is MultiPolygon multiPolygon)
-                        {
-                            foreach (var poly in multiPolygon.Geometries)
-                            {
-                                if (poly is Polygon multiPolygonPolygon)
-                                {
-                                    ProcessPolygonWithMapping(feature, multiPolygonPolygon, mapZones, attributeMapping);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (System.Exception ex)
-            {
-                mf.Tls.WriteErrorLog("ShapefileHelper/LoadAndMapShapefile: " + ex.Message);
-            }
-            return mapZones;
-        }
-
-        public List<MapZone> LoadMapZones(string shapefilePath)
-        {
-            var mapZones = new List<MapZone>();
-            try
-            {
-                using (var shapefile = Shapefile.OpenRead(shapefilePath))
-                {
-                    foreach (var feature in shapefile)
-                    {
-                        if (feature.Geometry is Polygon polygon)
-                        {
-                            ProcessPolygon(feature, polygon, mapZones);
-                        }
-                        else if (feature.Geometry is MultiPolygon multiPolygon)
-                        {
-                            foreach (var poly in multiPolygon.Geometries)
-                            {
-                                if (poly is Polygon multiPolygonPolygon)
-                                {
-                                    ProcessPolygon(feature, multiPolygonPolygon, mapZones);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (System.Exception ex)
-            {
-                mf.Tls.WriteErrorLog("ShapefileHelper/LoadMapZones: " + ex.Message);
-            }
-
-            return mapZones;
         }
 
         public bool SaveMapZones(string shapefilePath, List<MapZone> mapZones)
@@ -136,63 +163,32 @@ namespace RateController.Classes
             return Result;
         }
 
-        private void ProcessPolygon(IFeature feature, Polygon polygon, List<MapZone> mapZones)
+        private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> attributeMapping)
         {
+            string Name = "Unnamed Zone";
+            int RateA = 0;
+            int RateB = 0;
+            int RateC = 0;
+            int RateD = 0;
+            Color ZoneColor = Color.Blue;
+            MapZone NewZone = null;
+
             try
             {
-                var name = feature.Attributes.Exists("Name")
-                    ? feature.Attributes["Name"].ToString()
-                    : "Unnamed Zone";
-
-                var productARate = feature.Attributes.Exists("ProductA") && int.TryParse(feature.Attributes["ProductA"]?.ToString(), out var aRate)
-                    ? aRate
-                    : 0;
-
-                var productBRate = feature.Attributes.Exists("ProductB") && int.TryParse(feature.Attributes["ProductB"]?.ToString(), out var bRate)
-                    ? bRate
-                    : 0;
-
-                var productCRate = feature.Attributes.Exists("ProductC") && int.TryParse(feature.Attributes["ProductC"]?.ToString(), out var cRate)
-                    ? cRate
-                    : 0;
-
-                var productDRate = feature.Attributes.Exists("ProductD") && int.TryParse(feature.Attributes["ProductD"]?.ToString(), out var dRate)
-                    ? dRate
-                    : 0;
-
-                var colorString = feature.Attributes.Exists("Color") ? feature.Attributes["Color"].ToString() : "#FF0000"; // Default to red
-                var zoneColor = ColorTranslator.FromHtml(colorString); // Convert HTML string to Color
-
-                var rates = new Dictionary<string, int>
-            {
-                { "ProductA", productARate },
-                { "ProductB", productBRate },
-                { "ProductC", productCRate },
-                { "ProductD", productDRate }
-            };
-
-                mapZones.Add(new MapZone(name, polygon, rates, zoneColor, mf)); // Pass color to MapZone
-            }
-            catch (System.Exception ex)
-            {
-                mf.Tls.WriteErrorLog("shapefilehelper/processpolygon: " + ex.Message);
-            }
-        }
-
-        private void ProcessPolygonWithMapping(IFeature feature, Polygon polygon, List<MapZone> mapZones, Dictionary<string, string> attributeMapping)
-        {
-            try
-            {
-                string Name = "Unnamed Zone";
-                int RateA = 0;
-                int RateB = 0;
-                int RateC = 0;
-                int RateD = 0;
-                Color ZoneColor = Color.Blue;
-
-                foreach (KeyValuePair<string, string> kvp in attributeMapping)
+                if (attributeMapping == null)
                 {
-                    try
+                    // loading RC shapefile
+                    if (feature.Attributes.Exists("Name")) Name = feature.Attributes["Name"].ToString();
+                    if (feature.Attributes.Exists("ProductA") && int.TryParse(feature.Attributes["ProductA"]?.ToString(), out int ra)) RateA = ra;
+                    if (feature.Attributes.Exists("ProductB") && int.TryParse(feature.Attributes["ProductB"]?.ToString(), out int rb)) RateB = rb;
+                    if (feature.Attributes.Exists("ProductC") && int.TryParse(feature.Attributes["ProductC"]?.ToString(), out int rc)) RateC = rc;
+                    if (feature.Attributes.Exists("ProductD") && int.TryParse(feature.Attributes["ProductD"]?.ToString(), out int rd)) RateD = rd;
+                    if (feature.Attributes.Exists("Color")) ZoneColor = ColorTranslator.FromHtml(feature.Attributes["Color"].ToString());
+                }
+                else
+                {
+                    // importing shapefile
+                    foreach (KeyValuePair<string, string> kvp in attributeMapping)
                     {
                         if (feature.Attributes.Exists(kvp.Value))
                         {
@@ -224,24 +220,23 @@ namespace RateController.Classes
                             }
                         }
                     }
-                    catch (System.Exception ex)
-                    {
-                        mf.Tls.WriteErrorLog("ShapefileHelper/ProcessPolygonWithMapping: " + ex.Message);
-                    }
                 }
-                Dictionary<string, int> rates = new Dictionary<string, int>();
 
-                rates.Add("ProductA", RateA);
-                rates.Add("ProductB", RateB);
-                rates.Add("ProductC", RateC);
-                rates.Add("ProductD", RateD);
+                var rates = new Dictionary<string, int>
+                {
+                { "ProductA", RateA },
+                { "ProductB", RateB },
+                { "ProductC", RateC },
+                { "ProductD", RateD }
+                };
 
-                mapZones.Add(new MapZone(Name, polygon, rates, ZoneColor, mf)); // Pass color to MapZone
+                NewZone = new MapZone(Name, polygon, rates, ZoneColor, mf);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("ShapefileHelper/ProcessPolygonWithMapping: " + ex.Message);
+                mf.Tls.WriteErrorLog("ShapefileHelper/CreateMapZone: " + ex.Message);
             }
+            return NewZone;
         }
     }
 }

@@ -253,7 +253,7 @@ namespace RateController
             get { return cMeterCal; }
             set
             {
-                if (value > 0 && value < 10000)
+                if (value > 0 && value < 16701)
                 {
                     cMeterCal = value;
                 }
