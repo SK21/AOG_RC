@@ -1,13 +1,9 @@
-﻿using GMap.NET;
-using GMap.NET.WindowsForms;
-using NetTopologySuite.Features;
+﻿using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO.Esri;
-using NetTopologySuite.IO.Esri.Shapefiles.Writers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 
 namespace RateController.Classes
@@ -15,7 +11,6 @@ namespace RateController.Classes
     public class ShapefileHelper
     {
         private FormStart mf;
-        private DateTime LastRateSave;
 
         public ShapefileHelper(FormStart mf)
         {
@@ -70,204 +65,39 @@ namespace RateController.Classes
             return new List<string>();
         }
 
-        public List<GMapPolygon> LoadAppliedRateAreas(string shapefilePath)
+        public bool SaveMapZones(string shapefilePath, List<MapZone> mapZones)
         {
-            var appliedPolygons = new List<GMapPolygon>();
+            bool Result = false;
             try
             {
-                using (var shapefile = Shapefile.OpenRead(shapefilePath))
-                {
-                    foreach (var feature in shapefile)
-                    {
-                        if (feature.Geometry is Polygon polygon)
-                        {
-                            var points = polygon.Coordinates.Select(coord => new PointLatLng(coord.Y, coord.X)).ToList();
-                            GMapPolygon gmapPolygon = new GMapPolygon(points, "LoadedAppliedArea")
-                            {
-                                Stroke = new Pen(Color.Black, 1),
-                                Fill = new SolidBrush(Color.FromArgb(100, Color.Blue))
-                            };
-                            appliedPolygons.Add(gmapPolygon);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog($"ShapefileHelper/LoadAppliedRateAreas: {ex.Message}");
-            }
-            return appliedPolygons;
-        }
-
-        public void SaveAppliedRateAreas(string shapefilePath, List<GMapPolygon> appliedRatePolygons)
-        {
-            try
-            {
-                var appliedFeatures = new List<Feature>();
-                foreach (var polygon in appliedRatePolygons)
-                {
-                    var coordinates = polygon.Points.Select(pt => new Coordinate(pt.Lng, pt.Lat)).ToArray();
-                    var geometry = new Polygon(new LinearRing(coordinates));
-                    var attributes = new AttributesTable { { "RateName", "Applied" } };
-                    appliedFeatures.Add(new Feature(geometry, attributes));
-                }
-
-                if (appliedFeatures.Count > 0)
-                {
-                    Shapefile.WriteAllFeatures(appliedFeatures, shapefilePath);
-                }
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog($"ShapefileHelper/SaveAppliedRateAreas: {ex.Message}");
-            }
-        }
-
-        public void SaveRates(string shapefilePath, List<GMapPolygon> appliedRatePolygons, int[] Rates)
-        {
-            try
-            {
-                if (DateTime.Now.Subtract(LastRateSave).TotalSeconds > 30)
-                {
-                    LastRateSave = DateTime.Now;
-                    string RatesFolder = Path.Combine(shapefilePath, "Rates");
-                    var appliedFeatures = new List<Feature>();
-                    foreach (var polygon in appliedRatePolygons)
-                    {
-                        var coordinates = polygon.Points.Select(pt => new Coordinate(pt.Lng, pt.Lat)).ToArray();
-                        var geometry = new Polygon(new LinearRing(coordinates));
-                        var attributes=new AttributesTable
-                        { 
-                            { "ProductA", Rates[0] },
-                            { "ProductB", Rates[1] },
-                            { "ProductC", Rates[2] },
-                            { "ProductD", Rates[3] }
-                        };
-
-                        appliedFeatures.Add(new Feature(geometry, attributes));
-                    }
-
-                    if (appliedFeatures.Count > 0)
-                    {
-                        // Ensure the applied rates subfolder exists
-                        Directory.CreateDirectory(RatesFolder);
-
-                        // Create a subfolder for each zone within applied rates (optional)
-                        string sanitizedZoneName = string.Concat(mapZone.Name.Split(Path.GetInvalidFileNameChars()));
-                        string zoneAppliedRatesFolder = Path.Combine(appliedRatesFolderPath, sanitizedZoneName);
-                        Directory.CreateDirectory(zoneAppliedRatesFolder);
-
-                        // Construct the file path for the "as applied" shapefile
-                        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                        string appliedShapefileName = $"AppliedRates_{timestamp}.shp";
-                        string appliedShapefilePath = Path.Combine(zoneAppliedRatesFolder, appliedShapefileName);
-
-                        Shapefile.WriteAllFeatures(appliedFeatures, appliedShapefilePath);
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog($"ShapefileHelper/SaveRates: {ex.Message}");
-            }
-        }
-
-        public bool SaveMapZones(string zoneShapefilePath, List<MapZone> mapZones)
-        {
-            bool result = false;
-            try
-            {
-                // Save zone polygons (unchanged)
-                var zoneFeatures = new List<Feature>();
+                var features = new List<IFeature>();
 
                 foreach (var mapZone in mapZones)
                 {
                     var attributes = new AttributesTable
-            {
-                { "Name", mapZone.Name },
-                { "ProductA", mapZone.Rates["ProductA"] },
-                { "ProductB", mapZone.Rates["ProductB"] },
-                { "ProductC", mapZone.Rates["ProductC"] },
-                { "ProductD", mapZone.Rates["ProductD"] },
-                { "Color", ColorTranslator.ToHtml(mapZone.ZoneColor) }
-            };
-
-                    zoneFeatures.Add(new Feature(mapZone.Geometry, attributes));
-                }
-
-                if (zoneFeatures.Count > 0)
                 {
-                    Shapefile.WriteAllFeatures(zoneFeatures, zoneShapefilePath);
+                    { "Name", mapZone.Name },
+                    { "ProductA", mapZone.Rates["ProductA"] },
+                    { "ProductB", mapZone.Rates["ProductB"] },
+                    { "ProductC", mapZone.Rates["ProductC"] },
+                    { "ProductD", mapZone.Rates["ProductD"] },
+                    { "Color", ColorTranslator.ToHtml(mapZone.ZoneColor) } // Save color as HTML string
+                };
+
+                    features.Add(new Feature(mapZone.Geometry, attributes));
                 }
 
-
-
-
-                // Derive the applied rates folder path as a subfolder of zoneShapefilePath
-                string zoneDirectory = Path.GetDirectoryName(zoneShapefilePath);
-                string appliedRatesFolderPath = Path.Combine(zoneDirectory, "Rates");
-
-                // Save "as applied" data for each zone
-                foreach (var mapZone in mapZones)
+                if (features.Count > 0)
                 {
-                    var appliedFeatures = new List<Feature>();
-
-                    foreach (var appliedRateEntry in mapZone.AppliedRates)
-                    {
-                        var pointLatLng = appliedRateEntry.Key; // Location
-                        var rateDictionary = appliedRateEntry.Value; // Dictionary<string, double>
-
-                        foreach (var rateEntry in rateDictionary)
-                        {
-                            string rateName = rateEntry.Key;     // Applied Rate Name
-                            double rateValue = rateEntry.Value;  // Applied Rate Value
-
-                            // Create a point geometry at the applied rate location
-                            var coordinate = new Coordinate(pointLatLng.Lng, pointLatLng.Lat); // Longitude (X), Latitude (Y)
-                            var point = new NetTopologySuite.Geometries.Point(coordinate);
-
-                            // Create attributes for the applied rate point
-                            var appliedRateAttributes = new AttributesTable
-                    {
-                        { "ZoneName", mapZone.Name },
-                        { "RateName", rateName },
-                        { "AppliedRate", rateValue },
-                        { "Latitude", pointLatLng.Lat },
-                        { "Longitude", pointLatLng.Lng },
-                    };
-
-                            // Add the point feature to the list
-                            appliedFeatures.Add(new Feature(point, appliedRateAttributes));
-                        }
-                    }
-
-                    if (appliedFeatures.Count > 0)
-                    {
-                        // Ensure the applied rates subfolder exists
-                        Directory.CreateDirectory(appliedRatesFolderPath);
-
-                        // Create a subfolder for each zone within applied rates (optional)
-                        string sanitizedZoneName = string.Concat(mapZone.Name.Split(Path.GetInvalidFileNameChars()));
-                        string zoneAppliedRatesFolder = Path.Combine(appliedRatesFolderPath, sanitizedZoneName);
-                        Directory.CreateDirectory(zoneAppliedRatesFolder);
-
-                        // Construct the file path for the "as applied" shapefile
-                        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                        string appliedShapefileName = $"AppliedRates_{timestamp}.shp";
-                        string appliedShapefilePath = Path.Combine(zoneAppliedRatesFolder, appliedShapefileName);
-
-                        Shapefile.WriteAllFeatures(appliedFeatures, appliedShapefilePath);
-                    }
+                    Shapefile.WriteAllFeatures(features, shapefilePath);
+                    Result = true;
                 }
-
-                result = true;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                mf.Tls.WriteErrorLog($"ShapefileHelper/SaveMapZones: {ex.Message}");
+                mf.Tls.WriteErrorLog("ShapefileHelper/SaveMapZones: " + ex.Message);
             }
-            return result;
+            return Result;
         }
 
         private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> attributeMapping)

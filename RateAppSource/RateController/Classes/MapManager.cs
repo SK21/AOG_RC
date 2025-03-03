@@ -9,7 +9,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace RateController.Classes
 {
@@ -37,24 +36,11 @@ namespace RateController.Classes
         private GMarkerGoogle tractorMarker;
         private GMapOverlay zoneOverlay;
 
-        private GMapOverlay appliedRateOverlay;
-        private string selectedAppliedRate = "ProductA"; // Default selection
-        private const double AcresToSquareMeters = 4046.86; // Conversion factor
-        private double implementWidthMeters = 30.48; // Default width in meters (100 feet)
-        private PointLatLng? lastTractorPosition = null;
-        private double accumulatedArea = 0; // Track area covered
-        private List<GMapPolygon> appliedRatePolygons = new List<GMapPolygon>(); // Persisted applied rate areas
-        private ShapefileHelper shapefileHelper;
-        private string appliedRatesShapefilePath;
-        private double cMinAppliedArea=0.1; // 1/10 acre
-        private string cMapPath;
-
         public MapManager(FormStart main)
         {
             mf = main;
             cRootPath = GetFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RateMap");
             CachePath = GetFolder(cRootPath, "MapCache");
-            shapefileHelper = new ShapefileHelper(mf);
 
             if (bool.TryParse(mf.Tls.LoadProperty("ShowTiles"), out bool st)) cShowTiles = st;
             InitializeMap();
@@ -66,7 +52,6 @@ namespace RateController.Classes
         }
 
         public event EventHandler MapChanged;
-        public string MapPath { get { return cMapPath; } }
 
         public bool EditMode
         {
@@ -202,81 +187,53 @@ namespace RateController.Classes
             return LoadMap(LastFile);
         }
 
-        public bool LoadMap(string FilePath)
+        public bool LoadMap(string path)
         {
             bool Result = false;
-            if (FileNameValidator.IsValidFolderName(FilePath))
+            if (FileNameValidator.IsValidFolderName(path))
             {
-                if (File.Exists(FilePath))
+                if (File.Exists(path))
                 {
-                    MapName = Path.GetFileNameWithoutExtension(FilePath);
-                    cMapPath = Path.GetDirectoryName(FilePath);
-                    InitializeMapZones();
+                    MapName = Path.GetFileNameWithoutExtension(path);
+                    var shapefileHelper = new ShapefileHelper(mf);
+                    mapZones = shapefileHelper.CreateZoneList(path);
 
-                    mapZones = shapefileHelper.CreateZoneList(FilePath);
-                    if (mapZones.Count > 0)
+                    zoneOverlay.Polygons.Clear();
+
+                    if (mapZones.Count > 0) CenterMapToZone(mapZones[0]);
+
+                    foreach (var mapZone in mapZones)
                     {
-                        CenterMapToZone(mapZones[0]);
-                        foreach (var mapZone in mapZones)
-                        {
-                            zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
-                        }
+                        zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
                     }
 
                     gmap.Refresh();
-                    mf.Tls.SaveProperty("LastMapFile", FilePath);
-                    ZoomToFit();
-                    MapChanged?.Invoke(this, EventArgs.Empty);
+                    gmap.Zoom = 16;
                     Result = true;
+                    MapChanged?.Invoke(this, EventArgs.Empty);
+                    mf.Tls.SaveProperty("LastMapFile", path);
+                    ZoomToFit();
                 }
             }
             return Result;
         }
 
-        public bool NewMap(string name)
+        public bool NewMap()
         {
             bool Result = false;
             try
             {
-                bool ValidName = false;
-                string FolderPath = Path.Combine(cRootPath, name);
-                if (FileNameValidator.IsValidFolderName(name) && FileNameValidator.IsValidFileName(name))
-                {
-                    if (Directory.Exists(FolderPath))
-                    {
-                        var Hlp = new frmMsgBox(mf, "File exists, overwrite?", "File Exists", true);
-                        Hlp.TopMost = true;
-                        Hlp.ShowDialog();
-                        bool Choice = Hlp.Result;
-                        Hlp.Close();
-                        if (Choice)
-                        {
-                            Directory.Delete(FolderPath, true);
-                            ValidName = true;
-                        }
-                        else
-                        {
-                            mf.Tls.ShowMessage("File not created!", "File Error", 10000);
-                        }
-                    }
-                    else
-                    {
-                        ValidName = true;
-                    }
-                }
-                if (ValidName)
-                {
-                    if (!Directory.Exists(FolderPath))
-                    {
-                        Directory.CreateDirectory(FolderPath);
-                        mf.Tls.ShowMessage("New file created.", "File Created", 10000);
-                    }
-                    MapName = name;
-                    cMapPath = FolderPath;
-                    InitializeMapZones();
-                    gmap.Refresh();
-                    Result = true;
-                }
+                gmap.Overlays.Clear();
+                zoneOverlay = new GMapOverlay("zones");
+                gpsMarkerOverlay = new GMapOverlay();
+                tempMarkerOverlay = new GMapOverlay();
+                gmap.Overlays.Add(zoneOverlay);
+                gmap.Overlays.Add(gpsMarkerOverlay);
+                gmap.Overlays.Add(tempMarkerOverlay);
+                currentZoneVertices = new List<PointLatLng>();
+                mapZones.Clear();
+                gmap.Refresh();
+                Result = true;
             }
             catch (Exception ex)
             {
@@ -285,66 +242,35 @@ namespace RateController.Classes
             return Result;
         }
 
-
-        public bool SaveMap(bool UpdateCache = true)
+        public bool SaveMap(string name, bool UpdateCache = true)
         {
             bool Result = false;
-            string FilePath = Path.Combine(cMapPath, MapName);
-            shapefileHelper.SaveMapZones(FilePath, mapZones);
-            if (UpdateCache) AddToCache();
-            Result = true;
+            string path = GetFolder(cRootPath, name);
+            if (FileNameValidator.IsValidFolderName(name) && FileNameValidator.IsValidFileName(name))
+            {
+                var shapefileHelper = new ShapefileHelper(mf);
+                path += "\\" + name;
+                shapefileHelper.SaveMapZones(path, mapZones);
+                if (UpdateCache) AddToCache();
+                Result = true;
+                MapName = name;
+            }
             return Result;
         }
 
-        public void SetTractorPosition(PointLatLng NewLocation, int[] Rates = null, bool FromMouseClick = false)
+        public void SetTractorPosition(PointLatLng NewLocation, bool FromMouseClick = false)
         {
             if (FromMouseClick || (!cEditMode && !FromMouseClick))
             {
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation; // Update the marker position
                 gmap.Refresh(); // Refresh the map to show the updated marker
-                UpdateTargetRates();
-                UpdateAppliedRates(NewLocation, Rates);
+                UpdateRates();
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        private void UpdateAppliedRates(PointLatLng NewLocation, int[] Rates)
-        {
-            if (Rates != null)
-            {
-                if (lastTractorPosition.HasValue)
-                {
-                    double distanceTraveled = GetDistance(lastTractorPosition.Value, NewLocation); // Meters
-                    double areaCovered = distanceTraveled * implementWidthMeters; // Square meters
-                    accumulatedArea += areaCovered;
-
-                    if (accumulatedArea >= (AcresToSquareMeters * cMinAppliedArea)) // Check if minimum area is reached in acres
-                    {
-                        List<PointLatLng> areaCoveredPoints = GetCoveredArea(lastTractorPosition.Value, NewLocation);
-                        for (int i = 0; i < Rates.Length; i++)
-                        {
-                            if (Rates[i] > 0)
-                            {
-                                double rateValue = Rates[i];
-                                Color rateColor = GetRateColor(rateValue);
-                                GMapPolygon areaPolygon = new GMapPolygon(areaCoveredPoints, "AppliedArea")
-                                {
-                                    Stroke = new Pen(Color.Black, 1),
-                                    Fill = new SolidBrush(Color.FromArgb(100, rateColor))
-                                };
-                                appliedRatePolygons.Add(areaPolygon);
-                                appliedRateOverlay.Polygons.Add(areaPolygon);
-                            }
-                        }
-                        shapefileHelper.SaveAppliedRateAreas(appliedRatesShapefilePath, appliedRatePolygons);
-                        accumulatedArea = 0; // Reset area tracker
-                    }
-                }
-                lastTractorPosition = NewLocation;
-            }
-        }
-        public void UpdateTargetRates()
+        public void UpdateRates()
         {
             try
             {
@@ -436,7 +362,7 @@ namespace RateController.Classes
                         };
                         zone.ZoneColor = zoneColor;
                         Found = true;
-                        SaveMap( false);
+                        SaveMap(MapName, false);
                         LoadLastMap();
                         break;
                     }
@@ -563,7 +489,7 @@ namespace RateController.Classes
                 else
                 {
                     PointLatLng Location = gmap.FromLocalToLatLng(e.X, e.Y);
-                    SetTractorPosition(Location,null, true);
+                    SetTractorPosition(Location, true);
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -649,80 +575,23 @@ namespace RateController.Classes
             }
 
             gmap.MouseClick += Gmap_MouseClick;
+
+            zoneOverlay = new GMapOverlay("mapzones");
+            gpsMarkerOverlay = new GMapOverlay("gpsMarkers");
+            tempMarkerOverlay = new GMapOverlay("tempMarkers");
+
+            tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0), GMarkerGoogleType.green); // Initialize with a default position
+            gpsMarkerOverlay.Markers.Add(tractorMarker); // Add the tractor marker to the overlay
+
+            gmap.Overlays.Add(zoneOverlay);
+            gmap.Overlays.Add(gpsMarkerOverlay);
+            gmap.Overlays.Add(tempMarkerOverlay);
         }
 
         private void InitializeMapZones()
         {
             mapZones = new List<MapZone>();
             currentZoneVertices = new List<PointLatLng>();
-
-            gmap.Overlays.Clear();
-
-            zoneOverlay = new GMapOverlay("mapzones");
-            tempMarkerOverlay = new GMapOverlay("tempMarkers");
-            appliedRateOverlay = new GMapOverlay("appliedRates");
-            gpsMarkerOverlay = new GMapOverlay("gpsMarkers");
-            tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0), GMarkerGoogleType.green); // Initialize with a default position
-            gpsMarkerOverlay.Markers.Add(tractorMarker); // Add the tractor marker to the overlay
-
-            gmap.Overlays.Add(appliedRateOverlay);
-            gmap.Overlays.Add(zoneOverlay);
-            gmap.Overlays.Add(gpsMarkerOverlay);
-            gmap.Overlays.Add(tempMarkerOverlay);
-        }
-
-        public void UpdateAppliedRateLayer(string rateName)
-        {
-            selectedAppliedRate = rateName;
-            appliedRateOverlay.Markers.Clear();
-            appliedRateOverlay.Polygons.Clear();
-
-            foreach (var polygon in appliedRatePolygons)
-            {
-                appliedRateOverlay.Polygons.Add(polygon);
-            }
-            gmap.Refresh();
-        }
-
-        private List<PointLatLng> GetCoveredArea(PointLatLng start, PointLatLng end)
-        {
-            double halfWidth = (implementWidthMeters / 2) / 111320.0; // Convert meters to degrees
-            return new List<PointLatLng>
-        {
-            new PointLatLng(start.Lat + halfWidth, start.Lng),
-            new PointLatLng(end.Lat + halfWidth, end.Lng),
-            new PointLatLng(end.Lat - halfWidth, end.Lng),
-            new PointLatLng(start.Lat - halfWidth, start.Lng),
-            new PointLatLng(start.Lat + halfWidth, start.Lng)
-        };
-        }
-
-        private void SaveAppliedRateData()
-        {
-            shapefileHelper.SaveAppliedRateAreas(appliedRatesShapefilePath, appliedRatePolygons);
-        }
-
-        private void LoadAppliedRateData()
-        {
-            appliedRatePolygons = shapefileHelper.LoadAppliedRateAreas(appliedRatesShapefilePath);
-        }
-
-        private double GetDistance(PointLatLng p1, PointLatLng p2)
-        {
-            double R = 6371000; // Earth radius in meters
-            double dLat = (p2.Lat - p1.Lat) * Math.PI / 180;
-            double dLng = (p2.Lng - p1.Lng) * Math.PI / 180;
-            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                       Math.Cos(p1.Lat * Math.PI / 180) * Math.Cos(p2.Lat * Math.PI / 180) *
-                       Math.Sin(dLng / 2) * Math.Sin(dLng / 2);
-            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-            return R * c; // Distance in meters
-        }
-
-        private Color GetRateColor(double rateValue)
-        {
-            int intensity = (int)(Math.Min(255, rateValue * 10)); // Scale value to 0-255
-            return Color.FromArgb(255, intensity, 255 - intensity, 0); // Gradient from green to red
         }
     }
 }

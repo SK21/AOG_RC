@@ -21,12 +21,12 @@ namespace RateController.Classes
             Rates = rates;
             ZoneColor = zoneColor;
             this.mf = mf;
-            AppliedRates = new Dictionary<PointLatLng, Dictionary<string, double>>();
         }
 
-        public Dictionary<PointLatLng, Dictionary<string, double>> AppliedRates { get; set; }
         public Polygon Geometry { get; set; }
+
         public string Name { get; set; }
+
         public Dictionary<string, int> Rates { get; set; }
 
         public Color ZoneColor { get; set; }
@@ -36,11 +36,6 @@ namespace RateController.Classes
             var coordinate = new Coordinate(point.Lng, point.Lat);
             var pointGeometry = new NetTopologySuite.Geometries.Point(coordinate);
             return Geometry.Contains(pointGeometry);
-        }
-
-        public Dictionary<PointLatLng, Dictionary<string, double>> GetAppliedRates()
-        {
-            return AppliedRates;
         }
 
         public double Hectares()
@@ -78,21 +73,6 @@ namespace RateController.Classes
                 mf.Tls.ShowMessage("MapZone.CalculateArea: " + ex.Message, "Help", 20000, true);
             }
             return totalArea;
-        }
-
-        public void LogAppliedRate(PointLatLng location, string name, double rate)
-        {
-            if (location == null) throw new ArgumentNullException(nameof(location));
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Rate name cannot be null or empty.", nameof(name));
-
-            // Initialize the inner dictionary if the location does not exist
-            if (!AppliedRates.ContainsKey(location))
-            {
-                AppliedRates[location] = new Dictionary<string, double>();
-            }
-
-            // Add or update the rate
-            AppliedRates[location][name] = rate;
         }
 
         public List<GMapPolygon> ToGMapPolygons()
@@ -150,6 +130,7 @@ namespace RateController.Classes
                     };
                     polygons.Add(holePolygon);
                 }
+
             }
             catch (Exception ex)
             {

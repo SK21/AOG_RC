@@ -87,7 +87,14 @@ namespace RateController.Menu
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            mf.Tls.Manager.NewMap(tbMapName.Text);
+            if (mf.Tls.Manager.NewMap())
+            {
+                tbMapName.Text = "New Map";
+            }
+            else
+            {
+                mf.Tls.ShowMessage("New zone could not be created.");
+            }
         }
 
         private void btnResume_Click(object sender, EventArgs e)
@@ -102,7 +109,7 @@ namespace RateController.Menu
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (mf.Tls.Manager.SaveMap())
+            if (mf.Tls.Manager.SaveMap(tbMapName.Text))
             {
                 mf.Tls.ShowMessage("Map saved successfully.");
             }
@@ -454,7 +461,7 @@ namespace RateController.Menu
 
             tbMapName.Text = mf.Tls.Manager.MapName;
             tbName.Text = mf.Tls.Manager.ZoneName;
-            mf.Tls.Manager.UpdateTargetRates();
+            mf.Tls.Manager.UpdateRates();
             tbP1.Text = mf.Tls.Manager.GetRate(0).ToString();
             tbP2.Text = mf.Tls.Manager.GetRate(1).ToString();
             tbP3.Text = mf.Tls.Manager.GetRate(2).ToString();

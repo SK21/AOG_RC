@@ -50,13 +50,13 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.gbMap = new System.Windows.Forms.GroupBox();
-            this.ckMap = new System.Windows.Forms.CheckBox();
             this.ckFullScreen = new System.Windows.Forms.CheckBox();
             this.VSzoom = new System.Windows.Forms.VScrollBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ckEnable = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnResume = new System.Windows.Forms.Button();
+            this.ckMap = new System.Windows.Forms.CheckBox();
             this.gbZone.SuspendLayout();
             this.gbMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -97,7 +97,7 @@
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(11, 11);
+            this.btnImport.Location = new System.Drawing.Point(8, 12);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(89, 64);
             this.btnImport.TabIndex = 342;
@@ -317,26 +317,12 @@
             this.gbMap.Text = "Map";
             this.gbMap.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
-            // ckMap
-            // 
-            this.ckMap.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckMap.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMap.Image = global::RateController.Properties.Resources.map;
-            this.ckMap.Location = new System.Drawing.Point(30, 249);
-            this.ckMap.Name = "ckMap";
-            this.ckMap.Size = new System.Drawing.Size(82, 60);
-            this.ckMap.TabIndex = 349;
-            this.ckMap.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckMap.UseVisualStyleBackColor = true;
-            this.ckMap.CheckedChanged += new System.EventHandler(this.ckMap_CheckedChanged);
-            // 
             // ckFullScreen
             // 
             this.ckFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFullScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFullScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFullScreen.Location = new System.Drawing.Point(11, 171);
+            this.ckFullScreen.Location = new System.Drawing.Point(8, 172);
             this.ckFullScreen.Name = "ckFullScreen";
             this.ckFullScreen.Size = new System.Drawing.Size(89, 64);
             this.ckFullScreen.TabIndex = 348;
@@ -356,9 +342,9 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(57, 324);
+            this.pictureBox1.Location = new System.Drawing.Point(66, 324);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(476, 294);
+            this.pictureBox1.Size = new System.Drawing.Size(467, 294);
             this.pictureBox1.TabIndex = 350;
             this.pictureBox1.TabStop = false;
             // 
@@ -367,7 +353,7 @@
             this.ckEnable.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckEnable.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEnable.Location = new System.Drawing.Point(11, 251);
+            this.ckEnable.Location = new System.Drawing.Point(8, 252);
             this.ckEnable.Name = "ckEnable";
             this.ckEnable.Size = new System.Drawing.Size(89, 64);
             this.ckEnable.TabIndex = 351;
@@ -382,13 +368,27 @@
             // 
             // btnResume
             // 
-            this.btnResume.Location = new System.Drawing.Point(11, 91);
+            this.btnResume.Location = new System.Drawing.Point(8, 92);
             this.btnResume.Name = "btnResume";
             this.btnResume.Size = new System.Drawing.Size(89, 64);
             this.btnResume.TabIndex = 353;
             this.btnResume.Text = "Resume";
             this.btnResume.UseVisualStyleBackColor = true;
             this.btnResume.Click += new System.EventHandler(this.btnResume_Click);
+            // 
+            // ckMap
+            // 
+            this.ckMap.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMap.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckMap.Image = global::RateController.Properties.Resources.map;
+            this.ckMap.Location = new System.Drawing.Point(30, 249);
+            this.ckMap.Name = "ckMap";
+            this.ckMap.Size = new System.Drawing.Size(82, 60);
+            this.ckMap.TabIndex = 349;
+            this.ckMap.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMap.UseVisualStyleBackColor = true;
+            this.ckMap.CheckedChanged += new System.EventHandler(this.ckMap_CheckedChanged);
             // 
             // frmMenuRateMap
             // 

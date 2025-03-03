@@ -82,23 +82,6 @@ namespace RateController
             return cProducts[IDX];
         }
 
-        public int[] ProductRates()
-        {
-            int[] Result = new int[mf.MaxProducts];
-            for (int i = 0; i < mf.MaxProducts - 2; i++)
-            {
-                if (cProducts[i].RateSensor.Connected())
-                {
-                    Result[i] = (int)cProducts[i].SmoothRate();
-                }
-                else
-                {
-                    Result[i] = 0;
-                }
-            }
-            return Result;
-        }
-
         public void Load(bool Reset = false)
         {
             cProducts.Clear();

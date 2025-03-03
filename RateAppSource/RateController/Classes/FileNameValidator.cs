@@ -51,10 +51,5 @@ namespace RateController.Classes
             char[] invalidChars = Path.GetInvalidPathChars();
             return name.All(c => !invalidChars.Contains(c));
         }
-
-        public static bool IsDuplicateFolder(string name)
-        {
-
-        }
     }
 }
