@@ -1371,9 +1371,9 @@ namespace RateController
             if (GPS.Connected())
             {
                 PointLatLng Position = new PointLatLng(GPS.Latitude, GPS.Longitude);
-                Tls.Manager.SetTractorPosition(Position);
+                Tls.Manager.SetTractorPosition(Position, Products.ProductRates());
             }
-            Tls.Manager.UpdateRates();
+            Tls.Manager.UpdateTargetRates();
         }
 
         private void timerPIDs_Tick(object sender, EventArgs e)
