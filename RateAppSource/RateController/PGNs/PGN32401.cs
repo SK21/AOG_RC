@@ -87,7 +87,7 @@ namespace RateController
             if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 byte ModuleID = Data[2];
-                cPressure[ModuleID] = (double)(Data[3] | Data[4] << 8) / 10.0;
+                cPressure[ModuleID] = (double)(Data[3] | Data[4] << 8);
                 cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
                 cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
 

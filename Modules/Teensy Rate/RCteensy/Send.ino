@@ -111,9 +111,8 @@ void SendComm()
         Data[1] = 126;
         Data[2] = MDL.ID;
 
-        int16_t Pressure = AINs.AIN0 / 10.0;
-        Data[3] = (byte)Pressure;
-        Data[4] = (byte)(Pressure >> 8);
+        Data[3] = (byte)PressureReading;
+        Data[4] = (byte)(PressureReading >> 8);
         Data[5] = 0;
         Data[6] = 0;
         Data[7] = 0;

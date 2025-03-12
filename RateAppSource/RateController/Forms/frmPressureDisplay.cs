@@ -70,8 +70,9 @@ namespace RateController
         private void UpdateForm()
         {
             double Pressure = mf.ModulesStatus.Pressure(mf.Products.Items[mf.CurrentProduct()].ModuleID);
-            if (mf.PressureCal > 0) Pressure = Pressure / mf.PressureCal;
-            Pressure += mf.PressureOffset;
+            //if (mf.PressureCal > 0) Pressure = Pressure / mf.PressureCal;
+            //Pressure += mf.PressureOffset;
+            if(mf.PressureCal>0) Pressure = Pressure * mf.PressureCal + mf.PressureOffset;
             lbPressureValue.Text = Pressure.ToString("N1");
         }
     }

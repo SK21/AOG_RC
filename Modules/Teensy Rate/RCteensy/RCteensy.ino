@@ -21,8 +21,8 @@ extern "C" {
 }
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  24-Dec-2024"
-const uint16_t InoID = 24124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  11-Mar-2025"
+const uint16_t InoID = 11035;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -58,7 +58,7 @@ struct ModuleConfig
 	uint8_t WorkPin = 2;
 	bool WorkPinIsMomentary = false;
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output2 only, Output1 is off
-	uint8_t PressurePin = 15;		// NC - no pressure pin
+	uint8_t PressurePin = NC;		// NC - no pressure pin
 	bool ADS1115Enabled = false;
 	uint8_t ESPserialPort = 1;		// serial port to connect to wifi module
 };
@@ -129,6 +129,7 @@ struct AnalogConfig
 	int16_t AIN3;
 };
 AnalogConfig AINs;
+int PressureReading = 0;
 
 bool ADSfound = false;
 
@@ -293,8 +294,8 @@ elapsedMicros LoopTmr;
 byte ReadReset;
 uint32_t MaxLoopTime;
 
-//double debug1;
-//double debug2;
+double debug1;
+double debug2;
 //double debug3;
 //double debug4;
 
@@ -310,17 +311,19 @@ void Blink()
 			Serial.print(" Micros: ");
 			Serial.print(MaxLoopTime);
 
-			//Serial.print(", IP Address: ");
-			//Serial.print(Ethernet.localIP());
+			Serial.print(", ");
+			Serial.print(Ethernet.localIP());
 
 			//Serial.print(", Temp: ");
 			//Serial.print(tempmonGetTemp());
 
-			//Serial.print(", ");
-			//Serial.print(debug1);
+			debug1 = MDL.PressurePin;
+			Serial.print(", ");
+			Serial.print(debug1);
 
-			//Serial.print(", ");
-			//Serial.print(debug2);
+			debug2 = PressureReading;
+			Serial.print(", ");
+			Serial.print(debug2);
 
 			//Serial.print(", ");
 			//Serial.print(debug3);

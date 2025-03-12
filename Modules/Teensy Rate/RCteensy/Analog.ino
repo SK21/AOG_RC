@@ -8,7 +8,11 @@
 uint8_t CurrentPin = 0;
 void ReadAnalog()
 {
-	if (ADSfound)
+	if (MDL.PressurePin < NC)
+	{
+		PressureReading = analogRead(MDL.PressurePin);
+	}
+	else if (ADSfound)
 	{
 		// based on https://github.com/RalphBacon/ADS1115-ADC/blob/master/ADS1115_ADC_16_bit_SingleEnded.ino
 
@@ -24,6 +28,7 @@ void ReadAnalog()
 		{
 		case 0:
 			AINs.AIN0 = Aread;
+			PressureReading = Aread;
 			break;
 		case 1:
 			AINs.AIN1 = Aread;
