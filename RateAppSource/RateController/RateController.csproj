@@ -174,6 +174,9 @@
     <Compile Include="Classes\clsAlarm.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />
+    <Compile Include="Classes\clsPressure.cs" />
+    <Compile Include="Classes\clsPressureRawData.cs" />
+    <Compile Include="Classes\clsPressures.cs" />
     <Compile Include="Classes\clsProducts.cs" />
     <Compile Include="Classes\clsRelay.cs" />
     <Compile Include="Classes\clsRelays.cs" />
@@ -372,6 +375,12 @@
     </Compile>
     <Compile Include="Menu\frmMenuPins.Designer.cs">
       <DependentUpon>frmMenuPins.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuPressure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuPressure.Designer.cs">
+      <DependentUpon>frmMenuPressure.cs</DependentUpon>
     </Compile>
     <Compile Include="Menu\frmMenuRate.cs">
       <SubType>Form</SubType>
@@ -573,6 +582,9 @@
     <EmbeddedResource Include="Menu\frmMenuPins.resx">
       <DependentUpon>frmMenuPins.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuPressure.resx">
+      <DependentUpon>frmMenuPressure.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuRate.resx">
       <DependentUpon>frmMenuRate.cs</DependentUpon>
     </EmbeddedResource>
@@ -672,6 +684,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\copy.png" />
     <None Include="Resources\map.png" />
     <None Include="Resources\Update4.png" />
     <None Include="Resources\Pause.png" />

@@ -44,9 +44,6 @@ namespace RateController.Menu
                 if (double.TryParse(tbSimSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
                 mf.UseInches = !ckMetric.Checked;
                 mf.UseTransparent = ckTransparent.Checked;
-                mf.ShowPressure = ckPressure.Checked;
-                if (double.TryParse(tbPressureCal.Text, out double Pressure)) mf.PressureCal = Pressure;
-                if (double.TryParse(tbPressureOffset.Text, out double PresOff)) mf.PressureOffset = PresOff;
                 mf.UseLargeScreen = ckLargeScreen.Checked;
                 if (ckSingle.Checked) mf.SwitchScreens(true);
                 SetButtons(false);
@@ -158,63 +155,9 @@ namespace RateController.Menu
             ckTransparent.Text = Lang.lgTransparent;
             ckSingle.Text = Lang.lgSingleProduct;
             ckReset.Text = Lang.lgResetProducts;
-            gbPressure.Text = Lang.lgPressure;
-            ckPressure.Text = Lang.lgShowPressure;
-            lbCalValue.Text = Lang.lgCalValue;
-            lbPressureOffset.Text = Lang.lgOffset;
             gbOther.Text = Lang.lgOther;
             ckMetric.Text = Lang.lgMetric;
             ckSimSpeed.Text = Lang.lgSimulateSpeed;
-        }
-
-        private void tbPressureCal_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbPressureCal.Text, out tempD);
-            using (var form = new FormNumeric(0, 10000, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbPressureCal.Text = form.ReturnValue.ToString("N1");
-                }
-            }
-        }
-
-        private void tbPressureCal_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbPressureCal.Text, out tempD);
-            if (tempD < 0 || tempD > 10000)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
-        }
-
-        private void tbPressureOffset_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbPressureOffset.Text, out tempD);
-            using (var form = new FormNumeric(-10000, 10000, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbPressureOffset.Text = form.ReturnValue.ToString("N1");
-                }
-            }
-        }
-
-        private void tbPressureOffset_Validating(object sender, CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbPressureOffset.Text, out tempD);
-            if (tempD < -10000 || tempD > 10000)
-            {
-                System.Media.SystemSounds.Exclamation.Play();
-                e.Cancel = true;
-            }
         }
 
         private void tbSimSpeed_Enter(object sender, EventArgs e)
@@ -259,10 +202,7 @@ namespace RateController.Menu
             ckSimSpeed.Checked = (mf.SimMode == SimType.Sim_Speed);
             ckMetric.Checked = !mf.UseInches;
             ckTransparent.Checked = mf.UseTransparent;
-            ckPressure.Checked = mf.ShowPressure;
             ckLargeScreen.Checked = mf.UseLargeScreen;
-            tbPressureOffset.Text = mf.PressureOffset.ToString("N1");
-            tbPressureCal.Text = mf.PressureCal.ToString("N1");
             ckReset.Checked = false;
             ckSingle.Checked = false;
 

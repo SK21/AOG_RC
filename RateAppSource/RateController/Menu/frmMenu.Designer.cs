@@ -66,6 +66,7 @@
             this.butBoards = new System.Windows.Forms.Button();
             this.butColor = new System.Windows.Forms.Button();
             this.butMap = new System.Windows.Forms.Button();
+            this.btnPressure = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -263,7 +264,7 @@
             this.butCalibrate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butCalibrate.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butCalibrate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butCalibrate.Location = new System.Drawing.Point(633, 345);
+            this.butCalibrate.Location = new System.Drawing.Point(633, 420);
             this.butCalibrate.Name = "butCalibrate";
             this.butCalibrate.Size = new System.Drawing.Size(158, 49);
             this.butCalibrate.TabIndex = 20;
@@ -434,7 +435,7 @@
             this.butLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butLanguage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butLanguage.Location = new System.Drawing.Point(970, 149);
+            this.butLanguage.Location = new System.Drawing.Point(961, 147);
             this.butLanguage.Name = "butLanguage";
             this.butLanguage.Size = new System.Drawing.Size(158, 49);
             this.butLanguage.TabIndex = 31;
@@ -472,7 +473,7 @@
             this.butPrimed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butPrimed.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butPrimed.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butPrimed.Location = new System.Drawing.Point(633, 282);
+            this.butPrimed.Location = new System.Drawing.Point(633, 348);
             this.butPrimed.Name = "butPrimed";
             this.butPrimed.Size = new System.Drawing.Size(158, 49);
             this.butPrimed.TabIndex = 29;
@@ -713,7 +714,7 @@
             this.butColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butColor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butColor.Location = new System.Drawing.Point(970, 204);
+            this.butColor.Location = new System.Drawing.Point(961, 202);
             this.butColor.Name = "butColor";
             this.butColor.Size = new System.Drawing.Size(158, 49);
             this.butColor.TabIndex = 163;
@@ -743,11 +744,31 @@
             this.butMap.Visible = false;
             this.butMap.Click += new System.EventHandler(this.butMap_Click);
             // 
+            // btnPressure
+            // 
+            this.btnPressure.BackColor = System.Drawing.Color.Transparent;
+            this.btnPressure.FlatAppearance.BorderSize = 0;
+            this.btnPressure.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPressure.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPressure.Location = new System.Drawing.Point(633, 276);
+            this.btnPressure.Name = "btnPressure";
+            this.btnPressure.Size = new System.Drawing.Size(158, 49);
+            this.btnPressure.TabIndex = 165;
+            this.btnPressure.Text = "Pressure";
+            this.btnPressure.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPressure.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnPressure.UseVisualStyleBackColor = false;
+            this.btnPressure.Visible = false;
+            this.btnPressure.Click += new System.EventHandler(this.btnPressure_Click);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.Controls.Add(this.btnPressure);
             this.Controls.Add(this.butMap);
             this.Controls.Add(this.butColor);
             this.Controls.Add(this.butBoards);
@@ -839,5 +860,6 @@
         private System.Windows.Forms.Button butBoards;
         private System.Windows.Forms.Button butColor;
         private System.Windows.Forms.Button butMap;
+        private System.Windows.Forms.Button btnPressure;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -69,10 +70,15 @@ namespace RateController
 
         private void UpdateForm()
         {
-            double Pressure = mf.ModulesStatus.Pressure(mf.Products.Items[mf.CurrentProduct()].ModuleID);
-            //if (mf.PressureCal > 0) Pressure = Pressure / mf.PressureCal;
-            //Pressure += mf.PressureOffset;
-            if(mf.PressureCal>0) Pressure = Pressure * mf.PressureCal + mf.PressureOffset;
+            double Pressure = 0;
+
+            int ModuleID = mf.Products.Items[mf.CurrentProduct()].ModuleID;
+            double RawData = mf.ModulesStatus.Pressure(ModuleID);
+            clsPressure pres = mf.PressureObjects.Item(ModuleID);
+            if (RawData > pres.MinimumRawData)
+            {
+                Pressure = pres.Slope * RawData + pres.Intercept;
+            }
             lbPressureValue.Text = Pressure.ToString("N1");
         }
     }

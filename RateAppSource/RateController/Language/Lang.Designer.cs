@@ -1051,6 +1051,33 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pressure.
+        /// </summary>
+        internal static string lgPressurePressure {
+            get {
+                return ResourceManager.GetString("lgPressurePressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raw Data.
+        /// </summary>
+        internal static string lgPressureRaw {
+            get {
+                return ResourceManager.GetString("lgPressureRaw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading.
+        /// </summary>
+        internal static string lgPressureReading {
+            get {
+                return ResourceManager.GetString("lgPressureReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Primed Start.
         /// </summary>
         internal static string lgPrimedStart {

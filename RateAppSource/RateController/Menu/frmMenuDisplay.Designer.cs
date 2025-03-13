@@ -35,19 +35,12 @@
             this.ckLargeScreen = new System.Windows.Forms.CheckBox();
             this.ckSingle = new System.Windows.Forms.CheckBox();
             this.ckTransparent = new System.Windows.Forms.CheckBox();
-            this.gbPressure = new System.Windows.Forms.GroupBox();
-            this.lbPressureOffset = new System.Windows.Forms.Label();
-            this.tbPressureOffset = new System.Windows.Forms.TextBox();
-            this.lbCalValue = new System.Windows.Forms.Label();
-            this.tbPressureCal = new System.Windows.Forms.TextBox();
-            this.ckPressure = new System.Windows.Forms.CheckBox();
             this.gbOther = new System.Windows.Forms.GroupBox();
             this.ckMetric = new System.Windows.Forms.CheckBox();
             this.tbSimSpeed = new System.Windows.Forms.TextBox();
             this.lbSimUnits = new System.Windows.Forms.Label();
             this.ckSimSpeed = new System.Windows.Forms.CheckBox();
             this.gbDisplay.SuspendLayout();
-            this.gbPressure.SuspendLayout();
             this.gbOther.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,7 +87,7 @@
             this.gbDisplay.Controls.Add(this.ckSingle);
             this.gbDisplay.Controls.Add(this.ckTransparent);
             this.gbDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbDisplay.Location = new System.Drawing.Point(45, 24);
+            this.gbDisplay.Location = new System.Drawing.Point(54, 116);
             this.gbDisplay.Name = "gbDisplay";
             this.gbDisplay.Size = new System.Drawing.Size(418, 144);
             this.gbDisplay.TabIndex = 163;
@@ -159,83 +152,6 @@
             this.ckTransparent.UseVisualStyleBackColor = true;
             this.ckTransparent.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
             // 
-            // gbPressure
-            // 
-            this.gbPressure.Controls.Add(this.lbPressureOffset);
-            this.gbPressure.Controls.Add(this.tbPressureOffset);
-            this.gbPressure.Controls.Add(this.lbCalValue);
-            this.gbPressure.Controls.Add(this.tbPressureCal);
-            this.gbPressure.Controls.Add(this.ckPressure);
-            this.gbPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbPressure.Location = new System.Drawing.Point(45, 213);
-            this.gbPressure.Name = "gbPressure";
-            this.gbPressure.Size = new System.Drawing.Size(418, 133);
-            this.gbPressure.TabIndex = 164;
-            this.gbPressure.TabStop = false;
-            this.gbPressure.Text = "Pressure";
-            this.gbPressure.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
-            // 
-            // lbPressureOffset
-            // 
-            this.lbPressureOffset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPressureOffset.Location = new System.Drawing.Point(212, 81);
-            this.lbPressureOffset.Name = "lbPressureOffset";
-            this.lbPressureOffset.Size = new System.Drawing.Size(69, 23);
-            this.lbPressureOffset.TabIndex = 155;
-            this.lbPressureOffset.Text = "Offset";
-            // 
-            // tbPressureOffset
-            // 
-            this.tbPressureOffset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPressureOffset.Location = new System.Drawing.Point(315, 78);
-            this.tbPressureOffset.MaxLength = 8;
-            this.tbPressureOffset.Name = "tbPressureOffset";
-            this.tbPressureOffset.Size = new System.Drawing.Size(90, 30);
-            this.tbPressureOffset.TabIndex = 153;
-            this.tbPressureOffset.Text = "0";
-            this.tbPressureOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbPressureOffset.TextChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
-            this.tbPressureOffset.Enter += new System.EventHandler(this.tbPressureOffset_Enter);
-            this.tbPressureOffset.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureOffset_Validating);
-            // 
-            // lbCalValue
-            // 
-            this.lbCalValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCalValue.Location = new System.Drawing.Point(212, 33);
-            this.lbCalValue.Name = "lbCalValue";
-            this.lbCalValue.Size = new System.Drawing.Size(97, 23);
-            this.lbCalValue.TabIndex = 154;
-            this.lbCalValue.Text = "Cal Value";
-            // 
-            // tbPressureCal
-            // 
-            this.tbPressureCal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPressureCal.Location = new System.Drawing.Point(315, 30);
-            this.tbPressureCal.MaxLength = 8;
-            this.tbPressureCal.Name = "tbPressureCal";
-            this.tbPressureCal.Size = new System.Drawing.Size(90, 30);
-            this.tbPressureCal.TabIndex = 152;
-            this.tbPressureCal.Text = "0";
-            this.tbPressureCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbPressureCal.TextChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
-            this.tbPressureCal.Enter += new System.EventHandler(this.tbPressureCal_Enter);
-            this.tbPressureCal.Validating += new System.ComponentModel.CancelEventHandler(this.tbPressureCal_Validating);
-            // 
-            // ckPressure
-            // 
-            this.ckPressure.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckPressure.Location = new System.Drawing.Point(22, 52);
-            this.ckPressure.Name = "ckPressure";
-            this.ckPressure.Size = new System.Drawing.Size(164, 34);
-            this.ckPressure.TabIndex = 123;
-            this.ckPressure.Text = "Show";
-            this.ckPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckPressure.UseVisualStyleBackColor = true;
-            this.ckPressure.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
-            // 
             // gbOther
             // 
             this.gbOther.Controls.Add(this.ckMetric);
@@ -243,7 +159,7 @@
             this.gbOther.Controls.Add(this.lbSimUnits);
             this.gbOther.Controls.Add(this.ckSimSpeed);
             this.gbOther.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbOther.Location = new System.Drawing.Point(45, 391);
+            this.gbOther.Location = new System.Drawing.Point(54, 305);
             this.gbOther.Name = "gbOther";
             this.gbOther.Size = new System.Drawing.Size(418, 135);
             this.gbOther.TabIndex = 227;
@@ -312,7 +228,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.Controls.Add(this.gbOther);
-            this.Controls.Add(this.gbPressure);
             this.Controls.Add(this.gbDisplay);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -323,8 +238,6 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuDisplay_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuDisplay_Load);
             this.gbDisplay.ResumeLayout(false);
-            this.gbPressure.ResumeLayout(false);
-            this.gbPressure.PerformLayout();
             this.gbOther.ResumeLayout(false);
             this.gbOther.PerformLayout();
             this.ResumeLayout(false);
@@ -340,12 +253,6 @@
         private System.Windows.Forms.CheckBox ckLargeScreen;
         private System.Windows.Forms.CheckBox ckSingle;
         private System.Windows.Forms.CheckBox ckTransparent;
-        private System.Windows.Forms.GroupBox gbPressure;
-        private System.Windows.Forms.Label lbPressureOffset;
-        private System.Windows.Forms.TextBox tbPressureOffset;
-        private System.Windows.Forms.Label lbCalValue;
-        private System.Windows.Forms.TextBox tbPressureCal;
-        private System.Windows.Forms.CheckBox ckPressure;
         private System.Windows.Forms.GroupBox gbOther;
         private System.Windows.Forms.CheckBox ckMetric;
         private System.Windows.Forms.TextBox tbSimSpeed;

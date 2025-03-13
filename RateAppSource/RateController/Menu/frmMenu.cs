@@ -160,6 +160,24 @@ namespace RateController
             }
         }
 
+        private void btnPressure_Click(object sender, EventArgs e)
+        {
+            cLastScreen = "frmMenuPressure";
+            HighlightButton(cLastScreen);
+            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuPressure(mf, this);
+                frm.Owner = this;
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
+
         private void butCalibrate_Click(object sender, EventArgs e)
         {
             cLastScreen = "frmMenuCalibrate";
@@ -367,6 +385,7 @@ namespace RateController
                 butCalibrate.Visible = !Expanded;
                 butSwitches.Visible = !Expanded;
                 butPrimed.Visible = !Expanded;
+                btnPressure.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -403,6 +422,10 @@ namespace RateController
                     butSwitches.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butSwitches.Top = Pos;
+
+                    btnPressure.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    btnPressure.Top = Pos;
 
                     butPrimed.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -1136,6 +1159,14 @@ namespace RateController
                             butOptions.PerformClick();  // frmMenuDisplay opened by default
                             break;
 
+                        case "frmMenuPressure":
+                            butOptions.PerformClick();
+                            fs = new frmMenuPressure(mf, this);
+                            fs.Owner = this;
+                            cLastScreen = Last;
+                            fs.Show();
+                            break;
+
                         case "frmMenuLanguage":
                             butOptions.PerformClick();
                             fs = new frmMenuLanguage(mf, this);
@@ -1208,6 +1239,7 @@ namespace RateController
             butDisplay.Text = Lang.lgDisplay;
             butLanguage.Text = Lang.lgLanguage;
             butColor.Text = Lang.lgColor;
+            btnPressure.Text = Lang.lgPressure;
         }
     }
 }

@@ -21,8 +21,8 @@ extern "C" {
 }
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  11-Mar-2025"
-const uint16_t InoID = 11035;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  12-Mar-2025"
+const uint16_t InoID = 12035;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -192,7 +192,11 @@ void setup()
 	Serial.print("DIR Pin: ");
 	Serial.println(Sensor[0].DirPin);
 	Serial.print("PWM Pin: ");
-	Serial.print(Sensor[0].PWMPin);
+	Serial.println(Sensor[0].PWMPin);
+	Serial.print("Work Switch Pin: ");
+	Serial.println(MDL.WorkPin);
+	Serial.print("Pressure Pin: ");
+	Serial.println(MDL.PressurePin);
 	Serial.println("");
 }
 
@@ -294,7 +298,7 @@ elapsedMicros LoopTmr;
 byte ReadReset;
 uint32_t MaxLoopTime;
 
-double debug1;
+//double debug1;
 double debug2;
 //double debug3;
 //double debug4;
@@ -317,9 +321,8 @@ void Blink()
 			//Serial.print(", Temp: ");
 			//Serial.print(tempmonGetTemp());
 
-			debug1 = MDL.PressurePin;
-			Serial.print(", ");
-			Serial.print(debug1);
+			//Serial.print(", ");
+			//Serial.print(debug1);
 
 			debug2 = PressureReading;
 			Serial.print(", ");

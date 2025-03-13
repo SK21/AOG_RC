@@ -67,6 +67,9 @@ void DoSetup()
 		}
 	}
 
+	// analog pins
+	analogReadResolution(12);
+
 	// ethernet 
 	Serial.println("Starting Ethernet ...");
 	MDL.IP3 = MDL.ID + 50;

@@ -1,4 +1,5 @@
 ﻿using GMap.NET;
+using RateController.Classes;
 using RateController.Language;
 using RateController.PGNs;
 using RateController.Properties;
@@ -93,6 +94,7 @@ namespace RateController
         private Label[] Rates;
         private PGN32501[] RelaySettings;
         public PGN100 GPS;
+        public clsPressures PressureObjects;
 
         public FormStart()
         {
@@ -150,6 +152,7 @@ namespace RateController
             SectionControl = new clsSectionControl(this);
             ScaleIndicator = new PGN32296(this);
             GPS = new PGN100(this);
+            PressureObjects=new clsPressures(this);
         }
 
         public event EventHandler ColorChanged;
@@ -520,6 +523,7 @@ namespace RateController
             }
 
             if (int.TryParse(Tls.LoadProperty("RateType"), out int rt)) cRateType = rt;
+            PressureObjects.Load();
         }
 
         public void NewFile()
