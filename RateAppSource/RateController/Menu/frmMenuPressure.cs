@@ -37,8 +37,8 @@ namespace RateController.Menu
             double intercept = 0;
             if (double.TryParse(lbCalSlope.Text, out double sl)) slope = sl;
             if (double.TryParse(lbCalIntercept.Text, out double pt)) intercept = pt;
-            tbSlope.Text = slope.ToString("N1");
-            tbIntercept.Text = intercept.ToString("N1");
+            tbSlope.Text = slope.ToString("N3");
+            tbIntercept.Text = intercept.ToString("N3");
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -130,7 +130,7 @@ namespace RateController.Menu
             btnDelete.Top = btnOK.Top;
             btnNew.Left = btnDelete.Left - 78;
             btnNew.Top = btnOK.Top;
-            ckPressure.Left = btnNew.Left - 85;
+            ckPressure.Left = btnNew.Left - 90;
             ckPressure.Top = btnOK.Top;
 
             MainMenu.StyleControls(this);
@@ -184,10 +184,10 @@ namespace RateController.Menu
                         (CalSlope, CalIntercept) = mf.PressureObjects.GetSlopeAndInterceptByModuleID(cbModules.SelectedIndex);
                     }
                 }
-                lbCalSlope.Text = CalSlope.ToString("N1");
-                lbCalIntercept.Text = CalIntercept.ToString("N1");
-                tbSlope.Text = Slope.ToString("N1");
-                tbIntercept.Text = Intercept.ToString("N1");
+                lbCalSlope.Text = CalSlope.ToString("N3");
+                lbCalIntercept.Text = CalIntercept.ToString("N3");
+                tbSlope.Text = Slope.ToString("N3");
+                tbIntercept.Text = Intercept.ToString("N3");
                 tbMin.Text = MinRaw.ToString("N0");
                 ckPressure.Checked = mf.ShowPressure;
             }

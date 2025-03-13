@@ -166,31 +166,38 @@ namespace RateController.Classes
 
         private void LoadCalData()
         {
-            cRawData.Clear();
-            string filePath = Path.Combine(mf.Tls.FilesDir(), "PressureRawData.csv");
-
-            if (!File.Exists(filePath))
+            try
             {
-                File.WriteAllText(filePath, "ID,ModuleID,RawData,Pressure" + Environment.NewLine);
-            }
+                cRawData.Clear();
+                string filePath = Path.Combine(mf.Tls.FilesDir(), "PressureRawData.csv");
 
-            using (var reader = new StreamReader(filePath))
-            {
-                reader.ReadLine();  // skip header
-
-                while (!reader.EndOfStream)
+                if (!File.Exists(filePath))
                 {
-                    var line = reader.ReadLine();
-                    var values = line.Split(',');
-                    if (values.Length == 4 && int.TryParse(values[0], out int id) &&
-                        int.TryParse(values[1], out int moduleID) &&
-                        int.TryParse(values[2], out int rawData) &&
-                        double.TryParse(values[3], out double pressure))
+                    File.WriteAllText(filePath, "ID,ModuleID,RawData,Pressure" + Environment.NewLine);
+                }
+
+                using (var reader = new StreamReader(filePath))
+                {
+                    reader.ReadLine();  // skip header
+
+                    while (!reader.EndOfStream)
                     {
-                        cRawData.Add(new clsPressureRawData { ID = id, ModuleID = moduleID, RawData = rawData, Pressure = pressure });
-                        if (id > LastID) LastID = id;
+                        var line = reader.ReadLine();
+                        var values = line.Split(',');
+                        if (values.Length == 4 && int.TryParse(values[0], out int id) &&
+                            int.TryParse(values[1], out int moduleID) &&
+                            int.TryParse(values[2], out int rawData) &&
+                            double.TryParse(values[3], out double pressure))
+                        {
+                            cRawData.Add(new clsPressureRawData { ID = id, ModuleID = moduleID, RawData = rawData, Pressure = pressure });
+                            if (id > LastID) LastID = id;
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("clsPressure/LoadCalData: " + ex.Message);
             }
         }
     }

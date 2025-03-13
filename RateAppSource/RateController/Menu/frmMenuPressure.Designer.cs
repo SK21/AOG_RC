@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.DGV = new System.Windows.Forms.DataGridView();
             this.cReadingDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cRawDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -92,15 +92,15 @@
             this.ID});
             this.DGV.DataMember = "Table1";
             this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.NullValue = "<dbnull>";
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.NullValue = "<dbnull>";
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle8;
             this.DGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
             this.DGV.Location = new System.Drawing.Point(14, 27);
             this.DGV.Margin = new System.Windows.Forms.Padding(11);
@@ -115,10 +115,10 @@
             // cReadingDataGridViewTextBoxColumn
             // 
             this.cReadingDataGridViewTextBoxColumn.DataPropertyName = "cReading";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle9.Format = "N0";
-            dataGridViewCellStyle9.NullValue = null;
-            this.cReadingDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.Format = "N0";
+            dataGridViewCellStyle5.NullValue = null;
+            this.cReadingDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
             this.cReadingDataGridViewTextBoxColumn.HeaderText = "Reading";
             this.cReadingDataGridViewTextBoxColumn.Name = "cReadingDataGridViewTextBoxColumn";
             this.cReadingDataGridViewTextBoxColumn.ReadOnly = true;
@@ -126,10 +126,10 @@
             // cRawDataGridViewTextBoxColumn
             // 
             this.cRawDataGridViewTextBoxColumn.DataPropertyName = "cRaw";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle10.Format = "N0";
-            dataGridViewCellStyle10.NullValue = null;
-            this.cRawDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "N0";
+            dataGridViewCellStyle6.NullValue = null;
+            this.cRawDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
             this.cRawDataGridViewTextBoxColumn.HeaderText = "Raw Data";
             this.cRawDataGridViewTextBoxColumn.Name = "cRawDataGridViewTextBoxColumn";
             this.cRawDataGridViewTextBoxColumn.ReadOnly = true;
@@ -139,10 +139,10 @@
             // 
             this.cKnownPressureDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.cKnownPressureDataGridViewTextBoxColumn.DataPropertyName = "cKnownPressure";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle11.Format = "N1";
-            dataGridViewCellStyle11.NullValue = null;
-            this.cKnownPressureDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "N1";
+            dataGridViewCellStyle7.NullValue = null;
+            this.cKnownPressureDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
             this.cKnownPressureDataGridViewTextBoxColumn.HeaderText = "Pressure";
             this.cKnownPressureDataGridViewTextBoxColumn.Name = "cKnownPressureDataGridViewTextBoxColumn";
             this.cKnownPressureDataGridViewTextBoxColumn.ReadOnly = true;
@@ -288,7 +288,7 @@
             this.tbSlope.Location = new System.Drawing.Point(101, 25);
             this.tbSlope.MaxLength = 8;
             this.tbSlope.Name = "tbSlope";
-            this.tbSlope.Size = new System.Drawing.Size(67, 30);
+            this.tbSlope.Size = new System.Drawing.Size(80, 30);
             this.tbSlope.TabIndex = 190;
             this.tbSlope.Text = "0";
             this.tbSlope.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -302,7 +302,7 @@
             this.lbCalSlope.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbCalSlope.Location = new System.Drawing.Point(112, 303);
             this.lbCalSlope.Name = "lbCalSlope";
-            this.lbCalSlope.Size = new System.Drawing.Size(67, 30);
+            this.lbCalSlope.Size = new System.Drawing.Size(80, 30);
             this.lbCalSlope.TabIndex = 210;
             this.lbCalSlope.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -311,16 +311,16 @@
             this.lbCalIntercept.BackColor = System.Drawing.Color.Transparent;
             this.lbCalIntercept.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbCalIntercept.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCalIntercept.Location = new System.Drawing.Point(338, 303);
+            this.lbCalIntercept.Location = new System.Drawing.Point(325, 303);
             this.lbCalIntercept.Name = "lbCalIntercept";
-            this.lbCalIntercept.Size = new System.Drawing.Size(67, 30);
+            this.lbCalIntercept.Size = new System.Drawing.Size(80, 30);
             this.lbCalIntercept.TabIndex = 212;
             this.lbCalIntercept.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(239, 307);
+            this.label2.Location = new System.Drawing.Point(226, 307);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(93, 23);
             this.label2.TabIndex = 211;
@@ -329,10 +329,10 @@
             // tbIntercept
             // 
             this.tbIntercept.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbIntercept.Location = new System.Drawing.Point(338, 25);
+            this.tbIntercept.Location = new System.Drawing.Point(325, 25);
             this.tbIntercept.MaxLength = 8;
             this.tbIntercept.Name = "tbIntercept";
-            this.tbIntercept.Size = new System.Drawing.Size(67, 30);
+            this.tbIntercept.Size = new System.Drawing.Size(80, 30);
             this.tbIntercept.TabIndex = 215;
             this.tbIntercept.Text = "0";
             this.tbIntercept.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -401,7 +401,7 @@
             // label7
             // 
             this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(239, 340);
+            this.label7.Location = new System.Drawing.Point(226, 340);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(93, 23);
             this.label7.TabIndex = 218;
@@ -410,10 +410,10 @@
             // tbPressure
             // 
             this.tbPressure.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPressure.Location = new System.Drawing.Point(338, 336);
+            this.tbPressure.Location = new System.Drawing.Point(325, 336);
             this.tbPressure.MaxLength = 8;
             this.tbPressure.Name = "tbPressure";
-            this.tbPressure.Size = new System.Drawing.Size(67, 30);
+            this.tbPressure.Size = new System.Drawing.Size(80, 30);
             this.tbPressure.TabIndex = 217;
             this.tbPressure.Text = "0";
             this.tbPressure.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -426,7 +426,7 @@
             this.lbRaw.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbRaw.Location = new System.Drawing.Point(112, 336);
             this.lbRaw.Name = "lbRaw";
-            this.lbRaw.Size = new System.Drawing.Size(67, 30);
+            this.lbRaw.Size = new System.Drawing.Size(80, 30);
             this.lbRaw.TabIndex = 214;
             this.lbRaw.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -471,7 +471,7 @@
             this.tbMin.Location = new System.Drawing.Point(251, 70);
             this.tbMin.MaxLength = 8;
             this.tbMin.Name = "tbMin";
-            this.tbMin.Size = new System.Drawing.Size(67, 30);
+            this.tbMin.Size = new System.Drawing.Size(80, 30);
             this.tbMin.TabIndex = 219;
             this.tbMin.Text = "0";
             this.tbMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -490,7 +490,7 @@
             // label6
             // 
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(239, 29);
+            this.label6.Location = new System.Drawing.Point(226, 29);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(93, 23);
             this.label6.TabIndex = 218;
@@ -533,6 +533,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "frmMenuPressure";
+            this.ShowInTaskbar = false;
             this.Text = "frmMenuPressure";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuPressure_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuPressure_Load);
