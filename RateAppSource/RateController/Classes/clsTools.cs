@@ -38,7 +38,7 @@ namespace RateController
     public class clsTools
     {
         private string cAppName = "RateController";
-        private string cAppVersion = "4.0.0-beta.8";
+        private string cAppVersion = "4.0.0-beta.9";
         private bool cIsReadOnly = false;
         private MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
         private string cPropertiesApp;
