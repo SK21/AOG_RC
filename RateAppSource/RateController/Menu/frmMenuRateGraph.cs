@@ -8,6 +8,7 @@ namespace RateController.Menu
 {
     public partial class frmMenuRateGraph : Form
     {
+        private int CurrentProductID;
         private string dataPWM = "-1";
         private string dataSteerAngle = "0";
         private bool isAuto = false;
@@ -19,12 +20,13 @@ namespace RateController.Menu
             InitializeComponent();
             mf = CallingForm;
             Prod = mf.Products.Item(mf.CurrentProduct());
+            CurrentProductID = mf.CurrentProduct();
 
             #region // language
 
             this.lbSetPoint.Text = Lang.lgUPMTarget;
             this.lbActual.Text = Lang.lgUPMApplied;
-            this.Text = Lang.lgPIDTune;
+            this.Text = Lang.lgPIDTune + "   [" + Prod.ProductName + "]";
             lbError.Text = Lang.lgError;
 
             #endregion // language
@@ -175,6 +177,12 @@ namespace RateController.Menu
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (mf.CurrentProduct() != CurrentProductID)
+            {
+                Prod = mf.Products.Item(mf.CurrentProduct());
+                CurrentProductID = mf.CurrentProduct();
+                this.Text = Lang.lgPIDTune + "   [" + Prod.ProductName + "]";
+            }
             DrawChart();
         }
     }

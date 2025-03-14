@@ -45,7 +45,7 @@ namespace RateController
         private string cPropertiesFile;
         private string cSettingsDir;
         private bool cUseVariableRate = false;
-        private string cVersionDate = "17-Feb-2025";
+        private string cVersionDate = "13-Mar-2025";
         private string lastMessage;
         private DateTime lastMessageTime;
         private FormStart mf;
