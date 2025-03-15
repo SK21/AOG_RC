@@ -1,6 +1,7 @@
 ﻿using AgOpenGPS;
 using RateController.Language;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -60,80 +61,81 @@ namespace RateController.Menu
             try
             {
                 byte val;
-                mf.ModuleConfig.Momentary = ckMomentary.Checked;
+                MainMenu.ModuleConfig1.Momentary = ckMomentary.Checked;
 
                 // flow
                 if (byte.TryParse(tbFlow1.Text, out val))
                 {
-                    mf.ModuleConfig.Sensor0Flow = val;
+                    MainMenu.ModuleConfig2.Sensor0Flow = val;
                 }
                 else
                 {
-                    mf.ModuleConfig.Sensor0Flow = 255;
+                    MainMenu.ModuleConfig2.Sensor0Flow = 255;
                 }
                 if (byte.TryParse(tbFlow2.Text, out val))
                 {
-                    mf.ModuleConfig.Sensor1Flow = val;
+                    MainMenu.ModuleConfig2.Sensor1Flow = val;
                 }
                 else
                 {
-                    mf.ModuleConfig.Sensor1Flow = 255;
+                    MainMenu.ModuleConfig2.Sensor1Flow = 255;
                 }
 
                 // motor
                 if (byte.TryParse(tbDir1.Text, out val))
                 {
-                    mf.ModuleConfig.Sensor0Dir = val;
+                    MainMenu.ModuleConfig2.Sensor0Dir = val;
                 }
                 else
                 {
-                    mf.ModuleConfig.Sensor0Dir = 255;
+                    MainMenu.ModuleConfig2.Sensor0Dir = 255;
                 }
                 if (byte.TryParse(tbDir2.Text, out val))
                 {
-                    mf.ModuleConfig.Sensor1Dir = val;
+                    MainMenu.ModuleConfig2.Sensor1Dir = val;
                 }
                 else
                 {
-                    mf.ModuleConfig.Sensor1Dir = 255;
+                    MainMenu.ModuleConfig2.Sensor1Dir = 255;
                 }
                 if (byte.TryParse(tbPWM1.Text, out val))
                 {
-                    mf.ModuleConfig.Sensor0PWM = val;
+                    MainMenu.ModuleConfig2.Sensor0PWM = val;
                 }
                 else
                 {
-                    mf.ModuleConfig.Sensor0PWM = 255;
+                    MainMenu.ModuleConfig2.Sensor0PWM = 255;
                 }
                 if (byte.TryParse(tbPWM2.Text, out val))
                 {
-                    mf.ModuleConfig.Sensor1PWM = val;
+                    MainMenu.ModuleConfig2.Sensor1PWM = val;
                 }
                 else
                 {
-                    mf.ModuleConfig.Sensor1PWM = 255;
+                    MainMenu.ModuleConfig2.Sensor1PWM = 255;
                 }
 
                 // Work Pin
                 if (byte.TryParse(tbWrk.Text, out val))
                 {
-                    mf.ModuleConfig.WorkPin = val;
+                    MainMenu.ModuleConfig1.WorkPin = val;
                 }
                 else
                 {
-                    mf.ModuleConfig.WorkPin = 255;
+                    MainMenu.ModuleConfig1.WorkPin = 255;
                 }
 
                 // Pressure
                 if (byte.TryParse(tbPressure.Text, out val))
                 {
-                    mf.ModuleConfig.PressurePin = val;
+                    MainMenu.ModuleConfig1.PressurePin = val;
                 }
                 else
                 {
-                    mf.ModuleConfig.PressurePin = 255;
+                    MainMenu.ModuleConfig1.PressurePin = 255;
                 }
-                mf.ModuleConfig.Save();
+                MainMenu.ModuleConfig1.Save();
+                MainMenu.ModuleConfig2.Save();
 
                 SetButtons(false);
                 UpdateForm();
@@ -217,47 +219,41 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            byte[] data = mf.ModuleConfig.GetData();
-            string[] display = new string[data.Length];
-            for (int i = 7; i < 13; i++)
-            {
-                if (data[i] > 60)
-                {
-                    display[i] = "-";
-                }
-                else
-                {
-                    display[i] = data[i].ToString();
-                }
-            }
+            string[] Display = Enumerable.Repeat("-", 6).ToArray();
 
-            ckMomentary.Checked = mf.ModuleConfig.Momentary;
-            tbFlow1.Text = display[7].ToString();
-            tbDir1.Text = display[8].ToString();
-            tbPWM1.Text = display[9].ToString();
-            tbFlow2.Text = display[10].ToString();
-            tbDir2.Text = display[11].ToString();
-            tbPWM2.Text = display[12].ToString();
+            byte[] data = MainMenu.ModuleConfig2.GetData();
+            for (int i = 0; i < 6; i++)
+            {
+                if (data[i] < 60) Display[i] = data[i].ToString();
+            }
+            tbFlow1.Text = Display[0];
+            tbDir1.Text = Display[1];
+            tbPWM1.Text = Display[2];
+            tbFlow2.Text = Display[3];
+            tbDir2.Text = Display[4];
+            tbPWM2.Text = Display[5];
 
             // work pin
-            if (data[29] > 60)
+            if (MainMenu.ModuleConfig1.WorkPin > 60)
             {
                 tbWrk.Text = "-";
             }
             else
             {
-                tbWrk.Text = data[29].ToString();
+                tbWrk.Text = MainMenu.ModuleConfig1.WorkPin.ToString();
             }
 
             // pressure pin
-            if (data[30] > 60)
+            if (MainMenu.ModuleConfig1.PressurePin > 60)
             {
                 tbPressure.Text = "-";
             }
             else
             {
-                tbPressure.Text = data[30].ToString();
+                tbPressure.Text = MainMenu.ModuleConfig1.PressurePin.ToString();
             }
+
+            ckMomentary.Checked = MainMenu.ModuleConfig1.Momentary;
 
             Initializing = false;
         }

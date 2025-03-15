@@ -129,7 +129,7 @@ namespace RateController.PGNs
                 cData[6] = (byte)Prod.ManualPWM;
             }
 
-            if (Prod.mf.CanBus1.IsOpen) Prod.mf.CanBus1.SendCanMessage(6, (byte)Prod.ModuleID, Prod.SensorID, cData);
+           Prod.mf.CanBus1.SendCanMessage(6, (byte)Prod.ModuleID, Prod.SensorID, cData);
         }
     }
 }

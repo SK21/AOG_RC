@@ -29,10 +29,11 @@ namespace RateController.Menu
         {
             try
             {
-                mf.ModuleConfig.ClientMode = ckClient.Checked;
+                MainMenu.ModuleConfig1.ClientMode = ckClient.Checked;
+                MainMenu.ModuleConfig1.Save();
                 mf.NetworkConfig.NetworkName = tbSSID.Text;
                 mf.NetworkConfig.NetworkPassword = tbPassword.Text;
-                mf.ModuleConfig.Save();
+                mf.NetworkConfig.Save();
                 SetButtons(false);
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();
@@ -120,7 +121,7 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            ckClient.Checked = mf.ModuleConfig.ClientMode;
+            ckClient.Checked = MainMenu.ModuleConfig1.ClientMode;
             tbSSID.Text = mf.NetworkConfig.NetworkName;
             tbPassword.Text = mf.NetworkConfig.NetworkPassword;
             Initializing = false;

@@ -1,5 +1,6 @@
 ﻿using AgOpenGPS;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -73,8 +74,10 @@ namespace RateController.Menu
                         Pins[i] = 255;
                     }
                 }
-                mf.ModuleConfig.RelayPins(Pins);
-                mf.ModuleConfig.Save();
+                MainMenu.ModuleConfig3.SetRelayPins(Pins);
+                MainMenu.ModuleConfig3.Save();
+                MainMenu.ModuleConfig4.SetRelayPins(Pins);
+                MainMenu.ModuleConfig4.Save();
 
                 SetButtons(false);
                 UpdateForm();
@@ -85,7 +88,6 @@ namespace RateController.Menu
                 mf.Tls.WriteErrorLog("frmMenuConfig/btnOk_Click: " + ex.Message);
             }
         }
-
 
         private void frmMenuRelayPins_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -112,15 +114,15 @@ namespace RateController.Menu
             UpdateForm();
         }
 
+        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        {
+            PositionForm();
+        }
+
         private void MainMenu_ModuleDefaultsSet(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
-        }
-
-        private void MainMenu_MenuMoved(object sender, EventArgs e)
-        {
-            PositionForm();
         }
 
         private void PositionForm()
@@ -156,39 +158,41 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            byte[] data = mf.ModuleConfig.GetData();
-            string[] display = new string[data.Length];
-            for (int i = 13; i < 29; i++)
+            string[] Display = Enumerable.Repeat("-", 8).ToArray();
+
+            byte[] data = MainMenu.ModuleConfig3.GetData();
+            for (int i = 0; i < 8; i++)
             {
-                if (data[i] > 60)
-                {
-                    display[i] = "-";
-                }
-                else
-                {
-                    display[i] = data[i].ToString();
-                }
+                if (data[i] < 60) Display[i] = data[i].ToString();
             }
 
-            tbRelay1.Text = display[13].ToString();
-            tbRelay2.Text = display[14].ToString();
-            tbRelay3.Text = display[15].ToString();
-            tbRelay4.Text = display[16].ToString();
+            tbRelay1.Text = Display[0];
+            tbRelay2.Text = Display[1];
+            tbRelay3.Text = Display[2];
+            tbRelay4.Text = Display[3];
 
-            tbRelay5.Text = display[17].ToString();
-            tbRelay6.Text = display[18].ToString();
-            tbRelay7.Text = display[19].ToString();
-            tbRelay8.Text = display[20].ToString();
+            tbRelay5.Text = Display[4];
+            tbRelay6.Text = Display[5];
+            tbRelay7.Text = Display[6];
+            tbRelay8.Text = Display[7];
 
-            tbRelay9.Text = display[21].ToString();
-            tbRelay10.Text = display[22].ToString();
-            tbRelay11.Text = display[23].ToString();
-            tbRelay12.Text = display[24].ToString();
+            Display = Enumerable.Repeat("-", 8).ToArray();
 
-            tbRelay13.Text = display[25].ToString();
-            tbRelay14.Text = display[26].ToString();
-            tbRelay15.Text = display[27].ToString();
-            tbRelay16.Text = display[28].ToString();
+            data = MainMenu.ModuleConfig4.GetData();
+            for (int i = 0; i < 8; i++)
+            {
+                if (data[i] < 60) Display[i] = data[i].ToString();
+            }
+
+            tbRelay9.Text = Display[0];
+            tbRelay10.Text = Display[1];
+            tbRelay11.Text = Display[2];
+            tbRelay12.Text = Display[3];
+
+            tbRelay13.Text = Display[4];
+            tbRelay14.Text = Display[5];
+            tbRelay15.Text = Display[6];
+            tbRelay16.Text = Display[7];
 
             Initializing = false;
         }

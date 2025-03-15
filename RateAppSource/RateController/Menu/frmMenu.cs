@@ -1,5 +1,6 @@
 ﻿using RateController.Language;
 using RateController.Menu;
+using RateController.PGNs;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -20,12 +21,16 @@ namespace RateController
         private clsProduct cCurrentProduct;
         private string cLastScreen = "";
         private bool cMenuNetworkHasRan = false;
+        private int cModuleID = 0;
         private bool Expanded = false;
         private Button[] Items;
         private bool LoadLast = false;
         private FormStart mf;
         private Point MouseDownLocation;
-
+        public PGN15 ModuleConfig1;
+        public PGN16 ModuleConfig2;
+        public PGN17 ModuleConfig3;
+        public PGN18 ModuleConfig4;
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
             InitializeComponent();
@@ -56,6 +61,22 @@ namespace RateController
         public bool MenuNetworkHasRan
         { get { return cMenuNetworkHasRan; } set { cMenuNetworkHasRan = value; } }
 
+        public int ModuleID
+        {
+            get { return cModuleID; }
+            set
+            {
+                if (value >= 0 && value < mf.MaxModules)
+                {
+                    cModuleID = value;
+                    mf.Tls.SaveProperty("frmMenu_ModuleID", cModuleID.ToString());
+                    ModuleConfig1 = new PGN15(mf, cModuleID);
+                    ModuleConfig2 = new PGN16(mf, cModuleID);
+                    ModuleConfig3 = new PGN17(mf, cModuleID);
+                    ModuleConfig4 = new PGN18(mf, cModuleID);
+                }
+            }
+        }
         public void ChangeProduct(int NewID, bool NoFans = false)
         {
             if (NewID < 0) NewID = 0;
@@ -876,7 +897,10 @@ namespace RateController
         {
             try
             {
-                mf.ModuleConfig.Send();
+                ModuleConfig1.Send();
+                ModuleConfig2.Send();
+                ModuleConfig3.Send();
+                ModuleConfig4.Send();
                 mf.NetworkConfig.Send();
                 mf.Tls.ShowMessage("Settings sent to module", "Config", 10000);
 
@@ -982,6 +1006,11 @@ namespace RateController
             butPowerOff.Top = 8;
             if (LoadLast) LoadLastScreen();
             SetLanguage();
+            if (int.TryParse(mf.Tls.LoadProperty("frmMenu_ModuleID"), out int id)) cModuleID = id;
+            ModuleConfig1 = new PGN15(mf, cModuleID);
+            ModuleConfig2 = new PGN16(mf, cModuleID);
+            ModuleConfig3 = new PGN17(mf, cModuleID);
+            ModuleConfig4 = new PGN18(mf, cModuleID);
         }
 
         private void frmMenu_LocationChanged(object sender, EventArgs e)

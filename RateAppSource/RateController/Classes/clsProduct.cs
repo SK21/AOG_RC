@@ -60,7 +60,7 @@ namespace RateController
         private bool cUseAltRate = false;
         private bool cUseMinUPMbySpeed = false;
         private bool cUseOffRateAlarm;
-        private PGN32502 ModuleControlSettings;
+        private PGN8 ModuleControlSettings;
         private Stopwatch UpdateStopWatch;
 
         public clsProduct(FormStart CallingForm, int ProdID)
@@ -73,7 +73,7 @@ namespace RateController
             RateSensorInfo1 = new PGN10(this);
             RateSensorInfo2 = new PGN11(this);
             ModuleRateSettings = new PGN6(this);
-            ModuleControlSettings = new PGN32502(this);
+            ModuleControlSettings = new PGN8(this);
 
             if (cProductID > mf.MaxProducts - 3)
             {

@@ -1,4 +1,6 @@
-﻿using RateController.Language;
+﻿using AgOpenGPS;
+using RateController.Language;
+using RateController.PGNs;
 using System;
 using System.Drawing;
 using System.Net;
@@ -41,6 +43,7 @@ namespace RateController.Menu
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();
                 mf.Tls.SaveProperty("BoardType", BoardType.ToString());
+                if (int.TryParse(tbModuleIDtoUpdate.Text, out int id)) MainMenu.ModuleID = id;
             }
             catch (Exception ex)
             {
@@ -57,7 +60,7 @@ namespace RateController.Menu
         {
             try
             {
-                PGN32503 SetSubnet = new PGN32503(mf);
+                PGN4 SetSubnet = new PGN4(mf);
                 if (SetSubnet.Send(mf.UDPmodules.NetworkEP))
                 {
                     mf.Tls.ShowMessage("New Subnet address sent.", "Subnet", 10000);
@@ -120,8 +123,8 @@ namespace RateController.Menu
             if (!MainMenu.MenuNetworkHasRan)
             {
                 MainMenu.MenuNetworkHasRan = true;
-                if (mf.ModuleConfig.Sensor0Flow == 0 && mf.ModuleConfig.Sensor0Dir == 0 && mf.ModuleConfig.Sensor0PWM == 0
-                    && mf.ModuleConfig.Sensor1Dir == 0 && mf.ModuleConfig.Sensor1Flow == 0 && mf.ModuleConfig.Sensor1PWM == 0)
+                if (MainMenu.ModuleConfig2.Sensor0Flow == 0 && MainMenu.ModuleConfig2.Sensor0Dir == 0 && MainMenu.ModuleConfig2.Sensor0PWM == 0
+                    && MainMenu.ModuleConfig2.Sensor1Dir == 0 && MainMenu.ModuleConfig2.Sensor1Flow == 0 && MainMenu.ModuleConfig2.Sensor1PWM == 0)
                 {
                     mf.Tls.ShowMessage("Empty settings, default values selected.", "Default Values");
                     ckDefaultModule.Checked = true;
@@ -222,7 +225,11 @@ namespace RateController.Menu
 
         private void SetDefaults()
         {
-            PGN32700 Set = mf.ModuleConfig;
+            PGN15 Config1 = MainMenu.ModuleConfig1;
+            PGN16 Config2 = MainMenu.ModuleConfig2;
+            PGN17 Config3 = MainMenu.ModuleConfig3;
+            PGN18 Config4 = MainMenu.ModuleConfig4;
+
             byte[] Pins = new byte[16];
 
             for (int i = 0; i < 16; i++)
@@ -234,23 +241,24 @@ namespace RateController.Menu
             {
                 case 1:
                     // RC11, Teensy
-                    Set.ModuleID = 0;
-                    Set.SensorCount = 2;
-                    Set.WifiPort = 1;
-                    Set.RelayType = 1;
-                    Set.InvertRelay = true;
-                    Set.InvertFlow = true;
-                    Set.Momentary = false;
-                    Set.Sensor0Flow = 28;
-                    Set.Sensor1Flow = 29;
-                    Set.Sensor0Dir = 37;
-                    Set.Sensor1Dir = 14;
-                    Set.Sensor0PWM = 36;
-                    Set.Sensor1PWM = 15;
-                    Set.WorkPin = 255;
-                    Set.PressurePin = 255;
-                    Set.ClientMode = false;
-                    Set.Is3Wire = true;
+                    Config1.ModuleID = 0;
+                    Config1.SensorCount = 2;
+                    Config1.WifiPort = 1;
+                    Config1.RelayType = 1;
+                    Config1.InvertRelay = true;
+                    Config1.InvertFlow = true;
+                    Config1.Momentary = false;
+                    Config2.Sensor0Flow = 28;
+                    Config2.Sensor1Flow = 29;
+                    Config2.Sensor0Dir = 37;
+                    Config2.Sensor1Dir = 14;
+                    Config2.Sensor0PWM = 36;
+                    Config2.Sensor1PWM = 15;
+                    Config1.WorkPin = 255;
+                    Config1.PressurePin = 255;
+                    Config1.ClientMode = false;
+                    Config1.Is3Wire = true;
+                    Config1.ADS1115enabled = false;
 
                     Pins[0] = 8;    // relay 1
                     Pins[1] = 9;
@@ -264,49 +272,55 @@ namespace RateController.Menu
 
                 case 2:
                     // RC15, ESP32
-                    Set.ModuleID = 0;
-                    Set.SensorCount = 2;
-                    Set.WifiPort = 0;
-                    Set.RelayType = 5;
-                    Set.InvertRelay = true;
-                    Set.InvertFlow = true;
-                    Set.Momentary = false;
-                    Set.Sensor0Flow = 17;
-                    Set.Sensor1Flow = 16;
-                    Set.Sensor0Dir = 32;
-                    Set.Sensor1Dir = 25;
-                    Set.Sensor0PWM = 33;
-                    Set.Sensor1PWM = 26;
-                    Set.WorkPin = 255;
-                    Set.PressurePin = 255;
-                    Set.ClientMode = false;
-                    Set.Is3Wire = true;
+                    Config1.ModuleID = 0;
+                    Config1.SensorCount = 2;
+                    Config1.WifiPort = 0;
+                    Config1.RelayType = 5;
+                    Config1.InvertRelay = true;
+                    Config1.InvertFlow = true;
+                    Config1.Momentary = false;
+                    Config2.Sensor0Flow = 17;
+                    Config2.Sensor1Flow = 16;
+                    Config2.Sensor0Dir = 32;
+                    Config2.Sensor1Dir = 25;
+                    Config2.Sensor0PWM = 33;
+                    Config2.Sensor1PWM = 26;
+                    Config1.WorkPin = 255;
+                    Config1.PressurePin = 255;
+                    Config1.ClientMode = false;
+                    Config1.Is3Wire = true;
+                    Config1.ADS1115enabled = false;
                     break;
 
                 default:
                     // RC12, Nano
-                    Set.ModuleID = 0;
-                    Set.SensorCount = 1;
-                    Set.WifiPort = 0;
-                    Set.RelayType = 2;
-                    Set.InvertRelay = true;
-                    Set.InvertFlow = true;
-                    Set.Momentary = false;
-                    Set.Sensor0Flow = 3;
-                    Set.Sensor1Flow = 255;
-                    Set.Sensor0Dir = 6;
-                    Set.Sensor1Dir = 255;
-                    Set.Sensor0PWM = 9;
-                    Set.Sensor1PWM = 255;
-                    Set.WorkPin = 255;
-                    Set.PressurePin = 255;
-                    Set.ClientMode = false;
-                    Set.Is3Wire = true;
+                    Config1.ModuleID = 0;
+                    Config1.SensorCount = 1;
+                    Config1.WifiPort = 0;
+                    Config1.RelayType = 2;
+                    Config1.InvertRelay = true;
+                    Config1.InvertFlow = true;
+                    Config1.Momentary = false;
+                    Config2.Sensor0Flow = 3;
+                    Config2.Sensor1Flow = 255;
+                    Config2.Sensor0Dir = 6;
+                    Config2.Sensor1Dir = 255;
+                    Config2.Sensor0PWM = 9;
+                    Config2.Sensor1PWM = 255;
+                    Config1.WorkPin = 255;
+                    Config1.PressurePin = 255;
+                    Config1.ClientMode = false;
+                    Config1.Is3Wire = true;
+                    Config1.ADS1115enabled = false;
                     break;
             }
 
-            Set.RelayPins(Pins);
-            Set.Save();
+            Config1.Save();
+            Config2.Save();
+            Config3.SetRelayPins(Pins);
+            Config3.Save();
+            Config4.SetRelayPins(Pins);
+            Config4.Save();
 
             mf.NetworkConfig.NetworkName = "Tractor";
             mf.NetworkConfig.NetworkPassword = "111222333";
@@ -338,6 +352,20 @@ namespace RateController.Menu
             return Result;
         }
 
+        private void tbModuleIDtoUpdate_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbModuleIDtoUpdate.Text, out temp);
+            using (var form = new FormNumeric(0, 8, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbModuleIDtoUpdate.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
         private void UpdateForm()
         {
             Initializing = true;
@@ -360,6 +388,7 @@ namespace RateController.Menu
             }
 
             ckDefaultModule.Checked = false;
+            tbModuleIDtoUpdate.Text = MainMenu.ModuleID.ToString();
             Initializing = false;
         }
     }

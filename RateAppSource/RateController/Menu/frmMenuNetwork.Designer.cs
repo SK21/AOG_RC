@@ -43,6 +43,8 @@
             this.rbESP32 = new System.Windows.Forms.RadioButton();
             this.rbTeensy = new System.Windows.Forms.RadioButton();
             this.gbNetwork = new System.Windows.Forms.GroupBox();
+            this.tbModuleIDtoUpdate = new System.Windows.Forms.TextBox();
+            this.lbModuleID = new System.Windows.Forms.Label();
             this.gbBoards.SuspendLayout();
             this.gbNetwork.SuspendLayout();
             this.SuspendLayout();
@@ -247,11 +249,35 @@
             this.gbNetwork.Text = "Network";
             this.gbNetwork.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
+            // tbModuleIDtoUpdate
+            // 
+            this.tbModuleIDtoUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbModuleIDtoUpdate.Location = new System.Drawing.Point(366, 31);
+            this.tbModuleIDtoUpdate.Name = "tbModuleIDtoUpdate";
+            this.tbModuleIDtoUpdate.Size = new System.Drawing.Size(58, 29);
+            this.tbModuleIDtoUpdate.TabIndex = 227;
+            this.tbModuleIDtoUpdate.TabStop = false;
+            this.tbModuleIDtoUpdate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbModuleIDtoUpdate.TextChanged += new System.EventHandler(this.cbEthernet_SelectedIndexChanged);
+            this.tbModuleIDtoUpdate.Enter += new System.EventHandler(this.tbModuleIDtoUpdate_Enter);
+            // 
+            // lbModuleID
+            // 
+            this.lbModuleID.AutoSize = true;
+            this.lbModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModuleID.Location = new System.Drawing.Point(88, 33);
+            this.lbModuleID.Name = "lbModuleID";
+            this.lbModuleID.Size = new System.Drawing.Size(201, 24);
+            this.lbModuleID.TabIndex = 226;
+            this.lbModuleID.Text = "ID of Module to Update";
+            // 
             // frmMenuNetwork
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.tbModuleIDtoUpdate);
+            this.Controls.Add(this.lbModuleID);
             this.Controls.Add(this.gbNetwork);
             this.Controls.Add(this.gbBoards);
             this.Controls.Add(this.btnCancel);
@@ -267,6 +293,7 @@
             this.gbNetwork.ResumeLayout(false);
             this.gbNetwork.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -286,5 +313,7 @@
         private System.Windows.Forms.RadioButton rbTeensy;
         private System.Windows.Forms.GroupBox gbNetwork;
         private System.Windows.Forms.CheckBox ckDefaultModule;
+        private System.Windows.Forms.TextBox tbModuleIDtoUpdate;
+        private System.Windows.Forms.Label lbModuleID;
     }
 }

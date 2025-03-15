@@ -30,14 +30,14 @@ namespace RateController.Menu
         {
             try
             {
-                if (byte.TryParse(tbModuleID.Text, out byte id)) mf.ModuleConfig.ModuleID = id;
-                if (byte.TryParse(tbSensorCount.Text, out byte ct)) mf.ModuleConfig.SensorCount = ct;
-                if (byte.TryParse(tbWifiPort.Text, out byte pt)) mf.ModuleConfig.WifiPort = pt;
-                mf.ModuleConfig.InvertRelay = ckRelayOn.Checked;
-                mf.ModuleConfig.InvertFlow = ckFlowOn.Checked;
-                mf.ModuleConfig.ADS1115enabled = ckADS1115enabled.Checked;
-                mf.ModuleConfig.RelayType = (byte)cbRelayControl.SelectedIndex;
-                mf.ModuleConfig.Save();
+                if (byte.TryParse(tbModuleID.Text, out byte id)) MainMenu.ModuleConfig1.ModuleID = id;
+                if (byte.TryParse(tbSensorCount.Text, out byte ct)) MainMenu.ModuleConfig1.SensorCount = ct;
+                if (byte.TryParse(tbWifiPort.Text, out byte pt)) MainMenu.ModuleConfig1.WifiPort = pt;
+                MainMenu.ModuleConfig1.InvertRelay = ckRelayOn.Checked;
+                MainMenu.ModuleConfig1.InvertFlow = ckFlowOn.Checked;
+                MainMenu.ModuleConfig1.ADS1115enabled = ckADS1115enabled.Checked;
+                MainMenu.ModuleConfig1.RelayType = (byte)cbRelayControl.SelectedIndex;
+                MainMenu.ModuleConfig1.Save();
 
                 SetButtons(false);
                 UpdateForm();
@@ -171,14 +171,14 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            byte[] data = mf.ModuleConfig.GetData();
-            tbModuleID.Text = data[2].ToString();
-            tbSensorCount.Text = data[3].ToString();
-            cbRelayControl.SelectedIndex = data[5];
-            tbWifiPort.Text = data[6].ToString();
-            ckRelayOn.Checked = mf.ModuleConfig.InvertRelay;
-            ckFlowOn.Checked = mf.ModuleConfig.InvertFlow;
-            ckADS1115enabled.Checked = mf.ModuleConfig.ADS1115enabled;
+            byte[] data = MainMenu.ModuleConfig1.GetData();
+            tbModuleID.Text = data[0].ToString();
+            tbSensorCount.Text = data[1].ToString();
+            cbRelayControl.SelectedIndex = data[2];
+            tbWifiPort.Text = data[3].ToString();
+            ckRelayOn.Checked = MainMenu.ModuleConfig1.InvertRelay;
+            ckFlowOn.Checked = MainMenu.ModuleConfig1.InvertFlow;
+            ckADS1115enabled.Checked = MainMenu.ModuleConfig1.ADS1115enabled;
 
             Initializing = false;
         }

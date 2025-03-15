@@ -78,21 +78,24 @@ namespace RateController.Classes
 
         public void SendCanMessage(byte PGN, byte ModuleID, byte SensorID, byte[] data)
         {
-            ushort id = EncodeCanID(PGN, ModuleID, SensorID);
-            if (data.Length > 8) throw new ArgumentException("CAN data length cannot exceed 8 bytes.");
-            string idHex = id.ToString("X3");
-            string dataHex = string.Concat(data.Select(b => b.ToString("X2")));
-            string command = $"t{idHex}{data.Length}{dataHex}";
-            SendSlcanCommand(command);
+            try
+            {
+                if (cIsOpen)
+                {
+                    ushort id = EncodeCanID(PGN, ModuleID, SensorID);
+                    if (data.Length > 8) throw new ArgumentException("CAN data length cannot exceed 8 bytes.");
+                    string idHex = id.ToString("X3");
+                    string dataHex = string.Concat(data.Select(b => b.ToString("X2")));
+                    string command = $"t{idHex}{data.Length}{dataHex}";
+                    SendSlcanCommand(command);
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("clsCanBus/SendCanMessage: " + ex.Message);
+                throw;
+            }
         }
-
-        private void DecodeCanID(ushort ID, ref byte PGN, ref byte ModuleID, ref byte SensorID)
-        {
-            PGN = (byte)((ID >> 6) & 0x1F);
-            ModuleID = (byte)((ID >> 3) & 0x7);
-            SensorID = (byte)(ID & 0x7);
-        }
-
         private UInt16 EncodeCanID(byte PGN, byte ModuleID, byte SensorID)
         {
             UInt16 Result = 0;
@@ -102,6 +105,14 @@ namespace RateController.Classes
             }
             return Result;
         }
+
+        private void DecodeCanID(ushort ID, ref byte PGN, ref byte ModuleID, ref byte SensorID)
+        {
+            PGN = (byte)((ID >> 6) & 0x1F);
+            ModuleID = (byte)((ID >> 3) & 0x7);
+            SensorID = (byte)(ID & 0x7);
+        }
+
 
         private CanMessageReceivedEventArgs ParseCanMessage(string message)
         {

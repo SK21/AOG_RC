@@ -216,9 +216,9 @@
             this.lbModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbModuleID.Location = new System.Drawing.Point(84, 119);
             this.lbModuleID.Name = "lbModuleID";
-            this.lbModuleID.Size = new System.Drawing.Size(96, 24);
+            this.lbModuleID.Size = new System.Drawing.Size(140, 24);
             this.lbModuleID.TabIndex = 165;
-            this.lbModuleID.Text = "Module ID";
+            this.lbModuleID.Text = "New Module ID";
             // 
             // frmMenuConfig
             // 

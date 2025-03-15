@@ -29,8 +29,8 @@ namespace RateController.Menu
         {
             try
             {
-                mf.ModuleConfig.Is3Wire = rb3Wire.Checked;
-                mf.ModuleConfig.Save();
+                MainMenu.ModuleConfig1.Is3Wire = rb3Wire.Checked;
+                MainMenu.ModuleConfig1.Save();
                 SetButtons(false);
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();
@@ -110,7 +110,7 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            rb3Wire.Checked = mf.ModuleConfig.Is3Wire;
+            rb3Wire.Checked = MainMenu.ModuleConfig1.Is3Wire;
             rb2Wire.Checked = !rb3Wire.Checked;
             Initializing = false;
         }

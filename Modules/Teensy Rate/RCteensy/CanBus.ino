@@ -33,7 +33,8 @@ void ReceiveCanMessage()
 	{
 		uint8_t PGN, ModuleID, SensorID;
 		DecodeCanID(msg.id, PGN, ModuleID, SensorID);
-		if (MDL.ID == ModuleID || PGN == 4)
+		if (MDL.ID == ModuleID || PGN == 4 || PGN == 19
+			|| PGN == 20 || PGN == 21 || PGN == 22)
 		{
 			ReadMessages(PGN, SensorID, msg.buf);
 		}

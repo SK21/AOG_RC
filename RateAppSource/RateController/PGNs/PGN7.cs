@@ -49,7 +49,7 @@ namespace RateController.PGNs
             cData[4] = (byte)Inverted;
             cData[5] = (byte)(Inverted >> 8);
 
-            if (mf.CanBus1.IsOpen) mf.CanBus1.SendCanMessage(7, (byte)cModuleID, 0, cData);
+             mf.CanBus1.SendCanMessage(7, (byte)cModuleID, 0, cData);
             //to do, mf.UDPmodules.SendUDPMessage(cData);
         }
     }

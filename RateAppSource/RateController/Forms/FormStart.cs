@@ -41,9 +41,8 @@ namespace RateController
         public frmLargeScreen Lscrn;
         public PGN238 MachineConfig;
         public PGN239 MachineData;
-        public PGN32700 ModuleConfig;
         public PGN9 ModulesStatus;
-        public PGN32702 NetworkConfig;
+        public PGNs_WifiConfig NetworkConfig;
         public clsProducts Products;
         public clsAlarm RCalarm;
         public clsRelays RelayObjects;
@@ -146,8 +145,7 @@ namespace RateController
 
             Zones = new clsZones(this);
             vSwitchBox = new clsVirtualSwitchBox(this);
-            ModuleConfig = new PGN32700(this);
-            NetworkConfig = new PGN32702(this);
+            NetworkConfig = new PGNs_WifiConfig(this);
             AOGsections = new PGN229(this);
             SectionControl = new clsSectionControl(this);
             GPS = new PGN100(this);
