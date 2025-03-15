@@ -41,6 +41,9 @@
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
     <ClCompile Include="SerialESPcomm.ino" />
+    <ClCompile Include="CanBus.ino" />
+    <ClCompile Include="PGNsRead.ino" />
+    <ClCompile Include="PGNsSend.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCteensy.vsarduino.h">

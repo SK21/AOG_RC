@@ -174,6 +174,7 @@
     <Compile Include="Classes\clsAlarm.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />
+    <Compile Include="Classes\clsCanBus.cs" />
     <Compile Include="Classes\clsPressure.cs" />
     <Compile Include="Classes\clsPressureRawData.cs" />
     <Compile Include="Classes\clsPressures.cs" />

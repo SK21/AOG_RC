@@ -20,8 +20,12 @@ extern "C" {
 #include "FlashTxx.h"		// TLC/T3x/T4x/TMM flash primitives
 }
 
+#include <FlexCan_T4.h>
+FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> can1;
+
+
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  12-Mar-2025"
+# define InoDescription "RCteensyCanBus :  14-Mar-2025"
 const uint16_t InoID = 12035;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
@@ -202,6 +206,7 @@ void setup()
 
 void loop()
 {
+	ReceiveCanMessage();
 	ReceiveSerial();
 	ReceiveUDPwired();
 	ReceiveESP();
@@ -227,6 +232,7 @@ void loop()
 	}
 
 	SendComm();
+	SendMessages();
 	Blink();
 	wdt.feed();
 }
