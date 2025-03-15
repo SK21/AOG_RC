@@ -457,14 +457,14 @@
     <Compile Include="PGNs\PGN235.cs" />
     <Compile Include="PGNs\PGN238.cs" />
     <Compile Include="PGNs\PGN239.cs" />
-    <Compile Include="PGNs\PGN32500.cs" />
-    <Compile Include="PGNs\PGN32501.cs" />
     <Compile Include="PGNs\PGN32502.cs" />
     <Compile Include="PGNs\PGN32503.cs" />
     <Compile Include="PGNs\PGN32618.cs" />
     <Compile Include="PGNs\PGN254.cs" />
     <Compile Include="PGNs\PGN32700.cs" />
     <Compile Include="PGNs\PGN32702.cs" />
+    <Compile Include="PGNs\PGN6.cs" />
+    <Compile Include="PGNs\PGN7.cs" />
     <Compile Include="PGNs\PGN9.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

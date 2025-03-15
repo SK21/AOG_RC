@@ -11,7 +11,7 @@ namespace RateController
         public readonly FormStart mf;
 
         public byte CoverageUnits = 0;
-        public PGN32500 ModuleRateSettings;
+        public PGN6 ModuleRateSettings;
         public PGN10 RateSensorInfo1;
         public PGN11 RateSensorInfo2;
         private double AccumulatedLast = 0;
@@ -72,7 +72,7 @@ namespace RateController
 
             RateSensorInfo1 = new PGN10(this);
             RateSensorInfo2 = new PGN11(this);
-            ModuleRateSettings = new PGN32500(this);
+            ModuleRateSettings = new PGN6(this);
             ModuleControlSettings = new PGN32502(this);
 
             if (cProductID > mf.MaxProducts - 3)
@@ -1076,15 +1076,18 @@ namespace RateController
 
                 if (cAppMode == ApplicationMode.DocumentTarget)
                 {
-                    // send pgn from virtual module
+                    // send pgns from virtual module
                     byte[] Data = new byte[8];
                     Data[3] = 0b00000001; // sensor connected
                     RateSensorInfo2.ParseData(Data);
+
                     double Hz = (TargetUPM() * MeterCal / 60.0) * 1000;
                     Data[0] = (byte)Hz;
                     Data[1] = (byte)((int)Hz >> 8);
                     Data[2] = (byte)((int)Hz >> 16);
                     Data[3] = 0;
+                    // to do, check if accumulated quantity is required
+
                     RateSensorInfo1.ParseData(Data);
                     UpdateUnitsApplied();
                 }

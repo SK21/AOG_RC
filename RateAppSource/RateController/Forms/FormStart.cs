@@ -91,7 +91,7 @@ namespace RateController
         private Point MouseDownLocation;
         private Label[] ProdName;
         private Label[] Rates;
-        private PGN32501[] RelaySettings;
+        private PGN7[] RelaySettings;
         public PGN100 GPS;
         public clsPressures PressureObjects;
         public clsCanBus CanBus1;
@@ -138,10 +138,10 @@ namespace RateController
 
             timerMain.Interval = 1000;
 
-            RelaySettings = new PGN32501[MaxModules];
+            RelaySettings = new PGN7[MaxModules];
             for (int i = 0; i < MaxModules; i++)
             {
-                RelaySettings[i] = new PGN32501(this, i);
+                RelaySettings[i] = new PGN7(this, i);
             }
 
             Zones = new clsZones(this);

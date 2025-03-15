@@ -21,7 +21,7 @@ namespace RateController.Classes
         private SerialPort serialPort;
         private bool stopReconnect = false;
         private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
-
+        private bool cIsOpen = false;
         public clsCanBus(FormStart CallingForm, string portName)
         {
             mf = CallingForm;
@@ -47,6 +47,7 @@ namespace RateController.Classes
                 serialPort.Close();
                 stopReconnect = true;
                 result = true;
+                cIsOpen = false;
             }
             catch (Exception ex)
             {
@@ -54,7 +55,7 @@ namespace RateController.Classes
             }
             return result;
         }
-
+        public bool IsOpen { get { return cIsOpen; } }
         public bool Open()
         {
             bool result = false;
@@ -71,6 +72,7 @@ namespace RateController.Classes
                 mf.Tls.WriteErrorLog($"clsCanBus/Open: {ex.Message}");
                 reconnecting = true;
             }
+            cIsOpen = result;
             return result;
         }
 
