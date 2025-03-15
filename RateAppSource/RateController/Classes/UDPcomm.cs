@@ -154,14 +154,14 @@ namespace RateController
                     switch (PGN)
                     {
                         case 32400:
-                            foreach (clsProduct Prod in mf.Products.Items)
-                            {
-                                Prod.UDPcommFromArduino(Data, PGN);
-                            }
+                            //foreach (clsProduct Prod in mf.Products.Items)
+                            //{
+                            //    Prod.UDPcommFromArduino(Data, PGN);
+                            //}
                             break;
 
                         case 32401:
-                            mf.ModulesStatus.ParseByteData(Data);
+                            //mf.ModulesStatus.ParseByteData(Data);
                             break;
 
                         case 32618:

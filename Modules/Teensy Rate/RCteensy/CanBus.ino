@@ -5,7 +5,7 @@ uint16_t EncodeCanID(uint8_t PGN, uint8_t ModuleID, uint8_t SensorID)
 	uint16_t Result = 0;
 	if (PGN < 32 && ModuleID < 8 && SensorID < 8)
 	{
-		Result = PGN << 6 || ModuleID << 3 || SensorID;
+		Result = PGN << 6 | ModuleID << 3 | SensorID;
 	}
 	return Result;
 }

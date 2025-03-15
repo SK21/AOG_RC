@@ -42,13 +42,12 @@ namespace RateController
         public PGN238 MachineConfig;
         public PGN239 MachineData;
         public PGN32700 ModuleConfig;
-        public PGN32401 ModulesStatus;
+        public PGN9 ModulesStatus;
         public PGN32702 NetworkConfig;
         public clsProducts Products;
         public clsAlarm RCalarm;
         public clsRelays RelayObjects;
         public bool Restart = false;
-        public PGN32296 ScaleIndicator;
         public clsSectionControl SectionControl;
         public clsSections Sections;
         public PGN235 SectionsPGN;
@@ -95,6 +94,7 @@ namespace RateController
         private PGN32501[] RelaySettings;
         public PGN100 GPS;
         public clsPressures PressureObjects;
+        public clsCanBus CanBus1;
 
         public FormStart()
         {
@@ -123,7 +123,7 @@ namespace RateController
             MachineData = new PGN239(this);
 
             SwitchBox = new PGN32618(this);
-            ModulesStatus = new PGN32401(this);
+            ModulesStatus = new PGN9(this);
 
             Sections = new clsSections(this);
             Products = new clsProducts(this);
@@ -150,9 +150,21 @@ namespace RateController
             NetworkConfig = new PGN32702(this);
             AOGsections = new PGN229(this);
             SectionControl = new clsSectionControl(this);
-            ScaleIndicator = new PGN32296(this);
             GPS = new PGN100(this);
             PressureObjects=new clsPressures(this);
+            CanBus1 = new clsCanBus(this, "Com12");
+            CanBus1.CanMessageReceived += CanBus1_CanMessageReceived;
+        }
+
+        private void CanBus1_CanMessageReceived(object sender, clsCanBus.CanMessageReceivedEventArgs e)
+        {
+            switch (e.PGN)
+            {
+                case 9:
+                    // module info
+                    ModulesStatus.ParseData(e.ModuleID, e.Data);
+                    break;
+            }
         }
 
         public event EventHandler ColorChanged;
@@ -801,9 +813,9 @@ namespace RateController
                             break;
                     }
 
-                    if (Prd.RateSensor.ModuleSending())
+                    if (Prd.RateSensorInfo1.ModuleSending())
                     {
-                        if (Prd.RateSensor.ModuleReceiving())
+                        if (Prd.RateSensorInfo1.ModuleReceiving())
                         {
                             lbArduinoConnected.BackColor = Color.LightGreen;
                         }
@@ -1098,6 +1110,8 @@ namespace RateController
                 DisplaySwitches();
                 DisplayPressure();
                 DisplayScales();
+
+                CanBus1.Open();
 
                 timerMain.Enabled = true;
             }

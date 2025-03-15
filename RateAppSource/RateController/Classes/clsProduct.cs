@@ -1,4 +1,5 @@
 ﻿using RateController.Language;
+using RateController.PGNs;
 using System;
 using System.Diagnostics;
 
@@ -11,7 +12,8 @@ namespace RateController
 
         public byte CoverageUnits = 0;
         public PGN32500 ModuleRateSettings;
-        public PGN32400 RateSensor;
+        public PGN10 RateSensorInfo1;
+        public PGN11 RateSensorInfo2;
         private double AccumulatedLast = 0;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
         private bool cBumpButtons;
@@ -68,7 +70,8 @@ namespace RateController
             cModID = ProdID / 2;
             cSenID = (byte)(ProdID % 2);
 
-            RateSensor = new PGN32400(this);
+            RateSensorInfo1 = new PGN10(this);
+            RateSensorInfo2 = new PGN11(this);
             ModuleRateSettings = new PGN32500(this);
             ModuleControlSettings = new PGN32502(this);
 
@@ -79,8 +82,32 @@ namespace RateController
             }
 
             UpdateStopWatch = new Stopwatch();
+            mf.CanBus1.CanMessageReceived += CanBus1_CanMessageReceived;
         }
 
+        private void CanBus1_CanMessageReceived(object sender, Classes.clsCanBus.CanMessageReceivedEventArgs e)
+        {
+            if (e.ModuleID == cModID && e.SensorID == cSenID
+                && cAppMode != ApplicationMode.DocumentTarget)    // block real module
+            {
+                switch (e.PGN)
+                {
+                    case 10:
+                        // sensor info 1
+                        RateSensorInfo1.ParseData(e.Data);
+                        break;
+
+                    case 11:
+                        // sensor info 2
+                        RateSensorInfo2.ParseData(e.Data);
+                        break;
+                }
+            }
+        }
+        public double Weight()
+        {
+            return RateSensorInfo2.Weight;
+        }
         public ApplicationMode AppMode
         {
             get { return cAppMode; }
@@ -166,7 +193,7 @@ namespace RateController
         }
 
         public double ElapsedTime
-        { get { return RateSensor.ElapsedTime(); } }
+        { get { return RateSensorInfo1.ElapsedTime(); } }
 
         public bool Enabled
         {
@@ -681,7 +708,7 @@ namespace RateController
 
         public double PWM()
         {
-            return RateSensor.PWMsetting;
+            return RateSensorInfo1.PWMsetting;
         }
 
         public double RateApplied()
@@ -694,14 +721,14 @@ namespace RateController
                     if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
-                        if (cHectaresPerMinute > 0) Result = RateSensor.UPM / (cHectaresPerMinute * 2.47);
+                        if (cHectaresPerMinute > 0) Result = RateSensorInfo1.UPM / (cHectaresPerMinute * 2.47);
                     }
                     else if (cAppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (HPM > 0) Result = RateSensor.UPM / (HPM * 2.47);
+                        if (HPM > 0) Result = RateSensorInfo1.UPM / (HPM * 2.47);
                     }
                     else
                     {
@@ -715,14 +742,14 @@ namespace RateController
                     if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
-                        if (cHectaresPerMinute > 0) Result = RateSensor.UPM / cHectaresPerMinute;
+                        if (cHectaresPerMinute > 0) Result = RateSensorInfo1.UPM / cHectaresPerMinute;
                     }
                     else if (cAppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (HPM > 0) Result = RateSensor.UPM / HPM;
+                        if (HPM > 0) Result = RateSensorInfo1.UPM / HPM;
                     }
                     else
                     {
@@ -740,7 +767,7 @@ namespace RateController
                     }
                     else
                     {
-                        Result = RateSensor.UPM;
+                        Result = RateSensorInfo1.UPM;
                     }
                     break;
 
@@ -753,7 +780,7 @@ namespace RateController
                     }
                     else
                     {
-                        Result = RateSensor.UPM * 60;
+                        Result = RateSensorInfo1.UPM * 60;
                     }
                     break;
             }
@@ -978,25 +1005,6 @@ namespace RateController
             return Result;
         }
 
-        public void UDPcommFromArduino(byte[] data, int PGN)
-        {
-            try
-            {
-                if (cAppMode != ApplicationMode.DocumentTarget)    // block real module
-                {
-                    switch (PGN)
-                    {
-                        case 32400:
-                            if (RateSensor.ParseByteData(data)) UpdateUnitsApplied();
-                            break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog("clsProduct/UDPcomFromArduino: " + ex.Message);
-            }
-        }
 
         public string Units()
         {
@@ -1020,7 +1028,7 @@ namespace RateController
 
         public void Update()
         {
-            if (RateSensor.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)
+            if (RateSensorInfo1.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)
             {
                 double CurrentMinutes = UpdateStopWatch.ElapsedMilliseconds / 60000.0;
                 UpdateStopWatch.Restart();
@@ -1069,17 +1077,16 @@ namespace RateController
                 if (cAppMode == ApplicationMode.DocumentTarget)
                 {
                     // send pgn from virtual module
-                    byte[] Data = new byte[13];
-                    Data[0] = 144;
-                    Data[1] = 126;
-                    Data[2] = (byte)(cModID * 16 + cSenID);
+                    byte[] Data = new byte[8];
+                    Data[3] = 0b00000001; // sensor connected
+                    RateSensorInfo2.ParseData(Data);
                     double Hz = (TargetUPM() * MeterCal / 60.0) * 1000;
-                    Data[3] = (byte)Hz;
-                    Data[4] = (byte)((int)Hz >> 8);
-                    Data[5] = (byte)((int)Hz >> 16);
-                    Data[11] = 0b00000001; // sensor connected
-                    Data[12] = mf.Tls.CRC(Data, 12);
-                    if (RateSensor.ParseByteData(Data)) UpdateUnitsApplied();
+                    Data[0] = (byte)Hz;
+                    Data[1] = (byte)((int)Hz >> 8);
+                    Data[2] = (byte)((int)Hz >> 16);
+                    Data[3] = 0;
+                    RateSensorInfo1.ParseData(Data);
+                    UpdateUnitsApplied();
                 }
             }
             else
@@ -1096,7 +1103,7 @@ namespace RateController
 
         public double UPMapplied()
         {
-            return RateSensor.UPM;
+            return RateSensorInfo1.UPM;
         }
 
         public double WorkRate()
@@ -1142,18 +1149,18 @@ namespace RateController
             bool Result = false;
             if (ControlType == ControlTypeEnum.Fan)
             {
-                Result = RateSensor.Connected();
+                Result = RateSensorInfo1.Connected();
             }
             else
             {
-                Result = (RateSensor.Connected() && cHectaresPerMinute > 0);
+                Result = (RateSensorInfo1.Connected() && cHectaresPerMinute > 0);
             }
             return Result;
         }
 
         private void UpdateUnitsApplied()
         {
-            double AccumulatedUnits = RateSensor.AccumulatedQuantity;
+            double AccumulatedUnits = RateSensorInfo1.AccumulatedQuantity;
             double Diff = AccumulatedUnits - AccumulatedLast;
             if (Diff < 0 || Diff > 1000) Diff = 0;
             AccumulatedLast = AccumulatedUnits;

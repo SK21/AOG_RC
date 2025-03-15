@@ -105,7 +105,7 @@ namespace RateController
                     Hlp2.Close();
                     if (Result2)
                     {
-                        TareWeight = mf.ScaleIndicator.Value(cProductID);
+                        TareWeight = mf.Products.Item(cProductID).Weight();
                     }
                     break;
             }
@@ -137,7 +137,7 @@ namespace RateController
 
         private double NetWeight()
         {
-            double wt = mf.ScaleIndicator.Value(cProductID) - TareWeight;
+            double wt = mf.Products.Item(cProductID).Weight() - TareWeight;
             return wt;
         }
 

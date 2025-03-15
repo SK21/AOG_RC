@@ -223,7 +223,7 @@ namespace RateController.Menu
 
         private void SetModuleIndicator()
         {
-            if (mf.Products.Item(MainMenu.CurrentProduct.ID).RateSensor.Connected())
+            if (mf.Products.Item(MainMenu.CurrentProduct.ID).RateSensorInfo1.Connected())
             {
                 ModuleIndicator.Image = Properties.Resources.On;
             }

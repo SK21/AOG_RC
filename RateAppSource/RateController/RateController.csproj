@@ -449,15 +449,14 @@
     <Compile Include="Menu\frmMenuRateMap.Designer.cs">
       <DependentUpon>frmMenuRateMap.cs</DependentUpon>
     </Compile>
+    <Compile Include="PGNs\PGN10.cs" />
     <Compile Include="PGNs\PGN100.cs" />
+    <Compile Include="PGNs\PGN11.cs" />
     <Compile Include="PGNs\PGN229.cs" />
     <Compile Include="PGNs\PGN234.cs" />
     <Compile Include="PGNs\PGN235.cs" />
     <Compile Include="PGNs\PGN238.cs" />
     <Compile Include="PGNs\PGN239.cs" />
-    <Compile Include="PGNs\PGN32296.cs" />
-    <Compile Include="PGNs\PGN32400.cs" />
-    <Compile Include="PGNs\PGN32401.cs" />
     <Compile Include="PGNs\PGN32500.cs" />
     <Compile Include="PGNs\PGN32501.cs" />
     <Compile Include="PGNs\PGN32502.cs" />
@@ -466,6 +465,7 @@
     <Compile Include="PGNs\PGN254.cs" />
     <Compile Include="PGNs\PGN32700.cs" />
     <Compile Include="PGNs\PGN32702.cs" />
+    <Compile Include="PGNs\PGN9.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\RCRestore.cs">

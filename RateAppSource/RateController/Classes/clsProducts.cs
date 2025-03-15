@@ -44,7 +44,6 @@ namespace RateController
             }
             return cAlarmOn;
         }
-
         public bool Connected()
         {
             bool Result = false;
@@ -55,7 +54,7 @@ namespace RateController
                     // returns true if at least one module is connected
                     for (int i = 0; i < mf.MaxProducts; i++)
                     {
-                        if (cProducts[i].RateSensor.Connected())
+                        if (cProducts[i].RateSensorInfo1.Connected())
                         {
                             Result = true;
                             break;
@@ -177,7 +176,7 @@ namespace RateController
         {
             for (int i = 0; i < cProducts.Count; i++)
             {
-                if (cProducts[i].RateSensor.Connected()) cProducts[i].SendPID();
+                if (cProducts[i].RateSensorInfo1.Connected()) cProducts[i].SendPID();
             }
         }
 

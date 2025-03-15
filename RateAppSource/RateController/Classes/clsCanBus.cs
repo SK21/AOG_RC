@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,6 +34,8 @@ namespace RateController.Classes
             StartReconnectMonitor();
             StartCommandProcessor();
         }
+
+        public event EventHandler<CanMessageReceivedEventArgs> CanMessageReceived;
 
         public bool Close()
         {
@@ -73,13 +74,31 @@ namespace RateController.Classes
             return result;
         }
 
-        public void SendCanMessage(int id, byte[] data)
+        public void SendCanMessage(byte PGN, byte ModuleID, byte SensorID, byte[] data)
         {
+            ushort id = EncodeCanID(PGN, ModuleID, SensorID);
             if (data.Length > 8) throw new ArgumentException("CAN data length cannot exceed 8 bytes.");
             string idHex = id.ToString("X3");
             string dataHex = string.Concat(data.Select(b => b.ToString("X2")));
             string command = $"t{idHex}{data.Length}{dataHex}";
             SendSlcanCommand(command);
+        }
+
+        private void DecodeCanID(ushort ID, ref byte PGN, ref byte ModuleID, ref byte SensorID)
+        {
+            PGN = (byte)((ID >> 6) & 0x1F);
+            ModuleID = (byte)((ID >> 3) & 0x7);
+            SensorID = (byte)(ID & 0x7);
+        }
+
+        private UInt16 EncodeCanID(byte PGN, byte ModuleID, byte SensorID)
+        {
+            UInt16 Result = 0;
+            if (PGN < 32 && ModuleID < 8 && SensorID < 8)
+            {
+                Result = (ushort)(PGN << 6 | ModuleID << 3 | SensorID);
+            }
+            return Result;
         }
 
         private CanMessageReceivedEventArgs ParseCanMessage(string message)
@@ -88,6 +107,8 @@ namespace RateController.Classes
             {
                 string idHex = message.Substring(1, 3); // Extract CAN ID
                 int id = Convert.ToInt32(idHex, 16);
+                byte PGN = 0, ModuleID = 0, SensorID = 0;
+                DecodeCanID((ushort)id, ref PGN, ref ModuleID, ref SensorID);
 
                 int dataLength = int.Parse(message.Substring(4, 1)); // Extract length
 
@@ -98,7 +119,7 @@ namespace RateController.Classes
                     dataBytes.Add(Convert.ToByte(byteHex, 16));
                 }
 
-                return new CanMessageReceivedEventArgs(id, dataBytes.ToArray());
+                return new CanMessageReceivedEventArgs(PGN, ModuleID, SensorID, dataBytes.ToArray());
             }
             catch (Exception)
             {
@@ -218,15 +239,18 @@ namespace RateController.Classes
 
         public class CanMessageReceivedEventArgs : EventArgs
         {
-            public CanMessageReceivedEventArgs(int senderId, byte[] data)
+            public CanMessageReceivedEventArgs(byte iPGN, byte iModuleID, byte iSensorID, byte[] data)
             {
-                SenderId = senderId;
+                PGN = iPGN;
+                ModuleID = iModuleID;
+                SensorID = iSensorID;
                 Data = data;
             }
 
             public byte[] Data { get; }
-            public int SenderId { get; }
+            public byte ModuleID { get; }
+            public byte PGN { get; }
+            public byte SensorID { get; }
         }
     }
-}
 }
