@@ -153,6 +153,11 @@ namespace RateController
 
                     switch (PGN)
                     {
+                        case 28705:
+                            // can message
+                            mf.CanBus1.ReceiveUDP(Data);
+                            break;
+
                         case 32400:
                             //foreach (clsProduct Prod in mf.Products.Items)
                             //{

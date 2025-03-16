@@ -109,6 +109,38 @@ void ReadPGNs(byte Data[], uint16_t len)
 
 	switch (PGN)
 	{
+	case 28704:
+		// PGN 28704, 0x7020, can message
+		// 0    0x20
+		// 1    0x70
+		// 2    ID lo byte
+		// 3    ID Hi byte
+		// 4    data 0
+		// 5    data 1
+		// 6    data 2
+		// 7    data 3
+		// 8    data 4
+		// 9    data 5
+		// 10   data 6
+		// 11   data 7
+		// 12   CRC
+
+		PGNlength = 13;
+		if (len > PGNlength - 1)
+		{
+			if (GoodCRC(Data, PGNlength))
+			{
+				int ID = Data[2] | Data[3] << 8;
+				byte Msg[8];
+				for (int i = 0; i < 8; i++)
+				{
+					Msg[i] = Data[4 + i];
+				}
+				ProcessCanMessage(ID, Msg);
+			}
+		}
+		break;
+
 	case 32500:
 		//PGN32500, Rate settings from RC to module
 		//0	    HeaderLo		    244

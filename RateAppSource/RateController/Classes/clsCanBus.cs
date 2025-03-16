@@ -3,8 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RateController.Classes
 {
@@ -12,6 +14,7 @@ namespace RateController.Classes
     {
         private const int MaxBufferSize = 100;
         private readonly string portName;
+        private bool cIsOpen = false;
         private ConcurrentQueue<string> commandQueue = new ConcurrentQueue<string>();
         private AutoResetEvent commandReady = new AutoResetEvent(false);
         private FormStart mf;
@@ -21,7 +24,7 @@ namespace RateController.Classes
         private SerialPort serialPort;
         private bool stopReconnect = false;
         private System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
-        private bool cIsOpen = false;
+
         public clsCanBus(FormStart CallingForm, string portName)
         {
             mf = CallingForm;
@@ -36,6 +39,9 @@ namespace RateController.Classes
         }
 
         public event EventHandler<CanMessageReceivedEventArgs> CanMessageReceived;
+
+        public bool IsOpen
+        { get { return cIsOpen; } }
 
         public bool Close()
         {
@@ -55,7 +61,7 @@ namespace RateController.Classes
             }
             return result;
         }
-        public bool IsOpen { get { return cIsOpen; } }
+
         public bool Open()
         {
             bool result = false;
@@ -76,6 +82,47 @@ namespace RateController.Classes
             return result;
         }
 
+        public void ReceiveUDP(byte[] data)
+        {
+            try
+            {
+                // PGN 28705, 0x7021, can message
+                // 0    0x21
+                // 1    0x70
+                // 2    ID lo byte
+                // 3    ID Hi byte
+                // 4    data 0
+                // 5    data 1
+                // 6    data 2
+                // 7    data 3
+                // 8    data 4
+                // 9    data 5
+                // 10   data 6
+                // 11   data 7
+                // 12   CRC
+
+                if (data.Length == 13)
+                {
+                    if (mf.Tls.GoodCRC(data))
+                    {
+                        ushort id = (ushort)(data[2] | data[3] << 8);
+                        byte PGN = 0, ModuleID = 0, SensorID = 0;
+                        DecodeCanID((ushort)id, ref PGN, ref ModuleID, ref SensorID);
+
+                        byte[] msg = new byte[8];
+                        Array.Copy(data, 4, msg, 0, 8);
+
+                        CanMessageReceivedEventArgs args = new CanMessageReceivedEventArgs(PGN, ModuleID, SensorID, msg);
+                        CanMessageReceived?.Invoke(this, args);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("clsCanBus/ReceiveUDP: " + ex.Message);
+            }
+        }
+
         public void SendCanMessage(byte PGN, byte ModuleID, byte SensorID, byte[] data)
         {
             try
@@ -88,22 +135,13 @@ namespace RateController.Classes
                     string dataHex = string.Concat(data.Select(b => b.ToString("X2")));
                     string command = $"t{idHex}{data.Length}{dataHex}";
                     SendSlcanCommand(command);
+                    SendUDP(id, data);
                 }
             }
             catch (Exception ex)
             {
                 mf.Tls.WriteErrorLog("clsCanBus/SendCanMessage: " + ex.Message);
-                throw;
             }
-        }
-        private UInt16 EncodeCanID(byte PGN, byte ModuleID, byte SensorID)
-        {
-            UInt16 Result = 0;
-            if (PGN < 32 && ModuleID < 8 && SensorID < 8)
-            {
-                Result = (ushort)(PGN << 6 | ModuleID << 3 | SensorID);
-            }
-            return Result;
         }
 
         private void DecodeCanID(ushort ID, ref byte PGN, ref byte ModuleID, ref byte SensorID)
@@ -113,6 +151,15 @@ namespace RateController.Classes
             SensorID = (byte)(ID & 0x7);
         }
 
+        private UInt16 EncodeCanID(byte PGN, byte ModuleID, byte SensorID)
+        {
+            UInt16 Result = 0;
+            if (PGN < 32 && ModuleID < 8 && SensorID < 8)
+            {
+                Result = (ushort)(PGN << 6 | ModuleID << 3 | SensorID);
+            }
+            return Result;
+        }
 
         private CanMessageReceivedEventArgs ParseCanMessage(string message)
         {
@@ -144,6 +191,45 @@ namespace RateController.Classes
         {
             commandQueue.Enqueue(command + "\r"); // Enqueue the command
             commandReady.Set(); // Signal that a command is ready to be processed
+        }
+
+        private void SendUDP(ushort ID, byte[] data)
+        {
+            try
+            {
+                // PGN 28704, 0x7020, can message
+                // 0    0x20
+                // 1    0x70
+                // 2    ID lo byte
+                // 3    ID Hi byte
+                // 4    data 0
+                // 5    data 1
+                // 6    data 2
+                // 7    data 3
+                // 8    data 4
+                // 9    data 5
+                // 10   data 6
+                // 11   data 7
+                // 12   CRC
+
+                int len = data.Length;
+                if (len > 8) len = 8;
+                byte[] ToSend = new byte[13];
+                ToSend[0] = 0x20;
+                ToSend[1] = 0x70;
+                ToSend[2] = (byte)ID;
+                ToSend[3] = (byte)(ID >> 8);
+                for (int i = 0; i < len; i++)
+                {
+                    ToSend[4 + i] = data[i];
+                }
+                ToSend[ToSend.Length - 1] = mf.Tls.CRC(data, ToSend.Length - 1);
+                mf.UDPmodules.SendUDPMessage(ToSend);
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("clsCanBus/SendUDP: " + ex.Message);
+            }
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
