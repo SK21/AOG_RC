@@ -59,6 +59,7 @@ namespace RateController
         private Bitmap cScreenBitmap;
         private int cScreenBitmapHeight = 465;  // from frmMenuColor colorPanel
         private int cScreenBitmapWidth = 516;
+        private DataCollector cRateCollector;
 
         #endregion ScreenBitMap
 
@@ -75,6 +76,9 @@ namespace RateController
 
         public MapManager Manager
         { get { return cManager; } }
+
+        public DataCollector RateCollector
+        { get { return cRateCollector; } }
 
         public MasterSwitchMode MasterSwitchMode
         {
@@ -642,6 +646,10 @@ namespace RateController
         public void StartMapManager()
         {
             cManager = new MapManager(mf);
+        }
+        public void StartRateCollector(string FileName,bool Overwrite=false)
+        {
+            cRateCollector = new DataCollector(FileName, Overwrite);
         }
 
         #region ScreenBitMapCode

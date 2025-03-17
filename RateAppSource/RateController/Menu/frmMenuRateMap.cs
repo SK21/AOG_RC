@@ -461,7 +461,7 @@ namespace RateController.Menu
 
             tbMapName.Text = mf.Tls.Manager.MapName;
             tbName.Text = mf.Tls.Manager.ZoneName;
-            mf.Tls.Manager.UpdateRates();
+            mf.Tls.Manager.UpdateTargetRates();
             tbP1.Text = mf.Tls.Manager.GetRate(0).ToString();
             tbP2.Text = mf.Tls.Manager.GetRate(1).ToString();
             tbP3.Text = mf.Tls.Manager.GetRate(2).ToString();

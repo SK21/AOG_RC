@@ -187,16 +187,16 @@ namespace RateController.Classes
             return LoadMap(LastFile);
         }
 
-        public bool LoadMap(string path)
+        public bool LoadMap(string FilePath)
         {
             bool Result = false;
-            if (FileNameValidator.IsValidFolderName(path))
+            if (FileNameValidator.IsValidFolderName(FilePath))
             {
-                if (File.Exists(path))
+                if (File.Exists(FilePath))
                 {
-                    MapName = Path.GetFileNameWithoutExtension(path);
+                    MapName = Path.GetFileNameWithoutExtension(FilePath);
                     var shapefileHelper = new ShapefileHelper(mf);
-                    mapZones = shapefileHelper.CreateZoneList(path);
+                    mapZones = shapefileHelper.CreateZoneList(FilePath);
 
                     zoneOverlay.Polygons.Clear();
 
@@ -211,8 +211,10 @@ namespace RateController.Classes
                     gmap.Zoom = 16;
                     Result = true;
                     MapChanged?.Invoke(this, EventArgs.Empty);
-                    mf.Tls.SaveProperty("LastMapFile", path);
+                    mf.Tls.SaveProperty("LastMapFile", FilePath);
                     ZoomToFit();
+                    string DataPath = Path.GetDirectoryName(FilePath) + "\\" + MapName + "_Rates.csv";
+                    mf.Tls.StartRateCollector(DataPath);
                 }
             }
             return Result;
@@ -258,19 +260,20 @@ namespace RateController.Classes
             return Result;
         }
 
-        public void SetTractorPosition(PointLatLng NewLocation, bool FromMouseClick = false)
+        public void SetTractorPosition(PointLatLng NewLocation, double[] AppliedRates, double[] TargetRates, bool FromMouseClick = false)
         {
             if (FromMouseClick || (!cEditMode && !FromMouseClick))
             {
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation; // Update the marker position
                 gmap.Refresh(); // Refresh the map to show the updated marker
-                UpdateRates();
+                UpdateTargetRates();
+                mf.Tls.RateCollector.RecordReading(NewLocation.Lat, NewLocation.Lng, AppliedRates, TargetRates);
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        public void UpdateRates()
+        public void UpdateTargetRates()
         {
             try
             {
@@ -489,7 +492,7 @@ namespace RateController.Classes
                 else
                 {
                     PointLatLng Location = gmap.FromLocalToLatLng(e.X, e.Y);
-                    SetTractorPosition(Location, true);
+                    SetTractorPosition(Location,null,null, true);
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }

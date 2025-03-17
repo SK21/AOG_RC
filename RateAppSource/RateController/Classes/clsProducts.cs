@@ -15,6 +15,32 @@ namespace RateController
             mf = CallingForm;
             Items = cProducts.AsReadOnly();
         }
+        public double[] ProductAppliedRates()
+        {
+            double[] Result = new double[mf.MaxProducts];
+            for (int i = 0; i < mf.MaxProducts - 2; i++)
+            {
+                if (cProducts[i].RateSensor.Connected())
+                {
+                    Result[i] = cProducts[i].SmoothRate();
+                }
+            }
+            return Result;
+        }
+
+        public double[] ProductTargetRates()
+        {
+            double[] Result = new double[mf.MaxProducts];
+            for (int i = 0; i < mf.MaxProducts - 2; i++)
+            {
+                if (cProducts[i].RateSensor.Connected())
+                {
+                    Result[i] = cProducts[i].TargetRate();
+                }
+            }
+            return Result;
+        }
+
 
         public bool AlarmOn()
         {

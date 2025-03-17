@@ -137,6 +137,7 @@ namespace RateController
             RelayObjects = new clsRelays(this);
 
             timerMain.Interval = 1000;
+            timerRates.Interval = 3000;
 
             RelaySettings = new PGN32501[MaxModules];
             for (int i = 0; i < MaxModules; i++)
@@ -1023,6 +1024,7 @@ namespace RateController
 
                 timerMain.Enabled = false;
                 timerPIDs.Enabled = false;
+                timerRates.Enabled = false;
                 Tls.WriteActivityLog("Stopped");
                 string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
@@ -1100,6 +1102,7 @@ namespace RateController
                 DisplayScales();
 
                 timerMain.Enabled = true;
+                timerRates.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -1371,18 +1374,21 @@ namespace RateController
             SendRelays();
             Products.Save();
             SectionControl.ReadRateSwitches();
-
-            if (GPS.Connected())
-            {
-                PointLatLng Position = new PointLatLng(GPS.Latitude, GPS.Longitude);
-                Tls.Manager.SetTractorPosition(Position);
-            }
-            Tls.Manager.UpdateRates();
         }
 
         private void timerPIDs_Tick(object sender, EventArgs e)
         {
             Products.UpdatePID();
+        }
+
+        private void timerRates_Tick(object sender, EventArgs e)
+        {
+            if (GPS.Connected())
+            {
+                PointLatLng Position = new PointLatLng(GPS.Latitude, GPS.Longitude);
+                Tls.Manager.SetTractorPosition(Position,Products.ProductAppliedRates(),Products.ProductTargetRates());
+            }
+            Tls.Manager.UpdateTargetRates();
         }
     }
 }
