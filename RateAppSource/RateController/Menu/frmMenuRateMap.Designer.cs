@@ -57,8 +57,9 @@
             this.ckEnable = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnResume = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.ckZones = new System.Windows.Forms.CheckBox();
+            this.btnPNG = new System.Windows.Forms.Button();
+            this.btnRateData = new System.Windows.Forms.Button();
             this.gbZone.SuspendLayout();
             this.gbMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -323,9 +324,9 @@
             this.ckMap.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckMap.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMap.Location = new System.Drawing.Point(11, 558);
+            this.ckMap.Location = new System.Drawing.Point(8, 397);
             this.ckMap.Name = "ckMap";
-            this.ckMap.Size = new System.Drawing.Size(82, 60);
+            this.ckMap.Size = new System.Drawing.Size(89, 64);
             this.ckMap.TabIndex = 349;
             this.ckMap.Text = "Sat View";
             this.ckMap.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -337,7 +338,7 @@
             this.ckFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFullScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFullScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFullScreen.Location = new System.Drawing.Point(8, 194);
+            this.ckFullScreen.Location = new System.Drawing.Point(8, 243);
             this.ckFullScreen.Name = "ckFullScreen";
             this.ckFullScreen.Size = new System.Drawing.Size(89, 64);
             this.ckFullScreen.TabIndex = 348;
@@ -368,7 +369,7 @@
             this.ckEnable.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckEnable.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEnable.Location = new System.Drawing.Point(8, 285);
+            this.ckEnable.Location = new System.Drawing.Point(8, 166);
             this.ckEnable.Name = "ckEnable";
             this.ckEnable.Size = new System.Drawing.Size(89, 64);
             this.ckEnable.TabIndex = 351;
@@ -383,7 +384,7 @@
             // 
             // btnResume
             // 
-            this.btnResume.Location = new System.Drawing.Point(8, 103);
+            this.btnResume.Location = new System.Drawing.Point(8, 89);
             this.btnResume.Name = "btnResume";
             this.btnResume.Size = new System.Drawing.Size(89, 64);
             this.btnResume.TabIndex = 353;
@@ -391,31 +392,36 @@
             this.btnResume.UseVisualStyleBackColor = true;
             this.btnResume.Click += new System.EventHandler(this.btnResume_Click);
             // 
-            // checkBox1
+            // ckZones
             // 
-            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox1.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.checkBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.checkBox1.Location = new System.Drawing.Point(8, 376);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(89, 64);
-            this.checkBox1.TabIndex = 354;
-            this.checkBox1.Text = "Zones";
-            this.checkBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.ckZones.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckZones.Location = new System.Drawing.Point(8, 320);
+            this.ckZones.Name = "ckZones";
+            this.ckZones.Size = new System.Drawing.Size(89, 64);
+            this.ckZones.TabIndex = 354;
+            this.ckZones.Text = "Zones";
+            this.ckZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckZones.UseVisualStyleBackColor = true;
             // 
-            // checkBox2
+            // btnPNG
             // 
-            this.checkBox2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox2.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.checkBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.checkBox2.Location = new System.Drawing.Point(8, 467);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(89, 64);
-            this.checkBox2.TabIndex = 355;
-            this.checkBox2.Text = "Applied Layer";
-            this.checkBox2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.btnPNG.Location = new System.Drawing.Point(8, 551);
+            this.btnPNG.Name = "btnPNG";
+            this.btnPNG.Size = new System.Drawing.Size(89, 64);
+            this.btnPNG.TabIndex = 356;
+            this.btnPNG.Text = "Export PNG";
+            this.btnPNG.UseVisualStyleBackColor = true;
+            // 
+            // btnRateData
+            // 
+            this.btnRateData.Location = new System.Drawing.Point(8, 474);
+            this.btnRateData.Name = "btnRateData";
+            this.btnRateData.Size = new System.Drawing.Size(89, 64);
+            this.btnRateData.TabIndex = 357;
+            this.btnRateData.Text = "Rate Data";
+            this.btnRateData.UseVisualStyleBackColor = true;
             // 
             // frmMenuRateMap
             // 
@@ -423,9 +429,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.ControlBox = false;
+            this.Controls.Add(this.btnRateData);
+            this.Controls.Add(this.btnPNG);
             this.Controls.Add(this.ckMap);
-            this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.ckZones);
             this.Controls.Add(this.btnResume);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.ckFullScreen);
@@ -482,7 +489,8 @@
         private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.Button btnResume;
         private System.Windows.Forms.CheckBox ckMap;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox ckZones;
+        private System.Windows.Forms.Button btnPNG;
+        private System.Windows.Forms.Button btnRateData;
     }
 }

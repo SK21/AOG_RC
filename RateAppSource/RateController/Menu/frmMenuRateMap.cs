@@ -140,7 +140,11 @@ namespace RateController.Menu
 
         private void ckEnable_CheckedChanged(object sender, EventArgs e)
         {
-            if (!Initializing) mf.Tls.VariableRateEnabled = ckEnable.Checked;
+            if (!Initializing)
+            {
+                mf.Tls.VariableRateEnabled = ckEnable.Checked;
+                // to do: ask user to record data if record is off
+            }
         }
 
         private void ckFullScreen_CheckedChanged(object sender, EventArgs e)
