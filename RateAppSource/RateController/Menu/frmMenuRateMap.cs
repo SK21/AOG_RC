@@ -14,7 +14,9 @@ namespace RateController.Menu
         private frmMenu MainMenu;
         private int MainTop = 0;
         private FormStart mf;
-
+        private const int ScreenWidthMin = 379;
+        private const int ScreenHeightMin = 294;
+        private const int ScreenLeftMin = 154;
         public frmMenuRateMap(FormStart main, frmMenu menu)
         {
             InitializeComponent();
@@ -151,12 +153,12 @@ namespace RateController.Menu
 
                 if (mf.UseLargeScreen)
                 {
-                    mf.LSLeft = 66 + this.Left;
+                    mf.LSLeft = ScreenLeftMin + this.Left;
                     mf.LSTop = 324 + this.Top;
                 }
                 else
                 {
-                    mf.Left = 66 + this.Left;
+                    mf.Left = ScreenLeftMin + this.Left;
                     mf.Top = 324 + this.Top;
                 }
             }
@@ -164,8 +166,8 @@ namespace RateController.Menu
             {
                 this.Width = 540;
                 this.Height = 630;
-                pictureBox1.Size = new Size(467, 294);
-                pictureBox1.Location = new System.Drawing.Point(66, 324);
+                pictureBox1.Size = new Size(ScreenWidthMin, ScreenHeightMin);
+                pictureBox1.Location = new System.Drawing.Point(ScreenLeftMin, 324);
                 PositionForm();
 
                 if (mf.UseLargeScreen)

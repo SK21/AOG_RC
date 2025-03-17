@@ -50,13 +50,15 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.gbMap = new System.Windows.Forms.GroupBox();
+            this.ckMap = new System.Windows.Forms.CheckBox();
             this.ckFullScreen = new System.Windows.Forms.CheckBox();
             this.VSzoom = new System.Windows.Forms.VScrollBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ckEnable = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnResume = new System.Windows.Forms.Button();
-            this.ckMap = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.gbZone.SuspendLayout();
             this.gbMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -76,7 +78,7 @@
             this.btnLoad.FlatAppearance.BorderSize = 0;
             this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLoad.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnLoad.Location = new System.Drawing.Point(30, 123);
+            this.btnLoad.Location = new System.Drawing.Point(30, 151);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(82, 60);
             this.btnLoad.TabIndex = 14;
@@ -294,7 +296,7 @@
             this.btnSave.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnSave.Image = global::RateController.Properties.Resources.Save;
             this.btnSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnSave.Location = new System.Drawing.Point(30, 186);
+            this.btnSave.Location = new System.Drawing.Point(30, 242);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(82, 60);
             this.btnSave.TabIndex = 347;
@@ -304,7 +306,6 @@
             // 
             // gbMap
             // 
-            this.gbMap.Controls.Add(this.ckMap);
             this.gbMap.Controls.Add(this.tbMapName);
             this.gbMap.Controls.Add(this.btnSave);
             this.gbMap.Controls.Add(this.btnNew);
@@ -317,12 +318,26 @@
             this.gbMap.Text = "Map";
             this.gbMap.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
+            // ckMap
+            // 
+            this.ckMap.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMap.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckMap.Location = new System.Drawing.Point(11, 558);
+            this.ckMap.Name = "ckMap";
+            this.ckMap.Size = new System.Drawing.Size(82, 60);
+            this.ckMap.TabIndex = 349;
+            this.ckMap.Text = "Sat View";
+            this.ckMap.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMap.UseVisualStyleBackColor = true;
+            this.ckMap.CheckedChanged += new System.EventHandler(this.ckMap_CheckedChanged);
+            // 
             // ckFullScreen
             // 
             this.ckFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFullScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFullScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFullScreen.Location = new System.Drawing.Point(8, 172);
+            this.ckFullScreen.Location = new System.Drawing.Point(8, 194);
             this.ckFullScreen.Name = "ckFullScreen";
             this.ckFullScreen.Size = new System.Drawing.Size(89, 64);
             this.ckFullScreen.TabIndex = 348;
@@ -334,7 +349,7 @@
             // VSzoom
             // 
             this.VSzoom.LargeChange = 1;
-            this.VSzoom.Location = new System.Drawing.Point(9, 324);
+            this.VSzoom.Location = new System.Drawing.Point(106, 324);
             this.VSzoom.Name = "VSzoom";
             this.VSzoom.Size = new System.Drawing.Size(45, 294);
             this.VSzoom.TabIndex = 349;
@@ -342,9 +357,9 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(66, 324);
+            this.pictureBox1.Location = new System.Drawing.Point(154, 324);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(467, 294);
+            this.pictureBox1.Size = new System.Drawing.Size(379, 294);
             this.pictureBox1.TabIndex = 350;
             this.pictureBox1.TabStop = false;
             // 
@@ -353,7 +368,7 @@
             this.ckEnable.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckEnable.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEnable.Location = new System.Drawing.Point(8, 252);
+            this.ckEnable.Location = new System.Drawing.Point(8, 285);
             this.ckEnable.Name = "ckEnable";
             this.ckEnable.Size = new System.Drawing.Size(89, 64);
             this.ckEnable.TabIndex = 351;
@@ -368,7 +383,7 @@
             // 
             // btnResume
             // 
-            this.btnResume.Location = new System.Drawing.Point(8, 92);
+            this.btnResume.Location = new System.Drawing.Point(8, 103);
             this.btnResume.Name = "btnResume";
             this.btnResume.Size = new System.Drawing.Size(89, 64);
             this.btnResume.TabIndex = 353;
@@ -376,19 +391,31 @@
             this.btnResume.UseVisualStyleBackColor = true;
             this.btnResume.Click += new System.EventHandler(this.btnResume_Click);
             // 
-            // ckMap
+            // checkBox1
             // 
-            this.ckMap.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckMap.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMap.Image = global::RateController.Properties.Resources.map;
-            this.ckMap.Location = new System.Drawing.Point(30, 249);
-            this.ckMap.Name = "ckMap";
-            this.ckMap.Size = new System.Drawing.Size(82, 60);
-            this.ckMap.TabIndex = 349;
-            this.ckMap.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckMap.UseVisualStyleBackColor = true;
-            this.ckMap.CheckedChanged += new System.EventHandler(this.ckMap_CheckedChanged);
+            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox1.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.checkBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.checkBox1.Location = new System.Drawing.Point(8, 376);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(89, 64);
+            this.checkBox1.TabIndex = 354;
+            this.checkBox1.Text = "Zones";
+            this.checkBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox2.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.checkBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.checkBox2.Location = new System.Drawing.Point(8, 467);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(89, 64);
+            this.checkBox2.TabIndex = 355;
+            this.checkBox2.Text = "Applied Layer";
+            this.checkBox2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // frmMenuRateMap
             // 
@@ -396,6 +423,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.ControlBox = false;
+            this.Controls.Add(this.ckMap);
+            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.btnResume);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.ckFullScreen);
@@ -452,5 +482,7 @@
         private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.Button btnResume;
         private System.Windows.Forms.CheckBox ckMap;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
