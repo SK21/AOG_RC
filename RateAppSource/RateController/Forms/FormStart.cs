@@ -136,9 +136,6 @@ namespace RateController
 
             RelayObjects = new clsRelays(this);
 
-            timerMain.Interval = 1000;
-            timerRates.Interval = 3000;
-
             RelaySettings = new PGN32501[MaxModules];
             for (int i = 0; i < MaxModules; i++)
             {

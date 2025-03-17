@@ -273,6 +273,24 @@ namespace RateController.Classes
             }
         }
 
+        public Dictionary<string, Color> ShowApplied()
+        {
+            Dictionary<string, Color> legend = new Dictionary<string, Color>;
+            try
+            {
+                var readings = mf.Tls.RateCollector.GetReadings().ToList();
+                AsAppliedMapLayerCreator creator = new AsAppliedMapLayerCreator();
+                GMapOverlay overlay = creator.CreateOverlay(readings, out legend);
+                gmap.Overlays.Add(overlay);
+                gmap.Refresh();
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("MapManger/ShowApplied: " + ex.Message);
+            }
+            return legend;
+        }
+
         public void UpdateTargetRates()
         {
             try
@@ -492,7 +510,7 @@ namespace RateController.Classes
                 else
                 {
                     PointLatLng Location = gmap.FromLocalToLatLng(e.X, e.Y);
-                    SetTractorPosition(Location,null,null, true);
+                    SetTractorPosition(Location, null, null, true);
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }

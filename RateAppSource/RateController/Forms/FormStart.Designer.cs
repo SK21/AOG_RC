@@ -620,7 +620,7 @@ namespace RateController
             // 
             // timerRates
             // 
-            this.timerRates.Interval = 3000;
+            this.timerRates.Interval = 2000;
             this.timerRates.Tick += new System.EventHandler(this.timerRates_Tick);
             // 
             // FormStart
