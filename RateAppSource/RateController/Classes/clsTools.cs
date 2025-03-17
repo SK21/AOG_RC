@@ -647,7 +647,7 @@ namespace RateController
         {
             cManager = new MapManager(mf);
         }
-        public void StartRateCollector(string FileName,bool Overwrite=false)
+        public void NewRateCollector(string FileName,bool Overwrite=false)
         {
             cRateCollector = new DataCollector(FileName, Overwrite);
         }

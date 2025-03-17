@@ -8,18 +8,24 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace RateController.Classes
 {
     public class MapManager
     {
+        private double AppliedOverlayCellSize = 0.1;
+        private int AppliedOverlayProductID = 0;
+        private System.Timers.Timer AppliedOverlayTimer;
+        private RateType AppliedOverlayType = RateType.Applied;
         private string CachePath;
         private bool cEditMode;
         private string cMapName = "Unnamed Map";
         private string cRootPath;
         private bool cShowTiles = true;
         private PointLatLng cTractorPosition;
+        private GMapOverlay currentAppliedOverlay;
         private List<PointLatLng> currentZoneVertices;
         private Color cZoneColor;
         private double cZoneHectares;
@@ -49,6 +55,10 @@ namespace RateController.Classes
             gmap.MouseMove += Gmap_MouseMove;
             gmap.MouseUp += Gmap_MouseUp;
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
+
+            AppliedOverlayTimer = new System.Timers.Timer(60);
+            AppliedOverlayTimer.Elapsed += AppliedOverlayTimer_Elapsed;
+            AppliedOverlayTimer.Enabled = false;
         }
 
         public event EventHandler MapChanged;
@@ -214,7 +224,7 @@ namespace RateController.Classes
                     mf.Tls.SaveProperty("LastMapFile", FilePath);
                     ZoomToFit();
                     string DataPath = Path.GetDirectoryName(FilePath) + "\\" + MapName + "_Rates.csv";
-                    mf.Tls.StartRateCollector(DataPath);
+                    mf.Tls.NewRateCollector(DataPath);
                 }
             }
             return Result;
@@ -273,22 +283,51 @@ namespace RateController.Classes
             }
         }
 
-        public Dictionary<string, Color> ShowApplied()
+        public Dictionary<string, Color> ShowAppliedLayer(double RefreshIntervalSeconds = 0, double CellAreaAcres = 0.1,
+            RateType AppliedType = RateType.Applied, int AppliedProductID = 0)
         {
-            Dictionary<string, Color> legend = new Dictionary<string, Color>;
+            Dictionary<string, Color> legend = new Dictionary<string, Color>();
             try
             {
+                // display layer
+                AppliedOverlayType = AppliedType;
+                AppliedOverlayProductID = AppliedProductID;
+                AppliedOverlayCellSize = CellAreaAcres;
                 var readings = mf.Tls.RateCollector.GetReadings().ToList();
                 AsAppliedMapLayerCreator creator = new AsAppliedMapLayerCreator();
-                GMapOverlay overlay = creator.CreateOverlay(readings, out legend);
-                gmap.Overlays.Add(overlay);
+                currentAppliedOverlay = creator.CreateOverlay(readings, out legend, AppliedOverlayCellSize, AppliedOverlayType, AppliedOverlayProductID);
+                gmap.Overlays.Add(currentAppliedOverlay);
                 gmap.Refresh();
+
+                if (RefreshIntervalSeconds > 29 && RefreshIntervalSeconds < 1800)
+                {
+                    AppliedOverlayTimer.Interval = RefreshIntervalSeconds * 1000;
+                    AppliedOverlayTimer.Enabled = true;
+                }
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("MapManger/ShowApplied: " + ex.Message);
+                mf.Tls.WriteErrorLog("MapManger/ShowAppliedLayer: " + ex.Message);
             }
             return legend;
+        }
+
+        public void RemoveAppliedLayer()
+        {
+            try
+            {
+                if (currentAppliedOverlay != null)
+                {
+                    gmap.Overlays.Remove(currentAppliedOverlay);
+                    gmap.Refresh();
+                    currentAppliedOverlay = null;
+                    AppliedOverlayTimer.Enabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("MapManger/RemoveAppliedLayer: " + ex.Message);
+            }
         }
 
         public void UpdateTargetRates()
@@ -464,6 +503,27 @@ namespace RateController.Classes
                     }
                 }
             }
+        }
+
+        private void AppliedOverlayTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // Get updated data and re-create overlay; use the UI thread for map updates.
+            List<RateReading> readings = mf.Tls.RateCollector.GetReadings().ToList();
+            AsAppliedMapLayerCreator creator = new AsAppliedMapLayerCreator();
+            Dictionary<string, Color> legend;
+            GMapOverlay updatedOverlay = creator.CreateOverlay(readings, out legend, AppliedOverlayCellSize, AppliedOverlayType, AppliedOverlayProductID);
+
+            // Since this event occurs on a secondary thread, perform UI updates on the main thread.
+            gmap.Invoke((MethodInvoker)delegate
+            {
+                if (currentAppliedOverlay != null)
+                {
+                    gmap.Overlays.Remove(currentAppliedOverlay);
+                }
+                currentAppliedOverlay = updatedOverlay;
+                gmap.Overlays.Add(currentAppliedOverlay);
+                gmap.Refresh();
+            });
         }
 
         private Coordinate CalculateCentroid(Polygon polygon)

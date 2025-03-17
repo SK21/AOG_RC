@@ -9,30 +9,44 @@ using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
+    public enum RateType
+    {
+        Applied,
+        Target
+    }
     public class AsAppliedMapLayerCreator
     {
         /// <summary>
         /// Creates a GMapOverlay using a grid whose cell area is defined in acres.
-        /// For each grid cell the average applied rate (using the first applied rate value) is computed.
-        /// Each cell is colored with one of five shades of green based on applied rate ranges.
+        /// For each grid cell, the average rate is computed based on a user-selected rate value
+        /// from either the applied or target rates.
+        /// Each cell is colored with one of five shades of green based on the computed rate ranges.
         /// A legend mapping range labels to colors is output via the out parameter.
         /// </summary>
         /// <param name="readings">The list of RateReading data.</param>
-        /// <param name="legend">Output dictionary with range labels mapped to their corresponding color.</param>
+        /// <param name="legend">Output dictionary mapping range labels to colors.</param>
         /// <param name="cellAreaAcres">
         /// The area for a square grid cell in acres. Defaults to 0.1 (i.e. 1/10 acre).
         /// </param>
-        /// <returns>A GMapOverlay containing the as‑applied map layer.</returns>
-        public GMapOverlay CreateOverlay(List<RateReading> readings, out Dictionary<string, Color> legend, double cellAreaAcres = 0.1)
+        /// <param name="selectedRateType">
+        /// Specifies whether to use the AppliedRates or TargetRates. Defaults to Applied.
+        /// </param>
+        /// <param name="selectedRateIndex">
+        /// The index (0-based) of the rate to use in the selected rate array.
+        /// Defaults to 0.
+        /// </param>
+        /// <returns>A GMapOverlay representing the computed map layer.</returns>
+        public GMapOverlay CreateOverlay(List<RateReading> readings, out Dictionary<string, Color> legend,
+            double cellAreaAcres = 0.1, RateType selectedRateType = RateType.Applied, int selectedRateIndex = 0)
         {
             // Initialize the legend.
             legend = new Dictionary<string, Color>();
 
-            // Create a new overlay for the map.
+            // Create a new overlay.
             GMapOverlay overlay = new GMapOverlay("asAppliedMap");
 
             if (readings == null || readings.Count == 0)
-                return overlay;  // nothing to map
+                return overlay;  // Nothing to map.
 
             // Determine the geographic bounding box.
             double minLat = readings.Min(r => r.Latitude);
@@ -51,8 +65,7 @@ namespace RateController.Classes
             double metersPerDegreeLat = 111320;
             double cellSizeDegreesLat = cellSideMeters / metersPerDegreeLat;
 
-            // Convert cell side length from meters to degrees longitude.
-            // Use the average latitude for adjustment.
+            // Convert cell side length from meters to degrees longitude using the average latitude.
             double avgLat = (minLat + maxLat) / 2.0;
             double metersPerDegreeLng = 111320 * Math.Cos(avgLat * Math.PI / 180.0);
             double cellSizeDegreesLng = cellSideMeters / metersPerDegreeLng;
@@ -69,16 +82,30 @@ namespace RateController.Classes
                 grid[key].Add(reading);
             }
 
-            // Compute the average applied rate per cell (using the first applied rate value).
+            // Compute the average rate per cell.
+            // Only include readings that actually have at least (selectedRateIndex+1) entries in the selected array.
             Dictionary<(int i, int j), double> cellAverages = new Dictionary<(int, int), double>();
             foreach (var kvp in grid)
             {
-                double cellSum = kvp.Value.Sum(r => r.AppliedRates[0]);
-                double cellAvg = cellSum / kvp.Value.Count;
-                cellAverages[kvp.Key] = cellAvg;
+                // Get the valid rates from this cell.
+                var validRates = kvp.Value
+                    .Where(r => (selectedRateType == RateType.Applied && r.AppliedRates.Length > selectedRateIndex) ||
+                                (selectedRateType == RateType.Target && r.TargetRates.Length > selectedRateIndex))
+                    .Select(r => selectedRateType == RateType.Applied ? r.AppliedRates[selectedRateIndex] : r.TargetRates[selectedRateIndex])
+                    .ToList();
+
+                if (validRates.Count > 0)
+                {
+                    double cellAvg = validRates.Average();
+                    cellAverages[kvp.Key] = cellAvg;
+                }
             }
 
-            // Determine overall minimum and maximum average applied rates.
+            // If no valid averages, return an empty overlay.
+            if (cellAverages.Count == 0)
+                return overlay;
+
+            // Determine overall minimum and maximum for the computed averages.
             double overallMin = cellAverages.Values.Min();
             double overallMax = cellAverages.Values.Max();
 
@@ -95,7 +122,7 @@ namespace RateController.Classes
                 Color.DarkGreen
             };
 
-            // Create range labels and build the legend.
+            // Build the legend.
             for (int k = 0; k < 5; k++)
             {
                 double lowerBound = overallMin + k * rangeWidth;
@@ -104,7 +131,7 @@ namespace RateController.Classes
                 legend[label] = shadesOfGreen[k];
             }
 
-            // Create a polygon for each grid cell, color it based on its average applied rate.
+            // Create a polygon for each grid cell, coloring it based on its average rate.
             foreach (var kvp in cellAverages)
             {
                 (int i, int j) cellKey = kvp.Key;
@@ -118,13 +145,12 @@ namespace RateController.Classes
                 if (rangeIndex >= 5)
                     rangeIndex = 4;
 
-                // Compute cell boundary.
+                // Calculate cell boundaries.
                 double cellMinLat = minLat + cellKey.i * cellSizeDegreesLat;
                 double cellMinLng = minLng + cellKey.j * cellSizeDegreesLng;
                 double cellMaxLat = cellMinLat + cellSizeDegreesLat;
                 double cellMaxLng = cellMinLng + cellSizeDegreesLng;
 
-                // Build polygon points for the cell.
                 List<PointLatLng> points = new List<PointLatLng>
                 {
                     new PointLatLng(cellMinLat, cellMinLng),
@@ -133,7 +159,6 @@ namespace RateController.Classes
                     new PointLatLng(cellMaxLat, cellMinLng)
                 };
 
-                // Create and style the polygon.
                 GMapPolygon polygon = new GMapPolygon(points, $"Cell_{cellKey.i}_{cellKey.j}");
                 polygon.Fill = new SolidBrush(shadesOfGreen[rangeIndex]);
                 polygon.Stroke = new System.Drawing.Pen(System.Drawing.Color.Black, 1);
@@ -141,9 +166,9 @@ namespace RateController.Classes
                 overlay.Polygons.Add(polygon);
             }
 
-            // Return the overlay. The legend dictionary can later be used to create a visual UI legend.
             return overlay;
         }
     }
 }
+
 

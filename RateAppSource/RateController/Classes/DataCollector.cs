@@ -51,6 +51,12 @@ namespace RateController.Classes
             SaveTimer.Enabled = Record;
         }
 
+        public void SaveIntervalSeconds(double IntervalSeconds)
+        {
+            if (IntervalSeconds < 1 || IntervalSeconds > 600) IntervalSeconds = 30;
+            SaveTimer.Interval = IntervalSeconds * 1000;
+        }
+
         public IReadOnlyList<RateReading> GetReadings()
         {
             lock (_lock)
