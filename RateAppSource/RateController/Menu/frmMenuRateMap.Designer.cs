@@ -422,6 +422,7 @@
             this.btnRateData.TabIndex = 357;
             this.btnRateData.Text = "Rate Data";
             this.btnRateData.UseVisualStyleBackColor = true;
+            this.btnRateData.Click += new System.EventHandler(this.btnRateData_Click);
             // 
             // frmMenuRateMap
             // 

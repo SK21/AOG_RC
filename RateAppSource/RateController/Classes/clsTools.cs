@@ -50,16 +50,16 @@ namespace RateController
         private DateTime lastMessageTime;
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
-        private SortedDictionary<string, string> Props = new SortedDictionary<string, string>();
+        private SortedDictionary<string, string> PropsDictionary = new SortedDictionary<string, string>();
         private SortedDictionary<string, string> PropsApp = new SortedDictionary<string, string>();
 
         #region ScreenBitMap
 
         private MapManager cManager;
+        private DataCollector cRateCollector;
         private Bitmap cScreenBitmap;
         private int cScreenBitmapHeight = 465;  // from frmMenuColor colorPanel
         private int cScreenBitmapWidth = 516;
-        private DataCollector cRateCollector;
 
         #endregion ScreenBitMap
 
@@ -76,9 +76,6 @@ namespace RateController
 
         public MapManager Manager
         { get { return cManager; } }
-
-        public DataCollector RateCollector
-        { get { return cRateCollector; } }
 
         public MasterSwitchMode MasterSwitchMode
         {
@@ -104,6 +101,9 @@ namespace RateController
                 }
             }
         }
+
+        public DataCollector RateCollector
+        { get { return cRateCollector; } }
 
         public bool ReadOnly
         {
@@ -380,8 +380,13 @@ namespace RateController
         public string LoadProperty(string Key)
         {
             string Prop = "";
-            if (Props.ContainsKey(Key)) Prop = Props[Key].ToString();
+            if (PropsDictionary.ContainsKey(Key)) Prop = PropsDictionary[Key].ToString();
             return Prop;
+        }
+
+        public void NewRateCollector(string FileName, bool Overwrite = false)
+        {
+            cRateCollector = new DataCollector(FileName, Overwrite);
         }
 
         public void OpenFile(string NewFile, bool IsNew = false)
@@ -408,6 +413,7 @@ namespace RateController
                         FileName = "Default.RCS";
                     }
                 }
+                Props.FilePath = cPropertiesFile;
                 LoadFilesData(cPropertiesFile);
                 Properties.Settings.Default.FileName = FileName;
                 Properties.Settings.Default.Save();
@@ -592,17 +598,17 @@ namespace RateController
                 if (!ReadOnly || IgnoreReadOnly || Value != null)
                 {
                     bool Changed = false;
-                    if (Props.ContainsKey(Key))
+                    if (PropsDictionary.ContainsKey(Key))
                     {
-                        if (!Props[Key].ToString().Equals(Value))
+                        if (!PropsDictionary[Key].ToString().Equals(Value))
                         {
-                            Props[Key] = Value;
+                            PropsDictionary[Key] = Value;
                             Changed = true;
                         }
                     }
                     else
                     {
-                        Props.Add(Key, Value);
+                        PropsDictionary.Add(Key, Value);
                         Changed = true;
                     }
                     if (Changed) SaveProperties();
@@ -646,10 +652,6 @@ namespace RateController
         public void StartMapManager()
         {
             cManager = new MapManager(mf);
-        }
-        public void NewRateCollector(string FileName,bool Overwrite=false)
-        {
-            cRateCollector = new DataCollector(FileName, Overwrite);
         }
 
         #region ScreenBitMapCode
@@ -938,14 +940,14 @@ namespace RateController
             // property:  key=value  ex: "LastFile=Main.mdb"
             try
             {
-                Props.Clear();
+                PropsDictionary.Clear();
                 string[] lines = System.IO.File.ReadAllLines(path);
                 foreach (string line in lines)
                 {
                     if (line.Contains("=") && !String.IsNullOrEmpty(line.Split('=')[0]) && !String.IsNullOrEmpty(line.Split('=')[1]))
                     {
                         string[] splitText = line.Split('=');
-                        Props.Add(splitText[0], splitText[1]);
+                        PropsDictionary.Add(splitText[0], splitText[1]);
                     }
                 }
             }
@@ -977,9 +979,9 @@ namespace RateController
         {
             try
             {
-                string[] NewLines = new string[Props.Count];
+                string[] NewLines = new string[PropsDictionary.Count];
                 int i = -1;
-                foreach (var Pair in Props)
+                foreach (var Pair in PropsDictionary)
                 {
                     i++;
                     NewLines[i] = Pair.Key.ToString() + "=" + Pair.Value.ToString();

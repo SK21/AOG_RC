@@ -1,5 +1,7 @@
 ﻿using AgOpenGPS;
 using GMap.NET.WindowsForms;
+using RateController.Classes;
+using RateController.Forms;
 using RateController.Language;
 using System;
 using System.Drawing;
@@ -493,6 +495,15 @@ namespace RateController.Menu
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
+        }
+
+        private void btnRateData_Click(object sender, EventArgs e)
+        {
+            if (Props.FormIsClosed("frmRates"))
+            {
+                var frm = new frmRates();
+                frm.Show();
+            }
         }
     }
 }

@@ -179,6 +179,7 @@
     <Compile Include="Classes\clsPressure.cs" />
     <Compile Include="Classes\clsPressureRawData.cs" />
     <Compile Include="Classes\clsPressures.cs" />
+    <Compile Include="Classes\Props.cs" />
     <Compile Include="Classes\DataCollector.cs" />
     <Compile Include="Classes\RateReading.cs" />
     <Compile Include="Classes\clsProducts.cs" />
