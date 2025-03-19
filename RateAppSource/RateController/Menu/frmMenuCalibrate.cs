@@ -74,7 +74,7 @@ namespace RateController.Menu
 
         private void frmMenuCalibrate_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
             mf.SimMode = SimType.Sim_None;
             btnCalStop.PerformClick();
             Cals.Close();
@@ -86,7 +86,6 @@ namespace RateController.Menu
             // sub menu 540,630
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
-            mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;

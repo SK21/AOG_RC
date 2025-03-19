@@ -1,4 +1,5 @@
-﻿using RateController.Language;
+﻿using RateController.Classes;
+using RateController.Language;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -81,7 +82,7 @@ namespace RateController.Menu
 
         private void frmMenuControl_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void frmMenuControl_Load(object sender, EventArgs e)
@@ -91,7 +92,6 @@ namespace RateController.Menu
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             MainMenu.ProductChanged += MainMenu_ProductChanged;
-            mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;

@@ -92,7 +92,7 @@ namespace RateController.Menu
 
         private void frmMenuNetwork_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void frmMenuNetwork_Load(object sender, EventArgs e)
@@ -101,7 +101,6 @@ namespace RateController.Menu
             // sub menu 540,630
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
-            mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;

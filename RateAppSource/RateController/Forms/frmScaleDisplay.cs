@@ -56,14 +56,14 @@ namespace RateController
 
         private void frmScaleDisplay_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this, cProductID.ToString());
+            Props.SaveFormLocation(this, cProductID.ToString());
             timer1.Enabled = false;
             SaveData();
         }
 
         private void frmScaleDisplay_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this, cProductID.ToString());
+            Props.LoadFormLocation(this, cProductID.ToString());
             timer1.Enabled = true;
             LoadData();
             lbValue.ForeColor = Properties.Settings.Default.DisplayForeColour;

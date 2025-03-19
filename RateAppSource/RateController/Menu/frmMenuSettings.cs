@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.ComponentModel;
@@ -112,7 +113,7 @@ namespace RateController.Menu
 
         private void frmMenuSettings_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
             timer1.Enabled = false;
         }
 
@@ -123,7 +124,6 @@ namespace RateController.Menu
             //SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             MainMenu.ProductChanged += MainMenu_ProductChanged;
-            mf.Tls.LoadFormData(this, "", false);
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;
             btnOK.Left = this.Width - 84;

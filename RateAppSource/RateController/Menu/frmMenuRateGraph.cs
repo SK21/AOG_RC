@@ -1,4 +1,5 @@
-﻿using RateController.Language;
+﻿using RateController.Classes;
+using RateController.Language;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
@@ -148,12 +149,12 @@ namespace RateController.Menu
 
         private void frmMenuRateGraph_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void frmMenuRateGraph_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this);
+            Props.LoadFormLocation(this);
 
             timer1.Interval = (int)((1 / 20.0) * 1000);
 

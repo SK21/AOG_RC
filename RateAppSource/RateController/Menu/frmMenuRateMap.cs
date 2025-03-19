@@ -317,7 +317,7 @@ namespace RateController.Menu
 
         private void mnuRateMap_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void mnuRateMap_Load(object sender, EventArgs e)
@@ -328,7 +328,6 @@ namespace RateController.Menu
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             mf.Tls.Manager.MapChanged += Manager_MapChanged;
-            mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;

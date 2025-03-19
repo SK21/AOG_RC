@@ -150,14 +150,14 @@ namespace RateController
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
             }
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
             timer1.Enabled = false;
             mf.vSwitchBox.SwitchScreenOn = false;
         }
 
         private void frmSimulation_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this);
+            Props.LoadFormLocation(this);
             UpdateForm();
             timer1.Enabled = true;
             mf.vSwitchBox.SwitchScreenOn = true;

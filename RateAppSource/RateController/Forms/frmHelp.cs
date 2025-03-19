@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -38,14 +39,14 @@ namespace RateController
 
         private void frmHelp_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void frmHelp_Load(object sender, EventArgs e)
         {
             try
             {
-                mf.Tls.LoadFormData(this);
+                Props.LoadFormLocation(this);
                 this.BackColor = Properties.Settings.Default.MainBackColour;
             }
             catch (Exception ex)
@@ -65,7 +66,7 @@ namespace RateController
             timer1.Dispose();
             Dispose();
 
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
             Close();
         }
     }

@@ -34,13 +34,13 @@ namespace RateController
 
         private void frmPressureDisplay_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
             timer1.Enabled = false;
         }
 
         private void frmPressureDisplay_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this);
+            Props.LoadFormLocation(this);
             timer1.Enabled = true;
             lbPressureValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
             this.BackColor = Properties.Settings.Default.DisplayBackColour;

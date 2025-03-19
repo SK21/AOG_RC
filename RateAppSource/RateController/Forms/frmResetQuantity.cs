@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.Windows.Forms;
@@ -61,12 +62,12 @@ namespace RateController
 
         private void frmResetQuantity_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void frmResetQuantity_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this);
+            Props.LoadFormLocation(this);
             TankSize = mf.Products.Item(mf.CurrentProduct()).TankSize;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             UpdateForm();

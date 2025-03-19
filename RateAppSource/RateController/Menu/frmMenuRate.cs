@@ -202,7 +202,7 @@ namespace RateController.Menu
 
         private void frmMenuRate_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
             timer1.Enabled = false;
         }
 
@@ -210,7 +210,6 @@ namespace RateController.Menu
         {
             // menu 800,600
             // sub menu 540,630
-            mf.Tls.LoadFormData(this, "", false);
             SetLanguage();
             MainMenu.MenuMoved += MyMenu_MenuMoved;
             MainMenu.ProductChanged += MainMenu_ProductChanged;

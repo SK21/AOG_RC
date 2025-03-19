@@ -965,13 +965,13 @@ namespace RateController
 
         private void frmMenu_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
             if (cLastScreen != "" && cLastScreen != null) Props.SetProp("LastScreen", cLastScreen);
         }
 
         private void frmMenu_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this);
+            Props.LoadFormLocation(this);
             this.Width = FormWidth;
             this.Height = FormHeight;
             StyleControls(this);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -30,14 +31,14 @@ namespace RateController.Menu
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
             cCancelled = true;
             this.Hide();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
             if (rbESP32.Checked)
             {
                 cBoard = 2;
@@ -56,13 +57,13 @@ namespace RateController.Menu
 
         private void frmMenuBoards_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void frmMenuBoards_Load(object sender, EventArgs e)
         {
             this.BackColor = Properties.Settings.Default.MainBackColour;
-            mf.Tls.LoadFormData(this);
+            Props.LoadFormLocation(this);
         }
 
         private void SetOptions(int board)

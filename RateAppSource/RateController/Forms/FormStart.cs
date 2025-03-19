@@ -986,7 +986,7 @@ namespace RateController
         {
             try
             {
-                Tls.SaveFormData(this);
+                Props.SaveFormLocation(this);
                 if (this.WindowState == FormWindowState.Normal)
                 {
                     Props.SetProp("CurrentPage", CurrentPage.ToString());
@@ -1052,7 +1052,7 @@ namespace RateController
         {
             try
             {
-                Tls.LoadFormData(this);
+                Props.LoadFormLocation(this);
 
                 CurrentPage = 5;
                 int.TryParse(Props.GetProp("CurrentPage"), out CurrentPage);

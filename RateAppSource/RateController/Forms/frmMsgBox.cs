@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Windows.Forms;
 
 namespace RateController
@@ -37,7 +38,7 @@ namespace RateController
         {
             if (this.WindowState == FormWindowState.Normal)
             {
-                mf.Tls.SaveFormData(this);
+                Props.SaveFormLocation(this);
             }
             Result = true;
             this.Hide();
@@ -47,7 +48,7 @@ namespace RateController
         {
             if (this.WindowState == FormWindowState.Normal)
             {
-                mf.Tls.SaveFormData(this);
+                Props.SaveFormLocation(this);
             }
             Result = false;
             this.Hide();
@@ -55,12 +56,12 @@ namespace RateController
 
         private void frmMsgBox_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void frmMsgBox_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this);
+            Props.LoadFormLocation(this);
             this.BackColor = Properties.Settings.Default.MainBackColour;
         }
     }

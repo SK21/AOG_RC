@@ -32,12 +32,12 @@ namespace RateController.Forms
 
         private void frmImport_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void frmImport_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this);
+            Props.LoadFormLocation(this);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             SetLanguage();
         }

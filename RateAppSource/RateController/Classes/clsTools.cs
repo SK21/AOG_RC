@@ -12,7 +12,6 @@ using System.Windows.Forms;
 
 namespace RateController
 {
-
     public class clsTools
     {
         private string cAppName = "RateController";
@@ -130,23 +129,6 @@ namespace RateController
             return (byte)((ArdID << 4) | (SenID & 0b00001111));
         }
 
-        public void CenterForm(Form form)
-        {
-            // Retrieve screen width and height
-            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
-            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
-
-            // Retrieve form width and height
-            int formWidth = form.Width;
-            int formHeight = form.Height;
-
-            // Calculate the appropriate position
-            int xPosition = (screenWidth / 2) - (formWidth / 2);
-            int yPosition = (screenHeight / 2) - (formHeight / 2);
-
-            form.Location = new Point(xPosition, yPosition);
-        }
-
         public string ControlTypeDescription(ControlTypeEnum CT)
         {
             string Result = "";
@@ -188,27 +170,6 @@ namespace RateController
                 for (int i = Start; i < Length; i++)
                 {
                     CK += Data[i];
-                }
-                Result = (byte)CK;
-            }
-            return Result;
-        }
-
-        public byte CRC(string[] Data, int Length, byte Start = 0)
-        {
-            byte Result = 0;
-            if (Length <= Data.Length)
-            {
-                byte tmp;
-                byte[] BD = new byte[Length];
-                for (int i = 0; i < Length; i++)
-                {
-                    if (byte.TryParse(Data[i], out tmp)) BD[i] = tmp;
-                }
-                int CK = 0;
-                for (int i = Start; i < Length; i++)
-                {
-                    CK += BD[i];
                 }
                 Result = (byte)CK;
             }
@@ -270,21 +231,6 @@ namespace RateController
             return Result;
         }
 
-        public bool GoodCRC(string[] Data, byte Start = 0)
-        {
-            bool Result = false;
-            byte tmp;
-            int Length = Data.Length;
-            byte[] BD = new byte[Length];
-            for (int i = 0; i < Length; i++)
-            {
-                if (byte.TryParse(Data[i], out tmp)) BD[i] = tmp;
-            }
-            byte cr = CRC(BD, Length - 1, Start);   // exclude existing crc
-            Result = (cr == BD[Length - 1]);
-            return Result;
-        }
-
         public bool IsFormNameValid(string formName)
         {
             // Get the current assembly
@@ -308,53 +254,6 @@ namespace RateController
             }
             return Result;
         }
-
-        public bool IsOnScreen(Form form, bool PutOnScreen = false)
-        {
-            // Create rectangle
-            Rectangle formRectangle = new Rectangle(form.Left, form.Top, form.Width, form.Height);
-
-            // Test
-            bool IsOn = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(formRectangle));
-
-            if (!IsOn & PutOnScreen)
-            {
-                CenterForm(form);
-            }
-
-            return IsOn;
-        }
-
-        public string LoadAppProperty(string Key)
-        {
-            string Prop = "";
-            if (PropsApp.ContainsKey(Key)) Prop = PropsApp[Key].ToString();
-            return Prop;
-        }
-
-        public void LoadFormData(Form Frm, string Instance = "", bool SetLocation = true)
-        {
-            if (SetLocation)
-            {
-                int Leftloc = -1;
-                int Toploc = -1;
-                if (int.TryParse(LoadAppProperty(Frm.Name + Instance + ".Left"), out int lft)) Leftloc = lft;
-                if (int.TryParse(LoadAppProperty(Frm.Name + Instance + ".Top"), out int tl)) Toploc = tl;
-
-                if (Leftloc == -1 || Toploc == -1)
-                {
-                    CenterForm(Frm);
-                }
-                else
-                {
-                    Frm.Left = Leftloc;
-                    Frm.Top = Toploc;
-                }
-                IsOnScreen(Frm, true);
-            }
-            FormAdd(Frm);
-        }
-
 
         public void NewRateCollector(string FileName, bool Overwrite = false)
         {
@@ -470,61 +369,6 @@ namespace RateController
             }
         }
 
-        public string ReadTextFile(string FileName)
-        {
-            string Result = "";
-            string Line;
-            FileName = cSettingsDir + "\\" + FileName;
-            try
-            {
-                if (File.Exists(FileName))
-                {
-                    StreamReader sr = new StreamReader(FileName);
-                    Line = sr.ReadLine();
-                    while (Line != null)
-                    {
-                        Result += Line + Environment.NewLine;
-                        Line = sr.ReadLine();
-                    }
-                    sr.Close();
-                }
-            }
-            catch (Exception)
-            {
-                //WriteErrorLog("ReadTextFile: " + ex.Message);
-            }
-            return Result;
-        }
-
-        public void SaveAppProperty(string Key, string Value)
-        {
-            try
-            {
-                if (Value != null)
-                {
-                    bool Changed = false;
-                    if (PropsApp.ContainsKey(Key))
-                    {
-                        if (!PropsApp[Key].ToString().Equals(Value))
-                        {
-                            PropsApp[Key] = Value;
-                            Changed = true;
-                        }
-                    }
-                    else
-                    {
-                        PropsApp.Add(Key, Value);
-                        Changed = true;
-                    }
-                    if (Changed) SaveAppProperties();
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("clsTools/SaveAppProperty: " + ex.Message);
-            }
-        }
-
         public void SaveFile(string NewFile)
         {
             try
@@ -545,28 +389,6 @@ namespace RateController
             {
                 WriteErrorLog("clsTools: SaveFile: " + ex.Message);
             }
-        }
-
-        public void SaveFormData(Form Frm, string Instance = "")
-        {
-            try
-            {
-                if (Frm.WindowState == FormWindowState.Normal)
-                {
-                    SaveAppProperty(Frm.Name + Instance + ".Left", Frm.Left.ToString());
-                    SaveAppProperty(Frm.Name + Instance + ".Top", Frm.Top.ToString());
-                }
-                FormRemove(Frm);
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-
-        public string SettingsDir()
-        {
-            return cSettingsDir;
         }
 
         public void ShowMessage(string Message, string Title = "Help",
@@ -667,7 +489,6 @@ namespace RateController
         }
 
         #endregion ScreenBitMapCode
-
 
         public string VersionDate()
         {

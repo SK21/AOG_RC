@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using System;
 using System.Windows.Forms;
 
@@ -89,7 +90,7 @@ namespace RateController.Menu
 
         private void frmMenuRelayPins_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
         }
 
         private void frmMenuRelayPins_Load(object sender, EventArgs e)
@@ -99,7 +100,6 @@ namespace RateController.Menu
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
-            mf.Tls.LoadFormData(this, "", false);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;

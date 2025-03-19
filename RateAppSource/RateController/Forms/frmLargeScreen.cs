@@ -193,7 +193,7 @@ namespace RateController
 
         private void frmLargeScreen_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mf.Tls.SaveFormData(this);
+            Props.SaveFormLocation(this);
 
             timerMain.Enabled = false;
             if (mf.UseTransparent)
@@ -210,7 +210,7 @@ namespace RateController
 
         private void frmLargeScreen_Load(object sender, EventArgs e)
         {
-            mf.Tls.LoadFormData(this);
+            Props.LoadFormLocation(this);
             Prd = mf.Products.Item(mf.DefaultProduct);
 
             UpdateForm();
