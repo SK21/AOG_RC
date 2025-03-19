@@ -6,19 +6,21 @@ using RateController.Language;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RateController.Menu
 {
     public partial class frmMenuRateMap : Form
     {
+        private const int ScreenHeightMin = 294;
+        private const int ScreenLeftMin = 154;
+        private const int ScreenWidthMin = 379;
         private bool Initializing = false;
         private int MainLeft = 0;
         private frmMenu MainMenu;
         private int MainTop = 0;
         private FormStart mf;
-        private const int ScreenWidthMin = 379;
-        private const int ScreenHeightMin = 294;
-        private const int ScreenLeftMin = 154;
+
         public frmMenuRateMap(FormStart main, frmMenu menu)
         {
             InitializeComponent();
@@ -101,6 +103,16 @@ namespace RateController.Menu
             }
         }
 
+        private void btnRateData_Click(object sender, EventArgs e)
+        {
+            if (Props.FormIsClosed("frmRates"))
+            {
+                var frm = new frmRates();
+                frm.SetManager(mf.Tls.Manager);
+                frm.Show();
+            }
+        }
+
         private void btnResume_Click(object sender, EventArgs e)
         {
             Initializing = true;
@@ -167,6 +179,7 @@ namespace RateController.Menu
                     mf.Left = ScreenLeftMin + this.Left;
                     mf.Top = 324 + this.Top;
                 }
+                if (Props.RateDisplayShow) ShowLegend();
             }
             else
             {
@@ -186,6 +199,7 @@ namespace RateController.Menu
                     mf.Left = MainLeft;
                     mf.Top = MainTop;
                 }
+                legendPanel.Visible = false;
             }
             mf.Tls.Manager.ZoomToFit();
         }
@@ -349,6 +363,42 @@ namespace RateController.Menu
             gbZone.Text = Lang.lgZone;
         }
 
+        private void ShowLegend()
+        {
+            try
+            {
+                legendPanel.Left = this.Left + 8;
+                legendPanel.Top = this.Top + 628;
+                int yOffset = 10;
+                foreach (var entry in mf.Tls.Manager.Legend)
+                {
+                    Panel colorBox = new Panel
+                    {
+                        Size = new Size(20, 20),
+                        BackColor = entry.Value,
+                        Location = new Point(legendPanel.Left + 10, legendPanel.Top + yOffset)
+                    };
+
+                    Label label = new Label
+                    {
+                        Text = entry.Key,
+                        Location = new Point(legendPanel.Left + 40, legendPanel.Top + yOffset),
+                        AutoSize = true
+                    };
+
+                    legendPanel.Controls.Add(colorBox);
+                    legendPanel.Controls.Add(label);
+
+                    yOffset += 30;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuRateMap/ShowLegend: " + ex.Message);
+            }
+        }
+        
+
         private void tbMapName_TextChanged(object sender, EventArgs e)
         {
             HighlightMapSave();
@@ -495,15 +545,6 @@ namespace RateController.Menu
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
-        }
-
-        private void btnRateData_Click(object sender, EventArgs e)
-        {
-            if (Props.FormIsClosed("frmRates"))
-            {
-                var frm = new frmRates();
-                frm.Show();
-            }
         }
     }
 }

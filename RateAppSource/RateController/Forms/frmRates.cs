@@ -10,18 +10,22 @@ namespace RateController.Forms
     {
         private bool cEdited = false;
         private bool Initializing = false;
-
+        private MapManager cMapManager;
         public frmRates()
         {
             InitializeComponent();
         }
+        public event EventHandler RatesMapSettingsChanged;
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
         }
-
+        public void SetManager(MapManager mapManager)
+        {
+            cMapManager= mapManager;
+        }
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (cEdited)
@@ -61,6 +65,7 @@ namespace RateController.Forms
 
                     SetButtons(false);
                     UpdateForm();
+                    cMapManager.UpdateRateMapDisplay();
                 }
                 catch (Exception ex)
                 {

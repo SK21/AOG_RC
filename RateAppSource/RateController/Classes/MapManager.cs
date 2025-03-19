@@ -36,6 +36,7 @@ namespace RateController.Classes
         private bool isDragging = false;
         private string LastFile;
         private System.Drawing.Point lastMousePosition;
+        private Dictionary<string, Color> cLegend;
         private List<MapZone> mapZones;
         private FormStart mf;
         private GMapOverlay tempMarkerOverlay;
@@ -76,7 +77,7 @@ namespace RateController.Classes
 
         public PointLatLng GetTractorPosition
         { get { return cTractorPosition; } }
-
+        public Dictionary<string,Color> Legend { get { return cLegend; } }
         public GMapControl gmapObject
         { get { return gmap; } }
 
@@ -254,6 +255,24 @@ namespace RateController.Classes
             return Result;
         }
 
+        public void RemoveAppliedLayer()
+        {
+            try
+            {
+                if (currentAppliedOverlay != null)
+                {
+                    gmap.Overlays.Remove(currentAppliedOverlay);
+                    gmap.Refresh();
+                    currentAppliedOverlay = null;
+                    AppliedOverlayTimer.Enabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.WriteErrorLog("MapManger/RemoveAppliedLayer: " + ex.Message);
+            }
+        }
+
         public bool SaveMap(string name, bool UpdateCache = true)
         {
             bool Result = false;
@@ -283,10 +302,13 @@ namespace RateController.Classes
             }
         }
 
-        public Dictionary<string, Color> ShowAppliedLayer(double RefreshIntervalSeconds = 0, double CellAreaAcres = 0.1,
-            RateType AppliedType = RateType.Applied, int AppliedProductID = 0)
+        public Dictionary<string, Color> ShowAppliedLayer()
         {
             Dictionary<string, Color> legend = new Dictionary<string, Color>();
+            double RefreshIntervalSeconds = Props.RateDisplayRefresh;
+            double CellAreaAcres = Props.RateDisplayResolution;
+            RateType AppliedType = Props.RateDisplayType;
+            int AppliedProductID = Props.RateDisplayProduct;
             try
             {
                 // display layer
@@ -312,21 +334,16 @@ namespace RateController.Classes
             return legend;
         }
 
-        public void RemoveAppliedLayer()
+        public void UpdateRateMapDisplay()
         {
-            try
+            mf.Tls.RateCollector.AutoRecord(Props.RecordRates);
+            if (Props.RateDisplayShow)
             {
-                if (currentAppliedOverlay != null)
-                {
-                    gmap.Overlays.Remove(currentAppliedOverlay);
-                    gmap.Refresh();
-                    currentAppliedOverlay = null;
-                    AppliedOverlayTimer.Enabled = false;
-                }
+                cLegend = ShowAppliedLayer();
             }
-            catch (Exception ex)
+            else
             {
-                mf.Tls.WriteErrorLog("MapManger/RemoveAppliedLayer: " + ex.Message);
+                RemoveAppliedLayer();
             }
         }
 

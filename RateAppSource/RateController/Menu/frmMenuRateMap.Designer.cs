@@ -60,6 +60,7 @@
             this.ckZones = new System.Windows.Forms.CheckBox();
             this.btnPNG = new System.Windows.Forms.Button();
             this.btnRateData = new System.Windows.Forms.Button();
+            this.legendPanel = new System.Windows.Forms.Panel();
             this.gbZone.SuspendLayout();
             this.gbMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -307,6 +308,7 @@
             // 
             // gbMap
             // 
+            this.gbMap.Controls.Add(this.legendPanel);
             this.gbMap.Controls.Add(this.tbMapName);
             this.gbMap.Controls.Add(this.btnSave);
             this.gbMap.Controls.Add(this.btnNew);
@@ -424,6 +426,15 @@
             this.btnRateData.UseVisualStyleBackColor = true;
             this.btnRateData.Click += new System.EventHandler(this.btnRateData_Click);
             // 
+            // legendPanel
+            // 
+            this.legendPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.legendPanel.Location = new System.Drawing.Point(71, 294);
+            this.legendPanel.Name = "legendPanel";
+            this.legendPanel.Size = new System.Drawing.Size(250, 300);
+            this.legendPanel.TabIndex = 358;
+            this.legendPanel.Visible = false;
+            // 
             // frmMenuRateMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -493,5 +504,6 @@
         private System.Windows.Forms.CheckBox ckZones;
         private System.Windows.Forms.Button btnPNG;
         private System.Windows.Forms.Button btnRateData;
+        private System.Windows.Forms.Panel legendPanel;
     }
 }

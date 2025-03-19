@@ -334,6 +334,7 @@
             this.Name = "frmRates";
             this.ShowInTaskbar = false;
             this.Text = "Rate Data";
+            this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmRates_FormClosed);
             this.Load += new System.EventHandler(this.frmRates_Load);
             this.gbMap.ResumeLayout(false);
