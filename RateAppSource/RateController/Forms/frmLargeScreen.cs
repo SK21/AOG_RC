@@ -297,7 +297,7 @@ namespace RateController
         private void lbQuantityAmount_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("frmResetQuantity");
+            Form fs = Props.IsFormOpen("frmResetQuantity");
 
             if (fs != null)
             {
@@ -546,16 +546,12 @@ namespace RateController
             UpdateForm();
 
             //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("frmMenu");
+            Form fs = Props.IsFormOpen("frmMenu");
 
             if (fs == null)
             {
                 Form frm = new frmMenu(mf, Prd.ID, OpenLast);
                 frm.Show();
-            }
-            else
-            {
-                fs.Focus();
             }
         }
 

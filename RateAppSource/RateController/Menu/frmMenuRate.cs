@@ -85,7 +85,7 @@ namespace RateController.Menu
         private void btnResetTank_Click(object sender, EventArgs e)
         {
             //check if window already exists
-            Form fs = mf.Tls.IsFormOpen("frmResetQuantity");
+            Form fs = Props.IsFormOpen("frmResetQuantity");
 
             if (fs != null)
             {

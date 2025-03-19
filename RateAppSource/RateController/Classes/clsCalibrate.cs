@@ -208,7 +208,7 @@ namespace RateController
         {
             if (cEdited && cEnabled)
             {
-                if (mf.Tls.ReadOnly)
+                if (Props.ReadOnly)
                 {
                     mf.Tls.ShowMessage("File is read only.", "Help", 5000, false, false, true);
                 }

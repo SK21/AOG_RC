@@ -48,7 +48,7 @@ namespace RateController.Classes
             get { return cPropsFileName; }
             set
             {
-                string FileName = value.Split('.')[0] + "_Props.rcs";
+                string FileName = value;
                 if (!File.Exists(value)) File.WriteAllText(FileName, ""); // Create empty property file
                 cPropsFileName = FileName;
                 Load(cProps, cPropsFileName);
@@ -66,6 +66,10 @@ namespace RateController.Classes
                 cActivityFileName = Path.Combine(FolderPath, "Activity Log.txt");
                 if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
             }
+        }
+        public static void OpenFile(string NewFile, bool IsNew=false)
+        {
+            string PathName = Path.GetDirectoryName(NewFile);
         }
 
         #region MainProperties
@@ -166,16 +170,12 @@ namespace RateController.Classes
             }
         }
 
-        public static bool FormIsClosed(string Name, bool SetFocus = true)
+
+        public static Form IsFormOpen(string Name, bool SetFocus=true)
         {
-            bool Result = true;
             Form frm = Application.OpenForms[Name];
-            if (frm != null)
-            {
-                Result = false;
-                if (SetFocus) frm.Focus();
-            }
-            return Result;
+            if (frm != null && SetFocus) frm.Focus();
+            return frm;
         }
 
         public static string GetProp(string key)

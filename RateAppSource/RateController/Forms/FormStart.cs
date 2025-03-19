@@ -338,18 +338,14 @@ namespace RateController
 
         public void DisplayPressure()
         {
-            Form fs = Tls.IsFormOpen("frmPressureDisplay");
+            Form fs = Props.IsFormOpen("frmPressureDisplay");
 
             if (cShowPressure)
             {
                 if (fs == null)
                 {
-                    Form frm = new frmPressureDisplay(this);
-                    frm.Show();
-                }
-                else
-                {
-                    fs.Focus();
+                    SwitchesForm = new frmSwitches(this);
+                    SwitchesForm.Show();
                 }
             }
             else
@@ -398,7 +394,7 @@ namespace RateController
 
         public void DisplaySwitches()
         {
-            Form fs = Tls.IsFormOpen("frmSwitches");
+            Form fs = Props.IsFormOpen("frmSwitches");
 
             if (cShowSwitches)
             {
@@ -406,10 +402,6 @@ namespace RateController
                 {
                     SwitchesForm = new frmSwitches(this);
                     SwitchesForm.Show();
-                }
-                else
-                {
-                    fs.Focus();
                 }
             }
             else
@@ -499,7 +491,7 @@ namespace RateController
             }
 
             // check loaded forms, reload to update
-            Form Swt = Tls.IsFormOpen("frmSwitches");
+            Form Swt = Props.IsFormOpen("frmSwitches");
             if (Swt != null)
             {
                 Swt.Close();
@@ -557,7 +549,7 @@ namespace RateController
                 if (saveFileDialog1.FileName != "")
                 {
                     Tls.SaveFile(saveFileDialog1.FileName);
-                    Tls.ReadOnly = false;
+                    Props.ReadOnly = false;
                     LoadSettings();
                 }
             }
@@ -592,7 +584,7 @@ namespace RateController
         {
             try
             {
-                Form fs = Tls.IsFormOpen("frmLargeScreen");
+                Form fs = Props.IsFormOpen("frmLargeScreen");
                 if (cUseLargeScreen)
                 {
                     if (SingleProduct)
@@ -1319,7 +1311,7 @@ namespace RateController
         private void ShowSettings(bool OpenLast = false)
         {
             //check if window already exists
-            Form fs = Tls.IsFormOpen("frmMenu");
+            Form fs = Props.IsFormOpen("frmMenu");
 
             if (fs == null)
             {
@@ -1328,10 +1320,6 @@ namespace RateController
                 Form frm = new frmMenu(this, Prd, OpenLast);
                 frm.Show();
             }
-            else
-            {
-                fs.Focus();
-            }
         }
 
         private void TankRemain_Click(object sender, EventArgs e)
@@ -1339,7 +1327,7 @@ namespace RateController
             if (MouseButtonClicked == MouseButtons.Left)
             {
                 //check if window already exists
-                Form fs = Tls.IsFormOpen("frmResetQuantity");
+                Form fs = Props.IsFormOpen("frmResetQuantity");
 
                 if (fs != null)
                 {

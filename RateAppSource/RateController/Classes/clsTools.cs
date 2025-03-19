@@ -16,9 +16,7 @@ namespace RateController
     {
         private string cAppName = "RateController";
         private string cAppVersion = "4.0.0-beta.9";
-        private bool cIsReadOnly = false;
         private MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
-        private string cPropertiesApp;
         private string cPropertiesFile;
         private string cSettingsDir;
         private bool cUseVariableRate = false;
@@ -26,9 +24,6 @@ namespace RateController
         private string lastMessage;
         private DateTime lastMessageTime;
         private FormStart mf;
-        private Form[] OpenForms = new Form[30];    // make sure to allocate enough
-        private SortedDictionary<string, string> PropsApp = new SortedDictionary<string, string>();
-        private SortedDictionary<string, string> PropsDictionary = new SortedDictionary<string, string>();
 
         #region ScreenBitMap
 
@@ -81,16 +76,6 @@ namespace RateController
 
         public DataCollector RateCollector
         { get { return cRateCollector; } }
-
-        public bool ReadOnly
-        {
-            get { return cIsReadOnly; }
-            set
-            {
-                cIsReadOnly = value;
-                Props.SetProp("ReadOnly", cIsReadOnly.ToString(), true);
-            }
-        }
 
         public bool VariableRateEnabled
         {
@@ -241,20 +226,6 @@ namespace RateController
             return formType != null;
         }
 
-        public Form IsFormOpen(string Name)
-        {
-            Form Result = null;
-            for (int i = 0; i < OpenForms.Length; i++)
-            {
-                if (OpenForms[i] != null && OpenForms[i].Name == Name)
-                {
-                    Result = OpenForms[i];
-                    break;
-                }
-            }
-            return Result;
-        }
-
         public void NewRateCollector(string FileName, bool Overwrite = false)
         {
             cRateCollector = new DataCollector(FileName, Overwrite);
@@ -285,21 +256,9 @@ namespace RateController
                     }
                 }
                 Props.FilePath = cPropertiesFile;
-                LoadFilesData(cPropertiesFile);
                 Properties.Settings.Default.FileName = FileName;
                 Properties.Settings.Default.Save();
-                if (bool.TryParse(Props.GetProp("ReadOnly"), out bool RO))
-                {
-                    cIsReadOnly = RO;
-                }
-                else
-                {
-                    cIsReadOnly = false;
-                }
 
-                cPropertiesApp = Properties.Settings.Default.FilesDir + "\\AppData.txt";
-                if (!File.Exists(cPropertiesApp)) File.Create(cPropertiesApp).Dispose();
-                LoadAppData(cPropertiesApp);
                 if (bool.TryParse(Props.GetProp("UseVariableRate_" + Properties.Settings.Default.FileName), out bool vr))
                 {
                     cUseVariableRate = vr;
@@ -381,7 +340,6 @@ namespace RateController
                 cPropertiesFile = Properties.Settings.Default.FilesDir + "\\" + FileName;
                 if (!File.Exists(cPropertiesFile)) File.Create(cPropertiesFile).Dispose();
 
-                SaveProperties();
                 Properties.Settings.Default.FileName = FileName;
                 Properties.Settings.Default.Save();
             }
@@ -586,122 +544,6 @@ namespace RateController
 
                 string FilesDir = Properties.Settings.Default.FilesDir;
                 if (!Directory.Exists(FilesDir)) Properties.Settings.Default.FilesDir = cSettingsDir;
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        private void FormAdd(Form frm)
-        {
-            bool Found = false;
-            for (int i = 0; i < OpenForms.Length; i++)
-            {
-                if (OpenForms[i] != null && OpenForms[i].Name == frm.Name)
-                {
-                    Found = true;
-                    break;
-                }
-            }
-            if (!Found)
-            {
-                for (int i = 0; i < OpenForms.Length; i++)
-                {
-                    if (OpenForms[i] == null)
-                    {
-                        OpenForms[i] = frm;
-                        break;
-                    }
-                }
-            }
-        }
-
-        private void FormRemove(Form frm)
-        {
-            for (int i = 0; i < OpenForms.Length; i++)
-            {
-                if (OpenForms[i] != null && OpenForms[i].Name == frm.Name)
-                {
-                    OpenForms[i] = null;
-                    break;
-                }
-            }
-        }
-
-        private void LoadAppData(string path)
-        {
-            // property:  key=value  ex: "LastFile=Main.mdb"
-            try
-            {
-                PropsApp.Clear();
-                string[] lines = System.IO.File.ReadAllLines(path);
-                foreach (string line in lines)
-                {
-                    if (line.Contains("=") && !String.IsNullOrEmpty(line.Split('=')[0]) && !String.IsNullOrEmpty(line.Split('=')[1]))
-                    {
-                        string[] splitText = line.Split('=');
-                        PropsApp.Add(splitText[0], splitText[1]);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Tools: LoadProperties: " + ex.Message);
-            }
-        }
-
-        private void LoadFilesData(string path)
-        {
-            // property:  key=value  ex: "LastFile=Main.mdb"
-            try
-            {
-                PropsDictionary.Clear();
-                string[] lines = System.IO.File.ReadAllLines(path);
-                foreach (string line in lines)
-                {
-                    if (line.Contains("=") && !String.IsNullOrEmpty(line.Split('=')[0]) && !String.IsNullOrEmpty(line.Split('=')[1]))
-                    {
-                        string[] splitText = line.Split('=');
-                        PropsDictionary.Add(splitText[0], splitText[1]);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Tools: LoadProperties: " + ex.Message);
-            }
-        }
-
-        private void SaveAppProperties()
-        {
-            try
-            {
-                string[] NewLines = new string[PropsApp.Count];
-                int i = -1;
-                foreach (var Pair in PropsApp)
-                {
-                    i++;
-                    NewLines[i] = Pair.Key.ToString() + "=" + Pair.Value.ToString();
-                }
-                if (i > -1) File.WriteAllLines(cPropertiesApp, NewLines);
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        private void SaveProperties()
-        {
-            try
-            {
-                string[] NewLines = new string[PropsDictionary.Count];
-                int i = -1;
-                foreach (var Pair in PropsDictionary)
-                {
-                    i++;
-                    NewLines[i] = Pair.Key.ToString() + "=" + Pair.Value.ToString();
-                }
-                if (i > -1) File.WriteAllLines(cPropertiesFile, NewLines);
             }
             catch (Exception)
             {

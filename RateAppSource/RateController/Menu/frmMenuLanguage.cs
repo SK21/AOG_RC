@@ -55,7 +55,7 @@ namespace RateController.Menu
                     Settings.Default.UserLanguageChange = true;
                     Properties.Settings.Default.Save();
 
-                    Form fs = mf.Tls.IsFormOpen("frmLargeScreen");
+                    Form fs = Props.IsFormOpen("frmLargeScreen");
                     if (fs != null)
                     {
                         mf.Restart = true;

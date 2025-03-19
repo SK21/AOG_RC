@@ -209,7 +209,7 @@ namespace RateController.Menu
 
         private void butGraph_Click(object sender, EventArgs e)
         {
-            Form fs = mf.Tls.IsFormOpen("frmMenuRateGraph");
+            Form fs = Props.IsFormOpen("frmMenuRateGraph");
 
             if (fs == null)
             {

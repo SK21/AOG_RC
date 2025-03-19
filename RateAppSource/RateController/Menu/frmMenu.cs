@@ -165,7 +165,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuPressure";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -173,27 +173,19 @@ namespace RateController
                 frm.Owner = this;
                 frm.Show();
             }
-            else
-            {
-                fs.Focus();
-            }
         }
 
         private void butCalibrate_Click(object sender, EventArgs e)
         {
             cLastScreen = "frmMenuCalibrate";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
                 Form frm = new frmMenuCalibrate(mf, this);
                 frm.Owner = this;
                 frm.Show();
-            }
-            else
-            {
-                fs.Focus();
             }
         }
 
@@ -206,7 +198,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuColor";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -214,27 +206,19 @@ namespace RateController
                 frm.Owner = this;
                 frm.Show();
             }
-            else
-            {
-                fs.Focus();
-            }
         }
 
         private void butConfig_Click(object sender, EventArgs e)
         {
             cLastScreen = "frmMenuConfig";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
                 Form frm = new frmMenuConfig(mf, this);
                 frm.Owner = this;
                 frm.Show();
-            }
-            else
-            {
-                fs.Focus();
             }
         }
 
@@ -244,17 +228,13 @@ namespace RateController
             {
                 cLastScreen = "frmMenuControl";
                 HighlightButton(cLastScreen);
-                Form fs = mf.Tls.IsFormOpen(cLastScreen);
+                Form fs =Props.IsFormOpen(cLastScreen);
 
                 if (fs == null)
                 {
                     Form frm = new frmMenuControl(mf, this);
                     frm.Owner = this;
                     frm.Show();
-                }
-                else
-                {
-                    fs.Focus();
                 }
             }
         }
@@ -263,7 +243,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuData";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -271,27 +251,19 @@ namespace RateController
                 frm.Owner = this;
                 frm.Show();
             }
-            else
-            {
-                fs.Focus();
-            }
         }
 
         private void butDisplay_Click(object sender, EventArgs e)
         {
             cLastScreen = "frmMenuDisplay";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
                 Form frm = new frmMenuDisplay(mf, this);
                 frm.Owner = this;
                 frm.Show();
-            }
-            else
-            {
-                fs.Focus();
             }
         }
 
@@ -345,7 +317,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuHelp";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -353,27 +325,19 @@ namespace RateController
                 frm.Owner = this;
                 frm.Show();
             }
-            else
-            {
-                fs.Focus();
-            }
         }
 
         private void butLanguage_Click(object sender, EventArgs e)
         {
             cLastScreen = "frmMenuLanguage";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
                 Form frm = new frmMenuLanguage(mf, this);
                 frm.Owner = this;
                 frm.Show();
-            }
-            else
-            {
-                fs.Focus();
             }
         }
 
@@ -445,7 +409,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuRateMap";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -453,17 +417,13 @@ namespace RateController
                 frm.Owner = this;
                 frm.Show();
             }
-            else
-            {
-                fs.Focus();
-            }
         }
 
         private void butMode_Click(object sender, EventArgs e)
         {
             cLastScreen = "frmMenuMode";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -550,7 +510,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuMonitoring";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -569,7 +529,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuNetwork";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -650,7 +610,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuPins";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -673,7 +633,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuPrimed";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -762,7 +722,7 @@ namespace RateController
             {
                 cLastScreen = "frmMenuRate";
                 HighlightButton(cLastScreen);
-                Form fs = mf.Tls.IsFormOpen(cLastScreen);
+                Form fs = Props.IsFormOpen(cLastScreen);
 
                 if (fs == null)
                 {
@@ -781,7 +741,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuRelayPins";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -799,7 +759,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuRelays";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -823,7 +783,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuSections";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -841,7 +801,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuSettings";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -859,7 +819,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuSwitches";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -893,7 +853,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuValves";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
@@ -911,7 +871,7 @@ namespace RateController
         {
             cLastScreen = "frmMenuWifi";
             HighlightButton(cLastScreen);
-            Form fs = mf.Tls.IsFormOpen(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {

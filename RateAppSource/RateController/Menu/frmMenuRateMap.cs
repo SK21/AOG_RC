@@ -105,7 +105,7 @@ namespace RateController.Menu
 
         private void btnRateData_Click(object sender, EventArgs e)
         {
-            if (Props.FormIsClosed("frmRates"))
+            if (Props.IsFormOpen("frmRates") == null)
             {
                 var frm = new frmRates();
                 frm.SetManager(mf.Tls.Manager);
