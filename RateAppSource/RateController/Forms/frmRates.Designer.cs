@@ -68,12 +68,14 @@
             // rbApplied
             // 
             this.rbApplied.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbApplied.Checked = true;
             this.rbApplied.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbApplied.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbApplied.Location = new System.Drawing.Point(6, 47);
             this.rbApplied.Name = "rbApplied";
             this.rbApplied.Size = new System.Drawing.Size(89, 64);
             this.rbApplied.TabIndex = 358;
+            this.rbApplied.TabStop = true;
             this.rbApplied.Text = "Applied";
             this.rbApplied.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbApplied.UseVisualStyleBackColor = true;
@@ -120,12 +122,14 @@
             // rbProductA
             // 
             this.rbProductA.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbProductA.Checked = true;
             this.rbProductA.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbProductA.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbProductA.Location = new System.Drawing.Point(17, 38);
             this.rbProductA.Name = "rbProductA";
             this.rbProductA.Size = new System.Drawing.Size(66, 40);
             this.rbProductA.TabIndex = 363;
+            this.rbProductA.TabStop = true;
             this.rbProductA.Text = "A";
             this.rbProductA.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbProductA.UseVisualStyleBackColor = true;
@@ -158,18 +162,22 @@
             // 
             this.HSrefresh.LargeChange = 1;
             this.HSrefresh.Location = new System.Drawing.Point(265, 144);
+            this.HSrefresh.Maximum = 600;
+            this.HSrefresh.Minimum = 15;
             this.HSrefresh.Name = "HSrefresh";
             this.HSrefresh.Size = new System.Drawing.Size(239, 45);
             this.HSrefresh.TabIndex = 375;
+            this.HSrefresh.Value = 15;
             // 
             // HSresolution
             // 
             this.HSresolution.LargeChange = 1;
             this.HSresolution.Location = new System.Drawing.Point(263, 204);
+            this.HSresolution.Minimum = 1;
             this.HSresolution.Name = "HSresolution";
             this.HSresolution.Size = new System.Drawing.Size(241, 45);
             this.HSresolution.TabIndex = 374;
-            this.HSresolution.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HSlow_Scroll);
+            this.HSresolution.Value = 100;
             // 
             // lbResolution
             // 
@@ -190,7 +198,6 @@
             this.lbRefresh.TabIndex = 372;
             this.lbRefresh.Text = "100";
             this.lbRefresh.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lbRefresh.Click += new System.EventHandler(this.lbHigh_Click);
             // 
             // lbResolutionDescription
             // 

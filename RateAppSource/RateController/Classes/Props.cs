@@ -7,31 +7,37 @@ using System.Windows.Forms;
 
 namespace RateController.Classes
 {
+    public enum RateType
+    {
+        Applied,
+        Target
+    }
+
     public static class Props
     {
-        private static string cActivityFileName;
+        private static string cActivityFileName = "";
         private static string cErrorsFileName = "";
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
-        private static string cFormPropsName = "";
+        private static string cFormPropsFileName = "";
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
-        private static string cPropsName;
+        private static string cPropsFileName = "";
         private static bool cReadOnly = false;
 
         public static string FilePath
         {
-            get { return cPropsName; }
+            get { return cPropsFileName; }
             set
             {
                 if (!File.Exists(value)) File.WriteAllText(value, ""); // Create empty property file
-                cPropsName = value;
-                Load(cProps, cPropsName);
+                cPropsFileName = value;
+                Load(cProps, cPropsFileName);
 
-                if (bool.TryParse(Get("ReadOnly"), out bool ro)) cReadOnly = ro;
-                string FolderPath = Path.GetDirectoryName(cPropsName) ?? Directory.GetCurrentDirectory();
+                if (bool.TryParse(GetProp("ReadOnly"), out bool ro)) cReadOnly = ro;
+                string FolderPath = Path.GetDirectoryName(cPropsFileName) ?? Directory.GetCurrentDirectory();
 
-                cFormPropsName = Path.Combine(FolderPath, "FormData.txt");
-                if (!File.Exists(cFormPropsName)) File.WriteAllText(cFormPropsName, "");
-                Load(cFormProps, cFormPropsName);
+                cFormPropsFileName = Path.Combine(FolderPath, "FormData.txt");
+                if (!File.Exists(cFormPropsFileName)) File.WriteAllText(cFormPropsFileName, "");
+                Load(cFormProps, cFormPropsFileName);
 
                 cErrorsFileName = Path.Combine(FolderPath, "Error Log.txt");
                 if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
@@ -41,6 +47,52 @@ namespace RateController.Classes
             }
         }
 
+        #region MainProperties
+
+        public static int RateDisplayProduct
+        {
+            get { return int.TryParse(GetProp("RatesProduct"), out int rs) ? rs : 0; }
+            set { SetProp("RatesProduct", value.ToString()); }
+        }
+
+        public static int RateDisplayRefresh
+        {
+            get { return int.TryParse(GetProp("RateDisplayRefresh"), out int rs) ? rs : 0; }
+            set { SetProp("RateDisplayRefresh", value.ToString()); }
+        }
+
+        public static int RateDisplayResolution
+        {
+            get { return int.TryParse(GetProp("RateDisplayResolution"), out int rs) ? rs : 0; }
+            set { SetProp("RateDisplayResolution", value.ToString()); }
+        }
+
+        public static bool RateDisplayShow
+        {
+            get { return bool.TryParse(GetProp("DisplayRates"), out bool dr) ? dr : false; }
+            set { SetProp("DisplayRates", value.ToString()); }
+        }
+
+        public static RateType RateDisplayType
+        {
+            get { return Enum.TryParse(GetProp("RateDisplayType"), out RateType tp) ? tp : RateType.Applied; }
+            set { SetProp("RateDisplayType", value.ToString()); }
+        }
+
+        public static bool RecordRates
+        {
+            get { return bool.TryParse(GetProp("RecordRates"), out bool rc) ? rc : false; }
+            set { SetProp("RecordRates", value.ToString()); }
+        }
+
+        public static bool UseMetric
+        {
+            get { return bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false; }
+            set { SetProp("UseMetric", value.ToString()); }
+        }
+
+        #endregion MainProperties
+
         public static bool ReadOnly
         {
             get { return cReadOnly; }
@@ -48,7 +100,7 @@ namespace RateController.Classes
             {
                 bool Changed = cReadOnly != value;
                 cReadOnly = value;
-                if (Changed) Save(cProps, cPropsName);
+                if (Changed) Save(cProps, cPropsFileName);
             }
         }
 
@@ -64,7 +116,7 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static string Get(string key)
+        public static string GetProp(string key)
         {
             return cProps.TryGetValue(key, out var value) ? value : string.Empty;
         }
@@ -115,7 +167,7 @@ namespace RateController.Classes
             }
         }
 
-        public static void Set(string key, string value, bool IgnoreReadOnly = false)
+        public static void SetProp(string key, string value, bool IgnoreReadOnly = false)
         {
             try
             {
@@ -124,7 +176,7 @@ namespace RateController.Classes
                     if (!cProps.TryGetValue(key, out var existingValue) || existingValue != value)
                     {
                         cProps[key] = value;
-                        Save(cProps, cPropsName);
+                        Save(cProps, cPropsFileName);
                     }
                 }
             }
@@ -273,7 +325,7 @@ namespace RateController.Classes
                     if (!cFormProps.TryGetValue(key, out var existingValue) || existingValue != value)
                     {
                         cFormProps[key] = value;
-                        Save(cFormProps, cFormPropsName);
+                        Save(cFormProps, cFormPropsFileName);
                     }
                 }
             }

@@ -9,11 +9,6 @@ using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
-    public enum RateType
-    {
-        Applied,
-        Target
-    }
     public class AsAppliedMapLayerCreator
     {
         /// <summary>
