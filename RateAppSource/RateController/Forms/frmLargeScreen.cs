@@ -584,9 +584,9 @@ namespace RateController
         {
             if (mf.UseTransparent != IsTransparent) SetTransparent();
 
-            this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+            this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile) + "]";
 
-            if (mf.Tls.VariableRateEnabled)
+            if (Props.VariableRateEnabled)
             {
                 lbTargetType.Text = "V";
             }

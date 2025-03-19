@@ -983,7 +983,7 @@ namespace RateController
             try
             {
                 string Last = Props.GetProp("LastScreen");
-                if (mf.Tls.IsFormNameValid(Last))
+                if (Props.IsFormNameValid(Last))
                 {
                     Form fs;
                     switch (Last)

@@ -232,7 +232,7 @@ namespace RateController
                         {
                             case RelayTypes.Section:
                                 if ((MasterFound && MasterRelayOn) || !MasterFound
-                                    || (MasterFound && mf.Tls.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
+                                    || (MasterFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
                                 {
                                     // set relay by section
                                     if (Rly.SectionID == -1)
@@ -249,7 +249,7 @@ namespace RateController
 
                             case RelayTypes.Slave:
                                 if ((MasterFound && MasterRelayOn) || !MasterFound
-                                    || (MasterFound && mf.Tls.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
+                                    || (MasterFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
                                 {
                                     // set relay if at lease one section on
                                     Rly.IsON = SectionsOn;
@@ -262,7 +262,7 @@ namespace RateController
 
                             case RelayTypes.Invert_Section:
                                 if ((MasterFound && MasterRelayOn) || !MasterFound
-                                    || (MasterFound && mf.Tls.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
+                                    || (MasterFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
                                 {
                                     // set relay by section
                                     if (Rly.SectionID == -1)

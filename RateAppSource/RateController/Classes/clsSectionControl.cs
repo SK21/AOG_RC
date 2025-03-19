@@ -224,7 +224,7 @@ namespace RateController
                 {
                     if (Sec.Enabled)
                     {
-                        if (mf.Tls.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly)
+                        if (Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly)
                         {
                             Sec.IsON = mf.SwitchBox.SectionSwitchOn(Sec.SwitchID);
                         }
@@ -411,7 +411,7 @@ namespace RateController
                     {
                         for (int i = Zn.Start - 1; i < Zn.End; i++)
                         {
-                            if (mf.Tls.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly)
+                            if (Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly)
                             {
                                 mf.Sections.Item(i).IsON = mf.SwitchBox.SectionSwitchOn(Zn.SwitchID);
                             }

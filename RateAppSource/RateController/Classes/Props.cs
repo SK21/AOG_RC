@@ -1,8 +1,11 @@
-﻿using System;
+﻿using GMap.NET.MapProviders;
+using RateController.Language;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -36,43 +39,28 @@ namespace RateController.Classes
     public static class Props
     {
         private static string cActivityFileName = "";
+        private static string cAppName = "RateController";
+        private static string cAppVersion = "4.0.0-beta.9";
         private static string cErrorsFileName = "";
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
         private static string cFormPropsFileName = "";
+        private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
-        private static string cPropsFileName = "";
         private static bool cReadOnly = false;
-
-        public static string FilePath
-        {
-            get { return cPropsFileName; }
-            set
-            {
-                string FileName = value;
-                if (!File.Exists(value)) File.WriteAllText(FileName, ""); // Create empty property file
-                cPropsFileName = FileName;
-                Load(cProps, cPropsFileName);
-
-                if (bool.TryParse(GetProp("ReadOnly"), out bool ro)) cReadOnly = ro;
-                string FolderPath = Path.GetDirectoryName(cPropsFileName) ?? Directory.GetCurrentDirectory();
-
-                cFormPropsFileName = Path.Combine(FolderPath, "FormData.txt");
-                if (!File.Exists(cFormPropsFileName)) File.WriteAllText(cFormPropsFileName, "");
-                Load(cFormProps, cFormPropsFileName);
-
-                cErrorsFileName = Path.Combine(FolderPath, "Error Log.txt");
-                if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
-
-                cActivityFileName = Path.Combine(FolderPath, "Activity Log.txt");
-                if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
-            }
-        }
-        public static void OpenFile(string NewFile, bool IsNew=false)
-        {
-            string PathName = Path.GetDirectoryName(NewFile);
-        }
+        private static bool cUseVariableRate = false;
+        private static string cVersionDate = "19-Mar-2025";
 
         #region MainProperties
+
+        public static MasterSwitchMode MasterSwitchMode
+        {
+            get { return cMasterSwitchMode; }
+            set
+            {
+                cMasterSwitchMode = value;
+                SetProp("MasterSwitchMode", cMasterSwitchMode.ToString());
+            }
+        }
 
         public static int RateDisplayProduct
         {
@@ -104,6 +92,17 @@ namespace RateController.Classes
             set { SetProp("RateDisplayType", value.ToString()); }
         }
 
+        public static bool ReadOnly
+        {
+            get { return cReadOnly; }
+            set
+            {
+                bool Changed = cReadOnly != value;
+                cReadOnly = value;
+                if (Changed) Save(cProps, Properties.Settings.Default.CurrentFile);
+            }
+        }
+
         public static bool RecordRates
         {
             get { return bool.TryParse(GetProp("RecordRates"), out bool rc) ? rc : false; }
@@ -116,17 +115,93 @@ namespace RateController.Classes
             set { SetProp("UseMetric", value.ToString()); }
         }
 
-        #endregion MainProperties
-
-        public static bool ReadOnly
+        public static bool VariableRateEnabled
         {
-            get { return cReadOnly; }
+            get { return cUseVariableRate; }
             set
             {
-                bool Changed = cReadOnly != value;
-                cReadOnly = value;
-                if (Changed) Save(cProps, cPropsFileName);
+                cUseVariableRate = value;
+                SetProp("UseVariableRate_" + CurrentFileName(), cUseVariableRate.ToString());
             }
+        }
+
+        public static string AppVersion()
+        {
+            return cAppVersion;
+        }
+
+        public static string ControlTypeDescription(ControlTypeEnum CT)
+        {
+            string Result = "";
+            switch (CT)
+            {
+                case ControlTypeEnum.Valve:
+                    Result = Lang.lgStandard;
+                    break;
+
+                case ControlTypeEnum.ComboClose:
+                    Result = Lang.lgComboClose;
+                    break;
+
+                case ControlTypeEnum.Motor:
+                    Result = Lang.lgMotor;
+                    break;
+
+                case ControlTypeEnum.MotorWeights:
+                    Result = Lang.lgMotorWeight;
+                    break;
+
+                case ControlTypeEnum.Fan:
+                    Result = Lang.lgFan;
+                    break;
+
+                case ControlTypeEnum.ComboCloseTimed:
+                    Result = Lang.lgComboTimed;
+                    break;
+            }
+            return Result;
+        }
+
+        public static string CurrentDir()
+        {
+            return Path.GetDirectoryName(Properties.Settings.Default.CurrentFile);
+        }
+
+        public static string CurrentFileName()
+        {
+            return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile);
+        }
+
+        public static string VersionDate()
+        {
+            return cVersionDate;
+        }
+
+        #endregion MainProperties
+
+        public static bool CheckFolders()
+        {
+            bool Result = false;
+            try
+            {
+                // check for default dir and files
+                string cDefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
+                if (!Directory.Exists(cDefaultDir)) Directory.CreateDirectory(cDefaultDir);
+                if (!File.Exists(cDefaultDir + "\\Example.rcs")) File.WriteAllBytes(cDefaultDir + "\\Example.rcs", Properties.Resources.Example);
+                if (!File.Exists(cDefaultDir + "\\Default.rcs")) File.WriteAllBytes(cDefaultDir + "\\Default.rcs", Properties.Resources.Default);
+
+                // check user file
+                if (!File.Exists(Properties.Settings.Default.CurrentFile))
+                {
+                    Properties.Settings.Default.CurrentFile = cDefaultDir + "\\Default.rcs";
+                    Properties.Settings.Default.Save();
+                }
+                Result = true;
+            }
+            catch (Exception)
+            {
+            }
+            return Result;
         }
 
         public static void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
@@ -170,17 +245,26 @@ namespace RateController.Classes
             }
         }
 
+        public static string GetProp(string key)
+        {
+            return cProps.TryGetValue(key, out var value) ? value : string.Empty;
+        }
 
-        public static Form IsFormOpen(string Name, bool SetFocus=true)
+        public static bool IsFormNameValid(string formName)
+        {
+            // Get the current assembly
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            // Check if a type with the given name exists and inherits from Form
+            var formType = assembly.GetTypes().FirstOrDefault(t => t.Name == formName && t.IsSubclassOf(typeof(Form)));
+            return formType != null;
+        }
+
+        public static Form IsFormOpen(string Name, bool SetFocus = true)
         {
             Form frm = Application.OpenForms[Name];
             if (frm != null && SetFocus) frm.Focus();
             return frm;
-        }
-
-        public static string GetProp(string key)
-        {
-            return cProps.TryGetValue(key, out var value) ? value : string.Empty;
         }
 
         public static void LoadFormLocation(Form frm, string Instance = "")
@@ -208,6 +292,84 @@ namespace RateController.Classes
             {
                 WriteErrorLog("Props/LoadFormLocation: " + ex.Message);
             }
+        }
+
+        public static void LoadProperties()
+        {
+            cReadOnly = bool.TryParse(GetProp("ReadOnly"), out bool rd) ? rd : false;
+            cUseVariableRate = bool.TryParse(GetProp("UseVariableRate_" + Props.CurrentDir()), out bool vr) ? vr : false;
+            cMasterSwitchMode = Enum.TryParse(GetProp("MasterSwitchMode"), out MasterSwitchMode msm) ? msm : MasterSwitchMode.ControlAll;
+        }
+
+        public static bool OpenFile(string FileName, bool IsNew = false)
+        {
+            bool Result = false;
+            try
+            {
+                bool FileFound = false;
+
+                if (IsNew) File.WriteAllText(FileName, ""); // Create empty property file
+
+                if (File.Exists(FileName))
+                {
+                    Properties.Settings.Default.CurrentFile = FileName;
+                    Properties.Settings.Default.Save();
+                    FileFound = true;
+                }
+
+                if (!FileFound) CheckFolders();
+                Load(cProps, Properties.Settings.Default.CurrentFile);
+                string CurrentDir = Path.GetDirectoryName(Properties.Settings.Default.CurrentFile);
+
+                cFormPropsFileName = Path.Combine(CurrentDir, "FormData.txt");
+                if (!File.Exists(cFormPropsFileName)) File.WriteAllText(cFormPropsFileName, "");
+                Load(cFormProps, cFormPropsFileName);
+
+                cErrorsFileName = Path.Combine(CurrentDir, "Error Log.txt");
+                if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
+
+                cActivityFileName = Path.Combine(CurrentDir, "Activity Log.txt");
+                if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
+
+                LoadProperties();
+                Result = true;
+            }
+            catch (Exception)
+            {
+            }
+            return Result;
+        }
+
+        public static bool SaveAs(string FileName, bool OverWrite = false)
+        {
+            bool Result = false;
+            if (!File.Exists(FileName) || OverWrite)
+            {
+                File.WriteAllText(FileName, ""); // Create empty property file
+
+                if (File.Exists(FileName))
+                {
+                    Properties.Settings.Default.CurrentFile = FileName;
+                    Properties.Settings.Default.Save();
+
+                    string CurrentDir = Path.GetDirectoryName(Properties.Settings.Default.CurrentFile);
+
+                    cFormPropsFileName = Path.Combine(CurrentDir, "FormData.txt");
+                    if (!File.Exists(cFormPropsFileName)) File.WriteAllText(cFormPropsFileName, "");
+                    Load(cFormProps, cFormPropsFileName);
+
+                    cErrorsFileName = Path.Combine(CurrentDir, "Error Log.txt");
+                    if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
+
+                    cActivityFileName = Path.Combine(CurrentDir, "Activity Log.txt");
+                    if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
+
+                    Save(cProps, Properties.Settings.Default.CurrentFile);
+                    Save(cFormProps, cFormPropsFileName);
+                    Result = true;
+                }
+            }
+            return Result;
         }
 
         public static void SaveFormLocation(Form frm, string Instance = "")
@@ -238,7 +400,7 @@ namespace RateController.Classes
                     if (!cProps.TryGetValue(key, out var existingValue) || existingValue != value)
                     {
                         cProps[key] = value;
-                        Save(cProps, cPropsFileName);
+                        Save(cProps, Properties.Settings.Default.CurrentFile);
                     }
                 }
             }

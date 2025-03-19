@@ -139,7 +139,7 @@ namespace RateController.Classes
 
         public void SaveCalData()
         {
-            string filePath = Path.Combine(mf.Tls.FilesDir(), "PressureRawData.csv");
+            string filePath = Path.Combine(Props.CurrentDir(), "PressureRawData.csv");
             using (var writer = new StreamWriter(filePath))
             {
                 writer.WriteLine("ID,ModuleID,RawData,Pressure");
@@ -169,7 +169,7 @@ namespace RateController.Classes
             try
             {
                 cRawData.Clear();
-                string filePath = Path.Combine(mf.Tls.FilesDir(), "PressureRawData.csv");
+                string filePath = Path.Combine(Props.CurrentDir(), "PressureRawData.csv");
 
                 if (!File.Exists(filePath))
                 {

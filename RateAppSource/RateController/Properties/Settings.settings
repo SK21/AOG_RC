@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RateController.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="FileName" Type="System.String" Scope="User">
+    <Setting Name="CurrentFile" Type="System.String" Scope="User">
       <Value Profile="(Default)">Default.rcs</Value>
     </Setting>
     <Setting Name="setF_culture" Type="System.String" Scope="User">
@@ -10,9 +10,6 @@
     </Setting>
     <Setting Name="Transparent" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="FilesDir" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="UseLargeScreen" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

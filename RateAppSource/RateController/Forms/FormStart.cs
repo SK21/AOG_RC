@@ -108,6 +108,9 @@ namespace RateController
 
             #endregion // language
 
+            Props.CheckFolders();
+            Props.OpenFile(Properties.Settings.Default.CurrentFile);
+
             Tls = new clsTools(this);
             Tls.StartMapManager();
 
@@ -505,13 +508,13 @@ namespace RateController
 
         public void NewFile()
         {
-            saveFileDialog1.InitialDirectory = Tls.FilesDir();
+            saveFileDialog1.InitialDirectory = Props.CurrentDir();
             saveFileDialog1.Title = "New File";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
                 {
-                    Tls.OpenFile(saveFileDialog1.FileName, true);
+                    Props.OpenFile(saveFileDialog1.FileName,true); 
                     LoadSettings();
                 }
             }
@@ -521,10 +524,10 @@ namespace RateController
         {
             try
             {
-                openFileDialog1.InitialDirectory = Tls.FilesDir();
+                openFileDialog1.InitialDirectory = Props.CurrentDir();
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    Tls.PropertiesFile = openFileDialog1.FileName;
+                    Props.OpenFile(openFileDialog1.FileName);
                     LoadSettings();
                 }
             }
@@ -542,13 +545,13 @@ namespace RateController
 
         public void SaveFileAs()
         {
-            saveFileDialog1.InitialDirectory = Tls.FilesDir();
+            saveFileDialog1.InitialDirectory = Props.CurrentDir();
             saveFileDialog1.Title = "Save As";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
                 {
-                    Tls.SaveFile(saveFileDialog1.FileName);
+                    Props.SaveAs(saveFileDialog1.FileName);
                     Props.ReadOnly = false;
                     LoadSettings();
                 }
@@ -658,7 +661,7 @@ namespace RateController
         {
             try
             {
-                this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName) + "]";
+                this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile) + "]";
 
                 if (cSimMode == SimType.Sim_Speed || SectionControl.PrimeOn)
                 {
@@ -698,7 +701,7 @@ namespace RateController
                     // product pages
                     clsProduct Prd = Products.Item(CurrentPage - 1);
 
-                    if (Tls.VariableRateEnabled)
+                    if (Props.VariableRateEnabled)
                     {
                         lbTarget.Text = "VR Target";
                     }
@@ -1210,7 +1213,7 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                if (!Tls.VariableRateEnabled)
+                if (!Props.VariableRateEnabled)
                 {
                     if (Products.Item(CurrentPage - 1).UseAltRate)
                     {

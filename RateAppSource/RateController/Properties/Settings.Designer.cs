@@ -26,12 +26,12 @@ namespace RateController.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Default.rcs")]
-        public string FileName {
+        public string CurrentFile {
             get {
-                return ((string)(this["FileName"]));
+                return ((string)(this["CurrentFile"]));
             }
             set {
-                this["FileName"] = value;
+                this["CurrentFile"] = value;
             }
         }
         
@@ -56,18 +56,6 @@ namespace RateController.Properties {
             }
             set {
                 this["Transparent"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FilesDir {
-            get {
-                return ((string)(this["FilesDir"]));
-            }
-            set {
-                this["FilesDir"] = value;
             }
         }
         

@@ -156,7 +156,7 @@ namespace RateController.Menu
         {
             if (!Initializing)
             {
-                mf.Tls.VariableRateEnabled = ckEnable.Checked;
+                Props.VariableRateEnabled = ckEnable.Checked;
                 // to do: ask user to record data if record is off
             }
         }
@@ -536,7 +536,7 @@ namespace RateController.Menu
             GMapControl gmap = mf.Tls.Manager.gmapObject;
             VSzoom.Value = (int)((gmap.Zoom - gmap.MinZoom) * 100) / (gmap.MaxZoom - gmap.MinZoom);
 
-            ckEnable.Checked = mf.Tls.VariableRateEnabled;
+            ckEnable.Checked = Props.VariableRateEnabled;
             ckMap.Checked = mf.Tls.Manager.ShowTiles;
             ckZones.Checked = mf.Tls.Manager.ShowZoneOverlay;
             gbZone.Enabled = ckZones.Checked;

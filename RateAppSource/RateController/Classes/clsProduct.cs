@@ -913,7 +913,7 @@ namespace RateController
         public double TargetRate()
         {
             double Result = 0;
-            if (!CalUseBaseRate && mf.Tls.VariableRateEnabled)
+            if (!CalUseBaseRate && Props.VariableRateEnabled)
             {
                 Result = mf.Tls.Manager.GetRate(ID);
             }

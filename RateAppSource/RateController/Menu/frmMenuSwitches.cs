@@ -39,15 +39,15 @@ namespace RateController.Menu
 
                 if (rbMasterAll.Checked)
                 {
-                    mf.Tls.MasterSwitchMode = MasterSwitchMode.ControlAll;
+                    Props.MasterSwitchMode = MasterSwitchMode.ControlAll;
                 }
                 else if (rbMasterRelayOnly.Checked)
                 {
-                    mf.Tls.MasterSwitchMode = MasterSwitchMode.ControlMasterRelayOnly;
+                    Props.MasterSwitchMode = MasterSwitchMode.ControlMasterRelayOnly;
                 }
                 else if (rbMasterOverride.Checked)
                 {
-                    mf.Tls.MasterSwitchMode = MasterSwitchMode.Override;
+                    Props.MasterSwitchMode = MasterSwitchMode.Override;
                 }
 
                 SetButtons(false);
@@ -147,7 +147,7 @@ namespace RateController.Menu
             ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
             rbSections.Checked = mf.SwitchBox.AutoRateDisabled;
 
-            switch (mf.Tls.MasterSwitchMode)
+            switch (Props.MasterSwitchMode)
             {
                 case MasterSwitchMode.ControlAll:
                     rbMasterAll.Checked = true;

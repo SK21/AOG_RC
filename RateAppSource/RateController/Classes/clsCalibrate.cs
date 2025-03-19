@@ -311,7 +311,7 @@ namespace RateController
             }
 
             cDescriptionLabel.Text = (cID + 1).ToString() + ". " + cProduct.ProductName
-                + "  - " + mf.Tls.ControlTypeDescription(cProduct.ControlType);
+                + "  - " + Props.ControlTypeDescription(cProduct.ControlType);
 
             Initializing = false;
         }

@@ -94,8 +94,8 @@ namespace RateController.Menu
             PositionForm();
             timer1.Enabled = true;
             lbIP.Text = mf.UDPmodules.SubNet;
-            lbAppVersion.Text = mf.Tls.AppVersion();
-            lbDate.Text = mf.Tls.VersionDate();
+            lbAppVersion.Text = Props.AppVersion();
+            lbDate.Text = Props.VersionDate();
 
             lbModID.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
             lbInoID.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
@@ -202,7 +202,7 @@ namespace RateController.Menu
             }
 
             lbIP.Text = mf.UDPmodules.SubNet;
-            lbFile.Text = Path.GetFileNameWithoutExtension(Properties.Settings.Default.FileName);
+            lbFile.Text = Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile);
 
             if (mf.SwitchBox.RealConnected())
             {

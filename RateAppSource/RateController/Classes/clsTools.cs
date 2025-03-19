@@ -14,13 +14,6 @@ namespace RateController
 {
     public class clsTools
     {
-        private string cAppName = "RateController";
-        private string cAppVersion = "4.0.0-beta.9";
-        private MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
-        private string cPropertiesFile;
-        private string cSettingsDir;
-        private bool cUseVariableRate = false;
-        private string cVersionDate = "13-Mar-2025";
         private string lastMessage;
         private DateTime lastMessageTime;
         private FormStart mf;
@@ -38,8 +31,6 @@ namespace RateController
         public clsTools(FormStart CallingForm)
         {
             mf = CallingForm;
-            CheckFolders();
-            OpenFile(Properties.Settings.Default.FileName);
             CreateColorBitmap();
 
             lastMessage = string.Empty;
@@ -49,48 +40,8 @@ namespace RateController
         public MapManager Manager
         { get { return cManager; } }
 
-        public MasterSwitchMode MasterSwitchMode
-        {
-            get { return cMasterSwitchMode; }
-            set
-            {
-                cMasterSwitchMode = value;
-                Props.SetProp("MasterSwitchMode", cMasterSwitchMode.ToString());
-            }
-        }
-
-        public string PropertiesFile
-        {
-            get
-            {
-                return cPropertiesFile;
-            }
-            set
-            {
-                if (File.Exists(value))
-                {
-                    OpenFile(value);
-                }
-            }
-        }
-
         public DataCollector RateCollector
         { get { return cRateCollector; } }
-
-        public bool VariableRateEnabled
-        {
-            get { return cUseVariableRate; }
-            set
-            {
-                cUseVariableRate = value;
-                Props.SetProp("UseVariableRate_" + Properties.Settings.Default.FileName, cUseVariableRate.ToString());
-            }
-        }
-
-        public string AppVersion()
-        {
-            return cAppVersion;
-        }
 
         public byte BitClear(byte b, int pos)
         {
@@ -112,38 +63,6 @@ namespace RateController
         public byte BuildModSenID(byte ArdID, byte SenID)
         {
             return (byte)((ArdID << 4) | (SenID & 0b00001111));
-        }
-
-        public string ControlTypeDescription(ControlTypeEnum CT)
-        {
-            string Result = "";
-            switch (CT)
-            {
-                case ControlTypeEnum.Valve:
-                    Result = Lang.lgStandard;
-                    break;
-
-                case ControlTypeEnum.ComboClose:
-                    Result = Lang.lgComboClose;
-                    break;
-
-                case ControlTypeEnum.Motor:
-                    Result = Lang.lgMotor;
-                    break;
-
-                case ControlTypeEnum.MotorWeights:
-                    Result = Lang.lgMotorWeight;
-                    break;
-
-                case ControlTypeEnum.Fan:
-                    Result = Lang.lgFan;
-                    break;
-
-                case ControlTypeEnum.ComboCloseTimed:
-                    Result = Lang.lgComboTimed;
-                    break;
-            }
-            return Result;
         }
 
         public byte CRC(byte[] Data, int Length, byte Start = 0)
@@ -202,11 +121,6 @@ namespace RateController
             }
         }
 
-        public string FilesDir()
-        {
-            return Properties.Settings.Default.FilesDir;
-        }
-
         public bool GoodCRC(byte[] Data, byte Start = 0)
         {
             bool Result = false;
@@ -216,71 +130,9 @@ namespace RateController
             return Result;
         }
 
-        public bool IsFormNameValid(string formName)
-        {
-            // Get the current assembly
-            Assembly assembly = Assembly.GetExecutingAssembly();
-
-            // Check if a type with the given name exists and inherits from Form
-            var formType = assembly.GetTypes().FirstOrDefault(t => t.Name == formName && t.IsSubclassOf(typeof(Form)));
-            return formType != null;
-        }
-
         public void NewRateCollector(string FileName, bool Overwrite = false)
         {
             cRateCollector = new DataCollector(FileName, Overwrite);
-        }
-
-        public void OpenFile(string NewFile, bool IsNew = false)
-        {
-            try
-            {
-                string PathName = Path.GetDirectoryName(NewFile); // only works if file name present
-                string FileName = Path.GetFileName(NewFile);
-                if (FileName == "") PathName = NewFile;     // no file name present, fix path name
-                if (Directory.Exists(PathName)) Properties.Settings.Default.FilesDir = PathName; // set the new files dir
-
-                cPropertiesFile = Properties.Settings.Default.FilesDir + "\\" + FileName;
-                if (!File.Exists(cPropertiesFile))
-                {
-                    if (IsNew)
-                    {
-                        // create new file
-                        File.Create(cPropertiesFile).Dispose();
-                    }
-                    else
-                    {
-                        // file not found, use default file
-                        cPropertiesFile = Properties.Settings.Default.FilesDir + "\\Default.rcs";
-                        FileName = "Default.RCS";
-                    }
-                }
-                Props.FilePath = cPropertiesFile;
-                Properties.Settings.Default.FileName = FileName;
-                Properties.Settings.Default.Save();
-
-                if (bool.TryParse(Props.GetProp("UseVariableRate_" + Properties.Settings.Default.FileName), out bool vr))
-                {
-                    cUseVariableRate = vr;
-                }
-                else
-                {
-                    cUseVariableRate = false;
-                }
-
-                if (Enum.TryParse(Props.GetProp("MasterSwitchMode"), out MasterSwitchMode msm))
-                {
-                    cMasterSwitchMode = msm;
-                }
-                else
-                {
-                    cMasterSwitchMode = MasterSwitchMode.ControlAll;
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Tools: OpenFile: " + ex.Message);
-            }
         }
 
         public bool OpenTextFile(string FileName)
@@ -288,7 +140,7 @@ namespace RateController
             bool Result = false;
             try
             {
-                string Name = cSettingsDir + "\\" + FileName;
+                string Name = Props.CurrentDir() + "\\" + FileName;
                 if (File.Exists(Name))
                 {
                     Process.Start(new ProcessStartInfo(Name) { UseShellExecute = true });
@@ -325,27 +177,6 @@ namespace RateController
             else
             {
                 return false;
-            }
-        }
-
-        public void SaveFile(string NewFile)
-        {
-            try
-            {
-                string PathName = Path.GetDirectoryName(NewFile); // only works if file name present
-                string FileName = Path.GetFileName(NewFile);
-                if (FileName == "") PathName = NewFile;     // no file name present, fix path name
-                if (Directory.Exists(PathName)) Properties.Settings.Default.FilesDir = PathName; // set the new files dir
-
-                cPropertiesFile = Properties.Settings.Default.FilesDir + "\\" + FileName;
-                if (!File.Exists(cPropertiesFile)) File.Create(cPropertiesFile).Dispose();
-
-                Properties.Settings.Default.FileName = FileName;
-                Properties.Settings.Default.Save();
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("clsTools: SaveFile: " + ex.Message);
             }
         }
 
@@ -448,18 +279,13 @@ namespace RateController
 
         #endregion ScreenBitMapCode
 
-        public string VersionDate()
-        {
-            return cVersionDate;
-        }
-
         public void WriteActivityLog(string Message, bool Newline = false, bool NoDate = false)
         {
             string Line = "";
             string DF;
             try
             {
-                string FileName = cSettingsDir + "\\Activity Log.txt";
+                string FileName = Props.CurrentDir() + "\\Activity Log.txt";
                 TrimFile(FileName);
 
                 if (Newline) Line = "\r\n";
@@ -485,7 +311,7 @@ namespace RateController
         {
             try
             {
-                string FileName = cSettingsDir + "\\Error Log.txt";
+                string FileName = Props.CurrentDir() + "\\Error Log.txt";
                 TrimFile(FileName);
                 File.AppendAllText(FileName, DateTime.Now.ToString("MMM-dd hh:mm:ss") + "  -  " + strErrorText + "\r\n\r\n");
             }
@@ -501,7 +327,7 @@ namespace RateController
             if (Message == null) Message = "";
             try
             {
-                string FileName = cSettingsDir + "\\" + LogName;
+                string FileName = Props.CurrentDir() + "\\" + LogName;
                 TrimFile(FileName);
 
                 if (NewLine) Line = "\r\n";
@@ -523,30 +349,6 @@ namespace RateController
             catch (Exception ex)
             {
                 WriteErrorLog("Tools: WriteLog: " + ex.Message);
-            }
-        }
-
-        private void CheckFolders()
-        {
-            try
-            {
-                // SettingsDir
-                cSettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
-
-                if (!Directory.Exists(cSettingsDir))
-                {
-                    Directory.CreateDirectory(cSettingsDir);
-                    Properties.Settings.Default.FileName = "Default";
-                }
-
-                if (!File.Exists(cSettingsDir + "\\Example.rcs")) File.WriteAllBytes(cSettingsDir + "\\Example.rcs", Properties.Resources.Example);
-                if (!File.Exists(cSettingsDir + "\\Default.rcs")) File.WriteAllBytes(cSettingsDir + "\\Default.rcs", Properties.Resources.Default);
-
-                string FilesDir = Properties.Settings.Default.FilesDir;
-                if (!Directory.Exists(FilesDir)) Properties.Settings.Default.FilesDir = cSettingsDir;
-            }
-            catch (Exception)
-            {
             }
         }
 
