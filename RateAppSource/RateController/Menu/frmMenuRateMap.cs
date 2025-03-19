@@ -539,12 +539,20 @@ namespace RateController.Menu
 
             ckEnable.Checked = mf.Tls.VariableRateEnabled;
             ckMap.Checked = mf.Tls.Manager.ShowTiles;
+            ckZones.Checked = mf.Tls.Manager.ShowZoneOverlay;
+            gbZone.Enabled = ckZones.Checked;
             Initializing = false;
         }
 
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
+        }
+
+        private void ckZones_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) mf.Tls.Manager.ShowZoneOverlay = ckZones.Checked;
+            gbZone.Enabled=ckZones.Checked;
         }
     }
 }

@@ -21,9 +21,11 @@ namespace RateController.Classes
         private RateType AppliedOverlayType = RateType.Applied;
         private string CachePath;
         private bool cEditMode;
+        private Dictionary<string, Color> cLegend;
         private string cMapName = "Unnamed Map";
         private string cRootPath;
         private bool cShowTiles = true;
+        private bool cShowZoneOverlay;
         private PointLatLng cTractorPosition;
         private GMapOverlay currentAppliedOverlay;
         private List<PointLatLng> currentZoneVertices;
@@ -36,7 +38,6 @@ namespace RateController.Classes
         private bool isDragging = false;
         private string LastFile;
         private System.Drawing.Point lastMousePosition;
-        private Dictionary<string, Color> cLegend;
         private List<MapZone> mapZones;
         private FormStart mf;
         private GMapOverlay tempMarkerOverlay;
@@ -50,6 +51,7 @@ namespace RateController.Classes
             CachePath = GetFolder(cRootPath, "MapCache");
 
             if (bool.TryParse(mf.Tls.LoadProperty("ShowTiles"), out bool st)) cShowTiles = st;
+            cShowZoneOverlay = true;
             InitializeMap();
             InitializeMapZones();
             gmap.MouseDown += Gmap_MouseDown;
@@ -77,9 +79,12 @@ namespace RateController.Classes
 
         public PointLatLng GetTractorPosition
         { get { return cTractorPosition; } }
-        public Dictionary<string,Color> Legend { get { return cLegend; } }
+
         public GMapControl gmapObject
         { get { return gmap; } }
+
+        public Dictionary<string, Color> Legend
+        { get { return cLegend; } }
 
         public string MapName
         {
@@ -117,6 +122,33 @@ namespace RateController.Classes
                 }
                 gmap.Refresh();
                 mf.Tls.SaveProperty("ShowTiles", cShowTiles.ToString());
+            }
+        }
+
+        public bool ShowZoneOverlay
+        {
+            get { return cShowZoneOverlay; }
+            set
+            {
+                cShowZoneOverlay = value;
+                mf.Tls.SaveProperty("ShowZoneOverlay", cShowZoneOverlay.ToString());
+                if (cShowZoneOverlay)
+                {
+                    try
+                    {
+                        if (zoneOverlay == null) zoneOverlay = new GMapOverlay("mapzones");
+                        gmap.Overlays.Add(zoneOverlay);
+                        gmap.Refresh();
+                    }
+                    catch (Exception ex)
+                    {
+                        Props.WriteErrorLog("MapManager/ShowZoneOverlay: " + ex.Message);
+                    }
+                }
+                else
+                {
+                    RemoveOverlay(zoneOverlay);
+                }
             }
         }
 
@@ -240,7 +272,7 @@ namespace RateController.Classes
                 zoneOverlay = new GMapOverlay("zones");
                 gpsMarkerOverlay = new GMapOverlay();
                 tempMarkerOverlay = new GMapOverlay();
-                gmap.Overlays.Add(zoneOverlay);
+                if (cShowZoneOverlay) gmap.Overlays.Add(zoneOverlay);
                 gmap.Overlays.Add(gpsMarkerOverlay);
                 gmap.Overlays.Add(tempMarkerOverlay);
                 currentZoneVertices = new List<PointLatLng>();
@@ -253,24 +285,6 @@ namespace RateController.Classes
                 mf.Tls.ShowMessage("MapManager.NewMap: " + ex.Message, "Error", 20000);
             }
             return Result;
-        }
-
-        public void RemoveAppliedLayer()
-        {
-            try
-            {
-                if (currentAppliedOverlay != null)
-                {
-                    gmap.Overlays.Remove(currentAppliedOverlay);
-                    gmap.Refresh();
-                    currentAppliedOverlay = null;
-                    AppliedOverlayTimer.Enabled = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.WriteErrorLog("MapManger/RemoveAppliedLayer: " + ex.Message);
-            }
         }
 
         public bool SaveMap(string name, bool UpdateCache = true)
@@ -343,7 +357,8 @@ namespace RateController.Classes
             }
             else
             {
-                RemoveAppliedLayer();
+                RemoveOverlay(currentAppliedOverlay);
+                AppliedOverlayTimer.Enabled = false;
             }
         }
 
@@ -681,15 +696,33 @@ namespace RateController.Classes
             tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0), GMarkerGoogleType.green); // Initialize with a default position
             gpsMarkerOverlay.Markers.Add(tractorMarker); // Add the tractor marker to the overlay
 
-            gmap.Overlays.Add(zoneOverlay);
             gmap.Overlays.Add(gpsMarkerOverlay);
             gmap.Overlays.Add(tempMarkerOverlay);
+
+            if (cShowZoneOverlay) gmap.Overlays.Add(zoneOverlay);
         }
 
         private void InitializeMapZones()
         {
             mapZones = new List<MapZone>();
             currentZoneVertices = new List<PointLatLng>();
+        }
+
+        private void RemoveOverlay(GMapOverlay Overlay)
+        {
+            try
+            {
+                if (Overlay != null)
+                {
+                    gmap.Overlays.Remove(Overlay);
+                    gmap.Refresh();
+                    //Overlay = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/RemoveLayer: " + ex.Message);
+            }
         }
     }
 }

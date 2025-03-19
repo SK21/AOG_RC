@@ -324,6 +324,8 @@
             // ckMap
             // 
             this.ckMap.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMap.Checked = true;
+            this.ckMap.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckMap.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckMap.Location = new System.Drawing.Point(8, 397);
@@ -397,6 +399,8 @@
             // ckZones
             // 
             this.ckZones.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckZones.Checked = true;
+            this.ckZones.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckZones.Location = new System.Drawing.Point(8, 320);
@@ -406,6 +410,7 @@
             this.ckZones.Text = "Zones";
             this.ckZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckZones.UseVisualStyleBackColor = true;
+            this.ckZones.CheckedChanged += new System.EventHandler(this.ckZones_CheckedChanged);
             // 
             // btnPNG
             // 
