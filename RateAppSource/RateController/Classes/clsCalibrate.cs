@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using System;
 using System.Windows.Forms;
 

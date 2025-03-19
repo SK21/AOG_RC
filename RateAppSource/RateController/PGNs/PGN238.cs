@@ -1,4 +1,6 @@
-﻿namespace RateController
+﻿using RateController.Classes;
+
+namespace RateController
 {
     public class PGN238
     {

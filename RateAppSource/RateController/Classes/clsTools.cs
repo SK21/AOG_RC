@@ -12,28 +12,6 @@ using System.Windows.Forms;
 
 namespace RateController
 {
-    public enum ApplicationMode
-    { ControlledUPM, ConstantUPM, DocumentApplied, DocumentTarget }
-
-    public enum ControlTypeEnum
-    { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
-
-    public enum MasterSwitchMode
-    { ControlAll, ControlMasterRelayOnly, Override };
-
-    public enum RelayTypes
-    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None };
-
-    public enum SimType
-    { Sim_None, Sim_Speed }
-
-    public enum SwIDs
-    {
-        // 0 Used to be AutoSwitch. It was replaced with AutoSection and AutoRate.
-        NotUsed, MasterOn, MasterOff, RateUp, RateDown, sw0, sw1, sw2, sw3, sw4, sw5,
-
-        sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, AutoSection, AutoRate, WorkSwitch
-    };
 
     public class clsTools
     {

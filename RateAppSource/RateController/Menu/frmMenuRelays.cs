@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.Data;

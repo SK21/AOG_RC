@@ -1,4 +1,5 @@
-﻿using RateController.Language;
+﻿using RateController.Classes;
+using RateController.Language;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
