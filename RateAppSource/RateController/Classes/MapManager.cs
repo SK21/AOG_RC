@@ -50,7 +50,7 @@ namespace RateController.Classes
             cRootPath = GetFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RateMap");
             CachePath = GetFolder(cRootPath, "MapCache");
 
-            if (bool.TryParse(mf.Tls.LoadProperty("ShowTiles"), out bool st)) cShowTiles = st;
+            if (bool.TryParse(Props.GetProp("ShowTiles"), out bool st)) cShowTiles = st;
             cShowZoneOverlay = true;
             InitializeMap();
             InitializeMapZones();
@@ -226,7 +226,7 @@ namespace RateController.Classes
 
         public bool LoadLastMap()
         {
-            LastFile = mf.Tls.LoadProperty("LastMapFile");
+            LastFile = Props.GetProp("LastMapFile");
             return LoadMap(LastFile);
         }
 
@@ -658,8 +658,8 @@ namespace RateController.Classes
 
             double Lat = 200;
             double Lng = 200;
-            if (double.TryParse(mf.Tls.LoadProperty("LastMapLat"), out double latpos)) Lat = latpos;
-            if (double.TryParse(mf.Tls.LoadProperty("LastMapLng"), out double lngpos)) Lng = lngpos;
+            if (double.TryParse(Props.GetProp("LastMapLat"), out double latpos)) Lat = latpos;
+            if (double.TryParse(Props.GetProp("LastMapLng"), out double lngpos)) Lng = lngpos;
 
             if (Lat < -90 || Lat > 90 || Lng < -180 || Lng > 180)
             {

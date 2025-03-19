@@ -303,10 +303,10 @@ namespace RateController.Menu
             DGV2.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             UseZones = mf.UseZones;
-            int.TryParse(mf.Tls.LoadProperty("SectionsPerZone"), out SectionsPerZone);
+            int.TryParse(Props.GetProp("SectionsPerZone"), out SectionsPerZone);
             if (SectionsPerZone < 1) SectionsPerZone = 1;
             DefaultWidth = 300;
-            if (Double.TryParse(mf.Tls.LoadProperty("SectionDefaultWidth"), out double dw)) DefaultWidth = dw;
+            if (Double.TryParse(Props.GetProp("SectionDefaultWidth"), out double dw)) DefaultWidth = dw;
             UpdateForm();
         }
 

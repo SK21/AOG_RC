@@ -70,8 +70,8 @@ namespace RateController
 
         public void Load()
         {
-            NetworkName = mf.Tls.LoadProperty("NetworkName");
-            NetworkPassword = mf.Tls.LoadProperty("NetworkPassword");
+            NetworkName = Props.GetProp("NetworkName");
+            NetworkPassword = Props.GetProp("NetworkPassword");
         }
 
         public void Save()

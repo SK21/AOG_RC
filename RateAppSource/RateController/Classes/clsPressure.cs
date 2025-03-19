@@ -30,9 +30,9 @@
 
         public void Load()
         {
-            if (double.TryParse(mf.Tls.LoadProperty("PressureSlope" + cName), out double sl)) cSlope = sl;
-            if (double.TryParse(mf.Tls.LoadProperty("PressureIntercept" + cName), out double cpt)) cIntercept = cpt;
-            if (int.TryParse(mf.Tls.LoadProperty("PressureMin" + cName), out int mn)) cMinimumRateData = mn;
+            if (double.TryParse(Props.GetProp("PressureSlope" + cName), out double sl)) cSlope = sl;
+            if (double.TryParse(Props.GetProp("PressureIntercept" + cName), out double cpt)) cIntercept = cpt;
+            if (int.TryParse(Props.GetProp("PressureMin" + cName), out int mn)) cMinimumRateData = mn;
         }
 
         public void Save()

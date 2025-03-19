@@ -115,9 +115,9 @@ namespace RateController
 
         public void Load()
         {
-            bool.TryParse(mf.Tls.LoadProperty(Name + "_enabled"), out cEnabled);
-            float.TryParse(mf.Tls.LoadProperty(Name + "_width"), out cWidth);
-            int.TryParse(mf.Tls.LoadProperty(Name + "_SwitchID"), out cSwitchID);
+            bool.TryParse(Props.GetProp(Name + "_enabled"), out cEnabled);
+            float.TryParse(Props.GetProp(Name + "_width"), out cWidth);
+            int.TryParse(Props.GetProp(Name + "_SwitchID"), out cSwitchID);
         }
 
         public void Save()

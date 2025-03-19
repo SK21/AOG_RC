@@ -117,10 +117,10 @@ namespace RateController
 
         public void Load()
         {
-            float.TryParse(mf.Tls.LoadProperty(Name + "_width"), out cWidth);
-            int.TryParse(mf.Tls.LoadProperty(Name + "_SwitchID"), out cSwitchID);
-            int.TryParse(mf.Tls.LoadProperty(Name + "_Start"), out SecStart);
-            int.TryParse(mf.Tls.LoadProperty(Name + "_End"), out SecEnd);
+            float.TryParse(Props.GetProp(Name + "_width"), out cWidth);
+            int.TryParse(Props.GetProp(Name + "_SwitchID"), out cSwitchID);
+            int.TryParse(Props.GetProp(Name + "_Start"), out SecStart);
+            int.TryParse(Props.GetProp(Name + "_End"), out SecEnd);
         }
 
         public void Save()

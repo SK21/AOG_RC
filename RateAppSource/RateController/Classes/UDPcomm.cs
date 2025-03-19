@@ -268,7 +268,7 @@ namespace RateController
                 }
                 else
                 {
-                    string EP = mf.Tls.LoadProperty("EndPoint_" + cConnectionName);
+                    string EP = Props.GetProp("EndPoint_" + cConnectionName);
                     if (IPAddress.TryParse(EP, out _))
                     {
                         NetworkEP = EP;

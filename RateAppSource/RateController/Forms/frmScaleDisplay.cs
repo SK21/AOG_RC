@@ -114,10 +114,10 @@ namespace RateController
 
         private void LoadData()
         {
-            if (int.TryParse(mf.Tls.LoadProperty("Scale_DisplayMode" + cProductID.ToString()), out int md)) cDisplayMode = md;
-            if (double.TryParse(mf.Tls.LoadProperty("Scale_Area" + cProductID.ToString()), out double ar)) StartingAcres = ar;
-            if (double.TryParse(mf.Tls.LoadProperty("Scale_Weight" + cProductID.ToString()), out double wt)) StartingWeight = wt;
-            if (double.TryParse(mf.Tls.LoadProperty("Scale_Tare" + cProductID.ToString()), out double ta)) TareWeight = ta;
+            if (int.TryParse(Props.GetProp("Scale_DisplayMode" + cProductID.ToString()), out int md)) cDisplayMode = md;
+            if (double.TryParse(Props.GetProp("Scale_Area" + cProductID.ToString()), out double ar)) StartingAcres = ar;
+            if (double.TryParse(Props.GetProp("Scale_Weight" + cProductID.ToString()), out double wt)) StartingWeight = wt;
+            if (double.TryParse(Props.GetProp("Scale_Tare" + cProductID.ToString()), out double ta)) TareWeight = ta;
         }
 
         private void Mf_ColorChanged(object sender, EventArgs e)

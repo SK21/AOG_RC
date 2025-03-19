@@ -39,8 +39,8 @@ namespace RateController
             SW[(int)SwIDs.AutoSection] = true; // default to auto in case of no switchbox
             SW[(int)SwIDs.AutoRate] = true;
 
-            if (bool.TryParse(mf.Tls.LoadProperty("UseWorkSwitch"), out bool uw)) cUseWorkSwitch = uw;
-            if (bool.TryParse(mf.Tls.LoadProperty("SwitchboxAutoRateDisabled"), out bool auto)) cAutoRateDisabled = auto;
+            if (bool.TryParse(Props.GetProp("UseWorkSwitch"), out bool uw)) cUseWorkSwitch = uw;
+            if (bool.TryParse(Props.GetProp("SwitchboxAutoRateDisabled"), out bool auto)) cAutoRateDisabled = auto;
         }
 
         public event EventHandler SwitchPGNreceived;

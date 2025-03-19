@@ -186,10 +186,10 @@ namespace RateController
 
         public void Load()
         {
-            if (bool.TryParse(mf.Tls.LoadProperty(Name() + "_IsLocked"), out bool lk)) cIsLocked = lk;
-            if (double.TryParse(mf.Tls.LoadProperty(Name() + "_Pulses"), out double pl)) PulseCountTotal = pl;
-            if (double.TryParse(mf.Tls.LoadProperty(Name() + "_Amount"), out double amt)) MeasuredAmount = amt;
-            if (int.TryParse(mf.Tls.LoadProperty(Name() + "_CalPWM"), out int pwm)) CalPWM = pwm;
+            if (bool.TryParse(Props.GetProp(Name() + "_IsLocked"), out bool lk)) cIsLocked = lk;
+            if (double.TryParse(Props.GetProp(Name() + "_Pulses"), out double pl)) PulseCountTotal = pl;
+            if (double.TryParse(Props.GetProp(Name() + "_Amount"), out double amt)) MeasuredAmount = amt;
+            if (int.TryParse(Props.GetProp(Name() + "_CalPWM"), out int pwm)) CalPWM = pwm;
         }
 
         public void Reset()

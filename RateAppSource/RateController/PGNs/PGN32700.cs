@@ -227,7 +227,7 @@ namespace RateController
             for (int i = 2; i < cByteCount; i++)
             {
                 Name = "ModuleConfig_" + i.ToString();
-                if (byte.TryParse(mf.Tls.LoadProperty(Name), out byte Val))
+                if (byte.TryParse(Props.GetProp(Name), out byte Val))
                 {
                     cData[i] = Val;
                 }

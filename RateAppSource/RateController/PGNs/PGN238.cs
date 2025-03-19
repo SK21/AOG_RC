@@ -67,10 +67,10 @@ namespace RateController
 
         private void Load()
         {
-            byte.TryParse(mf.Tls.LoadProperty("RaiseTime"), out cRaiseTime);
-            byte.TryParse(mf.Tls.LoadProperty("LowerTime"), out cLowerTime);
-            bool.TryParse(mf.Tls.LoadProperty("HydEnable"), out cHydEnable);
-            byte.TryParse(mf.Tls.LoadProperty("HydSettings"), out cSet0);
+            byte.TryParse(Props.GetProp("RaiseTime"), out cRaiseTime);
+            byte.TryParse(Props.GetProp("LowerTime"), out cLowerTime);
+            bool.TryParse(Props.GetProp("HydEnable"), out cHydEnable);
+            byte.TryParse(Props.GetProp("HydSettings"), out cSet0);
         }
 
         private void Save()

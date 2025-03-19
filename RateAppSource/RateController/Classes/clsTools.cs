@@ -355,12 +355,6 @@ namespace RateController
             FormAdd(Frm);
         }
 
-        public string LoadProperty(string Key)
-        {
-            string Prop = "";
-            if (PropsDictionary.ContainsKey(Key)) Prop = PropsDictionary[Key].ToString();
-            return Prop;
-        }
 
         public void NewRateCollector(string FileName, bool Overwrite = false)
         {
@@ -395,7 +389,7 @@ namespace RateController
                 LoadFilesData(cPropertiesFile);
                 Properties.Settings.Default.FileName = FileName;
                 Properties.Settings.Default.Save();
-                if (bool.TryParse(LoadProperty("ReadOnly"), out bool RO))
+                if (bool.TryParse(Props.GetProp("ReadOnly"), out bool RO))
                 {
                     cIsReadOnly = RO;
                 }
@@ -407,7 +401,7 @@ namespace RateController
                 cPropertiesApp = Properties.Settings.Default.FilesDir + "\\AppData.txt";
                 if (!File.Exists(cPropertiesApp)) File.Create(cPropertiesApp).Dispose();
                 LoadAppData(cPropertiesApp);
-                if (bool.TryParse(LoadProperty("UseVariableRate_" + Properties.Settings.Default.FileName), out bool vr))
+                if (bool.TryParse(Props.GetProp("UseVariableRate_" + Properties.Settings.Default.FileName), out bool vr))
                 {
                     cUseVariableRate = vr;
                 }
@@ -416,7 +410,7 @@ namespace RateController
                     cUseVariableRate = false;
                 }
 
-                if (Enum.TryParse(LoadProperty("MasterSwitchMode"), out MasterSwitchMode msm))
+                if (Enum.TryParse(Props.GetProp("MasterSwitchMode"), out MasterSwitchMode msm))
                 {
                     cMasterSwitchMode = msm;
                 }

@@ -89,9 +89,9 @@ namespace RateController
 
         public void Load()
         {
-            if (Enum.TryParse(mf.Tls.LoadProperty("RelayType" + cName), true, out RelayTypes tmp)) cType = tmp;
-            if (int.TryParse(mf.Tls.LoadProperty("RelaySection" + cName), out int T)) cSectionID = T;
-            if (int.TryParse(mf.Tls.LoadProperty("RelaySwitch" + cName), out int sw)) cSwitchID = sw;
+            if (Enum.TryParse(Props.GetProp("RelayType" + cName), true, out RelayTypes tmp)) cType = tmp;
+            if (int.TryParse(Props.GetProp("RelaySection" + cName), out int T)) cSectionID = T;
+            if (int.TryParse(Props.GetProp("RelaySwitch" + cName), out int sw)) cSwitchID = sw;
         }
 
         public void Save()

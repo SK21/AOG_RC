@@ -554,7 +554,7 @@ namespace RateController
         public bool IsNew()
         {
             bool Result = true;
-            if (bool.TryParse(mf.Tls.LoadProperty("IsNew" + IDname), out bool nw)) Result = nw;
+            if (bool.TryParse(Props.GetProp("IsNew" + IDname), out bool nw)) Result = nw;
             return Result;
         }
 
@@ -562,52 +562,52 @@ namespace RateController
         {
             int tmp;
 
-            double.TryParse(mf.Tls.LoadProperty("Coverage" + IDname), out Coverage);
-            double.TryParse(mf.Tls.LoadProperty("Coverage2" + IDname), out Coverage2);
-            byte.TryParse(mf.Tls.LoadProperty("CoverageUnits" + IDname), out CoverageUnits);
+            double.TryParse(Props.GetProp("Coverage" + IDname), out Coverage);
+            double.TryParse(Props.GetProp("Coverage2" + IDname), out Coverage2);
+            byte.TryParse(Props.GetProp("CoverageUnits" + IDname), out CoverageUnits);
 
-            double.TryParse(mf.Tls.LoadProperty("TankStart" + IDname), out cTankStart);
-            double.TryParse(mf.Tls.LoadProperty("QuantityApplied" + IDname), out cUnitsApplied);
-            double.TryParse(mf.Tls.LoadProperty("QuantityApplied2" + IDname), out cUnitsApplied2);
+            double.TryParse(Props.GetProp("TankStart" + IDname), out cTankStart);
+            double.TryParse(Props.GetProp("QuantityApplied" + IDname), out cUnitsApplied);
+            double.TryParse(Props.GetProp("QuantityApplied2" + IDname), out cUnitsApplied2);
 
-            if (double.TryParse(mf.Tls.LoadProperty("AccumulatedLast" + IDname), out double oa)) AccumulatedLast = oa;
+            if (double.TryParse(Props.GetProp("AccumulatedLast" + IDname), out double oa)) AccumulatedLast = oa;
 
-            cQuantityDescription = mf.Tls.LoadProperty("QuantityDescription" + IDname);
+            cQuantityDescription = Props.GetProp("QuantityDescription" + IDname);
             if (cQuantityDescription == "") cQuantityDescription = "Lbs";
 
-            double.TryParse(mf.Tls.LoadProperty("RateSet" + IDname), out cRateSet);
+            double.TryParse(Props.GetProp("RateSet" + IDname), out cRateSet);
             if (cRateSet < 0 || cRateSet > 50000) cRateSet = 0;
 
-            double.TryParse(mf.Tls.LoadProperty("RateAlt" + IDname), out cRateAlt);
+            double.TryParse(Props.GetProp("RateAlt" + IDname), out cRateAlt);
 
-            double.TryParse(mf.Tls.LoadProperty("cProdDensity" + IDname), out cProdDensity);
-            bool.TryParse(mf.Tls.LoadProperty("cEnableProdDensity" + IDname), out cEnableProdDensity);
+            double.TryParse(Props.GetProp("cProdDensity" + IDname), out cProdDensity);
+            bool.TryParse(Props.GetProp("cEnableProdDensity" + IDname), out cEnableProdDensity);
 
-            double.TryParse(mf.Tls.LoadProperty("FlowCal" + IDname), out cMeterCal);
-            if (double.TryParse(mf.Tls.LoadProperty("TankSize" + IDname), out double ts)) cTankSize = ts;
+            double.TryParse(Props.GetProp("FlowCal" + IDname), out cMeterCal);
+            if (double.TryParse(Props.GetProp("TankSize" + IDname), out double ts)) cTankSize = ts;
 
-            cProductName = mf.Tls.LoadProperty("ProductName" + IDname);
+            cProductName = Props.GetProp("ProductName" + IDname);
 
-            int.TryParse(mf.Tls.LoadProperty("CountsRev" + IDname), out cCountsRev);
+            int.TryParse(Props.GetProp("CountsRev" + IDname), out cCountsRev);
 
             int tmpModuleID = -1;
-            if (int.TryParse(mf.Tls.LoadProperty("ModuleID" + IDname), out int tmp1)) tmpModuleID = tmp1;
-            int.TryParse(mf.Tls.LoadProperty("SensorID" + IDname), out int tmp2);
+            if (int.TryParse(Props.GetProp("ModuleID" + IDname), out int tmp1)) tmpModuleID = tmp1;
+            int.TryParse(Props.GetProp("SensorID" + IDname), out int tmp2);
             ChangeID(tmpModuleID, tmp2);
 
-            bool.TryParse(mf.Tls.LoadProperty("OffRateAlarm" + IDname), out cUseOffRateAlarm);
-            byte.TryParse(mf.Tls.LoadProperty("OffRateSetting" + IDname), out cOffRateSetting);
+            bool.TryParse(Props.GetProp("OffRateAlarm" + IDname), out cUseOffRateAlarm);
+            byte.TryParse(Props.GetProp("OffRateSetting" + IDname), out cOffRateSetting);
 
-            double.TryParse(mf.Tls.LoadProperty("MinUPM" + IDname), out cMinUPM);
-            double.TryParse(mf.Tls.LoadProperty("MinUPMbySpeed" + IDname), out cMinUPMbySpeed);
-            if (bool.TryParse(mf.Tls.LoadProperty("UseMinUPMbySpeed" + IDname), out bool ms)) cUseMinUPMbySpeed = ms;
+            double.TryParse(Props.GetProp("MinUPM" + IDname), out cMinUPM);
+            double.TryParse(Props.GetProp("MinUPMbySpeed" + IDname), out cMinUPMbySpeed);
+            if (bool.TryParse(Props.GetProp("UseMinUPMbySpeed" + IDname), out bool ms)) cUseMinUPMbySpeed = ms;
 
             tmp = 0;
-            int.TryParse(mf.Tls.LoadProperty("SerialPort" + IDname), out tmp);
+            int.TryParse(Props.GetProp("SerialPort" + IDname), out tmp);
             cSerialPort = tmp;
 
             tmp = 0;
-            int.TryParse(mf.Tls.LoadProperty("ManualPWM" + IDname), out tmp);
+            int.TryParse(Props.GetProp("ManualPWM" + IDname), out tmp);
             cManualPWM = tmp;
 
             if (ID > mf.MaxProducts - 3)
@@ -616,10 +616,10 @@ namespace RateController
             }
             else
             {
-                Enum.TryParse(mf.Tls.LoadProperty("ValveType" + IDname), true, out cControlType);
+                Enum.TryParse(Props.GetProp("ValveType" + IDname), true, out cControlType);
             }
 
-            if (bool.TryParse(mf.Tls.LoadProperty("OnScreen" + IDname), out bool OS))
+            if (bool.TryParse(Props.GetProp("OnScreen" + IDname), out bool OS))
             {
                 cOnScreen = OS;
             }
@@ -628,7 +628,7 @@ namespace RateController
                 cOnScreen = true;
             }
 
-            if (bool.TryParse(mf.Tls.LoadProperty("BumpButtons" + IDname), out bool BB))
+            if (bool.TryParse(Props.GetProp("BumpButtons" + IDname), out bool BB))
             {
                 cBumpButtons = BB;
             }
@@ -637,18 +637,18 @@ namespace RateController
                 cBumpButtons = false;
             }
 
-            if (int.TryParse(mf.Tls.LoadProperty("ShiftRange" + IDname), out int sr)) cShiftRange = sr;
-            if (double.TryParse(mf.Tls.LoadProperty("Hours1" + IDname), out double h1)) cHours1 = h1;
-            if (double.TryParse(mf.Tls.LoadProperty("Hours2" + IDname), out double h2)) cHours2 = h2;
+            if (int.TryParse(Props.GetProp("ShiftRange" + IDname), out int sr)) cShiftRange = sr;
+            if (double.TryParse(Props.GetProp("Hours1" + IDname), out double h1)) cHours1 = h1;
+            if (double.TryParse(Props.GetProp("Hours2" + IDname), out double h2)) cHours2 = h2;
 
-            if (Enum.TryParse(mf.Tls.LoadProperty("AppMode" + IDname), true, out ApplicationMode am)) cAppMode = am;
+            if (Enum.TryParse(Props.GetProp("AppMode" + IDname), true, out ApplicationMode am)) cAppMode = am;
 
-            if (int.TryParse(mf.Tls.LoadProperty("AdjustHigh" + IDname), out int ah)) cHighAdjust = ah;
-            if (int.TryParse(mf.Tls.LoadProperty("AdjustLow" + IDname), out int al)) cLowAdjust = al;
-            if (int.TryParse(mf.Tls.LoadProperty("Threshold" + IDname), out int th)) cThreshold = th;
-            if (int.TryParse(mf.Tls.LoadProperty("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
-            if (int.TryParse(mf.Tls.LoadProperty("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
-            if (int.TryParse(mf.Tls.LoadProperty("Scaling" + IDname), out int sc)) cScalingFactor = sc;
+            if (int.TryParse(Props.GetProp("AdjustHigh" + IDname), out int ah)) cHighAdjust = ah;
+            if (int.TryParse(Props.GetProp("AdjustLow" + IDname), out int al)) cLowAdjust = al;
+            if (int.TryParse(Props.GetProp("Threshold" + IDname), out int th)) cThreshold = th;
+            if (int.TryParse(Props.GetProp("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
+            if (int.TryParse(Props.GetProp("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
+            if (int.TryParse(Props.GetProp("Scaling" + IDname), out int sc)) cScalingFactor = sc;
         }
 
         public void LoadDefaultControlSettings()

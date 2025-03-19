@@ -310,7 +310,7 @@ namespace RateController
             get
             {
                 bool tmp = false;
-                if (bool.TryParse(Tls.LoadProperty("UseZones"), out bool tmp2)) tmp = tmp2;
+                if (bool.TryParse(Props.GetProp("UseZones"), out bool tmp2)) tmp = tmp2;
                 return tmp;
             }
             set { Props.SetProp("UseZones", value.ToString()); }
@@ -422,29 +422,29 @@ namespace RateController
         {
             SetDisplay();
 
-            if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
-            if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
-            if (double.TryParse(Tls.LoadProperty("PressureCal"), out double pc)) cPressureCal = pc;
-            if (double.TryParse(Tls.LoadProperty("PressureOffset"), out double po)) cPressureOffset = po;
+            if (bool.TryParse(Props.GetProp("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
+            if (bool.TryParse(Props.GetProp("ShowPressure"), out bool SP)) cShowPressure = SP;
+            if (double.TryParse(Props.GetProp("PressureCal"), out double pc)) cPressureCal = pc;
+            if (double.TryParse(Props.GetProp("PressureOffset"), out double po)) cPressureOffset = po;
 
             for (int i = 0; i < 4; i++)
             {
                 cShowScale[i] = false;
-                if (bool.TryParse(Tls.LoadProperty("ShowScale_" + i.ToString()), out bool ss)) cShowScale[i] = ss;
+                if (bool.TryParse(Props.GetProp("ShowScale_" + i.ToString()), out bool ss)) cShowScale[i] = ss;
             }
 
-            if (byte.TryParse(Tls.LoadProperty("PressureID"), out byte ID)) cPressureToShowID = ID;
-            if (bool.TryParse(Tls.LoadProperty("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
-            if (bool.TryParse(Tls.LoadProperty("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
-            if (bool.TryParse(Tls.LoadProperty("UseDualAuto"), out bool ud)) cUseDualAuto = ud;
-            if (bool.TryParse(Tls.LoadProperty("ResumeAfterPrime"), out bool re)) cResumeAfterPrime = re;
-            if (int.TryParse(Tls.LoadProperty("PrimeDelay"), out int PD))
+            if (byte.TryParse(Props.GetProp("PressureID"), out byte ID)) cPressureToShowID = ID;
+            if (bool.TryParse(Props.GetProp("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
+            if (bool.TryParse(Props.GetProp("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
+            if (bool.TryParse(Props.GetProp("UseDualAuto"), out bool ud)) cUseDualAuto = ud;
+            if (bool.TryParse(Props.GetProp("ResumeAfterPrime"), out bool re)) cResumeAfterPrime = re;
+            if (int.TryParse(Props.GetProp("PrimeDelay"), out int PD))
             {
                 cPrimeDelay = PD;
             }
             if (cPrimeDelay < 3) cPrimeDelay = 3;
 
-            if (double.TryParse(Tls.LoadProperty("SimSpeed"), out double Spd))
+            if (double.TryParse(Props.GetProp("SimSpeed"), out double Spd))
             {
                 cSimSpeed = Spd;
             }
@@ -453,7 +453,7 @@ namespace RateController
                 cSimSpeed = 5;
             }
 
-            if (Enum.TryParse(Tls.LoadProperty("SimMode"), out SimType SM))
+            if (Enum.TryParse(Props.GetProp("SimMode"), out SimType SM))
             {
                 cSimMode = SM;
             }
@@ -462,7 +462,7 @@ namespace RateController
                 cSimMode = SimType.Sim_None;
             }
 
-            if (double.TryParse(Tls.LoadProperty("PrimeTime"), out double ptime))
+            if (double.TryParse(Props.GetProp("PrimeTime"), out double ptime))
             {
                 cPrimeTime = ptime;
             }
@@ -480,7 +480,7 @@ namespace RateController
             LoadDefaultProduct();
             Zones.Load();
 
-            if (bool.TryParse(Tls.LoadProperty("UseLargeScreen"), out bool LS))
+            if (bool.TryParse(Props.GetProp("UseLargeScreen"), out bool LS))
             {
                 UseLargeScreen = LS;
             }
@@ -489,7 +489,7 @@ namespace RateController
                 UseLargeScreen = false;
             }
 
-            if (bool.TryParse(Tls.LoadProperty("ShowSwitches"), out bool SS))
+            if (bool.TryParse(Props.GetProp("ShowSwitches"), out bool SS))
             {
                 ShowSwitches = SS;
             }
@@ -507,7 +507,7 @@ namespace RateController
                 Swt.Show();
             }
 
-            if (int.TryParse(Tls.LoadProperty("RateType"), out int rt)) cRateType = rt;
+            if (int.TryParse(Props.GetProp("RateType"), out int rt)) cRateType = rt;
             PressureObjects.Load();
         }
 
@@ -1055,7 +1055,7 @@ namespace RateController
                 Tls.LoadFormData(this);
 
                 CurrentPage = 5;
-                int.TryParse(Tls.LoadProperty("CurrentPage"), out CurrentPage);
+                int.TryParse(Props.GetProp("CurrentPage"), out CurrentPage);
 
                 if (Tls.PrevInstance())
                 {
@@ -1244,7 +1244,7 @@ namespace RateController
 
         private void LoadDefaultProduct()
         {
-            if (int.TryParse(Tls.LoadProperty("DefaultProduct"), out int DP)) cDefaultProduct = DP;
+            if (int.TryParse(Props.GetProp("DefaultProduct"), out int DP)) cDefaultProduct = DP;
             int count = 0;
             int tmp = 0;
             foreach (clsProduct Prd in Products.Items)

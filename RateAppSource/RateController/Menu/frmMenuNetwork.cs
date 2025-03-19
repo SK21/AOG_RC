@@ -27,7 +27,7 @@ namespace RateController.Menu
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            if (int.TryParse(mf.Tls.LoadProperty("BoardType"), out int bt)) BoardType = bt;
+            if (int.TryParse(Props.GetProp("BoardType"), out int bt)) BoardType = bt;
             UpdateForm();
             SetButtons(false);
         }
@@ -111,7 +111,7 @@ namespace RateController.Menu
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
             PositionForm();
-            if (int.TryParse(mf.Tls.LoadProperty("BoardType"), out int bt)) BoardType = bt;
+            if (int.TryParse(Props.GetProp("BoardType"), out int bt)) BoardType = bt;
             UpdateForm();
         }
 

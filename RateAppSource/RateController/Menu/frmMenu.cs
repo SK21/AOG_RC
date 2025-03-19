@@ -1022,7 +1022,7 @@ namespace RateController
         {
             try
             {
-                string Last = mf.Tls.LoadProperty("LastScreen");
+                string Last = Props.GetProp("LastScreen");
                 if (mf.Tls.IsFormNameValid(Last))
                 {
                     Form fs;
