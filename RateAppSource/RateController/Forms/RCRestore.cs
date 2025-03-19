@@ -27,7 +27,7 @@ namespace RateController
             base.OnPaint(e);
 
             // Define the border color and thickness
-            Color borderColor = Properties.Settings.Default.ForeColour;
+            Color borderColor = Properties.Settings.Default.DisplayForeColour;
             int borderWidth = 1;
 
             // Draw the border
@@ -39,8 +39,8 @@ namespace RateController
 
         private void Main_ColorChanged(object sender, EventArgs e)
         {
-            lbRateAmount.ForeColor = Properties.Settings.Default.ForeColour;
-            this.BackColor = Properties.Settings.Default.BackColour;
+            lbRateAmount.ForeColor = Properties.Settings.Default.DisplayForeColour;
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -62,8 +62,8 @@ namespace RateController
 
             FormToHide.WindowState = FormWindowState.Minimized;
             timer1.Enabled = true;
-            this.BackColor = Properties.Settings.Default.BackColour;
-            lbRateAmount.ForeColor = Properties.Settings.Default.ForeColour;
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
+            lbRateAmount.ForeColor = Properties.Settings.Default.DisplayForeColour;
         }
 
         private void RestoreLC_Click(object sender, EventArgs e)

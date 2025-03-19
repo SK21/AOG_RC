@@ -707,7 +707,7 @@ namespace RateController
                         ProdName[i].Text = Products.Item(i).ProductName;
 
                         ProdName[i].BackColor = Color.Transparent;
-                        ProdName[i].ForeColor = Properties.Settings.Default.ForeColour;
+                        ProdName[i].ForeColor = Properties.Settings.Default.DisplayForeColour;
                         ProdName[i].BorderStyle = BorderStyle.None;
 
                         Rates[i].Text = Products.Item(i).SmoothRate().ToString("N1");
@@ -857,7 +857,7 @@ namespace RateController
             base.OnPaint(e);
 
             // Define the border color and thickness
-            Color borderColor = Properties.Settings.Default.ForeColour;
+            Color borderColor = Properties.Settings.Default.DisplayForeColour;
             int borderWidth = 1;
 
             // Draw the border
@@ -1120,7 +1120,7 @@ namespace RateController
         private void groupBox3_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
-            Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Properties.Settings.Default.ForeColour);
+            Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Properties.Settings.Default.DisplayForeColour);
         }
 
         private void label34_Click(object sender, EventArgs e)
@@ -1286,10 +1286,10 @@ namespace RateController
 
         private void SetDisplay()
         {
-            this.BackColor = Properties.Settings.Default.BackColour;
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
             foreach (Control c in this.Controls)
             {
-                c.ForeColor = Properties.Settings.Default.ForeColour;
+                c.ForeColor = Properties.Settings.Default.DisplayForeColour;
             }
             lbAogConnected.ForeColor = Color.Black;
             lbArduinoConnected.ForeColor = Color.Black;
@@ -1299,9 +1299,9 @@ namespace RateController
 
             for (int i = 0; i < MaxProducts; i++)
             {
-                ProdName[i].ForeColor = Properties.Settings.Default.ForeColour;
+                ProdName[i].ForeColor = Properties.Settings.Default.DisplayForeColour;
             }
-            groupBox3.ForeColor = Properties.Settings.Default.ForeColour;
+            groupBox3.ForeColor = Properties.Settings.Default.DisplayForeColour;
         }
 
         private void SetLanguage()

@@ -22,7 +22,7 @@ namespace RateController
             base.OnPaint(e);
 
             // Define the border color and thickness
-            Color borderColor = Properties.Settings.Default.ForeColour;
+            Color borderColor = Properties.Settings.Default.DisplayForeColour;
             int borderWidth = 1;
 
             // Draw the border
@@ -42,15 +42,15 @@ namespace RateController
         {
             mf.Tls.LoadFormData(this);
             timer1.Enabled = true;
-            lbPressureValue.ForeColor = Properties.Settings.Default.ForeColour;
-            this.BackColor = Properties.Settings.Default.BackColour;
+            lbPressureValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
             UpdateForm();
         }
 
         private void Mf_ColorChanged(object sender, EventArgs e)
         {
-            lbPressureValue.ForeColor = Properties.Settings.Default.ForeColour;
-            this.BackColor = Properties.Settings.Default.BackColour;
+            lbPressureValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)

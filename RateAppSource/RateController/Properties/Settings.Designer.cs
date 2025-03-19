@@ -110,36 +110,36 @@ namespace RateController.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("210, 220, 230")]
-        public global::System.Drawing.Color BackColour {
+        public global::System.Drawing.Color DisplayBackColour {
             get {
-                return ((global::System.Drawing.Color)(this["BackColour"]));
+                return ((global::System.Drawing.Color)(this["DisplayBackColour"]));
             }
             set {
-                this["BackColour"] = value;
+                this["DisplayBackColour"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color ForeColourUser1 {
+        public global::System.Drawing.Color DisplayForeColourUser {
             get {
-                return ((global::System.Drawing.Color)(this["ForeColourUser1"]));
+                return ((global::System.Drawing.Color)(this["DisplayForeColourUser"]));
             }
             set {
-                this["ForeColourUser1"] = value;
+                this["DisplayForeColourUser"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("210, 220, 230")]
-        public global::System.Drawing.Color BackColourUser1 {
+        public global::System.Drawing.Color DisplayBackColourUser {
             get {
-                return ((global::System.Drawing.Color)(this["BackColourUser1"]));
+                return ((global::System.Drawing.Color)(this["DisplayBackColourUser"]));
             }
             set {
-                this["BackColourUser1"] = value;
+                this["DisplayBackColourUser"] = value;
             }
         }
         
@@ -170,12 +170,12 @@ namespace RateController.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color ForeColour {
+        public global::System.Drawing.Color DisplayForeColour {
             get {
-                return ((global::System.Drawing.Color)(this["ForeColour"]));
+                return ((global::System.Drawing.Color)(this["DisplayForeColour"]));
             }
             set {
-                this["ForeColour"] = value;
+                this["DisplayForeColour"] = value;
             }
         }
         

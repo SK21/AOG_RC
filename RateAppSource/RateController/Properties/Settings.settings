@@ -23,13 +23,13 @@
     <Setting Name="UserLanguageChange" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="BackColour" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="DisplayBackColour" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">210, 220, 230</Value>
     </Setting>
-    <Setting Name="ForeColourUser1" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="DisplayForeColourUser" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
-    <Setting Name="BackColourUser1" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="DisplayBackColourUser" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">210, 220, 230</Value>
     </Setting>
     <Setting Name="MouseDown" Type="System.Drawing.Color" Scope="User">
@@ -38,7 +38,7 @@
     <Setting Name="MenuFontSmall" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Microsoft Sans Serif, 14.25pt</Value>
     </Setting>
-    <Setting Name="ForeColour" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="DisplayForeColour" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
     <Setting Name="MainBackColour" Type="System.Drawing.Color" Scope="User">

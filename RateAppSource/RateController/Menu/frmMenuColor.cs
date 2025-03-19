@@ -36,21 +36,21 @@ namespace RateController.Menu
                 // set colors
                 if (rbColour1.Checked)
                 {
-                    Properties.Settings.Default.ForeColour = tbColourDefault1.ForeColor;
-                    Properties.Settings.Default.BackColour = tbColourDefault1.BackColor;
+                    Properties.Settings.Default.DisplayForeColour = tbColourDefault1.ForeColor;
+                    Properties.Settings.Default.DisplayBackColour = tbColourDefault1.BackColor;
                 }
                 else if (rbColour2.Checked)
                 {
-                    Properties.Settings.Default.ForeColour = tbColourDefault2.ForeColor;
-                    Properties.Settings.Default.BackColour = tbColourDefault2.BackColor;
+                    Properties.Settings.Default.DisplayForeColour = tbColourDefault2.ForeColor;
+                    Properties.Settings.Default.DisplayBackColour = tbColourDefault2.BackColor;
                 }
                 else
                 {
-                    Properties.Settings.Default.ForeColour = tbColourUser1.ForeColor;
-                    Properties.Settings.Default.BackColour = tbColourUser1.BackColor;
+                    Properties.Settings.Default.DisplayForeColour = tbColourUser1.ForeColor;
+                    Properties.Settings.Default.DisplayBackColour = tbColourUser1.BackColor;
                 }
-                Properties.Settings.Default.ForeColourUser1 = tbColourUser1.ForeColor;
-                Properties.Settings.Default.BackColourUser1 = tbColourUser1.BackColor;
+                Properties.Settings.Default.DisplayForeColourUser = tbColourUser1.ForeColor;
+                Properties.Settings.Default.DisplayBackColourUser = tbColourUser1.BackColor;
                 Properties.Settings.Default.Save();
                 mf.RaiseColorChanged();
 
@@ -129,7 +129,7 @@ namespace RateController.Menu
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             mf.Tls.LoadFormData(this, "", false);
-            this.BackColor = Properties.Settings.Default.BackColour;
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;
             btnOK.Left = this.Width - 84;
@@ -209,13 +209,13 @@ namespace RateController.Menu
             Initializing = true;
 
             // set colours
-            tbColourUser1.ForeColor = Properties.Settings.Default.ForeColourUser1;
-            tbColourUser1.BackColor = Properties.Settings.Default.BackColourUser1;
-            if (Properties.Settings.Default.ForeColour == tbColourDefault1.ForeColor && Properties.Settings.Default.BackColour == tbColourDefault1.BackColor)
+            tbColourUser1.ForeColor = Properties.Settings.Default.DisplayForeColourUser;
+            tbColourUser1.BackColor = Properties.Settings.Default.DisplayBackColourUser;
+            if (Properties.Settings.Default.DisplayForeColour == tbColourDefault1.ForeColor && Properties.Settings.Default.DisplayBackColour == tbColourDefault1.BackColor)
             {
                 rbColour1.Checked = true;
             }
-            else if (Properties.Settings.Default.ForeColour == tbColourDefault2.ForeColor && Properties.Settings.Default.BackColour == tbColourDefault2.BackColor)
+            else if (Properties.Settings.Default.DisplayForeColour == tbColourDefault2.ForeColor && Properties.Settings.Default.DisplayBackColour == tbColourDefault2.BackColor)
             {
                 rbColour2.Checked = true;
             }

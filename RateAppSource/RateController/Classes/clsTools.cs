@@ -50,8 +50,8 @@ namespace RateController
         private DateTime lastMessageTime;
         private FormStart mf;
         private Form[] OpenForms = new Form[30];    // make sure to allocate enough
-        private SortedDictionary<string, string> PropsDictionary = new SortedDictionary<string, string>();
         private SortedDictionary<string, string> PropsApp = new SortedDictionary<string, string>();
+        private SortedDictionary<string, string> PropsDictionary = new SortedDictionary<string, string>();
 
         #region ScreenBitMap
 

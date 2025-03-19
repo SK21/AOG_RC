@@ -61,7 +61,7 @@ namespace RateController.Menu
 
         private void frmMenuBoards_Load(object sender, EventArgs e)
         {
-            this.BackColor = Properties.Settings.Default.BackColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
             mf.Tls.LoadFormData(this);
         }
 

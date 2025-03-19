@@ -158,7 +158,7 @@ namespace RateController.Menu
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
             mf.Tls.LoadFormData(this, "", false);
-            this.BackColor = Properties.Settings.Default.BackColour;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
             this.Width = MainMenu.Width - 260;
             this.Height = MainMenu.Height - 50;
             btnOK.Left = this.Width - 84;
