@@ -525,7 +525,7 @@ namespace RateController.Menu
             tbP3.Text = mf.Tls.Manager.GetRate(2).ToString();
             tbP4.Text = mf.Tls.Manager.GetRate(3).ToString();
             SetSelectedColor(mf.Tls.Manager.ZoneColor);
-            if (mf.UseInches)
+            if (!Props.UseMetric)
             {
                 lbArea.Text = (mf.Tls.Manager.ZoneHectares * 2.47).ToString("N1");
             }

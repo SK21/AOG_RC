@@ -36,7 +36,6 @@ namespace RateController
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
-        public bool cUseInches;
         public bool LargeScreenExit = false;
         public frmLargeScreen Lscrn;
         public PGN238 MachineConfig;
@@ -131,8 +130,6 @@ namespace RateController
 
             ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4, prd5 };
             Rates = new Label[] { rt0, rt1, rt2, rt3, rt4, rt5 };
-
-            cUseInches = true;
 
             RelayObjects = new clsRelays(this);
 
@@ -283,15 +280,6 @@ namespace RateController
         public bool UseDualAuto
         { get { return cUseDualAuto; } set { cUseDualAuto = value; } }
 
-        public bool UseInches
-        {
-            get { return cUseInches; }
-            set
-            {
-                cUseInches = value;
-                Tls.SaveProperty("UseInches", cUseInches.ToString());
-            }
-        }
 
         public bool UseLargeScreen
         {
@@ -434,7 +422,6 @@ namespace RateController
         {
             SetDisplay();
 
-            if (bool.TryParse(Tls.LoadProperty("UseInches"), out bool tmp)) cUseInches = tmp;
             if (bool.TryParse(Tls.LoadProperty("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
             if (bool.TryParse(Tls.LoadProperty("ShowPressure"), out bool SP)) cShowPressure = SP;
             if (double.TryParse(Tls.LoadProperty("PressureCal"), out double pc)) cPressureCal = pc;

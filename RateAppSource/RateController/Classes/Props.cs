@@ -28,8 +28,9 @@ namespace RateController.Classes
             get { return cPropsFileName; }
             set
             {
-                if (!File.Exists(value)) File.WriteAllText(value, ""); // Create empty property file
-                cPropsFileName = value;
+                string FileName = value.Split('.')[0] + "_Props.rcs";
+                if (!File.Exists(value)) File.WriteAllText(FileName, ""); // Create empty property file
+                cPropsFileName = FileName;
                 Load(cProps, cPropsFileName);
 
                 if (bool.TryParse(GetProp("ReadOnly"), out bool ro)) cReadOnly = ro;

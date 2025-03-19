@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Collections.Generic;
 
 namespace RateController
@@ -159,7 +160,7 @@ namespace RateController
         {
             double Wdth;
             string Units;
-            if (mf.UseInches)
+            if (!Props.UseMetric)
             {
                 Units = "Inches";
             }
@@ -173,7 +174,7 @@ namespace RateController
 
             for (int i = 0; i < mf.SectionsPGN.SectionCount(); i++)
             {
-                if (mf.UseInches)
+                if (!Props.UseMetric)
                 {
                     Wdth = Math.Round((double)(mf.SectionsPGN.Width_cm(i)) * 0.393701);
                 }

@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.ComponentModel;
@@ -112,7 +113,7 @@ namespace RateController.Menu
 
             PositionForm();
 
-            if (mf.UseInches)
+            if (!Props.UseMetric)
             {
                 lbSpeed.Text = "MPH";
             }

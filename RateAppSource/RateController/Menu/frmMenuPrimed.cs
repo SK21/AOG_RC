@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.ComponentModel;
@@ -201,7 +202,7 @@ namespace RateController.Menu
             tbTime.Text = mf.PrimeTime.ToString("N0");
             tbDelay.Text = mf.PrimeDelay.ToString("N0");
 
-            if (mf.UseInches)
+            if (!Props.UseMetric)
             {
                 lbSpeed.Text = "MPH";
             }

@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.ComponentModel;
@@ -42,7 +43,7 @@ namespace RateController.Menu
                 }
 
                 if (double.TryParse(tbSimSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
-                mf.UseInches = !ckMetric.Checked;
+                Props.UseMetric = ckMetric.Checked;
                 mf.UseTransparent = ckTransparent.Checked;
                 mf.UseLargeScreen = ckLargeScreen.Checked;
                 if (ckSingle.Checked) mf.SwitchScreens(true);
@@ -149,7 +150,6 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            ckMetric.Text = Lang.lgMetric;
             gbDisplay.Text = Lang.lgDisplay;
             ckLargeScreen.Text = Lang.lgLargeScreen;
             ckTransparent.Text = Lang.lgTransparent;
@@ -189,18 +189,18 @@ namespace RateController.Menu
         {
             Initializing = true;
 
-            if (mf.UseInches)
+            if (Props.UseMetric)
             {
-                lbSimUnits.Text = "MPH";
+                lbSimUnits.Text = "KMH";
             }
             else
             {
-                lbSimUnits.Text = "KMH";
+                lbSimUnits.Text = "MPH";
             }
 
             tbSimSpeed.Text = mf.SimSpeed.ToString("N1");
             ckSimSpeed.Checked = (mf.SimMode == SimType.Sim_Speed);
-            ckMetric.Checked = !mf.UseInches;
+            ckMetric.Checked = Props.UseMetric;
             ckTransparent.Checked = mf.UseTransparent;
             ckLargeScreen.Checked = mf.UseLargeScreen;
             ckReset.Checked = false;

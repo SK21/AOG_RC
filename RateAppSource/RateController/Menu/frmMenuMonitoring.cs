@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.ComponentModel;
@@ -219,7 +220,7 @@ namespace RateController.Menu
             }
 
             lbSpeedData.Text = MainMenu.CurrentProduct.Speed().ToString("N1");
-            if (mf.UseInches)
+            if (!Props.UseMetric)
             {
                 lbSpeed.Text = Lang.lgMPH;
             }
@@ -228,8 +229,8 @@ namespace RateController.Menu
                 lbSpeed.Text = Lang.lgKPH;
             }
 
-            lbWidthData.Text = mf.Sections.WorkingWidth(mf.UseInches).ToString("N1");
-            if (mf.UseInches)
+            lbWidthData.Text = mf.Sections.WorkingWidth(!Props.UseMetric).ToString("N1");
+            if (!Props.UseMetric)
             {
                 lbWidth.Text = Lang.lgWorkingWidthFT;
             }
@@ -239,7 +240,7 @@ namespace RateController.Menu
             }
 
             lbWorkRateData.Text = MainMenu.CurrentProduct.WorkRate().ToString("N1");
-            if (mf.UseInches)
+            if (!Props.UseMetric)
             {
                 lbWorkRate.Text = Lang.lgAcresHr;
             }

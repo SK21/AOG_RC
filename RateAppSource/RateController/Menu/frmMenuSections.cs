@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.ComponentModel;
@@ -321,7 +322,7 @@ namespace RateController.Menu
                         DataRow Rw = dataSet1.Tables[0].NewRow();
                         Rw[0] = Sec.ID + 1;
 
-                        if (mf.UseInches)
+                        if (!Props.UseMetric)
                         {
                             Rw[1] = Sec.Width_inches;
                         }
@@ -355,7 +356,7 @@ namespace RateController.Menu
                     Rw[2] = Zn.End;
                     if (Zn.Start > 0)
                     {
-                        if (mf.UseInches)
+                        if (!Props.UseMetric)
                         {
                             Rw[3] = Zn.Width_inches;
                         }
@@ -405,7 +406,7 @@ namespace RateController.Menu
                         {
                             case 1:
                                 // width
-                                if (mf.UseInches)
+                                if (!Props.UseMetric)
                                 {
                                     mf.Sections.Item(i).Width_inches = (float)Convert.ToDouble(val);
                                 }
@@ -448,7 +449,7 @@ namespace RateController.Menu
                             {
                                 case 3:
                                     // width
-                                    if (mf.UseInches)
+                                    if (!Props.UseMetric)
                                     {
                                         mf.Zones.Item(i).Width_inches = (float)Convert.ToDouble(val);
                                     }
@@ -663,7 +664,7 @@ namespace RateController.Menu
                 }
             }
 
-            if (mf.UseInches)
+            if (!Props.UseMetric)
             {
                 lbWidth.Text = Lang.lgWidth + ":  " + ((DisplayWidth).ToString("N0")) + " Inches";
                 lbFeet.Text = (DisplayWidth / 12.0).ToString("N1") + "  FT";
@@ -707,7 +708,7 @@ namespace RateController.Menu
 
         private void UpdateTotalWidth()
         {
-            if (mf.UseInches)
+            if (!Props.UseMetric)
             {
                 lbWidth.Text = Lang.lgWidth + ":  " + (mf.Sections.TotalWidth(true) * 12.0).ToString("N0") + " Inches";
                 lbFeet.Text = (mf.Sections.TotalWidth(true)).ToString("N1") + "  FT";

@@ -1,4 +1,5 @@
-﻿using RateController.Language;
+﻿using RateController.Classes;
+using RateController.Language;
 using System;
 using System.Diagnostics;
 
@@ -666,7 +667,7 @@ namespace RateController
             if (cUseMinUPMbySpeed)
             {
                 double KPH = cMinUPMbySpeed;
-                if (mf.UseInches) KPH *= mf.MPHtoKPH;
+                if (!Props.UseMetric) KPH *= mf.MPHtoKPH;
                 double HPM = mf.Sections.TotalWidth(false) * KPH / 600.0;   // hectares per minute
                 Result = TargetRate() * HPM;
                 if (CoverageUnits == 0) Result *= 2.47;
@@ -897,7 +898,7 @@ namespace RateController
             }
             else
             {
-                if (mf.UseInches)
+                if (!Props.UseMetric)
                 {
                     Result = mf.AutoSteerPGN.Speed_KMH() * 0.621371;
                 }
@@ -1104,7 +1105,7 @@ namespace RateController
             double Result = 0;
             if (mf.Sections.WorkingWidth(true) > 0)
             {
-                if (mf.UseInches)
+                if (!Props.UseMetric)
                 {
                     Result = cHectaresPerMinute * 2.47105 * 60.0;
                 }
@@ -1121,7 +1122,7 @@ namespace RateController
             double Result = 0;
             if (mf.SimMode == SimType.Sim_Speed || mf.SectionControl.PrimeOn)
             {
-                if (mf.UseInches)
+                if (!Props.UseMetric)
                 {
                     Result = mf.SimSpeed / 0.621371;  // convert mph back to kmh
                 }

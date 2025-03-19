@@ -15,7 +15,6 @@ namespace RateController.Forms
         {
             InitializeComponent();
         }
-        public event EventHandler RatesMapSettingsChanged;
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
