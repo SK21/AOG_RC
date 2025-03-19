@@ -800,59 +800,59 @@ namespace RateController
 
         public void Save()
         {
-            mf.Tls.SaveProperty("IsNew" + IDname, "false");
-            mf.Tls.SaveProperty("Coverage" + IDname, Coverage.ToString());
-            mf.Tls.SaveProperty("Coverage2" + IDname, Coverage2.ToString());
-            mf.Tls.SaveProperty("CoverageUnits" + IDname, CoverageUnits.ToString());
+            Props.SetProp("IsNew" + IDname, "false");
+            Props.SetProp("Coverage" + IDname, Coverage.ToString());
+            Props.SetProp("Coverage2" + IDname, Coverage2.ToString());
+            Props.SetProp("CoverageUnits" + IDname, CoverageUnits.ToString());
 
-            mf.Tls.SaveProperty("TankStart" + IDname, cTankStart.ToString());
-            mf.Tls.SaveProperty("QuantityDescription" + IDname, cQuantityDescription);
+            Props.SetProp("TankStart" + IDname, cTankStart.ToString());
+            Props.SetProp("QuantityDescription" + IDname, cQuantityDescription);
 
-            mf.Tls.SaveProperty("QuantityApplied" + IDname, cUnitsApplied.ToString());
-            mf.Tls.SaveProperty("QuantityApplied2" + IDname, cUnitsApplied2.ToString());
-            mf.Tls.SaveProperty("AccumulatedLast" + IDname, AccumulatedLast.ToString());
+            Props.SetProp("QuantityApplied" + IDname, cUnitsApplied.ToString());
+            Props.SetProp("QuantityApplied2" + IDname, cUnitsApplied2.ToString());
+            Props.SetProp("AccumulatedLast" + IDname, AccumulatedLast.ToString());
 
-            mf.Tls.SaveProperty("cProdDensity" + IDname, cProdDensity.ToString());
-            mf.Tls.SaveProperty("cEnableProdDensity" + IDname, cEnableProdDensity.ToString());
+            Props.SetProp("cProdDensity" + IDname, cProdDensity.ToString());
+            Props.SetProp("cEnableProdDensity" + IDname, cEnableProdDensity.ToString());
 
-            mf.Tls.SaveProperty("RateSet" + IDname, cRateSet.ToString());
-            mf.Tls.SaveProperty("RateAlt" + IDname, cRateAlt.ToString());
-            mf.Tls.SaveProperty("FlowCal" + IDname, cMeterCal.ToString());
-            mf.Tls.SaveProperty("TankSize" + IDname, TankSize.ToString());
-            mf.Tls.SaveProperty("ValveType" + IDname, cControlType.ToString());
+            Props.SetProp("RateSet" + IDname, cRateSet.ToString());
+            Props.SetProp("RateAlt" + IDname, cRateAlt.ToString());
+            Props.SetProp("FlowCal" + IDname, cMeterCal.ToString());
+            Props.SetProp("TankSize" + IDname, TankSize.ToString());
+            Props.SetProp("ValveType" + IDname, cControlType.ToString());
 
-            mf.Tls.SaveProperty("ProductName" + IDname, cProductName);
+            Props.SetProp("ProductName" + IDname, cProductName);
 
-            mf.Tls.SaveProperty("CountsRev" + IDname, cCountsRev.ToString());
+            Props.SetProp("CountsRev" + IDname, cCountsRev.ToString());
 
-            mf.Tls.SaveProperty("ModuleID" + IDname, cModID.ToString());
-            mf.Tls.SaveProperty("SensorID" + IDname, cSenID.ToString());
+            Props.SetProp("ModuleID" + IDname, cModID.ToString());
+            Props.SetProp("SensorID" + IDname, cSenID.ToString());
 
-            mf.Tls.SaveProperty("OffRateAlarm" + IDname, cUseOffRateAlarm.ToString());
-            mf.Tls.SaveProperty("OffRateSetting" + IDname, cOffRateSetting.ToString());
+            Props.SetProp("OffRateAlarm" + IDname, cUseOffRateAlarm.ToString());
+            Props.SetProp("OffRateSetting" + IDname, cOffRateSetting.ToString());
 
-            mf.Tls.SaveProperty("MinUPM" + IDname, cMinUPM.ToString());
-            mf.Tls.SaveProperty("MinUPMbySpeed" + IDname, cMinUPMbySpeed.ToString());
-            mf.Tls.SaveProperty("UseMinUPMbySpeed" + IDname, cUseMinUPMbySpeed.ToString());
+            Props.SetProp("MinUPM" + IDname, cMinUPM.ToString());
+            Props.SetProp("MinUPMbySpeed" + IDname, cMinUPMbySpeed.ToString());
+            Props.SetProp("UseMinUPMbySpeed" + IDname, cUseMinUPMbySpeed.ToString());
 
-            mf.Tls.SaveProperty("SerialPort" + IDname, cSerialPort.ToString());
-            mf.Tls.SaveProperty("ManualPWM" + IDname, cManualPWM.ToString());
+            Props.SetProp("SerialPort" + IDname, cSerialPort.ToString());
+            Props.SetProp("ManualPWM" + IDname, cManualPWM.ToString());
 
-            mf.Tls.SaveProperty("OnScreen" + IDname, cOnScreen.ToString());
-            mf.Tls.SaveProperty("BumpButtons" + IDname, cBumpButtons.ToString());
+            Props.SetProp("OnScreen" + IDname, cOnScreen.ToString());
+            Props.SetProp("BumpButtons" + IDname, cBumpButtons.ToString());
 
-            mf.Tls.SaveProperty("ShiftRange" + IDname, cShiftRange.ToString());
-            mf.Tls.SaveProperty("Hours1" + IDname, cHours1.ToString());
-            mf.Tls.SaveProperty("Hours2" + IDname, cHours2.ToString());
+            Props.SetProp("ShiftRange" + IDname, cShiftRange.ToString());
+            Props.SetProp("Hours1" + IDname, cHours1.ToString());
+            Props.SetProp("Hours2" + IDname, cHours2.ToString());
 
-            mf.Tls.SaveProperty("AppMode" + IDname, cAppMode.ToString());
+            Props.SetProp("AppMode" + IDname, cAppMode.ToString());
 
-            mf.Tls.SaveProperty("AdjustHigh" + IDname, cHighAdjust.ToString());
-            mf.Tls.SaveProperty("AdjustLow" + IDname, cLowAdjust.ToString());
-            mf.Tls.SaveProperty("Threshold" + IDname, cThreshold.ToString());
-            mf.Tls.SaveProperty("MaxAdjust" + IDname, cMaxAdjust.ToString());
-            mf.Tls.SaveProperty("MinAdjust" + IDname, cMinAdjust.ToString());
-            mf.Tls.SaveProperty("Scaling" + IDname, cScalingFactor.ToString());
+            Props.SetProp("AdjustHigh" + IDname, cHighAdjust.ToString());
+            Props.SetProp("AdjustLow" + IDname, cLowAdjust.ToString());
+            Props.SetProp("Threshold" + IDname, cThreshold.ToString());
+            Props.SetProp("MaxAdjust" + IDname, cMaxAdjust.ToString());
+            Props.SetProp("MinAdjust" + IDname, cMinAdjust.ToString());
+            Props.SetProp("Scaling" + IDname, cScalingFactor.ToString());
         }
 
         public void SendPID()

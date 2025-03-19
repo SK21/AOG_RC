@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -163,10 +164,10 @@ namespace RateController
 
         private void SaveData()
         {
-            mf.Tls.SaveProperty("Scale_DisplayMode" + cProductID.ToString(), cDisplayMode.ToString());
-            mf.Tls.SaveProperty("Scale_Area" + cProductID.ToString(), StartingAcres.ToString());
-            mf.Tls.SaveProperty("Scale_Weight" + cProductID.ToString(), StartingWeight.ToString());
-            mf.Tls.SaveProperty("Scale_Tare" + cProductID.ToString(), TareWeight.ToString());
+            Props.SetProp("Scale_DisplayMode" + cProductID.ToString(), cDisplayMode.ToString());
+            Props.SetProp("Scale_Area" + cProductID.ToString(), StartingAcres.ToString());
+            Props.SetProp("Scale_Weight" + cProductID.ToString(), StartingWeight.ToString());
+            Props.SetProp("Scale_Tare" + cProductID.ToString(), TareWeight.ToString());
         }
 
         private void timer1_Tick(object sender, EventArgs e)

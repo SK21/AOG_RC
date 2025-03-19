@@ -75,10 +75,10 @@ namespace RateController
 
         private void Save()
         {
-            mf.Tls.SaveProperty("RaiseTime", cRaiseTime.ToString());
-            mf.Tls.SaveProperty("LowerTime", cLowerTime.ToString());
-            mf.Tls.SaveProperty("HydEnable", cHydEnable.ToString());
-            mf.Tls.SaveProperty("HydSettings", cSet0.ToString());
+            Props.SetProp("RaiseTime", cRaiseTime.ToString());
+            Props.SetProp("LowerTime", cLowerTime.ToString());
+            Props.SetProp("HydEnable", cHydEnable.ToString());
+            Props.SetProp("HydSettings", cSet0.ToString());
         }
     }
 }

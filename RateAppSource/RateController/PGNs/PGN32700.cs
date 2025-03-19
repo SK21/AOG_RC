@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 
 namespace RateController
 {
@@ -247,7 +248,7 @@ namespace RateController
             for (int i = 2; i < cByteCount; i++)
             {
                 Name = "ModuleConfig_" + i.ToString();
-                mf.Tls.SaveProperty(Name, cData[i].ToString());
+                Props.SetProp(Name, cData[i].ToString());
             }
         }
 

@@ -214,10 +214,10 @@ namespace RateController
                 }
                 else
                 {
-                    mf.Tls.SaveProperty(Name() + "_Pulses", PulseCountTotal.ToString());
-                    mf.Tls.SaveProperty(Name() + "_Amount", MeasuredAmount.ToString());
-                    mf.Tls.SaveProperty(Name() + "_CalPWM", CalPWM.ToString());
-                    mf.Tls.SaveProperty(Name() + "_IsLocked", cIsLocked.ToString());
+                    Props.SetProp(Name() + "_Pulses", PulseCountTotal.ToString());
+                    Props.SetProp(Name() + "_Amount", MeasuredAmount.ToString());
+                    Props.SetProp(Name() + "_CalPWM", CalPWM.ToString());
+                    Props.SetProp(Name() + "_IsLocked", cIsLocked.ToString());
 
                     double.TryParse(cCalFactorBox.Text, out cCalFactor);
                     cProduct.MeterCal = cCalFactor;

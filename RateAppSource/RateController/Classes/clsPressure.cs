@@ -37,9 +37,9 @@
 
         public void Save()
         {
-            mf.Tls.SaveProperty("PressureSlope" + cName, cSlope.ToString());
-            mf.Tls.SaveProperty("PressureIntercept" + cName, cIntercept.ToString());
-            mf.Tls.SaveProperty("PressureMin" + cName, cMinimumRateData.ToString());
+            Props.SetProp("PressureSlope" + cName, cSlope.ToString());
+            Props.SetProp("PressureIntercept" + cName, cIntercept.ToString());
+            Props.SetProp("PressureMin" + cName, cMinimumRateData.ToString());
         }
     }
 }

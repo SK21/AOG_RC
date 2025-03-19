@@ -7,11 +7,6 @@ using System.Windows.Forms;
 
 namespace RateController.Classes
 {
-    public enum RateType
-    {
-        Applied,
-        Target
-    }
     public enum ApplicationMode
     { ControlledUPM, ConstantUPM, DocumentApplied, DocumentTarget }
 
@@ -20,6 +15,9 @@ namespace RateController.Classes
 
     public enum MasterSwitchMode
     { ControlAll, ControlMasterRelayOnly, Override };
+
+    public enum RateType
+    { Applied, Target }
 
     public enum RelayTypes
     { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None };

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 
 namespace RateController
 {
@@ -123,9 +124,9 @@ namespace RateController
         {
             if (cEdited)
             {
-                mf.Tls.SaveProperty(Name + "_enabled", cEnabled.ToString());
-                mf.Tls.SaveProperty(Name + "_width", cWidth.ToString());
-                mf.Tls.SaveProperty(Name + "_SwitchID", cSwitchID.ToString());
+                Props.SetProp(Name + "_enabled", cEnabled.ToString());
+                Props.SetProp(Name + "_width", cWidth.ToString());
+                Props.SetProp(Name + "_SwitchID", cSwitchID.ToString());
                 cEdited = false;
             }
         }

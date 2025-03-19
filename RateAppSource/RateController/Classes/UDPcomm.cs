@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Net;
 using System.Net.Sockets;
 
@@ -48,7 +49,7 @@ namespace RateController
                 {
                     data = value.Split('.');
                     cNetworkEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
-                    mf.Tls.SaveProperty("EndPoint_" + cConnectionName, value);
+                    Props.SetProp("EndPoint_" + cConnectionName, value);
                     cSubNet = data[0].ToString() + "." + data[1].ToString() + "." + data[2].ToString();
                 }
             }

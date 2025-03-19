@@ -61,7 +61,7 @@ namespace RateController
             set
             {
                 cMasterSwitchMode = value;
-                SaveProperty("MasterSwitchMode", cMasterSwitchMode.ToString());
+                Props.SetProp("MasterSwitchMode", cMasterSwitchMode.ToString());
             }
         }
 
@@ -89,7 +89,7 @@ namespace RateController
             set
             {
                 cIsReadOnly = value;
-                SaveProperty("ReadOnly", cIsReadOnly.ToString(), true);
+                Props.SetProp("ReadOnly", cIsReadOnly.ToString(), true);
             }
         }
 
@@ -99,7 +99,7 @@ namespace RateController
             set
             {
                 cUseVariableRate = value;
-                SaveProperty("UseVariableRate_" + Properties.Settings.Default.FileName, cUseVariableRate.ToString());
+                Props.SetProp("UseVariableRate_" + Properties.Settings.Default.FileName, cUseVariableRate.ToString());
             }
         }
 
@@ -569,34 +569,6 @@ namespace RateController
             }
         }
 
-        public void SaveProperty(string Key, string Value, bool IgnoreReadOnly = false)
-        {
-            try
-            {
-                if (!ReadOnly || IgnoreReadOnly || Value != null)
-                {
-                    bool Changed = false;
-                    if (PropsDictionary.ContainsKey(Key))
-                    {
-                        if (!PropsDictionary[Key].ToString().Equals(Value))
-                        {
-                            PropsDictionary[Key] = Value;
-                            Changed = true;
-                        }
-                    }
-                    else
-                    {
-                        PropsDictionary.Add(Key, Value);
-                        Changed = true;
-                    }
-                    if (Changed) SaveProperties();
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("clsTools/SaveProperty: " + ex.Message);
-            }
-        }
 
         public string SettingsDir()
         {
@@ -702,56 +674,6 @@ namespace RateController
 
         #endregion ScreenBitMapCode
 
-        public void StartWifi()
-        {
-            string SSID = LoadProperty("WifiSSID");
-            string Password = LoadProperty("WifiPassword");
-
-            string Start = "netsh wlan set hostednetwork mode=allow ssid=" + SSID + " key=" + Password + "\n";
-            Start += "netsh wlan stop hostednetwork\n";
-            Start += "netsh wlan start hostednetwork\n";
-
-            string FileName = SettingsDir() + "\\StartWifi.bat";
-            File.WriteAllText(FileName, Start);
-
-            var psi = new ProcessStartInfo();
-            psi.CreateNoWindow = true;
-            psi.WindowStyle = ProcessWindowStyle.Hidden;
-            psi.FileName = FileName;
-            psi.Verb = "runas";
-
-            var process = new Process();
-            process.StartInfo = psi;
-            process.Start();
-            process.WaitForExit();
-        }
-
-        public void StopWifi()
-        {
-            string Stop = "netsh wlan stop hostednetwork\n";
-
-            string FileName = SettingsDir() + "\\StopWifi.bat";
-            File.WriteAllText(FileName, Stop);
-
-            var psi = new ProcessStartInfo();
-            psi.CreateNoWindow = true;
-            psi.FileName = FileName;
-            psi.Verb = "runas";
-
-            var process = new Process();
-            process.StartInfo = psi;
-            process.Start();
-            process.WaitForExit();
-        }
-
-        public int StringToInt(string S)
-        {
-            if (decimal.TryParse(S, out decimal tmp))
-            {
-                return (int)tmp;
-            }
-            return 0;
-        }
 
         public string VersionDate()
         {

@@ -98,9 +98,9 @@ namespace RateController
         {
             // Should only be called from clsRelays. Need to run sub
             // BuildPowerRelays on change.
-            mf.Tls.SaveProperty("RelayType" + cName, cType.ToString());
-            mf.Tls.SaveProperty("RelaySection" + cName, cSectionID.ToString());
-            mf.Tls.SaveProperty("RelaySwitch" + cName, cSwitchID.ToString());
+            Props.SetProp("RelayType" + cName, cType.ToString());
+            Props.SetProp("RelaySection" + cName, cSectionID.ToString());
+            Props.SetProp("RelaySwitch" + cName, cSwitchID.ToString());
         }
     }
 }

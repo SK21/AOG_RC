@@ -162,7 +162,7 @@ namespace RateController
                 if (value >= 0 && value < MaxProducts - 2)
                 {
                     cDefaultProduct = value;
-                    Tls.SaveProperty("DefaultProduct", cDefaultProduct.ToString());
+                    Props.SetProp("DefaultProduct", cDefaultProduct.ToString());
                 }
             }
         }
@@ -185,7 +185,7 @@ namespace RateController
             set
             {
                 cPressureCal = value;
-                Tls.SaveProperty("PressureCal", value.ToString());
+                Props.SetProp("PressureCal", value.ToString());
             }
         }
 
@@ -195,7 +195,7 @@ namespace RateController
             set
             {
                 cPressureOffset = value;
-                Tls.SaveProperty("PressureOffset", value.ToString());
+                Props.SetProp("PressureOffset", value.ToString());
             }
         }
 
@@ -233,7 +233,7 @@ namespace RateController
             set
             {
                 cResumeAfterPrime = value;
-                Tls.SaveProperty("ResumeAfterPrime", cResumeAfterPrime.ToString());
+                Props.SetProp("ResumeAfterPrime", cResumeAfterPrime.ToString());
             }
         }
 
@@ -243,7 +243,7 @@ namespace RateController
             set
             {
                 cShowPressure = value;
-                Tls.SaveProperty("ShowPressure", value.ToString());
+                Props.SetProp("ShowPressure", value.ToString());
                 DisplayPressure();
             }
         }
@@ -254,7 +254,7 @@ namespace RateController
             set
             {
                 cShowSwitches = value;
-                Tls.SaveProperty("ShowSwitches", cShowSwitches.ToString());
+                Props.SetProp("ShowSwitches", cShowSwitches.ToString());
                 DisplaySwitches();
             }
         }
@@ -289,7 +289,7 @@ namespace RateController
                 if (cUseLargeScreen != value)
                 {
                     cUseLargeScreen = value;
-                    Tls.SaveProperty("UseLargeScreen", cUseLargeScreen.ToString());
+                    Props.SetProp("UseLargeScreen", cUseLargeScreen.ToString());
                     SwitchScreens();
                 }
             }
@@ -301,7 +301,7 @@ namespace RateController
             set
             {
                 cUseTransparent = value;
-                Tls.SaveProperty("UseTransparent", cUseTransparent.ToString());
+                Props.SetProp("UseTransparent", cUseTransparent.ToString());
             }
         }
 
@@ -313,7 +313,7 @@ namespace RateController
                 if (bool.TryParse(Tls.LoadProperty("UseZones"), out bool tmp2)) tmp = tmp2;
                 return tmp;
             }
-            set { Tls.SaveProperty("UseZones", value.ToString()); }
+            set { Props.SetProp("UseZones", value.ToString()); }
         }
 
         public void ChangeLanguage()
@@ -576,7 +576,7 @@ namespace RateController
             if (ProductID < 4)
             {
                 cShowScale[ProductID] = Show;
-                Tls.SaveProperty("ShowScale_" + ProductID.ToString(), cShowScale[ProductID].ToString());
+                Props.SetProp("ShowScale_" + ProductID.ToString(), cShowScale[ProductID].ToString());
                 DisplayScales();
             }
         }
@@ -989,19 +989,19 @@ namespace RateController
                 Tls.SaveFormData(this);
                 if (this.WindowState == FormWindowState.Normal)
                 {
-                    Tls.SaveProperty("CurrentPage", CurrentPage.ToString());
+                    Props.SetProp("CurrentPage", CurrentPage.ToString());
                 }
 
                 Sections.Save();
                 Products.Save();
-                Tls.SaveProperty("ShowQuantityRemaining", ShowQuantityRemaining.ToString());
-                Tls.SaveProperty("ShowCoverageRemaining", ShowCoverageRemaining.ToString());
+                Props.SetProp("ShowQuantityRemaining", ShowQuantityRemaining.ToString());
+                Props.SetProp("ShowCoverageRemaining", ShowCoverageRemaining.ToString());
 
-                Tls.SaveProperty("PrimeTime", cPrimeTime.ToString());
-                Tls.SaveProperty("PrimeDelay", cPrimeDelay.ToString());
-                Tls.SaveProperty("SimSpeed", cSimSpeed.ToString());
-                Tls.SaveProperty("SimMode", cSimMode.ToString());
-                Tls.SaveProperty("UseDualAuto", cUseDualAuto.ToString());
+                Props.SetProp("PrimeTime", cPrimeTime.ToString());
+                Props.SetProp("PrimeDelay", cPrimeDelay.ToString());
+                Props.SetProp("SimSpeed", cSimSpeed.ToString());
+                Props.SetProp("SimMode", cSimMode.ToString());
+                Props.SetProp("UseDualAuto", cUseDualAuto.ToString());
 
                 UDPaog.Close();
                 UDPmodules.Close();
@@ -1013,7 +1013,7 @@ namespace RateController
                 string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
 
-                Tls.SaveProperty("RateType", cRateType.ToString());
+                Props.SetProp("RateType", cRateType.ToString());
             }
             catch (Exception)
             {

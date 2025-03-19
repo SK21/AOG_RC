@@ -1,4 +1,5 @@
-﻿using RateController.Language;
+﻿using RateController.Classes;
+using RateController.Language;
 using System;
 using System.Drawing;
 using System.Net;
@@ -40,7 +41,7 @@ namespace RateController.Menu
                 SetButtons(false);
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();
-                mf.Tls.SaveProperty("BoardType", BoardType.ToString());
+                Props.SetProp("BoardType", BoardType.ToString());
             }
             catch (Exception ex)
             {

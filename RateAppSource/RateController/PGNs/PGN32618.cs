@@ -51,7 +51,7 @@ namespace RateController
             set
             {
                 cAutoRateDisabled = value;
-                mf.Tls.SaveProperty("SwitchboxAutoRateDisabled", cAutoRateDisabled.ToString());
+                Props.SetProp("SwitchboxAutoRateDisabled", cAutoRateDisabled.ToString());
             }
         }
 
@@ -94,7 +94,7 @@ namespace RateController
             set
             {
                 cUseWorkSwitch = value;
-                mf.Tls.SaveProperty("UseWorkSwitch", cUseWorkSwitch.ToString());
+                Props.SetProp("UseWorkSwitch", cUseWorkSwitch.ToString());
             }
         }
 

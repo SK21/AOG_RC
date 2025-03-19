@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using RateController.Classes;
+using System.Text;
 
 namespace RateController
 {
@@ -75,8 +76,8 @@ namespace RateController
 
         public void Save()
         {
-            mf.Tls.SaveProperty("NetworkName", cNetworkName);
-            mf.Tls.SaveProperty("NetworkPassword", cNetworkPassword);
+            Props.SetProp("NetworkName", cNetworkName);
+            Props.SetProp("NetworkPassword", cNetworkPassword);
         }
 
         public void Send()

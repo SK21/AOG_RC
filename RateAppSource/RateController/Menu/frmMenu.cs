@@ -1,4 +1,5 @@
-﻿using RateController.Language;
+﻿using RateController.Classes;
+using RateController.Language;
 using RateController.Menu;
 using System;
 using System.Diagnostics;
@@ -965,7 +966,7 @@ namespace RateController
         private void frmMenu_FormClosed(object sender, FormClosedEventArgs e)
         {
             mf.Tls.SaveFormData(this);
-            if (cLastScreen != "" && cLastScreen != null) mf.Tls.SaveProperty("LastScreen", cLastScreen);
+            if (cLastScreen != "" && cLastScreen != null) Props.SetProp("LastScreen", cLastScreen);
         }
 
         private void frmMenu_Load(object sender, EventArgs e)

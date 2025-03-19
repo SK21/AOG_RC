@@ -40,7 +40,7 @@ namespace RateController.Menu
                 if (UseZones)
                 {
                     int.TryParse(tbSectionsPerZone.Text, out SectionsPerZone);
-                    mf.Tls.SaveProperty("SectionsPerZone", SectionsPerZone.ToString());
+                    Props.SetProp("SectionsPerZone", SectionsPerZone.ToString());
 
                     if (SectionCountChanged || SectionsPerZoneChanged) mf.Zones.Build(SectionsPerZone);
                     SectionCountChanged = false;
@@ -57,7 +57,7 @@ namespace RateController.Menu
 
                 if (double.TryParse(tbDefaultWidth.Text, out double dw))
                 {
-                    mf.Tls.SaveProperty("SectionDefaultWidth", dw.ToString());
+                    Props.SetProp("SectionDefaultWidth", dw.ToString());
                     DefaultWidth = dw;
                 }
 

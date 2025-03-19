@@ -121,7 +121,7 @@ namespace RateController.Classes
                     gmap.MapProvider = GMapProviders.EmptyProvider;
                 }
                 gmap.Refresh();
-                mf.Tls.SaveProperty("ShowTiles", cShowTiles.ToString());
+                Props.SetProp("ShowTiles", cShowTiles.ToString());
             }
         }
 
@@ -131,7 +131,7 @@ namespace RateController.Classes
             set
             {
                 cShowZoneOverlay = value;
-                mf.Tls.SaveProperty("ShowZoneOverlay", cShowZoneOverlay.ToString());
+                Props.SetProp("ShowZoneOverlay", cShowZoneOverlay.ToString());
                 if (cShowZoneOverlay)
                 {
                     try
@@ -254,7 +254,7 @@ namespace RateController.Classes
                     gmap.Zoom = 16;
                     Result = true;
                     MapChanged?.Invoke(this, EventArgs.Empty);
-                    mf.Tls.SaveProperty("LastMapFile", FilePath);
+                    Props.SetProp("LastMapFile", FilePath);
                     ZoomToFit();
                     string DataPath = Path.GetDirectoryName(FilePath) + "\\" + MapName + "_Rates.csv";
                     mf.Tls.NewRateCollector(DataPath);
@@ -578,8 +578,8 @@ namespace RateController.Classes
         {
             var centroid = CalculateCentroid(zone.Geometry); // Assuming Geometry is a Polygon
             gmap.Position = new PointLatLng(centroid.Y, centroid.X); // Set the map position to the centroid
-            mf.Tls.SaveProperty("LastMapLat", centroid.Y.ToString());
-            mf.Tls.SaveProperty("LastMapLng", centroid.X.ToString());
+            Props.SetProp("LastMapLat", centroid.Y.ToString());
+            Props.SetProp("LastMapLng", centroid.X.ToString());
         }
 
         private string GetFolder(string StartFolder, string SubFolder, bool CreateNew = true)
