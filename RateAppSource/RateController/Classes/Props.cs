@@ -73,7 +73,7 @@ namespace RateController.Classes
         private static FormStart mf;
         private static frmPressureDisplay PressureDisplay;
         private static frmSwitches SwitchesForm;
-
+        private static Dictionary<string, Form> openForms = new Dictionary<string, Form>();
         #region // flow adjustment defaults
 
         public static readonly int HighAdjustDefault = 50;
@@ -512,8 +512,11 @@ namespace RateController.Classes
 
         public static Form IsFormOpen(string Name, bool SetFocus = true)
         {
-            Form frm = Application.OpenForms[Name];
-            if (frm != null && SetFocus) frm.Focus();
+            Form frm = null;
+            if (openForms.TryGetValue(Name, out frm))
+            {
+                if (SetFocus) frm.Focus();
+            }
             return frm;
         }
 
@@ -537,6 +540,14 @@ namespace RateController.Classes
                     frm.Top = Top;
                 }
                 CheckOnScreen(frm);
+
+                // record open forms
+                if(!openForms.ContainsKey(frm.Name))
+                {
+                    openForms.Add(frm.Name, frm);
+                    // subscribe to the form close event to remove
+                    frm.FormClosed += (s, e) => openForms.Remove(frm.Name); 
+                }
             }
             catch (Exception ex)
             {

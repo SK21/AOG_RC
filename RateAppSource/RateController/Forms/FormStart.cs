@@ -709,7 +709,7 @@ namespace RateController
                 Products.UpdatePID();
                 UpdateStatus();
 
-                //SwitchScreens();
+                if (Props.UseLargeScreen) Props.SwitchScreens();
                 Props.DisplaySwitches();
                 Props.DisplayPressure();
                 DisplayScales();
