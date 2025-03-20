@@ -228,7 +228,7 @@ namespace RateController
             {
                 cLastScreen = "frmMenuControl";
                 HighlightButton(cLastScreen);
-                Form fs =Props.IsFormOpen(cLastScreen);
+                Form fs = Props.IsFormOpen(cLastScreen);
 
                 if (fs == null)
                 {
@@ -548,6 +548,7 @@ namespace RateController
             HighlightButton("butNew");
             mf.NewFile();
             ChangeProduct(0);
+            ShowName();
         }
 
         private void butOpen_Click(object sender, EventArgs e)
@@ -555,6 +556,7 @@ namespace RateController
             HighlightButton("butOpen");
             mf.OpenFile();
             ChangeProduct(0);
+            ShowName();
         }
 
         private void butOptions_Click(object sender, EventArgs e)
@@ -777,6 +779,7 @@ namespace RateController
         {
             HighlightButton("butSaveAs");
             mf.SaveFileAs();
+            ShowName();
         }
 
         private void butSections_Click(object sender, EventArgs e)
@@ -943,6 +946,7 @@ namespace RateController
             butPowerOff.Top = 8;
             if (LoadLast) LoadLastScreen();
             SetLanguage();
+            ShowName();
         }
 
         private void frmMenu_LocationChanged(object sender, EventArgs e)
@@ -1201,6 +1205,12 @@ namespace RateController
             butLanguage.Text = Lang.lgLanguage;
             butColor.Text = Lang.lgColor;
             btnPressure.Text = Lang.lgPressure;
+        }
+
+        private void ShowName()
+        {
+            string Nm = Props.CurrentFileName().Length <= 11 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 8) + "...";
+            lbFileName.Text = "[" + Nm + "]";
         }
     }
 }

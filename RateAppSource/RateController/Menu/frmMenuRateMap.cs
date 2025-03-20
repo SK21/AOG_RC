@@ -5,6 +5,7 @@ using RateController.Forms;
 using RateController.Language;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -552,6 +553,23 @@ namespace RateController.Menu
         {
             if (!Initializing) mf.Tls.Manager.ShowZoneOverlay = ckZones.Checked;
             gbZone.Enabled=ckZones.Checked;
+        }
+
+        private void btnPNG_Click(object sender, EventArgs e)
+        {
+            GMapControl map = mf.Tls.Manager.gmapObject;
+            Bitmap MapImage=new Bitmap(map.Width, map.Height);
+            map.DrawToBitmap(MapImage,new Rectangle(0,0,map.Width,map.Height));
+            saveFileDialog1.InitialDirectory = Props.CurrentDir();
+            saveFileDialog1.Title = "Save Map";
+            saveFileDialog1.Filter = "PNG|*.PNG";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    MapImage.Save(saveFileDialog1.FileName, ImageFormat.Png);
+                }
+            }
         }
     }
 }

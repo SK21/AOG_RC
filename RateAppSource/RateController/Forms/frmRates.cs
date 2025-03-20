@@ -14,6 +14,12 @@ namespace RateController.Forms
         public frmRates()
         {
             InitializeComponent();
+            Props.UnitsChanged += Props_UnitsChanged;
+        }
+
+        private void Props_UnitsChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

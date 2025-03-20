@@ -50,6 +50,7 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.gbMap = new System.Windows.Forms.GroupBox();
+            this.legendPanel = new System.Windows.Forms.Panel();
             this.ckMap = new System.Windows.Forms.CheckBox();
             this.ckFullScreen = new System.Windows.Forms.CheckBox();
             this.VSzoom = new System.Windows.Forms.VScrollBar();
@@ -60,7 +61,7 @@
             this.ckZones = new System.Windows.Forms.CheckBox();
             this.btnPNG = new System.Windows.Forms.Button();
             this.btnRateData = new System.Windows.Forms.Button();
-            this.legendPanel = new System.Windows.Forms.Panel();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.gbZone.SuspendLayout();
             this.gbMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -321,6 +322,15 @@
             this.gbMap.Text = "Map";
             this.gbMap.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
+            // legendPanel
+            // 
+            this.legendPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.legendPanel.Location = new System.Drawing.Point(71, 294);
+            this.legendPanel.Name = "legendPanel";
+            this.legendPanel.Size = new System.Drawing.Size(250, 300);
+            this.legendPanel.TabIndex = 358;
+            this.legendPanel.Visible = false;
+            // 
             // ckMap
             // 
             this.ckMap.Appearance = System.Windows.Forms.Appearance.Button;
@@ -418,8 +428,9 @@
             this.btnPNG.Name = "btnPNG";
             this.btnPNG.Size = new System.Drawing.Size(89, 64);
             this.btnPNG.TabIndex = 356;
-            this.btnPNG.Text = "Export PNG";
+            this.btnPNG.Text = "Save Image";
             this.btnPNG.UseVisualStyleBackColor = true;
+            this.btnPNG.Click += new System.EventHandler(this.btnPNG_Click);
             // 
             // btnRateData
             // 
@@ -431,14 +442,9 @@
             this.btnRateData.UseVisualStyleBackColor = true;
             this.btnRateData.Click += new System.EventHandler(this.btnRateData_Click);
             // 
-            // legendPanel
+            // saveFileDialog1
             // 
-            this.legendPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.legendPanel.Location = new System.Drawing.Point(71, 294);
-            this.legendPanel.Name = "legendPanel";
-            this.legendPanel.Size = new System.Drawing.Size(250, 300);
-            this.legendPanel.TabIndex = 358;
-            this.legendPanel.Visible = false;
+            this.saveFileDialog1.DefaultExt = "PNG";
             // 
             // frmMenuRateMap
             // 
@@ -510,5 +516,6 @@
         private System.Windows.Forms.Button btnPNG;
         private System.Windows.Forms.Button btnRateData;
         private System.Windows.Forms.Panel legendPanel;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }

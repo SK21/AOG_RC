@@ -60,14 +60,13 @@
             this.butMachine = new System.Windows.Forms.Button();
             this.butProducts = new System.Windows.Forms.Button();
             this.butFile = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnHelp = new System.Windows.Forms.Button();
             this.butUpdateModules = new System.Windows.Forms.Button();
             this.butBoards = new System.Windows.Forms.Button();
             this.butColor = new System.Windows.Forms.Button();
             this.butMap = new System.Windows.Forms.Button();
             this.btnPressure = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.lbFileName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // butClose
@@ -638,19 +637,6 @@
             this.butFile.UseVisualStyleBackColor = false;
             this.butFile.Click += new System.EventHandler(this.butFile_Click);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = global::RateController.Properties.Resources.RC_logo;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 8);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(70, 63);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
-            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
-            // 
             // btnHelp
             // 
             this.btnHelp.BackColor = System.Drawing.Color.Transparent;
@@ -763,11 +749,21 @@
             this.btnPressure.Visible = false;
             this.btnPressure.Click += new System.EventHandler(this.btnPressure_Click);
             // 
+            // lbFileName
+            // 
+            this.lbFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFileName.Location = new System.Drawing.Point(12, 9);
+            this.lbFileName.Name = "lbFileName";
+            this.lbFileName.Size = new System.Drawing.Size(127, 38);
+            this.lbFileName.TabIndex = 166;
+            this.lbFileName.Text = "label1";
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.Controls.Add(this.lbFileName);
             this.Controls.Add(this.btnPressure);
             this.Controls.Add(this.butMap);
             this.Controls.Add(this.butColor);
@@ -805,7 +801,6 @@
             this.Controls.Add(this.butProducts);
             this.Controls.Add(this.butFile);
             this.Controls.Add(this.butClose);
-            this.Controls.Add(this.pictureBox1);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMenu";
@@ -816,14 +811,11 @@
             this.LocationChanged += new System.EventHandler(this.frmMenu_LocationChanged);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button butClose;
         private System.Windows.Forms.Button butFile;
         private System.Windows.Forms.Button butProducts;
@@ -861,5 +853,6 @@
         private System.Windows.Forms.Button butColor;
         private System.Windows.Forms.Button butMap;
         private System.Windows.Forms.Button btnPressure;
+        private System.Windows.Forms.Label lbFileName;
     }
 }

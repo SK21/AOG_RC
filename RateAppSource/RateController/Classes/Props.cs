@@ -67,13 +67,15 @@ namespace RateController.Classes
         private static double cSimSpeed = 0;
         private static bool cUseDualAuto;
         private static bool cUseLargeScreen = false;
+        private static bool cUseMetric;
         private static bool cUseTransparent = false;
         private static bool cUseVariableRate = false;
         private static bool cUseZones = false;
         private static FormStart mf;
+        private static Dictionary<string, Form> openForms = new Dictionary<string, Form>();
         private static frmPressureDisplay PressureDisplay;
         private static frmSwitches SwitchesForm;
-        private static Dictionary<string, Form> openForms = new Dictionary<string, Form>();
+
         #region // flow adjustment defaults
 
         public static readonly int HighAdjustDefault = 50;
@@ -84,6 +86,8 @@ namespace RateController.Classes
         public static readonly int ThresholdDefault = 50;
 
         #endregion // flow adjustment defaults
+
+        public static event EventHandler UnitsChanged;
 
         #region MainProperties
 
@@ -290,8 +294,16 @@ namespace RateController.Classes
 
         public static bool UseMetric
         {
-            get { return bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false; }
-            set { SetProp("UseMetric", value.ToString()); }
+            get { return cUseMetric; }
+            set
+            {
+                if (cUseMetric != value)
+                {
+                    cUseMetric = value;
+                    SetProp("UseMetric", cUseMetric.ToString());
+                    UnitsChanged?.Invoke(null, EventArgs.Empty);
+                }
+            }
         }
 
         public static int UserRateType
@@ -542,11 +554,11 @@ namespace RateController.Classes
                 CheckOnScreen(frm);
 
                 // record open forms
-                if(!openForms.ContainsKey(frm.Name))
+                if (!openForms.ContainsKey(frm.Name))
                 {
                     openForms.Add(frm.Name, frm);
                     // subscribe to the form close event to remove
-                    frm.FormClosed += (s, e) => openForms.Remove(frm.Name); 
+                    frm.FormClosed += (s, e) => openForms.Remove(frm.Name);
                 }
             }
             catch (Exception ex)
@@ -575,6 +587,7 @@ namespace RateController.Classes
             cUseZones = bool.TryParse(GetProp("UseZones"), out bool uz) ? uz : false;
             cShowQuantityRemaining = bool.TryParse(GetProp("ShowQuantityRemaining"), out bool qr) ? qr : false;
             cShowCoverageRemaining = bool.TryParse(GetProp("ShowCoverageRemaining"), out bool cr) ? cr : false;
+            cUseMetric = bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false;
         }
 
         public static bool OpenFile(string FileName, bool IsNew = false)
