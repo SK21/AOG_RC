@@ -32,8 +32,8 @@ namespace RateController.Menu
         {
             try
             {
-                mf.ShowSwitches = ckScreenSwitches.Checked;
-                mf.UseDualAuto = ckDualAuto.Checked;
+                Props.ShowSwitches = ckScreenSwitches.Checked;
+                Props.UseDualAuto = ckDualAuto.Checked;
                 mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
                 mf.SwitchBox.AutoRateDisabled = rbSections.Checked;
 
@@ -142,8 +142,8 @@ namespace RateController.Menu
         {
             Initializing = true;
 
-            ckScreenSwitches.Checked = mf.ShowSwitches;
-            ckDualAuto.Checked = mf.UseDualAuto;
+            ckScreenSwitches.Checked = Props.ShowSwitches;
+            ckDualAuto.Checked = Props.UseDualAuto;
             ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
             rbSections.Checked = mf.SwitchBox.AutoRateDisabled;
 

@@ -169,7 +169,7 @@ namespace RateController.Menu
                 pictureBox1.Size = new Size(this.ClientSize.Width - 565, this.ClientSize.Height - 28);
                 pictureBox1.Location = new System.Drawing.Point(550, 14);
 
-                if (mf.UseLargeScreen)
+                if (Props.UseLargeScreen)
                 {
                     mf.LSLeft = ScreenLeftMin + this.Left;
                     mf.LSTop = 324 + this.Top;
@@ -189,7 +189,7 @@ namespace RateController.Menu
                 pictureBox1.Location = new System.Drawing.Point(ScreenLeftMin, 324);
                 PositionForm();
 
-                if (mf.UseLargeScreen)
+                if (Props.UseLargeScreen)
                 {
                     mf.LSLeft = MainLeft;
                     mf.LSTop = MainTop;
@@ -339,7 +339,7 @@ namespace RateController.Menu
             MainLeft = mf.Left;
             MainTop = mf.Top;
 
-            if (mf.UseLargeScreen)
+            if (Props.UseLargeScreen)
             {
                 MainLeft = mf.LSLeft;
                 MainTop = mf.LSTop;

@@ -35,18 +35,18 @@ namespace RateController.Menu
             {
                 if (ckSimSpeed.Checked)
                 {
-                    mf.SimMode = SimType.Sim_Speed;
+                    Props.SimMode = SimType.Sim_Speed;
                 }
                 else
                 {
-                    mf.SimMode = SimType.Sim_None;
+                    Props.SimMode = SimType.Sim_None;
                 }
 
-                if (double.TryParse(tbSimSpeed.Text, out double Speed)) mf.SimSpeed = Speed;
+                if (double.TryParse(tbSimSpeed.Text, out double Speed)) Props.SimSpeed = Speed;
                 Props.UseMetric = ckMetric.Checked;
-                mf.UseTransparent = ckTransparent.Checked;
-                mf.UseLargeScreen = ckLargeScreen.Checked;
-                if (ckSingle.Checked) mf.SwitchScreens(true);
+                Props.UseTransparent = ckTransparent.Checked;
+                Props.UseLargeScreen = ckLargeScreen.Checked;
+                if (ckSingle.Checked) Props.SwitchScreens(true);
                 SetButtons(false);
                 if (ckReset.Checked) mf.Products.Load(true);
                 UpdateForm();
@@ -197,11 +197,11 @@ namespace RateController.Menu
                 lbSimUnits.Text = "MPH";
             }
 
-            tbSimSpeed.Text = mf.SimSpeed.ToString("N1");
-            ckSimSpeed.Checked = (mf.SimMode == SimType.Sim_Speed);
+            tbSimSpeed.Text = Props.SimSpeed.ToString("N1");
+            ckSimSpeed.Checked = (Props.SimMode == SimType.Sim_Speed);
             ckMetric.Checked = Props.UseMetric;
-            ckTransparent.Checked = mf.UseTransparent;
-            ckLargeScreen.Checked = mf.UseLargeScreen;
+            ckTransparent.Checked = Props.UseTransparent;
+            ckLargeScreen.Checked = Props.UseLargeScreen;
             ckReset.Checked = false;
             ckSingle.Checked = false;
 

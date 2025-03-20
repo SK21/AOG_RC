@@ -506,7 +506,7 @@ namespace RateController
         {
             if (mf.SwitchBox.Connected())
             {
-                if (mf.UseZones)
+                if (Props.UseZones)
                 {
                     UpdateSectionStatusWithZones();
                 }
@@ -535,15 +535,15 @@ namespace RateController
         private void PrimingTimerTick(Object myObject, EventArgs myEventArgs)
         {
             TimerCount++;
-            if (TimerCount > mf.PrimeTime)
+            if (TimerCount > Props.PrimeTime)
             {
                 TimerCount = 0;
                 PrimeTimer.Enabled = false;
                 cPrimeOn = false;
                 PrimeInitialized = false;
 
-                ForceOff = !mf.ResumeAfterPrime;
-                if (!mf.ResumeAfterPrime) mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
+                ForceOff = !Props.ResumeAfterPrime;
+                if (!Props.ResumeAfterPrime) mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
             }
         }
 
@@ -552,7 +552,7 @@ namespace RateController
             // turn sections on if master held in on position for a defined time
             if (PrimeInitialized)
             {
-                if (((DateTime.Now - OnFirstPressed).TotalSeconds > mf.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
+                if (((DateTime.Now - OnFirstPressed).TotalSeconds > Props.PrimeDelay) && mf.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
                 {
                     // priming mode
                     cPrimeOn = true;
@@ -574,7 +574,7 @@ namespace RateController
         private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
             ReadRateSwitches();
-            if (mf.UseZones)
+            if (Props.UseZones)
             {
                 UpdateSectionStatusWithZones();
             }

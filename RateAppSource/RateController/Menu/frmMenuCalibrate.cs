@@ -31,7 +31,7 @@ namespace RateController.Menu
         {
             // btnCalStop needs to be next in tab order 
             // after btnCalStart to receive the focus
-            mf.SimMode = SimType.Sim_Speed;
+            Props.SimMode = SimType.Sim_Speed;
             Running = true;
             SetButtons();
             Cals.Running(true);
@@ -39,7 +39,7 @@ namespace RateController.Menu
 
         private void btnCalStop_Click(object sender, EventArgs e)
         {
-            mf.SimMode = SimType.Sim_None;
+            Props.SimMode = SimType.Sim_None;
             Running = false;
             SetButtons();
             Cals.Running(false);
@@ -56,7 +56,7 @@ namespace RateController.Menu
         {
             try
             {
-                if (double.TryParse(tbSpeed.Text, out double Tmp)) mf.SimSpeed = Tmp;
+                if (double.TryParse(tbSpeed.Text, out double Tmp)) Props.SimSpeed = Tmp;
                 Cals.Save();
                 SetButtons(false);
                 UpdateForm();
@@ -75,7 +75,7 @@ namespace RateController.Menu
         private void frmMenuCalibrate_FormClosed(object sender, FormClosedEventArgs e)
         {
             Props.SaveFormLocation(this);
-            mf.SimMode = SimType.Sim_None;
+            Props.SimMode = SimType.Sim_None;
             btnCalStop.PerformClick();
             Cals.Close();
         }
@@ -263,7 +263,7 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            tbSpeed.Text = mf.SimSpeed.ToString("N1");
+            tbSpeed.Text = Props.SimSpeed.ToString("N1");
             Initializing = false;
         }
 

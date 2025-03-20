@@ -32,10 +32,10 @@ namespace RateController.Menu
         {
             try
             {
-                if (double.TryParse(tbSpeed.Text, out double Spd)) mf.SimSpeed = Spd;
-                if (double.TryParse(tbTime.Text, out double Time)) mf.PrimeTime = Time;
-                if (int.TryParse(tbDelay.Text, out int Delay)) mf.PrimeDelay = Delay;
-                mf.ResumeAfterPrime = ckResume.Checked;
+                if (double.TryParse(tbSpeed.Text, out double Spd)) Props.SimSpeed = Spd;
+                if (double.TryParse(tbTime.Text, out double Time)) Props.PrimeTime = Time;
+                if (int.TryParse(tbDelay.Text, out int Delay)) Props.PrimeDelay = Delay;
+                Props.ResumeAfterPrime = ckResume.Checked;
                 SetButtons(false);
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();
@@ -197,9 +197,9 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            tbSpeed.Text = mf.SimSpeed.ToString("N1");
-            tbTime.Text = mf.PrimeTime.ToString("N0");
-            tbDelay.Text = mf.PrimeDelay.ToString("N0");
+            tbSpeed.Text = Props.SimSpeed.ToString("N1");
+            tbTime.Text = Props.PrimeTime.ToString("N0");
+            tbDelay.Text = Props.PrimeDelay.ToString("N0");
 
             if (!Props.UseMetric)
             {

@@ -67,7 +67,7 @@ namespace RateController
             }
             if (Changed)
             {
-                if (mf.UseZones)
+                if (Props.UseZones)
                 {
                     mf.SectionControl.UpdateSectionStatusWithZones();
                 }

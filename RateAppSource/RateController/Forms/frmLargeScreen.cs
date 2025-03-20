@@ -71,8 +71,8 @@ namespace RateController
 
         public void SetTransparent()
         {
-            IsTransparent = mf.UseTransparent;
-            if (mf.UseTransparent)
+            IsTransparent = Props.UseTransparent;
+            if (Props.UseTransparent)
             {
                 this.Text = string.Empty;
                 this.TransparencyKey = Properties.Settings.Default.MainBackColour;
@@ -141,7 +141,7 @@ namespace RateController
 
         private void btMinimize_Click(object sender, EventArgs e)
         {
-            Form restoreform = new RCRestore(this, mf.RateType, Prd, mf);
+            Form restoreform = new RCRestore(this, Props.UserRateType, Prd, mf);
             restoreform.Show();
         }
 
@@ -196,14 +196,14 @@ namespace RateController
             Props.SaveFormLocation(this);
 
             timerMain.Enabled = false;
-            if (mf.UseTransparent)
+            if (Props.UseTransparent)
             {
                 // move the window back to the default location
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
             }
 
-            if (mf.UseLargeScreen) mf.LargeScreenExit = true;
+            if (Props.UseLargeScreen) mf.LargeScreenExit = true;
             mf.WindowState = FormWindowState.Normal;
             mf.vSwitchBox.LargeScreenOn = false;
         }
@@ -224,7 +224,7 @@ namespace RateController
 
         private void lbCoverage_Click(object sender, EventArgs e)
         {
-            mf.ShowCoverageRemaining = !mf.ShowCoverageRemaining;
+            Props.ShowCoverageRemaining = !Props.ShowCoverageRemaining;
             UpdateForm();
         }
 
@@ -281,7 +281,7 @@ namespace RateController
 
         private void lbQuantity_Click(object sender, EventArgs e)
         {
-            mf.ShowQuantityRemaining = !mf.ShowQuantityRemaining;
+            Props.ShowQuantityRemaining = !Props.ShowQuantityRemaining;
             UpdateForm();
         }
 
@@ -311,13 +311,13 @@ namespace RateController
 
         private void lbRate_Click(object sender, EventArgs e)
         {
-            if (mf.RateType < 1)
+            if (Props.UserRateType < 1)
             {
-                mf.RateType++;
+                Props.UserRateType++;
             }
             else
             {
-                mf.RateType = 0;
+                Props.UserRateType = 0;
             }
             UpdateForm();
         }
@@ -372,7 +372,7 @@ namespace RateController
 
         private void mainform_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && mf.UseTransparent)
+            if (e.Button == MouseButtons.Left && Props.UseTransparent)
             {
                 this.FormBorderStyle = FormBorderStyle.FixedSingle;
                 tmrBorder.Start();
@@ -426,7 +426,7 @@ namespace RateController
 
         private void SetFont()
         {
-            if (mf.UseTransparent)
+            if (Props.UseTransparent)
             {
                 string TransparentFont = "MS Gothic";
                 //string TransparentFont = "Courier New";
@@ -582,7 +582,7 @@ namespace RateController
 
         private void UpdateForm()
         {
-            if (mf.UseTransparent != IsTransparent) SetTransparent();
+            if (Props.UseTransparent != IsTransparent) SetTransparent();
 
             this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile) + "]";
 
@@ -706,7 +706,7 @@ namespace RateController
             }
 
             // rate
-            switch (mf.RateType)
+            switch (Props.UserRateType)
             {
                 case 1:
                     lbRateType.Text = "I";
@@ -727,7 +727,7 @@ namespace RateController
             lbTargetAmount.Text = Prd.TargetRate().ToString("N1");
 
             // coverage
-            if (mf.ShowCoverageRemaining)
+            if (Props.ShowCoverageRemaining)
             {
                 lbCoverageType.Text = "R";
                 double RT = Prd.SmoothRate();
@@ -751,7 +751,7 @@ namespace RateController
             lbCoverage.Text = Prd.CoverageDescription();
 
             // quantity
-            if (mf.ShowQuantityRemaining)
+            if (Props.ShowQuantityRemaining)
             {
                 lbQuantityType.Text = "R";
                 // calculate remaining
@@ -766,7 +766,7 @@ namespace RateController
             lbQuantity.Text = Prd.QuantityDescription;
 
             // aog
-            if (mf.SimMode == SimType.Sim_Speed)
+            if (Props.SimMode == SimType.Sim_Speed)
             {
                 btnMenu.Image = Properties.Resources.SimGear;
             }

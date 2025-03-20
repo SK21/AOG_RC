@@ -1,5 +1,4 @@
-﻿using GMap.NET.MapProviders;
-using RateController.Language;
+﻿using RateController.Language;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -38,26 +37,42 @@ namespace RateController.Classes
 
     public static class Props
     {
-        private static string cActivityFileName = "";
-        private static string cAppName = "RateController";
-        private static string cAppVersion = "4.0.0-beta.9";
-        private static string cErrorsFileName = "";
-        private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
-        private static string cFormPropsFileName = "";
-        private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
-        private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
-        private static bool cReadOnly = false;
-        private static bool cUseVariableRate = false;
-        private static string cVersionDate = "19-Mar-2025";
-        private static int cDefaultProduct;
-
         public static readonly int MaxModules = 8;
-        public static readonly int MaxProducts = 6;// last two are fans
+        public static readonly int MaxProducts = 6;
         public static readonly int MaxRelays = 16;
         public static readonly int MaxSections = 128;
         public static readonly int MaxSensors = 8;
         public static readonly int MaxSwitches = 16;
         public static readonly double MPHtoKPH = 1.6092;
+        public static bool cShowCoverageRemaining;
+        public static bool cShowQuantityRemaining;
+        private static string cActivityFileName = "";
+        private static string cAppDate = "19-Mar-2025";
+        private static string cAppName = "RateController";
+        private static string cAppVersion = "4.0.0-beta.9";
+        private static int cDefaultProduct;
+        private static string cErrorsFileName = "";
+        private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
+        private static string cFormPropsFileName = "";
+        private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
+        private static int cPrimeDelay = 3;
+        private static double cPrimeTime = 0;
+        private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
+        private static int cRateType;
+        private static bool cReadOnly = false;
+        private static bool cResumeAfterPrime;
+        private static bool cShowPressure;
+        private static bool cShowSwitches;
+        private static SimType cSimMode = SimType.Sim_None;
+        private static double cSimSpeed = 0;
+        private static bool cUseDualAuto;
+        private static bool cUseLargeScreen = false;
+        private static bool cUseTransparent = false;
+        private static bool cUseVariableRate = false;
+        private static bool cUseZones = false;
+        private static FormStart mf;
+        private static frmPressureDisplay PressureDisplay;
+        private static frmSwitches SwitchesForm;
 
         #region // flow adjustment defaults
 
@@ -72,6 +87,25 @@ namespace RateController.Classes
 
         #region MainProperties
 
+        public static int DefaultProduct
+        {
+            get { return cDefaultProduct; }
+            set
+            {
+                if (value >= 0 && value < MaxProducts - 2)
+                {
+                    cDefaultProduct = value;
+                    SetProp("DefaultProduct", cDefaultProduct.ToString());
+                }
+            }
+        }
+
+        public static FormStart MainForm
+        {
+            get { return mf; }
+            set { mf = value; }
+        }
+
         public static MasterSwitchMode MasterSwitchMode
         {
             get { return cMasterSwitchMode; }
@@ -79,6 +113,32 @@ namespace RateController.Classes
             {
                 cMasterSwitchMode = value;
                 SetProp("MasterSwitchMode", cMasterSwitchMode.ToString());
+            }
+        }
+
+        public static int PrimeDelay
+        {
+            get { return cPrimeDelay; }
+            set
+            {
+                if (value >= 3 && value < 9)
+                {
+                    cPrimeDelay = value;
+                    SetProp("PrimeDelay", cPrimeDelay.ToString());
+                }
+            }
+        }
+
+        public static double PrimeTime
+        {
+            get { return cPrimeTime; }
+            set
+            {
+                if (value >= 0 && value < 30)
+                {
+                    cPrimeTime = value;
+                    SetProp("PrimeTime", cPrimeTime.ToString());
+                }
             }
         }
 
@@ -129,10 +189,144 @@ namespace RateController.Classes
             set { SetProp("RecordRates", value.ToString()); }
         }
 
+        public static bool ResumeAfterPrime
+        {
+            get { return cResumeAfterPrime; }
+            set
+            {
+                cResumeAfterPrime = value;
+                SetProp("ResumeAfterPrime", cResumeAfterPrime.ToString());
+            }
+        }
+
+        public static bool ShowCoverageRemaining
+        {
+            get { return cShowCoverageRemaining; }
+            set
+            {
+                cShowCoverageRemaining = value;
+                SetProp("ShowCoverageRemaining", cShowCoverageRemaining.ToString());
+            }
+        }
+
+        public static bool ShowPressure
+        {
+            get { return cShowPressure; }
+            set
+            {
+                cShowPressure = value;
+                SetProp("ShowPressure", value.ToString());
+                DisplayPressure();
+            }
+        }
+
+        public static bool ShowQuantityRemaining
+        {
+            get { return cShowQuantityRemaining; }
+            set
+            {
+                cShowQuantityRemaining = value;
+                SetProp("ShowQuantityRemaining", cShowQuantityRemaining.ToString());
+            }
+        }
+
+        public static bool ShowSwitches
+        {
+            get { return cShowSwitches; }
+            set
+            {
+                cShowSwitches = value;
+                Props.SetProp("ShowSwitches", cShowSwitches.ToString());
+                DisplaySwitches();
+            }
+        }
+
+        public static SimType SimMode
+        {
+            get { return cSimMode; }
+            set
+            {
+                cSimMode = value;
+                SetProp("SimMode", cSimMode.ToString());
+            }
+        }
+
+        public static double SimSpeed
+        {
+            get { return cSimSpeed; }
+            set
+            {
+                if (value >= 0 && value < 40)
+                {
+                    cSimSpeed = value;
+                    SetProp("SimSpeed", cSimSpeed.ToString());
+                }
+            }
+        }
+
+        public static bool UseDualAuto
+        {
+            get { return cUseDualAuto; }
+            set
+            {
+                cUseDualAuto = value;
+                SetProp("UseDualAuto", cUseDualAuto.ToString());
+            }
+        }
+
+        public static bool UseLargeScreen
+        {
+            get { return cUseLargeScreen; }
+            set
+            {
+                if (cUseLargeScreen != value)
+                {
+                    cUseLargeScreen = value;
+                    SetProp("UseLargeScreen", cUseLargeScreen.ToString());
+                    SwitchScreens();
+                }
+            }
+        }
+
         public static bool UseMetric
         {
             get { return bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false; }
             set { SetProp("UseMetric", value.ToString()); }
+        }
+
+        public static int UserRateType
+        {
+            // to show user
+            // 0 current rate, 1 instantaneous rate
+            get { return cRateType; }
+            set
+            {
+                if (value >= 0 && value < 2)
+                {
+                    cRateType = value;
+                    SetProp("UserRateType", cRateType.ToString());
+                }
+            }
+        }
+
+        public static bool UseTransparent
+        {
+            get { return cUseTransparent; }
+            set
+            {
+                cUseTransparent = value;
+                SetProp("UseTransparent", cUseTransparent.ToString());
+            }
+        }
+
+        public static bool UseZones
+        {
+            get { return cUseZones; }
+            set
+            {
+                cUseZones = value;
+                SetProp("UseZones", cUseZones.ToString());
+            }
         }
 
         public static bool VariableRateEnabled
@@ -194,26 +388,8 @@ namespace RateController.Classes
 
         public static string VersionDate()
         {
-            return cVersionDate;
+            return cAppDate;
         }
-
-        public static int DefaultProduct
-        {
-            get { return cDefaultProduct; }
-            set
-            {
-                if (value >= 0 && value < MaxProducts - 2)
-                {
-                    cDefaultProduct = value;
-                    SetProp("DefaultProduct", cDefaultProduct.ToString());
-                }
-            }
-        }
-
-
-
-
-
 
         #endregion MainProperties
 
@@ -240,6 +416,42 @@ namespace RateController.Classes
             {
             }
             return Result;
+        }
+
+        public static void DisplayPressure()
+        {
+            Form fs = IsFormOpen("frmPressureDisplay");
+
+            if (cShowPressure)
+            {
+                if (fs == null)
+                {
+                    PressureDisplay = new frmPressureDisplay(mf);
+                    PressureDisplay.Show();
+                }
+            }
+            else
+            {
+                if (fs != null) fs.Close();
+            }
+        }
+
+        public static void DisplaySwitches()
+        {
+            Form fs = Props.IsFormOpen("frmSwitches");
+
+            if (cShowSwitches)
+            {
+                if (fs == null)
+                {
+                    SwitchesForm = new frmSwitches(mf);
+                    SwitchesForm.Show();
+                }
+            }
+            else
+            {
+                if (fs != null) fs.Close();
+            }
         }
 
         public static void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
@@ -337,6 +549,21 @@ namespace RateController.Classes
             cReadOnly = bool.TryParse(GetProp("ReadOnly"), out bool rd) ? rd : false;
             cUseVariableRate = bool.TryParse(GetProp("UseVariableRate_" + Props.CurrentDir()), out bool vr) ? vr : false;
             cMasterSwitchMode = Enum.TryParse(GetProp("MasterSwitchMode"), out MasterSwitchMode msm) ? msm : MasterSwitchMode.ControlAll;
+            cDefaultProduct = int.TryParse(GetProp("DefaultProduct"), out int dp) ? dp : 0;
+            cPrimeDelay = int.TryParse(GetProp("PrimeDelay"), out int pd) ? pd : 3;
+            cPrimeTime = int.TryParse(GetProp("PrimeTime"), out int pt) ? pt : 5;
+            cRateType = int.TryParse(GetProp("UserRateType"), out int ut) ? ut : 0;
+            cResumeAfterPrime = bool.TryParse(GetProp("ResumeAfterPrime"), out bool rp) ? rp : false;
+            cShowPressure = bool.TryParse(GetProp("ShowPressure"), out bool sp) ? sp : false;
+            cShowSwitches = bool.TryParse(GetProp("ShowSwitches"), out bool ss) ? ss : false;
+            cSimMode = Enum.TryParse(GetProp("SimMode"), out SimType sm) ? sm : SimType.Sim_None;
+            cSimSpeed = double.TryParse(GetProp("SimSpeed"), out double spd) ? spd : 0;
+            cUseDualAuto = bool.TryParse(GetProp("UseDualAuto"), out bool da) ? da : false;
+            cUseLargeScreen = bool.TryParse(GetProp("UseLargeScreen"), out bool ls) ? ls : false;
+            cUseTransparent = bool.TryParse(GetProp("UseTransparent"), out bool utr) ? utr : false;
+            cUseZones = bool.TryParse(GetProp("UseZones"), out bool uz) ? uz : false;
+            cShowQuantityRemaining = bool.TryParse(GetProp("ShowQuantityRemaining"), out bool qr) ? qr : false;
+            cShowCoverageRemaining = bool.TryParse(GetProp("ShowCoverageRemaining"), out bool cr) ? cr : false;
         }
 
         public static bool OpenFile(string FileName, bool IsNew = false)
@@ -445,6 +672,80 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 WriteErrorLog("Props/Set: " + ex.Message);
+            }
+        }
+
+        public static void SwitchScreens(bool SingleProduct = false)
+        {
+            try
+            {
+                Form fs = IsFormOpen("frmLargeScreen");
+                if (cUseLargeScreen)
+                {
+                    if (SingleProduct)
+                    {
+                        // hide unused items, set product 4 as default, set product 4 id to 0
+                        foreach (clsProduct Prd in mf.Products.Items)
+                        {
+                            Prd.OnScreen = false;
+                        }
+                        clsProduct P0 = mf.Products.Items[0];
+                        clsProduct P3 = mf.Products.Items[3];
+
+                        P3.ProductName = P0.ProductName;
+                        P3.ControlType = P0.ControlType;
+                        P3.QuantityDescription = P0.QuantityDescription;
+                        P3.CoverageUnits = P0.CoverageUnits;
+                        P3.MeterCal = P0.MeterCal;
+                        P3.ProdDensity = P0.ProdDensity;
+                        P3.EnableProdDensity = P0.EnableProdDensity;
+                        P3.RateSet = P0.RateSet;
+                        P3.RateAlt = P0.RateAlt;
+                        P3.TankSize = P0.TankSize;
+                        P3.TankStart = P0.TankStart;
+
+                        P3.HighAdjust = P0.HighAdjust;
+                        P3.LowAdjust = P0.LowAdjust;
+                        P3.Threshold = P0.Threshold;
+                        P3.MaxAdjust = P0.Threshold;
+                        P3.MinAdjust = P0.MinAdjust;
+
+                        mf.Products.Item(2).BumpButtons = false;
+                        P0.ModuleID = 6;
+                        P3.ChangeID(0, 0);
+                        P3.OnScreen = true;
+                        P3.AppMode = P0.AppMode;
+                        P3.UseOffRateAlarm = P0.UseOffRateAlarm;
+                        P3.OffRateSetting = P0.OffRateSetting;
+                        P3.MinUPM = P0.MinUPM;
+                        P3.BumpButtons = false;
+
+                        P3.CountsRev = P0.CountsRev;
+                        Props.DefaultProduct = 3;
+                        UseTransparent = true;
+                    }
+
+                    if (fs == null)
+                    {
+                        mf.LargeScreenExit = false;
+                        mf.Restart = false;
+                        mf.WindowState = FormWindowState.Minimized;
+                        mf.ShowInTaskbar = false;
+                        mf.Lscrn = new frmLargeScreen(mf);
+                        mf.Lscrn.ShowInTaskbar = true;
+                        mf.Lscrn.SetTransparent();
+                        mf.Lscrn.Show();
+                    }
+                }
+                else
+                {
+                    // use standard screen
+                    if (fs != null) mf.Lscrn.SwitchToStandard();
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("SwitchScreens: " + ex.Message);
             }
         }
 

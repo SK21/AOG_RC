@@ -120,7 +120,7 @@ namespace RateController.Menu
             if (!Initializing)
             {
                 UseZones = ckZones.Checked;
-                mf.UseZones = UseZones;
+                Props.UseZones = UseZones;
                 UpdateForm();
             }
         }
@@ -301,7 +301,7 @@ namespace RateController.Menu
             DGV2.BackgroundColor = DGV.DefaultCellStyle.BackColor;
             DGV2.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            UseZones = mf.UseZones;
+            UseZones = Props.UseZones;
             int.TryParse(Props.GetProp("SectionsPerZone"), out SectionsPerZone);
             if (SectionsPerZone < 1) SectionsPerZone = 1;
             DefaultWidth = 300;

@@ -892,9 +892,9 @@ namespace RateController
         public double Speed()
         {
             double Result = 0;
-            if (mf.SimMode == SimType.Sim_Speed || mf.SectionControl.PrimeOn)
+            if (Props.SimMode == SimType.Sim_Speed || mf.SectionControl.PrimeOn)
             {
-                Result = mf.SimSpeed;
+                Result = Props.SimSpeed;
             }
             else
             {
@@ -1120,15 +1120,15 @@ namespace RateController
         private double KMH()
         {
             double Result = 0;
-            if (mf.SimMode == SimType.Sim_Speed || mf.SectionControl.PrimeOn)
+            if (Props.SimMode == SimType.Sim_Speed || mf.SectionControl.PrimeOn)
             {
                 if (!Props.UseMetric)
                 {
-                    Result = mf.SimSpeed / 0.621371;  // convert mph back to kmh
+                    Result = Props.SimSpeed / 0.621371;  // convert mph back to kmh
                 }
                 else
                 {
-                    Result = mf.SimSpeed;
+                    Result = Props.SimSpeed;
                 }
             }
             else

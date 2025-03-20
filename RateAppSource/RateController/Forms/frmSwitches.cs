@@ -144,7 +144,7 @@ namespace RateController
 
         private void frmSimulation_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (mf.UseTransparent)
+            if (Props.UseTransparent)
             {
                 // move the window back to the default location
                 this.Top += -TransTopOffset;
@@ -205,7 +205,7 @@ namespace RateController
 
         private void SetTransparent()
         {
-            if (mf.UseTransparent)
+            if (Props.UseTransparent)
             {
                 this.TransparencyKey = Properties.Settings.Default.MainBackColour;
                 this.ControlBox = false;
@@ -247,7 +247,7 @@ namespace RateController
 
         private void UpdateForm()
         {
-            if (mf.UseTransparent != IsTransparent) SetTransparent();
+            if (Props.UseTransparent != IsTransparent) SetTransparent();
 
             if (mf.SwitchBox.AutoRateOn || mf.SwitchBox.AutoSectionOn)
             {
@@ -375,7 +375,7 @@ namespace RateController
                 btnAutoRate.BackColor = Color.Red;
             }
 
-            if (mf.UseDualAuto)
+            if (Props.UseDualAuto)
             {
                 btAuto.Visible = false;
                 btnMaster.Width = 142;

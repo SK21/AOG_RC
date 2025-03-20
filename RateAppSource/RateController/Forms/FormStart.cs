@@ -10,14 +10,13 @@ using System.Windows.Forms;
 
 namespace RateController
 {
-
     public partial class FormStart : Form
     {
-
         public PGN229 AOGsections;
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
+        public PGN100 GPS;
         public bool LargeScreenExit = false;
         public frmLargeScreen Lscrn;
         public PGN238 MachineConfig;
@@ -25,6 +24,7 @@ namespace RateController
         public PGN32700 ModuleConfig;
         public PGN32401 ModulesStatus;
         public PGN32702 NetworkConfig;
+        public clsPressures PressureObjects;
         public clsProducts Products;
         public clsAlarm RCalarm;
         public clsRelays RelayObjects;
@@ -33,8 +33,6 @@ namespace RateController
         public clsSectionControl SectionControl;
         public clsSections Sections;
         public PGN235 SectionsPGN;
-        public bool ShowCoverageRemaining;
-        public bool ShowQuantityRemaining;
         public Color SimColor = Color.FromArgb(255, 182, 0);
         public PGN32618 SwitchBox;
         public frmSwitches SwitchesForm;
@@ -49,33 +47,16 @@ namespace RateController
         public clsVirtualSwitchBox vSwitchBox;
         public string WiFiIP;
         public clsZones Zones;
-        private int cDefaultProduct = 0;
-        private double cPressureCal;
-        private double cPressureOffset;
-        private byte cPressureToShowID;
-        private int cPrimeDelay = 3;
-        private double cPrimeTime = 0;
-        private int cRateType;
-        private bool cResumeAfterPrime;
-        private bool cShowPressure;
         private bool[] cShowScale = new bool[4];
-        private bool cShowSwitches = false;
-        private SimType cSimMode = SimType.Sim_None;
-        private double cSimSpeed = 0;
         private DateTime cStartTime;
         private int CurrentPage;
         private int CurrentPageLast;
-        private bool cUseDualAuto;
-        private bool cUseLargeScreen = false;
-        private bool cUseTransparent = false;
         private bool LoadError = false;
         private MouseButtons MouseButtonClicked;
         private Point MouseDownLocation;
         private Label[] ProdName;
         private Label[] Rates;
         private PGN32501[] RelaySettings;
-        public PGN100 GPS;
-        public clsPressures PressureObjects;
 
         public FormStart()
         {
@@ -90,6 +71,7 @@ namespace RateController
 
             #endregion // language
 
+            Props.MainForm = this;
             Props.CheckFolders();
             Props.OpenFile(Properties.Settings.Default.CurrentFile);
 
@@ -132,13 +114,12 @@ namespace RateController
             SectionControl = new clsSectionControl(this);
             ScaleIndicator = new PGN32296(this);
             GPS = new PGN100(this);
-            PressureObjects=new clsPressures(this);
+            PressureObjects = new clsPressures(this);
         }
 
         public event EventHandler ColorChanged;
 
         public event EventHandler ProductChanged;
-
 
         public int LSLeft
         {
@@ -152,143 +133,6 @@ namespace RateController
             set { Lscrn.Top = value; }
         }
 
-        public double PressureCal
-        {
-            get { return cPressureCal; }
-            set
-            {
-                cPressureCal = value;
-                Props.SetProp("PressureCal", value.ToString());
-            }
-        }
-
-        public double PressureOffset
-        {
-            get { return cPressureOffset; }
-            set
-            {
-                cPressureOffset = value;
-                Props.SetProp("PressureOffset", value.ToString());
-            }
-        }
-
-        public int PrimeDelay
-        {
-            get { return cPrimeDelay; }
-            set
-            {
-                if (value >= 3 && value < 9) { cPrimeDelay = value; }
-            }
-        }
-
-        public double PrimeTime
-        {
-            get { return cPrimeTime; }
-            set
-            {
-                if (value >= 0 && value < 30) { cPrimeTime = value; }
-            }
-        }
-
-        public int RateType
-        {
-            // 0 current rate, 1 instantaneous rate
-            get { return cRateType; }
-            set
-            {
-                if (value >= 0 && value < 2) cRateType = value;
-            }
-        }
-
-        public bool ResumeAfterPrime
-        {
-            get { return cResumeAfterPrime; }
-            set
-            {
-                cResumeAfterPrime = value;
-                Props.SetProp("ResumeAfterPrime", cResumeAfterPrime.ToString());
-            }
-        }
-
-        public bool ShowPressure
-        {
-            get { return cShowPressure; }
-            set
-            {
-                cShowPressure = value;
-                Props.SetProp("ShowPressure", value.ToString());
-                DisplayPressure();
-            }
-        }
-
-        public bool ShowSwitches
-        {
-            get { return cShowSwitches; }
-            set
-            {
-                cShowSwitches = value;
-                Props.SetProp("ShowSwitches", cShowSwitches.ToString());
-                DisplaySwitches();
-            }
-        }
-
-        public SimType SimMode
-        {
-            get { return cSimMode; }
-            set
-            {
-                cSimMode = value;
-            }
-        }
-
-        public double SimSpeed
-        {
-            get { return cSimSpeed; }
-            set
-            {
-                if (value >= 0 && value < 40) { cSimSpeed = value; }
-            }
-        }
-
-        public bool UseDualAuto
-        { get { return cUseDualAuto; } set { cUseDualAuto = value; } }
-
-
-        public bool UseLargeScreen
-        {
-            get { return cUseLargeScreen; }
-            set
-            {
-                if (cUseLargeScreen != value)
-                {
-                    cUseLargeScreen = value;
-                    Props.SetProp("UseLargeScreen", cUseLargeScreen.ToString());
-                    SwitchScreens();
-                }
-            }
-        }
-
-        public bool UseTransparent
-        {
-            get { return cUseTransparent; }
-            set
-            {
-                cUseTransparent = value;
-                Props.SetProp("UseTransparent", cUseTransparent.ToString());
-            }
-        }
-
-        public bool UseZones
-        {
-            get
-            {
-                bool tmp = false;
-                if (bool.TryParse(Props.GetProp("UseZones"), out bool tmp2)) tmp = tmp2;
-                return tmp;
-            }
-            set { Props.SetProp("UseZones", value.ToString()); }
-        }
-
         public void ChangeLanguage()
         {
             Restart = true;
@@ -298,7 +142,7 @@ namespace RateController
         public int CurrentProduct()
         {
             int Result = 0;
-            if (cUseLargeScreen)
+            if (Props.UseLargeScreen)
             {
                 Result = Lscrn.CurrentProduct();
             }
@@ -307,24 +151,6 @@ namespace RateController
                 if (CurrentPage > 1) Result = CurrentPage - 1;
             }
             return Result;
-        }
-
-        public void DisplayPressure()
-        {
-            Form fs = Props.IsFormOpen("frmPressureDisplay");
-
-            if (cShowPressure)
-            {
-                if (fs == null)
-                {
-                    SwitchesForm = new frmSwitches(this);
-                    SwitchesForm.Show();
-                }
-            }
-            else
-            {
-                if (fs != null) fs.Close();
-            }
         }
 
         public void DisplayScales()
@@ -365,75 +191,14 @@ namespace RateController
             }
         }
 
-        public void DisplaySwitches()
-        {
-            Form fs = Props.IsFormOpen("frmSwitches");
-
-            if (cShowSwitches)
-            {
-                if (fs == null)
-                {
-                    SwitchesForm = new frmSwitches(this);
-                    SwitchesForm.Show();
-                }
-            }
-            else
-            {
-                if (fs != null) fs.Close();
-            }
-        }
-
         public void LoadSettings()
         {
             SetDisplay();
-
-            if (bool.TryParse(Props.GetProp("UseTransparent"), out bool Ut)) cUseTransparent = Ut;
-            if (bool.TryParse(Props.GetProp("ShowPressure"), out bool SP)) cShowPressure = SP;
-            if (double.TryParse(Props.GetProp("PressureCal"), out double pc)) cPressureCal = pc;
-            if (double.TryParse(Props.GetProp("PressureOffset"), out double po)) cPressureOffset = po;
 
             for (int i = 0; i < 4; i++)
             {
                 cShowScale[i] = false;
                 if (bool.TryParse(Props.GetProp("ShowScale_" + i.ToString()), out bool ss)) cShowScale[i] = ss;
-            }
-
-            if (byte.TryParse(Props.GetProp("PressureID"), out byte ID)) cPressureToShowID = ID;
-            if (bool.TryParse(Props.GetProp("ShowQuantityRemaining"), out bool QR)) ShowQuantityRemaining = QR;
-            if (bool.TryParse(Props.GetProp("ShowCoverageRemaining"), out bool CR)) ShowCoverageRemaining = CR;
-            if (bool.TryParse(Props.GetProp("UseDualAuto"), out bool ud)) cUseDualAuto = ud;
-            if (bool.TryParse(Props.GetProp("ResumeAfterPrime"), out bool re)) cResumeAfterPrime = re;
-            if (int.TryParse(Props.GetProp("PrimeDelay"), out int PD))
-            {
-                cPrimeDelay = PD;
-            }
-            if (cPrimeDelay < 3) cPrimeDelay = 3;
-
-            if (double.TryParse(Props.GetProp("SimSpeed"), out double Spd))
-            {
-                cSimSpeed = Spd;
-            }
-            else
-            {
-                cSimSpeed = 5;
-            }
-
-            if (Enum.TryParse(Props.GetProp("SimMode"), out SimType SM))
-            {
-                cSimMode = SM;
-            }
-            else
-            {
-                cSimMode = SimType.Sim_None;
-            }
-
-            if (double.TryParse(Props.GetProp("PrimeTime"), out double ptime))
-            {
-                cPrimeTime = ptime;
-            }
-            else
-            {
-                cPrimeTime = 5;
             }
 
             Sections.Load();
@@ -445,23 +210,7 @@ namespace RateController
             LoadDefaultProduct();
             Zones.Load();
 
-            if (bool.TryParse(Props.GetProp("UseLargeScreen"), out bool LS))
-            {
-                UseLargeScreen = LS;
-            }
-            else
-            {
-                UseLargeScreen = false;
-            }
-
-            if (bool.TryParse(Props.GetProp("ShowSwitches"), out bool SS))
-            {
-                ShowSwitches = SS;
-            }
-            else
-            {
-                ShowSwitches = false;
-            }
+            Props.DisplaySwitches();
 
             // check loaded forms, reload to update
             Form Swt = Props.IsFormOpen("frmSwitches");
@@ -472,7 +221,6 @@ namespace RateController
                 Swt.Show();
             }
 
-            if (int.TryParse(Props.GetProp("RateType"), out int rt)) cRateType = rt;
             PressureObjects.Load();
         }
 
@@ -484,7 +232,7 @@ namespace RateController
             {
                 if (saveFileDialog1.FileName != "")
                 {
-                    Props.OpenFile(saveFileDialog1.FileName,true); 
+                    Props.OpenFile(saveFileDialog1.FileName, true);
                     LoadSettings();
                 }
             }
@@ -553,87 +301,13 @@ namespace RateController
             return Result;
         }
 
-        public void SwitchScreens(bool SingleProduct = false)
-        {
-            try
-            {
-                Form fs = Props.IsFormOpen("frmLargeScreen");
-                if (cUseLargeScreen)
-                {
-                    if (SingleProduct)
-                    {
-                        // hide unused items, set product 4 as default, set product 4 id to 0
-                        foreach (clsProduct Prd in Products.Items)
-                        {
-                            Prd.OnScreen = false;
-                        }
-                        clsProduct P0 = Products.Items[0];
-                        clsProduct P3 = Products.Items[3];
-
-                        P3.ProductName = P0.ProductName;
-                        P3.ControlType = P0.ControlType;
-                        P3.QuantityDescription = P0.QuantityDescription;
-                        P3.CoverageUnits = P0.CoverageUnits;
-                        P3.MeterCal = P0.MeterCal;
-                        P3.ProdDensity = P0.ProdDensity;
-                        P3.EnableProdDensity = P0.EnableProdDensity;
-                        P3.RateSet = P0.RateSet;
-                        P3.RateAlt = P0.RateAlt;
-                        P3.TankSize = P0.TankSize;
-                        P3.TankStart = P0.TankStart;
-
-                        P3.HighAdjust = P0.HighAdjust;
-                        P3.LowAdjust = P0.LowAdjust;
-                        P3.Threshold = P0.Threshold;
-                        P3.MaxAdjust = P0.Threshold;
-                        P3.MinAdjust = P0.MinAdjust;
-
-                        Products.Item(2).BumpButtons = false;
-                        P0.ModuleID = 6;
-                        P3.ChangeID(0, 0);
-                        P3.OnScreen = true;
-                        P3.AppMode = P0.AppMode;
-                        P3.UseOffRateAlarm = P0.UseOffRateAlarm;
-                        P3.OffRateSetting = P0.OffRateSetting;
-                        P3.MinUPM = P0.MinUPM;
-                        P3.BumpButtons = false;
-
-                        P3.CountsRev = P0.CountsRev;
-                        Props.DefaultProduct = 3;
-                        UseTransparent = true;
-                    }
-
-                    if (fs == null)
-                    {
-                        LargeScreenExit = false;
-                        Restart = false;
-                        this.WindowState = FormWindowState.Minimized;
-                        this.ShowInTaskbar = false;
-                        Lscrn = new frmLargeScreen(this);
-                        Lscrn.ShowInTaskbar = true;
-                        Lscrn.SetTransparent();
-                        Lscrn.Show();
-                    }
-                }
-                else
-                {
-                    // use standard screen
-                    if (fs != null) Lscrn.SwitchToStandard();
-                }
-            }
-            catch (Exception ex)
-            {
-                Tls.WriteErrorLog("SwitchScreens: " + ex.Message);
-            }
-        }
-
         public void UpdateStatus()
         {
             try
             {
                 this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile) + "]";
 
-                if (cSimMode == SimType.Sim_Speed || SectionControl.PrimeOn)
+                if (Props.SimMode == SimType.Sim_Speed || SectionControl.PrimeOn)
                 {
                     btnSettings.Image = Properties.Resources.SimGear;
                 }
@@ -694,7 +368,7 @@ namespace RateController
                     SetRate.Text = Prd.TargetRate().ToString("N1");
                     lblUnits.Text = Prd.Units();
 
-                    if (ShowCoverageRemaining)
+                    if (Props.ShowCoverageRemaining)
                     {
                         lbCoverage.Text = CoverageDescriptions[Prd.CoverageUnits] + " Left";
                         double RT = Prd.SmoothRate();
@@ -717,7 +391,7 @@ namespace RateController
                     }
 
                     double Tnk = 0;
-                    if (ShowQuantityRemaining)
+                    if (Props.ShowQuantityRemaining)
                     {
                         lbRemaining.Text = Lang.lgTank_Remaining;
                         // calculate remaining
@@ -738,7 +412,7 @@ namespace RateController
                         TankRemain.Text = Tnk.ToString("N1");
                     }
 
-                    switch (cRateType)
+                    switch (Props.UserRateType)
                     {
                         case 1:
                             lbRate.Text = Lang.lgInstantRate;
@@ -780,7 +454,7 @@ namespace RateController
                 }
 
                 // alarm
-                if (!cUseLargeScreen) RCalarm.CheckAlarms();
+                if (!Props.UseLargeScreen) RCalarm.CheckAlarms();
 
                 if (CurrentPage != CurrentPageLast)
                 {
@@ -959,14 +633,6 @@ namespace RateController
 
                 Sections.Save();
                 Products.Save();
-                Props.SetProp("ShowQuantityRemaining", ShowQuantityRemaining.ToString());
-                Props.SetProp("ShowCoverageRemaining", ShowCoverageRemaining.ToString());
-
-                Props.SetProp("PrimeTime", cPrimeTime.ToString());
-                Props.SetProp("PrimeDelay", cPrimeDelay.ToString());
-                Props.SetProp("SimSpeed", cSimSpeed.ToString());
-                Props.SetProp("SimMode", cSimMode.ToString());
-                Props.SetProp("UseDualAuto", cUseDualAuto.ToString());
 
                 UDPaog.Close();
                 UDPmodules.Close();
@@ -977,8 +643,6 @@ namespace RateController
                 Tls.WriteActivityLog("Stopped");
                 string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
                 Tls.WriteActivityLog(mes);
-
-                Props.SetProp("RateType", cRateType.ToString());
             }
             catch (Exception)
             {
@@ -1046,8 +710,8 @@ namespace RateController
                 UpdateStatus();
 
                 //SwitchScreens();
-                DisplaySwitches();
-                DisplayPressure();
+                Props.DisplaySwitches();
+                Props.DisplayPressure();
                 DisplayScales();
 
                 timerMain.Enabled = true;
@@ -1079,7 +743,7 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                ShowQuantityRemaining = !ShowQuantityRemaining;
+                Props.ShowQuantityRemaining = !Props.ShowQuantityRemaining;
                 UpdateStatus();
             }
         }
@@ -1099,7 +763,7 @@ namespace RateController
             {
                 int prod = CurrentPage - 1;
                 if (prod < 0) prod = 0;
-                Form restoreform = new RCRestore(this, RateType, Products.Item(prod), this);
+                Form restoreform = new RCRestore(this, Props.UserRateType, Products.Item(prod), this);
                 restoreform.Show();
             }
         }
@@ -1118,7 +782,7 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                ShowCoverageRemaining = !ShowCoverageRemaining;
+                Props.ShowCoverageRemaining = !Props.ShowCoverageRemaining;
                 UpdateStatus();
             }
         }
@@ -1152,8 +816,8 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                cRateType++;
-                if (cRateType > 1) cRateType = 0;
+                Props.UserRateType++;
+                if (Props.UserRateType > 1) Props.UserRateType = 0;
                 UpdateStatus();
             }
         }
@@ -1209,7 +873,6 @@ namespace RateController
 
         private void LoadDefaultProduct()
         {
-            if (int.TryParse(Props.GetProp("DefaultProduct"), out int DP)) cDefaultProduct = DP;
             int count = 0;
             int tmp = 0;
             foreach (clsProduct Prd in Products.Items)
@@ -1222,7 +885,7 @@ namespace RateController
             }
             if (count == 1) Props.DefaultProduct = tmp;
 
-            CurrentPage = cDefaultProduct + 1;
+            CurrentPage = Props.DefaultProduct + 1;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -1331,7 +994,7 @@ namespace RateController
             if (GPS.Connected())
             {
                 PointLatLng Position = new PointLatLng(GPS.Latitude, GPS.Longitude);
-                Tls.Manager.SetTractorPosition(Position,Products.ProductAppliedRates(),Products.ProductTargetRates());
+                Tls.Manager.SetTractorPosition(Position, Products.ProductAppliedRates(), Products.ProductTargetRates());
             }
             Tls.Manager.UpdateTargetRates();
         }

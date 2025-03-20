@@ -188,7 +188,7 @@ namespace RateController.Menu
                 tbSlope.Text = Slope.ToString("N3");
                 tbIntercept.Text = Intercept.ToString("N3");
                 tbMin.Text = MinRaw.ToString("N0");
-                ckPressure.Checked = mf.ShowPressure;
+                ckPressure.Checked = Props.ShowPressure;
             }
             catch (Exception ex)
             {
@@ -259,7 +259,7 @@ namespace RateController.Menu
                 pres.Intercept = intercept;
                 pres.MinimumRawData = MinRaw;
                 mf.PressureObjects.Save(cbModules.SelectedIndex);
-                mf.ShowPressure = ckPressure.Checked;
+                Props.ShowPressure = ckPressure.Checked;
             }
             catch (Exception ex)
             {
