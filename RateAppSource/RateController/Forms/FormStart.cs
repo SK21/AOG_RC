@@ -78,7 +78,7 @@ namespace RateController
             Tls = new clsTools(this);
             Tls.StartMapManager();
 
-            Tls.NewRateCollector(Properties.Settings.Default.CurrentRateDataFile);
+            Tls.SetRateCollector(Properties.Settings.Default.CurrentRateDataFile);
 
             //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
 

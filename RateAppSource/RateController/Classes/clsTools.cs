@@ -130,7 +130,7 @@ namespace RateController
             return Result;
         }
 
-        public void NewRateCollector(string FileName, bool Overwrite = false)
+        public void SetRateCollector(string FileName, bool Overwrite = false)
         {
             cRateCollector = new DataCollector(FileName, Overwrite);
         }

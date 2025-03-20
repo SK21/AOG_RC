@@ -41,9 +41,10 @@ namespace RateController.Classes
                     LoadDataFromCsv();
                 }
             }
-            SaveTimer = new Timer(30000);
+            SaveTimer = new Timer();
             SaveTimer.Elapsed += SaveTimer_Elapsed;
             SaveTimer.Enabled = false;
+            SaveIntervalSeconds = Props.RateRecordInterval;
         }
 
         public void AutoRecord(bool Record)
@@ -51,10 +52,13 @@ namespace RateController.Classes
             SaveTimer.Enabled = Record;
         }
 
-        public void SaveIntervalSeconds(double IntervalSeconds)
+        public int SaveIntervalSeconds
         {
-            if (IntervalSeconds < 1 || IntervalSeconds > 600) IntervalSeconds = 30;
-            SaveTimer.Interval = IntervalSeconds * 1000;
+            set
+            {
+                if (value < 1 || value > 600) value = 30;
+                SaveTimer.Interval = value * 1000;
+            }
         }
 
         public IReadOnlyList<RateReading> GetReadings()

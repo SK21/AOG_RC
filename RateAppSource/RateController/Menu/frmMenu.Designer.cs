@@ -756,7 +756,7 @@
             this.lbFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbFileName.Location = new System.Drawing.Point(12, 9);
             this.lbFileName.Name = "lbFileName";
-            this.lbFileName.Size = new System.Drawing.Size(127, 38);
+            this.lbFileName.Size = new System.Drawing.Size(127, 30);
             this.lbFileName.TabIndex = 166;
             this.lbFileName.Text = "label1";
             // 
@@ -782,9 +782,9 @@
             // lbRateData
             // 
             this.lbRateData.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateData.Location = new System.Drawing.Point(12, 47);
+            this.lbRateData.Location = new System.Drawing.Point(12, 44);
             this.lbRateData.Name = "lbRateData";
-            this.lbRateData.Size = new System.Drawing.Size(127, 38);
+            this.lbRateData.Size = new System.Drawing.Size(127, 30);
             this.lbRateData.TabIndex = 168;
             this.lbRateData.Text = "label1";
             // 

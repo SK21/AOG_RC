@@ -75,6 +75,8 @@ namespace RateController.Classes
         private static Dictionary<string, Form> openForms = new Dictionary<string, Form>();
         private static frmPressureDisplay PressureDisplay;
         private static frmSwitches SwitchesForm;
+        private static int cRateRecordInterval;
+        private static string cCurrentMapName;
 
         #region // flow adjustment defaults
 
@@ -156,6 +158,25 @@ namespace RateController.Classes
         {
             get { return int.TryParse(GetProp("RateDisplayRefresh"), out int rs) ? rs : 300; }
             set { SetProp("RateDisplayRefresh", value.ToString()); }
+        }
+        public static int RateRecordInterval
+        {
+            get { return cRateRecordInterval; }
+            set
+            {
+                cRateRecordInterval = value;
+                SetProp("RateRecordInterval", cRateRecordInterval.ToString());
+                mf.Tls.RateCollector.SaveIntervalSeconds = cRateRecordInterval;
+            }
+        }
+        public static string CurrentMapName
+        {
+            get { return cCurrentMapName; }
+            set
+            {
+                cCurrentMapName = value;
+                SetProp("CurrentMapName", cCurrentMapName);
+            }
         }
 
         public static int RateDisplayResolution
@@ -599,6 +620,32 @@ namespace RateController.Classes
             cShowQuantityRemaining = bool.TryParse(GetProp("ShowQuantityRemaining"), out bool qr) ? qr : false;
             cShowCoverageRemaining = bool.TryParse(GetProp("ShowCoverageRemaining"), out bool cr) ? cr : false;
             cUseMetric = bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false;
+            cRateRecordInterval = int.TryParse(GetProp("RateRecordInterval"), out int rr) ? rr : 300;
+            cCurrentMapName = GetProp("CurrentMapName");
+        }
+
+        public static bool OpenRateDataFile(string FileName, bool IsNew = false)
+        {
+            bool Result = false;
+            try
+            {
+                bool FileFound = false;
+                if (IsNew) File.WriteAllText(FileName, ""); // Create empty property file
+                if (File.Exists(FileName))
+                {
+                    Properties.Settings.Default.CurrentRateDataFile = FileName;
+                    Properties.Settings.Default.Save();
+                    FileFound = true;
+                }
+                if (!FileFound) CheckFolders();
+               mf.Tls.SetRateCollector(Properties.Settings.Default.CurrentRateDataFile);
+                Result = true;
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/OpenRateDataFile: " + ex.Message);
+            }
+            return Result;
         }
 
         public static bool OpenFile(string FileName, bool IsNew = false)

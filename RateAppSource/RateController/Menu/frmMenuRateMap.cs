@@ -106,12 +106,12 @@ namespace RateController.Menu
 
         private void btnRateData_Click(object sender, EventArgs e)
         {
-            if (Props.IsFormOpen("frmRates") == null)
-            {
-                var frm = new frmMenuRateData();
-                frm.SetManager(mf.Tls.Manager);
-                frm.Show();
-            }
+            //if (Props.IsFormOpen("frmRates") == null)
+            //{
+            //    var frm = new frmMenuRateData();
+            //    frm.SetManager(mf.Tls.Manager);
+            //    frm.Show();
+            //}
         }
 
         private void btnResume_Click(object sender, EventArgs e)
@@ -554,6 +554,7 @@ namespace RateController.Menu
             saveFileDialog1.InitialDirectory = Props.CurrentDir();
             saveFileDialog1.Title = "Save Map";
             saveFileDialog1.Filter = "PNG|*.PNG";
+            saveFileDialog1.FileName = Props.CurrentMapName + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")

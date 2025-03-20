@@ -10,16 +10,17 @@ namespace RateController.Forms
     {
         private bool cEdited = false;
         private bool Initializing = false;
-        private MapManager cMapManager;
-        public frmMenuRateData()
+        private frmMenu MainMenu;
+        private FormStart mf;
+
+        public frmMenuRateData(FormStart main, frmMenu menu)
         {
+            Initializing = true;
             InitializeComponent();
             Props.UnitsChanged += Props_UnitsChanged;
-        }
-
-        private void Props_UnitsChanged(object sender, EventArgs e)
-        {
-            UpdateForm();
+            MainMenu = menu;
+            mf = main;
+            this.Tag = false;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -27,10 +28,35 @@ namespace RateController.Forms
             UpdateForm();
             SetButtons(false);
         }
-        public void SetManager(MapManager mapManager)
+
+        private void btnLoad_Click(object sender, EventArgs e)
         {
-            cMapManager= mapManager;
+            openFileDialog1.InitialDirectory = Props.CurrentDir();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (!Props.OpenRateDataFile(openFileDialog1.FileName))
+                {
+                    mf.Tls.ShowMessage("Could not open file.");
+                }
+                tbRateDataFile.Text = Props.CurrentRateDataFile();
+            }
         }
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.InitialDirectory = Props.CurrentDir();
+            saveFileDialog1.Title = "New File";
+            saveFileDialog1.FileName = Props.CurrentMapName + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    Props.OpenRateDataFile(saveFileDialog1.FileName, true);
+                    tbRateDataFile.Text = Props.CurrentRateDataFile();
+                }
+            }
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (cEdited)
@@ -47,9 +73,9 @@ namespace RateController.Forms
                     }
 
                     Props.RecordRates = ckRecord.Checked;
-                    Props.RateDisplayShow = ckDisplayRates.Checked;
                     Props.RateDisplayRefresh = HSrefreshMap.Value;
                     Props.RateDisplayResolution = HSresolution.Value;
+                    Props.RateRecordInterval = HSRecordInterval.Value;
 
                     if (rbProductA.Checked)
                     {
@@ -70,16 +96,27 @@ namespace RateController.Forms
 
                     SetButtons(false);
                     UpdateForm();
-                    cMapManager.UpdateRateMapDisplay();
+                    mf.Tls.Manager.UpdateRateMapDisplay();
                 }
                 catch (Exception ex)
                 {
                     Props.WriteErrorLog("frmRates/btnOK_Click: " + ex.Message);
                 }
             }
-            else
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.InitialDirectory = Props.CurrentDir();
+            saveFileDialog1.Title = "Save As";
+            saveFileDialog1.FileName = tbRateDataFile.Text;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                this.Close();
+                if (saveFileDialog1.FileName != "")
+                {
+                    Props.OpenRateDataFile(saveFileDialog1.FileName, true);
+                    tbRateDataFile.Text = Props.CurrentRateDataFile();
+                }
             }
         }
 
@@ -90,16 +127,53 @@ namespace RateController.Forms
 
         private void frmRates_Load(object sender, EventArgs e)
         {
-            Props.LoadFormLocation(this);
-            this.BackColor = Properties.Settings.Default.MainBackColour;
+            // menu 800,600
+            // sub menu 540,630
             SetLanguage();
+            MainMenu.MenuMoved += MainMenu_MenuMoved;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
+            this.Width = MainMenu.Width - 260;
+            this.Height = MainMenu.Height - 50;
+            btnOK.Left = this.Width - 84;
+            btnOK.Top = this.Height - 84;
+            btnCancel.Left = btnOK.Left - 78;
+            btnCancel.Top = btnOK.Top;
+            MainMenu.StyleControls(this);
+            PositionForm();
             UpdateForm();
+
+            Font ValFont = new Font(lbFileName.Font.FontFamily, 14, FontStyle.Bold);
+            lbRefresh.Font = ValFont;
+            lbResolution.Font = ValFont;
+            lbRecordInterval.Font = ValFont;
+        }
+
+        private void gbMap_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void HSresolution_Scroll(object sender, ScrollEventArgs e)
         {
             UpdateControlDisplay();
             SetButtons(true);
+        }
+
+        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        {
+            PositionForm();
+        }
+
+        private void PositionForm()
+        {
+            this.Top = MainMenu.Top + 30;
+            this.Left = MainMenu.Left + 246;
+        }
+
+        private void Props_UnitsChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void rbProductA_CheckedChanged(object sender, EventArgs e)
@@ -114,12 +188,12 @@ namespace RateController.Forms
                 if (Edited)
                 {
                     btnCancel.Enabled = true;
-                    btnOK.Image = Properties.Resources.Save;
+                    btnOK.Enabled = true;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
-                    btnOK.Image = Properties.Resources.OK;
+                    btnOK.Enabled = false;
                 }
 
                 cEdited = Edited;
@@ -150,6 +224,7 @@ namespace RateController.Forms
             {
                 lbResolution.Text = (HSresolution.Value * 0.05).ToString("N2");
             }
+            lbRecordInterval.Text = HSRecordInterval.Value.ToString("N0");
         }
 
         private void UpdateForm()
@@ -160,9 +235,9 @@ namespace RateController.Forms
                 rbApplied.Checked = (Props.RateDisplayType == RateType.Applied);
                 rbTarget.Checked = !rbApplied.Checked;
                 ckRecord.Checked = Props.RecordRates;
-                ckDisplayRates.Checked = Props.RateDisplayShow;
                 HSrefreshMap.Value = Props.RateDisplayRefresh;
                 HSresolution.Value = Props.RateDisplayResolution;
+                HSRecordInterval.Value = Props.RateRecordInterval;
 
                 switch (Props.RateDisplayProduct)
                 {
@@ -185,6 +260,7 @@ namespace RateController.Forms
 
                 UpdateControlDisplay();
                 SetLanguage();
+                tbRateDataFile.Text = Props.CurrentRateDataFile();
 
                 Initializing = false;
             }
@@ -192,12 +268,6 @@ namespace RateController.Forms
             {
                 Props.WriteErrorLog("frmRates/UpdateForm: " + ex.Message);
             }
-        }
-
-        private void gbMap_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
     }
 }

@@ -256,6 +256,7 @@ namespace RateController.Classes
                     MapChanged?.Invoke(this, EventArgs.Empty);
                     Props.SetProp("LastMapFile", FilePath);
                     ZoomToFit();
+                    Props.CurrentMapName = MapName;
                 }
             }
             return Result;
@@ -297,6 +298,7 @@ namespace RateController.Classes
                 if (UpdateCache) AddToCache();
                 Result = true;
                 MapName = name;
+                Props.CurrentMapName = name;
             }
             return Result;
         }

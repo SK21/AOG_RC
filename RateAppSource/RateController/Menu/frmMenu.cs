@@ -1,4 +1,5 @@
 ﻿using RateController.Classes;
+using RateController.Forms;
 using RateController.Language;
 using RateController.Menu;
 using System;
@@ -34,7 +35,7 @@ namespace RateController
 
             Items = new Button[] { butNew, butOpen, butSaveAs, butRate, butControl, butSettings, butMode, butMonitor,
                 butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins, butWifi,
-                butValves, butDisplay, butPrimed, butSwitches, butLanguage, butColor };
+                butValves, butDisplay, butPrimed, butSwitches, butLanguage, butColor,butRateData };
 
             ChangeProduct(ProductID);
             LoadLast = LoadLst;
@@ -601,7 +602,7 @@ namespace RateController
                     Pos += SubSpacing;
                     butMap.Top = Pos;
 
-                    butRateData.Left= butFile.Left + SubOffset;
+                    butRateData.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butRateData.Top = Pos;
 
@@ -741,6 +742,20 @@ namespace RateController
                 {
                     fs.Focus();
                 }
+            }
+        }
+
+        private void butRateData_Click(object sender, EventArgs e)
+        {
+            cLastScreen = "frmMenuRateData";
+            HighlightButton(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRateData(mf, this);
+                frm.Owner = this;
+                frm.Show();
             }
         }
 
@@ -952,6 +967,10 @@ namespace RateController
             if (LoadLast) LoadLastScreen();
             SetLanguage();
             ShowName();
+
+            Font ValFont = new Font(lbFileName.Font.FontFamily, 10, FontStyle.Regular);
+            lbFileName.Font = ValFont;
+            lbRateData.Font = ValFont;
         }
 
         private void frmMenu_LocationChanged(object sender, EventArgs e)
@@ -1032,14 +1051,6 @@ namespace RateController
                         case "frmMenuData":
                             butProducts.PerformClick();
                             fs = new frmMenuData(mf, this);
-                            fs.Owner = this;
-                            cLastScreen = Last;
-                            fs.Show();
-                            break;
-
-                        case "frmMenuRateMap":
-                            butProducts.PerformClick();
-                            fs = new frmMenuRateMap(mf, this);
                             fs.Owner = this;
                             cLastScreen = Last;
                             fs.Show();
@@ -1137,6 +1148,22 @@ namespace RateController
                             fs.Show();
                             break;
 
+                        case "frmMenuRateMap":
+                            butOptions.PerformClick();
+                            fs = new frmMenuRateMap(mf, this);
+                            fs.Owner = this;
+                            cLastScreen = Last;
+                            fs.Show();
+                            break;
+
+                        case "frmMenuRateData":
+                            butOptions.PerformClick();
+                            fs = new frmMenuRateData(mf, this);
+                            fs.Owner = this;
+                            cLastScreen = Last;
+                            fs.Show();
+                            break;
+
                         case "frmMenuLanguage":
                             butOptions.PerformClick();
                             fs = new frmMenuLanguage(mf, this);
@@ -1215,26 +1242,11 @@ namespace RateController
 
         private void ShowName()
         {
-            string Nm = Props.CurrentFileName().Length <= 11 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 8) + "...";
+            string Nm = Props.CurrentFileName().Length <= 18 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 18) + "...";
             lbFileName.Text = "[" + Nm + "]";
 
-            Nm = Props.CurrentRateDataFile().Length <= 11 ? Props.CurrentRateDataFile() : Props.CurrentRateDataFile().Substring(0, 8) + "...";
+            Nm = Props.CurrentRateDataFile().Length <= 18 ? Props.CurrentRateDataFile() : Props.CurrentRateDataFile().Substring(0, 18) + "...";
             lbRateData.Text = "[" + Nm + "]";
-        }
-
-        private void butRateData_Click(object sender, EventArgs e)
-        {
-            cLastScreen = "frmMenuRateData";
-            HighlightButton(cLastScreen);
-            Form fs = Props.IsFormOpen(cLastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuRa teMap(mf, this);
-                frm.Owner = this;
-                frm.Show();
-            }
-
         }
     }
 }
