@@ -107,7 +107,7 @@ namespace RateController.Classes
         public void Load()
         {
             cPressures.Clear();
-            for (int i = 0; i < mf.MaxModules; i++)
+            for (int i = 0; i < Props.MaxModules; i++)
             {
                 clsPressure pr = new clsPressure(mf, i);
                 cPressures.Add(pr);
@@ -125,7 +125,7 @@ namespace RateController.Classes
             if (ModuleID == -1)
             {
                 // save all
-                for (int i = 0; i < mf.MaxModules; i++)
+                for (int i = 0; i < Props.MaxModules; i++)
                 {
                     cPressures[i].Save();
                 }

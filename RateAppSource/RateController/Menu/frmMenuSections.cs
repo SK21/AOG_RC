@@ -562,7 +562,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbSectionCount.Text, out tempD);
-            using (var form = new FormNumeric(1, mf.MaxSections, tempD))
+            using (var form = new FormNumeric(1, Props.MaxSections, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -583,7 +583,7 @@ namespace RateController.Menu
             {
                 double tempD;
                 double.TryParse(tbSectionCount.Text, out tempD);
-                if (tempD < 1 || tempD > mf.MaxSections)
+                if (tempD < 1 || tempD > Props.MaxSections)
                 {
                     System.Media.SystemSounds.Exclamation.Play();
                     e.Cancel = true;
@@ -603,7 +603,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbSectionsPerZone.Text, out tempD);
-            using (var form = new FormNumeric(1, mf.MaxSections, tempD))
+            using (var form = new FormNumeric(1, Props.MaxSections, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -624,7 +624,7 @@ namespace RateController.Menu
             {
                 double tempD;
                 double.TryParse(tbSectionsPerZone.Text, out tempD);
-                if (tempD < 1 || tempD > mf.MaxSections)
+                if (tempD < 1 || tempD > Props.MaxSections)
                 {
                     System.Media.SystemSounds.Exclamation.Play();
                     e.Cancel = true;

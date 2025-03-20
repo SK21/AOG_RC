@@ -23,8 +23,8 @@ namespace RateController
         {
             mf = CallingForm;
             Items = cRelays.AsReadOnly();
-            cPowerRelays = new int[mf.MaxModules];
-            cInvertedRelays = new int[mf.MaxModules];
+            cPowerRelays = new int[Props.MaxModules];
+            cInvertedRelays = new int[Props.MaxModules];
         }
 
         public IList<clsRelay> Items { get => cItems; set => cItems = value; }
@@ -37,7 +37,7 @@ namespace RateController
         public int InvertedRelays(int ModuleID)
         {
             int Result = 0;
-            if (ModuleID >= 0 && ModuleID < mf.MaxModules) Result = cInvertedRelays[ModuleID];
+            if (ModuleID >= 0 && ModuleID < Props.MaxModules) Result = cInvertedRelays[ModuleID];
             return Result;
         }
 
@@ -51,9 +51,9 @@ namespace RateController
         public void Load(bool LoadfromFile = true)
         {
             cRelays.Clear();
-            for (int m = 0; m < mf.MaxModules; m++)
+            for (int m = 0; m < Props.MaxModules; m++)
             {
-                for (int r = 0; r < mf.MaxRelays; r++)
+                for (int r = 0; r < Props.MaxRelays; r++)
                 {
                     clsRelay Rly = new clsRelay(mf, r, m);
                     cRelays.Add(Rly);
@@ -67,7 +67,7 @@ namespace RateController
         public int PowerRelays(int ModuleID)
         {
             int Result = 0;
-            if (ModuleID >= 0 && ModuleID < mf.MaxModules) Result = cPowerRelays[ModuleID];
+            if (ModuleID >= 0 && ModuleID < Props.MaxModules) Result = cPowerRelays[ModuleID];
             return Result;
         }
 
@@ -103,7 +103,7 @@ namespace RateController
                         if (Rly.Type == RelayTypes.Section || Rly.Type == RelayTypes.Invert_Section
                             || ((Rly.Type == RelayTypes.TramRight || Rly.Type == RelayTypes.TramLeft) && tmp > 0))
                         {
-                            if (CurrentSection < mf.MaxSections)
+                            if (CurrentSection < Props.MaxSections)
                             {
                                 Rly.SectionID = CurrentSection;
                                 CurrentSection++;
@@ -198,7 +198,7 @@ namespace RateController
                 }
 
                 // check if at least one section on
-                for (int i = 0; i < mf.MaxSections; i++)
+                for (int i = 0; i < Props.MaxSections; i++)
                 {
                     if (mf.Sections.Item(i).IsON)
                     {
@@ -300,7 +300,7 @@ namespace RateController
 
         private void BuildInvertedRelays()
         {
-            for (int i = 0; i < mf.MaxModules; i++)
+            for (int i = 0; i < Props.MaxModules; i++)
             {
                 cInvertedRelays[i] = 0;
                 for (int j = 0; j < cRelays.Count; j++)
@@ -315,7 +315,7 @@ namespace RateController
         {
             // 16 bit list indicating which relays are power type
             // needed for example when powering off a combo close valve in case of comm failure
-            for (int i = 0; i < mf.MaxModules; i++)
+            for (int i = 0; i < Props.MaxModules; i++)
             {
                 cPowerRelays[i] = 0;
                 for (int j = 0; j < cRelays.Count; j++)

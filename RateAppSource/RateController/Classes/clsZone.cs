@@ -60,7 +60,7 @@ namespace RateController
             get { return cSwitchID; }
             set
             {
-                if (value >= 0 && value < mf.MaxSwitches)
+                if (value >= 0 && value < Props.MaxSwitches)
                 {
                     if (cSwitchID != value)
                     {
@@ -70,7 +70,7 @@ namespace RateController
                 }
                 else
                 {
-                    throw new ArgumentException("Must be between 0 and " + (mf.MaxSwitches - 1).ToString());
+                    throw new ArgumentException("Must be between 0 and " + (Props.MaxSwitches - 1).ToString());
                 }
             }
         }

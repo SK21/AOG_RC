@@ -43,7 +43,7 @@ namespace RateController
             get { return cSectionID; }
             set
             {
-                if (value >= -1 && value < mf.MaxSections)
+                if (value >= -1 && value < Props.MaxSections)
                 {
                     cSectionID = value;
                 }
@@ -60,7 +60,7 @@ namespace RateController
             get { return cSwitchID; }
             set
             {
-                if (value >= -1 && value < mf.MaxSwitches)
+                if (value >= -1 && value < Props.MaxSwitches)
                 {
                     cSwitchID = value;
                 }

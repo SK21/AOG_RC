@@ -543,14 +543,14 @@ namespace RateController.Menu
             TankSize.Text = MainMenu.CurrentProduct.TankSize.ToString("N0");
             ValveType.SelectedIndex = ConvertControlType(MainMenu.CurrentProduct.ControlType);
 
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
+            if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
             {
                 // fans
                 pnlFan.Visible = true;
                 pnlFan.Left = 71;
                 pnlFan.Top = 48;
                 pnlMain.Visible = false;
-                lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
+                lbProduct.Text = "Fan " + (3 - (Props.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
             }
             else
             {

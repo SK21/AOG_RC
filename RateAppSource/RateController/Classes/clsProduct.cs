@@ -73,7 +73,7 @@ namespace RateController
             ModuleRateSettings = new PGN32500(this);
             ModuleControlSettings = new PGN32502(this);
 
-            if (cProductID > mf.MaxProducts - 3)
+            if (cProductID > Props.MaxProducts - 3)
             {
                 cControlType = ControlTypeEnum.Fan;
                 ProductName = "fan";
@@ -132,7 +132,7 @@ namespace RateController
         {
             get
             {
-                if (cProductID > mf.MaxProducts - 3)
+                if (cProductID > Props.MaxProducts - 3)
                 {
                     return ControlTypeEnum.Fan;
                 }
@@ -143,7 +143,7 @@ namespace RateController
             }
             set
             {
-                if (cProductID > mf.MaxProducts - 3)
+                if (cProductID > Props.MaxProducts - 3)
                 {
                     cControlType = ControlTypeEnum.Fan;
                 }
@@ -352,7 +352,7 @@ namespace RateController
             {
                 if (cControlType == ControlTypeEnum.Fan)
                 {
-                    int tmp = 3 - (mf.MaxProducts - cProductID);
+                    int tmp = 3 - (Props.MaxProducts - cProductID);
                     cProductName = "Fan " + tmp.ToString();
                 }
                 return cProductName;
@@ -361,7 +361,7 @@ namespace RateController
             {
                 if (cControlType == ControlTypeEnum.Fan)
                 {
-                    int tmp = 3 - (mf.MaxProducts - cProductID);
+                    int tmp = 3 - (Props.MaxProducts - cProductID);
                     cProductName = "Fan " + tmp.ToString();
                 }
                 else
@@ -510,7 +510,7 @@ namespace RateController
                 cSenID = SenID;
                 Result = true;
             }
-            else if (ModID > -1 && ModID < mf.MaxModules && SenID > -1 && SenID < mf.MaxSensors)
+            else if (ModID > -1 && ModID < Props.MaxModules && SenID > -1 && SenID < Props.MaxSensors)
             {
                 if (mf.Products.UniqueModSen(ModID, SenID, cProductID))
                 {
@@ -610,7 +610,7 @@ namespace RateController
             int.TryParse(Props.GetProp("ManualPWM" + IDname), out tmp);
             cManualPWM = tmp;
 
-            if (ID > mf.MaxProducts - 3)
+            if (ID > Props.MaxProducts - 3)
             {
                 cControlType = ControlTypeEnum.Fan;
             }
@@ -653,12 +653,12 @@ namespace RateController
 
         public void LoadDefaultControlSettings()
         {
-            cHighAdjust = mf.HighAdjustDefault;
-            cLowAdjust = mf.LowAdjustDefault;
-            cThreshold = mf.ThresholdDefault;
-            cMaxAdjust = mf.MaxAdjustDefault;
-            cMinAdjust = mf.MinAdjustDefault;
-            cScalingFactor = mf.ScalingDefault;
+            cHighAdjust = Props.HighAdjustDefault;
+            cLowAdjust = Props.LowAdjustDefault;
+            cThreshold = Props.ThresholdDefault;
+            cMaxAdjust = Props.MaxAdjustDefault;
+            cMinAdjust = Props.MinAdjustDefault;
+            cScalingFactor = Props.ScalingDefault;
         }
 
         public double MinUPMinUse()
@@ -667,7 +667,7 @@ namespace RateController
             if (cUseMinUPMbySpeed)
             {
                 double KPH = cMinUPMbySpeed;
-                if (!Props.UseMetric) KPH *= mf.MPHtoKPH;
+                if (!Props.UseMetric) KPH *= Props.MPHtoKPH;
                 double HPM = mf.Sections.TotalWidth(false) * KPH / 600.0;   // hectares per minute
                 Result = TargetRate() * HPM;
                 if (CoverageUnits == 0) Result *= 2.47;

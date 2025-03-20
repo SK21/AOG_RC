@@ -55,12 +55,12 @@ namespace RateController.Menu
 
         private void btnPIDloadDefaults_Click(object sender, EventArgs e)
         {
-            HShigh.Value = mf.HighAdjustDefault;
-            HSlow.Value = mf.LowAdjustDefault;
-            HSthreshold.Value = mf.ThresholdDefault;
-            HSmax.Value = mf.MaxAdjustDefault;
-            HSmin.Value = mf.MinAdjustDefault;
-            HSscaling.Value = mf.ScalingDefault;
+            HShigh.Value = Props.HighAdjustDefault;
+            HSlow.Value = Props.LowAdjustDefault;
+            HSthreshold.Value = Props.ThresholdDefault;
+            HSmax.Value = Props.MaxAdjustDefault;
+            HSmin.Value = Props.MinAdjustDefault;
+            HSscaling.Value = Props.ScalingDefault;
         }
 
         private void btnRight_Click(object sender, EventArgs e)
@@ -187,10 +187,10 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
+            if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
             {
                 // fans
-                lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
+                lbProduct.Text = "Fan " + (3 - (Props.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
             }
             else
             {

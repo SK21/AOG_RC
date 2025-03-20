@@ -269,7 +269,7 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3 && MainMenu.LastScreen == this.Text)
+            if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3 && MainMenu.LastScreen == this.Text)
             {
                 // fans, move to product only
                 MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID - 1, true);

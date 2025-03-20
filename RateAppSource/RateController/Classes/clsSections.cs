@@ -25,7 +25,7 @@ namespace RateController
             get
             {
                 int tmp = 0;
-                for (int i = 0; i < mf.MaxSections; i++)
+                for (int i = 0; i < Props.MaxSections; i++)
                 {
                     if (cSections[i].Enabled) tmp++;
                 }
@@ -33,13 +33,13 @@ namespace RateController
             }
             set
             {
-                if (value < 0 || value > mf.MaxSections)
+                if (value < 0 || value > Props.MaxSections)
                 {
                     throw new ArgumentException("Invalid section number. (clsSections)");
                 }
                 else
                 {
-                    for (int i = 0; i < mf.MaxSections; i++)
+                    for (int i = 0; i < Props.MaxSections; i++)
                     {
                         Tmp = ListID(i);
                         if (i < value)
@@ -60,7 +60,7 @@ namespace RateController
         public void CheckSwitchDefinitions()
         {
             bool Changed = false;
-            for (int i = 0; i < mf.MaxSections; i++)
+            for (int i = 0; i < Props.MaxSections; i++)
             {
                 if (cSections[i].SwitchChanged) Changed = true;
                 cSections[i].SwitchChanged = false;
@@ -88,7 +88,7 @@ namespace RateController
         public void Load()
         {
             cSections.Clear();
-            for (int i = 0; i < mf.MaxSections; i++)
+            for (int i = 0; i < Props.MaxSections; i++)
             {
                 clsSection Sec = new clsSection(mf, i);
                 Sec.Load();
@@ -113,7 +113,7 @@ namespace RateController
             float Result = 0;
             float cWorkingWidth_cm = 0;
 
-            for (int i = 0; i < mf.MaxSections; i++)
+            for (int i = 0; i < Props.MaxSections; i++)
             {
                 if (cSections[i].Enabled)
                 {
@@ -137,7 +137,7 @@ namespace RateController
             float Result = 0;
             float cWorkingWidth_cm = 0;
 
-            for (int i = 0; i < mf.MaxSections; i++)
+            for (int i = 0; i < Props.MaxSections; i++)
             {
                 if (mf.Sections.Item(i).IsON)
                 {

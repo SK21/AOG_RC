@@ -49,6 +49,26 @@ namespace RateController.Classes
         private static bool cReadOnly = false;
         private static bool cUseVariableRate = false;
         private static string cVersionDate = "19-Mar-2025";
+        private static int cDefaultProduct;
+
+        public static readonly int MaxModules = 8;
+        public static readonly int MaxProducts = 6;// last two are fans
+        public static readonly int MaxRelays = 16;
+        public static readonly int MaxSections = 128;
+        public static readonly int MaxSensors = 8;
+        public static readonly int MaxSwitches = 16;
+        public static readonly double MPHtoKPH = 1.6092;
+
+        #region // flow adjustment defaults
+
+        public static readonly int HighAdjustDefault = 50;
+        public static readonly int LowAdjustDefault = 20;
+        public static readonly int MaxAdjustDefault = 100;
+        public static readonly int MinAdjustDefault = 5;
+        public static readonly int ScalingDefault = 48;
+        public static readonly int ThresholdDefault = 50;
+
+        #endregion // flow adjustment defaults
 
         #region MainProperties
 
@@ -176,6 +196,24 @@ namespace RateController.Classes
         {
             return cVersionDate;
         }
+
+        public static int DefaultProduct
+        {
+            get { return cDefaultProduct; }
+            set
+            {
+                if (value >= 0 && value < MaxProducts - 2)
+                {
+                    cDefaultProduct = value;
+                    SetProp("DefaultProduct", cDefaultProduct.ToString());
+                }
+            }
+        }
+
+
+
+
+
 
         #endregion MainProperties
 

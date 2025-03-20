@@ -33,7 +33,7 @@ namespace RateController
         public clsVirtualSwitchBox(FormStart CalledFrom)
         {
             mf = CalledFrom;
-            cSwitch = new bool[mf.MaxSwitches];
+            cSwitch = new bool[Props.MaxSwitches];
             PressedData = new byte[6];
             PressedData[0] = 106;
             PressedData[1] = 127;

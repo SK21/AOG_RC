@@ -18,8 +18,8 @@ namespace RateController
         }
         public double[] ProductAppliedRates()
         {
-            double[] Result = new double[mf.MaxProducts];
-            for (int i = 0; i < mf.MaxProducts - 2; i++)
+            double[] Result = new double[Props.MaxProducts];
+            for (int i = 0; i < Props.MaxProducts - 2; i++)
             {
                 if (cProducts[i].RateSensor.Connected())
                 {
@@ -31,8 +31,8 @@ namespace RateController
 
         public double[] ProductTargetRates()
         {
-            double[] Result = new double[mf.MaxProducts];
-            for (int i = 0; i < mf.MaxProducts - 2; i++)
+            double[] Result = new double[Props.MaxProducts];
+            for (int i = 0; i < Props.MaxProducts - 2; i++)
             {
                 if (cProducts[i].RateSensor.Connected())
                 {
@@ -48,7 +48,7 @@ namespace RateController
             double AlarmSetPoint;
             bool cAlarmOn = false;
 
-            for (int i = 0; i < mf.MaxProducts; i++)
+            for (int i = 0; i < Props.MaxProducts; i++)
             {
                 if ((cProducts[i].WorkRate() > 0) && (cProducts[i].UseOffRateAlarm))
                 {
@@ -80,7 +80,7 @@ namespace RateController
                 if (cProducts.Count > 0)
                 {
                     // returns true if at least one module is connected
-                    for (int i = 0; i < mf.MaxProducts; i++)
+                    for (int i = 0; i < Props.MaxProducts; i++)
                     {
                         if (cProducts[i].RateSensor.Connected())
                         {
@@ -113,14 +113,14 @@ namespace RateController
         {
             cProducts.Clear();
 
-            for (int i = 0; i < mf.MaxProducts; i++)
+            for (int i = 0; i < Props.MaxProducts; i++)
             {
                 clsProduct Prod = new clsProduct(mf, i);
                 cProducts.Add(Prod);
                 Prod.Load();
             }
 
-            for (int i = 0; i < mf.MaxProducts; i++)
+            for (int i = 0; i < Props.MaxProducts; i++)
             {
                 clsProduct Prd = cProducts[i];
                 if (Prd.IsNew() || Reset)
@@ -146,7 +146,7 @@ namespace RateController
                     Prd.LoadDefaultControlSettings();
                     Prd.Save();
 
-                    mf.DefaultProduct = 0;
+                   Props.DefaultProduct = 0;
                 }
             }
         }
@@ -185,14 +185,14 @@ namespace RateController
 
         public void Save()
         {
-            for (int i = 0; i < mf.MaxProducts; i++)
+            for (int i = 0; i < Props.MaxProducts; i++)
             {
                 cProducts[i].Update();
             }
 
             if ((DateTime.Now - LastSave).TotalSeconds > 60)
             {
-                for (int i = 0; i < mf.MaxProducts; i++)
+                for (int i = 0; i < Props.MaxProducts; i++)
                 {
                     cProducts[i].Save();
                 }

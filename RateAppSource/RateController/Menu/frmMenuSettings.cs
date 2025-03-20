@@ -51,7 +51,7 @@ namespace RateController.Menu
                     MainMenu.CurrentProduct.ChangeID(tmp1, tmp2);
                     if (double.TryParse(tbMinUPM.Text, out double mu)) MainMenu.CurrentProduct.MinUPM = mu;
                     if (double.TryParse(tbUPMspeed.Text, out double sp)) MainMenu.CurrentProduct.MinUPMbySpeed = sp;
-                    if (ckDefault.Checked) mf.DefaultProduct = MainMenu.CurrentProduct.ID;
+                    if (ckDefault.Checked) Props.DefaultProduct = MainMenu.CurrentProduct.ID;
                     MainMenu.CurrentProduct.OnScreen = ckOnScreen.Checked;
                     MainMenu.CurrentProduct.BumpButtons = ckBumpButtons.Checked;
                     mf.SetScale(MainMenu.CurrentProduct.ID, ckScale.Checked);
@@ -351,10 +351,10 @@ namespace RateController.Menu
             Initializing = true;
 
             SetModuleIndicator();
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
+            if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
             {
                 // fans
-                lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
+                lbProduct.Text = "Fan " + (3 - (Props.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
                 grpMinUPM.Visible = false;
                 ckDefault.Visible = false;
                 ckBumpButtons.Visible = false;
@@ -389,7 +389,7 @@ namespace RateController.Menu
             }
             rbUPMSpeed.Checked = MainMenu.CurrentProduct.UseMinUPMbySpeed;
             rbUPMFixed.Checked = !MainMenu.CurrentProduct.UseMinUPMbySpeed;
-            ckDefault.Checked = (mf.DefaultProduct == MainMenu.CurrentProduct.ID);
+            ckDefault.Checked = (Props.DefaultProduct == MainMenu.CurrentProduct.ID);
             ckOnScreen.Checked = MainMenu.CurrentProduct.OnScreen;
             ckBumpButtons.Checked = MainMenu.CurrentProduct.BumpButtons;
             ckOffRate.Checked = MainMenu.CurrentProduct.UseOffRateAlarm;

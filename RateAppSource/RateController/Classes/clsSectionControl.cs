@@ -36,7 +36,7 @@ namespace RateController
         public clsSectionControl(FormStart CallingForm)
         {
             mf = CallingForm;
-            RCsectionOn = new bool[mf.MaxSections];
+            RCsectionOn = new bool[Props.MaxSections];
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             mf.AOGsections.SectionsChanged += AOGsections_SectionsChanged;
             MasterIsOn = false;
@@ -304,7 +304,7 @@ namespace RateController
                     }
 
                     // send off bytes to match switchbox
-                    if (mf.MaxSections < Max) Max = mf.MaxSections;
+                    if (Props.MaxSections < Max) Max = Props.MaxSections;
                     for (int i = 0; i < Max; i++)
                     {
                         if (!RCsectionOn[i])

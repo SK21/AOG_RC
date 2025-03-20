@@ -159,13 +159,13 @@ namespace RateController
 
         private void btnFan1_Click(object sender, EventArgs e)
         {
-            clsProduct fn = mf.Products.Item(mf.MaxProducts - 2);
+            clsProduct fn = mf.Products.Item(Props.MaxProducts - 2);
             fn.FanOn = !fn.FanOn;
         }
 
         private void btnFan2_Click(object sender, EventArgs e)
         {
-            clsProduct fn = mf.Products.Item(mf.MaxProducts - 1);
+            clsProduct fn = mf.Products.Item(Props.MaxProducts - 1);
             fn.FanOn = !fn.FanOn;
         }
 
@@ -211,7 +211,7 @@ namespace RateController
         private void frmLargeScreen_Load(object sender, EventArgs e)
         {
             Props.LoadFormLocation(this);
-            Prd = mf.Products.Item(mf.DefaultProduct);
+            Prd = mf.Products.Item(Props.DefaultProduct);
 
             UpdateForm();
             timerMain.Enabled = true;
@@ -895,7 +895,7 @@ namespace RateController
             }
             pbRate3.Value = RtLevel;
 
-            clsProduct prd = mf.Products.Item(mf.MaxProducts - 2);
+            clsProduct prd = mf.Products.Item(Props.MaxProducts - 2);
 
             if (Fan1RateType == 1)
             {
@@ -923,7 +923,7 @@ namespace RateController
             }
 
             // fan 2
-            prd = mf.Products.Item(mf.MaxProducts - 1);
+            prd = mf.Products.Item(Props.MaxProducts - 1);
             if (Fan2RateType == 1)
             {
                 lbRPM2.Text = prd.CurrentRate().ToString("N0") + " RPM-I";
@@ -950,7 +950,7 @@ namespace RateController
             }
 
             // fan 1 button
-            clsProduct fn = mf.Products.Item(mf.MaxProducts - 2);
+            clsProduct fn = mf.Products.Item(Props.MaxProducts - 2);
             if (fn.FanOn)
             {
                 btnFan1.Image = Properties.Resources.FanOn;
@@ -961,7 +961,7 @@ namespace RateController
             }
 
             // fan 2 button
-            fn = mf.Products.Item(mf.MaxProducts - 1);
+            fn = mf.Products.Item(Props.MaxProducts - 1);
             if (fn.FanOn)
             {
                 btnFan2.Image = Properties.Resources.FanOn;

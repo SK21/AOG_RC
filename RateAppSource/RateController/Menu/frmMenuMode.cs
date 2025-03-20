@@ -165,10 +165,10 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            if (MainMenu.CurrentProduct.ID > mf.MaxProducts - 3)
+            if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
             {
                 // fans
-                lbProduct.Text = "Fan " + (3 - (mf.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
+                lbProduct.Text = "Fan " + (3 - (Props.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
             }
             else
             {

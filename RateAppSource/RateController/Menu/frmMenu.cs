@@ -60,8 +60,8 @@ namespace RateController
         public void ChangeProduct(int NewID, bool NoFans = false)
         {
             if (NewID < 0) NewID = 0;
-            if (NewID > mf.MaxProducts - 1) NewID = mf.MaxProducts - 1;
-            if (NoFans && NewID > mf.MaxProducts - 3) NewID = mf.MaxProducts - 3;
+            if (NewID > Props.MaxProducts - 1) NewID = Props.MaxProducts - 1;
+            if (NoFans && NewID > Props.MaxProducts - 3) NewID = Props.MaxProducts - 3;
             cCurrentProduct = mf.Products.Item(NewID);
             ProductChanged?.Invoke(this, EventArgs.Empty);
         }

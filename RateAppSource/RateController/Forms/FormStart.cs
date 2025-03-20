@@ -13,24 +13,6 @@ namespace RateController
 
     public partial class FormStart : Form
     {
-        public readonly int MaxModules = 8;
-        public readonly int MaxProducts = 6;// last two are fans
-        public readonly int MaxRelays = 16;
-        public readonly int MaxSections = 128;
-        public readonly int MaxSensors = 8;
-        public readonly int MaxSwitches = 16;
-        public readonly double MPHtoKPH = 1.6092;
-
-        #region // flow adjustment defaults
-
-        public readonly int HighAdjustDefault = 50;
-        public readonly int LowAdjustDefault = 20;
-        public readonly int MaxAdjustDefault = 100;
-        public readonly int MinAdjustDefault = 5;
-        public readonly int ScalingDefault = 48;
-        public readonly int ThresholdDefault = 50;
-
-        #endregion // flow adjustment defaults
 
         public PGN229 AOGsections;
         public PGN254 AutoSteerPGN;
@@ -136,8 +118,8 @@ namespace RateController
 
             RelayObjects = new clsRelays(this);
 
-            RelaySettings = new PGN32501[MaxModules];
-            for (int i = 0; i < MaxModules; i++)
+            RelaySettings = new PGN32501[Props.MaxModules];
+            for (int i = 0; i < Props.MaxModules; i++)
             {
                 RelaySettings[i] = new PGN32501(this, i);
             }
@@ -157,18 +139,6 @@ namespace RateController
 
         public event EventHandler ProductChanged;
 
-        public int DefaultProduct
-        {
-            get { return cDefaultProduct; }
-            set
-            {
-                if (value >= 0 && value < MaxProducts - 2)
-                {
-                    cDefaultProduct = value;
-                    Props.SetProp("DefaultProduct", cDefaultProduct.ToString());
-                }
-            }
-        }
 
         public int LSLeft
         {
@@ -560,7 +530,7 @@ namespace RateController
 
         public void SendRelays()
         {
-            for (int i = 0; i < MaxModules; i++)
+            for (int i = 0; i < Props.MaxModules; i++)
             {
                 if (ModulesStatus.Connected(i)) RelaySettings[i].Send();
             }
@@ -629,7 +599,7 @@ namespace RateController
                         P3.BumpButtons = false;
 
                         P3.CountsRev = P0.CountsRev;
-                        DefaultProduct = 3;
+                        Props.DefaultProduct = 3;
                         UseTransparent = true;
                     }
 
@@ -684,7 +654,7 @@ namespace RateController
                 if (CurrentPage == 0)
                 {
                     // summary
-                    for (int i = 0; i < MaxProducts; i++)
+                    for (int i = 0; i < Props.MaxProducts; i++)
                     {
                         ProdName[i].Text = Products.Item(i).ProductName;
 
@@ -892,7 +862,7 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                if (CurrentPage < MaxProducts)
+                if (CurrentPage < Props.MaxProducts)
                 {
                     CurrentPage++;
                     UpdateStatus();
@@ -1244,13 +1214,13 @@ namespace RateController
             int tmp = 0;
             foreach (clsProduct Prd in Products.Items)
             {
-                if (Prd.OnScreen && Prd.ID < MaxProducts - 2)
+                if (Prd.OnScreen && Prd.ID < Props.MaxProducts - 2)
                 {
                     count++;
                     tmp = Prd.ID;
                 }
             }
-            if (count == 1) DefaultProduct = tmp;
+            if (count == 1) Props.DefaultProduct = tmp;
 
             CurrentPage = cDefaultProduct + 1;
         }
@@ -1279,7 +1249,7 @@ namespace RateController
             lbOn.BackColor = Color.Transparent;
             lbOff.BackColor = Color.Transparent;
 
-            for (int i = 0; i < MaxProducts; i++)
+            for (int i = 0; i < Props.MaxProducts; i++)
             {
                 ProdName[i].ForeColor = Properties.Settings.Default.DisplayForeColour;
             }

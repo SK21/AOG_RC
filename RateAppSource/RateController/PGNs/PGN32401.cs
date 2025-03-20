@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 
 namespace RateController
 {
@@ -46,17 +47,17 @@ namespace RateController
         public PGN32401(FormStart CalledFrom)
         {
             mf = CalledFrom;
-            cInoID = new ushort[mf.MaxModules];
-            cWorkSwitch = new bool[mf.MaxModules];
-            cPressure = new double[mf.MaxModules];
-            ReceiveTime = new DateTime[mf.MaxModules];
-            cWifiSignal = new byte[mf.MaxModules];
-            cEthernetConnected = new bool[mf.MaxModules];
-            cGoodPins = new bool[mf.MaxModules];
+            cInoID = new ushort[Props.MaxModules];
+            cWorkSwitch = new bool[Props.MaxModules];
+            cPressure = new double[Props.MaxModules];
+            ReceiveTime = new DateTime[Props.MaxModules];
+            cWifiSignal = new byte[Props.MaxModules];
+            cEthernetConnected = new bool[Props.MaxModules];
+            cGoodPins = new bool[Props.MaxModules];
 
-            EthernetConnectedLast = new bool[mf.MaxModules];
-            WifiSignalLast = new byte[mf.MaxModules];
-            GoodPinsLast = new bool[mf.MaxModules];
+            EthernetConnectedLast = new bool[Props.MaxModules];
+            WifiSignalLast = new byte[Props.MaxModules];
+            GoodPinsLast = new bool[Props.MaxModules];
         }
 
         public event EventHandler<PinStatusEventArgs> PinStatusChanged;
@@ -143,7 +144,7 @@ namespace RateController
         public void UpdateActivity()
         {
             string Mes;
-            for (int i = 0; i < mf.MaxModules; i++)
+            for (int i = 0; i < Props.MaxModules; i++)
             {
                 if (EthernetConnectedLast[i] != cEthernetConnected[i])
                 {
@@ -189,7 +190,7 @@ namespace RateController
         {
             // returns true if any module workswitch is on
             bool Result = false;
-            for (int i = 0; i < mf.MaxModules; i++)
+            for (int i = 0; i < Props.MaxModules; i++)
             {
                 if (mf.ModulesStatus.Connected(i))
                 {
