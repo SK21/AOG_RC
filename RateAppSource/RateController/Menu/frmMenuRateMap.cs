@@ -108,7 +108,7 @@ namespace RateController.Menu
         {
             if (Props.IsFormOpen("frmRates") == null)
             {
-                var frm = new frmRates();
+                var frm = new frmMenuRateData();
                 frm.SetManager(mf.Tls.Manager);
                 frm.Show();
             }
@@ -137,15 +137,6 @@ namespace RateController.Menu
             btnSave.FlatAppearance.BorderSize = 0;
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            Initializing = true;
-            if (!mf.Tls.Manager.LoadLastMap())
-            {
-                mf.Tls.ShowMessage("Map could not be loaded.");
-            }
-            Initializing = false;
-        }
 
         private void ckEdit_CheckedChanged(object sender, EventArgs e)
         {

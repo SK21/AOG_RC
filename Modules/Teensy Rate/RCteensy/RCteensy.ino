@@ -299,7 +299,7 @@ byte ReadReset;
 uint32_t MaxLoopTime;
 
 //double debug1;
-double debug2;
+//double debug2;
 //double debug3;
 //double debug4;
 
@@ -324,9 +324,9 @@ void Blink()
 			//Serial.print(", ");
 			//Serial.print(debug1);
 
-			debug2 = PressureReading;
-			Serial.print(", ");
-			Serial.print(debug2);
+			//debug2 = PressureReading;
+			//Serial.print(", ");
+			//Serial.print(debug2);
 
 			//Serial.print(", ");
 			//Serial.print(debug3);

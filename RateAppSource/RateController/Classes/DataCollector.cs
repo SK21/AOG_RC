@@ -172,62 +172,65 @@ namespace RateController.Classes
             // Using a using block ensures the file is closed immediately after reading.
             using (var reader = new StreamReader(cFilePath))
             {
-                // Read and discard header line.
-                string headerLine = reader.ReadLine();
-
-                while (!reader.EndOfStream)
+                if (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
+                    // Read and discard header line.
+                    string headerLine = reader.ReadLine();
 
-                    // Assuming the CSV format matches our SaveDataToCsv header.
-                    // Split on comma. This simple approach assumes that the data values do not contain commas.
-                    string[] parts = line.Split(',');
-
-                    // There should be 13 parts: Timestamp, Latitude, Longitude + 5 applied + 5 target.
-                    if (parts.Length < 13)
-                        continue;
-
-                    // Parse basic values.
-                    DateTime timestamp;
-                    double latitude, longitude;
-                    if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp))
-                        continue;
-                    if (!double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude))
-                        continue;
-                    if (!double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
-                        continue;
-
-                    // Parse applied rates.
-                    List<double> appliedRates = new List<double>();
-                    for (int i = 3; i < 8; i++)
+                    while (!reader.EndOfStream)
                     {
-                        double rate;
-                        if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                        string line = reader.ReadLine();
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+
+                        // Assuming the CSV format matches our SaveDataToCsv header.
+                        // Split on comma. This simple approach assumes that the data values do not contain commas.
+                        string[] parts = line.Split(',');
+
+                        // There should be 13 parts: Timestamp, Latitude, Longitude + 5 applied + 5 target.
+                        if (parts.Length < 13)
+                            continue;
+
+                        // Parse basic values.
+                        DateTime timestamp;
+                        double latitude, longitude;
+                        if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp))
+                            continue;
+                        if (!double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude))
+                            continue;
+                        if (!double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
+                            continue;
+
+                        // Parse applied rates.
+                        List<double> appliedRates = new List<double>();
+                        for (int i = 3; i < 8; i++)
                         {
-                            appliedRates.Add(rate);
+                            double rate;
+                            if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                            {
+                                appliedRates.Add(rate);
+                            }
                         }
-                    }
 
-                    // Parse target rates.
-                    List<double> targetRates = new List<double>();
-                    for (int i = 8; i < 14; i++)
-                    {
-                        double rate;
-                        if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                        // Parse target rates.
+                        List<double> targetRates = new List<double>();
+                        for (int i = 8; i < 14; i++)
                         {
-                            targetRates.Add(rate);
+                            double rate;
+                            if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                            {
+                                targetRates.Add(rate);
+                            }
                         }
-                    }
 
-                    // Only add the reading if the number of applied and target rates match.
-                    if (appliedRates.Count == targetRates.Count && appliedRates.Count > 0)
-                    {
-                        var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), targetRates.ToArray());
-                        lock (_lock)
+                        // Only add the reading if the number of applied and target rates match.
+                        if (appliedRates.Count == targetRates.Count && appliedRates.Count > 0)
                         {
-                            Readings.Add(reading);
+                            var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), targetRates.ToArray());
+                            lock (_lock)
+                            {
+                                Readings.Add(reading);
+                            }
                         }
                     }
                 }

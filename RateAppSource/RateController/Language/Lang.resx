@@ -492,6 +492,9 @@
   <data name="lgRate" xml:space="preserve">
     <value>Rate</value>
   </data>
+  <data name="lgRateData" xml:space="preserve">
+    <value>Rate Data</value>
+  </data>
   <data name="lgRateMap" xml:space="preserve">
     <value>Rate Map</value>
   </data>

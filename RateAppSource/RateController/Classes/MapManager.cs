@@ -256,8 +256,6 @@ namespace RateController.Classes
                     MapChanged?.Invoke(this, EventArgs.Empty);
                     Props.SetProp("LastMapFile", FilePath);
                     ZoomToFit();
-                    string DataPath = Path.GetDirectoryName(FilePath) + "\\" + MapName + "_Rates.csv";
-                    mf.Tls.NewRateCollector(DataPath);
                 }
             }
             return Result;

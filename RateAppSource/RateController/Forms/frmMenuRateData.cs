@@ -6,12 +6,12 @@ using System.Windows.Forms.VisualStyles;
 
 namespace RateController.Forms
 {
-    public partial class frmRates : Form
+    public partial class frmMenuRateData : Form
     {
         private bool cEdited = false;
         private bool Initializing = false;
         private MapManager cMapManager;
-        public frmRates()
+        public frmMenuRateData()
         {
             InitializeComponent();
             Props.UnitsChanged += Props_UnitsChanged;
@@ -48,7 +48,7 @@ namespace RateController.Forms
 
                     Props.RecordRates = ckRecord.Checked;
                     Props.RateDisplayShow = ckDisplayRates.Checked;
-                    Props.RateDisplayRefresh = HSrefresh.Value;
+                    Props.RateDisplayRefresh = HSrefreshMap.Value;
                     Props.RateDisplayResolution = HSresolution.Value;
 
                     if (rbProductA.Checked)
@@ -141,7 +141,7 @@ namespace RateController.Forms
 
         private void UpdateControlDisplay()
         {
-            lbRefresh.Text = HSrefresh.Value.ToString("N0");
+            lbRefresh.Text = HSrefreshMap.Value.ToString("N0");
             if (Props.UseMetric)
             {
                 lbResolution.Text = (HSresolution.Value * 0.020234).ToString("N2");
@@ -161,7 +161,7 @@ namespace RateController.Forms
                 rbTarget.Checked = !rbApplied.Checked;
                 ckRecord.Checked = Props.RecordRates;
                 ckDisplayRates.Checked = Props.RateDisplayShow;
-                HSrefresh.Value = Props.RateDisplayRefresh;
+                HSrefreshMap.Value = Props.RateDisplayRefresh;
                 HSresolution.Value = Props.RateDisplayResolution;
 
                 switch (Props.RateDisplayProduct)

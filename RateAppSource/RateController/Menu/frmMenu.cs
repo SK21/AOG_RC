@@ -566,6 +566,8 @@ namespace RateController
                 butDisplay.Visible = !Expanded;
                 butLanguage.Visible = !Expanded;
                 butColor.Visible = !Expanded;
+                butMap.Visible = !Expanded;
+                butRateData.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -594,6 +596,14 @@ namespace RateController
                     butDisplay.Left = butFile.Left + SubOffset;
                     Pos += SubFirstSpacing;
                     butDisplay.Top = Pos;
+
+                    butMap.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butMap.Top = Pos;
+
+                    butRateData.Left= butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butRateData.Top = Pos;
 
                     butLanguage.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -659,7 +669,6 @@ namespace RateController
                 butMode.Visible = !Expanded;
                 butMonitor.Visible = !Expanded;
                 butData.Visible = !Expanded;
-                butMap.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -708,10 +717,6 @@ namespace RateController
                     butData.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butData.Top = Pos;
-
-                    butMap.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butMap.Top = Pos;
 
                     butRate.PerformClick();
                 }
@@ -1187,6 +1192,7 @@ namespace RateController
             butMonitor.Text = Lang.lgMonitoring;
             butData.Text = Lang.lgData;
             butMap.Text = Lang.lgRateMap;
+            butRateData.Text = Lang.lgRateData;
 
             butSections.Text = Lang.lgSections;
             butRelays.Text = Lang.lgRelays;
@@ -1211,6 +1217,24 @@ namespace RateController
         {
             string Nm = Props.CurrentFileName().Length <= 11 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 8) + "...";
             lbFileName.Text = "[" + Nm + "]";
+
+            Nm = Props.CurrentRateDataFile().Length <= 11 ? Props.CurrentRateDataFile() : Props.CurrentRateDataFile().Substring(0, 8) + "...";
+            lbRateData.Text = "[" + Nm + "]";
+        }
+
+        private void butRateData_Click(object sender, EventArgs e)
+        {
+            cLastScreen = "frmMenuRateData";
+            HighlightButton(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRa teMap(mf, this);
+                frm.Owner = this;
+                frm.Show();
+            }
+
         }
     }
 }

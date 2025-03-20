@@ -231,11 +231,11 @@
     <Compile Include="Forms\frmLargeScreen.Designer.cs">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmRates.cs">
+    <Compile Include="Forms\frmMenuRateData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmRates.Designer.cs">
-      <DependentUpon>frmRates.cs</DependentUpon>
+    <Compile Include="Forms\frmMenuRateData.Designer.cs">
+      <DependentUpon>frmMenuRateData.cs</DependentUpon>
     </Compile>
     <Compile Include="Language\Lang.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -500,8 +500,8 @@
     <EmbeddedResource Include="Forms\frmLargeScreen.resx">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmRates.resx">
-      <DependentUpon>frmRates.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\frmMenuRateData.resx">
+      <DependentUpon>frmMenuRateData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Language\Lang.lt.resx" />
     <EmbeddedResource Include="Menu\frmMenu.resx">

@@ -44,5 +44,8 @@
     <Setting Name="MainForeColour" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
+    <Setting Name="CurrentRateDataFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DefaultRateData.csv</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

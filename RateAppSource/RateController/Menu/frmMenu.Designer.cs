@@ -67,6 +67,8 @@
             this.butMap = new System.Windows.Forms.Button();
             this.btnPressure = new System.Windows.Forms.Button();
             this.lbFileName = new System.Windows.Forms.Label();
+            this.butRateData = new System.Windows.Forms.Button();
+            this.lbRateData = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // butClose
@@ -434,7 +436,7 @@
             this.butLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butLanguage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butLanguage.Location = new System.Drawing.Point(961, 147);
+            this.butLanguage.Location = new System.Drawing.Point(961, 276);
             this.butLanguage.Name = "butLanguage";
             this.butLanguage.Size = new System.Drawing.Size(158, 49);
             this.butLanguage.TabIndex = 31;
@@ -700,7 +702,7 @@
             this.butColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butColor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butColor.Location = new System.Drawing.Point(961, 202);
+            this.butColor.Location = new System.Drawing.Point(961, 348);
             this.butColor.Name = "butColor";
             this.butColor.Size = new System.Drawing.Size(158, 49);
             this.butColor.TabIndex = 163;
@@ -719,7 +721,7 @@
             this.butMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butMap.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butMap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butMap.Location = new System.Drawing.Point(448, 506);
+            this.butMap.Location = new System.Drawing.Point(970, 149);
             this.butMap.Name = "butMap";
             this.butMap.Size = new System.Drawing.Size(158, 49);
             this.butMap.TabIndex = 164;
@@ -758,11 +760,41 @@
             this.lbFileName.TabIndex = 166;
             this.lbFileName.Text = "label1";
             // 
+            // butRateData
+            // 
+            this.butRateData.BackColor = System.Drawing.Color.Transparent;
+            this.butRateData.FlatAppearance.BorderSize = 0;
+            this.butRateData.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butRateData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butRateData.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butRateData.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butRateData.Location = new System.Drawing.Point(970, 204);
+            this.butRateData.Name = "butRateData";
+            this.butRateData.Size = new System.Drawing.Size(158, 49);
+            this.butRateData.TabIndex = 167;
+            this.butRateData.Text = "Rate Data";
+            this.butRateData.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butRateData.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butRateData.UseVisualStyleBackColor = false;
+            this.butRateData.Visible = false;
+            this.butRateData.Click += new System.EventHandler(this.butRateData_Click);
+            // 
+            // lbRateData
+            // 
+            this.lbRateData.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRateData.Location = new System.Drawing.Point(12, 47);
+            this.lbRateData.Name = "lbRateData";
+            this.lbRateData.Size = new System.Drawing.Size(127, 38);
+            this.lbRateData.TabIndex = 168;
+            this.lbRateData.Text = "label1";
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.Controls.Add(this.lbRateData);
+            this.Controls.Add(this.butRateData);
             this.Controls.Add(this.lbFileName);
             this.Controls.Add(this.btnPressure);
             this.Controls.Add(this.butMap);
@@ -854,5 +886,7 @@
         private System.Windows.Forms.Button butMap;
         private System.Windows.Forms.Button btnPressure;
         private System.Windows.Forms.Label lbFileName;
+        private System.Windows.Forms.Button butRateData;
+        private System.Windows.Forms.Label lbRateData;
     }
 }

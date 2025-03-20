@@ -1,6 +1,6 @@
 ﻿namespace RateController.Forms
 {
-    partial class frmRates
+    partial class frmMenuRateData
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRates));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuRateData));
             this.rbTarget = new System.Windows.Forms.RadioButton();
             this.rbApplied = new System.Windows.Forms.RadioButton();
             this.rbProductD = new System.Windows.Forms.RadioButton();
@@ -37,19 +37,27 @@
             this.rbProductA = new System.Windows.Forms.RadioButton();
             this.gbMap = new System.Windows.Forms.GroupBox();
             this.lbSensorCounts = new System.Windows.Forms.Label();
-            this.HSrefresh = new System.Windows.Forms.HScrollBar();
+            this.HSrefreshMap = new System.Windows.Forms.HScrollBar();
             this.HSresolution = new System.Windows.Forms.HScrollBar();
             this.lbResolution = new System.Windows.Forms.Label();
             this.lbRefresh = new System.Windows.Forms.Label();
             this.lbResolutionDescription = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ckDisplayRates = new System.Windows.Forms.CheckBox();
             this.ckRecord = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
-            this.btnHelp = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnNew = new System.Windows.Forms.Button();
+            this.btnLoad = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.tbMapName = new System.Windows.Forms.TextBox();
+            this.HSRecordInterval = new System.Windows.Forms.HScrollBar();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.gbMap.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // rbTarget
@@ -57,7 +65,7 @@
             this.rbTarget.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbTarget.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbTarget.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbTarget.Location = new System.Drawing.Point(112, 51);
+            this.rbTarget.Location = new System.Drawing.Point(273, 40);
             this.rbTarget.Name = "rbTarget";
             this.rbTarget.Size = new System.Drawing.Size(89, 64);
             this.rbTarget.TabIndex = 357;
@@ -71,7 +79,7 @@
             this.rbApplied.Checked = true;
             this.rbApplied.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbApplied.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbApplied.Location = new System.Drawing.Point(11, 51);
+            this.rbApplied.Location = new System.Drawing.Point(134, 40);
             this.rbApplied.Name = "rbApplied";
             this.rbApplied.Size = new System.Drawing.Size(89, 64);
             this.rbApplied.TabIndex = 358;
@@ -86,7 +94,7 @@
             this.rbProductD.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbProductD.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbProductD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbProductD.Location = new System.Drawing.Point(269, 38);
+            this.rbProductD.Location = new System.Drawing.Point(293, 38);
             this.rbProductD.Name = "rbProductD";
             this.rbProductD.Size = new System.Drawing.Size(66, 40);
             this.rbProductD.TabIndex = 360;
@@ -100,7 +108,7 @@
             this.rbProductC.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbProductC.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbProductC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbProductC.Location = new System.Drawing.Point(185, 38);
+            this.rbProductC.Location = new System.Drawing.Point(201, 38);
             this.rbProductC.Name = "rbProductC";
             this.rbProductC.Size = new System.Drawing.Size(66, 40);
             this.rbProductC.TabIndex = 361;
@@ -114,7 +122,7 @@
             this.rbProductB.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbProductB.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbProductB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbProductB.Location = new System.Drawing.Point(101, 38);
+            this.rbProductB.Location = new System.Drawing.Point(109, 38);
             this.rbProductB.Name = "rbProductB";
             this.rbProductB.Size = new System.Drawing.Size(66, 40);
             this.rbProductB.TabIndex = 362;
@@ -145,9 +153,9 @@
             this.gbMap.Controls.Add(this.rbProductD);
             this.gbMap.Controls.Add(this.rbProductC);
             this.gbMap.Controls.Add(this.rbProductB);
-            this.gbMap.Location = new System.Drawing.Point(213, 28);
+            this.gbMap.Location = new System.Drawing.Point(62, 110);
             this.gbMap.Name = "gbMap";
-            this.gbMap.Size = new System.Drawing.Size(352, 103);
+            this.gbMap.Size = new System.Drawing.Size(367, 103);
             this.gbMap.TabIndex = 364;
             this.gbMap.TabStop = false;
             this.gbMap.Text = "Product to Display";
@@ -156,29 +164,29 @@
             // lbSensorCounts
             // 
             this.lbSensorCounts.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSensorCounts.Location = new System.Drawing.Point(11, 155);
+            this.lbSensorCounts.Location = new System.Drawing.Point(13, 227);
             this.lbSensorCounts.Name = "lbSensorCounts";
-            this.lbSensorCounts.Size = new System.Drawing.Size(236, 23);
+            this.lbSensorCounts.Size = new System.Drawing.Size(170, 23);
             this.lbSensorCounts.TabIndex = 366;
-            this.lbSensorCounts.Text = "Refresh Interval (Seconds)";
+            this.lbSensorCounts.Text = "Interval (Seconds)";
             this.lbSensorCounts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // HSrefresh
+            // HSrefreshMap
             // 
-            this.HSrefresh.LargeChange = 1;
-            this.HSrefresh.Location = new System.Drawing.Point(263, 144);
-            this.HSrefresh.Maximum = 300;
-            this.HSrefresh.Minimum = 15;
-            this.HSrefresh.Name = "HSrefresh";
-            this.HSrefresh.Size = new System.Drawing.Size(239, 45);
-            this.HSrefresh.TabIndex = 375;
-            this.HSrefresh.Value = 15;
-            this.HSrefresh.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HSresolution_Scroll);
+            this.HSrefreshMap.LargeChange = 1;
+            this.HSrefreshMap.Location = new System.Drawing.Point(190, 216);
+            this.HSrefreshMap.Maximum = 300;
+            this.HSrefreshMap.Minimum = 15;
+            this.HSrefreshMap.Name = "HSrefreshMap";
+            this.HSrefreshMap.Size = new System.Drawing.Size(239, 45);
+            this.HSrefreshMap.TabIndex = 375;
+            this.HSrefreshMap.Value = 15;
+            this.HSrefreshMap.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HSresolution_Scroll);
             // 
             // HSresolution
             // 
             this.HSresolution.LargeChange = 1;
-            this.HSresolution.Location = new System.Drawing.Point(263, 204);
+            this.HSresolution.Location = new System.Drawing.Point(190, 271);
             this.HSresolution.Minimum = 1;
             this.HSresolution.Name = "HSresolution";
             this.HSresolution.Size = new System.Drawing.Size(241, 45);
@@ -189,7 +197,7 @@
             // lbResolution
             // 
             this.lbResolution.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbResolution.Location = new System.Drawing.Point(507, 216);
+            this.lbResolution.Location = new System.Drawing.Point(436, 282);
             this.lbResolution.Name = "lbResolution";
             this.lbResolution.Size = new System.Drawing.Size(59, 23);
             this.lbResolution.TabIndex = 373;
@@ -199,7 +207,7 @@
             // lbRefresh
             // 
             this.lbRefresh.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRefresh.Location = new System.Drawing.Point(507, 155);
+            this.lbRefresh.Location = new System.Drawing.Point(436, 227);
             this.lbRefresh.Name = "lbRefresh";
             this.lbRefresh.Size = new System.Drawing.Size(59, 23);
             this.lbRefresh.TabIndex = 372;
@@ -209,9 +217,9 @@
             // lbResolutionDescription
             // 
             this.lbResolutionDescription.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbResolutionDescription.Location = new System.Drawing.Point(11, 216);
+            this.lbResolutionDescription.Location = new System.Drawing.Point(13, 282);
             this.lbResolutionDescription.Name = "lbResolutionDescription";
-            this.lbResolutionDescription.Size = new System.Drawing.Size(236, 23);
+            this.lbResolutionDescription.Size = new System.Drawing.Size(170, 23);
             this.lbResolutionDescription.TabIndex = 371;
             this.lbResolutionDescription.Text = "Resolution (Acres)";
             this.lbResolutionDescription.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -226,7 +234,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(413, 292);
+            this.btnCancel.Location = new System.Drawing.Point(344, 554);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(89, 64);
             this.btnCancel.TabIndex = 378;
@@ -236,7 +244,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.HSrefresh);
+            this.groupBox1.Controls.Add(this.HSrefreshMap);
             this.groupBox1.Controls.Add(this.lbSensorCounts);
             this.groupBox1.Controls.Add(this.gbMap);
             this.groupBox1.Controls.Add(this.rbApplied);
@@ -245,38 +253,24 @@
             this.groupBox1.Controls.Add(this.HSresolution);
             this.groupBox1.Controls.Add(this.lbRefresh);
             this.groupBox1.Controls.Add(this.lbResolution);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Location = new System.Drawing.Point(12, 217);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(585, 266);
+            this.groupBox1.Size = new System.Drawing.Size(516, 331);
             this.groupBox1.TabIndex = 380;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Rate Display";
+            this.groupBox1.Text = "Coverage Map";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.gbMap_Paint);
-            // 
-            // ckDisplayRates
-            // 
-            this.ckDisplayRates.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckDisplayRates.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckDisplayRates.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDisplayRates.Location = new System.Drawing.Point(122, 292);
-            this.ckDisplayRates.Name = "ckDisplayRates";
-            this.ckDisplayRates.Size = new System.Drawing.Size(89, 64);
-            this.ckDisplayRates.TabIndex = 381;
-            this.ckDisplayRates.Text = "Display Rates";
-            this.ckDisplayRates.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDisplayRates.UseVisualStyleBackColor = true;
-            this.ckDisplayRates.CheckedChanged += new System.EventHandler(this.rbProductA_CheckedChanged);
             // 
             // ckRecord
             // 
             this.ckRecord.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckRecord.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRecord.Location = new System.Drawing.Point(16, 292);
+            this.ckRecord.Image = global::RateController.Properties.Resources.Start;
+            this.ckRecord.Location = new System.Drawing.Point(62, 131);
             this.ckRecord.Name = "ckRecord";
             this.ckRecord.Size = new System.Drawing.Size(89, 64);
             this.ckRecord.TabIndex = 382;
-            this.ckRecord.Text = "Record Data";
             this.ckRecord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckRecord.UseVisualStyleBackColor = true;
             this.ckRecord.CheckedChanged += new System.EventHandler(this.rbProductA_CheckedChanged);
@@ -288,9 +282,9 @@
             this.btnOK.FlatAppearance.BorderSize = 0;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnOK.Image = global::RateController.Properties.Resources.OK;
+            this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(508, 292);
+            this.btnOK.Location = new System.Drawing.Point(439, 554);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(89, 64);
             this.btnOK.TabIndex = 383;
@@ -298,35 +292,122 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // btnHelp
+            // groupBox2
             // 
-            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
-            this.btnHelp.FlatAppearance.BorderSize = 0;
-            this.btnHelp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
-            this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHelp.Location = new System.Drawing.Point(337, 290);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(70, 66);
-            this.btnHelp.TabIndex = 384;
-            this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnHelp.UseVisualStyleBackColor = false;
+            this.groupBox2.Controls.Add(this.HSRecordInterval);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.tbMapName);
+            this.groupBox2.Controls.Add(this.btnSave);
+            this.groupBox2.Controls.Add(this.btnLoad);
+            this.groupBox2.Controls.Add(this.btnNew);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.ckRecord);
+            this.groupBox2.Location = new System.Drawing.Point(12, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(516, 199);
+            this.groupBox2.TabIndex = 384;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Record Rate Data";
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(69, 31);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(101, 23);
+            this.label1.TabIndex = 383;
+            this.label1.Text = "File Name";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnNew
+            // 
+            this.btnNew.FlatAppearance.BorderSize = 0;
+            this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNew.Image = global::RateController.Properties.Resources.NewFile;
+            this.btnNew.Location = new System.Drawing.Point(158, 133);
+            this.btnNew.Name = "btnNew";
+            this.btnNew.Size = new System.Drawing.Size(82, 60);
+            this.btnNew.TabIndex = 387;
+            this.btnNew.UseVisualStyleBackColor = true;
+            // 
+            // btnLoad
+            // 
+            this.btnLoad.FlatAppearance.BorderSize = 0;
+            this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoad.Image = global::RateController.Properties.Resources.VehFileLoad;
+            this.btnLoad.Location = new System.Drawing.Point(247, 133);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(82, 60);
+            this.btnLoad.TabIndex = 388;
+            this.btnLoad.UseVisualStyleBackColor = true;
+            // 
+            // btnSave
+            // 
+            this.btnSave.BackColor = System.Drawing.Color.Transparent;
+            this.btnSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnSave.FlatAppearance.BorderSize = 0;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnSave.Image = global::RateController.Properties.Resources.Save;
+            this.btnSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnSave.Location = new System.Drawing.Point(336, 133);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(82, 60);
+            this.btnSave.TabIndex = 389;
+            this.btnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnSave.UseVisualStyleBackColor = false;
+            // 
+            // tbMapName
+            // 
+            this.tbMapName.Location = new System.Drawing.Point(176, 28);
+            this.tbMapName.Name = "tbMapName";
+            this.tbMapName.Size = new System.Drawing.Size(255, 29);
+            this.tbMapName.TabIndex = 390;
+            this.tbMapName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // HSRecordInterval
+            // 
+            this.HSRecordInterval.LargeChange = 1;
+            this.HSRecordInterval.Location = new System.Drawing.Point(190, 66);
+            this.HSRecordInterval.Maximum = 300;
+            this.HSRecordInterval.Minimum = 15;
+            this.HSRecordInterval.Name = "HSRecordInterval";
+            this.HSRecordInterval.Size = new System.Drawing.Size(239, 45);
+            this.HSRecordInterval.TabIndex = 393;
+            this.HSRecordInterval.Value = 15;
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(13, 77);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(170, 23);
+            this.label2.TabIndex = 391;
+            this.label2.Text = "Interval (Seconds)";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(436, 77);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 23);
+            this.label3.TabIndex = 392;
+            this.label3.Text = "100";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // frmRates
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(609, 368);
-            this.Controls.Add(this.btnHelp);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.ckRecord);
-            this.Controls.Add(this.ckDisplayRates);
+            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
@@ -339,6 +420,8 @@
             this.Load += new System.EventHandler(this.frmRates_Load);
             this.gbMap.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -352,16 +435,23 @@
         private System.Windows.Forms.RadioButton rbProductA;
         private System.Windows.Forms.GroupBox gbMap;
         private System.Windows.Forms.Label lbSensorCounts;
-        private System.Windows.Forms.HScrollBar HSrefresh;
+        private System.Windows.Forms.HScrollBar HSrefreshMap;
         private System.Windows.Forms.HScrollBar HSresolution;
         private System.Windows.Forms.Label lbResolution;
         private System.Windows.Forms.Label lbRefresh;
         private System.Windows.Forms.Label lbResolutionDescription;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox ckDisplayRates;
         private System.Windows.Forms.CheckBox ckRecord;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Button btnHelp;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnNew;
+        private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.TextBox tbMapName;
+        private System.Windows.Forms.HScrollBar HSRecordInterval;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }

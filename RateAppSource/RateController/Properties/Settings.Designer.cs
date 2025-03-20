@@ -190,5 +190,17 @@ namespace RateController.Properties {
                 this["MainForeColour"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DefaultRateData.csv")]
+        public string CurrentRateDataFile {
+            get {
+                return ((string)(this["CurrentRateDataFile"]));
+            }
+            set {
+                this["CurrentRateDataFile"] = value;
+            }
+        }
     }
 }

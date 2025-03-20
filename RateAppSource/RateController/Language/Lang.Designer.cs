@@ -1186,6 +1186,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rate Data.
+        /// </summary>
+        internal static string lgRateData {
+            get {
+                return ResourceManager.GetString("lgRateData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rate Map.
         /// </summary>
         internal static string lgRateMap {

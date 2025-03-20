@@ -397,6 +397,10 @@ namespace RateController.Classes
         {
             return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile);
         }
+        public static string CurrentRateDataFile()
+        {
+            return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentRateDataFile);
+        }
 
         public static string VersionDate()
         {
@@ -415,13 +419,20 @@ namespace RateController.Classes
                 if (!Directory.Exists(cDefaultDir)) Directory.CreateDirectory(cDefaultDir);
                 if (!File.Exists(cDefaultDir + "\\Example.rcs")) File.WriteAllBytes(cDefaultDir + "\\Example.rcs", Properties.Resources.Example);
                 if (!File.Exists(cDefaultDir + "\\Default.rcs")) File.WriteAllBytes(cDefaultDir + "\\Default.rcs", Properties.Resources.Default);
+                if (!File.Exists(cDefaultDir + "\\DefaultRateData.csv")) File.WriteAllText(cDefaultDir + "\\DefaultRateData.csv", string.Empty);
 
-                // check user file
+                // check user files
                 if (!File.Exists(Properties.Settings.Default.CurrentFile))
                 {
                     Properties.Settings.Default.CurrentFile = cDefaultDir + "\\Default.rcs";
                     Properties.Settings.Default.Save();
                 }
+                if (!File.Exists(Properties.Settings.Default.CurrentRateDataFile))
+                {
+                    Properties.Settings.Default.CurrentRateDataFile = cDefaultDir + "\\DefaultRateData.csv";
+                    Properties.Settings.Default.Save();
+                }
+
                 Result = true;
             }
             catch (Exception)
