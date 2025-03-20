@@ -104,14 +104,22 @@ namespace RateController.Menu
             }
         }
 
-        private void btnRateData_Click(object sender, EventArgs e)
+        private void btnPNG_Click(object sender, EventArgs e)
         {
-            //if (Props.IsFormOpen("frmRates") == null)
-            //{
-            //    var frm = new frmMenuRateData();
-            //    frm.SetManager(mf.Tls.Manager);
-            //    frm.Show();
-            //}
+            GMapControl map = mf.Tls.Manager.gmapObject;
+            Bitmap MapImage = new Bitmap(map.Width, map.Height);
+            map.DrawToBitmap(MapImage, new Rectangle(0, 0, map.Width, map.Height));
+            saveFileDialog1.InitialDirectory = Props.CurrentDir();
+            saveFileDialog1.Title = "Save Map";
+            saveFileDialog1.Filter = "PNG|*.PNG";
+            saveFileDialog1.FileName = Props.CurrentMapName + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    MapImage.Save(saveFileDialog1.FileName, ImageFormat.Png);
+                }
+            }
         }
 
         private void btnResume_Click(object sender, EventArgs e)
@@ -136,7 +144,6 @@ namespace RateController.Menu
             }
             btnSave.FlatAppearance.BorderSize = 0;
         }
-
 
         private void ckEdit_CheckedChanged(object sender, EventArgs e)
         {
@@ -171,7 +178,7 @@ namespace RateController.Menu
                     mf.Left = ScreenLeftMin + this.Left;
                     mf.Top = 324 + this.Top;
                 }
-                if (Props.RateDisplayShow) ShowLegend();
+                if (Props.MapShowRates) ShowLegend();
             }
             else
             {
@@ -198,7 +205,19 @@ namespace RateController.Menu
 
         private void ckMap_CheckedChanged(object sender, EventArgs e)
         {
-            if (!Initializing) mf.Tls.Manager.ShowTiles = ckMap.Checked;
+            mf.Tls.Manager.ShowTiles = ckSatView.Checked;
+        }
+
+        private void ckRateData_CheckedChanged(object sender, EventArgs e)
+        {
+            Props.MapShowRates = ckRateData.Checked;
+            mf.Tls.Manager.UpdateRateMapDisplay();
+        }
+
+        private void ckZones_CheckedChanged(object sender, EventArgs e)
+        {
+            mf.Tls.Manager.ShowZoneOverlay = ckZones.Checked;
+            gbZone.Enabled = ckZones.Checked;
         }
 
         private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -336,6 +355,9 @@ namespace RateController.Menu
                 MainLeft = mf.LSLeft;
                 MainTop = mf.LSTop;
             }
+            ckZones.Checked = Props.MapShowZones;
+            ckSatView.Checked = Props.MapShowTiles;
+            ckRateData.Checked = Props.MapShowRates;
         }
 
         private void PositionForm()
@@ -388,7 +410,6 @@ namespace RateController.Menu
                 Props.WriteErrorLog("frmMenuRateMap/ShowLegend: " + ex.Message);
             }
         }
-        
 
         private void tbMapName_TextChanged(object sender, EventArgs e)
         {
@@ -529,7 +550,7 @@ namespace RateController.Menu
             VSzoom.Value = (int)((gmap.Zoom - gmap.MinZoom) * 100) / (gmap.MaxZoom - gmap.MinZoom);
 
             ckEnable.Checked = Props.VariableRateEnabled;
-            ckMap.Checked = mf.Tls.Manager.ShowTiles;
+            ckSatView.Checked = mf.Tls.Manager.ShowTiles;
             ckZones.Checked = mf.Tls.Manager.ShowZoneOverlay;
             gbZone.Enabled = ckZones.Checked;
             Initializing = false;
@@ -538,30 +559,6 @@ namespace RateController.Menu
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
-        }
-
-        private void ckZones_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing) mf.Tls.Manager.ShowZoneOverlay = ckZones.Checked;
-            gbZone.Enabled=ckZones.Checked;
-        }
-
-        private void btnPNG_Click(object sender, EventArgs e)
-        {
-            GMapControl map = mf.Tls.Manager.gmapObject;
-            Bitmap MapImage=new Bitmap(map.Width, map.Height);
-            map.DrawToBitmap(MapImage,new Rectangle(0,0,map.Width,map.Height));
-            saveFileDialog1.InitialDirectory = Props.CurrentDir();
-            saveFileDialog1.Title = "Save Map";
-            saveFileDialog1.Filter = "PNG|*.PNG";
-            saveFileDialog1.FileName = Props.CurrentMapName + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    MapImage.Save(saveFileDialog1.FileName, ImageFormat.Png);
-                }
-            }
         }
     }
 }

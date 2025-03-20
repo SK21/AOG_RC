@@ -51,7 +51,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.gbMap = new System.Windows.Forms.GroupBox();
             this.legendPanel = new System.Windows.Forms.Panel();
-            this.ckMap = new System.Windows.Forms.CheckBox();
+            this.ckSatView = new System.Windows.Forms.CheckBox();
             this.ckFullScreen = new System.Windows.Forms.CheckBox();
             this.VSzoom = new System.Windows.Forms.VScrollBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -60,8 +60,8 @@
             this.btnResume = new System.Windows.Forms.Button();
             this.ckZones = new System.Windows.Forms.CheckBox();
             this.btnPNG = new System.Windows.Forms.Button();
-            this.btnRateData = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.ckRateData = new System.Windows.Forms.CheckBox();
             this.gbZone.SuspendLayout();
             this.gbMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -331,21 +331,21 @@
             this.legendPanel.TabIndex = 358;
             this.legendPanel.Visible = false;
             // 
-            // ckMap
+            // ckSatView
             // 
-            this.ckMap.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckMap.Checked = true;
-            this.ckMap.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckMap.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMap.Location = new System.Drawing.Point(8, 397);
-            this.ckMap.Name = "ckMap";
-            this.ckMap.Size = new System.Drawing.Size(89, 64);
-            this.ckMap.TabIndex = 349;
-            this.ckMap.Text = "Sat View";
-            this.ckMap.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckMap.UseVisualStyleBackColor = true;
-            this.ckMap.CheckedChanged += new System.EventHandler(this.ckMap_CheckedChanged);
+            this.ckSatView.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckSatView.Checked = true;
+            this.ckSatView.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckSatView.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckSatView.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckSatView.Location = new System.Drawing.Point(8, 474);
+            this.ckSatView.Name = "ckSatView";
+            this.ckSatView.Size = new System.Drawing.Size(89, 64);
+            this.ckSatView.TabIndex = 349;
+            this.ckSatView.Text = "Sat View";
+            this.ckSatView.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSatView.UseVisualStyleBackColor = true;
+            this.ckSatView.CheckedChanged += new System.EventHandler(this.ckMap_CheckedChanged);
             // 
             // ckFullScreen
             // 
@@ -413,7 +413,7 @@
             this.ckZones.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckZones.Location = new System.Drawing.Point(8, 320);
+            this.ckZones.Location = new System.Drawing.Point(8, 397);
             this.ckZones.Name = "ckZones";
             this.ckZones.Size = new System.Drawing.Size(89, 64);
             this.ckZones.TabIndex = 354;
@@ -424,7 +424,7 @@
             // 
             // btnPNG
             // 
-            this.btnPNG.Location = new System.Drawing.Point(8, 551);
+            this.btnPNG.Location = new System.Drawing.Point(8, 320);
             this.btnPNG.Name = "btnPNG";
             this.btnPNG.Size = new System.Drawing.Size(89, 64);
             this.btnPNG.TabIndex = 356;
@@ -432,19 +432,25 @@
             this.btnPNG.UseVisualStyleBackColor = true;
             this.btnPNG.Click += new System.EventHandler(this.btnPNG_Click);
             // 
-            // btnRateData
-            // 
-            this.btnRateData.Location = new System.Drawing.Point(8, 474);
-            this.btnRateData.Name = "btnRateData";
-            this.btnRateData.Size = new System.Drawing.Size(89, 64);
-            this.btnRateData.TabIndex = 357;
-            this.btnRateData.Text = "Rate Data";
-            this.btnRateData.UseVisualStyleBackColor = true;
-            this.btnRateData.Click += new System.EventHandler(this.btnRateData_Click);
-            // 
             // saveFileDialog1
             // 
             this.saveFileDialog1.DefaultExt = "PNG";
+            // 
+            // ckRateData
+            // 
+            this.ckRateData.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckRateData.Checked = true;
+            this.ckRateData.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckRateData.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckRateData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckRateData.Location = new System.Drawing.Point(8, 551);
+            this.ckRateData.Name = "ckRateData";
+            this.ckRateData.Size = new System.Drawing.Size(89, 64);
+            this.ckRateData.TabIndex = 358;
+            this.ckRateData.Text = "Rate Data";
+            this.ckRateData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckRateData.UseVisualStyleBackColor = true;
+            this.ckRateData.CheckedChanged += new System.EventHandler(this.ckRateData_CheckedChanged);
             // 
             // frmMenuRateMap
             // 
@@ -452,9 +458,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.ControlBox = false;
-            this.Controls.Add(this.btnRateData);
+            this.Controls.Add(this.ckRateData);
             this.Controls.Add(this.btnPNG);
-            this.Controls.Add(this.ckMap);
+            this.Controls.Add(this.ckSatView);
             this.Controls.Add(this.ckZones);
             this.Controls.Add(this.btnResume);
             this.Controls.Add(this.btnImport);
@@ -511,11 +517,11 @@
         private System.Windows.Forms.ComboBox colorComboBox;
         private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.Button btnResume;
-        private System.Windows.Forms.CheckBox ckMap;
+        private System.Windows.Forms.CheckBox ckSatView;
         private System.Windows.Forms.CheckBox ckZones;
         private System.Windows.Forms.Button btnPNG;
-        private System.Windows.Forms.Button btnRateData;
         private System.Windows.Forms.Panel legendPanel;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.CheckBox ckRateData;
     }
 }

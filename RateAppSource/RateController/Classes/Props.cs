@@ -50,14 +50,19 @@ namespace RateController.Classes
         private static string cAppDate = "19-Mar-2025";
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0-beta.9";
+        private static string cCurrentMapName;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
         private static string cFormPropsFileName = "";
+        private static bool cMapShowRates;
+        private static bool cMapShowTiles;
+        private static bool cMapShowZones;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
         private static int cPrimeDelay = 3;
         private static double cPrimeTime = 0;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
+        private static int cRateRecordInterval;
         private static int cRateType;
         private static bool cReadOnly = false;
         private static bool cResumeAfterPrime;
@@ -75,8 +80,6 @@ namespace RateController.Classes
         private static Dictionary<string, Form> openForms = new Dictionary<string, Form>();
         private static frmPressureDisplay PressureDisplay;
         private static frmSwitches SwitchesForm;
-        private static int cRateRecordInterval;
-        private static string cCurrentMapName;
 
         #region // flow adjustment defaults
 
@@ -92,6 +95,16 @@ namespace RateController.Classes
         public static event EventHandler UnitsChanged;
 
         #region MainProperties
+
+        public static string CurrentMapName
+        {
+            get { return cCurrentMapName; }
+            set
+            {
+                cCurrentMapName = value;
+                SetProp("CurrentMapName", cCurrentMapName);
+            }
+        }
 
         public static int DefaultProduct
         {
@@ -110,6 +123,36 @@ namespace RateController.Classes
         {
             get { return mf; }
             set { mf = value; }
+        }
+
+        public static bool MapShowRates
+        {
+            get { return cMapShowRates; }
+            set
+            {
+                cMapShowRates = value;
+                SetProp("MapShowRates", cMapShowRates.ToString());
+            }
+        }
+
+        public static bool MapShowTiles
+        {
+            get { return cMapShowTiles; }
+            set
+            {
+                cMapShowTiles = value;
+                SetProp("ShowTiles", cMapShowTiles.ToString());
+            }
+        }
+
+        public static bool MapShowZones
+        {
+            get { return cMapShowZones; }
+            set
+            {
+                cMapShowZones = value;
+                SetProp("MapShowZones", cMapShowZones.ToString());
+            }
         }
 
         public static MasterSwitchMode MasterSwitchMode
@@ -159,25 +202,6 @@ namespace RateController.Classes
             get { return int.TryParse(GetProp("RateDisplayRefresh"), out int rs) ? rs : 300; }
             set { SetProp("RateDisplayRefresh", value.ToString()); }
         }
-        public static int RateRecordInterval
-        {
-            get { return cRateRecordInterval; }
-            set
-            {
-                cRateRecordInterval = value;
-                SetProp("RateRecordInterval", cRateRecordInterval.ToString());
-                mf.Tls.RateCollector.SaveIntervalSeconds = cRateRecordInterval;
-            }
-        }
-        public static string CurrentMapName
-        {
-            get { return cCurrentMapName; }
-            set
-            {
-                cCurrentMapName = value;
-                SetProp("CurrentMapName", cCurrentMapName);
-            }
-        }
 
         public static int RateDisplayResolution
         {
@@ -185,16 +209,21 @@ namespace RateController.Classes
             set { SetProp("RateDisplayResolution", value.ToString()); }
         }
 
-        public static bool RateDisplayShow
-        {
-            get { return bool.TryParse(GetProp("DisplayRates"), out bool dr) ? dr : false; }
-            set { SetProp("DisplayRates", value.ToString()); }
-        }
-
         public static RateType RateDisplayType
         {
             get { return Enum.TryParse(GetProp("RateDisplayType"), out RateType tp) ? tp : RateType.Applied; }
             set { SetProp("RateDisplayType", value.ToString()); }
+        }
+
+        public static int RateRecordInterval
+        {
+            get { return cRateRecordInterval; }
+            set
+            {
+                cRateRecordInterval = value;
+                SetProp("RateRecordInterval", cRateRecordInterval.ToString());
+                mf.Tls.RateCollector.RecordIntervalSeconds = cRateRecordInterval;
+            }
         }
 
         public static bool ReadOnly
@@ -418,6 +447,7 @@ namespace RateController.Classes
         {
             return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile);
         }
+
         public static string CurrentRateDataFile()
         {
             return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentRateDataFile);
@@ -622,30 +652,9 @@ namespace RateController.Classes
             cUseMetric = bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false;
             cRateRecordInterval = int.TryParse(GetProp("RateRecordInterval"), out int rr) ? rr : 300;
             cCurrentMapName = GetProp("CurrentMapName");
-        }
-
-        public static bool OpenRateDataFile(string FileName, bool IsNew = false)
-        {
-            bool Result = false;
-            try
-            {
-                bool FileFound = false;
-                if (IsNew) File.WriteAllText(FileName, ""); // Create empty property file
-                if (File.Exists(FileName))
-                {
-                    Properties.Settings.Default.CurrentRateDataFile = FileName;
-                    Properties.Settings.Default.Save();
-                    FileFound = true;
-                }
-                if (!FileFound) CheckFolders();
-               mf.Tls.SetRateCollector(Properties.Settings.Default.CurrentRateDataFile);
-                Result = true;
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/OpenRateDataFile: " + ex.Message);
-            }
-            return Result;
+            cMapShowTiles = bool.TryParse(GetProp("ShowTiles"), out bool st) ? st : true;
+            cMapShowZones = bool.TryParse(GetProp("MapShowZones"), out bool sz) ? sz : true;
+            cMapShowRates = bool.TryParse(GetProp("MapShowRates"), out bool sr) ? sr : false;
         }
 
         public static bool OpenFile(string FileName, bool IsNew = false)
@@ -683,6 +692,30 @@ namespace RateController.Classes
             }
             catch (Exception)
             {
+            }
+            return Result;
+        }
+
+        public static bool OpenRateDataFile(string FileName, bool IsNew = false)
+        {
+            bool Result = false;
+            try
+            {
+                bool FileFound = false;
+                if (IsNew) File.WriteAllText(FileName, ""); // Create empty property file
+                if (File.Exists(FileName))
+                {
+                    Properties.Settings.Default.CurrentRateDataFile = FileName;
+                    Properties.Settings.Default.Save();
+                    FileFound = true;
+                }
+                if (!FileFound) CheckFolders();
+                mf.Tls.SetRateCollector(Properties.Settings.Default.CurrentRateDataFile);
+                Result = true;
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/OpenRateDataFile: " + ex.Message);
             }
             return Result;
         }

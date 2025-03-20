@@ -268,7 +268,7 @@
             this.ckRecord.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckRecord.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRecord.Image = global::RateController.Properties.Resources.Start;
+            this.ckRecord.Image = global::RateController.Properties.Resources.record;
             this.ckRecord.Location = new System.Drawing.Point(62, 131);
             this.ckRecord.Name = "ckRecord";
             this.ckRecord.Size = new System.Drawing.Size(89, 64);

@@ -24,8 +24,6 @@ namespace RateController.Classes
         private Dictionary<string, Color> cLegend;
         private string cMapName = "Unnamed Map";
         private string cRootPath;
-        private bool cShowTiles = true;
-        private bool cShowZoneOverlay;
         private PointLatLng cTractorPosition;
         private GMapOverlay currentAppliedOverlay;
         private List<PointLatLng> currentZoneVertices;
@@ -50,8 +48,6 @@ namespace RateController.Classes
             cRootPath = GetFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RateMap");
             CachePath = GetFolder(cRootPath, "MapCache");
 
-            if (bool.TryParse(Props.GetProp("ShowTiles"), out bool st)) cShowTiles = st;
-            cShowZoneOverlay = true;
             InitializeMap();
             InitializeMapZones();
             gmap.MouseDown += Gmap_MouseDown;
@@ -108,10 +104,10 @@ namespace RateController.Classes
 
         public bool ShowTiles
         {
-            get { return cShowTiles; }
+            get { return Props.MapShowTiles; }
             set
             {
-                cShowTiles = value;
+                Props.MapShowTiles = value;
                 if (value)
                 {
                     gmap.MapProvider = GMapProviders.BingSatelliteMap;
@@ -121,18 +117,16 @@ namespace RateController.Classes
                     gmap.MapProvider = GMapProviders.EmptyProvider;
                 }
                 gmap.Refresh();
-                Props.SetProp("ShowTiles", cShowTiles.ToString());
             }
         }
 
         public bool ShowZoneOverlay
         {
-            get { return cShowZoneOverlay; }
+            get { return Props.MapShowZones; }
             set
             {
-                cShowZoneOverlay = value;
-                Props.SetProp("ShowZoneOverlay", cShowZoneOverlay.ToString());
-                if (cShowZoneOverlay)
+                Props.MapShowZones = value;
+                if (Props.MapShowZones)
                 {
                     try
                     {
@@ -257,6 +251,7 @@ namespace RateController.Classes
                     Props.SetProp("LastMapFile", FilePath);
                     ZoomToFit();
                     Props.CurrentMapName = MapName;
+                    UpdateRateMapDisplay();
                 }
             }
             return Result;
@@ -271,12 +266,13 @@ namespace RateController.Classes
                 zoneOverlay = new GMapOverlay("zones");
                 gpsMarkerOverlay = new GMapOverlay();
                 tempMarkerOverlay = new GMapOverlay();
-                if (cShowZoneOverlay) gmap.Overlays.Add(zoneOverlay);
+                if (Props.MapShowZones) gmap.Overlays.Add(zoneOverlay);
                 gmap.Overlays.Add(gpsMarkerOverlay);
                 gmap.Overlays.Add(tempMarkerOverlay);
                 currentZoneVertices = new List<PointLatLng>();
                 mapZones.Clear();
                 gmap.Refresh();
+                UpdateRateMapDisplay();
                 Result = true;
             }
             catch (Exception ex)
@@ -351,7 +347,7 @@ namespace RateController.Classes
         public void UpdateRateMapDisplay()
         {
             mf.Tls.RateCollector.AutoRecord(Props.RecordRates);
-            if (Props.RateDisplayShow)
+            if (Props.MapShowRates)
             {
                 cLegend = ShowAppliedLayer();
             }
@@ -678,7 +674,7 @@ namespace RateController.Classes
                 ShowCenter = false
             };
 
-            if (cShowTiles)
+            if (Props.MapShowTiles)
             {
                 gmap.MapProvider = GMapProviders.BingSatelliteMap;
             }
@@ -699,7 +695,7 @@ namespace RateController.Classes
             gmap.Overlays.Add(gpsMarkerOverlay);
             gmap.Overlays.Add(tempMarkerOverlay);
 
-            if (cShowZoneOverlay) gmap.Overlays.Add(zoneOverlay);
+            if (Props.MapShowZones) gmap.Overlays.Add(zoneOverlay);
         }
 
         private void InitializeMapZones()

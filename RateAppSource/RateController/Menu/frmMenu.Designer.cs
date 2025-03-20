@@ -759,6 +759,8 @@
             this.lbFileName.Size = new System.Drawing.Size(127, 30);
             this.lbFileName.TabIndex = 166;
             this.lbFileName.Text = "label1";
+            this.lbFileName.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
+            this.lbFileName.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
             // 
             // butRateData
             // 
@@ -787,6 +789,8 @@
             this.lbRateData.Size = new System.Drawing.Size(127, 30);
             this.lbRateData.TabIndex = 168;
             this.lbRateData.Text = "label1";
+            this.lbRateData.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
+            this.lbRateData.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
             // 
             // frmMenu
             // 

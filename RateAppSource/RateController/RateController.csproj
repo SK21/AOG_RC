@@ -701,6 +701,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\record.png" />
     <None Include="Resources\copy.png" />
     <None Include="Resources\map.png" />
     <None Include="Resources\Update4.png" />

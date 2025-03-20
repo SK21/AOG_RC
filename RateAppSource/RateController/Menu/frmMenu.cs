@@ -1242,10 +1242,10 @@ namespace RateController
 
         private void ShowName()
         {
-            string Nm = Props.CurrentFileName().Length <= 18 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 18) + "...";
+            string Nm = Props.CurrentFileName().Length <= 11 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 11) + "...";
             lbFileName.Text = "[" + Nm + "]";
 
-            Nm = Props.CurrentRateDataFile().Length <= 18 ? Props.CurrentRateDataFile() : Props.CurrentRateDataFile().Substring(0, 18) + "...";
+            Nm = Props.CurrentRateDataFile().Length <= 11 ? Props.CurrentRateDataFile() : Props.CurrentRateDataFile().Substring(0, 11) + "...";
             lbRateData.Text = "[" + Nm + "]";
         }
     }

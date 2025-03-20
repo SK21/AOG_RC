@@ -16,6 +16,8 @@ namespace RateController.Classes
         private double LastLatitude = 0;
         private double LastLongitude = 0;
         private bool NewData = false;
+        private bool ReadyForNewData = false;
+        private Timer RecordTimer;
         private Timer SaveTimer;
 
         public DataCollector(string NewFilePath, bool Overwrite = false)
@@ -41,24 +43,28 @@ namespace RateController.Classes
                     LoadDataFromCsv();
                 }
             }
-            SaveTimer = new Timer();
+            SaveTimer = new Timer(30000);
             SaveTimer.Elapsed += SaveTimer_Elapsed;
-            SaveTimer.Enabled = false;
-            SaveIntervalSeconds = Props.RateRecordInterval;
+            SaveTimer.Enabled = Props.RecordRates;
+
+            RecordTimer = new Timer();
+            RecordTimer.Elapsed += RecordTimer_Elapsed;
+            RecordTimer.Enabled = Props.RecordRates;
+            RecordIntervalSeconds = Props.RateRecordInterval;
         }
 
-        public void AutoRecord(bool Record)
-        {
-            SaveTimer.Enabled = Record;
-        }
-
-        public int SaveIntervalSeconds
+        public int RecordIntervalSeconds
         {
             set
             {
                 if (value < 1 || value > 600) value = 30;
                 SaveTimer.Interval = value * 1000;
             }
+        }
+
+        public void AutoRecord(bool Record)
+        {
+            RecordTimer.Enabled = Record;
         }
 
         public IReadOnlyList<RateReading> GetReadings()
@@ -71,25 +77,31 @@ namespace RateController.Classes
 
         public void RecordReading(double latitude, double longitude, double[] appliedRates, double[] targetRates)
         {
-            bool IsValid = true;
+            if (ReadyForNewData)
+            {
+                ReadyForNewData = false;
+                RecordTimer.Enabled = Props.RecordRates;
 
-            if (appliedRates == null || appliedRates.Length == 0 || appliedRates.Length > 5)
-            {
-                IsValid = false;
-            }
-            else if (targetRates == null || targetRates.Length == 0 || targetRates.Length > 5)
-            {
-                IsValid = false;
-            }
-            else if (appliedRates.Length != targetRates.Length) IsValid = false;
+                bool IsValid = true;
 
-            if (IsValid && HasMoved(latitude, longitude))
-            {
-                var reading = new RateReading(DateTime.UtcNow, latitude, longitude, appliedRates, targetRates);
-                lock (_lock)
+                if (appliedRates == null || appliedRates.Length == 0 || appliedRates.Length > 5)
                 {
-                    Readings.Add(reading);
-                    NewData = true;
+                    IsValid = false;
+                }
+                else if (targetRates == null || targetRates.Length == 0 || targetRates.Length > 5)
+                {
+                    IsValid = false;
+                }
+                else if (appliedRates.Length != targetRates.Length) IsValid = false;
+
+                if (IsValid && HasMoved(latitude, longitude))
+                {
+                    var reading = new RateReading(DateTime.UtcNow, latitude, longitude, appliedRates, targetRates);
+                    lock (_lock)
+                    {
+                        Readings.Add(reading);
+                        NewData = true;
+                    }
                 }
             }
         }
@@ -198,12 +210,13 @@ namespace RateController.Classes
                         // Parse basic values.
                         DateTime timestamp;
                         double latitude, longitude;
-                        if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp))
+
+                        if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp) ||
+                        !double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude) ||
+                        !double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
+                        {
                             continue;
-                        if (!double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude))
-                            continue;
-                        if (!double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
-                            continue;
+                        }
 
                         // Parse applied rates.
                         List<double> appliedRates = new List<double>();
@@ -239,6 +252,12 @@ namespace RateController.Classes
                     }
                 }
             }
+        }
+
+        private void RecordTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            ReadyForNewData = true;
+            RecordTimer.Enabled = false;
         }
 
         private void SaveTimer_Elapsed(object sender, ElapsedEventArgs e)
