@@ -317,9 +317,9 @@ uint32_t LastBlink;
 uint32_t LastLoop;
 byte ReadReset;
 uint32_t MaxLoopTime;
-double debug1;
-double debug2;
-double debug3;
+//double debug1;
+//double debug2;
+//double debug3;
 //double debug4;
 
 void Blink()
@@ -333,18 +333,14 @@ void Blink()
 		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
 
-		debug1 = RelayLo;
-		debug2 = MDL.RelayControl;
-		debug3 = MDL.Is3Wire;
-		
-		Serial.print(", ");
-		Serial.print(debug1);
-		
-		Serial.print(", ");
-		Serial.print(debug2);
+		//Serial.print(", ");
+		//Serial.print(debug1);
+		//
+		//Serial.print(", ");
+		//Serial.print(debug2);
 
-		Serial.print(", ");
-		Serial.print(debug3);
+		//Serial.print(", ");
+		//Serial.print(debug3);
 
 		//Serial.print(", ");
 		//Serial.print(debug4);
