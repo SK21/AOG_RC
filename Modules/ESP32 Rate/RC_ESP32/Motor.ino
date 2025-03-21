@@ -46,36 +46,18 @@ void AdjustFlow()
 
 void SetPWM(byte ID, double PWM)
 {
-    if (UseDRV8870)
-    {
-        // DRV8870
-        if (MDL.InvertFlow) PWM *= -1;    // flow on low
+    if (MDL.InvertFlow) PWM *= -1;    // flow on low
 
-        if (PWM > 0)
-        {
-            ledcWrite(ID * 2, PWM);     // IN1
-            ledcWrite(ID * 2 + 1, 0);   // IN2
-        }
-        else
-        {
-            PWM = abs(PWM);
-            ledcWrite(ID * 2, 0);       // IN1
-            ledcWrite(ID * 2 + 1, PWM); // IN2
-        }
+    if (PWM > 0)
+    {
+        ledcWrite(ID * 2, PWM);     // IN1
+        ledcWrite(ID * 2 + 1, 0);   // IN2
     }
     else
     {
-        // Cytron
-        if (PWM < 0)
-        {
-            digitalWrite(Sensor[ID].DirPin, !MDL.InvertFlow);   
-            ledcWrite(ID * 2 + 1, -PWM);                            
-        }
-        else
-        {
-            digitalWrite(Sensor[ID].DirPin, MDL.InvertFlow);    
-            ledcWrite(ID * 2 + 1, PWM);   
-        }
+        PWM = abs(PWM);
+        ledcWrite(ID * 2 + 1, PWM); // IN2
+        ledcWrite(ID * 2, 0);       // IN1
     }
 }
 

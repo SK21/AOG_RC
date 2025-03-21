@@ -110,8 +110,8 @@ void DoSetup()
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
-		pinMode(Sensor[i].DirPin, OUTPUT);
-		pinMode(Sensor[i].PWMPin, OUTPUT);
+		pinMode(Sensor[i].IN1, OUTPUT);
+		pinMode(Sensor[i].IN2, OUTPUT);
 
 		switch (i)
 		{
@@ -123,16 +123,14 @@ void DoSetup()
 			break;
 		}
 
-		if (UseDRV8870)
-		{
-			// DRV8870 IN1
-			ledcSetup(i * 2, 500, 8);
-			ledcAttachPin(Sensor[i].DirPin, i * 2);
-		}
+		// pwm
+		// DRV8870 IN1
+		ledcSetup(i * 2, 500, 8);
+		ledcAttachPin(Sensor[i].IN1, i * 2);
 
-		// DRV8870 IN2 or PWM for cytron
+		// DRV8870 IN2
 		ledcSetup(i * 2 + 1, 500, 8);
-		ledcAttachPin(Sensor[i].PWMPin, i * 2 + 1);
+		ledcAttachPin(Sensor[i].IN2, i * 2 + 1);
 	}
 
 	// Relays
@@ -398,24 +396,25 @@ void LoadDefaults()
 
 	// default flow pins
 	Sensor[0].FlowPin = 17;
-	Sensor[0].DirPin = 32;
-	Sensor[0].PWMPin = 33;
+	Sensor[0].IN1 = 32;
+	Sensor[0].IN2 = 33;
 
 	Sensor[1].FlowPin = 16;
-	Sensor[1].DirPin = 25;
-	Sensor[1].PWMPin = 26;
+	Sensor[1].IN1 = 25;
+	Sensor[1].IN2 = 26;
 
-	// default control settings
-	Sensor[0].HighAdjust = 50;
-	Sensor[0].LowAdjust = 20;
-	Sensor[0].AdjustThreshold = 0.25;
-	Sensor[0].MaxPower = 255;
-	Sensor[0].MinPower = 10;
-	Sensor[1].HighAdjust = 50;
-	Sensor[1].LowAdjust = 20;
-	Sensor[1].AdjustThreshold = 0.25;
-	Sensor[1].MaxPower = 255;
-	Sensor[1].MinPower = 10;
+	// default pid
+	Sensor[0].KP = 5;
+	Sensor[0].KI = 0;
+	Sensor[0].KD = 0;
+	Sensor[0].MinPWM = 5;
+	Sensor[0].MaxPWM = 50;
+
+	Sensor[1].KP = 5;
+	Sensor[1].KI = 0;
+	Sensor[1].KD = 0;
+	Sensor[1].MinPWM = 5;
+	Sensor[1].MaxPWM = 50;
 
 	// relay pins
 	for (int i = 0; i < 16; i++)
@@ -484,11 +483,11 @@ bool ValidData()
 				}
 				if (!Result) break;
 
-				// DirPin
+				// IN1
 				Result = false;
 				for (int j = 0; j < sizeof(ValidPins0); j++)
 				{
-					if (Sensor[i].DirPin == ValidPins0[j])
+					if (Sensor[i].IN1 == ValidPins0[j])
 					{
 						Result = true;
 						break;
@@ -496,11 +495,11 @@ bool ValidData()
 				}
 				if (!Result) break;
 
-				// PWMPin
+				// IN2
 				Result = false;
 				for (int j = 0; j < sizeof(ValidPins0); j++)
 				{
-					if (Sensor[i].PWMPin == ValidPins0[j])
+					if (Sensor[i].IN2 == ValidPins0[j])
 					{
 						Result = true;
 						break;

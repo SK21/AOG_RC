@@ -1,7 +1,13 @@
 
+// based off of https://github.com/br3ttb/Arduino-PID-Library
+
 uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
-const double Deadband = 0.03;			// error amount below which no adjustment is made
+const double Deadband = 0.03;		// % error below which no adjustment is made
+
+const double BrakePoint = 0.3;		// % error below which reduced adjustment is used
+const double BrakeSet = 0.75;		// low adjustment rate
+
 double RateError;
 double LastPWM[MaxProductCount];
 
@@ -22,7 +28,7 @@ void SetPWM()
 			{
 			case 5:
 				// combo close timed adjustment
-				Sensor[i].PWM = TimedCombo(i, false);
+				Sensor[i].PWM = TimedCombo(i,false);
 				break;
 
 			case 2:
@@ -48,14 +54,14 @@ void SetPWM()
 			{
 			case 5:
 				// combo close timed adjustment
-				Sensor[i].PWM = TimedCombo(i, true);
+				Sensor[i].PWM = TimedCombo(i,true);
 				break;
 
 			default:
 				Sensor[i].PWM = Sensor[i].ManualAdjust;
 				double Direction = 1.0;
 				if (Sensor[i].PWM < 0) Direction = -1.0;
-				if (abs(Sensor[i].PWM) > Sensor[i].MaxPower) Sensor[i].PWM = Sensor[i].MaxPower * Direction;
+				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
 				break;
 			}
 		}
@@ -80,19 +86,21 @@ int PIDmotor(byte ID)
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
 				// check brakepoint
-				if (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold)
+				if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
 				{
-					Result += Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
+					Result += Sensor[ID].KP * RateError;
 				}
 				else
 				{
-					Result += Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
+					Result += Sensor[ID].KP * RateError * BrakeSet;
 				}
-				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
+
+				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
 			}
 		}
 		LastPWM[ID] = Result;
 	}
+
 	return (int)Result;
 }
 
@@ -114,18 +122,18 @@ int PIDvalve(byte ID)
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
 				// check brakepoint
-				if (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold)
+				if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
 				{
-					Result = Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
+					Result = Sensor[ID].KP * RateError;
 				}
 				else
 				{
-					Result = Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
+					Result = Sensor[ID].KP * RateError * BrakeSet;
 				}
 
 				bool IsPositive = (Result > 0);
 				Result = abs(Result);
-				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
+				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
 				if (!IsPositive) Result *= -1.0;
 			}
 			else
@@ -177,7 +185,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 					Result = Sensor[ID].ManualAdjust;
 					double Direction = 1.0;
 					if (Result < 0) Direction = -1.0;
-					if (abs(Result) > Sensor[ID].MaxPower) Result = Sensor[ID].MaxPower * Direction;
+					if (abs(Result) > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * Direction;
 				}
 				else
 				{
@@ -190,18 +198,18 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 						RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
 						// check brakepoint
-						if (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold)
+						if (abs(RateError) > BrakePoint * Sensor[ID].TargetUPM)
 						{
-							Result = Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
+							Result = Sensor[ID].KP * RateError;
 						}
 						else
 						{
-							Result = Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
+							Result = Sensor[ID].KP * RateError * BrakeSet;
 						}
 
 						bool IsPositive = (Result > 0);
 						Result = abs(Result);
-						Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
+						Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
 						if (!IsPositive) Result *= -1.0;
 					}
 					else

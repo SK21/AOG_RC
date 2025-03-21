@@ -305,42 +305,41 @@ void ParseData(byte Data[], uint16_t len)
         break;
 
     case 32502:
-		// PGN32502, Control settings from RC to module
-		// 0   246
-		// 1   126
-		// 2   Mod/Sen ID     0-15/0-15
-		// 3   HighAdjust
-		// 4   LowAdjust
-		// 5   Threshold
-		// 6   MinAdjust
-		// 7   MaxAdjust
-        // 8   PID scaling
-        // 9   CRC
+        // PGN32502, PID from RC to module
+        // 0    246
+        // 1    126
+        // 2    Mod/Sen ID     0-15/0-15
+        // 3    KP
+        // 4    KI
+        // 5    KD
+        // 6    MinPWM
+        // 7    MaxPWM
+        // 8    PID scaling
+        // 9    CRC
 
-		PGNlength = 10;
+        PGNlength = 10;
 
-		if (len > PGNlength - 1)
-		{
-			if (GoodCRC(Data, PGNlength))
-			{
-				if (ParseModID(Data[2]) == MDL.ID)
-				{
-					byte SensorID = ParseSenID(Data[2]);
-					if (SensorID < MDL.SensorCount)
-					{
-						Sensor[SensorID].HighAdjust = (double)(255.0 * Data[3] / 100.0);
-						Sensor[SensorID].LowAdjust = (double)(255.0 * Data[4] / 100.0);
-						Sensor[SensorID].AdjustThreshold = (double)(255.0 * Data[5] / 100.0);
-						Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
-						Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
+        if (len > PGNlength - 1)
+        {
+            if (GoodCRC(Data, PGNlength))
+            {
+                if (ParseModID(Data[2]) == MDL.ID)
+                {
+                    byte SensorID = ParseSenID(Data[2]);
+                    if (SensorID < MDL.SensorCount)
+                    {
+                        double PIDscale = pow(10, Data[8] * -1);
 
-                        // 1.15 ^ ((100 - Scaling scroll bar value)* -1 + 3). 3 changes the max range of the scaling.
-                        // 1.17 ^ -100 is approx equivalent to 1/1,000,000
-                        Sensor[SensorID].Scaling = pow(1.15, (100 - Data[8]) * -1 + 3);
+                        Sensor[SensorID].KP = (double)(Data[3] * PIDscale);
+                        Sensor[SensorID].KI = (double)(Data[4] * PIDscale);
+                        Sensor[SensorID].KD = (double)(Data[5] * PIDscale);
+
+                        Sensor[SensorID].MinPWM = Data[6];
+                        Sensor[SensorID].MaxPWM = Data[7];
                     }
-				}
-			}
-		}
+                }
+            }
+        }
         break;
 
     case 32503:
@@ -413,11 +412,11 @@ void ParseData(byte Data[], uint16_t len)
 
                 MDL.RelayControl = Data[5];
                 Sensor[0].FlowPin = Data[7];
-                Sensor[0].DirPin = Data[8];
-                Sensor[0].PWMPin = Data[9];
+                Sensor[0].IN1 = Data[8];
+                Sensor[0].IN2 = Data[9];
                 Sensor[1].FlowPin = Data[10];
-                Sensor[1].DirPin = Data[11];
-                Sensor[1].PWMPin = Data[12];
+                Sensor[1].IN1 = Data[11];
+                Sensor[1].IN2 = Data[12];
 
                 for (int i = 0; i < 16; i++)
                 {
@@ -426,6 +425,7 @@ void ParseData(byte Data[], uint16_t len)
 
                 MDL.WorkPin = Data[29];
                 MDL.PressurePin = Data[30];
+
                 //SaveData();	saved in pgn 3702
             }
         }

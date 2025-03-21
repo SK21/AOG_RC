@@ -17,8 +17,8 @@
 #include <EthernetUdp.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  24-Dec-2024"
-const uint16_t InoID = 24124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  14-Dec-2024"
+const uint16_t InoID = 14124;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -36,7 +36,6 @@ const uint8_t MCP23017address = 0x20;
 const uint8_t PCF8574address = 0x20;
 const uint8_t W5500_SS = 5;		// W5500 SPI SS
 const uint8_t NC = 0xFF;		// Pin not connected
-const bool UseDRV8870 = true;	// true - DRV8870 flow control, false - Cytron flow control
 
 struct ModuleConfig
 {
@@ -67,8 +66,8 @@ ModuleConfig MDL;
 struct SensorConfig
 {
 	uint8_t FlowPin;
-	uint8_t DirPin;		// IN1
-	uint8_t PWMPin;		// IN2
+	uint8_t IN1;
+	uint8_t IN2;
 	bool FlowEnabled;
 	double UPM;				// sent as upm X 1000
 	double PWM;
@@ -78,12 +77,11 @@ struct SensorConfig
 	double TargetUPM;
 	double MeterCal;
 	double ManualAdjust;
-	double HighAdjust;
-	double LowAdjust;
-	double AdjustThreshold;
-	double MaxPower;
-	double MinPower;
-	double Scaling;
+	double KP;
+	double KI;
+	double KD;
+	byte MinPWM;
+	byte MaxPWM;
 };
 
 SensorConfig Sensor[2];
@@ -195,14 +193,6 @@ void IRAM_ATTR ISR1();
 void setup()
 {
 	DoSetup();
-
-	Serial.print("Flow Pin: ");
-	Serial.println(Sensor[0].FlowPin);
-	Serial.print("DIR Pin: ");
-	Serial.println(Sensor[0].DirPin);
-	Serial.print("PWM Pin: ");
-	Serial.print(Sensor[0].PWMPin);
-	Serial.println("");
 }
 
 void loop()
@@ -326,12 +316,13 @@ void CheckPressure()
 //
 //		//Serial.print(" Micros: ");
 //		//Serial.print(MaxLoopTime);
-//
+//		debug1 = Sensor[0].FlowPin;
+//		debug2 = Sensor[0].MeterCal;
 //		//Serial.print(", ");
-//		Serial.print(debug1,3);
+//		Serial.print(debug1);
 //		
 //		Serial.print(", ");
-//		Serial.print(debug2,3);
+//		Serial.print(debug2);
 //
 //		Serial.print(", ");
 //		Serial.print(debug3);
