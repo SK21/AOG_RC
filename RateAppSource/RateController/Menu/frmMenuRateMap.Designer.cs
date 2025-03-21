@@ -352,7 +352,7 @@
             this.ckFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFullScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFullScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFullScreen.Location = new System.Drawing.Point(8, 243);
+            this.ckFullScreen.Location = new System.Drawing.Point(8, 320);
             this.ckFullScreen.Name = "ckFullScreen";
             this.ckFullScreen.Size = new System.Drawing.Size(89, 64);
             this.ckFullScreen.TabIndex = 348;
@@ -383,7 +383,7 @@
             this.ckEnable.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckEnable.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEnable.Location = new System.Drawing.Point(8, 166);
+            this.ckEnable.Location = new System.Drawing.Point(8, 243);
             this.ckEnable.Name = "ckEnable";
             this.ckEnable.Size = new System.Drawing.Size(89, 64);
             this.ckEnable.TabIndex = 351;
@@ -424,7 +424,7 @@
             // 
             // btnPNG
             // 
-            this.btnPNG.Location = new System.Drawing.Point(8, 320);
+            this.btnPNG.Location = new System.Drawing.Point(8, 166);
             this.btnPNG.Name = "btnPNG";
             this.btnPNG.Size = new System.Drawing.Size(89, 64);
             this.btnPNG.TabIndex = 356;
@@ -458,8 +458,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.ControlBox = false;
-            this.Controls.Add(this.ckRateData);
             this.Controls.Add(this.btnPNG);
+            this.Controls.Add(this.ckRateData);
             this.Controls.Add(this.ckSatView);
             this.Controls.Add(this.ckZones);
             this.Controls.Add(this.btnResume);

@@ -754,11 +754,12 @@
             // lbFileName
             // 
             this.lbFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFileName.Location = new System.Drawing.Point(12, 9);
+            this.lbFileName.Location = new System.Drawing.Point(9, 9);
             this.lbFileName.Name = "lbFileName";
-            this.lbFileName.Size = new System.Drawing.Size(127, 30);
+            this.lbFileName.Size = new System.Drawing.Size(127, 22);
             this.lbFileName.TabIndex = 166;
-            this.lbFileName.Text = "label1";
+            this.lbFileName.Text = "01234567890123456789";
+            this.lbFileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbFileName.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
             this.lbFileName.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
             // 
@@ -784,11 +785,12 @@
             // lbRateData
             // 
             this.lbRateData.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateData.Location = new System.Drawing.Point(12, 44);
+            this.lbRateData.Location = new System.Drawing.Point(9, 39);
             this.lbRateData.Name = "lbRateData";
-            this.lbRateData.Size = new System.Drawing.Size(127, 30);
+            this.lbRateData.Size = new System.Drawing.Size(127, 22);
             this.lbRateData.TabIndex = 168;
             this.lbRateData.Text = "label1";
+            this.lbRateData.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbRateData.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
             this.lbRateData.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
             // 
