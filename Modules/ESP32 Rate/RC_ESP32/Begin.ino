@@ -225,9 +225,7 @@ void DoSetup()
 		while (!PCA9685_found)
 		{
 			Serial.print(".");
-			Wire.beginTransmission(PCA9685address);
-			Wire.write(0x00); // MODE1 register
-			Wire.write(0x20); // Set to normal mode and enable auto-increment (AI bit = 1)	
+			Wire.beginTransmission(PCA9685Address);
 			PCA9685_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
@@ -237,13 +235,16 @@ void DoSetup()
 		Serial.println("");
 		if (PCA9685_found)
 		{
-			Serial.println("PCA9685 found.");
+			Serial.println("PCA9685 expander found.");
+			PWMServoDriver.begin();
+			PWMServoDriver.setPWMFreq(200);
+
 			pinMode(OutputEnablePin, OUTPUT);
 			digitalWrite(OutputEnablePin, LOW);	//enable
 		}
 		else
 		{
-			Serial.println("PCA9685 not found.");
+			Serial.println("PCA9685 expander not found.");
 		}
 		break;
 
@@ -425,7 +426,7 @@ void LoadDefaults()
 	MDL.RelayControl = 5;
 	MDL.WifiModeUseStation = false;
 	MDL.Is3Wire = true;
-	MDL.ADS1115Enabled = false;
+	MDL.ADS1115Enabled = true;
 	MDL.InvertFlow = false;
 	MDL.InvertRelay = false;
 }

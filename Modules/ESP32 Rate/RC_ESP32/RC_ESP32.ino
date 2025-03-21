@@ -1,6 +1,6 @@
 
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
-#include <PCF8574.h>		// https://github.com/RobTillaart/PCF8574
+#include <pcf8574.h>		// https://github.com/RobTillaart/PCF8574
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 #include <WiFi.h>
@@ -16,9 +16,21 @@
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 
+#include <Adafruit_PWMServoDriver.h>
+
+#include <Adafruit_MCP23008.h>
+#include <Adafruit_MCP23X08.h>
+#include <Adafruit_MCP23X17.h>
+#include <Adafruit_MCP23XXX.h>
+
+#include <Adafruit_BusIO_Register.h>
+#include <Adafruit_I2CDevice.h>
+#include <Adafruit_I2CRegister.h>
+#include <Adafruit_SPIDevice.h>
+
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  14-Dec-2024"
-const uint16_t InoID = 14124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  21-Mar-2025"
+const uint16_t InoID = 21035;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -39,6 +51,7 @@ const uint8_t NC = 0xFF;		// Pin not connected
 
 struct ModuleConfig
 {
+	// RC15
 	uint8_t ID = 0;
 	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = false;	    // value that turns on relays
@@ -48,17 +61,17 @@ struct ModuleConfig
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
-	uint8_t RelayControl = 4;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
+	uint8_t RelayControl = 5;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
 	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
-	uint8_t WorkPin = 2;
+	uint8_t WorkPin = NC;
 	bool WorkPinIsMomentary = false;
-	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output2 only, Output1 is off
-	uint8_t PressurePin = 15;		// NC - no pressure pin
-	bool ADS1115Enabled = false;
+	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output1 only, Output2 is off
+	uint8_t PressurePin = NC;		// NC - no pressure pin
+	bool ADS1115Enabled = true;
 };
 
 ModuleConfig MDL;
@@ -129,9 +142,12 @@ bool PCF_found = false;
 PCA9555 PCA;
 bool PCA9555PW_found = false;
 
-bool PCA9685_found = false;
-
 bool MCP23017_found = false;
+
+// PCA9685
+bool PCA9685_found = false;
+#define PCA9685Address 0x55
+Adafruit_PWMServoDriver PWMServoDriver = Adafruit_PWMServoDriver(PCA9685Address);
 
 // analog
 struct AnalogConfig
@@ -220,7 +236,7 @@ void loop()
 	}
 	SendComm();
 	server.handleClient();
-	//Blink();
+	Blink();
 }
 
 byte ParseModID(byte ID)
@@ -296,48 +312,51 @@ void CheckPressure()
 	}
 }
 
-//bool State = false;
-//uint32_t LastBlink;
-//uint32_t LastLoop;
-//byte ReadReset;
-//uint32_t MaxLoopTime;
-//double debug1;
-//double debug2;
-//double debug3;
+bool State = false;
+uint32_t LastBlink;
+uint32_t LastLoop;
+byte ReadReset;
+uint32_t MaxLoopTime;
+double debug1;
+double debug2;
+double debug3;
 //double debug4;
-//
-//void Blink()
-//{
-//	if (millis() - LastBlink > 1000)
-//	{
-//		LastBlink = millis();
-//		State = !State;
-//		//digitalWrite(LED_BUILTIN, State);
-//
-//		//Serial.print(" Micros: ");
-//		//Serial.print(MaxLoopTime);
-//		debug1 = Sensor[0].FlowPin;
-//		debug2 = Sensor[0].MeterCal;
-//		//Serial.print(", ");
-//		Serial.print(debug1);
-//		
-//		Serial.print(", ");
-//		Serial.print(debug2);
-//
-//		Serial.print(", ");
-//		Serial.print(debug3);
-//
-//		Serial.print(", ");
-//		Serial.print(debug4);
-//
-//		Serial.println("");
-//
-//		if (ReadReset++ > 5)
-//		{
-//			ReadReset = 0;
-//			MaxLoopTime = 0;
-//		}
-//	}
-//	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
-//	LastLoop = micros();
-//}
+
+void Blink()
+{
+	if (millis() - LastBlink > 1000)
+	{
+		LastBlink = millis();
+		State = !State;
+		//digitalWrite(LED_BUILTIN, State);
+
+		Serial.print(" Micros: ");
+		Serial.print(MaxLoopTime);
+
+		debug1 = RelayLo;
+		debug2 = MDL.RelayControl;
+		debug3 = MDL.Is3Wire;
+		
+		Serial.print(", ");
+		Serial.print(debug1);
+		
+		Serial.print(", ");
+		Serial.print(debug2);
+
+		Serial.print(", ");
+		Serial.print(debug3);
+
+		//Serial.print(", ");
+		//Serial.print(debug4);
+
+		Serial.println("");
+
+		if (ReadReset++ > 5)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+		}
+	}
+	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
+	LastLoop = micros();
+}

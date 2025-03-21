@@ -132,16 +132,16 @@ void CheckRelays()
             uint8_t mcpOutB = 0; // Output for port B
 
             // Calculate output for port A, DRV sections 9-16
-            mcpOutA = (bitRead(NewLo, 4) ? 2 : 1) |
-                (bitRead(NewLo, 5) ? 8 : 4) |
-                (bitRead(NewLo, 6) ? 32 : 16) |
-                (bitRead(NewLo, 7) ? 128 : 64);
+            mcpOutA = (bitRead(RelayLo, 4) ? 2 : 1) |
+                (bitRead(RelayLo, 5) ? 8 : 4) |
+                (bitRead(RelayLo, 6) ? 32 : 16) |
+                (bitRead(RelayLo, 7) ? 128 : 64);
 
             // Calculate output for port B, DRV sections 1-8
-            mcpOutB = (bitRead(NewLo, 0) ? 2 : 1) |
-                (bitRead(NewLo, 1) ? 8 : 4) |
-                (bitRead(NewLo, 2) ? 32 : 16) |
-                (bitRead(NewLo, 3) ? 128 : 64);
+            mcpOutB = (bitRead(RelayLo, 0) ? 2 : 1) |
+                (bitRead(RelayLo, 1) ? 8 : 4) |
+                (bitRead(RelayLo, 2) ? 32 : 16) |
+                (bitRead(RelayLo, 3) ? 128 : 64);
 
             if (MDL.InvertRelay)
             {
@@ -164,64 +164,53 @@ void CheckRelays()
         {
             if (MDL.Is3Wire)
             {
-                // 1 pin for each valve, powered on only, 8 sections, 1 drv for each section, use IN2
-                Wire.beginTransmission(PCA9685address);
-                Wire.write(0x06); // Start at LED0_ON_L register (first PWM channel)
-
-                // Iterate through all 16 channels and write data using auto-increment, IN1 is off
+                // 1 pin for each valve, powered on only, 8 sections, 1 drv for each section, use IN1
                 for (int i = 0; i < 8; i++)
                 {
-                    for (int j = 0; j < 2; j++)
+                    BitState = bitRead(NewLo, i);
+
+                    if (RelayStatus[i] != BitState)
                     {
-                        if (NewLo & (1 << i) && j == 1)
+                        IOpin = (1 + i) * 2 - 1;
+                        if (BitState)
                         {
-                            // Turn on channel: ON = 0, OFF = 4096
-                            Wire.write(0);     // ON_L
-                            Wire.write(0);     // ON_H
-                            Wire.write(0);     // OFF_L (low byte of 4096 = 0)
-                            Wire.write(16);    // OFF_H (high byte of 4096 = 16 for 12-bit value)
+                            // on
+                            PWMServoDriver.setPWM(IOpin, 4096, 0);
                         }
                         else
                         {
-                            // Turn off channel: ON = 0, OFF = 0
-                            Wire.write(0);     // ON_L
-                            Wire.write(0);     // ON_H
-                            Wire.write(0);     // OFF_L
-                            Wire.write(0);     // OFF_H
+                            // off
+                            PWMServoDriver.setPWM(IOpin, 0, 4096);
                         }
+                        RelayStatus[i] = BitState;
                     }
                 }
-
-                Wire.endTransmission();
             }
             else
             {
                 // 2 pins used for each valve, powered on and off, 8 sections
-                Wire.beginTransmission(PCA9685address);
-                Wire.write(0x06); // Start at LED0_ON_L register (first PWM channel)
-
-                // Iterate through all 8 channels and write data using auto-increment
                 for (int i = 0; i < 8; i++)
                 {
-                    if (NewLo & (1 << i))
+                    BitState = bitRead(NewLo, i);
+
+                    if (RelayStatus[i] != BitState)
                     {
-                        // Turn on channel: ON = 0, OFF = 4096
-                        Wire.write(0);     // ON_L
-                        Wire.write(0);     // ON_H
-                        Wire.write(0);     // OFF_L (low byte of 4096 = 0)
-                        Wire.write(16);    // OFF_H (high byte of 4096 = 16 for 12-bit value)
-                    }
-                    else
-                    {
-                        // Turn off channel: ON = 0, OFF = 0
-                        Wire.write(0);     // ON_L
-                        Wire.write(0);     // ON_H
-                        Wire.write(0);     // OFF_L
-                        Wire.write(0);     // OFF_H
+                        IOpin = i * 2;
+                        if (BitState)
+                        {
+                            // on  
+                            PWMServoDriver.setPWM(IOpin, 4096, 0);
+                            PWMServoDriver.setPWM(IOpin + 1, 0, 4096);
+                        }
+                        else
+                        {
+                            // off
+                            PWMServoDriver.setPWM(IOpin, 0, 4096);
+                            PWMServoDriver.setPWM(IOpin + 1, 4096, 0);
+                        }
+                        RelayStatus[i] = BitState;
                     }
                 }
-
-                Wire.endTransmission();
             }
         }
         break;
