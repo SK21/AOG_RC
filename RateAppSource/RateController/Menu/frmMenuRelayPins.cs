@@ -83,7 +83,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenuConfig/btnOk_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenuConfig/btnOk_Click: " + ex.Message);
             }
         }
 

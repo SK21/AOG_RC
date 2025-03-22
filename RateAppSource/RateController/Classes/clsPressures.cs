@@ -139,8 +139,7 @@ namespace RateController.Classes
 
         public void SaveCalData()
         {
-            string filePath = Path.Combine(Props.CurrentDir(), "PressureRawData.csv");
-            using (var writer = new StreamWriter(filePath))
+            using (var writer = new StreamWriter(Props.CurrentPressureFile()))
             {
                 writer.WriteLine("ID,ModuleID,RawData,Pressure");
                 foreach (var reading in cRawData)
@@ -169,14 +168,7 @@ namespace RateController.Classes
             try
             {
                 cRawData.Clear();
-                string filePath = Path.Combine(Props.CurrentDir(), "PressureRawData.csv");
-
-                if (!File.Exists(filePath))
-                {
-                    File.WriteAllText(filePath, "ID,ModuleID,RawData,Pressure" + Environment.NewLine);
-                }
-
-                using (var reader = new StreamReader(filePath))
+                using (var reader = new StreamReader(Props.CurrentPressureFile()))
                 {
                     reader.ReadLine();  // skip header
 
@@ -197,7 +189,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("clsPressure/LoadCalData: " + ex.Message);
+                Props.WriteErrorLog("clsPressure/LoadCalData: " + ex.Message);
             }
         }
     }

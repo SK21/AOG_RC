@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Diagnostics;
 
 namespace RateController
@@ -128,7 +129,7 @@ namespace RateController
                 LastModuleSending = ModuleSending();
                 Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Sending: " + ModuleSending().ToString();
 
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+                Props.WriteActivityLog(Mes, false, true);
             }
 
             if (LastModuleReceiving != ModuleReceiving())
@@ -136,7 +137,7 @@ namespace RateController
                 LastModuleReceiving = ModuleReceiving();
                 Mes = "Module:" + Prod.ModuleID + "  Sensor:" + Prod.SensorID + "  Receiving: " + ModuleReceiving().ToString();
 
-                Prod.mf.Tls.WriteActivityLog(Mes, false, true);
+                Props.WriteActivityLog(Mes, false, true);
             }
         }
     }

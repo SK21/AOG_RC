@@ -51,7 +51,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmHelp/frmHelp_Load: " + ex.Message);
+                Props.WriteErrorLog("frmHelp/frmHelp_Load: " + ex.Message);
             }
         }
 

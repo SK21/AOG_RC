@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -77,7 +78,7 @@ namespace RateController
                                             }
                                             catch (Exception ex)
                                             {
-                                                mf.Tls.WriteErrorLog("frmNework/btnSend_Click/Bind error " + ex.Message);
+                                                Props.WriteErrorLog("frmNework/btnSend_Click/Bind error " + ex.Message);
                                             }
 
                                             scanSocket.Dispose();
@@ -85,7 +86,7 @@ namespace RateController
                                     }
                                     catch (Exception ex)
                                     {
-                                        mf.Tls.WriteErrorLog("frmNework/btnSend_Click/nic loop error " + ex.Message);
+                                        Props.WriteErrorLog("frmNework/btnSend_Click/nic loop error " + ex.Message);
                                     }
                                 }
                             }

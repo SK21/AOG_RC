@@ -646,6 +646,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Jobs.
+        /// </summary>
+        internal static string lgJobs {
+            get {
+                return ResourceManager.GetString("lgJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KPH.
         /// </summary>
         internal static string lgKPH {
@@ -1119,6 +1128,15 @@ namespace RateController.Language {
         internal static string lgProductsMenu {
             get {
                 return ResourceManager.GetString("lgProductsMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profiles.
+        /// </summary>
+        internal static string lgProfiles {
+            get {
+                return ResourceManager.GetString("lgProfiles", resourceCulture);
             }
         }
         

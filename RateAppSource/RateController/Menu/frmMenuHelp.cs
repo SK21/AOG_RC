@@ -37,7 +37,7 @@ namespace RateController.Menu
 
         private void butActivity_Click(object sender, EventArgs e)
         {
-            if (!mf.Tls.OpenTextFile("Activity Log.txt"))
+            if (!Props.ShowLog("Activity Log.txt"))
             {
                 mf.Tls.ShowMessage("File not found.");
             }
@@ -45,7 +45,7 @@ namespace RateController.Menu
 
         private void butErrors_Click(object sender, EventArgs e)
         {
-            if (!mf.Tls.OpenTextFile("Error Log.txt"))
+            if (!Props.ShowLog("Error Log.txt"))
             {
                 mf.Tls.ShowMessage("File not found.");
             }
@@ -69,7 +69,7 @@ namespace RateController.Menu
         private void butNet_Click(object sender, EventArgs e)
         {
             mf.UDPmodules.UpdateLog();
-            if (!mf.Tls.OpenTextFile("Ethernet Log.txt"))
+            if (!Props.ShowLog("Ethernet Log.txt"))
             {
                 mf.Tls.ShowMessage("File not found.");
             }

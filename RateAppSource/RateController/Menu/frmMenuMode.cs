@@ -42,7 +42,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenuMode/btnOk_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenuMode/btnOk_Click: " + ex.Message);
             }
         }
 

@@ -148,7 +148,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("clsSectionControl/ " + ex.Message);
+                Props.WriteErrorLog("clsSectionControl/ " + ex.Message);
             }
         }
 

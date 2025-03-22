@@ -67,7 +67,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenuSections/btnOk_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenuSections/btnOk_Click: " + ex.Message);
             }
         }
 
@@ -338,7 +338,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("FormSections/LoadDGV: " + ex.Message);
+                Props.WriteErrorLog("FormSections/LoadDGV: " + ex.Message);
             }
         }
 
@@ -376,7 +376,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("FormSections/LoadDGV2: " + ex.Message);
+                Props.WriteErrorLog("FormSections/LoadDGV2: " + ex.Message);
             }
         }
 

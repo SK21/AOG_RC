@@ -193,13 +193,37 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("DefaultRateData.csv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseJobs {
+            get {
+                return ((bool)(this["UseJobs"]));
+            }
+            set {
+                this["UseJobs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string CurrentRateDataFile {
             get {
                 return ((string)(this["CurrentRateDataFile"]));
             }
             set {
                 this["CurrentRateDataFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentJob {
+            get {
+                return ((string)(this["CurrentJob"]));
+            }
+            set {
+                this["CurrentJob"] = value;
             }
         }
     }

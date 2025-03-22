@@ -312,6 +312,9 @@
   <data name="lgInvertSection" xml:space="preserve">
     <value>Invert_Section</value>
   </data>
+  <data name="lgJobs" xml:space="preserve">
+    <value>Jobs</value>
+  </data>
   <data name="lgKPH" xml:space="preserve">
     <value>KPH</value>
   </data>
@@ -470,6 +473,9 @@
   </data>
   <data name="lgProductsMenu" xml:space="preserve">
     <value>Products</value>
+  </data>
+  <data name="lgProfiles" xml:space="preserve">
+    <value>Profiles</value>
   </data>
   <data name="lgProportional" xml:space="preserve">
     <value>Proportional</value>

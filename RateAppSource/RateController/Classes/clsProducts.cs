@@ -92,7 +92,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("clsProducts/Connected: " + ex.Message);
+                Props.WriteErrorLog("clsProducts/Connected: " + ex.Message);
             }
             return Result;
         }

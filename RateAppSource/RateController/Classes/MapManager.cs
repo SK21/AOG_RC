@@ -339,7 +339,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("MapManger/ShowAppliedLayer: " + ex.Message);
+                Props.WriteErrorLog("MapManger/ShowAppliedLayer: " + ex.Message);
             }
             return legend;
         }

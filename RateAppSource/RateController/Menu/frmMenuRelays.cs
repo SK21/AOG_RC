@@ -46,7 +46,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenuRelays/btnOk_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenuRelays/btnOk_Click: " + ex.Message);
             }
         }
 
@@ -69,7 +69,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmRelays/btnRenumber_Click: " + ex.Message);
+                Props.WriteErrorLog("frmRelays/btnRenumber_Click: " + ex.Message);
             }
         }
 
@@ -114,7 +114,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmRelays/CellClick: " + ex.Message);
+                Props.WriteErrorLog("frmRelays/CellClick: " + ex.Message);
             }
         }
 
@@ -125,7 +125,7 @@ namespace RateController.Menu
 
         private void DGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            mf.Tls.WriteErrorLog("frmRelays/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
+            Props.WriteErrorLog("frmRelays/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
                 + " Exception: " + e.Exception.ToString());
         }
 
@@ -219,7 +219,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmRelays/LoadData: " + ex.Message);
+                Props.WriteErrorLog("frmRelays/LoadData: " + ex.Message);
             }
         }
 
@@ -269,7 +269,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmRelays/SaveData: " + ex.Message);
+                Props.WriteErrorLog("frmRelays/SaveData: " + ex.Message);
             }
             mf.RelayObjects.Save();
         }

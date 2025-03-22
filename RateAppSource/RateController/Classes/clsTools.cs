@@ -130,30 +130,6 @@ namespace RateController
             return Result;
         }
 
-        public void SetRateCollector(string FileName, bool Overwrite = false)
-        {
-            cRateCollector = new DataCollector(FileName, Overwrite);
-        }
-
-        public bool OpenTextFile(string FileName)
-        {
-            bool Result = false;
-            try
-            {
-                string Name = Props.CurrentDir() + "\\" + FileName;
-                if (File.Exists(Name))
-                {
-                    Process.Start(new ProcessStartInfo(Name) { UseShellExecute = true });
-                    Result = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Tools: OpenTextFile: " + ex.Message);
-            }
-            return Result;
-        }
-
         public byte ParseModID(byte ID)
         {
             // top 4 bits
@@ -180,6 +156,11 @@ namespace RateController
             }
         }
 
+        public void SetRateCollector(string FileName, bool Overwrite = false)
+        {
+            cRateCollector = new DataCollector(FileName, Overwrite);
+        }
+
         public void ShowMessage(string Message, string Title = "Help",
             int timeInMsec = 20000, bool LogError = false, bool Modal = false
             , bool PlayErrorSound = false)
@@ -196,7 +177,7 @@ namespace RateController
                     Hlp.Show();
                 }
 
-                if (LogError) WriteErrorLog(Message);
+                if (LogError) Props.WriteErrorLog(Message);
                 if (PlayErrorSound) SystemSounds.Exclamation.Play();
 
                 lastMessage = Message;
@@ -278,103 +259,5 @@ namespace RateController
         }
 
         #endregion ScreenBitMapCode
-
-        public void WriteActivityLog(string Message, bool Newline = false, bool NoDate = false)
-        {
-            string Line = "";
-            string DF;
-            try
-            {
-                string FileName = Props.CurrentDir() + "\\Activity Log.txt";
-                TrimFile(FileName);
-
-                if (Newline) Line = "\r\n";
-
-                if (NoDate)
-                {
-                    DF = "hh:mm:ss";
-                }
-                else
-                {
-                    DF = "MMM-dd hh:mm:ss";
-                }
-
-                File.AppendAllText(FileName, Line + DateTime.Now.ToString(DF) + "  -  " + Message + "\r\n");
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Tools: WriteActivityLog: " + ex.Message);
-            }
-        }
-
-        public void WriteErrorLog(string strErrorText)
-        {
-            try
-            {
-                string FileName = Props.CurrentDir() + "\\Error Log.txt";
-                TrimFile(FileName);
-                File.AppendAllText(FileName, DateTime.Now.ToString("MMM-dd hh:mm:ss") + "  -  " + strErrorText + "\r\n\r\n");
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        public void WriteLog(string LogName, string Message, bool NewLine = false, bool UseDate = false)
-        {
-            string Line = "";
-            string DF = "";
-            if (Message == null) Message = "";
-            try
-            {
-                string FileName = Props.CurrentDir() + "\\" + LogName;
-                TrimFile(FileName);
-
-                if (NewLine) Line = "\r\n";
-
-                if (UseDate)
-                {
-                    DF = "MMM-dd hh:mm:ss";
-                }
-                else
-                {
-                    DF = "hh:mm:ss";
-                }
-
-                if (UseDate || Message.Length > 0)
-                {
-                    File.AppendAllText(FileName, Line + DateTime.Now.ToString(DF) + "  -  " + Message + "\r\n");
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Tools: WriteLog: " + ex.Message);
-            }
-        }
-
-        private void TrimFile(string FileName, int MaxSize = 100000)
-        {
-            try
-            {
-                if (File.Exists(FileName))
-                {
-                    long FileSize = new FileInfo(FileName).Length;
-                    if (FileSize > MaxSize)
-                    {
-                        // trim file
-                        string[] Lines = File.ReadAllLines(FileName);
-                        int Len = (int)Lines.Length;
-                        int St = (int)(Len * .1); // skip first 10% of old lines
-                        string[] NewLines = new string[Len - St];
-                        Array.Copy(Lines, St, NewLines, 0, Len - St);
-                        File.Delete(FileName);
-                        File.AppendAllLines(FileName, NewLines);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
     }
 }

@@ -30,7 +30,7 @@ namespace RateController
             cSendFromPort = SendFromPort;
             cConnectionName = ConnectionName;
             SetEP(DestinationEndPoint);
-            mf.Tls.WriteLog("Ethernet Log.txt", "", true, true);
+            Props.WriteLog("Ethernet Log.txt", "", true, true);
         }
 
         // Status delegate
@@ -65,7 +65,7 @@ namespace RateController
         {
             recvSocket.Close();
             sendSocket.Close();
-            mf.Tls.WriteLog("Ethernet Log.txt", cLog);
+            Props.WriteLog("Ethernet Log.txt", cLog);
         }
 
         public string Log()
@@ -91,7 +91,7 @@ namespace RateController
                 }
                 catch (Exception ex)
                 {
-                    mf.Tls.WriteErrorLog("UDPcomm/SendUDPMessage " + ex.Message);
+                    Props.WriteErrorLog("UDPcomm/SendUDPMessage " + ex.Message);
                 }
             }
         }
@@ -123,13 +123,13 @@ namespace RateController
             }
             catch (Exception e)
             {
-                mf.Tls.WriteErrorLog("UDPcomm/StartUDPServer: \n" + e.Message);
+                Props.WriteErrorLog("UDPcomm/StartUDPServer: \n" + e.Message);
             }
         }
 
         public void UpdateLog()
         {
-            mf.Tls.WriteLog("Ethernet Log.txt", cLog);
+            Props.WriteLog("Ethernet Log.txt",cLog);
             cLog = "";
         }
 
@@ -212,7 +212,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("UDPcomm/HandleData " + ex.Message);
+                Props.WriteErrorLog("UDPcomm/HandleData " + ex.Message);
             }
         }
 
@@ -242,7 +242,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("UDPcomm/ReceiveData " + ex.Message);
+                Props.WriteErrorLog("UDPcomm/ReceiveData " + ex.Message);
             }
         }
 
@@ -254,7 +254,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog(" UDP Send Data" + ex.ToString());
+                Props.WriteErrorLog(" UDP Send Data" + ex.ToString());
             }
         }
 
@@ -281,7 +281,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("UDPcomm/SetEP " + ex.Message);
+                Props.WriteErrorLog("UDPcomm/SetEP " + ex.Message);
             }
         }
     }

@@ -45,7 +45,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenuNetwork/btnOk_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenuNetwork/btnOk_Click: " + ex.Message);
             }
         }
 
@@ -158,7 +158,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmModuleConfig/LoadCombo " + ex.Message);
+                Props.WriteErrorLog("frmModuleConfig/LoadCombo " + ex.Message);
             }
         }
 

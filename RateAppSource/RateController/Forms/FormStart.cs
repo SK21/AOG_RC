@@ -253,7 +253,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                Tls.WriteErrorLog("FormStart/OpenFile: " + ex.Message);
+                Props.WriteErrorLog("FormStart/OpenFile: " + ex.Message);
             }
         }
 
@@ -476,7 +476,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                Tls.WriteErrorLog("FormStart/UpdateStatus: " + ex.Message);
+                Props.WriteErrorLog("FormStart/UpdateStatus: " + ex.Message);
             }
         }
 
@@ -619,7 +619,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                Tls.WriteErrorLog("FormStart/FormatDisplay: " + ex.Message);
+                Props.WriteErrorLog("FormStart/FormatDisplay: " + ex.Message);
             }
         }
 
@@ -642,9 +642,9 @@ namespace RateController
                 timerMain.Enabled = false;
                 timerPIDs.Enabled = false;
                 timerRates.Enabled = false;
-                Tls.WriteActivityLog("Stopped");
+                Props.WriteActivityLog("Stopped");
                 string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
-                Tls.WriteActivityLog(mes);
+                Props.WriteActivityLog(mes);
             }
             catch (Exception)
             {
@@ -726,8 +726,13 @@ namespace RateController
                 Close();
             }
             SetLanguage();
-            Tls.WriteActivityLog("Started", true);
+            Props.WriteActivityLog("Started", true);
             cStartTime = DateTime.Now;
+
+            if (Properties.Settings.Default.UseJobs)
+            {
+                // to do open jobs screen
+            }
         }
 
         private void FormStart_Resize(object sender, EventArgs e)
@@ -942,7 +947,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                Tls.WriteErrorLog("FormStart/SetLanguage: " + ex.Message);
+                Props.WriteErrorLog("FormStart/SetLanguage: " + ex.Message);
             }
         }
 

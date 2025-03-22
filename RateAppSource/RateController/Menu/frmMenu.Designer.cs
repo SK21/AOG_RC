@@ -30,9 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenu));
             this.butClose = new System.Windows.Forms.Button();
-            this.butNew = new System.Windows.Forms.Button();
-            this.butOpen = new System.Windows.Forms.Button();
-            this.butSaveAs = new System.Windows.Forms.Button();
             this.butControl = new System.Windows.Forms.Button();
             this.butData = new System.Windows.Forms.Button();
             this.butMonitor = new System.Windows.Forms.Button();
@@ -69,6 +66,8 @@
             this.lbFileName = new System.Windows.Forms.Label();
             this.butRateData = new System.Windows.Forms.Button();
             this.lbRateData = new System.Windows.Forms.Label();
+            this.butProfiles = new System.Windows.Forms.Button();
+            this.butJobs = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // butClose
@@ -85,63 +84,6 @@
             this.butClose.TabIndex = 1;
             this.butClose.UseVisualStyleBackColor = false;
             this.butClose.Click += new System.EventHandler(this.butClose_Click);
-            // 
-            // butNew
-            // 
-            this.butNew.BackColor = System.Drawing.Color.Transparent;
-            this.butNew.FlatAppearance.BorderSize = 0;
-            this.butNew.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butNew.Location = new System.Drawing.Point(267, 92);
-            this.butNew.Name = "butNew";
-            this.butNew.Size = new System.Drawing.Size(158, 49);
-            this.butNew.TabIndex = 9;
-            this.butNew.Text = "New";
-            this.butNew.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butNew.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butNew.UseVisualStyleBackColor = false;
-            this.butNew.Visible = false;
-            this.butNew.Click += new System.EventHandler(this.butNew_Click);
-            // 
-            // butOpen
-            // 
-            this.butOpen.BackColor = System.Drawing.Color.Transparent;
-            this.butOpen.FlatAppearance.BorderSize = 0;
-            this.butOpen.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butOpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butOpen.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butOpen.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butOpen.Location = new System.Drawing.Point(267, 147);
-            this.butOpen.Name = "butOpen";
-            this.butOpen.Size = new System.Drawing.Size(158, 49);
-            this.butOpen.TabIndex = 10;
-            this.butOpen.Text = "Open";
-            this.butOpen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butOpen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butOpen.UseVisualStyleBackColor = false;
-            this.butOpen.Visible = false;
-            this.butOpen.Click += new System.EventHandler(this.butOpen_Click);
-            // 
-            // butSaveAs
-            // 
-            this.butSaveAs.BackColor = System.Drawing.Color.Transparent;
-            this.butSaveAs.FlatAppearance.BorderSize = 0;
-            this.butSaveAs.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butSaveAs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butSaveAs.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butSaveAs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butSaveAs.Location = new System.Drawing.Point(267, 203);
-            this.butSaveAs.Name = "butSaveAs";
-            this.butSaveAs.Size = new System.Drawing.Size(158, 49);
-            this.butSaveAs.TabIndex = 11;
-            this.butSaveAs.Text = "Save As";
-            this.butSaveAs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butSaveAs.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butSaveAs.UseVisualStyleBackColor = false;
-            this.butSaveAs.Visible = false;
-            this.butSaveAs.Click += new System.EventHandler(this.butSaveAs_Click);
             // 
             // butControl
             // 
@@ -794,11 +736,50 @@
             this.lbRateData.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
             this.lbRateData.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
             // 
+            // butProfiles
+            // 
+            this.butProfiles.BackColor = System.Drawing.Color.Transparent;
+            this.butProfiles.FlatAppearance.BorderSize = 0;
+            this.butProfiles.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butProfiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butProfiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butProfiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butProfiles.Location = new System.Drawing.Point(262, 101);
+            this.butProfiles.Name = "butProfiles";
+            this.butProfiles.Size = new System.Drawing.Size(158, 49);
+            this.butProfiles.TabIndex = 169;
+            this.butProfiles.Text = "Profiles";
+            this.butProfiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butProfiles.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butProfiles.UseVisualStyleBackColor = false;
+            this.butProfiles.Visible = false;
+            this.butProfiles.Click += new System.EventHandler(this.butProfiles_Click);
+            // 
+            // butJobs
+            // 
+            this.butJobs.BackColor = System.Drawing.Color.Transparent;
+            this.butJobs.FlatAppearance.BorderSize = 0;
+            this.butJobs.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butJobs.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butJobs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butJobs.Location = new System.Drawing.Point(262, 156);
+            this.butJobs.Name = "butJobs";
+            this.butJobs.Size = new System.Drawing.Size(158, 49);
+            this.butJobs.TabIndex = 170;
+            this.butJobs.Text = "Jobs";
+            this.butJobs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butJobs.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butJobs.UseVisualStyleBackColor = false;
+            this.butJobs.Visible = false;
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.Controls.Add(this.butJobs);
+            this.Controls.Add(this.butProfiles);
             this.Controls.Add(this.lbRateData);
             this.Controls.Add(this.butRateData);
             this.Controls.Add(this.lbFileName);
@@ -828,9 +809,6 @@
             this.Controls.Add(this.butControl);
             this.Controls.Add(this.butRate);
             this.Controls.Add(this.butData);
-            this.Controls.Add(this.butSaveAs);
-            this.Controls.Add(this.butOpen);
-            this.Controls.Add(this.butNew);
             this.Controls.Add(this.butPowerOff);
             this.Controls.Add(this.butHelpScreen);
             this.Controls.Add(this.butOptions);
@@ -862,9 +840,6 @@
         private System.Windows.Forms.Button butOptions;
         private System.Windows.Forms.Button butHelpScreen;
         private System.Windows.Forms.Button butPowerOff;
-        private System.Windows.Forms.Button butNew;
-        private System.Windows.Forms.Button butOpen;
-        private System.Windows.Forms.Button butSaveAs;
         private System.Windows.Forms.Button butControl;
         private System.Windows.Forms.Button butData;
         private System.Windows.Forms.Button butMonitor;
@@ -894,5 +869,7 @@
         private System.Windows.Forms.Label lbFileName;
         private System.Windows.Forms.Button butRateData;
         private System.Windows.Forms.Label lbRateData;
+        private System.Windows.Forms.Button butProfiles;
+        private System.Windows.Forms.Button butJobs;
     }
 }

@@ -118,7 +118,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("clsRelays/Renumber: " + ex.Message);
+                Props.WriteErrorLog("clsRelays/Renumber: " + ex.Message);
             }
         }
 
@@ -292,7 +292,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("clsRelays/SetRelays: " + ex.Message);
+                Props.WriteErrorLog("clsRelays/SetRelays: " + ex.Message);
             }
 
             return Result;

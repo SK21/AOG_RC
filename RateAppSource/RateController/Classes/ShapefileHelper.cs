@@ -47,7 +47,7 @@ namespace RateController.Classes
             }
             catch (System.Exception ex)
             {
-                mf.Tls.WriteErrorLog("ShapefileHelper/LoadAndMapShapefile: " + ex.Message);
+                Props.WriteErrorLog("ShapefileHelper/LoadAndMapShapefile: " + ex.Message);
             }
             return mapZones;
         }
@@ -95,7 +95,7 @@ namespace RateController.Classes
             }
             catch (System.Exception ex)
             {
-                mf.Tls.WriteErrorLog("ShapefileHelper/SaveMapZones: " + ex.Message);
+                Props.WriteErrorLog("ShapefileHelper/SaveMapZones: " + ex.Message);
             }
             return Result;
         }
@@ -171,7 +171,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("ShapefileHelper/CreateMapZone: " + ex.Message);
+                Props.WriteErrorLog("ShapefileHelper/CreateMapZone: " + ex.Message);
             }
             return NewZone;
         }

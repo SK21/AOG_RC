@@ -33,7 +33,7 @@ namespace RateController
             InitializeComponent();
             this.mf = cf;
 
-            Items = new Button[] { butNew, butOpen, butSaveAs, butRate, butControl, butSettings, butMode, butMonitor,
+            Items = new Button[] { butProfiles, butJobs,  butRate, butControl, butSettings, butMode, butMonitor,
                 butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins, butWifi,
                 butValves, butDisplay, butPrimed, butSwitches, butLanguage, butColor,butRateData };
 
@@ -158,7 +158,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenu/bthHelp_Click: " + ex.Message);
             }
         }
 
@@ -270,8 +270,11 @@ namespace RateController
 
         private void butFile_Click(object sender, EventArgs e)
         {
+            Debug.Print("butFile_Click");
             if (ClosedOwned())
             {
+                butProfiles.Visible = !Expanded;
+                butJobs.Visible = !Expanded;
                 if (Expanded)
                 {
                     Expanded = false;
@@ -281,9 +284,6 @@ namespace RateController
                     butModules.Visible = true;
                     butOptions.Visible = true;
                     butHelpScreen.Visible = true;
-                    butNew.Visible = false;
-                    butOpen.Visible = false;
-                    butSaveAs.Visible = false;
                 }
                 else
                 {
@@ -296,20 +296,18 @@ namespace RateController
                     butHelpScreen.Visible = false;
 
                     int Pos = butFile.Top;
-                    butNew.Visible = true;
-                    butNew.Left = butFile.Left + SubOffset;
+                    butProfiles.Visible = true;
+                    butProfiles.Left = butFile.Left + SubOffset;
                     Pos += SubFirstSpacing;
-                    butNew.Top = Pos;
+                    butProfiles.Top = Pos;
 
-                    butOpen.Visible = true;
-                    butOpen.Left = butFile.Left + SubOffset;
+                    butJobs.Visible = true;
+                    butJobs.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
-                    butOpen.Top = Pos;
+                    butJobs.Top = Pos;
 
-                    butSaveAs.Visible = true;
-                    butSaveAs.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butSaveAs.Top = Pos;
+                    Debug.Print("butFile_Click/butProfiles.PerformClick");
+                    butProfiles.PerformClick();
                 }
             }
         }
@@ -344,6 +342,7 @@ namespace RateController
 
         private void butMachine_Click(object sender, EventArgs e)
         {
+            Debug.Print("butMachine_Click");
             if (ClosedOwned())
             {
                 butSections.Visible = !Expanded;
@@ -401,6 +400,7 @@ namespace RateController
                     Pos += SubSpacing;
                     butCalibrate.Top = Pos;
 
+                    Debug.Print("butMachine_Click/butSections.PerformClick");
                     butSections.PerformClick();
                 }
             }
@@ -724,6 +724,32 @@ namespace RateController
             }
         }
 
+        private void butProfiles_Click(object sender, EventArgs e)
+        {
+            cLastScreen = "frmMenuProfiles";
+            HighlightButton(cLastScreen);
+            Form fs = Props.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuProfiles(mf, this);
+                frm.Owner = this;
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+            if(Props.IsFormOpen(cLastScreen)==null)
+            {
+                Debug.Print(cLastScreen + " is null");
+            }
+            else
+            {
+                Debug.Print(cLastScreen + " is open");
+            }
+        }
+
         private void butRate_Click(object sender, EventArgs e)
         {
             if (CheckEdited())
@@ -1014,8 +1040,23 @@ namespace RateController
                 if (Props.IsFormNameValid(Last))
                 {
                     Form fs;
+                    Debug.Print("");
+                    Debug.Print("LastScreen: "+Last);
                     switch (Last)
                     {
+                        case "frmMenuProfiles":
+                            Debug.Print("butFiles.PerformClick");
+                            butFile.PerformClick(); // frmMenuProfiles opened by default
+                            break;
+
+                        //case "frmMenuJobs":
+                        //    butJobs.PerformClick();
+                        //    fs = new frmMenuJobs(mf, this);
+                        //    fs.Owner = this;
+                        //    cLastScreen = Last;
+                        //    fs.Show();
+                        //    break;
+
                         case "frmMenuControl":
                             butProducts.PerformClick();
                             fs = new frmMenuControl(mf, this);
@@ -1057,6 +1098,7 @@ namespace RateController
                             break;
 
                         case "frmMenuSections":
+                            Debug.Print("butMachine.PerformClick");
                             butMachine.PerformClick();  // frmMenuSections opened by default
                             break;
 
@@ -1196,7 +1238,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenu/LoadLastScreen: " + ex.Message);
+                Props.WriteErrorLog("frmMenu/LoadLastScreen: " + ex.Message);
             }
         }
 
@@ -1209,9 +1251,8 @@ namespace RateController
             butOptions.Text = Lang.lgOptions;
             butHelpScreen.Text = Lang.lgHelp;
 
-            butNew.Text = Lang.lgNew;
-            butOpen.Text = Lang.lgOpen;
-            butSaveAs.Text = Lang.lgSaveAs;
+            butJobs.Text = Lang.lgJobs;
+            butProfiles.Text = Lang.lgProfiles;
             butRate.Text = Lang.lgRate;
             butControl.Text = Lang.lgControl;
             butSettings.Text = Lang.lgSettings;

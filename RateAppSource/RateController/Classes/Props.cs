@@ -1,10 +1,12 @@
 ﻿using RateController.Language;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -48,6 +50,9 @@ namespace RateController.Classes
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
         private static string cAppDate = "19-Mar-2025";
+        private static string cApplicationFolder;
+        private static string cJobsFolder;
+        private static string cProfilesFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0-beta.9";
         private static string cCurrentMapName;
@@ -96,6 +101,11 @@ namespace RateController.Classes
 
         #region MainProperties
 
+        public static string ApplicationFolder
+        { get { return cApplicationFolder; } }
+
+        public static string JobsFolder { get { return cJobsFolder; } }
+        public static string ProfilesFolder { get { return cProfilesFolder; } }
         public static string CurrentMapName
         {
             get { return cCurrentMapName; }
@@ -447,6 +457,11 @@ namespace RateController.Classes
         {
             return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile);
         }
+        public static string CurrentPressureFile()
+        {
+            string name = CurrentDir() + "\\" + CurrentFileName() + "PressureData.csv";
+            return name;
+        }
 
         public static string CurrentRateDataFile()
         {
@@ -468,19 +483,45 @@ namespace RateController.Classes
                 // check for default dir and files
                 string cDefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
                 if (!Directory.Exists(cDefaultDir)) Directory.CreateDirectory(cDefaultDir);
-                if (!File.Exists(cDefaultDir + "\\Example.rcs")) File.WriteAllBytes(cDefaultDir + "\\Example.rcs", Properties.Resources.Example);
-                if (!File.Exists(cDefaultDir + "\\Default.rcs")) File.WriteAllBytes(cDefaultDir + "\\Default.rcs", Properties.Resources.Default);
-                if (!File.Exists(cDefaultDir + "\\DefaultRateData.csv")) File.WriteAllText(cDefaultDir + "\\DefaultRateData.csv", string.Empty);
+
+                // application folder
+                string name = cDefaultDir + "\\Application";
+                if (!Directory.Exists(name)) Directory.CreateDirectory(name);
+                cApplicationFolder = name;
+
+                // profiles folder
+                name = cDefaultDir + "\\Profiles";
+                if (!Directory.Exists(name)) Directory.CreateDirectory(name);
+                cProfilesFolder = name;
+
+                string DefaultProfile = name + "\\" + "Default";
+                if (!Directory.Exists(DefaultProfile)) Directory.CreateDirectory(DefaultProfile);
+                if (!File.Exists(DefaultProfile + "\\Default.rcs")) File.WriteAllBytes(DefaultProfile + "\\Default.rcs", Properties.Resources.Default);
+                if (!File.Exists(DefaultProfile + "\\DefaultPressureData.csv")) File.WriteAllText(DefaultProfile + "\\DefaultPressureData.csv", string.Empty);
+
+                string ExampleProfile = name + "\\" + "Example";
+                if (!Directory.Exists(ExampleProfile)) Directory.CreateDirectory(ExampleProfile);
+                if (!File.Exists(ExampleProfile + "\\Example.rcs")) File.WriteAllBytes(ExampleProfile + "\\Example.rcs", Properties.Resources.Default);
+                if (!File.Exists(ExampleProfile + "\\ExamplePressureData.csv")) File.WriteAllText(ExampleProfile + "\\ExamplePressureData.csv", string.Empty);
+
+                // jobs folder
+                name = cDefaultDir + "\\Jobs";
+                if (!Directory.Exists(name)) Directory.CreateDirectory(name);
+                cJobsFolder= name;
+
+                string DefaultJob = name + "\\" + "DefaultJob";
+                if (!Directory.Exists(DefaultJob)) Directory.CreateDirectory(DefaultJob);
+                if (!File.Exists(DefaultJob + "\\DefaultJob.jbs")) File.WriteAllText(DefaultJob + "\\DefaultJob.jbs", string.Empty);
+                if (!File.Exists(DefaultJob + "\\DefaultRateData.csv")) File.WriteAllText(DefaultJob + "\\DefaultRateData.csv", string.Empty);
+
+                string MapName = DefaultJob + "\\Map";
+                if (!Directory.Exists(MapName)) Directory.CreateDirectory(MapName);
 
                 // check user files
                 if (!File.Exists(Properties.Settings.Default.CurrentFile))
                 {
-                    Properties.Settings.Default.CurrentFile = cDefaultDir + "\\Default.rcs";
-                    Properties.Settings.Default.Save();
-                }
-                if (!File.Exists(Properties.Settings.Default.CurrentRateDataFile))
-                {
-                    Properties.Settings.Default.CurrentRateDataFile = cDefaultDir + "\\DefaultRateData.csv";
+                    Properties.Settings.Default.CurrentFile = DefaultProfile + "\\Default.rcs";
+                    Properties.Settings.Default.UseJobs = true;
                     Properties.Settings.Default.Save();
                 }
 
@@ -677,14 +718,14 @@ namespace RateController.Classes
                 Load(cProps, Properties.Settings.Default.CurrentFile);
                 string CurrentDir = Path.GetDirectoryName(Properties.Settings.Default.CurrentFile);
 
-                cFormPropsFileName = Path.Combine(CurrentDir, "FormData.txt");
+                cFormPropsFileName = Path.Combine(ApplicationFolder, "FormData.txt");
                 if (!File.Exists(cFormPropsFileName)) File.WriteAllText(cFormPropsFileName, "");
                 Load(cFormProps, cFormPropsFileName);
 
-                cErrorsFileName = Path.Combine(CurrentDir, "Error Log.txt");
+                cErrorsFileName = Path.Combine(ApplicationFolder, "Error Log.txt");
                 if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
 
-                cActivityFileName = Path.Combine(CurrentDir, "Activity Log.txt");
+                cActivityFileName = Path.Combine(ApplicationFolder, "Activity Log.txt");
                 if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
 
                 LoadProperties();
@@ -732,18 +773,6 @@ namespace RateController.Classes
                     Properties.Settings.Default.CurrentFile = FileName;
                     Properties.Settings.Default.Save();
 
-                    string CurrentDir = Path.GetDirectoryName(Properties.Settings.Default.CurrentFile);
-
-                    cFormPropsFileName = Path.Combine(CurrentDir, "FormData.txt");
-                    if (!File.Exists(cFormPropsFileName)) File.WriteAllText(cFormPropsFileName, "");
-                    Load(cFormProps, cFormPropsFileName);
-
-                    cErrorsFileName = Path.Combine(CurrentDir, "Error Log.txt");
-                    if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
-
-                    cActivityFileName = Path.Combine(CurrentDir, "Activity Log.txt");
-                    if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
-
                     Save(cProps, Properties.Settings.Default.CurrentFile);
                     Save(cFormProps, cFormPropsFileName);
                     Result = true;
@@ -788,6 +817,25 @@ namespace RateController.Classes
             {
                 WriteErrorLog("Props/Set: " + ex.Message);
             }
+        }
+
+        public static bool ShowLog(string FileName)
+        {
+            bool Result = false;
+            try
+            {
+                string Name = cApplicationFolder + "\\" + FileName;
+                if (File.Exists(Name))
+                {
+                    Process.Start(new ProcessStartInfo(Name) { UseShellExecute = true });
+                    Result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: OpenTextFile: " + ex.Message);
+            }
+            return Result;
         }
 
         public static void SwitchScreens(bool SingleProduct = false)
@@ -900,6 +948,38 @@ namespace RateController.Classes
             }
             catch (Exception)
             {
+            }
+        }
+
+        public static void WriteLog(string LogName, string Message, bool NewLine = false, bool UseDate = false)
+        {
+            string Line = "";
+            string DF = "";
+            if (Message == null) Message = "";
+            try
+            {
+                string FileName = cApplicationFolder + "\\" + LogName;
+                TrimFile(FileName);
+
+                if (NewLine) Line = "\r\n";
+
+                if (UseDate)
+                {
+                    DF = "MMM-dd hh:mm:ss";
+                }
+                else
+                {
+                    DF = "hh:mm:ss";
+                }
+
+                if (UseDate || Message.Length > 0)
+                {
+                    File.AppendAllText(FileName, Line + DateTime.Now.ToString(DF) + "  -  " + Message + "\r\n");
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Tools: WriteLog: " + ex.Message);
             }
         }
 

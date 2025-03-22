@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 
 namespace RateController.PGNs
 {
@@ -108,7 +109,7 @@ namespace RateController.PGNs
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("PGN100/ParseByteData: " + ex.ToString());
+                Props.WriteErrorLog("PGN100/ParseByteData: " + ex.ToString());
             }
         }
     }

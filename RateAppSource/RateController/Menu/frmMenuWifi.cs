@@ -40,7 +40,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenuWifi/btnOk_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenuWifi/btnOk_Click: " + ex.Message);
             }
         }
 

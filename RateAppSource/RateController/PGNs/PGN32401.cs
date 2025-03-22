@@ -150,14 +150,14 @@ namespace RateController
                 {
                     EthernetConnectedLast[i] = cEthernetConnected[i];
                     Mes = "Module " + i.ToString() + ", Ethernet connected: " + cEthernetConnected[i].ToString();
-                    mf.Tls.WriteActivityLog(Mes, false, true);
+                    Props.WriteActivityLog(Mes, false, true);
                 }
 
                 if (WifiSignalLast[i] != cWifiSignal[i])
                 {
                     WifiSignalLast[i] = cWifiSignal[i];
                     Mes = "Module " + i.ToString() + ", Wifi Strength: " + cWifiSignal[i].ToString();
-                    mf.Tls.WriteActivityLog(Mes, false, true);
+                    Props.WriteActivityLog(Mes, false, true);
                 }
 
                 if (GoodPinsLast[i] != cGoodPins[i])
@@ -171,7 +171,7 @@ namespace RateController
                     {
                         Mes = "Module " + i.ToString() + ", Pin Configuration not correct.";
                     }
-                    mf.Tls.WriteActivityLog(Mes, false, true);
+                    Props.WriteActivityLog(Mes, false, true);
 
                     PinStatusEventArgs args = new PinStatusEventArgs();
                     args.GoodPins = cGoodPins[i];

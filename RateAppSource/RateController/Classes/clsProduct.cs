@@ -995,7 +995,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("clsProduct/UDPcomFromArduino: " + ex.Message);
+                Props.WriteErrorLog("clsProduct/UDPcomFromArduino: " + ex.Message);
             }
         }
 

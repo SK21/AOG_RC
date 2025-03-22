@@ -70,7 +70,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("frmMenuSettings/btnOk_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenuSettings/btnOk_Click: " + ex.Message);
             }
         }
 
@@ -142,21 +142,6 @@ namespace RateController.Menu
             SetLanguage();
         }
 
-        private void SetLanguage()
-        {
-            grpSensor.Text = Lang.lgSensorLocation;
-            grpMinUPM.Text = Lang.lgMinUPM;
-            lbModuleID.Text = Lang.lgModuleID;
-            lbSensorID.Text = Lang.lgSensorID;
-            rbUPMFixed.Text = Lang.lgUPMFixed;
-            rbUPMSpeed.Text = Lang.lgUPMSpeed;
-            ckDefault.Text = Lang.lgDefaultProduct;
-            ckBumpButtons.Text = Lang.lgBumpButtons;
-            ckOffRate.Text = Lang.lgOffRate;
-            ckOnScreen.Text = Lang.lgOnScreen;
-            ckScale.Text = Lang.lgScaleWeight;
-        }
-
         private void grpMinUPM_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
@@ -219,6 +204,21 @@ namespace RateController.Menu
                 cEdited = Edited;
                 this.Tag = cEdited;
             }
+        }
+
+        private void SetLanguage()
+        {
+            grpSensor.Text = Lang.lgSensorLocation;
+            grpMinUPM.Text = Lang.lgMinUPM;
+            lbModuleID.Text = Lang.lgModuleID;
+            lbSensorID.Text = Lang.lgSensorID;
+            rbUPMFixed.Text = Lang.lgUPMFixed;
+            rbUPMSpeed.Text = Lang.lgUPMSpeed;
+            ckDefault.Text = Lang.lgDefaultProduct;
+            ckBumpButtons.Text = Lang.lgBumpButtons;
+            ckOffRate.Text = Lang.lgOffRate;
+            ckOnScreen.Text = Lang.lgOnScreen;
+            ckScale.Text = Lang.lgScaleWeight;
         }
 
         private void SetModuleIndicator()

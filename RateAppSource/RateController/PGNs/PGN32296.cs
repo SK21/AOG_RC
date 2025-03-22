@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Classes;
+using System;
 using System.Text;
 
 namespace RateController
@@ -45,7 +46,7 @@ namespace RateController
             }
             catch (Exception ex)
             {
-                mf.Tls.WriteErrorLog("PGN32296/ParseStringData: " + ex.Message);
+                Props.WriteErrorLog("PGN32296/ParseStringData: " + ex.Message);
             }
             return Result;
         }
