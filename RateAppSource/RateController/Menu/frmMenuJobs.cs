@@ -252,7 +252,9 @@ namespace RateController.Menu
             {
                 Properties.Settings.Default.UseJobs = ckJobs.Checked;
                 Properties.Settings.Default.Save();
-
+                Props.SetJobProp("Notes",tbNotes.Text);
+                SetButtons(false);
+                UpdateForm();
             }
             catch (Exception ex)
             {

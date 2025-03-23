@@ -127,11 +127,11 @@
             // tbNotes
             // 
             this.tbNotes.Location = new System.Drawing.Point(132, 405);
+            this.tbNotes.MaxLength = 800;
             this.tbNotes.Multiline = true;
             this.tbNotes.Name = "tbNotes";
             this.tbNotes.Size = new System.Drawing.Size(349, 131);
             this.tbNotes.TabIndex = 370;
-            this.tbNotes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbNotes.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
             // lb1

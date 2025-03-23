@@ -60,6 +60,7 @@ namespace RateController.Classes
         private static string cErrorsFileName = "";
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
         private static string cFormPropsFileName = "";
+        private static SortedDictionary<string, string> cJobProps = new SortedDictionary<string, string>();
         private static string cJobsFolder;
         private static bool cMapShowRates;
         private static bool cMapShowTiles;
@@ -69,7 +70,6 @@ namespace RateController.Classes
         private static double cPrimeTime = 0;
         private static string cProfilesFolder;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
-        private static SortedDictionary<string, string> cJobProps = new SortedDictionary<string, string>();
         private static int cRateRecordInterval;
         private static int cRateType;
         private static bool cReadOnly = false;
@@ -100,8 +100,9 @@ namespace RateController.Classes
 
         #endregion // flow adjustment defaults
 
-        public static event EventHandler UnitsChanged;
         public static event EventHandler JobChanged;
+
+        public static event EventHandler UnitsChanged;
 
         #region MainProperties
 
@@ -654,6 +655,12 @@ namespace RateController.Classes
             }
         }
 
+        public static string GetJobProp(string key)
+        {
+            string prop = cJobProps.TryGetValue(key, out var value) ? value : string.Empty;
+            return prop;
+        }
+
         public static string GetProp(string key)
         {
             return cProps.TryGetValue(key, out var value) ? value : string.Empty;
@@ -781,23 +788,25 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool OpenJob(string FileName, bool IsNew = false)
+        public static bool OpenJob(string NewFile, bool IsNew = false)
         {
             bool Result = false;
             try
             {
-                string FullName = Props.JobsFolder + "\\" + Path.GetFileNameWithoutExtension(FileName);
+                string FileName=Path.GetFileNameWithoutExtension(NewFile);
+                string FolderName = Props.JobsFolder + "\\" + FileName;
+                string FullName = FolderName + "\\" + FileName + ".jbs";
                 if (IsNew)
                 {
-                    if (FileNameValidator.IsValidFolderName(FileName) &&
+                    if (FileNameValidator.IsValidFolderName(FolderName) &&
                         FileNameValidator.IsValidFileName(FileName) &&
-                        !Directory.Exists(FullName))
+                        !Directory.Exists(FolderName))
                     {
-                        Directory.CreateDirectory(FullName);
-                        File.WriteAllText(FullName + "\\" + FileName + ".jbs", string.Empty);
-                        File.WriteAllText(FullName + "\\" + FileName + "RateData.csv", string.Empty);
+                        Directory.CreateDirectory(FolderName);
+                        File.WriteAllText(FullName, string.Empty);
+                        File.WriteAllText(FolderName + "\\" + FileName + "RateData.csv", string.Empty);
 
-                        Directory.CreateDirectory(FullName + "\\Map");
+                        Directory.CreateDirectory(FolderName + "\\Map");
                     }
                 }
 
@@ -806,10 +815,16 @@ namespace RateController.Classes
                     Load(cJobProps, FullName);
                     Properties.Settings.Default.CurrentJob = FullName;
                     Properties.Settings.Default.Save();
-                    Result = true;
-                    JobChanged?.Invoke(null, EventArgs.Empty);
                 }
-
+                else
+                {
+                    // use default job
+                    Load(cJobProps, cDefaultJob);
+                    Properties.Settings.Default.CurrentJob = cDefaultJob;
+                    Properties.Settings.Default.Save();
+                }
+                Result = true;
+                JobChanged?.Invoke(null, EventArgs.Empty);
             }
             catch (Exception ex)
             {
@@ -916,6 +931,25 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 WriteErrorLog("Props/Set: " + ex.Message);
+            }
+        }
+
+        public static void SetJobProp(string key, string value, bool IgnoreReadOnly=false)
+        {
+            try
+            {
+                if (value != null && (!ReadOnly || IgnoreReadOnly))
+                {
+                    if (!cJobProps.TryGetValue(key, out var existingValue) || existingValue != value)
+                    {
+                        cJobProps[key] = value;
+                        Save(cJobProps, Properties.Settings.Default.CurrentJob);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/SetJobProp: " + ex.Message);
             }
         }
 
@@ -1129,12 +1163,6 @@ namespace RateController.Classes
         {
             string prop = cFormProps.TryGetValue(key, out var value) ? value : string.Empty;
             return int.TryParse(prop, out var vl) ? vl : -1;
-        }
-
-        public static string GetJobProp(string key)
-        {
-            string prop = cJobProps.TryGetValue(key, out var value) ? value : string.Empty;
-            return prop;
         }
 
         private static void Load(SortedDictionary<string, string> PropsDct, string DctPath)

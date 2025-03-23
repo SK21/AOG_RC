@@ -74,6 +74,7 @@ namespace RateController
             Props.MainForm = this;
             Props.CheckFolders();
             Props.OpenFile(Properties.Settings.Default.CurrentFile);
+            Props.OpenJob(Properties.Settings.Default.CurrentJob);
 
             Tls = new clsTools(this);
             Tls.StartMapManager();
