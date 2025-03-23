@@ -90,7 +90,7 @@ namespace RateController
             string Nm = Props.CurrentFileName().Length <= 11 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 11) + "...";
             lbFileName.Text = "[" + Nm + "]";
 
-            string job = Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentJob);
+            string job = Path.GetFileNameWithoutExtension(Props.CurrentJob);
             Nm = job.Length <= 11 ? job : job.Substring(0, 11) + "...";
             lbJob.Text = "[" + Nm + "]";
         }
@@ -987,7 +987,7 @@ namespace RateController
             SetLanguage();
             ShowProfile();
 
-            Font ValFont = new Font(lbFileName.Font.FontFamily, 10, FontStyle.Regular);
+            Font ValFont = new Font(lbFileName.Font.FontFamily, 12, FontStyle.Regular);
             lbFileName.Font = ValFont;
             lbJob.Font = ValFont;
         }

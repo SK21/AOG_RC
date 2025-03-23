@@ -41,7 +41,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.cbField = new System.Windows.Forms.ComboBox();
             this.ckJobs = new System.Windows.Forms.CheckBox();
-            this.btnResume = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.dtpDate = new System.Windows.Forms.DateTimePicker();
@@ -133,6 +132,7 @@
             this.tbNotes.Size = new System.Drawing.Size(349, 131);
             this.tbNotes.TabIndex = 370;
             this.tbNotes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbNotes.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
             // lb1
             // 
@@ -188,15 +188,7 @@
             this.ckJobs.Text = "Use Jobs";
             this.ckJobs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckJobs.UseVisualStyleBackColor = true;
-            // 
-            // btnResume
-            // 
-            this.btnResume.Location = new System.Drawing.Point(9, 260);
-            this.btnResume.Name = "btnResume";
-            this.btnResume.Size = new System.Drawing.Size(89, 64);
-            this.btnResume.TabIndex = 377;
-            this.btnResume.Text = "Resume";
-            this.btnResume.UseVisualStyleBackColor = true;
+            this.ckJobs.CheckedChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
             // btnCancel
             // 
@@ -214,6 +206,7 @@
             this.btnCancel.TabIndex = 379;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOK
             // 
@@ -231,6 +224,7 @@
             this.btnOK.TabIndex = 378;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // dtpDate
             // 
@@ -249,7 +243,6 @@
             this.Controls.Add(this.dtpDate);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.btnResume);
             this.Controls.Add(this.ckJobs);
             this.Controls.Add(this.cbField);
             this.Controls.Add(this.label2);
@@ -290,7 +283,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cbField;
         private System.Windows.Forms.CheckBox ckJobs;
-        private System.Windows.Forms.Button btnResume;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.DateTimePicker dtpDate;

@@ -695,7 +695,7 @@
             // 
             // lbFileName
             // 
-            this.lbFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbFileName.Location = new System.Drawing.Point(9, 9);
             this.lbFileName.Name = "lbFileName";
             this.lbFileName.Size = new System.Drawing.Size(127, 22);
@@ -724,11 +724,11 @@
             this.butRateData.Visible = false;
             this.butRateData.Click += new System.EventHandler(this.butRateData_Click);
             // 
-            // lbRateData
+            // lbJob
             // 
-            this.lbJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbJob.Location = new System.Drawing.Point(9, 39);
-            this.lbJob.Name = "lbRateData";
+            this.lbJob.Name = "lbJob";
             this.lbJob.Size = new System.Drawing.Size(127, 22);
             this.lbJob.TabIndex = 168;
             this.lbJob.Text = "label1";

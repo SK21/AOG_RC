@@ -1,5 +1,6 @@
 ﻿using RateController.Classes;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -8,6 +9,8 @@ namespace RateController.Menu
 {
     public partial class frmMenuJobs : Form
     {
+        private bool cEdited;
+        private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
 
@@ -19,7 +22,6 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
-        public event EventHandler ChangedJobs;
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
@@ -28,27 +30,25 @@ namespace RateController.Menu
                 string NewFilePath = Props.JobsFolder + "\\" + tbName.Text;
                 if (FileNameValidator.IsValidFolderName(tbName.Text) &&
                     FileNameValidator.IsValidFileName(tbName.Text) &&
-                    !Directory.Exists(NewFilePath) )
+                    !Directory.Exists(NewFilePath))
                 {
-                    if(lstJobs.SelectedIndex >= 0)
+                    if (lstJobs.SelectedIndex >= 0)
                     {
-                    Directory.CreateDirectory(NewFilePath);
+                        Directory.CreateDirectory(NewFilePath);
 
-                    string OldFileName = lstJobs.SelectedItem.ToString();
-                    string OldFileFullName = Props.JobsFolder + "\\" + OldFileName + "\\" + OldFileName + ".jbs";
-                    File.Copy(OldFileFullName, NewFilePath + "\\" + tbName.Text + ".jbs");
+                        string OldFileName = lstJobs.SelectedItem.ToString();
+                        string OldFileFullName = Props.JobsFolder + "\\" + OldFileName + "\\" + OldFileName + ".jbs";
+                        File.Copy(OldFileFullName, NewFilePath + "\\" + tbName.Text + ".jbs");
 
-                    string NewFileRatesName = NewFilePath + "\\" + tbName.Text + "RateData.csv";
-                    string OldFileRatesName = Props.JobsFolder + "\\" + OldFileName + "\\" + OldFileName + "RateData.csv";
-                    File.Copy(OldFileRatesName, NewFileRatesName);
+                        string NewFileRatesName = NewFilePath + "\\" + tbName.Text + "RateData.csv";
+                        string OldFileRatesName = Props.JobsFolder + "\\" + OldFileName + "\\" + OldFileName + "RateData.csv";
+                        File.Copy(OldFileRatesName, NewFileRatesName);
 
-                    Directory.CreateDirectory(NewFilePath + "\\Map");
-                    Properties.Settings.Default.CurrentJob = NewFilePath + "\\" + tbName.Text + ".jbs";
-
-                    tbName.Text = "";
-                    UpdateForm();
-                    ChangedJobs?.Invoke(this, EventArgs.Empty);
-                    MainMenu.ShowProfile();
+                        Directory.CreateDirectory(NewFilePath + "\\Map");
+                        Props.OpenJob(tbName.Text);
+                        tbName.Text = "";
+                        UpdateForm();
+                        MainMenu.ShowProfile();
                     }
                     else
                     {
@@ -91,12 +91,11 @@ namespace RateController.Menu
                                 // load default if current is deleted
                                 if (Properties.Settings.Default.CurrentJob == FilePath + "\\" + FileToDelete + ".jbs")
                                 {
-                                    Properties.Settings.Default.CurrentJob = Props.JobsFolder + "\\DefaultJob\\DefaultJob.jbs";
+                                    Props.OpenJob(Props.DefaultJob);
                                     tbName.Text = "";
-                                    ChangedJobs?.Invoke(this, EventArgs.Empty);
                                     MainMenu.ShowProfile();
                                 }
-                                    UpdateForm();
+                                UpdateForm();
                             }
                             else
                             {
@@ -126,12 +125,15 @@ namespace RateController.Menu
             {
                 if (lstJobs.SelectedIndex >= 0)
                 {
-                    string NewName = lstJobs.SelectedItem.ToString();
-                    string name = Props.JobsFolder + "\\" + NewName + "\\" + NewName + ".jbs";
-                    Properties.Settings.Default.CurrentJob = name;
-                    ChangedJobs?.Invoke(this, EventArgs.Empty);
-                    UpdateForm();
-                    MainMenu.ShowProfile();
+                    if (Props.OpenJob(lstJobs.SelectedItem.ToString()))
+                    {
+                        UpdateForm();
+                        MainMenu.ShowProfile();
+                    }
+                    else
+                    {
+                        mf.Tls.ShowMessage("File not opened.");
+                    }
                 }
                 else
                 {
@@ -148,20 +150,9 @@ namespace RateController.Menu
         {
             try
             {
-                string NewFolder = Props.JobsFolder + "\\" + tbName.Text;
-                if (FileNameValidator.IsValidFolderName(tbName.Text) &&
-                    FileNameValidator.IsValidFileName(tbName.Text) &&
-                    !Directory.Exists(NewFolder))
+                if (Props.OpenJob(tbName.Text,true))
                 {
-                    Directory.CreateDirectory(NewFolder);
-                    File.WriteAllText(NewFolder + "\\" + tbName.Text + ".jbs", string.Empty);
-                    File.WriteAllText(NewFolder + "\\" + tbName.Text + "RateData.csv", string.Empty);
-
-                    Directory.CreateDirectory(NewFolder + "\\Map");
-                    Properties.Settings.Default.CurrentJob = NewFolder + "\\" + tbName.Text + ".jbs";
-
                     tbName.Text = "";
-                    ChangedJobs?.Invoke(this, EventArgs.Empty);
                     UpdateForm();
                     MainMenu.ShowProfile();
                 }
@@ -209,13 +200,64 @@ namespace RateController.Menu
 
         private void UpdateForm()
         {
+            Initializing=true;
+
             lstJobs.Items.Clear();
             string[] folders = Directory.GetDirectories(Props.JobsFolder);
             foreach (string folder in folders)
             {
                 lstJobs.Items.Add(Path.GetFileName(folder));
             }
-            lbJob.Text = "Current Job:  " + Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentJob);
+            lbJob.Text = "Current Job:  " + Path.GetFileNameWithoutExtension(Props.CurrentJob);
+
+            ckJobs.Checked = Properties.Settings.Default.UseJobs;
+            tbNotes.Text = Props.GetJobProp("Notes");
+
+            Initializing =false;
+        }
+        private void SetButtons(bool Edited)
+        {
+            if (!Initializing)
+            {
+                if (Edited)
+                {
+                    btnCancel.Enabled = true;
+                    btnOK.Enabled = true;
+                }
+                else
+                {
+                    btnCancel.Enabled = false;
+                    btnOK.Enabled = false;
+                }
+
+                cEdited = Edited;
+                this.Tag = cEdited;
+            }
+        }
+
+        private void ckJobs_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            UpdateForm();
+            SetButtons(false);
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Properties.Settings.Default.UseJobs = ckJobs.Checked;
+                Properties.Settings.Default.Save();
+
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuJobs/btnOk_Click: " + ex.Message);
+            }
         }
     }
 }

@@ -95,7 +95,7 @@ namespace RateController.Menu
                                     MainMenu.ChangeProduct(0);
                                     MainMenu.ShowProfile();
                                 }
-                                    UpdateForm();
+                                UpdateForm();
                             }
                             else
                             {

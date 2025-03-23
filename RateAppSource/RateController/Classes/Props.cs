@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace RateController.Classes
 {
@@ -54,6 +55,7 @@ namespace RateController.Classes
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0-beta.9";
         private static string cCurrentMapName;
+        private static string cDefaultJob;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
@@ -67,6 +69,7 @@ namespace RateController.Classes
         private static double cPrimeTime = 0;
         private static string cProfilesFolder;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
+        private static SortedDictionary<string, string> cJobProps = new SortedDictionary<string, string>();
         private static int cRateRecordInterval;
         private static int cRateType;
         private static bool cReadOnly = false;
@@ -98,11 +101,37 @@ namespace RateController.Classes
         #endregion // flow adjustment defaults
 
         public static event EventHandler UnitsChanged;
+        public static event EventHandler JobChanged;
 
         #region MainProperties
 
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
+
+        public static string CurrentJob
+        {
+            get
+            {
+                string Result = "";
+                if (File.Exists(Properties.Settings.Default.CurrentJob))
+                {
+                    Result = Properties.Settings.Default.CurrentJob;
+                }
+                else
+                {
+                    if (File.Exists(cDefaultJob))
+                    {
+                        Result = cDefaultJob;
+                    }
+                    else
+                    {
+                        CheckFolders();
+                        Result = cDefaultJob;
+                    }
+                }
+                return Result;
+            }
+        }
 
         public static string CurrentMapName
         {
@@ -111,6 +140,15 @@ namespace RateController.Classes
             {
                 cCurrentMapName = value;
                 SetProp("CurrentMapName", cCurrentMapName);
+            }
+        }
+
+        public static string DefaultJob
+        {
+            get
+            {
+                if (!File.Exists(cDefaultJob)) CheckFolders();
+                return cDefaultJob;
             }
         }
 
@@ -514,12 +552,13 @@ namespace RateController.Classes
                 if (!Directory.Exists(name)) Directory.CreateDirectory(name);
                 cJobsFolder = name;
 
-                string DefaultJob = name + "\\" + "DefaultJob";
-                if (!Directory.Exists(DefaultJob)) Directory.CreateDirectory(DefaultJob);
-                if (!File.Exists(DefaultJob + "\\DefaultJob.jbs")) File.WriteAllText(DefaultJob + "\\DefaultJob.jbs", string.Empty);
-                if (!File.Exists(DefaultJob + "\\DefaultRateData.csv")) File.WriteAllText(DefaultJob + "\\DefaultRateData.csv", string.Empty);
+                string DefaultJobFolder = name + "\\" + "DefaultJob";
+                if (!Directory.Exists(DefaultJobFolder)) Directory.CreateDirectory(DefaultJobFolder);
+                cDefaultJob = DefaultJobFolder + "\\DefaultJob.jbs";
+                if (!File.Exists(cDefaultJob)) File.WriteAllText(cDefaultJob, string.Empty);
+                if (!File.Exists(DefaultJobFolder + "\\DefaultRateData.csv")) File.WriteAllText(DefaultJobFolder + "\\DefaultRateData.csv", string.Empty);
 
-                string MapName = DefaultJob + "\\Map";
+                string MapName = DefaultJobFolder + "\\Map";
                 if (!Directory.Exists(MapName)) Directory.CreateDirectory(MapName);
 
                 // check user files
@@ -738,6 +777,43 @@ namespace RateController.Classes
             }
             catch (Exception)
             {
+            }
+            return Result;
+        }
+
+        public static bool OpenJob(string FileName, bool IsNew = false)
+        {
+            bool Result = false;
+            try
+            {
+                string FullName = Props.JobsFolder + "\\" + Path.GetFileNameWithoutExtension(FileName);
+                if (IsNew)
+                {
+                    if (FileNameValidator.IsValidFolderName(FileName) &&
+                        FileNameValidator.IsValidFileName(FileName) &&
+                        !Directory.Exists(FullName))
+                    {
+                        Directory.CreateDirectory(FullName);
+                        File.WriteAllText(FullName + "\\" + FileName + ".jbs", string.Empty);
+                        File.WriteAllText(FullName + "\\" + FileName + "RateData.csv", string.Empty);
+
+                        Directory.CreateDirectory(FullName + "\\Map");
+                    }
+                }
+
+                if (File.Exists(FullName))
+                {
+                    Load(cJobProps, FullName);
+                    Properties.Settings.Default.CurrentJob = FullName;
+                    Properties.Settings.Default.Save();
+                    Result = true;
+                    JobChanged?.Invoke(null, EventArgs.Empty);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/OpenJob: " + ex.Message);
             }
             return Result;
         }
@@ -1053,6 +1129,12 @@ namespace RateController.Classes
         {
             string prop = cFormProps.TryGetValue(key, out var value) ? value : string.Empty;
             return int.TryParse(prop, out var vl) ? vl : -1;
+        }
+
+        public static string GetJobProp(string key)
+        {
+            string prop = cJobProps.TryGetValue(key, out var value) ? value : string.Empty;
+            return prop;
         }
 
         private static void Load(SortedDictionary<string, string> PropsDct, string DctPath)

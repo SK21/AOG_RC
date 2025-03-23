@@ -74,15 +74,15 @@ namespace RateController.Menu
             UpdateForm();
         }
 
+        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        {
+            PositionForm();
+        }
+
         private void MainMenu_ModuleDefaultsSet(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
-        }
-
-        private void MainMenu_MenuMoved(object sender, EventArgs e)
-        {
-            PositionForm();
         }
 
         private void PositionForm()
