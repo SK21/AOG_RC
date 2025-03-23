@@ -165,7 +165,7 @@ namespace RateController
             int timeInMsec = 20000, bool LogError = false, bool Modal = false
             , bool PlayErrorSound = false)
         {
-            if (!LogError || Message != lastMessage || (DateTime.Now - lastMessageTime).TotalSeconds > 60)
+            if (!LogError || Message != lastMessage || (DateTime.Now - lastMessageTime).TotalSeconds > 60) 
             {
                 var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
                 if (Modal)

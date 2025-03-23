@@ -51,8 +51,6 @@ namespace RateController.Classes
         private static string cActivityFileName = "";
         private static string cAppDate = "19-Mar-2025";
         private static string cApplicationFolder;
-        private static string cJobsFolder;
-        private static string cProfilesFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0-beta.9";
         private static string cCurrentMapName;
@@ -60,12 +58,14 @@ namespace RateController.Classes
         private static string cErrorsFileName = "";
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
         private static string cFormPropsFileName = "";
+        private static string cJobsFolder;
         private static bool cMapShowRates;
         private static bool cMapShowTiles;
         private static bool cMapShowZones;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
         private static int cPrimeDelay = 3;
         private static double cPrimeTime = 0;
+        private static string cProfilesFolder;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
         private static int cRateRecordInterval;
         private static int cRateType;
@@ -104,8 +104,6 @@ namespace RateController.Classes
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
 
-        public static string JobsFolder { get { return cJobsFolder; } }
-        public static string ProfilesFolder { get { return cProfilesFolder; } }
         public static string CurrentMapName
         {
             get { return cCurrentMapName; }
@@ -128,6 +126,9 @@ namespace RateController.Classes
                 }
             }
         }
+
+        public static string JobsFolder
+        { get { return cJobsFolder; } }
 
         public static FormStart MainForm
         {
@@ -200,6 +201,9 @@ namespace RateController.Classes
                 }
             }
         }
+
+        public static string ProfilesFolder
+        { get { return cProfilesFolder; } }
 
         public static int RateDisplayProduct
         {
@@ -457,6 +461,7 @@ namespace RateController.Classes
         {
             return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile);
         }
+
         public static string CurrentPressureFile()
         {
             string name = CurrentDir() + "\\" + CurrentFileName() + "PressureData.csv";
@@ -507,7 +512,7 @@ namespace RateController.Classes
                 // jobs folder
                 name = cDefaultDir + "\\Jobs";
                 if (!Directory.Exists(name)) Directory.CreateDirectory(name);
-                cJobsFolder= name;
+                cJobsFolder = name;
 
                 string DefaultJob = name + "\\" + "DefaultJob";
                 if (!Directory.Exists(DefaultJob)) Directory.CreateDirectory(DefaultJob);
@@ -758,6 +763,25 @@ namespace RateController.Classes
             {
                 WriteErrorLog("Props/OpenRateDataFile: " + ex.Message);
             }
+            return Result;
+        }
+
+        public static bool SafeToDelete(string name)
+        {
+            bool Result = false;
+
+            string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string rateControllerPath = Path.Combine(myDocuments, "RateController");
+            string fullPath = Path.GetFullPath(name);
+
+            if (fullPath.StartsWith(rateControllerPath, StringComparison.OrdinalIgnoreCase))
+            {
+                if (Directory.Exists(fullPath))
+                {
+                    Result = true;
+                }
+            }
+
             return Result;
         }
 

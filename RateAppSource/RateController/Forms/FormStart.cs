@@ -224,58 +224,16 @@ namespace RateController
             }
 
             PressureObjects.Load();
-        }
 
-        public void NewFile()
-        {
-            saveFileDialog1.InitialDirectory = Props.CurrentDir();
-            saveFileDialog1.Title = "New File";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Props.OpenFile(saveFileDialog1.FileName, true);
-                    LoadSettings();
-                }
-            }
-        }
-
-        public void OpenFile()
-        {
-            try
-            {
-                openFileDialog1.InitialDirectory = Props.CurrentDir();
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    Props.OpenFile(openFileDialog1.FileName);
-                    LoadSettings();
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("FormStart/OpenFile: " + ex.Message);
-            }
+            Products.UpdatePID();
+            UpdateStatus();
+            DisplayScales();
         }
 
         public void RaiseColorChanged()
         {
             ColorChanged?.Invoke(this, EventArgs.Empty);
             SetDisplay();
-        }
-
-        public void SaveFileAs()
-        {
-            saveFileDialog1.InitialDirectory = Props.CurrentDir();
-            saveFileDialog1.Title = "Save As";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Props.SaveAs(saveFileDialog1.FileName);
-                    Props.ReadOnly = false;
-                    LoadSettings();
-                }
-            }
         }
 
         public void SendRelays()
@@ -708,13 +666,10 @@ namespace RateController
                 }
 
                 LoadSettings();
-                Products.UpdatePID();
-                UpdateStatus();
 
                 if (Props.UseLargeScreen) Props.SwitchScreens();
                 Props.DisplaySwitches();
                 Props.DisplayPressure();
-                DisplayScales();
 
                 timerMain.Enabled = true;
                 timerRates.Enabled = true;

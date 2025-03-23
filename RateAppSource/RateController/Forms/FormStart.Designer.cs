@@ -59,8 +59,6 @@ namespace RateController
             this.rt1 = new System.Windows.Forms.Label();
             this.prd0 = new System.Windows.Forms.Label();
             this.rt0 = new System.Windows.Forms.Label();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panFan = new System.Windows.Forms.Panel();
             this.btnFan = new System.Windows.Forms.Button();
             this.lbOn = new System.Windows.Forms.Label();
@@ -422,16 +420,6 @@ namespace RateController
             this.rt0.Text = "0";
             this.rt0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.DefaultExt = "rcs";
-            this.openFileDialog1.Filter = "RC Settings|*.rcs";
-            // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.DefaultExt = "rcs";
-            this.saveFileDialog1.Filter = "RC Settings|*.rcs";
-            // 
             // panFan
             // 
             this.panFan.Controls.Add(this.btnFan);
@@ -689,8 +677,6 @@ namespace RateController
         private System.Windows.Forms.Label prd0;
         private System.Windows.Forms.Label rt0;
         private System.Windows.Forms.Button btnLeft;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button btAlarm;
         private System.Windows.Forms.Label lbTarget;
         private System.Windows.Forms.Panel panFan;

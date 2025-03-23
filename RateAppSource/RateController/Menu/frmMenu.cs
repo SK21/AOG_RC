@@ -544,21 +544,7 @@ namespace RateController
             }
         }
 
-        private void butNew_Click(object sender, EventArgs e)
-        {
-            HighlightButton("butNew");
-            mf.NewFile();
-            ChangeProduct(0);
-            ShowName();
-        }
 
-        private void butOpen_Click(object sender, EventArgs e)
-        {
-            HighlightButton("butOpen");
-            mf.OpenFile();
-            ChangeProduct(0);
-            ShowName();
-        }
 
         private void butOptions_Click(object sender, EventArgs e)
         {
@@ -821,13 +807,6 @@ namespace RateController
             }
         }
 
-        private void butSaveAs_Click(object sender, EventArgs e)
-        {
-            HighlightButton("butSaveAs");
-            mf.SaveFileAs();
-            ShowName();
-        }
-
         private void butSections_Click(object sender, EventArgs e)
         {
             cLastScreen = "frmMenuSections";
@@ -992,7 +971,7 @@ namespace RateController
             butPowerOff.Top = 8;
             if (LoadLast) LoadLastScreen();
             SetLanguage();
-            ShowName();
+            ShowProfile();
 
             Font ValFont = new Font(lbFileName.Font.FontFamily, 10, FontStyle.Regular);
             lbFileName.Font = ValFont;
@@ -1281,7 +1260,7 @@ namespace RateController
             btnPressure.Text = Lang.lgPressure;
         }
 
-        private void ShowName()
+        public void ShowProfile()
         {
             string Nm = Props.CurrentFileName().Length <= 11 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 11) + "...";
             lbFileName.Text = "[" + Nm + "]";

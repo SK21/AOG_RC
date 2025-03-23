@@ -49,13 +49,13 @@
             // 
             // lstProfiles
             // 
-            this.lstProfiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstProfiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstProfiles.FormattingEnabled = true;
-            this.lstProfiles.ItemHeight = 29;
+            this.lstProfiles.ItemHeight = 31;
             this.lstProfiles.Location = new System.Drawing.Point(132, 116);
             this.lstProfiles.Name = "lstProfiles";
             this.lstProfiles.ScrollAlwaysVisible = true;
-            this.lstProfiles.Size = new System.Drawing.Size(349, 497);
+            this.lstProfiles.Size = new System.Drawing.Size(349, 469);
             this.lstProfiles.Sorted = true;
             this.lstProfiles.TabIndex = 150;
             // 
@@ -69,6 +69,7 @@
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 358;
             this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnLoad
             // 
@@ -80,6 +81,7 @@
             this.btnLoad.Size = new System.Drawing.Size(82, 60);
             this.btnLoad.TabIndex = 359;
             this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // btnCopy
             // 
@@ -91,6 +93,7 @@
             this.btnCopy.Size = new System.Drawing.Size(82, 60);
             this.btnCopy.TabIndex = 360;
             this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
             // btnNew
             // 

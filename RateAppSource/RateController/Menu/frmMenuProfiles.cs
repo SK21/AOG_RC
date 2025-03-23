@@ -1,15 +1,7 @@
 ﻿using RateController.Classes;
-using RateController.Language;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -27,22 +19,155 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (FileNameValidator.IsValidFolderName(tbName.Text) &&
+                    FileNameValidator.IsValidFileName(tbName.Text) &&
+                    !Directory.Exists(tbName.Text) &&
+                    lstProfiles.SelectedIndex >= 0)
+                {
+                    string NewFilePath = Props.ProfilesFolder + "\\" + tbName.Text;
+                    Directory.CreateDirectory(NewFilePath);
+
+                    string OldFileName = lstProfiles.SelectedItem.ToString();
+                    string OldFileFullName = Props.ProfilesFolder + "\\" + OldFileName + "\\" + OldFileName + ".rcs";
+                    File.Copy(OldFileFullName, NewFilePath + "\\" + tbName.Text + ".rcs");
+
+                    string NewFilePressureName = NewFilePath + "\\" + tbName.Text + "PressureData.csv";
+                    string OldFilePressureName = Props.ProfilesFolder + "\\" + OldFileName + "\\" + OldFileName + "PressureData.csv";
+                    File.Copy(OldFilePressureName, NewFilePressureName);
+
+                    Props.OpenFile(NewFilePath + "\\" + tbName.Text + ".rcs");
+                    UpdateForm();
+                    tbName.Text = "";
+                    mf.LoadSettings();
+                    UpdateForm();
+                    MainMenu.ChangeProduct(0);
+                    MainMenu.ShowProfile();
+                }
+                else
+                {
+                    mf.Tls.ShowMessage("Invalid file name.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuProfiles/btnCopy_Click: " + ex.Message);
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstProfiles.SelectedIndex >= 0)
+                {
+                    string FileToDelete = lstProfiles.SelectedItem.ToString();
+                    if (FileToDelete != "Default" && FileToDelete != "Example")
+                    {
+                        var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FileToDelete + "]?", "Delete File", true);
+                        Hlp.TopMost = true;
+
+                        Hlp.ShowDialog();
+                        bool Result = Hlp.Result;
+                        Hlp.Close();
+                        if (Result)
+                        {
+                            string FilePath = Props.ProfilesFolder + "\\" + FileToDelete;
+                            if (Props.SafeToDelete(FilePath))
+                            {
+                                Directory.Delete(FilePath, true);
+
+                                // load default if current is deleted
+                                if (Properties.Settings.Default.CurrentFile == FilePath + "\\" + FileToDelete + ".rcs")
+                                {
+                                    string name = Props.ProfilesFolder + "\\default\\default.rcs";
+                                    Props.OpenFile(name);
+                                    UpdateForm();
+                                    tbName.Text = "";
+                                    mf.LoadSettings();
+                                    UpdateForm();
+                                    MainMenu.ChangeProduct(0);
+                                    MainMenu.ShowProfile();
+                                }
+                            }
+                            else
+                            {
+                                mf.Tls.ShowMessage("Can not delete file.", "Help", 20000, true);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        mf.Tls.ShowMessage("Can not delete file.", "Help", 20000, true);
+                    }
+                }
+                else
+                {
+                    mf.Tls.ShowMessage("No file selected.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuProfiles/btnDelete_Click: +" + ex.Message);
+            }
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lstProfiles.SelectedIndex >= 0)
+                {
+                    string NewName = lstProfiles.SelectedItem.ToString();
+                    string name = Props.ProfilesFolder + "\\" + NewName + "\\" + NewName + ".rcs";
+                    Props.OpenFile(name);
+                    mf.LoadSettings();
+                    UpdateForm();
+                    MainMenu.ChangeProduct(0);
+                    MainMenu.ShowProfile();
+                }
+                else
+                {
+                    mf.Tls.ShowMessage("No file selected.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuProfiles/btnLoad_Click: " + ex.Message);
+            }
+        }
+
         private void btnNew_Click(object sender, EventArgs e)
         {
-            if (FileNameValidator.IsValidFolderName(tbName.Text) &&
-                FileNameValidator.IsValidFileName(tbName.Text) &&
-                !Directory.Exists(tbName.Text))
+            try
             {
-                string NewFolder = Props.ProfilesFolder + "\\" + tbName.Text;
-                Directory.CreateDirectory(NewFolder);
-                File.WriteAllText(NewFolder + "\\" + tbName.Text + ".rcs", string.Empty);
-                File.WriteAllText(NewFolder + "\\" + tbName.Text + "PressureData.csv", string.Empty);
-                UpdateForm();
-                tbName.Text = "";
+                if (FileNameValidator.IsValidFolderName(tbName.Text) &&
+                    FileNameValidator.IsValidFileName(tbName.Text) &&
+                    !Directory.Exists(tbName.Text))
+                {
+                    string NewFolder = Props.ProfilesFolder + "\\" + tbName.Text;
+                    Directory.CreateDirectory(NewFolder);
+                    File.WriteAllText(NewFolder + "\\" + tbName.Text + ".rcs", string.Empty);
+                    File.WriteAllText(NewFolder + "\\" + tbName.Text + "PressureData.csv", string.Empty);
+                    Props.OpenFile(NewFolder + "\\" + tbName.Text + ".rcs");
+                    UpdateForm();
+                    tbName.Text = "";
+                    mf.LoadSettings();
+                    UpdateForm();
+                    MainMenu.ChangeProduct(0);
+                    MainMenu.ShowProfile();
+                }
+                else
+                {
+                    mf.Tls.ShowMessage("Invalid file name.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                mf.Tls.ShowMessage("Invalid file name.");
+                Props.WriteErrorLog("frmMenuProfiles/btnNew_Click: " + ex.Message);
             }
         }
 
@@ -85,7 +210,7 @@ namespace RateController.Menu
             {
                 lstProfiles.Items.Add(Path.GetFileName(folder));
             }
-            lbProfile.Text ="Current Profle:  "+ Props.CurrentFileName();
+            lbProfile.Text = "Current Profle:  " + Props.CurrentFileName();
         }
     }
 }
