@@ -231,6 +231,12 @@
     <Compile Include="Forms\frmLargeScreen.Designer.cs">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\frmMenuJobs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuJobs.Designer.cs">
+      <DependentUpon>frmMenuJobs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menu\frmMenuProfiles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -506,6 +512,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmLargeScreen.resx">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuJobs.resx">
+      <DependentUpon>frmMenuJobs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuProfiles.resx">
       <DependentUpon>frmMenuProfiles.cs</DependentUpon>

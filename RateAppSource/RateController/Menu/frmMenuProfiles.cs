@@ -23,29 +23,34 @@ namespace RateController.Menu
         {
             try
             {
+                string NewFilePath = Props.ProfilesFolder + "\\" + tbName.Text;
                 if (FileNameValidator.IsValidFolderName(tbName.Text) &&
                     FileNameValidator.IsValidFileName(tbName.Text) &&
-                    !Directory.Exists(tbName.Text) &&
-                    lstProfiles.SelectedIndex >= 0)
+                    !Directory.Exists(NewFilePath))
                 {
-                    string NewFilePath = Props.ProfilesFolder + "\\" + tbName.Text;
-                    Directory.CreateDirectory(NewFilePath);
+                    if (lstProfiles.SelectedIndex >= 0)
+                    {
+                        Directory.CreateDirectory(NewFilePath);
 
-                    string OldFileName = lstProfiles.SelectedItem.ToString();
-                    string OldFileFullName = Props.ProfilesFolder + "\\" + OldFileName + "\\" + OldFileName + ".rcs";
-                    File.Copy(OldFileFullName, NewFilePath + "\\" + tbName.Text + ".rcs");
+                        string OldFileName = lstProfiles.SelectedItem.ToString();
+                        string OldFileFullName = Props.ProfilesFolder + "\\" + OldFileName + "\\" + OldFileName + ".rcs";
+                        File.Copy(OldFileFullName, NewFilePath + "\\" + tbName.Text + ".rcs");
 
-                    string NewFilePressureName = NewFilePath + "\\" + tbName.Text + "PressureData.csv";
-                    string OldFilePressureName = Props.ProfilesFolder + "\\" + OldFileName + "\\" + OldFileName + "PressureData.csv";
-                    File.Copy(OldFilePressureName, NewFilePressureName);
+                        string NewFilePressureName = NewFilePath + "\\" + tbName.Text + "PressureData.csv";
+                        string OldFilePressureName = Props.ProfilesFolder + "\\" + OldFileName + "\\" + OldFileName + "PressureData.csv";
+                        File.Copy(OldFilePressureName, NewFilePressureName);
 
-                    Props.OpenFile(NewFilePath + "\\" + tbName.Text + ".rcs");
-                    UpdateForm();
-                    tbName.Text = "";
-                    mf.LoadSettings();
-                    UpdateForm();
-                    MainMenu.ChangeProduct(0);
-                    MainMenu.ShowProfile();
+                        Props.OpenFile(NewFilePath + "\\" + tbName.Text + ".rcs");
+                        tbName.Text = "";
+                        mf.LoadSettings();
+                        UpdateForm();
+                        MainMenu.ChangeProduct(0);
+                        MainMenu.ShowProfile();
+                    }
+                    else
+                    {
+                        mf.Tls.ShowMessage("No file selected.");
+                    }
                 }
                 else
                 {
@@ -85,13 +90,12 @@ namespace RateController.Menu
                                 {
                                     string name = Props.ProfilesFolder + "\\default\\default.rcs";
                                     Props.OpenFile(name);
-                                    UpdateForm();
                                     tbName.Text = "";
                                     mf.LoadSettings();
-                                    UpdateForm();
                                     MainMenu.ChangeProduct(0);
                                     MainMenu.ShowProfile();
                                 }
+                                    UpdateForm();
                             }
                             else
                             {
@@ -144,16 +148,15 @@ namespace RateController.Menu
         {
             try
             {
+                string NewFolder = Props.ProfilesFolder + "\\" + tbName.Text;
                 if (FileNameValidator.IsValidFolderName(tbName.Text) &&
                     FileNameValidator.IsValidFileName(tbName.Text) &&
-                    !Directory.Exists(tbName.Text))
+                    !Directory.Exists(NewFolder))
                 {
-                    string NewFolder = Props.ProfilesFolder + "\\" + tbName.Text;
                     Directory.CreateDirectory(NewFolder);
                     File.WriteAllText(NewFolder + "\\" + tbName.Text + ".rcs", string.Empty);
                     File.WriteAllText(NewFolder + "\\" + tbName.Text + "PressureData.csv", string.Empty);
                     Props.OpenFile(NewFolder + "\\" + tbName.Text + ".rcs");
-                    UpdateForm();
                     tbName.Text = "";
                     mf.LoadSettings();
                     UpdateForm();

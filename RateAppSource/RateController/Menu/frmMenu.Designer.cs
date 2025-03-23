@@ -65,7 +65,7 @@
             this.btnPressure = new System.Windows.Forms.Button();
             this.lbFileName = new System.Windows.Forms.Label();
             this.butRateData = new System.Windows.Forms.Button();
-            this.lbRateData = new System.Windows.Forms.Label();
+            this.lbJob = new System.Windows.Forms.Label();
             this.butProfiles = new System.Windows.Forms.Button();
             this.butJobs = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -726,15 +726,15 @@
             // 
             // lbRateData
             // 
-            this.lbRateData.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateData.Location = new System.Drawing.Point(9, 39);
-            this.lbRateData.Name = "lbRateData";
-            this.lbRateData.Size = new System.Drawing.Size(127, 22);
-            this.lbRateData.TabIndex = 168;
-            this.lbRateData.Text = "label1";
-            this.lbRateData.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbRateData.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
-            this.lbRateData.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
+            this.lbJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbJob.Location = new System.Drawing.Point(9, 39);
+            this.lbJob.Name = "lbRateData";
+            this.lbJob.Size = new System.Drawing.Size(127, 22);
+            this.lbJob.TabIndex = 168;
+            this.lbJob.Text = "label1";
+            this.lbJob.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbJob.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
+            this.lbJob.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
             // 
             // butProfiles
             // 
@@ -772,6 +772,7 @@
             this.butJobs.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butJobs.UseVisualStyleBackColor = false;
             this.butJobs.Visible = false;
+            this.butJobs.Click += new System.EventHandler(this.butJobs_Click);
             // 
             // frmMenu
             // 
@@ -780,7 +781,7 @@
             this.ClientSize = new System.Drawing.Size(1249, 757);
             this.Controls.Add(this.butJobs);
             this.Controls.Add(this.butProfiles);
-            this.Controls.Add(this.lbRateData);
+            this.Controls.Add(this.lbJob);
             this.Controls.Add(this.butRateData);
             this.Controls.Add(this.lbFileName);
             this.Controls.Add(this.btnPressure);
@@ -868,7 +869,7 @@
         private System.Windows.Forms.Button btnPressure;
         private System.Windows.Forms.Label lbFileName;
         private System.Windows.Forms.Button butRateData;
-        private System.Windows.Forms.Label lbRateData;
+        private System.Windows.Forms.Label lbJob;
         private System.Windows.Forms.Button butProfiles;
         private System.Windows.Forms.Button butJobs;
     }

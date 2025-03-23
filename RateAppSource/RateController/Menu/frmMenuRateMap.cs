@@ -77,33 +77,6 @@ namespace RateController.Menu
             frm.ShowDialog();
         }
 
-        private void btnLoad_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.InitialDirectory = mf.Tls.Manager.RootPath;
-            openFileDialog1.Filter = "Shapefiles (*.shp)|*.shp|All files (*.*)|*.*";
-            openFileDialog1.Title = "Select a Shapefile";
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (!mf.Tls.Manager.LoadMap(openFileDialog1.FileName))
-                {
-                    mf.Tls.ShowMessage("Map could not be loaded.");
-                }
-            }
-        }
-
-        private void btnNew_Click(object sender, EventArgs e)
-        {
-            if (mf.Tls.Manager.NewMap())
-            {
-                tbMapName.Text = "New Map";
-            }
-            else
-            {
-                mf.Tls.ShowMessage("New zone could not be created.");
-            }
-        }
-
         private void btnPNG_Click(object sender, EventArgs e)
         {
             GMapControl map = mf.Tls.Manager.gmapObject;
@@ -120,29 +93,6 @@ namespace RateController.Menu
                     MapImage.Save(saveFileDialog1.FileName, ImageFormat.Png);
                 }
             }
-        }
-
-        private void btnResume_Click(object sender, EventArgs e)
-        {
-            Initializing = true;
-            if (!mf.Tls.Manager.LoadLastMap())
-            {
-                mf.Tls.ShowMessage("Map could not be loaded.");
-            }
-            Initializing = false;
-        }
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            if (mf.Tls.Manager.SaveMap(tbMapName.Text))
-            {
-                mf.Tls.ShowMessage("Map saved successfully.");
-            }
-            else
-            {
-                mf.Tls.ShowMessage("Map could not be saved.");
-            }
-            btnSave.FlatAppearance.BorderSize = 0;
         }
 
         private void ckEdit_CheckedChanged(object sender, EventArgs e)
@@ -281,15 +231,6 @@ namespace RateController.Menu
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
-        private void HighlightMapSave()
-        {
-            if (!Initializing)
-            {
-                btnSave.FlatAppearance.BorderSize = 2;
-                btnSave.FlatAppearance.BorderColor = Color.Blue;
-            }
-        }
-
         private void HighlightZoneSave()
         {
             btnCreateZone.FlatAppearance.BorderSize = 2;
@@ -369,10 +310,8 @@ namespace RateController.Menu
         private void SetLanguage()
         {
             btnImport.Text = Lang.lgImport;
-            btnResume.Text = Lang.lgResume;
             ckFullScreen.Text = Lang.lgFullScreen;
             ckEnable.Text = Lang.lgEnableVR;
-            gbMap.Text = Lang.lgMap;
             gbZone.Text = Lang.lgZone;
         }
 
@@ -382,6 +321,7 @@ namespace RateController.Menu
             {
                 legendPanel.Left = this.Left + 8;
                 legendPanel.Top = this.Top + 628;
+                legendPanel.Size = new Size(250, 300);
                 int yOffset = 10;
                 foreach (var entry in mf.Tls.Manager.Legend)
                 {
@@ -411,17 +351,11 @@ namespace RateController.Menu
             }
         }
 
-        private void tbMapName_TextChanged(object sender, EventArgs e)
-        {
-            HighlightMapSave();
-        }
-
         private void tbName_TextChanged(object sender, EventArgs e)
         {
             if (ckEdit.Checked)
             {
                 HighlightZoneSave();
-                HighlightMapSave();
             }
         }
 
@@ -529,7 +463,6 @@ namespace RateController.Menu
         {
             Initializing = true;
 
-            tbMapName.Text = mf.Tls.Manager.MapName;
             tbName.Text = mf.Tls.Manager.ZoneName;
             mf.Tls.Manager.UpdateTargetRates();
             tbP1.Text = mf.Tls.Manager.GetRate(0).ToString();

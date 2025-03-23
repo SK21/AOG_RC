@@ -109,7 +109,7 @@
             // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(188, 50);
+            this.tbName.Location = new System.Drawing.Point(192, 50);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(289, 29);
             this.tbName.TabIndex = 362;
