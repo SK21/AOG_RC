@@ -88,6 +88,7 @@ namespace RateController.Classes
         private static Dictionary<string, Form> openForms = new Dictionary<string, Form>();
         private static frmPressureDisplay PressureDisplay;
         private static frmSwitches SwitchesForm;
+        private static string cFieldNames;
 
         #region // flow adjustment defaults
 
@@ -268,6 +269,7 @@ namespace RateController.Classes
             set { SetProp("RateDisplayType", value.ToString()); }
         }
 
+        public static string FieldNames { get { return cFieldNames; } }
         public static int RateRecordInterval
         {
             get { return cRateRecordInterval; }
@@ -779,6 +781,9 @@ namespace RateController.Classes
                 cActivityFileName = Path.Combine(ApplicationFolder, "Activity Log.txt");
                 if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
 
+                cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");
+                if (!File.Exists(cFieldNames)) File.WriteAllText(cFieldNames, "");
+
                 LoadProperties();
                 Result = true;
             }
@@ -832,7 +837,36 @@ namespace RateController.Classes
             }
             return Result;
         }
-
+        public static void SetFieldNames(string[] Names)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(cFieldNames))
+                {
+                    foreach (string name in Names)
+                    {
+                        writer.WriteLine(name);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/SetFieldNames: " + ex.Message);
+            }
+        }
+        public static string[] GetFieldNames()
+        {
+            string[] items = null;
+            try
+            {
+                items = File.ReadAllLines(cFieldNames);
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/GetFieldNames:" + ex.Message);
+            }
+            return items;
+        }
         public static bool OpenRateDataFile(string FileName, bool IsNew = false)
         {
             bool Result = false;

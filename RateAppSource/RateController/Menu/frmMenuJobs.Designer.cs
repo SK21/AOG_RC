@@ -38,12 +38,13 @@
             this.tbNotes = new System.Windows.Forms.TextBox();
             this.lb1 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lbFieldName = new System.Windows.Forms.Label();
             this.cbField = new System.Windows.Forms.ComboBox();
             this.ckJobs = new System.Windows.Forms.CheckBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.dtpDate = new System.Windows.Forms.DateTimePicker();
+            this.btnDeleteField = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbName
@@ -130,6 +131,7 @@
             this.tbNotes.MaxLength = 800;
             this.tbNotes.Multiline = true;
             this.tbNotes.Name = "tbNotes";
+            this.tbNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbNotes.Size = new System.Drawing.Size(349, 131);
             this.tbNotes.TabIndex = 370;
             this.tbNotes.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
@@ -148,18 +150,20 @@
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(9, 592);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(117, 23);
+            this.label1.Size = new System.Drawing.Size(117, 29);
             this.label1.TabIndex = 372;
             this.label1.Text = "Date";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label2
+            // lbFieldName
             // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(9, 542);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(117, 23);
-            this.label2.TabIndex = 374;
-            this.label2.Text = "Field";
+            this.lbFieldName.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFieldName.Location = new System.Drawing.Point(9, 542);
+            this.lbFieldName.Name = "lbFieldName";
+            this.lbFieldName.Size = new System.Drawing.Size(70, 41);
+            this.lbFieldName.TabIndex = 374;
+            this.lbFieldName.Text = "Field";
+            this.lbFieldName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cbField
             // 
@@ -173,6 +177,9 @@
             this.cbField.Size = new System.Drawing.Size(240, 41);
             this.cbField.Sorted = true;
             this.cbField.TabIndex = 375;
+            this.cbField.Text = "Home";
+            this.cbField.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
+            this.cbField.Resize += new System.EventHandler(this.cbField_Resize);
             // 
             // ckJobs
             // 
@@ -235,17 +242,30 @@
             this.dtpDate.Size = new System.Drawing.Size(240, 29);
             this.dtpDate.TabIndex = 380;
             // 
+            // btnDeleteField
+            // 
+            this.btnDeleteField.FlatAppearance.BorderSize = 0;
+            this.btnDeleteField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteField.Image = global::RateController.Properties.Resources.trash_small;
+            this.btnDeleteField.Location = new System.Drawing.Point(85, 542);
+            this.btnDeleteField.Name = "btnDeleteField";
+            this.btnDeleteField.Size = new System.Drawing.Size(41, 41);
+            this.btnDeleteField.TabIndex = 381;
+            this.btnDeleteField.UseVisualStyleBackColor = true;
+            this.btnDeleteField.Click += new System.EventHandler(this.btnDeleteField_Click);
+            // 
             // frmMenuJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.btnDeleteField);
             this.Controls.Add(this.dtpDate);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.ckJobs);
             this.Controls.Add(this.cbField);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lbFieldName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lb1);
             this.Controls.Add(this.tbNotes);
@@ -280,11 +300,12 @@
         private System.Windows.Forms.TextBox tbNotes;
         private System.Windows.Forms.Label lb1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbFieldName;
         private System.Windows.Forms.ComboBox cbField;
         private System.Windows.Forms.CheckBox ckJobs;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.DateTimePicker dtpDate;
+        private System.Windows.Forms.Button btnDeleteField;
     }
 }

@@ -3,7 +3,9 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RateController.Menu
 {
@@ -13,6 +15,7 @@ namespace RateController.Menu
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
+        private bool DeleteField = false;
 
         public frmMenuJobs(FormStart main, frmMenu menu)
         {
@@ -22,6 +25,12 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            UpdateForm();
+            SetButtons(false);
+        }
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
@@ -150,7 +159,7 @@ namespace RateController.Menu
         {
             try
             {
-                if (Props.OpenJob(tbName.Text,true))
+                if (Props.OpenJob(tbName.Text, true))
                 {
                     tbName.Text = "";
                     UpdateForm();
@@ -165,6 +174,51 @@ namespace RateController.Menu
             {
                 Props.WriteErrorLog("frmMenuJobs/btnNew_Click: " + ex.Message);
             }
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Properties.Settings.Default.UseJobs = ckJobs.Checked;
+                Properties.Settings.Default.Save();
+                Props.SetJobProp("Notes", tbNotes.Text);
+
+                // fields
+                if (DeleteField)
+                {
+                    cbField.Items.Remove(cbField.SelectedItem);
+                    DeleteField = false;
+                }
+
+                string newItem = cbField.Text.Trim();
+                if (!string.IsNullOrEmpty(newItem))
+                {
+                    if (!cbField.Items.Contains(newItem))
+                    {
+                        cbField.Items.Add(newItem);
+                        cbField.SelectedItem = newItem;
+                    }
+                }
+
+                if (cbField.SelectedItem != null) Props.SetJobProp("Field", cbField.SelectedItem.ToString());
+
+
+                string[] itemsArray = cbField.Items.Cast<string>().ToArray();
+                Props.SetFieldNames(itemsArray);
+
+                SetButtons(false);
+                UpdateForm();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuJobs/btnOk_Click: " + ex.Message);
+            }
+        }
+
+        private void ckJobs_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
 
         private void frmMenuJobs_Load(object sender, EventArgs e)
@@ -193,28 +247,6 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + 246;
         }
 
-        private void SetLanguage()
-        {
-            //grpSensor.Text = Lang.lgSensorLocation;
-        }
-
-        private void UpdateForm()
-        {
-            Initializing=true;
-
-            lstJobs.Items.Clear();
-            string[] folders = Directory.GetDirectories(Props.JobsFolder);
-            foreach (string folder in folders)
-            {
-                lstJobs.Items.Add(Path.GetFileName(folder));
-            }
-            lbJob.Text = "Current Job:  " + Path.GetFileNameWithoutExtension(Props.CurrentJob);
-
-            ckJobs.Checked = Properties.Settings.Default.UseJobs;
-            tbNotes.Text = Props.GetJobProp("Notes");
-
-            Initializing =false;
-        }
         private void SetButtons(bool Edited)
         {
             if (!Initializing)
@@ -235,31 +267,64 @@ namespace RateController.Menu
             }
         }
 
-        private void ckJobs_CheckedChanged(object sender, EventArgs e)
+        private void SetLanguage()
         {
-            SetButtons(true);
+            //grpSensor.Text = Lang.lgSensorLocation;
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void UpdateForm()
         {
-            UpdateForm();
-            SetButtons(false);
+            Initializing = true;
+
+            lstJobs.Items.Clear();
+            string[] folders = Directory.GetDirectories(Props.JobsFolder);
+            foreach (string folder in folders)
+            {
+                lstJobs.Items.Add(Path.GetFileName(folder));
+            }
+            lbJob.Text = "Current Job:  " + Path.GetFileNameWithoutExtension(Props.CurrentJob);
+
+            ckJobs.Checked = Properties.Settings.Default.UseJobs;
+            tbNotes.Text = Props.GetJobProp("Notes");
+
+            // field
+            string[] items = Props.GetFieldNames();
+            if (items != null)
+            {
+                cbField.Items.Clear();
+                cbField.Items.AddRange(items);
+            }
+
+            string field = Props.GetJobProp("Field");
+            if (cbField.Items.Contains(field)) cbField.SelectedItem = field;
+
+            Initializing = false;
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void btnDeleteField_Click(object sender, EventArgs e)
         {
-            try
+            if (cbField.SelectedItem != null)
             {
-                Properties.Settings.Default.UseJobs = ckJobs.Checked;
-                Properties.Settings.Default.Save();
-                Props.SetJobProp("Notes",tbNotes.Text);
-                SetButtons(false);
-                UpdateForm();
+                string FieldToDelete = cbField.SelectedItem.ToString();
+                var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FieldToDelete + "]?", "Delete Field", true);
+                Hlp.TopMost = true;
+
+                Hlp.ShowDialog();
+                bool Result = Hlp.Result;
+                Hlp.Close();
+                if (Result)
+                {
+                    DeleteField = true;
+                    SetButtons(true);
+                }
             }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuJobs/btnOk_Click: " + ex.Message);
-            }
+        }
+
+        private void cbField_Resize(object sender, EventArgs e)
+        {
+            int cbCenter=cbField.Top+(cbField.Height/2);
+            btnDeleteField.Top = cbCenter - (btnDeleteField.Height / 2);
+            lbFieldName.Top=cbCenter-(lbFieldName.Height/2);
         }
     }
 }
