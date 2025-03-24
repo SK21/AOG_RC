@@ -58,6 +58,9 @@ namespace RateController.Classes
             AppliedOverlayTimer = new System.Timers.Timer(60);
             AppliedOverlayTimer.Elapsed += AppliedOverlayTimer_Elapsed;
             AppliedOverlayTimer.Enabled = false;
+
+            Props.JobChanged += Props_JobChanged;
+            Props.MapShowRatesSettingsChanged += Props_MapShowRatesChanged;
         }
 
         public event EventHandler MapChanged;
@@ -250,8 +253,7 @@ namespace RateController.Classes
                     MapChanged?.Invoke(this, EventArgs.Empty);
                     Props.SetProp("LastMapFile", FilePath);
                     ZoomToFit();
-                    Props.CurrentMapName = MapName;
-                    UpdateRateMapDisplay();
+                    UpdateRateDataDisplay();
                 }
             }
             return Result;
@@ -272,7 +274,7 @@ namespace RateController.Classes
                 currentZoneVertices = new List<PointLatLng>();
                 mapZones.Clear();
                 gmap.Refresh();
-                UpdateRateMapDisplay();
+                UpdateRateDataDisplay();
                 Result = true;
             }
             catch (Exception ex)
@@ -294,7 +296,6 @@ namespace RateController.Classes
                 if (UpdateCache) AddToCache();
                 Result = true;
                 MapName = name;
-                Props.CurrentMapName = name;
             }
             return Result;
         }
@@ -344,9 +345,8 @@ namespace RateController.Classes
             return legend;
         }
 
-        public void UpdateRateMapDisplay()
+        public void UpdateRateDataDisplay()
         {
-            mf.Tls.RateCollector.AutoRecord(Props.RecordRates);
             if (Props.MapShowRates)
             {
                 cLegend = ShowAppliedLayer();
@@ -702,6 +702,16 @@ namespace RateController.Classes
         {
             mapZones = new List<MapZone>();
             currentZoneVertices = new List<PointLatLng>();
+        }
+
+        private void Props_JobChanged(object sender, EventArgs e)
+        {
+            LoadMap(Props.CurrentMapName);
+        }
+
+        private void Props_MapShowRatesChanged(object sender, EventArgs e)
+        {
+            UpdateRateDataDisplay();
         }
 
         private void RemoveOverlay(GMapOverlay Overlay)

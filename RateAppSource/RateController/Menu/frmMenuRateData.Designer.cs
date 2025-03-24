@@ -50,13 +50,6 @@
             this.HSRecordInterval = new System.Windows.Forms.HScrollBar();
             this.label2 = new System.Windows.Forms.Label();
             this.lbRecordInterval = new System.Windows.Forms.Label();
-            this.tbRateDataFile = new System.Windows.Forms.TextBox();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnLoad = new System.Windows.Forms.Button();
-            this.btnNew = new System.Windows.Forms.Button();
-            this.lbFileName = new System.Windows.Forms.Label();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.gbMap.SuspendLayout();
             this.gbCoverage.SuspendLayout();
             this.gbRecord.SuspendLayout();
@@ -269,7 +262,7 @@
             this.ckRecord.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckRecord.Image = global::RateController.Properties.Resources.record;
-            this.ckRecord.Location = new System.Drawing.Point(62, 131);
+            this.ckRecord.Location = new System.Drawing.Point(213, 28);
             this.ckRecord.Name = "ckRecord";
             this.ckRecord.Size = new System.Drawing.Size(89, 64);
             this.ckRecord.TabIndex = 382;
@@ -300,11 +293,6 @@
             this.gbRecord.Controls.Add(this.HSRecordInterval);
             this.gbRecord.Controls.Add(this.label2);
             this.gbRecord.Controls.Add(this.lbRecordInterval);
-            this.gbRecord.Controls.Add(this.tbRateDataFile);
-            this.gbRecord.Controls.Add(this.btnSave);
-            this.gbRecord.Controls.Add(this.btnLoad);
-            this.gbRecord.Controls.Add(this.btnNew);
-            this.gbRecord.Controls.Add(this.lbFileName);
             this.gbRecord.Controls.Add(this.ckRecord);
             this.gbRecord.Location = new System.Drawing.Point(12, 12);
             this.gbRecord.Name = "gbRecord";
@@ -317,7 +305,7 @@
             // HSRecordInterval
             // 
             this.HSRecordInterval.LargeChange = 1;
-            this.HSRecordInterval.Location = new System.Drawing.Point(190, 66);
+            this.HSRecordInterval.Location = new System.Drawing.Point(182, 125);
             this.HSRecordInterval.Maximum = 300;
             this.HSRecordInterval.Minimum = 15;
             this.HSRecordInterval.Name = "HSRecordInterval";
@@ -329,7 +317,7 @@
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(13, 77);
+            this.label2.Location = new System.Drawing.Point(5, 136);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(170, 23);
             this.label2.TabIndex = 391;
@@ -339,80 +327,12 @@
             // lbRecordInterval
             // 
             this.lbRecordInterval.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRecordInterval.Location = new System.Drawing.Point(436, 77);
+            this.lbRecordInterval.Location = new System.Drawing.Point(428, 136);
             this.lbRecordInterval.Name = "lbRecordInterval";
             this.lbRecordInterval.Size = new System.Drawing.Size(59, 23);
             this.lbRecordInterval.TabIndex = 392;
             this.lbRecordInterval.Text = "100";
             this.lbRecordInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tbRateDataFile
-            // 
-            this.tbRateDataFile.Location = new System.Drawing.Point(176, 28);
-            this.tbRateDataFile.Name = "tbRateDataFile";
-            this.tbRateDataFile.Size = new System.Drawing.Size(255, 29);
-            this.tbRateDataFile.TabIndex = 390;
-            this.tbRateDataFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // btnSave
-            // 
-            this.btnSave.BackColor = System.Drawing.Color.Transparent;
-            this.btnSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnSave.FlatAppearance.BorderSize = 0;
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnSave.Image = global::RateController.Properties.Resources.Save;
-            this.btnSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnSave.Location = new System.Drawing.Point(354, 133);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(82, 60);
-            this.btnSave.TabIndex = 389;
-            this.btnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // btnLoad
-            // 
-            this.btnLoad.FlatAppearance.BorderSize = 0;
-            this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLoad.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnLoad.Location = new System.Drawing.Point(259, 133);
-            this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(82, 60);
-            this.btnLoad.TabIndex = 388;
-            this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
-            // 
-            // btnNew
-            // 
-            this.btnNew.FlatAppearance.BorderSize = 0;
-            this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNew.Image = global::RateController.Properties.Resources.NewFile;
-            this.btnNew.Location = new System.Drawing.Point(164, 133);
-            this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(82, 60);
-            this.btnNew.TabIndex = 387;
-            this.btnNew.UseVisualStyleBackColor = true;
-            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
-            // 
-            // lbFileName
-            // 
-            this.lbFileName.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFileName.Location = new System.Drawing.Point(69, 31);
-            this.lbFileName.Name = "lbFileName";
-            this.lbFileName.Size = new System.Drawing.Size(101, 23);
-            this.lbFileName.TabIndex = 383;
-            this.lbFileName.Text = "File Name";
-            this.lbFileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.Filter = "CSV|*.CSV";
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "CSV|*.CSV";
             // 
             // frmMenuRateData
             // 
@@ -432,12 +352,10 @@
             this.Name = "frmMenuRateData";
             this.ShowInTaskbar = false;
             this.Text = "Rate Data";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmRates_FormClosed);
             this.Load += new System.EventHandler(this.frmRates_Load);
             this.gbMap.ResumeLayout(false);
             this.gbCoverage.ResumeLayout(false);
             this.gbRecord.ResumeLayout(false);
-            this.gbRecord.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -461,15 +379,8 @@
         private System.Windows.Forms.CheckBox ckRecord;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.GroupBox gbRecord;
-        private System.Windows.Forms.Label lbFileName;
-        private System.Windows.Forms.Button btnNew;
-        private System.Windows.Forms.Button btnLoad;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.TextBox tbRateDataFile;
         private System.Windows.Forms.HScrollBar HSRecordInterval;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lbRecordInterval;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

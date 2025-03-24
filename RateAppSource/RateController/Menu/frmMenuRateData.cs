@@ -29,33 +29,6 @@ namespace RateController.Forms
             SetButtons(false);
         }
 
-        private void btnLoad_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.InitialDirectory = Props.CurrentDir();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (!Props.OpenRateDataFile(openFileDialog1.FileName))
-                {
-                    mf.Tls.ShowMessage("Could not open file.");
-                }
-                tbRateDataFile.Text = Props.CurrentRateDataFile();
-            }
-        }
-
-        private void btnNew_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.InitialDirectory = Props.CurrentDir();
-            saveFileDialog1.Title = "New File";
-            saveFileDialog1.FileName = Props.CurrentMapName + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Props.OpenRateDataFile(saveFileDialog1.FileName, true);
-                    tbRateDataFile.Text = Props.CurrentRateDataFile();
-                }
-            }
-        }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
@@ -72,10 +45,11 @@ namespace RateController.Forms
                         Props.RateDisplayType = RateType.Target;
                     }
 
-                    Props.RecordRates = ckRecord.Checked;
+                    Props.RateRecordEnabled = ckRecord.Checked;
+                    Props.RateRecordInterval = HSRecordInterval.Value;
+
                     Props.RateDisplayRefresh = HSrefreshMap.Value;
                     Props.RateDisplayResolution = HSresolution.Value;
-                    Props.RateRecordInterval = HSRecordInterval.Value;
 
                     if (rbProductA.Checked)
                     {
@@ -96,7 +70,7 @@ namespace RateController.Forms
 
                     SetButtons(false);
                     UpdateForm();
-                    mf.Tls.Manager.UpdateRateMapDisplay();
+                    Props.RaiseMapShowRatesSettingsChanged();
                 }
                 catch (Exception ex)
                 {
@@ -105,25 +79,7 @@ namespace RateController.Forms
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.InitialDirectory = Props.CurrentDir();
-            saveFileDialog1.Title = "Save As";
-            saveFileDialog1.FileName = tbRateDataFile.Text;
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    Props.OpenRateDataFile(saveFileDialog1.FileName, true);
-                    tbRateDataFile.Text = Props.CurrentRateDataFile();
-                }
-            }
-        }
 
-        private void frmRates_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Props.SaveFormLocation(this);
-        }
 
         private void frmRates_Load(object sender, EventArgs e)
         {
@@ -142,7 +98,7 @@ namespace RateController.Forms
             PositionForm();
             UpdateForm();
 
-            Font ValFont = new Font(lbFileName.Font.FontFamily, 14, FontStyle.Bold);
+            Font ValFont = new Font(lbRefresh.Font.FontFamily, 14, FontStyle.Bold);
             lbRefresh.Font = ValFont;
             lbResolution.Font = ValFont;
             lbRecordInterval.Font = ValFont;
@@ -234,7 +190,7 @@ namespace RateController.Forms
                 Initializing = true;
                 rbApplied.Checked = (Props.RateDisplayType == RateType.Applied);
                 rbTarget.Checked = !rbApplied.Checked;
-                ckRecord.Checked = Props.RecordRates;
+                ckRecord.Checked = Props.RateRecordEnabled;
                 HSrefreshMap.Value = Props.RateDisplayRefresh;
                 HSresolution.Value = Props.RateDisplayResolution;
                 HSRecordInterval.Value = Props.RateRecordInterval;
@@ -260,7 +216,6 @@ namespace RateController.Forms
 
                 UpdateControlDisplay();
                 SetLanguage();
-                tbRateDataFile.Text = Props.CurrentRateDataFile();
 
                 Initializing = false;
             }

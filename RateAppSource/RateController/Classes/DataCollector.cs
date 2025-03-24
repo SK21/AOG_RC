@@ -22,35 +22,29 @@ namespace RateController.Classes
 
         public DataCollector(string NewFilePath, bool Overwrite = false)
         {
-            if (string.IsNullOrWhiteSpace(NewFilePath))
-                throw new ArgumentException("File path is required.", "DataCollector");
-
-            cFilePath = NewFilePath;
-
-            if (Overwrite)
-            {
-                // If overwrite is true, clear the file if it exists.
-                if (File.Exists(cFilePath))
-                {
-                    File.WriteAllText(cFilePath, string.Empty);
-                }
-            }
-            else
-            {
-                // Otherwise, if the file exists, load the data.
-                if (File.Exists(cFilePath))
-                {
-                    LoadDataFromCsv();
-                }
-            }
             SaveTimer = new Timer(30000);
             SaveTimer.Elapsed += SaveTimer_Elapsed;
-            SaveTimer.Enabled = Props.RecordRates;
+            SaveTimer.Enabled = Props.RateRecordEnabled;
 
             RecordTimer = new Timer();
             RecordTimer.Elapsed += RecordTimer_Elapsed;
-            RecordTimer.Enabled = Props.RecordRates;
+            RecordTimer.Enabled = Props.RateRecordEnabled;
             RecordIntervalSeconds = Props.RateRecordInterval;
+
+            Props.JobChanged += Props_JobChanged;
+            Props.RecordSettingsChanged += Props_RecordSettingsChanged;
+        }
+
+        private void Props_RecordSettingsChanged(object sender, EventArgs e)
+        {
+            RecordTimer.Enabled = Props.RateRecordEnabled;
+            RecordIntervalSeconds = Props.RateRecordInterval;
+        }
+
+        private void Props_JobChanged(object sender, EventArgs e)
+        {
+            cFilePath = Props.CurrentRateDataName;
+            LoadDataFromCsv();
         }
 
         public int RecordIntervalSeconds
@@ -62,10 +56,6 @@ namespace RateController.Classes
             }
         }
 
-        public void AutoRecord(bool Record)
-        {
-            RecordTimer.Enabled = Record;
-        }
 
         public IReadOnlyList<RateReading> GetReadings()
         {
@@ -80,7 +70,7 @@ namespace RateController.Classes
             if (ReadyForNewData)
             {
                 ReadyForNewData = false;
-                RecordTimer.Enabled = Props.RecordRates;
+                RecordTimer.Enabled = Props.RateRecordEnabled;
 
                 bool IsValid = true;
 

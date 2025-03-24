@@ -36,6 +36,7 @@
             this.ShapeFileAttribute = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnSelectFile = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMapping)).BeginInit();
             this.SuspendLayout();
             // 
@@ -107,11 +108,30 @@
             this.btnSelectFile.UseVisualStyleBackColor = false;
             this.btnSelectFile.Click += new System.EventHandler(this.btnSelectFile_Click);
             // 
+            // btnCancel
+            // 
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
+            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnCancel.Location = new System.Drawing.Point(142, 334);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(89, 64);
+            this.btnCancel.TabIndex = 379;
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // frmImport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(419, 410);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.dgvMapping);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnSelectFile);
@@ -136,5 +156,6 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn ShapeFileAttribute;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnSelectFile;
+        private System.Windows.Forms.Button btnCancel;
     }
 }

@@ -30,6 +30,7 @@
         {
             this.btnImport = new System.Windows.Forms.Button();
             this.gbZone = new System.Windows.Forms.GroupBox();
+            this.legendPanel = new System.Windows.Forms.Panel();
             this.lbArea = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.colorComboBox = new System.Windows.Forms.ComboBox();
@@ -55,7 +56,6 @@
             this.btnPNG = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ckRateData = new System.Windows.Forms.CheckBox();
-            this.legendPanel = new System.Windows.Forms.Panel();
             this.gbZone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -95,6 +95,14 @@
             this.gbZone.TabStop = false;
             this.gbZone.Text = "Zone";
             this.gbZone.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // legendPanel
+            // 
+            this.legendPanel.Location = new System.Drawing.Point(139, 216);
+            this.legendPanel.Name = "legendPanel";
+            this.legendPanel.Size = new System.Drawing.Size(200, 100);
+            this.legendPanel.TabIndex = 359;
+            this.legendPanel.Visible = false;
             // 
             // lbArea
             // 
@@ -361,13 +369,6 @@
             this.ckRateData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckRateData.UseVisualStyleBackColor = true;
             this.ckRateData.CheckedChanged += new System.EventHandler(this.ckRateData_CheckedChanged);
-            // 
-            // legendPanel
-            // 
-            this.legendPanel.Location = new System.Drawing.Point(139, 216);
-            this.legendPanel.Name = "legendPanel";
-            this.legendPanel.Size = new System.Drawing.Size(200, 100);
-            this.legendPanel.TabIndex = 359;
             // 
             // frmMenuRateMap
             // 

@@ -1,13 +1,11 @@
 ﻿using AgOpenGPS;
 using GMap.NET.WindowsForms;
 using RateController.Classes;
-using RateController.Forms;
 using RateController.Language;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RateController.Menu
 {
@@ -85,7 +83,7 @@ namespace RateController.Menu
             saveFileDialog1.InitialDirectory = Props.CurrentDir();
             saveFileDialog1.Title = "Save Map";
             saveFileDialog1.Filter = "PNG|*.PNG";
-            saveFileDialog1.FileName = Props.CurrentMapName + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
+            saveFileDialog1.FileName = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
@@ -161,7 +159,7 @@ namespace RateController.Menu
         private void ckRateData_CheckedChanged(object sender, EventArgs e)
         {
             Props.MapShowRates = ckRateData.Checked;
-            mf.Tls.Manager.UpdateRateMapDisplay();
+            mf.Tls.Manager.UpdateRateDataDisplay();
         }
 
         private void ckZones_CheckedChanged(object sender, EventArgs e)

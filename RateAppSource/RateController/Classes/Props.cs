@@ -57,6 +57,7 @@ namespace RateController.Classes
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0-beta.9";
         private static string cCurrentMapName;
+        private static string cCurrentRateDataName;
         private static string cDefaultJob;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
@@ -73,6 +74,7 @@ namespace RateController.Classes
         private static double cPrimeTime = 0;
         private static string cProfilesFolder;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
+        private static bool cRateRecordEnabled;
         private static int cRateRecordInterval;
         private static int cRateType;
         private static bool cReadOnly = false;
@@ -104,6 +106,10 @@ namespace RateController.Classes
         #endregion // flow adjustment defaults
 
         public static event EventHandler JobChanged;
+
+        public static event EventHandler MapShowRatesSettingsChanged;
+
+        public static event EventHandler RecordSettingsChanged;
 
         public static event EventHandler UnitsChanged;
 
@@ -140,11 +146,11 @@ namespace RateController.Classes
         public static string CurrentMapName
         {
             get { return cCurrentMapName; }
-            set
-            {
-                cCurrentMapName = value;
-                SetProp("CurrentMapName", cCurrentMapName);
-            }
+        }
+
+        public static string CurrentRateDataName
+        {
+            get { return cCurrentRateDataName; }
         }
 
         public static string DefaultJob
@@ -265,13 +271,27 @@ namespace RateController.Classes
         public static int RateDisplayResolution
         {
             get { return int.TryParse(GetProp("RateDisplayResolution"), out int rs) ? rs : 20; }
-            set { SetProp("RateDisplayResolution", value.ToString()); }
+            set
+            {
+                SetProp("RateDisplayResolution", value.ToString());
+            }
         }
 
         public static RateType RateDisplayType
         {
             get { return Enum.TryParse(GetProp("RateDisplayType"), out RateType tp) ? tp : RateType.Applied; }
             set { SetProp("RateDisplayType", value.ToString()); }
+        }
+
+        public static bool RateRecordEnabled
+        {
+            get { return cRateRecordEnabled; }
+            set
+            {
+                cRateRecordEnabled = value;
+                SetProp("RecordRates", value.ToString());
+                RecordSettingsChanged?.Invoke(null, EventArgs.Empty);
+            }
         }
 
         public static int RateRecordInterval
@@ -281,7 +301,6 @@ namespace RateController.Classes
             {
                 cRateRecordInterval = value;
                 SetProp("RateRecordInterval", cRateRecordInterval.ToString());
-                mf.Tls.RateCollector.RecordIntervalSeconds = cRateRecordInterval;
             }
         }
 
@@ -294,12 +313,6 @@ namespace RateController.Classes
                 cReadOnly = value;
                 if (Changed) Save(cProps, Properties.Settings.Default.CurrentFile);
             }
-        }
-
-        public static bool RecordRates
-        {
-            get { return bool.TryParse(GetProp("RecordRates"), out bool rc) ? rc : false; }
-            set { SetProp("RecordRates", value.ToString()); }
         }
 
         public static bool ResumeAfterPrime
@@ -513,57 +526,12 @@ namespace RateController.Classes
             return name;
         }
 
-        public static string CurrentRateDataFile()
-        {
-            return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentRateDataFile);
-        }
-
         public static string VersionDate()
         {
             return cAppDate;
         }
 
         #endregion MainProperties
-
-        public static bool ParseDateText(string input,out DateTime result)
-        {
-            int currentYear = DateTime.Now.Year;
-            if (IsDayMonthOnly(input)) input += " " + currentYear.ToString();
-
-            // Try to parse the date with different formats
-            string[] formats = {
-                "MM/dd/yyyy", "MM-dd-yyyy", "MM.dd.yyyy",
-                "dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy",
-                "yyyy/MM/dd", "yyyy-MM-dd", "yyyy.MM.dd",
-                "MMM dd, yyyy", "dd MMM yyyy", "MMM dd yyyy",
-                "dd MMM yyyy"
-            };
-
-            return DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
-        }
-
-        private static bool IsDayMonthOnly(string input)
-        {
-            bool Result = false;
-            // Check if the input matches day and month formats
-            string[] dayMonthFormats = {
-                "MM/dd", "MM-dd", "MM.dd",
-                "dd/MM", "dd-MM", "dd.MM",
-                "MMM dd", "dd MMM"
-            };
-
-            foreach (var format in dayMonthFormats)
-            {
-                if (DateTime.TryParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-                {
-                    Result = true;
-                    break;
-                }
-            }
-
-            return Result;
-        }
-
 
         public static bool CheckFolders()
         {
@@ -603,7 +571,7 @@ namespace RateController.Classes
                 if (!Directory.Exists(DefaultJobFolder)) Directory.CreateDirectory(DefaultJobFolder);
                 cDefaultJob = DefaultJobFolder + "\\DefaultJob.jbs";
                 if (!File.Exists(cDefaultJob)) File.WriteAllText(cDefaultJob, string.Empty);
-                if (!File.Exists(DefaultJobFolder + "\\DefaultRateData.csv")) File.WriteAllText(DefaultJobFolder + "\\DefaultRateData.csv", string.Empty);
+                if (!File.Exists(DefaultJobFolder + "\\Default_RateData.csv")) File.WriteAllText(DefaultJobFolder + "\\Default_RateData.csv", string.Empty);
 
                 string MapName = DefaultJobFolder + "\\Map";
                 if (!Directory.Exists(MapName)) Directory.CreateDirectory(MapName);
@@ -803,6 +771,7 @@ namespace RateController.Classes
             cShowCoverageRemaining = bool.TryParse(GetProp("ShowCoverageRemaining"), out bool cr) ? cr : false;
             cUseMetric = bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false;
             cRateRecordInterval = int.TryParse(GetProp("RateRecordInterval"), out int rr) ? rr : 300;
+            cRateRecordEnabled = bool.TryParse(GetProp("RecordRates"), out bool rc) ? rc : true;
             cCurrentMapName = GetProp("CurrentMapName");
             cMapShowTiles = bool.TryParse(GetProp("ShowTiles"), out bool st) ? st : true;
             cMapShowZones = bool.TryParse(GetProp("MapShowZones"), out bool sz) ? sz : true;
@@ -867,7 +836,7 @@ namespace RateController.Classes
                     {
                         Directory.CreateDirectory(FolderName);
                         File.WriteAllText(FullName, string.Empty);
-                        File.WriteAllText(FolderName + "\\" + FileName + "RateData.csv", string.Empty);
+                        File.WriteAllText(FolderName + "\\" + FileName + "_RateData.csv", string.Empty);
 
                         Directory.CreateDirectory(FolderName + "\\Map");
                     }
@@ -878,6 +847,8 @@ namespace RateController.Classes
                     Load(cJobProps, FullName);
                     Properties.Settings.Default.CurrentJob = FullName;
                     Properties.Settings.Default.Save();
+                    cCurrentMapName = FolderName + "\\Map\\" + FileName + ".shp";
+                    cCurrentRateDataName = FolderName + "\\" + FileName + "_RateData.csv";
                 }
                 else
                 {
@@ -885,7 +856,12 @@ namespace RateController.Classes
                     Load(cJobProps, cDefaultJob);
                     Properties.Settings.Default.CurrentJob = cDefaultJob;
                     Properties.Settings.Default.Save();
+
+                    string currentJobFolder = Path.GetDirectoryName(cDefaultJob);
+                    cCurrentMapName = currentJobFolder + "\\Map\\Default.shp";
+                    cCurrentRateDataName = currentJobFolder + "\\Default_RateData.csv";
                 }
+
                 Result = true;
                 JobChanged?.Invoke(null, EventArgs.Empty);
             }
@@ -896,28 +872,26 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool OpenRateDataFile(string FileName, bool IsNew = false)
+        public static bool ParseDateText(string input, out DateTime result)
         {
-            bool Result = false;
-            try
-            {
-                bool FileFound = false;
-                if (IsNew) File.WriteAllText(FileName, ""); // Create empty property file
-                if (File.Exists(FileName))
-                {
-                    Properties.Settings.Default.CurrentRateDataFile = FileName;
-                    Properties.Settings.Default.Save();
-                    FileFound = true;
-                }
-                if (!FileFound) CheckFolders();
-                mf.Tls.SetRateCollector(Properties.Settings.Default.CurrentRateDataFile);
-                Result = true;
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/OpenRateDataFile: " + ex.Message);
-            }
-            return Result;
+            int currentYear = DateTime.Now.Year;
+            if (IsDayMonthOnly(input)) input += " " + currentYear.ToString();
+
+            // Try to parse the date with different formats
+            string[] formats = {
+                "MM/dd/yyyy", "MM-dd-yyyy", "MM.dd.yyyy",
+                "dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy",
+                "yyyy/MM/dd", "yyyy-MM-dd", "yyyy.MM.dd",
+                "MMM dd, yyyy", "dd MMM yyyy", "MMM dd yyyy",
+                "dd MMM yyyy"
+            };
+
+            return DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+        }
+
+        public static void RaiseMapShowRatesSettingsChanged()
+        {
+            MapShowRatesSettingsChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static bool SafeToDelete(string name)
@@ -939,25 +913,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool SaveAs(string FileName, bool OverWrite = false)
-        {
-            bool Result = false;
-            if (!File.Exists(FileName) || OverWrite)
-            {
-                File.WriteAllText(FileName, ""); // Create empty property file
-
-                if (File.Exists(FileName))
-                {
-                    Properties.Settings.Default.CurrentFile = FileName;
-                    Properties.Settings.Default.Save();
-
-                    Save(cProps, Properties.Settings.Default.CurrentFile);
-                    Save(cFormProps, cFormPropsFileName);
-                    Result = true;
-                }
-            }
-            return Result;
-        }
 
         public static void SaveFormLocation(Form frm, string Instance = "")
         {
@@ -1244,6 +1199,28 @@ namespace RateController.Classes
         {
             string prop = cFormProps.TryGetValue(key, out var value) ? value : string.Empty;
             return int.TryParse(prop, out var vl) ? vl : -1;
+        }
+
+        private static bool IsDayMonthOnly(string input)
+        {
+            bool Result = false;
+            // Check if the input matches day and month formats
+            string[] dayMonthFormats = {
+                "MM/dd", "MM-dd", "MM.dd",
+                "dd/MM", "dd-MM", "dd.MM",
+                "MMM dd", "dd MMM"
+            };
+
+            foreach (var format in dayMonthFormats)
+            {
+                if (DateTime.TryParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                {
+                    Result = true;
+                    break;
+                }
+            }
+
+            return Result;
         }
 
         private static void Load(SortedDictionary<string, string> PropsDct, string DctPath)

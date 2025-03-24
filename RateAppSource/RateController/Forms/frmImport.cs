@@ -20,9 +20,30 @@ namespace RateController.Forms
             dgvMapping.AllowUserToAddRows = false;
         }
 
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveCrossReferencedShapefile();
+            var Hlp = new frmMsgBox(mf, "Confirm replace current map with imported map?", "Import File", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                if (SaveCrossReferencedShapefile())
+                {
+                    mf.Tls.ShowMessage("Cross-referenced shapefile saved successfully.");
+                }
+                else
+                {
+                    mf.Tls.ShowMessage("Failed to map attributes. File not saved.");
+                }
+            }
         }
 
         private void btnSelectFile_Click(object sender, EventArgs e)
@@ -40,11 +61,6 @@ namespace RateController.Forms
             Props.LoadFormLocation(this);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             SetLanguage();
-        }
-        private void SetLanguage()
-        {
-            dgvMapping.Columns[0].HeaderText = Lang.lgZoneAttributes;
-            dgvMapping.Columns[1].HeaderText = Lang.lgShapefileAttributes;
         }
 
         private void LoadShapefileAttributes(DataGridView dgvMapping)
@@ -72,43 +88,44 @@ namespace RateController.Forms
             }
         }
 
-        private void SaveCrossReferencedShapefile()
+        private bool SaveCrossReferencedShapefile()
         {
-            if (string.IsNullOrEmpty(selectedShapefilePath))
+            bool Result = false;
+            try
             {
-                mf.Tls.ShowMessage("Please select a shapefile first.");
-                return;
-            }
-
-            attributeMapping = new Dictionary<string, string>();
-            foreach (DataGridViewRow row in ((DataGridView)Controls[0]).Rows)
-            {
-                var predefined = row.Cells["PredefinedAttribute"].Value?.ToString();
-                var shapefileAttribute = row.Cells["ShapefileAttribute"].Value?.ToString();
-
-                if (!string.IsNullOrEmpty(predefined) && !string.IsNullOrEmpty(shapefileAttribute))
+                if (!string.IsNullOrEmpty(selectedShapefilePath))
                 {
-                    attributeMapping[predefined] = shapefileAttribute;
-                }
-            }
-
-            var shapefileHelper = new ShapefileHelper(mf);
-            var mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
-
-            using (var sfd = new SaveFileDialog { Filter = "Shapefiles (*.shp)|*.shp" })
-            {
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    if (shapefileHelper.SaveMapZones(sfd.FileName, mapZones))
+                    attributeMapping = new Dictionary<string, string>();
+                    foreach (DataGridViewRow row in ((DataGridView)Controls[0]).Rows)
                     {
-                        mf.Tls.ShowMessage("Cross-referenced shapefile saved successfully.");
+                        var predefined = row.Cells["PredefinedAttribute"].Value?.ToString();
+                        var shapefileAttribute = row.Cells["ShapefileAttribute"].Value?.ToString();
+
+                        if (!string.IsNullOrEmpty(predefined) && !string.IsNullOrEmpty(shapefileAttribute))
+                        {
+                            attributeMapping[predefined] = shapefileAttribute;
+                        }
                     }
-                    else
+
+                    var shapefileHelper = new ShapefileHelper(mf);
+                    var mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
+
+                    if (shapefileHelper.SaveMapZones(Props.CurrentMapName, mapZones))
                     {
-                        mf.Tls.ShowMessage("Failed to map attributes. File not saved.");
+                        mf.Tls.Manager.LoadMap(Props.CurrentMapName);
+                        Result = true;
                     }
                 }
+                else
+                {
+                    mf.Tls.ShowMessage("Please select a shapefile first.");
+                }
             }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmImport/SaveCrossReferencedShapeFile: " + ex.Message);
+            }
+            return Result;
         }
 
         private void SelectShapefile(DataGridView dgvMapping)
@@ -121,6 +138,12 @@ namespace RateController.Forms
                     LoadShapefileAttributes(dgvMapping);
                 }
             }
+        }
+
+        private void SetLanguage()
+        {
+            dgvMapping.Columns[0].HeaderText = Lang.lgZoneAttributes;
+            dgvMapping.Columns[1].HeaderText = Lang.lgShapefileAttributes;
         }
     }
 }
