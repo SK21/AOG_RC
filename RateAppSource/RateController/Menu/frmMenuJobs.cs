@@ -21,7 +21,7 @@ namespace RateController.Menu
         private bool cEdited;
         private bool DeleteField = false;
         private bool Initializing = false;
-        private string LocalDateFormat = "dd-MMM-yyyy   HH:mm";
+        private string RCdateFormat = "dd-MMM-yyyy   HH:mm";
         private frmMenu MainMenu;
         private FormStart mf;
 
@@ -47,7 +47,7 @@ namespace RateController.Menu
         private void btnCalender_Click(object sender, EventArgs e)
         {
             ButtonDateEntry = true;
-            tbDate.Text = DateTime.Now.ToString(LocalDateFormat);
+            tbDate.Text = DateTime.Now.ToString(RCdateFormat);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -283,7 +283,7 @@ namespace RateController.Menu
                     DateTime NewDate;
                     if (Props.ParseDateText(tbDate.Text, out NewDate))
                     {
-                        Props.SetJobProp("Date", NewDate.ToString(LocalDateFormat));
+                        Props.SetJobProp("Date", NewDate.ToString(RCdateFormat));
                     }
                 }
 
