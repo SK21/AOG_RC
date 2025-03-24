@@ -187,6 +187,9 @@ namespace RateController.Classes
             set { mf = value; }
         }
 
+        public static string MapCache
+        { get { return cApplicationFolder + "\\MapCache"; } }
+
         public static bool MapShowRates
         {
             get { return cMapShowRates; }
@@ -822,6 +825,7 @@ namespace RateController.Classes
 
         public static bool OpenJob(string NewFile, bool IsNew = false)
         {
+            Debug.Print("OpenJob");
             bool Result = false;
             try
             {
@@ -912,7 +916,6 @@ namespace RateController.Classes
 
             return Result;
         }
-
 
         public static void SaveFormLocation(Form frm, string Instance = "")
         {

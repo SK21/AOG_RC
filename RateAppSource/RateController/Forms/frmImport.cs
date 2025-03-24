@@ -96,7 +96,7 @@ namespace RateController.Forms
                 if (!string.IsNullOrEmpty(selectedShapefilePath))
                 {
                     attributeMapping = new Dictionary<string, string>();
-                    foreach (DataGridViewRow row in ((DataGridView)Controls[0]).Rows)
+                    foreach (DataGridViewRow row in dgvMapping.Rows)
                     {
                         var predefined = row.Cells["PredefinedAttribute"].Value?.ToString();
                         var shapefileAttribute = row.Cells["ShapefileAttribute"].Value?.ToString();
@@ -112,7 +112,7 @@ namespace RateController.Forms
 
                     if (shapefileHelper.SaveMapZones(Props.CurrentMapName, mapZones))
                     {
-                        mf.Tls.Manager.LoadMap(Props.CurrentMapName);
+                        mf.Tls.Manager.LoadMap();
                         Result = true;
                     }
                 }
@@ -128,14 +128,14 @@ namespace RateController.Forms
             return Result;
         }
 
-        private void SelectShapefile(DataGridView dgvMapping)
+        private void SelectShapefile(DataGridView DGV)
         {
             using (var ofd = new OpenFileDialog { Filter = "Shapefiles (*.shp)|*.shp" })
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     selectedShapefilePath = ofd.FileName;
-                    LoadShapefileAttributes(dgvMapping);
+                    LoadShapefileAttributes(DGV);
                 }
             }
         }

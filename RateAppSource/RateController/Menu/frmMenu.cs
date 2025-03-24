@@ -87,11 +87,11 @@ namespace RateController
 
         public void ShowProfile()
         {
-            string Nm = Props.CurrentFileName().Length <= 11 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 11) + "...";
+            string Nm = Props.CurrentFileName().Length <= 20 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 20) + "...";
             lbFileName.Text = "[" + Nm + "]";
 
             string job = Path.GetFileNameWithoutExtension(Props.CurrentJob);
-            Nm = job.Length <= 11 ? job : job.Substring(0, 11) + "...";
+            Nm = job.Length <= 20 ? job : job.Substring(0, 20) + "...";
             lbJob.Text = "[" + Nm + "]";
         }
 
@@ -977,12 +977,12 @@ namespace RateController
             this.Width = FormWidth;
             this.Height = FormHeight;
             StyleControls(this);
+            butPowerOff.Left = 12;
+            butPowerOff.Top = this.Height - 75;
+            btnHelp.Left = 86;
+            btnHelp.Top = this.Height - 75;
             butClose.Left = 160;
-            butClose.Top = this.Height - 100;
-            btnHelp.Left = 20;
-            btnHelp.Top = this.Height - 100;
-            butPowerOff.Left = 160;
-            butPowerOff.Top = 8;
+            butClose.Top = this.Height - 75;
             if (LoadLast) LoadLastScreen();
             SetLanguage();
             ShowProfile();

@@ -5,8 +5,8 @@ using GMap.NET.WindowsForms.Markers;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Timers;
 using System.Windows.Forms;
@@ -19,11 +19,8 @@ namespace RateController.Classes
         private int AppliedOverlayProductID = 0;
         private System.Timers.Timer AppliedOverlayTimer;
         private RateType AppliedOverlayType = RateType.Applied;
-        private string CachePath;
         private bool cEditMode;
         private Dictionary<string, Color> cLegend;
-        private string cMapName = "Unnamed Map";
-        private string cRootPath;
         private PointLatLng cTractorPosition;
         private GMapOverlay currentAppliedOverlay;
         private List<PointLatLng> currentZoneVertices;
@@ -44,9 +41,8 @@ namespace RateController.Classes
 
         public MapManager(FormStart main)
         {
+            Debug.Print("MapManager");
             mf = main;
-            cRootPath = GetFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RateMap");
-            CachePath = GetFolder(cRootPath, "MapCache");
 
             InitializeMap();
             InitializeMapZones();
@@ -84,26 +80,6 @@ namespace RateController.Classes
 
         public Dictionary<string, Color> Legend
         { get { return cLegend; } }
-
-        public string MapName
-        {
-            get { return cMapName; }
-            set
-            {
-                if (value.Length > 0)
-                {
-                    if (value.Length > 12) value = value.Substring(0, 12);
-                    cMapName = value;
-                }
-                else
-                {
-                    cMapName = "Unnamed Map";
-                }
-            }
-        }
-
-        public string RootPath
-        { get { return cRootPath; } }
 
         public bool ShowTiles
         {
@@ -221,22 +197,18 @@ namespace RateController.Classes
             return Result;
         }
 
-        public bool LoadLastMap()
+        public bool LoadMap()
         {
-            LastFile = Props.GetProp("LastMapFile");
-            return LoadMap(LastFile);
-        }
-
-        public bool LoadMap(string FilePath)
-        {
+            //InitializeMap();
+            Debug.Print("LoadMap");
             bool Result = false;
-            if (FileNameValidator.IsValidFolderName(FilePath))
+            try
             {
-                if (File.Exists(FilePath))
+                if (gmap.Parent != null)
                 {
-                    MapName = Path.GetFileNameWithoutExtension(FilePath);
+                    Debug.Print(gmap.Parent.Name);
                     var shapefileHelper = new ShapefileHelper(mf);
-                    mapZones = shapefileHelper.CreateZoneList(FilePath);
+                    mapZones = shapefileHelper.CreateZoneList(Props.CurrentMapName);
 
                     zoneOverlay.Polygons.Clear();
 
@@ -251,11 +223,19 @@ namespace RateController.Classes
                     gmap.Zoom = 16;
                     Result = true;
                     MapChanged?.Invoke(this, EventArgs.Empty);
-                    Props.SetProp("LastMapFile", FilePath);
                     ZoomToFit();
-                    UpdateRateDataDisplay();
+                    //UpdateRateDataDisplay();
+                }
+                else
+                {
+                    Debug.Print("LoadMap parent null");
                 }
             }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/LoadMap: " + ex.Message);
+            }
+            if (gmap.Parent != null) Debug.Print(gmap.Parent.Name);
             return Result;
         }
 
@@ -284,19 +264,13 @@ namespace RateController.Classes
             return Result;
         }
 
-        public bool SaveMap(string name, bool UpdateCache = true)
+        public bool SaveMap(bool UpdateCache = true)
         {
             bool Result = false;
-            string path = GetFolder(cRootPath, name);
-            if (FileNameValidator.IsValidFolderName(name) && FileNameValidator.IsValidFileName(name))
-            {
-                var shapefileHelper = new ShapefileHelper(mf);
-                path += "\\" + name;
-                shapefileHelper.SaveMapZones(path, mapZones);
-                if (UpdateCache) AddToCache();
-                Result = true;
-                MapName = name;
-            }
+            var shapefileHelper = new ShapefileHelper(mf);
+            shapefileHelper.SaveMapZones(Props.CurrentMapName, mapZones);
+            if (UpdateCache) AddToCache();
+            Result = true;
             return Result;
         }
 
@@ -347,15 +321,15 @@ namespace RateController.Classes
 
         public void UpdateRateDataDisplay()
         {
-            if (Props.MapShowRates)
-            {
-                cLegend = ShowAppliedLayer();
-            }
-            else
-            {
-                RemoveOverlay(currentAppliedOverlay);
-                AppliedOverlayTimer.Enabled = false;
-            }
+            //if (Props.MapShowRates)
+            //{
+            //    cLegend = ShowAppliedLayer();
+            //}
+            //else
+            //{
+            //    RemoveOverlay(currentAppliedOverlay);
+            //    AppliedOverlayTimer.Enabled = false;
+            //}
         }
 
         public void UpdateTargetRates()
@@ -450,8 +424,8 @@ namespace RateController.Classes
                         };
                         zone.ZoneColor = zoneColor;
                         Found = true;
-                        SaveMap(MapName, false);
-                        LoadLastMap();
+                        SaveMap(false);
+                        LoadMap();
                         break;
                     }
                 }
@@ -578,13 +552,6 @@ namespace RateController.Classes
             Props.SetProp("LastMapLng", centroid.X.ToString());
         }
 
-        private string GetFolder(string StartFolder, string SubFolder, bool CreateNew = true)
-        {
-            string NewPath = Path.Combine(StartFolder, SubFolder);
-            if (CreateNew && !Directory.Exists(NewPath)) Directory.CreateDirectory(NewPath);
-            return NewPath;
-        }
-
         private void Gmap_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -644,12 +611,13 @@ namespace RateController.Classes
 
         private void InitializeMap()
         {
+            Debug.Print("InitializeMap");
             //GMaps.Instance.Mode = AccessMode.CacheOnly;
             //GMaps.Instance.Mode = AccessMode.ServerOnly;
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
             GMaps.Instance.PrimaryCache = new GMap.NET.CacheProviders.SQLitePureImageCache
             {
-                CacheLocation = CachePath
+                CacheLocation = Props.MapCache
             };
 
             double Lat = 200;
@@ -692,6 +660,7 @@ namespace RateController.Classes
             tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0), GMarkerGoogleType.green); // Initialize with a default position
             gpsMarkerOverlay.Markers.Add(tractorMarker); // Add the tractor marker to the overlay
 
+            //gmap.Overlays.Add(zoneOverlay);
             gmap.Overlays.Add(gpsMarkerOverlay);
             gmap.Overlays.Add(tempMarkerOverlay);
 
@@ -706,7 +675,8 @@ namespace RateController.Classes
 
         private void Props_JobChanged(object sender, EventArgs e)
         {
-            LoadMap(Props.CurrentMapName);
+            Debug.Print("Props_JobChanged");
+            LoadMap();
         }
 
         private void Props_MapShowRatesChanged(object sender, EventArgs e)

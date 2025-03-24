@@ -74,9 +74,9 @@ namespace RateController
             Props.MainForm = this;
             Props.CheckFolders();
             Tls = new clsTools(this);
-            Tls.StartMapManager();
             Props.OpenFile(Properties.Settings.Default.CurrentFile);
             Props.OpenJob(Properties.Settings.Default.CurrentJob);
+            Tls.StartMapManager();
 
             //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
 

@@ -20,7 +20,7 @@ namespace RateController.Classes
         private Timer RecordTimer;
         private Timer SaveTimer;
 
-        public DataCollector(string NewFilePath, bool Overwrite = false)
+        public DataCollector()
         {
             SaveTimer = new Timer(30000);
             SaveTimer.Elapsed += SaveTimer_Elapsed;

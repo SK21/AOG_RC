@@ -78,7 +78,7 @@
             this.butClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butClose.Image = ((System.Drawing.Image)(resources.GetObject("butClose.Image")));
-            this.butClose.Location = new System.Drawing.Point(12, 576);
+            this.butClose.Location = new System.Drawing.Point(160, 605);
             this.butClose.Name = "butClose";
             this.butClose.Size = new System.Drawing.Size(70, 63);
             this.butClose.TabIndex = 1;
@@ -465,9 +465,9 @@
             this.butPowerOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butPowerOff.Image = global::RateController.Properties.Resources.SwitchOff;
             this.butPowerOff.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butPowerOff.Location = new System.Drawing.Point(145, 8);
+            this.butPowerOff.Location = new System.Drawing.Point(12, 605);
             this.butPowerOff.Name = "butPowerOff";
-            this.butPowerOff.Size = new System.Drawing.Size(70, 66);
+            this.butPowerOff.Size = new System.Drawing.Size(70, 63);
             this.butPowerOff.TabIndex = 8;
             this.butPowerOff.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butPowerOff.UseVisualStyleBackColor = false;
@@ -590,9 +590,9 @@
             this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHelp.Image = global::RateController.Properties.Resources.Help;
             this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHelp.Location = new System.Drawing.Point(145, 574);
+            this.btnHelp.Location = new System.Drawing.Point(86, 605);
             this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(70, 66);
+            this.btnHelp.Size = new System.Drawing.Size(70, 63);
             this.btnHelp.TabIndex = 160;
             this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnHelp.UseVisualStyleBackColor = false;
@@ -698,9 +698,9 @@
             this.lbFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbFileName.Location = new System.Drawing.Point(9, 9);
             this.lbFileName.Name = "lbFileName";
-            this.lbFileName.Size = new System.Drawing.Size(127, 22);
+            this.lbFileName.Size = new System.Drawing.Size(221, 22);
             this.lbFileName.TabIndex = 166;
-            this.lbFileName.Text = "01234567890123456789";
+            this.lbFileName.Text = "012345678901234567890123456789";
             this.lbFileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbFileName.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
             this.lbFileName.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
@@ -729,7 +729,7 @@
             this.lbJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbJob.Location = new System.Drawing.Point(9, 39);
             this.lbJob.Name = "lbJob";
-            this.lbJob.Size = new System.Drawing.Size(127, 22);
+            this.lbJob.Size = new System.Drawing.Size(221, 22);
             this.lbJob.TabIndex = 168;
             this.lbJob.Text = "label1";
             this.lbJob.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -778,7 +778,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1249, 757);
+            this.ClientSize = new System.Drawing.Size(1249, 680);
             this.Controls.Add(this.butJobs);
             this.Controls.Add(this.butProfiles);
             this.Controls.Add(this.lbJob);

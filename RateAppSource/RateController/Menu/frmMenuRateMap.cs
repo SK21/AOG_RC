@@ -11,7 +11,7 @@ namespace RateController.Menu
 {
     public partial class frmMenuRateMap : Form
     {
-        private const int ScreenHeightMin = 294;
+        private const int ScreenHeightMin = 358;
         private const int ScreenLeftMin = 154;
         private const int ScreenWidthMin = 379;
         private bool Initializing = false;
@@ -119,12 +119,12 @@ namespace RateController.Menu
                 if (Props.UseLargeScreen)
                 {
                     mf.LSLeft = ScreenLeftMin + this.Left;
-                    mf.LSTop = 324 + this.Top;
+                    mf.LSTop = 260 + this.Top;
                 }
                 else
                 {
                     mf.Left = ScreenLeftMin + this.Left;
-                    mf.Top = 324 + this.Top;
+                    mf.Top = 260 + this.Top;
                 }
                 if (Props.MapShowRates) ShowLegend();
             }
@@ -133,7 +133,7 @@ namespace RateController.Menu
                 this.Width = 540;
                 this.Height = 630;
                 pictureBox1.Size = new Size(ScreenWidthMin, ScreenHeightMin);
-                pictureBox1.Location = new System.Drawing.Point(ScreenLeftMin, 324);
+                pictureBox1.Location = new System.Drawing.Point(ScreenLeftMin, 260);
                 PositionForm();
 
                 if (Props.UseLargeScreen)
@@ -297,6 +297,7 @@ namespace RateController.Menu
             ckZones.Checked = Props.MapShowZones;
             ckSatView.Checked = Props.MapShowTiles;
             ckRateData.Checked = Props.MapShowRates;
+            mf.Tls.Manager.LoadMap();
         }
 
         private void PositionForm()

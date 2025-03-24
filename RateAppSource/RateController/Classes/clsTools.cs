@@ -35,6 +35,7 @@ namespace RateController
 
             lastMessage = string.Empty;
             lastMessageTime = DateTime.MinValue;
+            cRateCollector=new DataCollector();
         }
 
         public MapManager Manager
@@ -156,10 +157,6 @@ namespace RateController
             }
         }
 
-        public void SetRateCollector(string FileName, bool Overwrite = false)
-        {
-            cRateCollector = new DataCollector(FileName, Overwrite);
-        }
 
         public void ShowMessage(string Message, string Title = "Help",
             int timeInMsec = 20000, bool LogError = false, bool Modal = false
