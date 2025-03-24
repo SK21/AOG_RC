@@ -720,6 +720,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\arrow-up.png" />
+    <None Include="Resources\arrow-down.png" />
+    <None Include="Resources\calendar-blank.png" />
     <None Include="Resources\trash_small.png" />
     <None Include="Resources\record.png" />
     <None Include="Resources\copy.png" />

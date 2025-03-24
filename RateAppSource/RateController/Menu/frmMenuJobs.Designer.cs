@@ -43,8 +43,14 @@
             this.ckJobs = new System.Windows.Forms.CheckBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.dtpDate = new System.Windows.Forms.DateTimePicker();
             this.btnDeleteField = new System.Windows.Forms.Button();
+            this.tbDate = new System.Windows.Forms.TextBox();
+            this.btnCalender = new System.Windows.Forms.Button();
+            this.btnAppendDate = new System.Windows.Forms.Button();
+            this.btnJobsUp = new System.Windows.Forms.Button();
+            this.btnJobsDown = new System.Windows.Forms.Button();
+            this.btnNotesDown = new System.Windows.Forms.Button();
+            this.btnNotesUp = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbName
@@ -177,7 +183,6 @@
             this.cbField.Size = new System.Drawing.Size(240, 41);
             this.cbField.Sorted = true;
             this.cbField.TabIndex = 375;
-            this.cbField.Text = "Home";
             this.cbField.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             this.cbField.Resize += new System.EventHandler(this.cbField_Resize);
             // 
@@ -233,15 +238,6 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // dtpDate
-            // 
-            this.dtpDate.CustomFormat = "    dd-MMM-yyyy    HH:mm";
-            this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpDate.Location = new System.Drawing.Point(132, 592);
-            this.dtpDate.Name = "dtpDate";
-            this.dtpDate.Size = new System.Drawing.Size(240, 29);
-            this.dtpDate.TabIndex = 380;
-            // 
             // btnDeleteField
             // 
             this.btnDeleteField.FlatAppearance.BorderSize = 0;
@@ -254,13 +250,100 @@
             this.btnDeleteField.UseVisualStyleBackColor = true;
             this.btnDeleteField.Click += new System.EventHandler(this.btnDeleteField_Click);
             // 
+            // tbDate
+            // 
+            this.tbDate.Location = new System.Drawing.Point(132, 591);
+            this.tbDate.Name = "tbDate";
+            this.tbDate.Size = new System.Drawing.Size(240, 29);
+            this.tbDate.TabIndex = 382;
+            this.tbDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbDate.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
+            // 
+            // btnCalender
+            // 
+            this.btnCalender.FlatAppearance.BorderSize = 0;
+            this.btnCalender.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCalender.Image = global::RateController.Properties.Resources.calendar_blank;
+            this.btnCalender.Location = new System.Drawing.Point(85, 586);
+            this.btnCalender.Name = "btnCalender";
+            this.btnCalender.Size = new System.Drawing.Size(41, 41);
+            this.btnCalender.TabIndex = 383;
+            this.btnCalender.UseVisualStyleBackColor = true;
+            this.btnCalender.Click += new System.EventHandler(this.btnCalender_Click);
+            // 
+            // btnAppendDate
+            // 
+            this.btnAppendDate.FlatAppearance.BorderSize = 0;
+            this.btnAppendDate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAppendDate.Image = global::RateController.Properties.Resources.calendar_blank;
+            this.btnAppendDate.Location = new System.Drawing.Point(487, 45);
+            this.btnAppendDate.Name = "btnAppendDate";
+            this.btnAppendDate.Size = new System.Drawing.Size(41, 41);
+            this.btnAppendDate.TabIndex = 384;
+            this.btnAppendDate.UseVisualStyleBackColor = true;
+            this.btnAppendDate.Click += new System.EventHandler(this.btnAppendDate_Click);
+            // 
+            // btnJobsUp
+            // 
+            this.btnJobsUp.FlatAppearance.BorderSize = 0;
+            this.btnJobsUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnJobsUp.Image = global::RateController.Properties.Resources.arrow_up;
+            this.btnJobsUp.Location = new System.Drawing.Point(487, 208);
+            this.btnJobsUp.Name = "btnJobsUp";
+            this.btnJobsUp.Size = new System.Drawing.Size(41, 41);
+            this.btnJobsUp.TabIndex = 385;
+            this.btnJobsUp.UseVisualStyleBackColor = true;
+            this.btnJobsUp.Click += new System.EventHandler(this.btnJobsUp_Click);
+            // 
+            // btnJobsDown
+            // 
+            this.btnJobsDown.FlatAppearance.BorderSize = 0;
+            this.btnJobsDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnJobsDown.Image = global::RateController.Properties.Resources.arrow_down;
+            this.btnJobsDown.Location = new System.Drawing.Point(487, 273);
+            this.btnJobsDown.Name = "btnJobsDown";
+            this.btnJobsDown.Size = new System.Drawing.Size(41, 41);
+            this.btnJobsDown.TabIndex = 386;
+            this.btnJobsDown.UseVisualStyleBackColor = true;
+            this.btnJobsDown.Click += new System.EventHandler(this.btnJobsDown_Click);
+            // 
+            // btnNotesDown
+            // 
+            this.btnNotesDown.FlatAppearance.BorderSize = 0;
+            this.btnNotesDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNotesDown.Image = global::RateController.Properties.Resources.arrow_down;
+            this.btnNotesDown.Location = new System.Drawing.Point(487, 495);
+            this.btnNotesDown.Name = "btnNotesDown";
+            this.btnNotesDown.Size = new System.Drawing.Size(41, 41);
+            this.btnNotesDown.TabIndex = 387;
+            this.btnNotesDown.UseVisualStyleBackColor = true;
+            this.btnNotesDown.Click += new System.EventHandler(this.btnNotesDown_Click);
+            // 
+            // btnNotesUp
+            // 
+            this.btnNotesUp.FlatAppearance.BorderSize = 0;
+            this.btnNotesUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNotesUp.Image = global::RateController.Properties.Resources.arrow_up;
+            this.btnNotesUp.Location = new System.Drawing.Point(487, 405);
+            this.btnNotesUp.Name = "btnNotesUp";
+            this.btnNotesUp.Size = new System.Drawing.Size(41, 41);
+            this.btnNotesUp.TabIndex = 388;
+            this.btnNotesUp.UseVisualStyleBackColor = true;
+            this.btnNotesUp.Click += new System.EventHandler(this.btnNotesUp_Click);
+            // 
             // frmMenuJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.btnNotesUp);
+            this.Controls.Add(this.btnNotesDown);
+            this.Controls.Add(this.btnJobsDown);
+            this.Controls.Add(this.btnJobsUp);
+            this.Controls.Add(this.btnAppendDate);
+            this.Controls.Add(this.btnCalender);
+            this.Controls.Add(this.tbDate);
             this.Controls.Add(this.btnDeleteField);
-            this.Controls.Add(this.dtpDate);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.ckJobs);
@@ -305,7 +388,13 @@
         private System.Windows.Forms.CheckBox ckJobs;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.DateTimePicker dtpDate;
         private System.Windows.Forms.Button btnDeleteField;
+        private System.Windows.Forms.TextBox tbDate;
+        private System.Windows.Forms.Button btnCalender;
+        private System.Windows.Forms.Button btnAppendDate;
+        private System.Windows.Forms.Button btnJobsUp;
+        private System.Windows.Forms.Button btnJobsDown;
+        private System.Windows.Forms.Button btnNotesDown;
+        private System.Windows.Forms.Button btnNotesUp;
     }
 }

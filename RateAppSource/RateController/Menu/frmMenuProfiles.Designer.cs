@@ -35,6 +35,8 @@
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnNew = new System.Windows.Forms.Button();
             this.tbName = new System.Windows.Forms.TextBox();
+            this.btnProfilesUp = new System.Windows.Forms.Button();
+            this.btnProfilesDown = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbProfile
@@ -115,11 +117,37 @@
             this.tbName.TabIndex = 362;
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // btnProfilesUp
+            // 
+            this.btnProfilesUp.FlatAppearance.BorderSize = 0;
+            this.btnProfilesUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnProfilesUp.Image = global::RateController.Properties.Resources.arrow_up;
+            this.btnProfilesUp.Location = new System.Drawing.Point(487, 265);
+            this.btnProfilesUp.Name = "btnProfilesUp";
+            this.btnProfilesUp.Size = new System.Drawing.Size(41, 41);
+            this.btnProfilesUp.TabIndex = 386;
+            this.btnProfilesUp.UseVisualStyleBackColor = true;
+            this.btnProfilesUp.Click += new System.EventHandler(this.btnProfilesUp_Click);
+            // 
+            // btnProfilesDown
+            // 
+            this.btnProfilesDown.FlatAppearance.BorderSize = 0;
+            this.btnProfilesDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnProfilesDown.Image = global::RateController.Properties.Resources.arrow_down;
+            this.btnProfilesDown.Location = new System.Drawing.Point(487, 342);
+            this.btnProfilesDown.Name = "btnProfilesDown";
+            this.btnProfilesDown.Size = new System.Drawing.Size(41, 41);
+            this.btnProfilesDown.TabIndex = 387;
+            this.btnProfilesDown.UseVisualStyleBackColor = true;
+            this.btnProfilesDown.Click += new System.EventHandler(this.btnProfilesDown_Click);
+            // 
             // frmMenuProfiles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
+            this.Controls.Add(this.btnProfilesDown);
+            this.Controls.Add(this.btnProfilesUp);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.btnNew);
             this.Controls.Add(this.btnCopy);
@@ -148,5 +176,7 @@
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Button btnNew;
         private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.Button btnProfilesUp;
+        private System.Windows.Forms.Button btnProfilesDown;
     }
 }

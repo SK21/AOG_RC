@@ -215,5 +215,17 @@ namespace RateController.Menu
             }
             lbProfile.Text = "Current Profle:  " + Props.CurrentFileName();
         }
+
+        private void btnProfilesUp_Click(object sender, EventArgs e)
+        {
+            int itemsPerPage = lstProfiles.ClientSize.Height / lstProfiles.ItemHeight; // Calculate visible items
+            lstProfiles.TopIndex = Math.Max(0, lstProfiles.TopIndex - itemsPerPage); // Move up by 1 page
+        }
+
+        private void btnProfilesDown_Click(object sender, EventArgs e)
+        {
+            int itemsPerPage = lstProfiles.ClientSize.Height / lstProfiles.ItemHeight; // Calculate visible items
+            lstProfiles.TopIndex = Math.Min(lstProfiles.Items.Count - 1, lstProfiles.TopIndex + itemsPerPage); // Move down by 1 page
+        }
     }
 }

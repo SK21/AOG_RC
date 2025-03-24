@@ -1,8 +1,10 @@
-﻿using RateController.Language;
+﻿using GMap.NET.MapProviders;
+using RateController.Language;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -58,6 +60,7 @@ namespace RateController.Classes
         private static string cDefaultJob;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
+        private static string cFieldNames;
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
         private static string cFormPropsFileName = "";
         private static SortedDictionary<string, string> cJobProps = new SortedDictionary<string, string>();
@@ -88,7 +91,6 @@ namespace RateController.Classes
         private static Dictionary<string, Form> openForms = new Dictionary<string, Form>();
         private static frmPressureDisplay PressureDisplay;
         private static frmSwitches SwitchesForm;
-        private static string cFieldNames;
 
         #region // flow adjustment defaults
 
@@ -166,6 +168,9 @@ namespace RateController.Classes
                 }
             }
         }
+
+        public static string FieldNames
+        { get { return cFieldNames; } }
 
         public static string JobsFolder
         { get { return cJobsFolder; } }
@@ -269,7 +274,6 @@ namespace RateController.Classes
             set { SetProp("RateDisplayType", value.ToString()); }
         }
 
-        public static string FieldNames { get { return cFieldNames; } }
         public static int RateRecordInterval
         {
             get { return cRateRecordInterval; }
@@ -521,6 +525,46 @@ namespace RateController.Classes
 
         #endregion MainProperties
 
+        public static bool ParseDateText(string input,out DateTime result)
+        {
+            int currentYear = DateTime.Now.Year;
+            if (IsDayMonthOnly(input)) input += " " + currentYear.ToString();
+
+            // Try to parse the date with different formats
+            string[] formats = {
+                "MM/dd/yyyy", "MM-dd-yyyy", "MM.dd.yyyy",
+                "dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy",
+                "yyyy/MM/dd", "yyyy-MM-dd", "yyyy.MM.dd",
+                "MMM dd, yyyy", "dd MMM yyyy", "MMM dd yyyy",
+                "dd MMM yyyy"
+            };
+
+            return DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+        }
+
+        private static bool IsDayMonthOnly(string input)
+        {
+            bool Result = false;
+            // Check if the input matches day and month formats
+            string[] dayMonthFormats = {
+                "MM/dd", "MM-dd", "MM.dd",
+                "dd/MM", "dd-MM", "dd.MM",
+                "MMM dd", "dd MMM"
+            };
+
+            foreach (var format in dayMonthFormats)
+            {
+                if (DateTime.TryParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                {
+                    Result = true;
+                    break;
+                }
+            }
+
+            return Result;
+        }
+
+
         public static bool CheckFolders()
         {
             bool Result = false;
@@ -655,6 +699,20 @@ namespace RateController.Classes
                 //Top2
                 g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + (int)(strSize.Width), rect.Y), new Point(rect.X + rect.Width, rect.Y));
             }
+        }
+
+        public static string[] GetFieldNames()
+        {
+            string[] items = null;
+            try
+            {
+                items = File.ReadAllLines(cFieldNames);
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/GetFieldNames:" + ex.Message);
+            }
+            return items;
         }
 
         public static string GetJobProp(string key)
@@ -798,7 +856,7 @@ namespace RateController.Classes
             bool Result = false;
             try
             {
-                string FileName=Path.GetFileNameWithoutExtension(NewFile);
+                string FileName = Path.GetFileNameWithoutExtension(NewFile);
                 string FolderName = Props.JobsFolder + "\\" + FileName;
                 string FullName = FolderName + "\\" + FileName + ".jbs";
                 if (IsNew)
@@ -837,36 +895,7 @@ namespace RateController.Classes
             }
             return Result;
         }
-        public static void SetFieldNames(string[] Names)
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(cFieldNames))
-                {
-                    foreach (string name in Names)
-                    {
-                        writer.WriteLine(name);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/SetFieldNames: " + ex.Message);
-            }
-        }
-        public static string[] GetFieldNames()
-        {
-            string[] items = null;
-            try
-            {
-                items = File.ReadAllLines(cFieldNames);
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/GetFieldNames:" + ex.Message);
-            }
-            return items;
-        }
+
         public static bool OpenRateDataFile(string FileName, bool IsNew = false)
         {
             bool Result = false;
@@ -949,6 +978,43 @@ namespace RateController.Classes
             }
         }
 
+        public static void SetFieldNames(string[] Names)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(cFieldNames))
+                {
+                    foreach (string name in Names)
+                    {
+                        writer.WriteLine(name);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/SetFieldNames: " + ex.Message);
+            }
+        }
+
+        public static void SetJobProp(string key, string value, bool IgnoreReadOnly = false)
+        {
+            try
+            {
+                if (value != null && (!ReadOnly || IgnoreReadOnly))
+                {
+                    if (!cJobProps.TryGetValue(key, out var existingValue) || existingValue != value)
+                    {
+                        cJobProps[key] = value;
+                        Save(cJobProps, Properties.Settings.Default.CurrentJob);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/SetJobProp: " + ex.Message);
+            }
+        }
+
         public static void SetProp(string key, string value, bool IgnoreReadOnly = false)
         {
             try
@@ -965,25 +1031,6 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 WriteErrorLog("Props/Set: " + ex.Message);
-            }
-        }
-
-        public static void SetJobProp(string key, string value, bool IgnoreReadOnly=false)
-        {
-            try
-            {
-                if (value != null && (!ReadOnly || IgnoreReadOnly))
-                {
-                    if (!cJobProps.TryGetValue(key, out var existingValue) || existingValue != value)
-                    {
-                        cJobProps[key] = value;
-                        Save(cJobProps, Properties.Settings.Default.CurrentJob);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/SetJobProp: " + ex.Message);
             }
         }
 

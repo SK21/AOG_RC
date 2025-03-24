@@ -2,20 +2,28 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RateController.Menu
 {
     public partial class frmMenuJobs : Form
     {
+        private const int SB_PAGEDOWN = 3;
+        private const int SB_PAGEUP = 2;
+        private const int WM_VSCROLL = 0x0115;
+        private bool ButtonDateEntry = false;
         private bool cEdited;
+        private bool DeleteField = false;
         private bool Initializing = false;
+        private string LocalDateFormat = "dd-MMM-yyyy   HH:mm";
         private frmMenu MainMenu;
         private FormStart mf;
-        private bool DeleteField = false;
 
         public frmMenuJobs(FormStart main, frmMenu menu)
         {
@@ -25,11 +33,28 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+
+        private void btnAppendDate_Click(object sender, EventArgs e)
+        {
+            if (tbName.Text.Length > 0)
+            {
+                tbName.Text += "_" + DateTime.Now.ToString("yyyy-MM-dd");
+            }
+        }
+
+        private void btnCalender_Click(object sender, EventArgs e)
+        {
+            ButtonDateEntry = true;
+            tbDate.Text = DateTime.Now.ToString(LocalDateFormat);
+        }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
+            tbName.Text = "";
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
@@ -128,6 +153,37 @@ namespace RateController.Menu
             }
         }
 
+        private void btnDeleteField_Click(object sender, EventArgs e)
+        {
+            if (cbField.SelectedItem != null)
+            {
+                string FieldToDelete = cbField.SelectedItem.ToString();
+                var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FieldToDelete + "] from the Fields list?", "Delete Field", true);
+                Hlp.TopMost = true;
+
+                Hlp.ShowDialog();
+                bool Result = Hlp.Result;
+                Hlp.Close();
+                if (Result)
+                {
+                    DeleteField = true;
+                    SetButtons(true);
+                }
+            }
+        }
+
+        private void btnJobsDown_Click(object sender, EventArgs e)
+        {
+            int itemsPerPage = lstJobs.ClientSize.Height / lstJobs.ItemHeight; // Calculate visible items
+            lstJobs.TopIndex = Math.Min(lstJobs.Items.Count - 1, lstJobs.TopIndex + itemsPerPage); // Move down by 1 page
+        }
+
+        private void btnJobsUp_Click(object sender, EventArgs e)
+        {
+            int itemsPerPage = lstJobs.ClientSize.Height / lstJobs.ItemHeight; // Calculate visible items
+            lstJobs.TopIndex = Math.Max(0, lstJobs.TopIndex - itemsPerPage); // Move up by 1 page
+        }
+
         private void btnLoad_Click(object sender, EventArgs e)
         {
             try
@@ -176,6 +232,16 @@ namespace RateController.Menu
             }
         }
 
+        private void btnNotesDown_Click(object sender, EventArgs e)
+        {
+            SendMessage(tbNotes.Handle, WM_VSCROLL, new IntPtr(SB_PAGEDOWN), IntPtr.Zero);
+        }
+
+        private void btnNotesUp_Click(object sender, EventArgs e)
+        {
+            SendMessage(tbNotes.Handle, WM_VSCROLL, new IntPtr(SB_PAGEUP), IntPtr.Zero);
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             try
@@ -203,9 +269,23 @@ namespace RateController.Menu
 
                 if (cbField.SelectedItem != null) Props.SetJobProp("Field", cbField.SelectedItem.ToString());
 
-
                 string[] itemsArray = cbField.Items.Cast<string>().ToArray();
                 Props.SetFieldNames(itemsArray);
+
+                // date
+                if (ButtonDateEntry)
+                {
+                    ButtonDateEntry = false;
+                    Props.SetJobProp("Date", tbDate.Text);
+                }
+                else
+                {
+                    DateTime NewDate;
+                    if (Props.ParseDateText(tbDate.Text, out NewDate))
+                    {
+                        Props.SetJobProp("Date", NewDate.ToString(LocalDateFormat));
+                    }
+                }
 
                 SetButtons(false);
                 UpdateForm();
@@ -214,6 +294,13 @@ namespace RateController.Menu
             {
                 Props.WriteErrorLog("frmMenuJobs/btnOk_Click: " + ex.Message);
             }
+        }
+
+        private void cbField_Resize(object sender, EventArgs e)
+        {
+            int cbCenter = cbField.Top + (cbField.Height / 2);
+            btnDeleteField.Top = cbCenter - (btnDeleteField.Height / 2);
+            lbFieldName.Top = cbCenter - (lbFieldName.Height / 2);
         }
 
         private void ckJobs_CheckedChanged(object sender, EventArgs e)
@@ -298,33 +385,10 @@ namespace RateController.Menu
             string field = Props.GetJobProp("Field");
             if (cbField.Items.Contains(field)) cbField.SelectedItem = field;
 
+            // date
+            tbDate.Text = Props.GetJobProp("Date");
+
             Initializing = false;
-        }
-
-        private void btnDeleteField_Click(object sender, EventArgs e)
-        {
-            if (cbField.SelectedItem != null)
-            {
-                string FieldToDelete = cbField.SelectedItem.ToString();
-                var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FieldToDelete + "]?", "Delete Field", true);
-                Hlp.TopMost = true;
-
-                Hlp.ShowDialog();
-                bool Result = Hlp.Result;
-                Hlp.Close();
-                if (Result)
-                {
-                    DeleteField = true;
-                    SetButtons(true);
-                }
-            }
-        }
-
-        private void cbField_Resize(object sender, EventArgs e)
-        {
-            int cbCenter=cbField.Top+(cbField.Height/2);
-            btnDeleteField.Top = cbCenter - (btnDeleteField.Height / 2);
-            lbFieldName.Top=cbCenter-(lbFieldName.Height/2);
         }
     }
 }
