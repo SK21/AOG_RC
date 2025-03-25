@@ -31,7 +31,6 @@ namespace RateController.Classes
         private GMapControl gmap;
         private GMapOverlay gpsMarkerOverlay;
         private bool isDragging = false;
-        private string LastFile;
         private System.Drawing.Point lastMousePosition;
         private List<MapZone> mapZones;
         private FormStart mf;
@@ -41,7 +40,6 @@ namespace RateController.Classes
 
         public MapManager(FormStart main)
         {
-            Debug.Print("MapManager");
             mf = main;
 
             InitializeMap();
@@ -199,67 +197,31 @@ namespace RateController.Classes
 
         public bool LoadMap()
         {
-            //InitializeMap();
-            Debug.Print("LoadMap");
             bool Result = false;
             try
             {
-                if (gmap.Parent != null)
+                var shapefileHelper = new ShapefileHelper(mf);
+                mapZones = shapefileHelper.CreateZoneList(Props.CurrentMapName);
+
+                zoneOverlay.Polygons.Clear();
+
+                if (mapZones.Count > 0) CenterMapToZone(mapZones[0]);
+
+                foreach (var mapZone in mapZones)
                 {
-                    Debug.Print(gmap.Parent.Name);
-                    var shapefileHelper = new ShapefileHelper(mf);
-                    mapZones = shapefileHelper.CreateZoneList(Props.CurrentMapName);
-
-                    zoneOverlay.Polygons.Clear();
-
-                    if (mapZones.Count > 0) CenterMapToZone(mapZones[0]);
-
-                    foreach (var mapZone in mapZones)
-                    {
-                        zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
-                    }
-
-                    gmap.Refresh();
-                    gmap.Zoom = 16;
-                    Result = true;
-                    MapChanged?.Invoke(this, EventArgs.Empty);
-                    ZoomToFit();
-                    //UpdateRateDataDisplay();
+                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
                 }
-                else
-                {
-                    Debug.Print("LoadMap parent null");
-                }
+
+                gmap.Refresh();
+                gmap.Zoom = 16;
+                Result = true;
+                MapChanged?.Invoke(this, EventArgs.Empty);
+                ZoomToFit();
+                //UpdateRateDataDisplay();
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapManager/LoadMap: " + ex.Message);
-            }
-            if (gmap.Parent != null) Debug.Print(gmap.Parent.Name);
-            return Result;
-        }
-
-        public bool NewMap()
-        {
-            bool Result = false;
-            try
-            {
-                gmap.Overlays.Clear();
-                zoneOverlay = new GMapOverlay("zones");
-                gpsMarkerOverlay = new GMapOverlay();
-                tempMarkerOverlay = new GMapOverlay();
-                if (Props.MapShowZones) gmap.Overlays.Add(zoneOverlay);
-                gmap.Overlays.Add(gpsMarkerOverlay);
-                gmap.Overlays.Add(tempMarkerOverlay);
-                currentZoneVertices = new List<PointLatLng>();
-                mapZones.Clear();
-                gmap.Refresh();
-                UpdateRateDataDisplay();
-                Result = true;
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.ShowMessage("MapManager.NewMap: " + ex.Message, "Error", 20000);
             }
             return Result;
         }
@@ -611,7 +573,6 @@ namespace RateController.Classes
 
         private void InitializeMap()
         {
-            Debug.Print("InitializeMap");
             //GMaps.Instance.Mode = AccessMode.CacheOnly;
             //GMaps.Instance.Mode = AccessMode.ServerOnly;
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
@@ -675,7 +636,6 @@ namespace RateController.Classes
 
         private void Props_JobChanged(object sender, EventArgs e)
         {
-            Debug.Print("Props_JobChanged");
             LoadMap();
         }
 

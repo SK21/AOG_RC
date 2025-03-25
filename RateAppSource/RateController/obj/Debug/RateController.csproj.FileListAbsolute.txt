@@ -2369,9 +2369,11 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuCalibrate.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuConfig.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuControl.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuHelp.pdf
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuJobs.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuNetwork.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuPressure.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuPrimed.pdf
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuProfiles.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuRate.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuRateMap.pdf
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuRelays.pdf
@@ -2394,6 +2396,9 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\Rate
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmHelp.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Forms.frmImport.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmLargeScreen.resources
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuJobs.resources
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuProfiles.resources
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Forms.frmMenuRateData.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmMenu.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmMsgBox.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmPressureDisplay.resources
@@ -2447,8 +2452,3 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\ru\R
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateCont.B5F4215A.Up2Date
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.exe
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.pdb
-G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Forms.frmMenuRateData.resources
-G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuProfiles.resources
-G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Menu.frmMenuJobs.resources
-G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuJobs.pdf
-G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\Help\frmMenuProfiles.pdf

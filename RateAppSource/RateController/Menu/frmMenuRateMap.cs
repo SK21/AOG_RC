@@ -59,6 +59,7 @@ namespace RateController.Menu
             }
             btnCreateZone.FlatAppearance.BorderSize = 0;
             ckEdit.Checked = false;
+            mf.Tls.Manager.SaveMap();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
