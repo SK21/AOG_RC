@@ -566,9 +566,13 @@ namespace RateController.Classes
                 if (!File.Exists(ExampleProfile + "\\ExamplePressureData.csv")) File.WriteAllText(ExampleProfile + "\\ExamplePressureData.csv", string.Empty);
 
                 // jobs folder
-                name = cDefaultDir + "\\Jobs";
+                name = cApplicationFolder + "\\Jobs";
                 if (!Directory.Exists(name)) Directory.CreateDirectory(name);
                 cJobsFolder = name;
+
+                // check default field name exists. 
+                cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");
+                if (!File.Exists(cFieldNames)) File.WriteAllText(cFieldNames, "");
 
                 string DefaultJobFolder = name + "\\" + "DefaultJob";
                 if (!Directory.Exists(DefaultJobFolder)) Directory.CreateDirectory(DefaultJobFolder);
@@ -811,15 +815,39 @@ namespace RateController.Classes
                 cActivityFileName = Path.Combine(ApplicationFolder, "Activity Log.txt");
                 if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
 
-                cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");
-                if (!File.Exists(cFieldNames)) File.WriteAllText(cFieldNames, "");
-
                 LoadProperties();
                 Result = true;
             }
             catch (Exception)
             {
             }
+            return Result;
+        }
+
+        public static bool CheckYearExists(int yr, bool Create = false)
+        {
+            bool Result = false;
+            string[] subFolders = Directory.GetDirectories(cJobsFolder);
+            foreach (string subFolder in subFolders)
+            {
+                string folderName = Path.GetFileName(subFolder);
+                int.TryParse(folderName, out int year);
+                if (year > 1900 || year < 2100)
+                {
+                    Result = true;
+                    break;
+                }
+            }
+
+            if (!Result && Create)
+            {
+                if (yr > 1900 && yr < 2100)
+                {
+                    Directory.CreateDirectory(cJobsFolder + "\\" + yr.ToString());
+                    Result = true;
+                }
+            }
+
             return Result;
         }
 
