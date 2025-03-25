@@ -169,8 +169,9 @@ namespace RateController.Menu
 
         private void ckZones_CheckedChanged(object sender, EventArgs e)
         {
-            mf.Tls.Manager.ShowZoneOverlay = ckZones.Checked;
             gbZone.Enabled = ckZones.Checked;
+            mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
+           if(ckZones.Checked) mf.Tls.Manager.ZoomToFit();
         }
 
         private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -303,6 +304,7 @@ namespace RateController.Menu
             ckSatView.Checked = Props.MapShowTiles;
             ckRateData.Checked = Props.MapShowRates;
             mf.Tls.Manager.LoadMap();
+            mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
         }
 
         private void PositionForm()
@@ -488,7 +490,7 @@ namespace RateController.Menu
 
             ckEnable.Checked = Props.VariableRateEnabled;
             ckSatView.Checked = mf.Tls.Manager.ShowTiles;
-            ckZones.Checked = mf.Tls.Manager.ShowZoneOverlay;
+            ckZones.Checked = Props.MapShowZones;
             gbZone.Enabled = ckZones.Checked;
             Initializing = false;
         }

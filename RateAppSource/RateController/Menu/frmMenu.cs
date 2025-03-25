@@ -575,8 +575,6 @@ namespace RateController
                 butDisplay.Visible = !Expanded;
                 butLanguage.Visible = !Expanded;
                 butColor.Visible = !Expanded;
-                butMap.Visible = !Expanded;
-                butRateData.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -605,14 +603,6 @@ namespace RateController
                     butDisplay.Left = butFile.Left + SubOffset;
                     Pos += SubFirstSpacing;
                     butDisplay.Top = Pos;
-
-                    butMap.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butMap.Top = Pos;
-
-                    butRateData.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butRateData.Top = Pos;
 
                     butLanguage.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -678,6 +668,8 @@ namespace RateController
                 butMode.Visible = !Expanded;
                 butMonitor.Visible = !Expanded;
                 butData.Visible = !Expanded;
+                butMap.Visible = !Expanded;
+                butRateData.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -726,6 +718,14 @@ namespace RateController
                     butData.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butData.Top = Pos;
+
+                    butMap.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butMap.Top = Pos;
+
+                    butRateData.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butRateData.Top = Pos;
 
                     butRate.PerformClick();
                 }
@@ -1092,6 +1092,24 @@ namespace RateController
                             fs.Show();
                             break;
 
+                        case "frmMenuRateMap":
+                            butProducts.PerformClick();
+                            fs = new frmMenuRateMap(mf, this);
+                            fs.Owner = this;
+                            cLastScreen = Last;
+                            HighlightButton(butMap);
+                            fs.Show();
+                            break;
+
+                        case "frmMenuRateData":
+                            butProducts.PerformClick();
+                            fs = new frmMenuRateData(mf, this);
+                            fs.Owner = this;
+                            cLastScreen = Last;
+                            HighlightButton(butRateData);
+                            fs.Show();
+                            break;
+
                         case "frmMenuSections":
                             butMachine.PerformClick();  // frmMenuSections opened by default
                             HighlightButton(butSections);
@@ -1193,24 +1211,6 @@ namespace RateController
                             fs.Owner = this;
                             cLastScreen = Last;
                             HighlightButton(btnPressure);
-                            fs.Show();
-                            break;
-
-                        case "frmMenuRateMap":
-                            butOptions.PerformClick();
-                            fs = new frmMenuRateMap(mf, this);
-                            fs.Owner = this;
-                            cLastScreen = Last;
-                            HighlightButton(butMap);
-                            fs.Show();
-                            break;
-
-                        case "frmMenuRateData":
-                            butOptions.PerformClick();
-                            fs = new frmMenuRateData(mf, this);
-                            fs.Owner = this;
-                            cLastScreen = Last;
-                            HighlightButton(butRateData);
                             fs.Show();
                             break;
 

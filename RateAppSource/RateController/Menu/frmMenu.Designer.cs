@@ -93,7 +93,7 @@
             this.butControl.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butControl.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butControl.Location = new System.Drawing.Point(448, 163);
+            this.butControl.Location = new System.Drawing.Point(445, 92);
             this.butControl.Name = "butControl";
             this.butControl.Size = new System.Drawing.Size(158, 49);
             this.butControl.TabIndex = 14;
@@ -112,7 +112,7 @@
             this.butData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butData.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butData.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butData.Location = new System.Drawing.Point(448, 451);
+            this.butData.Location = new System.Drawing.Point(445, 364);
             this.butData.Name = "butData";
             this.butData.Size = new System.Drawing.Size(158, 49);
             this.butData.TabIndex = 12;
@@ -131,7 +131,7 @@
             this.butMonitor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butMonitor.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butMonitor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butMonitor.Location = new System.Drawing.Point(448, 379);
+            this.butMonitor.Location = new System.Drawing.Point(445, 296);
             this.butMonitor.Name = "butMonitor";
             this.butMonitor.Size = new System.Drawing.Size(158, 49);
             this.butMonitor.TabIndex = 17;
@@ -150,7 +150,7 @@
             this.butMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butMode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butMode.Location = new System.Drawing.Point(448, 307);
+            this.butMode.Location = new System.Drawing.Point(445, 228);
             this.butMode.Name = "butMode";
             this.butMode.Size = new System.Drawing.Size(158, 49);
             this.butMode.TabIndex = 16;
@@ -169,7 +169,7 @@
             this.butSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butSettings.Location = new System.Drawing.Point(448, 235);
+            this.butSettings.Location = new System.Drawing.Point(445, 160);
             this.butSettings.Name = "butSettings";
             this.butSettings.Size = new System.Drawing.Size(158, 49);
             this.butSettings.TabIndex = 15;
@@ -188,7 +188,7 @@
             this.butRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butRate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butRate.Location = new System.Drawing.Point(448, 92);
+            this.butRate.Location = new System.Drawing.Point(445, 24);
             this.butRate.Name = "butRate";
             this.butRate.Size = new System.Drawing.Size(158, 49);
             this.butRate.TabIndex = 13;
@@ -207,7 +207,7 @@
             this.butCalibrate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butCalibrate.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butCalibrate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butCalibrate.Location = new System.Drawing.Point(633, 420);
+            this.butCalibrate.Location = new System.Drawing.Point(609, 364);
             this.butCalibrate.Name = "butCalibrate";
             this.butCalibrate.Size = new System.Drawing.Size(158, 49);
             this.butCalibrate.TabIndex = 20;
@@ -226,7 +226,7 @@
             this.butRelays.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butRelays.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butRelays.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butRelays.Location = new System.Drawing.Point(633, 156);
+            this.butRelays.Location = new System.Drawing.Point(609, 92);
             this.butRelays.Name = "butRelays";
             this.butRelays.Size = new System.Drawing.Size(158, 49);
             this.butRelays.TabIndex = 19;
@@ -245,7 +245,7 @@
             this.butSections.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butSections.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butSections.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butSections.Location = new System.Drawing.Point(633, 93);
+            this.butSections.Location = new System.Drawing.Point(609, 24);
             this.butSections.Name = "butSections";
             this.butSections.Size = new System.Drawing.Size(158, 49);
             this.butSections.TabIndex = 18;
@@ -264,7 +264,7 @@
             this.butValves.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butValves.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butValves.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butValves.Location = new System.Drawing.Point(797, 492);
+            this.butValves.Location = new System.Drawing.Point(759, 426);
             this.butValves.Name = "butValves";
             this.butValves.Size = new System.Drawing.Size(158, 49);
             this.butValves.TabIndex = 27;
@@ -283,7 +283,7 @@
             this.butWifi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butWifi.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butWifi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butWifi.Location = new System.Drawing.Point(797, 420);
+            this.butWifi.Location = new System.Drawing.Point(759, 359);
             this.butWifi.Name = "butWifi";
             this.butWifi.Size = new System.Drawing.Size(158, 49);
             this.butWifi.TabIndex = 26;
@@ -302,7 +302,7 @@
             this.butRelayPins.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butRelayPins.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butRelayPins.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butRelayPins.Location = new System.Drawing.Point(797, 348);
+            this.butRelayPins.Location = new System.Drawing.Point(759, 292);
             this.butRelayPins.Name = "butRelayPins";
             this.butRelayPins.Size = new System.Drawing.Size(158, 49);
             this.butRelayPins.TabIndex = 25;
@@ -321,7 +321,7 @@
             this.butPins.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butPins.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butPins.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butPins.Location = new System.Drawing.Point(797, 276);
+            this.butPins.Location = new System.Drawing.Point(759, 225);
             this.butPins.Name = "butPins";
             this.butPins.Size = new System.Drawing.Size(158, 49);
             this.butPins.TabIndex = 24;
@@ -340,7 +340,7 @@
             this.butConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butConfig.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butConfig.Location = new System.Drawing.Point(797, 204);
+            this.butConfig.Location = new System.Drawing.Point(759, 158);
             this.butConfig.Name = "butConfig";
             this.butConfig.Size = new System.Drawing.Size(158, 49);
             this.butConfig.TabIndex = 23;
@@ -359,7 +359,7 @@
             this.butNetwork.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butNetwork.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butNetwork.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butNetwork.Location = new System.Drawing.Point(797, 149);
+            this.butNetwork.Location = new System.Drawing.Point(759, 91);
             this.butNetwork.Name = "butNetwork";
             this.butNetwork.Size = new System.Drawing.Size(158, 49);
             this.butNetwork.TabIndex = 21;
@@ -378,7 +378,7 @@
             this.butLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butLanguage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butLanguage.Location = new System.Drawing.Point(961, 276);
+            this.butLanguage.Location = new System.Drawing.Point(907, 92);
             this.butLanguage.Name = "butLanguage";
             this.butLanguage.Size = new System.Drawing.Size(158, 49);
             this.butLanguage.TabIndex = 31;
@@ -397,7 +397,7 @@
             this.butSwitches.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butSwitches.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butSwitches.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butSwitches.Location = new System.Drawing.Point(633, 219);
+            this.butSwitches.Location = new System.Drawing.Point(609, 160);
             this.butSwitches.Name = "butSwitches";
             this.butSwitches.Size = new System.Drawing.Size(158, 49);
             this.butSwitches.TabIndex = 30;
@@ -416,7 +416,7 @@
             this.butPrimed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butPrimed.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butPrimed.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butPrimed.Location = new System.Drawing.Point(633, 348);
+            this.butPrimed.Location = new System.Drawing.Point(609, 296);
             this.butPrimed.Name = "butPrimed";
             this.butPrimed.Size = new System.Drawing.Size(158, 49);
             this.butPrimed.TabIndex = 29;
@@ -435,7 +435,7 @@
             this.butDisplay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butDisplay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butDisplay.Location = new System.Drawing.Point(970, 94);
+            this.butDisplay.Location = new System.Drawing.Point(907, 24);
             this.butDisplay.Name = "butDisplay";
             this.butDisplay.Size = new System.Drawing.Size(158, 49);
             this.butDisplay.TabIndex = 28;
@@ -607,7 +607,7 @@
             this.butUpdateModules.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butUpdateModules.Image = global::RateController.Properties.Resources.UpArrow64;
             this.butUpdateModules.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butUpdateModules.Location = new System.Drawing.Point(797, 551);
+            this.butUpdateModules.Location = new System.Drawing.Point(759, 493);
             this.butUpdateModules.Name = "butUpdateModules";
             this.butUpdateModules.Size = new System.Drawing.Size(158, 62);
             this.butUpdateModules.TabIndex = 161;
@@ -626,7 +626,7 @@
             this.butBoards.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butBoards.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butBoards.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butBoards.Location = new System.Drawing.Point(797, 94);
+            this.butBoards.Location = new System.Drawing.Point(759, 24);
             this.butBoards.Name = "butBoards";
             this.butBoards.Size = new System.Drawing.Size(158, 49);
             this.butBoards.TabIndex = 162;
@@ -644,7 +644,7 @@
             this.butColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butColor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butColor.Location = new System.Drawing.Point(961, 348);
+            this.butColor.Location = new System.Drawing.Point(907, 158);
             this.butColor.Name = "butColor";
             this.butColor.Size = new System.Drawing.Size(158, 49);
             this.butColor.TabIndex = 163;
@@ -663,7 +663,7 @@
             this.butMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butMap.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butMap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butMap.Location = new System.Drawing.Point(970, 149);
+            this.butMap.Location = new System.Drawing.Point(445, 432);
             this.butMap.Name = "butMap";
             this.butMap.Size = new System.Drawing.Size(158, 49);
             this.butMap.TabIndex = 164;
@@ -682,7 +682,7 @@
             this.btnPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPressure.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPressure.Location = new System.Drawing.Point(633, 276);
+            this.btnPressure.Location = new System.Drawing.Point(609, 228);
             this.btnPressure.Name = "btnPressure";
             this.btnPressure.Size = new System.Drawing.Size(158, 49);
             this.btnPressure.TabIndex = 165;
@@ -713,7 +713,7 @@
             this.butRateData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butRateData.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butRateData.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butRateData.Location = new System.Drawing.Point(970, 204);
+            this.butRateData.Location = new System.Drawing.Point(445, 500);
             this.butRateData.Name = "butRateData";
             this.butRateData.Size = new System.Drawing.Size(158, 49);
             this.butRateData.TabIndex = 167;
@@ -744,7 +744,7 @@
             this.butProfiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butProfiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butProfiles.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butProfiles.Location = new System.Drawing.Point(262, 101);
+            this.butProfiles.Location = new System.Drawing.Point(281, 24);
             this.butProfiles.Name = "butProfiles";
             this.butProfiles.Size = new System.Drawing.Size(158, 49);
             this.butProfiles.TabIndex = 169;
@@ -763,7 +763,7 @@
             this.butJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butJobs.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butJobs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butJobs.Location = new System.Drawing.Point(262, 156);
+            this.butJobs.Location = new System.Drawing.Point(281, 92);
             this.butJobs.Name = "butJobs";
             this.butJobs.Size = new System.Drawing.Size(158, 49);
             this.butJobs.TabIndex = 170;
