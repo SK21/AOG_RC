@@ -38,6 +38,7 @@ namespace RateController.Forms
                 if (SaveCrossReferencedShapefile())
                 {
                     mf.Tls.ShowMessage("Cross-referenced shapefile saved successfully.");
+                    this.Close();
                 }
                 else
                 {

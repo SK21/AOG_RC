@@ -64,7 +64,11 @@ namespace RateController.Menu
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (!mf.Tls.Manager.DeleteZone(tbName.Text))
+            if (mf.Tls.Manager.DeleteZone(tbName.Text))
+            {
+                UpdateForm();
+            }
+            else
             {
                 mf.Tls.ShowMessage("Zone could not be deleted.");
             }

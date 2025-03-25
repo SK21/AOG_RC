@@ -177,6 +177,8 @@ namespace RateController.Classes
                             gmap.Overlays.Add(zoneOverlay);
 
                             gmap.Refresh();
+                            UpdateTargetRates();
+                            SaveMap();
                             Result = true;
                         }
                     }
@@ -317,7 +319,7 @@ namespace RateController.Classes
                 }
                 if (!Found)
                 {
-                    cZoneName = "N/A (Outside Zones)";
+                    cZoneName = "-";
                     cZoneRates[0] = 0;
                     cZoneRates[1] = 0;
                     cZoneRates[2] = 0;
