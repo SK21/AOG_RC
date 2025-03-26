@@ -64,7 +64,7 @@ namespace RateController.Classes
         private static string cFieldNames;
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
         private static string cFormPropsFileName = "";
-        private static SortedDictionary<string, string> cJobProps = new SortedDictionary<string, string>();
+        private static string cJobsDataPath;
         private static string cJobsFolder;
         private static bool cMapShowRates;
         private static bool cMapShowTiles;
@@ -118,28 +118,12 @@ namespace RateController.Classes
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
 
-        public static string CurrentJob
+        public static string CurrentJobName
         {
             get
             {
-                string Result = "";
-                if (File.Exists(Properties.Settings.Default.CurrentJob))
-                {
-                    Result = Properties.Settings.Default.CurrentJob;
-                }
-                else
-                {
-                    if (File.Exists(cDefaultJob))
-                    {
-                        Result = cDefaultJob;
-                    }
-                    else
-                    {
-                        CheckFolders();
-                        Result = cDefaultJob;
-                    }
-                }
-                return Result;
+                Job current = Job.SearchJob(Properties.Settings.Default.CurrentJob);
+                return current.Name;
             }
         }
 
@@ -177,6 +161,9 @@ namespace RateController.Classes
 
         public static string FieldNames
         { get { return cFieldNames; } }
+
+        public static string JobsDataPath
+        { get { return cJobsDataPath; } }
 
         public static string JobsFolder
         { get { return cJobsFolder; } }
@@ -565,31 +552,46 @@ namespace RateController.Classes
                 if (!File.Exists(ExampleProfile + "\\Example.rcs")) File.WriteAllBytes(ExampleProfile + "\\Example.rcs", Properties.Resources.Default);
                 if (!File.Exists(ExampleProfile + "\\ExamplePressureData.csv")) File.WriteAllText(ExampleProfile + "\\ExamplePressureData.csv", string.Empty);
 
-                // jobs folder
-                name = cApplicationFolder + "\\Jobs";
-                if (!Directory.Exists(name)) Directory.CreateDirectory(name);
-                cJobsFolder = name;
-
-                // check default field name exists. 
-                cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");
-                if (!File.Exists(cFieldNames)) File.WriteAllText(cFieldNames, "");
-
-                string DefaultJobFolder = name + "\\" + "DefaultJob";
-                if (!Directory.Exists(DefaultJobFolder)) Directory.CreateDirectory(DefaultJobFolder);
-                cDefaultJob = DefaultJobFolder + "\\DefaultJob.jbs";
-                if (!File.Exists(cDefaultJob)) File.WriteAllText(cDefaultJob, string.Empty);
-                if (!File.Exists(DefaultJobFolder + "\\Default_RateData.csv")) File.WriteAllText(DefaultJobFolder + "\\Default_RateData.csv", string.Empty);
-
-                string MapName = DefaultJobFolder + "\\Map";
-                if (!Directory.Exists(MapName)) Directory.CreateDirectory(MapName);
-
-                // check user files
+                // check user files, current profile
                 if (!File.Exists(Properties.Settings.Default.CurrentFile))
                 {
                     Properties.Settings.Default.CurrentFile = DefaultProfile + "\\Default.rcs";
                     Properties.Settings.Default.UseJobs = true;
                     Properties.Settings.Default.Save();
                 }
+
+                // jobs folder
+                name = cDefaultDir + "\\Jobs";
+                if (!Directory.Exists(name)) Directory.CreateDirectory(name);
+                cJobsFolder = name;
+
+                cJobsDataPath = cJobsFolder + "\\JobsData.jbs";
+                if (!File.Exists(cJobsDataPath)) File.WriteAllText(cJobsDataPath, string.Empty);
+
+                // check for default job
+                List<Job> jobs = Job.GetJobs();
+                bool defaultExists = jobs.Any(j => string.Equals(j.Name, "Default", StringComparison.OrdinalIgnoreCase));
+
+                if (!defaultExists)
+                {
+                    // Create a new blank clsJob instance with default values
+                    Job defaultJob = new Job
+                    {
+                        Date = DateTime.Now,
+                        FieldID = 0,
+                        Name = "Default",
+                        Notes = string.Empty,
+                    };
+                    Job.AddJob(defaultJob);
+                }
+
+                // check user files, current job
+                int CurrentJob = Properties.Settings.Default.CurrentJob;
+                if (Job.SearchJob(CurrentJob) == null) Properties.Settings.Default.CurrentJob = 0;
+
+                // check field name exists.
+                cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");
+                if (!File.Exists(cFieldNames)) File.WriteAllText(cFieldNames, "");
 
                 Result = true;
             }
@@ -688,12 +690,6 @@ namespace RateController.Classes
                 WriteErrorLog("Props/GetFieldNames:" + ex.Message);
             }
             return items;
-        }
-
-        public static string GetJobProp(string key)
-        {
-            string prop = cJobProps.TryGetValue(key, out var value) ? value : string.Empty;
-            return prop;
         }
 
         public static string GetProp(string key)
@@ -824,86 +820,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool CheckYearExists(int yr, bool Create = false)
-        {
-            bool Result = false;
-            string[] subFolders = Directory.GetDirectories(cJobsFolder);
-            foreach (string subFolder in subFolders)
-            {
-                string folderName = Path.GetFileName(subFolder);
-                int.TryParse(folderName, out int year);
-                if (year > 1900 || year < 2100)
-                {
-                    Result = true;
-                    break;
-                }
-            }
-
-            if (!Result && Create)
-            {
-                if (yr > 1900 && yr < 2100)
-                {
-                    Directory.CreateDirectory(cJobsFolder + "\\" + yr.ToString());
-                    Result = true;
-                }
-            }
-
-            return Result;
-        }
-
-        public static bool OpenJob(string NewFile, bool IsNew = false)
-        {
-            Debug.Print("OpenJob");
-            bool Result = false;
-            try
-            {
-                string FileName = Path.GetFileNameWithoutExtension(NewFile);
-                string FolderName = Props.JobsFolder + "\\" + FileName;
-                string FullName = FolderName + "\\" + FileName + ".jbs";
-                if (IsNew)
-                {
-                    if (FileNameValidator.IsValidFolderName(FolderName) &&
-                        FileNameValidator.IsValidFileName(FileName) &&
-                        !Directory.Exists(FolderName))
-                    {
-                        Directory.CreateDirectory(FolderName);
-                        File.WriteAllText(FullName, string.Empty);
-                        File.WriteAllText(FolderName + "\\" + FileName + "_RateData.csv", string.Empty);
-
-                        Directory.CreateDirectory(FolderName + "\\Map");
-                    }
-                }
-
-                if (File.Exists(FullName))
-                {
-                    Load(cJobProps, FullName);
-                    Properties.Settings.Default.CurrentJob = FullName;
-                    Properties.Settings.Default.Save();
-                    cCurrentMapName = FolderName + "\\Map\\" + FileName + ".shp";
-                    cCurrentRateDataName = FolderName + "\\" + FileName + "_RateData.csv";
-                }
-                else
-                {
-                    // use default job
-                    Load(cJobProps, cDefaultJob);
-                    Properties.Settings.Default.CurrentJob = cDefaultJob;
-                    Properties.Settings.Default.Save();
-
-                    string currentJobFolder = Path.GetDirectoryName(cDefaultJob);
-                    cCurrentMapName = currentJobFolder + "\\Map\\Default.shp";
-                    cCurrentRateDataName = currentJobFolder + "\\Default_RateData.csv";
-                }
-
-                Result = true;
-                JobChanged?.Invoke(null, EventArgs.Empty);
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/OpenJob: " + ex.Message);
-            }
-            return Result;
-        }
-
         public static bool ParseDateText(string input, out DateTime result)
         {
             int currentYear = DateTime.Now.Year;
@@ -979,25 +895,6 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 WriteErrorLog("Props/SetFieldNames: " + ex.Message);
-            }
-        }
-
-        public static void SetJobProp(string key, string value, bool IgnoreReadOnly = false)
-        {
-            try
-            {
-                if (value != null && (!ReadOnly || IgnoreReadOnly))
-                {
-                    if (!cJobProps.TryGetValue(key, out var existingValue) || existingValue != value)
-                    {
-                        cJobProps[key] = value;
-                        Save(cJobProps, Properties.Settings.Default.CurrentJob);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/SetJobProp: " + ex.Message);
             }
         }
 

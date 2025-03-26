@@ -90,7 +90,7 @@ namespace RateController
             string Nm = Props.CurrentFileName().Length <= 20 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 20) + "...";
             lbFileName.Text = "[" + Nm + "]";
 
-            string job = Path.GetFileNameWithoutExtension(Props.CurrentJob);
+            string job = Path.GetFileNameWithoutExtension(Props.CurrentJobName);
             Nm = job.Length <= 20 ? job : job.Substring(0, 20) + "...";
             lbJob.Text = "[" + Nm + "]";
         }

@@ -217,10 +217,10 @@ namespace RateController.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string CurrentJob {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CurrentJob {
             get {
-                return ((string)(this["CurrentJob"]));
+                return ((int)(this["CurrentJob"]));
             }
             set {
                 this["CurrentJob"] = value;

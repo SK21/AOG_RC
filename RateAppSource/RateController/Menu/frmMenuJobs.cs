@@ -79,7 +79,7 @@ namespace RateController.Menu
                         File.Copy(OldFileRatesName, NewFileRatesName);
 
                         Directory.CreateDirectory(NewFilePath + "\\Map");
-                        Props.OpenJob(tbName.Text);
+                        //Props.OpenJob(tbName.Text);
                         tbName.Text = "";
                         UpdateForm();
                         MainMenu.ShowProfile();
@@ -123,12 +123,12 @@ namespace RateController.Menu
                                 Directory.Delete(FilePath, true);
 
                                 // load default if current is deleted
-                                if (Properties.Settings.Default.CurrentJob == FilePath + "\\" + FileToDelete + ".jbs")
-                                {
-                                    Props.OpenJob(Props.DefaultJob);
-                                    tbName.Text = "";
-                                    MainMenu.ShowProfile();
-                                }
+                                //if (Properties.Settings.Default.CurrentJob == FilePath + "\\" + FileToDelete + ".jbs")
+                                //{
+                                //    Props.OpenJob(Props.DefaultJob);
+                                //    tbName.Text = "";
+                                //    MainMenu.ShowProfile();
+                                //}
                                 UpdateForm();
                             }
                             else
@@ -186,50 +186,50 @@ namespace RateController.Menu
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (lstJobs.SelectedIndex >= 0)
-                {
-                    if (Props.OpenJob(lstJobs.SelectedItem.ToString()))
-                    {
-                        UpdateForm();
-                        MainMenu.ShowProfile();
-                    }
-                    else
-                    {
-                        mf.Tls.ShowMessage("File not opened.");
-                    }
-                }
-                else
-                {
-                    mf.Tls.ShowMessage("No file selected.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuJobs/btnLoad_Click: " + ex.Message);
-            }
+            //try
+            //{
+            //    if (lstJobs.SelectedIndex >= 0)
+            //    {
+            //        if (Props.OpenJob(lstJobs.SelectedItem.ToString()))
+            //        {
+            //            UpdateForm();
+            //            MainMenu.ShowProfile();
+            //        }
+            //        else
+            //        {
+            //            mf.Tls.ShowMessage("File not opened.");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        mf.Tls.ShowMessage("No file selected.");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Props.WriteErrorLog("frmMenuJobs/btnLoad_Click: " + ex.Message);
+            //}
         }
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (Props.OpenJob(tbName.Text, true))
-                {
-                    tbName.Text = "";
-                    UpdateForm();
-                    MainMenu.ShowProfile();
-                }
-                else
-                {
-                    mf.Tls.ShowMessage("Invalid file name.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuJobs/btnNew_Click: " + ex.Message);
-            }
+            //try
+            //{
+            //    if (Props.OpenJob(tbName.Text, true))
+            //    {
+            //        tbName.Text = "";
+            //        UpdateForm();
+            //        MainMenu.ShowProfile();
+            //    }
+            //    else
+            //    {
+            //        mf.Tls.ShowMessage("Invalid file name.");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Props.WriteErrorLog("frmMenuJobs/btnNew_Click: " + ex.Message);
+            //}
         }
 
         private void btnNotesDown_Click(object sender, EventArgs e)
@@ -244,56 +244,56 @@ namespace RateController.Menu
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Properties.Settings.Default.UseJobs = ckJobs.Checked;
-                Properties.Settings.Default.Save();
-                Props.SetJobProp("Notes", tbNotes.Text);
+            //try
+            //{
+            //    Properties.Settings.Default.UseJobs = ckJobs.Checked;
+            //    Properties.Settings.Default.Save();
+            //    Props.SetJobProp("Notes", tbNotes.Text);
 
-                // fields
-                if (DeleteField)
-                {
-                    cbField.Items.Remove(cbField.SelectedItem);
-                    DeleteField = false;
-                }
+            //    // fields
+            //    if (DeleteField)
+            //    {
+            //        cbField.Items.Remove(cbField.SelectedItem);
+            //        DeleteField = false;
+            //    }
 
-                string newItem = cbField.Text.Trim();
-                if (!string.IsNullOrEmpty(newItem))
-                {
-                    if (!cbField.Items.Contains(newItem))
-                    {
-                        cbField.Items.Add(newItem);
-                        cbField.SelectedItem = newItem;
-                    }
-                }
+            //    string newItem = cbField.Text.Trim();
+            //    if (!string.IsNullOrEmpty(newItem))
+            //    {
+            //        if (!cbField.Items.Contains(newItem))
+            //        {
+            //            cbField.Items.Add(newItem);
+            //            cbField.SelectedItem = newItem;
+            //        }
+            //    }
 
-                if (cbField.SelectedItem != null) Props.SetJobProp("Field", cbField.SelectedItem.ToString());
+            //    if (cbField.SelectedItem != null) Props.SetJobProp("Field", cbField.SelectedItem.ToString());
 
-                string[] itemsArray = cbField.Items.Cast<string>().ToArray();
-                Props.SetFieldNames(itemsArray);
+            //    string[] itemsArray = cbField.Items.Cast<string>().ToArray();
+            //    Props.SetFieldNames(itemsArray);
 
-                // date
-                if (ButtonDateEntry)
-                {
-                    ButtonDateEntry = false;
-                    Props.SetJobProp("Date", tbDate.Text);
-                }
-                else
-                {
-                    DateTime NewDate;
-                    if (Props.ParseDateText(tbDate.Text, out NewDate))
-                    {
-                        Props.SetJobProp("Date", NewDate.ToString(RCdateFormat));
-                    }
-                }
+            //    // date
+            //    if (ButtonDateEntry)
+            //    {
+            //        ButtonDateEntry = false;
+            //        Props.SetJobProp("Date", tbDate.Text);
+            //    }
+            //    else
+            //    {
+            //        DateTime NewDate;
+            //        if (Props.ParseDateText(tbDate.Text, out NewDate))
+            //        {
+            //            Props.SetJobProp("Date", NewDate.ToString(RCdateFormat));
+            //        }
+            //    }
 
-                SetButtons(false);
-                UpdateForm();
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuJobs/btnOk_Click: " + ex.Message);
-            }
+            //    SetButtons(false);
+            //    UpdateForm();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Props.WriteErrorLog("frmMenuJobs/btnOk_Click: " + ex.Message);
+            //}
         }
 
         private void cbField_Resize(object sender, EventArgs e)
@@ -361,34 +361,34 @@ namespace RateController.Menu
 
         private void UpdateForm()
         {
-            Initializing = true;
+            //Initializing = true;
 
-            lstJobs.Items.Clear();
-            string[] folders = Directory.GetDirectories(Props.JobsFolder);
-            foreach (string folder in folders)
-            {
-                lstJobs.Items.Add(Path.GetFileName(folder));
-            }
-            lbJob.Text = "Current Job:  " + Path.GetFileNameWithoutExtension(Props.CurrentJob);
+            //lstJobs.Items.Clear();
+            //string[] folders = Directory.GetDirectories(Props.JobsFolder);
+            //foreach (string folder in folders)
+            //{
+            //    lstJobs.Items.Add(Path.GetFileName(folder));
+            //}
+            //lbJob.Text = "Current Job:  " + Path.GetFileNameWithoutExtension(Props.CurrentJobName);
 
-            ckJobs.Checked = Properties.Settings.Default.UseJobs;
-            tbNotes.Text = Props.GetJobProp("Notes");
+            //ckJobs.Checked = Properties.Settings.Default.UseJobs;
+            //tbNotes.Text = Props.GetJobProp("Notes");
 
-            // field
-            string[] items = Props.GetFieldNames();
-            if (items != null)
-            {
-                cbField.Items.Clear();
-                cbField.Items.AddRange(items);
-            }
+            //// field
+            //string[] items = Props.GetFieldNames();
+            //if (items != null)
+            //{
+            //    cbField.Items.Clear();
+            //    cbField.Items.AddRange(items);
+            //}
 
-            string field = Props.GetJobProp("Field");
-            if (cbField.Items.Contains(field)) cbField.SelectedItem = field;
+            //string field = Props.GetJobProp("Field");
+            //if (cbField.Items.Contains(field)) cbField.SelectedItem = field;
 
-            // date
-            tbDate.Text = Props.GetJobProp("Date");
+            //// date
+            //tbDate.Text = Props.GetJobProp("Date");
 
-            Initializing = false;
+            //Initializing = false;
         }
 
         private void groupBox1_Paint(object sender, PaintEventArgs e)
