@@ -159,7 +159,7 @@ namespace RateController.Classes
             }
         }
 
-        public static string FieldNames
+        public static string FieldNamesPath
         { get { return cFieldNames; } }
 
         public static string JobsDataPath
@@ -589,9 +589,8 @@ namespace RateController.Classes
                 int CurrentJob = Properties.Settings.Default.CurrentJob;
                 if (Job.SearchJob(CurrentJob) == null) Properties.Settings.Default.CurrentJob = 0;
 
-                // check field name exists.
+                // create field names path
                 cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");
-                if (!File.Exists(cFieldNames)) File.WriteAllText(cFieldNames, "");
 
                 Result = true;
             }
@@ -678,19 +677,6 @@ namespace RateController.Classes
             }
         }
 
-        public static string[] GetFieldNames()
-        {
-            string[] items = null;
-            try
-            {
-                items = File.ReadAllLines(cFieldNames);
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/GetFieldNames:" + ex.Message);
-            }
-            return items;
-        }
 
         public static string GetProp(string key)
         {
@@ -880,23 +866,6 @@ namespace RateController.Classes
             }
         }
 
-        public static void SetFieldNames(string[] Names)
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(cFieldNames))
-                {
-                    foreach (string name in Names)
-                    {
-                        writer.WriteLine(name);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/SetFieldNames: " + ex.Message);
-            }
-        }
 
         public static void SetProp(string key, string value, bool IgnoreReadOnly = false)
         {

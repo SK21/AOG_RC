@@ -39,6 +39,38 @@ namespace RateController.Classes
             }
         }
 
+        public static Job CopyJob(int sourceJobId)
+        {
+            lock (_syncLock)
+            {
+                // Locate the source job.
+                Job sourceJob = SearchJob(sourceJobId);
+                if (sourceJob == null)
+                    return null;
+
+                // Create a new job instance copying properties from the source.
+                Job newJob = new Job
+                {
+                    Date = DateTime.Now,
+                    FieldID = sourceJob.FieldID,
+                    Name = sourceJob.Name + "_Copy",  // Optionally append "Copy" to the name.
+                    Notes = sourceJob.Notes
+                };
+
+                // Add the new job (this assigns a new ID and creates a new folder structure).
+                AddJob(newJob);
+
+                // Copy folder structure data from the source job folder to the new job folder.
+                string sourceFolder = sourceJob.JobFolder;
+                string destinationFolder = newJob.JobFolder;
+                if (Directory.Exists(sourceFolder))
+                {
+                    CopyDirectory(sourceFolder, destinationFolder);
+                }
+                return newJob;
+            }
+        }
+
         public static bool DeleteJob(int id)
         {
             lock (_syncLock)
@@ -122,6 +154,31 @@ namespace RateController.Classes
                 jobs[index] = updatedJob; // Update in-memory
                 SaveJobsToFile(jobs);     // Persist and re-sync cache
                 return true;
+            }
+        }
+
+        private static void CopyDirectory(string sourceDir, string destinationDir)
+        {
+            // Create destination directory if it does not exist.
+            if (!Directory.Exists(destinationDir))
+            {
+                Directory.CreateDirectory(destinationDir);
+            }
+
+            // Copy each file.
+            foreach (string filePath in Directory.GetFiles(sourceDir))
+            {
+                string fileName = Path.GetFileName(filePath);
+                string destFile = Path.Combine(destinationDir, fileName);
+                File.Copy(filePath, destFile, true);
+            }
+
+            // Recursively copy subdirectories.
+            foreach (string subDir in Directory.GetDirectories(sourceDir))
+            {
+                string dirName = Path.GetFileName(subDir);
+                string destSubDir = Path.Combine(destinationDir, dirName);
+                CopyDirectory(subDir, destSubDir);
             }
         }
 

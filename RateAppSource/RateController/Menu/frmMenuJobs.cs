@@ -1,5 +1,6 @@
 ﻿using RateController.Classes;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -21,7 +22,7 @@ namespace RateController.Menu
         private bool cEdited;
         private bool DeleteField = false;
         private bool Initializing = false;
-        private string RCdateFormat = "dd-MMM-yyyy   HH:mm";
+        private string JobsDateFormat = "dd-MMM-yyyy   HH:mm";
         private frmMenu MainMenu;
         private FormStart mf;
 
@@ -36,62 +37,39 @@ namespace RateController.Menu
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
 
-        private void btnAppendDate_Click(object sender, EventArgs e)
-        {
-            if (tbName.Text.Length > 0)
-            {
-                tbName.Text += "_" + DateTime.Now.ToString("yyyy-MM-dd");
-            }
-        }
-
         private void btnCalender_Click(object sender, EventArgs e)
         {
             ButtonDateEntry = true;
-            tbDate.Text = DateTime.Now.ToString(RCdateFormat);
+            tbDate.Text = DateTime.Now.ToString(JobsDateFormat);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
-            tbName.Text = "";
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
             try
             {
-                string NewFilePath = Props.JobsFolder + "\\" + tbName.Text;
-                if (FileNameValidator.IsValidFolderName(tbName.Text) &&
-                    FileNameValidator.IsValidFileName(tbName.Text) &&
-                    !Directory.Exists(NewFilePath))
+                if (lstJobs.SelectedIndex >= 0)
                 {
-                    if (lstJobs.SelectedIndex >= 0)
+                    Job SelectedJob = lstJobs.SelectedItem as Job;
+                    Job NewJob = Job.CopyJob(SelectedJob.ID);
+                    if(NewJob==null)
                     {
-                        Directory.CreateDirectory(NewFilePath);
-
-                        string OldFileName = lstJobs.SelectedItem.ToString();
-                        string OldFileFullName = Props.JobsFolder + "\\" + OldFileName + "\\" + OldFileName + ".jbs";
-                        File.Copy(OldFileFullName, NewFilePath + "\\" + tbName.Text + ".jbs");
-
-                        string NewFileRatesName = NewFilePath + "\\" + tbName.Text + "RateData.csv";
-                        string OldFileRatesName = Props.JobsFolder + "\\" + OldFileName + "\\" + OldFileName + "RateData.csv";
-                        File.Copy(OldFileRatesName, NewFileRatesName);
-
-                        Directory.CreateDirectory(NewFilePath + "\\Map");
-                        //Props.OpenJob(tbName.Text);
-                        tbName.Text = "";
-                        UpdateForm();
-                        MainMenu.ShowProfile();
+                        mf.Tls.ShowMessage("Could not copy file.");
                     }
                     else
                     {
-                        mf.Tls.ShowMessage("No file selected.");
+                        tbDate.Text = NewJob.Date.ToString(JobsDateFormat);
+                        cbField.selected
                     }
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("Invalid file name.");
+                    mf.Tls.ShowMessage("No file selected.");
                 }
             }
             catch (Exception ex)
@@ -117,23 +95,11 @@ namespace RateController.Menu
                         Hlp.Close();
                         if (Result)
                         {
-                            string FilePath = Props.JobsFolder + "\\" + FileToDelete;
-                            if (Props.SafeToDelete(FilePath))
+                            Job SelectedJob = lstJobs.SelectedItem as Job;
+                            if(SelectedJob != null)
                             {
-                                Directory.Delete(FilePath, true);
-
-                                // load default if current is deleted
-                                //if (Properties.Settings.Default.CurrentJob == FilePath + "\\" + FileToDelete + ".jbs")
-                                //{
-                                //    Props.OpenJob(Props.DefaultJob);
-                                //    tbName.Text = "";
-                                //    MainMenu.ShowProfile();
-                                //}
+                                Job.DeleteJob(SelectedJob.ID);
                                 UpdateForm();
-                            }
-                            else
-                            {
-                                mf.Tls.ShowMessage("Can not delete file.", "Help", 20000, true);
                             }
                         }
                     }
@@ -299,13 +265,56 @@ namespace RateController.Menu
         private void cbField_Resize(object sender, EventArgs e)
         {
             int cbCenter = cbField.Top + (cbField.Height / 2);
-            btnDeleteField.Top = cbCenter - (btnDeleteField.Height / 2);
             lbFieldName.Top = cbCenter - (lbFieldName.Height / 2);
         }
 
         private void ckJobs_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void FillCombos()
+        {
+            List<Parcel> Flds = ParcelManager.GetParcels();
+            cbSearchField.DataSource = Flds;
+            cbSearchField.DisplayMember = "Name";
+            cbSearchField.ValueMember = "ID";
+
+            cbField.DataSource = Flds;
+            cbField.DisplayMember = "Name";
+            cbField.ValueMember = "ID";
+        }
+
+        private void FillListBox()
+        {
+            try
+            {
+                int yr = 0;
+                int.TryParse(tbSearchYear.Text, out yr);
+                List<Job> filteredByDate;
+                if (yr > 0)
+                {
+                    DateTime startDate = new DateTime(yr, 1, 1);
+                    DateTime endDate = new DateTime(yr, 12, 31);
+
+                    filteredByDate = Job.FilterByDate(startDate, endDate);
+                }
+                else
+                {
+                    filteredByDate = Job.GetJobs();
+                }
+
+                List<Job> filteredJobs = filteredByDate
+                    .Where(job => job.FieldID == cbSearchField.SelectedIndex)
+                    .ToList();
+                lstJobs.Items.Clear();
+                lstJobs.DataSource = filteredJobs;
+                lstJobs.DisplayMember = "Name";
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuJobs/FillListBox: " + ex.Message);
+            }
         }
 
         private void frmMenuJobs_Load(object sender, EventArgs e)
@@ -320,7 +329,12 @@ namespace RateController.Menu
             MainMenu.StyleControls(this);
             SetLanguage();
             UpdateForm();
-            lbJob.Font = new Font(lbJob.Font, lbJob.Font.Style | FontStyle.Underline);
+        }
+
+        private void groupBox1_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -361,40 +375,22 @@ namespace RateController.Menu
 
         private void UpdateForm()
         {
-            //Initializing = true;
+            Initializing = true;
 
-            //lstJobs.Items.Clear();
-            //string[] folders = Directory.GetDirectories(Props.JobsFolder);
-            //foreach (string folder in folders)
-            //{
-            //    lstJobs.Items.Add(Path.GetFileName(folder));
-            //}
-            //lbJob.Text = "Current Job:  " + Path.GetFileNameWithoutExtension(Props.CurrentJobName);
+            FillListBox();
+            FillCombos();
 
-            //ckJobs.Checked = Properties.Settings.Default.UseJobs;
-            //tbNotes.Text = Props.GetJobProp("Notes");
+            Job jb = Job.SearchJob(Properties.Settings.Default.CurrentJob);
 
-            //// field
-            //string[] items = Props.GetFieldNames();
-            //if (items != null)
-            //{
-            //    cbField.Items.Clear();
-            //    cbField.Items.AddRange(items);
-            //}
+            tbDate.Text = jb.Date.ToString(JobsDateFormat);
+            cbField.SelectedValue = jb.FieldID;
+            tbNotes.Text = jb.Notes;
+            tbNotes.SelectionStart = tbNotes.Text.Length;
+            tbNotes.ScrollToCaret();
 
-            //string field = Props.GetJobProp("Field");
-            //if (cbField.Items.Contains(field)) cbField.SelectedItem = field;
+            ckJobs.Checked = Properties.Settings.Default.UseJobs;
 
-            //// date
-            //tbDate.Text = Props.GetJobProp("Date");
-
-            //Initializing = false;
-        }
-
-        private void groupBox1_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+            Initializing = false;
         }
     }
 }
