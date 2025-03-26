@@ -22,9 +22,11 @@ namespace RateController.Menu
         private bool cEdited;
         private bool DeleteField = false;
         private bool Initializing = false;
+        private bool IsNewJob = false;
         private string JobsDateFormat = "dd-MMM-yyyy   HH:mm";
         private frmMenu MainMenu;
         private FormStart mf;
+        private int NewJobID = -1;
 
         public frmMenuJobs(FormStart main, frmMenu menu)
         {
@@ -45,6 +47,12 @@ namespace RateController.Menu
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (IsNewJob)
+            {
+                Job.DeleteJob(NewJobID);
+                IsNewJob = false;
+                NewJobID = -1;
+            }
             UpdateForm();
             SetButtons(false);
         }
@@ -57,14 +65,17 @@ namespace RateController.Menu
                 {
                     Job SelectedJob = lstJobs.SelectedItem as Job;
                     Job NewJob = Job.CopyJob(SelectedJob.ID);
-                    if(NewJob==null)
+                    if (NewJob == null)
                     {
                         mf.Tls.ShowMessage("Could not copy file.");
                     }
                     else
                     {
                         tbDate.Text = NewJob.Date.ToString(JobsDateFormat);
-                        cbField.selected
+                        cbField.SelectedValue = NewJob.FieldID;
+                        tbNotes.Text = NewJob.Notes;
+                        NewJobID = NewJob.ID;
+                        IsNewJob = true;
                     }
                 }
                 else
@@ -87,7 +98,7 @@ namespace RateController.Menu
                     string FileToDelete = lstJobs.SelectedItem.ToString();
                     if (FileToDelete != "DefaultJob")
                     {
-                        var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FileToDelete + "]?", "Delete File", true);
+                        var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FileToDelete + "] and all job data?", "Delete File", true);
                         Hlp.TopMost = true;
 
                         Hlp.ShowDialog();
@@ -96,7 +107,7 @@ namespace RateController.Menu
                         if (Result)
                         {
                             Job SelectedJob = lstJobs.SelectedItem as Job;
-                            if(SelectedJob != null)
+                            if (SelectedJob != null)
                             {
                                 Job.DeleteJob(SelectedJob.ID);
                                 UpdateForm();
@@ -132,8 +143,21 @@ namespace RateController.Menu
                 Hlp.Close();
                 if (Result)
                 {
-                    DeleteField = true;
-                    SetButtons(true);
+                    if (ParcelManager.DeleteParcel(cbField.SelectedIndex, out bool FieldInUse))
+                    {
+                        UpdateForm();
+                    }
+                    else
+                    {
+                        if (FieldInUse)
+                        {
+                            mf.Tls.ShowMessage("Can not delete field in use.");
+                        }
+                        else
+                        {
+                            mf.Tls.ShowMessage("Field could not be deleted.");
+                        }
+                    }
                 }
             }
         }
@@ -152,50 +176,40 @@ namespace RateController.Menu
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    if (lstJobs.SelectedIndex >= 0)
-            //    {
-            //        if (Props.OpenJob(lstJobs.SelectedItem.ToString()))
-            //        {
-            //            UpdateForm();
-            //            MainMenu.ShowProfile();
-            //        }
-            //        else
-            //        {
-            //            mf.Tls.ShowMessage("File not opened.");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        mf.Tls.ShowMessage("No file selected.");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Props.WriteErrorLog("frmMenuJobs/btnLoad_Click: " + ex.Message);
-            //}
+            try
+            {
+                if (lstJobs.SelectedIndex >= 0)
+                {
+                    Properties.Settings.Default.CurrentJob = lstJobs.SelectedIndex;
+                    UpdateForm();
+                }
+                else
+                {
+                    mf.Tls.ShowMessage("No file selected.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuJobs/btnLoad_Click: " + ex.Message);
+            }
         }
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    if (Props.OpenJob(tbName.Text, true))
-            //    {
-            //        tbName.Text = "";
-            //        UpdateForm();
-            //        MainMenu.ShowProfile();
-            //    }
-            //    else
-            //    {
-            //        mf.Tls.ShowMessage("Invalid file name.");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Props.WriteErrorLog("frmMenuJobs/btnNew_Click: " + ex.Message);
-            //}
+            try
+            {
+                Job NewJob = new Job();
+                Job.AddJob(NewJob);
+                tbDate.Text = NewJob.Date.ToString(JobsDateFormat);
+                cbField.SelectedValue = NewJob.FieldID;
+                tbNotes.Text = NewJob.Notes;
+                NewJobID = NewJob.ID;
+                IsNewJob = true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuJobs/btnNew_Click: " + ex.Message);
+            }
         }
 
         private void btnNotesDown_Click(object sender, EventArgs e)
@@ -210,62 +224,44 @@ namespace RateController.Menu
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    Properties.Settings.Default.UseJobs = ckJobs.Checked;
-            //    Properties.Settings.Default.Save();
-            //    Props.SetJobProp("Notes", tbNotes.Text);
+            try
+            {
+                Properties.Settings.Default.UseJobs = ckJobs.Checked;
+                Properties.Settings.Default.Save();
 
-            //    // fields
-            //    if (DeleteField)
-            //    {
-            //        cbField.Items.Remove(cbField.SelectedItem);
-            //        DeleteField = false;
-            //    }
+                int CurrentID = -1;
+                if (NewJobID > -1)
+                {
+                    CurrentID = NewJobID;
+                    NewJobID = -1;
+                    IsNewJob = false;
+                }
+                else
+                {
+                    if (lstJobs.SelectedIndex >= 0) CurrentID = lstJobs.SelectedIndex;
+                }
 
-            //    string newItem = cbField.Text.Trim();
-            //    if (!string.IsNullOrEmpty(newItem))
-            //    {
-            //        if (!cbField.Items.Contains(newItem))
-            //        {
-            //            cbField.Items.Add(newItem);
-            //            cbField.SelectedItem = newItem;
-            //        }
-            //    }
+                if (CurrentID > -1)
+                {
+                    Job NewJob = Job.SearchJob(CurrentID);
+                    if (NewJob != null)
+                    {
+                        DateTime NewDate;
+                        DateTime.TryParse(tbDate.Text, out NewDate);
+                        NewJob.Date = NewDate;
 
-            //    if (cbField.SelectedItem != null) Props.SetJobProp("Field", cbField.SelectedItem.ToString());
+                        NewJob.FieldID = cbField.SelectedIndex;
+                        NewJob.Notes = tbNotes.Text;
+                    }
+                }
 
-            //    string[] itemsArray = cbField.Items.Cast<string>().ToArray();
-            //    Props.SetFieldNames(itemsArray);
-
-            //    // date
-            //    if (ButtonDateEntry)
-            //    {
-            //        ButtonDateEntry = false;
-            //        Props.SetJobProp("Date", tbDate.Text);
-            //    }
-            //    else
-            //    {
-            //        DateTime NewDate;
-            //        if (Props.ParseDateText(tbDate.Text, out NewDate))
-            //        {
-            //            Props.SetJobProp("Date", NewDate.ToString(RCdateFormat));
-            //        }
-            //    }
-
-            //    SetButtons(false);
-            //    UpdateForm();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Props.WriteErrorLog("frmMenuJobs/btnOk_Click: " + ex.Message);
-            //}
-        }
-
-        private void cbField_Resize(object sender, EventArgs e)
-        {
-            int cbCenter = cbField.Top + (cbField.Height / 2);
-            lbFieldName.Top = cbCenter - (lbFieldName.Height / 2);
+                SetButtons(false);
+                UpdateForm();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuJobs/btnOk_Click: " + ex.Message);
+            }
         }
 
         private void ckJobs_CheckedChanged(object sender, EventArgs e)
@@ -356,11 +352,19 @@ namespace RateController.Menu
                 {
                     btnCancel.Enabled = true;
                     btnOK.Enabled = true;
+                    btnLoad.Enabled = false;
+                    btnCopy.Enabled = false;
+                    btnDelete.Enabled = false;
+                    btnDeleteField.Enabled = false;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
                     btnOK.Enabled = false;
+                    btnLoad.Enabled = true;
+                    btnCopy.Enabled = true;
+                    btnDelete.Enabled = true;
+                    btnDeleteField.Enabled = true;
                 }
 
                 cEdited = Edited;

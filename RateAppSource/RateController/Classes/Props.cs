@@ -828,25 +828,40 @@ namespace RateController.Classes
             MapShowRatesSettingsChanged?.Invoke(null, EventArgs.Empty);
         }
 
-        public static bool SafeToDelete(string name)
+        public static bool IsPathSafeToDelete(string candidatePath)
         {
-            bool Result = false;
-
-            string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string rateControllerPath = Path.Combine(myDocuments, "RateController");
-            string fullPath = Path.GetFullPath(name);
-
-            if (fullPath.StartsWith(rateControllerPath, StringComparison.OrdinalIgnoreCase))
+            bool result = false;
+            try
             {
-                if (Directory.Exists(fullPath))
+                string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string baseFolder = Path.Combine(myDocuments, "RateController");
+
+                if (!string.IsNullOrEmpty(candidatePath))
                 {
-                    Result = true;
+                    string candidateFullPath = Path.GetFullPath(candidatePath);
+                    string safeBaseFullPath = Path.GetFullPath(baseFolder);
+
+                    // If the candidate is a file, use its parent folder for the containment check.
+                    if (File.Exists(candidateFullPath))
+                    {
+                        candidateFullPath = Path.GetDirectoryName(candidateFullPath);
+                    }
+
+                    // Normalize paths
+                    candidateFullPath = candidateFullPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                    safeBaseFullPath = safeBaseFullPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+                    // Check if the candidate path is within the safe base folder
+                    string safeBaseWithSeparator = safeBaseFullPath + Path.DirectorySeparatorChar;
+                    result = candidateFullPath.StartsWith(safeBaseWithSeparator, StringComparison.OrdinalIgnoreCase);
                 }
             }
-
-            return Result;
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/SafeToDelete: " + ex.Message);
+            }
+            return result;
         }
-
         public static void SaveFormLocation(Form frm, string Instance = "")
         {
             try

@@ -56,6 +56,7 @@
             this.tbSearchYear = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnDeleteField = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -181,7 +182,6 @@
             this.cbField.Sorted = true;
             this.cbField.TabIndex = 375;
             this.cbField.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
-            this.cbField.Resize += new System.EventHandler(this.cbField_Resize);
             // 
             // ckJobs
             // 
@@ -386,6 +386,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnDeleteField);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.tbDate);
             this.groupBox2.Controls.Add(this.btnCalender);
@@ -402,6 +403,18 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Current Job";
             this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // btnDeleteField
+            // 
+            this.btnDeleteField.FlatAppearance.BorderSize = 0;
+            this.btnDeleteField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteField.Image = global::RateController.Properties.Resources.trash_small;
+            this.btnDeleteField.Location = new System.Drawing.Point(377, 59);
+            this.btnDeleteField.Name = "btnDeleteField";
+            this.btnDeleteField.Size = new System.Drawing.Size(41, 41);
+            this.btnDeleteField.TabIndex = 389;
+            this.btnDeleteField.UseVisualStyleBackColor = true;
+            this.btnDeleteField.Click += new System.EventHandler(this.btnDeleteField_Click);
             // 
             // frmMenuJobs
             // 
@@ -463,5 +476,6 @@
         private System.Windows.Forms.TextBox tbSearchYear;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button btnDeleteField;
     }
 }

@@ -71,18 +71,38 @@ namespace RateController.Classes
             }
         }
 
-        public static bool DeleteJob(int id)
+        public static bool DeleteJob(int ID)
         {
             lock (_syncLock)
             {
-                var jobs = GetJobs();
-                Job jobToRemove = jobs.FirstOrDefault(j => j.ID == id);
-                if (jobToRemove == null)
-                    return false;
+                bool Result = false;
+                try
+                {
+                    var jobs = GetJobs();
+                    Job jobToRemove = jobs.FirstOrDefault(j => j.ID == ID);
+                    if (jobToRemove != null)
+                    {
+                        string jobFolderPath = jobToRemove.JobFolder;
+                        if (Props.IsPathSafeToDelete(jobFolderPath))
+                        {
+                            // Delete job folder and files
+                            if (Directory.Exists(jobFolderPath))
+                            {
+                                Directory.Delete(jobFolderPath, true); // Deletes the folder and its contents
+                            }
 
-                jobs.Remove(jobToRemove);
-                SaveJobsToFile(jobs);
-                return true;
+                            // Remove the job from the list and update the file
+                            jobs.Remove(jobToRemove);
+                            SaveJobsToFile(jobs);
+                            Result = true;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("Jobs/DeleteJob: " + ex.Message);
+                }
+                return Result;
             }
         }
 
@@ -113,6 +133,14 @@ namespace RateController.Classes
                     _lastCacheUpdate = DateTime.Now;
                 }
                 return _cachedJobs;
+            }
+        }
+
+        public static bool IsFieldIDUsed(int fieldID)
+        {
+            lock (_syncLock)
+            {
+                return GetJobs().Any(job => job.FieldID == fieldID);
             }
         }
 
