@@ -59,7 +59,6 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.btnDeleteField = new System.Windows.Forms.Button();
             this.cbField = new System.Windows.Forms.ComboBox();
-            this.tbID = new System.Windows.Forms.TextBox();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
@@ -380,7 +379,6 @@
             // 
             // gbCurrentJob
             // 
-            this.gbCurrentJob.Controls.Add(this.tbID);
             this.gbCurrentJob.Controls.Add(this.label5);
             this.gbCurrentJob.Controls.Add(this.tbName);
             this.gbCurrentJob.Controls.Add(this.btnDeleteField);
@@ -446,14 +444,6 @@
             this.cbField.TabIndex = 375;
             this.cbField.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
-            // tbID
-            // 
-            this.tbID.Location = new System.Drawing.Point(438, 29);
-            this.tbID.Name = "tbID";
-            this.tbID.Size = new System.Drawing.Size(69, 29);
-            this.tbID.TabIndex = 392;
-            this.tbID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // frmMenuJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -514,6 +504,5 @@
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.ComboBox cbField;
         private System.Windows.Forms.Button btnRefeshJobs;
-        private System.Windows.Forms.TextBox tbID;
     }
 }

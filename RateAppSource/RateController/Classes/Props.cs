@@ -123,6 +123,12 @@ namespace RateController.Classes
             get
             {
                 Job current = JobManager.SearchJob(Properties.Settings.Default.CurrentJob);
+                if (current == null)
+                {
+                    Properties.Settings.Default.CurrentJob = 0;
+                    Properties.Settings.Default.Save();
+                    current = JobManager.SearchJob(0);
+                }
                 return current.Name;
             }
         }
@@ -569,21 +575,7 @@ namespace RateController.Classes
                 if (!File.Exists(cJobsDataPath)) File.WriteAllText(cJobsDataPath, string.Empty);
 
                 // check for default job
-                List<Job> jobs = JobManager.GetJobs();
-                bool defaultExists = jobs.Any(j => string.Equals(j.Name, "Default", StringComparison.OrdinalIgnoreCase));
-
-                if (!defaultExists)
-                {
-                    // Create a new blank clsJob instance with default values
-                    Job defaultJob = new Job
-                    {
-                        Date = DateTime.Now,
-                        FieldID = 0,
-                        Name = "Default",
-                        Notes = string.Empty,
-                    };
-                    JobManager.AddJob(defaultJob);
-                }
+                JobManager.CheckDefaultJob();
 
                 // check user files, current job
                 int CurrentJob = Properties.Settings.Default.CurrentJob;

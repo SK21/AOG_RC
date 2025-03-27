@@ -15,7 +15,6 @@ namespace RateController.Menu
         private const int WM_VSCROLL = 0x0115;
         private bool cEdited;
         private Job EditingJob = null;
-        private Parcel EditingParcel = null;
         private bool Initializing = false;
         private bool IsNewJob = false;
         private string JobsDateFormat = "dd-MMM-yyyy   HH:mm";
@@ -91,10 +90,9 @@ namespace RateController.Menu
             {
                 if (lstJobs.SelectedItem is Job SelectedJob)
                 {
-                    int FileToDelete = SelectedJob.ID;
-                    if (FileToDelete != 0)
+                    if (SelectedJob != null && SelectedJob.ID != 0)    // keep 0, default job
                     {
-                        var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FileToDelete + "] and all job data?", "Delete File", true);
+                        var Hlp = new frmMsgBox(mf, "Confirm Delete [" + SelectedJob.Name + "] and all job data?", "Delete File", true);
                         Hlp.TopMost = true;
 
                         Hlp.ShowDialog();
@@ -285,6 +283,16 @@ namespace RateController.Menu
             FillListBox();
         }
 
+        private void btnRefeshJobs_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                cbSearchField.SelectedIndex = -1;
+                tbSearchYear.Text = DateTime.Now.Year.ToString();
+                FillListBox();
+            }
+        }
+
         private void ckJobs_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -448,8 +456,8 @@ namespace RateController.Menu
         {
             int JobID = Properties.Settings.Default.CurrentJob;
             EditingJob = JobManager.SearchJob(JobID);
+            if (EditingJob == null) EditingJob = JobManager.SearchJob(0);
             IsNewJob = false;
-            EditingParcel = ParcelManager.SearchParcel(EditingJob.FieldID);
         }
 
         private void UpdateForm()
@@ -458,8 +466,8 @@ namespace RateController.Menu
             {
                 Initializing = true;
 
-                 FillCombos();
-               FillListBox();
+                FillCombos();
+                FillListBox();
 
                 if (EditingJob == null)
                 {
@@ -472,7 +480,6 @@ namespace RateController.Menu
                 {
                     tbName.Text = EditingJob.Name;
                     tbDate.Text = EditingJob.Date.ToString(JobsDateFormat);
-                    tbID.Text = EditingJob.FieldID.ToString();
 
                     // Use ParcelManager.SearchParcel to find the Parcel by FieldID
                     Parcel fieldParcel = ParcelManager.SearchParcel(EditingJob.FieldID);
@@ -511,16 +518,6 @@ namespace RateController.Menu
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuJobs/UpdateForm: " + ex.Message);
-            }
-        }
-
-        private void btnRefeshJobs_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                cbSearchField.SelectedIndex = -1;
-                tbSearchYear.Text = DateTime.Now.Year.ToString();
-                FillListBox();
             }
         }
     }

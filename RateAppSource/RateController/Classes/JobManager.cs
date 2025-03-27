@@ -25,6 +25,29 @@ namespace RateController.Classes
             }
         }
 
+        public static void CheckDefaultJob()
+        {
+            lock (_syncLock)
+            {
+                Job defaultJob=SearchJob(0);
+                if (defaultJob == null)
+                {
+                    defaultJob = new Job
+                    {
+                        ID = 0,
+                        Date = DateTime.Now,
+                        FieldID = -1,
+                        Name = "Default Job",
+                        Notes = ""
+                    };
+                    List<Job> jobs = GetJobs();
+                    jobs.Add(defaultJob);
+                    SaveJobsToFile(jobs);
+                    CreateJobFolderStructure(defaultJob);
+                }
+            }
+        }
+
         public static Job CopyJob(int sourceJobId)
         {
             lock (_syncLock)
