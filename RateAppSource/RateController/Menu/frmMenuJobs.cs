@@ -201,7 +201,6 @@ namespace RateController.Menu
             {
                 EditingJob = new Job();
                 tbDate.Text = DateTime.Now.ToString(JobsDateFormat);
-                cbField.SelectedValue = EditingJob.FieldID;
                 tbNotes.Text = "";
                 tbName.Text = "New Job";
                 IsNewJob = true;
@@ -297,33 +296,19 @@ namespace RateController.Menu
             {
                 List<Parcel> Flds = ParcelManager.GetParcels();
 
-                // Store previous selections
-                int? previousFieldID = cbField.SelectedValue as int?;
-                int? previousSearchFieldID = cbSearchField.SelectedValue as int?;
+                // Sort and create independent lists for each ComboBox
+                var fieldList = Flds.OrderBy(p => p.Name).ToList();
+                var searchFieldList = Flds.OrderBy(p => p.Name).ToList();
 
-                // Create separate lists for each combo box
-                List<Parcel> fieldList = new List<Parcel>(Flds);
-                List<Parcel> searchFieldList = new List<Parcel>(Flds);
-
-                // Set data sources
-                cbSearchField.DataSource = searchFieldList;
-                cbSearchField.DisplayMember = "Name";
-                cbSearchField.ValueMember = "ID";
-
+                // Set data sources separately to prevent unwanted synchronization
                 cbField.DataSource = fieldList;
-                cbField.DisplayMember = "Name";
-                cbField.ValueMember = "ID";
+                cbSearchField.DataSource = searchFieldList;
 
-                // Restore valid previous selection if still present
-                if (previousFieldID.HasValue && fieldList.Any(f => f.ID == previousFieldID.Value))
-                    cbField.SelectedValue = previousFieldID.Value;
-                else
-                    cbField.SelectedIndex = -1;
+                // Assign display and value members
+                cbField.DisplayMember = cbSearchField.DisplayMember = "Name";
+                cbField.ValueMember = cbSearchField.ValueMember = "ID";
 
-                if (previousSearchFieldID.HasValue && searchFieldList.Any(f => f.ID == previousSearchFieldID.Value))
-                    cbSearchField.SelectedValue = previousSearchFieldID.Value;
-                else
-                    cbSearchField.SelectedIndex = -1;
+                cbSearchField.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -392,7 +377,7 @@ namespace RateController.Menu
             GroupBox box = sender as GroupBox;
             if (box != null)
             {
-                Color borderColor = cEdited ? Color.Yellow : Color.Blue; // Change color based on cEdited
+                Color borderColor = cEdited ? Color.Blue : Color.Blue; // Change color based on cEdited
                 float borderWidth = cEdited ? 3 : 1; // Change thickness based on cEdited
                 mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, borderColor, borderWidth);
             }
@@ -473,8 +458,8 @@ namespace RateController.Menu
             {
                 Initializing = true;
 
-                FillListBox();
-                FillCombos();
+                 FillCombos();
+               FillListBox();
 
                 if (EditingJob == null)
                 {
@@ -487,18 +472,29 @@ namespace RateController.Menu
                 {
                     tbName.Text = EditingJob.Name;
                     tbDate.Text = EditingJob.Date.ToString(JobsDateFormat);
+                    tbID.Text = EditingJob.FieldID.ToString();
 
                     // Use ParcelManager.SearchParcel to find the Parcel by FieldID
                     Parcel fieldParcel = ParcelManager.SearchParcel(EditingJob.FieldID);
-                    if (fieldParcel != null)
+                    if (fieldParcel == null)
                     {
-                        cbField.SelectedValue = fieldParcel.ID;
+                        cbField.SelectedIndex = -1;
                     }
                     else
                     {
-                        cbField.SelectedIndex = -1; // Clear selection if ID is invalid
-                    }
+                        var matchingParcel = cbField.Items
+                                          .OfType<Parcel>()
+                                          .FirstOrDefault(p => p.ID == fieldParcel.ID);
 
+                        if (matchingParcel == null)
+                        {
+                            cbField.SelectedIndex = -1;  // Could not find a matching object
+                        }
+                        else
+                        {
+                            cbField.SelectedItem = matchingParcel;
+                        }
+                    }
                     tbNotes.Text = EditingJob.Notes;
                 }
 
@@ -523,6 +519,7 @@ namespace RateController.Menu
             if (e.Button == MouseButtons.Right)
             {
                 cbSearchField.SelectedIndex = -1;
+                tbSearchYear.Text = DateTime.Now.Year.ToString();
                 FillListBox();
             }
         }
