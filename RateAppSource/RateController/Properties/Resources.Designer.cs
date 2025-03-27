@@ -193,6 +193,16 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap calendar___large {
+            get {
+                object obj = ResourceManager.GetObject("calendar___large", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap calendar_blank {
             get {
                 object obj = ResourceManager.GetObject("calendar_blank", resourceCulture);

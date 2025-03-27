@@ -740,6 +740,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\calendar - large.png" />
     <None Include="Resources\Update small.png" />
     <None Include="Resources\arrow-up.png" />
     <None Include="Resources\arrow-down.png" />

@@ -21,20 +21,20 @@ namespace RateController.Classes
             SaveParcels(mappings);
         }
 
-        public static bool DeleteParcel(int ID, out bool InUse)
+        public static bool DeleteParcel(int FieldID, out bool InUse)
         {
             bool Result = false;
             InUse = false;
             try
             {
-                if (JobManager.IsFieldIDUsed(ID))
+                if (JobManager.IsFieldIDUsed(FieldID))
                 {
                     InUse = true;
                 }
                 else
                 {
                     var mappings = GetParcels();
-                    var mappingToRemove = mappings.FirstOrDefault(m => m.ID == ID);
+                    var mappingToRemove = mappings.FirstOrDefault(m => m.ID == FieldID);
                     if (mappingToRemove != null)
                     {
                         mappings.Remove(mappingToRemove);

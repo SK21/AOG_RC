@@ -117,12 +117,15 @@ namespace RateController.Classes
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
 
-        public static string CurrentJobName
+        public static string CurrentJobDescription
         {
             get
             {
                 Job current = JobManager.SearchJob(Props.CurrentJobID);
-                return current.Name;
+                string fld = "";
+                Parcel currentParcel = ParcelManager.SearchParcel(current.FieldID);
+                if (currentParcel != null) fld = currentParcel.Name;
+                return current.Name+ " - " + fld;
             }
         }
 

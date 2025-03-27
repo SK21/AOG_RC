@@ -51,13 +51,13 @@
             this.gbJobs = new System.Windows.Forms.GroupBox();
             this.btnRefeshJobs = new System.Windows.Forms.Button();
             this.cbSearchField = new System.Windows.Forms.ComboBox();
+            this.btnDeleteField = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.tbSearchYear = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.gbCurrentJob = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
-            this.btnDeleteField = new System.Windows.Forms.Button();
             this.cbField = new System.Windows.Forms.ComboBox();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
@@ -80,7 +80,7 @@
             this.btnCopy.FlatAppearance.BorderSize = 0;
             this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCopy.Image = global::RateController.Properties.Resources.copy1;
-            this.btnCopy.Location = new System.Drawing.Point(6, 144);
+            this.btnCopy.Location = new System.Drawing.Point(6, 173);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(82, 64);
             this.btnCopy.TabIndex = 367;
@@ -92,7 +92,7 @@
             this.btnLoad.FlatAppearance.BorderSize = 0;
             this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLoad.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnLoad.Location = new System.Drawing.Point(6, 65);
+            this.btnLoad.Location = new System.Drawing.Point(6, 94);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(82, 64);
             this.btnLoad.TabIndex = 366;
@@ -104,7 +104,7 @@
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(6, 223);
+            this.btnDelete.Location = new System.Drawing.Point(6, 252);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 365;
@@ -116,7 +116,7 @@
             this.lstJobs.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstJobs.FormattingEnabled = true;
             this.lstJobs.ItemHeight = 31;
-            this.lstJobs.Location = new System.Drawing.Point(94, 66);
+            this.lstJobs.Location = new System.Drawing.Point(94, 95);
             this.lstJobs.Name = "lstJobs";
             this.lstJobs.ScrollAlwaysVisible = true;
             this.lstJobs.Size = new System.Drawing.Size(379, 221);
@@ -124,19 +124,19 @@
             // 
             // tbNotes
             // 
-            this.tbNotes.Location = new System.Drawing.Point(94, 139);
+            this.tbNotes.Location = new System.Drawing.Point(94, 133);
             this.tbNotes.MaxLength = 800;
             this.tbNotes.Multiline = true;
             this.tbNotes.Name = "tbNotes";
             this.tbNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbNotes.Size = new System.Drawing.Size(373, 89);
+            this.tbNotes.Size = new System.Drawing.Size(373, 66);
             this.tbNotes.TabIndex = 370;
             this.tbNotes.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
             // lb1
             // 
             this.lb1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb1.Location = new System.Drawing.Point(6, 139);
+            this.lb1.Location = new System.Drawing.Point(7, 133);
             this.lb1.Name = "lb1";
             this.lb1.Size = new System.Drawing.Size(70, 23);
             this.lb1.TabIndex = 371;
@@ -145,7 +145,7 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(6, 64);
+            this.label1.Location = new System.Drawing.Point(6, 60);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(71, 29);
             this.label1.TabIndex = 372;
@@ -155,7 +155,7 @@
             // lbFieldName
             // 
             this.lbFieldName.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFieldName.Location = new System.Drawing.Point(7, 102);
+            this.lbFieldName.Location = new System.Drawing.Point(7, 97);
             this.lbFieldName.Name = "lbFieldName";
             this.lbFieldName.Size = new System.Drawing.Size(70, 29);
             this.lbFieldName.TabIndex = 374;
@@ -216,7 +216,7 @@
             // 
             // tbDate
             // 
-            this.tbDate.Location = new System.Drawing.Point(94, 64);
+            this.tbDate.Location = new System.Drawing.Point(94, 60);
             this.tbDate.Name = "tbDate";
             this.tbDate.Size = new System.Drawing.Size(258, 29);
             this.tbDate.TabIndex = 382;
@@ -227,10 +227,10 @@
             // 
             this.btnCalender.FlatAppearance.BorderSize = 0;
             this.btnCalender.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCalender.Image = global::RateController.Properties.Resources.calendar_blank;
-            this.btnCalender.Location = new System.Drawing.Point(377, 58);
+            this.btnCalender.Image = global::RateController.Properties.Resources.calendar___large;
+            this.btnCalender.Location = new System.Drawing.Point(376, 42);
             this.btnCalender.Name = "btnCalender";
-            this.btnCalender.Size = new System.Drawing.Size(41, 41);
+            this.btnCalender.Size = new System.Drawing.Size(82, 64);
             this.btnCalender.TabIndex = 383;
             this.btnCalender.UseVisualStyleBackColor = true;
             this.btnCalender.Click += new System.EventHandler(this.btnCalender_Click);
@@ -240,7 +240,7 @@
             this.btnJobsUp.FlatAppearance.BorderSize = 0;
             this.btnJobsUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnJobsUp.Image = global::RateController.Properties.Resources.arrow_up;
-            this.btnJobsUp.Location = new System.Drawing.Point(479, 66);
+            this.btnJobsUp.Location = new System.Drawing.Point(479, 95);
             this.btnJobsUp.Name = "btnJobsUp";
             this.btnJobsUp.Size = new System.Drawing.Size(41, 41);
             this.btnJobsUp.TabIndex = 385;
@@ -252,7 +252,7 @@
             this.btnJobsDown.FlatAppearance.BorderSize = 0;
             this.btnJobsDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnJobsDown.Image = global::RateController.Properties.Resources.arrow_down;
-            this.btnJobsDown.Location = new System.Drawing.Point(479, 245);
+            this.btnJobsDown.Location = new System.Drawing.Point(479, 274);
             this.btnJobsDown.Name = "btnJobsDown";
             this.btnJobsDown.Size = new System.Drawing.Size(41, 41);
             this.btnJobsDown.TabIndex = 386;
@@ -264,7 +264,7 @@
             this.btnNotesDown.FlatAppearance.BorderSize = 0;
             this.btnNotesDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNotesDown.Image = global::RateController.Properties.Resources.arrow_down;
-            this.btnNotesDown.Location = new System.Drawing.Point(473, 188);
+            this.btnNotesDown.Location = new System.Drawing.Point(473, 158);
             this.btnNotesDown.Name = "btnNotesDown";
             this.btnNotesDown.Size = new System.Drawing.Size(41, 41);
             this.btnNotesDown.TabIndex = 387;
@@ -276,7 +276,7 @@
             this.btnNotesUp.FlatAppearance.BorderSize = 0;
             this.btnNotesUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNotesUp.Image = global::RateController.Properties.Resources.arrow_up;
-            this.btnNotesUp.Location = new System.Drawing.Point(473, 135);
+            this.btnNotesUp.Location = new System.Drawing.Point(473, 105);
             this.btnNotesUp.Name = "btnNotesUp";
             this.btnNotesUp.Size = new System.Drawing.Size(41, 41);
             this.btnNotesUp.TabIndex = 388;
@@ -305,6 +305,7 @@
             // 
             this.gbJobs.Controls.Add(this.btnRefeshJobs);
             this.gbJobs.Controls.Add(this.cbSearchField);
+            this.gbJobs.Controls.Add(this.btnDeleteField);
             this.gbJobs.Controls.Add(this.label2);
             this.gbJobs.Controls.Add(this.btnJobsDown);
             this.gbJobs.Controls.Add(this.tbSearchYear);
@@ -316,7 +317,7 @@
             this.gbJobs.Controls.Add(this.lstJobs);
             this.gbJobs.Location = new System.Drawing.Point(6, 0);
             this.gbJobs.Name = "gbJobs";
-            this.gbJobs.Size = new System.Drawing.Size(528, 299);
+            this.gbJobs.Size = new System.Drawing.Size(528, 322);
             this.gbJobs.TabIndex = 390;
             this.gbJobs.TabStop = false;
             this.gbJobs.Text = "Jobs";
@@ -326,10 +327,10 @@
             // 
             this.btnRefeshJobs.FlatAppearance.BorderSize = 0;
             this.btnRefeshJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefeshJobs.Image = global::RateController.Properties.Resources.Update_small;
-            this.btnRefeshJobs.Location = new System.Drawing.Point(479, 23);
+            this.btnRefeshJobs.Image = global::RateController.Properties.Resources.Update;
+            this.btnRefeshJobs.Location = new System.Drawing.Point(432, 25);
             this.btnRefeshJobs.Name = "btnRefeshJobs";
-            this.btnRefeshJobs.Size = new System.Drawing.Size(41, 41);
+            this.btnRefeshJobs.Size = new System.Drawing.Size(82, 64);
             this.btnRefeshJobs.TabIndex = 387;
             this.btnRefeshJobs.UseVisualStyleBackColor = true;
             this.btnRefeshJobs.Click += new System.EventHandler(this.btnRefeshJobs_Click);
@@ -340,18 +341,30 @@
             this.cbSearchField.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cbSearchField.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSearchField.FormattingEnabled = true;
-            this.cbSearchField.Location = new System.Drawing.Point(249, 28);
+            this.cbSearchField.Location = new System.Drawing.Point(94, 52);
             this.cbSearchField.MaxDropDownItems = 12;
             this.cbSearchField.MaxLength = 20;
             this.cbSearchField.Name = "cbSearchField";
-            this.cbSearchField.Size = new System.Drawing.Size(224, 32);
+            this.cbSearchField.Size = new System.Drawing.Size(244, 32);
             this.cbSearchField.Sorted = true;
             this.cbSearchField.TabIndex = 385;
+            // 
+            // btnDeleteField
+            // 
+            this.btnDeleteField.FlatAppearance.BorderSize = 0;
+            this.btnDeleteField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteField.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDeleteField.Location = new System.Drawing.Point(344, 25);
+            this.btnDeleteField.Name = "btnDeleteField";
+            this.btnDeleteField.Size = new System.Drawing.Size(82, 64);
+            this.btnDeleteField.TabIndex = 389;
+            this.btnDeleteField.UseVisualStyleBackColor = true;
+            this.btnDeleteField.Click += new System.EventHandler(this.btnDeleteField_Click);
             // 
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(173, 30);
+            this.label2.Location = new System.Drawing.Point(90, 23);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 29);
             this.label2.TabIndex = 384;
@@ -360,7 +373,7 @@
             // 
             // tbSearchYear
             // 
-            this.tbSearchYear.Location = new System.Drawing.Point(94, 30);
+            this.tbSearchYear.Location = new System.Drawing.Point(10, 54);
             this.tbSearchYear.Name = "tbSearchYear";
             this.tbSearchYear.Size = new System.Drawing.Size(63, 29);
             this.tbSearchYear.TabIndex = 386;
@@ -370,7 +383,7 @@
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(16, 30);
+            this.label4.Location = new System.Drawing.Point(10, 23);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(68, 29);
             this.label4.TabIndex = 383;
@@ -381,7 +394,6 @@
             // 
             this.gbCurrentJob.Controls.Add(this.label5);
             this.gbCurrentJob.Controls.Add(this.tbName);
-            this.gbCurrentJob.Controls.Add(this.btnDeleteField);
             this.gbCurrentJob.Controls.Add(this.label1);
             this.gbCurrentJob.Controls.Add(this.tbDate);
             this.gbCurrentJob.Controls.Add(this.btnCalender);
@@ -391,9 +403,9 @@
             this.gbCurrentJob.Controls.Add(this.cbField);
             this.gbCurrentJob.Controls.Add(this.lb1);
             this.gbCurrentJob.Controls.Add(this.tbNotes);
-            this.gbCurrentJob.Location = new System.Drawing.Point(6, 305);
+            this.gbCurrentJob.Location = new System.Drawing.Point(6, 328);
             this.gbCurrentJob.Name = "gbCurrentJob";
-            this.gbCurrentJob.Size = new System.Drawing.Size(526, 235);
+            this.gbCurrentJob.Size = new System.Drawing.Size(528, 212);
             this.gbCurrentJob.TabIndex = 391;
             this.gbCurrentJob.TabStop = false;
             this.gbCurrentJob.Text = "Current Job";
@@ -402,7 +414,7 @@
             // label5
             // 
             this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(6, 28);
+            this.label5.Location = new System.Drawing.Point(6, 25);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(71, 29);
             this.label5.TabIndex = 390;
@@ -411,31 +423,19 @@
             // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(94, 28);
+            this.tbName.Location = new System.Drawing.Point(94, 25);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(258, 29);
             this.tbName.TabIndex = 391;
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbName.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
-            // btnDeleteField
-            // 
-            this.btnDeleteField.FlatAppearance.BorderSize = 0;
-            this.btnDeleteField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteField.Image = global::RateController.Properties.Resources.trash_small;
-            this.btnDeleteField.Location = new System.Drawing.Point(377, 96);
-            this.btnDeleteField.Name = "btnDeleteField";
-            this.btnDeleteField.Size = new System.Drawing.Size(41, 41);
-            this.btnDeleteField.TabIndex = 389;
-            this.btnDeleteField.UseVisualStyleBackColor = true;
-            this.btnDeleteField.Click += new System.EventHandler(this.btnDeleteField_Click);
-            // 
             // cbField
             // 
             this.cbField.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cbField.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbField.FormattingEnabled = true;
-            this.cbField.Location = new System.Drawing.Point(94, 100);
+            this.cbField.Location = new System.Drawing.Point(94, 95);
             this.cbField.MaxDropDownItems = 12;
             this.cbField.MaxLength = 20;
             this.cbField.Name = "cbField";

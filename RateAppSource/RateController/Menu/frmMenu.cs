@@ -88,11 +88,12 @@ namespace RateController
 
         public void ShowProfile()
         {
-            string Nm = Props.CurrentFileName().Length <= 20 ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, 20) + "...";
+            int max = 25;
+            string Nm = Props.CurrentFileName().Length <= max ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, max) + "...";
             lbFileName.Text = "[" + Nm + "]";
 
-            string job = Path.GetFileNameWithoutExtension(Props.CurrentJobName);
-            Nm = job.Length <= 20 ? job : job.Substring(0, 20) + "...";
+            string job = Props.CurrentJobDescription;
+            Nm = job.Length <= max ? job : job.Substring(0, max) + "...";
             lbJob.Text = "[" + Nm + "]";
         }
 

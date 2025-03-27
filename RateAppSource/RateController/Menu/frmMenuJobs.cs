@@ -33,6 +33,7 @@ namespace RateController.Menu
 
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+
         private void btnCalender_Click(object sender, EventArgs e)
         {
             tbDate.Text = DateTime.Now.ToString(JobsDateFormat);
@@ -121,9 +122,10 @@ namespace RateController.Menu
         {
             try
             {
-                if (cbField.SelectedItem != null)
+                Parcel Fld = cbSearchField.SelectedItem as Parcel;
+                if (Fld != null)
                 {
-                    string FieldToDelete = cbField.SelectedItem.ToString();
+                    string FieldToDelete = Fld.Name;
                     var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FieldToDelete + "] from the Fields list?", "Delete Field", true);
                     Hlp.TopMost = true;
 
@@ -132,7 +134,7 @@ namespace RateController.Menu
                     Hlp.Close();
                     if (Result)
                     {
-                        if (ParcelManager.DeleteParcel(cbField.SelectedIndex, out bool FieldInUse))
+                        if (ParcelManager.DeleteParcel(Fld.ID, out bool FieldInUse))
                         {
                             UpdateForm();
                         }
@@ -140,7 +142,7 @@ namespace RateController.Menu
                         {
                             if (FieldInUse)
                             {
-                                mf.Tls.ShowMessage("Can not delete field in use.");
+                                mf.Tls.ShowMessage("Can not delete, field is in use.");
                             }
                             else
                             {
@@ -515,6 +517,16 @@ namespace RateController.Menu
                 gbCurrentJob.Invalidate();
                 gbJobs.Invalidate();
 
+                // highlight the current job in the list
+                int id = Props.CurrentJobID;
+                for (int i = 0; i < lstJobs.Items.Count; i++)
+                {
+                    if ((lstJobs.Items[i] as Job).ID == id)
+                    {
+                        lstJobs.SelectedIndex = i;
+                        break;
+                    }
+                }
 
                 Initializing = false;
             }
