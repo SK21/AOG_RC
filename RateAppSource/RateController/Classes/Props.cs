@@ -122,7 +122,7 @@ namespace RateController.Classes
         {
             get
             {
-                Job current = Job.SearchJob(Properties.Settings.Default.CurrentJob);
+                Job current = JobManager.SearchJob(Properties.Settings.Default.CurrentJob);
                 return current.Name;
             }
         }
@@ -569,7 +569,7 @@ namespace RateController.Classes
                 if (!File.Exists(cJobsDataPath)) File.WriteAllText(cJobsDataPath, string.Empty);
 
                 // check for default job
-                List<Job> jobs = Job.GetJobs();
+                List<Job> jobs = JobManager.GetJobs();
                 bool defaultExists = jobs.Any(j => string.Equals(j.Name, "Default", StringComparison.OrdinalIgnoreCase));
 
                 if (!defaultExists)
@@ -582,12 +582,12 @@ namespace RateController.Classes
                         Name = "Default",
                         Notes = string.Empty,
                     };
-                    Job.AddJob(defaultJob);
+                    JobManager.AddJob(defaultJob);
                 }
 
                 // check user files, current job
                 int CurrentJob = Properties.Settings.Default.CurrentJob;
-                if (Job.SearchJob(CurrentJob) == null) Properties.Settings.Default.CurrentJob = 0;
+                if (JobManager.SearchJob(CurrentJob) == null) Properties.Settings.Default.CurrentJob = 0;
 
                 // create field names path
                 cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");

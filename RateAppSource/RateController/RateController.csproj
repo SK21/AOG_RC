@@ -188,10 +188,10 @@
     <Compile Include="Classes\clsAlarm.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />
-    <Compile Include="Classes\Job.cs" />
     <Compile Include="Classes\clsPressure.cs" />
     <Compile Include="Classes\clsPressureRawData.cs" />
     <Compile Include="Classes\clsPressures.cs" />
+    <Compile Include="Classes\JobManager.cs" />
     <Compile Include="Classes\ParcelManager.cs" />
     <Compile Include="Classes\Props.cs" />
     <Compile Include="Classes\DataCollector.cs" />
@@ -740,6 +740,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Update small.png" />
     <None Include="Resources\arrow-up.png" />
     <None Include="Resources\arrow-down.png" />
     <None Include="Resources\calendar-blank.png" />

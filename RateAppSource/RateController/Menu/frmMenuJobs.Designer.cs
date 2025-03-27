@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tbName = new System.Windows.Forms.TextBox();
             this.btnNew = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
@@ -38,7 +37,6 @@
             this.lb1 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lbFieldName = new System.Windows.Forms.Label();
-            this.cbField = new System.Windows.Forms.ComboBox();
             this.ckJobs = new System.Windows.Forms.CheckBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
@@ -50,24 +48,20 @@
             this.btnNotesUp = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.gbLine = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbJobs = new System.Windows.Forms.GroupBox();
+            this.btnRefeshJobs = new System.Windows.Forms.Button();
             this.cbSearchField = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tbSearchYear = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.gbCurrentJob = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbName = new System.Windows.Forms.TextBox();
             this.btnDeleteField = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.cbField = new System.Windows.Forms.ComboBox();
+            this.gbJobs.SuspendLayout();
+            this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // tbName
-            // 
-            this.tbName.Location = new System.Drawing.Point(100, 257);
-            this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(258, 29);
-            this.tbName.TabIndex = 369;
-            this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnNew
             // 
@@ -126,24 +120,23 @@
             this.lstJobs.Name = "lstJobs";
             this.lstJobs.ScrollAlwaysVisible = true;
             this.lstJobs.Size = new System.Drawing.Size(379, 221);
-            this.lstJobs.Sorted = true;
             this.lstJobs.TabIndex = 364;
             // 
             // tbNotes
             // 
-            this.tbNotes.Location = new System.Drawing.Point(94, 114);
+            this.tbNotes.Location = new System.Drawing.Point(94, 139);
             this.tbNotes.MaxLength = 800;
             this.tbNotes.Multiline = true;
             this.tbNotes.Name = "tbNotes";
             this.tbNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbNotes.Size = new System.Drawing.Size(373, 115);
+            this.tbNotes.Size = new System.Drawing.Size(373, 89);
             this.tbNotes.TabIndex = 370;
             this.tbNotes.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
             // lb1
             // 
             this.lb1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb1.Location = new System.Drawing.Point(6, 114);
+            this.lb1.Location = new System.Drawing.Point(6, 139);
             this.lb1.Name = "lb1";
             this.lb1.Size = new System.Drawing.Size(70, 23);
             this.lb1.TabIndex = 371;
@@ -152,7 +145,7 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(6, 25);
+            this.label1.Location = new System.Drawing.Point(6, 64);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(71, 29);
             this.label1.TabIndex = 372;
@@ -162,26 +155,12 @@
             // lbFieldName
             // 
             this.lbFieldName.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFieldName.Location = new System.Drawing.Point(7, 67);
+            this.lbFieldName.Location = new System.Drawing.Point(7, 102);
             this.lbFieldName.Name = "lbFieldName";
             this.lbFieldName.Size = new System.Drawing.Size(70, 29);
             this.lbFieldName.TabIndex = 374;
             this.lbFieldName.Text = "Field:";
             this.lbFieldName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // cbField
-            // 
-            this.cbField.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbField.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbField.FormattingEnabled = true;
-            this.cbField.Location = new System.Drawing.Point(94, 64);
-            this.cbField.MaxDropDownItems = 12;
-            this.cbField.MaxLength = 20;
-            this.cbField.Name = "cbField";
-            this.cbField.Size = new System.Drawing.Size(258, 32);
-            this.cbField.Sorted = true;
-            this.cbField.TabIndex = 375;
-            this.cbField.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
             // ckJobs
             // 
@@ -237,7 +216,7 @@
             // 
             // tbDate
             // 
-            this.tbDate.Location = new System.Drawing.Point(94, 25);
+            this.tbDate.Location = new System.Drawing.Point(94, 64);
             this.tbDate.Name = "tbDate";
             this.tbDate.Size = new System.Drawing.Size(258, 29);
             this.tbDate.TabIndex = 382;
@@ -249,7 +228,7 @@
             this.btnCalender.FlatAppearance.BorderSize = 0;
             this.btnCalender.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCalender.Image = global::RateController.Properties.Resources.calendar_blank;
-            this.btnCalender.Location = new System.Drawing.Point(377, 20);
+            this.btnCalender.Location = new System.Drawing.Point(377, 58);
             this.btnCalender.Name = "btnCalender";
             this.btnCalender.Size = new System.Drawing.Size(41, 41);
             this.btnCalender.TabIndex = 383;
@@ -297,7 +276,7 @@
             this.btnNotesUp.FlatAppearance.BorderSize = 0;
             this.btnNotesUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNotesUp.Image = global::RateController.Properties.Resources.arrow_up;
-            this.btnNotesUp.Location = new System.Drawing.Point(473, 109);
+            this.btnNotesUp.Location = new System.Drawing.Point(473, 135);
             this.btnNotesUp.Name = "btnNotesUp";
             this.btnNotesUp.Size = new System.Drawing.Size(41, 41);
             this.btnNotesUp.TabIndex = 388;
@@ -322,25 +301,39 @@
             this.gbLine.TabIndex = 389;
             this.gbLine.TabStop = false;
             // 
-            // groupBox1
+            // gbJobs
             // 
-            this.groupBox1.Controls.Add(this.cbSearchField);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.btnJobsDown);
-            this.groupBox1.Controls.Add(this.tbSearchYear);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.btnJobsUp);
-            this.groupBox1.Controls.Add(this.btnLoad);
-            this.groupBox1.Controls.Add(this.btnCopy);
-            this.groupBox1.Controls.Add(this.btnDelete);
-            this.groupBox1.Controls.Add(this.lstJobs);
-            this.groupBox1.Location = new System.Drawing.Point(6, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(528, 299);
-            this.groupBox1.TabIndex = 390;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Jobs";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            this.gbJobs.Controls.Add(this.btnRefeshJobs);
+            this.gbJobs.Controls.Add(this.cbSearchField);
+            this.gbJobs.Controls.Add(this.label2);
+            this.gbJobs.Controls.Add(this.btnJobsDown);
+            this.gbJobs.Controls.Add(this.tbSearchYear);
+            this.gbJobs.Controls.Add(this.label4);
+            this.gbJobs.Controls.Add(this.btnJobsUp);
+            this.gbJobs.Controls.Add(this.btnLoad);
+            this.gbJobs.Controls.Add(this.btnCopy);
+            this.gbJobs.Controls.Add(this.btnDelete);
+            this.gbJobs.Controls.Add(this.lstJobs);
+            this.gbJobs.Location = new System.Drawing.Point(6, 0);
+            this.gbJobs.Name = "gbJobs";
+            this.gbJobs.Size = new System.Drawing.Size(528, 299);
+            this.gbJobs.TabIndex = 390;
+            this.gbJobs.TabStop = false;
+            this.gbJobs.Text = "Jobs";
+            this.gbJobs.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // btnRefeshJobs
+            // 
+            this.btnRefeshJobs.FlatAppearance.BorderSize = 0;
+            this.btnRefeshJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefeshJobs.Image = global::RateController.Properties.Resources.Update_small;
+            this.btnRefeshJobs.Location = new System.Drawing.Point(479, 23);
+            this.btnRefeshJobs.Name = "btnRefeshJobs";
+            this.btnRefeshJobs.Size = new System.Drawing.Size(41, 41);
+            this.btnRefeshJobs.TabIndex = 387;
+            this.btnRefeshJobs.UseVisualStyleBackColor = true;
+            this.btnRefeshJobs.Click += new System.EventHandler(this.btnRefeshJobs_Click);
+            this.btnRefeshJobs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnRefeshJobs_MouseDown);
             // 
             // cbSearchField
             // 
@@ -384,47 +377,81 @@
             this.label4.Text = "Year:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // groupBox2
+            // gbCurrentJob
             // 
-            this.groupBox2.Controls.Add(this.btnDeleteField);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.tbDate);
-            this.groupBox2.Controls.Add(this.btnCalender);
-            this.groupBox2.Controls.Add(this.lbFieldName);
-            this.groupBox2.Controls.Add(this.btnNotesUp);
-            this.groupBox2.Controls.Add(this.btnNotesDown);
-            this.groupBox2.Controls.Add(this.cbField);
-            this.groupBox2.Controls.Add(this.lb1);
-            this.groupBox2.Controls.Add(this.tbNotes);
-            this.groupBox2.Location = new System.Drawing.Point(6, 305);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(526, 235);
-            this.groupBox2.TabIndex = 391;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Current Job";
-            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            this.gbCurrentJob.Controls.Add(this.label5);
+            this.gbCurrentJob.Controls.Add(this.tbName);
+            this.gbCurrentJob.Controls.Add(this.btnDeleteField);
+            this.gbCurrentJob.Controls.Add(this.label1);
+            this.gbCurrentJob.Controls.Add(this.tbDate);
+            this.gbCurrentJob.Controls.Add(this.btnCalender);
+            this.gbCurrentJob.Controls.Add(this.lbFieldName);
+            this.gbCurrentJob.Controls.Add(this.btnNotesUp);
+            this.gbCurrentJob.Controls.Add(this.btnNotesDown);
+            this.gbCurrentJob.Controls.Add(this.cbField);
+            this.gbCurrentJob.Controls.Add(this.lb1);
+            this.gbCurrentJob.Controls.Add(this.tbNotes);
+            this.gbCurrentJob.Location = new System.Drawing.Point(6, 305);
+            this.gbCurrentJob.Name = "gbCurrentJob";
+            this.gbCurrentJob.Size = new System.Drawing.Size(526, 235);
+            this.gbCurrentJob.TabIndex = 391;
+            this.gbCurrentJob.TabStop = false;
+            this.gbCurrentJob.Text = "Current Job";
+            this.gbCurrentJob.Paint += new System.Windows.Forms.PaintEventHandler(this.gbCurrentJob_Paint);
+            // 
+            // label5
+            // 
+            this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(6, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(71, 29);
+            this.label5.TabIndex = 390;
+            this.label5.Text = "Name:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tbName
+            // 
+            this.tbName.Location = new System.Drawing.Point(94, 28);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(258, 29);
+            this.tbName.TabIndex = 391;
+            this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbName.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
             // btnDeleteField
             // 
             this.btnDeleteField.FlatAppearance.BorderSize = 0;
             this.btnDeleteField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteField.Image = global::RateController.Properties.Resources.trash_small;
-            this.btnDeleteField.Location = new System.Drawing.Point(377, 59);
+            this.btnDeleteField.Location = new System.Drawing.Point(377, 96);
             this.btnDeleteField.Name = "btnDeleteField";
             this.btnDeleteField.Size = new System.Drawing.Size(41, 41);
             this.btnDeleteField.TabIndex = 389;
             this.btnDeleteField.UseVisualStyleBackColor = true;
             this.btnDeleteField.Click += new System.EventHandler(this.btnDeleteField_Click);
             // 
+            // cbField
+            // 
+            this.cbField.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbField.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbField.FormattingEnabled = true;
+            this.cbField.Location = new System.Drawing.Point(94, 100);
+            this.cbField.MaxDropDownItems = 12;
+            this.cbField.MaxLength = 20;
+            this.cbField.Name = "cbField";
+            this.cbField.Size = new System.Drawing.Size(258, 32);
+            this.cbField.Sorted = true;
+            this.cbField.TabIndex = 375;
+            this.cbField.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
+            // 
             // frmMenuJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbCurrentJob);
+            this.Controls.Add(this.gbJobs);
             this.Controls.Add(this.gbLine);
-            this.Controls.Add(this.tbName);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btnNew);
             this.Controls.Add(this.ckJobs);
@@ -437,18 +464,15 @@
             this.ShowInTaskbar = false;
             this.Text = "frmMenuJobs";
             this.Load += new System.EventHandler(this.frmMenuJobs_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.gbJobs.ResumeLayout(false);
+            this.gbJobs.PerformLayout();
+            this.gbCurrentJob.ResumeLayout(false);
+            this.gbCurrentJob.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.Button btnNew;
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Button btnLoad;
@@ -458,7 +482,6 @@
         private System.Windows.Forms.Label lb1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lbFieldName;
-        private System.Windows.Forms.ComboBox cbField;
         private System.Windows.Forms.CheckBox ckJobs;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
@@ -470,12 +493,16 @@
         private System.Windows.Forms.Button btnNotesUp;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox gbLine;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbJobs;
         private System.Windows.Forms.ComboBox cbSearchField;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbSearchYear;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbCurrentJob;
         private System.Windows.Forms.Button btnDeleteField;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.ComboBox cbField;
+        private System.Windows.Forms.Button btnRefeshJobs;
     }
 }

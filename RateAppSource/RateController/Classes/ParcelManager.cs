@@ -27,7 +27,7 @@ namespace RateController.Classes
             InUse = false;
             try
             {
-                if (Job.IsFieldIDUsed(ID))
+                if (JobManager.IsFieldIDUsed(ID))
                 {
                     InUse = true;
                 }
