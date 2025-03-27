@@ -56,7 +56,6 @@ namespace RateController.Classes
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0-beta.9";
-        private static string cCurrentMapName;
         private static string cDefaultJob;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
@@ -125,7 +124,7 @@ namespace RateController.Classes
                 string fld = "";
                 Parcel currentParcel = ParcelManager.SearchParcel(current.FieldID);
                 if (currentParcel != null) fld = currentParcel.Name;
-                return current.Name+ " - " + fld;
+                return current.Name + " - " + fld;
             }
         }
 
@@ -151,9 +150,12 @@ namespace RateController.Classes
             }
         }
 
-        public static string CurrentMapName
+        public static string CurrentMapPath
         {
-            get { return cCurrentMapName; }
+            get
+            {
+                return JobManager.MapPath(Properties.Settings.Default.CurrentJob);
+            }
         }
 
         public static string CurrentRateDataPath
@@ -163,7 +165,6 @@ namespace RateController.Classes
                 return JobManager.RateDataPath(Properties.Settings.Default.CurrentJob);
             }
         }
-
 
         public static int DefaultProduct
         {
@@ -682,7 +683,6 @@ namespace RateController.Classes
             }
         }
 
-
         public static string GetProp(string key)
         {
             return cProps.TryGetValue(key, out var value) ? value : string.Empty;
@@ -706,6 +706,41 @@ namespace RateController.Classes
                 if (SetFocus) frm.Focus();
             }
             return frm;
+        }
+
+        public static bool IsPathSafeToDelete(string candidatePath)
+        {
+            bool result = false;
+            try
+            {
+                string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string baseFolder = Path.Combine(myDocuments, "RateController");
+
+                if (!string.IsNullOrEmpty(candidatePath))
+                {
+                    string candidateFullPath = Path.GetFullPath(candidatePath);
+                    string safeBaseFullPath = Path.GetFullPath(baseFolder);
+
+                    // If the candidate is a file, use its parent folder for the containment check.
+                    if (File.Exists(candidateFullPath))
+                    {
+                        candidateFullPath = Path.GetDirectoryName(candidateFullPath);
+                    }
+
+                    // Normalize paths
+                    candidateFullPath = candidateFullPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                    safeBaseFullPath = safeBaseFullPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+                    // Check if the candidate path is within the safe base folder
+                    string safeBaseWithSeparator = safeBaseFullPath + Path.DirectorySeparatorChar;
+                    result = candidateFullPath.StartsWith(safeBaseWithSeparator, StringComparison.OrdinalIgnoreCase);
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/SafeToDelete: " + ex.Message);
+            }
+            return result;
         }
 
         public static void LoadFormLocation(Form frm, string Instance = "")
@@ -766,7 +801,6 @@ namespace RateController.Classes
             cUseMetric = bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false;
             cRateRecordInterval = int.TryParse(GetProp("RateRecordInterval"), out int rr) ? rr : 300;
             cRateRecordEnabled = bool.TryParse(GetProp("RecordRates"), out bool rc) ? rc : true;
-            cCurrentMapName = GetProp("CurrentMapName");
             cMapShowTiles = bool.TryParse(GetProp("ShowTiles"), out bool st) ? st : true;
             cMapShowZones = bool.TryParse(GetProp("MapShowZones"), out bool sz) ? sz : true;
             cMapShowRates = bool.TryParse(GetProp("MapShowRates"), out bool sr) ? sr : false;
@@ -833,40 +867,6 @@ namespace RateController.Classes
             MapShowRatesSettingsChanged?.Invoke(null, EventArgs.Empty);
         }
 
-        public static bool IsPathSafeToDelete(string candidatePath)
-        {
-            bool result = false;
-            try
-            {
-                string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string baseFolder = Path.Combine(myDocuments, "RateController");
-
-                if (!string.IsNullOrEmpty(candidatePath))
-                {
-                    string candidateFullPath = Path.GetFullPath(candidatePath);
-                    string safeBaseFullPath = Path.GetFullPath(baseFolder);
-
-                    // If the candidate is a file, use its parent folder for the containment check.
-                    if (File.Exists(candidateFullPath))
-                    {
-                        candidateFullPath = Path.GetDirectoryName(candidateFullPath);
-                    }
-
-                    // Normalize paths
-                    candidateFullPath = candidateFullPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                    safeBaseFullPath = safeBaseFullPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-
-                    // Check if the candidate path is within the safe base folder
-                    string safeBaseWithSeparator = safeBaseFullPath + Path.DirectorySeparatorChar;
-                    result = candidateFullPath.StartsWith(safeBaseWithSeparator, StringComparison.OrdinalIgnoreCase);
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/SafeToDelete: " + ex.Message);
-            }
-            return result;
-        }
         public static void SaveFormLocation(Form frm, string Instance = "")
         {
             try
@@ -885,7 +885,6 @@ namespace RateController.Classes
                 WriteErrorLog("Props/SaveFormLocation: " + ex.Message);
             }
         }
-
 
         public static void SetProp(string key, string value, bool IgnoreReadOnly = false)
         {

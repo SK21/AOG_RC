@@ -111,7 +111,8 @@ namespace RateController.Forms
                     var shapefileHelper = new ShapefileHelper(mf);
                     var mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
 
-                    if (shapefileHelper.SaveMapZones(Props.CurrentMapName, mapZones))
+                    string MapPath = JobManager.MapPath(Props.CurrentJobID);
+                    if (shapefileHelper.SaveMapZones(MapPath, mapZones))
                     {
                         mf.Tls.Manager.LoadMap();
                         Result = true;

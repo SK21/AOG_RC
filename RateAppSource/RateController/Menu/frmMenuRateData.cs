@@ -29,7 +29,6 @@ namespace RateController.Forms
             SetButtons(false);
         }
 
-
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (cEdited)
@@ -78,8 +77,6 @@ namespace RateController.Forms
                 }
             }
         }
-
-
 
         private void frmRates_Load(object sender, EventArgs e)
         {

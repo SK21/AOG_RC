@@ -1,6 +1,7 @@
 ﻿using AgOpenGPS;
 using GMap.NET.WindowsForms;
 using RateController.Classes;
+using RateController.Forms;
 using RateController.Language;
 using System;
 using System.Drawing;
@@ -76,8 +77,13 @@ namespace RateController.Menu
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            Form frm = new RateController.Forms.frmImport(mf);
-            frm.ShowDialog();
+            Form fs = Props.IsFormOpen("frmImport");
+
+            if (fs == null)
+            {
+                Form frm = new frmImport(mf);
+                frm.Show();
+            }
         }
 
         private void btnPNG_Click(object sender, EventArgs e)
@@ -109,7 +115,6 @@ namespace RateController.Menu
             if (!Initializing)
             {
                 Props.VariableRateEnabled = ckEnable.Checked;
-                // to do: ask user to record data if record is off
             }
         }
 
@@ -171,7 +176,7 @@ namespace RateController.Menu
         {
             gbZone.Enabled = ckZones.Checked;
             mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
-           if(ckZones.Checked) mf.Tls.Manager.ZoomToFit();
+            if (ckZones.Checked) mf.Tls.Manager.ZoomToFit();
         }
 
         private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -498,6 +503,17 @@ namespace RateController.Menu
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            Form fs = Props.IsFormOpen("frmCopyMap");
+
+            if (fs == null)
+            {
+                Form frm = new frmCopyMap(mf);
+                frm.Show();
+            }
         }
     }
 }

@@ -178,7 +178,7 @@ namespace RateController.Classes
             {
                 var shapefileHelper = new ShapefileHelper(mf);
 
-                mapZones = shapefileHelper.CreateZoneList(Props.CurrentMapName);
+                mapZones = shapefileHelper.CreateZoneList(Props.CurrentMapPath);
 
                 zoneOverlay.Polygons.Clear();
 
@@ -207,7 +207,7 @@ namespace RateController.Classes
         {
             bool Result = false;
             var shapefileHelper = new ShapefileHelper(mf);
-            shapefileHelper.SaveMapZones(Props.CurrentMapName, mapZones);
+            shapefileHelper.SaveMapZones(Props.CurrentMapPath, mapZones);
             if (UpdateCache) AddToCache();
             Result = true;
             return Result;

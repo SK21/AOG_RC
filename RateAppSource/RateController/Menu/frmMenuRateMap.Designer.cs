@@ -56,13 +56,14 @@
             this.btnPNG = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ckRateData = new System.Windows.Forms.CheckBox();
+            this.btnCopy = new System.Windows.Forms.Button();
             this.gbZone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(8, 12);
+            this.btnImport.Location = new System.Drawing.Point(8, 88);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(89, 64);
             this.btnImport.TabIndex = 342;
@@ -266,7 +267,7 @@
             this.ckSatView.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckSatView.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckSatView.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSatView.Location = new System.Drawing.Point(8, 457);
+            this.ckSatView.Location = new System.Drawing.Point(8, 468);
             this.ckSatView.Name = "ckSatView";
             this.ckSatView.Size = new System.Drawing.Size(89, 64);
             this.ckSatView.TabIndex = 349;
@@ -280,7 +281,7 @@
             this.ckFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFullScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFullScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFullScreen.Location = new System.Drawing.Point(8, 279);
+            this.ckFullScreen.Location = new System.Drawing.Point(8, 316);
             this.ckFullScreen.Name = "ckFullScreen";
             this.ckFullScreen.Size = new System.Drawing.Size(89, 64);
             this.ckFullScreen.TabIndex = 348;
@@ -311,7 +312,7 @@
             this.ckEnable.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckEnable.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEnable.Location = new System.Drawing.Point(8, 190);
+            this.ckEnable.Location = new System.Drawing.Point(8, 240);
             this.ckEnable.Name = "ckEnable";
             this.ckEnable.Size = new System.Drawing.Size(89, 64);
             this.ckEnable.TabIndex = 351;
@@ -331,7 +332,7 @@
             this.ckZones.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckZones.Location = new System.Drawing.Point(8, 368);
+            this.ckZones.Location = new System.Drawing.Point(8, 392);
             this.ckZones.Name = "ckZones";
             this.ckZones.Size = new System.Drawing.Size(89, 64);
             this.ckZones.TabIndex = 354;
@@ -342,7 +343,7 @@
             // 
             // btnPNG
             // 
-            this.btnPNG.Location = new System.Drawing.Point(8, 101);
+            this.btnPNG.Location = new System.Drawing.Point(8, 164);
             this.btnPNG.Name = "btnPNG";
             this.btnPNG.Size = new System.Drawing.Size(89, 64);
             this.btnPNG.TabIndex = 356;
@@ -361,7 +362,7 @@
             this.ckRateData.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckRateData.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRateData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRateData.Location = new System.Drawing.Point(8, 546);
+            this.ckRateData.Location = new System.Drawing.Point(8, 544);
             this.ckRateData.Name = "ckRateData";
             this.ckRateData.Size = new System.Drawing.Size(89, 64);
             this.ckRateData.TabIndex = 358;
@@ -370,12 +371,23 @@
             this.ckRateData.UseVisualStyleBackColor = true;
             this.ckRateData.CheckedChanged += new System.EventHandler(this.ckRateData_CheckedChanged);
             // 
+            // btnCopy
+            // 
+            this.btnCopy.Location = new System.Drawing.Point(8, 12);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(89, 64);
+            this.btnCopy.TabIndex = 359;
+            this.btnCopy.Text = "Copy";
+            this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
             // frmMenuRateMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 630);
             this.ControlBox = false;
+            this.Controls.Add(this.btnCopy);
             this.Controls.Add(this.btnPNG);
             this.Controls.Add(this.ckRateData);
             this.Controls.Add(this.ckSatView);
@@ -431,5 +443,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.CheckBox ckRateData;
         private System.Windows.Forms.Panel legendPanel;
+        private System.Windows.Forms.Button btnCopy;
     }
 }

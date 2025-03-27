@@ -48,7 +48,7 @@ namespace RateController.Classes
             }
         }
 
-        public static bool CopyJobData(int FromID, int ToID)
+        public static bool CopyJobData(int FromID, int ToID, bool EraseRateData = true)
         {
             lock (_syncLock)
             {
@@ -63,9 +63,12 @@ namespace RateController.Classes
                     {
                         CopyDirectory(fromFolder, toFolder);
 
-                        // erase RateData.csv by overwriting it with an empty string
-                        string rateDataFilePath = Path.Combine(toFolder, "RateData.csv");
-                        File.WriteAllText(rateDataFilePath, string.Empty);
+                        if (EraseRateData)
+                        {
+                            // erase RateData.csv by overwriting it with an empty string
+                            string rateDataFilePath = Path.Combine(toFolder, "RateData.csv");
+                            File.WriteAllText(rateDataFilePath, string.Empty);
+                        }
 
                         Result = true;
                     }
@@ -170,11 +173,19 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static Job SearchJob(int id)
+        public static string MapPath(int JobID)
+        {
+            string Result = null;
+            Job JB = SearchJob(JobID);
+            if (JB != null) Result = Path.Combine(JB.JobFolder, "Map\\Map.shp");
+            return Result;
+        }
+
+        public static Job SearchJob(int JobID)
         {
             lock (_syncLock)
             {
-                return GetJobs().FirstOrDefault(j => j.ID == id);
+                return GetJobs().FirstOrDefault(j => j.ID == JobID);
             }
         }
 
