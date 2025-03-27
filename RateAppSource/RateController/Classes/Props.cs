@@ -57,7 +57,6 @@ namespace RateController.Classes
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0-beta.9";
         private static string cCurrentMapName;
-        private static string cCurrentRateDataName;
         private static string cDefaultJob;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
@@ -122,14 +121,30 @@ namespace RateController.Classes
         {
             get
             {
+                Job current = JobManager.SearchJob(Props.CurrentJobID);
+                return current.Name;
+            }
+        }
+
+        public static int CurrentJobID
+        {
+            get
+            {
                 Job current = JobManager.SearchJob(Properties.Settings.Default.CurrentJob);
                 if (current == null)
                 {
                     Properties.Settings.Default.CurrentJob = 0;
                     Properties.Settings.Default.Save();
                     current = JobManager.SearchJob(0);
+                    JobChanged?.Invoke(null, EventArgs.Empty);
                 }
-                return current.Name;
+                return Properties.Settings.Default.CurrentJob;
+            }
+            set
+            {
+                Properties.Settings.Default.CurrentJob = value;
+                Properties.Settings.Default.Save();
+                JobChanged?.Invoke(null, EventArgs.Empty);
             }
         }
 
@@ -138,19 +153,14 @@ namespace RateController.Classes
             get { return cCurrentMapName; }
         }
 
-        public static string CurrentRateDataName
-        {
-            get { return cCurrentRateDataName; }
-        }
-
-        public static string DefaultJob
+        public static string CurrentRateDataPath
         {
             get
             {
-                if (!File.Exists(cDefaultJob)) CheckFolders();
-                return cDefaultJob;
+                return JobManager.RateDataPath(Properties.Settings.Default.CurrentJob);
             }
         }
+
 
         public static int DefaultProduct
         {
@@ -578,8 +588,8 @@ namespace RateController.Classes
                 JobManager.CheckDefaultJob();
 
                 // check user files, current job
-                int CurrentJob = Properties.Settings.Default.CurrentJob;
-                if (JobManager.SearchJob(CurrentJob) == null) Properties.Settings.Default.CurrentJob = 0;
+                int CurrentJob = Props.CurrentJobID;
+                if (JobManager.SearchJob(CurrentJob) == null) Props.CurrentJobID = 0;
 
                 // create field names path
                 cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");

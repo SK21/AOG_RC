@@ -1,6 +1,7 @@
 ﻿using RateController.Classes;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -18,6 +19,7 @@ namespace RateController.Menu
         private bool Initializing = false;
         private bool IsNewJob = false;
         private string JobsDateFormat = "dd-MMM-yyyy   HH:mm";
+        private int JobToCopyFromID = -1;
         private frmMenu MainMenu;
         private FormStart mf;
 
@@ -31,7 +33,6 @@ namespace RateController.Menu
 
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
-
         private void btnCalender_Click(object sender, EventArgs e)
         {
             tbDate.Text = DateTime.Now.ToString(JobsDateFormat);
@@ -58,20 +59,15 @@ namespace RateController.Menu
                 if (lstJobs.SelectedIndex >= 0)
                 {
                     Job SelectedJob = lstJobs.SelectedItem as Job;
-                    Job NewJob = JobManager.CopyJob(SelectedJob.ID);
-                    if (NewJob == null)
-                    {
-                        mf.Tls.ShowMessage("Could not copy file.");
-                    }
-                    else
-                    {
-                        EditingJob = new Job();
-                        EditingJob.Date = NewJob.Date;
-                        EditingJob.FieldID = NewJob.FieldID;
-                        EditingJob.Name = NewJob.Name + "_Copy";
-                        EditingJob.Notes = NewJob.Notes;
-                        IsNewJob = true;
-                    }
+                    JobToCopyFromID = SelectedJob.ID;
+                    EditingJob = new Job();
+                    EditingJob.Date = DateTime.Now;
+                    EditingJob.FieldID = SelectedJob.FieldID;
+                    EditingJob.Name = SelectedJob.Name + "_Copy";
+                    EditingJob.Notes = "";
+                    IsNewJob = true;
+                    SetButtons(true);
+                    UpdateForm();
                 }
                 else
                 {
@@ -178,7 +174,7 @@ namespace RateController.Menu
             {
                 if (lstJobs.SelectedItem is Job selectedJob)
                 {
-                    Properties.Settings.Default.CurrentJob = selectedJob.ID;
+                    Props.CurrentJobID = selectedJob.ID;
                     UpdateEditingJob();
                     UpdateForm();
                 }
@@ -260,13 +256,19 @@ namespace RateController.Menu
                     {
                         JobManager.AddJob(EditingJob);
                         IsNewJob = false;
+                        if (JobToCopyFromID > -1)
+                        {
+                            // copy job data
+                            JobManager.CopyJobData(JobToCopyFromID, EditingJob.ID);
+                            JobToCopyFromID = -1;
+                        }
                     }
                     else
                     {
                         JobManager.EditJob(EditingJob);
                     }
 
-                    Properties.Settings.Default.CurrentJob = EditingJob.ID;
+                    Props.CurrentJobID = EditingJob.ID;
                 }
 
                 SetButtons(false);
@@ -454,7 +456,7 @@ namespace RateController.Menu
 
         private void UpdateEditingJob()
         {
-            int JobID = Properties.Settings.Default.CurrentJob;
+            int JobID = Props.CurrentJobID;
             EditingJob = JobManager.SearchJob(JobID);
             if (EditingJob == null) EditingJob = JobManager.SearchJob(0);
             IsNewJob = false;
@@ -512,6 +514,7 @@ namespace RateController.Menu
                 // Trigger a repaint
                 gbCurrentJob.Invalidate();
                 gbJobs.Invalidate();
+
 
                 Initializing = false;
             }

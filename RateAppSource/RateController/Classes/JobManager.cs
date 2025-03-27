@@ -29,7 +29,7 @@ namespace RateController.Classes
         {
             lock (_syncLock)
             {
-                Job defaultJob=SearchJob(0);
+                Job defaultJob = SearchJob(0);
                 if (defaultJob == null)
                 {
                     defaultJob = new Job
@@ -48,35 +48,29 @@ namespace RateController.Classes
             }
         }
 
-        public static Job CopyJob(int sourceJobId)
+        public static bool CopyJobData(int FromID, int ToID)
         {
             lock (_syncLock)
             {
-                // Locate the source job.
-                Job sourceJob = SearchJob(sourceJobId);
-                if (sourceJob == null)
-                    return null;
-
-                // Create a new instance copying properties from the source.
-                Job newJob = new Job
+                bool Result = false;
+                Job fromJob = SearchJob(FromID);
+                Job toJob = SearchJob(ToID);
+                if (fromJob != null && toJob != null)
                 {
-                    Date = DateTime.Now,
-                    FieldID = sourceJob.FieldID,
-                    Name = sourceJob.Name + "_Copy",
-                    Notes = sourceJob.Notes
-                };
+                    string fromFolder = fromJob.JobFolder;
+                    string toFolder = toJob.JobFolder;
+                    if (Directory.Exists(fromFolder))
+                    {
+                        CopyDirectory(fromFolder, toFolder);
 
-                // Add the new job (this assigns a new ID and creates the folder structure).
-                AddJob(newJob);
+                        // erase RateData.csv by overwriting it with an empty string
+                        string rateDataFilePath = Path.Combine(toFolder, "RateData.csv");
+                        File.WriteAllText(rateDataFilePath, string.Empty);
 
-                // Copy folder data from the source job folder to the new job folder.
-                string sourceFolder = sourceJob.JobFolder;
-                string destinationFolder = newJob.JobFolder;
-                if (Directory.Exists(sourceFolder))
-                {
-                    CopyDirectory(sourceFolder, destinationFolder);
+                        Result = true;
+                    }
                 }
-                return newJob;
+                return Result;
             }
         }
 
@@ -168,6 +162,14 @@ namespace RateController.Classes
             }
         }
 
+        public static string RateDataPath(int JobID)
+        {
+            string Result = null;
+            Job JB = SearchJob(JobID);
+            if (JB != null) Result = Path.Combine(JB.JobFolder, "RateData.csv");
+            return Result;
+        }
+
         public static Job SearchJob(int id)
         {
             lock (_syncLock)
@@ -223,9 +225,9 @@ namespace RateController.Classes
                     }
                     string[] mapFiles = new string[]
                     {
-                        $"Job_{job.ID}.cpg",
-                        $"Job_{job.ID}.dbf",
-                        $"Job_{job.ID}.shp"
+                        $"Job.cpg",
+                        $"Job.dbf",
+                        $"Job.shp"
                     };
                     foreach (string fileName in mapFiles)
                     {

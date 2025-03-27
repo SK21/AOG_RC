@@ -39,6 +39,7 @@ namespace RateController
 
             ChangeProduct(ProductID);
             LoadLast = LoadLst;
+            Props.JobChanged += Props_JobChanged;
         }
 
         public event EventHandler MenuMoved;
@@ -1251,6 +1252,11 @@ namespace RateController
             {
                 Props.WriteErrorLog("frmMenu/LoadLastScreen: " + ex.Message);
             }
+        }
+
+        private void Props_JobChanged(object sender, EventArgs e)
+        {
+            ShowProfile();
         }
 
         private void SetLanguage()

@@ -43,7 +43,7 @@ namespace RateController.Classes
 
         private void Props_JobChanged(object sender, EventArgs e)
         {
-            cFilePath = Props.CurrentRateDataName;
+            cFilePath = Props.CurrentRateDataPath;
             LoadDataFromCsv();
         }
 
