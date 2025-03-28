@@ -68,9 +68,9 @@
             this.btnNew.FlatAppearance.BorderSize = 0;
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNew.Image = global::RateController.Properties.Resources.NewFile;
-            this.btnNew.Location = new System.Drawing.Point(292, 546);
+            this.btnNew.Location = new System.Drawing.Point(296, 603);
             this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(72, 72);
+            this.btnNew.Size = new System.Drawing.Size(70, 63);
             this.btnNew.TabIndex = 368;
             this.btnNew.UseVisualStyleBackColor = true;
             this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
@@ -80,7 +80,7 @@
             this.btnCopy.FlatAppearance.BorderSize = 0;
             this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCopy.Image = global::RateController.Properties.Resources.copy1;
-            this.btnCopy.Location = new System.Drawing.Point(6, 173);
+            this.btnCopy.Location = new System.Drawing.Point(6, 188);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(82, 64);
             this.btnCopy.TabIndex = 367;
@@ -104,7 +104,7 @@
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(6, 252);
+            this.btnDelete.Location = new System.Drawing.Point(6, 282);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 365;
@@ -119,7 +119,7 @@
             this.lstJobs.Location = new System.Drawing.Point(94, 95);
             this.lstJobs.Name = "lstJobs";
             this.lstJobs.ScrollAlwaysVisible = true;
-            this.lstJobs.Size = new System.Drawing.Size(379, 221);
+            this.lstJobs.Size = new System.Drawing.Size(379, 252);
             this.lstJobs.TabIndex = 364;
             // 
             // tbNotes
@@ -129,7 +129,7 @@
             this.tbNotes.Multiline = true;
             this.tbNotes.Name = "tbNotes";
             this.tbNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbNotes.Size = new System.Drawing.Size(373, 66);
+            this.tbNotes.Size = new System.Drawing.Size(373, 78);
             this.tbNotes.TabIndex = 370;
             this.tbNotes.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
@@ -169,7 +169,7 @@
             this.ckJobs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckJobs.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckJobs.Location = new System.Drawing.Point(13, 550);
+            this.ckJobs.Location = new System.Drawing.Point(6, 602);
             this.ckJobs.Name = "ckJobs";
             this.ckJobs.Size = new System.Drawing.Size(89, 64);
             this.ckJobs.TabIndex = 376;
@@ -188,9 +188,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(370, 546);
+            this.btnCancel.Location = new System.Drawing.Point(377, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 379;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -206,9 +206,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(454, 546);
+            this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 378;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -264,7 +264,7 @@
             this.btnNotesDown.FlatAppearance.BorderSize = 0;
             this.btnNotesDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNotesDown.Image = global::RateController.Properties.Resources.arrow_down;
-            this.btnNotesDown.Location = new System.Drawing.Point(473, 158);
+            this.btnNotesDown.Location = new System.Drawing.Point(473, 170);
             this.btnNotesDown.Name = "btnNotesDown";
             this.btnNotesDown.Size = new System.Drawing.Size(41, 41);
             this.btnNotesDown.TabIndex = 387;
@@ -276,7 +276,7 @@
             this.btnNotesUp.FlatAppearance.BorderSize = 0;
             this.btnNotesUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNotesUp.Image = global::RateController.Properties.Resources.arrow_up;
-            this.btnNotesUp.Location = new System.Drawing.Point(473, 105);
+            this.btnNotesUp.Location = new System.Drawing.Point(473, 115);
             this.btnNotesUp.Name = "btnNotesUp";
             this.btnNotesUp.Size = new System.Drawing.Size(41, 41);
             this.btnNotesUp.TabIndex = 388;
@@ -317,7 +317,7 @@
             this.gbJobs.Controls.Add(this.lstJobs);
             this.gbJobs.Location = new System.Drawing.Point(6, 0);
             this.gbJobs.Name = "gbJobs";
-            this.gbJobs.Size = new System.Drawing.Size(528, 322);
+            this.gbJobs.Size = new System.Drawing.Size(528, 362);
             this.gbJobs.TabIndex = 390;
             this.gbJobs.TabStop = false;
             this.gbJobs.Text = "Jobs";
@@ -406,9 +406,9 @@
             this.gbCurrentJob.Controls.Add(this.cbField);
             this.gbCurrentJob.Controls.Add(this.lb1);
             this.gbCurrentJob.Controls.Add(this.tbNotes);
-            this.gbCurrentJob.Location = new System.Drawing.Point(6, 328);
+            this.gbCurrentJob.Location = new System.Drawing.Point(6, 368);
             this.gbCurrentJob.Name = "gbCurrentJob";
-            this.gbCurrentJob.Size = new System.Drawing.Size(528, 212);
+            this.gbCurrentJob.Size = new System.Drawing.Size(528, 228);
             this.gbCurrentJob.TabIndex = 391;
             this.gbCurrentJob.TabStop = false;
             this.gbCurrentJob.Text = "Current Job";
@@ -451,7 +451,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.gbCurrentJob);
             this.Controls.Add(this.gbJobs);
             this.Controls.Add(this.gbLine);

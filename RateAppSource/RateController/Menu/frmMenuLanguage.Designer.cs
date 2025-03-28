@@ -50,9 +50,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(378, 546);
+            this.btnCancel.Location = new System.Drawing.Point(380, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 164;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -68,9 +68,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(456, 546);
+            this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 163;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -81,7 +81,7 @@
             this.rbFrench.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbFrench.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbFrench.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbFrench.Location = new System.Drawing.Point(301, 313);
+            this.rbFrench.Location = new System.Drawing.Point(290, 330);
             this.rbFrench.Margin = new System.Windows.Forms.Padding(2);
             this.rbFrench.Name = "rbFrench";
             this.rbFrench.Size = new System.Drawing.Size(140, 34);
@@ -97,7 +97,7 @@
             this.rbNederlands.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbNederlands.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbNederlands.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbNederlands.Location = new System.Drawing.Point(89, 392);
+            this.rbNederlands.Location = new System.Drawing.Point(78, 409);
             this.rbNederlands.Margin = new System.Windows.Forms.Padding(2);
             this.rbNederlands.Name = "rbNederlands";
             this.rbNederlands.Size = new System.Drawing.Size(140, 34);
@@ -112,7 +112,7 @@
             this.rbRussian.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbRussian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbRussian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbRussian.Location = new System.Drawing.Point(301, 234);
+            this.rbRussian.Location = new System.Drawing.Point(290, 251);
             this.rbRussian.Margin = new System.Windows.Forms.Padding(2);
             this.rbRussian.Name = "rbRussian";
             this.rbRussian.Size = new System.Drawing.Size(140, 34);
@@ -127,7 +127,7 @@
             this.rbHungarian.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbHungarian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbHungarian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbHungarian.Location = new System.Drawing.Point(89, 313);
+            this.rbHungarian.Location = new System.Drawing.Point(78, 330);
             this.rbHungarian.Margin = new System.Windows.Forms.Padding(2);
             this.rbHungarian.Name = "rbHungarian";
             this.rbHungarian.Size = new System.Drawing.Size(140, 34);
@@ -142,7 +142,7 @@
             this.rbPolish.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbPolish.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbPolish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbPolish.Location = new System.Drawing.Point(301, 155);
+            this.rbPolish.Location = new System.Drawing.Point(290, 172);
             this.rbPolish.Margin = new System.Windows.Forms.Padding(2);
             this.rbPolish.Name = "rbPolish";
             this.rbPolish.Size = new System.Drawing.Size(140, 34);
@@ -157,7 +157,7 @@
             this.rbEnglish.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbEnglish.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbEnglish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbEnglish.Location = new System.Drawing.Point(89, 234);
+            this.rbEnglish.Location = new System.Drawing.Point(78, 251);
             this.rbEnglish.Margin = new System.Windows.Forms.Padding(2);
             this.rbEnglish.Name = "rbEnglish";
             this.rbEnglish.Size = new System.Drawing.Size(140, 34);
@@ -173,7 +173,7 @@
             this.rbDeustch.Checked = true;
             this.rbDeustch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbDeustch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbDeustch.Location = new System.Drawing.Point(89, 155);
+            this.rbDeustch.Location = new System.Drawing.Point(78, 172);
             this.rbDeustch.Margin = new System.Windows.Forms.Padding(2);
             this.rbDeustch.Name = "rbDeustch";
             this.rbDeustch.Size = new System.Drawing.Size(140, 34);
@@ -189,7 +189,7 @@
             this.rbLithuanian.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbLithuanian.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbLithuanian.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbLithuanian.Location = new System.Drawing.Point(301, 392);
+            this.rbLithuanian.Location = new System.Drawing.Point(290, 409);
             this.rbLithuanian.Margin = new System.Windows.Forms.Padding(2);
             this.rbLithuanian.Name = "rbLithuanian";
             this.rbLithuanian.Size = new System.Drawing.Size(140, 34);
@@ -203,7 +203,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.rbLithuanian);
             this.Controls.Add(this.rbFrench);
             this.Controls.Add(this.rbNederlands);

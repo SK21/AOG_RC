@@ -83,14 +83,11 @@ namespace RateController.Menu
 
         private void frmMenuEthernet_Load(object sender, EventArgs e)
         {
-            // menu 800,600
-            // sub menu 540,630
+            SubMenuLayout.SetFormLayout(this, MainMenu, null);
+            MainMenu.StyleControls(this);
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
-            this.Width = MainMenu.Width - 260;
-            this.Height = MainMenu.Height - 50;
-            MainMenu.StyleControls(this);
             PositionForm();
             timer1.Enabled = true;
             lbIP.Text = mf.UDPmodules.SubNet;
@@ -166,8 +163,8 @@ namespace RateController.Menu
 
         private void PositionForm()
         {
-            this.Top = MainMenu.Top + 30;
-            this.Left = MainMenu.Left + 246;
+            this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
+            this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
         private void SetLanguage()

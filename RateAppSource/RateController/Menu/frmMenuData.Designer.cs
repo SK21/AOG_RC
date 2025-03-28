@@ -62,9 +62,9 @@
             this.btnRight.FlatAppearance.BorderSize = 0;
             this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
-            this.btnRight.Location = new System.Drawing.Point(300, 546);
+            this.btnRight.Location = new System.Drawing.Point(302, 603);
             this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(72, 72);
+            this.btnRight.Size = new System.Drawing.Size(70, 63);
             this.btnRight.TabIndex = 176;
             this.btnRight.UseVisualStyleBackColor = false;
             this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
@@ -75,9 +75,9 @@
             this.btnLeft.FlatAppearance.BorderSize = 0;
             this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
-            this.btnLeft.Location = new System.Drawing.Point(222, 546);
+            this.btnLeft.Location = new System.Drawing.Point(224, 603);
             this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(72, 72);
+            this.btnLeft.Size = new System.Drawing.Size(70, 63);
             this.btnLeft.TabIndex = 175;
             this.btnLeft.UseVisualStyleBackColor = false;
             this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
@@ -92,9 +92,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(378, 546);
+            this.btnCancel.Location = new System.Drawing.Point(380, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 174;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -110,9 +110,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(456, 546);
+            this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 173;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -136,7 +136,7 @@
             this.ckHours2.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckHours2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckHours2.Image = ((System.Drawing.Image)(resources.GetObject("ckHours2.Image")));
-            this.ckHours2.Location = new System.Drawing.Point(395, 429);
+            this.ckHours2.Location = new System.Drawing.Point(395, 464);
             this.ckHours2.Name = "ckHours2";
             this.ckHours2.Size = new System.Drawing.Size(52, 46);
             this.ckHours2.TabIndex = 209;
@@ -149,7 +149,7 @@
             this.ckHours1.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckHours1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckHours1.Image = ((System.Drawing.Image)(resources.GetObject("ckHours1.Image")));
-            this.ckHours1.Location = new System.Drawing.Point(395, 362);
+            this.ckHours1.Location = new System.Drawing.Point(395, 390);
             this.ckHours1.Name = "ckHours1";
             this.ckHours1.Size = new System.Drawing.Size(52, 46);
             this.ckHours1.TabIndex = 208;
@@ -161,7 +161,7 @@
             this.lbHours1value.BackColor = System.Drawing.Color.Transparent;
             this.lbHours1value.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbHours1value.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbHours1value.Location = new System.Drawing.Point(222, 373);
+            this.lbHours1value.Location = new System.Drawing.Point(222, 401);
             this.lbHours1value.Name = "lbHours1value";
             this.lbHours1value.Size = new System.Drawing.Size(130, 25);
             this.lbHours1value.TabIndex = 206;
@@ -171,7 +171,7 @@
             // 
             this.lbHours1.AutoSize = true;
             this.lbHours1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbHours1.Location = new System.Drawing.Point(72, 374);
+            this.lbHours1.Location = new System.Drawing.Point(72, 402);
             this.lbHours1.Name = "lbHours1";
             this.lbHours1.Size = new System.Drawing.Size(75, 23);
             this.lbHours1.TabIndex = 207;
@@ -181,7 +181,7 @@
             // 
             this.lbHours2value.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbHours2value.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbHours2value.Location = new System.Drawing.Point(222, 440);
+            this.lbHours2value.Location = new System.Drawing.Point(222, 475);
             this.lbHours2value.Name = "lbHours2value";
             this.lbHours2value.Size = new System.Drawing.Size(130, 25);
             this.lbHours2value.TabIndex = 204;
@@ -191,7 +191,7 @@
             // 
             this.lbHours2.AutoSize = true;
             this.lbHours2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbHours2.Location = new System.Drawing.Point(72, 441);
+            this.lbHours2.Location = new System.Drawing.Point(72, 476);
             this.lbHours2.Name = "lbHours2";
             this.lbHours2.Size = new System.Drawing.Size(75, 23);
             this.lbHours2.TabIndex = 205;
@@ -203,7 +203,7 @@
             this.ckQuantity2.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckQuantity2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckQuantity2.Image = ((System.Drawing.Image)(resources.GetObject("ckQuantity2.Image")));
-            this.ckQuantity2.Location = new System.Drawing.Point(395, 295);
+            this.ckQuantity2.Location = new System.Drawing.Point(395, 316);
             this.ckQuantity2.Name = "ckQuantity2";
             this.ckQuantity2.Size = new System.Drawing.Size(52, 46);
             this.ckQuantity2.TabIndex = 203;
@@ -216,7 +216,7 @@
             this.ckQuantity1.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckQuantity1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckQuantity1.Image = ((System.Drawing.Image)(resources.GetObject("ckQuantity1.Image")));
-            this.ckQuantity1.Location = new System.Drawing.Point(395, 228);
+            this.ckQuantity1.Location = new System.Drawing.Point(395, 242);
             this.ckQuantity1.Name = "ckQuantity1";
             this.ckQuantity1.Size = new System.Drawing.Size(52, 46);
             this.ckQuantity1.TabIndex = 202;
@@ -229,7 +229,7 @@
             this.ckArea2.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckArea2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckArea2.Image = global::RateController.Properties.Resources.refresh;
-            this.ckArea2.Location = new System.Drawing.Point(395, 161);
+            this.ckArea2.Location = new System.Drawing.Point(395, 168);
             this.ckArea2.Name = "ckArea2";
             this.ckArea2.Size = new System.Drawing.Size(52, 46);
             this.ckArea2.TabIndex = 201;
@@ -254,7 +254,7 @@
             this.lbQuantity1.BackColor = System.Drawing.Color.Transparent;
             this.lbQuantity1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbQuantity1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbQuantity1.Location = new System.Drawing.Point(222, 249);
+            this.lbQuantity1.Location = new System.Drawing.Point(222, 253);
             this.lbQuantity1.Name = "lbQuantity1";
             this.lbQuantity1.Size = new System.Drawing.Size(130, 25);
             this.lbQuantity1.TabIndex = 198;
@@ -264,7 +264,7 @@
             // 
             this.lbGallons1.AutoSize = true;
             this.lbGallons1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbGallons1.Location = new System.Drawing.Point(72, 251);
+            this.lbGallons1.Location = new System.Drawing.Point(72, 254);
             this.lbGallons1.Name = "lbGallons1";
             this.lbGallons1.Size = new System.Drawing.Size(96, 23);
             this.lbGallons1.TabIndex = 199;
@@ -274,7 +274,7 @@
             // 
             this.lbQuantity2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbQuantity2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbQuantity2.Location = new System.Drawing.Point(222, 306);
+            this.lbQuantity2.Location = new System.Drawing.Point(222, 327);
             this.lbQuantity2.Name = "lbQuantity2";
             this.lbQuantity2.Size = new System.Drawing.Size(130, 25);
             this.lbQuantity2.TabIndex = 196;
@@ -284,7 +284,7 @@
             // 
             this.lbGallons2.AutoSize = true;
             this.lbGallons2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbGallons2.Location = new System.Drawing.Point(72, 307);
+            this.lbGallons2.Location = new System.Drawing.Point(72, 328);
             this.lbGallons2.Name = "lbGallons2";
             this.lbGallons2.Size = new System.Drawing.Size(96, 23);
             this.lbGallons2.TabIndex = 197;
@@ -315,7 +315,7 @@
             // 
             this.lbArea2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbArea2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbArea2.Location = new System.Drawing.Point(222, 172);
+            this.lbArea2.Location = new System.Drawing.Point(222, 179);
             this.lbArea2.Name = "lbArea2";
             this.lbArea2.Size = new System.Drawing.Size(130, 25);
             this.lbArea2.TabIndex = 192;
@@ -325,7 +325,7 @@
             // 
             this.lbAcres2.AutoSize = true;
             this.lbAcres2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAcres2.Location = new System.Drawing.Point(72, 173);
+            this.lbAcres2.Location = new System.Drawing.Point(72, 180);
             this.lbAcres2.Name = "lbAcres2";
             this.lbAcres2.Size = new System.Drawing.Size(71, 23);
             this.lbAcres2.TabIndex = 193;
@@ -340,7 +340,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.ckHours2);
             this.Controls.Add(this.ckHours1);
             this.Controls.Add(this.lbHours1value);

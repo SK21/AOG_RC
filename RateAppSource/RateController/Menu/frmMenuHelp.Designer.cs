@@ -161,10 +161,10 @@
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnStart.Image = global::RateController.Properties.Resources.Pause;
             this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStart.Location = new System.Drawing.Point(436, 543);
+            this.btnStart.Location = new System.Drawing.Point(455, 600);
             this.btnStart.Margin = new System.Windows.Forms.Padding(6);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(81, 72);
+            this.btnStart.Size = new System.Drawing.Size(70, 63);
             this.btnStart.TabIndex = 0;
             this.btnStart.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnStart.UseVisualStyleBackColor = false;
@@ -229,7 +229,7 @@
             this.butActivity.Image = global::RateController.Properties.Resources.file_text;
             this.butActivity.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butActivity.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butActivity.Location = new System.Drawing.Point(117, 543);
+            this.butActivity.Location = new System.Drawing.Point(163, 591);
             this.butActivity.Margin = new System.Windows.Forms.Padding(6);
             this.butActivity.Name = "butActivity";
             this.butActivity.Size = new System.Drawing.Size(81, 72);
@@ -249,7 +249,7 @@
             this.butErrors.Image = global::RateController.Properties.Resources.file_text;
             this.butErrors.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butErrors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butErrors.Location = new System.Drawing.Point(219, 543);
+            this.butErrors.Location = new System.Drawing.Point(256, 591);
             this.butErrors.Margin = new System.Windows.Forms.Padding(6);
             this.butErrors.Name = "butErrors";
             this.butErrors.Size = new System.Drawing.Size(81, 72);
@@ -268,7 +268,7 @@
             this.butGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.butGraph.Image = global::RateController.Properties.Resources.Chart;
             this.butGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butGraph.Location = new System.Drawing.Point(15, 543);
+            this.butGraph.Location = new System.Drawing.Point(9, 590);
             this.butGraph.Margin = new System.Windows.Forms.Padding(6);
             this.butGraph.Name = "butGraph";
             this.butGraph.Size = new System.Drawing.Size(81, 72);
@@ -279,7 +279,7 @@
             // lbTime
             // 
             this.lbTime.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTime.Location = new System.Drawing.Point(220, 350);
+            this.lbTime.Location = new System.Drawing.Point(220, 362);
             this.lbTime.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbTime.Name = "lbTime";
             this.lbTime.Size = new System.Drawing.Size(96, 23);
@@ -291,7 +291,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(9, 350);
+            this.label4.Location = new System.Drawing.Point(9, 362);
             this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(93, 23);
@@ -323,7 +323,7 @@
             // lbInoID
             // 
             this.lbInoID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbInoID.Location = new System.Drawing.Point(220, 318);
+            this.lbInoID.Location = new System.Drawing.Point(220, 324);
             this.lbInoID.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbInoID.Name = "lbInoID";
             this.lbInoID.Size = new System.Drawing.Size(96, 23);
@@ -335,7 +335,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(9, 318);
+            this.label6.Location = new System.Drawing.Point(9, 324);
             this.label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(138, 23);
@@ -345,7 +345,7 @@
             // lbIP
             // 
             this.lbIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIP.Location = new System.Drawing.Point(189, 382);
+            this.lbIP.Location = new System.Drawing.Point(189, 400);
             this.lbIP.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbIP.Name = "lbIP";
             this.lbIP.Size = new System.Drawing.Size(127, 23);
@@ -357,7 +357,7 @@
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(9, 382);
+            this.label27.Location = new System.Drawing.Point(9, 400);
             this.label27.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(145, 23);
@@ -367,7 +367,7 @@
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(9, 478);
+            this.label3.Location = new System.Drawing.Point(9, 514);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(87, 23);
             this.label3.TabIndex = 280;
@@ -377,7 +377,7 @@
             // lbFile
             // 
             this.lbFile.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFile.Location = new System.Drawing.Point(160, 478);
+            this.lbFile.Location = new System.Drawing.Point(160, 514);
             this.lbFile.Name = "lbFile";
             this.lbFile.Size = new System.Drawing.Size(156, 23);
             this.lbFile.TabIndex = 279;
@@ -387,7 +387,7 @@
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(9, 446);
+            this.label11.Location = new System.Drawing.Point(9, 476);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(138, 23);
             this.label11.TabIndex = 278;
@@ -397,7 +397,7 @@
             // lbDate
             // 
             this.lbDate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDate.Location = new System.Drawing.Point(160, 446);
+            this.lbDate.Location = new System.Drawing.Point(160, 476);
             this.lbDate.Name = "lbDate";
             this.lbDate.Size = new System.Drawing.Size(156, 23);
             this.lbDate.TabIndex = 277;
@@ -407,7 +407,7 @@
             // lbVersion
             // 
             this.lbVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVersion.Location = new System.Drawing.Point(9, 414);
+            this.lbVersion.Location = new System.Drawing.Point(9, 438);
             this.lbVersion.Name = "lbVersion";
             this.lbVersion.Size = new System.Drawing.Size(138, 23);
             this.lbVersion.TabIndex = 276;
@@ -417,7 +417,7 @@
             // lbAppVersion
             // 
             this.lbAppVersion.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAppVersion.Location = new System.Drawing.Point(153, 414);
+            this.lbAppVersion.Location = new System.Drawing.Point(153, 438);
             this.lbAppVersion.Name = "lbAppVersion";
             this.lbAppVersion.Size = new System.Drawing.Size(163, 23);
             this.lbAppVersion.TabIndex = 275;
@@ -434,7 +434,7 @@
             this.butNet.Image = global::RateController.Properties.Resources.file_text;
             this.butNet.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butNet.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butNet.Location = new System.Drawing.Point(321, 543);
+            this.butNet.Location = new System.Drawing.Point(349, 591);
             this.butNet.Margin = new System.Windows.Forms.Padding(6);
             this.butNet.Name = "butNet";
             this.butNet.Size = new System.Drawing.Size(94, 72);
@@ -449,7 +449,7 @@
             this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
             this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(275, 503);
+            this.ModuleIndicator.Location = new System.Drawing.Point(275, 545);
             this.ModuleIndicator.Name = "ModuleIndicator";
             this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
             this.ModuleIndicator.TabIndex = 283;
@@ -459,7 +459,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(9, 510);
+            this.label13.Location = new System.Drawing.Point(9, 552);
             this.label13.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(95, 23);
@@ -470,7 +470,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.ModuleIndicator);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.butNet);

@@ -61,9 +61,9 @@
             this.btnRight.FlatAppearance.BorderSize = 0;
             this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
-            this.btnRight.Location = new System.Drawing.Point(300, 546);
+            this.btnRight.Location = new System.Drawing.Point(296, 603);
             this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(72, 72);
+            this.btnRight.Size = new System.Drawing.Size(70, 63);
             this.btnRight.TabIndex = 164;
             this.btnRight.UseVisualStyleBackColor = false;
             this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
@@ -74,9 +74,9 @@
             this.btnLeft.FlatAppearance.BorderSize = 0;
             this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
-            this.btnLeft.Location = new System.Drawing.Point(222, 546);
+            this.btnLeft.Location = new System.Drawing.Point(216, 603);
             this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(72, 72);
+            this.btnLeft.Size = new System.Drawing.Size(70, 63);
             this.btnLeft.TabIndex = 163;
             this.btnLeft.UseVisualStyleBackColor = false;
             this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
@@ -91,9 +91,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(378, 546);
+            this.btnCancel.Location = new System.Drawing.Point(376, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 162;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -109,9 +109,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(456, 546);
+            this.btnOK.Location = new System.Drawing.Point(456, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 161;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -126,9 +126,9 @@
             this.btnPIDloadDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnPIDloadDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
             this.btnPIDloadDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnPIDloadDefaults.Location = new System.Drawing.Point(144, 546);
+            this.btnPIDloadDefaults.Location = new System.Drawing.Point(136, 603);
             this.btnPIDloadDefaults.Name = "btnPIDloadDefaults";
-            this.btnPIDloadDefaults.Size = new System.Drawing.Size(72, 72);
+            this.btnPIDloadDefaults.Size = new System.Drawing.Size(70, 63);
             this.btnPIDloadDefaults.TabIndex = 165;
             this.btnPIDloadDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnPIDloadDefaults.UseVisualStyleBackColor = false;
@@ -137,7 +137,7 @@
             // lbBoost
             // 
             this.lbBoost.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbBoost.Location = new System.Drawing.Point(438, 312);
+            this.lbBoost.Location = new System.Drawing.Point(438, 357);
             this.lbBoost.Name = "lbBoost";
             this.lbBoost.Size = new System.Drawing.Size(59, 23);
             this.lbBoost.TabIndex = 187;
@@ -147,7 +147,7 @@
             // lbMinValue
             // 
             this.lbMinValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinValue.Location = new System.Drawing.Point(438, 474);
+            this.lbMinValue.Location = new System.Drawing.Point(438, 549);
             this.lbMinValue.Name = "lbMinValue";
             this.lbMinValue.Size = new System.Drawing.Size(59, 23);
             this.lbMinValue.TabIndex = 184;
@@ -157,7 +157,7 @@
             // lbMaxValue
             // 
             this.lbMaxValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMaxValue.Location = new System.Drawing.Point(438, 393);
+            this.lbMaxValue.Location = new System.Drawing.Point(438, 453);
             this.lbMaxValue.Name = "lbMaxValue";
             this.lbMaxValue.Size = new System.Drawing.Size(59, 23);
             this.lbMaxValue.TabIndex = 183;
@@ -167,7 +167,7 @@
             // lbScaling
             // 
             this.lbScaling.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbScaling.Location = new System.Drawing.Point(34, 301);
+            this.lbScaling.Location = new System.Drawing.Point(34, 346);
             this.lbScaling.Name = "lbScaling";
             this.lbScaling.Size = new System.Drawing.Size(133, 45);
             this.lbScaling.TabIndex = 185;
@@ -177,7 +177,7 @@
             // lbThresholdValue
             // 
             this.lbThresholdValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbThresholdValue.Location = new System.Drawing.Point(438, 231);
+            this.lbThresholdValue.Location = new System.Drawing.Point(438, 261);
             this.lbThresholdValue.Name = "lbThresholdValue";
             this.lbThresholdValue.Size = new System.Drawing.Size(59, 23);
             this.lbThresholdValue.TabIndex = 182;
@@ -187,7 +187,7 @@
             // lbLow
             // 
             this.lbLow.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbLow.Location = new System.Drawing.Point(438, 150);
+            this.lbLow.Location = new System.Drawing.Point(438, 165);
             this.lbLow.Name = "lbLow";
             this.lbLow.Size = new System.Drawing.Size(59, 23);
             this.lbLow.TabIndex = 181;
@@ -207,7 +207,7 @@
             // lbThreshold
             // 
             this.lbThreshold.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbThreshold.Location = new System.Drawing.Point(34, 220);
+            this.lbThreshold.Location = new System.Drawing.Point(34, 250);
             this.lbThreshold.Name = "lbThreshold";
             this.lbThreshold.Size = new System.Drawing.Size(133, 45);
             this.lbThreshold.TabIndex = 176;
@@ -217,7 +217,7 @@
             // lbRateLow
             // 
             this.lbRateLow.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateLow.Location = new System.Drawing.Point(34, 139);
+            this.lbRateLow.Location = new System.Drawing.Point(34, 154);
             this.lbRateLow.Name = "lbRateLow";
             this.lbRateLow.Size = new System.Drawing.Size(133, 45);
             this.lbRateLow.TabIndex = 174;
@@ -237,7 +237,7 @@
             // lbMax
             // 
             this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMax.Location = new System.Drawing.Point(34, 382);
+            this.lbMax.Location = new System.Drawing.Point(34, 442);
             this.lbMax.Name = "lbMax";
             this.lbMax.Size = new System.Drawing.Size(133, 45);
             this.lbMax.TabIndex = 172;
@@ -247,7 +247,7 @@
             // lbMin
             // 
             this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMin.Location = new System.Drawing.Point(34, 463);
+            this.lbMin.Location = new System.Drawing.Point(34, 538);
             this.lbMin.Name = "lbMin";
             this.lbMin.Size = new System.Drawing.Size(133, 45);
             this.lbMin.TabIndex = 171;
@@ -269,7 +269,7 @@
             // HSmin
             // 
             this.HSmin.LargeChange = 1;
-            this.HSmin.Location = new System.Drawing.Point(173, 463);
+            this.HSmin.Location = new System.Drawing.Point(173, 538);
             this.HSmin.Name = "HSmin";
             this.HSmin.Size = new System.Drawing.Size(263, 45);
             this.HSmin.TabIndex = 333;
@@ -278,7 +278,7 @@
             // HSmax
             // 
             this.HSmax.LargeChange = 1;
-            this.HSmax.Location = new System.Drawing.Point(173, 382);
+            this.HSmax.Location = new System.Drawing.Point(173, 442);
             this.HSmax.Name = "HSmax";
             this.HSmax.Size = new System.Drawing.Size(263, 45);
             this.HSmax.TabIndex = 334;
@@ -287,7 +287,7 @@
             // HSscaling
             // 
             this.HSscaling.LargeChange = 1;
-            this.HSscaling.Location = new System.Drawing.Point(173, 301);
+            this.HSscaling.Location = new System.Drawing.Point(173, 346);
             this.HSscaling.Name = "HSscaling";
             this.HSscaling.Size = new System.Drawing.Size(263, 45);
             this.HSscaling.TabIndex = 335;
@@ -296,7 +296,7 @@
             // HSthreshold
             // 
             this.HSthreshold.LargeChange = 1;
-            this.HSthreshold.Location = new System.Drawing.Point(173, 220);
+            this.HSthreshold.Location = new System.Drawing.Point(173, 250);
             this.HSthreshold.Name = "HSthreshold";
             this.HSthreshold.Size = new System.Drawing.Size(263, 45);
             this.HSthreshold.TabIndex = 336;
@@ -305,7 +305,7 @@
             // HSlow
             // 
             this.HSlow.LargeChange = 1;
-            this.HSlow.Location = new System.Drawing.Point(173, 139);
+            this.HSlow.Location = new System.Drawing.Point(173, 154);
             this.HSlow.Name = "HSlow";
             this.HSlow.Size = new System.Drawing.Size(263, 45);
             this.HSlow.TabIndex = 337;
@@ -329,10 +329,10 @@
             this.butGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.butGraph.Image = global::RateController.Properties.Resources.Chart;
             this.butGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butGraph.Location = new System.Drawing.Point(54, 543);
+            this.butGraph.Location = new System.Drawing.Point(56, 603);
             this.butGraph.Margin = new System.Windows.Forms.Padding(6);
             this.butGraph.Name = "butGraph";
-            this.butGraph.Size = new System.Drawing.Size(81, 72);
+            this.butGraph.Size = new System.Drawing.Size(70, 63);
             this.butGraph.TabIndex = 339;
             this.butGraph.UseVisualStyleBackColor = false;
             this.butGraph.Click += new System.EventHandler(this.butGraph_Click);
@@ -341,7 +341,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.butGraph);
             this.Controls.Add(this.HShigh);
             this.Controls.Add(this.HSlow);
